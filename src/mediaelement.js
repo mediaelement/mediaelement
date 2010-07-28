@@ -198,7 +198,7 @@
 
         var isVideo = (mediaElement.tagName.toLowerCase() == 'video');
         
-        console.log('setup media element', el.id);
+        console.log('setup media element', el, el.id);
 
         // extend options
         var options = mediaElementDefaults;
@@ -319,7 +319,7 @@
             }
 
             // fire ready code
-            options.ready(mediaElement, mediaElement);
+            options.success(mediaElement, mediaElement);
 
             // return normal media element
             return mediaElement;
@@ -582,10 +582,8 @@ height="' + height + '"></embed>';
 											break;
 							}
 
-
-
-							if (pluginMediaElement.ready)
-									pluginMediaElement.ready(pluginMediaElement, mediaElement);
+							if (pluginMediaElement.success)
+									pluginMediaElement.success(pluginMediaElement, mediaElement);
 					}
 
 					// receives events from FLASH and translates them to HTML5 media events

@@ -62,9 +62,12 @@ function createPlayers(tagName) {
 	for (var i=0; i<els.length; i++) {
 		var el = els[i];
 		
-		new MediaElement(el, {ready: function(media, el) { 	
+		new MediaElement(el, {success: function(media, el) { 	
 			
-			console.log('ready',el);
+			console.log('success',el);
+			var controls = document.createElement('div');
+			el.parentNode.insertBefore(controls, el.nextSibling);		
+			
 			
 			// simple play/pause
 			var pp = document.createElement('input');
@@ -79,15 +82,15 @@ function createPlayers(tagName) {
 					pp.value = 'play';
 				}
 			}
-			el.parentNode.insertBefore(pp, el.nextSibling);		
+			controls.appendChild(pp);
 			
+			// current:duration display
 			var time = document.createElement('span');
 			media.addEventListener('timeupdate', function() {
-				time.innerHTML = media.currentTime.toString() + '/' + media.duration.toString();
+				time.innerHTML = Math.floor(media.currentTime).toString() + ' | ' + Math.floor(media.duration).toString();
 			}, true);
-			el.parentNode.insertBefore(time, el.nextSibling);						
-			
-			//media.play();
+			controls.appendChild(time);
+
 		}});
 	}
 
