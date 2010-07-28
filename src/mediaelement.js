@@ -190,8 +190,6 @@
     */
     html5.MediaElement = function (el, o) {
     
-			
-
         // find element
         var mediaElement = el;
         if (typeof el == 'string')
@@ -199,7 +197,7 @@
 
         var isVideo = (mediaElement.tagName.toLowerCase() == 'video');
         
-        console.log('setup media element', el, el.id);
+        console.log('[' + el.id + '] media element', el);
 
         // extend options
         var options = mediaElementDefaults;
@@ -214,11 +212,11 @@
         var pluginType = '';
         
         function testMedia(type, src) {
-					// test for HTML media playback
+					// test for HTML media playback								
+					
 					if (supportsMediaTag && mediaElement.canPlayType(type).replace(/no/,'') != '') {
 						canPlayMedia = true;
-
-													
+						
 					} else {
 				
 						// test for plugin playback types			
@@ -227,24 +225,27 @@
 							if (type == mediaTypes[fi].type && hasPluginVersion(mediaTypes[fi].pluginType, mediaTypes[fi].version)) {
 								urlForPlugin = src;
 								pluginType = mediaTypes[fi].pluginType;
+								
+								console.log('found matching plugin', urlForPlugin, pluginType);
 							}
 						}
 						
 					}        
         }
-
+        
+        console.log('el.src: ', mediaElement.getAttribute('src'));               
+        
 				// supplied type overrides all HTML
-				if (options.type != '') {
+				if (typeof(options.type) != 'undefined' && options.type != '') {
 					testMedia(options.type, null);
 				
 				// test for src attribute first
-				} else if (mediaElement.src != '') {
-					
-					
-					var src = mediaElement.src;
+				} else if (mediaElement.getAttribute('src') != 'undefined' && mediaElement.getAttribute('src') != null) {
+										
+					var src = mediaElement.getAttribute('src');
 					var type = mediaElement.getAttribute('type');
 					
-					console.log('testing src', src, type);
+					console.log('testing src: ', src, type);
 					
 					if (src && !type) {
 						// fake a type
@@ -256,6 +257,9 @@
 				
 				// then test for <source> elements
 				} else {
+				
+					console.log('testing <source> elements');
+				
 					// test <source> types to see if they are usable
 					// pull out one Flash can use
 					for (var i = 0; i < mediaElement.childNodes.length; i++) {
@@ -264,10 +268,19 @@
 						if (el.nodeType == 1 && el.tagName.toLowerCase() == 'source') {
 							var type = el.getAttribute('type');
 							var src = el.getAttribute('src');
-
+								
+							console.log('<source src ', src, ' type ', type);
+							
 							testMedia(type, src);
 						}
 					}
+				}
+				
+				console.log('supportsMediaTag: ', supportsMediaTag);
+				console.log('canPlayMedia: ', canPlayMedia);
+				if (!canPlayMedia) {
+					console.log('urlForPlugin: ', urlForPlugin);
+					console.log('pluginType: ', pluginType);
 				}
 				
 				// Special case for Safari without Quicktime (happens on both Mac and PC).
@@ -558,7 +571,7 @@ height="' + height + '"></embed>';
             // when Flash is ready, it calls out to this method
 					, initPlugin: function (id) {
 
-							//console.log('initPlugin',id);
+							console.log('initPlugin',id);
 							var pluginMediaElement = pluginMediaElements[id];
 							var mediaElement = mediaElements[id];
 
