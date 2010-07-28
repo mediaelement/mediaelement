@@ -24,8 +24,8 @@
 
     // for IE<9
     var mediaElements = ['audio', 'video', 'source'];
-    for (var x in mediaElements)
-        document.createElement(mediaElements[x]);
+    for (var i=0;i< mediaElements.length; i++)
+        document.createElement(mediaElements[i]);
 
     // Namespace
     var html5 = {};
