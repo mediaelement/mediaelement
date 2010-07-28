@@ -179,7 +179,8 @@
 			, type: ''
 			, flashUrl: path + 'flashmediaelement.swf'
 			, silverlightUrl: path + 'silverlightmediaelement.xap'
-			, ready: function () { }
+			, success: function () { }
+			, error: function () { }
     }
 
     /*
@@ -273,6 +274,7 @@
 				// Safari just acts like <video> tags are invalid HTML
         if (!supportsMediaTag && navigator.userAgent.indexOf('Safari') > -1) {
 						mediaElement.innerHTML = 'You need to install Quicktime for Safari to operate properly. Weird, huh?';
+						options.error(mediaElement);
 						return;
         }
         
@@ -339,27 +341,21 @@
                 width = mediaElement.width;
             }
 
-            // register wrapper
+            // register plugin
             var pluginMediaElement = html5.PluginMediaElement(pluginid, pluginType);
-            pluginMediaElement.ready = options.ready;
+            pluginMediaElement.success = options.success;
             html5.MediaPluginBridge.registerPluginElement(pluginid, pluginMediaElement, mediaElement);
-
 
             // create wrapper <div>
             var container = document.createElement('div');
             // must be added to DOM before inserting HTML for IE
-            mediaElement.parentNode.insertBefore(container, mediaElement);
-            //mediaElement.parentNode.replaceChild(mediaElement, container);    
+            mediaElement.parentNode.insertBefore(container, mediaElement); 
 
             // flash/silverlight vars
-            var initVars = ((options.enablePluginDebug) ? 'debug=true&' : '') +
-										'id=' + pluginid +
-										'&file=' + mediaUrl +
-										'&poster=' + posterUrl +
-										'&autoplay=' + autoplay +
-										'&width=' + width +
-										'&height=' + height
-										;
+            var initVars = ['id=' + pluginid,'file=' + mediaUrl, 'poster=' + posterUrl, 'autoplay=' + autoplay, 'width=' + width, 'height=' + height];
+            if (options.enablePluginDebug)
+							initVars.push('debug=true');
+							
 
             var html = '';
             switch (pluginType) {
@@ -367,7 +363,7 @@
                     container.innerHTML =
 '<object data="data:application/x-silverlight-2," type="application/x-silverlight-2"\
 id="' + pluginid + '" width="' + width + '" height="' + height + '">\
-<param name="initParams" value="' + initVars.replace(/&/gi, ',') + '" />\
+<param name="initParams" value="' + initVars.join(',') + '" />\
 <param name="windowless" value="true" />\
 <param name="background" value="black" />\
 <param name="minRuntimeVersion" value="4.0.50401.0" />\
@@ -383,7 +379,7 @@ id="' + pluginid + '" width="' + width + '" height="' + height + '">\
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"\
 id="' + pluginid + '" width="' + width + '" height="' + height + '"> \
 <param name="movie" value="' + options.flashUrl + '?x=' + (new Date()) + '" /> \
-<param name="flashvars" value="' + initVars + '" /> \
+<param name="flashvars" value="' + initVars.join('&') + '" /> \
 <param name="quality" value="high" /> \
 <param name="bgcolor" value="#000000" /> \
 <param name="wmode" value="transparent" /> \
@@ -403,7 +399,7 @@ wmode="transparent" \
 allowScriptAccess="sameDomain" \
 allowFullScreen="true" \
 type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" \
-src="' + options.flashUrl + '?' + initVars + '" \
+src="' + options.flashUrl + '?' + initVars.join('&') + '" \
 width="' + width + '" \
 height="' + height + '"></embed>';
                     }
@@ -416,6 +412,7 @@ height="' + height + '"></embed>';
             // return fake media object	
             return pluginMediaElement;
         } else {
+						options.error(mediaElement);
             mediaElement.innerHTML = 'No compatible player found for your browser.'
         }
     }
