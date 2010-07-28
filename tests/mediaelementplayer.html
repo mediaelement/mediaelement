@@ -3,14 +3,17 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>HTML5 MediaElement</title>	
-		
+	
+	<script src="../src/jquery.js"></script>	
 	<script src="../src/mediaelement.js"></script>
+	<script src="../src/mediaelementplayer.js"></script>
+	<link rel="stylesheet" href="../src/mediaelementplayer.css" />
 </head>
 <body>
 
-<h1>MediaElement.js</h1>
+<h1>MediaElementPlayer.js</h1>
 
-<p>Tests if the core mediaelement.js works</p>
+<p>Tests if the mediaelementplayer.js works</p>
 
 
 <h2>MP4 video (as source)</h2>
@@ -52,56 +55,11 @@
 <audio id="player7">		
 	<source src="../media/Parades-PastLives.mp3" type="audio/mp3" >
 	<p>Your browser leaves much to be desired.</p>			
-</audio>
-
-
-<h2>MP3 Audio (as src)</h2>
-<audio id="player8" src="../media/Parades-PastLives.mp3" type="audio/mp3" >
-	<p>Your browser leaves much to be desired.</p>			
 </audio>		
 
 <script>
 
-function createPlayers(tagName) {
-
-	var els = document.getElementsByTagName(tagName);
-	for (var i=0; i<els.length; i++) {
-		var el = els[i];
-		
-		new MediaElement(el, {success: function(media, el) { 	
-			
-			console.log('success',el);
-			var controls = document.createElement('div');
-			el.parentNode.insertBefore(controls, el.nextSibling);					
-						
-			// simple play/pause
-			var pp = document.createElement('input');
-			pp.type = 'button';
-			pp.value = 'play';
-			pp.onclick = function() {
-				if (media.paused) {
-					media.play();
-					pp.value = 'pause';
-				} else {
-					media.pause();
-					pp.value = 'play';
-				}
-			}
-			controls.appendChild(pp);
-			
-			// current:duration display
-			var time = document.createElement('span');
-			media.addEventListener('timeupdate', function() {
-				time.innerHTML = Math.floor(media.currentTime).toString() + ' | ' + Math.floor(media.duration).toString();
-			}, true);
-			controls.appendChild(time);
-
-		}});
-	}
-
-}
-createPlayers('video');
-createPlayers('audio');
+$('audio,video').mediaelementplayer();
 
 </script>
 
