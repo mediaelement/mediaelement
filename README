@@ -1,0 +1,36 @@
+MediaElement.js
+----------------------------------------------------------------------
+HTML5 <video> Toolkit
+
+MediaElement.js allows you to use H.264, FLV, and WMV video with the 
+<video> tag and Media Element JavaScript API on any browser.
+
+This is accomplished by replacing the <video> element with Flash or
+Silverlight and giving it a JavaScript wrapper that mimics the native
+Media Element API.
+
+
+<script src="mediaelement.js"></script>
+
+<video src="myvideo.mp4"></video>
+
+<script>
+var v = document.getElementsByTagName("video")[0];
+var me = new MediaElement(v);
+me.play();
+</script>
+
+
+MediaElementPlayer.js
+----------------------------------------------------------------------
+A sample CSS/JavaScript player built on top of MediaElement.js
+
+<script src="mediaelementplayer.js"></script>
+<link rel="stylesheet" href="mediaelementplayer.css" />
+
+<video src="myvideo.mp4"></video>
+
+<script>
+var v = document.getElementsByTagName("video")[0];
+var me = new MediaElementPlayer(v);
+</script>
