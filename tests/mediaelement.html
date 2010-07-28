@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+		
+	<script src="../mediaelement.js"></script>
+</head>
+<body>
+
+<h1>MediaElement.js</h1>
+
+<p>Tests if the core mediaelement.js works</p>
+
+
+<h2>MP4 video (as source)</h2>
+<video width="360" height="203" id="player1">		
+	<source src="../media/jsaddington.mp4" type="video/mp4" >
+	<p>Your browser leaves much to be desired.</p>			
+</video>	
+
+<h2>MP4 video (as src)</h2>
+<video width="360" height="203" id="player2" src="../media/jsaddington.mp4" type="video/mp4" >
+	<p>Your browser leaves much to be desired.</p>			
+</video>	
+
+<h2>MP4 video (as src, no type)</h2>
+<video width="360" height="203" id="player3" src="../media/jsaddington.mp4">
+	<p>Your browser leaves much to be desired.</p>
+</video>		
+
+<h2>M4V video (as source)</h2>
+<video width="360" height="203" id="player4" src="../media/echo-hereweare.m4v" type="video/mp4">
+	<p>Your browser leaves much to be desired.</p>
+</video>		
+
+
+<h2>WMV video (as source)</h2>
+<video width="320" height="240" id="player5"  >
+	<source src="../media/xbox.wmv" type="video/wmv" >
+	<p>Your browser leaves much to be desired.</p>			
+</video>	
+
+<h2>FLV video (as source)</h2>
+<video width="320" height="240" id="player6"  >
+	<source src="../media/grampa-laughing.flv" type="video/flv" >
+	<p>Your browser leaves much to be desired.</p>			
+</video>		
+
+
+<h2>MP3 Audio (as source)</h2>
+<audio id="player7">		
+	<source src="../media/Parades-PastLives.mp3" type="audio/mp3" >
+	<p>Your browser leaves much to be desired.</p>			
+</audio>		
+
+<script>
+
+function createPlayers(tagName) {
+
+	var els = document.getElementsByTagName(tagName);
+	for (var i=0; i<els.length; i++) {
+		var el = els[i];
+		
+		new MediaElement(el, {ready: function(media, el) { 	
+			
+			console.log('ready',el);
+			
+			// simple play/pause
+			var pp = document.createElement('input');
+			pp.type = 'button';
+			pp.value = 'play';
+			pp.onclick = function() {
+				if (media.paused) {
+					media.play();
+					pp.value = 'pause';
+				} else {
+					media.pause();
+					pp.value = 'play';
+				}
+			}
+			el.parentNode.insertBefore(pp, el.nextSibling);		
+			
+			var time = document.createElement('span');
+			media.addEventListener('timeupdate', function() {
+				time.innerHTML = media.currentTime.toString() + '/' + media.duration.toString();
+			}, true);
+			el.parentNode.insertBefore(time, el.nextSibling);						
+			
+			//media.play();
+		}});
+	}
+
+}
+createPlayers('video');
+createPlayers('audio');
+
+</script>
+
+</body>
+</html>
