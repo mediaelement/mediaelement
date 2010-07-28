@@ -1,3 +1,4 @@
+----------------------------------------------------------------------
 MediaElement.js
 ----------------------------------------------------------------------
 HTML5 <video> Toolkit
@@ -10,27 +11,34 @@ Silverlight and giving it a JavaScript wrapper that mimics the native
 Media Element API.
 
 
+//////////////////////////////////////////////////////////////////////
 <script src="mediaelement.js"></script>
 
-<video src="myvideo.mp4"></video>
+<video src="myvideo.mp4" width="320" height="240"></video>
 
 <script>
 var v = document.getElementsByTagName("video")[0];
 var me = new MediaElement(v);
 me.play();
 </script>
+//////////////////////////////////////////////////////////////////////
 
-
+----------------------------------------------------------------------
 MediaElementPlayer.js
 ----------------------------------------------------------------------
 A sample CSS/JavaScript player built on top of MediaElement.js
 
+
+//////////////////////////////////////////////////////////////////////
+<script src="jquery.js"></script>
+<script src="mediaelement.js"></script>
 <script src="mediaelementplayer.js"></script>
 <link rel="stylesheet" href="mediaelementplayer.css" />
 
-<video src="myvideo.mp4"></video>
+<video src="myvideo.mp4" width="320" height="240"></video>
 
 <script>
 var v = document.getElementsByTagName("video")[0];
 var me = new MediaElementPlayer(v);
 </script>
+//////////////////////////////////////////////////////////////////////
