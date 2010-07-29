@@ -30,16 +30,16 @@
     // Namespace
     var html5 = {};
 
-    // media types. Flash is the default, but you can re-order these to make Silverlight the default
+    // media types. Silverlight is the default, but you can reorder to prioritize Flash (for H.264 and MP3)
     var mediaTypes = [
-			  { pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
+		    { pluginType: 'silverlight', version: '4.0', type: 'video/mp4' }
+			, { pluginType: 'silverlight', version: '4.0', type: 'video/wmv' }
+			, { pluginType: 'silverlight', version: '4.0', type: 'audio/mp3' }
+			, { pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp3' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/flv' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'video/flv' }
 			//,{pluginType: 'flash', version: '11.0.0', type: 'video/webm'} // for future reference	
-			, { pluginType: 'silverlight', version: '4.0', type: 'video/mp4' }
-			, { pluginType: 'silverlight', version: '4.0', type: 'video/wmv' }
-			, { pluginType: 'silverlight', version: '4.0', type: 'audio/mp3' }
 			];
 
 
@@ -195,9 +195,7 @@
         if (typeof el == 'string')
             mediaElement = document.getElementById(el);
 
-        var isVideo = (mediaElement.tagName.toLowerCase() == 'video');
-        
-        console.log('[' + el.id + '] media element', el);
+        var isVideo = (mediaElement.tagName.toLowerCase() == 'video');      
 
         // extend options
         var options = mediaElementDefaults;
@@ -224,16 +222,11 @@
 							// find plugin that can play the type
 							if (type == mediaTypes[fi].type && hasPluginVersion(mediaTypes[fi].pluginType, mediaTypes[fi].version)) {
 								urlForPlugin = src;
-								pluginType = mediaTypes[fi].pluginType;
-								
-								console.log('found matching plugin', urlForPlugin, pluginType);
+								pluginType = mediaTypes[fi].pluginType;														
 							}
-						}
-						
+						}						
 					}        
         }
-        
-        console.log('el.src: ', mediaElement.getAttribute('src'));               
         
 				// supplied type overrides all HTML
 				if (typeof(options.type) != 'undefined' && options.type != '') {
@@ -244,8 +237,6 @@
 										
 					var src = mediaElement.getAttribute('src');
 					var type = mediaElement.getAttribute('type');
-					
-					console.log('testing src: ', src, type);
 					
 					if (src && !type) {
 						// fake a type
@@ -258,8 +249,6 @@
 				// then test for <source> elements
 				} else {
 				
-					console.log('testing <source> elements');
-				
 					// test <source> types to see if they are usable
 					// pull out one Flash can use
 					for (var i = 0; i < mediaElement.childNodes.length; i++) {
@@ -268,19 +257,10 @@
 						if (el.nodeType == 1 && el.tagName.toLowerCase() == 'source') {
 							var type = el.getAttribute('type');
 							var src = el.getAttribute('src');
-								
-							console.log('<source src ', src, ' type ', type);
 							
 							testMedia(type, src);
 						}
 					}
-				}
-				
-				console.log('supportsMediaTag: ', supportsMediaTag);
-				console.log('canPlayMedia: ', canPlayMedia);
-				if (!canPlayMedia) {
-					console.log('urlForPlugin: ', urlForPlugin);
-					console.log('pluginType: ', pluginType);
 				}
 				
 				// Special case for Safari without Quicktime (happens on both Mac and PC).
@@ -571,7 +551,6 @@ height="' + height + '"></embed>';
             // when Flash is ready, it calls out to this method
 					, initPlugin: function (id) {
 
-							console.log('initPlugin',id);
 							var pluginMediaElement = pluginMediaElements[id];
 							var mediaElement = mediaElements[id];
 
@@ -599,7 +578,6 @@ height="' + height + '"></embed>';
 					// receives events from FLASH and translates them to HTML5 media events
 					// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html		
 					, fireEvent: function (id, eventName, values) {
-							//console.log('pluginevent', id, eventName, values);		
 
 							var pluginMediaElement = pluginMediaElements[id];
 							pluginMediaElement.ended = false;
@@ -626,11 +604,9 @@ height="' + height + '"></embed>';
     // silverlight requires window.method. It apparently doesn't understand window.object.method
     // also it doesn't like to pass raw JSON data (AFAIK)
     window.html5_MediaPluginBridge_initPlugin = function (id) {
-        //console.log(id);
         html5.MediaPluginBridge.initPlugin(id);
     }
     window.html5_MediaPluginBridge_fireEvent = function (id, eventName, values) {
-        //console.log(id);
         var jsonString = values.substring(1, values.length - 1);
         var jsonValues = eval('(' + jsonString + ')');
 
