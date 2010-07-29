@@ -29,7 +29,6 @@ namespace SilverlightMediaElement
 
         // state
         bool _isPaused = false;
-        bool _isMuted = false;
         bool _isEnded = false;
 
         public MainPage(IDictionary<string, string> initParams)
@@ -183,7 +182,7 @@ namespace SilverlightMediaElement
                         @", ""currentTime"":" + (media.Position.TotalSeconds).ToString() + @"" +
                         @", ""duration"":" + (media.NaturalDuration.TimeSpan.TotalSeconds).ToString() + @"" +
                         @", ""paused"":" + (_isEnded).ToString().ToLower() + @"" +
-                        @", ""muted"":" + (_isMuted).ToString().ToLower() + @"" +
+                        @", ""muted"":" + (media.IsMuted).ToString().ToLower() + @"" +
                         @", ""ended"":" + (_isPaused).ToString().ToLower() + @"" +
                         @", ""volume"":" + (media.Volume).ToString() + @"" +
                     @"}'");
@@ -224,6 +223,11 @@ namespace SilverlightMediaElement
         public void setVolume(Double volume)
         {
             media.Volume = volume;
+        }
+
+        [ScriptableMember]
+        public void setMuted(bool isMuted) {
+            media.IsMuted = isMuted;
         }
 
         [ScriptableMember]
