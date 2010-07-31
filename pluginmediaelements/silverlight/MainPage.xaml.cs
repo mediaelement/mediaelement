@@ -35,6 +35,8 @@ namespace SilverlightMediaElement
         {
             InitializeComponent();
 
+            HtmlPage.RegisterScriptableObject("SilverlightApp", this);
+
             // timer
             _timer = new System.Windows.Threading.DispatcherTimer();
             _timer.Interval = new TimeSpan(0, 0, 0, 0, 200); // 200 Milliseconds 
@@ -79,8 +81,7 @@ namespace SilverlightMediaElement
 
 
             media.AutoPlay = _autoplay;
-            if (!String.IsNullOrWhiteSpace(_mediaUrl))
-            {
+            if (!String.IsNullOrEmpty(_mediaUrl)) {
                 setUrl(_mediaUrl);               
             }
 
@@ -94,7 +95,7 @@ namespace SilverlightMediaElement
             FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
            
 
-            HtmlPage.RegisterScriptableObject("SilverlightApp", this);
+            
 
             // send out init call
             
