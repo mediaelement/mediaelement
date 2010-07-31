@@ -17,7 +17,6 @@
  - poster in flash (do in HTML)
 */
 
-
 (function () {
 		// for testing
     if (typeof window.console == 'undefined') window.console = { log: function () { } };
@@ -32,16 +31,15 @@
 
     // media types. Silverlight is the default, but you can reorder to prioritize Flash (for H.264 and MP3)
     var mediaTypes = [
-		    { pluginType: 'silverlight', version: '4.0', type: 'video/mp4' }
-			, { pluginType: 'silverlight', version: '4.0', type: 'video/wmv' }
-			, { pluginType: 'silverlight', version: '4.0', type: 'audio/mp3' }
+		    { pluginType: 'silverlight', version: '3.0', type: 'video/mp4' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'video/wmv' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp3' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp3' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/flv' }
-			, { pluginType: 'flash', version: '9.0.124', type: 'video/flv' }
+			, { pluginType: 'flash', version: '9.0.124', type: 'video/flv' }    
 			//,{pluginType: 'flash', version: '11.0.0', type: 'video/webm'} // for future reference	
 			];
-
 
     // Flash version detection from SwfObject 2.2
     /* Centralized function for browser feature detection
@@ -159,7 +157,19 @@
         }
     }
     
-    // determine paths
+    /* 
+    Utility methods
+    */
+    function escapeHTML(s) {
+        return s.split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
+    }
+    
+    function absolutizeUrl(url) {
+        var el = document.createElement('div');
+        el.innerHTML = '<a href="' + escapeHTML(url) + '">x</a>';
+        return el.firstChild.href;
+    }    
+    
     function getScriptPath(scriptName) {
         var path = '';
         var scripts = document.getElementsByTagName('script');
@@ -174,6 +184,9 @@
     }
     var path = getScriptPath('mediaelement.js');    
 
+		/*
+		Default options
+		*/
     var mediaElementDefaults = {
 			  enablePluginDebug: false
 			, type: ''
@@ -262,6 +275,9 @@
 						}
 					}
 				}
+			
+				console.log('supportsMediaTag',supportsMediaTag,'canPlayMedia',canPlayMedia, urlForPlugin, pluginType)
+
 				
 				// Special case for Safari without Quicktime (happens on both Mac and PC).
 				// Safari just acts like <video> tags are invalid HTML
@@ -345,11 +361,18 @@
             mediaElement.parentNode.insertBefore(container, mediaElement); 
 
             // flash/silverlight vars
-            var initVars = ['id=' + pluginid,'file=' + mediaUrl, 'poster=' + posterUrl, 'autoplay=' + autoplay, 'width=' + width, 'height=' + height];
+            var initVars = [
+							'id=' + pluginid,
+							'poster=' + posterUrl, 
+							'autoplay=' + autoplay, 
+							'width=' + width, 
+							'height=' + height];
+            
+            if (mediaUrl != null)
+							initVars.push('file=' + mediaUrl);
             if (options.enablePluginDebug)
 							initVars.push('debug=true');
 							
-
             var html = '';
             switch (pluginType) {
                 case 'silverlight':
@@ -470,67 +493,61 @@ height="' + height + '"></embed>';
 					, volume: 1
 					, currentTime: 0
 
-									// HTML methods
+					// HTML5 methods
 					, play: function (url) {
-							this.pluginElement.playMedia(url);
-							this.paused = false;
+						this.pluginElement.playMedia(url);
+						this.paused = false;
 					}
 					, loadMedia: function (url) {
-							this.pluginElement.loadMedia(url);
-							this.paused = false;
+						this.pluginElement.loadMedia(url);
+						this.paused = false;
 					}
 					, pause: function () {
-							this.pluginElement.pauseMedia();
-							this.paused = true;
+						this.pluginElement.pauseMedia();
+						this.paused = true;
 					}
 					, stop: function () {
-							this.pluginElement.stopMedia();
-							this.paused = true;
+						this.pluginElement.stopMedia();
+						this.paused = true;
 					}
 
-									// custom methods since not all JavaScript implementations support get/set
+					// custom methods since not all JavaScript implementations support get/set
 					, setCurrentTime: function (time) {
-							this.pluginElement.setCurrentTime(time);
-							this.currentTime = time;
+						this.pluginElement.setCurrentTime(time);
+						this.currentTime = time;
 					}
-
 					, setVolume: function (volume) {
-							this.pluginElement.setVolume(volume);
-							this.volume = volume;
+						this.pluginElement.setVolume(volume);
+						this.volume = volume;
 					}
-
 					, setVideoSize: function (width, height) {
-							//this.pluginElement.width = width;
-							//this.pluginElement.height = height;
-							this.pluginElement.style.width = width + 'px';
-							this.pluginElement.style.height = height + 'px';
+						this.pluginElement.style.width = width + 'px';
+						this.pluginElement.style.height = height + 'px';
 
-							this.pluginElement.setVideoSize(width, height);
+						this.pluginElement.setVideoSize(width, height);
 					}		
-
 					, setMuted: function (muted) {
-							this.pluginElement.setMuted(muted);
-							this.muted = muted;
+						this.pluginElement.setMuted(muted);
+						this.muted = muted;
 					}
-
 					, setFullscreen: function (fullscreen) {
-							this.pluginElement.setFullscreen(fullscreen);
+						this.pluginElement.setFullscreen(fullscreen);
 					}
 
-									// start: fake events
+					// start: fake events
 					, addEventListener: function (eventName, callback, bubble) {
-							events[eventName] = events[eventName] || [];
-							events[eventName].push(callback);
+						events[eventName] = events[eventName] || [];
+						events[eventName].push(callback);
 					}
 					, dispatchEvent: function (eventName) {
 
-							var i, callbacks = events[eventName], args;
-							if (callbacks) {
-									args = Array.prototype.slice.call(arguments, 1);
-									for (i = 0; i < callbacks.length; i++) {
-											callbacks[i].apply(null, args);
-									}
+						var i, callbacks = events[eventName], args;
+						if (callbacks) {
+							args = Array.prototype.slice.call(arguments, 1);
+							for (i = 0; i < callbacks.length; i++) {
+								callbacks[i].apply(null, args);
 							}
+						}
 					}
         }
     };
@@ -604,23 +621,15 @@ height="' + height + '"></embed>';
     // silverlight requires window.method. It apparently doesn't understand window.object.method
     // also it doesn't like to pass raw JSON data (AFAIK)
     window.html5_MediaPluginBridge_initPlugin = function (id) {
+        console.log('sl start',id);
         html5.MediaPluginBridge.initPlugin(id);
+        return true;
     }
-    window.html5_MediaPluginBridge_fireEvent = function (id, eventName, values) {
+    window.html5_MediaPluginBridge_fireEvent = function (id, eventName, values) {        
         var jsonString = values.substring(1, values.length - 1);
         var jsonValues = eval('(' + jsonString + ')');
 
         html5.MediaPluginBridge.fireEvent(id, eventName, jsonValues);
-    }
-
-
-    function escapeHTML(s) {
-        return s.split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
-    }
-    function absolutizeUrl(url) {
-        var el = document.createElement('div');
-        el.innerHTML = '<a href="' + escapeHTML(url) + '">x</a>';
-        return el.firstChild.href;
     }
 
     window.html5 = html5;
