@@ -1,0 +1,5 @@
+﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="SilverlightMediaElement" EntryPointType="SilverlightMediaElement.App" RuntimeVersion="3.0.40818.0">
+  <Deployment.Parts>
+    <AssemblyPart x:Name="SilverlightMediaElement" Source="SilverlightMediaElement.dll" />
+  </Deployment.Parts>
+</Deployment>

@@ -1,0 +1,12 @@
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\Bin\Release\SilverlightMediaElement.dll
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\Bin\Release\SilverlightMediaElement.pdb
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\Bin\Release\AppManifest.xaml
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\Bin\Release\SilverlightMediaElement.xap
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\Bin\Release\SilverlightMediaElementTestPage.html
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\obj\Release\ResolveAssemblyReference.cache
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\obj\Release\App.g.i.cs
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\obj\Release\MainPage.g.i.cs
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\obj\Release\SilverlightMediaElement.g.resources
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\obj\Release\SilverlightMediaElement.dll
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\obj\Release\SilverlightMediaElement.pdb
+D:\git\dtsplayer\silverlight\SilverlightMediaElement\obj\Release\XapCacheFile.xml
