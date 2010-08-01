@@ -63,11 +63,13 @@
 
             var o = $.extend(defaults, options);
 
-            return createmediaelementplayer($(this), o);
+            return MediaElementPlayer($(this), o);
        });
     };
 
-    function createmediaelementplayer($media, options) {
+    function MediaElementPlayer($media, options) {
+    
+				$media = $($media);
 
         var isVideo = $media[0].tagName.toLowerCase() == 'video';
         var id = $media.attr('id') + '_mep';
@@ -85,52 +87,24 @@
             $media.removeAttr('poster');
 
             // override Apple's autoplay override for iPads
-            if (isiPad && $media.hasAttribute('autoplay')) {
-
-                function fakeClick(fn) {
-                    // create a link that will play our video
-                    var $a = $('<a href="#" id="fakeClick"></a>');
-                    $a.bind("click", function (e) {
-                        e.preventDefault();
-                        fn();
-                    });
-
-                    // add the link to the body
-                    $("body").append($a);
-
-                    // grab the link
-                    var el = $("#fakeClick").get(0);
-
-                    // fire a fake event							
-                    if (document.createEvent) {
-                        var evt = document.createEvent("MouseEvents");
-                        if (evt.initMouseEvent) {
-                            evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                            el.dispatchEvent(evt);
-                        }
-                    }
-
-                    // remove, and don't tell Stevie J.
-                    $(el).remove();
-                }
-                fakeClick(function () {
-                    $media[0].play();
-                });
+            if (isiPad && $media[0].hasAttribute('autoplay')) {
+							$media[0].load();
+							$media[0].play();
             }
 
             // don't do the rest
             return;
-        } else {
-
-            if (isIE9) {
-                console.log('IE9 temp');
-                $media.attr('controls', 'controls');
-                return;
-            } else {
-                // remove native controls if accidentally set			
-                $media.removeAttr('controls');
-            }
-        }
+        } else if (isIE9) {
+					
+						// IE9 PP3 has a bug that doesnt' allow the <video> element to be moved
+						// I filed it and they promise to fix it
+						$media.attr('controls', 'controls');
+						return;
+				} else {
+				
+						// remove native controls if accidentally set			
+						$media.removeAttr('controls');
+				}
 
 
 
@@ -166,7 +140,23 @@
         // insert and switch position
         $media.before(html);
         var container = $('#' + id);
+        
+        // put the <video> tag in the right spot
         container.find('.mep-video').append($media);
+        
+        // move any skins up to the container
+        container.addClass($media[0].className);
+                
+        // append a poster
+        if ($media.attr('poster') != null) {
+					var poster = $('<img />');
+					poster.attr('src', $media.attr('poster'));
+					poster.addClass('mep-poster');
+					poster.width($media.width());
+					poster.height($media.height());
+					container.find('.mep-video').after( poster );
+        }
+        
         var overlay = container.find('.mep-overlay');
         var overlayMessage = container.find('.mep-overlay-message');
         
@@ -454,11 +444,13 @@
 
 
             mediaElement.addEventListener('play', function (e) {
+								container.find('.mep-poster').hide();
                 playpause.removeClass('mep-play').addClass('mep-pause');
                 hideMessage();
             }, true);
 
             mediaElement.addEventListener('playing', function (e) {
+                container.find('.mep-poster').hide();
                 playpause.removeClass('mep-play').addClass('mep-pause');
                 hideMessage();
             }, true);
@@ -469,6 +461,7 @@
             }, true);
 
             mediaElement.addEventListener('ended', function (e) {
+								container.find('.mep-poster').show();
                 playpause.removeClass('mep-pause').addClass('mep-play');
                 showMessage('ended');
             }, true);
