@@ -26,11 +26,16 @@
     for (var i=0;i< mediaElements.length; i++)
         document.createElement(mediaElements[i]);
 
-    // Namespace
-    var html5 = {};
+    
+    var 
+			// Namespace
+			html5 = {}, 
+			
+			// player number (for missing, same id attr)
+			elIndex = 1,
 
-    // media types. Silverlight is the default, but you can reorder to prioritize Flash (for H.264 and MP3)
-    var mediaTypes = [
+			// media types. Silverlight is the default, but you can reorder to prioritize Flash (for H.264 and MP3)
+			mediaTypes = [
 		    { pluginType: 'silverlight', version: '3.0', type: 'video/mp4' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'video/wmv' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp3' }
@@ -337,10 +342,9 @@
 
         // replace with plug version that mimics HTML media
         } else if (pluginType != '') {
-
             var width = 1;
             var height = 1;
-            var pluginid = mediaElement.getAttribute('id') + '_plugin_' + pluginType;
+            var pluginid = mediaElement.getAttribute('id') + elIndex.toString() + '_plugin_' + pluginType;
             var mediaUrl = (urlForPlugin != null) ? absolutizeUrl(urlForPlugin) : '';
             var posterUrl = (mediaElement.getAttribute('poster') == null) ? mediaElement.getAttribute('poster') : '';
             var autoplay = (mediaElement.getAttribute('autoplay') != null);
