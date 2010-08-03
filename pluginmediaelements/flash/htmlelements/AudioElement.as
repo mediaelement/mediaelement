@@ -109,20 +109,18 @@ package htmlelements
 		
 		//events
 		
-		
 
-		public function load(url:String):void {
+		// METHODS
+		public function setSrc(url:String):void {
 			_currentUrl = url;
 			_isLoaded = false;
-			
-			if (_autoplay) {
-				startLoading();
-				play(null);
-			}
+		}		
 
-		}
 		
-		private function startLoading():void {
+		public function load():void {
+			
+			if (_currentUrl == "")
+				return;
 			
 			_sound = new Sound();
 			//sound.addEventListener(IOErrorEvent.IO_ERROR,errorHandler);
@@ -132,23 +130,13 @@ package htmlelements
 						
 			//sendEvent(HtmlMediaEvent.LOADING);	
 			
-			_isLoaded = true;
+			_isLoaded = true;		
 		}
-
-		// METHODS
-		public function setUrl(url:String):void {
-			_currentUrl = url;
-			_isLoaded = false;
-		}		
-		public function play(url:String):void {
-			
-			if (url != null && _currentUrl != url) {
-				load(url);
-				return;
-			}
+		
+		public function play():void {		
 			
 			if (!_isLoaded)
-				startLoading();
+				load();
 			
 			_timer.stop();
 			
@@ -178,7 +166,7 @@ package htmlelements
 			
 			sendEvent(HtmlMediaEvent.SEEKED);
 			
-			play(null);			
+			play();			
 		}
 		
 		public function stop():void {
