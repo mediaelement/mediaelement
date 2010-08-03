@@ -32,8 +32,9 @@ Media Element API.
 
 <script>
 var v = document.getElementsByTagName("video")[0];
-var me = new MediaElement(v);
-me.play();
+new MediaElement(v, {success: function(media) {
+	media.play();
+}});
 </script>
 //////////////////////////////////////////////////////////////////////
 
@@ -51,9 +52,13 @@ browser supports, you get the same consistent control UI.
 <script src="mediaelementplayer.js"></script>
 <link rel="stylesheet" href="mediaelementplayer.css" />
 
-<video src="myvideo.mp4" width="320" height="240"></video>
+<video id="v1" src="myvideo.mp4" width="320" height="240"></video>
 
 <script>
 $('video').mediaelementplayer();
+</script>
+<!-- OR -->
+<script>
+new MediaElementPlayer('#v1');
 </script>
 //////////////////////////////////////////////////////////////////////
