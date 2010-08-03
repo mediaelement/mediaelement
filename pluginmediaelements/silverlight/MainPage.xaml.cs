@@ -18,6 +18,10 @@ namespace SilverlightMediaElement
     public partial class MainPage : UserControl
     {
         System.Windows.Threading.DispatcherTimer _timer;
+            
+        // work arounds for src, load(), play() compatibility
+        bool _isSettingSrc = false;
+        bool _isAttemptingToPlay = false;
 
         // variables
         string _mediaUrl;
@@ -42,32 +46,27 @@ namespace SilverlightMediaElement
             _timer.Interval = new TimeSpan(0, 0, 0, 0, 200); // 200 Milliseconds 
             _timer.Tick += new EventHandler(timer_Tick);
 
-             // TODO: make events work
+            // add events
             media.BufferingProgressChanged += new RoutedEventHandler(media_BufferingProgressChanged);
             media.CurrentStateChanged += new RoutedEventHandler(media_CurrentStateChanged);
             media.MediaEnded += new RoutedEventHandler(media_MediaEnded);
             media.MediaFailed += new EventHandler<ExceptionRoutedEventArgs>(media_MediaFailed);
 
-            // TODO: accept parameters
-          
+            // get parameters
             if (initParams.ContainsKey("id"))
-                _htmlid = initParams["id"];
-            
+                _htmlid = initParams["id"];            
             if (initParams.ContainsKey("file"))
                 _mediaUrl = initParams["file"];
-
             if (initParams.ContainsKey("autoplay") && initParams["autoplay"] == "true")
                 _autoplay = true;
             if (initParams.ContainsKey("debug") && initParams["debug"] == "true")
                 _debug = true;
-
-            if (initParams.ContainsKey("width")) {
-                Int32.TryParse(initParams["width"], out _width);
-            }
-            if (initParams.ContainsKey("height")) {
+            if (initParams.ContainsKey("width")) 
+                Int32.TryParse(initParams["width"], out _width);            
+            if (initParams.ContainsKey("height")) 
                 Int32.TryParse(initParams["height"], out _height);
-            }
-
+            
+            // set stage and media sizes
             if (_width > 0)
                 LayoutRoot.Width = media.Width = this.Width = _width;
             if (_height > 0)
@@ -82,74 +81,72 @@ namespace SilverlightMediaElement
 
             media.AutoPlay = _autoplay;
             if (!String.IsNullOrEmpty(_mediaUrl)) {
-                setUrl(_mediaUrl);               
+                setSrc(_mediaUrl);               
             }
 
-
-            Application.Current.Host.Content.FullScreenChanged +=
-                 new EventHandler(DisplaySizeInformation);
-
-            Application.Current.Host.Content.Resized +=
-                new EventHandler(DisplaySizeInformation);
-
+            // full screen settings
+            Application.Current.Host.Content.FullScreenChanged += new EventHandler(DisplaySizeInformation);
+            Application.Current.Host.Content.Resized += new EventHandler(DisplaySizeInformation);
             FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
            
-
-            
-
-            // send out init call
-            
-            //HtmlPage.Window.Invoke("html5.MediaPluginBridge.initPlugin", _htmlid);
+            // send out init call            
             HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", _htmlid);
         }
 
-        void timer_Tick(object sender, EventArgs e)
-        {
+        void timer_Tick(object sender, EventArgs e) {
             SendEvent("timeupdate");
         }
-        void StartTimer()
-        {
+
+        void StartTimer() {
             _timer.Start();
         }
-        void StopTimer()
-        {
+
+        void StopTimer() {
             _timer.Stop();
         }
 
+        void WriteDebug(string text) {
+            textBox1.Text += text + "\n";
+        }
 
-
-        void media_MediaFailed(object sender, ExceptionRoutedEventArgs e)
-        {
+        void media_MediaFailed(object sender, ExceptionRoutedEventArgs e) {
             SendEvent(e.ToString());
         }
 
-        void media_MediaEnded(object sender, RoutedEventArgs e)
-        {
+        void media_MediaEnded(object sender, RoutedEventArgs e) {
             _isEnded = true;
             _isPaused = false;
             SendEvent("ended");
             StopTimer();
         }
 
-        void media_CurrentStateChanged(object sender, RoutedEventArgs e)
-        {
- 
-             textBox1.Text += media.CurrentState.ToString() + "\n";
+        void media_CurrentStateChanged(object sender, RoutedEventArgs e) {
+
+            WriteDebug(media.CurrentState.ToString());
 
             switch (media.CurrentState)
             {
                 case MediaElementState.Opening:
-                    
+
                     break;
                 case MediaElementState.Playing:
                     _isEnded = false;
                     _isPaused = false;
+                    _isAttemptingToPlay = false;
                     StartTimer();
                     SendEvent("playing");
                     break;
                 case MediaElementState.Paused:
                     _isEnded = false;
                     _isPaused = true;
+
+                    // special settings to allow play() to work
+                    _isSettingSrc = false;
+                    WriteDebug("paused event, " + _isAttemptingToPlay);
+                    if (_isAttemptingToPlay) {
+                        this.playMedia();
+                    }
+
                     StopTimer();
                     SendEvent("paused");
                     break;
@@ -166,14 +163,11 @@ namespace SilverlightMediaElement
            
         }
 
-        void media_BufferingProgressChanged(object sender, RoutedEventArgs e)
-        {   
+        void media_BufferingProgressChanged(object sender, RoutedEventArgs e) {   
             SendEvent("BufferProgress");
         }
 
-        void SendEvent(string name)
-        {
-            //return; 
+        void SendEvent(string name) {
 
             HtmlPage.Window.Invoke("html5_MediaPluginBridge_fireEvent", 
                     _htmlid,
@@ -189,17 +183,16 @@ namespace SilverlightMediaElement
                     @"}'");
         }
 
-        /*
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.media.Play();
-        }
-        */
-
         /* HTML5 wrapper methods */
         [ScriptableMember]
-        public void playMedia()
-        {
+        public void playMedia() {
+            WriteDebug("method:play " + media.CurrentState);
+
+            if (media.CurrentState == MediaElementState.Closed && _isSettingSrc) {
+                _isAttemptingToPlay = true;
+            }
+
+
             media.Play();
             _isEnded = false;
             _isPaused = false;         
@@ -208,48 +201,59 @@ namespace SilverlightMediaElement
         }
 
         [ScriptableMember]
-        public void pauseMedia()
-        {
+        public void pauseMedia() {
+            WriteDebug("method:pause " + media.CurrentState);
+
             _isEnded = false;
             _isPaused = true;
             
             media.Pause();
-
-
-
             StopTimer();
         }
 
         [ScriptableMember]
-        public void setVolume(Double volume)
-        {
+        public void loadMedia() {
+            // no eqivalent
+            WriteDebug("method:load " + media.CurrentState);
+        }
+
+        [ScriptableMember]
+        public void setVolume(Double volume) {
+            WriteDebug("method:setvolume: " + volume.ToString());
+
             media.Volume = volume;
         }
 
         [ScriptableMember]
         public void setMuted(bool isMuted) {
+            WriteDebug("method:setmuted: " + isMuted.ToString());
+
             media.IsMuted = isMuted;
         }
 
         [ScriptableMember]
-        public void setCurrentTime(Double position)
-        {
+        public void setCurrentTime(Double position) {
+            WriteDebug("method:setCurrentTime: " + position.ToString());
+
             int milliseconds = Convert.ToInt32(position * 1000);
 
             media.Position = new TimeSpan(0, 0, 0, 0, milliseconds);
         }
 
         [ScriptableMember]
-        public void setUrl(string url)
-        {
+        public void setSrc(string url) {
+            WriteDebug("method:setSrc " + media.CurrentState);
+            WriteDebug(" - " + url.ToString());
+
             Uri uri = new Uri(url);
          
             media.Source = new Uri(url, UriKind.Absolute);
+
+            _isSettingSrc = true;
         }
 
         [ScriptableMember]
-        public void setFullscreen(bool goFullscreen)
-        {
+        public void setFullscreen(bool goFullscreen) {
 
             FullscreenButton.Visibility = System.Windows.Visibility.Visible;
         }
@@ -261,17 +265,14 @@ namespace SilverlightMediaElement
             media.Height = height;
         }
 
-        private void FullscreenButton_Click(object sender, RoutedEventArgs e)
-        {
+        private void FullscreenButton_Click(object sender, RoutedEventArgs e) {
             Application.Current.Host.Content.IsFullScreen = true;
             FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
         }
 
-        private void DisplaySizeInformation(Object sender, EventArgs e)
-        {
+        private void DisplaySizeInformation(Object sender, EventArgs e) {
             this.Width = LayoutRoot.Width = media.Width = Application.Current.Host.Content.ActualWidth;
             this.Height = LayoutRoot.Height = media.Height = Application.Current.Host.Content.ActualHeight;
-
         }
 
     }
