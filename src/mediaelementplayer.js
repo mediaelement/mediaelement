@@ -15,37 +15,16 @@
 
 // TODO:
 // - make volume be event driven, remember setting (cookie, startup)
-// - loaded/ready event
 // - poster for <audio>
-// - resizing?
-// - detect URL
-
 
 (function ($) {
 
-    function getScriptPath(scriptName) {
-        var path = '';
-        var scripts = document.getElementsByTagName('script');
-
-        for (var i = 0; i < scripts.length; i++) {
-            if (scripts[i].src.indexOf(scriptName) > -1) {
-                path = scripts[i].src.substring(0, scripts[i].src.indexOf(scriptName));
-            }
-        }
-
-        return path;
-    }
-    var path = getScriptPath('mediaelementplayer.js');
-
     // default player values
-    var defaults = {
+    var mediaElementPlayerDefaults = {
         videoWidth: -1
 			, videoHeight: -1
 			, audioWidth: 300
 			, audioHeight: 30
-			, path: path
-			, flashFilename: 'flashmediaelement.swf'
-			, silverlightFilename: 'silverlightmediaelement.xap'
     }
 
     // utility methods
@@ -57,19 +36,12 @@
         seconds = (seconds >= 10) ? seconds : "0" + seconds;
         return minutes + ":" + seconds;
     }
-
-    jQuery.fn.mediaelementplayer = function (options) {
-       return this.each(function () {
-
-            var o = $.extend(defaults, options);
-
-            return MediaElementPlayer($(this), o);
-       });
-    };
-
-    function MediaElementPlayer($media, options) {
+  
+		// wraps a MediaElement object in player controls
+    function MediaElementPlayer($media, o) {
     
 				$media = $($media);
+				var options = $.extend(mediaElementPlayerDefaults, o);
 
         var isVideo = $media[0].tagName.toLowerCase() == 'video';
         var id = $media.attr('id') + '_mep';
@@ -112,14 +84,17 @@
         var html = $('<div id="' + id + '" class="mep-container"> \
 					<div class="mep-video"> \
 					</div> \
+					<img class="mep-poster" />\
 					<div class="mep-overlay"><div class="mep-overlay-message"></div> \
 					</div> \
 					<ul class="mep-controls"> \
 						<li class="mep-playpause-button mep-play"><span></span></li> \
 						<li class="mep-time-rail"> \
-							<span class="mep-time-total"></span> \
-							<span class="mep-time-loaded"></span> \
-							<span class="mep-time-current"></span> \
+							<span class="mep-time-total">\
+								<span class="mep-time-loaded"></span> \
+								<span class="mep-time-current"></span> \
+								<span class="mep-time-handle"></span> \
+							</span> \
 						</li> \
 						<li class="mep-time"> \
 							<span class="mep-currenttime"></span> \
@@ -146,27 +121,29 @@
         
         // move any skins up to the container
         container.addClass($media[0].className);
-                
+          
+        var poster = container.find('.mep-poster');
+        poster.hide();
+        
         // append a poster
-        if ($media.attr('poster') != null) {
-					var poster = $('<img />');
-					poster.attr('src', $media.attr('poster'));
-					poster.addClass('mep-poster');
-					poster.width($media.width());
-					poster.height($media.height());
-					container.find('.mep-video').after( poster );
+        if ($media.attr('poster') != null) {				
+					poster.attr('src', $media.attr('poster'));					
+					poster.width($media.attr('width'));
+					poster.height($media.attr('height'));
+					poster.show();        	
         }
         
-        var overlay = container.find('.mep-overlay');
-        var overlayMessage = container.find('.mep-overlay-message');
         
+        // create overlay
+        var overlay = container.find('.mep-overlay');
+        var overlayMessage = container.find('.mep-overlay-message');        
         if ($media[0].hasAttribute('autoplay'))        
 					showMessage('Loading<br/><img src="' + path + 'ajax-loader.gif" />');
 				else
 					showMessage('Click to Start');
 
-        if (isVideo) {
-            // set container size to video size	
+				// set container size to video size	
+        if (isVideo) {           
             container
 							.width((options.videoWidth > 0) ? options.videoWidth : $media.attr('width'))
 							.height((options.videoHeight > 0) ? options.videoHeight : $media.attr('height'));
@@ -188,17 +165,14 @@
 
         // controls bar
         var controls = container.find('.mep-controls')
+				var isControlsVisible = true;
 
         if (isVideo) {
             // show/hide controls	
             container
-							.bind('mouseenter', function () { controls.fadeIn(200); })
-							.bind('mouseleave', function () { controls.fadeOut(200); });
+							.bind('mouseenter', function () { controls.fadeIn(200); setRailSize(); isControlsVisible = true; })
+							.bind('mouseleave', function () { controls.fadeOut(200); isControlsVisible = false; });
         }
-
-
-        // change out poster
-
 
         function showMessage(text) {
             if (isVideo) {
@@ -211,292 +185,328 @@
         }
 
 
+				// find controls
+				var playpause = controls.find('.mep-playpause-button');
+				var fullscreen = controls.find('.mep-fullscreen-button');
+				if (!isVideo)
+					fullscreen.hide();
+
+				var time = controls.find('.mep-time');
+				var currentTime = controls.find('.mep-currenttime').html('00:00');
+				var duration = controls.find('.mep-duration').html('00:00');
+
+				var mute = controls.find('.mep-volume-button');
+				var volumeSlider = controls.find('.mep-volume-slider');
+				var volumeRail = controls.find('.mep-volume-rail');
+				var volumeHandle = controls.find('.mep-volume-handle');
+
+				var timeRail = controls.find('.mep-time-rail');
+				var timeCurrent = timeRail.find('.mep-time-current').width(0);
+				var timeLoaded = timeRail.find('.mep-time-loaded').width(0);
+				var timeTotal = timeRail.find('.mep-time-total');
+				var timeHandle = controls.find('.mep-time-handle');
+
+				function setRailSize() {
+					var usedWidth = playpause.outerWidth(true) + 
+													time.outerWidth(true) + 
+													mute.outerWidth(true) + 
+													((isVideo) ? fullscreen.outerWidth(true) : 0);
+
+					var railWidth = controls.width() - usedWidth - (timeRail.outerWidth(true) - timeRail.outerWidth(false));		                               
+
+					timeRail.width(railWidth);
+					timeTotal.width(railWidth - 10);
+				}
 
         function setupControls(mediaElement, domNode) {
-						// TODO: success?
+					controls.show();
+					setRailSize();
 
-            // find controls
-            var playpause = controls.find('.mep-playpause-button');
-            var fullscreen = controls.find('.mep-fullscreen-button');
-            if (!isVideo)
-                fullscreen.hide();
+					// play/pause button
+					playpause.bind('click', function () {
 
-            var currentTime = controls.find('.mep-currenttime').val('00:00');
-            var duration = controls.find('.mep-duration').val('00:00');
+						if (playpause.hasClass('mep-play')) {
+							//if (mediaElement.paused) {
+							mediaElement.play();
+							playpause.removeClass('mep-play').addClass('mep-pause');
+						} else {
+							mediaElement.pause();
+							playpause.removeClass('mep-pause').addClass('mep-play');
+						}
+					});
 
-            var mute = controls.find('.mep-volume-button');
-            var volumeSlider = controls.find('.mep-volume-slider');
-            var volumeRail = controls.find('.mep-volume-rail');
-            var volumeHandle = controls.find('.mep-volume-handle');
+					// VOLUME SLIDER
+					function volumeMove(e) {
+						//$('body').css('cursor','N-resize');
 
-            var timeRail = controls.find('.mep-time-rail');
-            var timeCurrent = timeRail.find('.mep-time-current');
-            var timeLoaded = timeRail.find('.mep-time-loaded');
-            var timeTotal = timeRail.find('.mep-time-total');
+						// only allow it to move within the rail
+						var railHeight = volumeRail.height();
+						var newY = e.pageY - volumeRail.offset().top;
+						if (newY < 0)
+								newY = 0;
+						else if (newY > railHeight)
+								newY = railHeight;
 
-            // WebKit can't report the correct with on absolute and floated elements. Hooray.
-            // Reverting to manually sizing
-            function setRailSize() {
-                var usedWidth = 25 + //playpause.outerWidth(true) + 
-							45 + // currentTime.outerWidth(true) + 
-							45 + // duration.outerWidth(true) + 
-							25 + //mute.outerWidth(true) + 
-							((isVideo) ? 25 : 0); //fullscreen.outerWidth(true);
-                var railWidth = container.outerWidth() - usedWidth - 5; // - (timeRail.outerWidth(true) - timeRail.outerWidth(false));		
+						// set position
+						volumeHandle.css('top', newY - (volumeHandle.height() / 2));
 
-                timeRail.width(railWidth);
+						// calculate volume			
+						var volume = (railHeight - newY) / railHeight;
 
-                timeCurrent.width(0);
-                timeLoaded.width(0);
-                timeTotal.width(railWidth - 10);
+						// make sure to check mute status
+						if (volume == 0) {
+							mediaElement.setMuted(true);
+							mute.removeClass('mep-mute').addClass('mep-unmute');
+						} else {
+							mediaElement.setMuted(false);
+							mute.removeClass('mep-unmute').addClass('mep-mute');
+						}
 
-            }
-            setRailSize();
+						mediaElement.setVolume(volume);
+					};
+					function positionVolumeHandle(volume) {
+						volumeHandle.css('top', volumeRail.height() - (volumeRail.height() * volume) - (volumeHandle.height() / 2));
+					}
+					function removeMouseMove() {
+						//$(document).css('cursor','');
+						$(document)
+							.unbind('mousemove', volumeMove)
+							.unbind('mouseup', removeMouseMove);
+					}
+					volumeSlider.bind('mousedown', function (e) {
+						volumeMove(e);
+						$(document)
+							.bind('mousemove', volumeMove)
+							.bind('mouseup', removeMouseMove);
+					});
 
-            // play/pause button
-            playpause.bind('click', function () {
+					// MUTE
+					mute.find('span').bind('click', function () {
+						if (mediaElement.muted) {
+							mediaElement.setMuted(false);
+							mute.removeClass('mep-unmute').addClass('mep-mute');
+							positionVolumeHandle(1);
+						} else {
+							mediaElement.setMuted(true);
+							mute.removeClass('mep-mute').addClass('mep-unmute');
+							positionVolumeHandle(0);
+						}
+					});
 
-                if (playpause.hasClass('mep-play')) {
-                    //if (mediaElement.paused) {
-                    mediaElement.play();
-                    playpause.removeClass('mep-play').addClass('mep-pause');
-                } else {
-                    mediaElement.pause();
-                    playpause.removeClass('mep-pause').addClass('mep-play');
-                }
-            });
+					// FULLSCREEN
+					var isFullScreen = false;
+					var normalHeight = 0;
+					var normalWidth = 0;
+					fullscreen.bind('click', function () {
+						setFullScreen(!isFullScreen);
+					});
 
-            // VOLUME SLIDER
-            function volumeMove(e) {
-                //$('body').css('cursor','N-resize');
+					function setFullScreen(goFullScreen) {
+						switch (mediaElement.pluginType) {
+							case 'flash':
+								mediaElement.setFullscreen(goFullScreen);
+								break;
+							case 'silverlight':
+								mediaElement.setFullscreen(goFullScreen);
+								break;
+							case 'native':
 
-                // only allow it to move within the rail
-                var railHeight = volumeRail.height();
-                var newY = e.pageY - volumeRail.offset().top;
-                if (newY < 0)
-                    newY = 0;
-                else if (newY > railHeight)
-                    newY = railHeight;
+								if (goFullScreen) {
+									// store
+									normalHeight = $media.height();
+									normalWidth = $media.width();
 
-                // set position
-                volumeHandle.css('top', newY - (volumeHandle.height() / 2));
+									// make full size
+									container
+										.addClass('mep-container-fullscreen')
+										.width('100%')
+										.height('100%')
+										.css('z-index', 1000);
+									
+									$media
+										.width('100%')
+										.height('100%');
 
-                // calculate volume			
-                var volume = (railHeight - newY) / railHeight;
+									overlay
+										.width('100%')
+										.height('100%');
+									
+									poster
+										.width('100%')
+										.height('auto');
+											
+																								
+									fullscreen
+										.removeClass('mep-fullscreen')
+										.addClass('mep-unfullscreen');
 
-                // make sure to check mute status
-                if (volume == 0) {
-                    mediaElement.setMuted(true);
-                    mute.removeClass('mep-mute').addClass('mep-unmute');
-                } else {
-                    mediaElement.setMuted(false);
-                    mute.removeClass('mep-unmute').addClass('mep-mute');
-                }
+									setRailSize();
+									
 
-                mediaElement.setVolume(volume);
-            };
-            function positionVolumeHandle(volume) {
-                volumeHandle.css('top', volumeRail.height() - (volumeRail.height() * volume) - (volumeHandle.height() / 2));
-            }
-            function removeMouseMove() {
-                //$(document).css('cursor','');
-                $(document)
-									.unbind('mousemove', volumeMove)
-									.unbind('mouseup', removeMouseMove);
-            }
-            volumeSlider.bind('mousedown', function (e) {
-                volumeMove(e);
-                $(document)
-									.bind('mousemove', volumeMove)
-									.bind('mouseup', removeMouseMove);
-            });
+									$(document).bind('keydown', escListener);
+									$(window).bind('resize', resizeListener);
+								} else {
 
-            // MUTE
-            mute.find('span').bind('click', function () {
-                if (mediaElement.muted) {
-                    mediaElement.setMuted(false);
-                    mute.removeClass('mep-unmute').addClass('mep-mute');
-                    positionVolumeHandle(1);
-                } else {
-                    mediaElement.setMuted(true);
-                    mute.removeClass('mep-mute').addClass('mep-unmute');
-                    positionVolumeHandle(0);
-                }
-            });
+									container
+										.removeClass('mep-container-fullscreen')
+										.width(normalWidth)
+										.height(normalHeight)
+										.css('z-index', 1);
+									$media
+										.width(normalWidth)
+										.height(normalHeight);
+									
+									poster
+										.width(normalWidth)
+										.height(normalHeight);															
+									
+									fullscreen
+										.removeClass('mep-unfullscreen')
+										.addClass('mep-fullscreen');
+									
+									setRailSize();
+																							
+									$(document).unbind('keydown', escListener);
+									$(window).unbind('resize', resizeListener);
 
-            // FULLSCREEN
-            var isFullScreen = false;
-            var normalHeight = 0;
-            var normalWidth = 0;
-            fullscreen.bind('click', function () {
-                setFullScreen(!isFullScreen);
-            });
+								}
+						}
+						isFullScreen = goFullScreen;
+					}
 
-            function setFullScreen(goFullScreen) {
-                switch (mediaElement.pluginType) {
-                    case 'flash':
-                        mediaElement.setFullscreen(goFullScreen);
-                        break;
-                    case 'silverlight':
-                        mediaElement.setFullscreen(goFullScreen);
-                        break;
-                    case 'native':
+					function escListener(e) {
+						if (e.keyCode == 27)
+							setFullScreen(false);
+					}
 
-                        if (goFullScreen) {
-                            // store
-                            normalHeight = $media.height();
-                            normalWidth = $media.width();
+					function resizeListener(e) {
+						setRailSize();
+					}
 
-                            // make full size
-                            container.addClass('mep-container-fullscreen');
-                            container.width('100%').height('100%').css('z-index', 1000);
-                            $media.width('100%').height('100%');
+					// time rail
+					timeRail.delegate('span', 'click', function (e) {
+						// mouse position relative to the object!
+						var x = e.pageX;
+						var offset = timeTotal.offset();
+						var width = timeTotal.outerWidth();
+						var percentage = ((x - offset.left) / width);
+						var newTime = percentage * mediaElement.duration;
 
-                            setRailSize();
-                            fullscreen.removeClass('mep-fullscreen').addClass('mep-unfullscreen');
-
-                            $(document).bind('keydown', escListener);
-                            $(window).bind('resize', resizeListener);
-                        } else {
-
-                            container.removeClass('mep-container-fullscreen');
-                            container.width(normalWidth).height(normalHeight).css('z-index', 1);
-                            $media.width(normalWidth).height(normalHeight);
-                            setRailSize();
-                            fullscreen.removeClass('mep-unfullscreen').addClass('mep-fullscreen');
-
-                            $(document).unbind('keydown', escListener);
-                            $(window).unbind('resize', resizeListener);
-
-                        }
-                }
-                isFullScreen = goFullScreen;
-            }
-
-            function escListener(e) {
-                if (e.keyCode == 27)
-                    setFullScreen(false);
-            }
-
-            function resizeListener(e) {
-                setRailSize();
-            }
-
-            // time rail
-            timeRail.delegate('span', 'click', function (e) {
-                // mouse position relative to the object!
-                var x = e.pageX;
-                var offset = timeTotal.offset();
-                var width = timeTotal.outerWidth();
-                var percentage = ((x - offset.left) / width);
-                var newTime = percentage * mediaElement.duration;
-
-                mediaElement.setCurrentTime(newTime);
-            });
+						mediaElement.setCurrentTime(newTime);
+					});
 
 
-            overlay.bind('click', function (e) {
-                if (mediaElement.paused)
-                    mediaElement.play();
-            }, true);
+					overlay.bind('click', function (e) {
+						if (mediaElement.paused)
+							mediaElement.play();
+					}, true);
 
 
-            // attach events to <video>
-            mediaElement.addEventListener('timeupdate', function (e) {
+					// attach events to <video>
+					mediaElement.addEventListener('timeupdate', function (e) {
+						
+						if (!isControlsVisible)
+							return;
 
-                // update current:duration
-                currentTime.html(formatTime(mediaElement.currentTime));
-                if (mediaElement.duration)
-                    duration.html(formatTime(mediaElement.duration));
+						// update current:duration
+						currentTime.html(formatTime(mediaElement.currentTime));
+						if (mediaElement.duration)
+							duration.html(formatTime(mediaElement.duration));
 
-                // update time bar	
-                timeCurrent.width(timeTotal.width() * mediaElement.currentTime / mediaElement.duration);
+						// update time bar
+						var newWidth = timeTotal.width() * mediaElement.currentTime / mediaElement.duration;	
+						timeCurrent.width(newWidth);
+						
+						var handlePos = newWidth - (timeHandle.width()/2); 
+						
+						timeHandle.css('left',handlePos);
 
-            }, true);
+					}, true);
 
-            // bytes loaded/progress
-            // problems in webkit?
-            mediaElement.addEventListener('progress', function (e) {
-                var percent = 0;
+					// bytes loaded/progress
+					// this is undergoing changes in the HTML5 spec. Boo.
+					mediaElement.addEventListener('progress', function (e) {
+						var percent = 0;
 
-                // flash/silverlight (html5 early browsers)
-                if (!isNaN(e.target.loaded) && !isNaN(e.target.total)) {
-                    percent = (e.loaded / e.total);
-                    // html5 revision (safari 5 supports this, but chrome mis-reports it as always having 100% buffered)
-                } else if (e.target.buffered && e.target.buffered.end) {
-                    try {
-                        percent = e.target.buffered.end() / e.target.duration;
-                    } catch (e) {}
-                }
+						// flash/silverlight (html5 early browsers)
+						if (!isNaN(e.target.loaded) && !isNaN(e.target.total)) {
+							percent = (e.loaded / e.total);
+							// html5 revision (safari 5 supports this, but chrome mis-reports it as always having 100% buffered)
+						} else if (e.target.buffered && e.target.buffered.end) {
+							try {
+								percent = e.target.buffered.end() / e.target.duration;
+							} catch (e) {}
+						}
 
-                // update loaded bar	
-                timeLoaded.width(timeTotal.width() * percent);
+						// update loaded bar	
+						timeLoaded.width(timeTotal.width() * percent);
 
-            }, true);
-
-
-            mediaElement.addEventListener('click', function (e) {
-                if (mediaElement.paused)
-                    mediaElement.play();
-                //else
-                //	mediaElement.pause();
-            }, true);
+					}, true);
 
 
-            mediaElement.addEventListener('play', function (e) {
-								container.find('.mep-poster').hide();
-                playpause.removeClass('mep-play').addClass('mep-pause');
-                hideMessage();
-            }, true);
+					mediaElement.addEventListener('click', function (e) {
+						if (mediaElement.paused)
+							mediaElement.play();
+					}, true);
 
-            mediaElement.addEventListener('playing', function (e) {
-                container.find('.mep-poster').hide();
-                playpause.removeClass('mep-play').addClass('mep-pause');
-                hideMessage();
-            }, true);
 
-            mediaElement.addEventListener('pause', function (e) {
-                playpause.removeClass('mep-pause').addClass('mep-play');
-                showMessage('paused');
-            }, true);
+					mediaElement.addEventListener('play', function (e) {
+						container.find('.mep-poster').hide();
+						playpause.removeClass('mep-play').addClass('mep-pause');
+						hideMessage();
+					}, true);
 
-            mediaElement.addEventListener('ended', function (e) {
-								container.find('.mep-poster').show();
-                playpause.removeClass('mep-pause').addClass('mep-play');
-                showMessage('ended');
-            }, true);
+					mediaElement.addEventListener('playing', function (e) {
+						container.find('.mep-poster').hide();
+						playpause.removeClass('mep-play').addClass('mep-pause');
+						hideMessage();
+					}, true);
 
-        }
+					mediaElement.addEventListener('pause', function (e) {
+						playpause.removeClass('mep-pause').addClass('mep-play');
+						showMessage('paused');
+					}, true);
+
+					mediaElement.addEventListener('ended', function (e) {
+						container.find('.mep-poster').show();
+						playpause.removeClass('mep-pause').addClass('mep-play');
+						showMessage('ended');
+					}, true);
+					
+        
+					// webkit has trouble doing this without a delay
+					setTimeout(function() {
+						setRailSize();
+					}, 50);					
+					
+
+					if (options.success)
+						options.success(mediaElement, domNode);
+        } // end setupControls
         
         function handleError(me) {
 					console.log('medialementplayer ERROR', me);
         }
 
+				
+				var meOptions = $.extend({}, options, {success: setupControls, error: handleError});
 
-        // use FlashWrapper
-        var mediaElement = html5.MediaElement($media[0], {
-            success: setupControls,
-            error: handleError,
-            flashUrl: options.path + options.flashFilename,
-            silverlightUrl: options.path + options.silverlightFilename,
-            type: options.type
-        });
-        
-        var obj = {
-            play: function () {
-                mediaElement.play();
-            },
-            pause: function () {
-                mediaElement.pause();
-            },
-            loadMedia: function(url) {
-								console.log('load', this, mediaElement);
-            
-								mediaElement.loadMedia(url);
-            }        
-        };
+        // create MediaElement wrapper for controls
+        var mediaElement = html5.MediaElement($media[0], meOptions);
 
-        return obj;
+
+        return mediaElement;
     }
+    
+    
+		// turn into jQuery plugin
+    jQuery.fn.mediaelementplayer = function (options) {
+       return this.each(function () {         
+            return new MediaElementPlayer($(this), options);
+       });
+    };
+    
+    window.html5.MediaElementPlayer = MediaElementPlayer;
+    window.MediaElementPlayer = MediaElementPlayer;
 
 })(jQuery);
