@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+		
+	<script src="../src/mediaelement.js"></script>
+</head>
+<body>
+
+<h1>MediaElement.js</h1>
+
+<p>Recommended code setup</p>
+
+<h2>MP4 video (as src)</h2>
+<video width="360" height="203" id="player1" src="../media/jsaddington.mp4" type="video/mp4" controls="controls">
+	<p>Your browser leaves much to be desired.</p>			
+</video>
+	
+<script>
+new MediaElement('player1', {success: function(me) {
+	
+	console.log(me.play);
+
+}});
+</script>
+
+</body>
+</html>

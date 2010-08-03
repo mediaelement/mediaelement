@@ -1,0 +1,155 @@
+.mep-container.vim {
+}
+.mep-container.vim .mep-controls {
+	background: none;
+	height: auto;
+}
+.mep-container.vim .mep-controls li {
+	background: rgba(23, 35, 34, 0.75);
+	margin: 12px 0 0 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+.mep-container.vim .mep-controls li.mep-playpause-button {
+	width: 65px;
+	height: 40px;
+	top: -70px;
+	margin: 0 5px 10px 10px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
+}
+.mep-container.vim .mep-controls li.mep-playpause-button span {
+	background-image: none;
+	border-style: solid;
+	border-color: transparent transparent transparent #fff;;
+	border-width: 10px 0 10px 20px;
+	width: 1px;
+	height: 1px;
+	margin: 9px 0 0 23px;
+}
+
+.mep-container.vim .mep-controls li.mep-playpause-button:hover {
+	background: #00ADEF;
+}
+.mep-container.vim .mep-controls li.mep-fullscreen-button {
+	-webkit-border-radius: 0 5px 5px 0; 
+	-moz-border-radius: 0 5px 5px 0;
+	border-radius: 0 5px 5px 0;
+}
+
+.mep-container.vim .mep-controls li.mep-time-rail {
+	-webkit-border-radius: 5px 0 0 5px; 
+	-moz-border-radius: 5px 0 0 5px;
+	border-radius: 5px 0 0 5px;	
+	height: 28px;
+}
+
+.mep-container.vim .mep-controls .mep-time-total,
+.mep-container.vim .mep-controls .mep-time-loaded,
+.mep-container.vim .mep-controls .mep-time-current {
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	margin: 0;
+}
+
+.mep-container.vim .mep-controls .mep-time-total {
+	background: #121C1B; /*#6B6F70;*/
+	border: solid 1px #898F8F;
+	margin: 8px;
+}
+.mep-container.vim .mep-controls .mep-time-loaded {
+	background: #6B6F70;
+	border: solid 1px #121C1B;
+	display: none;
+}
+.mep-container.vim .mep-controls .mep-time-current {
+	height: 8px;
+	background: #00ADEF;
+	border: solid 1px #121C1B;
+}
+
+.mep-container.vim .mep-controls .mep-time {
+	height: 18px;
+	padding: 8px 0 2px 0;
+	line-height: 1em;
+}
+.mep-container.vim .mep-controls .mep-time {
+	height: 18px;
+	padding: 8px 0 2px 0;
+	line-height: 1em;
+}
+
+.mep-container.vim .mep-controls .mep-volume-button, .mep-container.vim .mep-controls .mep-fullscreen-button {
+	height: 28px;
+}
+.mep-container.vim .mep-controls .mep-volume-button span, .mep-container.vim .mep-controls .mep-fullscreen-button span {
+	margin: 5px 2px;
+}
+
+
+/************* APPL *******************/
+.mep-container.appl {
+	
+}
+.mep-container.appl .mep-controls {
+	position: inline;	
+	bottom: 20px;
+	width: 400px;
+	
+	margin-left: -200px;
+	left: 50%;
+	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: solid 1px #fff;
+	border-color: #eee #aaa #333 #aaa;
+	border-color: rgba(255,255,255,0.5) rgba(100,100,100,0.5) rgba(0,0,0,0.8) rgba(100,100,100,0.5) ;
+}
+.mep-container.appl .mep-controls li {
+	background: none;
+}
+.mep-container.appl .mep-controls .mep-time-total,
+.mep-container.appl .mep-controls .mep-time-loaded,
+.mep-container.appl .mep-controls .mep-time-current {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.mep-container.appl .mep-controls .mep-time-total {
+	background: rgba(50,50,50,1);
+}
+.mep-container.appl .mep-controls .mep-time-loaded {
+	background: rgba(0,0,0,1);
+}
+.mep-container.appl .mep-controls .mep-time-current {
+	background: #0085f2;
+	background: -webkit-gradient(linear,left bottom,left top,color-stop(0, rgb(0,133,242)), color-stop(1, rgb(0,195,249)));
+	background: -moz-linear-gradient(center bottom,rgb(0,133,242) 0%,rgb(0,195,249) 100%);
+}
+.mep-container.appl .mep-controls .mep-time-handle {
+	display: block;
+}
+.mep-container.appl .mep-controls .mep-time-handle:hover {
+	-webkit-box-shadow: #fff 0 0 10px;
+	-moz-box-shadow: #fff 0 0 10px;
+	box-shadow: #fff 0 0 10px;
+}
+
+/********** Yout ********************/
+
+.mep-container.yout {
+	
+}
+.mep-container.yout .mep-controls {
+	bottom: -30px;
+	height: 30px;
+	background: #ccc;
+}
+.mep-container.yout .mep-controls li {
+	background: none;
+}
