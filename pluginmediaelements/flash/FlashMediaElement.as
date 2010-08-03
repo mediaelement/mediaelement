@@ -112,15 +112,18 @@
 					// add HTML media methods
 					ExternalInterface.addCallback("playMedia", playMedia);					
 					ExternalInterface.addCallback("loadMedia", loadMedia);					
-					ExternalInterface.addCallback("pauseMedia", pauseMedia);		
+					ExternalInterface.addCallback("pauseMedia", pauseMedia);
+					
+					ExternalInterface.addCallback("setSrc", setSrc);
 					ExternalInterface.addCallback("setCurrentTime", setCurrentTime);
 					ExternalInterface.addCallback("setVolume", setVolume);
 					ExternalInterface.addCallback("setMuted", setMuted);
+					
 					ExternalInterface.addCallback("setFullscreen", setFullscreen);					
 					ExternalInterface.addCallback("setVideoSize", setVideoSize);					
 					
 					// fire init method
-					ExternalInterface.call("html5.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
+					ExternalInterface.call("html5_MediaPluginBridge_initPlugin", ExternalInterface.objectID);
 					
 					_output.appendText("Success...\n");
 					
@@ -137,15 +140,12 @@
 			
 			if (_mediaUrl != "") {			
 				
+				_mediaElement.setSrc(_mediaUrl);
+				
 				if (_autoplay) {
-					_mediaElement.play(_mediaUrl);
-				} else {
-					_mediaElement.setUrl(_mediaUrl);					
-					
-					//flash.utils.setTimeout(function() { trace("play");  _mediaElement.play(null); }, 2000);
-				}
-			
-				// playMedia(_mediaUrl);				
+					_mediaElement.load();
+					_mediaElement.play();
+				}	
 			}
 			
 			
@@ -210,19 +210,24 @@
 		// END: Fullscreen
 		
 		
-		function playMedia(url:String) {
-			_output.appendText("play: " + url + "\n");
-			_mediaElement.play(url);
+		function playMedia() {
+			_output.appendText("play\n");
+			_mediaElement.play();
 		}
 		
-		function loadMedia(url:String) {
-			_output.appendText("load: " + url + "\n");
-			_mediaElement.play(url);
+		function loadMedia() {
+			_output.appendText("load\n");
+			_mediaElement.load();
 		}		
 						
 		function pauseMedia() {
 			_output.appendText("pause\n");					
 			_mediaElement.pause();
+		}
+		
+		function setSrc(url:String) {
+			_output.appendText("setSrc: " + url + "\n");
+			_mediaElement.setSrc(url);
 		}
 		
 		function setCurrentTime(time:Number) {

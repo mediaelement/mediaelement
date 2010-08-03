@@ -4,11 +4,13 @@ package htmlelements
 	
 	public interface IMediaElement {		
 		
-		function play(url:String):void;
+		function play():void;
 		
 		function pause():void;
 		
-		function setUrl(url:String):void;
+		function load():void;		
+		
+		function setSrc(url:String):void;
 		
 		function setCurrentTime(pos:Number):void;
 		
