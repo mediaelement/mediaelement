@@ -149,7 +149,10 @@ package htmlelements
 		}
 		
 		
-		public function setUrl(url:String):void {
+
+		
+		// interface members
+		public function setSrc(url:String):void {
 			if (_isLoaded) {
 				// stop and restart
 				_stream.pause();
@@ -158,65 +161,27 @@ package htmlelements
 			_currentUrl = url;			
 		}
 		
-		// interface members
-		public function play(url:String):void {		
-			
-			if (url == null) {
-								
-				if (_isLoaded) {
-					_stream.resume();
-					_timer.start();
-					_isPaused = false;
-					_isLoaded = true;	
-					sendEvent(HtmlMediaEvent.PLAYING);						
-				} else {
-					// error: play() called without a URL
-					_stream.play(_currentUrl);
-					_timer.start();
-					_isPaused = false;
-					_isLoaded = true;	
-					sendEvent(HtmlMediaEvent.PLAYING);						
-				}
-				
-			} else {
-				
-				if (url == _currentUrl) {
+		public function load():void {		
+			// there really isn't an equivalent here 		
+		}
 
-					// same URL, so just resume
-					_stream.resume();
-					_timer.start();	
-					_isPaused = false;
-					_isLoaded = true;	
-					sendEvent(HtmlMediaEvent.PLAYING);	
-
-				} else {
-					// new URL, so start up
-					_currentUrl = url;
-					_stream.play(url);
-					_timer.start();	
-					_isPaused = false;
-					_isLoaded = true;	
-					sendEvent(HtmlMediaEvent.PLAYING);				
-				}
-				
-			}
+		public function play():void {		
 			
-			/*
-			if (url != null && url != _currentUrl) {
-				_stream.play(url);
-				_timer.start();				
-				return;
-			}
-			
-			if (url == null && _isPaused) {
+			if (_isLoaded) {
 				_stream.resume();
-				_isPaused = false;
 				_timer.start();
-				
 				_isPaused = false;
-				sendEvent(HtmlMediaEvent.PLAYING);				
-			}	
-			*/
+				_isLoaded = true;
+				sendEvent(HtmlMediaEvent.PLAYING);						
+			} else {
+				// error: play() called without a URL
+				_stream.play(_currentUrl);
+				_timer.start();
+				_isPaused = false;
+				_isLoaded = true;	
+				sendEvent(HtmlMediaEvent.PLAYING);						
+			}
+
 		}			
 		
 		public function pause():void {
