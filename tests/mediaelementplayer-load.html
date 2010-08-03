@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../src/jquery.js"></script>	
+	<script src="../src/mediaelement.js"></script>
+	<script src="../src/mediaelementplayer.js"></script>
+	<link rel="stylesheet" href="../src/mediaelementplayer.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Dynamic load</p>
+
+
+<h2>MP4 video (as src)</h2>
+<video width="360" height="203" id="player1" type="video/mp4" controls="controls">
+	<p>Your browser leaves much to be desired.</p>			
+</video>
+
+<input type="button" id="load1" value="Load	1" />
+<input type="button" id="load2" value="Load	2" />
+
+<script>
+var me = new MediaElementPlayer('#player1', {enablePluginDebug:true, type:'video/mp4', success: function(me, node) {
+	console.log('success');
+}});
+
+$('#load1').bind('click', function() {
+	me.setSrc('../media/jsaddington.mp4');
+	me.load();
+	me.play();	
+});
+
+$('#load2').bind('click', function() {
+	me.setSrc('../media/echo-hereweare.m4v');
+	me.load();
+	me.play();	
+});
+</script>
+
+</body>
+</html>
