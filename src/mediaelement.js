@@ -36,15 +36,15 @@
 
     // media types. Silverlight is the default, but you can reorder to prioritize Flash (for H.264 and MP3)
 		mediaTypes = [
-		 { pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
-		, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp3' }
-		, { pluginType: 'flash', version: '9.0.124', type: 'audio/flv' }
-		, { pluginType: 'flash', version: '9.0.124', type: 'video/flv' }
-		, { pluginType: 'silverlight', version: '3.0', type: 'video/mp4' }
-		, { pluginType: 'silverlight', version: '3.0', type: 'video/wmv' }
-		, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp3' }
-
-        //,{pluginType: 'flash', version: '11.0.0', type: 'video/webm'} // for future reference	
+				{ pluginType: 'silverlight', version: '3.0', type: 'video/mp4' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'video/wmv' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp3' }	
+			, { pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
+			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp3' }
+			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp4' }			
+			, { pluginType: 'flash', version: '9.0.124', type: 'audio/flv' }
+			, { pluginType: 'flash', version: '9.0.124', type: 'video/flv' }
+			//,{pluginType: 'flash', version: '11.0.0', type: 'video/webm'} // for future reference	
 		];
 
     // Flash version detection from SwfObject 2.2
@@ -638,19 +638,24 @@ height="' + height + '"></embed>';
     // silverlight requires window.method. It apparently doesn't understand window.object.method
     // also it doesn't like to pass raw JSON data (AFAIK)
     window.html5_MediaPluginBridge_initPlugin = function (id) {
-        console.log('init', id);
-        html5.MediaPluginBridge.initPlugin(id);
+        try {
+            html5.MediaPluginBridge.initPlugin(id);
+        } catch (e) {
+            console.log('init error', e);
+        }
         return true;
     }
     window.html5_MediaPluginBridge_fireEvent = function (id, eventName, values) {
 
+        try {
+            var jsonString = values.substring(1, values.length - 1);
+            var jsonValues = eval('(' + jsonString + ')');
+            html5.MediaPluginBridge.fireEvent(id, eventName, jsonValues);
+        } catch (e) {
+            console.log('event error', e);
+        }
 
-        var jsonString = values.substring(1, values.length - 1);
-        var jsonValues = eval('(' + jsonString + ')');
-
-        console.log('event', id, eventName, values, jsonValues);
-
-        html5.MediaPluginBridge.fireEvent(id, eventName, jsonValues);
+        return true;
     }
 
     window.html5 = html5;
