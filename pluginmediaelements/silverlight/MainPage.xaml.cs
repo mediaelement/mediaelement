@@ -30,6 +30,8 @@ namespace SilverlightMediaElement
         bool _debug = false;
         int _width = 0;
         int _height = 0;
+        double _bufferedBytes = 0;
+        double _bufferedTime = 0;
 
         // state
         bool _isPaused = false;
@@ -45,9 +47,11 @@ namespace SilverlightMediaElement
             _timer = new System.Windows.Threading.DispatcherTimer();
             _timer.Interval = new TimeSpan(0, 0, 0, 0, 200); // 200 Milliseconds 
             _timer.Tick += new EventHandler(timer_Tick);
+            _timer.Stop();
 
             // add events
             media.BufferingProgressChanged += new RoutedEventHandler(media_BufferingProgressChanged);
+            media.DownloadProgressChanged += new RoutedEventHandler(media_DownloadProgressChanged);
             media.CurrentStateChanged += new RoutedEventHandler(media_CurrentStateChanged);
             media.MediaEnded += new RoutedEventHandler(media_MediaEnded);
             media.MediaFailed += new EventHandler<ExceptionRoutedEventArgs>(media_MediaFailed);
@@ -163,9 +167,19 @@ namespace SilverlightMediaElement
            
         }
 
-        void media_BufferingProgressChanged(object sender, RoutedEventArgs e) {   
-            SendEvent("BufferProgress");
+        void media_BufferingProgressChanged(object sender, RoutedEventArgs e) {
+            _bufferedBytes = media.BufferingProgress;
+            
+            
+            SendEvent("progress");            
         }
+
+        void media_DownloadProgressChanged(object sender, RoutedEventArgs e) {
+            _bufferedTime = media.DownloadProgress * media.NaturalDuration.TimeSpan.TotalSeconds;
+            
+            SendEvent("progress");            
+        }
+     
 
         void SendEvent(string name) {
 
@@ -180,6 +194,8 @@ namespace SilverlightMediaElement
                         @", ""muted"":" + (media.IsMuted).ToString().ToLower() + @"" +
                         @", ""ended"":" + (_isPaused).ToString().ToLower() + @"" +
                         @", ""volume"":" + (media.Volume).ToString() + @"" +
+                        @", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
+                        @", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
                     @"}'");
         }
 
@@ -189,6 +205,7 @@ namespace SilverlightMediaElement
             WriteDebug("method:play " + media.CurrentState);
 
             if (media.CurrentState == MediaElementState.Closed && _isSettingSrc) {
+                WriteDebug("storing _isAttemptingToPlay ");
                 _isAttemptingToPlay = true;
             }
 
@@ -197,7 +214,7 @@ namespace SilverlightMediaElement
             _isEnded = false;
             _isPaused = false;         
             
-            StartTimer();
+            //StartTimer();
         }
 
         [ScriptableMember]
@@ -242,6 +259,8 @@ namespace SilverlightMediaElement
 
         [ScriptableMember]
         public void setSrc(string url) {
+            _isSettingSrc = true;
+            
             WriteDebug("method:setSrc " + media.CurrentState);
             WriteDebug(" - " + url.ToString());
 
@@ -249,7 +268,7 @@ namespace SilverlightMediaElement
          
             media.Source = new Uri(url, UriKind.Absolute);
 
-            _isSettingSrc = true;
+            
         }
 
         [ScriptableMember]

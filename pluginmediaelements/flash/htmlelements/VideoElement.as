@@ -35,6 +35,7 @@ package htmlelements
 		
 		private var _bytesLoaded:Number = 0;
 		private var _bytesTotal:Number = 0;		
+		private var _bufferedTime:Number = 0;		
 		
 		
 		private var _timer:Timer;
@@ -227,6 +228,9 @@ package htmlelements
 		
 		private function sendEvent(eventName:String) {
 			
+			// calculate this to mimic HTML5
+			_bufferedTime = _bytesLoaded / _bytesTotal + _duration;			
+			
 			// build JSON
 			var values:String = 
 							"{duration:" + _duration + 
@@ -236,8 +240,9 @@ package htmlelements
 							",paused:" + _isPaused + 
 							",ended:" + _isEnded + 
 							",volume:" + _volume +
-							",loaded:" + _bytesLoaded +
-							",total:" + _bytesTotal +							
+							",bytesTotal:" + _bytesTotal +							
+							",bufferedBytes:" + _bytesLoaded +
+							",bufferedTime:" + _bufferedTime +
 							"}";
 			
 			_element.sendEvent(eventName, values);			
