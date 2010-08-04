@@ -5,7 +5,7 @@ Width="640" Height="360">
 
         <MediaElement Grid.Row="0" Grid.Column="0" Width="640" Height="360" AutoPlay="false" Name="media"
                        ></MediaElement>
-        <TextBox Margin="25,25,380,189" Name="textBox1" VerticalScrollBarVisibility="Auto" />
+        <TextBox Margin="25,25,0,0" Name="textBox1" VerticalScrollBarVisibility="Auto" Height="146" VerticalAlignment="Top" HorizontalAlignment="Left" Width="235" />
         <Button Content="Go Fullscreen" Height="23" HorizontalAlignment="Right" Margin="0,12,12,0" Name="FullscreenButton" VerticalAlignment="Top" Width="93" Click="FullscreenButton_Click" />
     </Grid>
 </UserControl>
