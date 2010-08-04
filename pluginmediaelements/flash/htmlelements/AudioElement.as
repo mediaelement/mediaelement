@@ -37,6 +37,7 @@ package htmlelements
 		private var _duration:Number = 0;
 		private var _bytesLoaded:Number = 0;
 		private var _bytesTotal:Number = 0;				
+		private var _bufferedTime:Number = 0;						
 		
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
@@ -214,8 +215,9 @@ package htmlelements
 							",paused:" + _isPaused + 
 							",ended:" + _isEnded + 	
 							",volume:" + _volume +
-							",loaded:" + _bytesLoaded +
-							",total:" + _bytesTotal +									
+							",bytesTotal:" + _bytesTotal +							
+							",bufferedBytes:" + _bytesLoaded +
+							",bufferedTime:" + _bufferedTime +					
 							"}";
 			
 			_element.sendEvent(eventName, values);			
