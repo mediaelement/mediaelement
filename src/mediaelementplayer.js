@@ -68,6 +68,11 @@
 
             // don't do the rest
             return;
+        } else if (isAndroid && isVideo) {
+
+            // Andriod is better off with native controls (like iOS)
+            $media.attr('controls', 'controls');
+            return;
         } else if (isIE9) {
 
             // IE9 PP3 has a bug that doesnt' allow the <video> element to be moved
@@ -410,45 +415,44 @@
                 if (!isControlsVisible)
                     return;
 
-                // update current:duration
-                currentTime.html(formatTime(mediaElement.currentTime));
-                if (mediaElement.duration)
-                    duration.html(formatTime(mediaElement.duration));
+                if (mediaElement.currentTime && mediaElement.duration) {
 
-                // update time bar
-                var newWidth = timeTotal.width() * mediaElement.currentTime / mediaElement.duration;
-                timeCurrent.width(newWidth);
+                    // update current:duration
+                    currentTime.html(formatTime(mediaElement.currentTime));
+                    if (mediaElement.duration)
+                        duration.html(formatTime(mediaElement.duration));
 
-                // position handle
-                var handlePos = newWidth - (timeHandle.width() / 2);
-                timeHandle.css('left', handlePos);
+                    // update time bar
+                    var newWidth = timeTotal.width() * mediaElement.currentTime / mediaElement.duration;
+                    timeCurrent.width(newWidth);
 
-                // update buffered bar?
-                var percent = 0;
-
-                // calculate percentage
-                if (e.target && e.target.buffered && e.target.buffered.end) {
-                    percent = e.target.buffered.end(0) / e.target.duration;
+                    // position handle
+                    var handlePos = newWidth - (timeHandle.width() / 2);
+                    timeHandle.css('left', handlePos);                    
                 }
+               
+                if (e.target && e.target.buffered && e.target.buffered.end) {
 
-                // update loaded bar	
-                timeLoaded.width(timeTotal.width() * percent);
+                    // calculate percentage
+                    var percent = e.target.buffered.end(0) / e.target.duration;
 
+                    // update loaded bar	
+                    timeLoaded.width(timeTotal.width() * percent);
+                }
 
             }, true);
 
             // removed byte/loaded
             // changed over to W3C method, even through Chrome currently does this wrong.
             mediaElement.addEventListener('progress', function (e) {
-                var percent = 0;
-
-                // calculate percentage
+                
                 if (e.target && e.target.buffered && e.target.buffered.end) {
-                    percent = e.target.buffered.end(0) / e.target.duration;
-                }
+                    // calculate percentage
+                    var percent = e.target.buffered.end(0) / e.target.duration;
 
-                // update loaded bar	
-                timeLoaded.width(timeTotal.width() * percent);
+                    // update loaded bar	
+                    timeLoaded.width(timeTotal.width() * percent);
+                }
 
             }, true);
 
