@@ -37,10 +37,15 @@
     // media types. Silverlight is the default, but you can reorder to prioritize Flash (for H.264 and MP3)
 		mediaTypes = [
 				{ pluginType: 'silverlight', version: '3.0', type: 'video/mp4' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'video/m4v' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'video/wmv' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'audio/wma' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp4' }
+			, { pluginType: 'silverlight', version: '3.0', type: 'audio/m4a' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp3' }	
 			, { pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp3' }
+			, { pluginType: 'flash', version: '9.0.124', type: 'audio/m4a' }	
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp4' }			
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/flv' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'video/flv' }
@@ -193,12 +198,12 @@
     Default options
     */
     var mediaElementDefaults = {
-        enablePluginDebug: false
-		, type: ''
-		, flashUrl: path + 'flashmediaelement.swf'
-		, silverlightUrl: path + 'silverlightmediaelement.xap'
-		, success: function () { }
-		, error: function () { }
+			  enablePluginDebug: false
+			, type: ''
+			, flashUrl: path + 'flashmediaelement.swf'
+			, silverlightUrl: path + 'silverlightmediaelement.xap'
+			, success: function () { }
+			, error: function () { }
     }
 
     /*
@@ -232,7 +237,7 @@
 
             // Special case for Android which sadly does not report on media.canPlayType()
             // It's always a blank string (as of Android 2.1, tested on Samsung Captivate)
-            if (navigator.userAgent.indexOf('Android') > -1 && (src == 'video/mp4' || src == 'video/m4v' || src == 'video/mov')) {
+            if (navigator.userAgent.indexOf('Android') > -1 && (type == 'video/mp4' || type == 'video/m4v' || type == 'video/mov')) {
                 canPlayMedia = true;
                 return;
             }
