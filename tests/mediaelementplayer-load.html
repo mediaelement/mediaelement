@@ -21,8 +21,9 @@
 	<p>Your browser leaves much to be desired.</p>			
 </video>
 
-<input type="button" id="load1" value="Load	1" />
-<input type="button" id="load2" value="Load	2" />
+<input type="button" id="load1" value="Load 1" />
+<input type="button" id="load2" value="Load 2" />
+<input type="button" id="load3" value="Load 3" />
 
 <script>
 var me = new MediaElementPlayer('#player1', {enablePluginDebug:true, type:'video/mp4', success: function(me, node) {
@@ -38,7 +39,13 @@ $('#load1').bind('click', function() {
 $('#load2').bind('click', function() {
 	me.setSrc('../media/echo-hereweare.m4v');
 	me.load();
-	me.play();	
+	me.play();
+});
+
+$('#load3').bind('click', function () {
+    me.setSrc('http://oefiles.dts.edu/be103/BE103_u001_v001_lo.mp4');
+    me.load();
+    me.play();
 });
 </script>
 
