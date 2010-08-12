@@ -20,7 +20,7 @@ namespace SilverlightMediaElement
         System.Windows.Threading.DispatcherTimer _timer;
             
         // work arounds for src, load(), play() compatibility
-        bool _isSettingSrc = false;
+        bool _isLoading = false;
         bool _isAttemptingToPlay = false;
 
         // variables
@@ -85,7 +85,9 @@ namespace SilverlightMediaElement
 
             media.AutoPlay = _autoplay;
             if (!String.IsNullOrEmpty(_mediaUrl)) {
-                setSrc(_mediaUrl);               
+                setSrc(_mediaUrl);
+                if (_autoplay)
+                    loadMedia();
             }
 
             // full screen settings
@@ -126,7 +128,7 @@ namespace SilverlightMediaElement
 
         void media_CurrentStateChanged(object sender, RoutedEventArgs e) {
 
-            WriteDebug(media.CurrentState.ToString());
+            WriteDebug("state:" + media.CurrentState.ToString());
 
             switch (media.CurrentState)
             {
@@ -145,7 +147,7 @@ namespace SilverlightMediaElement
                     _isPaused = true;
 
                     // special settings to allow play() to work
-                    _isSettingSrc = false;
+                    _isLoading = false;
                     WriteDebug("paused event, " + _isAttemptingToPlay);
                     if (_isAttemptingToPlay) {
                         this.playMedia();
@@ -204,11 +206,17 @@ namespace SilverlightMediaElement
         public void playMedia() {
             WriteDebug("method:play " + media.CurrentState);
 
-            if (media.CurrentState == MediaElementState.Closed && _isSettingSrc) {
+            // sometimes people forget to call load() first
+            if (_mediaUrl != "" && media.Source == null) {
+                _isAttemptingToPlay = true;
+                loadMedia();
+            }
+
+            // store and trigger with the state change above
+            if (media.CurrentState == MediaElementState.Closed && _isLoading) {
                 WriteDebug("storing _isAttemptingToPlay ");
                 _isAttemptingToPlay = true;
             }
-
 
             media.Play();
             _isEnded = false;
@@ -230,8 +238,14 @@ namespace SilverlightMediaElement
 
         [ScriptableMember]
         public void loadMedia() {
-            // no eqivalent
+            _isLoading = true;
+
             WriteDebug("method:load " + media.CurrentState);
+            WriteDebug(" - " + _mediaUrl.ToString());
+
+            Uri uri = new Uri(_mediaUrl);
+            media.AutoPlay = true;
+            media.Source = new Uri(_mediaUrl, UriKind.Absolute);
         }
 
         [ScriptableMember]
@@ -259,16 +273,7 @@ namespace SilverlightMediaElement
 
         [ScriptableMember]
         public void setSrc(string url) {
-            _isSettingSrc = true;
-            
-            WriteDebug("method:setSrc " + media.CurrentState);
-            WriteDebug(" - " + url.ToString());
-
-            Uri uri = new Uri(url);
-         
-            media.Source = new Uri(url, UriKind.Absolute);
-
-            
+            _mediaUrl = url;
         }
 
         [ScriptableMember]
