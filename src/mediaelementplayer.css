@@ -1,6 +1,6 @@
 /*
 <div class="mep-container">
-	<div class="mep-video">
+	<div class="mep-mediaelement">
 		<video></video>
 	</div>
 	<ul class="mep-controls">
@@ -37,12 +37,12 @@
 	bottom: 0; 
 	overflow: hidden; 
 }
-.mep-container-fullscreen .mep-video,
+.mep-container-fullscreen .mep-mediaelement,
 .mep-container-fullscreen video { 	
 	width: 100%; 
 	height: 100%; 
 }
-.mep-video {
+.mep-mediaelement {
 	position: absolute;
 	top: 0;
 	left: 0;

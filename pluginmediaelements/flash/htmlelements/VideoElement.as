@@ -164,6 +164,9 @@ package htmlelements
 		
 		public function load():void {		
 			// there really isn't an equivalent here 		
+			_stream.pause();
+			_connection.connect(null);
+			_isLoaded =false;
 		}
 
 		public function play():void {		
