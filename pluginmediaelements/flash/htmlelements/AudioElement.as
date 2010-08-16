@@ -131,13 +131,23 @@ package htmlelements
 						
 			//sendEvent(HtmlMediaEvent.LOADING);	
 			
-			_isLoaded = true;		
+			_isLoaded = true;	
+			
+			if (_playAfterLoading) {
+				_playAfterLoading = false;
+				play();
+			}
 		}
+		
+		private var _playAfterLoading:Boolean= false;
 		
 		public function play():void {		
 			
-			if (!_isLoaded)
+			if (!_isLoaded) {
+				_playAfterLoading = true;
 				load();
+				return;
+			}
 			
 			_timer.stop();
 			
@@ -164,10 +174,13 @@ package htmlelements
 			_timer.stop();
 			_currentTime = pos;
 			_soundChannel.stop();
+			_sound.length
+			_soundChannel = _sound.play(_currentTime * 1000, 0, _soundTransform);
 			
 			sendEvent(HtmlMediaEvent.SEEKED);
+			_timer.start();
 			
-			play();			
+			//play();			
 		}
 		
 		public function stop():void {

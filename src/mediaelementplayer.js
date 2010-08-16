@@ -89,7 +89,7 @@
 
 
         var html = $('<div id="' + id + '" class="mep-container"> \
-					<div class="mep-video"> \
+					<div class="mep-mediaelement"> \
 					</div> \
 					<img class="mep-poster" />\
 					<div class="mep-overlay"><div class="mep-overlay-message"></div> \
@@ -124,7 +124,7 @@
         var container = $('#' + id);
 
         // put the <video> tag in the right spot
-        container.find('.mep-video').append($media);
+        container.find('.mep-mediaelement').append($media);
 
         // move any skins up to the container
         container.addClass($media[0].className);
