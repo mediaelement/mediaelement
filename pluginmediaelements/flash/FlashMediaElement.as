@@ -47,23 +47,22 @@
 			// setup stage and player sizes/scales
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			
-			
+						
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
 			//_autoplay = true;
-			//_mediaUrl  = "test2.mp3";
-			
+			//_mediaUrl  = "../media/Parades-PastLives.mp3";
 			
 			// create media element
 			
-			var extension:String = _mediaUrl.substr(_mediaUrl.indexOf(".")+1);
+			var extension:String = _mediaUrl.substr(_mediaUrl.lastIndexOf(".")+1);
 			
 			trace(extension);
 			
 			switch (extension) {
 				case "mp3":
+				case "aac":
 					_mediaElement = new AudioElement(this, _autoplay);				
-					break;
+					break;					
 				default:
 				case "mp4":
 				case "webm": // for future reference

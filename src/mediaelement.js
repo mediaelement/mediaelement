@@ -36,14 +36,14 @@
 
     // media types. Silverlight is the default, but you can reorder to prioritize Flash (for H.264 and MP3)
 		mediaTypes = [
-				{ pluginType: 'silverlight', version: '3.0', type: 'video/mp4' }
+			/*	{ pluginType: 'silverlight', version: '3.0', type: 'video/mp4' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'video/m4v' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'video/wmv' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'audio/wma' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp4' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'audio/m4a' }
 			, { pluginType: 'silverlight', version: '3.0', type: 'audio/mp3' }	
-			, { pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
+			, */{ pluginType: 'flash', version: '9.0.124', type: 'video/mp4' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp3' }
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/m4a' }	
 			, { pluginType: 'flash', version: '9.0.124', type: 'audio/mp4' }			
@@ -360,6 +360,11 @@
             if (mediaElement.tagName.toLowerCase() == 'video') {
                 height = mediaElement.height;
                 width = mediaElement.width;
+            } else {
+							if (options.enablePluginDebug) {
+								height = 320;
+								width = 240;
+							}
             }
 
             // register plugin
