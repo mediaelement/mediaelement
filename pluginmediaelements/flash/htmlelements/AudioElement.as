@@ -128,6 +128,7 @@ package htmlelements
 			_sound.addEventListener(ProgressEvent.PROGRESS,progressHandler);
 			_sound.addEventListener(Event.ID3,id3Handler);						
 			_sound.load(new URLRequest(_currentUrl));
+			_currentTime = 0;
 						
 			//sendEvent(HtmlMediaEvent.LOADING);	
 			
@@ -164,6 +165,7 @@ package htmlelements
 		public function pause():void {
 			
 			_timer.stop();
+			_currentTime = _soundChannel.position;
 			_soundChannel.stop();
 			
 			_isPaused = true;

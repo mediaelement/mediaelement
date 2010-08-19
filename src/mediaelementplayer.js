@@ -133,8 +133,10 @@
         poster.hide();
 
         // append a poster
-        if ($media.attr('poster') != null) {
-            poster.attr('src', $media.attr('poster'));
+        var posterUrl = $media.attr('poster');
+        
+        if (posterUrl) {
+            poster.attr('src',posterUrl);
             poster.width($media.attr('width'));
             poster.height($media.attr('height'));
             poster.show();

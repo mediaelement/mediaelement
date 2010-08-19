@@ -35,7 +35,11 @@
 		// media
 		private var _mediaElement:IMediaElement;
 		
+		//private var fullscreen_btn:SimpleButton;
+		
 		public function FlashMediaElement() {		
+		
+
 			
 			// get parameters
 			var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
@@ -48,9 +52,19 @@
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 						
-			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
+
 			//_autoplay = true;
+			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
 			//_mediaUrl  = "../media/Parades-PastLives.mp3";
+			//_mediaUrl  = "../media/echo-hereweare.m4v";
+			
+			// position and hide
+			_fullscreenButton = getChildByName("fullscreen_btn") as SimpleButton;
+			_fullscreenButton.visible = false;
+			_fullscreenButton.addEventListener(MouseEvent.CLICK, fullscreenClick, false);
+			_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width - 10;
+			_fullscreenButton.y = 10;		
+					
 			
 			// create media element
 			
@@ -75,6 +89,7 @@
 			// if video, add to stage
 			if (_mediaElement is VideoElement) {
 				_video = (_mediaElement as VideoElement).video;
+				//_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
 				addChild(_video);				
 			}					
 			
@@ -122,7 +137,7 @@
 					ExternalInterface.addCallback("setVideoSize", setVideoSize);					
 					
 					// fire init method
-					ExternalInterface.call("html5_MediaPluginBridge_initPlugin", ExternalInterface.objectID);
+					ExternalInterface.call("html5.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
 					
 					_output.appendText("Success...\n");
 					
@@ -134,8 +149,6 @@
 				
 			}
 			
-			//_autoplay = true;
-			//_mediaUrl = "../adm_jsaddington_review.mp4";
 			
 			if (_mediaUrl != "") {			
 				
@@ -148,14 +161,11 @@
 			}
 			
 			
-			// fullscreen workaround
-			_fullscreenButton = getChildByName("fullscreen_btn") as SimpleButton;
-			_fullscreenButton.visible = false;
-			_fullscreenButton.addEventListener(MouseEvent.CLICK, fullscreenClick, false);
-			_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width - 10;
-			_fullscreenButton.y = 10;
+			// put back on top
 			addChild(_fullscreenButton);
-						
+			//_fullscreenButton.alpha = 0;
+			_fullscreenButton.visible = false;
+			trace(_fullscreenButton.visible);
 		}
 		
 		// START: Fullscreen
