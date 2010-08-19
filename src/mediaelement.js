@@ -9,13 +9,8 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thursday June 17 11:22:48 2010 -0600
+ * Date: Thursday August 19 11:22:48 2010 -0600
  */
- 
-/* TODO
- - progress events (these have changed in the HTML5 spec)
- - poster in flash (do in HTML)
-*/
 
 (function () {
 	// for testing
@@ -25,7 +20,6 @@
 	var mediaElements = ['audio', 'video', 'source'];
 	for (var i = 0; i < mediaElements.length; i++)
 			document.createElement(mediaElements[i]);
-
 
 	var 
 		// Namespace
@@ -37,22 +31,24 @@
 		// media types accepted by plugins
 		, plugins = {
 				'silverlight': [
-						{ version: '3.0', type: 'video/mp4' }
-					, { version: '3.0', type: 'video/m4v' }
-					, { version: '3.0', type: 'video/wmv' }
-					, { version: '3.0', type: 'audio/wma' }
-					, { version: '3.0', type: 'audio/mp4' }
-					, { version: '3.0', type: 'audio/m4a' }
-					, { version: '3.0', type: 'audio/mp3' }
+					  {version: '3.0', type: 'video/mp4'}
+					, {version: '3.0', type: 'video/m4v'}
+					, {version: '3.0', type: 'video/mov'}
+					, {version: '3.0', type: 'video/wmv'}
+					, {version: '3.0', type: 'audio/wma'}
+					, {version: '3.0', type: 'audio/mp4'}
+					, {version: '3.0', type: 'audio/m4a'}
+					, {version: '3.0', type: 'audio/mp3'}
 				]
 				,'flash': [
-					  { version: '9.0.124', type: 'video/mp4' }
-					, { version: '9.0.124', type: 'audio/mp3' }
-					, { version: '9.0.124', type: 'audio/m4a' }
-					, { version: '9.0.124', type: 'audio/mp4' }
-					, { version: '9.0.124', type: 'audio/flv' }
-					, { version: '9.0.124', type: 'video/flv' }
-					//,{pluginType: 'flash', version: '11.0.0', type: 'video/webm'} // for future reference	
+					  {version: '9.0.124', type: 'video/mp4'}
+					, {version: '9.0.124', type: 'video/flv'}
+					, {version: '9.0.124', type: 'video/mov'}
+					//,{version: '11.0.0', type: 'video/webm'} // for future reference
+					, {version: '9.0.124', type: 'audio/mp3'}
+					, {version: '9.0.124', type: 'audio/m4a'}
+					, {version: '9.0.124', type: 'audio/mp4'}
+					, {version: '9.0.124', type: 'audio/flv'}
 				]
 	};
 
