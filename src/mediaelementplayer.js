@@ -61,7 +61,7 @@
             $media.removeAttr('poster');
 
             // override Apple's autoplay override for iPads
-            if (isiPad && $media[0].hasAttribute('autoplay')) {
+            if (isiPad && $media[0].getAttribute('autoplay') !== null) {
                 $media[0].load();
                 $media[0].play();
             }
@@ -146,7 +146,7 @@
         // create overlay
         var overlay = container.find('.mep-overlay');
         var overlayMessage = container.find('.mep-overlay-message');
-        if ($media[0].hasAttribute('autoplay'))
+        if ($media[0].getAttribute('autoplay') !== null)
             showMessage('Loading<br/>'); //<img src="' + path + 'ajax-loader.gif" />');
         else
             showMessage('Click to Start');
