@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../src/jquery.js"></script>	
+	<script src="../src/mediaelement.js"></script>
+	<script src="../src/mediaelementplayer.js"></script>
+	<link rel="stylesheet" href="../src/mediaelementplayer.css" />
+</head>
+<body>
+
+<h1>MediaElement.js</h1>
+
+<p>Recommended code setup</p>
+
+<h2>MP4 video (as src)</h2>
+<audio id="player1" src="http://a1.phobos.apple.com/us/r1000/023/Music/0b/f7/f8/mzm.dehsezty.aac.p.m4a" type="audio/mp4" controls="controls">
+	<p>Your browser leaves much to be desired.</p>			
+</audio>
+	
+
+<script>
+$('audio,video').mediaelementplayer();
+</script>
+
+</body>
+</html>

@@ -96,7 +96,8 @@ namespace SilverlightMediaElement
             FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
            
             // send out init call            
-            HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", _htmlid);
+            //HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", new object[] {_htmlid});
+            HtmlPage.Window.Eval("html5.MediaPluginBridge.initPlugin('" +  _htmlid  + "');");
         }
 
         void timer_Tick(object sender, EventArgs e) {
@@ -184,7 +185,7 @@ namespace SilverlightMediaElement
      
 
         void SendEvent(string name) {
-
+            /*
             HtmlPage.Window.Invoke("html5_MediaPluginBridge_fireEvent", 
                     _htmlid,
                     name,                    
@@ -199,6 +200,21 @@ namespace SilverlightMediaElement
                         @", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
                         @", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
                     @"}'");
+             */
+
+            HtmlPage.Window.Eval("html5.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
+                    @"{" +
+                        @"""name"": """ + name + @"""" +
+                        @", ""currentTime"":" + (media.Position.TotalSeconds).ToString() + @"" +
+                        @", ""duration"":" + (media.NaturalDuration.TimeSpan.TotalSeconds).ToString() + @"" +
+                        @", ""paused"":" + (_isEnded).ToString().ToLower() + @"" +
+                        @", ""muted"":" + (media.IsMuted).ToString().ToLower() + @"" +
+                        @", ""ended"":" + (_isPaused).ToString().ToLower() + @"" +
+                        @", ""volume"":" + (media.Volume).ToString() + @"" +
+                        @", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
+                        @", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
+                    @"});");
+
         }
 
         /* HTML5 wrapper methods */
@@ -284,9 +300,8 @@ namespace SilverlightMediaElement
 
         [ScriptableMember]
         public void setVideoSize(int width, int height) {
-
-            media.Width = width;
-            media.Height = height;
+            this.Width = media.Width = width;
+            this.Height = media.Height = height;
         }
 
         private void FullscreenButton_Click(object sender, RoutedEventArgs e) {
