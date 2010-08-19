@@ -13,14 +13,28 @@
 <p>Recommended code setup</p>
 
 <h2>MP4 video (as src)</h2>
-<video width="360" height="203" id="player1" src="../media/jsaddington.mp4" type="video/mp4" controls="controls">
+<video width="360" height="203" id="player1" src="../media/grampa-laughing.flv" type="video/flv" controls="controls">
 	<p>Your browser leaves much to be desired.</p>			
 </video>
+
+<input type="button" id="pp" value="toggle" />
+<span id="time"></span>
 	
 <script>
 new MediaElement('player1', {success: function(me) {
 	
-	console.log(me.play);
+	me.play();
+	
+	me.addEventListener('timeUpdate', function() {
+		documnet.getElementById('time').innerHtml = me.currentTime;
+	});
+	
+	pp.addEventListener('click', function() {
+		if (me.paused)
+			me.play();
+		else
+			me.pause();
+	}, true);
 
 }});
 </script>
