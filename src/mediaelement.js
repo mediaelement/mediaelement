@@ -310,7 +310,7 @@
 			return;
 		}
 
-		console.log(canPlayMedia, pluginType);
+		//console.log(canPlayMedia, pluginType);
 
 		// use native <audio> or <video> with existing media
 		if (canPlayMedia) {

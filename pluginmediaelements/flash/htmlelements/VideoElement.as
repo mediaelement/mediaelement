@@ -145,6 +145,8 @@ package htmlelements
 		private function onMetaDataHandler(info:Object):void {
 			_duration = info.duration;
 			_framerate = info.framerate;
+			
+			// set size?			
 						
 			sendEvent(HtmlMediaEvent.LOADEDMETADATA);
 		}
