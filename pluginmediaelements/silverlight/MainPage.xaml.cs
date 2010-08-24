@@ -186,6 +186,7 @@ namespace SilverlightMediaElement
 
         void SendEvent(string name) {
             /*
+			 * INVOKE
             HtmlPage.Window.Invoke("html5_MediaPluginBridge_fireEvent", 
                     _htmlid,
                     name,                    
@@ -201,7 +202,9 @@ namespace SilverlightMediaElement
                         @", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
                     @"}'");
              */
-
+			
+			/*
+			 * EVAL
             HtmlPage.Window.Eval("html5.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
                     @"{" +
                         @"""name"": """ + name + @"""" +
@@ -214,6 +217,22 @@ namespace SilverlightMediaElement
                         @", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
                         @", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
                     @"});");
+			 * */
+
+
+			// setTimeout
+			HtmlPage.Window.Invoke("setTimeout","html5.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
+		@"{" +
+			@"""name"": """ + name + @"""" +
+			@", ""currentTime"":" + (media.Position.TotalSeconds).ToString() + @"" +
+			@", ""duration"":" + (media.NaturalDuration.TimeSpan.TotalSeconds).ToString() + @"" +
+			@", ""paused"":" + (_isEnded).ToString().ToLower() + @"" +
+			@", ""muted"":" + (media.IsMuted).ToString().ToLower() + @"" +
+			@", ""ended"":" + (_isPaused).ToString().ToLower() + @"" +
+			@", ""volume"":" + (media.Volume).ToString() + @"" +
+			@", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
+			@", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
+		@"});", 0);
 
         }
 
