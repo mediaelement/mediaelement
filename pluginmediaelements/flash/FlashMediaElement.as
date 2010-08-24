@@ -27,6 +27,8 @@
 		private var _autoplay:Boolean; // TODO
 		private var _debug:Boolean;
 		private var _video:Video;
+		private var _initialWidth:Number;
+		private var _initialHeight:Number;
 		
 		// visual elements
 		private var _output:TextField;
@@ -51,6 +53,8 @@
 			// setup stage and player sizes/scales
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			_initialWidth = stage.stageWidth;
+			_initialHeight = stage.stageHeight;			
 						
 
 			//_autoplay = true;
@@ -166,6 +170,15 @@
 			//_fullscreenButton.alpha = 0;
 			_fullscreenButton.visible = false;
 			trace(_fullscreenButton.visible);
+			
+			
+			// listen for rezie
+			stage.addEventListener(Event.RESIZE, resizeHandler);
+		}
+		
+		function resizeHandler(e:Event):void {
+			_video.scaleX = stage.stageWidth / _initialWidth;
+			_video.scaleY = stage.stageHeight / _initialHeight;				
 		}
 		
 		// START: Fullscreen
@@ -277,11 +290,17 @@
 			if (eventValues == "")
 				eventValues = "{}";
 			
+			/*
+			OLD DIRECT METHOD
 			ExternalInterface.call(
 				"function(id, name) { html5.MediaPluginBridge.fireEvent(id,name," + eventValues + "); }", 
 				ExternalInterface.objectID, 
-				eventName);			
-
+				eventName);	
+			*/
+			
+			// use set timeout for performance reasons
+			ExternalInterface.call("setTimeout", "html5.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
+			
 		}			
 	}	
 }
