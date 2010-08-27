@@ -21,7 +21,7 @@
 	for (var i = 0; i < mediaElements.length; i++)
 			document.createElement(mediaElements[i]);
 
-	var 
+	var
 		// Namespace
 		html5 = {}
 
@@ -102,7 +102,7 @@
 			}
 			return { pv: playerVersion };
 		} ();
-	
+
 	function hasFlashPlayerVersion(rv) {
 			var pv = ua.pv, v = rv.split(".");
 			v[0] = parseInt(v[0], 10);
@@ -114,15 +114,15 @@
 	// silverlight version detection from Microsoft
 	var Silverlight = {};
 	Silverlight.isInstalled = function (b) {
-		if (b == undefined) 
+		if (b == undefined)
 			b = null;
 		var a = false,
 		m = null;
 		try {
 			var i = null,
 					j = false;
-			
-			if (window.ActiveXObject) 
+
+			if (window.ActiveXObject)
 				try {
 					i = new ActiveXObject("AgControl.AgControl");
 					if (b === null) a = true;
@@ -131,7 +131,7 @@
 				} catch (l) {
 					j = true
 				} else j = true;
-				
+
 			if (j) {
 				var k = navigator.plugins["Silverlight Plug-In"];
 				if (k) if (b === null) a = true;
@@ -169,7 +169,7 @@
 		}
 	}
 
-	/* 
+	/*
 	Utility methods
 	*/
 	function escapeHTML(s) {
@@ -209,7 +209,7 @@
 
 	/*
 	Determines if a browser supports the <video> or <audio> element
-	and either returns the native element or a Flash/Silverlight version that 
+	and either returns the native element or a Flash/Silverlight version that
 	mimics HTML5 MediaElements
 	*/
 	html5.MediaElement = function (el, o) {
@@ -254,14 +254,14 @@
 				canPlayMedia = true;
 
 			} else {
-				
+
 				// go through allowed plugin types
 				for (pi=0; pi<options.plugins.length; pi++) {
 					// get the plugin and its allowe media types
 					var plugin = options.plugins[pi];
 					var mediaTypes = plugins[plugin];
-					
-					// test for plugin playback types			
+
+					// test for plugin playback types
 					for (var fi=0; fi<mediaTypes.length; fi++) {
 						// find plugin that can play the type
 						if (type == mediaTypes[fi].type && hasPluginVersion(plugin, mediaTypes[fi].version)) {
@@ -315,7 +315,7 @@
 		// use native <audio> or <video> with existing media
 		if (canPlayMedia) {
 
-			// add methods to video object to bring it into parity with Flash Object	
+			// add methods to video object to bring it into parity with Flash Object
 			for (var m in html5.HtmlMediaElement) {
 				mediaElement[m] = html5.HtmlMediaElement[m];
 			}
@@ -447,7 +447,7 @@ height="' + height + '"></embed>';
 			// hide original element
 			mediaElement.style.display = 'none';
 
-			// return fake media object	
+			// return fake media object
 			return pluginMediaElement;
 		} else {
 			options.error(mediaElement);
@@ -489,7 +489,7 @@ height="' + height + '"></embed>';
 
 			// JavaScript values and ExternalInterface methods that match HTML5 video properties methods
 			// http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
-			// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html	
+			// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
 			return {
 
 				// special
@@ -594,12 +594,12 @@ height="' + height + '"></embed>';
 
 				// when Flash is ready, it calls out to this method
 				, initPlugin: function (id) {
-				
+
 					console.log('initing',id);
 
 					var pluginMediaElement = pluginMediaElements[id];
 					var mediaElement = mediaElements[id];
-				
+
 					// find the javascript bridge
 					switch (pluginMediaElement.pluginType) {
 						case "flash":
@@ -616,7 +616,7 @@ height="' + height + '"></embed>';
 
 							break;
 					}
-					
+
 					if (pluginMediaElement.success)
 						pluginMediaElement.success(pluginMediaElement, mediaElement);
 				}
