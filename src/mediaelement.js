@@ -641,9 +641,9 @@ height="' + height + '"></embed>';
 						e[i] = values[i];
 					}
 
-					// fake the new W3C buffered TimeRange (loaded and total are removed)
+					// fake the new W3C buffered TimeRange (loaded and total have been removed)
 					var bufferedTime = values.bufferedTime || 0;
-					e.target.buffered = e.buffered = { end: function () { return bufferedTime; } }
+					e.target.buffered = e.buffered = { start: function(index) { return 0; }, end: function (index) { return bufferedTime; }, length: 1 }
 
 					pluginMediaElement.dispatchEvent(e.type, e);
 				}
