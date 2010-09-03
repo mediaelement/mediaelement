@@ -189,11 +189,13 @@
 		function showMessage(text) {
 			if (isVideo) {
 				overlayMessage.html(text);
-				overlay.show();
+				//overlay.show();
+				overlay.css('visibility','visible');
 			}
 		}
 		function hideMessage() {
-			overlay.hide();
+			//overlay.hide();
+			overlay.css('visibility','hidden');
 		}
 
 
@@ -433,7 +435,7 @@
 					timeHandle.css('left', handlePos);
 				}
 
-				if (e.target && e.target.buffered && e.target.buffered.end) {
+				if (e.target && e.target.buffered && e.target.buffered.end && e.target.duration) {
 					// calculate percentage
 					var percent = e.target.buffered.end(0) / e.target.duration;
 
@@ -447,7 +449,7 @@
 			// changed over to W3C method, even through Chrome currently does this wrong.
 			mediaElement.addEventListener('progress', function (e) {
 
-				if (e.target && e.target.buffered && e.target.buffered.end) {
+				if (e.target && e.target.buffered && e.target.buffered.end && e.target.duration) {
 					// calculate percentage
 					var percent = e.target.buffered.end(0) / e.target.duration;
 
