@@ -527,10 +527,6 @@ height="' + height + '"></embed>';
 					this.pluginApi.pauseMedia();
 					this.paused = true;
 				}
-				, stop: function () {
-					this.pluginApi.stopMedia();
-					this.paused = true;
-				}
 
 				// custom methods since not all JavaScript implementations support get/set
 				, setSrc: function (url) {
