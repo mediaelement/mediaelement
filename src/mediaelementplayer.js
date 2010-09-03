@@ -435,29 +435,28 @@
 					timeHandle.css('left', handlePos);
 				}
 
-				if (e.target && e.target.buffered && e.target.buffered.end && e.target.duration) {
-					// calculate percentage
-					var percent = e.target.buffered.end(0) / e.target.duration;
+				setTimeLoaded(e.target);
 
-					// update loaded bar
-					timeLoaded.width(timeTotal.width() * percent);
-				}
+			}, true);
+
+			mediaElement.addEventListener('progress', function (e) {
+				
+				setTimeLoaded(e.target);
 
 			}, true);
 
 			// removed byte/loaded
 			// changed over to W3C method, even through Chrome currently does this wrong.
-			mediaElement.addEventListener('progress', function (e) {
-
-				if (e.target && e.target.buffered && e.target.buffered.end && e.target.duration) {
+			// need to account for a real array with multiple values			
+			function setTimeLoaded(target) {
+				if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
 					// calculate percentage
-					var percent = e.target.buffered.end(0) / e.target.duration;
+					var percent = target.buffered.end(0) / target.duration;
 
 					// update loaded bar
 					timeLoaded.width(timeTotal.width() * percent);
-				}
-
-			}, true);
+				}			
+			}
 
 			mediaElement.addEventListener('click', function (e) {
 				if (mediaElement.paused)
