@@ -9,7 +9,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date: Thursday August 19 11:22:48 2010 -0600
+ * Version: 1.0.1
  */
 
 (function () {
