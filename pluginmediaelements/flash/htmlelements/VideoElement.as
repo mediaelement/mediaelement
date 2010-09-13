@@ -114,7 +114,13 @@ package htmlelements
 				case "NetStream.Pause.Notify":
 					_isPaused = true;
 					sendEvent(HtmlMediaEvent.PAUSED);
-                    break;					
+                    break;			
+					
+				case "NetStream.Play.Stop":
+					_isPaused = false;
+					_timer.stop();
+					sendEvent(HtmlMediaEvent.ENDED);
+                    break;						
 				
             }
         }		
@@ -123,7 +129,7 @@ package htmlelements
 			trace("connectStream");
             _stream = new NetStream(_connection);
             
-			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
+			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection			
             _stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
 			
 			var customClient:Object = new Object();
@@ -141,6 +147,7 @@ package htmlelements
 		private function asyncErrorHandler(event:AsyncErrorEvent):void {
             // ignore AsyncErrorEvent events.
         }
+		
 		
 		private function onMetaDataHandler(info:Object):void {
 			_duration = info.duration;
