@@ -19,6 +19,13 @@
 
 (function ($) {
 
+	var v = document.createElement('video');
+	var ua = navigator.userAgent;
+	
+	// native fullscreen (Safari only, Chrome fails)
+	var hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
+	if (ua.match('Chrome')) hasNativeFullScreen = false;
+
 	// default player values
 	var mediaElementPlayerDefaults = {
 		  videoWidth: -1
@@ -325,66 +332,77 @@
 						break;
 					case 'native':
 
-						if (goFullScreen) {
-							// store
-							normalHeight = $media.height();
-							normalWidth = $media.width();
+						if (hasNativeFullScreen) {
+							
+							if (goFullScreen) {
+								mediaElement.webkitEnterFullScreen();
+							} else {
+								mediaElement.webkitExitFullScreen();
+							}
+						
+						} else {			
+							if (goFullScreen) {
 
-							// make full size
-							container
-								.addClass('mep-container-fullscreen')
-								.width('100%')
-								.height('100%')
-								.css('z-index', 1000);
+								// store
+								normalHeight = $media.height();
+								normalWidth = $media.width();
 
-							$media
-								.width('100%')
-								.height('100%');
+								// make full size
+								container
+									.addClass('mep-container-fullscreen')
+									.width('100%')
+									.height('100%')
+									.css('z-index', 1000);
 
-							overlay
-								.width('100%')
-								.height('100%');
+								$media
+									.width('100%')
+									.height('100%');
 
-							poster
-								.width('100%')
-								.height('auto');
+								overlay
+									.width('100%')
+									.height('100%');
 
-							fullscreen
-								.removeClass('mep-fullscreen')
-								.addClass('mep-unfullscreen');
+								poster
+									.width('100%')
+									.height('auto');
 
-							setRailSize();
+								fullscreen
+									.removeClass('mep-fullscreen')
+									.addClass('mep-unfullscreen');
+
+								setRailSize();
 
 
-							$(document).bind('keydown', escListener);
-							$(window).bind('resize', resizeListener);
-						} else {
+								$(document).bind('keydown', escListener);
+								$(window).bind('resize', resizeListener);
+							} else {
 
-							container
-								.removeClass('mep-container-fullscreen')
-								.width(normalWidth)
-								.height(normalHeight)
-								.css('z-index', 1);
-							$media
-								.width(normalWidth)
-								.height(normalHeight);
+								container
+									.removeClass('mep-container-fullscreen')
+									.width(normalWidth)
+									.height(normalHeight)
+									.css('z-index', 1);
+								$media
+									.width(normalWidth)
+									.height(normalHeight);
 
-							poster
-								.width(normalWidth)
-								.height(normalHeight);
+								poster
+									.width(normalWidth)
+									.height(normalHeight);
 
-							fullscreen
-								.removeClass('mep-unfullscreen')
-								.addClass('mep-fullscreen');
+								fullscreen
+									.removeClass('mep-unfullscreen')
+									.addClass('mep-fullscreen');
 
-							setRailSize();
+								setRailSize();
 
-							$(document).unbind('keydown', escListener);
-							$(window).unbind('resize', resizeListener);
+								$(document).unbind('keydown', escListener);
+								$(window).unbind('resize', resizeListener);
 
+							}
 						}
-				}
-				isFullScreen = goFullScreen;
+					}
+					isFullScreen = goFullScreen;
 			}
 
 			function escListener(e) {
