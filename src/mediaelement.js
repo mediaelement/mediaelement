@@ -9,7 +9,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.1
+ * Version: 1.0.2
  */
 
 (function () {
@@ -228,7 +228,7 @@
 		}
 
 		// media type settings
-		var supportsMediaTag = (typeof mediaElement.canPlayType != 'undefined');
+		var supportsMediaTag = (typeof(mediaElement.canPlayType) != 'undefined');
 		var canPlayMedia = false;
 		var urlForPlugin = '';
 		var pluginType = '';
@@ -590,8 +590,6 @@ height="' + height + '"></embed>';
 
 				// when Flash is ready, it calls out to this method
 				, initPlugin: function (id) {
-
-					console.log('initing',id);
 
 					var pluginMediaElement = pluginMediaElements[id];
 					var mediaElement = mediaElements[id];

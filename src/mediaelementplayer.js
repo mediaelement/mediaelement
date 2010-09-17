@@ -10,7 +10,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.1
+ * Version: 1.0.2
  */
 
 // TODO:
@@ -87,12 +87,7 @@
 			// Andriod is better off with native controls (like iOS)
 			$media.attr('controls', 'controls');
 			return;
-		} else if (isIE9) {
-
-			// IE9 PP3 has a bug that doesnt' allow the <video> element to be moved
-			// I filed it and they promise to fix it
-			$media.attr('controls', 'controls');
-			return;
+			
 		} else {
 
 			// remove native controls if accidentally set
@@ -128,7 +123,7 @@
 				</li> \
 				<li class="mep-fullscreen-button"><span></span></li> \
 			</ul> \
-			<div style="clear:both;"><div> \
+			<div style="clear:both;"></div> \
 		</div>');
 
 		// insert and switch position
@@ -165,12 +160,12 @@
 		// set container size to video size
 		if (isVideo) {
 			container
-				.width((options.videoWidth > 0) ? options.videoWidth : $media.attr('width'))
-				.height((options.videoHeight > 0) ? options.videoHeight : $media.attr('height'));
+				.width((options.videoWidth > 0) ? options.videoWidth : $media.width())
+				.height((options.videoHeight > 0) ? options.videoHeight : $media.height());
 
 			overlay
-				.width((options.videoWidth > 0) ? options.videoWidth : $media.attr('width'))
-				.height((options.videoHeight > 0) ? options.videoHeight : $media.attr('height'));
+				.width((options.videoWidth > 0) ? options.videoWidth : $media.width())
+				.height((options.videoHeight > 0) ? options.videoHeight : $media.height());
 
 		} else {
 			container
@@ -181,7 +176,7 @@
 				.width(options.audioWidth)
 				.height(options.audioHeight);
 		}
-
+		
 		// controls bar
 		var controls = container.find('.mep-controls')
 		var isControlsVisible = true;
@@ -493,7 +488,7 @@
 				hideMessage();
 			}, true);
 
-			mediaElement.addEventListener('pause', function (e) {
+			mediaElement.addEventListener('pause', function (e) {	
 				playpause.removeClass('mep-pause').addClass('mep-play');
 				showMessage(options.messages.paused);
 			}, true);
@@ -515,7 +510,11 @@
 
 		function handleError(me) {
 			showMessage(options.messages.error);
-			console.log('medialementplayer ERROR', me);
+			
+			var et = '';
+			for (var ee in me)
+				et += ee + ' = ' + me[ee] + ',';
+			console.log('medialementplayer ERROR', et);
 		}
 		
 		// create MediaElement, setup controls on success
