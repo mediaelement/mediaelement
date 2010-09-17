@@ -68,6 +68,9 @@ new MediaElementPlayer('#v1');
 Version History
 ----------------------------------------------------------------------
 
+1.0.2 (2010/09/17)
+- minor updates to support IE9 beta1
+
 1.0.1 (2010/09/13)
 - added native fullscreen support for Safari 5 (via webkitEnterFullScreen)
 
