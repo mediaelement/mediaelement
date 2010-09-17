@@ -86,7 +86,7 @@
 	background-image: none;
 	display: inline-block;
 	float: left;
-	margin: 5px 0 5px 5px;
+	margin: 5px 5px 5px 0;
 	padding: 0;
 	width: 20px;
 	height: 20px;	
@@ -100,8 +100,8 @@
 	border-radius: 4px;		
 }
 
-.mep-container ul.mep-controls li:last-child {
-	margin-right: 5px;	
+.mep-container ul.mep-controls li:first-child {
+	margin-left: 5px;	
 }
 
 .mep-container ul.mep-controls .mep-time {
