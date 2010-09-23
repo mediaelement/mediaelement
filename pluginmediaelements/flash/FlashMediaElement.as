@@ -41,7 +41,6 @@
 		
 		public function FlashMediaElement() {		
 		
-
 			
 			// get parameters
 			var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
@@ -273,7 +272,11 @@
 			if (_video != null) {
 				_video.width = width;
 				_video.height = height;
-			}
+				
+				
+			}					
+			
+			_output.appendText(_video.width.toString() + "," + _video.height.toString() + "\n");				
 		}
 		/*
 		function setFullscreen(fullscreen:Boolean) {

@@ -28,10 +28,12 @@
 
 	// default player values
 	var mediaElementPlayerDefaults = {
-		  videoWidth: -1
-		, videoHeight: -1
-		, audioWidth: 300
-		, audioHeight: 30
+		  defaultVideoWidth: 480   	// default if the <video width> is not specified
+		, defaultVideoHeight: 270  	// default if the <video height> is not specified
+		, videoWidth: -1						// if set, overrides <video width> 
+		, videoHeight: -1						// if set, overrides <video height>
+		, audioWidth: 300						// width of audio player
+		, audioHeight: 30						// height of audio player
 		, messages: {
 				  start: "Click to Start"
 				, loading: "Loading"				  
@@ -67,11 +69,11 @@
 		var isiPad = (u.match(/iPad/i) != null);
 		var isiPhone = (u.match(/iPhone/i) != null);
 		var isAndroid = (u.match(/Android/i) != null);
-		var isIE9 = (u.match(/Trident\/5.0/i) != null);
 
 		if (isiPad || isiPhone) {
 			// add controls and stop
 			$media.attr('controls', 'controls');
+			// fix Apple bug
 			$media.removeAttr('poster');
 
 			// override Apple's autoplay override for iPads
@@ -90,40 +92,45 @@
 			
 		} else {
 
-			// remove native controls if accidentally set
+			// remove native controls and use MEP
 			$media.removeAttr('controls');
 		}
 
 		var html = $(
-			'<div id="' + id + '" class="mep-container"> \
-			<div class="mep-mediaelement"> \
-			</div> \
-			<img class="mep-poster" />\
-			<div class="mep-overlay"><div class="mep-overlay-message"></div> \
-			</div> \
-			<ul class="mep-controls"> \
-				<li class="mep-playpause-button mep-play"><span></span></li> \
-				<li class="mep-time-rail"> \
+		'<div id="' + id + '" class="mep-container">\
+			<div class="mep-mediaelement">\
+			</div>\
+			<div class="mep-poster">\
+				<img />\
+			</div>\
+			<div class="mep-overlay">\
+				<div class="mep-overlay-message"></div>\
+			</div>\
+			<div class="mep-controls">\
+				<div class="mep-playpause-button mep-play"><span></span></div>\
+				<div class="mep-time-rail">\
 					<span class="mep-time-total">\
-						<span class="mep-time-loaded"></span> \
-						<span class="mep-time-current"></span> \
-						<span class="mep-time-handle"></span> \
-					</span> \
-				</li> \
-				<li class="mep-time"> \
-					<span class="mep-currenttime"></span> \
-					<span>|</span> \
-					<span class="mep-duration"></span> \
-				</li> \
-				<li class="mep-volume-button mep-mute"> \
+						<span class="mep-time-loaded"></span>\
+						<span class="mep-time-current"></span>\
+						<span class="mep-time-handle"></span>\
+					</span>\
+				</div>\
+				<div class="mep-time">\
+					<span class="mep-currenttime"></span>\
+					<span>|</span>\
+					<span class="mep-duration"></span>\
+				</div>\
+				<div class="mep-volume-button mep-mute">\
 					<span></span> \
-					<div class="mep-volume-slider"> \
-						<div class="mep-volume-rail"><div class="mep-volume-handle"></div></div> \
-					</div> \
-				</li> \
-				<li class="mep-fullscreen-button"><span></span></li> \
-			</ul> \
-			<div style="clear:both;"></div> \
+					<div class="mep-volume-slider">\
+						<div class="mep-volume-rail">\
+							<div class="mep-volume-handle"></div>\
+						</div>\
+					</div>\
+				</div>\
+				<div class="mep-fullscreen-button"><span></span></div>\
+			</div>\
+			<div class="mep-clear"></div>\
 		</div>');
 
 		// insert and switch position
@@ -137,15 +144,14 @@
 		container.addClass($media[0].className);
 
 		var poster = container.find('.mep-poster');
+		var posterImg = poster.find('img');
 		poster.hide();
 
 		// append a poster
 		var posterUrl = $media.attr('poster');
 
-		if (posterUrl) {
-			poster.attr('src',posterUrl);
-			poster.width($media.attr('width'));
-			poster.height($media.attr('height'));
+		if (posterUrl !== '') {			
+			posterImg.attr('src',posterUrl);
 			poster.show();
 		}
 
@@ -153,29 +159,43 @@
 		var overlay = container.find('.mep-overlay');
 		var overlayMessage = container.find('.mep-overlay-message');
 		if ($media[0].getAttribute('autoplay') !== null)
-			showMessage(options.messages.loading); //<img src="' + path + 'ajax-loader.gif" />');
+			showMessage(options.messages.loading);
 		else
-			showMessage(options.messages.start);
+			showMessage(options.messages.start);		
 
 		// set container size to video size
-		if (isVideo) {
+		function setPlayerSize(width,height) {
+			
+			// ie9 appears to need this (jQuery bug?)
+			width = parseInt(width);
+			height = parseInt(height);
+			
 			container
-				.width((options.videoWidth > 0) ? options.videoWidth : $media.width())
-				.height((options.videoHeight > 0) ? options.videoHeight : $media.height());
+				.width(width)
+				.height(height);
 
 			overlay
-				.width((options.videoWidth > 0) ? options.videoWidth : $media.width())
-				.height((options.videoHeight > 0) ? options.videoHeight : $media.height());
-
-		} else {
-			container
-				.width(options.audioWidth)
-				.height(options.audioHeight);
-
-			overlay
-				.width(options.audioWidth)
-				.height(options.audioHeight);
+				.width(width)
+				.height(height);	
+				
+			posterImg
+				.height(height)
+				.width(width);								
 		}
+		
+		var width = 0;
+		var height = 0;
+				
+		if (isVideo) {			
+			// priority = videoWidth (forced), width attribute, defaultVideoWidth		
+			width = (options.videoWidth > 0) ? options.videoWidth : ($media[0].getAttribute('width') !== null) ? $media.attr('width') : options.defaultVideoWidth;
+			height = (options.videoHeight > 0) ? options.videoHeight : ($media[0].getAttribute('height') !== null) ? $media.attr('height') : options.defaultVideoHeight;				
+		} else {
+			width = options.audioWidth;
+			height = options.audioHeight;
+		}
+		
+		setPlayerSize(width, height);
 		
 		// controls bar
 		var controls = container.find('.mep-controls')
@@ -357,7 +377,7 @@
 									.width('100%')
 									.height('100%');
 
-								poster
+								posterImg
 									.width('100%')
 									.height('auto');
 
@@ -381,7 +401,7 @@
 									.width(normalWidth)
 									.height(normalHeight);
 
-								poster
+								posterImg
 									.width(normalWidth)
 									.height(normalHeight);
 
@@ -452,15 +472,13 @@
 
 			}, true);
 
-			mediaElement.addEventListener('progress', function (e) {
-				
+			mediaElement.addEventListener('progress', function (e) {				
 				setTimeLoaded(e.target);
-
 			}, true);
 
 			// removed byte/loaded
 			// changed over to W3C method, even through Chrome currently does this wrong.
-			// need to account for a real array with multiple values			
+			// TODO: account for a real array with multiple values			
 			function setTimeLoaded(target) {
 				if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
 					// calculate percentage
@@ -476,14 +494,8 @@
 					mediaElement.play();
 			}, true);
 
-			mediaElement.addEventListener('play', function (e) {
-				container.find('.mep-poster').hide();
-				playpause.removeClass('mep-play').addClass('mep-pause');
-				hideMessage();
-			}, true);
-
 			mediaElement.addEventListener('playing', function (e) {
-				container.find('.mep-poster').hide();
+				poster.hide();
 				playpause.removeClass('mep-play').addClass('mep-pause');
 				hideMessage();
 			}, true);
@@ -494,10 +506,29 @@
 			}, true);
 
 			mediaElement.addEventListener('ended', function (e) {
-				container.find('.mep-poster').show();
+				poster.show();
 				playpause.removeClass('mep-pause').addClass('mep-play');
 				showMessage(options.messages.ended);
 			}, true);
+			
+			mediaElement.addEventListener('loadedmetadata', function(e) {				
+				console.log(e, e.target, e.target.videoWidth);
+				// if the <video height> was not set and the options.videoHeight was not set
+				// then resize to the real dimensions
+				if (isVideo && options.videoHeight <= 0 && $media[0].getAttribute('height') === null && !isNaN(e.target.videoHeight)) {
+					setPlayerSize(e.target.videoWidth, e.target.videoHeight);
+					setRailSize();
+					mediaElement.setVideoSize(e.target.videoWidth, e.target.videoHeight);			
+				}
+				
+			}, true);
+			
+			var testEvents = 'play playing played paused pausing'.split(' ');
+			for (var i=0; i<testEvents.length;i++) {
+				mediaElement.addEventListener(testEvents[i], function(e) {				
+					console.log(e.type, e.target.paused);
+				}, true);
+			}
 
 			// webkit has trouble doing this without a delay
 			setTimeout(function () {
@@ -518,7 +549,12 @@
 		}
 		
 		// create MediaElement, setup controls on success
-		var meOptions = $.extend({}, options, { success: setupControls, error: handleError });
+		var meOptions = $.extend({}, options, { 
+			pluginWidth: height, 
+			pluginHeight: width,
+			success: setupControls, 
+			error: handleError });
+			
 		var mediaElement = html5.MediaElement($media[0], meOptions);
 
 		return mediaElement;

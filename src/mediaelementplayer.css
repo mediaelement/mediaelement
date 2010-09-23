@@ -1,25 +1,35 @@
 /*
 <div class="mep-container">
 	<div class="mep-mediaelement">
-		<video></video>
 	</div>
-	<ul class="mep-controls">
-		<li class="mep-playpause-button mep-play"><span></span></li>
-		<li class="mep-time mep-current-time"></li>
-		<li class="mep-time-rail">
-			<span class="mep-time-total"></span>
-			<span class="mep-time-loaded"></span>
-			<span class="mep-time-current"></span>
-		</li>
-		<li class="mep-time mep-duration"></li>
-		<li class="mep-volume-button mep-mute">
+	<div class="mep-poster" />
+		<img />
+	</div>
+	<div class="mep-overlay"><div class="mep-overlay-message"></div>
+	</div>
+	<div class="mep-controls">
+		<div class="mep-playpause-button mep-play"><span></span></div>
+		<div class="mep-time-rail">
+			<span class="mep-time-total">
+				<span class="mep-time-loaded"></span>
+				<span class="mep-time-current"></span>
+				<span class="mep-time-handle"></span>
+			</span>
+		</div>
+		<div class="mep-time">
+			<span class="mep-currenttime"></span>
+			<span>|</span>
+			<span class="mep-duration"></span>
+		</div>
+		<div class="mep-volume-button mep-mute">
 			<span></span>
 			<div class="mep-volume-slider">
-				<div class="mep-volume-rail"><div class="mep-volume-handle"></div></div>							
+				<div class="mep-volume-rail"><div class="mep-volume-handle"></div></div>
 			</div>
-		</li>
-		<li class="mep-fullscreen-button"><span></span></li>
-	</ul>
+		</div>
+		<div class="mep-fullscreen-button"><span></span></div>
+	</div>
+	<div class="mep-clear"></div>
 </div>
 */
 
@@ -57,7 +67,6 @@
 	top: 0;
 	left: 0;
 	display: table;
-	background: url(ajax-loader.gif) center middle no-repeat;
 }
 .mep-overlay-message {
 	display: table-cell;
@@ -68,7 +77,7 @@
 	font-size: 24px;
 	font-weight: bold;
 }
-.mep-container ul.mep-controls {
+.mep-container .mep-controls {
 	position: absolute;
 	background: none;
 	list-style-type: none;
@@ -79,9 +88,10 @@
 	background: #333;	
 	background: rgba(0, 0, 0, 0.5);
 	height: 30px;
-	width: 100%;
+	width: 100%;	
 }
-.mep-container ul.mep-controls li {
+
+.mep-container .mep-controls  div {
 	list-style-type: none;
 	background-image: none;
 	display: inline-block;
@@ -98,13 +108,15 @@
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;		
+	
+	font-family: Helvetica, Arial;
 }
 
-.mep-container ul.mep-controls li:first-child {
+.mep-container .mep-controls div:first-child {
 	margin-left: 5px;	
 }
 
-.mep-container ul.mep-controls .mep-time {
+.mep-container .mep-controls .mep-time {
 	color: #fff;
 	display: block;	
 	width: 80px;
@@ -113,7 +125,7 @@
 	overflow: hidden;	
 	text-align: center;
 }
-.mep-container ul.mep-controls .mep-time span {
+.mep-container .mep-controls .mep-time span {
 	font-size: 11px;
 	color: #fff;	
 	line-height: 1em;
@@ -219,6 +231,7 @@
 	border-radius: 4px 4px 0 0 ;			
 	top: -110px;	
 	position: absolute;
+	margin: 0;
 }
 .mep-controls .mep-volume-button:hover {
 	-webkit-border-radius: 0 0 4px 4px ;	
@@ -237,6 +250,7 @@
 	height: 100px;
 	background: #ddd;	
 	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
 }	
 
 .mep-controls .mep-volume-button .mep-volume-slider .mep-volume-rail .mep-volume-handle {
@@ -251,4 +265,8 @@
 	-webkit-border-radius: 1px;	
 	-moz-border-radius: 1px;	
 	border-radius: 1px;	
+	margin: 0;
+}
+.mep-clear {
+	clear: both;
 }
