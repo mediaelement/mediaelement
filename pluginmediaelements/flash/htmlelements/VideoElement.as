@@ -37,6 +37,8 @@ package htmlelements
 		private var _bytesTotal:Number = 0;		
 		private var _bufferedTime:Number = 0;		
 		
+		private var _videoWidth:Number = -1;
+		private var _videoHeight:Number = -1;
 		
 		private var _timer:Timer;
 		
@@ -152,6 +154,8 @@ package htmlelements
 		private function onMetaDataHandler(info:Object):void {
 			_duration = info.duration;
 			_framerate = info.framerate;
+			_videoWidth = info.width;
+			_videoHeight = info.height;
 			
 			// set size?			
 						
@@ -255,6 +259,8 @@ package htmlelements
 							",bytesTotal:" + _bytesTotal +							
 							",bufferedBytes:" + _bytesLoaded +
 							",bufferedTime:" + _bufferedTime +
+							",videoWidth:" + _videoWidth +
+							",videoHeight:" + _videoHeight +							
 							"}";
 			
 			_element.sendEvent(eventName, values);			
