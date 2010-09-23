@@ -203,6 +203,10 @@
 		, type: ''
 		, flashUrl: path + 'flashmediaelement.swf'
 		, silverlightUrl: path + 'silverlightmediaelement.xap'
+		, defaultVideoWidth: 480   	// default if the <video width> is not specified
+		, defaultVideoHeight: 270  	// default if the <video height> is not specified		
+		, pluginWidth: -1   				// overrides <video width>
+		, pluginHeight: -1  				// overrides <video height>
 		, success: function () { }
 		, error: function () { }
 	}
@@ -232,6 +236,7 @@
 		var canPlayMedia = false;
 		var urlForPlugin = '';
 		var pluginType = '';
+		var downloadUrl = '';
 
 		// test for HTML media playback
 		function testMedia(type, src) {
@@ -284,6 +289,8 @@
 			var type = mediaElement.getAttribute('type');
 
 			testMedia(type, src);
+			
+			downloadUrl = src;
 
 		// then test for <source> elements
 		} else {
@@ -298,8 +305,11 @@
 					var src = el.getAttribute('src');
 
 					testMedia(type, src);
-				}
-			}
+					
+					if (downloadUrl == '')
+						downloadUrl = src;
+				}							
+			}					
 		}
 
 		// Special case for Safari without Quicktime (happens on both Mac and PC).
@@ -333,19 +343,19 @@
 				var evts = 'progress timeupdate'.split(' ');
 				function addCheckEvents() {
 					for (var i in evts) {
-						mediaElement.addEventListener(evts[i], checkForPlaying);
+						mediaElement.addEventListener(evts[i], checkForPlaying, false);
 					}
 				}
 				function removeCheckEvents() {
 					for (var i in evts) {
-						mediaElement.removeEventListener(evts[i], checkForPlaying);
+						mediaElement.removeEventListener(evts[i], checkForPlaying, false);
 					}
 				}
 				addCheckEvents();
 				mediaElement.addEventListener('playing', function () {
 					hasStarted = true;
 					removeCheckEvents();
-				});
+				}, true);
 			}
 
 			// fire ready code
@@ -363,13 +373,14 @@
 			var posterUrl = (mediaElement.getAttribute('poster') == null) ? mediaElement.getAttribute('poster') : '';
 			var autoplay = (mediaElement.getAttribute('autoplay') != null);
 
-			if (mediaElement.tagName.toLowerCase() == 'video') {
-				height = mediaElement.height;
-				width = mediaElement.width;
+			if (isVideo) {
+				// options.videoWidth > mediaElement.getAttribute('width') > options.defaultVideoWidth
+				width = (options.videoWidth > 0) ?  options.videoWidth : (mediaElement.getAttribute('width') !== null) ? mediaElement.getAttribute('width') : options.defaultVideoWidth;
+				height = (options.videoHeight > 0) ?  options.videoHeight : (mediaElement.getAttribute('height') !== null) ? mediaElement.getAttribute('height') : options.defaultVideoHeight;				
 			} else {
 				if (options.enablePluginDebug) {
-					height = 320;
-					width = 240;
+					width = 320;
+					height = 240;					
 				}
 			}
 
@@ -450,8 +461,22 @@ height="' + height + '"></embed>';
 			// return fake media object
 			return pluginMediaElement;
 		} else {
+			var div = document.createElement('div');
+			div.className = 'me-cannotplay';
+			try {
+				div.style.width = mediaElement.width + 'px';
+				div.style.height = mediaElement.height + 'px';
+			} catch (e) {}
+			var poster = mediaElement.getAttribute('poster');
+			
+			if (poster == 'undefined' || poster == '' || poster == null)
+				div.innerHTML = '<a href="' + downloadUrl + '">Download file</a>';
+			else
+				div.innerHTML = '<a href="' + downloadUrl + '"><img src="' + mediaElement.getAttribute('poster') + '" /></a>';
+			mediaElement.parentNode.insertBefore(div, mediaElement);
+			mediaElement.style.display = 'none';
+
 			options.error(mediaElement);
-			mediaElement.innerHTML = 'No compatible player found for your browser.'
 		}
 	}
 
@@ -546,10 +571,10 @@ height="' + height + '"></embed>';
 				}
 
 				// additional non-HTML5 methods
-				, setVideoSize: function (width, height) {
+				, setVideoSize: function (width, height) {					
 					if ( this.pluginElement.style) {
 						this.pluginElement.style.width = width + 'px';
-						this.pluginElement.style.height = height + 'px';
+						this.pluginElement.style.height = height + 'px';						
 					}
 
 					this.pluginApi.setVideoSize(width, height);

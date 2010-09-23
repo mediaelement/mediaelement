@@ -98,9 +98,18 @@ package htmlelements
 			
 			// send timeupdate
 			sendEvent(HtmlMediaEvent.TIMEUPDATE);
+			
+			// sometimes the ended even doesn't fire, here's a fake one
+			if (_currentTime >= _duration-0.2) {
+				handleEnded();
+			}
 		}
 		
 		function soundCompleteHandler(e:Event) {
+			handleEnded();
+		}
+		
+		function handleEnded():void {
 			_timer.stop();
 			_currentTime = 0;
 			_isEnded = true;

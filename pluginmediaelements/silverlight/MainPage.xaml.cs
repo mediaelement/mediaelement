@@ -32,6 +32,8 @@ namespace SilverlightMediaElement
         int _height = 0;
         double _bufferedBytes = 0;
         double _bufferedTime = 0;
+		int _videoWidth = 0;
+		int _videoHeight = 0;
 
         // state
         bool _isPaused = false;
@@ -55,6 +57,7 @@ namespace SilverlightMediaElement
             media.CurrentStateChanged += new RoutedEventHandler(media_CurrentStateChanged);
             media.MediaEnded += new RoutedEventHandler(media_MediaEnded);
             media.MediaFailed += new EventHandler<ExceptionRoutedEventArgs>(media_MediaFailed);
+			media.MediaOpened += new RoutedEventHandler(media_MediaOpened);
 
             // get parameters
             if (initParams.ContainsKey("id"))
@@ -99,6 +102,13 @@ namespace SilverlightMediaElement
             //HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", new object[] {_htmlid});
             HtmlPage.Window.Eval("html5.MediaPluginBridge.initPlugin('" +  _htmlid  + "');");
         }
+
+		void media_MediaOpened(object sender, RoutedEventArgs e) {
+			_videoHeight = Convert.ToInt32(media.ActualHeight);
+			_videoWidth = Convert.ToInt32(media.ActualWidth);
+			_
+			SendEvent("loadedmetadata");
+		}
 
         void timer_Tick(object sender, EventArgs e) {
             SendEvent("timeupdate");
@@ -232,6 +242,8 @@ namespace SilverlightMediaElement
 			@", ""volume"":" + (media.Volume).ToString() + @"" +
 			@", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
 			@", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
+			@", ""videoWidth"":" + (_videoWidth).ToString() + @"" +
+			@", ""videoHeight"":" + (_videoHeight).ToString() + @"" +
 		@"});", 0);
 
         }
