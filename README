@@ -68,6 +68,14 @@ new MediaElementPlayer('#v1');
 Version History
 ----------------------------------------------------------------------
 
+1.0.3 (2010/09/24)
+- changes in poster handling
+- fix IE9 startup bug (its 'play' event fires wrongly it seems)
+- fixed Flock, Opera sizing bugs
+- fixed audio ended bug in special cases under Flash
+- added default height/width when they are not specified in attributes
+- TODO: auto-resize Flash/Silverlight after loading
+
 1.0.2 (2010/09/17)
 - minor updates to support IE9 beta1
 
