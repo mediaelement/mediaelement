@@ -47,6 +47,14 @@ package htmlelements
 			return _video;
 		}
 		
+		public function get videoHeight():Number {
+			return _videoHeight;
+		}
+		
+		public function get videoWidth():Number {
+			return _videoWidth;
+		}
+		
 		
 		public function VideoElement(element:FlashMediaElement, autoplay:Boolean) 
 		{
@@ -54,8 +62,6 @@ package htmlelements
 			_autoplay = autoplay;
 			
 			_video = new Video();
-			_video.width = _element.stage.stageWidth;			
-			_video.height = _element.stage.stageHeight;
 			addChild(_video);
 			
             _connection = new NetConnection();
