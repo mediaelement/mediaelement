@@ -23,12 +23,15 @@
 	public class FlashMediaElement extends MovieClip {
 			
 		private var _mediaUrl:String;
-		private var _posterUrl:String; // TODO
 		private var _autoplay:Boolean; // TODO
 		private var _debug:Boolean;
 		private var _video:Video;
-		private var _initialWidth:Number;
-		private var _initialHeight:Number;
+		private var _stageWidth:Number;
+		private var _stageHeight:Number;
+		
+		// native video size (from meta data)
+		private var _nativeVideoWidth:Number = 0;
+		private var _nativeVideoHeight:Number = 0;
 		
 		// visual elements
 		private var _output:TextField;
@@ -45,21 +48,20 @@
 			// get parameters
 			var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
-			_posterUrl = (params['poster'] != undefined) ? String(params['poster']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
 			
 			// setup stage and player sizes/scales
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
-			_initialWidth = stage.stageWidth;
-			_initialHeight = stage.stageHeight;			
+			_stageWidth = stage.stageWidth;
+			_stageHeight = stage.stageHeight;			
 						
 
 			//_autoplay = true;
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
 			//_mediaUrl  = "../media/Parades-PastLives.mp3";
-			//_mediaUrl  = "../media/echo-hereweare.m4v";
+			_mediaUrl  = "../media/echo-hereweare.m4v";
 			
 			// position and hide
 			_fullscreenButton = getChildByName("fullscreen_btn") as SimpleButton;
@@ -81,6 +83,7 @@
 					_mediaElement = new AudioElement(this, _autoplay);				
 					break;					
 				default:
+				case "m4v":
 				case "mp4":
 				case "webm": // for future reference
 				case "flv":
@@ -92,6 +95,8 @@
 			// if video, add to stage
 			if (_mediaElement is VideoElement) {
 				_video = (_mediaElement as VideoElement).video;
+				_video.width = _stageWidth;			
+				_video.height = _stageHeight;
 				//_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
 				addChild(_video);				
 			}					
@@ -112,8 +117,7 @@
 			
  
 		    _output.appendText("stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");						
-            _output.appendText("file: " + _mediaUrl + "\n");			
-            _output.appendText("poster: " + _posterUrl + "\n");						
+            _output.appendText("file: " + _mediaUrl + "\n");
             _output.appendText("autoplay: " + _autoplay.toString() + "\n");		
 			_output.appendText("displayState: " +(stage.hasOwnProperty("displayState")).toString() + "\n");								
 			
@@ -173,11 +177,19 @@
 			
 			// listen for rezie
 			stage.addEventListener(Event.RESIZE, resizeHandler);
+			
+			// test
+
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
 		}
 		
+		function clickHandler(e:MouseEvent):void {
+			_output.appendText("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");   			
+		}	
+	
 		function resizeHandler(e:Event):void {
-			_video.scaleX = stage.stageWidth / _initialWidth;
-			_video.scaleY = stage.stageHeight / _initialHeight;				
+			//_video.scaleX = stage.stageWidth / _stageWidth;
+			//_video.scaleY = stage.stageHeight / _stageHeight;				
 		}
 		
 		// START: Fullscreen
@@ -267,26 +279,56 @@
 		}
 		
 		function setVideoSize(width:Number, height:Number) {
-			_output.appendText("setVideoSize: " + width.toString() + "," + height.toString() + "\n");				
+			_output.appendText("setVideoSize: " + width.toString() + "," + height.toString() + "\n");		
+			
+			_stageWidth = width;
+			_stageHeight = height;
+			
 		
 			if (_video != null) {
-				_video.width = width;
-				_video.height = height;
-				
-				
+				repositionVideo();
+				//_video.width = width;
+				//_video.height = height;				
 			}					
 			
 			_output.appendText(_video.width.toString() + "," + _video.height.toString() + "\n");				
 		}
-		/*
-		function setFullscreen(fullscreen:Boolean) {
-			_output.appendText("fullscreen: " + fullscreen.toString() + "\n");				
-		}
-		*/
 		
+		function repositionVideo():void {		
+			
+			if (_nativeVideoWidth <= 0 || _nativeVideoHeight <= 0)
+				return;
+						
+			// calculate ratios
+			var stageRatio = _stageWidth/_stageHeight;
+			var nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
+
+			// adjust if not mathing
+			if (nativeRatio > stageRatio) {											
+				_video.width = _stageWidth;
+				_video.height = _nativeVideoHeight * _stageWidth / _nativeVideoWidth;				
+				_video.y = _stageHeight/2 - _video.height/2;
+			} else if (stageRatio > nativeRatio) {
+				_video.height = _stageHeight;
+				_video.width = _nativeVideoWidth * _stageHeight / _nativeVideoHeight;				
+				_video.x = _stageWidth/2 - _video.width/2;
+			}
+		}
+			
 		
 		// SEND events to JavaScript
 		public function sendEvent(eventName:String, eventValues:String) {
+			
+			// special video event
+			if (eventName == HtmlMediaEvent.LOADEDMETADATA) {
+				_nativeVideoWidth = (_mediaElement as VideoElement).videoWidth;
+				_nativeVideoHeight = (_mediaElement as VideoElement).videoHeight;			
+				
+				repositionVideo();
+			}
+			
+			
+			
 			//_output.appendText("event:" + eventName + " : " + eventValues);
 			trace("event", eventName, eventValues);
 			
