@@ -61,7 +61,7 @@
 			//_autoplay = true;
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
 			//_mediaUrl  = "../media/Parades-PastLives.mp3";
-			_mediaUrl  = "../media/echo-hereweare.m4v";
+			//_mediaUrl  = "../media/echo-hereweare.m4v";
 			
 			// position and hide
 			_fullscreenButton = getChildByName("fullscreen_btn") as SimpleButton;
