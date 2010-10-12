@@ -251,7 +251,7 @@
 			var railWidth = controls.width() - usedWidth - (timeRail.outerWidth(true) - timeRail.outerWidth(false));
 
 			timeRail.width(railWidth);
-			timeTotal.width(railWidth - 10);
+			timeTotal.width(railWidth - (timeTotal.outerWidth(true) - timeTotal.width()));
 		}
 
 		function setupControls(mediaElement, domNode) {
