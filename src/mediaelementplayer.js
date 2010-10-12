@@ -478,9 +478,19 @@
 
 			// removed byte/loaded
 			// changed over to W3C method, even through Chrome currently does this wrong.
-			// TODO: account for a real array with multiple values			
+			// need to account for a real array with multiple values			
 			function setTimeLoaded(target) {
-				if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
+			  // Some broswers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
+			  // to be anything other than 0. If the byte count is available we use this instead.
+			  // Browsers that support the else if do not seem to have the bufferedBytes value and
+			  // should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6.
+				if (target && target.bytesTotal != undefined && target.bytesTotal > 0 && target.bufferedBytes != undefined) {
+				  var percent = target.bufferedBytes / target.bytesTotal;
+
+				  // update loaded bar
+					timeLoaded.width(timeTotal.width() * percent);
+				}
+				else if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
 					// calculate percentage
 					var percent = target.buffered.end(0) / target.duration;
 
