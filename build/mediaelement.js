@@ -9,7 +9,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.4
+ * Version: 1.0.5
  */
 
 (function () {
@@ -179,19 +179,26 @@
 		return el.firstChild.href;
 	}
 
-	function getScriptPath(scriptName) {
+	function getScriptPath(scriptNames) {
 		var path = '';
 		var scripts = document.getElementsByTagName('script');
 
 		for (var i = 0; i < scripts.length; i++) {
-			if (scripts[i].src.indexOf(scriptName) > -1) {
-				path = scripts[i].src.substring(0, scripts[i].src.indexOf(scriptName));
+			var script = scripts[i].src;
+			for (var j = 0; j < scriptNames.length; j++) {
+				var name = scriptNames[j];				
+				if (script.indexOf(name) > -1) {					
+					path = script.substring(0, script.indexOf(name));
+					break;
+				}
 			}
+			if (path != '')
+				break;
 		}
 		return path;
 	}
-	var path = getScriptPath('mediaelement.js');
-
+	var path = getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']);		
+	
 	/*
 	Default options
 	*/
