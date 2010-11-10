@@ -10,7 +10,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.4
+ * Version: 1.0.5
  */
 
 // TODO:
