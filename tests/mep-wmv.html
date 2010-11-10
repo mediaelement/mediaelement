@@ -11,18 +11,17 @@
 </head>
 <body>
 
-<h1>MediaElementPlayer.js</h1>
+<h1>MediaElementPlayer.js with WMV</h1>
 
-<p>Recommended Setup</p>
-
-
-<h2>MP4 video (as src)</h2>
-<audio id="player2" src="../media/Parades-PastLives.mp3" type="audio/mp3" controls="controls">
+<video width="320" height="240" id="player5"  >
+	<source src="../media/xbox.wmv" type="video/wmv" >
 	<p>Your browser leaves much to be desired.</p>			
-</audio>	
+</video>	
 
 <script>
-$('audio,video').mediaelementplayer({enablePluginDebug: true});
+
+$('audio,video').mediaelementplayer({enablePluginDebug:true});
+
 </script>
 
 </body>
