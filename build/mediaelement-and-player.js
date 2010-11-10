@@ -9,7 +9,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.2
+ * Version: 1.0.4
  */
 
 (function () {
@@ -62,8 +62,6 @@
 		SHOCKWAVE_FLASH = "Shockwave Flash",
 		SHOCKWAVE_FLASH_AX = "ShockwaveFlash.ShockwaveFlash",
 		FLASH_MIME_TYPE = "application/x-shockwave-flash",
-		EXPRESS_INSTALL_ID = "SWFObjectExprInst",
-		ON_READY_STATE_CHANGE = "onreadystatechange",
 
 		win = window,
 		doc = document,
@@ -221,7 +219,7 @@
 		// find element
 		var mediaElement = el;
 		if (typeof el == 'string')
-				mediaElement = document.getElementById(el);
+			mediaElement = document.getElementById(el);
 
 		var isVideo = (mediaElement.tagName.toLowerCase() == 'video');
 
@@ -416,7 +414,7 @@ id="' + pluginid + '" width="' + width + '" height="' + height + '">\
 <param name="initParams" value="' + initVars.join(',') + '" />\
 <param name="windowless" value="true" />\
 <param name="background" value="black" />\
-<param name="minRuntimeVersion" value="4.0.50401.0" />\
+<param name="minRuntimeVersion" value="3.0.0.0" />\
 <param name="autoUpgrade" value="true" />\
 <param name="source" value="' + options.silverlightUrl + '" />\
 </object>';
@@ -604,8 +602,8 @@ height="' + height + '"></embed>';
 	// Flash makes calls through this object to the fake <video/audio> object
 	html5.MediaPluginBridge = (function () {
 
-		var pluginMediaElements = [];
-		var mediaElements = [];
+		var pluginMediaElements = [],
+			mediaElements = [];
 
 		return {
 			registerPluginElement: function (id, pluginMediaElement, mediaElement) {
@@ -613,60 +611,60 @@ height="' + height + '"></embed>';
 				mediaElements[id] = mediaElement;
 			}
 
-				// when Flash is ready, it calls out to this method
-				, initPlugin: function (id) {
+			// when Flash/Silverlight is ready, it calls out to this method
+			, initPlugin: function (id) {
+				
+				var pluginMediaElement = pluginMediaElements[id],
+					mediaElement = mediaElements[id];
+			
+				// find the javascript bridge
+				switch (pluginMediaElement.pluginType) {
+					case "flash":
+						// magic
+						if (navigator.appName.indexOf("Microsoft") != -1) {
+							pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = window[id];
+						} else {
+							pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document[id];
+						}
+						break;
+					case "silverlight":
+						pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
+						pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.SilverlightApp;
 
-					var pluginMediaElement = pluginMediaElements[id];
-					var mediaElement = mediaElements[id];
-
-					// find the javascript bridge
-					switch (pluginMediaElement.pluginType) {
-						case "flash":
-							// magic
-							if (navigator.appName.indexOf("Microsoft") != -1) {
-								pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = window[id];
-							} else {
-								pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document[id];
-							}
-							break;
-						case "silverlight":
-							pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
-							pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.SilverlightApp;
-
-							break;
-					}
-
-					if (pluginMediaElement.success)
-						pluginMediaElement.success(pluginMediaElement, mediaElement);
+						break;
 				}
 
-				// receives events from FLASH and translates them to HTML5 media events
-				// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
-				, fireEvent: function (id, eventName, values) {
+				if (pluginMediaElement.success)
+					pluginMediaElement.success(pluginMediaElement, mediaElement);
+			}
 
-					var pluginMediaElement = pluginMediaElements[id];
-					pluginMediaElement.ended = false;
-					pluginMediaElement.paused = false;
+			// receives events from Flash/Silverlight and sends them out as HTML5 media events
+			// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
+			, fireEvent: function (id, eventName, values) {
 
-					// fake event object to mimic real HTML media event.
-					var e = {
-						type: eventName,
-						target: pluginMediaElement
-					};
+				var pluginMediaElement = pluginMediaElements[id];
+				pluginMediaElement.ended = false;
+				pluginMediaElement.paused = false;
 
-					// attach all values to element and event object
-					for (var i in values) {
-						pluginMediaElement[i] = values[i];
-						e[i] = values[i];
-					}
+				// fake event object to mimic real HTML media event.
+				var e = {
+					type: eventName,
+					target: pluginMediaElement
+				};
 
-					// fake the new W3C buffered TimeRange (loaded and total have been removed)
-					var bufferedTime = values.bufferedTime || 0;
-					e.target.buffered = e.buffered = { start: function(index) { return 0; }, end: function (index) { return bufferedTime; }, length: 1 }
-
-					pluginMediaElement.dispatchEvent(e.type, e);
+				// attach all values to element and event object
+				for (var i in values) {
+					pluginMediaElement[i] = values[i];
+					e[i] = values[i];
 				}
-			};
+
+				// fake the new W3C buffered TimeRange (loaded and total have been removed)
+				var bufferedTime = values.bufferedTime || 0;
+				e.target.buffered = e.buffered = { start: function(index) { return 0; }, end: function (index) { return bufferedTime; }, length: 1 }
+
+				pluginMediaElement.dispatchEvent(e.type, e);
+			}
+		};
 
 	} ());
 
@@ -674,7 +672,7 @@ height="' + height + '"></embed>';
 	window.MediaElement = html5.MediaElement;
 })();
 
-/*!
+﻿/*!
  * Media Element jQuery plugin
  * http://mediaelementjs.com/
  *
@@ -686,12 +684,11 @@ height="' + height + '"></embed>';
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.2
+ * Version: 1.0.4
  */
 
 // TODO:
 // - make volume be event driven, remember setting (cookie, startup)
-// - poster for <audio>
 
 (function ($) {
 
@@ -1197,8 +1194,7 @@ height="' + height + '"></embed>';
 				showMessage(options.messages.ended);
 			}, true);
 			
-			mediaElement.addEventListener('loadedmetadata', function(e) {				
-				console.log(e, e.target, e.target.videoWidth);
+			mediaElement.addEventListener('loadedmetadata', function(e) {
 				// if the <video height> was not set and the options.videoHeight was not set
 				// then resize to the real dimensions
 				if (isVideo && options.videoHeight <= 0 && $media[0].getAttribute('height') === null && !isNaN(e.target.videoHeight)) {
