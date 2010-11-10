@@ -1,0 +1,6 @@
+# silverlight stuff
+src/silverlight/obj/*
+src/silverlight/Bin/*
+build/SilverlightMediaElementTestPage.html
+build/SilverlightMediaElement.pdb
+build/SilverlightMediaElement.dll
