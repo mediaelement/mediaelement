@@ -12,13 +12,13 @@
     <RootNamespace>SilverlightMediaElement</RootNamespace>
     <AssemblyName>SilverlightMediaElement</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <SilverlightApplication>true</SilverlightApplication>
     <SupportedCultures>
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
-    <GenerateSilverlightManifest>false</GenerateSilverlightManifest>
+    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
     <XapFilename>silverlightmediaelement.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
     <SilverlightAppEntry>SilverlightMediaElement.App</SilverlightAppEntry>

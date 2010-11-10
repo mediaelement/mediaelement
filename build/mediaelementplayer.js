@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * Media Element jQuery plugin
  * http://mediaelementjs.com/
  *
@@ -10,12 +10,11 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.2
+ * Version: 1.0.4
  */
 
 // TODO:
 // - make volume be event driven, remember setting (cookie, startup)
-// - poster for <audio>
 
 (function ($) {
 
@@ -521,8 +520,7 @@
 				showMessage(options.messages.ended);
 			}, true);
 			
-			mediaElement.addEventListener('loadedmetadata', function(e) {				
-				console.log(e, e.target, e.target.videoWidth);
+			mediaElement.addEventListener('loadedmetadata', function(e) {
 				// if the <video height> was not set and the options.videoHeight was not set
 				// then resize to the real dimensions
 				if (isVideo && options.videoHeight <= 0 && $media[0].getAttribute('height') === null && !isNaN(e.target.videoHeight)) {

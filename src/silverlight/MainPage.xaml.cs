@@ -71,7 +71,7 @@ namespace SilverlightMediaElement
             if (initParams.ContainsKey("width")) 
                 Int32.TryParse(initParams["width"], out _width);            
             if (initParams.ContainsKey("height")) 
-                Int32.TryParse(initParams["height"], out _height);
+                Int32.TryParse(initParams["height"], out _height);			
 
 			//_mediaUrl = "http://local.mediaelement.com/media/jsaddington.mp4";
 			//_autoplay = true;
