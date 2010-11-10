@@ -42,6 +42,13 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.0.4 (2010/11/10)*
+
+* Fixed Flash display when `<video>` did not match actual dimensions
+* autosizing in Flash and Silverlight
+* added options for defaultVideoWidth, defaultVideoHeight when `<video>` `height` and `width` are not set
+* included minified versions using YUI compressor
+
 *1.0.3 (2010/09/24)*
 
 * changes in poster handling
@@ -49,7 +56,6 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 * fixed Flock, Opera sizing bugs
 * fixed audio ended bug in special cases under Flash
 * added default height/width when they are not specified in attributes
-* TODO: auto-resize Flash/Silverlight after loading
 
 *1.0.2 (2010/09/17)*
 
