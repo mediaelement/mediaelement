@@ -627,12 +627,7 @@ height="' + height + '"></embed>';
 				// find the javascript bridge
 				switch (pluginMediaElement.pluginType) {
 					case "flash":
-						// magic
-						if (navigator.appName.indexOf("Microsoft") != -1) {
-							pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = window[id];
-						} else {
-							pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document[id];
-						}
+						pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
 						break;
 					case "silverlight":
 						pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
