@@ -9,7 +9,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.X
+ * Version: 1.0.6
  */
  
  /*
@@ -608,14 +608,7 @@ height="' + height + '"></embed>';
 				// find the javascript bridge
 				switch (pluginMediaElement.pluginType) {
 					case "flash":
-						// magic
-						if (navigator.appName.indexOf("Microsoft") != -1) {
-							pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = window[id];
-							// TODO: switch to document.getElementById()
-							
-						} else {
-							pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document[id];
-						}
+						pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
 						break;
 					case "silverlight":
 						pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);

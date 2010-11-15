@@ -42,6 +42,17 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.0.6 (2010/11/15)*
+
+* Rebuilt PluginDetection (removed SWFObject and Microsoft code)
+* More JSLint compatible (still a few iterations to get there)
+* Added jQuery 1.4.4
+
+*1.0.5 (2010/11/10 later on)*
+
+* Fixed a problem with the *.min.js files
+* Added jQuery 1.4.3
+
 *1.0.4 (2010/11/10)*
 
 * Fixed Flash display when `<video>` did not match actual dimensions
