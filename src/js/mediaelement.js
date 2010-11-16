@@ -117,10 +117,10 @@
 	});
 
 	// Add Silverlight detection
-	// Silverlight cannot report its version number to IE
-	// but it does have a isVersionSupported function, so we have to loop through it to get a version number.
-	// adapted from http://www.silverlightversion.com/
-	PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/x-silverlight-2','AgControl.AgControl', function (ax) {
+	PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/x-silverlight-2','AgControl.AgControl', function (ax) {		
+		// Silverlight cannot report its version number to IE
+		// but it does have a isVersionSupported function, so we have to loop through it to get a version number.
+		// adapted from http://www.silverlightversion.com/		
 		var v = [0,0,0,0],
 			loopMatch = function(ax, v, i, n) {
 				while(ax.isVersionSupported(v[0]+ "."+ v[1] + "." + v[2] + "." + v[3])){
@@ -243,16 +243,7 @@
 
 		// test for HTML media playback
 		function testMedia(type, src) {
-
-			// Special case for Android which sadly does not report on media.canPlayType()
-			// It's always a blank string (as of Android 2.1, tested on Samsung S)
-			/*
-			if (navigator.userAgent.indexOf('Android') > -1 && (type == 'video/mp4' || type == 'video/m4v' || type == 'video/mov')) {
-				canPlayMedia = true;
-				return;
-			}
-			*/
-
+		
 			// create fake type if needed
 			if (src && !type) {
 				var extension = src.substring(src.lastIndexOf('.') + 1);
@@ -491,186 +482,204 @@ height="' + height + '"></embed>';
 	extension methods to <video> or <audio> object to bring it into parity with PluginMediaElement (see below)
 	*/
 	html5.HtmlMediaElement = {
-			pluginType: 'native'
+		pluginType: 'native',
 
-		, setCurrentTime: function (time) {
+		setCurrentTime: function (time) {
 			this.currentTime = time;
-		}
-		, setMuted: function (muted) {
+		},
+		
+		setMuted: function (muted) {
 			this.muted = muted;
-		}
-		, setVolume: function (volume) {
+		
+		},
+		
+		setVolume: function (volume) {
 			this.volume = volume;
-		}
-		, setSrc: function (url) {
+		},
+		
+		setSrc: function (url) {
 			this.src = url;
-		}
+		},
 
-		, setVideoSize: function (width, height) {
+		setVideoSize: function (width, height) {
 			this.width = width;
 			this.height = height;
 		}
-	}
+	};
 
 	/*
 	Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
 	*/
 	html5.PluginMediaElement = function (pluginid, pluginType) {
+		this.id = pluginid;
+		this.pluginType = pluginType;
+		this.events = {};
+	};
 
-		var events = {};
+	// JavaScript values and ExternalInterface methods that match HTML5 video properties methods
+	// http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
+	// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html	
+	html5.PluginMediaElement.prototype = {
 
-		// JavaScript values and ExternalInterface methods that match HTML5 video properties methods
-		// http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
-		// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
-		return {
+		// special
+		pluginElement: null,
 
-			// special
-				id: pluginid
-			, pluginType: pluginType
-			, pluginElement: null
+		// not implemented :(
+		playbackRate: -1,
+		defaultPlaybackRate: -1,
+		seekable: [],
+		played: [],
 
-			// not implemented :(
-			, playbackRate: -1
-			, defaultPlaybackRate: -1
-			, seekable: []
-			, played: []
+		// HTML5 read-only properties
+		paused: true,
+		ended: false,
+		seeking: false,
+		duration: 0,
 
-			// HTML5 read-only properties
-			, paused: true
-			, ended: false
-			, seeking: false
-			, duration: 0
+		// HTML5 get/set properties, but only set (updated by event handlers)
+		muted: false,
+		volume: 1,
+		currentTime: 0,
 
-			// HTML5 get/set properties, but only set (updated by event handlers)
-			, muted: false
-			, volume: 1
-			, currentTime: 0
+		// HTML5 methods
+		play: function () {
+			this.pluginApi.playMedia();
+			this.paused = false;
+		},
+		load: function () {
+			this.pluginApi.loadMedia();
+			this.paused = false;
+		},
+		pause: function () {
+			this.pluginApi.pauseMedia();
+			this.paused = true;
+		},
 
-			// HTML5 methods
-			, play: function () {
-				this.pluginApi.playMedia();
-				this.paused = false;
+		// custom methods since not all JavaScript implementations support get/set
+		setSrc: function (url) {
+			this.pluginApi.setSrc(html5.Utility.absolutizeUrl(url));
+		},
+		setCurrentTime: function (time) {
+			this.pluginApi.setCurrentTime(time);
+			this.currentTime = time;
+		},
+		setVolume: function (volume) {
+			this.pluginApi.setVolume(volume);
+			this.volume = volume;
+		},
+		setMuted: function (muted) {
+			this.pluginApi.setMuted(muted);
+			this.muted = muted;
+		},
+
+		// additional non-HTML5 methods
+		setVideoSize: function (width, height) {					
+			if ( this.pluginElement.style) {
+				this.pluginElement.style.width = width + 'px';
+				this.pluginElement.style.height = height + 'px';						
 			}
-			, load: function () {
-				this.pluginApi.loadMedia();
-				this.paused = false;
-			}
-			, pause: function () {
-				this.pluginApi.pauseMedia();
-				this.paused = true;
-			}
 
-			// custom methods since not all JavaScript implementations support get/set
-			, setSrc: function (url) {
-				this.pluginApi.setSrc(html5.Utility.absolutizeUrl(url));
-			}
-			, setCurrentTime: function (time) {
-				this.pluginApi.setCurrentTime(time);
-				this.currentTime = time;
-			}
-			, setVolume: function (volume) {
-				this.pluginApi.setVolume(volume);
-				this.volume = volume;
-			}
-			, setMuted: function (muted) {
-				this.pluginApi.setMuted(muted);
-				this.muted = muted;
-			}
+			this.pluginApi.setVideoSize(width, height);
+		},
+		
+		setFullscreen: function (fullscreen) {
+			this.pluginApi.setFullscreen(fullscreen);
+		},
 
-			// additional non-HTML5 methods
-			, setVideoSize: function (width, height) {					
-				if ( this.pluginElement.style) {
-					this.pluginElement.style.width = width + 'px';
-					this.pluginElement.style.height = height + 'px';						
+		// start: fake events
+		addEventListener: function (eventName, callback, bubble) {
+			this.events[eventName] = this.events[eventName] || [];
+			this.events[eventName].push(callback);
+		},		
+		dispatchEvent: function (eventName) {
+			var i,
+				args,
+				callbacks = this.events[eventName];
+				
+			if (callbacks) {
+				args = Array.prototype.slice.call(arguments, 1);
+				for (i = 0; i < callbacks.length; i++) {
+					callbacks[i].apply(null, args);
 				}
-
-				this.pluginApi.setVideoSize(width, height);
 			}
-			, setFullscreen: function (fullscreen) {
-				this.pluginApi.setFullscreen(fullscreen);
-			}
-
-			// start: fake events
-			, addEventListener: function (eventName, callback, bubble) {
-				events[eventName] = events[eventName] || [];
-				events[eventName].push(callback);
-			}
-			, dispatchEvent: function (eventName) {
-				var i, callbacks = events[eventName], args;
-				if (callbacks) {
-					args = Array.prototype.slice.call(arguments, 1);
-					for (i = 0; i < callbacks.length; i++) {
-						callbacks[i].apply(null, args);
-					}
-				}
-			}
-			// end: fake events
 		}
+		// end: fake events
 	};
 
 	// Flash makes calls through this object to the fake <video/audio> object
-	html5.MediaPluginBridge = (function () {
+	html5.MediaPluginBridge = {
 
-		var pluginMediaElements = [],
-			mediaElements = [];
+		pluginMediaElements: [],
+		mediaElements:[],
 
-		return {
-			registerPluginElement: function (id, pluginMediaElement, mediaElement) {
-				pluginMediaElements[id] = pluginMediaElement;
-				mediaElements[id] = mediaElement;
-			}
+		registerPluginElement: function (id, pluginMediaElement, mediaElement) {
+			this.pluginMediaElements[id] = pluginMediaElement;
+			this.mediaElements[id] = mediaElement;
+		},
 
-			// when Flash/Silverlight is ready, it calls out to this method
-			, initPlugin: function (id) {
-				
-				var pluginMediaElement = pluginMediaElements[id],
-					mediaElement = mediaElements[id];
+		// when Flash/Silverlight is ready, it calls out to this method
+		initPlugin: function (id) {
 			
-				// find the javascript bridge
-				switch (pluginMediaElement.pluginType) {
-					case "flash":					
-						pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
-						break;
-					case "silverlight":
-						pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
-						pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.SilverlightApp;
-
-						break;
-				}
-
-				if (pluginMediaElement.success)
-					pluginMediaElement.success(pluginMediaElement, mediaElement);
+			var pluginMediaElement = this.pluginMediaElements[id],
+				mediaElement = this.mediaElements[id];
+		
+			// find the javascript bridge
+			switch (pluginMediaElement.pluginType) {
+				case "flash":					
+					pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
+					break;
+				case "silverlight":
+					pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
+					pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.SilverlightApp;
+					break;
 			}
 
-			// receives events from Flash/Silverlight and sends them out as HTML5 media events
-			// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
-			, fireEvent: function (id, eventName, values) {
-
-				var pluginMediaElement = pluginMediaElements[id];
-				pluginMediaElement.ended = false;
-				pluginMediaElement.paused = false;
-
-				// fake event object to mimic real HTML media event.
-				var e = {
-					type: eventName,
-					target: pluginMediaElement
-				};
-
-				// attach all values to element and event object
-				for (var i in values) {
-					pluginMediaElement[i] = values[i];
-					e[i] = values[i];
-				}
-
-				// fake the new W3C buffered TimeRange (loaded and total have been removed)
-				var bufferedTime = values.bufferedTime || 0;
-				e.target.buffered = e.buffered = { start: function(index) { return 0; }, end: function (index) { return bufferedTime; }, length: 1 }
-
-				pluginMediaElement.dispatchEvent(e.type, e);
+			if (pluginMediaElement.success) {
+				pluginMediaElement.success(pluginMediaElement, mediaElement);
 			}
-		};
+		},
 
-	} ());
+		// receives events from Flash/Silverlight and sends them out as HTML5 media events
+		// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
+		fireEvent: function (id, eventName, values) {
+
+			var 
+				e,
+				i,
+				bufferedTime,
+				pluginMediaElement = this.pluginMediaElements[id];
+			
+			pluginMediaElement.ended = false;
+			pluginMediaElement.paused = false;
+
+			// fake event object to mimic real HTML media event.
+			e = {
+				type: eventName,
+				target: pluginMediaElement
+			};
+
+			// attach all values to element and event object
+			for (i in values) {
+				pluginMediaElement[i] = values[i];
+				e[i] = values[i];
+			}
+
+			// fake the newer W3C buffered TimeRange (loaded and total have been removed)
+			bufferedTime = values.bufferedTime || 0;
+			
+			e.target.buffered = e.buffered = { 
+				start: function(index) { 
+					return 0; 
+				}, 
+				end: function (index) { 
+					return bufferedTime; 
+				}, 
+				length: 1 
+			};
+
+			pluginMediaElement.dispatchEvent(e.type, e);
+		}
+	};
 
 	window.html5 = html5;
 	window.MediaElement = html5.MediaElement;

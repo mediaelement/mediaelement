@@ -23,24 +23,33 @@
 	
 	// native fullscreen (Safari only, Chrome fails)
 	var hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
-	if (ua.match('Chrome')) hasNativeFullScreen = false;
+	if (ua.match('Chrome')) {
+		hasNativeFullScreen = false;
+	}
 
 	// default player values
 	var mediaElementPlayerDefaults = {
-		  defaultVideoWidth: 480   	// default if the <video width> is not specified
-		, defaultVideoHeight: 270  	// default if the <video height> is not specified
-		, videoWidth: -1						// if set, overrides <video width> 
-		, videoHeight: -1						// if set, overrides <video height>
-		, audioWidth: 300						// width of audio player
-		, audioHeight: 30						// height of audio player
-		, messages: {
-				  start: "Click to Start"
-				, loading: "Loading"				  
-				, paused: "Paused"
-				, error: "Error"
-				, ended: "Ended"				
+		// default if the <video width> is not specified
+		defaultVideoWidth: 480,
+		// default if the <video height> is not specified
+		defaultVideoHeight: 270,
+		// if set, overrides <video width> 
+		videoWidth: -1,
+		// if set, overrides <video height>
+		videoHeight: -1,
+		// width of audio player
+		audioWidth: 300,
+		// height of audio player
+		audioHeight: 30,		
+		// display messages
+		messages: {
+				start: 'Click to Start',
+				loading: 'Loading',				  
+				paused: 'Paused',
+				error: 'Error',
+				ended: 'Ended'				
 		}		
-	}
+	};
 
 	// utility methods
 	function formatTime(seconds) {
@@ -65,9 +74,9 @@
 
 		// ipad/iphone test
 		var u = navigator.userAgent;
-		var isiPad = (u.match(/iPad/i) != null);
-		var isiPhone = (u.match(/iPhone/i) != null);
-		var isAndroid = (u.match(/Android/i) != null);
+		var isiPad = (u.match(/iPad/i) !== null);
+		var isiPhone = (u.match(/iPhone/i) !== null);
+		var isAndroid = (u.match(/Android/i) !== null);
 
 		if (isiPad || isiPhone) {
 			// add controls and stop
@@ -96,41 +105,41 @@
 		}
 
 		var html = $(
-		'<div id="' + id + '" class="mep-container">\
-			<div class="mep-mediaelement">\
-			</div>\
-			<div class="mep-poster">\
-				<img />\
-			</div>\
-			<div class="mep-overlay">\
-				<div class="mep-overlay-message"></div>\
-			</div>\
-			<div class="mep-controls">\
-				<div class="mep-playpause-button mep-play"><span></span></div>\
-				<div class="mep-time-rail">\
-					<span class="mep-time-total">\
-						<span class="mep-time-loaded"></span>\
-						<span class="mep-time-current"></span>\
-						<span class="mep-time-handle"></span>\
-					</span>\
-				</div>\
-				<div class="mep-time">\
-					<span class="mep-currenttime"></span>\
-					<span>|</span>\
-					<span class="mep-duration"></span>\
-				</div>\
-				<div class="mep-volume-button mep-mute">\
-					<span></span> \
-					<div class="mep-volume-slider">\
-						<div class="mep-volume-rail">\
-							<div class="mep-volume-handle"></div>\
-						</div>\
-					</div>\
-				</div>\
-				<div class="mep-fullscreen-button"><span></span></div>\
-			</div>\
-			<div class="mep-clear"></div>\
-		</div>');
+		'<div id="' + id + '" class="mep-container">'+
+			'<div class="mep-mediaelement">'+
+			'</div>'+
+			'<div class="mep-poster">'+
+				'<img />'+
+			'</div>'+
+			'<div class="mep-overlay">'+
+				'<div class="mep-overlay-message"></div>'+
+			'</div>'+
+			'<div class="mep-controls">'+
+				'<div class="mep-playpause-button mep-play"><span></span></div>'+
+				'<div class="mep-time-rail">'+
+					'<span class="mep-time-total">'+
+						'<span class="mep-time-loaded"></span>'+
+						'<span class="mep-time-current"></span>'+
+						'<span class="mep-time-handle"></span>'+
+					'</span>'+
+				'</div>'+
+				'<div class="mep-time">'+
+					'<span class="mep-currenttime"></span>'+
+					' <span> | </span> '+
+					'<span class="mep-duration"></span>'+
+				'</div>'+
+				'<div class="mep-volume-button mep-mute">'+
+					'<span></span>'+
+					'<div class="mep-volume-slider">'+
+						'<div class="mep-volume-rail">'+
+							'<div class="mep-volume-handle"></div>'+
+						'</div>'+
+					'</div>'+
+				'</div>'+
+				'<div class="mep-fullscreen-button"><span></span></div>'+
+			'</div>'+
+			'<div class="mep-clear"></div>'+
+		'</div>');
 
 		// insert and switch position
 		$media.before(html);
