@@ -171,13 +171,18 @@
 			return el.firstChild.href;
 		},
 		getScriptPath: function(scriptNames) {
-			var path = '';
-			var scripts = document.getElementsByTagName('script');
+			var 
+				i = 0,
+				j,
+				path = '',
+				name = '',
+				script,
+				scripts = document.getElementsByTagName('script');
 
-			for (var i = 0; i < scripts.length; i++) {
-				var script = scripts[i].src;
-				for (var j = 0; j < scriptNames.length; j++) {
-					var name = scriptNames[j];				
+			for (; i < scripts.length; i++) {
+				script = scripts[i].src;
+				for (j = 0; j < scriptNames.length; j++) {
+					name = scriptNames[j];				
 					if (script.indexOf(name) > -1) {					
 						path = script.substring(0, script.indexOf(name));
 						break;
@@ -194,7 +199,7 @@
 	/*
 	Default options
 	*/
-	html5.mediaElementDefaults = {
+	html5.MediaElementDefaults = {
 		// shows debug errors on screen
 		enablePluginDebug: false,
 		// remove or reorder to change plugin priority
@@ -203,7 +208,9 @@
 		type: '',
 		// path to Flash and Silverlight plugins
 		pluginPath: html5.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
+		// name of flash file
 		flashName: 'flashmediaelement.swf',
+		// name of silverlight file
 		silverlightName: 'silverlightmediaelement.xap',
 		// default if the <video width> is not specified
 		defaultVideoWidth: 480,
@@ -233,7 +240,7 @@
 			urlForPlugin = '',
 			pluginType = '',
 			downloadUrl = '',
-			options = html5.mediaElementDefaults,
+			options = html5.MediaElementDefaults,
 			prop;
 			
 		// extend options
@@ -609,19 +616,19 @@ height="' + height + '"></embed>';
 	// Flash makes calls through this object to the fake <video/audio> object
 	html5.MediaPluginBridge = {
 
-		pluginMediaElements: [],
-		mediaElements:[],
+		pluginMediaElements:{},
+		htmlMediaElements:{},
 
-		registerPluginElement: function (id, pluginMediaElement, mediaElement) {
+		registerPluginElement: function (id, pluginMediaElement, htmlMediaElement) {
 			this.pluginMediaElements[id] = pluginMediaElement;
-			this.mediaElements[id] = mediaElement;
+			this.htmlMediaElements[id] = htmlMediaElement;
 		},
 
 		// when Flash/Silverlight is ready, it calls out to this method
 		initPlugin: function (id) {
 			
 			var pluginMediaElement = this.pluginMediaElements[id],
-				mediaElement = this.mediaElements[id];
+				htmlMediaElement = this.htmlMediaElements[id];
 		
 			// find the javascript bridge
 			switch (pluginMediaElement.pluginType) {
@@ -635,7 +642,7 @@ height="' + height + '"></embed>';
 			}
 
 			if (pluginMediaElement.success) {
-				pluginMediaElement.success(pluginMediaElement, mediaElement);
+				pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
 			}
 		},
 
