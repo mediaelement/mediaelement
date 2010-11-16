@@ -72,7 +72,7 @@
 		// runs detectPlugin() and stores the version number
 		addPlugin: function(p, pluginName, mimeType, activeX, axDetect) {
 			this.plugins[p] = this.detectPlugin(pluginName, mimeType, activeX, axDetect);
-		},	
+		},
 		
 		// get the version number from the mimetype (all but IE) or ActiveX (IE)
 		detectPlugin: function(pluginName, mimeType, activeX, axDetect) {
@@ -139,12 +139,23 @@
 		
 		return v;
 	});
-		
-	// special case for Android (yes, this really is necessary)
-	if (PluginDetector.ua.match(/Android 2\.[12]/) != null) {
-		HTMLMediaElement.canPlayType = function(type) {
-			return (type.match(/video\/(mp4m4v)/) != null) ? 'probably' : '';
+	// add adobe acrobat 
+	/*
+	PluginDetector.addPlugin('acrobat','Adobe Acrobat','application/pdf','AcroPDF.PDF', function (ax) {	
+		var version = [],
+			d = ax.GetVersions().split(',')[0].split('=')[1];
+		if (d) {
+			version = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
 		}
+		return version;		
+	}
+	*/
+			
+	// special case for Android (yes, this really is necessary because Android doesn't implement the canPlayType function)
+	if (PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
+		HTMLMediaElement.canPlayType = function(type) {
+			return (type.match(/video\/(mp4m4v)/) !== null) ? 'probably' : '';
+		};
 	}
 
 	/*
@@ -172,31 +183,39 @@
 						break;
 					}
 				}
-				if (path != '')
+				if (path !== '')
 					break;
 			}
 			return path;
 		}		
-	}
+	};
 
 	
 	/*
 	Default options
 	*/
-	var mediaElementDefaults = {
-		  enablePluginDebug: false
-		, plugins: ['silverlight', 'flash'] // remove or reorder to change
-		, type: ''
-		, flashName: 'flashmediaelement.swf'
-		, silverlightName: 'silverlightmediaelement.xap'
-		, defaultVideoWidth: 480   	// default if the <video width> is not specified
-		, defaultVideoHeight: 270  	// default if the <video height> is not specified		
-		, pluginPath: html5.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js'])
-		, pluginWidth: -1   				// overrides <video width>
-		, pluginHeight: -1  				// overrides <video height>
-		, success: function () { }
-		, error: function () { }
-	}
+	html5.mediaElementDefaults = {
+		// shows debug errors on screen
+		enablePluginDebug: false,
+		// remove or reorder to change plugin priority
+		plugins: ['silverlight', 'flash'],
+		// specify to force MediaElement into a mode
+		type: '',
+		// path to Flash and Silverlight plugins
+		pluginPath: html5.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
+		flashName: 'flashmediaelement.swf',
+		silverlightName: 'silverlightmediaelement.xap',
+		// default if the <video width> is not specified
+		defaultVideoWidth: 480,
+		// default if the <video height> is not specified		
+		defaultVideoHeight: 270,
+		// overrides <video width>
+		pluginWidth: -1,
+		// overrides <video height>		
+		pluginHeight: -1,
+		success: function () { },
+		error: function () { }
+	};
 
 	/*
 	Determines if a browser supports the <video> or <audio> element
@@ -214,10 +233,11 @@
 			urlForPlugin = '',
 			pluginType = '',
 			downloadUrl = '',
-			options = mediaElementDefaults;
+			options = html5.mediaElementDefaults,
+			prop;
 			
 		// extend options
-		for (var prop in o) {
+		for (prop in o) {
 			options[prop] = o[prop];
 		}
 
@@ -240,7 +260,7 @@
 			}
 
 			// continue normal testing
-			if (supportsMediaTag && mediaElement.canPlayType(type).replace(/no/, '') != '') {
+			if (supportsMediaTag && mediaElement.canPlayType(type).replace(/no/, '') !== '') {
 				canPlayMedia = true;
 
 			} else {
@@ -264,11 +284,11 @@
 		}
 
 		// supplied type overrides all HTML
-		if (typeof (options.type) != 'undefined' && options.type != '') {
+		if (typeof (options.type) != 'undefined' && options.type !== '') {
 				testMedia(options.type, null);
 
 		// test for src attribute first
-		} else if (mediaElement.getAttribute('src') != 'undefined' && mediaElement.getAttribute('src') != null) {
+		} else if (mediaElement.getAttribute('src') != 'undefined' && mediaElement.getAttribute('src') !== null) {
 
 			var src = mediaElement.getAttribute('src');
 			var type = mediaElement.getAttribute('type');
@@ -283,16 +303,17 @@
 			// test <source> types to see if they are usable
 			// pull out one Flash can use
 			for (var i = 0; i < mediaElement.childNodes.length; i++) {
-				var el = mediaElement.childNodes[i];
+				var n = mediaElement.childNodes[i];
 
-				if (el.nodeType == 1 && el.tagName.toLowerCase() == 'source') {
-					var type = el.getAttribute('type');
-					var src = el.getAttribute('src');
+				if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
+					var type = n.getAttribute('type');
+					var src = n.getAttribute('src');
 
 					testMedia(type, src);
 					
-					if (downloadUrl == '')
+					if (downloadUrl === '') {
 						downloadUrl = src;
+					}
 				}							
 			}					
 		}
@@ -305,8 +326,6 @@
 			return;
 		}
 
-		//console.log(canPlayMedia, pluginType);
-
 		// use native <audio> or <video> with existing media
 		if (canPlayMedia) {
 
@@ -316,8 +335,8 @@
 			}
 
 			// make sure it autoplays on slow connections
-			var hasStarted = false;
-			var autoplay = (mediaElement.getAttribute('autoplay') != null);
+			var hasStarted = false,
+				autoplay = (mediaElement.getAttribute('autoplay') !== null);
 
 			if (autoplay) {
 				function checkForPlaying() {
@@ -350,13 +369,13 @@
 			return mediaElement;
 
 			// replace with plug version that mimics HTML media
-		} else if (pluginType != '') {
+		} else if (pluginType !== '') {
 			var width = 1,
 				height = 1,
 				pluginid = 'me_' + pluginType + '_' + (html5.meIndex++),
-				mediaUrl = (urlForPlugin != null) ? html5.Utility.absolutizeUrl(urlForPlugin) : '',
-				posterUrl = (mediaElement.getAttribute('poster') == null) ? mediaElement.getAttribute('poster') : '',
-				autoplay = (mediaElement.getAttribute('autoplay') != null);
+				mediaUrl = (urlForPlugin !== null) ? html5.Utility.absolutizeUrl(urlForPlugin) : '',
+				posterUrl = (mediaElement.getAttribute('poster') === null) ? mediaElement.getAttribute('poster') : '',
+				autoplay = (mediaElement.getAttribute('autoplay') !== null);
 
 			if (isVideo) {
 				// options.videoWidth > mediaElement.getAttribute('width') > options.defaultVideoWidth
@@ -388,10 +407,12 @@
 				'width=' + width,
 				'height=' + height];
 
-			if (mediaUrl != null)
+			if (mediaUrl !== null) {
 				initVars.push('file=' + mediaUrl);
-			if (options.enablePluginDebug)
+			}
+			if (options.enablePluginDebug) {
 				initVars.push('debug=true');
+			}
 
 			var html = '';
 			switch (pluginType) {
@@ -426,7 +447,7 @@ id="' + pluginid + '" width="' + width + '" height="' + height + '"> \
 					} else {
 
 						container.innerHTML =
-'<embed name="' + pluginid + '" \
+'<embed id="' + pluginid + '" \ name="' + pluginid + '" \
 play="true" \
 loop="false" \
 quality="high" \
@@ -607,7 +628,7 @@ height="' + height + '"></embed>';
 			
 				// find the javascript bridge
 				switch (pluginMediaElement.pluginType) {
-					case "flash":
+					case "flash":					
 						pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
 						break;
 					case "silverlight":
