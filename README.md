@@ -1,3 +1,5 @@
+## GOAL: Make `<video>` and `<audio>` easy. One file. Any browser. Same UI.
+
 * Author: John Dyer (http://johndyer.name/)
 * Website: http://mediaelementjs.com/
 * License: GPLv2/MIT
@@ -5,12 +7,10 @@
 link back here.
 * Thanks: my employer, Dallas Theological Seminary (http://www.dts.edu/)
 
-### GOAL: Make `<video>` easy. One file. Any browser. Same UI.
-
-# MediaElement.js
+# Part 1: MediaElement.js
 _HTML5 `<video>` and `<audio>` shim_
 
-`MediaElement.js` wraps the HTML5 media API around Flash and/or Silverlight objects for browsers that don't support HTML5 or don't support the media codecs you're using. 
+`MediaElement.js` wraps the HTML5 media API around Flash and/or Silverlight plugins for browsers that don't support HTML5 or don't support the media codecs you're using. 
 
 	<script src="mediaelement.js"></script>
 	<video src="myvideo.mp4" width="320" height="240"></video>
@@ -21,7 +21,7 @@ _HTML5 `<video>` and `<audio>` shim_
 	}});
 	</script>
 
-# MediaElementPlayer.js
+# Part 2: MediaElementPlayer.js
 
 _HTML5 `<video>` and `<audio>` player_
 
