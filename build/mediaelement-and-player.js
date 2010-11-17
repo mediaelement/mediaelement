@@ -1,10 +1,11 @@
 /*!
 * Media Element
-* HTML5 <video> libary
+* HTML5 <video> and <audio> Shim
 * http://mediaelementjs.com/
 *
-* Creates a JavaScript object that mimics HTML5 media objects
-* through a Flash->JavaScript|Silverlight bridge
+* Creates a JavaScript object that mimics HTML5 media object
+* for browsers that don't understand HTML5 or can't play the provided codec
+* Can also play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
 *
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -160,7 +161,7 @@ html5.MediaFeatures = {
 		
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
 		this.hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
-		if (ua.match('Chrome')) {
+		if (ua.match(/Chrome/gi)) {
 			this.hasNativeFullScreen = false;
 		}
 	}
@@ -778,10 +779,8 @@ window.MediaElement = html5.MediaElement;
  * Media Element jQuery plugin
  * http://mediaelementjs.com/
  *
- * Creates a controller bar for HTML5 <video> tags
- * and falls back to a Flash player or Silverlight player for browsers that
- * do not support <video> or cannot play the video type.
- * Mostly designed for H.264, but can also play Ogg, WebM, FLV, WMV, ACC and MP3
+ * Creates a controller bar for HTML5 <video> add <audio> tags
+ * using jQuery and MediaElement.js
  *
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -822,6 +821,7 @@ window.MediaElement = html5.MediaElement;
 			timerail: true,
 			duration: true,
 			volume: true,
+			captions: true,
 			fullscreen: true
 		},
 		loop: false
@@ -889,6 +889,9 @@ window.MediaElement = html5.MediaElement;
 				'<div id="' + t.id + '" class="mep-container">'+
 					'<div class="mep-mediaelement">'+
 					'</div>'+
+					'<div class="mep-captions">'+
+						'<img />'+
+					'</div>'+
 					'<div class="mep-poster">'+
 						'<img />'+
 					'</div>'+
@@ -909,6 +912,9 @@ window.MediaElement = html5.MediaElement;
 							' <span> | </span> '+
 							'<span class="mep-duration"></span>'+
 						'</div>'+
+						'<div class="mep-captions-button">'+
+							'<span></span>'+
+						'</div>'+						
 						'<div class="mep-volume-button mep-mute">'+
 							'<span></span>'+
 							'<div class="mep-volume-slider">'+
@@ -1024,6 +1030,63 @@ window.MediaElement = html5.MediaElement;
 
 			if (t.options.success)
 				t.options.success(t.mediaElement, t.domNode);
+				
+			this.loadTracks();
+		},
+		
+		// adapted from Playr
+		loadTracks: function() {	
+			var t = this,
+				tracktags = t.$media.find('track[kind=subtitles]');
+			
+			// store
+			t.tracks = [];
+			t.trackToLoad = -1;
+			tracktags.each(function() {
+				t.tracks.push({
+					srclang: $(this).attr('srclang'), 
+					src: $(this).attr('src'),
+					entries: [],
+					isLoaded: false
+				});
+			});			
+			
+			if (t.tracks.length > 0) {
+				t.loadNextSubtitle();
+			} else {
+				t.captions.remove();
+				t.setRailSize();			
+			}
+		},
+		
+		loadNextSubtitle: function() {
+			var t = this;
+			
+			t.trackToLoad++;
+			if (t.trackToLoad < t.tracks.length){
+				t.loadSubtitles(t.trackToLoad);
+			}			
+		},
+
+		loadSubtitles: function(index){
+			var 
+				t = this,
+				currentTrack = t.tracks[index];
+				
+			$.ajax({
+				url: currentTrack.src,
+				success: function(d) {
+					// parse the loaded file
+					currentTrack.entries = SrtParser.parse(d);
+					
+					// TODO: create UI
+					
+					t.loadNextSubtitle();
+				}, 
+				error: function() {
+					t.loadNextSubtitle();				
+				}
+			});
 		},
 		
 		buildPoster: function() {
@@ -1092,6 +1155,8 @@ window.MediaElement = html5.MediaElement;
 			t.currentTime = t.controls.find('.mep-currenttime').html('00:00');
 			t.duration = t.controls.find('.mep-duration').html('00:00');
 
+			t.captions = t.controls.find('.mep-captions-button');
+			
 			t.mute = t.controls.find('.mep-volume-button');
 			t.volumeSlider = t.controls.find('.mep-volume-slider');
 			t.volumeRail = t.controls.find('.mep-volume-rail');
@@ -1244,9 +1309,10 @@ window.MediaElement = html5.MediaElement;
 			var 
 				t = this,
 				usedWidth = t.playpause.outerWidth(true) +
-												t.time.outerWidth(true) +
-												t.mute.outerWidth(true) +
-												((t.isVideo) ? t.fullscreen.outerWidth(true) : 0),
+							t.time.outerWidth(true) +
+							t.mute.outerWidth(true) +
+							t.captions.outerWidth(true) +
+							((t.isVideo) ? t.fullscreen.outerWidth(true) : 0),
 				railWidth = t.controls.width() - usedWidth - (t.timeRail.outerWidth(true) - t.timeRail.outerWidth(false));
 
 			t.timeRail.width(railWidth);
@@ -1360,6 +1426,7 @@ window.MediaElement = html5.MediaElement;
 								.width(t.normalWidth)
 								.height(t.normalHeight)
 								.css('z-index', 1);
+								
 							t.$media
 								.width(t.normalWidth)
 								.height(t.normalHeight);
@@ -1463,6 +1530,103 @@ window.MediaElement = html5.MediaElement;
 				.unbind('mouseup', t.vrmB);
 		}		
 	};
+	
+	
+	/*
+	Parses SRT format which should be formatted as
+	1
+	00:00:01,1 --> 00:00:05,000
+	A line of text
+
+	2
+	00:01:15,1 --> 00:02:05,000
+	A second line of text
+
+	Adapted from: http://www.delphiki.com/html5/playr
+	*/
+	html5.SrtParser = {
+		timecodeToSeconds: function(timecode){
+			var tab = timecode.split(':');
+			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
+		},
+		parse: function(srtText) {
+			var 
+				pattern_identifier = /^[0-9]+$/,
+				pattern_timecode = /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
+				i = 0,
+				lines = srtText.split(/\r?\n/),
+				entries = {text:[], times:[]},
+				timecode,
+				text;
+				
+			for(; i<lines.length; i++) {
+				// check for the line number
+				if (pattern_identifier.exec(lines[i])){
+					// skip to the next line where the start --> end time code should be
+					i++;
+					timecode = pattern_timecode.exec(lines[i]);
+					if (timecode && i<lines.length){
+						i++;
+						// grab all the (possibly multi-line) text that follows
+						text = lines[i];
+						i++;
+						while(lines[i] !== '' && i<lines.length){
+							text = text + '\n' + lines[i];
+							i++;
+						}
+					
+						
+						entries.text.push(text);
+						entries.times.push(
+						{
+							start: this.timecodeToSeconds(timecode[1]),
+							stop: this.timecodeToSeconds(timecode[3]),
+							settings: timecode[5]
+						});
+					}
+				}
+			}
+			
+			return entries;		
+		},
+		
+		canTranslate: function() {
+			return !(typeof(google) == 'undefined' || typeof(google.language) == 'undefined');
+		},
+		
+		translate: function(srtData, fromLang, toLang, callback) {
+			
+			if (!this.canTranslate()) {
+				callback(null);
+				return;
+			}
+			
+			var 
+				text =  srtData.text.join(' <span></span>'),
+				entries = {text:[], times:[]},
+				lines,
+				i;
+			
+			google.language.translate(text, fromLang, toLang, function(result) {
+				// split on separators
+				lines = result.translation.split('<span></span>');
+				
+				// create new entries
+				for (i=0;i<srtData.text.length; i++) {
+					// add translated line
+					entries.text[i] = lines[i];
+					// copy existing times
+					entries.times[i] = {
+						start: srtData.times[i].start,
+						stop: srtData.times[i].stop,
+						settings: srtData.times[i].settings
+					};
+				}
+				
+				callback(entries);
+			});	
+		}
+	};	
 
 	// turn into jQuery plugin
 	jQuery.fn.mediaelementplayer = function (options) {
