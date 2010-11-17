@@ -142,7 +142,8 @@
 }
 .mep-controls .mep-playpause-button span, 
 .mep-controls .mep-volume-button span, 
-.mep-controls .mep-fullscreen-button span {
+.mep-controls .mep-fullscreen-button span,
+.mep-controls .mep-captions-button span {
 	cursor: pointer;
 	display: block;
 	font-size: 0px;
@@ -212,6 +213,10 @@
 
 .mep-controls .mep-volume {
 
+}
+
+.mep-controls .mep-captions-button span {
+	background-position:-48px 0;
 }
 
 .mep-controls .mep-mute span {

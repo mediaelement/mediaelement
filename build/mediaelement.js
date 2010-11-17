@@ -1,10 +1,11 @@
 /*!
 * Media Element
-* HTML5 <video> libary
+* HTML5 <video> and <audio> Shim
 * http://mediaelementjs.com/
 *
-* Creates a JavaScript object that mimics HTML5 media objects
-* through a Flash->JavaScript|Silverlight bridge
+* Creates a JavaScript object that mimics HTML5 media object
+* for browsers that don't understand HTML5 or can't play the provided codec
+* Can also play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
 *
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -160,7 +161,7 @@ html5.MediaFeatures = {
 		
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
 		this.hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
-		if (ua.match('Chrome')) {
+		if (ua.match(/Chrome/gi)) {
 			this.hasNativeFullScreen = false;
 		}
 	}
