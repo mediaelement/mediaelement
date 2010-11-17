@@ -43,15 +43,14 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
-*1.1.0 (2010/11/18) - 21.5kb*
+*1.1.0 (2010/11/18) - 21.8kb*
 
 * Total re-oganization of MediaElement, MediaElementPlayer, and supporting objects
 * Updated CSS to a cleaner look, with better IE support & big play button
 * Simplified all plugin and version detection
 * Added loop option (useful for audio files)
 * Added the ability to turn each control button on/off
-
-* Update setSrc to take multiple sources
+* Updated setSrc to take multiple sources
 
 *1.0.7 (2010/11/17)*
 
