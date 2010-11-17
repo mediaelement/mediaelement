@@ -62,7 +62,7 @@
 	
 		t.$media = $($media);
 		t.options = $.extend(true,{},html5.MepDefaults,o);
-		t.isVideo = ($media[0].tagName.toLowerCase() == 'video');
+		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
 				
 		if (mf.isiPad || mf.isiPhone) {
 			// add controls and stop
