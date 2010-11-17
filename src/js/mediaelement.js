@@ -271,6 +271,7 @@ html5.PluginMediaElement.prototype = {
 
 	// special
 	pluginElement: null,
+	pluginType: '',
 
 	// not implemented :(
 	playbackRate: -1,
@@ -301,6 +302,30 @@ html5.PluginMediaElement.prototype = {
 	pause: function () {
 		this.pluginApi.pauseMedia();
 		this.paused = true;
+	},	
+	canPlayType: function(type) {
+		var i,
+			j,
+			pluginInfo,
+			pluginVersions = html5.plugins[this.pluginType];	
+			
+		for (i=0; i<pluginVersions.length; i++) {
+			pluginInfo = pluginVersions[i];
+			
+			// test if user has the correct plugin version
+			if (html5.PluginDetector.hasPluginVersion(this.pluginType, pluginInfo.version)) {
+			
+				// test for plugin playback types
+				for (j=0; j<pluginInfo.types.length; j++) {
+					// find plugin that can play the type
+					if (type == pluginInfo.types[j]) {
+						return true;
+					}
+				}
+			}
+		}	
+		
+		return false;
 	},
 
 	// custom methods since not all JavaScript implementations support get/set
@@ -510,7 +535,7 @@ html5.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, html5.Utility.absolutizeUrl(playback.url), poster, autoplay);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url) : '', poster, autoplay);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, playback.url, poster );
