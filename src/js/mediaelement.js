@@ -9,7 +9,7 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.0.7
+* Version: 1.0.8
 */
 
 /*
@@ -105,6 +105,7 @@ html5.PluginDetector = {
 
 // Add Flash detection
 html5.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwave-flash','ShockwaveFlash.ShockwaveFlash', function(ax) {
+	// adapted from SWFObject
 	var version = [],
 		d = ax.GetVariable("$version");
 	if (d) {
@@ -156,6 +157,35 @@ if (html5.PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
 	};
 }
 
+// necessary detection
+html5.MediaFeatures = {
+	init: function() {
+		var 
+			ua = html5.PluginDetector.ua,
+			i,
+			v,
+			html5Elements = ['source','track','audio','video'];
+		
+		// detect browsers
+		this.isiPad = (ua.match(/iPad/i) !== null);
+		this.isiPhone = (ua.match(/iPhone/i) !== null);
+		this.isAndroid = (ua.match(/Android/i) !== null);
+		
+		// create HTML5 media elements for IE, get a <video> element for fullscreen detection
+		for (i=0; i<html5Elements.length; i++) {
+			v = document.createElement(html5Elements[i]);
+		}
+		
+		// detect native JavaScript fullscreen (Safari only, Chrome fails)
+		this.hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
+		if (ua.match('Chrome')) {
+			this.hasNativeFullScreen = false;
+		}		
+	}
+
+};
+html5.MediaFeatures.init();
+
 /*
 Utility methods
 */
@@ -191,7 +221,15 @@ html5.Utility = {
 			}
 		}
 		return path;
-	}		
+	},	
+	secondsToTimeCode: function(seconds) {
+		seconds = Math.round(seconds);		
+		var minutes = Math.floor(seconds / 60);		
+		minutes = (minutes >= 10) ? minutes : "0" + minutes;
+		seconds = Math.floor(seconds % 60);
+		seconds = (seconds >= 10) ? seconds : "0" + seconds;
+		return minutes + ":" + seconds;
+	}
 };
 
 
