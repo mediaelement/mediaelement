@@ -42,6 +42,9 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.0.7 (2010/11/17)*
+* Total re-oganization of MediaElement code (JSLint compliant, YUI compliant, much easier to read)
+
 *1.0.6 (2010/11/15)*
 
 * Rebuilt PluginDetection (removed SWFObject and Microsoft code)
