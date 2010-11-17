@@ -85,8 +85,8 @@
 	padding: 0;
 	bottom: 0;
 	left: 0;
-	background: #333;	
-	background: rgba(0, 0, 0, 0.5);
+	background: url(background.png);	
+	background: rgba(0, 0, 0, 0.7);
 	height: 30px;
 	width: 100%;	
 }
@@ -102,8 +102,10 @@
 	height: 20px;	
 	font-size: 11px;
 	line-height: 11px;	
+	/*
 	background: #999;	
 	background: rgba(100, 100, 100, 0.8);
+	*/
 	
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -175,15 +177,15 @@
 .mep-controls .mep-time-rail .mep-time-total {
 	margin: 5px;
 	background: #333;
-	background: rgba(0,0,0,0.2);	
+	background: rgba(0,0,0,0.8);	
 }
 .mep-controls .mep-time-rail .mep-time-loaded {
-	background: #66c;
-	background: rgba(60,170,200,0.2);
+	background: #3caac8;
+	background: rgba(60,170,200,0.8);
 }
 .mep-controls .mep-time-rail .mep-time-current {
 	background: #fff;
-	background: rgba(255,255,255,0.9);
+	background: rgba(255,255,255,0.8);
 }
 
 .mep-controls .mep-time-rail .mep-time-handle {
@@ -225,10 +227,10 @@
 	height: 115px;
 	width: 20px;
 	background: #333;	
-	background: rgba(100, 100, 100, 0.8);
-	-webkit-border-radius: 4px 4px 0 0 ;	
-	-moz-border-radius: 4px 4px 0 0 ;	
-	border-radius: 4px 4px 0 0 ;			
+	background: rgba(0, 0, 0, 0.7);
+	-webkit-border-radius: 0;	
+	-moz-border-radius: 0;	
+	border-radius: 0;	
 	top: -110px;	
 	position: absolute;
 	margin: 0;
