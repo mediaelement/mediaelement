@@ -9,7 +9,7 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.0.6
+* Version: 1.0.7
 */
 
 /*
@@ -186,8 +186,9 @@ html5.Utility = {
 					break;
 				}
 			}
-			if (path !== '')
+			if (path !== '') {
 				break;
+			}
 		}
 		return path;
 	}		
@@ -290,7 +291,7 @@ html5.HtmlMediaElementShim = {
 		// test for src attribute first
 		} else if (htmlMediaElement.getAttribute('src') != 'undefined' && htmlMediaElement.getAttribute('src') !== null) {
 			url = htmlMediaElement.getAttribute('src');
-			type = this.checkType(url, htmlMediaElement.getAttribute('type'), isVideo)
+			type = this.checkType(url, htmlMediaElement.getAttribute('type'), isVideo);
 			mediaFiles.push({type:type, url:url});
 
 		// then test for <source> elements
@@ -300,7 +301,7 @@ html5.HtmlMediaElementShim = {
 				n = htmlMediaElement.childNodes[i];
 				if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
 					url = n.getAttribute('src');
-					type = this.checkType(url, n.getAttribute('type'), isVideo)
+					type = this.checkType(url, n.getAttribute('type'), isVideo);
 					mediaFiles.push({type:type, url:url});
 				}							
 			}			
