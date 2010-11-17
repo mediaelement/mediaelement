@@ -17,12 +17,17 @@
 
 
 <h2>MP4 video (as src)</h2>
-<video width="360" height="203" id="player2" src="../media/jsaddington.mp4" type="video/mp4" controls="controls">
+<video width="360" height="203" id="player1" src="../media/jsaddington.mp4" type="video/mp4" controls="controls">
 	<p>Your browser leaves much to be desired.</p>			
 </video>	
 
+<h2>MP3 audio (as src)</h2>
+<audio id="player2" src="../media/Parades-PastLives.mp3" type="audio/mp3" controls="controls">
+	<p>Your browser leaves much to be desired.</p>			
+</audio>	
+
 <script>
-$('audio,video').mediaelementplayer({pluginPath:'/build/'});
+$('audio,video').mediaelementplayer({controls: {duration: false}, loop: true, pluginPath:'/build/'});
 </script>
 
 </body>

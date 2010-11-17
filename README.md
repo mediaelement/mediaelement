@@ -1,4 +1,4 @@
-## GOAL: Make `<video>` and `<audio>` easy. One file. Any browser. Same UI.
+# GOAL: Make `<video>` and `<audio>` easy. One file. Any browser. Same UI.
 
 * Author: John Dyer (http://johndyer.name/)
 * Website: http://mediaelementjs.com/
@@ -7,13 +7,14 @@
 link back here.
 * Thanks: my employer, Dallas Theological Seminary (http://www.dts.edu/)
 
-# Part 1: MediaElement.js
+## Part 1: MediaElement.js
 _HTML5 `<video>` and `<audio>` shim_
 
 `MediaElement.js` wraps the HTML5 media API around Flash and/or Silverlight plugins for browsers that don't support HTML5 or don't support the media codecs you're using. 
 
 	<script src="mediaelement.js"></script>
 	<video src="myvideo.mp4" width="320" height="240"></video>
+	
 	<script>
 	var v = document.getElementsByTagName("video")[0];
 	new MediaElement(v, {success: function(media) {
@@ -21,7 +22,7 @@ _HTML5 `<video>` and `<audio>` shim_
 	}});
 	</script>
 
-# Part 2: MediaElementPlayer.js
+## Part 2: MediaElementPlayer.js
 
 _HTML5 `<video>` and `<audio>` player_
 
@@ -42,10 +43,20 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.1.0 (2010/11/18) - 21.5kb*
+
+* Total re-oganization of MediaElement, MediaElementPlayer, and supporting objects
+* Updated CSS to a cleaner look, with better IE support & big play button
+* Simplified all plugin and version detection
+* Added loop option (useful for audio files)
+* Added the ability to turn each control button on/off
+
+* Update setSrc to take multiple sources
+
 *1.0.7 (2010/11/17)*
 
 * Total re-oganization of MediaElement code
-* JSLint compliant, YUI compliant, much easier to read)
+* JSLint compliant, YUI compliant
 
 *1.0.6 (2010/11/15)*
 

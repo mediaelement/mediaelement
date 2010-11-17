@@ -10,7 +10,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.0.8
+ * Version: 1.1.0
  */
 
 // TODO:
@@ -39,7 +39,16 @@
 			paused: 'Paused',
 			error: 'Error',
 			ended: 'Ended'				
-		}		
+		},
+		// turn each button on or off
+		controls: {
+			playpause: true,
+			timerail: true,
+			duration: true,
+			volume: true,
+			fullscreen: false
+		},
+		loop: false
 	};
 
 	html5.mepIndex = 0;
@@ -55,8 +64,6 @@
 		t.options = $.extend(true,{},html5.MepDefaults,o);
 		t.isVideo = ($media[0].tagName.toLowerCase() == 'video');
 				
-
-
 		if (mf.isiPad || mf.isiPhone) {
 			// add controls and stop
 			t.$media.attr('controls', 'controls');
@@ -92,7 +99,7 @@
 
 			var
 				t = this,
-				meOptions = $.extend({}, t.options, {
+				meOptions = $.extend(true, {}, t.options, {
 					success: function(mediaElement, domNode) { t.setupPlayer(mediaElement, domNode); }, 
 					error: function(e) { t.handleError(e);} 
 				});				
@@ -155,7 +162,13 @@
 			} else {
 				t.width = t.options.audioWidth;
 				t.height = t.options.audioHeight;
-			}			
+			}
+			
+			// setup main layers and objects
+			t.buildPoster();
+			t.buildOverlay();						
+			t.setPlayerSize(t.width, t.height); // now that the container, overlay, and poster are ready specify their exact size
+			t.buildControls();			
 			
 			// create MediaElementShim	
 			meOptions.pluginWidth = t.height;
@@ -164,7 +177,7 @@
 			
 		},
 		
-		// Giant function that sets up all the controls and events
+		// Sets up all controls and events
 		setupPlayer: function(mediaElement, domNode) {		
 			
 			/*			
@@ -180,9 +193,7 @@
 			t.mediaElement = mediaElement;
 			t.domNode = domNode;			
 
-			t.buildPoster();
-			t.buildOverlay();						
-			t.setPlayerSize(t.width, t.height); // now that the container, overlay, and poster are ready specify their exact size
+			// build controls
 			t.buildControlBar();
 			t.buildPlayPause();
 			t.buildTimeRail();	
@@ -190,7 +201,7 @@
 			t.buildFullscreen();
 
 
-			// add events the acutal MediaElement
+			// add events the MediaElement
 			t.mediaElement.addEventListener('click', function (e) {
 				if (t.mediaElement.paused) {
 					t.mediaElement.play();
@@ -209,9 +220,15 @@
 			}, true);
 
 			t.mediaElement.addEventListener('ended', function (e) {
-				t.poster.show();
-				t.playpause.removeClass('mep-pause').addClass('mep-play');
-				t.showMessage(t.options.messages.ended);
+				if (t.options.loop) {
+					t.mediaElement.setCurrentTime(0);
+					t.setTimePosition();
+					t.mediaElement.play();
+				} else {
+					t.poster.show();
+					t.playpause.removeClass('mep-pause').addClass('mep-play');
+					t.showMessage(t.options.messages.ended);
+				}
 			}, true);
 			
 			t.mediaElement.addEventListener('loadedmetadata', function(e) {
@@ -240,6 +257,7 @@
 			t.poster = t.container.find('.mep-poster');
 			t.posterImg = t.poster.find('img');
 			t.posterUrl = t.$media.attr('poster');
+			t.posterUrl = (t.posterUrl === null || t.posterUrl == undefined) ? '' : t.posterUrl;
 			
 			if (t.posterUrl !== '') {			
 				t.posterImg.attr('src',t.posterUrl);				
@@ -280,27 +298,13 @@
 			this.overlay.css('visibility','hidden');
 		},			
 		
-		buildControlBar: function() {
+		buildControls: function() {
 			
 			var t = this;
 			
 			// CONTROLS BAR
 			t.controls = t.container.find('.mep-controls')
 			t.isControlsVisible = true;
-
-			if (t.isVideo) {
-				// show/hide controls
-				t.container
-					.bind('mouseenter', function () { 
-						t.controls.fadeIn(200); 
-						t.setRailSize(); 
-						t.isControlsVisible = true; 
-					})
-					.bind('mouseleave', function () { 
-						t.controls.fadeOut(200); 
-						t.isControlsVisible = false; 
-					});
-			}
 
 			// CONTROL BUTTONS and BARS
 			t.playpause = t.controls.find('.mep-playpause-button');
@@ -325,7 +329,47 @@
 
 			// setup controls
 			t.controls.show();
-			t.setRailSize();		
+			t.setRailSize();
+
+			// hide unwanted controls	
+
+			if (!t.options.controls.playpause) {
+				t.playpause.remove();
+			}
+			
+			if (!t.options.controls.timerail) {
+				t.timeRail.remove();
+			}	
+
+			if (!t.options.controls.duration) {
+				t.time.remove();
+			}	
+			
+			if (!t.options.controls.volume) {
+				t.mute.remove();
+			}	
+			
+			if (!t.options.controls.fullscreen) {
+				t.fullscreen.remove();
+			}				
+		},
+		
+		buildControlBar: function() {
+			var t = this;
+		
+			if (t.isVideo) {
+				// show/hide controls
+				t.container
+					.bind('mouseenter', function () { 
+						t.controls.fadeIn(200); 
+						t.setRailSize(); 
+						t.isControlsVisible = true; 
+					})
+					.bind('mouseleave', function () { 
+						t.controls.fadeOut(200); 
+						t.isControlsVisible = false; 
+					});
+			}		
 		},
 		
 		buildPlayPause: function() {
@@ -341,7 +385,7 @@
 					t.mediaElement.pause();
 					t.playpause.removeClass('mep-pause').addClass('mep-play');
 				}
-			});		
+			});
 		},
 		
 		buildTimeRail: function() {
@@ -364,31 +408,37 @@
 
 				if (!t.isControlsVisible)
 					return;
-
-				if (t.mediaElement.currentTime && t.mediaElement.duration) {
-
-					// update current and duration text
-					t.currentTime.html(html5.Utility.secondsToTimeCode(t.mediaElement.currentTime));
-					if (t.mediaElement.duration)
-						t.duration.html(html5.Utility.secondsToTimeCode(t.mediaElement.duration));
-
-					// update bar and handle
-					var 
-						newWidth = t.timeTotal.width() * t.mediaElement.currentTime / t.mediaElement.duration,
-						handlePos = newWidth - (t.timeHandle.width() / 2);
-					
-					t.timeCurrent.width(newWidth);
-					t.timeHandle.css('left', handlePos);
-				}
-
+				
+				t.setTimePosition();
 				t.setTimeLoaded(e.target);
 
 			}, true);
 
 			t.mediaElement.addEventListener('progress', function (e) {				
 				t.setTimeLoaded(e.target);
-			}, true);
+			}, true);		
+		},
 		
+		setTimePosition: function() {
+			var 
+				t = this,
+				newWidth,
+				handlePos;
+			
+			if (t.mediaElement.currentTime && t.mediaElement.duration) {
+
+				// update current and duration text
+				t.currentTime.html(html5.Utility.secondsToTimeCode(t.mediaElement.currentTime));
+				if (t.mediaElement.duration)
+					t.duration.html(html5.Utility.secondsToTimeCode(t.mediaElement.duration));
+
+				// update bar and handle				 
+				newWidth = t.timeTotal.width() * t.mediaElement.currentTime / t.mediaElement.duration;
+				handlePos = newWidth - (t.timeHandle.width() / 2);
+			
+				t.timeCurrent.width(newWidth);
+				t.timeHandle.css('left', handlePos);
+			}		
 		},
 			
 		setTimeLoaded:function(target) {
@@ -450,7 +500,9 @@
 		handleError: function(me) {
 			var t = this;
 			
-			t.showMessage(t.options.messages.error);
+			t.$media.hide();
+			
+			//t.showMessage(t.options.messages.error);
 			t.overlay.hide();
 			t.controls.hide();
 			t.poster.hide();
@@ -465,7 +517,7 @@
 			
 			t.fullscreen.bind('click', function () {
 				t.setFullScreen(!t.isFullScreen);
-			});
+			});			
 		},
 
 		setFullScreen: function (goFullScreen) {
@@ -480,7 +532,7 @@
 					break;
 				case 'native':
 
-					if (hasNativeFullScreen) {
+					if (html5.MediaFeatures.hasNativeFullScreen) {
 						
 						if (goFullScreen) {
 							t.mediaElement.webkitEnterFullScreen();
@@ -589,7 +641,8 @@
 					t.mute.removeClass('mep-mute').addClass('mep-unmute');
 					t.positionVolumeHandle(0);
 				}
-			});		
+			});	
+			
 		},
 		
 		volumeMove: function(e) {
