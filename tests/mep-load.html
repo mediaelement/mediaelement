@@ -31,21 +31,21 @@ var me = new MediaElementPlayer('#player1', {enablePluginDebug:true, type:'video
 }});
 
 $('#load1').bind('click', function() {
-	me.setSrc('../media/jsaddington.mp4');
-	me.load();
-	me.play();	
+	me.mediaElement.setSrc([{src:'../media/nothing.mp4', type:'video/poop'},{src:'../media/jsaddington.mp4', type:'video/mp4'}]);
+	me.mediaElement.load();
+	me.mediaElement.play();	
 });
 
 $('#load2').bind('click', function() {
-	me.setSrc('../media/echo-hereweare.m4v');
-	me.load();
-	me.play();
+	me.mediaElement.setSrc('../media/echo-hereweare.m4v');
+	me.mediaElement.load();
+	me.mediaElement.play();
 });
 
 $('#load3').bind('click', function () {
-    me.setSrc('http://oefiles.dts.edu/be103/BE103_u001_v001_lo.mp4');
-    me.load();
-    me.play();
+    me.mediaElement.setSrc('http://oefiles.dts.edu/be103/BE103_u001_v001_lo.mp4');
+    me.mediaElement.load();
+    me.mediaElement.play();
 });
 </script>
 
