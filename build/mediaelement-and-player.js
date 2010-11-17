@@ -822,7 +822,7 @@ window.MediaElement = html5.MediaElement;
 			timerail: true,
 			duration: true,
 			volume: true,
-			fullscreen: false
+			fullscreen: true
 		},
 		loop: false
 	};
