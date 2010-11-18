@@ -13,6 +13,8 @@
 * Version: 1.1.0
 */
 
+// TODO: send isVideo to Flash and Silverlight for extension-less files
+
 // Namespace
 var html5 = html5 || {};
 
