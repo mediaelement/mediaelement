@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Recommended Setup</p>
+
+
+<h2>MP4 video (as src)</h2>
+<audio id="player2" src="../media/Parades-PastLives.mp3" type="audio/mp3" controls="controls">
+	<p>Your browser leaves much to be desired.</p>			
+</audio>	
+
+<script>
+$('audio,video').mediaelementplayer({enablePluginDebug: true});
+</script>
+
+</body>
+</html>
