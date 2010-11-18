@@ -77,6 +77,23 @@
 	font-size: 24px;
 	font-weight: bold;
 }
+.mep-captions-layer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	padding: 0 0 38px 0;
+	text-align:center;
+}
+.mep-captions-text {
+	font-size: 12px;
+	padding: 3px 5px;
+	color: #fff;
+	background: url(background.png);	
+	background: rgba(0, 0, 0, 0.8);
+	font-weight: bold;
+	line-height: 22px;
+}
+
 .mep-container .mep-controls {
 	position: absolute;
 	background: none;
@@ -215,8 +232,48 @@
 
 }
 
+.mep-controls .mep-captions-button {
+	position: relative;
+}
+
 .mep-controls .mep-captions-button span {
 	background-position:-48px 0;
+}
+.mep-controls .mep-captions-button .mep-captions-selector {
+	visibility: hidden;
+	position: absolute;
+	bottom: 15px;
+	left: -70px;
+	width: 120px;
+	min-height: 50px;
+	background: url(background.png);
+	background: rgba(0,0,0,0.8);
+	border: solid 1px #fff;
+	padding: 10px;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;	
+	border-radius: 0;	
+}
+.mep-controls .mep-captions-button:hover  .mep-captions-selector {
+	visibility: visible;
+}
+
+.mep-controls .mep-captions-button .mep-captions-selector ul {
+	margin: 0;
+	padding: 0;
+	display: block;
+	list-style-type: none !important;
+	overflow: hidden;
+}
+.mep-controls .mep-captions-button .mep-captions-selector ul li{
+	margin: 0 0 6px 0;
+	padding: 0;
+	list-style-type: none !important;
+	display:block;
+	color: #fff;
+}
+.mep-controls .mep-captions-button .mep-captions-selector ul li label{
+	white-space: nowrap;
 }
 
 .mep-controls .mep-mute span {
