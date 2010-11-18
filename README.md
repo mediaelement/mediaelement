@@ -43,21 +43,22 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
-*1.1.0 (2010/11/17) - 22.1kb*
+*1.1.0 (2010/11/17) - 22.6kb*
 
 * Total re-oganization of MediaElement, MediaElementPlayer, and supporting objects
 * Updated CSS to a cleaner look, with better IE support & big play button
 * Simplified all plugin and version detection
 * Added loop option (useful for audio files)
 * Added the ability to turn each control button on/off
+* Added canPlayType to PluginMediaElement
 * Updated setSrc to take multiple sources
 
-*1.0.7 (2010/11/16)*
+*1.0.7 (2010/11/16) - 18.15kb*
 
 * Total re-oganization of MediaElement code
 * JSLint compliant, YUI compliant
 
-*1.0.6 (2010/11/15)*
+*1.0.6 (2010/11/15) - 17.96kb*
 
 * Rebuilt PluginDetection (removed SWFObject and Microsoft code)
 * More JSLint compatible (still a few iterations to get there)
@@ -68,7 +69,7 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 * Fixed a problem with the *.min.js files
 * Added jQuery 1.4.3
 
-*1.0.4 (2010/11/10)*
+*1.0.4 (2010/11/10) - 18.32kb*
 
 * Fixed Flash display when `<video>` did not match actual dimensions
 * autosizing in Flash and Silverlight
