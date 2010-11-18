@@ -36,7 +36,7 @@
 			loading: 'Loading',				  
 			paused: 'Paused',
 			error: 'Error',
-			ended: 'Ended'				
+			ended: 'Ended'
 		},
 		// turn each button on or off
 		controls: {
@@ -48,7 +48,9 @@
 			fullscreen: true
 		},
 		loop: false,
-		startLanguage: 'en',
+		// this will automatically turn on a <track>
+		startLanguage: '',
+		// a list of languages to auto-translate via Google
 		translations: []
 	};
 
@@ -293,6 +295,7 @@
 					for (i=0; i<t.tracks.length; i++) {
 						if (t.tracks[i].srclang == lang) {
 							t.selectedTrack = t.tracks[i];
+							t.captionsDisplay.attr('lang', t.selectedTrack.srclang);
 							break;
 						}
 					}	
@@ -1031,6 +1034,9 @@
 				entries = {text:[], times:[]},
 				lines,
 				i;
+				
+			if (text.length > 1000)
+				text = text.substring(0,1000);
 			
 			google.language.translate(text, fromLang, toLang, function(result) {
 				// split on separators
