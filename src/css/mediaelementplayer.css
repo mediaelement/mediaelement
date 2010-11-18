@@ -83,15 +83,28 @@
 	left: 0;
 	padding: 0 0 38px 0;
 	text-align:center;
-}
-.mep-captions-text {
+	
+	font-weight: bold;
+	line-height: 22px;	
 	font-size: 12px;
-	padding: 3px 5px;
 	color: #fff;
+}
+.mep-captions-layer  a {
+	color: #fff;
+	text-decoration: underline;
+}
+.mep-captions-layer[lang=ar] {
+	font-size: 20px;
+	font-weight: normal;
+} 
+
+.mep-captions-text {
+	
+	padding: 3px 5px;
+	
 	background: url(background.png);	
 	background: rgba(0, 0, 0, 0.8);
-	font-weight: bold;
-	line-height: 22px;
+
 }
 
 .mep-container .mep-controls {

@@ -10,8 +10,10 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.1.0
+* Version: 1.1.1
 */
+
+// TODO: send isVideo to Flash and Silverlight for extension-less files
 
 // Namespace
 var html5 = html5 || {};

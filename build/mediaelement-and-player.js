@@ -13,6 +13,8 @@
 * Version: 1.1.0
 */
 
+// TODO: send isVideo to Flash and Silverlight for extension-less files
+
 // Namespace
 var html5 = html5 || {};
 
@@ -813,7 +815,7 @@ window.MediaElement = html5.MediaElement;
 			loading: 'Loading',				  
 			paused: 'Paused',
 			error: 'Error',
-			ended: 'Ended'				
+			ended: 'Ended'
 		},
 		// turn each button on or off
 		controls: {
@@ -824,7 +826,11 @@ window.MediaElement = html5.MediaElement;
 			captions: true,
 			fullscreen: true
 		},
-		loop: false
+		loop: false,
+		// this will automatically turn on a <track>
+		startLanguage: '',
+		// a list of languages to auto-translate via Google
+		translations: []
 	};
 
 	html5.mepIndex = 0;
@@ -889,8 +895,8 @@ window.MediaElement = html5.MediaElement;
 				'<div id="' + t.id + '" class="mep-container">'+
 					'<div class="mep-mediaelement">'+
 					'</div>'+
-					'<div class="mep-captions">'+
-						'<img />'+
+					'<div class="mep-captions-layer">'+
+						'<span class="mep-captions-text"></span>'+
 					'</div>'+
 					'<div class="mep-poster">'+
 						'<img />'+
@@ -914,6 +920,14 @@ window.MediaElement = html5.MediaElement;
 						'</div>'+
 						'<div class="mep-captions-button">'+
 							'<span></span>'+
+							'<div class="mep-captions-selector">'+
+								'<ul>'+
+									'<li>'+ 
+										'<input checked="checked" type="radio" name="' + this.id + '_captions" id="' + this.id + '_captions_none" value="none" />' +
+										'<label for="' + this.id + '_captions_none">None</label>'+										
+									'</li>'+
+								'</ul>'+
+							'</div>'+							
 						'</div>'+						
 						'<div class="mep-volume-button mep-mute">'+
 							'<span></span>'+
@@ -948,7 +962,8 @@ window.MediaElement = html5.MediaElement;
 			
 			// setup main layers and objects
 			t.buildPoster();
-			t.buildOverlay();						
+			t.buildOverlay();
+			t.buildCaptionsDisplay();
 			t.setPlayerSize(t.width, t.height); // now that the container, overlay, and poster are ready specify their exact size
 			t.buildControls();			
 			
@@ -980,6 +995,7 @@ window.MediaElement = html5.MediaElement;
 			t.buildPlayPause();
 			t.buildTimeRail();	
 			t.buildVolumeControls();
+			t.buildCaptionsControls();
 			t.buildFullscreen();
 
 
@@ -1002,9 +1018,11 @@ window.MediaElement = html5.MediaElement;
 			}, true);
 
 			t.mediaElement.addEventListener('ended', function (e) {
-				if (t.options.loop) {
-					t.mediaElement.setCurrentTime(0);
-					t.setTimePosition();
+				t.mediaElement.setCurrentTime(0);
+				t.mediaElement.pause();
+				t.setTimePosition();
+					
+				if (t.options.loop) {					
 					t.mediaElement.play();
 				} else {
 					t.poster.show();
@@ -1034,23 +1052,70 @@ window.MediaElement = html5.MediaElement;
 			this.loadTracks();
 		},
 		
+		buildCaptionsDisplay: function() {
+			var t = this;
+			t.captionsDisplay = t.container.find('.mep-captions-layer').hide();
+			t.captionsText = t.container.find('.mep-captions-text');
+		},		
+		
+		buildCaptionsControls: function() {
+			var 
+				t = this,
+				lang,
+				i;
+				
+			// handle clicks to the language radio buttons
+			t.captions.delegate('input[type=radio]','click',function() {				
+				lang = this.value;	
+				
+				if (lang == 'none') {
+					t.selectedTrack = null;
+				} else {				
+					for (i=0; i<t.tracks.length; i++) {
+						if (t.tracks[i].srclang == lang) {
+							t.selectedTrack = t.tracks[i];
+							t.captionsDisplay.attr('lang', t.selectedTrack.srclang);
+							break;
+						}
+					}	
+				}
+			});
+		},
+		
 		// adapted from Playr
 		loadTracks: function() {	
 			var t = this,
+				i,
 				tracktags = t.$media.find('track[kind=subtitles]');
 			
-			// store
+			// create storage for tracks
 			t.tracks = [];
 			t.trackToLoad = -1;
-			tracktags.each(function() {
+			t.selectedTrack = null;
+			tracktags.each(function() {				
 				t.tracks.push({
-					srclang: $(this).attr('srclang'), 
+					srclang: $(this).attr('srclang').toLowerCase(), 
 					src: $(this).attr('src'),
 					entries: [],
-					isLoaded: false
+					isLoaded: false,
+					isTranslation: false
 				});
-			});			
+			});
 			
+			// add user-defined translations
+			if (t.tracks.length > 0 && t.options.translations.length > 0) {
+				for (i=0; i<t.options.translations.length; i++) {
+					t.tracks.push({
+						srclang: t.options.translations[i].toLowerCase(), 
+						src: null,
+						entries: [],
+						isLoaded: false,
+						isTranslation: true
+					});
+				}
+			}
+			
+			// begin loading, or remove button
 			if (t.tracks.length > 0) {
 				t.loadNextSubtitle();
 			} else {
@@ -1059,34 +1124,101 @@ window.MediaElement = html5.MediaElement;
 			}
 		},
 		
+		addTrackButton: function(lang) {
+			var t = this,
+				l = html5.language.codes[lang] || lang;
+			
+			t.captions.find('ul').append(
+				$('<li>'+ 
+					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" />' +
+					'<label for="' + t.id + '_captions_' + lang + '">' + l + '</label>'+										
+				'</li>')
+			);
+			t.captions.find('.mep-captions-selector').height(
+				t.captions.find('.mep-captions-selector ul').height()
+			);
+		},
+		
 		loadNextSubtitle: function() {
 			var t = this;
 			
 			t.trackToLoad++;
 			if (t.trackToLoad < t.tracks.length){
 				t.loadSubtitles(t.trackToLoad);
-			}			
+			} else {
+				// add done?
+			}
 		},
 
 		loadSubtitles: function(index){
 			var 
 				t = this,
-				currentTrack = t.tracks[index];
+				track = t.tracks[index];
 				
-			$.ajax({
-				url: currentTrack.src,
-				success: function(d) {
-					// parse the loaded file
-					currentTrack.entries = SrtParser.parse(d);
+			if (track.isTranslation) {
+
+				// translate the first track
+				html5.SrtParser.translate(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {
 					
-					// TODO: create UI
+					// store the new translation
+					track.entries = newOne;
+					track.isLoaded = true;
+					
+					// create button
+					t.addTrackButton(track.srclang);
 					
 					t.loadNextSubtitle();
-				}, 
-				error: function() {
-					t.loadNextSubtitle();				
+				});
+				
+			} else {
+				$.ajax({
+					url: track.src,
+					success: function(d) {
+						
+						// parse the loaded file
+						track.entries = html5.SrtParser.parse(d);						
+						track.isLoaded = true;
+						
+						// create button
+						t.addTrackButton(track.srclang);
+						
+						// auto select 
+						if (t.options.startLanguage == track.srclang && t.selectedTrack == null) {
+							//t.selectedTrack = track;
+							$('#' + t.id + '_captions_' + track.srclang).click();
+						}
+						
+						t.loadNextSubtitle();
+					},
+					error: function() {
+						t.loadNextSubtitle();				
+					}
+				});
+			}
+		},
+		
+		displayCaptions: function() {
+			
+			if (typeof this.tracks == 'undefined')
+				return;
+		
+			var
+				t = this,
+				i,
+				track = t.selectedTrack;
+			
+			if (track != null && track.isLoaded) {
+				for (i=0; i<track.entries.times.length; i++) {
+					if (t.mediaElement.currentTime >= track.entries.times[i].start && t.mediaElement.currentTime <= track.entries.times[i].stop){						
+						t.captionsText.html(track.entries.text[i]);
+						t.captionsDisplay.show();
+						return; // exit out if one is visible;
+					}
 				}
-			});
+				t.captionsDisplay.hide();
+			} else {
+				t.captionsDisplay.hide();
+			}
 		},
 		
 		buildPoster: function() {
@@ -1155,7 +1287,7 @@ window.MediaElement = html5.MediaElement;
 			t.currentTime = t.controls.find('.mep-currenttime').html('00:00');
 			t.duration = t.controls.find('.mep-duration').html('00:00');
 
-			t.captions = t.controls.find('.mep-captions-button');
+			t.captions = t.controls.find('.mep-captions-button');			
 			
 			t.mute = t.controls.find('.mep-volume-button');
 			t.volumeSlider = t.controls.find('.mep-volume-slider');
@@ -1202,12 +1334,18 @@ window.MediaElement = html5.MediaElement;
 				// show/hide controls
 				t.container
 					.bind('mouseenter', function () { 
+						t.controls.css('visibility','visible');						
 						t.controls.fadeIn(200); 
+						t.captionsDisplay.css('padding-bottom', t.controls.height() + 5);
 						t.setRailSize(); 
 						t.isControlsVisible = true; 
 					})
 					.bind('mouseleave', function () { 
-						t.controls.fadeOut(200); 
+						t.controls.fadeOut(200, function() {
+							$(this).css('visibility','hidden');
+							$(this).css('display','block');
+							t.captionsDisplay.css('padding-bottom', 10);
+						}); 
 						t.isControlsVisible = false; 
 					});
 			}		
@@ -1247,11 +1385,13 @@ window.MediaElement = html5.MediaElement;
 			// attach events to <video/audio> for RAIL updates
 			t.mediaElement.addEventListener('timeupdate', function (e) {
 
-				if (!t.isControlsVisible)
-					return;
+				t.displayCaptions();			
+			
+				//if (!t.isControlsVisible)
+				//	return;
 				
 				t.setTimePosition();
-				t.setTimeLoaded(e.target);
+				t.setTimeLoaded(e.target);						
 
 			}, true);
 
@@ -1308,11 +1448,14 @@ window.MediaElement = html5.MediaElement;
 		setRailSize: function() {
 			var 
 				t = this,
+				
 				usedWidth = t.playpause.outerWidth(true) +
 							t.time.outerWidth(true) +
 							t.mute.outerWidth(true) +
 							t.captions.outerWidth(true) +
 							((t.isVideo) ? t.fullscreen.outerWidth(true) : 0),
+				
+				//usedWidth = t.timeRail.siblings().outerWidth(true),
 				railWidth = t.controls.width() - usedWidth - (t.timeRail.outerWidth(true) - t.timeRail.outerWidth(false));
 
 			t.timeRail.width(railWidth);
@@ -1329,6 +1472,10 @@ window.MediaElement = html5.MediaElement;
 			t.container
 				.width(t.width)
 				.height(t.height);
+				
+			t.captionsDisplay
+			//	.height(t.height)
+				.width(t.width);					
 
 			t.overlay
 				.width(t.width)
@@ -1531,6 +1678,66 @@ window.MediaElement = html5.MediaElement;
 		}		
 	};
 	
+	html5.language = {
+		codes:  {
+			af:'Afrikaans',
+			sq:'Albanian',
+			ar:'Arabic',
+			be:'Belarusian',
+			bg:'Bulgarian',
+			ca:'Catalan',
+			zh:'Chinese',
+			'zh-cn':'Chinese (Simplified)',
+			'zh-tw':'Chinese (Traditional)',
+			hr:'Croatian',
+			cs:'Czech',
+			da:'Danish',
+			nl:'Dutch',
+			en:'English',
+			et:'Estonian',
+			tl:'Filipino',
+			fi:'Finnish',
+			fr:'French',
+			gl:'Galician',
+			de:'German',
+			el:'Greek',
+			ht:'Haitian (Creole)',
+			iw:'Hebrew',
+			hi:'Hindi',
+			hu:'Hungarian',
+			is:'Icelandic',
+			id:'Indonesian',
+			ga:'Irish',
+			it:'Italian',
+			ja:'Japanese',
+			ko:'Korean',
+			lv:'Latvian',
+			lt:'Lithuanian',
+			mk:'Macedonian',
+			ms:'Malay',
+			mt:'Maltese',
+			no:'Norwegian',
+			fa:'Persian',
+			pl:'Polish',
+			pt:'Portuguese',
+			'pt-pt':'Portuguese (Portugal)',
+			ro:'Romanian',
+			ru:'Russian',
+			sr:'Serbian',
+			sk:'Slovak',
+			sl:'Slovenian',
+			es:'Spanish',
+			sw:'Swahili',
+			sv:'Swedish',
+			tl:'Tagalog',
+			th:'Thai',
+			tr:'Turkish',
+			uk:'Ukrainian',
+			vi:'Vietnamese',
+			cy:'Welsh',
+			yi:'Yiddish'
+		}
+	};
 	
 	/*
 	Parses SRT format which should be formatted as
@@ -1544,7 +1751,7 @@ window.MediaElement = html5.MediaElement;
 
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
-	html5.SrtParser = {
+	html5.SrtParser = {	
 		timecodeToSeconds: function(timecode){
 			var tab = timecode.split(':');
 			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
@@ -1606,6 +1813,9 @@ window.MediaElement = html5.MediaElement;
 				entries = {text:[], times:[]},
 				lines,
 				i;
+				
+			if (text.length > 1000)
+				text = text.substring(0,1000);
 			
 			google.language.translate(text, fromLang, toLang, function(result) {
 				// split on separators
