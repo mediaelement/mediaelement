@@ -43,6 +43,11 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.1.1 (2010/11/18) - 27.1kb*
+
+* added captioning support via the `<source>` tag
+* added auto-translation support via Google translate API
+
 *1.1.0 (2010/11/17) - 22.6kb*
 
 * Total re-oganization of MediaElement, MediaElementPlayer, and supporting objects

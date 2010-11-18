@@ -4,3 +4,4 @@ src/silverlight/Bin/*
 build/SilverlightMediaElementTestPage.html
 build/SilverlightMediaElement.pdb
 build/SilverlightMediaElement.dll
+newfeatures/*
