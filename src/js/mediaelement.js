@@ -13,6 +13,7 @@
 * Version: 1.1.1
 */
 // x send isVideo to Flash and Silverlight for extension-less files
+// x add timerRate for controlling how often timeupdate events are sent
 
 // Namespace
 var html5 = html5 || {};
@@ -495,6 +496,9 @@ html5.MediaElementDefaults = {
 	pluginWidth: -1,
 	// overrides <video height>		
 	pluginHeight: -1,
+	// rate in milliseconds for Flash and Silverlight to fire the timeupdate event
+	// larger number is less accurate, but less strain on plugin->JavaScript bridge
+	timerRate: 250,
 	success: function () { },
 	error: function () { }
 };
@@ -700,6 +704,7 @@ html5.HtmlMediaElementShim = {
 			'isvideo=' + isVideo.toString(),
 			'autoplay=' + autoplay,
 			'width=' + width,
+			'timerrate=' + options.timerRate,
 			'height=' + height];
 
 		if (mediaUrl !== null) {

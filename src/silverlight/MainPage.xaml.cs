@@ -30,6 +30,7 @@ namespace SilverlightMediaElement
         bool _debug = false;
         int _width = 0;
         int _height = 0;
+		int _timerRate = 0;
         double _bufferedBytes = 0;
         double _bufferedTime = 0;
 		int _videoWidth = 0;
@@ -45,11 +46,7 @@ namespace SilverlightMediaElement
 
             HtmlPage.RegisterScriptableObject("SilverlightApp", this);
 
-            // timer
-            _timer = new System.Windows.Threading.DispatcherTimer();
-            _timer.Interval = new TimeSpan(0, 0, 0, 0, 200); // 200 Milliseconds 
-            _timer.Tick += new EventHandler(timer_Tick);
-            _timer.Stop();
+
 
             // add events
             media.BufferingProgressChanged += new RoutedEventHandler(media_BufferingProgressChanged);
@@ -71,7 +68,18 @@ namespace SilverlightMediaElement
             if (initParams.ContainsKey("width")) 
                 Int32.TryParse(initParams["width"], out _width);            
             if (initParams.ContainsKey("height")) 
-                Int32.TryParse(initParams["height"], out _height);			
+                Int32.TryParse(initParams["height"], out _height);
+			if (initParams.ContainsKey("timerate"))
+				Int32.TryParse(initParams["timerrate"], out _timerRate);
+
+			if (_timerRate == 0)
+				_timerRate = 250;
+
+			// timer
+			_timer = new System.Windows.Threading.DispatcherTimer();
+			_timer.Interval = new TimeSpan(0, 0, 0, 0, _timerRate); // 200 Milliseconds 
+			_timer.Tick += new EventHandler(timer_Tick);
+			_timer.Stop();
 
 			//_mediaUrl = "http://local.mediaelement.com/media/jsaddington.mp4";
 			//_autoplay = true;

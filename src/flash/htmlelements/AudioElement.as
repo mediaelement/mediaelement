@@ -45,12 +45,12 @@ package htmlelements
 		private var _element:FlashMediaElement;
 		private var _timer:Timer;
 		
-		public function AudioElement(element:FlashMediaElement, autoplay:Boolean) 
+		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number) 
 		{
 			_element = element;
 			_autoplay = autoplay;
 			
-			_timer = new Timer(200);
+			_timer = new Timer(timerRate);
 			_timer.addEventListener(TimerEvent.TIMER, timerEventHandler);
 			
 			_soundTransform = new SoundTransform();
