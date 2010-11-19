@@ -13,7 +13,7 @@
 
 // TODO:
 // x make control html part of the options
-// - add big play button, remove messages
+// x add big play button, remove messages
 // - make volume be event driven, remember setting (cookie, startup)
 // - add skins
 
@@ -47,6 +47,8 @@
 		startLanguage: '',
 		// a list of languages to auto-translate via Google
 		translations: [],
+		// a dropdownlist of automatic translations
+		translationSelector: false,		
 		// turn each button on or off
 		controls: {
 			playpause: true,
@@ -174,7 +176,8 @@
 				'<li>'+ 
 					'<input type="radio" name="' + this.id + '_captions" id="' + this.id + '_captions_none" value="none" checked="checked" />' +
 					'<label for="' + this.id + '_captions_none">None</label>'+										
-				'</li>'));			
+				'</li>'));
+			
 			
 			// move the <video/video> tag into the right spot
 			t.container
@@ -281,13 +284,50 @@
 			if (t.options.success)
 				t.options.success(t.mediaElement, t.domNode);
 				
-			this.loadTracks();
+			this.findTracks();
 		},
 		
 		buildCaptionsDisplay: function() {
-			var t = this;
+			var t = this,
+				options = '',
+				i;
 			t.captionsDisplay = t.container.find('.mep-captions-layer').hide();
 			t.captionsText = t.container.find('.mep-captions-text');
+			
+			// TEMP: add a drop down list
+			if (t.options.translationSelector) {				
+				for (i in html5.language.codes) {
+					options += '<option value="' + i + '">' + html5.language.codes[i] + '</option>';
+				}
+				t.container.find('.mep-captions-selector ul').before($(					
+					'<select class="mep-captions-translations">' +
+						'<option value="">--Add Translation--</option>' +
+						options +
+					'</select>'
+				));
+				// add clicks
+				t.container.find('.mep-captions-translations').change(function() {
+					var 
+						option = $(this);
+						lang = option.val();
+					// add this language to the tracks list
+					if (lang != '') {
+						t.tracks.push({
+							srclang: lang, 
+							src: null,
+							entries: [],
+							isLoaded: false,
+							isTranslation: true
+						});	
+						
+						if (!t.isLoadingTrack) {
+							t.trackToLoad--;
+							t.loadNextTrack();
+							option.html(option.html() + ' ...');
+						}
+					}
+				});
+			}			
 		},		
 		
 		buildCaptionsControls: function() {
@@ -316,7 +356,7 @@
 		},
 		
 		// adapted from Playr
-		loadTracks: function() {	
+		findTracks: function() {	
 			var t = this,
 				i,
 				tracktags = t.$media.find('track[kind=subtitles]');
@@ -325,6 +365,7 @@
 			t.tracks = [];
 			t.trackToLoad = -1;
 			t.selectedTrack = null;
+			t.isLoadingTrack = false;
 			tracktags.each(function() {				
 				t.tracks.push({
 					srclang: $(this).attr('srclang').toLowerCase(), 
@@ -350,7 +391,7 @@
 			
 			// begin loading, or remove button
 			if (t.tracks.length > 0) {
-				t.loadNextSubtitle();
+				t.loadNextTrack();
 			} else {
 				t.captions.remove();
 				t.setRailSize();			
@@ -367,19 +408,25 @@
 					'<label for="' + t.id + '_captions_' + lang + '">' + l + '</label>'+										
 				'</li>')
 			);
+			// adjust the size of the outer box
 			t.captions.find('.mep-captions-selector').height(
-				t.captions.find('.mep-captions-selector ul').height()
+				t.captions.find('.mep-captions-selector ul').outerHeight(true) +
+				t.captions.find('.mep-captions-translations').outerHeight(true) 
 			);
+			// remove this from the dropdownlist (if it exists)
+			t.container.find('.mep-captions-translations option[value=' + lang + ']').remove();
 		},
 		
-		loadNextSubtitle: function() {
+		loadNextTrack: function() {
 			var t = this;
 			
 			t.trackToLoad++;
-			if (t.trackToLoad < t.tracks.length){
+			if (t.trackToLoad < t.tracks.length) {
+				t.isLoadingTrack = true;
 				t.loadSubtitles(t.trackToLoad);
 			} else {
 				// add done?
+				t.isLoadingTrack = false;
 			}
 		},
 
@@ -400,7 +447,7 @@
 					// create button
 					t.addTrackButton(track.srclang);
 					
-					t.loadNextSubtitle();
+					t.loadNextTrack();
 				});
 				
 			} else {
@@ -421,10 +468,10 @@
 							$('#' + t.id + '_captions_' + track.srclang).click();
 						}
 						
-						t.loadNextSubtitle();
+						t.loadNextTrack();
 					},
 					error: function() {
-						t.loadNextSubtitle();				
+						t.loadNextTrack();				
 					}
 				});
 			}
@@ -480,6 +527,9 @@
 				t.showMessage(t.options.messages.loading);
 			} else {
 				t.showMessage(t.options.messages.start);
+			}
+			if (!t.isVideo) {
+				t.overlay.hide();
 			}
 			
 			t.overlay.bind('click', function (e) {
@@ -1075,12 +1125,14 @@
 				chunks = [],
 				chunk,
 				maxlength = 1000,
-				result,
+				result = '',
 				nextChunk= function() {
 					if (chunks.length > 0) {
-						chunk = chunks.pop();
+						chunk = chunks.shift();
 						html5.SrtParser.translateChunk(chunk, fromLang, toLang, function(r) {
-							result += r;
+							if (r != 'undefined') {
+								result += r;
+							}
 							nextChunk();
 						});
 					} else {
@@ -1093,7 +1145,7 @@
 				if (text.length > maxlength) {
 					separatorIndex = text.lastIndexOf('.', maxlength);
 					chunks.push(text.substring(0, separatorIndex));
-					text = text.substring(separatorIndex);
+					text = text.substring(separatorIndex+1);
 				} else {
 					chunks.push(text);
 					text = '';
