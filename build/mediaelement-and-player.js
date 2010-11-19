@@ -10,10 +10,10 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.1.0
+* Version: 1.1.1
 */
-
-// TODO: send isVideo to Flash and Silverlight for extension-less files
+// x send isVideo to Flash and Silverlight for extension-less files
+// x add timerRate for controlling how often timeupdate events are sent
 
 // Namespace
 var html5 = html5 || {};
@@ -496,6 +496,9 @@ html5.MediaElementDefaults = {
 	pluginWidth: -1,
 	// overrides <video height>		
 	pluginHeight: -1,
+	// rate in milliseconds for Flash and Silverlight to fire the timeupdate event
+	// larger number is less accurate, but less strain on plugin->JavaScript bridge
+	timerRate: 250,
 	success: function () { },
 	error: function () { }
 };
@@ -538,7 +541,7 @@ html5.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url) : '', poster, autoplay);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, playback.url, poster );
@@ -698,8 +701,10 @@ html5.HtmlMediaElementShim = {
 		initVars = [
 			'id=' + pluginid,
 			'poster=' + poster,
+			'isvideo=' + isVideo.toString(),
 			'autoplay=' + autoplay,
 			'width=' + width,
+			'timerrate=' + options.timerRate,
 			'height=' + height];
 
 		if (mediaUrl !== null) {
@@ -787,11 +792,14 @@ window.MediaElement = html5.MediaElement;
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.1.0
+ * Version: 1.1.1
  */
 
 // TODO:
+// x make control html part of the options
+// - add big play button, remove messages
 // - make volume be event driven, remember setting (cookie, startup)
+// - add skins
 
 (function ($) {
 
@@ -817,6 +825,12 @@ window.MediaElement = html5.MediaElement;
 			error: 'Error',
 			ended: 'Ended'
 		},
+		// useful for <audio> player loops
+		loop: false,
+		// this will automatically turn on a <track>
+		startLanguage: '',
+		// a list of languages to auto-translate via Google
+		translations: [],
 		// turn each button on or off
 		controls: {
 			playpause: true,
@@ -826,11 +840,40 @@ window.MediaElement = html5.MediaElement;
 			captions: true,
 			fullscreen: true
 		},
-		loop: false,
-		// this will automatically turn on a <track>
-		startLanguage: '',
-		// a list of languages to auto-translate via Google
-		translations: []
+		controlsTemplate: 
+			'<div class="mep-playpause-button mep-play">' + 
+				'<span></span>' + 
+			'</div>'+
+			'<div class="mep-time-rail">'+
+				'<span class="mep-time-total">'+
+					'<span class="mep-time-loaded"></span>'+
+					'<span class="mep-time-current"></span>'+
+					'<span class="mep-time-handle"></span>'+
+				'</span>'+
+			'</div>'+
+			'<div class="mep-time">'+
+				'<span class="mep-currenttime"></span>'+
+				'<span>&nbsp;|&nbsp;</span>'+
+				'<span class="mep-duration"></span>'+
+			'</div>'+
+			'<div class="mep-captions-button">'+
+				'<span></span>'+
+				'<div class="mep-captions-selector">'+
+					'<ul>'+
+					'</ul>'+
+				'</div>'+							
+			'</div>'+						
+			'<div class="mep-volume-button mep-mute">'+
+				'<span></span>'+
+				'<div class="mep-volume-slider">'+
+					'<div class="mep-volume-rail">'+
+						'<div class="mep-volume-handle"></div>'+
+					'</div>'+
+				'</div>'+
+			'</div>'+
+			'<div class="mep-fullscreen-button">' + 
+				'<span></span>' +
+			'</div>'
 	};
 
 	html5.mepIndex = 0;
@@ -902,47 +945,20 @@ window.MediaElement = html5.MediaElement;
 						'<img />'+
 					'</div>'+
 					'<div class="mep-overlay">'+
-						'<div class="mep-overlay-message"></div>'+
+						'<div class="mep-overlay-button"></div>'+
 					'</div>'+
 					'<div class="mep-controls">'+
-						'<div class="mep-playpause-button mep-play"><span></span></div>'+
-						'<div class="mep-time-rail">'+
-							'<span class="mep-time-total">'+
-								'<span class="mep-time-loaded"></span>'+
-								'<span class="mep-time-current"></span>'+
-								'<span class="mep-time-handle"></span>'+
-							'</span>'+
-						'</div>'+
-						'<div class="mep-time">'+
-							'<span class="mep-currenttime"></span>'+
-							' <span> | </span> '+
-							'<span class="mep-duration"></span>'+
-						'</div>'+
-						'<div class="mep-captions-button">'+
-							'<span></span>'+
-							'<div class="mep-captions-selector">'+
-								'<ul>'+
-									'<li>'+ 
-										'<input checked="checked" type="radio" name="' + this.id + '_captions" id="' + this.id + '_captions_none" value="none" />' +
-										'<label for="' + this.id + '_captions_none">None</label>'+										
-									'</li>'+
-								'</ul>'+
-							'</div>'+							
-						'</div>'+						
-						'<div class="mep-volume-button mep-mute">'+
-							'<span></span>'+
-							'<div class="mep-volume-slider">'+
-								'<div class="mep-volume-rail">'+
-									'<div class="mep-volume-handle"></div>'+
-								'</div>'+
-							'</div>'+
-						'</div>'+
-						'<div class="mep-fullscreen-button"><span></span></div>'+
+						t.options.controlsTemplate +
 					'</div>'+
 					'<div class="mep-clear"></div>'+
 				'</div>')		
 			);
 			t.container = $('#' + this.id);
+			t.container.find('.mep-captions-selector ul').append($(
+				'<li>'+ 
+					'<input type="radio" name="' + this.id + '_captions" id="' + this.id + '_captions_none" value="none" checked="checked" />' +
+					'<label for="' + this.id + '_captions_none">None</label>'+										
+				'</li>'));			
 			
 			// move the <video/video> tag into the right spot
 			t.container
@@ -1075,6 +1091,7 @@ window.MediaElement = html5.MediaElement;
 						if (t.tracks[i].srclang == lang) {
 							t.selectedTrack = t.tracks[i];
 							t.captionsDisplay.attr('lang', t.selectedTrack.srclang);
+							t.displayCaptions();
 							break;
 						}
 					}	
@@ -1158,7 +1175,7 @@ window.MediaElement = html5.MediaElement;
 			if (track.isTranslation) {
 
 				// translate the first track
-				html5.SrtParser.translate(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {
+				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {
 					
 					// store the new translation
 					track.entries = newOne;
@@ -1341,12 +1358,14 @@ window.MediaElement = html5.MediaElement;
 						t.isControlsVisible = true; 
 					})
 					.bind('mouseleave', function () { 
-						t.controls.fadeOut(200, function() {
-							$(this).css('visibility','hidden');
-							$(this).css('display','block');
-							t.captionsDisplay.css('padding-bottom', 10);
-						}); 
-						t.isControlsVisible = false; 
+						if (!t.mediaElement.paused) {
+							t.controls.fadeOut(200, function() {
+								$(this).css('visibility','hidden');
+								$(this).css('display','block');
+								t.captionsDisplay.css('padding-bottom', 10);
+							}); 
+							t.isControlsVisible = false; 
+						}
 					});
 			}		
 		},
@@ -1752,14 +1771,14 @@ window.MediaElement = html5.MediaElement;
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	html5.SrtParser = {	
+		pattern_identifier: /^[0-9]+$/,
+		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
 		timecodeToSeconds: function(timecode){
 			var tab = timecode.split(':');
 			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
 		},
 		parse: function(srtText) {
-			var 
-				pattern_identifier = /^[0-9]+$/,
-				pattern_timecode = /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
+			var 	
 				i = 0,
 				lines = srtText.split(/\r?\n/),
 				entries = {text:[], times:[]},
@@ -1768,10 +1787,10 @@ window.MediaElement = html5.MediaElement;
 				
 			for(; i<lines.length; i++) {
 				// check for the line number
-				if (pattern_identifier.exec(lines[i])){
+				if (this.pattern_identifier.exec(lines[i])){
 					// skip to the next line where the start --> end time code should be
 					i++;
-					timecode = pattern_timecode.exec(lines[i]);
+					timecode = this.pattern_timecode.exec(lines[i]);
 					if (timecode && i<lines.length){
 						i++;
 						// grab all the (possibly multi-line) text that follows
@@ -1780,15 +1799,15 @@ window.MediaElement = html5.MediaElement;
 						while(lines[i] !== '' && i<lines.length){
 							text = text + '\n' + lines[i];
 							i++;
-						}
-					
+						}					
 						
+						// Text is in a different array so I can use .join
 						entries.text.push(text);
 						entries.times.push(
 						{
 							start: this.timecodeToSeconds(timecode[1]),
 							stop: this.timecodeToSeconds(timecode[3]),
-							settings: timecode[5]
+							settings: timecode[5] 
 						});
 					}
 				}
@@ -1801,25 +1820,21 @@ window.MediaElement = html5.MediaElement;
 			return !(typeof(google) == 'undefined' || typeof(google.language) == 'undefined');
 		},
 		
-		translate: function(srtData, fromLang, toLang, callback) {
+		translateSrt: function(srtData, fromLang, toLang, callback) {
 			
 			if (!this.canTranslate()) {
 				callback(null);
 				return;
 			}
 			
-			var 
-				text =  srtData.text.join(' <span></span>'),
+			var 				
 				entries = {text:[], times:[]},
 				lines,
-				i;
-				
-			if (text.length > 1000)
-				text = text.substring(0,1000);
+				i			
 			
-			google.language.translate(text, fromLang, toLang, function(result) {
+			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, function(result) {
 				// split on separators
-				lines = result.translation.split('<span></span>');
+				lines = result.split('<a></a>');
 				
 				// create new entries
 				for (i=0;i<srtData.text.length; i++) {
@@ -1833,8 +1848,49 @@ window.MediaElement = html5.MediaElement;
 					};
 				}
 				
-				callback(entries);
-			});	
+				callback(entries);			
+			});
+		},
+		
+		translateText: function(text, fromLang, toLang, callback) {
+		
+			var 
+				separatorIndex,
+				chunks = [],
+				chunk,
+				maxlength = 1000,
+				result,
+				nextChunk= function() {
+					if (chunks.length > 0) {
+						chunk = chunks.pop();
+						html5.SrtParser.translateChunk(chunk, fromLang, toLang, function(r) {
+							result += r;
+							nextChunk();
+						});
+					} else {
+						callback(result);
+					}
+				};
+			
+			// split into chunks
+			while (text.length > 0) {
+				if (text.length > maxlength) {
+					separatorIndex = text.lastIndexOf('.', maxlength);
+					chunks.push(text.substring(0, separatorIndex));
+					text = text.substring(separatorIndex);
+				} else {
+					chunks.push(text);
+					text = '';
+				}				
+			}
+			
+			// start handling the chunks
+			nextChunk();			
+		},
+		translateChunk: function(text, fromLang, toLang, callback) {
+			google.language.translate(text, fromLang, toLang, function(result) {				
+				callback(result.translation);
+			});					
 		}
 	};	
 
