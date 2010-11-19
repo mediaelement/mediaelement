@@ -8,11 +8,14 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.1.0
+ * Version: 1.1.1
  */
 
 // TODO:
+// - make control html part of the options
 // - make volume be event driven, remember setting (cookie, startup)
+// - add big play button, remove messages
+// - add skins
 
 (function ($) {
 
@@ -38,6 +41,12 @@
 			error: 'Error',
 			ended: 'Ended'
 		},
+
+		loop: false,
+		// this will automatically turn on a <track>
+		startLanguage: '',
+		// a list of languages to auto-translate via Google
+		translations: [],
 		// turn each button on or off
 		controls: {
 			playpause: true,
@@ -47,11 +56,40 @@
 			captions: true,
 			fullscreen: true
 		},
-		loop: false,
-		// this will automatically turn on a <track>
-		startLanguage: '',
-		// a list of languages to auto-translate via Google
-		translations: []
+		controlsTemplate: 
+			'<div class="mep-playpause-button mep-play">' + 
+				'<span></span>' + 
+			'</div>'+
+			'<div class="mep-time-rail">'+
+				'<span class="mep-time-total">'+
+					'<span class="mep-time-loaded"></span>'+
+					'<span class="mep-time-current"></span>'+
+					'<span class="mep-time-handle"></span>'+
+				'</span>'+
+			'</div>'+
+			'<div class="mep-time">'+
+				'<span class="mep-currenttime"></span>'+
+				'<span>&nbsp;|&nbsp;</span>'+
+				'<span class="mep-duration"></span>'+
+			'</div>'+
+			'<div class="mep-captions-button">'+
+				'<span></span>'+
+				'<div class="mep-captions-selector">'+
+					'<ul>'+
+					'</ul>'+
+				'</div>'+							
+			'</div>'+						
+			'<div class="mep-volume-button mep-mute">'+
+				'<span></span>'+
+				'<div class="mep-volume-slider">'+
+					'<div class="mep-volume-rail">'+
+						'<div class="mep-volume-handle"></div>'+
+					'</div>'+
+				'</div>'+
+			'</div>'+
+			'<div class="mep-fullscreen-button">' + 
+				'<span></span>' +
+			'</div>'
 	};
 
 	html5.mepIndex = 0;
@@ -126,44 +164,17 @@
 						'<div class="mep-overlay-message"></div>'+
 					'</div>'+
 					'<div class="mep-controls">'+
-						'<div class="mep-playpause-button mep-play"><span></span></div>'+
-						'<div class="mep-time-rail">'+
-							'<span class="mep-time-total">'+
-								'<span class="mep-time-loaded"></span>'+
-								'<span class="mep-time-current"></span>'+
-								'<span class="mep-time-handle"></span>'+
-							'</span>'+
-						'</div>'+
-						'<div class="mep-time">'+
-							'<span class="mep-currenttime"></span>'+
-							' <span> | </span> '+
-							'<span class="mep-duration"></span>'+
-						'</div>'+
-						'<div class="mep-captions-button">'+
-							'<span></span>'+
-							'<div class="mep-captions-selector">'+
-								'<ul>'+
-									'<li>'+ 
-										'<input checked="checked" type="radio" name="' + this.id + '_captions" id="' + this.id + '_captions_none" value="none" />' +
-										'<label for="' + this.id + '_captions_none">None</label>'+										
-									'</li>'+
-								'</ul>'+
-							'</div>'+							
-						'</div>'+						
-						'<div class="mep-volume-button mep-mute">'+
-							'<span></span>'+
-							'<div class="mep-volume-slider">'+
-								'<div class="mep-volume-rail">'+
-									'<div class="mep-volume-handle"></div>'+
-								'</div>'+
-							'</div>'+
-						'</div>'+
-						'<div class="mep-fullscreen-button"><span></span></div>'+
+						t.options.controlsTemplate +
 					'</div>'+
 					'<div class="mep-clear"></div>'+
 				'</div>')		
 			);
 			t.container = $('#' + this.id);
+			t.container.find('.mep-captions-selector ul').append($(
+				'<li>'+ 
+					'<input type="radio" name="' + this.id + '_captions" id="' + this.id + '_captions_none" value="none" checked="checked" />' +
+					'<label for="' + this.id + '_captions_none">None</label>'+										
+				'</li>'));			
 			
 			// move the <video/video> tag into the right spot
 			t.container
@@ -296,6 +307,7 @@
 						if (t.tracks[i].srclang == lang) {
 							t.selectedTrack = t.tracks[i];
 							t.captionsDisplay.attr('lang', t.selectedTrack.srclang);
+							t.displayCaptions();
 							break;
 						}
 					}	
