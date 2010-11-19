@@ -391,7 +391,7 @@
 			if (track.isTranslation) {
 
 				// translate the first track
-				html5.SrtParser.translate(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {
+				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {
 					
 					// store the new translation
 					track.entries = newOne;
@@ -1034,25 +1034,21 @@
 			return !(typeof(google) == 'undefined' || typeof(google.language) == 'undefined');
 		},
 		
-		translate: function(srtData, fromLang, toLang, callback) {
+		translateSrt: function(srtData, fromLang, toLang, callback) {
 			
 			if (!this.canTranslate()) {
 				callback(null);
 				return;
 			}
 			
-			var 
-				text =  srtData.text.join(' <a></a>'),
+			var 				
 				entries = {text:[], times:[]},
 				lines,
-				i;
-				
-			if (text.length > 1500)
-				text = text.substring(0,1500);
+				i			
 			
-			google.language.translate(text, fromLang, toLang, function(result) {
+			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, function(result) {
 				// split on separators
-				lines = result.translation.split('<a></a>');
+				lines = result.split('<a></a>');
 				
 				// create new entries
 				for (i=0;i<srtData.text.length; i++) {
@@ -1066,8 +1062,49 @@
 					};
 				}
 				
-				callback(entries);
-			});	
+				callback(entries);			
+			});
+		},
+		
+		translateText: function(text, fromLang, toLang, callback) {
+		
+			var 
+				separatorIndex,
+				chunks = [],
+				chunk,
+				maxlength = 1000,
+				result,
+				nextChunk= function() {
+					if (chunks.length > 0) {
+						chunk = chunks.pop();
+						html5.SrtParser.translateChunk(chunk, fromLang, toLang, function(r) {
+							result += r;
+							nextChunk();
+						});
+					} else {
+						callback(result);
+					}
+				};
+			
+			// split into chunks
+			while (text.length > 0) {
+				if (text.length > maxlength) {
+					separatorIndex = text.lastIndexOf('.', maxlength);
+					chunks.push(text.substring(0, separatorIndex));
+					text = text.substring(separatorIndex);
+				} else {
+					chunks.push(text);
+					text = '';
+				}				
+			}
+			
+			// start handling the chunks
+			nextChunk();			
+		},
+		translateChunk: function(text, fromLang, toLang, callback) {
+			google.language.translate(text, fromLang, toLang, function(result) {				
+				callback(result.translation);
+			});					
 		}
 	};	
 
