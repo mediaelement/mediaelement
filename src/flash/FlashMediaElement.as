@@ -25,6 +25,7 @@
 		private var _mediaUrl:String;
 		private var _autoplay:Boolean; // TODO
 		private var _debug:Boolean;
+		private var _isVideo:Boolean;		
 		private var _video:Video;
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
@@ -54,6 +55,7 @@
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
+			_isVideo = (params['isvideo'] != undefined) ? (String(params['isvideo']) == "true") : false;
 			
 			// setup stage and player sizes/scales
 			stage.align = StageAlign.TOP_LEFT;
@@ -75,35 +77,17 @@
 			_fullscreenButton.y = 10;		
 					
 			
-			// create media element
-			
-			var extension:String = _mediaUrl.substr(_mediaUrl.lastIndexOf(".")+1);
-			
-			trace(extension);
-			
-			switch (extension) {
-				case "mp3":
-				case "aac":
-					_mediaElement = new AudioElement(this, _autoplay);				
-					break;					
-				default:
-				case "m4v":
-				case "mp4":
-				case "webm": // for future reference
-				case "flv":
-					_mediaElement = new VideoElement(this, _autoplay);
-					break;
-					
-			}
-			
-			// if video, add to stage
-			if (_mediaElement is VideoElement) {
+			// create media element			
+			if (_isVideo) {
+				_mediaElement = new VideoElement(this, _autoplay);
 				_video = (_mediaElement as VideoElement).video;
 				_video.width = _stageWidth;			
 				_video.height = _stageHeight;
 				//_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
-				addChild(_video);				
-			}					
+				addChild(_video);						
+			} else {
+				_mediaElement = new AudioElement(this, _autoplay);
+			}		
 			
 			// debugging
             _output = new TextField();
@@ -123,6 +107,7 @@
 		    _output.appendText("stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");						
             _output.appendText("file: " + _mediaUrl + "\n");
             _output.appendText("autoplay: " + _autoplay.toString() + "\n");		
+            _output.appendText("isvideo: " + _isVideo.toString() + "\n");		
 			_output.appendText("displayState: " +(stage.hasOwnProperty("displayState")).toString() + "\n");								
 			
 			// attach javascript
