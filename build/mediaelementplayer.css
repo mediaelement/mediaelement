@@ -66,8 +66,21 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	display: table;
+	cursor: pointer;
 }
+.mep-overlay-button {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100px;
+	height: 100px;
+	margin: -50px 0 0 -50px;
+	background: url(bigplay.png) top left no-repeat;
+}
+.mep-overlay:hover .mep-overlay-button{
+	background-position: 0 -100px ;
+}
+
 .mep-overlay-message {
 	display: table-cell;
 	text-align: center;

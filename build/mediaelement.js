@@ -10,10 +10,10 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.1.0
+* Version: 1.1.1
 */
-
-// TODO: send isVideo to Flash and Silverlight for extension-less files
+// x send isVideo to Flash and Silverlight for extension-less files
+// x add timerRate for controlling how often timeupdate events are sent
 
 // Namespace
 var html5 = html5 || {};
@@ -496,6 +496,9 @@ html5.MediaElementDefaults = {
 	pluginWidth: -1,
 	// overrides <video height>		
 	pluginHeight: -1,
+	// rate in milliseconds for Flash and Silverlight to fire the timeupdate event
+	// larger number is less accurate, but less strain on plugin->JavaScript bridge
+	timerRate: 250,
 	success: function () { },
 	error: function () { }
 };
@@ -538,7 +541,7 @@ html5.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url) : '', poster, autoplay);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, playback.url, poster );
@@ -698,8 +701,10 @@ html5.HtmlMediaElementShim = {
 		initVars = [
 			'id=' + pluginid,
 			'poster=' + poster,
+			'isvideo=' + isVideo.toString(),
 			'autoplay=' + autoplay,
 			'width=' + width,
+			'timerrate=' + options.timerRate,
 			'height=' + height];
 
 		if (mediaUrl !== null) {
