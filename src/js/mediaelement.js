@@ -12,8 +12,7 @@
 *
 * Version: 1.1.1
 */
-
-// TODO: send isVideo to Flash and Silverlight for extension-less files
+// x send isVideo to Flash and Silverlight for extension-less files
 
 // Namespace
 var html5 = html5 || {};
@@ -538,7 +537,7 @@ html5.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url) : '', poster, autoplay);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, playback.url, poster );
@@ -698,6 +697,7 @@ html5.HtmlMediaElementShim = {
 		initVars = [
 			'id=' + pluginid,
 			'poster=' + poster,
+			'isvideo=' + isVideo.toString(),
 			'autoplay=' + autoplay,
 			'width=' + width,
 			'height=' + height];
