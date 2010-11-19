@@ -161,7 +161,7 @@
 						'<img />'+
 					'</div>'+
 					'<div class="mep-overlay">'+
-						'<div class="mep-overlay-message"></div>'+
+						'<div class="mep-overlay-button"></div>'+
 					'</div>'+
 					'<div class="mep-controls">'+
 						t.options.controlsTemplate +
