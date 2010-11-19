@@ -27,6 +27,7 @@
 		private var _debug:Boolean;
 		private var _isVideo:Boolean;		
 		private var _video:Video;
+		private var _timerRate:Number;
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
 		
@@ -56,6 +57,9 @@
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? (String(params['isvideo']) == "true") : false;
+			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
+			if (isNaN(_timerRate))
+				_timerRate = 250;
 			
 			// setup stage and player sizes/scales
 			stage.align = StageAlign.TOP_LEFT;
@@ -79,14 +83,14 @@
 			
 			// create media element			
 			if (_isVideo) {
-				_mediaElement = new VideoElement(this, _autoplay);
+				_mediaElement = new VideoElement(this, _autoplay, _timerRate);
 				_video = (_mediaElement as VideoElement).video;
 				_video.width = _stageWidth;			
 				_video.height = _stageHeight;
 				//_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
 				addChild(_video);						
 			} else {
-				_mediaElement = new AudioElement(this, _autoplay);
+				_mediaElement = new AudioElement(this, _autoplay, _timerRate);
 			}		
 			
 			// debugging
@@ -108,6 +112,7 @@
             _output.appendText("file: " + _mediaUrl + "\n");
             _output.appendText("autoplay: " + _autoplay.toString() + "\n");		
             _output.appendText("isvideo: " + _isVideo.toString() + "\n");		
+            _output.appendText("timerrate: " + _timerRate.toString() + "\n");				
 			_output.appendText("displayState: " +(stage.hasOwnProperty("displayState")).toString() + "\n");								
 			
 			// attach javascript
