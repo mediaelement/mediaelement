@@ -297,9 +297,18 @@
 	list-style-type: none !important;
 	display:block;
 	color: #fff;
+	overflow: hidden;
+}
+.mep-controls .mep-captions-button .mep-captions-selector ul li input{
+	clear: both;
+	float: left;
+
 }
 .mep-controls .mep-captions-button .mep-captions-selector ul li label{
-	white-space: nowrap;
+	width: 100px;
+	float: left;
+	padding: 4px 0 0 0;
+	line-height: 15px;	
 }
 
 .mep-controls .mep-captions-button .mep-captions-translations {
