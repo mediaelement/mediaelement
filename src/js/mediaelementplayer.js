@@ -12,9 +12,9 @@
  */
 
 // TODO:
-// - make control html part of the options
-// - make volume be event driven, remember setting (cookie, startup)
+// x make control html part of the options
 // - add big play button, remove messages
+// - make volume be event driven, remember setting (cookie, startup)
 // - add skins
 
 (function ($) {
@@ -985,14 +985,14 @@
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	html5.SrtParser = {	
+		pattern_identifier: /^[0-9]+$/,
+		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
 		timecodeToSeconds: function(timecode){
 			var tab = timecode.split(':');
 			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
 		},
 		parse: function(srtText) {
-			var 
-				pattern_identifier = /^[0-9]+$/,
-				pattern_timecode = /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
+			var 	
 				i = 0,
 				lines = srtText.split(/\r?\n/),
 				entries = {text:[], times:[]},
@@ -1001,10 +1001,10 @@
 				
 			for(; i<lines.length; i++) {
 				// check for the line number
-				if (pattern_identifier.exec(lines[i])){
+				if (this.pattern_identifier.exec(lines[i])){
 					// skip to the next line where the start --> end time code should be
 					i++;
-					timecode = pattern_timecode.exec(lines[i]);
+					timecode = this.pattern_timecode.exec(lines[i]);
 					if (timecode && i<lines.length){
 						i++;
 						// grab all the (possibly multi-line) text that follows
@@ -1013,15 +1013,15 @@
 						while(lines[i] !== '' && i<lines.length){
 							text = text + '\n' + lines[i];
 							i++;
-						}
-					
+						}					
 						
+						// Text is in a different array so I can use .join
 						entries.text.push(text);
 						entries.times.push(
 						{
 							start: this.timecodeToSeconds(timecode[1]),
 							stop: this.timecodeToSeconds(timecode[3]),
-							settings: timecode[5]
+							settings: timecode[5] 
 						});
 					}
 				}
@@ -1042,17 +1042,17 @@
 			}
 			
 			var 
-				text =  srtData.text.join(' <span></span>'),
+				text =  srtData.text.join(' <a></a>'),
 				entries = {text:[], times:[]},
 				lines,
 				i;
 				
-			if (text.length > 1000)
-				text = text.substring(0,1000);
+			if (text.length > 1500)
+				text = text.substring(0,1500);
 			
 			google.language.translate(text, fromLang, toLang, function(result) {
 				// split on separators
-				lines = result.translation.split('<span></span>');
+				lines = result.translation.split('<a></a>');
 				
 				// create new entries
 				for (i=0;i<srtData.text.length; i++) {
