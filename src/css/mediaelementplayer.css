@@ -221,7 +221,7 @@
 .mep-controls .mep-time-rail .mep-time-total {
 	margin: 5px;
 	background: #333;
-	background: rgba(0,0,0,0.8);	
+	background: rgba(50,50,50,50.8);	
 }
 .mep-controls .mep-time-rail .mep-time-loaded {
 	background: #3caac8;
@@ -269,8 +269,8 @@
 	visibility: hidden;
 	position: absolute;
 	bottom: 15px;
-	left: -70px;
-	width: 120px;
+	left: -80px;
+	width: 130px;
 	min-height: 50px;
 	background: url(background.png);
 	background: rgba(0,0,0,0.8);
@@ -300,6 +300,11 @@
 }
 .mep-controls .mep-captions-button .mep-captions-selector ul li label{
 	white-space: nowrap;
+}
+
+.mep-controls .mep-captions-button .mep-captions-translations {
+	font-size: 10px;
+	margin: 0 0 5px 0;
 }
 
 .mep-controls .mep-mute span {
