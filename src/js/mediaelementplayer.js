@@ -41,7 +41,7 @@
 			error: 'Error',
 			ended: 'Ended'
 		},
-
+		// useful for <audio> player loops
 		loop: false,
 		// this will automatically turn on a <track>
 		startLanguage: '',
@@ -574,12 +574,14 @@
 						t.isControlsVisible = true; 
 					})
 					.bind('mouseleave', function () { 
-						t.controls.fadeOut(200, function() {
-							$(this).css('visibility','hidden');
-							$(this).css('display','block');
-							t.captionsDisplay.css('padding-bottom', 10);
-						}); 
-						t.isControlsVisible = false; 
+						if (!t.mediaElement.paused) {
+							t.controls.fadeOut(200, function() {
+								$(this).css('visibility','hidden');
+								$(this).css('display','block');
+								t.captionsDisplay.css('padding-bottom', 10);
+							}); 
+							t.isControlsVisible = false; 
+						}
 					});
 			}		
 		},
