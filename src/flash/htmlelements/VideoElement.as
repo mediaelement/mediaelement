@@ -56,7 +56,7 @@ package htmlelements
 		}
 		
 		
-		public function VideoElement(element:FlashMediaElement, autoplay:Boolean) 
+		public function VideoElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number) 
 		{
 			_element = element;
 			_autoplay = autoplay;
@@ -69,7 +69,7 @@ package htmlelements
             _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
             _connection.connect(null);	
 			
-			_timer = new Timer(200);
+			_timer = new Timer(timerRate);
 			_timer.addEventListener("timer", timerHandler);
 			
 		}
