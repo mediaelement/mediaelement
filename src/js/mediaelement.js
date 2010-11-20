@@ -665,7 +665,7 @@ html5.HtmlMediaElementShim = {
 					
 		errorContainer.innerHTML = (poster !== '') ?
 			'<a href="' + downloadUrl + '"><img src="' + poster + '" /></a>' :
-			'<a href="' + downloadUrl + '">Download File</a>';
+			'<a href="' + downloadUrl + '"><span>Download File</span></a>';
 		
 		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);
 		htmlMediaElement.style.display = 'none';

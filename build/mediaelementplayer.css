@@ -39,14 +39,16 @@
 	font-family: Helvetica, Arial;
 }
 
-.me-cannotplay {
-	padding: 15px;
+.me-cannotplay {	
 }
 .me-cannotplay a {
 	color: #fff;
 	font-weight: bold;
 }
-
+.me-cannotplay span {
+	padding: 15px;
+	display: block;
+}
 .mep-container-fullscreen { 
 	position: fixed; 
 	left: 0; 
