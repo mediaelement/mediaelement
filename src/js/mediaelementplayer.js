@@ -8,12 +8,10 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.1.1
+ * Version: 1.1.2
  */
 
 // TODO:
-// x make control html part of the options
-// x add big play button, remove messages
 // - make volume be event driven, remember setting (cookie, startup)
 // - add skins
 
@@ -25,7 +23,7 @@
 		defaultVideoWidth: 480,
 		// default if the <video height> is not specified
 		defaultVideoHeight: 270,
-		// if set, overrides <video width> 
+		// if set, overrides <video width>
 		videoWidth: -1,
 		// if set, overrides <video height>
 		videoHeight: -1,
@@ -36,7 +34,7 @@
 		// display messages
 		messages: {
 			start: 'Click to Start',
-			loading: 'Loading',				  
+			loading: 'Loading',				
 			paused: 'Paused',
 			error: 'Error',
 			ended: 'Ended'
@@ -58,9 +56,10 @@
 			captions: true,
 			fullscreen: true
 		},
-		controlsTemplate: 
-			'<div class="mep-playpause-button mep-play">' + 
-				'<span></span>' + 
+		// customize this to change the order of the control elements
+		controlsTemplate:
+			'<div class="mep-playpause-button mep-play">' +
+				'<span></span>' +
 			'</div>'+
 			'<div class="mep-time-rail">'+
 				'<span class="mep-time-total">'+
@@ -89,7 +88,7 @@
 					'</div>'+
 				'</div>'+
 			'</div>'+
-			'<div class="mep-fullscreen-button">' + 
+			'<div class="mep-fullscreen-button">' +
 				'<span></span>' +
 			'</div>'
 	};
@@ -143,8 +142,8 @@
 			var
 				t = this,
 				meOptions = $.extend(true, {}, t.options, {
-					success: function(mediaElement, domNode) { t.setupPlayer(mediaElement, domNode); }, 
-					error: function(e) { t.handleError(e);} 
+					success: function(mediaElement, domNode) { t.setupPlayer(mediaElement, domNode); },
+					error: function(e) { t.handleError(e);}
 				});				
 		
 			// unique ID
@@ -173,7 +172,7 @@
 			);
 			t.container = $('#' + this.id);
 			t.container.find('.mep-captions-selector ul').append($(
-				'<li>'+ 
+				'<li>'+
 					'<input type="radio" name="' + this.id + '_captions" id="' + this.id + '_captions_none" value="none" checked="checked" />' +
 					'<label for="' + this.id + '_captions_none">None</label>'+										
 				'</li>'));
@@ -294,8 +293,7 @@
 			t.captionsDisplay = t.container.find('.mep-captions-layer').hide();
 			t.captionsText = t.container.find('.mep-captions-text');
 			
-			// TEMP: add a drop down list
-			if (t.options.translationSelector) {				
+			if (t.options.translationSelector && html5.SrtParser.canTranslate()) {				
 				for (i in html5.language.codes) {
 					options += '<option value="' + i + '">' + html5.language.codes[i] + '</option>';
 				}
@@ -307,13 +305,13 @@
 				));
 				// add clicks
 				t.container.find('.mep-captions-translations').change(function() {
-					var 
+					var
 						option = $(this);
 						lang = option.val();
 					// add this language to the tracks list
 					if (lang != '') {
 						t.tracks.push({
-							srclang: lang, 
+							srclang: lang,
 							src: null,
 							entries: [],
 							isLoaded: false,
@@ -322,8 +320,9 @@
 						
 						if (!t.isLoadingTrack) {
 							t.trackToLoad--;
-							t.loadNextTrack();
-							option.html(option.html() + ' ...');
+							t.addTrackButton(lang,true);
+							t.options.startLanguage = lang;
+							t.loadNextTrack();							
 						}
 					}
 				});
@@ -331,7 +330,7 @@
 		},		
 		
 		buildCaptionsControls: function() {
-			var 
+			var
 				t = this,
 				lang,
 				i;
@@ -368,25 +367,30 @@
 			t.isLoadingTrack = false;
 			tracktags.each(function() {				
 				t.tracks.push({
-					srclang: $(this).attr('srclang').toLowerCase(), 
+					srclang: $(this).attr('srclang').toLowerCase(),
 					src: $(this).attr('src'),
 					entries: [],
 					isLoaded: false,
 					isTranslation: false
-				});
+				});				
 			});
 			
 			// add user-defined translations
-			if (t.tracks.length > 0 && t.options.translations.length > 0) {
+			if (t.tracks.length > 0 && t.options.translations.length > 0 && html5.SrtParser.canTranslate()) {
 				for (i=0; i<t.options.translations.length; i++) {
 					t.tracks.push({
-						srclang: t.options.translations[i].toLowerCase(), 
+						srclang: t.options.translations[i].toLowerCase(),
 						src: null,
 						entries: [],
 						isLoaded: false,
 						isTranslation: true
 					});
-				}
+				}				
+			}
+			
+			// add to list
+			for (i=0; i<t.tracks.length; i++) {
+				t.addTrackButton(t.tracks[i].srclang, t.tracks[i].isTranslation);	
 			}
 			
 			// begin loading, or remove button
@@ -396,25 +400,6 @@
 				t.captions.remove();
 				t.setRailSize();			
 			}
-		},
-		
-		addTrackButton: function(lang) {
-			var t = this,
-				l = html5.language.codes[lang] || lang;
-			
-			t.captions.find('ul').append(
-				$('<li>'+ 
-					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + l + '</label>'+										
-				'</li>')
-			);
-			// adjust the size of the outer box
-			t.captions.find('.mep-captions-selector').height(
-				t.captions.find('.mep-captions-selector ul').outerHeight(true) +
-				t.captions.find('.mep-captions-translations').outerHeight(true) 
-			);
-			// remove this from the dropdownlist (if it exists)
-			t.container.find('.mep-captions-translations option[value=' + lang + ']').remove();
 		},
 		
 		loadNextTrack: function() {
@@ -431,21 +416,22 @@
 		},
 
 		loadSubtitles: function(index){
-			var 
+			var
 				t = this,
 				track = t.tracks[index];
 				
 			if (track.isTranslation) {
-
+			
 				// translate the first track
-				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {
+				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {								
 					
 					// store the new translation
 					track.entries = newOne;
 					track.isLoaded = true;
 					
 					// create button
-					t.addTrackButton(track.srclang);
+					//t.addTrackButton(track.srclang);					
+					t.enableTrackButton(track.srclang);
 					
 					t.loadNextTrack();
 				});
@@ -460,13 +446,8 @@
 						track.isLoaded = true;
 						
 						// create button
-						t.addTrackButton(track.srclang);
-						
-						// auto select 
-						if (t.options.startLanguage == track.srclang && t.selectedTrack == null) {
-							//t.selectedTrack = track;
-							$('#' + t.id + '_captions_' + track.srclang).click();
-						}
+						//t.addTrackButton(track.srclang);
+						t.enableTrackButton(track.srclang);					
 						
 						t.loadNextTrack();
 					},
@@ -475,6 +456,49 @@
 					}
 				});
 			}
+		},
+		
+		enableTrackButton: function(lang) {
+			var t = this;
+			
+			t.captions
+				.find('input[value=' + lang + ']')
+					.attr('disabled','')
+				.siblings('label')
+					.html( html5.language.codes[lang] || lang );
+
+			// auto select
+			if (t.options.startLanguage == lang) {
+				$('#' + t.id + '_captions_' + lang).click();
+			}					
+					
+			t.adjustLanguageBox();
+		},
+		
+		addTrackButton: function(lang, isTranslation) {
+			var t = this,
+				l = html5.language.codes[lang] || lang;
+			
+			t.captions.find('ul').append(
+				$('<li>'+
+					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
+					'<label for="' + t.id + '_captions_' + lang + '">' + l + ((isTranslation) ? ' (translating)' : ' (loading)') + '</label>'+										
+				'</li>')
+			);
+			
+			t.adjustLanguageBox();
+			
+			// remove this from the dropdownlist (if it exists)
+			t.container.find('.mep-captions-translations option[value=' + lang + ']').remove();
+		},	
+
+		adjustLanguageBox:function() {
+			var t = this;
+			// adjust the size of the outer box
+			t.captions.find('.mep-captions-selector').height(
+				t.captions.find('.mep-captions-selector ul').outerHeight(true) +
+				t.captions.find('.mep-captions-translations').outerHeight(true)
+			);		
 		},
 		
 		displayCaptions: function() {
@@ -616,21 +640,21 @@
 			if (t.isVideo) {
 				// show/hide controls
 				t.container
-					.bind('mouseenter', function () { 
+					.bind('mouseenter', function () {
 						t.controls.css('visibility','visible');						
-						t.controls.fadeIn(200); 
+						t.controls.fadeIn(200);
 						t.captionsDisplay.css('padding-bottom', t.controls.height() + 5);
-						t.setRailSize(); 
-						t.isControlsVisible = true; 
+						t.setRailSize();
+						t.isControlsVisible = true;
 					})
-					.bind('mouseleave', function () { 
+					.bind('mouseleave', function () {
 						if (!t.mediaElement.paused) {
 							t.controls.fadeOut(200, function() {
 								$(this).css('visibility','hidden');
 								$(this).css('display','block');
 								t.captionsDisplay.css('padding-bottom', 10);
-							}); 
-							t.isControlsVisible = false; 
+							});
+							t.isControlsVisible = false;
 						}
 					});
 			}		
@@ -686,7 +710,7 @@
 		},
 		
 		setTimePosition: function() {
-			var 
+			var
 				t = this,
 				newWidth,
 				handlePos;
@@ -698,7 +722,7 @@
 				if (t.mediaElement.duration)
 					t.duration.html(html5.Utility.secondsToTimeCode(t.mediaElement.duration));
 
-				// update bar and handle				 
+				// update bar and handle				
 				newWidth = t.timeTotal.width() * t.mediaElement.currentTime / t.mediaElement.duration;
 				handlePos = newWidth - (t.timeHandle.width() / 2);
 			
@@ -708,7 +732,7 @@
 		},
 			
 		setTimeLoaded:function(target) {
-			var 
+			var
 				t = this,
 				percent = null;
 			
@@ -731,7 +755,7 @@
 		},		
 
 		setRailSize: function() {
-			var 
+			var
 				t = this,
 				
 				usedWidth = t.playpause.outerWidth(true) +
@@ -921,7 +945,7 @@
 		},
 		
 		volumeMove: function(e) {
-			var 
+			var
 				t = this,				
 				railHeight = t.volumeRail.height(),
 				newY = e.pageY - t.volumeRail.offset().top,
@@ -1073,7 +1097,7 @@
 						{
 							start: this.timecodeToSeconds(timecode[1]),
 							stop: this.timecodeToSeconds(timecode[3]),
-							settings: timecode[5] 
+							settings: timecode[5]
 						});
 					}
 				}
@@ -1120,7 +1144,7 @@
 		
 		translateText: function(text, fromLang, toLang, callback) {
 		
-			var 
+			var
 				separatorIndex,
 				chunks = [],
 				chunk,
