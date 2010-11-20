@@ -8,7 +8,7 @@
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.1.2
+ * Version: 1.1.3
  */
 
 // TODO:
