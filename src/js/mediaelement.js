@@ -10,10 +10,8 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.1.1
+* Version: 1.1.2
 */
-// x send isVideo to Flash and Silverlight for extension-less files
-// x add timerRate for controlling how often timeupdate events are sent
 
 // Namespace
 var html5 = html5 || {};
@@ -121,7 +119,7 @@ html5.PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/
 	
 	return v;
 });
-// add adobe acrobat 
+// add adobe acrobat
 /*
 PluginDetector.addPlugin('acrobat','Adobe Acrobat','application/pdf','AcroPDF.PDF', function (ax) {	
 	var version = [],
@@ -143,7 +141,7 @@ if (html5.PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
 // necessary detection (fixes for <IE9)
 html5.MediaFeatures = {
 	init: function() {
-		var 
+		var
 			nav = html5.PluginDetector.nav,
 			ua = html5.PluginDetector.ua,
 			i,
@@ -183,7 +181,7 @@ html5.Utility = {
 		return el.firstChild.href;
 	},
 	getScriptPath: function(scriptNames) {
-		var 
+		var
 			i = 0,
 			j,
 			path = '',
@@ -434,7 +432,7 @@ html5.MediaPluginBridge = {
 	// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
 	fireEvent: function (id, eventName, values) {
 
-		var 
+		var
 			e,
 			i,
 			bufferedTime,
@@ -458,14 +456,14 @@ html5.MediaPluginBridge = {
 		// fake the newer W3C buffered TimeRange (loaded and total have been removed)
 		bufferedTime = values.bufferedTime || 0;
 		
-		e.target.buffered = e.buffered = { 
-			start: function(index) { 
-				return 0; 
-			}, 
-			end: function (index) { 
-				return bufferedTime; 
-			}, 
-			length: 1 
+		e.target.buffered = e.buffered = {
+			start: function(index) {
+				return 0;
+			},
+			end: function (index) {
+				return bufferedTime;
+			},
+			length: 1
 		};
 
 		pluginMediaElement.dispatchEvent(e.type, e);
@@ -515,14 +513,14 @@ html5.MediaElement = function (el, o) {
 html5.HtmlMediaElementShim = {		
 
 	create: function(el, o) {			
-		var 
+		var
 			options = html5.MediaElementDefaults,
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,					
 			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video'),			
 			supportsMediaTag = (typeof(htmlMediaElement.canPlayType) != 'undefined'),
 			playback = {method:'', url:''},
-			poster = htmlMediaElement.getAttribute('poster'), 
-			autoplay =  htmlMediaElement.getAttribute('autoplay'), 
+			poster = htmlMediaElement.getAttribute('poster'),
+			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			prop;
 
 		// extend options
@@ -550,7 +548,7 @@ html5.HtmlMediaElementShim = {
 	
 	determinePlayback: function(htmlMediaElement, options, isVideo, supportsMediaTag) {
 		
-		var 
+		var
 			mediaFiles = [],
 			i,
 			j,
@@ -600,7 +598,7 @@ html5.HtmlMediaElementShim = {
 					return result;
 				}
 			}
-		} 
+		}
 
 		
 		// if native playback didn't work, then test plugins		
@@ -660,8 +658,8 @@ html5.HtmlMediaElementShim = {
 			errorContainer.style.height = htmlMediaElement.height + 'px';
 		} catch (e) {}
 					
-		errorContainer.innerHTML = (poster !== '') ? 
-			'<a href="' + downloadUrl + '"><img src="' + poster + '" /></a>' : 
+		errorContainer.innerHTML = (poster !== '') ?
+			'<a href="' + downloadUrl + '"><img src="' + poster + '" /></a>' :
 			'<a href="' + downloadUrl + '">Download file</a>';
 		
 		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);

@@ -43,6 +43,14 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.1.2 (2010/11/XX) - xx.xkb*
+
+* Removed messages, added big play button
+* Google translate now supports more than 1000 characters
+* Added a dropdownlist of languages from which the user can select
+* Added timerUpdate option to set the millisecond speed of timeupdate events
+* Updated the media file and examples
+
 *1.1.1 (2010/11/18) - 27.1kb*
 
 * added captioning support via the `<source>` tag
