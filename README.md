@@ -43,7 +43,11 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
-*1.1.2 (2010/11/XX) - xx.xkb*
+*1.1.3 (2010/11/20) - 29.0kb*
+
+* Change to fallback mechanism and styling (Windows Phone 7)
+
+*1.1.2 (2010/11/19) - 28.9kb*
 
 * Removed messages, added big play button
 * Google translate now supports more than 1000 characters

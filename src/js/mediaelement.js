@@ -10,7 +10,7 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.1.2
+* Version: 1.1.3
 */
 
 // Namespace
@@ -542,7 +542,7 @@ html5.HtmlMediaElementShim = {
 			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
-			this.createErrorMessage( htmlMediaElement, options, playback.url, poster );
+			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url) : '', poster );
 		}			
 	},
 	
@@ -558,6 +558,7 @@ html5.HtmlMediaElementShim = {
 			url,
 			type,
 			result = { method: '', url: ''},
+			src = htmlMediaElement.getAttribute('src'),
 			pluginName,
 			pluginVersions,
 			pluginInfo;
@@ -569,7 +570,7 @@ html5.HtmlMediaElementShim = {
 			mediaFiles.push({type:options.type, url:null});
 
 		// test for src attribute first
-		} else if (htmlMediaElement.getAttribute('src') != 'undefined' && htmlMediaElement.getAttribute('src') !== null) {
+		} else if (src  != 'undefined' && src  !== null) {
 			url = htmlMediaElement.getAttribute('src');
 			type = this.checkType(url, htmlMediaElement.getAttribute('type'), isVideo);
 			mediaFiles.push({type:type, url:url});
@@ -632,6 +633,11 @@ html5.HtmlMediaElementShim = {
 			}
 		}
 		
+		// what if there's nothing to play? just grab the first available
+		if (result.method === '') {
+			result.url = mediaFiles[0].url;
+		}
+		
 		return result;			
 		
 	},
@@ -648,7 +654,6 @@ html5.HtmlMediaElementShim = {
 		}
 	},
 	
-
 	createErrorMessage: function(htmlMediaElement, options, downloadUrl, poster) {
 		var errorContainer = document.createElement('div');
 		errorContainer.className = 'me-cannotplay';
@@ -660,7 +665,7 @@ html5.HtmlMediaElementShim = {
 					
 		errorContainer.innerHTML = (poster !== '') ?
 			'<a href="' + downloadUrl + '"><img src="' + poster + '" /></a>' :
-			'<a href="' + downloadUrl + '">Download file</a>';
+			'<a href="' + downloadUrl + '">Download File</a>';
 		
 		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);
 		htmlMediaElement.style.display = 'none';
