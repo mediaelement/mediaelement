@@ -57,7 +57,7 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 *1.1.1 (2010/11/18) - 27.1kb*
 
-* added captioning support via the `<source>` tag (thanks to [Playr](http://www.delphiki.com/html5/playr) for the example)
+* added captioning support via the `<track>` tag (thanks to [Playr](http://www.delphiki.com/html5/playr) for the example)
 * added auto-translation support via Google translate API
 
 *1.1.0 (2010/11/17) - 22.6kb*
