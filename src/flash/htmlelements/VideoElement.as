@@ -27,7 +27,7 @@ package htmlelements
 		// event values
 		private var _duration:Number;
 		private var _framerate:Number;
-		private var _isPaused:Boolean = false;
+		private var _isPaused:Boolean = true;
 		private var _isEnded:Boolean = false;
 		private var _isLoaded:Boolean = false;
 		private var _volume:Number = 1;

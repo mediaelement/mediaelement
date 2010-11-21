@@ -10,17 +10,19 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.1.3
 */
 
 // Namespace
-var html5 = html5 || {};
+var mejs = mejs || {};
+
+// version number
+mejs.version = '1.1.4';
 
 // player number (for missing, same id attr)
-html5.meIndex = 0;
+mejs.meIndex = 0;
 
 // media types accepted by plugins
-html5.plugins = {
+mejs.plugins = {
 	silverlight: [
 		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/mp4','audio/m4a','audio/mp3']}
 	],
@@ -31,7 +33,7 @@ html5.plugins = {
 };
 
 // Core detector, plugins are added below
-html5.PluginDetector = {
+mejs.PluginDetector = {
 
 	// main public function to test a plug version number PluginDetector.hasPluginVersion('flash',[9,0,125]);
 	hasPluginVersion: function(plugin, v) {
@@ -85,7 +87,7 @@ html5.PluginDetector = {
 };
 
 // Add Flash detection
-html5.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwave-flash','ShockwaveFlash.ShockwaveFlash', function(ax) {
+mejs.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwave-flash','ShockwaveFlash.ShockwaveFlash', function(ax) {
 	// adapted from SWFObject
 	var version = [],
 		d = ax.GetVariable("$version");
@@ -97,7 +99,7 @@ html5.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwav
 });
 
 // Add Silverlight detection
-html5.PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/x-silverlight-2','AgControl.AgControl', function (ax) {		
+mejs.PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/x-silverlight-2','AgControl.AgControl', function (ax) {		
 	// Silverlight cannot report its version number to IE
 	// but it does have a isVersionSupported function, so we have to loop through it to get a version number.
 	// adapted from http://www.silverlightversion.com/		
@@ -132,18 +134,18 @@ PluginDetector.addPlugin('acrobat','Adobe Acrobat','application/pdf','AcroPDF.PD
 */
 		
 // special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-if (html5.PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
+if (mejs.PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
 	HTMLMediaElement.canPlayType = function(type) {
 		return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'probably' : '';
 	};
 }
 
 // necessary detection (fixes for <IE9)
-html5.MediaFeatures = {
+mejs.MediaFeatures = {
 	init: function() {
 		var
-			nav = html5.PluginDetector.nav,
-			ua = html5.PluginDetector.ua,
+			nav = mejs.PluginDetector.nav,
+			ua = mejs.PluginDetector.ua,
 			i,
 			v,
 			html5Elements = ['source','track','audio','video'];
@@ -166,12 +168,12 @@ html5.MediaFeatures = {
 		}
 	}
 };
-html5.MediaFeatures.init();
+mejs.MediaFeatures.init();
 
 /*
 Utility methods
 */
-html5.Utility = {	
+mejs.Utility = {	
 	escapeHTML: function(s) {
 		return s.split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
 	},
@@ -217,7 +219,7 @@ html5.Utility = {
 /*
 extension methods to <video> or <audio> object to bring it into parity with PluginMediaElement (see below)
 */
-html5.HtmlMediaElement = {
+mejs.HtmlMediaElement = {
 	pluginType: 'native',
 
 	setCurrentTime: function (time) {
@@ -259,7 +261,7 @@ html5.HtmlMediaElement = {
 /*
 Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
 */
-html5.PluginMediaElement = function (pluginid, pluginType) {
+mejs.PluginMediaElement = function (pluginid, pluginType) {
 	this.id = pluginid;
 	this.pluginType = pluginType;
 	this.events = {};
@@ -268,7 +270,7 @@ html5.PluginMediaElement = function (pluginid, pluginType) {
 // JavaScript values and ExternalInterface methods that match HTML5 video properties methods
 // http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
 // http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html	
-html5.PluginMediaElement.prototype = {
+mejs.PluginMediaElement.prototype = {
 
 	// special
 	pluginElement: null,
@@ -293,28 +295,34 @@ html5.PluginMediaElement.prototype = {
 
 	// HTML5 methods
 	play: function () {
-		this.pluginApi.playMedia();
-		this.paused = false;
+		if (this.pluginApi != null) {
+			this.pluginApi.playMedia();
+			this.paused = false;
+		}
 	},
 	load: function () {
-		this.pluginApi.loadMedia();
-		this.paused = false;
+		if (this.pluginApi != null) {
+			this.pluginApi.loadMedia();
+			this.paused = false;
+		}
 	},
 	pause: function () {
-		this.pluginApi.pauseMedia();
-		this.paused = true;
+		if (this.pluginApi != null) {
+			this.pluginApi.pauseMedia();
+			this.paused = true;
+		}
 	},	
 	canPlayType: function(type) {
 		var i,
 			j,
 			pluginInfo,
-			pluginVersions = html5.plugins[this.pluginType];	
+			pluginVersions = mejs.plugins[this.pluginType];	
 			
 		for (i=0; i<pluginVersions.length; i++) {
 			pluginInfo = pluginVersions[i];
 			
 			// test if user has the correct plugin version
-			if (html5.PluginDetector.hasPluginVersion(this.pluginType, pluginInfo.version)) {
+			if (mejs.PluginDetector.hasPluginVersion(this.pluginType, pluginInfo.version)) {
 			
 				// test for plugin playback types
 				for (j=0; j<pluginInfo.types.length; j++) {
@@ -335,30 +343,36 @@ html5.PluginMediaElement.prototype = {
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]	
 	setSrc: function (url) {
 		if (typeof url == 'string') {
-			this.pluginApi.setSrc(html5.Utility.absolutizeUrl(url));
+			this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(url));
 		} else {
 			var i, media;
 			
 			for (i=0; i<url.length; i++) {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
-					this.pluginApi.setSrc(html5.Utility.absolutizeUrl(media.src));
+					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
 				}
 			}			
 		}	
 		
 	},
 	setCurrentTime: function (time) {
-		this.pluginApi.setCurrentTime(time);
-		this.currentTime = time;
+		if (this.pluginApi != null) {
+			this.pluginApi.setCurrentTime(time);
+			this.currentTime = time;
+		}
 	},
 	setVolume: function (volume) {
-		this.pluginApi.setVolume(volume);
-		this.volume = volume;
+		if (this.pluginApi != null) {
+			this.pluginApi.setVolume(volume);
+			this.volume = volume;
+		}
 	},
 	setMuted: function (muted) {
-		this.pluginApi.setMuted(muted);
-		this.muted = muted;
+		if (this.pluginApi != null) {
+			this.pluginApi.setMuted(muted);	
+			this.muted = muted;
+		}
 	},
 
 	// additional non-HTML5 methods
@@ -367,12 +381,15 @@ html5.PluginMediaElement.prototype = {
 			this.pluginElement.style.width = width + 'px';
 			this.pluginElement.style.height = height + 'px';						
 		}
-
-		this.pluginApi.setVideoSize(width, height);
+		if (this.pluginApi != null) {
+			this.pluginApi.setVideoSize(width, height);
+		}
 	},
 	
 	setFullscreen: function (fullscreen) {
-		this.pluginApi.setFullscreen(fullscreen);
+		if (this.pluginApi != null) {
+			this.pluginApi.setFullscreen(fullscreen);
+		}
 	},
 
 	// start: fake events
@@ -396,7 +413,7 @@ html5.PluginMediaElement.prototype = {
 };
 
 // Handles calls from Flash/Silverlight and reports them as native <video/audio> events and properties
-html5.MediaPluginBridge = {
+mejs.MediaPluginBridge = {
 
 	pluginMediaElements:{},
 	htmlMediaElements:{},
@@ -439,7 +456,7 @@ html5.MediaPluginBridge = {
 			pluginMediaElement = this.pluginMediaElements[id];
 		
 		pluginMediaElement.ended = false;
-		pluginMediaElement.paused = false;
+		pluginMediaElement.paused = true;
 
 		// fake event object to mimic real HTML media event.
 		e = {
@@ -473,7 +490,7 @@ html5.MediaPluginBridge = {
 /*
 Default options
 */
-html5.MediaElementDefaults = {
+mejs.MediaElementDefaults = {
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// remove or reorder to change plugin priority
@@ -481,7 +498,7 @@ html5.MediaElementDefaults = {
 	// specify to force MediaElement into a mode
 	type: '',
 	// path to Flash and Silverlight plugins
-	pluginPath: html5.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
+	pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
 	// name of flash file
 	flashName: 'flashmediaelement.swf',
 	// name of silverlight file
@@ -506,15 +523,15 @@ Determines if a browser supports the <video> or <audio> element
 and returns either the native element or a Flash/Silverlight version that
 mimics HTML5 MediaElement
 */
-html5.MediaElement = function (el, o) {	
-	html5.HtmlMediaElementShim.create(el,o);
+mejs.MediaElement = function (el, o) {	
+	mejs.HtmlMediaElementShim.create(el,o);
 };
 
-html5.HtmlMediaElementShim = {		
+mejs.HtmlMediaElementShim = {		
 
 	create: function(el, o) {			
 		var
-			options = html5.MediaElementDefaults,
+			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,					
 			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video'),			
 			supportsMediaTag = (typeof(htmlMediaElement.canPlayType) != 'undefined'),
@@ -539,10 +556,10 @@ html5.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
-			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url) : '', poster );
+			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
 		}			
 	},
 	
@@ -612,12 +629,12 @@ html5.HtmlMediaElementShim = {
 				pluginName = options.plugins[j];
 				
 				// test version of plugin (for future features)
-				pluginVersions = html5.plugins[pluginName];				
+				pluginVersions = mejs.plugins[pluginName];				
 				for (k=0; k<pluginVersions.length; k++) {
 					pluginInfo = pluginVersions[k];
 					
 					// test if user has the correct plugin version
-					if (html5.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
+					if (mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
 					
 						// test for plugin playback types
 						for (l=0; l<pluginInfo.types.length; l++) {
@@ -677,8 +694,8 @@ html5.HtmlMediaElementShim = {
 	
 		var width = 1,
 			height = 1,
-			pluginid = 'me_' + pluginType + '_' + (html5.meIndex++),
-			pluginMediaElement = new html5.PluginMediaElement(pluginid, pluginType),
+			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
+			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType),
 			container = document.createElement('div'),
 			initVars;
 
@@ -694,7 +711,7 @@ html5.HtmlMediaElementShim = {
 
 		// register plugin
 		pluginMediaElement.success = options.success;
-		html5.MediaPluginBridge.registerPluginElement(pluginid, pluginMediaElement, htmlMediaElement);
+		mejs.MediaPluginBridge.registerPluginElement(pluginid, pluginMediaElement, htmlMediaElement);
 
 		// add container (must be added to DOM before inserting HTML for IE)
 		container.className = 'me-plugin';			
@@ -732,7 +749,7 @@ html5.HtmlMediaElementShim = {
 
 			case 'flash':
 
-				if (html5.MediaFeatures.isIE) {
+				if (mejs.MediaFeatures.isIE) {
 					container.outerHTML =
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '">' +
@@ -772,8 +789,8 @@ html5.HtmlMediaElementShim = {
 	updateNative: function(htmlMediaElement, options) {
 
 		// add methods to video object to bring it into parity with Flash Object
-		for (var m in html5.HtmlMediaElement) {
-			htmlMediaElement[m] = html5.HtmlMediaElement[m];
+		for (var m in mejs.HtmlMediaElement) {
+			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
 		
 		// fire success code
@@ -782,5 +799,5 @@ html5.HtmlMediaElementShim = {
 };
 
 
-window.html5 = html5;
-window.MediaElement = html5.MediaElement;
+window.mejs = mejs;
+window.MediaElement = mejs.MediaElement;

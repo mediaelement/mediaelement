@@ -18,7 +18,7 @@
 (function ($) {
 
 	// default player values
-	html5.MepDefaults = {
+	mejs.MepDefaults = {
 		// default if the <video width> is not specified
 		defaultVideoWidth: 480,
 		// default if the <video height> is not specified
@@ -30,15 +30,9 @@
 		// width of audio player
 		audioWidth: 300,
 		// height of audio player
-		audioHeight: 30,		
-		// display messages
-		messages: {
-			start: 'Click to Start',
-			loading: 'Loading',				
-			paused: 'Paused',
-			error: 'Error',
-			ended: 'Ended'
-		},
+		audioHeight: 30,
+		// initial volume when the player starts (overrided by user cookie)
+		startVolume: 0.8,		
 		// useful for <audio> player loops
 		loop: false,
 		// this will automatically turn on a <track>
@@ -46,8 +40,10 @@
 		// a list of languages to auto-translate via Google
 		translations: [],
 		// a dropdownlist of automatic translations
-		translationSelector: false,		
-		// turn each button on or off
+		translationSelector: false,	
+		// key for tranlsations
+		googleApiKey: '',
+		// turn each button on or off		
 		controls: {
 			playpause: true,
 			timerail: true,
@@ -93,17 +89,17 @@
 			'</div>'
 	};
 
-	html5.mepIndex = 0;
+	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
-	html5.MediaElementPlayer = function($media, o) {
+	mejs.MediaElementPlayer = function($media, o) {
 
 		var	
 			t = this,
-			mf = html5.MediaFeatures;
+			mf = mejs.MediaFeatures;
 	
 		t.$media = $($media);
-		t.options = $.extend(true,{},html5.MepDefaults,o);
+		t.options = $.extend(true,{},mejs.MepDefaults,o);
 		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
 				
 		if (mf.isiPad || mf.isiPhone) {
@@ -136,7 +132,7 @@
 		t.createPlayer();
 	};
 	
-	html5.MediaElementPlayer.prototype = {
+	mejs.MediaElementPlayer.prototype = {
 		createPlayer: function() {
 
 			var
@@ -147,7 +143,7 @@
 				});				
 		
 			// unique ID
-			t.id = 'mep_' + html5.mepIndex++;			
+			t.id = 'mep_' + mejs.mepIndex++;			
 			
 			// add HTML
 			t.$media.before(
@@ -204,7 +200,7 @@
 			// create MediaElementShim	
 			meOptions.pluginWidth = t.height;
 			meOptions.pluginHeight = t.width;			
-			html5.MediaElement(t.$media[0], meOptions);			
+			mejs.MediaElement(t.$media[0], meOptions);			
 			
 		},
 		
@@ -240,28 +236,40 @@
 				}
 			}, true);
 
+			t.mediaElement.addEventListener('play', function (e) {
+				t.poster.hide();
+				t.overlay.hide();
+				t.playpause.removeClass('mep-play').addClass('mep-pause');			
+			}, true);
+			
 			t.mediaElement.addEventListener('playing', function (e) {
 				t.poster.hide();
-				t.playpause.removeClass('mep-play').addClass('mep-pause');
-				t.hideMessage();
+				t.overlay.hide();
+				t.playpause.removeClass('mep-play').addClass('mep-pause');			
 			}, true);
 
 			t.mediaElement.addEventListener('pause', function (e) {	
+				t.overlay.show();
 				t.playpause.removeClass('mep-pause').addClass('mep-play');
-				t.showMessage(t.options.messages.paused);
 			}, true);
+			
+			t.mediaElement.addEventListener('paused', function (e) {	
+				t.overlay.show();
+				t.playpause.removeClass('mep-pause').addClass('mep-play');
+			}, true);			
 
 			t.mediaElement.addEventListener('ended', function (e) {
 				t.mediaElement.setCurrentTime(0);
-				t.mediaElement.pause();
-				t.setTimePosition();
+				t.mediaElement.pause();				
 					
 				if (t.options.loop) {					
 					t.mediaElement.play();
 				} else {
 					t.poster.show();
+					t.overlay.show();
+					t.controls.css('visibility','visible');
 					t.playpause.removeClass('mep-pause').addClass('mep-play');
-					t.showMessage(t.options.messages.ended);
+					t.setTimePosition();
 				}
 			}, true);
 			
@@ -293,9 +301,9 @@
 			t.captionsDisplay = t.container.find('.mep-captions-layer').hide();
 			t.captionsText = t.container.find('.mep-captions-text');
 			
-			if (t.options.translationSelector && html5.SrtParser.canTranslate()) {				
-				for (i in html5.language.codes) {
-					options += '<option value="' + i + '">' + html5.language.codes[i] + '</option>';
+			if (t.options.translationSelector) {				
+				for (i in mejs.language.codes) {
+					options += '<option value="' + i + '">' + mejs.language.codes[i] + '</option>';
 				}
 				t.container.find('.mep-captions-selector ul').before($(					
 					'<select class="mep-captions-translations">' +
@@ -358,10 +366,10 @@
 		findTracks: function() {	
 			var t = this,
 				i,
-				tracktags = t.$media.find('track[kind=subtitles]');
+				tracktags = t.$media.find('track');
 			
 			// create storage for tracks
-			t.tracks = [];
+			t.tracks = []
 			t.trackToLoad = -1;
 			t.selectedTrack = null;
 			t.isLoadingTrack = false;
@@ -369,6 +377,7 @@
 				t.tracks.push({
 					srclang: $(this).attr('srclang').toLowerCase(),
 					src: $(this).attr('src'),
+					kind: $(this).attr('kind'),
 					entries: [],
 					isLoaded: false,
 					isTranslation: false
@@ -376,11 +385,12 @@
 			});
 			
 			// add user-defined translations
-			if (t.tracks.length > 0 && t.options.translations.length > 0 && html5.SrtParser.canTranslate()) {
+			if (t.tracks.length > 0 && t.options.translations.length > 0) {
 				for (i=0; i<t.options.translations.length; i++) {
 					t.tracks.push({
 						srclang: t.options.translations[i].toLowerCase(),
 						src: null,
+						kind: 'subtitles', 
 						entries: [],
 						isLoaded: false,
 						isTranslation: true
@@ -390,7 +400,9 @@
 			
 			// add to list
 			for (i=0; i<t.tracks.length; i++) {
-				t.addTrackButton(t.tracks[i].srclang, t.tracks[i].isTranslation);	
+				if (t.tracks[i].kind == 'subtitles') {
+					t.addTrackButton(t.tracks[i].srclang, t.tracks[i].isTranslation);	
+				}
 			}
 			
 			// begin loading, or remove button
@@ -423,7 +435,7 @@
 			if (track.isTranslation) {
 			
 				// translate the first track
-				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {								
+				mejs.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {								
 					
 					// store the new translation
 					track.entries = newOne;
@@ -442,7 +454,7 @@
 					success: function(d) {
 						
 						// parse the loaded file
-						track.entries = html5.SrtParser.parse(d);						
+						track.entries = mejs.SrtParser.parse(d);						
 						track.isLoaded = true;
 						
 						// create button
@@ -465,7 +477,7 @@
 				.find('input[value=' + lang + ']')
 					.attr('disabled','')
 				.siblings('label')
-					.html( html5.language.codes[lang] || lang );
+					.html( mejs.language.codes[lang] || lang );
 
 			// auto select
 			if (t.options.startLanguage == lang) {
@@ -477,7 +489,7 @@
 		
 		addTrackButton: function(lang, isTranslation) {
 			var t = this,
-				l = html5.language.codes[lang] || lang;
+				l = mejs.language.codes[lang] || lang;
 			
 			t.captions.find('ul').append(
 				$('<li>'+
@@ -547,11 +559,6 @@
 			// OVERLAY
 			t.overlay = t.container.find('.mep-overlay');
 			t.overlayMessage = t.container.find('.mep-overlay-message');
-			if (t.$media[0].getAttribute('autoplay') !== null) {
-				t.showMessage(t.options.messages.loading);
-			} else {
-				t.showMessage(t.options.messages.start);
-			}
 			if (!t.isVideo) {
 				t.overlay.hide();
 			}
@@ -563,18 +570,6 @@
 			}, true);		
 		},
 		
-		showMessage: function (text) {
-			if (this.isVideo) {
-				this.overlayMessage.html(text);
-				//overlay.show();
-				this.overlay.css('visibility','visible');
-			}
-		},
-		
-		hideMessage: function () {
-			//overlay.hide();
-			this.overlay.css('visibility','hidden');
-		},			
 		
 		buildControls: function() {
 			
@@ -718,9 +713,9 @@
 			if (t.mediaElement.currentTime && t.mediaElement.duration) {
 
 				// update current and duration text
-				t.currentTime.html(html5.Utility.secondsToTimeCode(t.mediaElement.currentTime));
+				t.currentTime.html(mejs.Utility.secondsToTimeCode(t.mediaElement.currentTime));
 				if (t.mediaElement.duration)
-					t.duration.html(html5.Utility.secondsToTimeCode(t.mediaElement.duration));
+					t.duration.html(mejs.Utility.secondsToTimeCode(t.mediaElement.duration));
 
 				// update bar and handle				
 				newWidth = t.timeTotal.width() * t.mediaElement.currentTime / t.mediaElement.duration;
@@ -800,7 +795,6 @@
 			
 			t.$media.hide();
 			
-			//t.showMessage(t.options.messages.error);
 			t.overlay.hide();
 			t.controls.hide();
 			t.poster.hide();
@@ -830,7 +824,7 @@
 					break;
 				case 'native':
 
-					if (html5.MediaFeatures.hasNativeFullScreen) {
+					if (mejs.MediaFeatures.hasNativeFullScreen) {
 						
 						if (goFullScreen) {
 							t.mediaElement.webkitEnterFullScreen();
@@ -942,6 +936,13 @@
 				}
 			});	
 			
+			t.mediaElement.addEventListener('volumechange', function(e) {
+				t.positionVolumeHandle(e.target.volume);
+			}, true);
+			
+			// set volume
+			t.mediaElement.setVolume(t.options.startVolume);
+			
 		},
 		
 		volumeMove: function(e) {
@@ -987,7 +988,7 @@
 		}		
 	};
 	
-	html5.language = {
+	mejs.language = {
 		codes:  {
 			af:'Afrikaans',
 			sq:'Albanian',
@@ -996,8 +997,8 @@
 			bg:'Bulgarian',
 			ca:'Catalan',
 			zh:'Chinese',
-			'zh-cn':'Chinese (Simplified)',
-			'zh-tw':'Chinese (Traditional)',
+			'zh-cn':'Chinese Simplified',
+			'zh-tw':'Chinese Traditional',
 			hr:'Croatian',
 			cs:'Czech',
 			da:'Danish',
@@ -1010,7 +1011,7 @@
 			gl:'Galician',
 			de:'German',
 			el:'Greek',
-			ht:'Haitian (Creole)',
+			ht:'Haitian Creole',
 			iw:'Hebrew',
 			hi:'Hindi',
 			hu:'Hungarian',
@@ -1029,7 +1030,7 @@
 			fa:'Persian',
 			pl:'Polish',
 			pt:'Portuguese',
-			'pt-pt':'Portuguese (Portugal)',
+			//'pt-pt':'Portuguese (Portugal)',
 			ro:'Romanian',
 			ru:'Russian',
 			sr:'Serbian',
@@ -1060,17 +1061,22 @@
 
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
-	html5.SrtParser = {	
+	mejs.SrtParser = {	
 		pattern_identifier: /^[0-9]+$/,
 		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
 		timecodeToSeconds: function(timecode){
 			var tab = timecode.split(':');
 			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
 		},
+		split2: function (text, regex) {
+			// normal version for compliant browsers
+			// see below for IE fix
+			return text.split(regex);
+		},		
 		parse: function(srtText) {
 			var 	
 				i = 0,
-				lines = srtText.split(/\r?\n/),
+				lines = this.split2(srtText, /\r?\n/),
 				entries = {text:[], times:[]},
 				timecode,
 				text;
@@ -1106,23 +1112,14 @@
 			return entries;		
 		},
 		
-		canTranslate: function() {
-			return !(typeof(google) == 'undefined' || typeof(google.language) == 'undefined');
-		},
-		
-		translateSrt: function(srtData, fromLang, toLang, callback) {
-			
-			if (!this.canTranslate()) {
-				callback(null);
-				return;
-			}
+		translateSrt: function(srtData, fromLang, toLang, googleApiKey, callback) {
 			
 			var 				
 				entries = {text:[], times:[]},
 				lines,
 				i			
 			
-			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, function(result) {
+			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
 				// split on separators
 				lines = result.split('<a></a>');
 				
@@ -1142,7 +1139,7 @@
 			});
 		},
 		
-		translateText: function(text, fromLang, toLang, callback) {
+		translateText: function(text, fromLang, toLang, googleApiKey, callback) {
 		
 			var
 				separatorIndex,
@@ -1153,7 +1150,7 @@
 				nextChunk= function() {
 					if (chunks.length > 0) {
 						chunk = chunks.shift();
-						html5.SrtParser.translateChunk(chunk, fromLang, toLang, function(r) {
+						mejs.SrtParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
 							if (r != 'undefined') {
 								result += r;
 							}
@@ -1179,22 +1176,62 @@
 			// start handling the chunks
 			nextChunk();			
 		},
-		translateChunk: function(text, fromLang, toLang, callback) {
-			google.language.translate(text, fromLang, toLang, function(result) {				
-				callback(result.translation);
-			});					
+		translateChunk: function(text, fromLang, toLang, googleApiKey, callback) {
+			
+			var data = {
+				q: text, 
+				langpair: fromLang + '|' + toLang,
+				v: '1.0'
+			};
+			if (googleApiKey !== '' && googleApiKey !== null) {
+				data.key = googleApiKey;
+			}
+			
+			$.ajax({
+				url: 'https://ajax.googleapis.com/ajax/services/language/translate', // 'https://www.google.com/uds/Gtranslate', //'https://ajax.googleapis.com/ajax/services/language/translate', //
+				data: data,
+				type: 'GET',
+				dataType: 'jsonp',
+				success: function(d) {
+					callback(d.responseData.translatedText);						
+				},
+				error: function(e) {
+					callback(null);
+				}
+			});			
 		}
 	};	
-
+	// test for browsers with bad String.split method.
+	if ('x\n\ny'.split(/\n/gi).length != 3) {
+		// add super slow IE8 and below version
+		mejs.SrtParser.split2 = function(text, regex) {			
+			var 
+				parts = [], 
+				chunk = '',
+				i;
+			
+			for (i=0; i<text.length; i++) {
+				chunk += text.substring(i,i+1);
+				if (regex.test(chunk)) {					
+					parts.push(chunk.replace(regex, ''));
+					chunk = '';
+				}
+			}
+			parts.push(chunk);
+			return parts;
+		}
+	}
+	
+	
 	// turn into jQuery plugin
 	jQuery.fn.mediaelementplayer = function (options) {
 		return this.each(function () {
-			return new MediaElementPlayer($(this), options);
+			return new mejs.MediaElementPlayer($(this), options);
 		});
 	};
 
 	// push out to window
-	window.MediaElementPlayer = html5.MediaElementPlayer;
+	window.MediaElementPlayer = mejs.MediaElementPlayer;
 
 })(jQuery);
 

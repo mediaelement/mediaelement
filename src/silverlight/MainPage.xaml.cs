@@ -113,7 +113,7 @@ namespace SilverlightMediaElement
             //HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", new object[] {_htmlid});
 			try
 			{
-				HtmlPage.Window.Eval("html5.MediaPluginBridge.initPlugin('" + _htmlid + "');");
+				HtmlPage.Window.Eval("mejs.MediaPluginBridge.initPlugin('" + _htmlid + "');");
 			}
 			catch { }
         }
@@ -231,7 +231,7 @@ namespace SilverlightMediaElement
 			
 			/*
 			 * EVAL
-            HtmlPage.Window.Eval("html5.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
+            HtmlPage.Window.Eval("mejs.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
                     @"{" +
                         @"""name"": """ + name + @"""" +
                         @", ""currentTime"":" + (media.Position.TotalSeconds).ToString() + @"" +
@@ -248,7 +248,7 @@ namespace SilverlightMediaElement
 			try
 			{
 				// setTimeout
-				HtmlPage.Window.Invoke("setTimeout", "html5.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
+				HtmlPage.Window.Invoke("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
 			@"{" +
 				@"""name"": """ + name + @"""" +
 				@", ""currentTime"":" + (media.Position.TotalSeconds).ToString() + @"" +
@@ -318,12 +318,16 @@ namespace SilverlightMediaElement
         public void setVolume(Double volume) {
             WriteDebug("method:setvolume: " + volume.ToString());
 
+			SendEvent("volumechange");
+
             media.Volume = volume;
         }
 
         [ScriptableMember]
         public void setMuted(bool isMuted) {
             WriteDebug("method:setmuted: " + isMuted.ToString());
+
+			SendEvent("volumechange");
 
             media.IsMuted = isMuted;
         }
