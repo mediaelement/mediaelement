@@ -1,11 +1,11 @@
 # GOAL: Make `<video>` and `<audio>` easy. One file. Any browser. Same UI.
 
-* Author: John Dyer (http://johndyer.name/)
-* Website: http://mediaelementjs.com/
+* Author: [John Dyer](http://johndyer.name/)
+* Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
 * License: GPLv2/MIT
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
-* Thanks: my employer, Dallas Theological Seminary (http://www.dts.edu/)
+* Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 
 ## Part 1: MediaElement.js
 _HTML5 `<video>` and `<audio>` shim_
@@ -57,7 +57,7 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 *1.1.1 (2010/11/18) - 27.1kb*
 
-* added captioning support via the `<source>` tag
+* added captioning support via the `<source>` tag (thanks to [Playr](http://www.delphiki.com/html5/playr) for the example)
 * added auto-translation support via Google translate API
 
 *1.1.0 (2010/11/17) - 22.6kb*
