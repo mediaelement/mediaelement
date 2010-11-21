@@ -46,8 +46,10 @@
 		// a list of languages to auto-translate via Google
 		translations: [],
 		// a dropdownlist of automatic translations
-		translationSelector: false,		
-		// turn each button on or off
+		translationSelector: false,	
+		// key for tranlsations
+		googleApiKey: '',
+		// turn each button on or off		
 		controls: {
 			playpause: true,
 			timerail: true,
@@ -293,7 +295,7 @@
 			t.captionsDisplay = t.container.find('.mep-captions-layer').hide();
 			t.captionsText = t.container.find('.mep-captions-text');
 			
-			if (t.options.translationSelector && html5.SrtParser.canTranslate()) {				
+			if (t.options.translationSelector) {				
 				for (i in html5.language.codes) {
 					options += '<option value="' + i + '">' + html5.language.codes[i] + '</option>';
 				}
@@ -376,7 +378,7 @@
 			});
 			
 			// add user-defined translations
-			if (t.tracks.length > 0 && t.options.translations.length > 0 && html5.SrtParser.canTranslate()) {
+			if (t.tracks.length > 0 && t.options.translations.length > 0) {
 				for (i=0; i<t.options.translations.length; i++) {
 					t.tracks.push({
 						srclang: t.options.translations[i].toLowerCase(),
@@ -423,7 +425,7 @@
 			if (track.isTranslation) {
 			
 				// translate the first track
-				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {								
+				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {								
 					
 					// store the new translation
 					track.entries = newOne;
@@ -996,8 +998,8 @@
 			bg:'Bulgarian',
 			ca:'Catalan',
 			zh:'Chinese',
-			'zh-cn':'Chinese (Simplified)',
-			'zh-tw':'Chinese (Traditional)',
+			'zh-cn':'Chinese Simplified',
+			'zh-tw':'Chinese Traditional',
 			hr:'Croatian',
 			cs:'Czech',
 			da:'Danish',
@@ -1010,7 +1012,7 @@
 			gl:'Galician',
 			de:'German',
 			el:'Greek',
-			ht:'Haitian (Creole)',
+			ht:'Haitian Creole',
 			iw:'Hebrew',
 			hi:'Hindi',
 			hu:'Hungarian',
@@ -1029,7 +1031,7 @@
 			fa:'Persian',
 			pl:'Polish',
 			pt:'Portuguese',
-			'pt-pt':'Portuguese (Portugal)',
+			//'pt-pt':'Portuguese (Portugal)',
 			ro:'Romanian',
 			ru:'Russian',
 			sr:'Serbian',
@@ -1106,23 +1108,14 @@
 			return entries;		
 		},
 		
-		canTranslate: function() {
-			return !(typeof(google) == 'undefined' || typeof(google.language) == 'undefined');
-		},
-		
-		translateSrt: function(srtData, fromLang, toLang, callback) {
-			
-			if (!this.canTranslate()) {
-				callback(null);
-				return;
-			}
+		translateSrt: function(srtData, fromLang, toLang, googleApiKey, callback) {
 			
 			var 				
 				entries = {text:[], times:[]},
 				lines,
 				i			
 			
-			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, function(result) {
+			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
 				// split on separators
 				lines = result.split('<a></a>');
 				
@@ -1142,7 +1135,7 @@
 			});
 		},
 		
-		translateText: function(text, fromLang, toLang, callback) {
+		translateText: function(text, fromLang, toLang, googleApiKey, callback) {
 		
 			var
 				separatorIndex,
@@ -1153,7 +1146,7 @@
 				nextChunk= function() {
 					if (chunks.length > 0) {
 						chunk = chunks.shift();
-						html5.SrtParser.translateChunk(chunk, fromLang, toLang, function(r) {
+						html5.SrtParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
 							if (r != 'undefined') {
 								result += r;
 							}
@@ -1179,10 +1172,29 @@
 			// start handling the chunks
 			nextChunk();			
 		},
-		translateChunk: function(text, fromLang, toLang, callback) {
-			google.language.translate(text, fromLang, toLang, function(result) {				
-				callback(result.translation);
-			});					
+		translateChunk: function(text, fromLang, toLang, googleApiKey, callback) {
+			
+			var data = {
+				q: text, 
+				langpair: fromLang + '|' + toLang,
+				v: '1.0'
+			};
+			if (googleApiKey !== '' && googleApiKey !== null) {
+				data.key = googleApiKey;
+			}
+			
+			$.ajax({
+				url: 'https://ajax.googleapis.com/ajax/services/language/translate', // 'https://www.google.com/uds/Gtranslate', //'https://ajax.googleapis.com/ajax/services/language/translate', //
+				data: data,
+				type: 'GET',
+				dataType: 'jsonp',
+				success: function(d) {
+					callback(d.responseData.translatedText);						
+				},
+				error: function(e) {
+					callback(null);
+				}
+			});			
 		}
 	};	
 
