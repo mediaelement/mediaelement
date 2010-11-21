@@ -10,17 +10,19 @@
 * Copyright 2010, John Dyer
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
-* Version: 1.1.3
 */
 
 // Namespace
-var html5 = html5 || {};
+var mejs = mejs || {};
+
+// version number
+mejs.version = '1.1.4';
 
 // player number (for missing, same id attr)
-html5.meIndex = 0;
+mejs.meIndex = 0;
 
 // media types accepted by plugins
-html5.plugins = {
+mejs.plugins = {
 	silverlight: [
 		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/mp4','audio/m4a','audio/mp3']}
 	],
@@ -31,7 +33,7 @@ html5.plugins = {
 };
 
 // Core detector, plugins are added below
-html5.PluginDetector = {
+mejs.PluginDetector = {
 
 	// main public function to test a plug version number PluginDetector.hasPluginVersion('flash',[9,0,125]);
 	hasPluginVersion: function(plugin, v) {
@@ -85,7 +87,7 @@ html5.PluginDetector = {
 };
 
 // Add Flash detection
-html5.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwave-flash','ShockwaveFlash.ShockwaveFlash', function(ax) {
+mejs.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwave-flash','ShockwaveFlash.ShockwaveFlash', function(ax) {
 	// adapted from SWFObject
 	var version = [],
 		d = ax.GetVariable("$version");
@@ -97,7 +99,7 @@ html5.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwav
 });
 
 // Add Silverlight detection
-html5.PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/x-silverlight-2','AgControl.AgControl', function (ax) {		
+mejs.PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/x-silverlight-2','AgControl.AgControl', function (ax) {		
 	// Silverlight cannot report its version number to IE
 	// but it does have a isVersionSupported function, so we have to loop through it to get a version number.
 	// adapted from http://www.silverlightversion.com/		
@@ -132,18 +134,18 @@ PluginDetector.addPlugin('acrobat','Adobe Acrobat','application/pdf','AcroPDF.PD
 */
 		
 // special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-if (html5.PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
+if (mejs.PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
 	HTMLMediaElement.canPlayType = function(type) {
 		return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'probably' : '';
 	};
 }
 
 // necessary detection (fixes for <IE9)
-html5.MediaFeatures = {
+mejs.MediaFeatures = {
 	init: function() {
 		var
-			nav = html5.PluginDetector.nav,
-			ua = html5.PluginDetector.ua,
+			nav = mejs.PluginDetector.nav,
+			ua = mejs.PluginDetector.ua,
 			i,
 			v,
 			html5Elements = ['source','track','audio','video'];
@@ -166,12 +168,12 @@ html5.MediaFeatures = {
 		}
 	}
 };
-html5.MediaFeatures.init();
+mejs.MediaFeatures.init();
 
 /*
 Utility methods
 */
-html5.Utility = {	
+mejs.Utility = {	
 	escapeHTML: function(s) {
 		return s.split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
 	},
@@ -217,7 +219,7 @@ html5.Utility = {
 /*
 extension methods to <video> or <audio> object to bring it into parity with PluginMediaElement (see below)
 */
-html5.HtmlMediaElement = {
+mejs.HtmlMediaElement = {
 	pluginType: 'native',
 
 	setCurrentTime: function (time) {
@@ -259,7 +261,7 @@ html5.HtmlMediaElement = {
 /*
 Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
 */
-html5.PluginMediaElement = function (pluginid, pluginType) {
+mejs.PluginMediaElement = function (pluginid, pluginType) {
 	this.id = pluginid;
 	this.pluginType = pluginType;
 	this.events = {};
@@ -268,7 +270,7 @@ html5.PluginMediaElement = function (pluginid, pluginType) {
 // JavaScript values and ExternalInterface methods that match HTML5 video properties methods
 // http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
 // http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html	
-html5.PluginMediaElement.prototype = {
+mejs.PluginMediaElement.prototype = {
 
 	// special
 	pluginElement: null,
@@ -293,28 +295,34 @@ html5.PluginMediaElement.prototype = {
 
 	// HTML5 methods
 	play: function () {
-		this.pluginApi.playMedia();
-		this.paused = false;
+		if (this.pluginApi != null) {
+			this.pluginApi.playMedia();
+			this.paused = false;
+		}
 	},
 	load: function () {
-		this.pluginApi.loadMedia();
-		this.paused = false;
+		if (this.pluginApi != null) {
+			this.pluginApi.loadMedia();
+			this.paused = false;
+		}
 	},
 	pause: function () {
-		this.pluginApi.pauseMedia();
-		this.paused = true;
+		if (this.pluginApi != null) {
+			this.pluginApi.pauseMedia();
+			this.paused = true;
+		}
 	},	
 	canPlayType: function(type) {
 		var i,
 			j,
 			pluginInfo,
-			pluginVersions = html5.plugins[this.pluginType];	
+			pluginVersions = mejs.plugins[this.pluginType];	
 			
 		for (i=0; i<pluginVersions.length; i++) {
 			pluginInfo = pluginVersions[i];
 			
 			// test if user has the correct plugin version
-			if (html5.PluginDetector.hasPluginVersion(this.pluginType, pluginInfo.version)) {
+			if (mejs.PluginDetector.hasPluginVersion(this.pluginType, pluginInfo.version)) {
 			
 				// test for plugin playback types
 				for (j=0; j<pluginInfo.types.length; j++) {
@@ -335,30 +343,36 @@ html5.PluginMediaElement.prototype = {
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]	
 	setSrc: function (url) {
 		if (typeof url == 'string') {
-			this.pluginApi.setSrc(html5.Utility.absolutizeUrl(url));
+			this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(url));
 		} else {
 			var i, media;
 			
 			for (i=0; i<url.length; i++) {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
-					this.pluginApi.setSrc(html5.Utility.absolutizeUrl(media.src));
+					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
 				}
 			}			
 		}	
 		
 	},
 	setCurrentTime: function (time) {
-		this.pluginApi.setCurrentTime(time);
-		this.currentTime = time;
+		if (this.pluginApi != null) {
+			this.pluginApi.setCurrentTime(time);
+			this.currentTime = time;
+		}
 	},
 	setVolume: function (volume) {
-		this.pluginApi.setVolume(volume);
-		this.volume = volume;
+		if (this.pluginApi != null) {
+			this.pluginApi.setVolume(volume);
+			this.volume = volume;
+		}
 	},
 	setMuted: function (muted) {
-		this.pluginApi.setMuted(muted);
-		this.muted = muted;
+		if (this.pluginApi != null) {
+			this.pluginApi.setMuted(muted);	
+			this.muted = muted;
+		}
 	},
 
 	// additional non-HTML5 methods
@@ -367,12 +381,15 @@ html5.PluginMediaElement.prototype = {
 			this.pluginElement.style.width = width + 'px';
 			this.pluginElement.style.height = height + 'px';						
 		}
-
-		this.pluginApi.setVideoSize(width, height);
+		if (this.pluginApi != null) {
+			this.pluginApi.setVideoSize(width, height);
+		}
 	},
 	
 	setFullscreen: function (fullscreen) {
-		this.pluginApi.setFullscreen(fullscreen);
+		if (this.pluginApi != null) {
+			this.pluginApi.setFullscreen(fullscreen);
+		}
 	},
 
 	// start: fake events
@@ -396,7 +413,7 @@ html5.PluginMediaElement.prototype = {
 };
 
 // Handles calls from Flash/Silverlight and reports them as native <video/audio> events and properties
-html5.MediaPluginBridge = {
+mejs.MediaPluginBridge = {
 
 	pluginMediaElements:{},
 	htmlMediaElements:{},
@@ -439,7 +456,7 @@ html5.MediaPluginBridge = {
 			pluginMediaElement = this.pluginMediaElements[id];
 		
 		pluginMediaElement.ended = false;
-		pluginMediaElement.paused = false;
+		pluginMediaElement.paused = true;
 
 		// fake event object to mimic real HTML media event.
 		e = {
@@ -473,7 +490,7 @@ html5.MediaPluginBridge = {
 /*
 Default options
 */
-html5.MediaElementDefaults = {
+mejs.MediaElementDefaults = {
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// remove or reorder to change plugin priority
@@ -481,7 +498,7 @@ html5.MediaElementDefaults = {
 	// specify to force MediaElement into a mode
 	type: '',
 	// path to Flash and Silverlight plugins
-	pluginPath: html5.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
+	pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
 	// name of flash file
 	flashName: 'flashmediaelement.swf',
 	// name of silverlight file
@@ -506,15 +523,15 @@ Determines if a browser supports the <video> or <audio> element
 and returns either the native element or a Flash/Silverlight version that
 mimics HTML5 MediaElement
 */
-html5.MediaElement = function (el, o) {	
-	html5.HtmlMediaElementShim.create(el,o);
+mejs.MediaElement = function (el, o) {	
+	mejs.HtmlMediaElementShim.create(el,o);
 };
 
-html5.HtmlMediaElementShim = {		
+mejs.HtmlMediaElementShim = {		
 
 	create: function(el, o) {			
 		var
-			options = html5.MediaElementDefaults,
+			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,					
 			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video'),			
 			supportsMediaTag = (typeof(htmlMediaElement.canPlayType) != 'undefined'),
@@ -539,10 +556,10 @@ html5.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
-			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? html5.Utility.absolutizeUrl(playback.url) : '', poster );
+			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
 		}			
 	},
 	
@@ -612,12 +629,12 @@ html5.HtmlMediaElementShim = {
 				pluginName = options.plugins[j];
 				
 				// test version of plugin (for future features)
-				pluginVersions = html5.plugins[pluginName];				
+				pluginVersions = mejs.plugins[pluginName];				
 				for (k=0; k<pluginVersions.length; k++) {
 					pluginInfo = pluginVersions[k];
 					
 					// test if user has the correct plugin version
-					if (html5.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
+					if (mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
 					
 						// test for plugin playback types
 						for (l=0; l<pluginInfo.types.length; l++) {
@@ -677,8 +694,8 @@ html5.HtmlMediaElementShim = {
 	
 		var width = 1,
 			height = 1,
-			pluginid = 'me_' + pluginType + '_' + (html5.meIndex++),
-			pluginMediaElement = new html5.PluginMediaElement(pluginid, pluginType),
+			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
+			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType),
 			container = document.createElement('div'),
 			initVars;
 
@@ -694,7 +711,7 @@ html5.HtmlMediaElementShim = {
 
 		// register plugin
 		pluginMediaElement.success = options.success;
-		html5.MediaPluginBridge.registerPluginElement(pluginid, pluginMediaElement, htmlMediaElement);
+		mejs.MediaPluginBridge.registerPluginElement(pluginid, pluginMediaElement, htmlMediaElement);
 
 		// add container (must be added to DOM before inserting HTML for IE)
 		container.className = 'me-plugin';			
@@ -732,7 +749,7 @@ html5.HtmlMediaElementShim = {
 
 			case 'flash':
 
-				if (html5.MediaFeatures.isIE) {
+				if (mejs.MediaFeatures.isIE) {
 					container.outerHTML =
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '">' +
@@ -772,8 +789,8 @@ html5.HtmlMediaElementShim = {
 	updateNative: function(htmlMediaElement, options) {
 
 		// add methods to video object to bring it into parity with Flash Object
-		for (var m in html5.HtmlMediaElement) {
-			htmlMediaElement[m] = html5.HtmlMediaElement[m];
+		for (var m in mejs.HtmlMediaElement) {
+			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
 		
 		// fire success code
@@ -782,8 +799,8 @@ html5.HtmlMediaElementShim = {
 };
 
 
-window.html5 = html5;
-window.MediaElement = html5.MediaElement;
+window.mejs = mejs;
+window.MediaElement = mejs.MediaElement;
 
 ﻿/*!
  * Media Element jQuery plugin
@@ -805,7 +822,7 @@ window.MediaElement = html5.MediaElement;
 (function ($) {
 
 	// default player values
-	html5.MepDefaults = {
+	mejs.MepDefaults = {
 		// default if the <video width> is not specified
 		defaultVideoWidth: 480,
 		// default if the <video height> is not specified
@@ -817,15 +834,9 @@ window.MediaElement = html5.MediaElement;
 		// width of audio player
 		audioWidth: 300,
 		// height of audio player
-		audioHeight: 30,		
-		// display messages
-		messages: {
-			start: 'Click to Start',
-			loading: 'Loading',				
-			paused: 'Paused',
-			error: 'Error',
-			ended: 'Ended'
-		},
+		audioHeight: 30,
+		// initial volume when the player starts (overrided by user cookie)
+		startVolume: 0.8,		
 		// useful for <audio> player loops
 		loop: false,
 		// this will automatically turn on a <track>
@@ -833,8 +844,10 @@ window.MediaElement = html5.MediaElement;
 		// a list of languages to auto-translate via Google
 		translations: [],
 		// a dropdownlist of automatic translations
-		translationSelector: false,		
-		// turn each button on or off
+		translationSelector: false,	
+		// key for tranlsations
+		googleApiKey: '',
+		// turn each button on or off		
 		controls: {
 			playpause: true,
 			timerail: true,
@@ -880,17 +893,17 @@ window.MediaElement = html5.MediaElement;
 			'</div>'
 	};
 
-	html5.mepIndex = 0;
+	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
-	html5.MediaElementPlayer = function($media, o) {
+	mejs.MediaElementPlayer = function($media, o) {
 
 		var	
 			t = this,
-			mf = html5.MediaFeatures;
+			mf = mejs.MediaFeatures;
 	
 		t.$media = $($media);
-		t.options = $.extend(true,{},html5.MepDefaults,o);
+		t.options = $.extend(true,{},mejs.MepDefaults,o);
 		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
 				
 		if (mf.isiPad || mf.isiPhone) {
@@ -923,7 +936,7 @@ window.MediaElement = html5.MediaElement;
 		t.createPlayer();
 	};
 	
-	html5.MediaElementPlayer.prototype = {
+	mejs.MediaElementPlayer.prototype = {
 		createPlayer: function() {
 
 			var
@@ -934,7 +947,7 @@ window.MediaElement = html5.MediaElement;
 				});				
 		
 			// unique ID
-			t.id = 'mep_' + html5.mepIndex++;			
+			t.id = 'mep_' + mejs.mepIndex++;			
 			
 			// add HTML
 			t.$media.before(
@@ -991,7 +1004,7 @@ window.MediaElement = html5.MediaElement;
 			// create MediaElementShim	
 			meOptions.pluginWidth = t.height;
 			meOptions.pluginHeight = t.width;			
-			html5.MediaElement(t.$media[0], meOptions);			
+			mejs.MediaElement(t.$media[0], meOptions);			
 			
 		},
 		
@@ -1027,28 +1040,40 @@ window.MediaElement = html5.MediaElement;
 				}
 			}, true);
 
+			t.mediaElement.addEventListener('play', function (e) {
+				t.poster.hide();
+				t.overlay.hide();
+				t.playpause.removeClass('mep-play').addClass('mep-pause');			
+			}, true);
+			
 			t.mediaElement.addEventListener('playing', function (e) {
 				t.poster.hide();
-				t.playpause.removeClass('mep-play').addClass('mep-pause');
-				t.hideMessage();
+				t.overlay.hide();
+				t.playpause.removeClass('mep-play').addClass('mep-pause');			
 			}, true);
 
 			t.mediaElement.addEventListener('pause', function (e) {	
+				t.overlay.show();
 				t.playpause.removeClass('mep-pause').addClass('mep-play');
-				t.showMessage(t.options.messages.paused);
 			}, true);
+			
+			t.mediaElement.addEventListener('paused', function (e) {	
+				t.overlay.show();
+				t.playpause.removeClass('mep-pause').addClass('mep-play');
+			}, true);			
 
 			t.mediaElement.addEventListener('ended', function (e) {
 				t.mediaElement.setCurrentTime(0);
-				t.mediaElement.pause();
-				t.setTimePosition();
+				t.mediaElement.pause();				
 					
 				if (t.options.loop) {					
 					t.mediaElement.play();
 				} else {
 					t.poster.show();
+					t.overlay.show();
+					t.controls.css('visibility','visible');
 					t.playpause.removeClass('mep-pause').addClass('mep-play');
-					t.showMessage(t.options.messages.ended);
+					t.setTimePosition();
 				}
 			}, true);
 			
@@ -1080,9 +1105,9 @@ window.MediaElement = html5.MediaElement;
 			t.captionsDisplay = t.container.find('.mep-captions-layer').hide();
 			t.captionsText = t.container.find('.mep-captions-text');
 			
-			if (t.options.translationSelector && html5.SrtParser.canTranslate()) {				
-				for (i in html5.language.codes) {
-					options += '<option value="' + i + '">' + html5.language.codes[i] + '</option>';
+			if (t.options.translationSelector) {				
+				for (i in mejs.language.codes) {
+					options += '<option value="' + i + '">' + mejs.language.codes[i] + '</option>';
 				}
 				t.container.find('.mep-captions-selector ul').before($(					
 					'<select class="mep-captions-translations">' +
@@ -1145,10 +1170,10 @@ window.MediaElement = html5.MediaElement;
 		findTracks: function() {	
 			var t = this,
 				i,
-				tracktags = t.$media.find('track[kind=subtitles]');
+				tracktags = t.$media.find('track');
 			
 			// create storage for tracks
-			t.tracks = [];
+			t.tracks = []
 			t.trackToLoad = -1;
 			t.selectedTrack = null;
 			t.isLoadingTrack = false;
@@ -1156,6 +1181,7 @@ window.MediaElement = html5.MediaElement;
 				t.tracks.push({
 					srclang: $(this).attr('srclang').toLowerCase(),
 					src: $(this).attr('src'),
+					kind: $(this).attr('kind'),
 					entries: [],
 					isLoaded: false,
 					isTranslation: false
@@ -1163,11 +1189,12 @@ window.MediaElement = html5.MediaElement;
 			});
 			
 			// add user-defined translations
-			if (t.tracks.length > 0 && t.options.translations.length > 0 && html5.SrtParser.canTranslate()) {
+			if (t.tracks.length > 0 && t.options.translations.length > 0) {
 				for (i=0; i<t.options.translations.length; i++) {
 					t.tracks.push({
 						srclang: t.options.translations[i].toLowerCase(),
 						src: null,
+						kind: 'subtitles', 
 						entries: [],
 						isLoaded: false,
 						isTranslation: true
@@ -1177,7 +1204,9 @@ window.MediaElement = html5.MediaElement;
 			
 			// add to list
 			for (i=0; i<t.tracks.length; i++) {
-				t.addTrackButton(t.tracks[i].srclang, t.tracks[i].isTranslation);	
+				if (t.tracks[i].kind == 'subtitles') {
+					t.addTrackButton(t.tracks[i].srclang, t.tracks[i].isTranslation);	
+				}
 			}
 			
 			// begin loading, or remove button
@@ -1210,7 +1239,7 @@ window.MediaElement = html5.MediaElement;
 			if (track.isTranslation) {
 			
 				// translate the first track
-				html5.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, function(newOne) {								
+				mejs.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {								
 					
 					// store the new translation
 					track.entries = newOne;
@@ -1229,7 +1258,7 @@ window.MediaElement = html5.MediaElement;
 					success: function(d) {
 						
 						// parse the loaded file
-						track.entries = html5.SrtParser.parse(d);						
+						track.entries = mejs.SrtParser.parse(d);						
 						track.isLoaded = true;
 						
 						// create button
@@ -1252,7 +1281,7 @@ window.MediaElement = html5.MediaElement;
 				.find('input[value=' + lang + ']')
 					.attr('disabled','')
 				.siblings('label')
-					.html( html5.language.codes[lang] || lang );
+					.html( mejs.language.codes[lang] || lang );
 
 			// auto select
 			if (t.options.startLanguage == lang) {
@@ -1264,7 +1293,7 @@ window.MediaElement = html5.MediaElement;
 		
 		addTrackButton: function(lang, isTranslation) {
 			var t = this,
-				l = html5.language.codes[lang] || lang;
+				l = mejs.language.codes[lang] || lang;
 			
 			t.captions.find('ul').append(
 				$('<li>'+
@@ -1334,11 +1363,6 @@ window.MediaElement = html5.MediaElement;
 			// OVERLAY
 			t.overlay = t.container.find('.mep-overlay');
 			t.overlayMessage = t.container.find('.mep-overlay-message');
-			if (t.$media[0].getAttribute('autoplay') !== null) {
-				t.showMessage(t.options.messages.loading);
-			} else {
-				t.showMessage(t.options.messages.start);
-			}
 			if (!t.isVideo) {
 				t.overlay.hide();
 			}
@@ -1350,18 +1374,6 @@ window.MediaElement = html5.MediaElement;
 			}, true);		
 		},
 		
-		showMessage: function (text) {
-			if (this.isVideo) {
-				this.overlayMessage.html(text);
-				//overlay.show();
-				this.overlay.css('visibility','visible');
-			}
-		},
-		
-		hideMessage: function () {
-			//overlay.hide();
-			this.overlay.css('visibility','hidden');
-		},			
 		
 		buildControls: function() {
 			
@@ -1505,9 +1517,9 @@ window.MediaElement = html5.MediaElement;
 			if (t.mediaElement.currentTime && t.mediaElement.duration) {
 
 				// update current and duration text
-				t.currentTime.html(html5.Utility.secondsToTimeCode(t.mediaElement.currentTime));
+				t.currentTime.html(mejs.Utility.secondsToTimeCode(t.mediaElement.currentTime));
 				if (t.mediaElement.duration)
-					t.duration.html(html5.Utility.secondsToTimeCode(t.mediaElement.duration));
+					t.duration.html(mejs.Utility.secondsToTimeCode(t.mediaElement.duration));
 
 				// update bar and handle				
 				newWidth = t.timeTotal.width() * t.mediaElement.currentTime / t.mediaElement.duration;
@@ -1587,7 +1599,6 @@ window.MediaElement = html5.MediaElement;
 			
 			t.$media.hide();
 			
-			//t.showMessage(t.options.messages.error);
 			t.overlay.hide();
 			t.controls.hide();
 			t.poster.hide();
@@ -1617,7 +1628,7 @@ window.MediaElement = html5.MediaElement;
 					break;
 				case 'native':
 
-					if (html5.MediaFeatures.hasNativeFullScreen) {
+					if (mejs.MediaFeatures.hasNativeFullScreen) {
 						
 						if (goFullScreen) {
 							t.mediaElement.webkitEnterFullScreen();
@@ -1729,6 +1740,13 @@ window.MediaElement = html5.MediaElement;
 				}
 			});	
 			
+			t.mediaElement.addEventListener('volumechange', function(e) {
+				t.positionVolumeHandle(e.target.volume);
+			}, true);
+			
+			// set volume
+			t.mediaElement.setVolume(t.options.startVolume);
+			
 		},
 		
 		volumeMove: function(e) {
@@ -1774,7 +1792,7 @@ window.MediaElement = html5.MediaElement;
 		}		
 	};
 	
-	html5.language = {
+	mejs.language = {
 		codes:  {
 			af:'Afrikaans',
 			sq:'Albanian',
@@ -1783,8 +1801,8 @@ window.MediaElement = html5.MediaElement;
 			bg:'Bulgarian',
 			ca:'Catalan',
 			zh:'Chinese',
-			'zh-cn':'Chinese (Simplified)',
-			'zh-tw':'Chinese (Traditional)',
+			'zh-cn':'Chinese Simplified',
+			'zh-tw':'Chinese Traditional',
 			hr:'Croatian',
 			cs:'Czech',
 			da:'Danish',
@@ -1797,7 +1815,7 @@ window.MediaElement = html5.MediaElement;
 			gl:'Galician',
 			de:'German',
 			el:'Greek',
-			ht:'Haitian (Creole)',
+			ht:'Haitian Creole',
 			iw:'Hebrew',
 			hi:'Hindi',
 			hu:'Hungarian',
@@ -1816,7 +1834,7 @@ window.MediaElement = html5.MediaElement;
 			fa:'Persian',
 			pl:'Polish',
 			pt:'Portuguese',
-			'pt-pt':'Portuguese (Portugal)',
+			//'pt-pt':'Portuguese (Portugal)',
 			ro:'Romanian',
 			ru:'Russian',
 			sr:'Serbian',
@@ -1847,17 +1865,22 @@ window.MediaElement = html5.MediaElement;
 
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
-	html5.SrtParser = {	
+	mejs.SrtParser = {	
 		pattern_identifier: /^[0-9]+$/,
 		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
 		timecodeToSeconds: function(timecode){
 			var tab = timecode.split(':');
 			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
 		},
+		split2: function (text, regex) {
+			// normal version for compliant browsers
+			// see below for IE fix
+			return text.split(regex);
+		},		
 		parse: function(srtText) {
 			var 	
 				i = 0,
-				lines = srtText.split(/\r?\n/),
+				lines = this.split2(srtText, /\r?\n/),
 				entries = {text:[], times:[]},
 				timecode,
 				text;
@@ -1893,23 +1916,14 @@ window.MediaElement = html5.MediaElement;
 			return entries;		
 		},
 		
-		canTranslate: function() {
-			return !(typeof(google) == 'undefined' || typeof(google.language) == 'undefined');
-		},
-		
-		translateSrt: function(srtData, fromLang, toLang, callback) {
-			
-			if (!this.canTranslate()) {
-				callback(null);
-				return;
-			}
+		translateSrt: function(srtData, fromLang, toLang, googleApiKey, callback) {
 			
 			var 				
 				entries = {text:[], times:[]},
 				lines,
 				i			
 			
-			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, function(result) {
+			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
 				// split on separators
 				lines = result.split('<a></a>');
 				
@@ -1929,7 +1943,7 @@ window.MediaElement = html5.MediaElement;
 			});
 		},
 		
-		translateText: function(text, fromLang, toLang, callback) {
+		translateText: function(text, fromLang, toLang, googleApiKey, callback) {
 		
 			var
 				separatorIndex,
@@ -1940,7 +1954,7 @@ window.MediaElement = html5.MediaElement;
 				nextChunk= function() {
 					if (chunks.length > 0) {
 						chunk = chunks.shift();
-						html5.SrtParser.translateChunk(chunk, fromLang, toLang, function(r) {
+						mejs.SrtParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
 							if (r != 'undefined') {
 								result += r;
 							}
@@ -1966,22 +1980,62 @@ window.MediaElement = html5.MediaElement;
 			// start handling the chunks
 			nextChunk();			
 		},
-		translateChunk: function(text, fromLang, toLang, callback) {
-			google.language.translate(text, fromLang, toLang, function(result) {				
-				callback(result.translation);
-			});					
+		translateChunk: function(text, fromLang, toLang, googleApiKey, callback) {
+			
+			var data = {
+				q: text, 
+				langpair: fromLang + '|' + toLang,
+				v: '1.0'
+			};
+			if (googleApiKey !== '' && googleApiKey !== null) {
+				data.key = googleApiKey;
+			}
+			
+			$.ajax({
+				url: 'https://ajax.googleapis.com/ajax/services/language/translate', // 'https://www.google.com/uds/Gtranslate', //'https://ajax.googleapis.com/ajax/services/language/translate', //
+				data: data,
+				type: 'GET',
+				dataType: 'jsonp',
+				success: function(d) {
+					callback(d.responseData.translatedText);						
+				},
+				error: function(e) {
+					callback(null);
+				}
+			});			
 		}
 	};	
-
+	// test for browsers with bad String.split method.
+	if ('x\n\ny'.split(/\n/gi).length != 3) {
+		// add super slow IE8 and below version
+		mejs.SrtParser.split2 = function(text, regex) {			
+			var 
+				parts = [], 
+				chunk = '',
+				i;
+			
+			for (i=0; i<text.length; i++) {
+				chunk += text.substring(i,i+1);
+				if (regex.test(chunk)) {					
+					parts.push(chunk.replace(regex, ''));
+					chunk = '';
+				}
+			}
+			parts.push(chunk);
+			return parts;
+		}
+	}
+	
+	
 	// turn into jQuery plugin
 	jQuery.fn.mediaelementplayer = function (options) {
 		return this.each(function () {
-			return new MediaElementPlayer($(this), options);
+			return new mejs.MediaElementPlayer($(this), options);
 		});
 	};
 
 	// push out to window
-	window.MediaElementPlayer = html5.MediaElementPlayer;
+	window.MediaElementPlayer = mejs.MediaElementPlayer;
 
 })(jQuery);
 

@@ -138,7 +138,7 @@
 					ExternalInterface.addCallback("setVideoSize", setVideoSize);					
 					
 					// fire init method
-					ExternalInterface.call("html5.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
+					ExternalInterface.call("mejs.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
 					
 					_output.appendText("Success...\n");
 					
@@ -350,13 +350,13 @@
 			/*
 			OLD DIRECT METHOD
 			ExternalInterface.call(
-				"function(id, name) { html5.MediaPluginBridge.fireEvent(id,name," + eventValues + "); }", 
+				"function(id, name) { mejs.MediaPluginBridge.fireEvent(id,name," + eventValues + "); }", 
 				ExternalInterface.objectID, 
 				eventName);	
 			*/
 			
 			// use set timeout for performance reasons
-			ExternalInterface.call("setTimeout", "html5.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
+			ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
 			
 		}			
 	}	

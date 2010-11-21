@@ -43,6 +43,15 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.1.4 (2010/11/22) - 29.5kb*
+
+* Added Default volume level to options (0.8)
+* Fix for IE volume slider positioning
+* Fix for IE tracks parsing (replacement String.split)
+* Changed namespace from html5 to mejs
+* Remove all showMessage references
+* Controls show again after playback ends
+
 *1.1.3 (2010/11/20) - 29.0kb*
 
 * Change to fallback mechanism and styling (Windows Phone 7)

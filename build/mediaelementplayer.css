@@ -107,7 +107,7 @@
 	padding: 0 0 38px 0;
 	text-align:center;
 	
-	font-weight: bold;
+	/*font-weight: bold;*/
 	line-height: 22px;	
 	font-size: 12px;
 	color: #fff;
@@ -121,8 +121,7 @@
 	font-weight: normal;
 } 
 
-.mep-captions-text {
-	
+.mep-captions-text {	
 	padding: 3px 5px;
 	
 	background: url(background.png);	
@@ -334,16 +333,22 @@
 	background-position:-16px 0;
 }
 
+.mep-controls .mep-volume-button {
+	position: relative;
+}
+
 .mep-controls .mep-volume-button .mep-volume-slider {
 	display: none;
 	height: 115px;
 	width: 20px;
-	background: #333;	
+	background: url(background.png);	
 	background: rgba(0, 0, 0, 0.7);
 	-webkit-border-radius: 0;	
 	-moz-border-radius: 0;	
 	border-radius: 0;	
-	top: -110px;	
+	top: -115px;	
+	left: 0;
+	z-index: 1;
 	position: absolute;
 	margin: 0;
 }
