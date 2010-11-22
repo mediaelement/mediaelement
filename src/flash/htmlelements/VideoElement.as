@@ -25,7 +25,7 @@ package htmlelements
 		private var _oldVolume:Number = 1;
 		
 		// event values
-		private var _duration:Number;
+		private var _duration:Number = 0;
 		private var _framerate:Number;
 		private var _isPaused:Boolean = true;
 		private var _isEnded:Boolean = false;
@@ -54,6 +54,16 @@ package htmlelements
 		public function get videoWidth():Number {
 			return _videoWidth;
 		}
+		
+		
+		public function duration():Number {		
+			return _duration;
+		}
+		
+		public function currentTime():Number {		
+			return _stream.time;
+		}			
+		
 		
 		
 		public function VideoElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number) 

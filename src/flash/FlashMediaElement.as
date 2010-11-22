@@ -48,6 +48,16 @@
 		
 		//private var fullscreen_btn:SimpleButton;
 		
+		// CONTROLS
+		private var _showControls:Boolean;
+		private var _controlBar:MovieClip;
+		private var _controlBarBg:MovieClip;		
+		private var _playButton:SimpleButton;
+		private var _pauseButton:SimpleButton;
+		private var _duration:TextField;
+		private var _currentTime:TextField;		
+		
+		
 		public function FlashMediaElement() {		
 		
 			
@@ -56,8 +66,9 @@
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
-			_isVideo = (params['isvideo'] != undefined) ? (String(params['isvideo']) == "true") : false;
+			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
+			_showControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
 			if (isNaN(_timerRate))
 				_timerRate = 250;
 			
@@ -65,13 +76,17 @@
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			_stageWidth = stage.stageWidth;
-			_stageHeight = stage.stageHeight;			
+			_stageHeight = stage.stageHeight;
 						
 
 			//_autoplay = true;
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
 			//_mediaUrl  = "../media/Parades-PastLives.mp3";
-			//_mediaUrl  = "../media/echo-hereweare.m4v";
+			//_mediaUrl  = "../media/echo-hereweare.mp4";
+			
+			
+
+			
 			
 			// position and hide
 			_fullscreenButton = getChildByName("fullscreen_btn") as SimpleButton;
@@ -91,7 +106,29 @@
 				addChild(_video);						
 			} else {
 				_mediaElement = new AudioElement(this, _autoplay, _timerRate);
-			}		
+			}
+			
+			
+			// controls!
+			_controlBar = getChildByName("controls_mc") as MovieClip;
+			_controlBarBg = _controlBar.getChildByName("controls_bg_mc") as MovieClip;			
+			_playButton = _controlBar.getChildByName("play_btn") as SimpleButton;
+			_playButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) {
+				_mediaElement.play();					 
+			});
+			_pauseButton = _controlBar.getChildByName("pause_btn") as SimpleButton;
+			_pauseButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) {
+				_mediaElement.pause();					 
+			});
+			_pauseButton.visible = false;
+			_duration = _controlBar.getChildByName("duration_txt") as TextField;
+			_currentTime = _controlBar.getChildByName("currentTime_txt") as TextField;
+			if (!_showControls) {
+				_controlBar.visible = false;
+			}			
+			addChild(_controlBar);
+			
+			
 			
 			// debugging
             _output = new TextField();
@@ -174,6 +211,7 @@
 			_connection.connect(ExternalInterface.objectID + "_player");
 			
 			
+			positionControls();
 			
 			// listen for rezie
 			stage.addEventListener(Event.RESIZE, resizeHandler);
@@ -188,7 +226,8 @@
 	
 		function resizeHandler(e:Event):void {
 			//_video.scaleX = stage.stageWidth / _stageWidth;
-			//_video.scaleY = stage.stageHeight / _stageHeight;				
+			//_video.scaleY = stage.stageHeight / _stageHeight;		
+			positionControls();
 		}
 		
 		
@@ -339,8 +378,23 @@
 				repositionVideo();
 			}
 			
-			
-			
+			// update controls
+			switch (eventName) {
+				case "pause":
+				case "paused":
+				case "ended":
+					_playButton.visible = true;
+					_pauseButton.visible = false;
+					break;
+				case "play":
+				case "playing":
+					_playButton.visible = false;
+					_pauseButton.visible = true;
+					break;					
+			}
+			_duration.text = secondsToTimeCode(_mediaElement.duration());
+			_currentTime.text = secondsToTimeCode(_mediaElement.currentTime());			
+						
 			//_output.appendText("event:" + eventName + " : " + eventValues);
 			trace("event", eventName, eventValues);
 			
@@ -358,6 +412,23 @@
 			// use set timeout for performance reasons
 			ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
 			
-		}			
+		}	
+		
+		function secondsToTimeCode(seconds:Number):String {
+			var timeCode:String = "";
+			seconds = Math.round(seconds);		
+			var minutes:Number = Math.floor(seconds / 60);		
+			timeCode = (minutes >= 10) ? minutes.toString() : "0" + minutes.toString();
+			seconds = Math.floor(seconds % 60);
+			timeCode += ":" + ((seconds >= 10) ? seconds.toString() : "0" + seconds.toString());
+			return timeCode; //minutes.toString() + ":" + seconds.toString();
+		}		
+		
+		function positionControls() {
+			_controlBarBg.width = stage.stageWidth;
+			_controlBar.y = stage.stageHeight - _controlBar.height;
+			_duration.x = stage.stageWidth - _duration.width - 10;
+			_currentTime.x = stage.stageWidth - _duration.width - 10 - _currentTime.width - 10;
+		}
 	}	
 }
