@@ -2,7 +2,7 @@
 package htmlelements
 {
 	
-	public interface IMediaElement {		
+	public interface IMediaElement {
 		
 		function play():void;
 		
@@ -17,6 +17,10 @@ package htmlelements
 		function setVolume(vol:Number):void;
 		
 		function setMuted(muted:Boolean):void;
+		
+		function duration():Number;
+		
+		function currentTime():Number;		
 		
 	}
 	

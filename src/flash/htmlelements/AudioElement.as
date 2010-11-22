@@ -45,6 +45,14 @@ package htmlelements
 		private var _element:FlashMediaElement;
 		private var _timer:Timer;
 		
+		public function duration():Number {		
+			return _duration;
+		}
+		
+		public function currentTime():Number {		
+			return _currentTime;
+		}		
+		
 		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number) 
 		{
 			_element = element;
