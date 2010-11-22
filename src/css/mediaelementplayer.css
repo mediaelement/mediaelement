@@ -90,16 +90,6 @@
 .mep-overlay:hover .mep-overlay-button{
 	background-position: 0 -100px ;
 }
-
-.mep-overlay-message {
-	display: table-cell;
-	text-align: center;
-	vertical-align: middle;
-	color: #fff;
-	text-shadow: #000 1px 1px 1px;	
-	font-size: 24px;
-	font-weight: bold;
-}
 .mep-captions-layer {
 	position: absolute;
 	bottom: 0;
