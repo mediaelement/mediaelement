@@ -45,7 +45,7 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 *1.1.5 (2010/11/21) - 29.8kb*
 
-* Workaround for IE issues when accidentally placed inside <p> tag
+* Workaround for IE issues when accidentally placed inside `<p>` tag
 * Fixed silverlight pause state reporting
 * Switched back to Flash as default
 
