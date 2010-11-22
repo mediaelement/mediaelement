@@ -37,7 +37,7 @@ namespace SilverlightMediaElement
 		int _videoHeight = 0;
 
         // state
-        bool _isPaused = false;
+        bool _isPaused = true;
         bool _isEnded = false;
 
         public MainPage(IDictionary<string, string> initParams)
@@ -253,9 +253,9 @@ namespace SilverlightMediaElement
 				@"""name"": """ + name + @"""" +
 				@", ""currentTime"":" + (media.Position.TotalSeconds).ToString() + @"" +
 				@", ""duration"":" + (media.NaturalDuration.TimeSpan.TotalSeconds).ToString() + @"" +
-				@", ""paused"":" + (_isEnded).ToString().ToLower() + @"" +
+				@", ""paused"":" + (_isPaused).ToString().ToLower() + @"" +
 				@", ""muted"":" + (media.IsMuted).ToString().ToLower() + @"" +
-				@", ""ended"":" + (_isPaused).ToString().ToLower() + @"" +
+				@", ""ended"":" + (_isEnded).ToString().ToLower() + @"" +
 				@", ""volume"":" + (media.Volume).ToString() + @"" +
 				@", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
 				@", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +

@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '1.1.4';
+mejs.version = '1.1.5';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -494,7 +494,7 @@ mejs.MediaElementDefaults = {
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// remove or reorder to change plugin priority
-	plugins: ['silverlight', 'flash'],
+	plugins: ['flash','silverlight'],
 	// specify to force MediaElement into a mode
 	type: '',
 	// path to Flash and Silverlight plugins
@@ -697,7 +697,18 @@ mejs.HtmlMediaElementShim = {
 			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
 			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType),
 			container = document.createElement('div'),
+			node,
 			initVars;
+			
+		// check for placement inside a <p> tag (sometimes WYSIWYG editors do this)
+		node = htmlMediaElement.parentNode;
+		while (node !== null && node.tagName.toLowerCase() != 'body') {
+			if (node.parentNode.tagName.toLowerCase() == 'p') {
+				node.parentNode.parentNode.insertBefore(node, node.parentNode);
+				break;
+			}
+			node = node.parentNode;
+		}			
 
 		if (isVideo) {
 			width = (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
