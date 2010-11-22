@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '1.1.4';
+mejs.version = '1.1.5';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -494,7 +494,7 @@ mejs.MediaElementDefaults = {
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// remove or reorder to change plugin priority
-	plugins: ['silverlight', 'flash'],
+	plugins: ['flash','silverlight'],
 	// specify to force MediaElement into a mode
 	type: '',
 	// path to Flash and Silverlight plugins
@@ -697,7 +697,18 @@ mejs.HtmlMediaElementShim = {
 			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
 			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType),
 			container = document.createElement('div'),
+			node,
 			initVars;
+			
+		// check for placement inside a <p> tag (sometimes WYSIWYG editors do this)
+		node = htmlMediaElement.parentNode;
+		while (node !== null && node.tagName.toLowerCase() != 'body') {
+			if (node.parentNode.tagName.toLowerCase() == 'p') {
+				node.parentNode.parentNode.insertBefore(node, node.parentNode);
+				break;
+			}
+			node = node.parentNode;
+		}			
 
 		if (isVideo) {
 			width = (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
@@ -964,6 +975,8 @@ window.MediaElement = mejs.MediaElement;
 					'<div class="mep-overlay">'+
 						'<div class="mep-overlay-button"></div>'+
 					'</div>'+
+					'<div class="mep-chapters">'+
+					'</div>'+					
 					'<div class="mep-controls">'+
 						t.options.controlsTemplate +
 					'</div>'+
@@ -1025,6 +1038,9 @@ window.MediaElement = mejs.MediaElement;
 			t.domNode = domNode;			
 
 			// build controls
+			if (t.isVideo) {
+				t.overlay.show();
+			}
 			t.buildControlBar();
 			t.buildPlayPause();
 			t.buildTimeRail();	
@@ -1053,12 +1069,16 @@ window.MediaElement = mejs.MediaElement;
 			}, true);
 
 			t.mediaElement.addEventListener('pause', function (e) {	
-				t.overlay.show();
+				if (t.isVideo) {
+					t.overlay.show();
+				}
 				t.playpause.removeClass('mep-pause').addClass('mep-play');
 			}, true);
 			
 			t.mediaElement.addEventListener('paused', function (e) {	
-				t.overlay.show();
+				if (t.isVideo) {
+					t.overlay.show();
+				}
 				t.playpause.removeClass('mep-pause').addClass('mep-play');
 			}, true);			
 
@@ -1224,17 +1244,28 @@ window.MediaElement = mejs.MediaElement;
 			t.trackToLoad++;
 			if (t.trackToLoad < t.tracks.length) {
 				t.isLoadingTrack = true;
-				t.loadSubtitles(t.trackToLoad);
+				t.loadTrack(t.trackToLoad);
 			} else {
 				// add done?
 				t.isLoadingTrack = false;
 			}
 		},
 
-		loadSubtitles: function(index){
+		loadTrack: function(index){
 			var
 				t = this,
-				track = t.tracks[index];
+				track = t.tracks[index],
+				after = function() {
+					
+					track.isLoaded = true;
+						
+					// create button
+					//t.addTrackButton(track.srclang);
+					t.enableTrackButton(track.srclang);					
+					
+					t.loadNextTrack();
+				
+				};
 				
 			if (track.isTranslation) {
 			
@@ -1243,13 +1274,8 @@ window.MediaElement = mejs.MediaElement;
 					
 					// store the new translation
 					track.entries = newOne;
-					track.isLoaded = true;
 					
-					// create button
-					//t.addTrackButton(track.srclang);					
-					t.enableTrackButton(track.srclang);
-					
-					t.loadNextTrack();
+					after();
 				});
 				
 			} else {
@@ -1259,16 +1285,10 @@ window.MediaElement = mejs.MediaElement;
 						
 						// parse the loaded file
 						track.entries = mejs.SrtParser.parse(d);						
-						track.isLoaded = true;
-						
-						// create button
-						//t.addTrackButton(track.srclang);
-						t.enableTrackButton(track.srclang);					
-						
-						t.loadNextTrack();
+						after();
 					},
 					error: function() {
-						t.loadNextTrack();				
+						t.loadNextTrack();								
 					}
 				});
 			}
@@ -1362,16 +1382,13 @@ window.MediaElement = mejs.MediaElement;
 			
 			// OVERLAY
 			t.overlay = t.container.find('.mep-overlay');
-			t.overlayMessage = t.container.find('.mep-overlay-message');
-			if (!t.isVideo) {
-				t.overlay.hide();
-			}
 			
 			t.overlay.bind('click', function (e) {
 				if (t.mediaElement.paused) {
 					t.mediaElement.play();
 				}
-			}, true);		
+			});
+			t.overlay.hide();		
 		},
 		
 		
@@ -1380,7 +1397,7 @@ window.MediaElement = mejs.MediaElement;
 			var t = this;
 			
 			// CONTROLS BAR
-			t.controls = t.container.find('.mep-controls')
+			t.controls = t.container.find('.mep-controls');
 			t.isControlsVisible = true;
 
 			// CONTROL BUTTONS and BARS
@@ -1409,6 +1426,7 @@ window.MediaElement = mejs.MediaElement;
 			// setup controls
 			t.controls.show();
 			t.setRailSize();
+			t.controls.hide();
 
 			// hide unwanted controls	
 
@@ -1435,6 +1453,7 @@ window.MediaElement = mejs.MediaElement;
 		
 		buildControlBar: function() {
 			var t = this;
+			t.controls.show(); // these are hidden until the MediaElement is returned
 		
 			if (t.isVideo) {
 				// show/hide controls
@@ -1654,6 +1673,9 @@ window.MediaElement = mejs.MediaElement;
 								.width('100%')
 								.height('100%');
 
+							t.captionsDisplay
+								.width('100%');							
+								
 							t.overlay
 								.width('100%')
 								.height('100%');
@@ -1689,6 +1711,9 @@ window.MediaElement = mejs.MediaElement;
 								.width(t.normalWidth)
 								.height(t.normalHeight);
 
+							t.captionsDisplay
+								.width(t.normalWidth);
+								
 							t.fullscreen
 								.removeClass('mep-unfullscreen')
 								.addClass('mep-fullscreen');
