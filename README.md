@@ -43,11 +43,18 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+
+*1.1.6 (2010/11/23) - 29.8kb*
+
+* Chapters support `<track kind="chapters" />`
+
 *1.1.5 (2010/11/21) - 29.8kb*
 
 * Workaround for IE issues when accidentally placed inside `<p>` tag
 * Fixed silverlight pause state reporting
 * Switched back to Flash as default
+* Removed requirement for Google translate API `<script>` (direct JSONP call)
+* Added googleApiKey option
 
 *1.1.4 (2010/11/21) - 29.5kb*
 
