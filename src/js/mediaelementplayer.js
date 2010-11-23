@@ -589,7 +589,7 @@
 				
 				t.chapters.append( $(
 					'<div class="mep-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + left.toString() + 'px;width: ' + width.toString() + 'px;">' + 
-						'<div class="mep-chapter-block">' + 
+						'<div class="mep-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mep-chapter-block-last' : '') + '">' + 
 							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' + 
 							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop) + '</span>' + 
 						'</div>' +
