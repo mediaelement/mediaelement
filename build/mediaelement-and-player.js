@@ -1098,6 +1098,9 @@ window.MediaElement = mejs.MediaElement;
 			}, true);
 			
 			t.mediaElement.addEventListener('loadedmetadata', function(e) {
+			
+				t.displayChapters();
+			
 				// if the <video height> was not set and the options.videoHeight was not set
 				// then resize to the real dimensions
 				if (t.isVideo && t.options.videoHeight <= 0 && t.$media[0].getAttribute('height') === null && !isNaN(e.target.videoHeight)) {
@@ -1124,6 +1127,7 @@ window.MediaElement = mejs.MediaElement;
 				i;
 			t.captionsDisplay = t.container.find('.mep-captions-layer').hide();
 			t.captionsText = t.container.find('.mep-captions-text');
+			t.chapters = t.container.find('.mep-chapters');
 			
 			if (t.options.translationSelector) {				
 				for (i in mejs.language.codes) {
@@ -1247,7 +1251,7 @@ window.MediaElement = mejs.MediaElement;
 				t.loadTrack(t.trackToLoad);
 			} else {
 				// add done?
-				t.isLoadingTrack = false;
+				t.isLoadingTrack = false;				
 			}
 		},
 
@@ -1286,6 +1290,10 @@ window.MediaElement = mejs.MediaElement;
 						// parse the loaded file
 						track.entries = mejs.SrtParser.parse(d);						
 						after();
+						
+						if (track.kind == 'chapters' && t.mediaElement.duration > 0) {
+							t.buildChapters(track);
+						}
 					},
 					error: function() {
 						t.loadNextTrack();								
@@ -1360,6 +1368,56 @@ window.MediaElement = mejs.MediaElement;
 				t.captionsDisplay.hide();
 			}
 		},
+		
+		displayChapters: function() {
+			var 
+				t = this,
+				i;
+			
+			for (i=0; i<t.tracks.length; i++) {
+				if (t.tracks[i].kind == 'chapters') {
+					t.buildChapters(t.tracks[i]);
+					break;
+				}
+			}
+		},
+		
+		buildChapters: function(chapters) {
+			var 
+				t = this,
+				i,
+				dur,
+				width,
+				left
+				;
+			
+			t.chapters.empty();
+			
+			for (i=0; i<chapters.entries.times.length; i++) {
+				dur = chapters.entries.times[i].stop - chapters.entries.times[i].start;
+				//width = length / t.mediaElement.duration * 100;				
+				width = Math.floor(t.width * dur / t.mediaElement.duration);
+				left = Math.floor(t.width * chapters.entries.times[i].start / t.mediaElement.duration);
+				if (left + width > t.width) {
+					width = t.width - left;
+				}
+				
+				t.chapters.append( $(
+					'<div class="mep-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + left.toString() + 'px;width: ' + width.toString() + 'px;">' + 
+						'<div class="mep-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mep-chapter-block-last' : '') + '">' + 
+							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' + 
+							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop) + '</span>' + 
+						'</div>' +
+					'</div>'));
+			}
+			
+			t.chapters.find('div.mep-chapter').click(function() {
+				t.mediaElement.setCurrentTime( parseFloat( $(this).attr('rel') ) );
+				if (t.mediaElement.paused) {
+					t.mediaElement.play(); 
+				}
+			});
+		},		
 		
 		buildPoster: function() {
 			var t = this;
@@ -1464,6 +1522,10 @@ window.MediaElement = mejs.MediaElement;
 						t.captionsDisplay.css('padding-bottom', t.controls.height() + 5);
 						t.setRailSize();
 						t.isControlsVisible = true;
+						
+						// chapters
+						t.chapters.css('visibility','visible');						
+						t.chapters.fadeIn(200);
 					})
 					.bind('mouseleave', function () {
 						if (!t.mediaElement.paused) {
@@ -1473,6 +1535,11 @@ window.MediaElement = mejs.MediaElement;
 								t.captionsDisplay.css('padding-bottom', 10);
 							});
 							t.isControlsVisible = false;
+							
+							t.chapters.fadeOut(200, function() {
+								$(this).css('visibility','hidden');
+								$(this).css('display','block');
+							});							
 						}
 					});
 			}		
