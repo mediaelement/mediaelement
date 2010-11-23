@@ -105,7 +105,6 @@
 	background: rgba(0,0,0,0.8);		
 	overflow: hidden;
 	border: 0;
-	height: 40px;
 }
 .mep-chapters .mep-chapter .mep-chapter-block {
 	font-size: 11px;
@@ -116,6 +115,10 @@
 	border-bottom: solid 1px #999;
 	cursor: pointer;
 }
+.mep-chapters .mep-chapter .mep-chapter-block-last {
+	border-right: none;
+}
+
 .mep-chapters .mep-chapter .mep-chapter-block:hover {
 	background: #333;
 }
@@ -125,10 +128,16 @@
 	display: block;
 	white-space:nowrap;
 	text-overflow: ellipsis;
+	margin: 0 0 3px 0;
+	line-height: 12px;
 }
 .mep-chapters .mep-chapter .mep-chapter-block .ch-timespan{
-	margin: 5px 0 0 0;
+	font-size: 12px;
+	line-height: 12px;
+	margin: 3px 0 4px 0;
 	display: block;
+	white-space:nowrap;
+	text-overflow: ellipsis;	
 }
 
 
