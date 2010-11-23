@@ -422,7 +422,7 @@
 			seconds = Math.floor(seconds % 60);
 			timeCode += ":" + ((seconds >= 10) ? seconds.toString() : "0" + seconds.toString());
 			return timeCode; //minutes.toString() + ":" + seconds.toString();
-		}		
+		}
 		
 		function positionControls() {
 			_controlBarBg.width = stage.stageWidth;
