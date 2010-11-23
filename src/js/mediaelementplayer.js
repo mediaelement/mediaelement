@@ -587,7 +587,13 @@
 					width = t.width - left;
 				}
 				
-				t.chapters.append( $('<div class="mep-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + left.toString() + 'px;width: ' + width.toString() + 'px;"><span>' + chapters.entries.text[i] + '</span></div>'));
+				t.chapters.append( $(
+					'<div class="mep-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + left.toString() + 'px;width: ' + width.toString() + 'px;">' + 
+						'<div class="mep-chapter-block">' + 
+							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' + 
+							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop) + '</span>' + 
+						'</div>' +
+					'</div>'));
 			}
 			
 			t.chapters.find('div.mep-chapter').click(function() {
