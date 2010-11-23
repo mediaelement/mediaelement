@@ -90,6 +90,57 @@
 .mep-overlay:hover .mep-overlay-button{
 	background-position: 0 -100px ;
 }
+
+.mep-chapters {
+	position: absolute;
+	top: 0;
+	left: 0;
+	-xborder-right: solid 1px #fff;
+	width: 10000px;
+}
+.mep-chapters .mep-chapter {
+	position: absolute;
+	float: left;
+	background: url(background.png);
+	background: rgba(0,0,0,0.8);		
+	overflow: hidden;
+	border: 0;
+}
+.mep-chapters .mep-chapter .mep-chapter-block {
+	font-size: 11px;
+	color: #fff;
+	padding: 5px;
+	display: block;
+	border-right: solid 1px #999;
+	border-bottom: solid 1px #999;
+	cursor: pointer;
+}
+.mep-chapters .mep-chapter .mep-chapter-block-last {
+	border-right: none;
+}
+
+.mep-chapters .mep-chapter .mep-chapter-block:hover {
+	background: #333;
+}
+.mep-chapters .mep-chapter .mep-chapter-block .ch-title{
+	font-size: 12px;
+	font-weight: bold;
+	display: block;
+	white-space:nowrap;
+	text-overflow: ellipsis;
+	margin: 0 0 3px 0;
+	line-height: 12px;
+}
+.mep-chapters .mep-chapter .mep-chapter-block .ch-timespan{
+	font-size: 12px;
+	line-height: 12px;
+	margin: 3px 0 4px 0;
+	display: block;
+	white-space:nowrap;
+	text-overflow: ellipsis;	
+}
+
+
 .mep-captions-layer {
 	position: absolute;
 	bottom: 0;
@@ -307,7 +358,9 @@
 	width: 100px;
 	float: left;
 	padding: 4px 0 0 0;
-	line-height: 15px;	
+	line-height: 15px;
+	font-family: helvetica, arial;	
+	font-size: 10px;
 }
 
 .mep-controls .mep-captions-button .mep-captions-translations {
