@@ -1115,10 +1115,13 @@ window.MediaElement = mejs.MediaElement;
 				t.setRailSize();
 			}, 50);
 
-			if (t.options.success)
+			if (t.options.success) {
 				t.options.success(t.mediaElement, t.domNode);
-				
-			this.findTracks();
+			}
+			
+			if (t.isVideo)  {
+				this.findTracks();
+			}
 		},
 		
 		buildCaptionsDisplay: function() {
@@ -1170,6 +1173,10 @@ window.MediaElement = mejs.MediaElement;
 				t = this,
 				lang,
 				i;
+			
+			if (!t.isVideo) {
+				t.captions.remove();
+			}
 				
 			// handle clicks to the language radio buttons
 			t.captions.delegate('input[type=radio]','click',function() {				
@@ -1460,15 +1467,11 @@ window.MediaElement = mejs.MediaElement;
 
 			// CONTROL BUTTONS and BARS
 			t.playpause = t.controls.find('.mep-playpause-button');
-			t.fullscreen = t.controls.find('.mep-fullscreen-button');
-			if (!t.isVideo)
-				t.fullscreen.remove();
-				
+			t.fullscreen = t.controls.find('.mep-fullscreen-button');					
 			t.time = t.controls.find('.mep-time');
 			t.currentTime = t.controls.find('.mep-currenttime').html('00:00');
 			t.duration = t.controls.find('.mep-duration').html('00:00');
-
-			t.captions = t.controls.find('.mep-captions-button');			
+			t.captions = t.controls.find('.mep-captions-button');	
 			
 			t.mute = t.controls.find('.mep-volume-button');
 			t.volumeSlider = t.controls.find('.mep-volume-slider');
@@ -1481,11 +1484,15 @@ window.MediaElement = mejs.MediaElement;
 			t.timeTotal = t.timeRail.find('.mep-time-total');
 			t.timeHandle = t.controls.find('.mep-time-handle');
 
-			// setup controls
-			t.controls.show();
-			t.setRailSize();
-			t.controls.hide();
+			// hide unneeded controls
+			if (!t.isVideo) {
+				t.fullscreen.remove();
+				t.captions.remove();			
+			}			
 
+
+
+			
 			// hide unwanted controls	
 
 			if (!t.options.controls.playpause) {
@@ -1506,7 +1513,17 @@ window.MediaElement = mejs.MediaElement;
 			
 			if (!t.options.controls.fullscreen) {
 				t.fullscreen.remove();
-			}				
+			}	
+
+			if (!t.options.controls.captions) {
+				t.captions.remove();
+			}	
+
+			
+			// setup controls
+			t.controls.show();
+			t.setRailSize();
+			t.controls.hide();			
 		},
 		
 		buildControlBar: function() {
