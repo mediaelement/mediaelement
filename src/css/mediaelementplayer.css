@@ -105,8 +105,9 @@
 	background: rgba(0,0,0,0.8);		
 	overflow: hidden;
 	border: 0;
+	height: 40px;
 }
-.mep-chapters .mep-chapter span {
+.mep-chapters .mep-chapter .mep-chapter-block {
 	font-size: 11px;
 	color: #fff;
 	padding: 5px;
@@ -115,8 +116,19 @@
 	border-bottom: solid 1px #999;
 	cursor: pointer;
 }
-.mep-chapters .mep-chapter span:hover {
+.mep-chapters .mep-chapter .mep-chapter-block:hover {
 	background: #333;
+}
+.mep-chapters .mep-chapter .mep-chapter-block .ch-title{
+	font-size: 12px;
+	font-weight: bold;
+	display: block;
+	white-space:nowrap;
+	text-overflow: ellipsis;
+}
+.mep-chapters .mep-chapter .mep-chapter-block .ch-timespan{
+	margin: 5px 0 0 0;
+	display: block;
 }
 
 
@@ -337,7 +349,9 @@
 	width: 100px;
 	float: left;
 	padding: 4px 0 0 0;
-	line-height: 15px;	
+	line-height: 15px;
+	font-family: helvetica, arial;	
+	font-size: 10px;
 }
 
 .mep-controls .mep-captions-button .mep-captions-translations {
