@@ -214,17 +214,20 @@
 .mep-container .mep-controls .mep-time {
 	color: #fff;
 	display: block;	
-	width: 80px;
+	width: 70px;
 	height: 17px;
 	padding: 3px 0 0 0 ;
 	overflow: hidden;	
 	text-align: center;
+	padding: auto 4px;
 }
 .mep-container .mep-controls .mep-time span {
 	font-size: 11px;
 	color: #fff;	
-	line-height: 1em;
-	display: inline-block;	
+	line-height: 12px;
+	display: block;	
+	float: left;
+	margin: 1px 2px 0 0;
 	
 }
 
