@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '1.1.5';
+mejs.version = '1.1.7';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -823,7 +823,6 @@ window.MediaElement = mejs.MediaElement;
  * Copyright 2010, John Dyer
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Version: 1.1.3
  */
 
 // TODO:
@@ -1380,6 +1379,9 @@ window.MediaElement = mejs.MediaElement;
 			var 
 				t = this,
 				i;
+				
+			if (typeof t.tracks == 'undefined' || t.tracks === null)
+				return;
 			
 			for (i=0; i<t.tracks.length; i++) {
 				if (t.tracks[i].kind == 'chapters') {

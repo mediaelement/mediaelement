@@ -43,6 +43,9 @@ A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQue
 
 ### Version History
 
+*1.1.7 (2010/11/29) - 29.8kb*
+
+* Fixed bug with `<track>` loading on `<audio>` player
 
 *1.1.6 (2010/11/23) - 29.8kb*
 
