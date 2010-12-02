@@ -7,6 +7,41 @@
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 
+
+## MediaElementPlayer.js
+
+_HTML5 `<video>` and `<audio>` player_
+
+A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuery`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
+
+### 1. Add Script and Stylesheet
+	<script src="jquery.js"></script>
+	<script src="mediaelement-and-player.min.js"></script>
+	<link rel="stylesheet" href="mediaelementplayer.css" />
+
+### 2. Option A: Single H.264 file (requires JavaScript and Flash or Silverlight in Firefox and IE)	
+	
+	<video id="v1" src="myvideo.mp4" width="320" height="240"></video>
+
+### 2. Option B: Multiple codes with Flash fall-through when JavaScript is disabled
+
+	<video width="640" height="360" id="player1" poster="poster.jpg" controls="controls" preload="none">
+		<source type="video/mp4" src="myvideo.mp4" />
+		<source type="video/webm" src="myvideo.webm" />
+		<source type="video/ogg" src="myvideo.ogv" />
+		<object width="640" height="360" type="application/x-shockwave-flash" data="mediaelementplayer.swf"> 		
+			<param name="movie" value="mediaelementplayer.swf" /> 
+			<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
+			<img src="myvideo.jpg" width="640" height="360" title="No video playback capabilities" />
+		</object> 	
+	</video>
+
+### 3. Run startup script (make sure this is not in the `<head>` tag
+
+	<script>
+	$('video').mediaelementplayer();
+	</script>
+
 ## Part 1: MediaElement.js
 _HTML5 `<video>` and `<audio>` shim_
 
@@ -22,26 +57,16 @@ _HTML5 `<video>` and `<audio>` shim_
 	}});
 	</script>
 
-## Part 2: MediaElementPlayer.js
-
-_HTML5 `<video>` and `<audio>` player_
-
-A complete HTML/CSS audio/video player built on top  `MediaElement.js` and `jQuery`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
-
-	<script src="jquery.js"></script>
-	<script src="mediaelement.js"></script>
-	<script src="mediaelementplayer.js"></script>
-	<link rel="stylesheet" href="mediaelementplayer.css" />
-
-	<video id="v1" src="myvideo.mp4" width="320" height="240"></video>
-
-	<script>
-	$('video').mediaelementplayer();
-	// OR
-	new MediaElementPlayer('#v1');
-	</script>
 
 ### Version History
+
+*2.0.0 (2010/12/02) - 29.1kb*
+
+* Reorganized MediaElementPlayer code to allow each button to become a pluggable feature that can be removed or overrided
+* Enabled a no JavaScript version to support Video for Everybody nested syntax (optional)
+* Enabled drag on progress bar
+* Preload="none" is default for Flash and Silverlight
+* Adjusted layout for IE6
 
 *1.1.7 (2010/11/29) - 29.8kb*
 
