@@ -8,9 +8,9 @@ link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 
 
-## MediaElementPlayer.js
+## Installation and Usage
 
-_HTML5 `<video>` and `<audio>` player_
+_MediaElementPlayer: HTML5 `<video>` and `<audio>` player_
 
 A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuery`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
 
@@ -19,11 +19,11 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 	<script src="mediaelement-and-player.min.js"></script>
 	<link rel="stylesheet" href="mediaelementplayer.css" />
 
-### 2. Option A: Single H.264 file (requires JavaScript and Flash or Silverlight in Firefox and IE)	
+### 2. Option A: Single H.264 file (requires JavaScript and Flash/Silverlight for IE and Firefox)	
 	
 	<video id="v1" src="myvideo.mp4" width="320" height="240"></video>
 
-### 2. Option B: Multiple codes with Flash fall-through when JavaScript is disabled
+### 2. Option B: Multiple codecs with Flash fall-through when JavaScript is disabled
 
 	<video width="640" height="360" id="player1" poster="poster.jpg" controls="controls" preload="none">
 		<source type="video/mp4" src="myvideo.mp4" />
@@ -36,16 +36,17 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 		</object> 	
 	</video>
 
-### 3. Run startup script (make sure this is not in the `<head>` tag
+### 3. Run startup script (make sure this is not in the `<head>` tag or iOS 3 will fail)
 
 	<script>
 	$('video').mediaelementplayer();
 	</script>
 
-## Part 1: MediaElement.js
+## How it Works: MediaElement.js
 _HTML5 `<video>` and `<audio>` shim_
 
-`MediaElement.js` wraps the HTML5 media API around Flash and/or Silverlight plugins for browsers that don't support HTML5 or don't support the media codecs you're using. 
+`MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
+Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
 
 	<script src="mediaelement.js"></script>
 	<video src="myvideo.mp4" width="320" height="240"></video>
@@ -57,6 +58,7 @@ _HTML5 `<video>` and `<audio>` shim_
 	}});
 	</script>
 
+You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
 ### Version History
 
