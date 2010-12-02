@@ -10,12 +10,10 @@
 
 <h1>MediaElement.js</h1>
 
-<p>Recommended code setup</p>
+<p>This is only the Flash/Silverlight Shim for older browers or browsers without the codec you need. It is not a full player.</p>
 
 <h2>MP4 video (as src)</h2>
-<video width="360" height="203" id="player1" src="../media/echo-hereweare.mp4" type="video/mp4" controls="controls">
-	<p>Your browser leaves much to be desired.</p>			
-</video>
+<video width="360" height="203" id="player1" src="../media/echo-hereweare.mp4" type="video/mp4" controls="controls"></video>
 
 <input type="button" id="pp" value="toggle" />
 <span id="time"></span>
@@ -25,11 +23,11 @@ MediaElement('player1', {success: function(me) {
 	
 	me.play();
 	
-	me.addEventListener('timeUpdate', function() {
+	me.addEventListener('timeupdate', function() {
 		document.getElementById('time').innerHTML = me.currentTime;
-	});
+	}, false);
 	
-	pp['onclick'] = function() {
+	document.getElementById('pp')['onclick'] = function() {
 		if (me.paused)
 			me.play();
 		else
