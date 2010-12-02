@@ -9,7 +9,7 @@
 		public static var SEEKED:String = "seeked";
 		public static var PLAY:String = "play";
 		public static var PLAYING:String = "playing";
-		public static var PAUSED:String = "paused";
+		public static var PAUSED:String = "pause";
 		public static var LOADEDMETADATA:String = "loadedmetadata";
 		public static var ENDED:String = "ended";
 		public static var VOLUMECHANGE:String = "volumechange";		

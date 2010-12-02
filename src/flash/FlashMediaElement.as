@@ -108,6 +108,21 @@
 				_mediaElement = new AudioElement(this, _autoplay, _timerRate);
 			}
 			
+					
+			// debugging
+            _output = new TextField();
+			_output.textColor = 0xeeeeee;
+            _output.width = stage.stageWidth - 100;
+            _output.height = stage.stageHeight;
+            _output.multiline = true;
+            _output.wordWrap = true;
+            _output.border = false;
+			_output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
+			
+            _output.text = "Initializing...\n";
+			addChild(_output);			
+			_output.visible = _debug;		
+			
 			
 			// controls!
 			_controlBar = getChildByName("controls_mc") as MovieClip;
@@ -128,21 +143,11 @@
 			}			
 			addChild(_controlBar);
 			
-			
-			
-			// debugging
-            _output = new TextField();
-			_output.textColor = 0xeeeeee;
-            _output.width = stage.stageWidth - 100;
-            _output.height = stage.stageHeight;
-            _output.multiline = true;
-            _output.wordWrap = true;
-            _output.border = false;
-			_output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
-			
-            _output.text = "Initializing...\n";
-			addChild(_output);			
-			_output.visible = _debug;		
+						// put back on top
+			addChild(_fullscreenButton);
+			//_fullscreenButton.alpha = 0;
+			_fullscreenButton.visible = false;
+	
 			
  
 		    _output.appendText("stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");						
@@ -156,7 +161,16 @@
 			_output.appendText("ExternalInterface.available: " + ExternalInterface.available.toString() + "\n");
 			_output.appendText("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null)? ExternalInterface.objectID.toString() : "null") + "\n");
 			
-			if (ExternalInterface.available) {
+			
+			
+			if (_mediaUrl != "") {							
+				_mediaElement.setSrc(_mediaUrl);				
+			}
+						
+			positionControls();
+			
+			
+			if (ExternalInterface.available && !_showControls) {
 				
 				_output.appendText("Adding callbacks...\n");
 				try {
@@ -187,31 +201,21 @@
 				
 			}
 			
+			if (_autoplay) {
+				_mediaElement.load();
+				_mediaElement.play();
+			}				
+
 			
-			if (_mediaUrl != "") {			
-				
-				_mediaElement.setSrc(_mediaUrl);
-				
-				if (_autoplay) {
-					_mediaElement.load();
-					_mediaElement.play();
-				}	
-			}
-			
-			
-			// put back on top
-			addChild(_fullscreenButton);
-			//_fullscreenButton.alpha = 0;
-			_fullscreenButton.visible = false;
-			trace(_fullscreenButton.visible);
+
 			
 			// connection to full screen
-			_connection = new LocalConnection();
-			_connection.client = this;
-			_connection.connect(ExternalInterface.objectID + "_player");
+			//_connection = new LocalConnection();
+			//_connection.client = this;
+			//_connection.connect(ExternalInterface.objectID + "_player");
 			
 			
-			positionControls();
+			
 			
 			// listen for rezie
 			stage.addEventListener(Event.RESIZE, resizeHandler);
@@ -221,7 +225,7 @@
 		}
 		
 		function clickHandler(e:MouseEvent):void {
-			_output.appendText("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");   			
+			//_output.appendText("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");   			
 		}	
 	
 		function resizeHandler(e:Event):void {
@@ -364,6 +368,8 @@
 				_video.x = 0;
 				_video.y = 0;				
 			}
+			
+			positionControls();
 		}
 			
 		
@@ -410,8 +416,9 @@
 			*/
 			
 			// use set timeout for performance reasons
-			ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
-			
+			if (!_showControls) {
+				ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
+			}
 		}	
 		
 		function secondsToTimeCode(seconds:Number):String {
