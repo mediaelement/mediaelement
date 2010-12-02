@@ -8,7 +8,12 @@ combined_filename = 'mediaelement-and-player'
 # BUILD MediaElement (single file)
 
 me_files = []
-me_files.append('mediaelement.js')
+me_files.append('me-namespace.js')
+me_files.append('me-utility.js')
+me_files.append('me-plugindetector.js')
+me_files.append('me-featuredetection.js')
+me_files.append('me-mediaelements.js')
+me_files.append('me-shim.js')
 
 code = ''
 
@@ -23,8 +28,13 @@ tmp_file.close()
 # BUILD MediaElementPlayer (single file)
 
 mep_files = []
-mep_files.append('mediaelementplayer.js')
-
+mep_files.append('mep-player.js')
+mep_files.append('mep-feature-playpause.js')
+mep_files.append('mep-feature-progress.js')
+mep_files.append('mep-feature-time.js')
+mep_files.append('mep-feature-volume.js')
+mep_files.append('mep-feature-fullscreen.js')
+mep_files.append('mep-feature-tracks.js')
 
 code = ''
 
