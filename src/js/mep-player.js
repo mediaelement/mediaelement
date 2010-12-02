@@ -1,0 +1,338 @@
+﻿/*!
+ * Media Element jQuery plugin
+ * http://mediaelementjs.com/
+ *
+ * Creates a controller bar for HTML5 <video> add <audio> tags
+ * using jQuery and MediaElement.js
+ *
+ * Copyright 2010, John Dyer
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ */
+
+(function ($) {
+
+	// default player values
+	mejs.MepDefaults = {
+		// default if the <video width> is not specified
+		defaultVideoWidth: 480,
+		// default if the <video height> is not specified
+		defaultVideoHeight: 270,
+		// if set, overrides <video width>
+		videoWidth: -1,
+		// if set, overrides <video height>
+		videoHeight: -1,
+		// width of audio player
+		audioWidth: 400,
+		// height of audio player
+		audioHeight: 30,
+		// initial volume when the player starts (overrided by user cookie)
+		startVolume: 0.8,		
+		// useful for <audio> player loops
+		loop: false,
+		// resize to media dimensions
+		enableAutosize: true,		
+		// features to show
+		features: ['playpause','progress','current','duration','tracks','volume','fullscreen','backlight']
+	};
+
+	mejs.mepIndex = 0;
+
+	// wraps a MediaElement object in player controls
+	mejs.MediaElementPlayer = function($media, o) {
+
+		var	
+			t = this,
+			mf = mejs.MediaFeatures;
+	
+		t.$media = $($media);
+		t.options = $.extend(true,{},mejs.MepDefaults,o);
+		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
+				
+		if (mf.isiPad || mf.isiPhone) {
+			// add controls and stop
+			t.$media.attr('controls', 'controls');
+			
+			// fix Apple bug
+			t.$media.removeAttr('poster');
+
+			// override Apple's autoplay override for iPads
+			if (mf.isiPad && t.$media[0].getAttribute('autoplay') !== null) {
+				t.$media[0].load();
+				t.$media[0].play();
+			}
+
+			// don't do the rest
+			return;
+		} else if (mf.isAndroid && t.isVideo) {
+
+			// Android is better off with native controls (like iOS)
+			t.$media.attr('controls', 'controls');
+			return;
+			
+		} else {
+
+			// remove native controls and use MEP
+			t.$media.removeAttr('controls');
+		}
+		
+		t.init();
+		
+		return t;
+	};
+	
+	// actual player
+	mejs.MediaElementPlayer.prototype = {
+		init: function() {
+
+			var
+				t = this,
+				meOptions = $.extend(true, {}, t.options, {
+					success: function(media, domNode) { t.meReady(media, domNode); },
+					error: function(e) { t.handleError(e);}
+				});				
+		
+			// unique ID
+			t.id = 'mep_' + mejs.mepIndex++;			
+			
+			// build container
+			t.container =
+				$('<div id="' + t.id + '" class="mejs-container">'+
+					//'<div class="mejs-inner">'+
+						'<div class="mejs-mediaelement">'+
+						'</div>'+
+						'<div class="mejs-layers">'+
+						'</div>'+
+						'<div class="mejs-controls">'+
+						'</div>'+
+						'<div class="mejs-clear"></div>'+
+					//'</div>' +
+				'</div>')		
+				
+				.addClass(t.$media[0].className)
+				.insertBefore(t.$media);
+				
+			// move the <video/video> tag into the right spot
+			t.container.find('.mejs-mediaelement').append(t.$media);
+			
+			// find parts
+			t.controls = t.container.find('.mejs-controls');
+			t.layers = t.container.find('.mejs-layers');		
+			
+			// determine the size							
+			if (t.isVideo) {			
+				// priority = videoWidth (forced), width attribute, defaultVideoWidth		
+				t.width = (t.options.videoWidth > 0) ? t.options.videoWidth : (t.$media[0].getAttribute('width') !== null) ? t.$media.attr('width') : t.options.defaultVideoWidth;
+				t.height = (t.options.videoHeight > 0) ? t.options.videoHeight : (t.$media[0].getAttribute('height') !== null) ? t.$media.attr('height') : t.options.defaultVideoHeight;				
+			} else {
+				t.width = t.options.audioWidth;
+				t.height = t.options.audioHeight;
+			}
+			
+			// set the size, while we wait for the plugins to load below
+			t.setPlayerSize(t.width, t.height);
+						
+			// create MediaElementShim	
+			meOptions.pluginWidth = t.height;
+			meOptions.pluginHeight = t.width;			
+			mejs.MediaElement(t.$media[0], meOptions);			
+		},
+		
+		// Sets up all controls and events
+		meReady: function(media, domNode) {		
+
+			var t = this,
+				f,
+				feature;
+
+			t.media = media;
+			t.domNode = domNode;
+				
+			// two built in features
+			t.buildposter(t, t.controls, t.layers, t.media);
+			t.buildoverlay(t, t.controls, t.layers, t.media);
+			
+			// grab for use by feautres
+			t.findTracks();
+				
+			// add user-defined features/controls
+			for (f in t.options.features) {
+				feature = t.options.features[f];
+				if (t['build' + feature]) {
+					try {
+						t['build' + feature](t, t.controls, t.layers, t.media);
+					} catch (e) {
+						// TODO: report control error
+					}
+				}			
+			}
+			
+			// reset all layers and controls
+			t.setPlayerSize(t.width, t.height);			
+			t.setControlsSize();
+			
+			// controls fade
+			if (t.isVideo) {
+				// show/hide controls
+				t.container
+					.bind('mouseenter', function () {
+						t.controls.css('visibility','visible');						
+						t.controls.stop(true, true).fadeIn(200);
+					})
+					.bind('mouseleave', function () {
+						if (!t.media.paused) {
+							t.controls.stop(true, true).fadeOut(200, function() {
+								$(this).css('visibility','hidden');
+								$(this).css('display','block');								
+							});						
+						}
+					});
+				
+				// resizer
+				if (t.options.enableAutosize) {
+					t.media.addEventListener('loadedmetadata', function(e) {
+						// if the <video height> was not set and the options.videoHeight was not set
+						// then resize to the real dimensions
+						if (t.options.videoHeight <= 0 && t.$media[0].getAttribute('height') === null && !isNaN(e.target.videoHeight)) {
+							t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
+							t.setControlsSize();
+							t.media.setVideoSize(e.target.videoWidth, e.target.videoHeight);			
+						}
+					}, false);
+				}
+			}		
+			
+			// ended for all
+			t.media.addEventListener('ended', function (e) {
+				t.media.setCurrentTime(0);
+				t.media.pause();				
+					
+				if (t.options.loop) {					
+					t.media.play();
+				} else {
+					t.controls.css('visibility','visible');
+				}
+			}, true);
+
+			
+			// webkit has trouble doing this without a delay
+			setTimeout(function () {
+				t.setControlsSize();
+				t.setPlayerSize(t.width, t.height);
+			}, 50);
+			
+			
+			if (t.options.success) {
+				t.options.success(t.media, t.domNode);
+			}		
+		},
+
+		setPlayerSize: function(width,height) {
+			var t = this;
+			
+			// ie9 appears to need this (jQuery bug?)
+			t.width = parseInt(width, 10);
+			t.height = parseInt(height, 10);
+			
+			t.container
+				.width(t.width)
+				.height(t.height);
+				
+			t.layers.children('div.mejs-layer')
+				.width(t.width)
+				.height(t.height);						
+		},
+
+		setControlsSize: function() {
+			var t = this,				
+				usedWidth = 0,		
+				railWidth = 0,
+				rail = t.controls.find('.mejs-time-rail'),
+				total = t.controls.find('.mejs-time-total'),
+				others = rail.siblings();
+			
+			// find the size of all the other controls besides the rail
+			others.each(function() {
+				usedWidth += $(this).outerWidth(true);
+			});
+			// fit the rail into the remaining space
+			railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
+			
+			rail.width(railWidth);		
+			total.width(railWidth - (total.outerWidth(true) - total.width()));			
+		},
+
+		
+		buildposter: function(player, controls, layers, media) {			
+			var poster = 	
+				$('<div class="mejs-poster mejs-layer">'+
+					'<img />'+
+				'</div>')
+					.appendTo(layers),
+				posterUrl = player.$media.attr('poster');
+				
+			if (posterUrl !== '' && posterUrl != null) {
+				poster.find('img').attr('src',posterUrl);
+			} else {
+				poster.hide();
+			}
+						
+			media.addEventListener('play',function() {
+				poster.hide();
+			}, false);			
+		},
+		
+		buildoverlay: function(player, controls, layers, media) {
+			if (!player.isVideo)
+				return;
+				
+			var overlay = 	
+				$('<div class="mejs-overlay mejs-layer">'+
+					'<div class="mejs-overlay-button"></div>'+
+				'</div>')
+				.appendTo(layers)
+				.click(function() {
+					if (media.paused) {
+						media.play();
+					} else {
+						media.pause();
+					}
+				});
+				
+			media.addEventListener('play',function() {
+				overlay.hide();
+			}, false);
+			media.addEventListener('pause',function() {
+				overlay.show();
+			}, false);			
+		},
+		
+		findTracks: function() {	
+			var t = this,
+				tracktags = t.$media.find('track');
+			
+			// store for use by plugins
+			t.tracks = [];			
+			tracktags.each(function() {				
+				t.tracks.push({
+					srclang: $(this).attr('srclang').toLowerCase(),
+					src: $(this).attr('src'),
+					kind: $(this).attr('kind'),
+					entries: [],
+					isLoaded: false
+				});				
+			});		
+		}		
+	};
+			
+	// turn into jQuery plugin
+	jQuery.fn.mediaelementplayer = function (options) {
+		return this.each(function () {
+			return new mejs.MediaElementPlayer($(this), options);
+		});
+	};
+
+	// push out to window
+	window.MediaElementPlayer = mejs.MediaElementPlayer;
+
+})(jQuery);
