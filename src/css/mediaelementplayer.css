@@ -171,7 +171,50 @@
 	cursor: pointer;	
 	border: solid 2px #333;
 	top: -2px;
+	text-align: center;
 }
+
+.mejs-controls .mejs-time-rail .mejs-time-float {	
+	visibility: hidden;	
+	position: absolute;
+	display: block;	
+	background: #eee;
+	width: 36px;
+	height: 17px;
+	border: solid 1px #333;
+	top: -26px;
+	margin-left: -14px;
+	text-align: center;
+	color: #111;
+}
+.mejs-controls .mejs-time-rail:hover .mejs-time-float {	
+	visibility: visible;
+}
+.mejs-controls .mejs-time-rail .mejs-time-float-current {	
+	margin: 2px;
+	width: 30px;
+	display: block;
+	text-align: center;
+}
+.mejs-controls .mejs-time-rail .mejs-time-float-corner {	
+	position: absolute;
+	display: block;
+	width: 0;
+	height: 0;
+	line-height: 0;
+	border: solid 5px #eee;
+	border-color: #eee transparent transparent transparent;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	top: 15px;
+	left: 13px;	
+	
+}
+
+
+
+
 /*
 .mejs-controls .mejs-time-rail:hover .mejs-time-handle {
 	visibility:visible;
@@ -317,7 +360,7 @@
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul li input{
 	clear: both;
 	float: left;
-
+	margin: 3px 3px 0px 5px;
 }
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul li label{
 	width: 100px;
