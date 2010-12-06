@@ -298,8 +298,8 @@
 				t = this,
 				i,
 				dur,
-				width,
-				left,
+				//width,
+				//left,
 				percent = 0,
 				usedPercent = 0;
 			
