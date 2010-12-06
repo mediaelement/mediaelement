@@ -21,6 +21,7 @@ mejs.MediaFeatures = {
 		this.isiPhone = (ua.match(/iPhone/i) !== null);
 		this.isAndroid = (ua.match(/Android/i) !== null);
 		this.isIE = (nav.appName.indexOf("Microsoft") != -1);
+		this.isChrome = (ua.match(/Chrome/gi) !== null);
 		
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
@@ -29,7 +30,7 @@ mejs.MediaFeatures = {
 		
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
 		this.hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
-		if (ua.match(/Chrome/gi)) {
+		if (this.isChrome) {
 			this.hasNativeFullScreen = false;
 		}
 	}
