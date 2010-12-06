@@ -4,7 +4,7 @@
 		if (!player.isVideo)
 			return;
 
-		// add speed controls			
+		// add postroll			
 	}
 	
 	
