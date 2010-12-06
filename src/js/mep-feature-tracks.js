@@ -299,27 +299,34 @@
 				i,
 				dur,
 				width,
-				left
-				;
+				left,
+				percent = 0,
+				usedPercent = 0;
 			
 			t.chapters.empty();
 			
 			for (i=0; i<chapters.entries.times.length; i++) {
 				dur = chapters.entries.times[i].stop - chapters.entries.times[i].start;
-				//width = length / t.media.duration * 100;				
-				width = Math.floor(t.width * dur / t.media.duration);
-				left = Math.floor(t.width * chapters.entries.times[i].start / t.media.duration);
-				if (left + width > t.width) {
-					width = t.width - left;
+				percent = Math.floor(dur / t.media.duration * 100);
+				if (percent + usedPercent > 100 || // too large
+					i == chapters.entries.times.length-1 && percent + usedPercent < 100) // not going to fill it in
+					{
+					percent = 100 - usedPercent;
 				}
+				//width = Math.floor(t.width * dur / t.media.duration);
+				//left = Math.floor(t.width * chapters.entries.times[i].start / t.media.duration);
+				//if (left + width > t.width) {
+				//	width = t.width - left;
+				//}
 				
 				t.chapters.append( $(
-					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + left.toString() + 'px;width: ' + width.toString() + 'px;">' + 
+					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + usedPercent.toString() + '%;width: ' + percent.toString() + '%;">' + 
 						'<div class="mejs-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mejs-chapter-block-last' : '') + '">' + 
 							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' + 
 							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop) + '</span>' + 
 						'</div>' +
 					'</div>'));
+				usedPercent += percent;
 			}
 			
 			t.chapters.find('div.mejs-chapter').click(function() {
