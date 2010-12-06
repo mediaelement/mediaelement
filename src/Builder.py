@@ -1,5 +1,6 @@
 import sys
 import os
+import shutil
 
 me_filename = 'mediaelement'
 mep_filename = 'mediaelementplayer'
@@ -80,3 +81,11 @@ tmp_file = open('../build/mediaelementplayer.css','w')
 tmp_file.write(src_file.read())
 tmp_file.close()
 os.system("java -jar yuicompressor-2.4.2.jar ../build/mediaelementplayer.css -o ../build/mediaelementplayer.min.css --charset utf-8 -v")
+
+#COPY skin files
+shutil.copy2('css/controls.png','../build/controls.png')
+
+shutil.copy2('css/mejs-skins.css','../build/mejs-skins.css')
+shutil.copy2('css/controls-ted.png','../build/controls-ted.png')
+shutil.copy2('css/controls-wmp.png','../build/controls-wmp.png')
+shutil.copy2('css/controls-wmp-bg.png','../build/controls-wmp-bg.png')
