@@ -377,7 +377,7 @@
 		public function sendEvent(eventName:String, eventValues:String) {
 			
 			// special video event
-			if (eventName == HtmlMediaEvent.LOADEDMETADATA) {
+			if (eventName == HtmlMediaEvent.LOADEDMETADATA && _isVideo) {
 				_nativeVideoWidth = (_mediaElement as VideoElement).videoWidth;
 				_nativeVideoHeight = (_mediaElement as VideoElement).videoHeight;			
 				
@@ -396,7 +396,7 @@
 				case "playing":
 					_playButton.visible = false;
 					_pauseButton.visible = true;
-					break;					
+					break;
 			}
 			_duration.text = secondsToTimeCode(_mediaElement.duration());
 			_currentTime.text = secondsToTimeCode(_mediaElement.currentTime());			
@@ -404,7 +404,7 @@
 			//_output.appendText("event:" + eventName + " : " + eventValues);
 			trace("event", eventName, eventValues);
 			
-			if (eventValues == "")
+			if (eventValues == null || eventValues == "")
 				eventValues = "{}";
 			
 			/*
