@@ -144,7 +144,7 @@ mejs.HtmlMediaElementShim = {
 
 		if (playback.method == 'native') {
 			// add methods to native HTMLMediaElement
-			this.updateNative( htmlMediaElement, options);				
+			this.updateNative( htmlMediaElement, options, preload, playback);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
 			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay, preload);
@@ -389,12 +389,31 @@ mejs.HtmlMediaElementShim = {
 		// FYI: options.success will be fired by the MediaPluginBridge
 	},
 	
-	updateNative: function(htmlMediaElement, options) {
-
+	updateNative: function(htmlMediaElement, options, preload, playback) {
+		
 		// add methods to video object to bring it into parity with Flash Object
 		for (var m in mejs.HtmlMediaElement) {
 			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
+		
+		// special case to enforce preload attribute (Chrome doesn't respect this)
+		if (preload == 'none' && mejs.MediaFeatures.isChrome) {
+			// forces the browser to stop loading
+			
+			htmlMediaElement.src = '';
+			htmlMediaElement.load();			
+			htmlMediaElement.canceledPreload = true;
+			
+			htmlMediaElement.addEventListener('play',function() {
+				if (htmlMediaElement.canceledPreload) {
+					htmlMediaElement.src = playback.url;
+					htmlMediaElement.load();
+					htmlMediaElement.play();
+					htmlMediaElement.canceledPreload = false;
+				}
+			}, false);
+		}
+		
 		
 		// fire success code
 		options.success(htmlMediaElement, htmlMediaElement);		
