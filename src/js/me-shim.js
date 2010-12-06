@@ -330,8 +330,8 @@ mejs.HtmlMediaElementShim = {
 			'timerrate=' + options.timerRate,
 			'height=' + height];
 
-		if (mediaUrl !== null) {
-			initVars.push('file=' + mediaUrl);
+		if (mediaUrl !== null) {		
+			initVars.push('file=' + mejs.Utility.encodeUrl(mediaUrl));
 		}
 		if (options.enablePluginDebug) {
 			initVars.push('debug=true');
