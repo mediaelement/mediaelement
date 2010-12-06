@@ -30,7 +30,7 @@ package htmlelements
 		private var _volume:Number = 1;				
 		private var _preMuteVolume:Number = 0;				
 		private var _isMuted:Boolean = false;
-		private var _isPaused:Boolean = false;
+		private var _isPaused:Boolean = true;
 		private var _isEnded:Boolean = false;		
 		private var _isLoaded:Boolean = false;		
 		private var _currentTime:Number = 0;
@@ -182,8 +182,10 @@ package htmlelements
 		public function pause():void {
 			
 			_timer.stop();
-			_currentTime = _soundChannel.position;
-			_soundChannel.stop();
+			if (_soundChannel != null) {
+				_currentTime = _soundChannel.position;
+				_soundChannel.stop();
+			}
 			
 			_isPaused = true;
 			sendEvent(HtmlMediaEvent.PAUSED);
@@ -208,12 +210,15 @@ package htmlelements
 		}
 		
 		public function setVolume(volume:Number):void {
+			
+			_volume = volume;			
 			_soundTransform.volume = volume;
-			_soundChannel.soundTransform = _soundTransform;
 			
-			_volume = volume;
-			
-			sendEvent(HtmlMediaEvent.VOLUMECHANGE);
+			if (_soundChannel != null) {
+				_soundChannel.soundTransform = _soundTransform;								
+			}
+
+			sendEvent(HtmlMediaEvent.VOLUMECHANGE);			
 		}		
 		
 
