@@ -65,23 +65,10 @@
 		// http://www.splashnology.com/blog/html5/382.html
 		function updateLights() {
 			
-			
 			// get a copy of video
 			context.drawImage(media, 0, 0, media.width, media.height);	
 			
-			/*
-			base.empty();
-			var applyAlpha =false ;
-			addLight(base, canvas, context, 3, vWidth, 100, 'left', applyAlpha);
-			addLight(base, canvas, context, 3, vWidth, 100, 'right', applyAlpha);
-			addLight(base, canvas, context, 5, hHeight, 100, 'top', applyAlpha);
-			addLight(base, canvas, context, 5, hHeight, 100, 'bottom', applyAlpha);
-			*/
-			
-			//base.empty();
-			//addLights2(base, canvas, context, vBlocks, hBlocks);
-			
-			addLights3(base, canvas, context, vBlocks, hBlocks, 40, 30);
+			addLights(base, canvas, context, vBlocks, hBlocks, 40, 30);
 
 			
 			if (keepUpdating && isActive) {
@@ -109,111 +96,9 @@
 		
 	};	
 	
-	function addLights2(base, canvas, context, vBlocks, hBlocks) {
 	
-		
-		var 
-			light = document.createElement('canvas'),
-			lightContext = light.getContext('2d'),
-			width = canvas.width,
-			g,
-			height = canvas.height,
-			topLightLength = 130,
-			topLightInset = 50,
-			sideLightLength = 130,
-			sideLightInset = 50,			
-			fake = [[255,0,0],[0,255,0],[0,0,255],[255,255,0]],
-			topLights = getMidColors(canvas, context, hBlocks, 50, 'top'),
-			bottomLights = getMidColors(canvas, context, hBlocks, 50, 'bottom'),
-			leftLights = getMidColors(canvas, context, vBlocks, 50, 'left'),
-			rightLights = getMidColors(canvas, context, vBlocks, 50, 'right');
-		
-		light.width = width + sideLightLength*2;
-		light.height = height + topLightLength*2;
-		lightContext.globalCompositeOperation = 'xor'; //'darker'; //'lighter';
-			
-		// top
-		for (var i=0; i<topLights.length; i++) {		
-			var g = context.createRadialGradient(
-				sideLightLength + (width/hBlocks*i) + width/hBlocks/2, 
-				topLightLength+topLightInset, 
-				0, 
-				sideLightLength + (width/hBlocks*i) + width/hBlocks/2,
-				topLightLength+topLightInset,
-				topLightLength);
-				
-			
-				
-			//g.addColorStop(0.0, 'rgba(' + adjustColor(topLights[i]).join(',') + ',1)');
-			g.addColorStop(0.0, 'rgba(255,255,255,1)');
-			g.addColorStop(1.0, 'rgba(' + adjustColor(topLights[i]).join(',') + ',0)');
-			
-			lightContext.fillStyle = g; 
-            lightContext.fillRect(0,0,light.width, light.height); 
-		}
-		
-		// bottom	
-		for (var i=0; i<bottomLights.length; i++) {		
-			var g = context.createRadialGradient(
-				sideLightLength + (width/hBlocks*i) + width/hBlocks/2, 
-				topLightLength + height - topLightInset, 
-				0, 
-				sideLightLength + (width/hBlocks*i) + width/hBlocks/2,
-				topLightLength+ height- topLightInset, 
-				topLightLength);
-				
-			//g.addColorStop(0.0, 'rgba(' + adjustColor(bottomLights[i]).join(',') + ',1)');
-			g.addColorStop(0.0, 'rgba(255,255,255,1)');
-			g.addColorStop(1.0, 'rgba(' + adjustColor(bottomLights[i]).join(',') + ',0)');
-			
-			lightContext.fillStyle = g; 
-            lightContext.fillRect(0,0,light.width, light.height); 
-		}	
-
-		// left
-		for (var i=1; i<leftLights.length-1; i++) {		
-			var g = context.createRadialGradient(
-				sideLightLength + sideLightInset, 
-				topLightLength + (height/vBlocks*i) + height/vBlocks/2,
-				0, 				
-				sideLightLength + sideLightInset, 
-				topLightLength + (height/vBlocks*i) + height/vBlocks/2, 
-				sideLightLength);
-				
-			//g.addColorStop(0.0, 'rgba(' + adjustColor(leftLights[i]).join(',') + ',1)');
-			g.addColorStop(0.0, 'rgba(255,255,255,1)');
-			g.addColorStop(1.0, 'rgba(' + adjustColor(leftLights[i]).join(',') + ',0)');
-			
-			lightContext.fillStyle = g; 
-            lightContext.fillRect(0,0,light.width, light.height); 
-		}			
-		
-		// left
-		for (var i=1; i<rightLights.length-1; i++) {		
-			var g = context.createRadialGradient(
-				sideLightLength + width - sideLightInset, 
-				topLightLength + (height/vBlocks*i) + height/vBlocks/2,
-				0, 				
-				sideLightLength + width - sideLightInset, 
-				topLightLength + (height/vBlocks*i) + height/vBlocks/2, 
-				sideLightLength);
-				
-			//g.addColorStop(0.0, 'rgba(' + adjustColor(rightLights[i]).join(',') + ',1)');
-			g.addColorStop(0.0, 'rgba(255,255,255,1)');
-			g.addColorStop(1.0, 'rgba(' + adjustColor(rightLights[i]).join(',') + ',0)');
-			
-			lightContext.fillStyle = g; 
-            lightContext.fillRect(0,0,light.width, light.height); 
-		}	
-		
-		$(light)
-			.css('position','absolute')
-			.css('top',-topLightLength)
-			.css('left',-sideLightLength)
-			.appendTo(base);	
-	}
 	
-	function addLights3(base, canvas, context, vBlocks, hBlocks, size, depth) {
+	function addLights(base, canvas, context, vBlocks, hBlocks, size, depth) {
 		base.empty();
 		
 		var 
@@ -227,13 +112,19 @@
 			topLights = getMidColors(canvas, context, hBlocks, depth, 'top'),
 			bottomLights = getMidColors(canvas, context, hBlocks, depth, 'bottom'),
 			leftLights = getMidColors(canvas, context, vBlocks, depth, 'left'),
-			rightLights = getMidColors(canvas, context, vBlocks, depth, 'right');
+			rightLights = getMidColors(canvas, context, vBlocks, depth, 'right'),
+			corners = [];
 		
 		glowCanvas.width = lightsCanvas.width = width + size + size;
 		glowCanvas.height = lightsCanvas.height = height + size + size;
 		lightsContext.globalCompositeOperation = 'xor'; //'darker'; //'lighter';
 			
 		// draw four gradients
+		// create corners
+		corner[0] = averageColor(topLights[topLights.length-1], rightLights[0]);
+		corner[1] = averageColor(bottomLights[topLights.length-1], rightLights[rightLights.length-1]);
+		corner[2] = averageColor(topLights[topLights.length-1], rightLights[0]);
+		corner[3] = averageColor(topLights[topLights.length-1], rightLights[0]);
 		
 		// top		
 		gradient = context.createLinearGradient(size, size, width+size, size);		
@@ -347,74 +238,6 @@
 	}	
 	
 		
-	function addLight(base, canvas, context, blocks, blockSize, lightSize, side, applyAlpha) {
-		// create a canvas to draw the lights on
-		var 
-			light = document.createElement('canvas'),
-			lightContext = light.getContext('2d'),
-			midColors = getMidColors(canvas, context, blocks, blockSize, side),
-			gradient;
-			
-		if (side == 'top' || side == 'bottom') {
-			gradient = context.createLinearGradient(0, 0, canvas.width, 0);
-			light.width = canvas.width;
-			light.height = lightSize;		
-		} else {
-			gradient = context.createLinearGradient(0, 0, 0, canvas.height);
-			light.width = lightSize;
-			light.height = canvas.height;				
-		}
-		
-		for (var i = 0, il = midColors.length; i < il; i++) {
-			gradient.addColorStop(i / il, 'rgb(' + adjustColor(midColors[i]).join(',') + ')');
-		}
-
-		// drawing gradient
-		lightContext.fillStyle = gradient;
-		lightContext.fillRect(0, 0, light.width, light.height);	
-		
-		// add alpha
-		
-		if (applyAlpha) {
-			var solidImage = lightContext.getImageData(0,0,(side == 'top' || side == 'bottom') ? canvas.width : lightSize, (side == 'top' || side == 'bottom') ? lightSize : canvas.height);
-			var newImage = lightContext.createImageData((side == 'top' || side == 'bottom') ? canvas.width : lightSize, (side == 'top' || side == 'bottom') ? lightSize : canvas.height);
-				
-			if (side == 'top' || side == 'bottom') {
-				for (y=0; y<light.height; y++) {			
-					var a = (side == 'top') ? y/lightSize*100 : (light.height-y)/lightSize*100;
-					for (x=0; x<light.width; x++) {
-						i = y*light.width*4 + x*4;
-						newImage.data[i] = solidImage.data[i];
-						newImage.data[i+1] = solidImage.data[i+1];
-						newImage.data[i+2] = solidImage.data[i+2];
-						newImage.data[i+3] = a;
-					}		
-				}			
-			} else {
-				
-				for (x=0; x<light.width; x++) {			
-					var a = (side == 'left') ? x/lightSize*100 : (light.width-x)/lightSize*100;
-					for (y=0; y<light.height; y++) {
-						i = y*light.width*4 + x*4;
-						newImage.data[i] = solidImage.data[i];
-						newImage.data[i+1] = solidImage.data[i+1];
-						newImage.data[i+2] = solidImage.data[i+2];
-						newImage.data[i+3] = a;			
-					}		
-				}	
-			}
-			lightContext.putImageData(newImage,0,0);
-		}		
-			
-			
-		$(light)
-			.css('position','absolute')
-			.css((side == 'top' || side == 'bottom') ? 'left' : 'top',0)
-			.css(side,-lightSize)
-			.appendTo(base);
-	
-		
-	}
 	
 	
 	function getMidColors(canvas, context, blocks, blockDepth, side) {
