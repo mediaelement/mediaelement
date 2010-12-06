@@ -190,7 +190,7 @@
 
 
 /* Start: Mute/Volume */
-.mejs-controls .mejs-volume {
+.mejs-controls .mejs-volume-button {
 }
 
 .mejs-controls .mejs-mute span {
@@ -229,20 +229,31 @@
 	display: block;
 }
 
-.mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-rail {
+.mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-total {
 	position: absolute;
 	left: 11px;
 	top: 8px;	
 	width: 2px;
 	height: 100px;
 	background: #ddd;	
-	background: rgba(255, 255, 255, 0.8);
+	background: rgba(255, 255, 255, 0.5);
 	margin: 0;
 }	
 
-.mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-rail .mejs-volume-handle {
+.mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-current {
 	position: absolute;
-	left: -7px;
+	left: 11px;
+	top: 8px;	
+	width: 2px;
+	height: 100px;
+	background: #ddd;
+	background: rgba(255, 255, 255, 0.9);
+	margin: 0;
+}
+
+.mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-handle {
+	position: absolute;
+	left: 4px;
 	top: -3px;
 	width: 16px;
 	height: 6px;
@@ -427,3 +438,27 @@
 /* End: ERROR */
 
 
+/* Start: Loop */
+.mejs-controls .mejs-loop-off span{
+	background-position: -64px -16px;
+}
+.mejs-controls .mejs-loop-on span {
+	background-position: -64px 0;
+}
+/* End: Loop */
+
+/* Start: backlight */
+.mejs-controls .mejs-backlight-off span{
+	background-position: -80px -16px;
+}
+.mejs-controls .mejs-backlight-on span {
+	background-position: -80px 0;
+}
+/* End: backlight */
+
+
+/* Start: picture controls */
+.mejs-controls .mejs-picturecontrols-button{
+	background-position: -96px 0;
+}
+/* End: picture controls */
