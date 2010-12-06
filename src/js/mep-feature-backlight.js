@@ -49,7 +49,7 @@
 		canvas.width = player.width;
 		canvas.height = player.height;
 		
-		$('<div class="mejs-backlight"><span></span></div>')
+		$('<div class="mejs-backlight-button"><span></span></div>')
 			.appendTo(controls)
 			.click(function() {
 				if (isActive) {
