@@ -5,8 +5,6 @@
 	font-family: Helvetica, Arial;
 }
 
-
-
 .mejs-container-fullscreen { 
 	position: fixed; 
 	left: 0; 
@@ -22,6 +20,11 @@
 }
 
 /* Start: LAYERS */
+.mejs-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 .mejs-mediaelement {
 	position: absolute;
 	top: 0;
@@ -79,10 +82,7 @@
 	line-height: 11px;	
 	font-family: Helvetica, Arial;
 }
-.mejs-controls .mejs-playpause-button span, 
-.mejs-controls .mejs-volume-button span, 
-.mejs-controls .mejs-fullscreen-button span,
-.mejs-controls .mejs-captions-button span {
+.mejs-controls .mejs-button span {
 	cursor: pointer;
 	display: block;
 	font-size: 0px;
@@ -160,7 +160,7 @@
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-handle {
-	visibility:hidden;
+	display: none;
 	position: absolute;
 	margin: 0;
 	width: 10px;
