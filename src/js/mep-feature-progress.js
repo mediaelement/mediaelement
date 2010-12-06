@@ -7,6 +7,10 @@
 				'<span class="mejs-time-loaded"></span>'+
 				'<span class="mejs-time-current"></span>'+
 				'<span class="mejs-time-handle"></span>'+
+				'<span class="mejs-time-float">' + 
+					'<span class="mejs-time-float-current">00:00</span>' + 
+					'<span class="mejs-time-float-corner"></span>' + 
+				'</span>'+
 			'</span>'+
 		'</div>')
 			.appendTo(controls);
@@ -15,6 +19,8 @@
 			loaded  = controls.find('.mejs-time-loaded'),
 			current  = controls.find('.mejs-time-current'),
 			handle  = controls.find('.mejs-time-handle'),
+			timefloat  = controls.find('.mejs-time-float'),
+			timefloatcurrent  = controls.find('.mejs-time-float-current'),
 			setProgress = function(e) {
 				var
 					target = e.target,
@@ -48,6 +54,8 @@
 				
 					current.width(newWidth);
 					handle.css('left', handlePos);
+					timefloat.css('left', handlePos);
+					timefloatcurrent.html( mejs.Utility.secondsToTimeCode(media.currentTime) );
 				}				
 			
 			},
