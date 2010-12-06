@@ -19,20 +19,24 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 	<script src="mediaelement-and-player.min.js"></script>
 	<link rel="stylesheet" href="mediaelementplayer.css" />
 
-### 2. Option A: Single H.264 file (requires JavaScript and Flash/Silverlight for IE and Firefox)	
+### 2. Option A: Single H.264 file
+
+	If your users have JavaScript and Flash, this is the easist route for all browsers and mobile devices.
 	
-	<video id="v1" src="myvideo.mp4" width="320" height="240"></video>
+	<video src="myvideo.mp4" width="320" height="240"></video>
 
 ### 2. Option B: Multiple codecs with Flash fall-through when JavaScript is disabled
 
-	<video width="640" height="360" id="player1" poster="poster.jpg" controls="controls" preload="none">
+	This includes multiple codecs for various browsers (H.264 for IE and webkit, WebM for Firefox 4 and Opera, Ogg for Firefox 3) as well as a Flash fallback for non HTML5 browsers with JavaScript disabled.
+
+	<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
 		<source type="video/mp4" src="myvideo.mp4" />
 		<source type="video/webm" src="myvideo.webm" />
 		<source type="video/ogg" src="myvideo.ogv" />
-		<object width="640" height="360" type="application/x-shockwave-flash" data="mediaelementplayer.swf"> 		
+		<object width="320" height="240" type="application/x-shockwave-flash" data="mediaelementplayer.swf"> 		
 			<param name="movie" value="mediaelementplayer.swf" /> 
 			<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
-			<img src="myvideo.jpg" width="640" height="360" title="No video playback capabilities" />
+			<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
 		</object> 	
 	</video>
 
@@ -42,8 +46,8 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 	$('video').mediaelementplayer();
 	</script>
 
-## How it Works: MediaElement.js
-_HTML5 `<video>` and `<audio>` shim_
+## How it Works: 
+_MediaElement.js: HTML5 `<video>` and `<audio>` shim_
 
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
@@ -62,12 +66,15 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.0.0 (2010/12/02) - 29.1kb*
+*2.0.0 (2010/12/XX) - 29.1kb*
 
 * Reorganized MediaElementPlayer code to allow each button to become a pluggable feature that can be removed or overrided
 * Enabled a no JavaScript version to support Video for Everybody nested syntax (optional)
 * Enabled drag on progress bar
 * Preload="none" is default for Flash and Silverlight
+* Preload="none" enabled on Google Chrome
+* Support for skin swapping
+* Exposed MediaElement API methods on player
 * Adjusted layout for IE6
 
 *1.1.7 (2010/11/29) - 29.8kb*
