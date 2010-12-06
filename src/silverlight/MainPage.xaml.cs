@@ -316,20 +316,21 @@ namespace SilverlightMediaElement
 
         [ScriptableMember]
         public void setVolume(Double volume) {
-            WriteDebug("method:setvolume: " + volume.ToString());
-
-			SendEvent("volumechange");
+            WriteDebug("method:setvolume: " + volume.ToString());			
 
             media.Volume = volume;
+
+			SendEvent("volumechange");
         }
 
         [ScriptableMember]
         public void setMuted(bool isMuted) {
-            WriteDebug("method:setmuted: " + isMuted.ToString());
+            WriteDebug("method:setmuted: " + isMuted.ToString());			
+
+            media.IsMuted = isMuted;
 
 			SendEvent("volumechange");
 
-            media.IsMuted = isMuted;
         }
 
         [ScriptableMember]
