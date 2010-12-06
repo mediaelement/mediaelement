@@ -1,7 +1,7 @@
 (function($) {
 	MediaElementPlayer.prototype.buildvolume = function(player, controls, layers, media) {
 		var mute = 	
-			$('<div class="mejs-volume-button mejs-mute">'+
+			$('<div class="mejs-button mejs-volume-button mejs-mute">'+
 				'<span></span>'+
 				'<div class="mejs-volume-slider">'+
 					'<div class="mejs-volume-rail">'+
