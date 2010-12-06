@@ -3,24 +3,36 @@
 		var mute = 	
 			$('<div class="mejs-button mejs-volume-button mejs-mute">'+
 				'<span></span>'+
-				'<div class="mejs-volume-slider">'+
-					'<div class="mejs-volume-rail">'+
-						'<div class="mejs-volume-handle"></div>'+
-					'</div>'+
+				'<div class="mejs-volume-slider">'+ // outer background
+					'<div class="mejs-volume-total"></div>'+ // line background
+					'<div class="mejs-volume-current"></div>'+ // current volume
+					'<div class="mejs-volume-handle"></div>'+ // handle
 				'</div>'+
 			'</div>')
 			.appendTo(controls),
 		volumeSlider = mute.find('.mejs-volume-slider'),
-		volumeRail = mute.find('.mejs-volume-rail'),
+		volumeTotal = mute.find('.mejs-volume-total'),
+		volumeCurrent = mute.find('.mejs-volume-current'),
 		volumeHandle = mute.find('.mejs-volume-handle'),
 		
-		positionVolumeHandle = function(volume) {				
-			volumeHandle.css('top', volumeRail.height() - (volumeRail.height() * volume) - (volumeHandle.height() / 2));
+		positionVolumeHandle = function(volume) {
+			
+			var 
+				top = volumeTotal.height() - (volumeTotal.height() * volume);
+				
+			// handle
+			volumeHandle.css('top', top - (volumeHandle.height() / 2));
+			
+			// show the current visibility
+			volumeCurrent.height(volumeTotal.height() - top + parseInt(volumeTotal.css('top').replace(/px/,''),10));
+			volumeCurrent.css('top',  top);			
 		},
 		handleVolumeMove = function(e) {
 			var	
-				railHeight = volumeRail.height(),
-				newY = e.pageY - volumeRail.offset().top,
+				railHeight = volumeTotal.height(),
+				totalOffset = volumeTotal.offset(),
+				totalTop = parseInt(volumeTotal.css('top').replace(/px/,''),10),
+				newY = e.pageY - totalOffset.top,
 				volume = (railHeight - newY) / railHeight
 			
 			// TODO: handle vertical and horizontal CSS
@@ -31,7 +43,11 @@
 				newY = railHeight;
 
 			// move the handle to match the mouse
-			volumeHandle.css('top', newY - (volumeHandle.height() / 2));
+			volumeHandle.css('top', newY - (volumeHandle.height() / 2) + totalTop );
+			
+			// show the current visibility
+			volumeCurrent.height(railHeight-newY);
+			volumeCurrent.css('top',newY+totalTop);
 
 			// set mute status
 			if (volume == 0) {
