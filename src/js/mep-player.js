@@ -72,7 +72,7 @@
 			
 		} else {
 
-			// remove native controls and use MEP
+			// remove native controls and use MEJS
 			t.$media.removeAttr('controls');
 		}
 		
@@ -98,17 +98,13 @@
 			// build container
 			t.container =
 				$('<div id="' + t.id + '" class="mejs-container">'+
-					//'<div class="mejs-inner">'+
-						'<div class="mejs-mediaelement">'+
-						'</div>'+
-						'<div class="mejs-layers">'+
-						'</div>'+
-						'<div class="mejs-controls">'+
-						'</div>'+
+					'<div class="mejs-inner">'+
+						'<div class="mejs-mediaelement"></div>'+
+						'<div class="mejs-layers"></div>'+
+						'<div class="mejs-controls"></div>'+
 						'<div class="mejs-clear"></div>'+
-					//'</div>' +
-				'</div>')		
-				
+					'</div>' +
+				'</div>')						
 				.addClass(t.$media[0].className)
 				.insertBefore(t.$media);
 				
@@ -253,7 +249,9 @@
 			
 			// find the size of all the other controls besides the rail
 			others.each(function() {
-				usedWidth += $(this).outerWidth(true);
+				if ($(this).css('position') != 'absolute') {
+					usedWidth += $(this).outerWidth(true);
+				}
 			});
 			// fit the rail into the remaining space
 			railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
@@ -322,7 +320,39 @@
 					isLoaded: false
 				});				
 			});		
-		}		
+		},
+		changeSkin: function(className) {
+			this.container[0].className = 'mejs-container ' + className;
+			this.setPlayerSize();
+			this.setControlsSize();
+		},
+		play: function() {
+			this.media.play();
+		},
+		pause: function() {
+			this.media.pause();
+		},
+		load: function() {
+			this.media.load();
+		},		
+		setMuted: function(muted) {
+			this.media.setMuted(muted);
+		},
+		setCurrentTime: function(time) {
+			this.media.setCurrentTime(time);
+		},
+		getCurrentTime: function() {
+			this.media.currentTime;
+		},	
+		setVolume: function(volume) {
+			this.media.setVolume(volume);
+		},
+		getVolume: function() {
+			this.media.volume;
+		},	
+		setSrc: function(src) {
+			this.media.setSrc(src);
+		}	
 	};
 			
 	// turn into jQuery plugin
