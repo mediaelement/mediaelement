@@ -31,7 +31,7 @@
 						.prependTo(layers).hide();
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
-					$('<div class="mejs-captions-button">'+
+					$('<div class="mejs-button mejs-captions-button">'+
 						'<span></span>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+

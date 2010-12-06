@@ -10,7 +10,7 @@
 			normalWidth = 0,	
 			container = player.container,
 			fullscreenBtn = 	
-				$('<div class="mejs-fullscreen-button"><span></span></div>')
+				$('<div class="mejs-button mejs-fullscreen-button"><span></span></div>')
 				.appendTo(controls)
 				.click(function() {
 					setFullScreen(!isFullScreen);

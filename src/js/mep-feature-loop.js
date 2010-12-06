@@ -2,7 +2,7 @@
 	// loop toggle
 	MediaElementPlayer.prototype.buildloop = function(player, controls, layers, media) {
 		var loop = 	
-			$('<div class="mejs-loop ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
+			$('<div class="mejs-button mejs-loop ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
 				'<span></span>' +
 			'</div>')
 			.appendTo(controls)
