@@ -68,6 +68,9 @@
 
 			// Android is better off with native controls (like iOS)
 			t.$media.attr('controls', 'controls');
+			t.$media[0].load();
+			t.$media[0].play();
+				
 			return;
 			
 		} else {

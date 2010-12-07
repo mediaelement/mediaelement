@@ -74,6 +74,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Preload="none" is default for Flash and Silverlight
 * Preload="none" enabled on Google Chrome
 * Support for skin swapping
+* Updated volume handle controls
+* Update progress controls display
 * Exposed MediaElement API methods on player
 * Adjusted layout for IE6
 
