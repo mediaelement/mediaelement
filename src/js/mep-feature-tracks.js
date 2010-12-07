@@ -63,6 +63,23 @@
 						//.bind('mouseenter', function() {
 						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')						
 						//});
+			// move with controls
+			player.container
+				.bind('mouseenter', function () {
+					// push captions above controls
+					var p = player.container.find('.mejs-captions-position');
+					p.css('bottom', (parseInt(p.css('bottom').replace(/px/,''), 10) + player.controls.height()) + 'px');
+					
+				})
+				.bind('mouseleave', function () {
+					if (!media.paused) {
+						// move back to normal place
+						player.container.find('.mejs-captions-position').css('bottom','');
+					}
+				});
+			
+			
+			
 						
 			player.trackToLoad = -1;
 			player.selectedTrack = null;
