@@ -4,7 +4,7 @@
 		backlightBackground: [0,0,0],
 		backlightHorizontalLights: 5,
 		backlightVerticalLights: 5,
-		backlightSize: 50,
+		backlightSize: 100,
 		backlightTimeout: 200
 	});
 
@@ -31,13 +31,14 @@
 				.css('top',0)
 				.css('left',0)
 				.width(player.width).height(player.height),
-			timeOut = 200,
-			hBlocks = 6,
-			hWidth = player.width / hBlocks,
-			hHeight = 50,
-			vBlocks = 4,		
-			vWidth = 50,
-			vHeight = player.height / vBlocks,
+			
+			//timeOut = 200,
+			//hBlocks = 6,
+			//hWidth = player.width / hBlocks,
+			//hHeight = 50,
+			//vBlocks = 4,		
+			//vWidth = 50,
+			//vHeight = player.height / vBlocks,
 			i,
 			canvas = document.createElement('canvas'),
 			context = canvas.getContext('2d'),
@@ -68,11 +69,10 @@
 			// get a copy of video
 			context.drawImage(media, 0, 0, media.width, media.height);	
 			
-			addLights(base, canvas, context, vBlocks, hBlocks, 40, 30);
-
+			addLights(base, canvas, context, player.options.backlightVerticalLights, player.options.backlightHorizontalLights, player.options.backlightSize, 30);
 			
 			if (keepUpdating && isActive) {
-				timer = setTimeout(updateLights, timeOut);
+				timer = setTimeout(updateLights, player.options.backlightTimeout);
 			}
 		}
 		
@@ -113,7 +113,8 @@
 			bottomLights = getMidColors(canvas, context, hBlocks, depth, 'bottom'),
 			leftLights = getMidColors(canvas, context, vBlocks, depth, 'left'),
 			rightLights = getMidColors(canvas, context, vBlocks, depth, 'right'),
-			corners = [];
+			corners = [],
+			stopSize = 0;
 		
 		glowCanvas.width = lightsCanvas.width = width + size + size;
 		glowCanvas.height = lightsCanvas.height = height + size + size;
@@ -121,56 +122,71 @@
 			
 		// draw four gradients
 		// create corners
-		corner[0] = averageColor(topLights[topLights.length-1], rightLights[0]);
-		corner[1] = averageColor(bottomLights[topLights.length-1], rightLights[rightLights.length-1]);
-		corner[2] = averageColor(topLights[topLights.length-1], rightLights[0]);
-		corner[3] = averageColor(topLights[topLights.length-1], rightLights[0]);
+		corners.push(averageColor(topLights[topLights.length-1], rightLights[0]) );
+		corners.push(averageColor(bottomLights[bottomLights.length-1], rightLights[rightLights.length-1]) );
+		corners.push(averageColor(bottomLights[0], leftLights[leftLights.length-1]) );
+		corners.push(averageColor(topLights[0], leftLights[0]) );
 		
 		// top		
-		gradient = context.createLinearGradient(size, size, width+size, size);		
+		stopSize = 1 / topLights.length;
+		gradient = context.createLinearGradient(size, size, width+size, size);
+		gradient.addColorStop(0, 'rgb(' + adjustColor(corners[3]).join(',') + ')');
 		for (var i = 0, il = topLights.length; i < il; i++) {
-			gradient.addColorStop(i / il, 'rgb(' + adjustColor(topLights[i]).join(',') + ')');
+			gradient.addColorStop(i * stopSize + stopSize/2, 'rgb(' + adjustColor(topLights[i]).join(',') + ')');
 		}
+		gradient.addColorStop(1.0, 'rgb(' + adjustColor(corners[0]).join(',') + ')');
 		lightsContext.fillStyle = gradient;
 		lightsContext.fillRect(size, 0, width, size);	
 
 		// right		
 		gradient = context.createLinearGradient(size+width, size, size+width, size+height);		
+		gradient.addColorStop(0, 'rgb(' + adjustColor(corners[0]).join(',') + ')');
 		for (var i = 0, il = rightLights.length; i < il; i++) {
-			gradient.addColorStop(i / il, 'rgb(' + adjustColor(rightLights[i]).join(',') + ')');
+			gradient.addColorStop(i * stopSize + stopSize/2, 'rgb(' + adjustColor(rightLights[i]).join(',') + ')');
 		}
+		gradient.addColorStop(1.0, 'rgb(' + adjustColor(corners[1]).join(',') + ')');
 		lightsContext.fillStyle = gradient;
 		lightsContext.fillRect(size+width, size, size+width+size, height);	
 
 		
 		// bottom		
 		gradient = context.createLinearGradient(size, size+height, size+width, size+height);		
+		gradient.addColorStop(0, 'rgb(' + adjustColor(corners[2]).join(',') + ')');
 		for (var i = 0, il = bottomLights.length; i < il; i++) {
-			gradient.addColorStop(i / il, 'rgb(' + adjustColor(bottomLights[i]).join(',') + ')');
+			gradient.addColorStop(i * stopSize + stopSize/2, 'rgb(' + adjustColor(bottomLights[i]).join(',') + ')');
 		}
+		gradient.addColorStop(1.0, 'rgb(' + adjustColor(corners[1]).join(',') + ')');
 		lightsContext.fillStyle = gradient;
 		lightsContext.fillRect(size, size+height, width, size);	
 
 		// left		
-		gradient = context.createLinearGradient(size, size, size, size+height);		
+		gradient = context.createLinearGradient(size, size, size, size+height);	
+		gradient.addColorStop(0, 'rgb(' + adjustColor(corners[3]).join(',') + ')');		
 		for (var i = 0, il = leftLights.length; i < il; i++) {
-			gradient.addColorStop(i / il, 'rgb(' + adjustColor(leftLights[i]).join(',') + ')');
+			gradient.addColorStop(i * stopSize + stopSize/2, 'rgb(' + adjustColor(leftLights[i]).join(',') + ')');
 		}
+		gradient.addColorStop(1.0, 'rgb(' + adjustColor(corners[2]).join(',') + ')');
 		lightsContext.fillStyle = gradient;
 		lightsContext.fillRect(0, size, size, height);
 		
 		// corners
-		lightsContext.fillStyle = 'rgb(' + adjustColor(topLights[0]).join(',') + ')';
-		lightsContext.fillRect(0, 0, size, size);	
 
-		lightsContext.fillStyle = 'rgb(' + adjustColor(topLights[topLights.length-1]).join(',') + ')';
+		// top right
+		lightsContext.fillStyle = 'rgb(' + adjustColor(corners[0]).join(',') + ')';
 		lightsContext.fillRect(width+size, 0, size+width+size, size);	
 
-		lightsContext.fillStyle = 'rgb(' + adjustColor(bottomLights[0]).join(',') + ')';
+		// bottom right
+		lightsContext.fillStyle = 'rgb(' + adjustColor(corners[1]).join(',') + ')';
+		lightsContext.fillRect(width+size, size+height, size+width+size, size+height+size);	
+				
+		// bottom left
+		lightsContext.fillStyle = 'rgb(' + adjustColor(corners[2]).join(',') + ')';
 		lightsContext.fillRect(0, size+height, size, size+height+size);	
 
-		lightsContext.fillStyle = 'rgb(' + adjustColor(bottomLights[bottomLights.length-1]).join(',') + ')';
-		lightsContext.fillRect(width+size, size+height, size+width+size, size+height+size);	
+		// top left
+		lightsContext.fillStyle = 'rgb(' + adjustColor(corners[3]).join(',') + ')';
+		lightsContext.fillRect(0, 0, size, size);	
+		
 		
 		
 		// draw glow
@@ -269,6 +285,15 @@
 
         return result;
 	}	
+	
+	function averageColor(c1,c2) {
+		var result = 
+			[(c1[0] + c2[0]) / 2, 
+			 (c1[1] + c2[1]) / 2,  
+			 (c1[2] + c2[2]) / 2];
+			 
+		return result;
+	}
 	
 	// average color for a block
 	function calcMidColorVertical(data, from, to) {
