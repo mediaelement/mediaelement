@@ -859,6 +859,8 @@ window.MediaElement = mejs.MediaElement;
 
 	// default player values
 	mejs.MepDefaults = {
+		// url to poster (to fix iOS 3.x)
+		poster: '',
 		// default if the <video width> is not specified
 		defaultVideoWidth: 480,
 		// default if the <video height> is not specified
@@ -911,11 +913,21 @@ window.MediaElement = mejs.MediaElement;
 			return;
 		} else if (mf.isAndroid && t.isVideo) {
 
-			// Android is better off with native controls (like iOS)
-			t.$media.attr('controls', 'controls');
-			t.$media[0].load();
-			t.$media[0].play();
-				
+			// Android fails when there are multiple types
+			// <video>
+			// <source src="file.mp4" type="video/mp4" />
+			// <source src="file.webm" type="video/webm" />
+			// </video>
+			if (t.$media.find('source').length > 0) {
+				// find an mp4 and make it the root element source
+				t.$media[0].src = t.$media.find('source[src$="mp4"]').attr('src');				
+			}
+			
+			// attach a click event to the video and hope Android can play it
+			t.$media.click(function() {
+				t.$media[0].play();
+			});			
+			
 			return;
 			
 		} else {
@@ -1116,8 +1128,10 @@ window.MediaElement = mejs.MediaElement;
 				'</div>')
 					.appendTo(layers),
 				posterUrl = player.$media.attr('poster');
-				
-			if (posterUrl !== '' && posterUrl != null) {
+			
+			if (player.options.poster != '') {
+				poster.find('img').attr('src',player.options.poster);
+			} else if (posterUrl !== '' && posterUrl != null) {
 				poster.find('img').attr('src',posterUrl);
 			} else {
 				poster.hide();
