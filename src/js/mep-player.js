@@ -359,13 +359,13 @@
 			this.media.setCurrentTime(time);
 		},
 		getCurrentTime: function() {
-			this.media.currentTime;
+			return this.media.currentTime;
 		},	
 		setVolume: function(volume) {
 			this.media.setVolume(volume);
 		},
 		getVolume: function() {
-			this.media.volume;
+			return this.media.volume;
 		},	
 		setSrc: function(src) {
 			this.media.setSrc(src);
