@@ -1,17 +1,3 @@
-/*!
-* Media Element
-* HTML5 <video> and <audio> shim and player
-* http://mediaelementjs.com/
-*
-* Creates a JavaScript object that mimics HTML5 media object
-* for browsers that don't understand HTML5 or can't play the provided codec
-* Can also play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
-*
-* Copyright 2010, John Dyer
-* Dual licensed under the MIT or GPL Version 2 licenses.
-*
-*/
-
 // Namespace
 var mejs = mejs || {};
 
