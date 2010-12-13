@@ -66,13 +66,14 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.0.0 (2010/12/XX) - 29.1kb*
+*2.0.0 (2010/12/13) - 30.8kb*
 
 * Reorganized MediaElementPlayer code to allow each button to become a pluggable feature that can be removed or overrided
 * Enabled a no JavaScript version to support Video for Everybody nested syntax (optional)
 * Enabled drag on progress bar
 * Preload="none" is default for Flash and Silverlight
 * Preload="none" enabled on Google Chrome
+* Added skins to download
 * Support for skin swapping
 * Updated volume handle controls
 * Update progress controls display
