@@ -4,7 +4,7 @@
 		backlightBackground: [0,0,0],
 		backlightHorizontalLights: 5,
 		backlightVerticalLights: 5,
-		backlightSize: 100,
+		backlightSize: 50,
 		backlightTimeout: 200
 	});
 
@@ -25,6 +25,13 @@
 				.css('left','-10px')
 				.css('border','solid 10px #010101')
 				.width(player.width).height(player.height),	
+			glowBase = $('<div class="mejs-backlight-glow"></div>')
+				.prependTo(mediaContainer)
+				.css('position','absolute')
+				.css('display','none')
+				.css('top',0)
+				.css('left',0)
+				.width(player.width).height(player.height),	
 			base = $('<div class="mejs-backlight"></div>')
 				.prependTo(mediaContainer)
 				.css('position','absolute')
@@ -32,44 +39,111 @@
 				.css('left',0)
 				.width(player.width).height(player.height),
 			
-			//timeOut = 200,
-			//hBlocks = 6,
-			//hWidth = player.width / hBlocks,
-			//hHeight = 50,
-			//vBlocks = 4,		
-			//vWidth = 50,
-			//vHeight = player.height / vBlocks,
 			i,
-			canvas = document.createElement('canvas'),
-			context = canvas.getContext('2d'),
+			copyCanvas = document.createElement('canvas'),
+			copyContext = copyCanvas.getContext('2d'),
 			pixels,
 			keepUpdating = true,
 			isActive = true,
-			timer = null;
-			
-		canvas.width = player.width;
-		canvas.height = player.height;
+			timer = null,
+			glowCanvas = document.createElement('canvas'),
+			glowContext = glowCanvas.getContext('2d'),
+			size = player.options.backlightSize,
+			backgroundColor = player.options.backlightBackground,
+			gradient,
+			width = player.width,
+			height = player.height;
 		
-		$('<div class="mejs-backlight-button"><span></span></div>')
+		// set sizes
+		copyCanvas.width = width;
+		copyCanvas.height = height;		
+		glowCanvas.width = width + size + size;
+		glowCanvas.height = height + size + size;
+				
+		// draw glow overlay
+		// top
+		gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, size, 0));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(size, size, width, -size); 
+
+		// tr
+		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, size, 0, width+size, size, size));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(width+size, size, size, -size); 		
+
+		// right
+		gradient = addGlow(backgroundColor,glowContext.createLinearGradient(width+size, size, width+size+size, size));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(width+size, size, size, height); 
+
+		// br
+		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, height+size, 0, width+size, height+size, size));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(width+size, height+size, size, size); 	
+
+		// bottom
+		var gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size+height, size, size+height+size));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(size, size+height, width, size); 
+
+		// bl
+		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, height+size, 0, size, height+size, size));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(0, height+size, size, size); 
+
+		// left
+		gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, 0, size));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(size, size, -size, height); 
+
+		// tl
+		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, size, 0, size, size, size));
+		glowContext.fillStyle = gradient; 
+		glowContext.fillRect(0, 0, size, size); 
+			
+		$(glowCanvas)
+			.css('position','absolute')
+			.css('top',-size)
+			.css('left',-size)
+			.appendTo(glowBase);		
+		
+		
+		// add toggle control
+		$('<div class="mejs-backlight-button mejs-backlight-active"><span></span></div>')
 			.appendTo(controls)
 			.click(function() {
 				if (isActive) {
-					timer = null;
 					delete timer;
-					base.empty();
+					timer = null;					
+					base.hide();
+					glowBase.hide();
+					$(this)
+						.removeClass('mejs-backlight-active')
+						.addClass('mejs-backlight-inactive')
 				} else {
 					updateLights();
+					base.show();
+					glowBase.show();					
+					$(this)
+						.removeClass('mejs-backlight-inactive')
+						.addClass('mejs-backlight-active')					
 				}
 				isActive = !isActive;				
 			});
+
 		
 		// http://www.splashnology.com/blog/html5/382.html
 		function updateLights() {
 			
 			// get a copy of video
-			context.drawImage(media, 0, 0, media.width, media.height);	
+			copyContext.drawImage(media, 0, 0, media.width, media.height);	
 			
-			addLights(base, canvas, context, player.options.backlightVerticalLights, player.options.backlightHorizontalLights, player.options.backlightSize, 30);
+			// create the gradient lights
+			addLights(base, copyCanvas, copyContext, 
+				player.options.backlightVerticalLights, 
+				player.options.backlightHorizontalLights, 
+				player.options.backlightSize, 
+				30);
 			
 			if (keepUpdating && isActive) {
 				timer = setTimeout(updateLights, player.options.backlightTimeout);
@@ -84,7 +158,8 @@
 		media.addEventListener('play',function() {
 			if (isActive) {
 				keepUpdating = true;
-				updateLights();			
+				updateLights();	
+				glowBase.css('display','');
 			}
 		});
 		media.addEventListener('pause',function() {
@@ -104,8 +179,6 @@
 		var 
 			lightsCanvas = document.createElement('canvas'),
 			lightsContext = lightsCanvas.getContext('2d'),
-			glowCanvas = document.createElement('canvas'),
-			glowContext = glowCanvas.getContext('2d'),
 			width = canvas.width,
 			height = canvas.height,
 			g,
@@ -115,9 +188,9 @@
 			rightLights = getMidColors(canvas, context, vBlocks, depth, 'right'),
 			corners = [],
 			stopSize = 0;
-		
-		glowCanvas.width = lightsCanvas.width = width + size + size;
-		glowCanvas.height = lightsCanvas.height = height + size + size;
+
+		lightsCanvas.width = width + size + size;
+		lightsCanvas.height = height + size + size;			
 		lightsContext.globalCompositeOperation = 'xor'; //'darker'; //'lighter';
 			
 		// draw four gradients
@@ -189,62 +262,13 @@
 		
 		
 		
-		// draw glow
-
-		// top
-		color = [34,34,34];
-		gradient = addGlow(color,glowContext.createLinearGradient(size, size, size, 0));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(size, size, width, -size); 
-
-		// tr
-		gradient = addGlow(color,glowContext.createRadialGradient(width+size, size, 0, width+size, size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(width+size, size, size, -size); 		
-
-		// right
-		gradient = addGlow(color,glowContext.createLinearGradient(width+size, size, width+size+size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(width+size, size, size, height); 
-
-		// br
-		gradient = addGlow(color,glowContext.createRadialGradient(width+size, height+size, 0, width+size, height+size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(width+size, height+size, size, size); 	
-
-		// bottom
-		var gradient = addGlow(color,glowContext.createLinearGradient(size, size+height, size, size+height+size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(size, size+height, width, size); 
-
-		// bl
-		gradient = addGlow(color,glowContext.createRadialGradient(size, height+size, 0, size, height+size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(0, height+size, size, size); 
-
-		// left
-		gradient = addGlow(color,glowContext.createLinearGradient(size, size, 0, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(size, size, -size, height); 
-
-		// tl
-		gradient = addGlow(color,glowContext.createRadialGradient(size, size, 0, size, size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(0, 0, size, size); 		
+	
 			
 		$(lightsCanvas)
 			.css('position','absolute')
 			.css('top',-size)
 			.css('left',-size)
-			.appendTo(base);
-			
-		$(glowCanvas)
-			.css('position','absolute')
-			.css('top',-size)
-			.css('left',-size)
 			.appendTo(base);			
-	
-				
 	}	
 	
 	function addGlow(color, g) {
@@ -332,6 +356,9 @@
 	}	
 	
 	function adjustColor(color) {
+		//if (color[0] <= 2 && color[2] <= 2 && color[3] <= 2)
+		//	return color;
+		
 		color = rgb2hsv(color);
 		color[1] = Math.min(100, color[1] * 1.2); //1.4); // saturation
 		color[2] = 80; //Math.min(100, color[2] * 2.7); //2.7); // brightness
