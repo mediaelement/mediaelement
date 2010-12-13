@@ -1,11 +1,15 @@
 (function($) {
 	// loop toggle
 	MediaElementPlayer.prototype.buildloop = function(player, controls, layers, media) {
-		var loop = 	
+		var 
+			// create the loop button
+			loop = 	
 			$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
 				'<span></span>' +
 			'</div>')
+			// append it to the toolbar
 			.appendTo(controls)
+			// add a click toggle event
 			.click(function() {
 				player.options.loop = !player.options.loop;
 				if (player.options.loop) {
