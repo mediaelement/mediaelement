@@ -1,17 +1,16 @@
 /*!
-* Media Element
+* MediaElement.js
 * HTML5 <video> and <audio> shim and player
 * http://mediaelementjs.com/
 *
-* Creates a JavaScript object that mimics HTML5 media object
+* Creates a JavaScript object that mimics HTML5 MediaElement API
 * for browsers that don't understand HTML5 or can't play the provided codec
-* Can also play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
+* Can play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
 *
-* Copyright 2010, John Dyer
+* Copyright 2010, John Dyer (http://johndyer.me)
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
 */
-
 // Namespace
 var mejs = mejs || {};
 
@@ -843,19 +842,18 @@ mejs.HtmlMediaElementShim = {
 window.mejs = mejs;
 window.MediaElement = mejs.MediaElement;
 
-﻿/*!
- * Media Element jQuery plugin
+/*!
+ * MediaElementPlayer
  * http://mediaelementjs.com/
  *
  * Creates a controller bar for HTML5 <video> add <audio> tags
- * using jQuery and MediaElement.js
+ * using jQuery and MediaElement.js (HTML5 Flash/Silverlight wrapper)
  *
- * Copyright 2010, John Dyer
+ * Copyright 2010, John Dyer (http://johndyer.me)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  */
-
-(function ($) {
+﻿(function ($) {
 
 	// default player values
 	mejs.MepDefaults = {
@@ -880,20 +878,24 @@ window.MediaElement = mejs.MediaElement;
 		// resize to media dimensions
 		enableAutosize: true,		
 		// features to show
-		features: ['playpause','progress','current','duration','tracks','volume','fullscreen','backlight']
+		features: ['playpause','progress','current','duration','tracks','volume','fullscreen']
 	};
 
 	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
 	mejs.MediaElementPlayer = function($media, o) {
-
+		// enforce object, even without "new" (via John Resig)
+		if ( !(this instanceof mejs.MediaElementPlayer) ) {
+			return new mejs.MediaElementPlayer($media, o);
+		} 
+		
 		var	
 			t = this,
 			mf = mejs.MediaFeatures;
 	
 		t.$media = $($media);
-		t.options = $.extend(true,{},mejs.MepDefaults,o);
+		t.options = $.extend({},mejs.MepDefaults,o);
 		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
 				
 		if (mf.isiPad || mf.isiPhone) {
@@ -1204,13 +1206,13 @@ window.MediaElement = mejs.MediaElement;
 			this.media.setCurrentTime(time);
 		},
 		getCurrentTime: function() {
-			this.media.currentTime;
+			return this.media.currentTime;
 		},	
 		setVolume: function(volume) {
 			this.media.setVolume(volume);
 		},
 		getVolume: function() {
-			this.media.volume;
+			return this.media.volume;
 		},	
 		setSrc: function(src) {
 			this.media.setSrc(src);
