@@ -35,20 +35,24 @@
 		// resize to media dimensions
 		enableAutosize: true,		
 		// features to show
-		features: ['playpause','progress','current','duration','tracks','volume','fullscreen','backlight']
+		features: ['playpause','progress','current','duration','tracks','volume','fullscreen']
 	};
 
 	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
 	mejs.MediaElementPlayer = function($media, o) {
-
+		// enforce object, even without "new" (via John Resig)
+		if ( !(this instanceof mejs.MediaElementPlayer) ) {
+			return new mejs.MediaElementPlayer($media, o);
+		} 
+		
 		var	
 			t = this,
 			mf = mejs.MediaFeatures;
 	
 		t.$media = $($media);
-		t.options = $.extend(true,{},mejs.MepDefaults,o);
+		t.options = $.extend({},mejs.MepDefaults,o);
 		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
 				
 		if (mf.isiPad || mf.isiPhone) {
