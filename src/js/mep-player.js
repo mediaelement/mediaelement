@@ -1,16 +1,4 @@
-﻿/*!
- * Media Element jQuery plugin
- * http://mediaelementjs.com/
- *
- * Creates a controller bar for HTML5 <video> add <audio> tags
- * using jQuery and MediaElement.js
- *
- * Copyright 2010, John Dyer
- * Dual licensed under the MIT or GPL Version 2 licenses.
- *
- */
-
-(function ($) {
+﻿(function ($) {
 
 	// default player values
 	mejs.MepDefaults = {
