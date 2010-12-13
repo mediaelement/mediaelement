@@ -49,8 +49,10 @@ tmp_file.close()
 
 # MINIFY both scripts
 
-os.system("java -jar yuicompressor-2.4.2.jar ../build/" + me_filename + ".js -o ../build/" + me_filename + ".min.js --charset utf-8 -v")
-os.system("java -jar yuicompressor-2.4.2.jar ../build/" + mep_filename + ".js -o ../build/" + mep_filename + ".min.js --charset utf-8 -v")
+# os.system("java -jar yuicompressor-2.4.2.jar ../build/" + me_filename + ".js -o ../build/" + me_filename + ".min.js --charset utf-8 -v")
+# os.system("java -jar yuicompressor-2.4.2.jar ../build/" + mep_filename + ".js -o ../build/" + mep_filename + ".min.js --charset utf-8 -v")
+os.system("java -jar compiler.jar --js ../build/" + me_filename + ".js --js_output_file ../build/" + me_filename + ".min.js")
+os.system("java -jar compiler.jar --js ../build/" + mep_filename + ".js --js_output_file ../build/" + mep_filename + ".min.js")
 
 # COMBINE into single script
 
