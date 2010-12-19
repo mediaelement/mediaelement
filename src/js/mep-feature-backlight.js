@@ -161,13 +161,13 @@
 				updateLights();	
 				glowBase.css('display','');
 			}
-		});
+		}, false);
 		media.addEventListener('pause',function() {
 			keepUpdating = false;
-		});	
+		}, false);	
 		media.addEventListener('ended',function() {
 			keepUpdating = false;
-		});			
+		}, false);			
 		
 	};	
 	
@@ -291,18 +291,27 @@
 			
 		if (side == 'top' || side == 'bottom') {			
 			for (i = 0; i < blocks; i++) {	
-				imgdata = context.getImageData(i*blockWidth, (side == 'top') ? 0 : height - blockHeight , blockWidth, blockHeight);
-				result.push( 					
-					calcMidColor(imgdata.data)
-				);
+				try {
+					imgdata = context.getImageData(i*blockWidth, (side == 'top') ? 0 : height - blockHeight , blockWidth, blockHeight);
+					result.push( 					
+						calcMidColor(imgdata.data)
+					);
+				} catch (e) {
+					console.log(e);
+				}
 			}			
 		} else {
 			
 			for (i = 0; i < blocks; i++) {				
-				imgdata = context.getImageData( (side == 'right') ? width - blockWidth : 0, i*blockHeight, blockWidth, blockHeight);				
-				result.push( 
-					calcMidColor(imgdata.data)
-				);
+				try {
+					imgdata = context.getImageData( (side == 'right') ? width - blockWidth : 0, i*blockHeight, blockWidth, blockHeight);				
+					result.push( 
+						calcMidColor(imgdata.data)
+					);
+				} catch (e) {
+					console.log(e);
+				}
+				
 			}			
 		}
 
