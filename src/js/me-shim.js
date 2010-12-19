@@ -361,7 +361,7 @@ mejs.HtmlMediaElementShim = {
 '<param name="quality" value="high" />' +
 '<param name="bgcolor" value="#000000" />' +
 '<param name="wmode" value="transparent" />' +
-'<param name="allowScriptAccess" value="sameDomain" />' +
+'<param name="allowScriptAccess" value="always" />' +
 '<param name="allowFullScreen" value="true" />' +
 '</object>';
 
@@ -374,7 +374,7 @@ mejs.HtmlMediaElementShim = {
 'quality="high" ' +
 'bgcolor="#000000" ' +
 'wmode="transparent" ' +
-'allowScriptAccess="sameDomain" ' +
+'allowScriptAccess="always" ' +
 'allowFullScreen="true" ' +
 'type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" ' +
 'src="' + options.pluginPath + options.flashName + '?' + initVars.join('&') + '" ' +
