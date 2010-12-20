@@ -286,7 +286,7 @@ mejs.HtmlMediaElementShim = {
 		var width = 1,
 			height = 1,
 			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
-			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType, medaiUrl),
+			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType, mediaUrl),
 			container = document.createElement('div'),
 			node,
 			initVars;
