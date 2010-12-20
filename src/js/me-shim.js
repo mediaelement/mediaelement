@@ -137,7 +137,7 @@ mejs.HtmlMediaElementShim = {
 		// check for real poster
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
-		autoplay = (typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false') ? '' : autoplay;
+		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
 		
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
@@ -323,8 +323,8 @@ mejs.HtmlMediaElementShim = {
 		initVars = [
 			'id=' + pluginid,
 			'poster=' + poster,
-			'isvideo=' + isVideo.toString(),
-			'autoplay=' + autoplay,
+			'isvideo=' + ((isVideo) ? "true" : "false"),
+			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
 			'width=' + width,			
 			'timerrate=' + options.timerRate,
@@ -363,7 +363,6 @@ mejs.HtmlMediaElementShim = {
 '<param name="wmode" value="transparent" />' +
 '<param name="allowScriptAccess" value="always" />' +
 '<param name="allowFullScreen" value="true" />' +
-'</object>';
 '</object>';
 
 				} else {
