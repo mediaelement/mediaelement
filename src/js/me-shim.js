@@ -286,7 +286,7 @@ mejs.HtmlMediaElementShim = {
 		var width = 1,
 			height = 1,
 			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
-			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType),
+			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType, medaiUrl),
 			container = document.createElement('div'),
 			node,
 			initVars;
@@ -363,6 +363,7 @@ mejs.HtmlMediaElementShim = {
 '<param name="wmode" value="transparent" />' +
 '<param name="allowScriptAccess" value="always" />' +
 '<param name="allowFullScreen" value="true" />' +
+'</object>';
 '</object>';
 
 				} else {
