@@ -226,6 +226,7 @@
 		
 		function clickHandler(e:MouseEvent):void {
 			//_output.appendText("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");   			
+			sendEvent("click", "");
 		}	
 	
 		function resizeHandler(e:Event):void {
