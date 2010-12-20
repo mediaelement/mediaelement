@@ -43,9 +43,10 @@ mejs.HtmlMediaElement = {
 /*
 Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
 */
-mejs.PluginMediaElement = function (pluginid, pluginType) {
+mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
 	this.id = pluginid;
 	this.pluginType = pluginType;
+	this.src = mediaUrl;
 	this.events = {};
 };
 
@@ -126,6 +127,7 @@ mejs.PluginMediaElement.prototype = {
 	setSrc: function (url) {
 		if (typeof url == 'string') {
 			this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(url));
+			this.src = mejs.Utility.absolutizeUrl(url);
 		} else {
 			var i, media;
 			
@@ -133,6 +135,7 @@ mejs.PluginMediaElement.prototype = {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
+					this.src = mejs.Utility.absolutizeUrl(url);
 				}
 			}			
 		}	
