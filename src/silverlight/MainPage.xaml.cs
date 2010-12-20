@@ -104,6 +104,8 @@ namespace SilverlightMediaElement
                     loadMedia();
             }
 
+			media.MouseLeftButtonUp += new MouseButtonEventHandler(media_MouseLeftButtonUp);
+
             // full screen settings
             Application.Current.Host.Content.FullScreenChanged += new EventHandler(DisplaySizeInformation);
             Application.Current.Host.Content.Resized += new EventHandler(DisplaySizeInformation);
@@ -117,6 +119,10 @@ namespace SilverlightMediaElement
 			}
 			catch { }
         }
+
+		void media_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+			SendEvent("click");
+		}
 
 		void media_MediaOpened(object sender, RoutedEventArgs e) {
 					
