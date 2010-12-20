@@ -66,6 +66,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
+*2.0.1 (2010/12/20) - XX.Xkb*
+
+* Changed Flash to allow cross domain video
+* Added 'click' event to Flash and Silverlight
+* Updated autoplay attribute detection
+
 *2.0.0 (2010/12/13) - 30.8kb*
 
 * Reorganized MediaElementPlayer code to allow each button to become a pluggable feature that can be removed or overrided

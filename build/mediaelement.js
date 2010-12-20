@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.0.0';
+mejs.version = '2.0.1';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -265,9 +265,10 @@ mejs.HtmlMediaElement = {
 /*
 Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
 */
-mejs.PluginMediaElement = function (pluginid, pluginType) {
+mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
 	this.id = pluginid;
 	this.pluginType = pluginType;
+	this.src = mediaUrl;
 	this.events = {};
 };
 
@@ -348,6 +349,7 @@ mejs.PluginMediaElement.prototype = {
 	setSrc: function (url) {
 		if (typeof url == 'string') {
 			this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(url));
+			this.src = mejs.Utility.absolutizeUrl(url);
 		} else {
 			var i, media;
 			
@@ -355,6 +357,7 @@ mejs.PluginMediaElement.prototype = {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
+					this.src = mejs.Utility.absolutizeUrl(url);
 				}
 			}			
 		}	
@@ -555,7 +558,7 @@ mejs.HtmlMediaElementShim = {
 		// check for real poster
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
-		autoplay = (typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false') ? '' : autoplay;
+		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
 		
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
@@ -704,7 +707,7 @@ mejs.HtmlMediaElementShim = {
 		var width = 1,
 			height = 1,
 			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
-			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType),
+			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType, mediaUrl),
 			container = document.createElement('div'),
 			node,
 			initVars;
@@ -741,8 +744,8 @@ mejs.HtmlMediaElementShim = {
 		initVars = [
 			'id=' + pluginid,
 			'poster=' + poster,
-			'isvideo=' + isVideo.toString(),
-			'autoplay=' + autoplay,
+			'isvideo=' + ((isVideo) ? "true" : "false"),
+			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
 			'width=' + width,			
 			'timerrate=' + options.timerRate,
@@ -779,7 +782,7 @@ mejs.HtmlMediaElementShim = {
 '<param name="quality" value="high" />' +
 '<param name="bgcolor" value="#000000" />' +
 '<param name="wmode" value="transparent" />' +
-'<param name="allowScriptAccess" value="sameDomain" />' +
+'<param name="allowScriptAccess" value="always" />' +
 '<param name="allowFullScreen" value="true" />' +
 '</object>';
 
@@ -792,7 +795,7 @@ mejs.HtmlMediaElementShim = {
 'quality="high" ' +
 'bgcolor="#000000" ' +
 'wmode="transparent" ' +
-'allowScriptAccess="sameDomain" ' +
+'allowScriptAccess="always" ' +
 'allowFullScreen="true" ' +
 'type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" ' +
 'src="' + options.pluginPath + options.flashName + '?' + initVars.join('&') + '" ' +
