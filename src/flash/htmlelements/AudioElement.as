@@ -253,7 +253,7 @@ package htmlelements
 							",ended:" + _isEnded + 	
 							",volume:" + _volume +
 							",bytesTotal:" + _bytesTotal +							
-							",src:" + _currentUrl +							
+							",src:\"" + _currentUrl + "\"" +							
 							",bufferedBytes:" + _bytesLoaded +
 							",bufferedTime:" + _bufferedTime +					
 							"}";
