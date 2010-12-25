@@ -165,6 +165,7 @@ package htmlelements
             
 			if (_playRTMPasap) {
 				play();
+				_playRTMPasap=false;
 			}         
         }		
 		
@@ -201,9 +202,7 @@ package htmlelements
 			_currentUrl = url;	
 			
 			
-			if (_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//)) {
-				_isRTMP=true;
-			}		
+			_isRTMP = !!_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//);
 		}
 		
 		public function load():void {		
