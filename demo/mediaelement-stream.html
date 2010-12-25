@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+		
+	<script src="../build/mediaelement.js"></script>
+</head>
+<body>
+
+<h1>MediaElement.js</h1>
+
+<p>This is only the Flash/Silverlight Shim for older browers or browsers without the codec you need. It is not a full player.</p>
+
+<h2>RTMP stream</h2>
+<video width="360" height="203" id="player1" src="rtmp://stream2.france24.yacast.net/france24_live/en/f24_liveen" autoplay="true" type="video/flv" controls="controls"></video>
+
+<input type="button" id="pp" value="toggle" />
+<span id="time"></span>
+	
+<script>
+MediaElement('player1', {success: function(me) {
+
+	me.play();
+	
+	me.addEventListener('timeupdate', function() {
+		document.getElementById('time').innerHTML = me.currentTime;
+	}, false);
+	
+	document.getElementById('pp')['onclick'] = function() {
+		if (me.paused)
+			me.play();
+		else
+			me.pause();
+	};
+
+}});
+</script>
+
+</body>
+</html>

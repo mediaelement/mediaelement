@@ -83,8 +83,11 @@
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
 			//_mediaUrl  = "../media/Parades-PastLives.mp3";
 			//_mediaUrl  = "../media/echo-hereweare.mp4";
-			
-			
+
+			//_mediaUrl = "http://video.ted.com/talks/podcast/AlGore_2006_480.mp4";
+			//_mediaUrl = "rtmp://stream2.france24.yacast.net/france24_live/en/f24_liveen";
+
+			//_debug=true;
 
 			
 			

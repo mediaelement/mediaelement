@@ -42,7 +42,10 @@ package htmlelements
 		
 		private var _timer:Timer;
 		
+		private var _isRTMP:Boolean = false;
+		private var _playRTMPasap:Boolean = false;
 		
+
 		public function get video():Video {
 			return _video;
 		}
@@ -77,7 +80,9 @@ package htmlelements
             _connection = new NetConnection();
             _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-            _connection.connect(null);	
+            
+            //will be called in load()
+            //_connection.connect(null);	
 			
 			_timer = new Timer(timerRate);
 			_timer.addEventListener("timer", timerHandler);
@@ -155,7 +160,12 @@ package htmlelements
 			_stream.client = customClient;
 
 			
-            _video.attachNetStream(_stream);          
+            _video.attachNetStream(_stream); 
+            
+            
+			if (_playRTMPasap) {
+				play();
+			}         
         }		
 		
         private function securityErrorHandler(event:SecurityErrorEvent):void {
@@ -188,17 +198,38 @@ package htmlelements
 				_stream.pause();
 			}
 			
-			_currentUrl = url;			
+			_currentUrl = url;	
+			
+			
+			if (_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//)) {
+				_isRTMP=true;
+			}		
 		}
 		
 		public function load():void {		
 			// there really isn't an equivalent here 		
-			_stream.pause();
-			_connection.connect(null);
+			if (_stream) 
+				_stream.pause();
+			
+			// there really isn't an equivalent here 		
+			if (_isRTMP) {
+				_connection.connect(_currentUrl.replace(/\/[^\/]+$/,"/"));
+			} else {
+				_connection.connect(null);
+			}
 			_isLoaded =false;
 		}
 
 		public function play():void {		
+			
+			// RTMP streams have to wait for the first NetConnection.Connect.Success event to begin playing
+			if (_isRTMP && !_stream) {
+				trace("Delaying RTMP play()");
+				_playRTMPasap=true;
+				return;
+			}
+			_playRTMPasap=false;
+            
 			
 			if (_isLoaded) {
 				_stream.resume();
@@ -208,7 +239,11 @@ package htmlelements
 				sendEvent(HtmlMediaEvent.PLAYING);						
 			} else {
 				// error: play() called without a URL
-				_stream.play(_currentUrl);
+				if (_isRTMP) {
+					_stream.play(_currentUrl.split("/").pop());
+				} else {
+					_stream.play(_currentUrl);
+				}
 				_timer.start();
 				_isPaused = false;
 				_isLoaded = true;	
