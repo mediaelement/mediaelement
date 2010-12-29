@@ -1158,8 +1158,10 @@ window.MediaElement = mejs.MediaElement;
 				.appendTo(layers)
 				.click(function() {
 					if (media.paused) {
+						$(this).hide();
 						media.play();
 					} else {
+						$(this).show();
 						media.pause();
 					}
 				});
@@ -1244,8 +1246,10 @@ window.MediaElement = mejs.MediaElement;
 			.appendTo(controls)
 			.click(function() {
 				if (media.paused) {
+					$('div.mejs-overlay-button').hide();
 					media.play();
 				} else {
+					$('div.mejs-overlay-button').show();
 					media.pause();
 				}
 			});
