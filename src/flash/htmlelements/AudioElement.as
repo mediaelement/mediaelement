@@ -176,6 +176,7 @@ package htmlelements
 			_timer.start();
 			
 			_isPaused = false;			
+			sendEvent(HtmlMediaEvent.PLAY);
 			sendEvent(HtmlMediaEvent.PLAYING);
 		}		
 		
@@ -188,7 +189,7 @@ package htmlelements
 			}
 			
 			_isPaused = true;
-			sendEvent(HtmlMediaEvent.PAUSED);
+			sendEvent(HtmlMediaEvent.PAUSE);
 		}		
 		
 		public function setCurrentTime(pos:Number):void {
