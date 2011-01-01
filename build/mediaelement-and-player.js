@@ -1343,7 +1343,7 @@ window.MediaElement = mejs.MediaElement;
 					newTime = 0;						
 					
 				
-				if (x > offset.left && x <= width + offset.left) {					
+				if (x > offset.left && x <= width + offset.left && media.duration) {					
 					percentage = ((x - offset.left) / width);
 					newTime = percentage * media.duration;
 					
@@ -1357,9 +1357,6 @@ window.MediaElement = mejs.MediaElement;
 					timefloat.css('left', pos);
 					timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );					
 				}
-				
-				
-				
 			},
 			mouseIsDown = false,
 			mouseIsOver = false;
