@@ -66,6 +66,15 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
+*2.0.2 (2010/XX/xx) - 
+
+* Changed HTML escape method to encodeURICompnent
+* Flash-based RMTP support (contributor: sylvinus)
+* Fixed Wordpress loop bug
+* Changed time popup to move with mouse instead of currentTime
+* added enablePluginSmoothing (Flash)
+* Added some "play" "playing" event duplication to Flash
+
 *2.0.1 (2010/12/20) - XX.Xkb*
 
 * Changed Flash to allow cross domain video

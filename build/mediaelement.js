@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.0.1';
+mejs.version = '2.0.2';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -36,7 +36,7 @@ Utility methods
 */
 mejs.Utility = {	
 	encodeUrl: function(url) {
-		return url.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
+		return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
 	},
 	escapeHTML: function(s) {
 		return s.split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
@@ -510,6 +510,8 @@ mejs.MediaElementDefaults = {
 	pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
 	// name of flash file
 	flashName: 'flashmediaelement.swf',
+	// turns on the smoothing filter in Flash
+	enablePluginSmoothing: false,
 	// name of silverlight file
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
@@ -756,6 +758,9 @@ mejs.HtmlMediaElementShim = {
 		}
 		if (options.enablePluginDebug) {
 			initVars.push('debug=true');
+		}
+		if (options.enablePluginSmoothing) {
+			initVars.push('smoothing=true');
 		}
 		
 		switch (pluginType) {
