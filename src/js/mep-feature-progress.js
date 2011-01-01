@@ -54,8 +54,7 @@
 				
 					current.width(newWidth);
 					handle.css('left', handlePos);
-					timefloat.css('left', handlePos);
-					timefloatcurrent.html( mejs.Utility.secondsToTimeCode(media.currentTime) );
+
 				}				
 			
 			},
@@ -64,20 +63,46 @@
 				var x = e.pageX,
 					offset = total.offset(),
 					width = total.outerWidth(),
-					percentage = ((x - offset.left) / width),
+					percentage = 0,
+					newTime = 0;						
+					
+				
+				if (x > offset.left && x <= width + offset.left) {					
+					percentage = ((x - offset.left) / width);
 					newTime = percentage * media.duration;
-
-				media.setCurrentTime(newTime);
+					
+					// seek to where the mouse is
+					if (mouseIsDown) {
+						media.setCurrentTime(newTime);					
+					}
+					
+					// position floating time box
+					var pos = x - offset.left;
+					timefloat.css('left', pos);
+					timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );					
+				}
+				
+				
+				
 			},
-			mouseIsDown = false;
+			mouseIsDown = false,
+			mouseIsOver = false;
 	
 		// handle clicks
 		//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
 		total
 			.bind('mousedown', function (e) {
-				handleMouseMove(e);
 				mouseIsDown = true;
+				handleMouseMove(e);				
 				return false;
+			});		
+
+		controls.find('.mejs-time-rail')
+			.bind('mouseenter', function(e) {
+				mouseIsOver = true;
+			})		
+			.bind('mouseleave',function(e) {
+				mouseIsOver = false;
 			});
 			
 		$(document)
@@ -86,7 +111,7 @@
 				//handleMouseMove(e);
 			})
 			.bind('mousemove', function (e) {
-				if (mouseIsDown) {
+				if (mouseIsDown || mouseIsOver) {
 					handleMouseMove(e);
 				}
 			});		
