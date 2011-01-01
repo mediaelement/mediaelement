@@ -23,7 +23,7 @@
 		// resize to media dimensions
 		enableAutosize: true,		
 		// features to show
-		features: ['playpause','progress','current','duration','tracks','volume','fullscreen']
+		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']
 	};
 
 	mejs.mepIndex = 0;
