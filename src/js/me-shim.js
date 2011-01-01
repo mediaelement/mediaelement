@@ -89,6 +89,8 @@ mejs.MediaElementDefaults = {
 	pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
 	// name of flash file
 	flashName: 'flashmediaelement.swf',
+	// turns on the smoothing filter in Flash
+	enablePluginSmoothing: false,
 	// name of silverlight file
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
@@ -335,6 +337,9 @@ mejs.HtmlMediaElementShim = {
 		}
 		if (options.enablePluginDebug) {
 			initVars.push('debug=true');
+		}
+		if (options.enablePluginSmoothing) {
+			initVars.push('smoothing=true');
 		}
 		
 		switch (pluginType) {
