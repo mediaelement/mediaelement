@@ -66,7 +66,13 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.0.2 (2010/XX/xx) - 
+*2.0.3 (2011/01/13) - 31.2kb*
+
+* changed IE Flash insertion to include me-plugin CSS class
+* changed player error handling
+* fixed a bug in the Silverlight player related to URLs
+
+*2.0.2 (2010/12/31) - 31.1kb*
 
 * Changed HTML escape method to encodeURICompnent
 * Flash-based RMTP support (contributor: sylvinus)
