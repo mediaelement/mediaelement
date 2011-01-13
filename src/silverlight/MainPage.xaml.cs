@@ -44,8 +44,7 @@ namespace SilverlightMediaElement
         {
             InitializeComponent();
 
-            HtmlPage.RegisterScriptableObject("SilverlightApp", this);
-
+            HtmlPage.RegisterScriptableObject("MediaElementJS", this);
 
 
             // add events
