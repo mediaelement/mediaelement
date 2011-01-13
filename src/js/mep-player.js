@@ -229,6 +229,10 @@
 				t.options.success(t.media, t.domNode);
 			}		
 		},
+		
+		handleError: function(e) {
+			// Tell user that the file cannot be played
+		},
 
 		setPlayerSize: function(width,height) {
 			var t = this;
