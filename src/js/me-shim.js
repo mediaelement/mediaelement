@@ -24,7 +24,7 @@ mejs.MediaPluginBridge = {
 				break;
 			case "silverlight":
 				pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
-				pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.SilverlightApp;
+				pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
 				break;
 		}
 
@@ -290,6 +290,7 @@ mejs.HtmlMediaElementShim = {
 			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
 			pluginMediaElement = new mejs.PluginMediaElement(pluginid, pluginType, mediaUrl),
 			container = document.createElement('div'),
+			specialIEContainer,
 			node,
 			initVars;
 			
@@ -332,8 +333,12 @@ mejs.HtmlMediaElementShim = {
 			'timerrate=' + options.timerRate,
 			'height=' + height];
 
-		if (mediaUrl !== null) {		
-			initVars.push('file=' + mejs.Utility.encodeUrl(mediaUrl));
+		if (mediaUrl !== null) {	
+			if (pluginType == 'flash') {
+				initVars.push('file=' + mejs.Utility.encodeUrl(mediaUrl));
+			} else {
+				initVars.push('file=' + mediaUrl);
+			}
 		}
 		if (options.enablePluginDebug) {
 			initVars.push('debug=true');
@@ -358,7 +363,9 @@ mejs.HtmlMediaElementShim = {
 			case 'flash':
 
 				if (mejs.MediaFeatures.isIE) {
-					container.outerHTML =
+					specialIEContainer = document.createElement('div');
+					container.appendChild(specialIEContainer);
+					specialIEContainer.outerHTML =
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '">' +
 '<param name="movie" value="' + options.pluginPath + options.flashName + '?x=' + (new Date()) + '" />' +
