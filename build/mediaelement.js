@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.0.3';
+mejs.version = '2.0.4';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -118,7 +118,7 @@ mejs.PluginDetector = {
 			if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
 				version = description.replace(pluginName, '').replace(/^\s+/,'').replace(/\sr/gi,'.').split('.');
 				for (i=0; i<version.length; i++) {
-					version[i] = parseInt(version[i].match(/\d/), 10);
+					version[i] = parseInt(version[i].match(/\d+/), 10);
 				}
 			}
 		// Internet Explorer / ActiveX
