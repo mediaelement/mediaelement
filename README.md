@@ -66,6 +66,10 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
+*2.0.4 (2011/01/14) - 31.2kb*
+
+* Fixed a major bug in plugin detection.
+
 *2.0.3 (2011/01/13) - 31.2kb*
 
 * changed IE Flash insertion to include me-plugin CSS class
