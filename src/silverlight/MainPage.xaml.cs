@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Browser;
+using System.Globalization;
 
 
 namespace SilverlightMediaElement
@@ -250,25 +251,24 @@ namespace SilverlightMediaElement
                     @"});");
 			 * */
 
-			try
-			{
+			try {
+				CultureInfo invCulture = CultureInfo.InvariantCulture;
 				// setTimeout
 				HtmlPage.Window.Invoke("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
-			@"{" +
-				@"""name"": """ + name + @"""" +
-				@", ""currentTime"":" + (media.Position.TotalSeconds).ToString() + @"" +
-				@", ""duration"":" + (media.NaturalDuration.TimeSpan.TotalSeconds).ToString() + @"" +
-				@", ""paused"":" + (_isPaused).ToString().ToLower() + @"" +
-				@", ""muted"":" + (media.IsMuted).ToString().ToLower() + @"" +
-				@", ""ended"":" + (_isEnded).ToString().ToLower() + @"" +
-				@", ""volume"":" + (media.Volume).ToString() + @"" +
-				@", ""bufferedBytes"":" + (_bufferedBytes).ToString() + @"" +
-				@", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
-				@", ""videoWidth"":" + (_videoWidth).ToString() + @"" +
-				@", ""videoHeight"":" + (_videoHeight).ToString() + @"" +
-			@"});", 0);
-			}
-			catch { }
+				@"{" +
+						@"""name"": """ + name + @"""" +
+						@", ""currentTime"":" + (media.Position.TotalSeconds).ToString(invCulture) + @"" +
+						@", ""duration"":" + (media.NaturalDuration.TimeSpan.TotalSeconds).ToString(invCulture) + @"" +
+						@", ""paused"":" + (_isPaused).ToString().ToLower() + @"" +
+						@", ""muted"":" + (media.IsMuted).ToString().ToLower() + @"" +
+						@", ""ended"":" + (_isEnded).ToString().ToLower() + @"" +
+						@", ""volume"":" + (media.Volume).ToString(invCulture) + @"" +
+						@", ""bufferedBytes"":" + (_bufferedBytes).ToString(invCulture) + @"" +
+						@", ""bufferedTime"":" + (_bufferedTime).ToString(invCulture) + @"" +
+						@", ""videoWidth"":" + (_videoWidth).ToString() + @"" +
+						@", ""videoHeight"":" + (_videoHeight).ToString() + @"" +
+				@"});", 0);
+			} catch { }
 
         }
 
