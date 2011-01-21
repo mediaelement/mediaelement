@@ -232,6 +232,8 @@
 		
 		handleError: function(e) {
 			// Tell user that the file cannot be played
+			
+			this.options.error(e);
 		},
 
 		setPlayerSize: function(width,height) {
