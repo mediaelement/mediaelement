@@ -186,6 +186,7 @@
 					ExternalInterface.addCallback("playMedia", playMedia);					
 					ExternalInterface.addCallback("loadMedia", loadMedia);					
 					ExternalInterface.addCallback("pauseMedia", pauseMedia);
+					ExternalInterface.addCallback("stopMedia", stopMedia);					
 					
 					ExternalInterface.addCallback("setSrc", setSrc);
 					ExternalInterface.addCallback("setCurrentTime", setCurrentTime);
@@ -318,6 +319,11 @@
 		function setSrc(url:String) {
 			_output.appendText("setSrc: " + url + "\n");
 			_mediaElement.setSrc(url);
+		}
+
+		function stopMedia() {
+			_output.appendText("stop\n");
+			_mediaElement.stop();
 		}
 		
 		function setCurrentTime(time:Number) {

@@ -16,6 +16,11 @@ mejs.HtmlMediaElement = {
 	setVolume: function (volume) {
 		this.volume = volume;
 	},
+	
+	// for parity with the plugin versions
+	stop: function () {
+		this.pause();
+	},	
 
 	// This can be a url string
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
@@ -95,6 +100,12 @@ mejs.PluginMediaElement.prototype = {
 			this.paused = true;
 		}
 	},	
+	stop: function () {
+		if (this.pluginApi != null) {
+			this.pluginApi.stopMedia();
+			this.paused = true;
+		}
+	},
 	canPlayType: function(type) {
 		var i,
 			j,
