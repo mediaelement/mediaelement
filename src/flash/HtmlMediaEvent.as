@@ -13,8 +13,7 @@
 		public static var LOADEDMETADATA:String = "loadedmetadata";
 		public static var ENDED:String = "ended";
 		public static var VOLUMECHANGE:String = "volumechange";		
-		
-		
+		public static var STOP:String = "stop";	
 
 	}	
 }

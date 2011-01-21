@@ -251,9 +251,10 @@ namespace SilverlightMediaElement
                     @"});");
 			 * */
 
+			// setTimeout
 			try {
 				CultureInfo invCulture = CultureInfo.InvariantCulture;
-				// setTimeout
+				
 				HtmlPage.Window.Invoke("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
 				@"{" +
 						@"""name"": """ + name + @"""" +
@@ -318,6 +319,17 @@ namespace SilverlightMediaElement
             media.AutoPlay = true;
             media.Source = new Uri(_mediaUrl, UriKind.Absolute);
         }
+
+		[ScriptableMember]
+		public void stopMedia() {
+			WriteDebug("method:stop " + media.CurrentState);
+
+			_isEnded = true;
+			_isPaused = false;
+
+			media.Stop();
+			StopTimer();
+		}
 
         [ScriptableMember]
         public void setVolume(Double volume) {
