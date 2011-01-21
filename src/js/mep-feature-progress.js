@@ -69,7 +69,7 @@
 				
 				if (x > offset.left && x <= width + offset.left && media.duration) {					
 					percentage = ((x - offset.left) / width);
-					newTime = percentage * media.duration;
+					newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 					
 					// seek to where the mouse is
 					if (mouseIsDown) {
