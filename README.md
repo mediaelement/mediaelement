@@ -6,7 +6,7 @@
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk)
+* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter)
 
 
 ## Installation and Usage
@@ -72,6 +72,16 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
 ### Version History
+
+*2.0.5 (in progress) *
+
+* Added error object to player
+* Adjusted popup timer and progress bar
+* Fixed media URL escaping
+* Stopped sending poster to plugin
+* Silverlight culture update
+* Added back reference check (also makes jQuery usage easier)
+* Added stop() function to mediaelement
 
 *2.0.4 (2011/01/14) - 31.2kb*
 
