@@ -208,6 +208,9 @@ package htmlelements
 		public function stop():void {
 			_timer.stop();
 			_soundChannel.stop();
+			_sound.close();
+			unload();
+			sendEvent(HtmlMediaEvent.STOP);
 		}
 		
 		public function setVolume(volume:Number):void {

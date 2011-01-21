@@ -271,6 +271,16 @@
 			_isPaused = true;
 			sendEvent(HtmlMediaEvent.PAUSE);
 		}		
+		
+		public function stop():void {
+			if (_stream == null)
+				return;
+			
+			_stream.close();
+			_isPaused = false;
+			_timer.stop();
+			sendEvent(HtmlMediaEvent.STOP);
+		}		
 
 		public function setCurrentTime(pos:Number):void {
 			if (_stream == null)

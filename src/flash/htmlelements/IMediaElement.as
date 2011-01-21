@@ -10,6 +10,8 @@ package htmlelements
 		
 		function load():void;		
 		
+		function stop():void;				
+		
 		function setSrc(url:String):void;
 		
 		function setCurrentTime(pos:Number):void;
