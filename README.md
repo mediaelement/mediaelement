@@ -28,14 +28,14 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 
 ### 2. Option B: Multiple codecs with Flash fall-through when JavaScript is disabled
 
-	This includes multiple codecs for various browsers (H.264 for IE and webkit, WebM for Firefox 4 and Opera, Ogg for Firefox 3) as well as a Flash fallback for non HTML5 browsers with JavaScript disabled.
+	This includes multiple codecs for various browsers (H.264 for IE and Safari, WebM for Chrome, Firefox 4, and Opera, Ogg for Firefox 3) as well as a Flash fallback for non HTML5 browsers with JavaScript disabled.
 
 	<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
 		<source type="video/mp4" src="myvideo.mp4" />
 		<source type="video/webm" src="myvideo.webm" />
 		<source type="video/ogg" src="myvideo.ogv" />
-		<object width="320" height="240" type="application/x-shockwave-flash" data="mediaelementplayer.swf"> 		
-			<param name="movie" value="mediaelementplayer.swf" /> 
+		<object width="320" height="240" type="application/x-shockwave-flash" data="flashmediaelement.swf"> 		
+			<param name="movie" value="flashmediaelement.swf" /> 
 			<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
 			<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
 		</object> 	
@@ -44,8 +44,14 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 ### 3. Run startup script (make sure this is not in the `<head>` tag or iOS 3 will fail)
 
 	<script>
+	// jQuery method
 	$('video').mediaelementplayer();
 	</script>
+	
+	<script>
+	// normal JavaScript 
+	var player = new MediaElementPlayer('#player');
+	</script>	
 
 ## How it Works: 
 _MediaElement.js: HTML5 `<video>` and `<audio>` shim_
