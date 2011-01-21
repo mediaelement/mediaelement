@@ -40,8 +40,17 @@
 			mf = mejs.MediaFeatures;
 	
 		t.$media = $($media);
+
+		// check for existing player
+		if (t.$media[0].player) {
+			return t.$media[0].player;
+		} else {
+			t.$media[0].player = t;
+		}
+
 		t.options = $.extend({},mejs.MepDefaults,o);
 		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
+		
 				
 		if (mf.isiPad || mf.isiPhone) {
 			// add controls and stop
@@ -373,7 +382,7 @@
 	// turn into jQuery plugin
 	jQuery.fn.mediaelementplayer = function (options) {
 		return this.each(function () {
-			return new mejs.MediaElementPlayer($(this), options);
+			new mejs.MediaElementPlayer($(this), options);
 		});
 	};
 
