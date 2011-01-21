@@ -325,7 +325,6 @@ mejs.HtmlMediaElementShim = {
 		// flash/silverlight vars
 		initVars = [
 			'id=' + pluginid,
-			'poster=' + poster,
 			'isvideo=' + ((isVideo) ? "true" : "false"),
 			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
