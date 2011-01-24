@@ -129,6 +129,7 @@ mejs.HtmlMediaElementShim = {
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
+			controls =  htmlMediaElement.getAttribute('controls'),
 			prop;
 
 		// extend options
@@ -140,6 +141,7 @@ mejs.HtmlMediaElementShim = {
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
 		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
+		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
 		
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
@@ -149,7 +151,7 @@ mejs.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options, autoplay, preload, playback);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
@@ -283,7 +285,7 @@ mejs.HtmlMediaElementShim = {
 		options.error(htmlMediaElement);		
 	},
 	
-	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload) {
+	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload, controls) {
 	
 		var width = 1,
 			height = 1,
@@ -345,6 +347,9 @@ mejs.HtmlMediaElementShim = {
 		if (options.enablePluginSmoothing) {
 			initVars.push('smoothing=true');
 		}
+		if (options.controls) {
+			initVars.push('controls=true');
+		}		
 		
 		switch (pluginType) {
 			case 'silverlight':
