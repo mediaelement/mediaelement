@@ -82,6 +82,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Silverlight culture update
 * Added back reference check (also makes jQuery usage easier)
 * Added stop() function to mediaelement
+* timerupdate still fires when paused (plugins)
+* Added Security.allowDomain("*") to Flash so it can be used on different domains
 
 *2.0.4 (2011/01/14) - 31.2kb*
 
