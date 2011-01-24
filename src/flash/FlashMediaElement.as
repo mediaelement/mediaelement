@@ -5,6 +5,7 @@
 	import flash.media.*;
 	import flash.net.*;
 	import flash.text.*;
+	import flash.system.*;
 		
 	import flash.media.Video;
     import flash.net.NetConnection;
@@ -18,7 +19,6 @@
 	import htmlelements.IMediaElement;
 	import htmlelements.VideoElement;
 	import htmlelements.AudioElement;
-	
 
 	public class FlashMediaElement extends MovieClip {
 			
@@ -31,6 +31,7 @@
 		private var _stageWidth:Number;
 		private var _stageHeight:Number;
 		private var _enableSmoothing:Boolean;
+		private var _allowedPluginDomain:String;
 		
 		// native video size (from meta data)
 		private var _nativeVideoWidth:Number = 0;
@@ -60,7 +61,9 @@
 		
 		
 		public function FlashMediaElement() {		
-		
+			
+			// show allow this player to be called from a different domain than the HTML page hosting the player
+			Security.allowDomain("*");
 			
 			// get parameters
 			var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
@@ -71,6 +74,7 @@
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
 			_showControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
 			_enableSmoothing = (params['smoothing'] != undefined) ? (String(params['smoothing']) == "true") : false;
+			
 			if (isNaN(_timerRate))
 				_timerRate = 250;
 			
