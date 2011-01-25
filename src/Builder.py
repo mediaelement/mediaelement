@@ -112,6 +112,7 @@ os.system("java -jar yuicompressor-2.4.2.jar ../build/mediaelementplayer.css -o 
 
 #COPY skin files
 shutil.copy2('css/controls.png','../build/controls.png')
+shutil.copy2('css/bigplay.png','../build/bigplay.png')
 
 shutil.copy2('css/mejs-skins.css','../build/mejs-skins.css')
 shutil.copy2('css/controls-ted.png','../build/controls-ted.png')
