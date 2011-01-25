@@ -287,6 +287,7 @@
 				return;
 				
 			_stream.seek(pos);
+			sendEvent(HtmlMediaEvent.TIMEUPDATE);
 			sendEvent(HtmlMediaEvent.SEEKED);
 		}
 
