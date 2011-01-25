@@ -22,6 +22,10 @@
 			timefloat  = controls.find('.mejs-time-float'),
 			timefloatcurrent  = controls.find('.mejs-time-float-current'),
 			setProgress = function(e) {
+				if (!e) {
+					return;
+				}
+
 				var
 					target = e.target,
 					percent = null;
@@ -45,6 +49,7 @@
 					
 				// finally update the progress bar
 				if (percent !== null) {
+					percent = Math.min(1, Math.max(0, percent));
 					// update loaded bar
 					loaded.width(total.width() * percent);			
 				}				
