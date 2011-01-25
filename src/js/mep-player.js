@@ -157,6 +157,12 @@
 				f,
 				feature;
 
+			// make sure it can't create itself again if a plugin reloads
+			if (this.created)
+				return;
+			else
+				this.created = true;				
+				
 			t.media = media;
 			t.domNode = domNode;
 				
@@ -241,8 +247,9 @@
 		
 		handleError: function(e) {
 			// Tell user that the file cannot be played
-			
-			this.options.error(e);
+			if (this.options.error) {
+				this.options.error(e);
+			}
 		},
 
 		setPlayerSize: function(width,height) {
