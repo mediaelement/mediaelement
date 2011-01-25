@@ -148,9 +148,8 @@
 			_pauseButton.visible = false;
 			_duration = _controlBar.getChildByName("duration_txt") as TextField;
 			_currentTime = _controlBar.getChildByName("currentTime_txt") as TextField;
-			if (!_showControls) {
-				_controlBar.visible = false;
-			}			
+
+			_controlBar.visible = _showControls;
 			addChild(_controlBar);
 			
 						// put back on top
@@ -181,7 +180,7 @@
 			positionControls();
 			
 			
-			if (ExternalInterface.available && !_showControls) {
+			if (ExternalInterface.available) { //  && !_showControls
 				
 				_output.appendText("Adding callbacks...\n");
 				try {
@@ -434,9 +433,9 @@
 			*/
 			
 			// use set timeout for performance reasons
-			if (!_showControls) {
+			//if (!_showControls) {
 				ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
-			}
+			//}
 		}	
 		
 		function secondsToTimeCode(seconds:Number):String {
