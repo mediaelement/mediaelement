@@ -64,7 +64,11 @@
 		}
 
 		public function currentTime():Number {		
-			return _stream.time;
+			if (_stream != null) {
+				return _stream.time;
+			} else {
+				return 0;
+			}
 		}			
 
 		// (1) load()
