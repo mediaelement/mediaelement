@@ -156,7 +156,6 @@ mejs.PluginMediaElement.prototype = {
 		if (this.pluginApi != null) {
 			this.pluginApi.setCurrentTime(time);
 			this.currentTime = time;
-			this.dispatchEvent('timeupdate');
 		}
 	},
 	setVolume: function (volume) {
