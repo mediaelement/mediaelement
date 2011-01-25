@@ -373,7 +373,7 @@ mejs.HtmlMediaElementShim = {
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '">' +
 '<param name="movie" value="' + options.pluginPath + options.flashName + '?x=' + (new Date()) + '" />' +
-'<param name="flashvars" value="' + initVars.join('&') + '" />' +
+'<param name="flashvars" value="' + initVars.join('&amp;') + '" />' +
 '<param name="quality" value="high" />' +
 '<param name="bgcolor" value="#000000" />' +
 '<param name="wmode" value="transparent" />' +
