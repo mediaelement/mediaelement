@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.0.4';
+mejs.version = '2.0.5';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -239,6 +239,11 @@ mejs.HtmlMediaElement = {
 	setVolume: function (volume) {
 		this.volume = volume;
 	},
+	
+	// for parity with the plugin versions
+	stop: function () {
+		this.pause();
+	},	
 
 	// This can be a url string
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
@@ -318,6 +323,12 @@ mejs.PluginMediaElement.prototype = {
 			this.paused = true;
 		}
 	},	
+	stop: function () {
+		if (this.pluginApi != null) {
+			this.pluginApi.stopMedia();
+			this.paused = true;
+		}
+	},
 	canPlayType: function(type) {
 		var i,
 			j,
@@ -551,6 +562,7 @@ mejs.HtmlMediaElementShim = {
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
+			controls =  htmlMediaElement.getAttribute('controls'),
 			prop;
 
 		// extend options
@@ -562,6 +574,7 @@ mejs.HtmlMediaElementShim = {
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
 		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
+		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
 		
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
@@ -571,7 +584,7 @@ mejs.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options, autoplay, preload, playback);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay, preload);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
@@ -705,7 +718,7 @@ mejs.HtmlMediaElementShim = {
 		options.error(htmlMediaElement);		
 	},
 	
-	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload) {
+	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload, controls) {
 	
 		var width = 1,
 			height = 1,
@@ -747,7 +760,6 @@ mejs.HtmlMediaElementShim = {
 		// flash/silverlight vars
 		initVars = [
 			'id=' + pluginid,
-			'poster=' + poster,
 			'isvideo=' + ((isVideo) ? "true" : "false"),
 			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
@@ -768,6 +780,9 @@ mejs.HtmlMediaElementShim = {
 		if (options.enablePluginSmoothing) {
 			initVars.push('smoothing=true');
 		}
+		if (controls) {
+			initVars.push('controls=true'); // shows controls in the plugin if desired
+		}		
 		
 		switch (pluginType) {
 			case 'silverlight':
@@ -791,7 +806,7 @@ mejs.HtmlMediaElementShim = {
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '">' +
 '<param name="movie" value="' + options.pluginPath + options.flashName + '?x=' + (new Date()) + '" />' +
-'<param name="flashvars" value="' + initVars.join('&') + '" />' +
+'<param name="flashvars" value="' + initVars.join('&amp;') + '" />' +
 '<param name="quality" value="high" />' +
 '<param name="bgcolor" value="#000000" />' +
 '<param name="wmode" value="transparent" />' +
@@ -911,8 +926,17 @@ window.MediaElement = mejs.MediaElement;
 			mf = mejs.MediaFeatures;
 	
 		t.$media = $($media);
+
+		// check for existing player
+		if (t.$media[0].player) {
+			return t.$media[0].player;
+		} else {
+			t.$media[0].player = t;
+		}
+
 		t.options = $.extend({},mejs.MepDefaults,o);
 		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
+		
 				
 		if (mf.isiPad || mf.isiPhone) {
 			// add controls and stop
@@ -929,24 +953,31 @@ window.MediaElement = mejs.MediaElement;
 
 			// don't do the rest
 			return;
-		} else if (mf.isAndroid && t.isVideo) {
+		} else if (mf.isAndroid) {
 
-			// Android fails when there are multiple types
-			// <video>
-			// <source src="file.mp4" type="video/mp4" />
-			// <source src="file.webm" type="video/webm" />
-			// </video>
-			if (t.$media.find('source').length > 0) {
-				// find an mp4 and make it the root element source
-				t.$media[0].src = t.$media.find('source[src$="mp4"]').attr('src');				
+			if (t.isVideo) {
+				// Android fails when there are multiple types
+				// <video>
+				// <source src="file.mp4" type="video/mp4" />
+				// <source src="file.webm" type="video/webm" />
+				// </video>
+				if (t.$media.find('source').length > 0) {
+					// find an mp4 and make it the root element source
+					t.$media[0].src = t.$media.find('source[src$="mp4"]').attr('src');				
+				}
+				
+				// attach a click event to the video and hope Android can play it
+				t.$media.click(function() {
+					t.$media[0].play();
+				});			
+				
+				return;
+			} else {
+				// audio?
+				// 2.1 = no support
+				// 2.2 = Flash support
+				// 2.3 = Native HTML5
 			}
-			
-			// attach a click event to the video and hope Android can play it
-			t.$media.click(function() {
-				t.$media[0].play();
-			});			
-			
-			return;
 			
 		} else {
 
@@ -1019,6 +1050,12 @@ window.MediaElement = mejs.MediaElement;
 				f,
 				feature;
 
+			// make sure it can't create itself again if a plugin reloads
+			if (this.created)
+				return;
+			else
+				this.created = true;				
+				
 			t.media = media;
 			t.domNode = domNode;
 				
@@ -1103,6 +1140,9 @@ window.MediaElement = mejs.MediaElement;
 		
 		handleError: function(e) {
 			// Tell user that the file cannot be played
+			if (this.options.error) {
+				this.options.error(e);
+			}
 		},
 
 		setPlayerSize: function(width,height) {
@@ -1242,7 +1282,7 @@ window.MediaElement = mejs.MediaElement;
 	// turn into jQuery plugin
 	jQuery.fn.mediaelementplayer = function (options) {
 		return this.each(function () {
-			return new mejs.MediaElementPlayer($(this), options);
+			new mejs.MediaElementPlayer($(this), options);
 		});
 	};
 
@@ -1310,23 +1350,34 @@ window.MediaElement = mejs.MediaElement;
 			timefloat  = controls.find('.mejs-time-float'),
 			timefloatcurrent  = controls.find('.mejs-time-float-current'),
 			setProgress = function(e) {
+				if (!e) {
+					return;
+				}
+
 				var
 					target = e.target,
 					percent = null;
 				
+				// newest HTML5 spec has buffered array (FF4, Webkit)
+				if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
+					// TODO: account for a real array with multiple values (only Firefox 4 has this so far) 
+					percent = target.buffered.end(0) / target.duration;				
+				} 
 				// Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
 				// to be anything other than 0. If the byte count is available we use this instead.
 				// Browsers that support the else if do not seem to have the bufferedBytes value and
-				// should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
-				if (target && target.bytesTotal != undefined && target.bytesTotal > 0 && target.bufferedBytes != undefined) {
+				// should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.					
+				else if (target && target.bytesTotal != undefined && target.bytesTotal > 0 && target.bufferedBytes != undefined) {
 					percent = target.bufferedBytes / target.bytesTotal;
 				}
-				// need to account for a real array with multiple values (only Firefox 4 has this so far)
-				else if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
-					percent = target.buffered.end(0) / target.duration;
+				// Firefox 3 with an Ogg file seems to go this way
+				else if (e.lengthComputable && e.total != 0) {
+					percent = e.loaded/e.total;
 				}
-
+					
+				// finally update the progress bar
 				if (percent !== null) {
+					percent = Math.min(1, Math.max(0, percent));
 					// update loaded bar
 					loaded.width(total.width() * percent);			
 				}				
@@ -1357,7 +1408,7 @@ window.MediaElement = mejs.MediaElement;
 				
 				if (x > offset.left && x <= width + offset.left && media.duration) {					
 					percentage = ((x - offset.left) / width);
-					newTime = percentage * media.duration;
+					newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 					
 					// seek to where the mouse is
 					if (mouseIsDown) {
@@ -1557,7 +1608,8 @@ window.MediaElement = mejs.MediaElement;
 		}, true);
 		
 		// set initial volume
-		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);		
+		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);	
+		positionVolumeHandle(player.options.startVolume);
 		media.setVolume(player.options.startVolume);		
 	}
 

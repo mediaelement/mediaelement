@@ -73,7 +73,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.0.5 (in progress) *
+*2.0.5 (2011/01/25) - 31.7kb*
 
 * Added error object to player
 * Adjusted popup timer and progress bar
@@ -86,6 +86,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Added Security.allowDomain("*") to Flash so it can be used on different domains
 * Fixed progress bar for Firefox 3 with Ogg files
 * Prevented Flash from re-creating the player when show/hide restarts it
+* Fixed initial volume level in non-HTML5 players
+* Made PNG8 versions of controls images (for IE6)
 
 *2.0.4 (2011/01/14) - 31.2kb*
 
@@ -220,3 +222,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *1.0.0 (2010/08/09)*
 
 * initial release
+
+###TODO
+
+* Loading indicator
+* Support 100% width and height
