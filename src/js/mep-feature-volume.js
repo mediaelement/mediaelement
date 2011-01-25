@@ -105,7 +105,8 @@
 		}, true);
 		
 		// set initial volume
-		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);		
+		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);	
+		positionVolumeHandle(player.options.startVolume);
 		media.setVolume(player.options.startVolume);		
 	}
 
