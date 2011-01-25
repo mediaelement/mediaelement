@@ -347,8 +347,8 @@ mejs.HtmlMediaElementShim = {
 		if (options.enablePluginSmoothing) {
 			initVars.push('smoothing=true');
 		}
-		if (options.controls) {
-			initVars.push('controls=true');
+		if (controls) {
+			initVars.push('controls=true'); // shows controls in the plugin if desired
 		}		
 		
 		switch (pluginType) {
