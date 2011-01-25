@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.0.4';
+mejs.version = '2.0.5';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -239,6 +239,11 @@ mejs.HtmlMediaElement = {
 	setVolume: function (volume) {
 		this.volume = volume;
 	},
+	
+	// for parity with the plugin versions
+	stop: function () {
+		this.pause();
+	},	
 
 	// This can be a url string
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
@@ -318,6 +323,12 @@ mejs.PluginMediaElement.prototype = {
 			this.paused = true;
 		}
 	},	
+	stop: function () {
+		if (this.pluginApi != null) {
+			this.pluginApi.stopMedia();
+			this.paused = true;
+		}
+	},
 	canPlayType: function(type) {
 		var i,
 			j,
@@ -551,6 +562,7 @@ mejs.HtmlMediaElementShim = {
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
+			controls =  htmlMediaElement.getAttribute('controls'),
 			prop;
 
 		// extend options
@@ -562,6 +574,7 @@ mejs.HtmlMediaElementShim = {
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
 		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
+		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
 		
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
@@ -571,7 +584,7 @@ mejs.HtmlMediaElementShim = {
 			this.updateNative( htmlMediaElement, options, autoplay, preload, playback);				
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url).replace('&','%26') : '', poster, autoplay, preload);
+			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
@@ -705,7 +718,7 @@ mejs.HtmlMediaElementShim = {
 		options.error(htmlMediaElement);		
 	},
 	
-	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload) {
+	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload, controls) {
 	
 		var width = 1,
 			height = 1,
@@ -747,7 +760,6 @@ mejs.HtmlMediaElementShim = {
 		// flash/silverlight vars
 		initVars = [
 			'id=' + pluginid,
-			'poster=' + poster,
 			'isvideo=' + ((isVideo) ? "true" : "false"),
 			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
@@ -768,6 +780,9 @@ mejs.HtmlMediaElementShim = {
 		if (options.enablePluginSmoothing) {
 			initVars.push('smoothing=true');
 		}
+		if (controls) {
+			initVars.push('controls=true'); // shows controls in the plugin if desired
+		}		
 		
 		switch (pluginType) {
 			case 'silverlight':
@@ -791,7 +806,7 @@ mejs.HtmlMediaElementShim = {
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '">' +
 '<param name="movie" value="' + options.pluginPath + options.flashName + '?x=' + (new Date()) + '" />' +
-'<param name="flashvars" value="' + initVars.join('&') + '" />' +
+'<param name="flashvars" value="' + initVars.join('&amp;') + '" />' +
 '<param name="quality" value="high" />' +
 '<param name="bgcolor" value="#000000" />' +
 '<param name="wmode" value="transparent" />' +
