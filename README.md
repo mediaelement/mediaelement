@@ -84,6 +84,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Added stop() function to mediaelement
 * timerupdate still fires when paused (plugins)
 * Added Security.allowDomain("*") to Flash so it can be used on different domains
+* Fixed progress bar for Firefox 3 with Ogg files
+* Prevented Flash from re-creating the player when show/hide restarts it
 
 *2.0.4 (2011/01/14) - 31.2kb*
 
