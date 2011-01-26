@@ -79,11 +79,11 @@
 					// find an mp4 and make it the root element source
 					t.$media[0].src = t.$media.find('source[src$="mp4"]').attr('src');				
 				}
-				
+								
 				// attach a click event to the video and hope Android can play it
 				t.$media.click(function() {
 					t.$media[0].play();
-				});			
+				});
 				
 				return;
 			} else {
