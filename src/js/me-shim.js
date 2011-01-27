@@ -165,7 +165,6 @@ mejs.HtmlMediaElementShim = {
 			k,
 			l,
 			n,
-			url,
 			type,
 			result = { method: '', url: ''},
 			src = htmlMediaElement.getAttribute('src'),
@@ -181,9 +180,8 @@ mejs.HtmlMediaElementShim = {
 
 		// test for src attribute first
 		} else if (src  != 'undefined' && src  !== null) {
-			url = htmlMediaElement.getAttribute('src');
-			type = this.checkType(url, htmlMediaElement.getAttribute('type'), isVideo);
-			mediaFiles.push({type:type, url:url});
+			type = this.checkType(src, htmlMediaElement.getAttribute('type'), isVideo);
+			mediaFiles.push({type:type, url:src});
 
 		// then test for <source> elements
 		} else {
@@ -191,9 +189,9 @@ mejs.HtmlMediaElementShim = {
 			for (i = 0; i < htmlMediaElement.childNodes.length; i++) {
 				n = htmlMediaElement.childNodes[i];
 				if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
-					url = n.getAttribute('src');
-					type = this.checkType(url, n.getAttribute('type'), isVideo);
-					mediaFiles.push({type:type, url:url});
+					src = n.getAttribute('src');
+					type = this.checkType(src, n.getAttribute('type'), isVideo);
+					mediaFiles.push({type:type, url:src});
 				}
 			}
 		}
