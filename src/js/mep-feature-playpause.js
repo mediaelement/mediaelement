@@ -1,7 +1,7 @@
 (function($) {
 	// PLAY/pause BUTTON
 	MediaElementPlayer.prototype.buildplaypause = function(player, controls, layers, media) {
-		var play = 	
+		var play = 
 			$('<div class="mejs-button mejs-playpause-button mejs-play">' +
 				'<span></span>' +
 			'</div>')
@@ -13,23 +13,23 @@
 					media.pause();
 				}
 			});
-			
+
 		media.addEventListener('play',function() {
-			play.removeClass('mejs-play').addClass('mejs-pause');	
+			play.removeClass('mejs-play').addClass('mejs-pause');
 		}, false);
 		media.addEventListener('playing',function() {
-			play.removeClass('mejs-play').addClass('mejs-pause');	
+			play.removeClass('mejs-play').addClass('mejs-pause');
 		}, false);
 
 
 		media.addEventListener('pause',function() {
-			play.removeClass('mejs-pause').addClass('mejs-play');	
+			play.removeClass('mejs-pause').addClass('mejs-play');
 		}, false);
 		media.addEventListener('paused',function() {
-			play.removeClass('mejs-pause').addClass('mejs-play');	
-		}, false);			
+			play.removeClass('mejs-pause').addClass('mejs-play');
+		}, false);
 
-		
-		
+
+
 	}
 })(jQuery);

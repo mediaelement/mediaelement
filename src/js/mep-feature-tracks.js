@@ -1,5 +1,5 @@
 (function($) {
-	
+
 	// add extra default options 
 	$.extend(mejs.MepDefaults, {
 		// this will automatically turn on a <track>
@@ -7,22 +7,22 @@
 		// a list of languages to auto-translate via Google
 		translations: [],
 		// a dropdownlist of automatic translations
-		translationSelector: false,	
+		translationSelector: false,
 		// key for tranlsations
 		googleApiKey: ''
 	});
-	
+
 	$.extend(MediaElementPlayer.prototype, {
-		
-		buildtracks: function(player, controls, layers, media) {	
+
+		buildtracks: function(player, controls, layers, media) {
 			if (!player.isVideo)
 				return;
-				
+
 			if (player.tracks.length == 0)
 				return;
-				
+
 			var i, options = '';
-		
+
 			player.chapters = 
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();
@@ -37,19 +37,19 @@
 							'<ul>'+
 								'<li>'+
 									'<input type="radio" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label for="' + player.id + '_captions_none">None</label>'+										
+									'<label for="' + player.id + '_captions_none">None</label>'+
 								'</li>'	+
 							'</ul>'+
-						'</div>'+							
+						'</div>'+
 					'</div>')
 						.appendTo(controls)
 						// handle clicks to the language radio buttons
-						.delegate('input[type=radio]','click',function() {				
-							lang = this.value;	
-							
+						.delegate('input[type=radio]','click',function() {
+							lang = this.value;
+
 							if (lang == 'none') {
 								player.selectedTrack = null;
-							} else {				
+							} else {
 								for (i=0; i<player.tracks.length; i++) {
 									if (player.tracks[i].srclang == lang) {
 										player.selectedTrack = player.tracks[i];
@@ -57,11 +57,11 @@
 										player.displayCaptions();
 										break;
 									}
-								}	
+								}
 							}
 						});
 						//.bind('mouseenter', function() {
-						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')						
+						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
 						//});
 			// move with controls
 			player.container
@@ -69,7 +69,7 @@
 					// push captions above controls
 					var p = player.container.find('.mejs-captions-position');
 					p.css('bottom', (parseInt(p.css('bottom').replace(/px/,''), 10) + player.controls.height()) + 'px');
-					
+
 				})
 				.bind('mouseleave', function () {
 					if (!media.paused) {
@@ -77,14 +77,14 @@
 						player.container.find('.mejs-captions-position').css('bottom','');
 					}
 				});
-			
-			
-			
-						
+
+
+
+
 			player.trackToLoad = -1;
 			player.selectedTrack = null;
 			player.isLoadingTrack = false;
-				
+
 			// add user-defined translations
 			if (player.tracks.length > 0 && player.options.translations.length > 0) {
 				for (i=0; i<player.options.translations.length; i++) {
@@ -96,23 +96,23 @@
 						isLoaded: false,
 						isTranslation: true
 					});
-				}				
+				}
 			}
-			
+
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].isTranslation);	
+					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].isTranslation);
 				}
 			}
-			
-			player.loadNextTrack();	
+
+			player.loadNextTrack();
 
 
 			media.addEventListener('timeupdate',function(e) {
 				player.displayCaptions();
 			}, false);
-			
+
 			media.addEventListener('loadedmetadata', function(e) {
 				player.displayChapters();
 			}, false);
@@ -120,7 +120,7 @@
 			player.container.hover(
 				function () {
 					// chapters
-					player.chapters.css('visibility','visible');						
+					player.chapters.css('visibility','visible');
 					player.chapters.fadeIn(200);
 				},
 				function () {
@@ -128,16 +128,16 @@
 						player.chapters.fadeOut(200, function() {
 							$(this).css('visibility','hidden');
 							$(this).css('display','block');
-						});												
+						});
 					}
 				});
 
 			// auto selector
-			if (player.options.translationSelector) {				
+			if (player.options.translationSelector) {
 				for (i in mejs.language.codes) {
 					options += '<option value="' + i + '">' + mejs.language.codes[i] + '</option>';
 				}
-				player.container.find('.mejs-captions-selector ul').before($(					
+				player.container.find('.mejs-captions-selector ul').before($(
 					'<select class="mejs-captions-translations">' +
 						'<option value="">--Add Translation--</option>' +
 						options +
@@ -156,30 +156,30 @@
 							entries: [],
 							isLoaded: false,
 							isTranslation: true
-						});	
-						
+						});
+
 						if (!player.isLoadingTrack) {
 							player.trackToLoad--;
 							player.addTrackButton(lang,true);
 							player.options.startLanguage = lang;
-							player.loadNextTrack();							
+							player.loadNextTrack();
 						}
 					}
 				});
-			}				
-			
+			}
+
 		},
-	
+
 		loadNextTrack: function() {
 			var t = this;
-			
+
 			t.trackToLoad++;
 			if (t.trackToLoad < t.tracks.length) {
 				t.isLoadingTrack = true;
 				t.loadTrack(t.trackToLoad);
 			} else {
 				// add done?
-				t.isLoadingTrack = false;				
+				t.isLoadingTrack = false;
 			}
 		},
 
@@ -188,51 +188,51 @@
 				t = this,
 				track = t.tracks[index],
 				after = function() {
-					
+
 					track.isLoaded = true;
-						
+
 					// create button
 					//t.addTrackButton(track.srclang);
-					t.enableTrackButton(track.srclang);					
-					
+					t.enableTrackButton(track.srclang);
+
 					t.loadNextTrack();
-				
+
 				};
-				
+
 			if (track.isTranslation) {
-			
+
 				// translate the first track
-				mejs.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {								
-					
+				mejs.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {
+
 					// store the new translation
 					track.entries = newOne;
-					
+
 					after();
 				});
-				
+
 			} else {
 				$.ajax({
 					url: track.src,
 					success: function(d) {
-						
+
 						// parse the loaded file
-						track.entries = mejs.SrtParser.parse(d);						
+						track.entries = mejs.SrtParser.parse(d);
 						after();
-						
+
 						if (track.kind == 'chapters' && t.media.duration > 0) {
 							t.drawChapters(track);
 						}
 					},
 					error: function() {
-						t.loadNextTrack();								
+						t.loadNextTrack();
 					}
 				});
 			}
 		},
-		
+
 		enableTrackButton: function(lang) {
 			var t = this;
-			
+
 			t.captionsButton
 				.find('input[value=' + lang + ']')
 					.attr('disabled','')
@@ -242,27 +242,27 @@
 			// auto select
 			if (t.options.startLanguage == lang) {
 				$('#' + t.id + '_captions_' + lang).click();
-			}					
-					
+			}
+
 			t.adjustLanguageBox();
 		},
-		
+
 		addTrackButton: function(lang, isTranslation) {
 			var t = this,
 				l = mejs.language.codes[lang] || lang;
-			
+
 			t.captionsButton.find('ul').append(
 				$('<li>'+
 					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + l + ((isTranslation) ? ' (translating)' : ' (loading)') + '</label>'+										
+					'<label for="' + t.id + '_captions_' + lang + '">' + l + ((isTranslation) ? ' (translating)' : ' (loading)') + '</label>'+
 				'</li>')
 			);
-			
+
 			t.adjustLanguageBox();
-			
+
 			// remove this from the dropdownlist (if it exists)
 			t.container.find('.mejs-captions-translations option[value=' + lang + ']').remove();
-		},	
+		},
 
 		adjustLanguageBox:function() {
 			var t = this;
@@ -270,22 +270,22 @@
 			t.captionsButton.find('.mejs-captions-selector').height(
 				t.captionsButton.find('.mejs-captions-selector ul').outerHeight(true) +
 				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
-			);		
+			);
 		},
-		
+
 		displayCaptions: function() {
-			
+
 			if (typeof this.tracks == 'undefined')
 				return;
-		
+
 			var
 				t = this,
 				i,
 				track = t.selectedTrack;
-			
+
 			if (track != null && track.isLoaded) {
 				for (i=0; i<track.entries.times.length; i++) {
-					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){						
+					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){
 						t.captionsText.html(track.entries.text[i]);
 						t.captions.show();
 						return; // exit out if one is visible;
@@ -296,12 +296,12 @@
 				t.captions.hide();
 			}
 		},
-		
+
 		displayChapters: function() {
 			var 
 				t = this,
 				i;
-			
+
 			for (i=0; i<t.tracks.length; i++) {
 				if (t.tracks[i].kind == 'chapters' && t.tracks[i].isLoaded) {
 					t.drawChapters(t.tracks[i]);
@@ -309,8 +309,8 @@
 				}
 			}
 		},
-		
-		drawChapters: function(chapters) {			
+
+		drawChapters: function(chapters) {
 			var 
 				t = this,
 				i,
@@ -319,9 +319,9 @@
 				//left,
 				percent = 0,
 				usedPercent = 0;
-			
+
 			t.chapters.empty();
-			
+
 			for (i=0; i<chapters.entries.times.length; i++) {
 				dur = chapters.entries.times[i].stop - chapters.entries.times[i].start;
 				percent = Math.floor(dur / t.media.duration * 100);
@@ -335,7 +335,7 @@
 				//if (left + width > t.width) {
 				//	width = t.width - left;
 				//}
-				
+
 				t.chapters.append( $(
 					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + usedPercent.toString() + '%;width: ' + percent.toString() + '%;">' + 
 						'<div class="mejs-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mejs-chapter-block-last' : '') + '">' + 
@@ -345,20 +345,20 @@
 					'</div>'));
 				usedPercent += percent;
 			}
-			
+
 			t.chapters.find('div.mejs-chapter').click(function() {
 				t.media.setCurrentTime( parseFloat( $(this).attr('rel') ) );
 				if (t.media.paused) {
 					t.media.play(); 
 				}
 			});
-			
+
 			t.chapters.show();
 		}
 	});
-	
-	
-	
+
+
+
 	mejs.language = {
 		codes:  {
 			af:'Afrikaans',
@@ -418,8 +418,8 @@
 			cy:'Welsh',
 			yi:'Yiddish'
 		}
-	};	
-	
+	};
+
 	/*
 	Parses SRT format which should be formatted as
 	1
@@ -432,9 +432,9 @@
 
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
-	mejs.SrtParser = {	
+	mejs.SrtParser = {
 		pattern_identifier: /^[0-9]+$/,
-		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,		
+		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,
 		timecodeToSeconds: function(timecode){
 			var tab = timecode.split(':');
 			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
@@ -443,15 +443,15 @@
 			// normal version for compliant browsers
 			// see below for IE fix
 			return text.split(regex);
-		},		
+		},
 		parse: function(srtText) {
-			var 	
+			var 
 				i = 0,
 				lines = this.split2(srtText, /\r?\n/),
 				entries = {text:[], times:[]},
 				timecode,
 				text;
-				
+
 			for(; i<lines.length; i++) {
 				// check for the line number
 				if (this.pattern_identifier.exec(lines[i])){
@@ -466,8 +466,8 @@
 						while(lines[i] !== '' && i<lines.length){
 							text = text + '\n' + lines[i];
 							i++;
-						}					
-						
+						}
+
 						// Text is in a different array so I can use .join
 						entries.text.push(text);
 						entries.times.push(
@@ -479,21 +479,21 @@
 					}
 				}
 			}
-			
-			return entries;		
+
+			return entries;
 		},
-		
+
 		translateSrt: function(srtData, fromLang, toLang, googleApiKey, callback) {
-			
-			var 				
+
+			var 
 				entries = {text:[], times:[]},
 				lines,
-				i			
-			
+				i
+
 			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
 				// split on separators
 				lines = result.split('<a></a>');
-				
+
 				// create new entries
 				for (i=0;i<srtData.text.length; i++) {
 					// add translated line
@@ -505,13 +505,13 @@
 						settings: srtData.times[i].settings
 					};
 				}
-				
-				callback(entries);			
+
+				callback(entries);
 			});
 		},
-		
+
 		translateText: function(text, fromLang, toLang, googleApiKey, callback) {
-		
+
 			var
 				separatorIndex,
 				chunks = [],
@@ -531,7 +531,7 @@
 						callback(result);
 					}
 				};
-			
+
 			// split into chunks
 			while (text.length > 0) {
 				if (text.length > maxlength) {
@@ -541,14 +541,14 @@
 				} else {
 					chunks.push(text);
 					text = '';
-				}				
+				}
 			}
-			
+
 			// start handling the chunks
-			nextChunk();			
+			nextChunk();
 		},
 		translateChunk: function(text, fromLang, toLang, googleApiKey, callback) {
-			
+
 			var data = {
 				q: text, 
 				langpair: fromLang + '|' + toLang,
@@ -557,33 +557,33 @@
 			if (googleApiKey !== '' && googleApiKey !== null) {
 				data.key = googleApiKey;
 			}
-			
+
 			$.ajax({
 				url: 'https://ajax.googleapis.com/ajax/services/language/translate', // 'https://www.google.com/uds/Gtranslate', //'https://ajax.googleapis.com/ajax/services/language/translate', //
 				data: data,
 				type: 'GET',
 				dataType: 'jsonp',
 				success: function(d) {
-					callback(d.responseData.translatedText);						
+					callback(d.responseData.translatedText);
 				},
 				error: function(e) {
 					callback(null);
 				}
-			});			
+			});
 		}
-	};	
+	};
 	// test for browsers with bad String.split method.
 	if ('x\n\ny'.split(/\n/gi).length != 3) {
 		// add super slow IE8 and below version
-		mejs.SrtParser.split2 = function(text, regex) {			
+		mejs.SrtParser.split2 = function(text, regex) {
 			var 
 				parts = [], 
 				chunk = '',
 				i;
-			
+
 			for (i=0; i<text.length; i++) {
 				chunk += text.substring(i,i+1);
-				if (regex.test(chunk)) {					
+				if (regex.test(chunk)) {
 					parts.push(chunk.replace(regex, ''));
 					chunk = '';
 				}
@@ -592,6 +592,6 @@
 			return parts;
 		}
 	}
-	
-	
+
+
 })(jQuery);

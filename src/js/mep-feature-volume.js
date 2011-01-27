@@ -1,6 +1,6 @@
 (function($) {
 	MediaElementPlayer.prototype.buildvolume = function(player, controls, layers, media) {
-		var mute = 	
+		var mute = 
 			$('<div class="mejs-button mejs-volume-button mejs-mute">'+
 				'<span></span>'+
 				'<div class="mejs-volume-slider">'+ // outer background
@@ -14,27 +14,27 @@
 		volumeTotal = mute.find('.mejs-volume-total'),
 		volumeCurrent = mute.find('.mejs-volume-current'),
 		volumeHandle = mute.find('.mejs-volume-handle'),
-		
+
 		positionVolumeHandle = function(volume) {
-			
+
 			var 
 				top = volumeTotal.height() - (volumeTotal.height() * volume);
-				
+
 			// handle
 			volumeHandle.css('top', top - (volumeHandle.height() / 2));
-			
+
 			// show the current visibility
 			volumeCurrent.height(volumeTotal.height() - top + parseInt(volumeTotal.css('top').replace(/px/,''),10));
-			volumeCurrent.css('top',  top);			
+			volumeCurrent.css('top',  top);
 		},
 		handleVolumeMove = function(e) {
-			var	
+			var
 				railHeight = volumeTotal.height(),
 				totalOffset = volumeTotal.offset(),
 				totalTop = parseInt(volumeTotal.css('top').replace(/px/,''),10),
 				newY = e.pageY - totalOffset.top,
 				volume = (railHeight - newY) / railHeight
-			
+
 			// TODO: handle vertical and horizontal CSS
 			// only allow it to move within the rail
 			if (newY < 0)
@@ -44,7 +44,7 @@
 
 			// move the handle to match the mouse
 			volumeHandle.css('top', newY - (volumeHandle.height() / 2) + totalTop );
-			
+
 			// show the current visibility
 			volumeCurrent.height(railHeight-newY);
 			volumeCurrent.css('top',newY+totalTop);
@@ -57,10 +57,10 @@
 				media.setMuted(false);
 				mute.removeClass('mejs-unmute').addClass('mejs-mute');
 			}
-			
+
 			volume = Math.max(0,volume);
 			volume = Math.min(volume,1);
-			
+
 			// set the volume
 			media.setVolume(volume);
 		},
@@ -82,8 +82,8 @@
 					handleVolumeMove(e);
 				}
 			});
-				
-			
+
+
 		// MUTE button
 		mute.find('span').click(function() {
 			if (media.muted) {
@@ -94,20 +94,20 @@
 				media.setMuted(true);
 				mute.removeClass('mejs-mute').addClass('mejs-unmute');
 				positionVolumeHandle(0);
-			}				
+			}
 		});
-		
+
 		// listen for volume change events from other sources
 		media.addEventListener('volumechange', function(e) {
 			if (!mouseIsDown) {
 				positionVolumeHandle(e.target.volume);
 			}
 		}, true);
-		
+
 		// set initial volume
-		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);	
+		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);
 		positionVolumeHandle(player.options.startVolume);
-		media.setVolume(player.options.startVolume);		
+		media.setVolume(player.options.startVolume);
 	}
 
 })(jQuery);

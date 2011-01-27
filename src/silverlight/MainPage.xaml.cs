@@ -125,10 +125,10 @@ namespace SilverlightMediaElement
 		}
 
 		void media_MediaOpened(object sender, RoutedEventArgs e) {
-					
+
 			_videoWidth = Convert.ToInt32(media.NaturalVideoWidth);
-			_videoHeight = Convert.ToInt32(media.NaturalVideoHeight);			
-			
+			_videoHeight = Convert.ToInt32(media.NaturalVideoHeight);
+
 			SendEvent("loadedmetadata");
 		}
 
@@ -234,7 +234,7 @@ namespace SilverlightMediaElement
                         @", ""bufferedTime"":" + (_bufferedTime).ToString() + @"" +
                     @"}'");
              */
-			
+
 			/*
 			 * EVAL
             HtmlPage.Window.Eval("mejs.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
@@ -254,7 +254,7 @@ namespace SilverlightMediaElement
 			// setTimeout
 			try {
 				CultureInfo invCulture = CultureInfo.InvariantCulture;
-				
+
 				HtmlPage.Window.Invoke("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
 				@"{" +
 						@"""name"": """ + name + @"""" +
@@ -333,7 +333,7 @@ namespace SilverlightMediaElement
 
         [ScriptableMember]
         public void setVolume(Double volume) {
-            WriteDebug("method:setvolume: " + volume.ToString());			
+            WriteDebug("method:setvolume: " + volume.ToString());
 
             media.Volume = volume;
 
@@ -342,7 +342,7 @@ namespace SilverlightMediaElement
 
         [ScriptableMember]
         public void setMuted(bool isMuted) {
-            WriteDebug("method:setmuted: " + isMuted.ToString());			
+            WriteDebug("method:setmuted: " + isMuted.ToString());
 
             media.IsMuted = isMuted;
 

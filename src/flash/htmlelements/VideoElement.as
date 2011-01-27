@@ -29,17 +29,17 @@
 		private var _isPaused:Boolean = true;
 		private var _isEnded:Boolean = false;
 		private var _volume:Number = 1;
-		private var _isMuted:Boolean = false;	
+		private var _isMuted:Boolean = false;
 
 		private var _bytesLoaded:Number = 0;
-		private var _bytesTotal:Number = 0;		
-		private var _bufferedTime:Number = 0;		
+		private var _bytesTotal:Number = 0;
+		private var _bufferedTime:Number = 0;
 
 		private var _videoWidth:Number = -1;
 		private var _videoHeight:Number = -1;
 
 		private var _timer:Timer;
-		
+
 		private var _isRTMP:Boolean = false;
 		private var _isConnected:Boolean = false;
 		private var _playWhenConnected:Boolean = false;
@@ -59,17 +59,17 @@
 		}
 
 
-		public function duration():Number {		
+		public function duration():Number {
 			return _duration;
 		}
 
-		public function currentTime():Number {		
+		public function currentTime():Number {
 			if (_stream != null) {
 				return _stream.time;
 			} else {
 				return 0;
 			}
-		}			
+		}
 
 		// (1) load()
 		// calls _connection.connect(); 
@@ -88,7 +88,7 @@
             _connection = new NetConnection();
             _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
             _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
-			//_connection.connect(null);	
+			//_connection.connect(null);
 
 			_timer = new Timer(timerRate);
 			_timer.addEventListener("timer", timerHandler);
@@ -105,7 +105,7 @@
 			trace("bytes", _bytesLoaded, _bytesTotal);
 
 			if (_bytesLoaded < _bytesTotal)
-				sendEvent(HtmlMediaEvent.PROGRESS);			
+				sendEvent(HtmlMediaEvent.PROGRESS);
 		}
 
 		// internal events
@@ -119,7 +119,7 @@
 					_bytesLoaded = _stream.bytesLoaded;
 					_bytesTotal = _stream.bytesTotal;
 
-					sendEvent(HtmlMediaEvent.PROGRESS);	
+					sendEvent(HtmlMediaEvent.PROGRESS);
                     break;
 
 				case "NetConnection.Connect.Success":
@@ -130,36 +130,36 @@
                     break;
 
 				// STREAM
-                case "NetStream.Play.Start":					
+                case "NetStream.Play.Start":
 					_isPaused = false;
 					sendEvent(HtmlMediaEvent.PLAY);
-					sendEvent(HtmlMediaEvent.PLAYING);					
+					sendEvent(HtmlMediaEvent.PLAYING);
 					_timer.start();
                     break;
 
                 case "NetStream.Seek.Notify":
 					sendEvent(HtmlMediaEvent.SEEKED);
-                    break;					
+                    break;
 
 				case "NetStream.Pause.Notify":
 					_isPaused = true;
 					sendEvent(HtmlMediaEvent.PAUSE);
-                    break;			
+                    break;
 
 				case "NetStream.Play.Stop":
 					_isPaused = false;
 					_timer.stop();
 					sendEvent(HtmlMediaEvent.ENDED);
-                    break;						
+                    break;
 
             }
-        }		
+        }
 
         private function connectStream():void {
 			trace("connectStream");
             _stream = new NetStream(_connection);
             
-			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection			
+			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
             _stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
 
 			var customClient:Object = new Object();
@@ -167,15 +167,15 @@
 			_stream.client = customClient;
 
             _video.attachNetStream(_stream);
-			
+
 			_isConnected = true;
-			
+
 			if (_playWhenConnected && !_hasStartedPlaying) {
 				play();
 				_playWhenConnected = false;
 			}
-				
-        }		
+
+        }
 
         private function securityErrorHandler(event:SecurityErrorEvent):void {
             trace("securityErrorHandler: " + event);
@@ -192,7 +192,7 @@
 			_videoWidth = info.width;
 			_videoHeight = info.height;
 
-			// set size?			
+			// set size?
 
 			sendEvent(HtmlMediaEvent.LOADEDMETADATA);
 		}
@@ -206,21 +206,21 @@
 				// stop and restart
 				_stream.pause();
 			}
-			
+
 			_isRTMP = !!_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//);
 			_currentUrl = url;
 			_isConnected = false;
 			_hasStartedPlaying = false;
 		}
 
-		public function load():void {		
+		public function load():void {
 			// as far as I know there is no way to start downloading a file without playing it (preload="auto" in HTML5)
 			// so this "load" just begins a Flash connection
 			if (_isConnected && _stream) {
 				_stream.pause();
 			}
 			_isConnected = false;
-			
+
 			if (_isRTMP) {
 				_connection.connect(_currentUrl.replace(/\/[^\/]+$/,"/"));
 			} else {
@@ -228,12 +228,12 @@
 			}
 			// in a few moments the "NetConnection.Connect.Success" event will fire
 			// and call createConnection which finishes the "load" sequence
-			
-			
+
+
 		}
 
-		public function play():void {	
-		
+		public function play():void {
+
 			if (!_hasStartedPlaying && !_isConnected) {
 				_playWhenConnected = true;
 				load();
@@ -249,7 +249,7 @@
 					sendEvent(HtmlMediaEvent.PLAYING);
 				}
 			} else {
-				
+
 				if (_isRTMP) {
 					_stream.play(_currentUrl.split("/").pop());
 				} else {
@@ -262,34 +262,34 @@
 				_hasStartedPlaying = true;
 			}
 
-		}			
+		}
 
 		public function pause():void {
 			if (_stream == null)
 				return;
-				
+
 			_stream.pause();
 			_isPaused = true;
-			_timer.stop();			
+			_timer.stop();
 
 			_isPaused = true;
 			sendEvent(HtmlMediaEvent.PAUSE);
-		}		
-		
+		}
+
 		public function stop():void {
 			if (_stream == null)
 				return;
-			
+
 			_stream.close();
 			_isPaused = false;
 			_timer.stop();
 			sendEvent(HtmlMediaEvent.STOP);
-		}		
+		}
 
 		public function setCurrentTime(pos:Number):void {
 			if (_stream == null)
 				return;
-				
+
 			_stream.seek(pos);
 			sendEvent(HtmlMediaEvent.TIMEUPDATE);
 			sendEvent(HtmlMediaEvent.SEEKED);
@@ -298,7 +298,7 @@
 		public function setVolume(volume:Number):void {
 			if (_stream == null)
 				return;
-			
+
 			_soundTransform = new SoundTransform(volume);
 			_stream.soundTransform = _soundTransform;
 			_volume = volume;
@@ -309,7 +309,7 @@
 		}
 
 
-		public function setMuted(muted:Boolean):void {			
+		public function setMuted(muted:Boolean):void {
 
 			if (_isMuted == muted)
 				return;
@@ -328,7 +328,7 @@
 		private function sendEvent(eventName:String) {
 
 			// calculate this to mimic HTML5
-			_bufferedTime = _bytesLoaded / _bytesTotal + _duration;			
+			_bufferedTime = _bytesLoaded / _bytesTotal + _duration;
 
 			// build JSON
 			var values:String = 
@@ -339,15 +339,15 @@
 							",paused:" + _isPaused + 
 							",ended:" + _isEnded + 
 							",volume:" + _volume +
-							",src:\"" + _currentUrl + "\"" +							
-							",bytesTotal:" + _bytesTotal +							
+							",src:\"" + _currentUrl + "\"" +
+							",bytesTotal:" + _bytesTotal +
 							",bufferedBytes:" + _bytesLoaded +
 							",bufferedTime:" + _bufferedTime +
 							",videoWidth:" + _videoWidth +
-							",videoHeight:" + _videoHeight +							
+							",videoHeight:" + _videoHeight +
 							"}";
 
-			_element.sendEvent(eventName, values);			
-		}		
+			_element.sendEvent(eventName, values);
+		}
 	}
 }
