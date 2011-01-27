@@ -18,7 +18,7 @@ package htmlelements
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
 
-        private var _video:VideoPlayer;
+		private var _video:VideoPlayer;
 		private var _ncManager:NCManager;
 
 		private var _soundTransform;
