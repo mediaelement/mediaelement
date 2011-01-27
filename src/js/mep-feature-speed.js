@@ -1,11 +1,11 @@
 (function($) {
 
-	MediaElementPlayer.prototype.buildspeed = function(player, controls, layers, media) {	
+	MediaElementPlayer.prototype.buildspeed = function(player, controls, layers, media) {
 		if (!player.isVideo)
 			return;
 
-		// add speed controls			
+		// add speed controls
 	}
-	
-	
+
+
 })(jQuery);

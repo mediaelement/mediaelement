@@ -3,7 +3,7 @@
 	MediaElementPlayer.prototype.buildloop = function(player, controls, layers, media) {
 		var 
 			// create the loop button
-			loop = 	
+			loop = 
 			$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
 				'<span></span>' +
 			'</div>')
@@ -17,6 +17,6 @@
 				} else {
 					loop.removeClass('mejs-loop-on').addClass('mejs-loop-off');
 				}
-			});		
+			});
 	}
 })(jQuery);

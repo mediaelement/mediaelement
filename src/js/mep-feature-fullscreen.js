@@ -1,21 +1,21 @@
 (function($) {
 	MediaElementPlayer.prototype.buildfullscreen = function(player, controls, layers, media) {
-			
+
 		if (!player.isVideo)
 			return;
-	
+
 		var 
 			isFullScreen = false,
 			normalHeight = 0,
-			normalWidth = 0,	
+			normalWidth = 0,
 			container = player.container,
-			fullscreenBtn = 	
+			fullscreenBtn = 
 				$('<div class="mejs-button mejs-fullscreen-button"><span></span></div>')
 				.appendTo(controls)
 				.click(function() {
 					setFullScreen(!isFullScreen);
-				}),				
-			setFullScreen = function(goFullScreen) {				
+				}),
+			setFullScreen = function(goFullScreen) {
 				switch (media.pluginType) {
 					case 'flash':
 					case 'silverlight':
@@ -23,13 +23,13 @@
 						break;
 					case 'native':
 
-						if (mejs.MediaFeatures.hasNativeFullScreen) {								
+						if (mejs.MediaFeatures.hasNativeFullScreen) {
 							if (goFullScreen) {
 								media.webkitEnterFullScreen();
 							} else {
 								media.webkitExitFullScreen();
-							}							
-						} else {			
+							}
+						} else {
 							if (goFullScreen) {
 
 								// store
@@ -46,12 +46,12 @@
 								player.$media
 									.width('100%')
 									.height('100%');
-									
+
 
 								layers.children('div')
 									.width('100%')
-									.height('100%');						
-								
+									.height('100%');
+
 								fullscreenBtn
 									.removeClass('mejs-fullscreen')
 									.addClass('mejs-unfullscreen');
@@ -64,15 +64,15 @@
 									.width(normalWidth)
 									.height(normalHeight)
 									.css('z-index', 1);
-									
+
 								player.$media
 									.width(normalWidth)
 									.height(normalHeight);
 
 								layers.children('div')
 									.width(normalWidth)
-									.height(normalHeight);						
-									
+									.height(normalHeight);
+
 								fullscreenBtn
 									.removeClass('mejs-unfullscreen')
 									.addClass('mejs-fullscreen');
@@ -80,16 +80,16 @@
 								player.setControlsSize();
 							}
 						}
-				}								
+				}
 				isFullScreen = goFullScreen;
 			};
-		
+
 		$(document).bind('keydown',function (e) {
 			if (isFullScreen && e.keyCode == 27) {
 				setFullScreen(false);
 			}
 		});
-		
+
 	}
 
 
