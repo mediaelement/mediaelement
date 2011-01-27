@@ -15,7 +15,7 @@ mejs.MediaPluginBridge = {
 
 		var pluginMediaElement = this.pluginMediaElements[id],
 			htmlMediaElement = this.htmlMediaElements[id];
-	
+
 		// find the javascript bridge
 		switch (pluginMediaElement.pluginType) {
 			case "flash":
@@ -112,7 +112,7 @@ Determines if a browser supports the <video> or <audio> element
 and returns either the native element or a Flash/Silverlight version that
 mimics HTML5 MediaElement
 */
-mejs.MediaElement = function (el, o) {	
+mejs.MediaElement = function (el, o) {
 	mejs.HtmlMediaElementShim.create(el,o);
 };
 
@@ -156,7 +156,7 @@ mejs.HtmlMediaElementShim = {
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
 		}
 	},
-	
+
 	determinePlayback: function(htmlMediaElement, options, isVideo, supportsMediaTag) {
 		var
 			mediaFiles = [],
@@ -197,7 +197,7 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		// STEP 2: Test for playback method
-	
+
 		// test for native playback first
 		if (supportsMediaTag) {
 			for (i=0; i<mediaFiles.length; i++) {
@@ -247,7 +247,7 @@ mejs.HtmlMediaElementShim = {
 
 		return result;
 	},
-	
+
 	checkType: function(url, type, isVideo) {
 		var ext;
 
@@ -259,7 +259,7 @@ mejs.HtmlMediaElementShim = {
 			return type;
 		}
 	},
-	
+
 	createErrorMessage: function(htmlMediaElement, options, downloadUrl, poster) {
 		var errorContainer = document.createElement('div');
 		errorContainer.className = 'me-cannotplay';
@@ -278,9 +278,8 @@ mejs.HtmlMediaElementShim = {
 
 		options.error(htmlMediaElement);
 	},
-	
+
 	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload, controls) {
-	
 		var width = 1,
 			height = 1,
 			pluginid = 'me_' + pluginType + '_' + (mejs.meIndex++),
@@ -328,7 +327,7 @@ mejs.HtmlMediaElementShim = {
 			'timerrate=' + options.timerRate,
 			'height=' + height];
 
-		if (mediaUrl !== null) {	
+		if (mediaUrl !== null) {
 			if (pluginType == 'flash') {
 				initVars.push('file=' + mejs.Utility.encodeUrl(mediaUrl));
 			} else {
@@ -398,9 +397,8 @@ mejs.HtmlMediaElementShim = {
 
 		// FYI: options.success will be fired by the MediaPluginBridge
 	},
-	
-	updateNative: function(htmlMediaElement, options, autoplay, preload, playback) {
 
+	updateNative: function(htmlMediaElement, options, autoplay, preload, playback) {
 		// add methods to video object to bring it into parity with Flash Object
 		for (var m in mejs.HtmlMediaElement) {
 			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
@@ -428,7 +426,6 @@ mejs.HtmlMediaElementShim = {
 		options.success(htmlMediaElement, htmlMediaElement);
 	}
 };
-
 
 window.mejs = mejs;
 window.MediaElement = mejs.MediaElement;
