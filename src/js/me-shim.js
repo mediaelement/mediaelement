@@ -1,5 +1,4 @@
 
-
 // Handles calls from Flash/Silverlight and reports them as native <video/audio> events and properties
 mejs.MediaPluginBridge = {
 
@@ -13,13 +12,13 @@ mejs.MediaPluginBridge = {
 
 	// when Flash/Silverlight is ready, it calls out to this method
 	initPlugin: function (id) {
-		
+
 		var pluginMediaElement = this.pluginMediaElements[id],
 			htmlMediaElement = this.htmlMediaElements[id];
 	
 		// find the javascript bridge
 		switch (pluginMediaElement.pluginType) {
-			case "flash":					
+			case "flash":
 				pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
 				break;
 			case "silverlight":
@@ -42,7 +41,7 @@ mejs.MediaPluginBridge = {
 			i,
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
-		
+
 		pluginMediaElement.ended = false;
 		pluginMediaElement.paused = true;
 
@@ -60,7 +59,7 @@ mejs.MediaPluginBridge = {
 
 		// fake the newer W3C buffered TimeRange (loaded and total have been removed)
 		bufferedTime = values.bufferedTime || 0;
-		
+
 		e.target.buffered = e.buffered = {
 			start: function(index) {
 				return 0;
@@ -95,11 +94,11 @@ mejs.MediaElementDefaults = {
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
 	defaultVideoWidth: 480,
-	// default if the <video height> is not specified		
+	// default if the <video height> is not specified
 	defaultVideoHeight: 270,
 	// overrides <video width>
 	pluginWidth: -1,
-	// overrides <video height>		
+	// overrides <video height>
 	pluginHeight: -1,
 	// rate in milliseconds for Flash and Silverlight to fire the timeupdate event
 	// larger number is less accurate, but less strain on plugin->JavaScript bridge
@@ -117,13 +116,13 @@ mejs.MediaElement = function (el, o) {
 	mejs.HtmlMediaElementShim.create(el,o);
 };
 
-mejs.HtmlMediaElementShim = {		
+mejs.HtmlMediaElementShim = {
 
-	create: function(el, o) {			
+	create: function(el, o) {
 		var
 			options = mejs.MediaElementDefaults,
-			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,					
-			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video'),			
+			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
+			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video'),
 			supportsMediaTag = (typeof(htmlMediaElement.canPlayType) != 'undefined'),
 			playback = {method:'', url:''},
 			poster = htmlMediaElement.getAttribute('poster'),
@@ -136,36 +135,35 @@ mejs.HtmlMediaElementShim = {
 		for (prop in o) {
 			options[prop] = o[prop];
 		}
-		
+
 		// check for real poster
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
 		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
 		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
-		
+
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
 
 		if (playback.method == 'native') {
 			// add methods to native HTMLMediaElement
-			this.updateNative( htmlMediaElement, options, autoplay, preload, playback);				
+			this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
 			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
-		}			
+		}
 	},
 	
 	determinePlayback: function(htmlMediaElement, options, isVideo, supportsMediaTag) {
-		
 		var
 			mediaFiles = [],
 			i,
 			j,
-			k,	
-			l,			
+			k,
+			l,
 			n,
 			url,
 			type,
@@ -174,11 +172,11 @@ mejs.HtmlMediaElementShim = {
 			pluginName,
 			pluginVersions,
 			pluginInfo;
-		
+
 		// STEP 1: Get Files from <video src> or <source src>
-		
+
 		// supplied type overrides all HTML
-		if (typeof (options.type) != 'undefined' && options.type !== '') {								
+		if (typeof (options.type) != 'undefined' && options.type !== '') {
 			mediaFiles.push({type:options.type, url:null});
 
 		// test for src attribute first
@@ -196,10 +194,10 @@ mejs.HtmlMediaElementShim = {
 					url = n.getAttribute('src');
 					type = this.checkType(url, n.getAttribute('type'), isVideo);
 					mediaFiles.push({type:type, url:url});
-				}							
-			}			
+				}
+			}
 		}
-		
+
 		// STEP 2: Test for playback method
 	
 		// test for native playback first
@@ -207,36 +205,35 @@ mejs.HtmlMediaElementShim = {
 			for (i=0; i<mediaFiles.length; i++) {
 				if (htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== '') {
 					result.method = 'native';
-					result.url = mediaFiles[i].url;					
+					result.url = mediaFiles[i].url;
 					return result;
 				}
 			}
 		}
 
-		
-		// if native playback didn't work, then test plugins		
+		// if native playback didn't work, then test plugins
 		for (i=0; i<mediaFiles.length; i++) {
 			type = mediaFiles[i].type;
-			
+
 			// test all plugins in order of preference [silverlight, flash]
 			for (j=0; j<options.plugins.length; j++) {
-				
+
 				pluginName = options.plugins[j];
-				
+
 				// test version of plugin (for future features)
-				pluginVersions = mejs.plugins[pluginName];				
+				pluginVersions = mejs.plugins[pluginName];
 				for (k=0; k<pluginVersions.length; k++) {
 					pluginInfo = pluginVersions[k];
-					
+
 					// test if user has the correct plugin version
 					if (mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
-					
+
 						// test for plugin playback types
 						for (l=0; l<pluginInfo.types.length; l++) {
 							// find plugin that can play the type
 							if (type == pluginInfo.types[l]) {
 								result.method = pluginName;
-								result.url = mediaFiles[i].url;					
+								result.url = mediaFiles[i].url;
 								return result;
 							}
 						}
@@ -244,19 +241,18 @@ mejs.HtmlMediaElementShim = {
 				}
 			}
 		}
-		
+
 		// what if there's nothing to play? just grab the first available
 		if (result.method === '') {
 			result.url = mediaFiles[0].url;
 		}
-		
-		return result;			
-		
+
+		return result;
 	},
 	
 	checkType: function(url, type, isVideo) {
 		var ext;
-		
+
 		// if no type is supplied, fake it with the extension
 		if (url && !type) {
 			ext = url.substring(url.lastIndexOf('.') + 1);
@@ -269,20 +265,20 @@ mejs.HtmlMediaElementShim = {
 	createErrorMessage: function(htmlMediaElement, options, downloadUrl, poster) {
 		var errorContainer = document.createElement('div');
 		errorContainer.className = 'me-cannotplay';
-		
+
 		try {
 			errorContainer.style.width = htmlMediaElement.width + 'px';
 			errorContainer.style.height = htmlMediaElement.height + 'px';
 		} catch (e) {}
-					
+
 		errorContainer.innerHTML = (poster !== '') ?
 			'<a href="' + downloadUrl + '"><img src="' + poster + '" /></a>' :
 			'<a href="' + downloadUrl + '"><span>Download File</span></a>';
-		
+
 		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);
 		htmlMediaElement.style.display = 'none';
 
-		options.error(htmlMediaElement);		
+		options.error(htmlMediaElement);
 	},
 	
 	createPlugin:function(htmlMediaElement, options, isVideo, pluginType, mediaUrl, poster, autoplay, preload, controls) {
@@ -295,7 +291,7 @@ mejs.HtmlMediaElementShim = {
 			specialIEContainer,
 			node,
 			initVars;
-			
+
 		// check for placement inside a <p> tag (sometimes WYSIWYG editors do this)
 		node = htmlMediaElement.parentNode;
 		while (node !== null && node.tagName.toLowerCase() != 'body') {
@@ -304,15 +300,15 @@ mejs.HtmlMediaElementShim = {
 				break;
 			}
 			node = node.parentNode;
-		}			
+		}
 
 		if (isVideo) {
 			width = (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
-			height = (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;				
+			height = (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;
 		} else {
 			if (options.enablePluginDebug) {
 				width = 320;
-				height = 240;					
+				height = 240;
 			}
 		}
 
@@ -321,7 +317,7 @@ mejs.HtmlMediaElementShim = {
 		mejs.MediaPluginBridge.registerPluginElement(pluginid, pluginMediaElement, htmlMediaElement);
 
 		// add container (must be added to DOM before inserting HTML for IE)
-		container.className = 'me-plugin';			
+		container.className = 'me-plugin';
 		htmlMediaElement.parentNode.insertBefore(container, htmlMediaElement);
 
 		// flash/silverlight vars
@@ -330,7 +326,7 @@ mejs.HtmlMediaElementShim = {
 			'isvideo=' + ((isVideo) ? "true" : "false"),
 			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
-			'width=' + width,			
+			'width=' + width,
 			'timerrate=' + options.timerRate,
 			'height=' + height];
 
@@ -349,8 +345,8 @@ mejs.HtmlMediaElementShim = {
 		}
 		if (controls) {
 			initVars.push('controls=true'); // shows controls in the plugin if desired
-		}		
-		
+		}
+
 		switch (pluginType) {
 			case 'silverlight':
 				container.innerHTML =
@@ -401,25 +397,25 @@ mejs.HtmlMediaElementShim = {
 		}
 		// hide original element
 		htmlMediaElement.style.display = 'none';
-		
+
 		// FYI: options.success will be fired by the MediaPluginBridge
 	},
 	
 	updateNative: function(htmlMediaElement, options, autoplay, preload, playback) {
-		
+
 		// add methods to video object to bring it into parity with Flash Object
 		for (var m in mejs.HtmlMediaElement) {
 			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
-		
+
 		// special case to enforce preload attribute (Chrome doesn't respect this)
 		if (mejs.MediaFeatures.isChrome && preload == 'none' && autoplay !== '') {
 			// forces the browser to stop loading
-			
+
 			htmlMediaElement.src = '';
-			htmlMediaElement.load();			
+			htmlMediaElement.load();
 			htmlMediaElement.canceledPreload = true;
-			
+
 			htmlMediaElement.addEventListener('play',function() {
 				if (htmlMediaElement.canceledPreload) {
 					htmlMediaElement.src = playback.url;
@@ -429,10 +425,9 @@ mejs.HtmlMediaElementShim = {
 				}
 			}, false);
 		}
-		
-		
+
 		// fire success code
-		options.success(htmlMediaElement, htmlMediaElement);		
+		options.success(htmlMediaElement, htmlMediaElement);
 	}
 };
 
