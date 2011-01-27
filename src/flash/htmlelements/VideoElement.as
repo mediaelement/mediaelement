@@ -16,9 +16,9 @@
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
 
-        private var _connection:NetConnection;
-        private var _stream:NetStream;
-        private var _video:Video;
+		private var _connection:NetConnection;
+		private var _stream:NetStream;
+		private var _video:Video;
 		private var _element:FlashMediaElement;
 		private var _soundTransform;
 		private var _oldVolume:Number = 1;
@@ -85,9 +85,9 @@
 			_video = new Video();
 			addChild(_video);
 
-            _connection = new NetConnection();
-            _connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
-            _connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+			_connection = new NetConnection();
+			_connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
+			_connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
 			//_connection.connect(null);
 
 			_timer = new Timer(timerRate);
@@ -109,64 +109,64 @@
 		}
 
 		// internal events
-        private function netStatusHandler(event:NetStatusEvent):void {
+		private function netStatusHandler(event:NetStatusEvent):void {
 			trace("netStatus", event.info.code);
 
 			switch (event.info.code) {
 
 				case "NetStream.Buffer.Empty":
-                case "NetStream.Buffer.Full":
+				case "NetStream.Buffer.Full":
 					_bytesLoaded = _stream.bytesLoaded;
 					_bytesTotal = _stream.bytesTotal;
 
 					sendEvent(HtmlMediaEvent.PROGRESS);
-                    break;
+					break;
 
 				case "NetConnection.Connect.Success":
-                    connectStream();
-                    break;
-                case "NetStream.Play.StreamNotFound":
-                    trace("Unable to locate video");
-                    break;
+					connectStream();
+					break;
+				case "NetStream.Play.StreamNotFound":
+					trace("Unable to locate video");
+					break;
 
 				// STREAM
-                case "NetStream.Play.Start":
+				case "NetStream.Play.Start":
 					_isPaused = false;
 					sendEvent(HtmlMediaEvent.PLAY);
 					sendEvent(HtmlMediaEvent.PLAYING);
 					_timer.start();
-                    break;
+					break;
 
-                case "NetStream.Seek.Notify":
+				case "NetStream.Seek.Notify":
 					sendEvent(HtmlMediaEvent.SEEKED);
-                    break;
+					break;
 
 				case "NetStream.Pause.Notify":
 					_isPaused = true;
 					sendEvent(HtmlMediaEvent.PAUSE);
-                    break;
+					break;
 
 				case "NetStream.Play.Stop":
 					_isPaused = false;
 					_timer.stop();
 					sendEvent(HtmlMediaEvent.ENDED);
-                    break;
+					break;
 
-            }
-        }
+			}
+		}
 
-        private function connectStream():void {
+		private function connectStream():void {
 			trace("connectStream");
-            _stream = new NetStream(_connection);
-            
+			_stream = new NetStream(_connection);
+			
 			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
-            _stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
+			_stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
 
 			var customClient:Object = new Object();
 			customClient.onMetaData = onMetaDataHandler;
 			_stream.client = customClient;
 
-            _video.attachNetStream(_stream);
+			_video.attachNetStream(_stream);
 
 			_isConnected = true;
 
@@ -175,15 +175,15 @@
 				_playWhenConnected = false;
 			}
 
-        }
+		}
 
-        private function securityErrorHandler(event:SecurityErrorEvent):void {
-            trace("securityErrorHandler: " + event);
-        }
+		private function securityErrorHandler(event:SecurityErrorEvent):void {
+			trace("securityErrorHandler: " + event);
+		}
 
 		private function asyncErrorHandler(event:AsyncErrorEvent):void {
-            // ignore AsyncErrorEvent events.
-        }
+			// ignore AsyncErrorEvent events.
+		}
 
 
 		private function onMetaDataHandler(info:Object):void {
