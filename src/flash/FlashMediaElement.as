@@ -8,8 +8,8 @@
 	import flash.system.*;
 
 	import flash.media.Video;
-    import flash.net.NetConnection;
-    import flash.net.NetStream;
+	import flash.net.NetConnection;
+	import flash.net.NetStream;
 
 	import flash.filters.DropShadowFilter;
 	import flash.utils.Timer;
@@ -115,16 +115,16 @@
 			}
 
 			// debugging
-            _output = new TextField();
+			_output = new TextField();
 			_output.textColor = 0xeeeeee;
-            _output.width = stage.stageWidth - 100;
-            _output.height = stage.stageHeight;
-            _output.multiline = true;
-            _output.wordWrap = true;
-            _output.border = false;
+			_output.width = stage.stageWidth - 100;
+			_output.height = stage.stageHeight;
+			_output.multiline = true;
+			_output.wordWrap = true;
+			_output.border = false;
 			_output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
 
-            _output.text = "Initializing...\n";
+			_output.text = "Initializing...\n";
 			addChild(_output);
 			_output.visible = _debug;
 
@@ -151,12 +151,12 @@
 			//_fullscreenButton.alpha = 0;
 			_fullscreenButton.visible = false;
 
-		    _output.appendText("stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");
-            _output.appendText("file: " + _mediaUrl + "\n");
-            _output.appendText("autoplay: " + _autoplay.toString() + "\n");
-            _output.appendText("isvideo: " + _isVideo.toString() + "\n");
-            _output.appendText("smoothing: " + _enableSmoothing.toString() + "\n");
-            _output.appendText("timerrate: " + _timerRate.toString() + "\n");
+			_output.appendText("stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");
+			_output.appendText("file: " + _mediaUrl + "\n");
+			_output.appendText("autoplay: " + _autoplay.toString() + "\n");
+			_output.appendText("isvideo: " + _isVideo.toString() + "\n");
+			_output.appendText("smoothing: " + _enableSmoothing.toString() + "\n");
+			_output.appendText("timerrate: " + _timerRate.toString() + "\n");
 			_output.appendText("displayState: " +(stage.hasOwnProperty("displayState")).toString() + "\n");
 
 			// attach javascript
@@ -193,10 +193,10 @@
 					_output.appendText("Success...\n");
 
 				} catch (error:SecurityError) {
-                    _output.appendText("A SecurityError occurred: " + error.message + "\n");
-                } catch (error:Error) {
-                    _output.appendText("An Error occurred: " + error.message + "\n");
-                }
+					_output.appendText("A SecurityError occurred: " + error.message + "\n");
+				} catch (error:Error) {
+					_output.appendText("An Error occurred: " + error.message + "\n");
+				}
 
 			}
 

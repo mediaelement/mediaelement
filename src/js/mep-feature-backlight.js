@@ -281,7 +281,7 @@
 
 
 	function getMidColors(canvas, context, blocks, blockDepth, side) {
-        var width = canvas.width,
+		var width = canvas.width,
 			height = canvas.height,
 			blockHeight = (side == 'top' || side == 'bottom') ? blockDepth : Math.ceil(height / blocks), // height of the analyzed block
 			blockWidth = (side == 'top' || side == 'bottom') ? Math.ceil(width / blocks) : blockDepth,
@@ -316,7 +316,7 @@
 		}
 
 
-        return result;
+		return result;
 	}
 
 	function averageColor(c1,c2) {
