@@ -207,8 +207,8 @@
 				_stream.pause();
 			}
 
-			_isRTMP = !!_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//);
 			_currentUrl = url;
+			_isRTMP = !!_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//);
 			_isConnected = false;
 			_hasStartedPlaying = false;
 		}
