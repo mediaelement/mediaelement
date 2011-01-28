@@ -27,7 +27,7 @@ mejs.MediaPluginBridge = {
 				break;
 		}
 
-		if (pluginMediaElement.success) {
+		if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
 			pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
 		}
 	},
