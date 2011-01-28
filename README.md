@@ -73,6 +73,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
+*2.0.6 (in progress) - XX.XX*
+
+* whitespace cleanup on files
+* preventing flash/sl plugins from reinitializing when they are removed
+
 *2.0.5 (2011/01/25) - 31.7kb*
 
 * Added error object to player
