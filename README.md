@@ -73,10 +73,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.0.6 (in progress) - XX.XX*
+*2.0.6 (2011/02/04) - 31.7kb*
 
-* whitespace cleanup on files
-* preventing flash/sl plugins from reinitializing when they are removed
+* Whitespace cleanup on files
+* Preventing flash/sl plugins from reinitializing when they are removed by another script
+* Fixed IE JavaScript errors in Flash fallback (seen in Wordpress)
+* Added 'play' event to Silverlight to prevent errors
 
 *2.0.5 (2011/01/25) - 31.7kb*
 
@@ -230,5 +232,6 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ###TODO
 
+* Fix startVolume for plugins
 * Loading indicator
 * Support 100% width and height
