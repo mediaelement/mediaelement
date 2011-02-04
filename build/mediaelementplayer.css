@@ -5,18 +5,18 @@
 	font-family: Helvetica, Arial;
 }
 
-.mejs-container-fullscreen { 
-	position: fixed; 
-	left: 0; 
-	top: 0; 
-	right: 0; 
-	bottom: 0; 
-	overflow: hidden; 
+.mejs-container-fullscreen {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
 }
 .mejs-container-fullscreen .mejs-mediaelement,
-.mejs-container-fullscreen video { 	
-	width: 100%; 
-	height: 100%; 
+.mejs-container-fullscreen video {
+	width: 100%;
+	height: 100%;
 }
 
 /* Start: LAYERS */
@@ -64,10 +64,10 @@
 	padding: 0;
 	bottom: 0;
 	left: 0;
-	background: url(background.png);	
+	background: url(background.png);
 	background: rgba(0, 0, 0, 0.7);
 	height: 30px;
-	width: 100%;	
+	width: 100%;
 }
 .mejs-container .mejs-controls  div {
 	list-style-type: none;
@@ -77,9 +77,9 @@
 	margin: 0;
 	padding: 0;
 	width: 26px;
-	height: 26px;	
+	height: 26px;
 	font-size: 11px;
-	line-height: 11px;	
+	line-height: 11px;
 	font-family: Helvetica, Arial;
 }
 .mejs-controls .mejs-button span {
@@ -91,29 +91,29 @@
 	margin: 7px 5px;
 	height: 16px;
 	width: 16px;
-	background: transparent url(controls.png) 0 0 no-repeat;	
+	background: transparent url(controls.png) 0 0 no-repeat;
 }
 /* End: CONTROL BAR */
 
 /* Start: Time (current / duration) */
 .mejs-container .mejs-controls .mejs-time {
 	color: #fff;
-	display: block;	
+	display: block;
 	height: 17px;
 	width: auto;
 	padding: 8px 3px 0 3px ;
-	overflow: hidden;	
+	overflow: hidden;
 	text-align: center;
 	padding: auto 4px;
 }
 .mejs-container .mejs-controls .mejs-time span {
 	font-size: 11px;
-	color: #fff;	
+	color: #fff;
 	line-height: 12px;
-	display: block;	
+	display: block;
 	float: left;
 	margin: 1px 2px 0 0;
-	width: auto;	
+	width: auto;
 }
 /* End: Time (current / duration) */
 
@@ -140,13 +140,13 @@
 	height: 10px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	border-radius: 2px;	
-	cursor: pointer;	
+	border-radius: 2px;
+	cursor: pointer;
 }
 .mejs-controls .mejs-time-rail .mejs-time-total {
 	margin: 5px;
 	background: #333;
-	background: rgba(50,50,50,.8);	
+	background: rgba(50,50,50,.8);
 }
 .mejs-controls .mejs-time-rail .mejs-time-loaded {
 	background: #3caac8;
@@ -167,17 +167,17 @@
 	background: #fff;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
-	border-radius: 5px;	
-	cursor: pointer;	
+	border-radius: 5px;
+	cursor: pointer;
 	border: solid 2px #333;
 	top: -2px;
 	text-align: center;
 }
 
-.mejs-controls .mejs-time-rail .mejs-time-float {	
-	visibility: hidden;	
+.mejs-controls .mejs-time-rail .mejs-time-float {
+	visibility: hidden;
 	position: absolute;
-	display: block;	
+	display: block;
 	background: #eee;
 	width: 36px;
 	height: 17px;
@@ -187,16 +187,16 @@
 	text-align: center;
 	color: #111;
 }
-.mejs-controls .mejs-time-rail:hover .mejs-time-float {	
+.mejs-controls .mejs-time-rail:hover .mejs-time-float {
 	visibility: visible;
 }
-.mejs-controls .mejs-time-rail .mejs-time-float-current {	
+.mejs-controls .mejs-time-rail .mejs-time-float-current {
 	margin: 2px;
 	width: 30px;
 	display: block;
 	text-align: center;
 }
-.mejs-controls .mejs-time-rail .mejs-time-float-corner {	
+.mejs-controls .mejs-time-rail .mejs-time-float-corner {
 	position: absolute;
 	display: block;
 	width: 0;
@@ -208,8 +208,8 @@
 	-moz-border-radius: 0;
 	border-radius: 0;
 	top: 15px;
-	left: 13px;	
-	
+	left: 13px;
+
 }
 
 
@@ -252,21 +252,21 @@
 	display: none;
 	height: 115px;
 	width: 25px;
-	background: url(background.png);	
+	background: url(background.png);
 	background: rgba(0, 0, 0, 0.7);
-	-webkit-border-radius: 0;	
-	-moz-border-radius: 0;	
-	border-radius: 0;	
-	top: -115px;	
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	top: -115px;
 	left: 0;
 	z-index: 1;
 	position: absolute;
 	margin: 0;
 }
 .mejs-controls .mejs-volume-button:hover {
-	-webkit-border-radius: 0 0 4px 4px ;	
-	-moz-border-radius: 0 0 4px 4px ;	
-	border-radius: 0 0 4px 4px ;	
+	-webkit-border-radius: 0 0 4px 4px ;
+	-moz-border-radius: 0 0 4px 4px ;
+	border-radius: 0 0 4px 4px ;
 }
 .mejs-controls .mejs-volume-button:hover .mejs-volume-slider {
 	display: block;
@@ -275,18 +275,18 @@
 .mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-total {
 	position: absolute;
 	left: 11px;
-	top: 8px;	
+	top: 8px;
 	width: 2px;
 	height: 100px;
-	background: #ddd;	
+	background: #ddd;
 	background: rgba(255, 255, 255, 0.5);
 	margin: 0;
-}	
+}
 
 .mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-current {
 	position: absolute;
 	left: 11px;
-	top: 8px;	
+	top: 8px;
 	width: 2px;
 	height: 100px;
 	background: #ddd;
@@ -300,12 +300,12 @@
 	top: -3px;
 	width: 16px;
 	height: 6px;
-	background: #ddd;	
+	background: #ddd;
 	background: rgba(255, 255, 255, 0.9);
 	cursor: N-resize;
-	-webkit-border-radius: 1px;	
-	-moz-border-radius: 1px;	
-	border-radius: 1px;	
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	border-radius: 1px;
 	margin: 0;
 }
 
@@ -335,8 +335,8 @@
 	padding: 10px;
 	overflow: hidden;
 	-webkit-border-radius: 0;
-	-moz-border-radius: 0;	
-	border-radius: 0;	
+	-moz-border-radius: 0;
+	border-radius: 0;
 }
 .mejs-controls .mejs-captions-button:hover  .mejs-captions-selector {
 	visibility: visible;
@@ -367,7 +367,7 @@
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: helvetica, arial;	
+	font-family: helvetica, arial;
 	font-size: 10px;
 }
 
@@ -388,7 +388,7 @@
 	position: absolute;
 	float: left;
 	background: url(background.png);
-	background: rgba(0,0,0,0.8);		
+	background: rgba(0,0,0,0.8);
 	overflow: hidden;
 	border: 0;
 }
@@ -423,7 +423,7 @@
 	margin: 3px 0 4px 0;
 	display: block;
 	white-space:nowrap;
-	text-overflow: ellipsis;	
+	text-overflow: ellipsis;
 }
 
 
@@ -433,7 +433,7 @@
 	left: 0;
 	text-align:center;
 	/*font-weight: bold;*/
-	line-height: 22px;	
+	line-height: 22px;
 	font-size: 12px;
 	color: #fff;
 }
@@ -444,7 +444,7 @@
 .mejs-captions-layer[lang=ar] {
 	font-size: 20px;
 	font-weight: normal;
-} 
+}
 
 .mejs-captions-position {
 	position: absolute;
@@ -452,10 +452,10 @@
 	bottom: 15px;
 }
 
-.mejs-captions-text {	
+.mejs-captions-text {
 	padding: 3px 5px;
-	
-	background: url(background.png);	
+
+	background: url(background.png);
 	background: rgba(0, 0, 0, 0.8);
 
 }
@@ -468,7 +468,7 @@
 }
 
 /* Start: ERROR */
-.me-cannotplay {	
+.me-cannotplay {
 }
 .me-cannotplay a {
 	color: #fff;
