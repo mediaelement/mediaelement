@@ -188,7 +188,9 @@
 					ExternalInterface.addCallback("setVideoSize", setVideoSize);
 
 					// fire init method
-					ExternalInterface.call("mejs.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
+					if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+						ExternalInterface.call("mejs.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
+					}
 
 					_output.appendText("Success...\n");
 
@@ -372,7 +374,7 @@
 		}
 
 		// SEND events to JavaScript
-		public function sendEvent(eventName:String, eventValues:String) {
+		public function sendEvent(eventName:String, eventValues:String) {			
 
 			// special video event
 			if (eventName == HtmlMediaEvent.LOADEDMETADATA && _isVideo) {
@@ -399,24 +401,28 @@
 			_duration.text = secondsToTimeCode(_mediaElement.duration());
 			_currentTime.text = secondsToTimeCode(_mediaElement.currentTime());
 
-			//_output.appendText("event:" + eventName + " : " + eventValues);
-			trace("event", eventName, eventValues);
-
-			if (eventValues == null || eventValues == "")
-				eventValues = "{}";
-
-			/*
-			OLD DIRECT METHOD
-			ExternalInterface.call(
-				"function(id, name) { mejs.MediaPluginBridge.fireEvent(id,name," + eventValues + "); }", 
-				ExternalInterface.objectID, 
-				eventName);
-			*/
-
-			// use set timeout for performance reasons
-			//if (!_showControls) {
-				ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
-			//}
+			
+			if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+				
+				//_output.appendText("event:" + eventName + " : " + eventValues);
+				trace("event", eventName, eventValues);
+	
+				if (eventValues == null || eventValues == "")
+					eventValues = "{}";
+	
+				/*
+				OLD DIRECT METHOD
+				ExternalInterface.call(
+					"function(id, name) { mejs.MediaPluginBridge.fireEvent(id,name," + eventValues + "); }", 
+					ExternalInterface.objectID, 
+					eventName);
+				*/				
+				
+				// use set timeout for performance reasons
+				//if (!_showControls) {
+					ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
+				//}
+			}
 		}
 
 		function secondsToTimeCode(seconds:Number):String {
