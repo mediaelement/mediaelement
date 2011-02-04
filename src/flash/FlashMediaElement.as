@@ -173,22 +173,23 @@
 
 				_output.appendText("Adding callbacks...\n");
 				try {
-					// add HTML media methods
-					ExternalInterface.addCallback("playMedia", playMedia);
-					ExternalInterface.addCallback("loadMedia", loadMedia);
-					ExternalInterface.addCallback("pauseMedia", pauseMedia);
-					ExternalInterface.addCallback("stopMedia", stopMedia);
-
-					ExternalInterface.addCallback("setSrc", setSrc);
-					ExternalInterface.addCallback("setCurrentTime", setCurrentTime);
-					ExternalInterface.addCallback("setVolume", setVolume);
-					ExternalInterface.addCallback("setMuted", setMuted);
-
-					ExternalInterface.addCallback("setFullscreen", setFullscreen);
-					ExternalInterface.addCallback("setVideoSize", setVideoSize);
-
-					// fire init method
 					if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+						
+						// add HTML media methods
+						ExternalInterface.addCallback("playMedia", playMedia);
+						ExternalInterface.addCallback("loadMedia", loadMedia);
+						ExternalInterface.addCallback("pauseMedia", pauseMedia);
+						ExternalInterface.addCallback("stopMedia", stopMedia);
+	
+						ExternalInterface.addCallback("setSrc", setSrc);
+						ExternalInterface.addCallback("setCurrentTime", setCurrentTime);
+						ExternalInterface.addCallback("setVolume", setVolume);
+						ExternalInterface.addCallback("setMuted", setMuted);
+	
+						ExternalInterface.addCallback("setFullscreen", setFullscreen);
+						ExternalInterface.addCallback("setVideoSize", setVideoSize);
+	
+						// fire init method					
 						ExternalInterface.call("mejs.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
 					}
 
