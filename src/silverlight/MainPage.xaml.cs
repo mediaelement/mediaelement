@@ -173,6 +173,7 @@ namespace SilverlightMediaElement
 					_isPaused = false;
 					_isAttemptingToPlay = false;
 					StartTimer();
+					SendEvent("play");
 					SendEvent("playing");
 					break;
 				case MediaElementState.Paused:
