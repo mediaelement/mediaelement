@@ -107,8 +107,8 @@ package htmlelements
 			// send timeupdate
 			sendEvent(HtmlMediaEvent.TIMEUPDATE);
 
-			// sometimes the ended even doesn't fire, here's a fake one
-			if (_currentTime >= _duration-0.2) {
+			// sometimes the ended event doesn't fire, here's a fake one
+			if (_duration > 0 && _currentTime >= _duration-0.2) {
 				handleEnded();
 			}
 		}
