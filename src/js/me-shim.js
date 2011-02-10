@@ -172,7 +172,7 @@ mejs.HtmlMediaElementShim = {
 			pluginVersions,
 			pluginInfo;
 
-		// STEP 1: Get Files from <video src> or <source src>
+		// STEP 1: Get URL and type from <video src> or <source src>
 
 		// supplied type overrides all HTML
 		if (typeof (options.type) != 'undefined' && options.type !== '') {
@@ -201,7 +201,10 @@ mejs.HtmlMediaElementShim = {
 		// test for native playback first
 		if (supportsMediaTag) {
 			for (i=0; i<mediaFiles.length; i++) {
-				if (htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== '') {
+				// normal check
+				if (htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== '' 
+					// special case for Mac/Safari 5.0.3 which answers '' to canPlayType('audio/mp3') but 'maybe' to canPlayType('audio/mpeg')
+					|| htmlMediaElement.canPlayType(mediaFiles[i].type.replace(/mp3/,'mpeg')).replace(/no/, '') !== '') {
 					result.method = 'native';
 					result.url = mediaFiles[i].url;
 					return result;
