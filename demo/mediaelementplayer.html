@@ -69,5 +69,16 @@ $('audio,video').mediaelementplayer();
 
 </script>
 
+<input type="button" id="stopall" value="Stop all">
+
+<script>
+$('#stopall').click(function() {
+    $('video, audio').each(function() {
+          $(this)[0].player.pause();
+    });
+});
+</script>
+
+
 </body>
 </html>
