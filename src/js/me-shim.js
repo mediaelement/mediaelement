@@ -256,7 +256,15 @@ mejs.HtmlMediaElementShim = {
 			ext = url.substring(url.lastIndexOf('.') + 1);
 			return ((isVideo) ? 'video' : 'audio') + '/' + ext;
 		} else {
-			return type;
+			// only return the mime part of the type in case the attribute contains the codec
+			// see http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html#the-source-element
+			// `video/mp4; codecs="avc1.42E01E, mp4a.40.2"` becomes `video/mp4`
+			
+			if (type && ~type.indexOf(';')) {
+				return type.substr(0, type.indexOf(';')); 
+			} else {
+				return type;
+			}
 		}
 	},
 
