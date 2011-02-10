@@ -174,10 +174,8 @@ package htmlelements
 			_soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
 
 			_timer.start();
-
-			_isPaused = false;
-			sendEvent(HtmlMediaEvent.PLAY);
-			sendEvent(HtmlMediaEvent.PLAYING);
+			
+			didStartPlaying();
 		}
 
 		public function pause():void {
@@ -201,8 +199,14 @@ package htmlelements
 
 			sendEvent(HtmlMediaEvent.SEEKED);
 			_timer.start();
-
-			//play();
+			
+			didStartPlaying();
+		}
+		
+		private function didStartPlaying():void {
+			_isPaused = false;
+			sendEvent(HtmlMediaEvent.PLAY);
+			sendEvent(HtmlMediaEvent.PLAYING);
 		}
 
 		public function stop():void {
