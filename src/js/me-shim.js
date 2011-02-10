@@ -81,16 +81,14 @@ mejs.MediaElementDefaults = {
 	// allows testing on HTML5, flash, silverlight
 	// auto: attempts to detect what the browser can do
 	// native: forces HTML5 playback
-	// nonnative: disallows HTML5, will attempt either Flash or Silverlight
-	// flash: forces Flash
-	// silverlight: forces Silverlight
+	// shim: disallows HTML5, will attempt either Flash or Silverlight
 	// none: forces fallback view
 	mode: 'auto',
+	// remove or reorder to change plugin priority and availability
+	plugins: ['flash','silverlight'],
 	// shows debug errors on screen
 	enablePluginDebug: false,
-	// remove or reorder to change plugin priority
-	plugins: ['flash','silverlight'],
-	// specify to force MediaElement into a mode
+	// overrides the type specified, useful for dynamic instantiation
 	type: '',
 	// path to Flash and Silverlight plugins
 	pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
