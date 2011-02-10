@@ -78,6 +78,14 @@ mejs.MediaPluginBridge = {
 Default options
 */
 mejs.MediaElementDefaults = {
+	// allows testing on HTML5, flash, silverlight
+	// auto: attempts to detect what the browser can do
+	// native: forces HTML5 playback
+	// nonnative: disallows HTML5, will attempt either Flash or Silverlight
+	// flash: forces Flash
+	// silverlight: forces Silverlight
+	// none: forces fallback view
+	mode: 'auto',
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// remove or reorder to change plugin priority
