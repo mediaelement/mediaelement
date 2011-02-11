@@ -205,7 +205,7 @@ mejs.HtmlMediaElementShim = {
 		// STEP 2: Test for playback method
 
 		// test for native playback first
-		if (supportsMediaTag) {
+		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native')) {
 			for (i=0; i<mediaFiles.length; i++) {
 				// normal check
 				if (htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== '' 
@@ -219,36 +219,38 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		// if native playback didn't work, then test plugins
-		for (i=0; i<mediaFiles.length; i++) {
-			type = mediaFiles[i].type;
+		if (options.mode === 'auto' || options.mode === 'shim') {
+			for (i=0; i<mediaFiles.length; i++) {
+				type = mediaFiles[i].type;
 
-			// test all plugins in order of preference [silverlight, flash]
-			for (j=0; j<options.plugins.length; j++) {
+				// test all plugins in order of preference [silverlight, flash]
+				for (j=0; j<options.plugins.length; j++) {
 
-				pluginName = options.plugins[j];
+					pluginName = options.plugins[j];
 
-				// test version of plugin (for future features)
-				pluginVersions = mejs.plugins[pluginName];
-				for (k=0; k<pluginVersions.length; k++) {
-					pluginInfo = pluginVersions[k];
+					// test version of plugin (for future features)
+					pluginVersions = mejs.plugins[pluginName];
+					for (k=0; k<pluginVersions.length; k++) {
+						pluginInfo = pluginVersions[k];
 
-					// test if user has the correct plugin version
-					if (mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
+						// test if user has the correct plugin version
+						if (mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
 
-						// test for plugin playback types
-						for (l=0; l<pluginInfo.types.length; l++) {
-							// find plugin that can play the type
-							if (type == pluginInfo.types[l]) {
-								result.method = pluginName;
-								result.url = mediaFiles[i].url;
-								return result;
+							// test for plugin playback types
+							for (l=0; l<pluginInfo.types.length; l++) {
+								// find plugin that can play the type
+								if (type == pluginInfo.types[l]) {
+									result.method = pluginName;
+									result.url = mediaFiles[i].url;
+									return result;
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-
+		
 		// what if there's nothing to play? just grab the first available
 		if (result.method === '') {
 			result.url = mediaFiles[0].url;
