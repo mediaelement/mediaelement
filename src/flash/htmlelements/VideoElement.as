@@ -337,7 +337,7 @@
 			var values:String = 
 							"{duration:" + _duration + 
 							",framerate:" + _framerate + 
-							",currentTime:" + _stream.time + 
+							",currentTime:" + (_stream != null ? _stream.time : 0) + 
 							",muted:" + _isMuted + 
 							",paused:" + _isPaused + 
 							",ended:" + _isEnded + 
