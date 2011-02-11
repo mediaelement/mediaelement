@@ -73,6 +73,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
+*2.x.x (in progress) - *
+
+* Added 'mode' option to force native (HTML5) or shim (Flash,Silverlight) modes
+* Fixed audio bug in Flash (thanks Andy!)
+
 *2.0.6 (2011/02/04) - 31.7kb*
 
 * Whitespace cleanup on files
@@ -236,3 +241,5 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Poster constraints
 * Loading indicator
 * Support 100% width and height
+* Fix flash audio bug
+* Add dynamic creation support
