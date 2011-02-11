@@ -45,7 +45,6 @@
 		private var _playWhenConnected:Boolean = false;
 		private var _hasStartedPlaying:Boolean = false;
 
-
 		public function get video():Video {
 			return _video;
 		}
@@ -158,6 +157,10 @@
 		private function connectStream():void {
 			trace("connectStream");
 			_stream = new NetStream(_connection);
+			
+			// explicitly set the sound since it could have come before the connection was made
+			_soundTransform = new SoundTransform(_volume);
+			_stream.soundTransform = _soundTransform;						
 			
 			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
 			_stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
@@ -296,11 +299,11 @@
 		}
 
 		public function setVolume(volume:Number):void {
-			if (_stream == null)
-				return;
-
-			_soundTransform = new SoundTransform(volume);
-			_stream.soundTransform = _soundTransform;
+			if (_stream != null) {
+				_soundTransform = new SoundTransform(volume);
+				_stream.soundTransform = _soundTransform;				
+			}
+			
 			_volume = volume;
 
 			_isMuted = (_volume == 0);
