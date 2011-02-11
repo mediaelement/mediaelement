@@ -76,7 +76,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *2.x.x (in progress) - *
 
 * Added 'mode' option to force native (HTML5) or shim (Flash,Silverlight) modes
-* Fixed audio bug in Flash (thanks Andy!)
+* Fixed audio seeking bug in Flash (thanks Andy!)
+* Fixed startVolume not working in Flash
 
 *2.0.6 (2011/02/04) - 31.7kb*
 
