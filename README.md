@@ -73,11 +73,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.x.x (in progress) - *
+*2.0.7 (in progress) - *
 
 * Added 'mode' option to force native (HTML5) or shim (Flash,Silverlight) modes
 * Fixed audio seeking bug in Flash (thanks Andy!)
 * Fixed startVolume not working in Flash
+* Overrided Chrome's autoplay since it doesn't always work
 
 *2.0.6 (2011/02/04) - 31.7kb*
 
@@ -238,9 +239,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ###TODO
 
-* Fix startVolume for plugins
 * Poster constraints
 * Loading indicator
 * Support 100% width and height
-* Fix flash audio bug
 * Add dynamic creation support
