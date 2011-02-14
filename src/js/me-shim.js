@@ -424,21 +424,27 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		// special case to enforce preload attribute (Chrome doesn't respect this)
-		if (mejs.MediaFeatures.isChrome && preload == 'none' && autoplay !== '') {
-			// forces the browser to stop loading
+		if (mejs.MediaFeatures.isChrome) {
+			if (preload === 'none' && autoplay === false) {
+				// forces the browser to stop loading
 
-			htmlMediaElement.src = '';
-			htmlMediaElement.load();
-			htmlMediaElement.canceledPreload = true;
+				htmlMediaElement.src = '';
+				htmlMediaElement.load();
+				htmlMediaElement.canceledPreload = true;
 
-			htmlMediaElement.addEventListener('play',function() {
-				if (htmlMediaElement.canceledPreload) {
-					htmlMediaElement.src = playback.url;
-					htmlMediaElement.load();
-					htmlMediaElement.play();
-					htmlMediaElement.canceledPreload = false;
-				}
-			}, false);
+				htmlMediaElement.addEventListener('play',function() {
+					if (htmlMediaElement.canceledPreload) {
+						htmlMediaElement.src = playback.url;
+						htmlMediaElement.load();
+						htmlMediaElement.play();
+						htmlMediaElement.canceledPreload = false;
+					}
+				}, false);
+			// for some reason Chrome forgets how to autoplay sometimes.
+			} else if (autoplay === true) {
+				htmlMediaElement.load();
+				htmlMediaElement.play();
+			}
 		}
 
 		// fire success code
