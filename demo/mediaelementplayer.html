@@ -24,6 +24,8 @@
 <video width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
 	id="player1" poster="../media/echo-hereweare.jpg" 
 	controls="controls" preload="none"></video>
+	
+<span id="player1-mode"></span>
 
 <h2>2. Multi-Codec with no JavaScript fallback player</h2>
 
@@ -63,9 +65,15 @@
 	</object> 	
 </video>
 
+<span id="player2-mode"></span>
+
 <script>
 
-$('audio,video').mediaelementplayer();
+$('audio,video').mediaelementplayer({
+	success: function(player, node) {
+		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+	}
+});
 
 </script>
 
@@ -74,7 +82,7 @@ $('audio,video').mediaelementplayer();
 <script>
 $('#stopall').click(function() {
     $('video, audio').each(function() {
-          $(this)[0].player.pause();
+          $(this)[0].player.pause();		  
     });
 });
 </script>
