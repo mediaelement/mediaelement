@@ -190,6 +190,19 @@ package htmlelements
 			sendEvent(HtmlMediaEvent.PAUSE);
 		}
 
+
+		public function stop():void {
+			if (_timer != null) {
+				_timer.stop();
+			}
+			if (_soundChannel != null) {
+				_soundChannel.stop();
+				_sound.close();
+			}
+			unload();
+			sendEvent(HtmlMediaEvent.STOP);
+		}
+
 		public function setCurrentTime(pos:Number):void {
 			_timer.stop();
 			_currentTime = pos;
@@ -209,13 +222,6 @@ package htmlelements
 			sendEvent(HtmlMediaEvent.PLAYING);
 		}
 
-		public function stop():void {
-			_timer.stop();
-			_soundChannel.stop();
-			_sound.close();
-			unload();
-			sendEvent(HtmlMediaEvent.STOP);
-		}
 
 		public function setVolume(volume:Number):void {
 
