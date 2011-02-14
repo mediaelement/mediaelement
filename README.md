@@ -73,7 +73,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.0.7 (in progress) - *
+*2.0.7 (2011/02/13) - 31.9kb*
 
 * Added 'mode' option to force native (HTML5) or shim (Flash,Silverlight) modes
 * Fixed audio seeking bug in Flash (thanks Andy!)
@@ -240,6 +240,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 ###TODO
 
 * Poster constraints
-* Loading indicator
-* Support 100% width and height
+* Loading indicator (canplay event)
 * Add dynamic creation support
+* Flash StageVideo?
+* Support 100% width and height?
