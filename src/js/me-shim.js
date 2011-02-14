@@ -423,11 +423,13 @@ mejs.HtmlMediaElementShim = {
 			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
 
-		// special case to enforce preload attribute (Chrome doesn't respect this)
+		
 		if (mejs.MediaFeatures.isChrome) {
-			if (preload === 'none' && autoplay === false) {
-				// forces the browser to stop loading
-
+		
+			// special case to enforce preload attribute (Chrome doesn't respect this)
+			if (preload === 'none' && !autoplay) {
+			
+				// forces the browser to stop loading (note: fails in IE9)
 				htmlMediaElement.src = '';
 				htmlMediaElement.load();
 				htmlMediaElement.canceledPreload = true;
@@ -441,7 +443,7 @@ mejs.HtmlMediaElementShim = {
 					}
 				}, false);
 			// for some reason Chrome forgets how to autoplay sometimes.
-			} else if (autoplay === true) {
+			} else if (autoplay) {
 				htmlMediaElement.load();
 				htmlMediaElement.play();
 			}
