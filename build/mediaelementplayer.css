@@ -128,6 +128,12 @@
 /* End: Play/pause */
 
 
+/* Stop */
+.mejs-controls .mejs-stop span {
+	background-position:100% 0;
+}
+/* End: Play/pause */
+
 /* Start: Progress bar */
 .mejs-controls div.mejs-time-rail {
 	width: 200px;
