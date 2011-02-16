@@ -13,6 +13,9 @@
 		public static var ENDED:String = "ended";
 		public static var VOLUMECHANGE:String = "volumechange";
 		public static var STOP:String = "stop";
-
+		
+		// new : 2/15/2011
+		public static var LOADSTART:String = "loadstart";
+		public static var CANPLAY:String = "canplay";
 	}
 }
