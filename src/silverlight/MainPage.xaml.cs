@@ -41,6 +41,9 @@ namespace SilverlightMediaElement
 		bool _isPaused = true;
 		bool _isEnded = false;
 
+		// dummy
+		bool _firedCanPlay = false;
+
 		public MainPage(IDictionary<string, string> initParams)
 		{
 			InitializeComponent();
@@ -166,13 +169,18 @@ namespace SilverlightMediaElement
 			switch (media.CurrentState)
 			{
 				case MediaElementState.Opening:
-
+					SendEvent("loadstart");
 					break;
 				case MediaElementState.Playing:
 					_isEnded = false;
 					_isPaused = false;
 					_isAttemptingToPlay = false;
 					StartTimer();
+
+					if (!_firedCanPlay) {
+						SendEvent("canplay");
+						_firedCanPlay = true;
+					}
 					SendEvent("play");
 					SendEvent("playing");
 					break;
@@ -312,6 +320,7 @@ namespace SilverlightMediaElement
 		[ScriptableMember]
 		public void loadMedia() {
 			_isLoading = true;
+			_firedCanPlay = false;
 
 			WriteDebug("method:load " + media.CurrentState);
 			WriteDebug(" - " + _mediaUrl.ToString());
