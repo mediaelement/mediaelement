@@ -33,6 +33,7 @@ mep_files = []
 mep_files.append('mep-header.js')
 mep_files.append('mep-player.js')
 mep_files.append('mep-feature-playpause.js')
+mep_files.append('mep-feature-stop.js')
 mep_files.append('mep-feature-progress.js')
 mep_files.append('mep-feature-time.js')
 mep_files.append('mep-feature-volume.js')
