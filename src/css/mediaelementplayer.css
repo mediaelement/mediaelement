@@ -39,6 +39,8 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+.mejs-overlay-play {
 	cursor: pointer;
 }
 .mejs-overlay-button {
@@ -49,6 +51,19 @@
 	height: 100px;
 	margin: -50px 0 0 -50px;
 	background: url(bigplay.png) top left no-repeat;
+}
+.mejs-overlay-loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 80px;
+	height: 80px;
+	margin: -40px 0 0 -40px;
+	background: #000 url(ajax-loader.gif) center center no-repeat;
+	-webkit-box-shadow: 0 0 4px #ccc;
+	-moz-box-shadow: 0 0 4px #ccc;
+	-ie-box-shadow: 0 0 4px #ccc;
+	box-shadow: 0 0 4px #ccc;
 }
 .mejs-overlay:hover .mejs-overlay-button{
 	background-position: 0 -100px ;
