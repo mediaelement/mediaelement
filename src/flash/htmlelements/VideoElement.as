@@ -131,6 +131,7 @@
 				// STREAM
 				case "NetStream.Play.Start":
 					_isPaused = false;
+					sendEvent(HtmlMediaEvent.CANPLAY);
 					sendEvent(HtmlMediaEvent.PLAY);
 					sendEvent(HtmlMediaEvent.PLAYING);
 					_timer.start();
@@ -232,7 +233,7 @@
 			// in a few moments the "NetConnection.Connect.Success" event will fire
 			// and call createConnection which finishes the "load" sequence
 
-
+			sendEvent(HtmlMediaEvent.LOADSTART);
 		}
 
 		public function play():void {

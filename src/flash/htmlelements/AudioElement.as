@@ -44,6 +44,7 @@ package htmlelements
 
 		private var _element:FlashMediaElement;
 		private var _timer:Timer;
+		private var _firedCanPlay:Boolean = false;
 
 		public function duration():Number {
 			return _duration;
@@ -75,6 +76,8 @@ package htmlelements
 		}
 
 		function id3Handler(e:Event):void {
+			sendEvent(HtmlMediaEvent.LOADEDMETADATA);			
+			
 			try {
 				var id3:ID3Info = _sound.id3;
 				var obj = {
@@ -87,8 +90,9 @@ package htmlelements
 					track:id3.track,
 					year:id3.year
 				}
-				//_playerCore.sendEvent(PlayerEvent.META,obj);
 			} catch (err:Error) {}
+			
+			
 		}
 
 		function timerEventHandler(e:TimerEvent) {
@@ -146,15 +150,16 @@ package htmlelements
 			_sound.addEventListener(Event.ID3,id3Handler);
 			_sound.load(new URLRequest(_currentUrl));
 			_currentTime = 0;
-
-			//sendEvent(HtmlMediaEvent.LOADING);
+			
+			_firedCanPlay = false;
+			sendEvent(HtmlMediaEvent.LOADSTART);
 
 			_isLoaded = true;
 
 			if (_playAfterLoading) {
 				_playAfterLoading = false;
 				play();
-			}
+			}						
 		}
 
 		private var _playAfterLoading:Boolean= false;
@@ -220,6 +225,10 @@ package htmlelements
 			_isPaused = false;
 			sendEvent(HtmlMediaEvent.PLAY);
 			sendEvent(HtmlMediaEvent.PLAYING);
+			if (!_firedCanPlay) {
+				sendEvent(HtmlMediaEvent.CANPLAY);
+				_firedCanPlay = true;
+			}
 		}
 
 
