@@ -240,7 +240,10 @@ You can use this as a standalone library if you wish, or just stick with the ful
 ###TODO
 
 * Poster constraints
-* Loading indicator (canplay event)
+* Loading indicator (events: loadeddata, canplay )
+* Flash/SL error codes
+* Error handling
 * Add dynamic creation support
+* Postroll
 * Flash StageVideo?
 * Support 100% width and height?
