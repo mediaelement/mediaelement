@@ -303,12 +303,15 @@
 					'<img />'+
 				'</div>')
 					.appendTo(layers),
-				posterUrl = player.$media.attr('poster');
+				posterUrl = player.$media.attr('poster'),
+				posterImg = poster.find('img').width(player.width).height(poster.height);
 
+			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
 			if (player.options.poster != '') {
-				poster.find('img').attr('src',player.options.poster);
+				posterImg.attr('src',player.options.poster);
+			// second, try the real poster
 			} else if (posterUrl !== '' && posterUrl != null) {
-				poster.find('img').attr('src',posterUrl);
+				posterImg.attr('src',posterUrl);
 			} else {
 				poster.hide();
 			}
