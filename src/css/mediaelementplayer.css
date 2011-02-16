@@ -1,4 +1,3 @@
-
 .mejs-container {
 	position: relative;
 	background: #000;
@@ -195,6 +194,7 @@
 	width: 30px;
 	display: block;
 	text-align: center;
+	left: 0;
 }
 .mejs-controls .mejs-time-rail .mejs-time-float-corner {
 	position: absolute;
