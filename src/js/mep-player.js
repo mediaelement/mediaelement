@@ -175,7 +175,7 @@
 
 			// two built in features
 			t.buildposter(t, t.controls, t.layers, t.media);
-			t.buildoverlay(t, t.controls, t.layers, t.media);
+			t.buildoverlays(t, t.controls, t.layers, t.media);
 
 			// grab for use by feautres
 			t.findTracks();
@@ -318,12 +318,27 @@
 			}, false);
 		},
 
-		buildoverlay: function(player, controls, layers, media) {
+		buildoverlays: function(player, controls, layers, media) {
 			if (!player.isVideo)
 				return;
 
-			var overlay = 
+			var 
+			loading = 
 				$('<div class="mejs-overlay mejs-layer">'+
+					'<div class="mejs-overlay-loading"></div>'+
+				'</div>')
+				.hide() // start out hidden
+				.appendTo(layers),
+			error = 
+				$('<div class="mejs-overlay mejs-layer">'+
+					'<div class="mejs-overlay-error"></div>'+
+				'</div>')
+				.hide() // start out hidden
+				.appendTo(layers),				
+				
+			// this needs to come last so it's on top
+			bigPlay = 
+				$('<div class="mejs-overlay mejs-layer mejs-overlay-play">'+
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
@@ -334,13 +349,30 @@
 						media.pause();
 					}
 				});
+	
 
+			// show/hide big play button
 			media.addEventListener('play',function() {
-				overlay.hide();
+				bigPlay.hide();
 			}, false);
 			media.addEventListener('pause',function() {
-				overlay.show();
+				bigPlay.show();
 			}, false);
+			
+			// show/hide loading			
+			media.addEventListener('loadstart',function() {
+				loading.show();
+			}, false);	
+			media.addEventListener('canplay',function() {
+				loading.hide();
+			}, false);	
+
+			// error handling
+			media.addEventListener('error',function() {
+				loading.hide();
+				error.show();
+				error.find('mejs-overlay-error').html("Error loading this resource");
+			}, false);				
 		},
 
 		findTracks: function() {
