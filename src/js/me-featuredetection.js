@@ -16,7 +16,7 @@ mejs.MediaFeatures = {
 			v,
 			html5Elements = ['source','track','audio','video'];
 
-		// detect browsers
+		// detect browsers (only the ones that have some kind of quirk we need to work around)
 		this.isiPad = (ua.match(/iPad/i) !== null);
 		this.isiPhone = (ua.match(/iPhone/i) !== null);
 		this.isAndroid = (ua.match(/Android/i) !== null);
