@@ -81,7 +81,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * IE6/7 CSS updates
 * Poster is now forced to the size of the player (could be updated to be proportional if someone wants to add that)
 * Updated Flash ended event to account for buffering weirdness
-
+* Added slight gradient to controls for a cleaner look
 
 *2.0.7 (2011/02/13) - 31.9kb*
 
@@ -252,6 +252,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Error handling
 * Flash/SL error codes
 * Add dynamic creation support
+* Inline volume slider?
 * Postroll
 * Flash StageVideo?
 * Support 100% width and height?
