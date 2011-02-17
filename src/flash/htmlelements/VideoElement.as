@@ -34,6 +34,7 @@
 		private var _bytesLoaded:Number = 0;
 		private var _bytesTotal:Number = 0;
 		private var _bufferedTime:Number = 0;
+		private var _bufferEmpty:Boolean = false;
 
 		private var _videoWidth:Number = -1;
 		private var _videoHeight:Number = -1;
@@ -114,12 +115,14 @@
 			switch (event.info.code) {
 
 				case "NetStream.Buffer.Empty":
+					_bufferEmpty = true;
 					_isEnded ? sendEvent(HtmlMediaEvent.ENDED) : null;
 					break;
 
 				case "NetStream.Buffer.Full":
 					_bytesLoaded = _stream.bytesLoaded;
 					_bytesTotal = _stream.bytesTotal;
+					_bufferEmpty = false;
 
 					sendEvent(HtmlMediaEvent.PROGRESS);
 					break;
