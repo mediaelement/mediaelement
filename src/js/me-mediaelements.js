@@ -75,6 +75,7 @@ mejs.PluginMediaElement.prototype = {
 	ended: false,
 	seeking: false,
 	duration: 0,
+	error: null,
 
 	// HTML5 get/set properties, but only set (updated by event handlers)
 	muted: false,
