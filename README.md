@@ -6,7 +6,7 @@
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald)
+* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig)
 
 
 ## Installation and Usage
@@ -75,10 +75,13 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.x.x (in progress) 
 
-* Added stop button (pause, then return to currentTime:0)
 * Added loadeddata and canplay events to Flash and Silverlight
 * Added loading indicator to MediaElemenetPlayer
+* Added stop button (pause, then return to currentTime:0)
 * IE6/7 CSS updates
+* Poster is now forced to the size of the player (could be updated to be proportional if someone wants to add that)
+* Updated Flash ended event to account for buffering weirdness
+
 
 *2.0.7 (2011/02/13) - 31.9kb*
 
@@ -246,9 +249,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ###TODO
 
-* Poster constraints
-* Flash/SL error codes
 * Error handling
+* Flash/SL error codes
 * Add dynamic creation support
 * Postroll
 * Flash StageVideo?
