@@ -35,11 +35,11 @@ This includes multiple codecs for various browsers (H.264 for IE and Safari, Web
 		<source type="video/mp4" src="myvideo.mp4" />
 		<source type="video/webm" src="myvideo.webm" />
 		<source type="video/ogg" src="myvideo.ogv" />
-		<object width="320" height="240" type="application/x-shockwave-flash" data="flashmediaelement.swf"> 		
+		<object width="320" height="240" type="application/x-shockwave-flash" data="flashmediaelement.swf">
 			<param name="movie" value="flashmediaelement.swf" /> 
 			<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
 			<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
-		</object> 	
+		</object>
 	</video>
 
 ### 3. Run startup script
@@ -79,7 +79,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *2.x.x (in progress) 
 
 * Added loadeddata and canplay events to Flash and Silverlight
-* Added loading indicator to MediaElemenetPlayer
+* Added loading indicator to MediaElementPlayer
 * Added stop button (pause, then return to currentTime:0)
 * IE6/7 CSS updates
 * Poster is now forced to the size of the player (could be updated to be proportional if someone wants to add that)
