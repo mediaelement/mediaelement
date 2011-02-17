@@ -114,6 +114,9 @@
 			switch (event.info.code) {
 
 				case "NetStream.Buffer.Empty":
+					_isEnded ? sendEvent(HtmlMediaEvent.ENDED) : null;
+					break;
+
 				case "NetStream.Buffer.Full":
 					_bytesLoaded = _stream.bytesLoaded;
 					_bytesTotal = _stream.bytesTotal;
@@ -147,9 +150,10 @@
 					break;
 
 				case "NetStream.Play.Stop":
+					_isEnded = true;
 					_isPaused = false;
 					_timer.stop();
-					sendEvent(HtmlMediaEvent.ENDED);
+					_bufferEmpty ? sendEvent(HtmlMediaEvent.ENDED) : null;
 					break;
 
 			}
