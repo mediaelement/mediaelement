@@ -23,40 +23,96 @@
 		// resize to media dimensions
 		enableAutosize: true,
 		// features to show
-		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']
+		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
+		
+		// dynamic creation
+		mode: 'auto',
+		tagName: '',
+		src: '',
+		type: '',
+		
 	};
 
 	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
-	mejs.MediaElementPlayer = function($media, o) {
+	mejs.MediaElementPlayer = function($node, o) {
 		// enforce object, even without "new" (via John Resig)
 		if ( !(this instanceof mejs.MediaElementPlayer) ) {
-			return new mejs.MediaElementPlayer($media, o);
+			return new mejs.MediaElementPlayer($node, o);
 		} 
 
 		var
 			t = this,
-			mf = mejs.MediaFeatures;
-
-		t.$media = $($media);
-
+			mf = mejs.MediaFeatures,
+			$media = $node,
+			tagName = $node[0].tagName.toLowerCase();			
+		
 		// check for existing player
-		if (t.$media[0].player) {
-			return t.$media[0].player;
+		if ($node[0].player) {
+			return $node[0].player;
 		} else {
-			t.$media[0].player = t;
+			// attach player to DOM node for reference
+			$node[0].player = t;
 		}
-
+		
+		// create options
 		t.options = $.extend({},mejs.MepDefaults,o);
-		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
-
+		t.isVideo = (tagName === 'video');				
+		
+		t.$node = $($node);	
+		t.$media = t.$node;
+		
+		/* FUTURE WORK = create player without existing <video> or <audio> node
+		
+		// if not a video or audio tag, then we'll dynamically create it
+		if (tagName == 'video' || tagName == 'audio') {
+			t.$media = $($node);
+		} else if (o.tagName !== '' && o.src !== '') {
+			// create a new node
+			if (o.mode == 'auto' || o.mode == 'native') {
+				
+				$media = $(o.tagName);
+				if (typeof o.src == 'string') {
+					$media.attr('src',o.src);
+				} else if (typeof o.src == 'object') {
+					// create source nodes
+					for (var x in o.src) {
+						$media.append($('<source src="' + o.src[x].src + '" type="' + o.src[x].type + '" />'));
+					}
+				}
+				if (o.type != '') {
+					$media.attr('type',o.type);
+				}
+				if (o.poster != '') {
+					$media.attr('poster',o.poster);
+				}
+				if (o.videoWidth > 0) {
+					$media.attr('width',o.videoWidth);
+				}
+				if (o.videoHeight > 0) {
+					$media.attr('height',o.videoHeight);
+				}
+				
+				$node.clear();
+				$node.append($media);
+				t.$media = $media;
+			} else if (o.mode == 'shim') {
+				$media = $();
+				// doesn't want a media node
+				// let MediaElement object handle this
+			}
+		} else {
+			// fail?
+			return;
+		}	
+		*/
 
 		if (mf.isiPad || mf.isiPhone) {
 			// add controls and stop
 			t.$media.attr('controls', 'controls');
 
-			// fix Apple bug
+			// fix iOS 3 bug
 			t.$media.removeAttr('poster');
 
 			// override Apple's autoplay override for iPads
