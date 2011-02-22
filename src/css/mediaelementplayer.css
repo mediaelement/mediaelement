@@ -146,7 +146,7 @@
 
 /* Stop */
 .mejs-controls .mejs-stop span {
-	background-position:100% 0;
+	background-position: -112px 0;
 }
 /* End: Play/pause */
 
