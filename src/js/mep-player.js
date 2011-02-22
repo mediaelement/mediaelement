@@ -360,7 +360,7 @@
 			} else if (posterUrl !== '' && posterUrl != null) {
 				posterImg.attr('src',posterUrl);
 			} else {
-				poster.hide();
+				poster.remove();
 			}
 
 			media.addEventListener('play',function() {
