@@ -81,7 +81,7 @@
 	background: url(background.png);
 	background: rgba(0, 0, 0, 0.7);
 	background: -webkit-gradient(linear, left top, left bottom, from(rgba(50,50,50,0.6)), to(rgba(0,0,0,0.6))); /* for webkit browsers */
-	background: -moz-linear-gradient(top,  rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); /* for firefox 3.6+ */
+	background: -moz-linear-gradient(top,  rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); /* for firefox 3.6+ */	
 	height: 30px;
 	width: 100%;
 }
@@ -169,18 +169,26 @@
 	margin: 5px;
 	background: #333;
 	background: rgba(50,50,50,.8);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(30,30,30,.8)), to(rgba(60,60,60,.8))); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  rgba(30,30,30,.8),  rgba(60,60,60,.8)); /* for firefox 3.6+ */	
+	/*filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#501E1E1E,endColorstr=#503C3C3C);*/
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#1E1E1E,endColorstr=#3C3C3C);
 }
 .mejs-controls .mejs-time-rail .mejs-time-loaded {
 	background: #3caac8;
 	background: rgba(60,170,200,0.8);
 	background: -webkit-gradient(linear, left top, left bottom, from(rgba(44,124,145,0.8)), to(rgba(78,183,212,0.8))); /* for webkit browsers */
-	background: -moz-linear-gradient(top,  rgba(60,170,200,0.8),  rgba(60,170,200,0.8)); /* for firefox 3.6+ */	
+	background: -moz-linear-gradient(top,  rgba(44,124,145,0.8),  rgba(78,183,212,0.8)); /* for firefox 3.6+ */	
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#2C7C91,endColorstr=#4EB7D4);
 	width: 0;
 }
 .mejs-controls .mejs-time-rail .mejs-time-current {
 	width: 0;
 	background: #fff;
 	background: rgba(255,255,255,0.8);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.9)), to(rgba(200,200,200,0.8))); /* for webkit browsers */
+	background: -moz-linear-gradient(top,  rgba(255,255,255,0.9),  rgba(200,200,200,0.8)); /* for firefox 3.6+ */	
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#FFFFFF,endColorstr=#C8C8C8);	
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-handle {
