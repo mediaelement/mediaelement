@@ -37,9 +37,11 @@
 
 		var
 			t = this,
-			mf = mejs.MediaFeatures,
-			$media = $node,
-			tagName = $node[0].tagName.toLowerCase();			
+			mf = mejs.MediaFeatures;
+			
+		// create options
+		t.options = $.extend({},mejs.MepDefaults,o);
+		t.$media = t.$node = $($node);
 		
 		// check for existing player
 		if ($node[0].player) {
@@ -49,12 +51,8 @@
 			$node[0].player = t;
 		}
 		
-		// create options
-		t.options = $.extend({},mejs.MepDefaults,o);
-		t.isVideo = (tagName === 'video');				
-		
-		t.$node = $($node);	
-		t.$media = t.$node;
+
+		t.isVideo = (t.$media[0].tagName.toLowerCase() === 'video');		
 		
 		/* FUTURE WORK = create player without existing <video> or <audio> node
 		
