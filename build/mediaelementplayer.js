@@ -34,40 +34,87 @@
 		// resize to media dimensions
 		enableAutosize: true,
 		// features to show
-		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']
+		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
 	};
 
 	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
-	mejs.MediaElementPlayer = function($media, o) {
+	mejs.MediaElementPlayer = function($node, o) {
 		// enforce object, even without "new" (via John Resig)
 		if ( !(this instanceof mejs.MediaElementPlayer) ) {
-			return new mejs.MediaElementPlayer($media, o);
+			return new mejs.MediaElementPlayer($node, o);
 		} 
 
 		var
 			t = this,
 			mf = mejs.MediaFeatures;
-
-		t.$media = $($media);
-
-		// check for existing player
-		if (t.$media[0].player) {
-			return t.$media[0].player;
-		} else {
-			t.$media[0].player = t;
-		}
-
+			
+		// create options
 		t.options = $.extend({},mejs.MepDefaults,o);
-		t.isVideo = (t.$media[0].tagName.toLowerCase() == 'video');
+		t.$media = t.$node = $($node);
+		
+		// check for existing player
+		if ($node[0].player) {
+			return $node[0].player;
+		} else {
+			// attach player to DOM node for reference
+			$node[0].player = t;
+		}
+		
 
+		t.isVideo = (t.$media[0].tagName.toLowerCase() === 'video');		
+		
+		/* FUTURE WORK = create player without existing <video> or <audio> node
+		
+		// if not a video or audio tag, then we'll dynamically create it
+		if (tagName == 'video' || tagName == 'audio') {
+			t.$media = $($node);
+		} else if (o.tagName !== '' && o.src !== '') {
+			// create a new node
+			if (o.mode == 'auto' || o.mode == 'native') {
+				
+				$media = $(o.tagName);
+				if (typeof o.src == 'string') {
+					$media.attr('src',o.src);
+				} else if (typeof o.src == 'object') {
+					// create source nodes
+					for (var x in o.src) {
+						$media.append($('<source src="' + o.src[x].src + '" type="' + o.src[x].type + '" />'));
+					}
+				}
+				if (o.type != '') {
+					$media.attr('type',o.type);
+				}
+				if (o.poster != '') {
+					$media.attr('poster',o.poster);
+				}
+				if (o.videoWidth > 0) {
+					$media.attr('width',o.videoWidth);
+				}
+				if (o.videoHeight > 0) {
+					$media.attr('height',o.videoHeight);
+				}
+				
+				$node.clear();
+				$node.append($media);
+				t.$media = $media;
+			} else if (o.mode == 'shim') {
+				$media = $();
+				// doesn't want a media node
+				// let MediaElement object handle this
+			}
+		} else {
+			// fail?
+			return;
+		}	
+		*/
 
 		if (mf.isiPad || mf.isiPhone) {
 			// add controls and stop
 			t.$media.attr('controls', 'controls');
 
-			// fix Apple bug
+			// fix iOS 3 bug
 			t.$media.removeAttr('poster');
 
 			// override Apple's autoplay override for iPads
@@ -186,7 +233,7 @@
 
 			// two built in features
 			t.buildposter(t, t.controls, t.layers, t.media);
-			t.buildoverlay(t, t.controls, t.layers, t.media);
+			t.buildoverlays(t, t.controls, t.layers, t.media);
 
 			// grab for use by feautres
 			t.findTracks();
@@ -314,14 +361,17 @@
 					'<img />'+
 				'</div>')
 					.appendTo(layers),
-				posterUrl = player.$media.attr('poster');
+				posterUrl = player.$media.attr('poster'),
+				posterImg = poster.find('img').width(player.width).height(poster.height);
 
+			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
 			if (player.options.poster != '') {
-				poster.find('img').attr('src',player.options.poster);
+				posterImg.attr('src',player.options.poster);
+			// second, try the real poster
 			} else if (posterUrl !== '' && posterUrl != null) {
-				poster.find('img').attr('src',posterUrl);
+				posterImg.attr('src',posterUrl);
 			} else {
-				poster.hide();
+				poster.remove();
 			}
 
 			media.addEventListener('play',function() {
@@ -329,12 +379,27 @@
 			}, false);
 		},
 
-		buildoverlay: function(player, controls, layers, media) {
+		buildoverlays: function(player, controls, layers, media) {
 			if (!player.isVideo)
 				return;
 
-			var overlay = 
+			var 
+			loading = 
 				$('<div class="mejs-overlay mejs-layer">'+
+					'<div class="mejs-overlay-loading"><span></span></div>'+
+				'</div>')
+				.hide() // start out hidden
+				.appendTo(layers),
+			error = 
+				$('<div class="mejs-overlay mejs-layer">'+
+					'<div class="mejs-overlay-error"></div>'+
+				'</div>')
+				.hide() // start out hidden
+				.appendTo(layers),				
+				
+			// this needs to come last so it's on top
+			bigPlay = 
+				$('<div class="mejs-overlay mejs-layer mejs-overlay-play">'+
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
@@ -345,13 +410,31 @@
 						media.pause();
 					}
 				});
+	
 
+			// show/hide big play button
 			media.addEventListener('play',function() {
-				overlay.hide();
+				bigPlay.hide();
+				error.hide();
 			}, false);
 			media.addEventListener('pause',function() {
-				overlay.show();
+				bigPlay.show();
 			}, false);
+			
+			// show/hide loading			
+			media.addEventListener('loadstart',function() {
+				loading.show();
+			}, false);	
+			media.addEventListener('canplay',function() {
+				loading.hide();
+			}, false);	
+
+			// error handling
+			media.addEventListener('error',function() {
+				loading.hide();
+				error.show();
+				error.find('mejs-overlay-error').html("Error loading this resource");
+			}, false);				
 		},
 
 		findTracks: function() {
@@ -449,6 +532,29 @@
 
 
 
+	}
+})(jQuery);
+(function($) {
+	// STOP BUTTON
+	MediaElementPlayer.prototype.buildstop = function(player, controls, layers, media) {
+		var stop = 
+			$('<div class="mejs-button mejs-stop-button mejs-stop">' +
+				'<span></span>' +
+			'</div>')
+			.appendTo(controls)
+			.click(function() {
+				if (!media.paused) {
+					media.pause();
+				}
+				if (media.currentTime > 0) {
+					media.setCurrentTime(0);	
+					controls.find('.mejs-time-current').width('0px');
+					controls.find('.mejs-time-handle').css('left', '0px');
+					controls.find('.mejs-time-float-current').html( mejs.Utility.secondsToTimeCode(0) );
+					controls.find('.mejs-currenttime').html( mejs.Utility.secondsToTimeCode(0) );					
+					layers.find('.mejs-poster').show();
+				}
+			});
 	}
 })(jQuery);
 (function($) {
@@ -904,17 +1010,16 @@
 			player.container
 				.bind('mouseenter', function () {
 					// push captions above controls
-					var p = player.container.find('.mejs-captions-position');
-					p.css('bottom', (parseInt(p.css('bottom').replace(/px/,''), 10) + player.controls.height()) + 'px');
+					player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
 				})
 				.bind('mouseleave', function () {
 					if (!media.paused) {
 						// move back to normal place
-						player.container.find('.mejs-captions-position').css('bottom','');
+						player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
 					}
 				});
-
+			
 
 
 

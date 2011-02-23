@@ -1,4 +1,3 @@
-
 .mejs-container {
 	position: relative;
 	background: #000;
@@ -39,6 +38,8 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+.mejs-overlay-play {
 	cursor: pointer;
 }
 .mejs-overlay-button {
@@ -53,6 +54,27 @@
 .mejs-overlay:hover .mejs-overlay-button{
 	background-position: 0 -100px ;
 }
+.mejs-overlay-loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 80px;
+	height: 80px;
+	margin: -40px 0 0 -40px;
+	background: #333;
+	background: url(background.png);
+	background: rgba(0, 0, 0, 0.9);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(50,50,50,0.9)), to(rgba(0,0,0,0.9))); 
+	background: -moz-linear-gradient(top,  rgba(50,50,50,0.9),  rgba(0,0,0,0.9)); 	
+	background: linear-gradient(rgba(50,50,50,0.9),  rgba(0,0,0,0.9)); 	
+}
+.mejs-overlay-loading span {
+	display:block;
+	width: 80px;
+	height: 80px;
+	background: transparent url(loading.gif) center center no-repeat;
+}
+
 /* End: LAYERS */
 
 /* Start: CONTROL BAR */
@@ -66,6 +88,9 @@
 	left: 0;
 	background: url(background.png);
 	background: rgba(0, 0, 0, 0.7);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(50,50,50,0.7)), to(rgba(0,0,0,0.7))); 
+	background: -moz-linear-gradient(top,  rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 	
+	background: linear-gradient(rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 	
 	height: 30px;
 	width: 100%;
 }
@@ -130,7 +155,7 @@
 
 /* Stop */
 .mejs-controls .mejs-stop span {
-	background-position:100% 0;
+	background-position: -112px 0;
 }
 /* End: Play/pause */
 
@@ -152,17 +177,28 @@
 .mejs-controls .mejs-time-rail .mejs-time-total {
 	margin: 5px;
 	background: #333;
-	background: rgba(50,50,50,.8);
+	background: rgba(50,50,50,0.8);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(30,30,30,0.8)), to(rgba(60,60,60,0.8))); 
+	background: -moz-linear-gradient(top, rgba(30,30,30,0.8),  rgba(60,60,60,0.8)); 	
+	background: linear-gradient(rgba(30,30,30,0.8),  rgba(60,60,60,0.8)); 	
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#1E1E1E,endColorstr=#3C3C3C);
 }
 .mejs-controls .mejs-time-rail .mejs-time-loaded {
 	background: #3caac8;
 	background: rgba(60,170,200,0.8);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(44,124,145,0.8)), to(rgba(78,183,212,0.8))); 
+	background: -moz-linear-gradient(top,  rgba(44,124,145,0.8),  rgba(78,183,212,0.8)); 	
+	background: linear-gradient(rgba(44,124,145,0.8),  rgba(78,183,212,0.8)); 	
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#2C7C91,endColorstr=#4EB7D4);
 	width: 0;
 }
 .mejs-controls .mejs-time-rail .mejs-time-current {
 	width: 0;
 	background: #fff;
 	background: rgba(255,255,255,0.8);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.9)), to(rgba(200,200,200,0.8))); 
+	background: -moz-linear-gradient(top,  rgba(255,255,255,0.9),  rgba(200,200,200,0.8)); 
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#FFFFFF,endColorstr=#C8C8C8);	
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-handle {
@@ -201,6 +237,7 @@
 	width: 30px;
 	display: block;
 	text-align: center;
+	left: 0;
 }
 .mejs-controls .mejs-time-rail .mejs-time-float-corner {
 	position: absolute;
@@ -259,7 +296,7 @@
 	height: 115px;
 	width: 25px;
 	background: url(background.png);
-	background: rgba(0, 0, 0, 0.7);
+	background: rgba(50, 50, 50, 0.7);
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
@@ -331,13 +368,13 @@
 .mejs-controls .mejs-captions-button .mejs-captions-selector {
 	visibility: hidden;
 	position: absolute;
-	bottom: 25px;
+	bottom: 26px;
 	right: -10px;
 	width: 130px;
 	height: 100px;
 	background: url(background.png);
-	background: rgba(0,0,0,0.8);
-	border: solid 1px #fff;
+	background: rgba(50,50,50,0.7);
+	border: solid 1px transparent;
 	padding: 10px;
 	overflow: hidden;
 	-webkit-border-radius: 0;
@@ -393,8 +430,12 @@
 .mejs-chapters .mejs-chapter {
 	position: absolute;
 	float: left;
-	background: url(background.png);
-	background: rgba(0,0,0,0.8);
+	background: #222;
+	background: rgba(0, 0, 0, 0.7);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(50,50,50,0.7)), to(rgba(0,0,0,0.7))); 
+	background: -moz-linear-gradient(top,  rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 	
+	background: linear-gradient(rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#323232,endColorstr=#000000);		
 	overflow: hidden;
 	border: 0;
 }
@@ -403,8 +444,8 @@
 	color: #fff;
 	padding: 5px;
 	display: block;
-	border-right: solid 1px #999;
-	border-bottom: solid 1px #999;
+	border-right: solid 1px #333;
+	border-bottom: solid 1px #333;
 	cursor: pointer;
 }
 .mejs-chapters .mejs-chapter .mejs-chapter-block-last {
@@ -412,7 +453,12 @@
 }
 
 .mejs-chapters .mejs-chapter .mejs-chapter-block:hover {
-	background: #333;
+	/*background: #333;*/
+	background: #666;
+	background: rgba(102,102,102, 0.7);
+	background: -webkit-gradient(linear, left top, left bottom, from(rgba(102,102,102,0.7)), to(rgba(50,50,50,0.6))); 
+	background: -moz-linear-gradient(top,  rgba(102,102,102,0.7),  rgba(50,50,50,0.6)); 
+	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#666666,endColorstr=#323232);		
 }
 .mejs-chapters .mejs-chapter .mejs-chapter-block .ch-title{
 	font-size: 12px;
@@ -458,11 +504,14 @@
 	bottom: 15px;
 }
 
+.mejs-captions-position-hover {
+	bottom: 45px;
+}
+
 .mejs-captions-text {
 	padding: 3px 5px;
-
 	background: url(background.png);
-	background: rgba(0, 0, 0, 0.8);
+	background: rgba(20, 20, 20, 0.8);
 
 }
 /* End: TRACK (Captions and Chapters) */
