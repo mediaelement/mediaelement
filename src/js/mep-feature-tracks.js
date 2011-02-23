@@ -67,17 +67,16 @@
 			player.container
 				.bind('mouseenter', function () {
 					// push captions above controls
-					var p = player.container.find('.mejs-captions-position');
-					p.css('bottom', (parseInt(p.css('bottom').replace(/px/,''), 10) + player.controls.height()) + 'px');
+					player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
 				})
 				.bind('mouseleave', function () {
 					if (!media.paused) {
 						// move back to normal place
-						player.container.find('.mejs-captions-position').css('bottom','');
+						player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
 					}
 				});
-
+			
 
 
 
