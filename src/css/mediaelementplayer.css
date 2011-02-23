@@ -504,11 +504,14 @@
 	bottom: 15px;
 }
 
+.mejs-captions-position-hover {
+	bottom: 45px;
+}
+
 .mejs-captions-text {
 	padding: 3px 5px;
-
 	background: url(background.png);
-	background: rgba(0, 0, 0, 0.8);
+	background: rgba(20, 20, 20, 0.8);
 
 }
 /* End: TRACK (Captions and Chapters) */
