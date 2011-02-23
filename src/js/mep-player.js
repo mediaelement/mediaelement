@@ -375,7 +375,7 @@
 			var 
 			loading = 
 				$('<div class="mejs-overlay mejs-layer">'+
-					'<div class="mejs-overlay-loading"></div>'+
+					'<div class="mejs-overlay-loading"><span></span></div>'+
 				'</div>')
 				.hide() // start out hidden
 				.appendTo(layers),
@@ -404,6 +404,7 @@
 			// show/hide big play button
 			media.addEventListener('play',function() {
 				bigPlay.hide();
+				error.hide();
 			}, false);
 			media.addEventListener('pause',function() {
 				bigPlay.show();
