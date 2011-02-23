@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.0.7';
+mejs.version = '2.1.0';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -200,7 +200,7 @@ mejs.MediaFeatures = {
 			v,
 			html5Elements = ['source','track','audio','video'];
 
-		// detect browsers
+		// detect browsers (only the ones that have some kind of quirk we need to work around)
 		this.isiPad = (ua.match(/iPad/i) !== null);
 		this.isiPhone = (ua.match(/iPhone/i) !== null);
 		this.isAndroid = (ua.match(/Android/i) !== null);
@@ -298,6 +298,7 @@ mejs.PluginMediaElement.prototype = {
 	ended: false,
 	seeking: false,
 	duration: 0,
+	error: null,
 
 	// HTML5 get/set properties, but only set (updated by event handlers)
 	muted: false,
