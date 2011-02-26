@@ -231,7 +231,9 @@
 		function resizeHandler(e:Event):void {
 			//_video.scaleX = stage.stageWidth / _stageWidth;
 			//_video.scaleY = stage.stageHeight / _stageHeight;
-			positionControls();
+			//positionControls();
+			
+			repositionVideo();
 		}
 
 		// START: Fullscreen
@@ -248,8 +250,7 @@
 				//_fullscreenButton.visible = false;
 
 				if (fullscreen) {
-
-					var screenRectangle:Rectangle = new Rectangle(_video.x, _video.y, _video.width, _video.height); 
+					var screenRectangle:Rectangle = new Rectangle(_video.x, _video.y, flash.system.Capabilities.screenResolutionX, flash.system.Capabilities.screenResolutionY); 
 					stage.fullScreenSourceRect = screenRectangle;
 
 					stage.displayState = StageDisplayState.FULL_SCREEN;
@@ -274,10 +275,9 @@
 
 			try {
 				setFullscreen(true);
-
+				repositionVideo(true);
 			} catch (error:Error) {
 			}
-
 		}
 
 		function stageFullScreen(e:FullScreenEvent) {
@@ -286,6 +286,7 @@
 			if (e.fullScreen) {
 				_fullscreenButton.visible = false;
 			} else {
+
 			}
 		}
 		// END: Fullscreen
@@ -344,7 +345,7 @@
 			_output.appendText("result: " + _video.width.toString() + "," + _video.height.toString() + "\n");
 		}
 
-		function repositionVideo():void {
+		function repositionVideo(fullscreen:Boolean = false):void {
 
 			if (_nativeVideoWidth <= 0 || _nativeVideoHeight <= 0)
 				return;
@@ -352,23 +353,45 @@
 			_output.appendText("positioning video\n");
 
 			// calculate ratios
-			var stageRatio = _stageWidth/_stageHeight;
-			var nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
-
-			// adjust size and position
-			if (nativeRatio > stageRatio) {
-				_video.width = _stageWidth;
-				_video.height = _nativeVideoHeight * _stageWidth / _nativeVideoWidth;
-				_video.y = _stageHeight/2 - _video.height/2;
-			} else if (stageRatio > nativeRatio) {
-				_video.height = _stageHeight;
-				_video.width = _nativeVideoWidth * _stageHeight / _nativeVideoHeight;
-				_video.x = _stageWidth/2 - _video.width/2;
-			} else if (stageRatio == nativeRatio) {
-				_video.height = _stageHeight;
-				_video.width = _stageWidth;
-				_video.x = 0;
-				_video.y = 0;
+			
+			if(fullscreen == true) {
+				var stageRatio = flash.system.Capabilities.screenResolutionX/flash.system.Capabilities.screenResolutionY;
+				var nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
+	
+				// adjust size and position
+				if (nativeRatio > stageRatio) {
+					_video.width = flash.system.Capabilities.screenResolutionX;
+					_video.height = _nativeVideoHeight * flash.system.Capabilities.screenResolutionX / _nativeVideoWidth;
+					_video.y = flash.system.Capabilities.screenResolutionY/2 - _video.height/2;
+				} else if (stageRatio > nativeRatio) {
+					_video.height = flash.system.Capabilities.screenResolutionY;
+					_video.width = _nativeVideoWidth * flash.system.Capabilities.screenResolutionY / _nativeVideoHeight;
+					_video.x = flash.system.Capabilities.screenResolutionX/2 - _video.width/2;
+				} else if (stageRatio == nativeRatio) {
+					_video.height = flash.system.Capabilities.screenResolutionY;
+					_video.width = flash.system.Capabilities.screenResolutionX;
+					_video.x = 0;
+					_video.y = 0;
+				}
+			} else {
+				var stageRatio = _stageWidth/_stageHeight;
+				var nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
+	
+				// adjust size and position
+				if (nativeRatio > stageRatio) {
+					_video.width = _stageWidth;
+					_video.height = _nativeVideoHeight * _stageWidth / _nativeVideoWidth;
+					_video.y = _stageHeight/2 - _video.height/2;
+				} else if (stageRatio > nativeRatio) {
+					_video.height = _stageHeight;
+					_video.width = _nativeVideoWidth * _stageHeight / _nativeVideoHeight;
+					_video.x = _stageWidth/2 - _video.width/2;
+				} else if (stageRatio == nativeRatio) {
+					_video.height = _stageHeight;
+					_video.width = _stageWidth;
+					_video.x = 0;
+					_video.y = 0;
+				}
 			}
 
 			positionControls();
