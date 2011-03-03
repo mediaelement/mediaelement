@@ -178,6 +178,7 @@ namespace SilverlightMediaElement
 					StartTimer();
 
 					if (!_firedCanPlay) {
+						SendEvent("loadeddata");
 						SendEvent("canplay");
 						_firedCanPlay = true;
 					}
