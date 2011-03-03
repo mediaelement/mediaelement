@@ -137,6 +137,7 @@
 				// STREAM
 				case "NetStream.Play.Start":
 					_isPaused = false;
+					sendEvent(HtmlMediaEvent.LOADEDDATA);
 					sendEvent(HtmlMediaEvent.CANPLAY);
 					sendEvent(HtmlMediaEvent.PLAY);
 					sendEvent(HtmlMediaEvent.PLAYING);
