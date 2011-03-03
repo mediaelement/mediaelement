@@ -226,7 +226,8 @@ package htmlelements
 			sendEvent(HtmlMediaEvent.PLAY);
 			sendEvent(HtmlMediaEvent.PLAYING);
 			if (!_firedCanPlay) {
-				sendEvent(HtmlMediaEvent.CANPLAY);
+				sendEvent(HtmlMediaEvent.LOADEDDATA);
+				sendEvent(HtmlMediaEvent.CANPLAY);				
 				_firedCanPlay = true;
 			}
 		}
