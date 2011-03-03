@@ -353,10 +353,11 @@
 			_output.appendText("positioning video\n");
 
 			// calculate ratios
+			var stageRatio, nativeRatio;
 			
 			if(fullscreen == true) {
-				var stageRatio = flash.system.Capabilities.screenResolutionX/flash.system.Capabilities.screenResolutionY;
-				var nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
+				stageRatio = flash.system.Capabilities.screenResolutionX/flash.system.Capabilities.screenResolutionY;
+				nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
 	
 				// adjust size and position
 				if (nativeRatio > stageRatio) {
@@ -374,8 +375,8 @@
 					_video.y = 0;
 				}
 			} else {
-				var stageRatio = _stageWidth/_stageHeight;
-				var nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
+				stageRatio = _stageWidth/_stageHeight;
+				nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
 	
 				// adjust size and position
 				if (nativeRatio > stageRatio) {
