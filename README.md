@@ -82,6 +82,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * switched to flashvars parameter to support Apache's mod_security
 * better flash fullscreen support
 * added flv-x to flash's accepted types
+* Fixed a bug in poster sizing (only affected IE)
 
 *2.1.0 (2011/02/23) - 32.9kb*
 
