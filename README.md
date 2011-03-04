@@ -1,6 +1,6 @@
 # GOAL: Make `<video>` and `<audio>` easy. One file. Any browser. Same UI.
 
-* Author: [John Dyer](http://johndyer.name/)
+* Author: John Dyer [http://j.hn/](http://j.hn/)
 * Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
 * License: GPLv2/MIT
 * Meaning: Please use this everywhere and it'd be swell if you'd 
@@ -81,6 +81,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * added 'loadeddata' event to Flash and Silverlight
 * switched to flashvars parameter to support Apache's mod_security
 * better flash fullscreen support
+* added flv-x to flash's accepted types
 
 *2.1.0 (2011/02/23) - 32.9kb*
 
