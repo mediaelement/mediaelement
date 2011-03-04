@@ -223,9 +223,11 @@
 		},
 
 		// Sets up all controls and events
-		meReady: function(media, domNode) {
-
+		meReady: function(media, domNode) {			
+		
+		
 			var t = this,
+				mf = mejs.MediaFeatures,
 				f,
 				feature;
 
@@ -233,83 +235,93 @@
 			if (this.created)
 				return;
 			else
-				this.created = true;
+				this.created = true;			
 
 			t.media = media;
 			t.domNode = domNode;
+			
+			if (!mf.isiPhone && !mf.isAndroid && !mf.isiPad) {				
+				
 
-			// two built in features
-			t.buildposter(t, t.controls, t.layers, t.media);
-			t.buildoverlays(t, t.controls, t.layers, t.media);
+				// two built in features
+				t.buildposter(t, t.controls, t.layers, t.media);
+				t.buildoverlays(t, t.controls, t.layers, t.media);
 
-			// grab for use by feautres
-			t.findTracks();
+				// grab for use by feautres
+				t.findTracks();
 
-			// add user-defined features/controls
-			for (f in t.options.features) {
-				feature = t.options.features[f];
-				if (t['build' + feature]) {
-					try {
-						t['build' + feature](t, t.controls, t.layers, t.media);
-					} catch (e) {
-						// TODO: report control error
+				// add user-defined features/controls
+				for (f in t.options.features) {
+					feature = t.options.features[f];
+					if (t['build' + feature]) {
+						try {
+							t['build' + feature](t, t.controls, t.layers, t.media);
+						} catch (e) {
+							// TODO: report control error
+						}
 					}
 				}
-			}
 
-			// reset all layers and controls
-			t.setPlayerSize(t.width, t.height);
-			t.setControlsSize();
-
-			// controls fade
-			if (t.isVideo) {
-				// show/hide controls
-				t.container
-					.bind('mouseenter', function () {
-						t.controls.css('visibility','visible');
-						t.controls.stop(true, true).fadeIn(200);
-					})
-					.bind('mouseleave', function () {
-						if (!t.media.paused) {
-							t.controls.stop(true, true).fadeOut(200, function() {
-								$(this).css('visibility','hidden');
-								$(this).css('display','block');
-							});
-						}
-					});
-
-				// resizer
-				if (t.options.enableAutosize) {
-					t.media.addEventListener('loadedmetadata', function(e) {
-						// if the <video height> was not set and the options.videoHeight was not set
-						// then resize to the real dimensions
-						if (t.options.videoHeight <= 0 && t.$media[0].getAttribute('height') === null && !isNaN(e.target.videoHeight)) {
-							t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
-							t.setControlsSize();
-							t.media.setVideoSize(e.target.videoWidth, e.target.videoHeight);
-						}
-					}, false);
-				}
-			}
-
-			// ended for all
-			t.media.addEventListener('ended', function (e) {
-				t.media.setCurrentTime(0);
-				t.media.pause();
-
-				if (t.options.loop) {
-					t.media.play();
-				} else {
-					t.controls.css('visibility','visible');
-				}
-			}, true);
-
-
-			// webkit has trouble doing this without a delay
-			setTimeout(function () {
-				t.setControlsSize();
+				// reset all layers and controls
 				t.setPlayerSize(t.width, t.height);
-			}, 50);
+				t.setControlsSize();
+
+				// controls fade
+				if (t.isVideo) {
+					// show/hide controls
+					t.container
+						.bind('mouseenter', function () {
+							t.controls.css('visibility','visible');
+							t.controls.stop(true, true).fadeIn(200);
+						})
+						.bind('mouseleave', function () {
+							if (!t.media.paused) {
+								t.controls.stop(true, true).fadeOut(200, function() {
+									$(this).css('visibility','hidden');
+									$(this).css('display','block');
+								});
+							}
+						});
+						
+					// check for autoplay
+					if (t.media.getAttribute('autoplay') !== null) {
+						t.controls.css('visibility','hidden');
+					}
+
+					// resizer
+					if (t.options.enableAutosize) {
+						t.media.addEventListener('loadedmetadata', function(e) {
+							// if the <video height> was not set and the options.videoHeight was not set
+							// then resize to the real dimensions
+							if (t.options.videoHeight <= 0 && t.media.getAttribute('height') === null && !isNaN(e.target.videoHeight)) {
+								t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
+								t.setControlsSize();
+								t.media.setVideoSize(e.target.videoWidth, e.target.videoHeight);
+							}
+						}, false);
+					}
+				}
+
+				// ended for all
+				t.media.addEventListener('ended', function (e) {
+					t.media.setCurrentTime(0);
+					t.media.pause();
+
+					if (t.options.loop) {
+						t.media.play();
+					} else {
+						t.controls.css('visibility','visible');
+					}
+				}, true);
+
+
+				// webkit has trouble doing this without a delay
+				setTimeout(function () {
+					t.setControlsSize();
+					t.setPlayerSize(t.width, t.height);
+				}, 50);
+				
+			}
 
 
 			if (t.options.success) {
@@ -866,7 +878,10 @@
 				$('<div class="mejs-button mejs-fullscreen-button"><span></span></div>')
 				.appendTo(controls)
 				.click(function() {
-					setFullScreen(!media.isFullScreen);
+					var goFullscreen = (mejs.MediaFeatures.hasNativeFullScreen) ?
+									!media.webkitDisplayingFullscreen :
+									!media.isFullScreen;
+					setFullScreen(goFullscreen);
 				}),
 			setFullScreen = function(goFullScreen) {
 				switch (media.pluginType) {
@@ -1082,6 +1097,11 @@
 						});
 					}
 				});
+				
+			// check for autoplay
+			if (media.getAttribute('autoplay') !== null) {
+				player.chapters.css('visibility','hidden');
+			}				
 
 			// auto selector
 			if (player.options.translationSelector) {
