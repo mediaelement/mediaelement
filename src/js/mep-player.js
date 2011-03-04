@@ -358,7 +358,7 @@
 				'</div>')
 					.appendTo(layers),
 				posterUrl = player.$media.attr('poster'),
-				posterImg = poster.find('img').width(player.width).height(poster.height);
+				posterImg = poster.find('img').width(player.width).height(player.height);
 
 			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
 			if (player.options.poster != '') {
