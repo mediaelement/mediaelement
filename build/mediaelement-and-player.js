@@ -954,7 +954,7 @@ window.MediaElement = mejs.MediaElement;
 		t.node = t.media = t.$media[0];
 		
 		// check for existing player
-		if (t.node.player) {
+		if (typeof t.node.player != 'undefined') {
 			return t.node.player;
 		} else {
 			// attach player to DOM node for reference
