@@ -83,7 +83,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * better flash fullscreen support
 * added flv-x to flash's accepted types
 * Fixed a bug in poster sizing (only affected IE)
-* added "isFullScreen" property to media objects
+* added "isFullScreen" property to media objects (like Safari's webkitDisplayingFullscreen)
+* controls are hidden by default on autoplay
 
 *2.1.0 (2011/02/23) - 32.9kb*
 
