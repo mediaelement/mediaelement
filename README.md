@@ -84,7 +84,9 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * added flv-x to flash's accepted types
 * Fixed a bug in poster sizing (only affected IE)
 * added "isFullScreen" property to media objects (like Safari's webkitDisplayingFullscreen)
-* controls are hidden by default on autoplay
+* controls start hidden with autoplay
+* fixed  iOS loading issues (success wasn't firing, other errors)
+* fixed IE6 when using new MediaElementPlayer(), rather than jQuery
 
 *2.1.0 (2011/02/23) - 32.9kb*
 
