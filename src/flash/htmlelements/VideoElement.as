@@ -344,7 +344,7 @@
 
 			// build JSON
 			var values:String = 
-							"{duration:" + _duration + 
+							"duration:" + _duration + 
 							",framerate:" + _framerate + 
 							",currentTime:" + (_stream != null ? _stream.time : 0) + 
 							",muted:" + _isMuted + 
@@ -357,7 +357,7 @@
 							",bufferedTime:" + _bufferedTime +
 							",videoWidth:" + _videoWidth +
 							",videoHeight:" + _videoHeight +
-							"}";
+							"";
 
 			_element.sendEvent(eventName, values);
 		}
