@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.0';
+mejs.version = '2.1.1.dev';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -26,7 +26,7 @@ mejs.plugins = {
 		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/m4a','audio/mp3','audio/wav','audio/mpeg']}
 	],
 	flash: [
-		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','audio/flv','audio/mp3','audio/m4a','audio/mpeg']}
+		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg']}
 		//,{version: [11,0], types: ['video/webm']} // for future reference
 	]
 };
@@ -839,7 +839,8 @@ mejs.HtmlMediaElementShim = {
 'allowScriptAccess="always" ' +
 'allowFullScreen="true" ' +
 'type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" ' +
-'src="' + options.pluginPath + options.flashName + '?' + initVars.join('&') + '" ' +
+'src="' + options.pluginPath + options.flashName + '" ' +
+'flashvars="' + initVars.join('&') + '" ' +
 'width="' + width + '" ' +
 'height="' + height + '"></embed>';
 				}
@@ -947,17 +948,19 @@ window.MediaElement = mejs.MediaElement;
 		t.options = $.extend({},mejs.MepDefaults,o);
 		t.$media = t.$node = $($node);
 		
+		// these will be reset after the MediaElement.success fires
+		t.node = t.media = t.$media[0];
+		
 		// check for existing player
-		if ($node[0].player) {
-			return $node[0].player;
+		if (t.node.player) {
+			return t.node.player;
 		} else {
 			// attach player to DOM node for reference
-			$node[0].player = t;
+			t.node.player = t;
 		}
 		
-
-		t.isVideo = (t.$media[0].tagName.toLowerCase() === 'video');		
-		
+		t.isVideo = (t.media.tagName.toLowerCase() === 'video');
+				
 		/* FUTURE WORK = create player without existing <video> or <audio> node
 		
 		// if not a video or audio tag, then we'll dynamically create it
@@ -1002,54 +1005,7 @@ window.MediaElement = mejs.MediaElement;
 			return;
 		}	
 		*/
-
-		if (mf.isiPad || mf.isiPhone) {
-			// add controls and stop
-			t.$media.attr('controls', 'controls');
-
-			// fix iOS 3 bug
-			t.$media.removeAttr('poster');
-
-			// override Apple's autoplay override for iPads
-			if (mf.isiPad && t.$media[0].getAttribute('autoplay') !== null) {
-				t.$media[0].load();
-				t.$media[0].play();
-			}
-
-			// don't do the rest
-			return;
-		} else if (mf.isAndroid) {
-
-			if (t.isVideo) {
-				// Android fails when there are multiple types
-				// <video>
-				// <source src="file.mp4" type="video/mp4" />
-				// <source src="file.webm" type="video/webm" />
-				// </video>
-				if (t.$media.find('source').length > 0) {
-					// find an mp4 and make it the root element source
-					t.$media[0].src = t.$media.find('source[src$="mp4"]').attr('src');
-				}
-
-				// attach a click event to the video and hope Android can play it
-				t.$media.click(function() {
-					t.$media[0].play();
-				});
-
-				return;
-			} else {
-				// audio?
-				// 2.1 = no support
-				// 2.2 = Flash support
-				// 2.3 = Native HTML5
-			}
-
-		} else {
-
-			// remove native controls and use MEJS
-			t.$media.removeAttr('controls');
-		}
-
+		
 		t.init();
 
 		return t;
@@ -1061,50 +1017,101 @@ window.MediaElement = mejs.MediaElement;
 
 			var
 				t = this,
+				// options for MediaElement (shim)
 				meOptions = $.extend(true, {}, t.options, {
 					success: function(media, domNode) { t.meReady(media, domNode); },
 					error: function(e) { t.handleError(e);}
 				});
+		
+		
+			// use native controls in iPad, iPhone, and Android	
+			if (mf.isiPad || mf.isiPhone) {
+				// add controls and stop
+				t.$media.attr('controls', 'controls');
 
-			// unique ID
-			t.id = 'mep_' + mejs.mepIndex++;
+				// fix iOS 3 bug
+				t.$media.removeAttr('poster');
 
-			// build container
-			t.container =
-				$('<div id="' + t.id + '" class="mejs-container">'+
-					'<div class="mejs-inner">'+
-						'<div class="mejs-mediaelement"></div>'+
-						'<div class="mejs-layers"></div>'+
-						'<div class="mejs-controls"></div>'+
-						'<div class="mejs-clear"></div>'+
-					'</div>' +
-				'</div>')
-				.addClass(t.$media[0].className)
-				.insertBefore(t.$media);
+				// override Apple's autoplay override for iPads
+				if (mf.isiPad && t.media.getAttribute('autoplay') !== null) {
+					t.media.load();
+					t.media.play();
+				}
+					
+			} else if (mf.isAndroid) {
 
-			// move the <video/video> tag into the right spot
-			t.container.find('.mejs-mediaelement').append(t.$media);
+				if (t.isVideo) {
+					// Android fails when there are multiple source elements and the type is specified
+					// <video>
+					// <source src="file.mp4" type="video/mp4" />
+					// <source src="file.webm" type="video/webm" />
+					// </video>
+					if (t.$media.find('source').length > 0) {
+						// find an mp4 and make it the root element source
+						t.media.src = t.$media.find('source[src$="mp4"]').attr('src');
+					}
 
-			// find parts
-			t.controls = t.container.find('.mejs-controls');
-			t.layers = t.container.find('.mejs-layers');
+					// attach a click event to the video and hope Android can play it
+					t.$media.click(function() {
+						t.media.play();
+					});
+			
+				} else {
+					// audio?
+					// 2.1 = no support
+					// 2.2 = Flash support
+					// 2.3 = Native HTML5
+				}
 
-			// determine the size
-			if (t.isVideo) {
-				// priority = videoWidth (forced), width attribute, defaultVideoWidth
-				t.width = (t.options.videoWidth > 0) ? t.options.videoWidth : (t.$media[0].getAttribute('width') !== null) ? t.$media.attr('width') : t.options.defaultVideoWidth;
-				t.height = (t.options.videoHeight > 0) ? t.options.videoHeight : (t.$media[0].getAttribute('height') !== null) ? t.$media.attr('height') : t.options.defaultVideoHeight;
 			} else {
-				t.width = t.options.audioWidth;
-				t.height = t.options.audioHeight;
+
+				// DESKTOP: use MediaElementPlayer controls
+				
+				// remove native controls 			
+				t.$media.removeAttr('controls');					
+				
+				// unique ID
+				t.id = 'mep_' + mejs.mepIndex++;
+
+				// build container
+				t.container =
+					$('<div id="' + t.id + '" class="mejs-container">'+
+						'<div class="mejs-inner">'+
+							'<div class="mejs-mediaelement"></div>'+
+							'<div class="mejs-layers"></div>'+
+							'<div class="mejs-controls"></div>'+
+							'<div class="mejs-clear"></div>'+
+						'</div>' +
+					'</div>')
+					.addClass(t.$media[0].className)
+					.insertBefore(t.$media);
+
+				// move the <video/video> tag into the right spot
+				t.container.find('.mejs-mediaelement').append(t.$media);
+
+				// find parts
+				t.controls = t.container.find('.mejs-controls');
+				t.layers = t.container.find('.mejs-layers');
+
+				// determine the size
+				if (t.isVideo) {
+					// priority = videoWidth (forced), width attribute, defaultVideoWidth
+					t.width = (t.options.videoWidth > 0) ? t.options.videoWidth : (t.$media[0].getAttribute('width') !== null) ? t.$media.attr('width') : t.options.defaultVideoWidth;
+					t.height = (t.options.videoHeight > 0) ? t.options.videoHeight : (t.$media[0].getAttribute('height') !== null) ? t.$media.attr('height') : t.options.defaultVideoHeight;
+				} else {
+					t.width = t.options.audioWidth;
+					t.height = t.options.audioHeight;
+				}
+
+				// set the size, while we wait for the plugins to load below
+				t.setPlayerSize(t.width, t.height);
+				
+				// create MediaElementShim
+				meOptions.pluginWidth = t.height;
+				meOptions.pluginHeight = t.width;				
 			}
 
-			// set the size, while we wait for the plugins to load below
-			t.setPlayerSize(t.width, t.height);
-
-			// create MediaElementShim
-			meOptions.pluginWidth = t.height;
-			meOptions.pluginHeight = t.width;
+			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 		},
 
