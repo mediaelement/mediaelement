@@ -4,8 +4,7 @@
 		if (!player.isVideo)
 			return;
 
-		var 
-			isFullScreen = false,
+		var 			
 			normalHeight = 0,
 			normalWidth = 0,
 			container = player.container,
@@ -13,7 +12,7 @@
 				$('<div class="mejs-button mejs-fullscreen-button"><span></span></div>')
 				.appendTo(controls)
 				.click(function() {
-					setFullScreen(!isFullScreen);
+					setFullScreen(!media.isFullScreen);
 				}),
 			setFullScreen = function(goFullScreen) {
 				switch (media.pluginType) {
@@ -26,8 +25,10 @@
 						if (mejs.MediaFeatures.hasNativeFullScreen) {
 							if (goFullScreen) {
 								media.webkitEnterFullScreen();
+								media.isFullScreen = true;
 							} else {
 								media.webkitExitFullScreen();
+								media.isFullScreen = false;
 							}
 						} else {
 							if (goFullScreen) {
@@ -57,6 +58,7 @@
 									.addClass('mejs-unfullscreen');
 
 								player.setControlsSize();
+								media.isFullScreen = true;
 							} else {
 
 								container
@@ -78,14 +80,14 @@
 									.addClass('mejs-fullscreen');
 
 								player.setControlsSize();
+								media.isFullScreen = false;
 							}
 						}
-				}
-				isFullScreen = goFullScreen;
+				}				
 			};
 
 		$(document).bind('keydown',function (e) {
-			if (isFullScreen && e.keyCode == 27) {
+			if (media.isFullScreen && e.keyCode == 27) {
 				setFullScreen(false);
 			}
 		});

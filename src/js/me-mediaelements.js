@@ -4,6 +4,7 @@ extension methods to <video> or <audio> object to bring it into parity with Plug
 */
 mejs.HtmlMediaElement = {
 	pluginType: 'native',
+	isFullScreen: false,
 
 	setCurrentTime: function (time) {
 		this.currentTime = time;
@@ -63,6 +64,7 @@ mejs.PluginMediaElement.prototype = {
 	// special
 	pluginElement: null,
 	pluginType: '',
+	isFullScreen: false,
 
 	// not implemented :(
 	playbackRate: -1,

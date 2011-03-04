@@ -32,6 +32,7 @@
 		private var _stageHeight:Number;
 		private var _enableSmoothing:Boolean;
 		private var _allowedPluginDomain:String;
+		private var _isFullScreen:Boolean = false;
 
 		// native video size (from meta data)
 		private var _nativeVideoWidth:Number = 0;
@@ -221,6 +222,9 @@
 
 			// test
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, clickHandler);
+			
+			// resize
+			stage.addEventListener(FullScreenEvent.FULL_SCREEN, stageFullScreen);	
 		}
 
 		function clickHandler(e:MouseEvent):void {
@@ -243,28 +247,30 @@
 			setFullscreen(true);
 		}
 
-		var _isFullscreen:Boolean = false;
-		function setFullscreen(fullscreen:Boolean) {
+
+		function setFullscreen(gofullscreen:Boolean) {
 
 			try {
 				//_fullscreenButton.visible = false;
 
-				if (fullscreen) {
+				if (gofullscreen) {
 					var screenRectangle:Rectangle = new Rectangle(_video.x, _video.y, flash.system.Capabilities.screenResolutionX, flash.system.Capabilities.screenResolutionY); 
 					stage.fullScreenSourceRect = screenRectangle;
 
 					stage.displayState = StageDisplayState.FULL_SCREEN;
-					_isFullscreen = true;
+					_isFullScreen = true;
 
 				} else {
 					stage.displayState = StageDisplayState.NORMAL;
-					_isFullscreen = false;
+					_isFullScreen = false;
 				}
 
 			} catch (error:Error) {
 
-				//if (fullscreen)
-					_fullscreenButton.visible = true;
+				// show the button when the security error doesn't let it work
+				_fullscreenButton.visible = true;
+
+				_isFullScreen = false;
 
 				_output.appendText("error setting fullscreen: " + error.toString() + "\n");   
 			}
@@ -274,6 +280,7 @@
 			_fullscreenButton.visible = false;
 
 			try {
+				_controlBar.visible = true;
 				setFullscreen(true);
 				repositionVideo(true);
 			} catch (error:Error) {
@@ -283,10 +290,11 @@
 		function stageFullScreen(e:FullScreenEvent) {
 			_output.appendText("fullscreen event: " + e.fullScreen.toString() + "\n");   
 
-			if (e.fullScreen) {
-				_fullscreenButton.visible = false;
-			} else {
+			_fullscreenButton.visible = false;
+			_isFullScreen = e.fullScreen;
 
+			if (!e.fullScreen) {			
+				_controlBar.visible = _showControls;
 			}
 		}
 		// END: Fullscreen
@@ -432,8 +440,14 @@
 				//_output.appendText("event:" + eventName + " : " + eventValues);
 				trace("event", eventName, eventValues);
 	
-				if (eventValues == null || eventValues == "")
-					eventValues = "{}";
+				if (eventValues == null)
+					eventValues == "";
+
+				if (_isVideo) {
+					eventValues += (eventValues != "" ? "," : "") + "isFullScreen:" + _isFullScreen;
+				}
+
+				eventValues = "{" + eventValues + "}";
 	
 				/*
 				OLD DIRECT METHOD
