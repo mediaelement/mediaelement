@@ -130,6 +130,11 @@
 						});
 					}
 				});
+				
+			// check for autoplay
+			if (media.getAttribute('autoplay') !== null) {
+				player.chapters.css('visibility','hidden');
+			}				
 
 			// auto selector
 			if (player.options.translationSelector) {
