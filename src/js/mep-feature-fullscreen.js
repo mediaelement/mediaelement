@@ -12,7 +12,10 @@
 				$('<div class="mejs-button mejs-fullscreen-button"><span></span></div>')
 				.appendTo(controls)
 				.click(function() {
-					setFullScreen(!media.isFullScreen);
+					var goFullscreen = (mejs.MediaFeatures.hasNativeFullScreen) ?
+									!media.webkitDisplayingFullscreen :
+									!media.isFullScreen;
+					setFullScreen(goFullscreen);
 				}),
 			setFullScreen = function(goFullScreen) {
 				switch (media.pluginType) {
