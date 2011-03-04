@@ -112,6 +112,7 @@
 
 			var
 				t = this,
+				mf = mejs.MediaFeatures,
 				// options for MediaElement (shim)
 				meOptions = $.extend(true, {}, t.options, {
 					success: function(media, domNode) { t.meReady(media, domNode); },
