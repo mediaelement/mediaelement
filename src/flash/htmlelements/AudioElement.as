@@ -270,7 +270,7 @@ package htmlelements
 		private function sendEvent(eventName:String) {
 
 			// build JSON
-			var values:String = "{duration:" + _duration + 
+			var values:String = "duration:" + _duration + 
 							",currentTime:" + _currentTime + 
 							",muted:" + _isMuted + 
 							",paused:" + _isPaused + 
@@ -280,7 +280,7 @@ package htmlelements
 							",src:\"" + _currentUrl + "\"" +
 							",bufferedBytes:" + _bytesLoaded +
 							",bufferedTime:" + _bufferedTime +
-							"}";
+							"";
 
 			_element.sendEvent(eventName, values);
 		}
