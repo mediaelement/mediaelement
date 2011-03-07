@@ -76,7 +76,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.1.1 (dev) *
+*2.1.1 (2011/03/07) - 33.5kb *
 
 * added 'loadeddata' event to Flash and Silverlight
 * switched to flashvars parameter to support Apache's mod_security
