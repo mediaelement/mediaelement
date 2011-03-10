@@ -502,6 +502,7 @@
 	position: absolute;
 	width: 100%;
 	bottom: 15px;
+	left: 0;
 }
 
 .mejs-captions-position-hover {
