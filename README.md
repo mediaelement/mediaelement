@@ -76,6 +76,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
+*2.1.2 ()*
+
+* fixed IE6 and IE7 caption position
+* fixed IE7 failure in certain places
+
 *2.1.1 (2011/03/07) - 33.5kb *
 
 * added 'loadeddata' event to Flash and Silverlight
