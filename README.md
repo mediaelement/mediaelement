@@ -80,6 +80,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 * fixed IE6 and IE7 caption position
 * fixed IE7 failure in certain places
+* changed browser UA detection to use only lowercase (iPhone iphone)
 
 *2.1.1 (2011/03/07) - 33.5kb *
 
