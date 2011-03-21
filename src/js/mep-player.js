@@ -295,6 +295,11 @@
 				t.media.addEventListener('ended', function (e) {
 					t.media.setCurrentTime(0);
 					t.media.pause();
+					
+					if (t.setProgressRail)
+						t.setProgressRail();
+					if (t.setCurrentRail)
+						t.setCurrentRail();						
 
 					if (t.options.loop) {
 						t.media.play();
@@ -347,6 +352,8 @@
 				railWidth = 0,
 				rail = t.controls.find('.mejs-time-rail'),
 				total = t.controls.find('.mejs-time-total'),
+				current = t.controls.find('.mejs-time-current'),
+				loaded = t.controls.find('.mejs-time-loaded');
 				others = rail.siblings();
 
 			// find the size of all the other controls besides the rail
@@ -358,8 +365,15 @@
 			// fit the rail into the remaining space
 			railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
 
+			// outer area
 			rail.width(railWidth);
+			// dark space
 			total.width(railWidth - (total.outerWidth(true) - total.width()));
+			
+			if (t.setProgressRail)
+				t.setProgressRail();
+			if (t.setCurrentRail)
+				t.setCurrentRail();				
 		},
 
 
