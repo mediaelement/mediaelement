@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.1';
+mejs.version = '2.1.2.dev';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -184,7 +184,7 @@ PluginDetector.addPlugin('acrobat','Adobe Acrobat','application/pdf','AcroPDF.PD
 */
 
 // special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-if (mejs.PluginDetector.ua.match(/Android 2\.[12]/) !== null) {
+if (mejs.PluginDetector.ua.match(/android 2\.[12]/) !== null) {
 	HTMLMediaElement.canPlayType = function(type) {
 		return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'probably' : '';
 	};
@@ -195,17 +195,17 @@ mejs.MediaFeatures = {
 	init: function() {
 		var
 			nav = mejs.PluginDetector.nav,
-			ua = mejs.PluginDetector.ua,
+			ua = mejs.PluginDetector.ua.toLowerCase(),
 			i,
 			v,
 			html5Elements = ['source','track','audio','video'];
 
 		// detect browsers (only the ones that have some kind of quirk we need to work around)
-		this.isiPad = (ua.match(/iPad/i) !== null);
-		this.isiPhone = (ua.match(/iPhone/i) !== null);
-		this.isAndroid = (ua.match(/Android/i) !== null);
-		this.isIE = (nav.appName.indexOf("Microsoft") != -1);
-		this.isChrome = (ua.match(/Chrome/gi) !== null);
+		this.isiPad = (ua.match(/ipad/i) !== null);
+		this.isiPhone = (ua.match(/iphone/i) !== null);
+		this.isAndroid = (ua.match(/android/i) !== null);
+		this.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
+		this.isChrome = (ua.match(/chrome/gi) !== null);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
@@ -419,6 +419,19 @@ mejs.PluginMediaElement.prototype = {
 		this.events[eventName] = this.events[eventName] || [];
 		this.events[eventName].push(callback);
 	},
+	removeEventListener: function (eventName, callback) {
+		if (!eventName) { this.events = {}; return true; }
+		var callbacks = this.events[eventName];
+		if (!callbacks) return true;
+		if (!callback) { this.events[eventName] = []; return true; }
+		for (i = 0; i < callbacks.length; i++) {
+			if (callbacks[i] === callback) {
+				this.events[eventName].splice(i, 1);
+				return true;
+			}
+		}
+		return false;
+	},	
 	dispatchEvent: function (eventName) {
 		var i,
 			args,
@@ -555,7 +568,7 @@ and returns either the native element or a Flash/Silverlight version that
 mimics HTML5 MediaElement
 */
 mejs.MediaElement = function (el, o) {
-	mejs.HtmlMediaElementShim.create(el,o);
+	return mejs.HtmlMediaElementShim.create(el,o);
 };
 
 mejs.HtmlMediaElementShim = {
@@ -589,10 +602,10 @@ mejs.HtmlMediaElementShim = {
 
 		if (playback.method == 'native') {
 			// add methods to native HTMLMediaElement
-			this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
+			return this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
+			return this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
@@ -852,6 +865,8 @@ mejs.HtmlMediaElementShim = {
 		htmlMediaElement.style.display = 'none';
 
 		// FYI: options.success will be fired by the MediaPluginBridge
+		
+		return pluginMediaElement;
 	},
 
 	updateNative: function(htmlMediaElement, options, autoplay, preload, playback) {
@@ -888,6 +903,8 @@ mejs.HtmlMediaElementShim = {
 
 		// fire success code
 		options.success(htmlMediaElement, htmlMediaElement);
+		
+		return htmlMediaElement;
 	}
 };
 
