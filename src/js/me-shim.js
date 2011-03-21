@@ -119,7 +119,7 @@ and returns either the native element or a Flash/Silverlight version that
 mimics HTML5 MediaElement
 */
 mejs.MediaElement = function (el, o) {
-	mejs.HtmlMediaElementShim.create(el,o);
+	return mejs.HtmlMediaElementShim.create(el,o);
 };
 
 mejs.HtmlMediaElementShim = {
@@ -153,10 +153,10 @@ mejs.HtmlMediaElementShim = {
 
 		if (playback.method == 'native') {
 			// add methods to native HTMLMediaElement
-			this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
+			return this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
+			return this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
@@ -416,6 +416,8 @@ mejs.HtmlMediaElementShim = {
 		htmlMediaElement.style.display = 'none';
 
 		// FYI: options.success will be fired by the MediaPluginBridge
+		
+		return pluginMediaElement;
 	},
 
 	updateNative: function(htmlMediaElement, options, autoplay, preload, playback) {
@@ -452,6 +454,8 @@ mejs.HtmlMediaElementShim = {
 
 		// fire success code
 		options.success(htmlMediaElement, htmlMediaElement);
+		
+		return htmlMediaElement;
 	}
 };
 
