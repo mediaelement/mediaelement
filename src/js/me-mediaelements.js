@@ -196,6 +196,19 @@ mejs.PluginMediaElement.prototype = {
 		this.events[eventName] = this.events[eventName] || [];
 		this.events[eventName].push(callback);
 	},
+	removeEventListener: function (eventName, callback) {
+		if (!eventName) { this.events = {}; return true; }
+		var callbacks = this.events[eventName];
+		if (!callbacks) return true;
+		if (!callback) { this.events[eventName] = []; return true; }
+		for (i = 0; i < callbacks.length; i++) {
+			if (callbacks[i] === callback) {
+				this.events[eventName].splice(i, 1);
+				return true;
+			}
+		}
+		return false;
+	},	
 	dispatchEvent: function (eventName) {
 		var i,
 			args,
