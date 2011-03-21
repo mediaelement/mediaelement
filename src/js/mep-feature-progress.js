@@ -21,54 +21,6 @@
 			handle  = controls.find('.mejs-time-handle'),
 			timefloat  = controls.find('.mejs-time-float'),
 			timefloatcurrent  = controls.find('.mejs-time-float-current'),
-			setProgress = function(e) {
-				if (!e) {
-					return;
-				}
-
-				var
-					target = e.target,
-					percent = null;
-
-				// newest HTML5 spec has buffered array (FF4, Webkit)
-				if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
-					// TODO: account for a real array with multiple values (only Firefox 4 has this so far) 
-					percent = target.buffered.end(0) / target.duration;
-				} 
-				// Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
-				// to be anything other than 0. If the byte count is available we use this instead.
-				// Browsers that support the else if do not seem to have the bufferedBytes value and
-				// should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
-				else if (target && target.bytesTotal != undefined && target.bytesTotal > 0 && target.bufferedBytes != undefined) {
-					percent = target.bufferedBytes / target.bytesTotal;
-				}
-				// Firefox 3 with an Ogg file seems to go this way
-				else if (e.lengthComputable && e.total != 0) {
-					percent = e.loaded/e.total;
-				}
-
-				// finally update the progress bar
-				if (percent !== null) {
-					percent = Math.min(1, Math.max(0, percent));
-					// update loaded bar
-					loaded.width(total.width() * percent);
-				}
-			}, 
-			setCurrentTime = function(e) {
-
-				if (media.currentTime && media.duration) {
-
-					// update bar and handle
-					var 
-						newWidth = total.width() * media.currentTime / media.duration,
-						handlePos = newWidth - (handle.outerWidth(true) / 2);
-
-					current.width(newWidth);
-					handle.css('left', handlePos);
-
-				}
-
-			},
 			handleMouseMove = function (e) {
 				// mouse position relative to the object
 				var x = e.pageX,
@@ -126,14 +78,60 @@
 
 		// loading
 		media.addEventListener('progress', function (e) {
-			setProgress(e);
+			player.setCurrentRail(e);
 		}, false);
 
 		// current time
 		media.addEventListener('timeupdate', function(e) {
-			setProgress(e);
-			setCurrentTime(e);
+			player.setProgressRail(e);
+			player.setCurrentRail(e);
 		}, false);
+		
+		MediaElementPlayer.prototype.setProgressRail = function(e) {
+
+			var
+				target = (e != undefined) ? e.target : media,
+				percent = null;
+
+			// newest HTML5 spec has buffered array (FF4, Webkit)
+			if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
+				// TODO: account for a real array with multiple values (only Firefox 4 has this so far) 
+				percent = target.buffered.end(0) / target.duration;
+			} 
+			// Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
+			// to be anything other than 0. If the byte count is available we use this instead.
+			// Browsers that support the else if do not seem to have the bufferedBytes value and
+			// should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
+			else if (target && target.bytesTotal != undefined && target.bytesTotal > 0 && target.bufferedBytes != undefined) {
+				percent = target.bufferedBytes / target.bytesTotal;
+			}
+			// Firefox 3 with an Ogg file seems to go this way
+			else if (e && e.lengthComputable && e.total != 0) {
+				percent = e.loaded/e.total;
+			}
+
+			// finally update the progress bar
+			if (percent !== null) {
+				percent = Math.min(1, Math.max(0, percent));
+				// update loaded bar
+				loaded.width(total.width() * percent);
+			}
+		}
+		MediaElementPlayer.prototype.setCurrentRail = function() {
+
+			if (media.currentTime != undefined && media.duration) {
+
+				// update bar and handle
+				var 
+					newWidth = total.width() * media.currentTime / media.duration,
+					handlePos = newWidth - (handle.outerWidth(true) / 2);
+
+				current.width(newWidth);
+				handle.css('left', handlePos);
+
+			}
+
+		}
 	}
 
 })(jQuery);
