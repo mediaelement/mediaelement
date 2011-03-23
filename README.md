@@ -76,7 +76,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.1.2 ()*
+*2.2.0 (proposed)*
+
+* create player from `<a href="media.mp4">video</a>`
+* create player from `<div class="mejs"></div>` specifying src in JavaScript
+
+*2.1.2 (2011/03/23)*
 
 * fixed IE6 and IE7 caption position
 * fixed IE7 failure in certain places
@@ -84,7 +89,6 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * fixed Flash audio loaded bug (reporting 0 after loaded)
 * added removeEventListener to shims
 * new rail-resizing code
-
 
 *2.1.1 (2011/03/07) - 33.5kb *
 
