@@ -269,9 +269,11 @@
 				}
 				_timer.start();
 				_isPaused = false;
-				sendEvent(HtmlMediaEvent.PLAY);
-				sendEvent(HtmlMediaEvent.PLAYING);
 				_hasStartedPlaying = true;
+				
+				// don't toss play/playing events here, because we haven't sent a 
+				// canplay / loadeddata event yet. that'll be handled in the net
+				// event listener
 			}
 
 		}
