@@ -38,7 +38,7 @@ mejs.Utility = {
 		}
 		return path;
 	},
-	secondsToTimeCode: function(seconds) {
+	secondsToTimeCode: function(seconds,forceHours) {
 		seconds = Math.round(seconds);
 		var hours,
 		    minutes = Math.floor(seconds / 60);
@@ -50,6 +50,6 @@ mejs.Utility = {
 		minutes = (minutes >= 10) ? minutes : "0" + minutes;
 		seconds = Math.floor(seconds % 60);
 		seconds = (seconds >= 10) ? seconds : "0" + seconds;
-		return hours + ":" + minutes + ":" + seconds;
+		return ((hours > 0 || forceHours === true) ? hours + ":" :'') + minutes + ":" + seconds;
 	}
 };
