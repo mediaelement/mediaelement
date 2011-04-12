@@ -87,7 +87,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * removed some duplicate flash events
 * added 'seeking' event to Flash/SL (already had 'seeked')
 
-*2.1.2 (2011/03/23)*
+*2.1.2 (2011/03/23) - 34.4kb*
 
 * fixed IE6 and IE7 caption position
 * fixed IE7 failure in certain places
@@ -96,7 +96,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * added removeEventListener to shims
 * new rail-resizing code
 
-*2.1.1 (2011/03/07) - 33.5kb *
+*2.1.1 (2011/03/07) - 33.5kb*
 
 * added 'loadeddata' event to Flash and Silverlight
 * switched to flashvars parameter to support Apache's mod_security
