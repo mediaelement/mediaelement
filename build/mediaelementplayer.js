@@ -33,6 +33,8 @@
 		loop: false,
 		// resize to media dimensions
 		enableAutosize: true,
+		// forces the hour marker (##:00:00)
+		alwaysShowHours: false,
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
 	};
@@ -258,6 +260,7 @@
 							t['build' + feature](t, t.controls, t.layers, t.media);
 						} catch (e) {
 							// TODO: report control error
+							throw e;
 						}
 					}
 				}
@@ -317,6 +320,18 @@
 					} else {
 						t.controls.css('visibility','visible');
 					}
+				}, true);
+				
+				// resize on the first play
+				t.media.addEventListener('loadedmetadata', function(e) {
+					if (t.updateDuration) {
+						t.updateDuration();
+					}
+					if (t.updateCurrent) {
+						t.updateCurrent();
+					}
+					
+					t.setControlsSize();
 				}, true);
 
 
@@ -737,36 +752,47 @@
 	// current and duration 00:00 / 00:00
 	MediaElementPlayer.prototype.buildcurrent = function(player, controls, layers, media) {
 		$('<div class="mejs-time">'+
-				'<span class="mejs-currenttime">00:00</span>'+
+				'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
 			'</div>')
 			.appendTo(controls);
 
 		media.addEventListener('timeupdate',function() {
-			if (media.currentTime) {
-				controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(media.currentTime));
-			}
+			player.updateCurrent();
 		}, false);
 	};
 
 	MediaElementPlayer.prototype.buildduration = function(player, controls, layers, media) {
 		if (controls.children().last().find('.mejs-currenttime').length > 0) {
 			$(' <span> | </span> '+
-			   '<span class="mejs-duration">00:00</span>')
+			   '<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>')
 				.appendTo(controls.find('.mejs-time'));
 		} else {
 
 			$('<div class="mejs-time">'+
-				'<span class="mejs-duration">00:00</span>'+
+				'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
 			'</div>')
 			.appendTo(controls);
 		}
 
 		media.addEventListener('timeupdate',function() {
-			if (media.duration) {
-				controls.find('.mejs-duration').html(mejs.Utility.secondsToTimeCode(media.duration));
-			}
+			player.updateDuration();
 		}, false);
 	};
+	
+	MediaElementPlayer.prototype.updateCurrent = function() {
+		var t = this;
+
+		//if (t.media.currentTime) {
+			t.controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 360 ));
+		//}
+	}
+	MediaElementPlayer.prototype.updateDuration = function() {	
+		var t = this;
+		
+		if (t.media.duration) {
+			t.controls.find('.mejs-duration').html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours));
+		}		
+	};	
 
 })(jQuery);
 (function($) {
