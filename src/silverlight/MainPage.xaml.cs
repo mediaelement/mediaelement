@@ -185,6 +185,7 @@ namespace SilverlightMediaElement
 					SendEvent("play");
 					SendEvent("playing");
 					break;
+
 				case MediaElementState.Paused:
 					_isEnded = false;
 					_isPaused = true;
@@ -367,7 +368,9 @@ namespace SilverlightMediaElement
 
 			int milliseconds = Convert.ToInt32(position * 1000);
 
+			SendEvent("seeking");
 			media.Position = new TimeSpan(0, 0, 0, 0, milliseconds);
+			SendEvent("seeked");
 		}
 
 		[ScriptableMember]
