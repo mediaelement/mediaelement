@@ -22,6 +22,8 @@
 		loop: false,
 		// resize to media dimensions
 		enableAutosize: true,
+		// forces the hour marker (##:00:00)
+		showHours: false,
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
 	};
@@ -247,6 +249,7 @@
 							t['build' + feature](t, t.controls, t.layers, t.media);
 						} catch (e) {
 							// TODO: report control error
+							throw e;
 						}
 					}
 				}
@@ -306,6 +309,18 @@
 					} else {
 						t.controls.css('visibility','visible');
 					}
+				}, true);
+				
+				// resize on the first play
+				t.media.addEventListener('loadedmetadata', function(e) {
+					if (t.updateDuration) {
+						t.updateDuration();
+					}
+					if (t.updateCurrent) {
+						t.updateCurrent();
+					}
+					
+					t.setControlsSize();
 				}, true);
 
 
