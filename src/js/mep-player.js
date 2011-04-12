@@ -23,7 +23,7 @@
 		// resize to media dimensions
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
-		showHours: false,
+		alwaysShowHours: false,
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
 	};
