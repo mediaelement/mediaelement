@@ -19,5 +19,8 @@
 		public static var CANPLAY:String = "canplay";
 		// new : 3/3/2011
 		public static var LOADEDDATA:String = "loadeddata";
+		
+		// new : 4/12/2011
+		public static var SEEKING:String = "seeking";		
 	}
 }
