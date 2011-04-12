@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.2';
+mejs.version = '2.1.3';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -70,13 +70,19 @@ mejs.Utility = {
 		}
 		return path;
 	},
-	secondsToTimeCode: function(seconds) {
+	secondsToTimeCode: function(seconds,forceHours) {
 		seconds = Math.round(seconds);
-		var minutes = Math.floor(seconds / 60);
+		var hours,
+		    minutes = Math.floor(seconds / 60);
+		if (minutes >= 60) {
+		    hours = Math.floor(minutes / 60);
+		    minutes = minutes % 60;
+		}
+		hours = hours === undefined ? "00" : (hours >= 10) ? hours : "0" + hours;
 		minutes = (minutes >= 10) ? minutes : "0" + minutes;
 		seconds = Math.floor(seconds % 60);
 		seconds = (seconds >= 10) ? seconds : "0" + seconds;
-		return minutes + ":" + seconds;
+		return ((hours > 0 || forceHours === true) ? hours + ":" :'') + minutes + ":" + seconds;
 	}
 };
 

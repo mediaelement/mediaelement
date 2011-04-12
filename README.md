@@ -81,6 +81,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * create player from `<a href="media.mp4">video</a>`
 * create player from `<div class="mejs"></div>` specifying src in JavaScript
 
+*2.1.3 (2011/04/12)*
+
+* added support for hours in time format (00:00:00) and an alwaysShowHours option to force hours to always show
+* removed some duplicate flash events
+* added 'seeking' event to Flash/SL (already had 'seeked')
+
 *2.1.2 (2011/03/23)*
 
 * fixed IE6 and IE7 caption position
