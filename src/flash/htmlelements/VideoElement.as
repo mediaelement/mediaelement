@@ -303,10 +303,10 @@
 		public function setCurrentTime(pos:Number):void {
 			if (_stream == null)
 				return;
-
+			
+			sendEvent(HtmlMediaEvent.SEEKING);
 			_stream.seek(pos);
 			sendEvent(HtmlMediaEvent.TIMEUPDATE);
-			sendEvent(HtmlMediaEvent.SEEKED);
 		}
 
 		public function setVolume(volume:Number):void {
