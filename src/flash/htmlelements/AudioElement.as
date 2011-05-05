@@ -155,7 +155,12 @@ package htmlelements
 			sendEvent(HtmlMediaEvent.LOADSTART);
 
 			_isLoaded = true;
-
+                        
+                        if (!_firedCanPlay) {
+				sendEvent(HtmlMediaEvent.LOADEDDATA);
+				sendEvent(HtmlMediaEvent.CANPLAY);				
+				_firedCanPlay = true;
+			}
 			if (_playAfterLoading) {
 				_playAfterLoading = false;
 				play();
