@@ -330,10 +330,8 @@ namespace SilverlightMediaElement
 			media.AutoPlay = true;
 			media.Source = new Uri(_mediaUrl, UriKind.Absolute);
 			
-			if (!_firedCanPlay) {
-				SendEvent("canplay");
-				_firedCanPlay = true;
-			}
+			SendEvent("canplay");
+			_firedCanPlay = true;
 		}
 
 		[ScriptableMember]

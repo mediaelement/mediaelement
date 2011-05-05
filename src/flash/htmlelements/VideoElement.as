@@ -245,10 +245,8 @@
 			sendEvent(HtmlMediaEvent.LOADSTART);
 
                         //since flash can always play, while other runtimes require it to first be loaded, fire a canplay event here as well for consistency
-			if (!_firedCanPlay) {
-				sendEvent(HtmlMediaEvent.CANPLAY);
-				_firedCanPlay = true;
-			}
+			sendEvent(HtmlMediaEvent.CANPLAY);
+			_firedCanPlay = true;
 		}
 
 		public function play():void {
