@@ -167,6 +167,8 @@
 .mejs-controls .mejs-time-rail span {
 	display: block;
 	position: absolute;
+	top: 0;
+	left: 0;
 	width: 180px;
 	height: 10px;
 	-webkit-border-radius: 2px;
@@ -175,7 +177,8 @@
 	cursor: pointer;
 }
 .mejs-controls .mejs-time-rail .mejs-time-total {
-	margin: 5px;
+	top: 5px;
+	left: 5px;
 	background: #333;
 	background: rgba(50,50,50,0.8);
 	background: -webkit-gradient(linear, left top, left bottom, from(rgba(30,30,30,0.8)), to(rgba(60,60,60,0.8))); 
