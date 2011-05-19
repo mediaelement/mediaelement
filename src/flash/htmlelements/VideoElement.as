@@ -77,10 +77,11 @@
 		// _stream gets created
 
 
-		public function VideoElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number) 
+		public function VideoElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number, startVolume:Number) 
 		{
 			_element = element;
 			_autoplay = autoplay;
+			_volume = startVolume;
 
 			_video = new Video();
 			addChild(_video);

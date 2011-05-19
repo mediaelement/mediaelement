@@ -33,6 +33,7 @@
 		private var _enableSmoothing:Boolean;
 		private var _allowedPluginDomain:String;
 		private var _isFullScreen:Boolean = false;
+		private var _startVolume:Number;
 
 		// native video size (from meta data)
 		private var _nativeVideoWidth:Number = 0;
@@ -75,6 +76,7 @@
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
 			_showControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
 			_enableSmoothing = (params['smoothing'] != undefined) ? (String(params['smoothing']) == "true") : false;
+			_startVolume = (params['startvolume'] != undefined) ? (parseInt(params['startvolume'], 10)) : 1;
 
 			if (isNaN(_timerRate))
 				_timerRate = 250;
@@ -104,7 +106,7 @@
 
 			// create media element
 			if (_isVideo) {
-				_mediaElement = new VideoElement(this, _autoplay, _timerRate);
+				_mediaElement = new VideoElement(this, _autoplay, _timerRate, _startVolume);
 				_video = (_mediaElement as VideoElement).video;
 				_video.width = _stageWidth;
 				_video.height = _stageHeight;
@@ -112,7 +114,7 @@
 				//_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
 				addChild(_video);
 			} else {
-				_mediaElement = new AudioElement(this, _autoplay, _timerRate);
+				_mediaElement = new AudioElement(this, _autoplay, _timerRate, _startVolume);
 			}
 
 			// debugging
