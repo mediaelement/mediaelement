@@ -179,7 +179,7 @@ package htmlelements
 
 			_timer.stop();
 
-			_soundChannel = _sound.play(_currentTime, 0, _soundTransform);
+			_soundChannel = _sound.play(_currentTime*1000, 0, _soundTransform);
 			_soundChannel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
 			_soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
 
@@ -193,7 +193,7 @@ package htmlelements
 			_timer.stop();
 			if (_soundChannel != null) {
 				_currentTime = _soundChannel.position/1000;
-				_soundChannel.stop();
+				_soundChannel.stop();			
 			}
 
 			_isPaused = true;
