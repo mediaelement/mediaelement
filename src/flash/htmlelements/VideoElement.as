@@ -342,7 +342,7 @@
 		private function sendEvent(eventName:String) {
 
 			// calculate this to mimic HTML5
-			_bufferedTime = _bytesLoaded / _bytesTotal + _duration;
+			_bufferedTime = _bytesLoaded / _bytesTotal * _duration;
 
 			// build JSON
 			var values:String = 
