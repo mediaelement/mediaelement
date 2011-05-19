@@ -32,9 +32,7 @@
 	MediaElementPlayer.prototype.updateCurrent = function() {
 		var t = this;
 
-		//if (t.media.currentTime) {
-			t.controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 360 ));
-		//}
+		t.controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 3600 ));
 	}
 	MediaElementPlayer.prototype.updateDuration = function() {	
 		var t = this;
