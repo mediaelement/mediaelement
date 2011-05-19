@@ -192,7 +192,7 @@ package htmlelements
 
 			_timer.stop();
 			if (_soundChannel != null) {
-				_currentTime = _soundChannel.position;
+				_currentTime = _soundChannel.position/1000;
 				_soundChannel.stop();
 			}
 
