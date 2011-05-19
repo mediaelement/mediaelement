@@ -51,5 +51,9 @@ mejs.Utility = {
 		seconds = Math.floor(seconds % 60);
 		seconds = (seconds >= 10) ? seconds : "0" + seconds;
 		return ((hours > 0 || forceHours === true) ? hours + ":" :'') + minutes + ":" + seconds;
+	},
+	timeCodeToSeconds: function(timecode){
+		var tab = timecode.split(':');
+		return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
 	}
 };

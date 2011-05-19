@@ -439,10 +439,7 @@
 	mejs.SrtParser = {
 		pattern_identifier: /^[0-9]+$/,
 		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,
-		timecodeToSeconds: function(timecode){
-			var tab = timecode.split(':');
-			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
-		},
+
 		split2: function (text, regex) {
 			// normal version for compliant browsers
 			// see below for IE fix
@@ -476,8 +473,8 @@
 						entries.text.push(text);
 						entries.times.push(
 						{
-							start: this.timecodeToSeconds(timecode[1]),
-							stop: this.timecodeToSeconds(timecode[3]),
+							start: mejs.Utility.timeCodeToSeconds(timecode[1]),
+							stop: mejs.Utility.timeCodeToSeconds(timecode[3]),
 							settings: timecode[5]
 						});
 					}
