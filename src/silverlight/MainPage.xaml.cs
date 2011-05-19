@@ -34,6 +34,7 @@ namespace SilverlightMediaElement
 		int _timerRate = 0;
 		double _bufferedBytes = 0;
 		double _bufferedTime = 0;
+		double _volume = 1;
 		int _videoWidth = 0;
 		int _videoHeight = 0;
 
@@ -74,6 +75,8 @@ namespace SilverlightMediaElement
 				Int32.TryParse(initParams["height"], out _height);
 			if (initParams.ContainsKey("timerate"))
 				Int32.TryParse(initParams["timerrate"], out _timerRate);
+			if (initParams.ContainsKey("startvolume"))
+				Double.TryParse(initParams["startvolume"], out _volume);
 
 			if (_timerRate == 0)
 				_timerRate = 250;
@@ -101,6 +104,7 @@ namespace SilverlightMediaElement
 
 
 			media.AutoPlay = _autoplay;
+			media.Volume = _volume;
 			if (!String.IsNullOrEmpty(_mediaUrl)) {
 				setSrc(_mediaUrl);
 				if (_autoplay)

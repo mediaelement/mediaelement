@@ -54,15 +54,16 @@ package htmlelements
 			return _currentTime;
 		}
 
-		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number) 
+		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number, startVolume:Number) 
 		{
 			_element = element;
 			_autoplay = autoplay;
+			_volume = startVolume;
 
 			_timer = new Timer(timerRate);
 			_timer.addEventListener(TimerEvent.TIMER, timerEventHandler);
 
-			_soundTransform = new SoundTransform();
+			_soundTransform = new SoundTransform(_volume);
 			_soundLoaderContext = new SoundLoaderContext();
 		}
 
