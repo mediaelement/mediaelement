@@ -322,7 +322,6 @@ namespace SilverlightMediaElement
 		[ScriptableMember]
 		public void loadMedia() {
 			_isLoading = true;
-			_firedCanPlay = false;
 
 			WriteDebug("method:load " + media.CurrentState);
 			WriteDebug(" - " + _mediaUrl.ToString());
@@ -330,6 +329,9 @@ namespace SilverlightMediaElement
 			Uri uri = new Uri(_mediaUrl);
 			media.AutoPlay = true;
 			media.Source = new Uri(_mediaUrl, UriKind.Absolute);
+			
+			SendEvent("canplay");
+			_firedCanPlay = true;
 		}
 
 		[ScriptableMember]

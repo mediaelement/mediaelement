@@ -45,6 +45,7 @@
 		private var _isConnected:Boolean = false;
 		private var _playWhenConnected:Boolean = false;
 		private var _hasStartedPlaying:Boolean = false;
+		private var _firedCanPlay:Boolean = false;
 
 		public function get video():Video {
 			return _video;
@@ -242,6 +243,10 @@
 			// and call createConnection which finishes the "load" sequence
 
 			sendEvent(HtmlMediaEvent.LOADSTART);
+
+                        //since flash can always play, while other runtimes require it to first be loaded, fire a canplay event here as well for consistency
+			sendEvent(HtmlMediaEvent.CANPLAY);
+			_firedCanPlay = true;
 		}
 
 		public function play():void {
