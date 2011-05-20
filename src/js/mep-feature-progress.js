@@ -15,7 +15,9 @@
 		'</div>')
 			.appendTo(controls);
 
-		var total = controls.find('.mejs-time-total'),
+		var 
+			t = this,
+			total = controls.find('.mejs-time-total'),
 			loaded  = controls.find('.mejs-time-loaded'),
 			current  = controls.find('.mejs-time-current'),
 			handle  = controls.find('.mejs-time-handle'),
@@ -78,6 +80,7 @@
 
 		// loading
 		media.addEventListener('progress', function (e) {
+			player.setProgressRail(e);
 			player.setCurrentRail(e);
 		}, false);
 
@@ -86,15 +89,20 @@
 			player.setProgressRail(e);
 			player.setCurrentRail(e);
 		}, false);
+		
+		
+		// store for later use
+		t.loaded = loaded;
+		t.total = total;
+		t.current = current;
+		t.handle = handle;
 	}
 	MediaElementPlayer.prototype.setProgressRail = function(e) {
 
 		var
 			t = this,
 			target = (e != undefined) ? e.target : t.media,
-			percent = null,
-			loaded = t.controls.find('.mejs-time-loaded'),
-			total = t.controls.find('.mejs-time-total');			
+			percent = null;			
 
 		// newest HTML5 spec has buffered array (FF4, Webkit)
 		if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
@@ -117,25 +125,22 @@
 		if (percent !== null) {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
-			loaded.width(total.width() * percent);
+			t.loaded.width(t.total.width() * percent);
 		}
 	}
 	MediaElementPlayer.prototype.setCurrentRail = function() {
 
-		var t = this,
-			handle  = t.controls.find('.mejs-time-handle'),
-			current  = t.controls.find('.mejs-time-current'),
-			total = t.controls.find('.mejs-time-total');
+		var t = this;
 	
 		if (t.media.currentTime != undefined && t.media.duration) {
 
 			// update bar and handle
 			var 
-				newWidth = total.width() * t.media.currentTime / t.media.duration,
-				handlePos = newWidth - (handle.outerWidth(true) / 2);
+				newWidth = t.total.width() * t.media.currentTime / t.media.duration,
+				handlePos = newWidth - (t.handle.outerWidth(true) / 2);
 
-			current.width(newWidth);
-			handle.css('left', handlePos);
+			t.current.width(newWidth);
+			t.handle.css('left', handlePos);
 		}
 
 	}	
