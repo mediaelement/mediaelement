@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.3';
+mejs.version = '2.1.4';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -83,6 +83,10 @@ mejs.Utility = {
 		seconds = Math.floor(seconds % 60);
 		seconds = (seconds >= 10) ? seconds : "0" + seconds;
 		return ((hours > 0 || forceHours === true) ? hours + ":" :'') + minutes + ":" + seconds;
+	},
+	timeCodeToSeconds: function(timecode){
+		var tab = timecode.split(':');
+		return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
 	}
 };
 
@@ -221,6 +225,10 @@ mejs.MediaFeatures = {
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
 		this.hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
 		if (this.isChrome) {
+			this.hasNativeFullScreen = false;
+		}
+		// OS X 10.5 can't do this even if it says it can :(
+		if (this.hasNativeFullScreen && this.ua.match(/mac os x 10_5/i)) {
 			this.hasNativeFullScreen = false;
 		}
 	}
@@ -798,6 +806,7 @@ mejs.HtmlMediaElementShim = {
 			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
 			'width=' + width,
+			'startvolume=' + options.startVolume,
 			'timerrate=' + options.timerRate,
 			'height=' + height];
 
@@ -1286,7 +1295,7 @@ window.MediaElement = mejs.MediaElement;
 				.width(t.width)
 				.height(t.height);
 
-			t.layers.children('div.mejs-layer')
+			t.layers.children('.mejs-layer')
 				.width(t.width)
 				.height(t.height);
 		},
@@ -1541,7 +1550,9 @@ window.MediaElement = mejs.MediaElement;
 		'</div>')
 			.appendTo(controls);
 
-		var total = controls.find('.mejs-time-total'),
+		var 
+			t = this,
+			total = controls.find('.mejs-time-total'),
 			loaded  = controls.find('.mejs-time-loaded'),
 			current  = controls.find('.mejs-time-current'),
 			handle  = controls.find('.mejs-time-handle'),
@@ -1604,6 +1615,7 @@ window.MediaElement = mejs.MediaElement;
 
 		// loading
 		media.addEventListener('progress', function (e) {
+			player.setProgressRail(e);
 			player.setCurrentRail(e);
 		}, false);
 
@@ -1612,15 +1624,20 @@ window.MediaElement = mejs.MediaElement;
 			player.setProgressRail(e);
 			player.setCurrentRail(e);
 		}, false);
+		
+		
+		// store for later use
+		t.loaded = loaded;
+		t.total = total;
+		t.current = current;
+		t.handle = handle;
 	}
 	MediaElementPlayer.prototype.setProgressRail = function(e) {
 
 		var
 			t = this,
 			target = (e != undefined) ? e.target : t.media,
-			percent = null,
-			loaded = t.controls.find('.mejs-time-loaded'),
-			total = t.controls.find('.mejs-time-total');			
+			percent = null;			
 
 		// newest HTML5 spec has buffered array (FF4, Webkit)
 		if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
@@ -1643,25 +1660,22 @@ window.MediaElement = mejs.MediaElement;
 		if (percent !== null) {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
-			loaded.width(total.width() * percent);
+			t.loaded.width(t.total.width() * percent);
 		}
 	}
 	MediaElementPlayer.prototype.setCurrentRail = function() {
 
-		var t = this,
-			handle  = t.controls.find('.mejs-time-handle'),
-			current  = t.controls.find('.mejs-time-current'),
-			total = t.controls.find('.mejs-time-total');
+		var t = this;
 	
 		if (t.media.currentTime != undefined && t.media.duration) {
 
 			// update bar and handle
 			var 
-				newWidth = total.width() * t.media.currentTime / t.media.duration,
-				handlePos = newWidth - (handle.outerWidth(true) / 2);
+				newWidth = t.total.width() * t.media.currentTime / t.media.duration,
+				handlePos = newWidth - (t.handle.outerWidth(true) / 2);
 
-			current.width(newWidth);
-			handle.css('left', handlePos);
+			t.current.width(newWidth);
+			t.handle.css('left', handlePos);
 		}
 
 	}	
@@ -1701,9 +1715,7 @@ window.MediaElement = mejs.MediaElement;
 	MediaElementPlayer.prototype.updateCurrent = function() {
 		var t = this;
 
-		//if (t.media.currentTime) {
-			t.controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 360 ));
-		//}
+		t.controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 3600 ));
 	}
 	MediaElementPlayer.prototype.updateDuration = function() {	
 		var t = this;
@@ -2062,7 +2074,7 @@ window.MediaElement = mejs.MediaElement;
 				});
 				
 			// check for autoplay
-			if (media.getAttribute('autoplay') !== null) {
+			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
 			}				
 
@@ -2136,7 +2148,7 @@ window.MediaElement = mejs.MediaElement;
 			if (track.isTranslation) {
 
 				// translate the first track
-				mejs.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {
+				mejs.TrackFormatParser.translateTrackText(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {
 
 					// store the new translation
 					track.entries = newOne;
@@ -2150,7 +2162,7 @@ window.MediaElement = mejs.MediaElement;
 					success: function(d) {
 
 						// parse the loaded file
-						track.entries = mejs.SrtParser.parse(d);
+						track.entries = mejs.TrackFormatParser.parse(d);
 						after();
 
 						if (track.kind == 'chapters' && t.media.duration > 0) {
@@ -2355,7 +2367,10 @@ window.MediaElement = mejs.MediaElement;
 	};
 
 	/*
-	Parses SRT format which should be formatted as
+	Parses WebVVT format which should be formatted as
+	================================
+	WEBVTT
+	
 	1
 	00:00:01,1 --> 00:00:05,000
 	A line of text
@@ -2363,25 +2378,24 @@ window.MediaElement = mejs.MediaElement;
 	2
 	00:01:15,1 --> 00:02:05,000
 	A second line of text
+	
+	===============================
 
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
-	mejs.SrtParser = {
+	mejs.TrackFormatParser = {
 		pattern_identifier: /^[0-9]+$/,
 		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,
-		timecodeToSeconds: function(timecode){
-			var tab = timecode.split(':');
-			return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
-		},
+
 		split2: function (text, regex) {
 			// normal version for compliant browsers
 			// see below for IE fix
 			return text.split(regex);
 		},
-		parse: function(srtText) {
+		parse: function(trackText) {
 			var 
 				i = 0,
-				lines = this.split2(srtText, /\r?\n/),
+				lines = this.split2(trackText, /\r?\n/),
 				entries = {text:[], times:[]},
 				timecode,
 				text;
@@ -2406,8 +2420,8 @@ window.MediaElement = mejs.MediaElement;
 						entries.text.push(text);
 						entries.times.push(
 						{
-							start: this.timecodeToSeconds(timecode[1]),
-							stop: this.timecodeToSeconds(timecode[3]),
+							start: mejs.Utility.timeCodeToSeconds(timecode[1]),
+							stop: mejs.Utility.timeCodeToSeconds(timecode[3]),
 							settings: timecode[5]
 						});
 					}
@@ -2417,26 +2431,26 @@ window.MediaElement = mejs.MediaElement;
 			return entries;
 		},
 
-		translateSrt: function(srtData, fromLang, toLang, googleApiKey, callback) {
+		translateTrackText: function(trackData, fromLang, toLang, googleApiKey, callback) {
 
 			var 
 				entries = {text:[], times:[]},
 				lines,
 				i
 
-			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
+			this.translateText( trackData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
 				// split on separators
 				lines = result.split('<a></a>');
 
 				// create new entries
-				for (i=0;i<srtData.text.length; i++) {
+				for (i=0;i<trackData.text.length; i++) {
 					// add translated line
 					entries.text[i] = lines[i];
 					// copy existing times
 					entries.times[i] = {
-						start: srtData.times[i].start,
-						stop: srtData.times[i].stop,
-						settings: srtData.times[i].settings
+						start: trackData.times[i].start,
+						stop: trackData.times[i].stop,
+						settings: trackData.times[i].settings
 					};
 				}
 
@@ -2455,7 +2469,7 @@ window.MediaElement = mejs.MediaElement;
 				nextChunk= function() {
 					if (chunks.length > 0) {
 						chunk = chunks.shift();
-						mejs.SrtParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
+						mejs.TrackFormatParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
 							if (r != 'undefined') {
 								result += r;
 							}
@@ -2509,7 +2523,7 @@ window.MediaElement = mejs.MediaElement;
 	// test for browsers with bad String.split method.
 	if ('x\n\ny'.split(/\n/gi).length != 3) {
 		// add super slow IE8 and below version
-		mejs.SrtParser.split2 = function(text, regex) {
+		mejs.TrackFormatParser.split2 = function(text, regex) {
 			var 
 				parts = [], 
 				chunk = '',
