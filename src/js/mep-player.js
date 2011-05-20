@@ -356,7 +356,7 @@
 				.width(t.width)
 				.height(t.height);
 
-			t.layers.children('div.mejs-layer')
+			t.layers.children('.mejs-layer')
 				.width(t.width)
 				.height(t.height);
 		},
