@@ -15,6 +15,7 @@
 	{
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
+		private var _preload:String = "";
 
 		private var _connection:NetConnection;
 		private var _stream:NetStream;
@@ -77,11 +78,12 @@
 		// _stream gets created
 
 
-		public function VideoElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number, startVolume:Number) 
+		public function VideoElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number) 
 		{
 			_element = element;
 			_autoplay = autoplay;
 			_volume = startVolume;
+			_preload = preload;
 
 			_video = new Video();
 			addChild(_video);
@@ -164,31 +166,6 @@
 			}
 		}
 
-		private function connectStream():void {
-			trace("connectStream");
-			_stream = new NetStream(_connection);
-			
-			// explicitly set the sound since it could have come before the connection was made
-			_soundTransform = new SoundTransform(_volume);
-			_stream.soundTransform = _soundTransform;						
-			
-			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
-			_stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
-
-			var customClient:Object = new Object();
-			customClient.onMetaData = onMetaDataHandler;
-			_stream.client = customClient;
-
-			_video.attachNetStream(_stream);
-
-			_isConnected = true;
-
-			if (_playWhenConnected && !_hasStartedPlaying) {
-				play();
-				_playWhenConnected = false;
-			}
-
-		}
 
 		private function securityErrorHandler(event:SecurityErrorEvent):void {
 			trace("securityErrorHandler: " + event);
@@ -217,7 +194,7 @@
 		public function setSrc(url:String):void {
 			if (_isConnected && _stream) {
 				// stop and restart
-				_stream.pause();
+				_stream.pause();				
 			}
 
 			_currentUrl = url;
@@ -244,6 +221,34 @@
 
 			sendEvent(HtmlMediaEvent.LOADSTART);
 		}
+		
+
+		private function connectStream():void {
+			trace("connectStream");
+			_stream = new NetStream(_connection);
+			_stream.bufferTime = 10;
+			
+			// explicitly set the sound since it could have come before the connection was made
+			_soundTransform = new SoundTransform(_volume);
+			_stream.soundTransform = _soundTransform;						
+			
+			_stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
+			_stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
+
+			var customClient:Object = new Object();
+			customClient.onMetaData = onMetaDataHandler;
+			_stream.client = customClient;
+
+			_video.attachNetStream(_stream);
+
+			_isConnected = true;
+
+			if (_playWhenConnected && !_hasStartedPlaying) {
+				play();
+				_playWhenConnected = false;
+			}
+
+		}		
 
 		public function play():void {
 
