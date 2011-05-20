@@ -26,6 +26,7 @@ namespace SilverlightMediaElement
 
 		// variables
 		string _mediaUrl;
+		string _preload;
 		string _htmlid;
 		bool _autoplay = false;
 		bool _debug = false;
@@ -69,6 +70,15 @@ namespace SilverlightMediaElement
 				_autoplay = true;
 			if (initParams.ContainsKey("debug") && initParams["debug"] == "true")
 				_debug = true;
+			if (initParams.ContainsKey("preload"))
+				_preload = initParams["preload"].ToLower();
+			else
+				_preload = "";
+
+			if (!(new string[] { "none", "metadata", "auto" }).Contains(_preload)){
+				_preload = "none";
+			}
+
 			if (initParams.ContainsKey("width")) 
 				Int32.TryParse(initParams["width"], out _width);			
 			if (initParams.ContainsKey("height")) 
@@ -107,7 +117,7 @@ namespace SilverlightMediaElement
 			media.Volume = _volume;
 			if (!String.IsNullOrEmpty(_mediaUrl)) {
 				setSrc(_mediaUrl);
-				if (_autoplay)
+				if (_autoplay || _preload != "none")
 					loadMedia();
 			}
 
@@ -181,11 +191,7 @@ namespace SilverlightMediaElement
 					_isAttemptingToPlay = false;
 					StartTimer();
 
-					if (!_firedCanPlay) {
-						SendEvent("loadeddata");
-						SendEvent("canplay");
-						_firedCanPlay = true;
-					}
+
 					SendEvent("play");
 					SendEvent("playing");
 					break;
@@ -218,6 +224,7 @@ namespace SilverlightMediaElement
 		}
 
 		void media_BufferingProgressChanged(object sender, RoutedEventArgs e) {
+			_bufferedTime = media.DownloadProgress * media.NaturalDuration.TimeSpan.TotalSeconds;
 			_bufferedBytes = media.BufferingProgress;
 			
 			
@@ -226,7 +233,14 @@ namespace SilverlightMediaElement
 
 		void media_DownloadProgressChanged(object sender, RoutedEventArgs e) {
 			_bufferedTime = media.DownloadProgress * media.NaturalDuration.TimeSpan.TotalSeconds;
-			
+			_bufferedBytes = media.BufferingProgress;
+
+			if (!_firedCanPlay) {
+				SendEvent("loadeddata");
+				SendEvent("canplay");
+				_firedCanPlay = true;
+			}
+
 			SendEvent("progress");			
 		}
 	 
@@ -331,9 +345,9 @@ namespace SilverlightMediaElement
 			WriteDebug("method:load " + media.CurrentState);
 			WriteDebug(" - " + _mediaUrl.ToString());
 
-			Uri uri = new Uri(_mediaUrl);
-			media.AutoPlay = true;
 			media.Source = new Uri(_mediaUrl, UriKind.Absolute);
+			//media.Play();
+			//media.Stop();
 		}
 
 		[ScriptableMember]
