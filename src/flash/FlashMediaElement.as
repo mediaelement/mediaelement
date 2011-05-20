@@ -159,6 +159,7 @@
 			_output.appendText("stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");
 			_output.appendText("file: " + _mediaUrl + "\n");
 			_output.appendText("autoplay: " + _autoplay.toString() + "\n");
+			_output.appendText("preload: " + _preload.toString() + "\n");
 			_output.appendText("isvideo: " + _isVideo.toString() + "\n");
 			_output.appendText("smoothing: " + _enableSmoothing.toString() + "\n");
 			_output.appendText("timerrate: " + _timerRate.toString() + "\n");
@@ -208,7 +209,13 @@
 
 			}
 
-			if (_autoplay) {
+			if (_preload != "none") {
+				_mediaElement.load();
+				
+				if (_autoplay) {
+					_mediaElement.play();
+				}
+			} else if (_autoplay) {
 				_mediaElement.load();
 				_mediaElement.play();
 			}
