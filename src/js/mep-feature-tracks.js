@@ -132,7 +132,7 @@
 				});
 				
 			// check for autoplay
-			if (media.getAttribute('autoplay') !== null) {
+			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
 			}				
 
@@ -206,7 +206,7 @@
 			if (track.isTranslation) {
 
 				// translate the first track
-				mejs.SrtParser.translateSrt(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {
+				mejs.TrackFormatParser.translateTrackText(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {
 
 					// store the new translation
 					track.entries = newOne;
@@ -220,7 +220,7 @@
 					success: function(d) {
 
 						// parse the loaded file
-						track.entries = mejs.SrtParser.parse(d);
+						track.entries = mejs.TrackFormatParser.parse(d);
 						after();
 
 						if (track.kind == 'chapters' && t.media.duration > 0) {
@@ -425,7 +425,10 @@
 	};
 
 	/*
-	Parses SRT format which should be formatted as
+	Parses WebVVT format which should be formatted as
+	================================
+	WEBVTT
+	
 	1
 	00:00:01,1 --> 00:00:05,000
 	A line of text
@@ -433,10 +436,12 @@
 	2
 	00:01:15,1 --> 00:02:05,000
 	A second line of text
+	
+	===============================
 
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
-	mejs.SrtParser = {
+	mejs.TrackFormatParser = {
 		pattern_identifier: /^[0-9]+$/,
 		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,
 
@@ -445,10 +450,10 @@
 			// see below for IE fix
 			return text.split(regex);
 		},
-		parse: function(srtText) {
+		parse: function(trackText) {
 			var 
 				i = 0,
-				lines = this.split2(srtText, /\r?\n/),
+				lines = this.split2(trackText, /\r?\n/),
 				entries = {text:[], times:[]},
 				timecode,
 				text;
@@ -484,26 +489,26 @@
 			return entries;
 		},
 
-		translateSrt: function(srtData, fromLang, toLang, googleApiKey, callback) {
+		translateTrackText: function(trackData, fromLang, toLang, googleApiKey, callback) {
 
 			var 
 				entries = {text:[], times:[]},
 				lines,
 				i
 
-			this.translateText( srtData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
+			this.translateText( trackData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
 				// split on separators
 				lines = result.split('<a></a>');
 
 				// create new entries
-				for (i=0;i<srtData.text.length; i++) {
+				for (i=0;i<trackData.text.length; i++) {
 					// add translated line
 					entries.text[i] = lines[i];
 					// copy existing times
 					entries.times[i] = {
-						start: srtData.times[i].start,
-						stop: srtData.times[i].stop,
-						settings: srtData.times[i].settings
+						start: trackData.times[i].start,
+						stop: trackData.times[i].stop,
+						settings: trackData.times[i].settings
 					};
 				}
 
@@ -522,7 +527,7 @@
 				nextChunk= function() {
 					if (chunks.length > 0) {
 						chunk = chunks.shift();
-						mejs.SrtParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
+						mejs.TrackFormatParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
 							if (r != 'undefined') {
 								result += r;
 							}
@@ -576,7 +581,7 @@
 	// test for browsers with bad String.split method.
 	if ('x\n\ny'.split(/\n/gi).length != 3) {
 		// add super slow IE8 and below version
-		mejs.SrtParser.split2 = function(text, regex) {
+		mejs.TrackFormatParser.split2 = function(text, regex) {
 			var 
 				parts = [], 
 				chunk = '',
