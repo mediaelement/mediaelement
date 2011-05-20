@@ -33,6 +33,10 @@ mejs.MediaFeatures = {
 		if (this.isChrome) {
 			this.hasNativeFullScreen = false;
 		}
+		// OS X 10.5 can't do this even if it says it can :(
+		if (this.hasNativeFullScreen && this.ua.match(/mac os x 10_5/i)) {
+			this.hasNativeFullScreen = false;
+		}
 	}
 };
 mejs.MediaFeatures.init();
