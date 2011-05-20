@@ -154,16 +154,14 @@ package htmlelements
 			_sound.load(new URLRequest(_currentUrl));
 			_currentTime = 0;
 			
-			_firedCanPlay = false;
 			sendEvent(HtmlMediaEvent.LOADSTART);
 
 			_isLoaded = true;
                         
-			if (!_firedCanPlay) {
-				sendEvent(HtmlMediaEvent.LOADEDDATA);
-				sendEvent(HtmlMediaEvent.CANPLAY);				
-				_firedCanPlay = true;
-			}
+			sendEvent(HtmlMediaEvent.LOADEDDATA);
+			sendEvent(HtmlMediaEvent.CANPLAY);				
+			_firedCanPlay = true;
+			
 			if (_playAfterLoading) {
 				_playAfterLoading = false;
 				play();

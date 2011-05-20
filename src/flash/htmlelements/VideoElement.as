@@ -200,7 +200,7 @@
 			_currentUrl = url;
 			_isRTMP = !!_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//);
 			_isConnected = false;
-			_hasStartedPlaying = false;
+			_hasStartedPlaying = false;		
 		}
 
 		public function load():void {
@@ -226,8 +226,7 @@
 		private function connectStream():void {
 			trace("connectStream");
 			_stream = new NetStream(_connection);
-			_stream.bufferTime = 10;
-			
+					
 			// explicitly set the sound since it could have come before the connection was made
 			_soundTransform = new SoundTransform(_volume);
 			_stream.soundTransform = _soundTransform;						
@@ -240,6 +239,15 @@
 			_stream.client = customClient;
 
 			_video.attachNetStream(_stream);
+			
+			// attempt to start downloading without playing
+			if (_preload != "none" && !_playWhenConnected) {
+				_stream.play(_currentUrl, 0, 0);
+				
+				_stream.pause();
+				_isPaused = true;
+				sendEvent(HtmlMediaEvent.PAUSE);
+			}			
 
 			_isConnected = true;
 
