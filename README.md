@@ -81,6 +81,17 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * create player from `<a href="media.mp4">video</a>`
 * create player from `<div class="mejs"></div>` specifying src in JavaScript
 
+*2.1.4 (2011/05/20) - 35.2kb*
+
+* fixed display of hours
+* fixed Flash audio bug where pausing when the file wasn't fully loaded would cause the progress bar to go offscreen
+* fixed Flash video bug where percent loaded was always 100%
+* fixed Flash audio bug where pressing pause, then play would always restart playback from the beginning
+* startVolume works more clearly in plugins (esp. Opera and Linux)
+* tracks support no longer refers to WebSRT, but is more generic for WebVTT (not all features of WebVTT are supported yet)
+* fixed fullscreen in Safari OS X 10.5 (which doens't really support true fullscreen)
+* Flash and Silverlight can now start downloading if preload="auto" or preload="metadata" (warning: preload="metadata" will load the entire thing)
+
 *2.1.3 (2011/04/12)*
 
 * added support for hours in time format (00:00:00) and an alwaysShowHours option to force hours to always show
