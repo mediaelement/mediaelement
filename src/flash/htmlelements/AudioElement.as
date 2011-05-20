@@ -41,6 +41,7 @@ package htmlelements
 
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
+		private var _preload:String = "";
 
 		private var _element:FlashMediaElement;
 		private var _timer:Timer;
@@ -54,11 +55,12 @@ package htmlelements
 			return _currentTime;
 		}
 
-		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, timerRate:Number, startVolume:Number) 
+		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number) 
 		{
 			_element = element;
 			_autoplay = autoplay;
 			_volume = startVolume;
+			_preload = preload;
 
 			_timer = new Timer(timerRate);
 			_timer.addEventListener(TimerEvent.TIMER, timerEventHandler);
@@ -157,7 +159,7 @@ package htmlelements
 
 			_isLoaded = true;
                         
-                        if (!_firedCanPlay) {
+			if (!_firedCanPlay) {
 				sendEvent(HtmlMediaEvent.LOADEDDATA);
 				sendEvent(HtmlMediaEvent.CANPLAY);				
 				_firedCanPlay = true;
