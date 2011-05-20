@@ -92,7 +92,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * fixed fullscreen in Safari OS X 10.5 (which doens't really support true fullscreen)
 * Flash and Silverlight can now start downloading if preload="auto" or preload="metadata" (warning: preload="metadata" will load the entire thing)
 
-*2.1.3 (2011/04/12)*
+*2.1.3 (2011/04/12) - 35.8kb *
 
 * added support for hours in time format (00:00:00) and an alwaysShowHours option to force hours to always show
 * removed some duplicate flash events
