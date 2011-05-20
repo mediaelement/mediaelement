@@ -5,6 +5,8 @@
 				'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
 			'</div>')
 			.appendTo(controls);
+		
+		this.currenttime = this.controls.find('.mejs-currenttime');
 
 		media.addEventListener('timeupdate',function() {
 			player.updateCurrent();
@@ -23,6 +25,8 @@
 			'</div>')
 			.appendTo(controls);
 		}
+		
+		this.durationD = this.controls.find('.mejs-duration');
 
 		media.addEventListener('timeupdate',function() {
 			player.updateDuration();
@@ -32,13 +36,13 @@
 	MediaElementPlayer.prototype.updateCurrent = function() {
 		var t = this;
 
-		t.controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 3600 ));
+		t.currenttime.html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 3600 ));
 	}
 	MediaElementPlayer.prototype.updateDuration = function() {	
 		var t = this;
 		
 		if (t.media.duration) {
-			t.controls.find('.mejs-duration').html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours));
+			this.durationD.html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours));
 		}		
 	};	
 
