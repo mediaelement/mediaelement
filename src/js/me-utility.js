@@ -7,7 +7,7 @@ mejs.Utility = {
 		return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
 	},
 	escapeHTML: function(s) {
-		return s.split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
+		return s.toString().split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
 	},
 	absolutizeUrl: function(url) {
 		var el = document.createElement('div');
