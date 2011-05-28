@@ -204,21 +204,23 @@
 		}
 
 		public function load():void {
-			// as far as I know there is no way to start downloading a file without playing it (preload="auto" in HTML5)
-			// so this "load" just begins a Flash connection
+			// disconnect existing stream and connection
 			if (_isConnected && _stream) {
 				_stream.pause();
+				_stream.close();
+				_connection.close();
 			}
 			_isConnected = false;
 
+			// start new connection
 			if (_isRTMP) {
 				_connection.connect(_currentUrl.replace(/\/[^\/]+$/,"/"));
 			} else {
 				_connection.connect(null);
 			}
+			
 			// in a few moments the "NetConnection.Connect.Success" event will fire
 			// and call createConnection which finishes the "load" sequence
-
 			sendEvent(HtmlMediaEvent.LOADSTART);
 		}
 		
@@ -240,13 +242,14 @@
 
 			_video.attachNetStream(_stream);
 			
-			// attempt to start downloading without playing
+			// start downloading without playing )based on preload and play() hasn't been called)
+			// I wish flash had a load() command to make this less awkward
 			if (_preload != "none" && !_playWhenConnected) {
 				_stream.play(_currentUrl, 0, 0);
 				
 				_stream.pause();
 				_isPaused = true;
-				sendEvent(HtmlMediaEvent.PAUSE);
+				sendEvent(HtmlMediaEvent.PAUSE); // have to send this because the "playing" event gets sent via event handlers
 			}			
 
 			_isConnected = true;
