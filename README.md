@@ -81,6 +81,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * create player from `<a href="media.mp4">video</a>`
 * create player from `<div class="mejs"></div>` specifying src in JavaScript
 
+*2.1.5 (2011/05/28) - 35.2kb*
+
+* minor fix for controls not showing time or duration
+* when switching files, the Flash plugin now forcibly stops downliading
+
 *2.1.4 (2011/05/20) - 35.2kb*
 
 * fixed display of hours

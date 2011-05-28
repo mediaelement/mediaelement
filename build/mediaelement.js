@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.4';
+mejs.version = '2.1.5';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -39,7 +39,7 @@ mejs.Utility = {
 		return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
 	},
 	escapeHTML: function(s) {
-		return s.split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
+		return s.toString().split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
 	},
 	absolutizeUrl: function(url) {
 		var el = document.createElement('div');
