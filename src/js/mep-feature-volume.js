@@ -105,9 +105,12 @@
 		}, true);
 
 		// set initial volume
-		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);
 		positionVolumeHandle(player.options.startVolume);
-		//media.setVolume(player.options.startVolume);
+		
+		// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
+		if (media.pluginType === 'native') {
+			media.setVolume(player.options.startVolume);
+		}
 	}
 
 })(jQuery);
