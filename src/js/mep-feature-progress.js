@@ -125,7 +125,9 @@
 		if (percent !== null) {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
-			t.loaded.width(t.total.width() * percent);
+			if (t.loaded && t.total) {
+				t.loaded.width(t.total.width() * percent);
+			}
 		}
 	}
 	MediaElementPlayer.prototype.setCurrentRail = function() {
@@ -135,12 +137,14 @@
 		if (t.media.currentTime != undefined && t.media.duration) {
 
 			// update bar and handle
-			var 
-				newWidth = t.total.width() * t.media.currentTime / t.media.duration,
-				handlePos = newWidth - (t.handle.outerWidth(true) / 2);
+			if (t.total && t.handle) {
+				var 
+					newWidth = t.total.width() * t.media.currentTime / t.media.duration,
+					handlePos = newWidth - (t.handle.outerWidth(true) / 2);
 
-			t.current.width(newWidth);
-			t.handle.css('left', handlePos);
+				t.current.width(newWidth);
+				t.handle.css('left', handlePos);
+			}
 		}
 
 	}	
