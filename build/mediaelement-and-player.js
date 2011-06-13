@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.5';
+mejs.version = '2.1.6';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -1479,16 +1479,20 @@ window.MediaElement = mejs.MediaElement;
 	// PLAY/pause BUTTON
 	MediaElementPlayer.prototype.buildplaypause = function(player, controls, layers, media) {
 		var play = 
-			$('<div class="mejs-button mejs-playpause-button mejs-play">' +
-				'<span></span>' +
+			$('<div class="mejs-button mejs-playpause-button mejs-play" type="button">' +
+				'<button type="button"></button>' +
 			'</div>')
 			.appendTo(controls)
-			.click(function() {
+			.click(function(e) {
+				e.preventDefault();
+			
 				if (media.paused) {
 					media.play();
 				} else {
 					media.pause();
 				}
+				
+				return false;
 			});
 
 		media.addEventListener('play',function() {
@@ -1515,7 +1519,7 @@ window.MediaElement = mejs.MediaElement;
 	MediaElementPlayer.prototype.buildstop = function(player, controls, layers, media) {
 		var stop = 
 			$('<div class="mejs-button mejs-stop-button mejs-stop">' +
-				'<span></span>' +
+				'<button type="button"></button>' +
 			'</div>')
 			.appendTo(controls)
 			.click(function() {
@@ -1660,7 +1664,9 @@ window.MediaElement = mejs.MediaElement;
 		if (percent !== null) {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
-			t.loaded.width(t.total.width() * percent);
+			if (t.loaded && t.total) {
+				t.loaded.width(t.total.width() * percent);
+			}
 		}
 	}
 	MediaElementPlayer.prototype.setCurrentRail = function() {
@@ -1670,12 +1676,14 @@ window.MediaElement = mejs.MediaElement;
 		if (t.media.currentTime != undefined && t.media.duration) {
 
 			// update bar and handle
-			var 
-				newWidth = t.total.width() * t.media.currentTime / t.media.duration,
-				handlePos = newWidth - (t.handle.outerWidth(true) / 2);
+			if (t.total && t.handle) {
+				var 
+					newWidth = t.total.width() * t.media.currentTime / t.media.duration,
+					handlePos = newWidth - (t.handle.outerWidth(true) / 2);
 
-			t.current.width(newWidth);
-			t.handle.css('left', handlePos);
+				t.current.width(newWidth);
+				t.handle.css('left', handlePos);
+			}
 		}
 
 	}	
@@ -1740,7 +1748,7 @@ window.MediaElement = mejs.MediaElement;
 	MediaElementPlayer.prototype.buildvolume = function(player, controls, layers, media) {
 		var mute = 
 			$('<div class="mejs-button mejs-volume-button mejs-mute">'+
-				'<span></span>'+
+				'<button type="button"></button>'+
 				'<div class="mejs-volume-slider">'+ // outer background
 					'<div class="mejs-volume-total"></div>'+ // line background
 					'<div class="mejs-volume-current"></div>'+ // current volume
@@ -1843,9 +1851,12 @@ window.MediaElement = mejs.MediaElement;
 		}, true);
 
 		// set initial volume
-		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);
 		positionVolumeHandle(player.options.startVolume);
-		media.setVolume(player.options.startVolume);
+		
+		// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
+		if (media.pluginType === 'native') {
+			media.setVolume(player.options.startVolume);
+		}
 	}
 
 })(jQuery);
@@ -1860,7 +1871,7 @@ window.MediaElement = mejs.MediaElement;
 			normalWidth = 0,
 			container = player.container,
 			fullscreenBtn = 
-				$('<div class="mejs-button mejs-fullscreen-button"><span></span></div>')
+				$('<div class="mejs-button mejs-fullscreen-button"><button type="button"></button></div>')
 				.appendTo(controls)
 				.click(function() {
 					var goFullscreen = (mejs.MediaFeatures.hasNativeFullScreen) ?
@@ -1984,7 +1995,7 @@ window.MediaElement = mejs.MediaElement;
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<span></span>'+
+						'<button type="button" ></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
@@ -1993,7 +2004,7 @@ window.MediaElement = mejs.MediaElement;
 								'</li>'	+
 							'</ul>'+
 						'</div>'+
-					'</div>')
+					'</button>')
 						.appendTo(controls)
 						// handle clicks to the language radio buttons
 						.delegate('input[type=radio]','click',function() {
