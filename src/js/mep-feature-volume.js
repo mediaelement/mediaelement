@@ -2,7 +2,7 @@
 	MediaElementPlayer.prototype.buildvolume = function(player, controls, layers, media) {
 		var mute = 
 			$('<div class="mejs-button mejs-volume-button mejs-mute">'+
-				'<span></span>'+
+				'<button type="button"></button>'+
 				'<div class="mejs-volume-slider">'+ // outer background
 					'<div class="mejs-volume-total"></div>'+ // line background
 					'<div class="mejs-volume-current"></div>'+ // current volume
@@ -107,7 +107,7 @@
 		// set initial volume
 		//player.options.startVolume = Math.min(Math.max(0,player.options.startVolume),1);
 		positionVolumeHandle(player.options.startVolume);
-		media.setVolume(player.options.startVolume);
+		//media.setVolume(player.options.startVolume);
 	}
 
 })(jQuery);

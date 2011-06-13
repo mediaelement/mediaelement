@@ -105,17 +105,22 @@
 	height: 26px;
 	font-size: 11px;
 	line-height: 11px;
+	background: 0;
 	font-family: Helvetica, Arial;
+	border: 0;
 }
-.mejs-controls .mejs-button span {
+
+.mejs-controls .mejs-button button {
 	cursor: pointer;
 	display: block;
 	font-size: 0px;
 	line-height: 0;
 	text-decoration: none;
 	margin: 7px 5px;
+	position: absolute;
 	height: 16px;
 	width: 16px;
+	border: 0;
 	background: transparent url(controls.png) 0 0 no-repeat;
 }
 /* End: CONTROL BAR */
@@ -144,17 +149,17 @@
 
 
 /* Start: Play/pause */
-.mejs-controls .mejs-play span {
+.mejs-controls .mejs-play button {
 	background-position:0 0;
 }
-.mejs-controls .mejs-pause span {
+.mejs-controls .mejs-pause button {
 	background-position:0 -16px;
 }
 /* End: Play/pause */
 
 
 /* Stop */
-.mejs-controls .mejs-stop span {
+.mejs-controls .mejs-stop button {
 	background-position: -112px 0;
 }
 /* End: Play/pause */
@@ -266,10 +271,10 @@
 /* End: Progress bar */
 
 /* Start: Fullscreen */
-.mejs-controls .mejs-fullscreen-button span {
+.mejs-controls .mejs-fullscreen-button button {
 	background-position:-32px 0;
 }
-.mejs-controls .mejs-unfullscreen span {
+.mejs-controls .mejs-unfullscreen button {
 	background-position:-32px -16px;
 }
 /* End: Fullscreen */
@@ -279,11 +284,11 @@
 .mejs-controls .mejs-volume-button {
 }
 
-.mejs-controls .mejs-mute span {
+.mejs-controls .mejs-mute button {
 	background-position:-16px -16px;
 }
 
-.mejs-controls .mejs-unmute span {
+.mejs-controls .mejs-unmute button {
 	background-position:-16px 0;
 }
 
@@ -362,7 +367,7 @@
 	position: relative;
 }
 
-.mejs-controls .mejs-captions-button span {
+.mejs-controls .mejs-captions-button button {
 	background-position:-48px 0;
 }
 .mejs-controls .mejs-captions-button .mejs-captions-selector {
@@ -538,19 +543,19 @@
 
 
 /* Start: Loop */
-.mejs-controls .mejs-loop-off span{
+.mejs-controls .mejs-loop-off button{
 	background-position: -64px -16px;
 }
-.mejs-controls .mejs-loop-on span {
+.mejs-controls .mejs-loop-on button {
 	background-position: -64px 0;
 }
 /* End: Loop */
 
 /* Start: backlight */
-.mejs-controls .mejs-backlight-off span{
+.mejs-controls .mejs-backlight-off button{
 	background-position: -80px -16px;
 }
-.mejs-controls .mejs-backlight-on span {
+.mejs-controls .mejs-backlight-on button {
 	background-position: -80px 0;
 }
 /* End: backlight */
