@@ -32,7 +32,7 @@
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<span></span>'+
+						'<button type="button" ></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
@@ -41,7 +41,7 @@
 								'</li>'	+
 							'</ul>'+
 						'</div>'+
-					'</div>')
+					'</button>')
 						.appendTo(controls)
 						// handle clicks to the language radio buttons
 						.delegate('input[type=radio]','click',function() {

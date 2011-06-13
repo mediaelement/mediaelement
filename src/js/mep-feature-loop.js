@@ -5,7 +5,7 @@
 			// create the loop button
 			loop = 
 			$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
-				'<span></span>' +
+				'<button></button>' +
 			'</div>')
 			// append it to the toolbar
 			.appendTo(controls)

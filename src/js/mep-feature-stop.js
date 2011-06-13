@@ -3,7 +3,7 @@
 	MediaElementPlayer.prototype.buildstop = function(player, controls, layers, media) {
 		var stop = 
 			$('<div class="mejs-button mejs-stop-button mejs-stop">' +
-				'<span></span>' +
+				'<button type="button"></button>' +
 			'</div>')
 			.appendTo(controls)
 			.click(function() {
