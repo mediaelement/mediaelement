@@ -2,16 +2,20 @@
 	// PLAY/pause BUTTON
 	MediaElementPlayer.prototype.buildplaypause = function(player, controls, layers, media) {
 		var play = 
-			$('<div class="mejs-button mejs-playpause-button mejs-play">' +
-				'<span></span>' +
+			$('<div class="mejs-button mejs-playpause-button mejs-play" type="button">' +
+				'<button type="button"></button>' +
 			'</div>')
 			.appendTo(controls)
-			.click(function() {
+			.click(function(e) {
+				e.preventDefault();
+			
 				if (media.paused) {
 					media.play();
 				} else {
 					media.pause();
 				}
+				
+				return false;
 			});
 
 		media.addEventListener('play',function() {
