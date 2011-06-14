@@ -81,11 +81,13 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * create player from `<a href="media.mp4">video</a>`
 * create player from `<div class="mejs"></div>` specifying src in JavaScript
 
-*2.1.6 (2011/06/13) - 35.5kb*
+*2.1.6 (2011/06/14) - 35.5kb*
 
 * fix errors when the progress bar isn't present
 * buttons are now actual `<button>` tags which allows tabbed controls (for better accessibility and possible ARIA support)
 * fix problems with low volume in Flash on startup (startVolume was sometimes 0!)
+* updated a few places to use jQuery 1.6's new prop/attr methods
+* updated skins to account for new `<button>` (still need highlighted style)
 
 *2.1.5 (2011/05/28) - 35.2kb*
 
