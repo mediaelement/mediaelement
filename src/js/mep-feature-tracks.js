@@ -239,7 +239,7 @@
 
 			t.captionsButton
 				.find('input[value=' + lang + ']')
-					.attr('disabled','')
+					.prop('disabled',false)
 				.siblings('label')
 					.html( mejs.language.codes[lang] || lang );
 
