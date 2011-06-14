@@ -1715,7 +1715,10 @@ window.MediaElement = mejs.MediaElement;
 				.appendTo(controls.find('.mejs-time'));
 		} else {
 
-			$('<div class="mejs-time">'+
+			// add class to current time
+			controls.find('.mejs-currenttime').parent().addClass('mejs-currenttime-container');
+			
+			$('<div class="mejs-time mejs-duration-container">'+
 				'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
 			'</div>')
 			.appendTo(controls);
