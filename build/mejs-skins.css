@@ -47,14 +47,14 @@
 	width: 49px;
 	height: 28px;
 }
-.mejs-ted .mejs-controls .mejs-playpause-button  span {
+.mejs-ted .mejs-controls .mejs-playpause-button  button {
 	width: 49px;
 	height: 28px;
 	background: url(controls-ted.png) no-repeat -50px -23px;
 	margin: 0;
 	padding: 0;
 }
-.mejs-ted .mejs-controls .mejs-pause span  {
+.mejs-ted .mejs-controls .mejs-pause button  {
 	background-position: 0 -23px;
 }
 
@@ -65,14 +65,14 @@
 	height: 15px;
 	background : none;
 }
-.mejs-ted .mejs-controls .mejs-fullscreen-button  span {
+.mejs-ted .mejs-controls .mejs-fullscreen-button  button {
 	width: 19px;
 	height: 17px;
 	background: transparent url(controls-ted.png) no-repeat 0 -66px;
 	margin: 0;
 	padding: 0;
 }
-.mejs-ted .mejs-controls .mejs-unfullscreen  span {
+.mejs-ted .mejs-controls .mejs-unfullscreen  button {
 	background: transparent url(controls-ted.png) no-repeat -21px -66px;
 	margin: 0;
 	padding: 0;
@@ -83,14 +83,14 @@
 	width: 24px;
 	height: 22px;
 }
-.mejs-ted .mejs-controls .mejs-mute span {
+.mejs-ted .mejs-controls .mejs-mute button {
 	background: url(controls-ted.png) no-repeat -15px 0;
 	width: 24px;
 	height: 22px;
 	margin: 0;
 	padding: 0;
 }
-.mejs-ted .mejs-controls .mejs-unmute span {
+.mejs-ted .mejs-controls .mejs-unmute button {
 	background: url(controls-ted.png) no-repeat -40px 0;
 	width: 24px;
 	height: 22px;
@@ -122,7 +122,23 @@
 	display: none;
 }
 
-.mejs-ted .mejs-controls .mejs-time  {
+.mejs-ted .mejs-controls .mejs-time span {
+	color: #333;
+}
+.mejs-ted .mejs-controls .mejs-currenttime-container  {
+	position: absolute;
+	top: 32px;
+	right: 100px;
+	border: solid 1px #999;
+	background: #fff;
+	color: #333;
+	padding-top: 2px;
+	border-radius: 3px;
+	color: #333;
+}
+.mejs-ted .mejs-controls .mejs-duration-container  {
+
+	position: absolute;
 	top: 32px;
 	right: 65px;
 	border: solid 1px #999;
@@ -132,7 +148,8 @@
 	border-radius: 3px;
 	color: #333;
 }
-.mejs-ted .mejs-controls .mejs-time  span{
+
+.mejs-ted .mejs-controls .mejs-time  button{
 	color: #333;
 }
 .mejs-ted .mejs-controls .mejs-captions-button {
@@ -193,22 +210,30 @@
 	height: 40px;
 	
 }
-.mejs-wmp .mejs-controls .mejs-playpause-button  span {
+.mejs-wmp .mejs-controls .mejs-playpause-button  button {
 	width: 40px;
 	height: 40px;
 	background: url(controls-wmp.png) no-repeat 0 0;	
 	margin: 0;
 	padding: 0;
 }
-.mejs-wmp .mejs-controls .mejs-pause span  {
+.mejs-wmp .mejs-controls .mejs-pause button  {
 	background-position: 0 -40px;
 }
 
-.mejs-wmp .mejs-controls .mejs-time  {
+.mejs-wmp .mejs-controls .mejs-currenttime-container  {
+	position: absolute;
 	top: 25px;
 	left: 50%;
-	margin-left: -90px;
+	margin-left: -93px;
 }
+.mejs-wmp .mejs-controls .mejs-duration-container  {
+	position: absolute;
+	top: 25px;
+	left: 50%;
+	margin-left: -58px;
+}
+
 
 .mejs-wmp .mejs-controls .mejs-volume-button  {
 	top: 32px;
@@ -217,14 +242,14 @@
 	width: 20px;
 	height: 15px;
 }
-.mejs-wmp .mejs-controls .mejs-volume-button span {
+.mejs-wmp .mejs-controls .mejs-volume-button button {
 	margin: 0;
 	padding: 0;
 	background: url(controls-wmp.png) no-repeat -42px -17px;
 	width: 20px;
 	height: 15px;
 }
-.mejs-wmp .mejs-controls .mejs-unmute span {
+.mejs-wmp .mejs-controls .mejs-unmute button {
 	margin: 0;
 	padding: 0;
 	background: url(controls-wmp.png) no-repeat -42px 0;
@@ -242,7 +267,7 @@
 	width: 15px;
 	height: 14px;
 }
-.mejs-wmp .mejs-controls .mejs-fullscreen-button  span {
+.mejs-wmp .mejs-controls .mejs-fullscreen-button  button {
 	margin: 0;
 	padding: 0;
 	background: url(controls-wmp.png) no-repeat -63px 0;
