@@ -2033,6 +2033,8 @@ window.MediaElement = mejs.MediaElement;
 						//.bind('mouseenter', function() {
 						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
 						//});
+
+      if (!player.options.alwaysShowControls) {
 			// move with controls
 			player.container
 				.bind('mouseenter', function () {
@@ -2046,7 +2048,9 @@ window.MediaElement = mejs.MediaElement;
 						player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
 					}
 				});
-			
+      } else {
+        player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+      }
 
 
 
@@ -2571,4 +2575,5 @@ window.MediaElement = mejs.MediaElement;
 
 
 })(jQuery);
+
 
