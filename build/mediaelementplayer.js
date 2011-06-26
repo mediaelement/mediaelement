@@ -35,6 +35,8 @@
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
 		alwaysShowHours: false,
+		// Hide controls when playing and mouse is not over the video
+		alwaysShowControls: false,
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
 	};
@@ -274,11 +276,13 @@
 					// show/hide controls
 					t.container
 						.bind('mouseenter', function () {
-							t.controls.css('visibility','visible');
-							t.controls.stop(true, true).fadeIn(200);
+							if (!t.options.alwaysShowControls) {
+								t.controls.css('visibility','visible');
+								t.controls.stop(true, true).fadeIn(200);
+							}
 						})
 						.bind('mouseleave', function () {
-							if (!t.media.paused) {
+							if (!t.media.paused && !t.options.alwaysShowControls) {
 								t.controls.stop(true, true).fadeOut(200, function() {
 									$(this).css('visibility','hidden');
 									$(this).css('display','block');
@@ -287,7 +291,7 @@
 						});
 						
 					// check for autoplay
-					if (t.domNode.getAttribute('autoplay') !== null) {
+					if (t.domNode.getAttribute('autoplay') !== null && !t.options.alwaysShowControls) {
 						t.controls.css('visibility','hidden');
 					}
 
@@ -317,7 +321,7 @@
 
 					if (t.options.loop) {
 						t.media.play();
-					} else {
+					} else if (!t.options.alwaysShowControls) {
 						t.controls.css('visibility','visible');
 					}
 				}, true);
