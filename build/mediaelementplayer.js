@@ -910,7 +910,7 @@
 
 
 		// MUTE button
-		mute.find('span').click(function() {
+		mute.find('button').click(function() {
 			if (media.muted) {
 				media.setMuted(false);
 				mute.removeClass('mejs-unmute').addClass('mejs-mute');
