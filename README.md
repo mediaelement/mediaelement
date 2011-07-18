@@ -6,7 +6,7 @@
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson)
+* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen)
 
 
 ## Installation and Usage
@@ -76,10 +76,20 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.2.0 (proposed)*
+*2.x.0 (proposed)*
 
 * create player from `<a href="media.mp4">video</a>`
 * create player from `<div class="mejs"></div>` specifying src in JavaScript
+* horizontal volume control
+* remove requirement for jQuery
+* deeper WebVTT support (alignment, color, etc.)
+
+*2.1.7 (2011/07/15) - 35.5kb*
+
+* fix on mute button (kaichen)
+* added alwaysShowControls option (kaichen)
+* forceful padding override on buttons
+* started "ender" branch to experiment with removing jQuery dependency and baking in ender.js
 
 *2.1.6 (2011/06/14) - 35.5kb*
 
