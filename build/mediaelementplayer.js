@@ -5,10 +5,11 @@
  * Creates a controller bar for HTML5 <video> add <audio> tags
  * using jQuery and MediaElement.js (HTML5 Flash/Silverlight wrapper)
  *
- * Copyright 2010, John Dyer (http://johndyer.me)
+ * Copyright 2010-2011, John Dyer (http://j.hn/)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  */
+mejs.$ = jQuery;
 ﻿(function ($) {
 
 	// default player values
@@ -42,10 +43,10 @@
 	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
-	mejs.MediaElementPlayer = function($node, o) {
+	mejs.MediaElementPlayer = function(node, o) {
 		// enforce object, even without "new" (via John Resig)
 		if ( !(this instanceof mejs.MediaElementPlayer) ) {
-			return new mejs.MediaElementPlayer($node, o);
+			return new mejs.MediaElementPlayer(node, o);
 		} 
 
 		var
@@ -54,7 +55,7 @@
 			
 		// create options
 		t.options = $.extend({},mejs.MepDefaults,o);
-		t.$media = t.$node = $($node);
+		t.$media = t.$node = $(node);
 		
 		// these will be reset after the MediaElement.success fires
 		t.node = t.media = t.$media[0];
@@ -471,6 +472,10 @@
 			
 			// show/hide loading			
 			media.addEventListener('loadstart',function() {
+				// for some reason Chrome is firing this event
+				if (mejs.MediaFeatures.isChrome && media.getAttribute('preload') === 'none')
+					return;
+					
 				loading.show();
 			}, false);	
 			media.addEventListener('canplay',function() {
@@ -538,15 +543,14 @@
 	// turn into jQuery plugin
 	jQuery.fn.mediaelementplayer = function (options) {
 		return this.each(function () {
-			new mejs.MediaElementPlayer($(this), options);
+			new mejs.MediaElementPlayer(this, options);
 		});
 	};
 
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
 
-})(jQuery);
-
+})(mejs.$);
 (function($) {
 	// PLAY/pause BUTTON
 	MediaElementPlayer.prototype.buildplaypause = function(player, controls, layers, media) {
@@ -581,11 +585,9 @@
 		media.addEventListener('paused',function() {
 			play.removeClass('mejs-pause').addClass('mejs-play');
 		}, false);
-
-
-
 	}
-})(jQuery);
+	
+})(mejs.$);
 (function($) {
 	// STOP BUTTON
 	MediaElementPlayer.prototype.buildstop = function(player, controls, layers, media) {
@@ -608,7 +610,8 @@
 				}
 			});
 	}
-})(jQuery);
+	
+})(mejs.$);
 (function($) {
 	// progress/loaded bar
 	MediaElementPlayer.prototype.buildprogress = function(player, controls, layers, media) {
@@ -760,7 +763,7 @@
 
 	}	
 
-})(jQuery);
+})(mejs.$);
 (function($) {
 	// current and duration 00:00 / 00:00
 	MediaElementPlayer.prototype.buildcurrent = function(player, controls, layers, media) {
@@ -818,7 +821,7 @@
 		}		
 	};	
 
-})(jQuery);
+})(mejs.$);
 (function($) {
 	MediaElementPlayer.prototype.buildvolume = function(player, controls, layers, media) {
 		var mute = 
@@ -934,7 +937,7 @@
 		}
 	}
 
-})(jQuery);
+})(mejs.$);
 (function($) {
 	MediaElementPlayer.prototype.buildfullscreen = function(player, controls, layers, media) {
 
@@ -1034,8 +1037,7 @@
 
 	}
 
-
-})(jQuery);
+})(mejs.$);
 (function($) {
 
 	// add extra default options 
@@ -1637,5 +1639,4 @@
 		}
 	}
 
-
-})(jQuery);
+})(mejs.$);
