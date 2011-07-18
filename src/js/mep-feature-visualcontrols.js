@@ -7,5 +7,4 @@
 		// add visual controls (HSV)
 	}
 
-
-})(jQuery);
+})(mejs.$);
