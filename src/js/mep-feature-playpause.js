@@ -32,8 +32,6 @@
 		media.addEventListener('paused',function() {
 			play.removeClass('mejs-pause').addClass('mejs-play');
 		}, false);
-
-
-
 	}
-})(jQuery);
+	
+})(mejs.$);

@@ -7,5 +7,4 @@
 		// add postroll
 	}
 
-
-})(jQuery);
+})(mejs.$);
