@@ -31,10 +31,10 @@
 	mejs.mepIndex = 0;
 
 	// wraps a MediaElement object in player controls
-	mejs.MediaElementPlayer = function($node, o) {
+	mejs.MediaElementPlayer = function(node, o) {
 		// enforce object, even without "new" (via John Resig)
 		if ( !(this instanceof mejs.MediaElementPlayer) ) {
-			return new mejs.MediaElementPlayer($node, o);
+			return new mejs.MediaElementPlayer(node, o);
 		} 
 
 		var
@@ -43,7 +43,7 @@
 			
 		// create options
 		t.options = $.extend({},mejs.MepDefaults,o);
-		t.$media = t.$node = $($node);
+		t.$media = t.$node = $(node);
 		
 		// these will be reset after the MediaElement.success fires
 		t.node = t.media = t.$media[0];
@@ -527,11 +527,11 @@
 	// turn into jQuery plugin
 	jQuery.fn.mediaelementplayer = function (options) {
 		return this.each(function () {
-			new mejs.MediaElementPlayer($(this), options);
+			new mejs.MediaElementPlayer(this, options);
 		});
 	};
 
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
 
-})(jQuery);
+})(mejs.$);
