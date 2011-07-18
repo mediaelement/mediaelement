@@ -177,15 +177,19 @@ mejs.HtmlMediaElementShim = {
 			pluginName,
 			pluginVersions,
 			pluginInfo;
-
+			
+		// clean up src attr
+		if (src == 'undefined' || src == '' || src === null) 
+			src = null;
+			
 		// STEP 1: Get URL and type from <video src> or <source src>
 
 		// supplied type overrides all HTML
 		if (typeof (options.type) != 'undefined' && options.type !== '') {
-			mediaFiles.push({type:options.type, url:null});
+			mediaFiles.push({type:options.type, url:src});
 
 		// test for src attribute first
-		} else if (src  != 'undefined' && src  !== null) {
+		} else if (src  !== null) {
 			type = this.checkType(src, htmlMediaElement.getAttribute('type'), isVideo);
 			mediaFiles.push({type:type, url:src});
 
