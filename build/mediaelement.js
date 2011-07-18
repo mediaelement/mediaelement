@@ -7,7 +7,7 @@
 * for browsers that don't understand HTML5 or can't play the provided codec
 * Can play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
 *
-* Copyright 2010, John Dyer (http://johndyer.me)
+* Copyright 2010-2011, John Dyer (http://j.hn)
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
 */
@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.6';
+mejs.version = '2.1.7';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -640,15 +640,19 @@ mejs.HtmlMediaElementShim = {
 			pluginName,
 			pluginVersions,
 			pluginInfo;
-
+			
+		// clean up src attr
+		if (src == 'undefined' || src == '' || src === null) 
+			src = null;
+			
 		// STEP 1: Get URL and type from <video src> or <source src>
 
 		// supplied type overrides all HTML
 		if (typeof (options.type) != 'undefined' && options.type !== '') {
-			mediaFiles.push({type:options.type, url:null});
+			mediaFiles.push({type:options.type, url:src});
 
 		// test for src attribute first
-		} else if (src  != 'undefined' && src  !== null) {
+		} else if (src  !== null) {
 			type = this.checkType(src, htmlMediaElement.getAttribute('type'), isVideo);
 			mediaFiles.push({type:type, url:src});
 
@@ -890,7 +894,8 @@ mejs.HtmlMediaElementShim = {
 			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
 
-		
+		/*
+		Chrome now supports preload="none"
 		if (mejs.MediaFeatures.isChrome) {
 		
 			// special case to enforce preload attribute (Chrome doesn't respect this)
@@ -915,6 +920,7 @@ mejs.HtmlMediaElementShim = {
 				htmlMediaElement.play();
 			}
 		}
+		*/
 
 		// fire success code
 		options.success(htmlMediaElement, htmlMediaElement);
