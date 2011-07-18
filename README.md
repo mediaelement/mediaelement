@@ -78,18 +78,23 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.x.0 (proposed)*
 
-* create player from `<a href="media.mp4">video</a>`
-* create player from `<div class="mejs"></div>` specifying src in JavaScript
+* dynamic player creatoin: from `<a href="media.mp4">video</a>` and `<div class="mejs"></div>` specifying src in JavaScript
 * horizontal volume control
-* remove requirement for jQuery
+* remove jQuery dependency
 * deeper WebVTT support (alignment, color, etc.)
 
-*2.1.7 (2011/07/15) - 35.5kb*
+*2.1.7 (2011/07/18) - 35.5kb*
 
-* fix on mute button (kaichen)
+* fixed mute button (kaichen)
 * added alwaysShowControls option (kaichen)
 * forceful padding override on buttons
 * started "ender" branch to experiment with removing jQuery dependency and baking in ender.js
+* updated the use of `type` javascript option with src is present
+* remove preload="none" hack for Chrome now that it supports it (note: Chrome still strangely fires a 'loadstart' event)
+* added hooks for other jQuery compatible libraries
+* Wordpress: if you don't specify a file extension, mejs will look for attached files and use them [video src="/wp-content/uploads/myfile"]
+* Wordpress: option to select a 'skin'
+* Wordpress: option to select audio width/height
 
 *2.1.6 (2011/06/14) - 35.5kb*
 
