@@ -7,4 +7,4 @@
 		// add speed controls
 	}
 
-})(jQuery);
+})(mejs.$);
