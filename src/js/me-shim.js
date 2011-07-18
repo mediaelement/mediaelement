@@ -431,7 +431,8 @@ mejs.HtmlMediaElementShim = {
 			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
 
-		
+		/*
+		Chrome now supports preload="none"
 		if (mejs.MediaFeatures.isChrome) {
 		
 			// special case to enforce preload attribute (Chrome doesn't respect this)
@@ -456,6 +457,7 @@ mejs.HtmlMediaElementShim = {
 				htmlMediaElement.play();
 			}
 		}
+		*/
 
 		// fire success code
 		options.success(htmlMediaElement, htmlMediaElement);
