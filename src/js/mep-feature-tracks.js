@@ -63,22 +63,24 @@
 						//.bind('mouseenter', function() {
 						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
 						//});
-			// move with controls
-			player.container
-				.bind('mouseenter', function () {
-					// push captions above controls
-					player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
-				})
-				.bind('mouseleave', function () {
-					if (!media.paused) {
-						// move back to normal place
-						player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
-					}
-				});
-			
+			if (!player.options.alwaysShowControls) {
+				// move with controls
+				player.container
+					.bind('mouseenter', function () {
+						// push captions above controls
+						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
-
+					})
+					.bind('mouseleave', function () {
+						if (!media.paused) {
+							// move back to normal place
+							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
+						}
+					});
+			} else {
+				player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+			}
 
 			player.trackToLoad = -1;
 			player.selectedTrack = null;
