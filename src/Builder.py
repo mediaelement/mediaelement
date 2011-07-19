@@ -31,7 +31,7 @@ tmp_file.close()
 
 mep_files = []
 mep_files.append('mep-header.js')
-mep_files.append('mep-library-jquery.js')
+mep_files.append('mep-library.js')
 mep_files.append('mep-player.js')
 mep_files.append('mep-feature-playpause.js')
 mep_files.append('mep-feature-stop.js')
