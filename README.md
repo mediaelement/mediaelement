@@ -83,7 +83,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * remove jQuery dependency
 * deeper WebVTT support (alignment, color, etc.)
 
-*2.1.7 (2011/07/19) - 35.5kb*
+*2.1.7 (2011/07/19) - 35.9kb*
 
 * fixed mute button (kaichen)
 * added alwaysShowControls option (kaichen)
