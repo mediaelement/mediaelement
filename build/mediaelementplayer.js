@@ -9,9 +9,9 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  */
-if (jQuery) {
+if (typeof jQuery != 'undefined') {
 	mejs.$ = jQuery;
-} else if (ender) {
+} else if (typeof ender != 'undefined') {
 	mejs.$ = ender;
 }
 ﻿(function ($) {
@@ -549,7 +549,7 @@ if (jQuery) {
 	};
 
 	// turn into jQuery plugin
-	if (jQuery) {
+	if (typeof jQuery != 'undefined') {
 		jQuery.fn.mediaelementplayer = function (options) {
 			return this.each(function () {
 				new mejs.MediaElementPlayer(this, options);
