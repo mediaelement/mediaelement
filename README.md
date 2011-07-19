@@ -83,7 +83,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * remove jQuery dependency
 * deeper WebVTT support (alignment, color, etc.)
 
-*2.1.7 (2011/07/18) - 35.5kb*
+*2.1.7 (2011/07/19) - 35.5kb*
 
 * fixed mute button (kaichen)
 * added alwaysShowControls option (kaichen)
@@ -91,7 +91,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * started "ender" branch to experiment with removing jQuery dependency and baking in ender.js
 * updated the use of `type` javascript option with src is present
 * remove preload="none" hack for Chrome now that it supports it (note: Chrome still strangely fires a 'loadstart' event)
-* added hooks for other jQuery compatible libraries
+* added hooks for other jQuery compatible libraries like [ender.js](http://enderjs.com)
 * Wordpress: if you don't specify a file extension, mejs will look for attached files and use them [video src="/wp-content/uploads/myfile"]
 * Wordpress: option to select a 'skin'
 * Wordpress: option to select audio width/height
