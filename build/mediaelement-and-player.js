@@ -943,7 +943,11 @@ window.MediaElement = mejs.MediaElement;
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  */
-mejs.$ = jQuery;
+if (jQuery) {
+	mejs.$ = jQuery;
+} else if (ender) {
+	mejs.$ = ender;
+}
 ﻿(function ($) {
 
 	// default player values
