@@ -549,12 +549,14 @@ if (jQuery) {
 	};
 
 	// turn into jQuery plugin
-	jQuery.fn.mediaelementplayer = function (options) {
-		return this.each(function () {
-			new mejs.MediaElementPlayer(this, options);
-		});
-	};
-
+	if (jQuery) {
+		jQuery.fn.mediaelementplayer = function (options) {
+			return this.each(function () {
+				new mejs.MediaElementPlayer(this, options);
+			});
+		};
+	}
+	
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
 
