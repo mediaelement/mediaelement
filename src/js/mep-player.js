@@ -533,7 +533,7 @@
 	};
 
 	// turn into jQuery plugin
-	if (jQuery) {
+	if (typeof jQuery != 'undefined') {
 		jQuery.fn.mediaelementplayer = function (options) {
 			return this.each(function () {
 				new mejs.MediaElementPlayer(this, options);
