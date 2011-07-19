@@ -40,6 +40,8 @@ if (jQuery) {
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
 		alwaysShowHours: false,
+		// Hide controls when playing and mouse is not over the video
+		alwaysShowControls: false,
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
 	};
@@ -279,11 +281,13 @@ if (jQuery) {
 					// show/hide controls
 					t.container
 						.bind('mouseenter', function () {
-							t.controls.css('visibility','visible');
-							t.controls.stop(true, true).fadeIn(200);
+							if (!t.options.alwaysShowControls) {
+								t.controls.css('visibility','visible');
+								t.controls.stop(true, true).fadeIn(200);
+							}
 						})
 						.bind('mouseleave', function () {
-							if (!t.media.paused) {
+							if (!t.media.paused && !t.options.alwaysShowControls) {
 								t.controls.stop(true, true).fadeOut(200, function() {
 									$(this).css('visibility','hidden');
 									$(this).css('display','block');
@@ -292,7 +296,7 @@ if (jQuery) {
 						});
 						
 					// check for autoplay
-					if (t.domNode.getAttribute('autoplay') !== null) {
+					if (t.domNode.getAttribute('autoplay') !== null && !t.options.alwaysShowControls) {
 						t.controls.css('visibility','hidden');
 					}
 
@@ -322,7 +326,7 @@ if (jQuery) {
 
 					if (t.options.loop) {
 						t.media.play();
-					} else {
+					} else if (!t.options.alwaysShowControls) {
 						t.controls.css('visibility','visible');
 					}
 				}, true);
@@ -913,7 +917,7 @@ if (jQuery) {
 
 
 		// MUTE button
-		mute.find('span').click(function() {
+		mute.find('button').click(function() {
 			if (media.muted) {
 				media.setMuted(false);
 				mute.removeClass('mejs-unmute').addClass('mejs-mute');
@@ -942,6 +946,7 @@ if (jQuery) {
 	}
 
 })(mejs.$);
+
 (function($) {
 	MediaElementPlayer.prototype.buildfullscreen = function(player, controls, layers, media) {
 
@@ -1107,22 +1112,24 @@ if (jQuery) {
 						//.bind('mouseenter', function() {
 						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
 						//});
-			// move with controls
-			player.container
-				.bind('mouseenter', function () {
-					// push captions above controls
-					player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
-				})
-				.bind('mouseleave', function () {
-					if (!media.paused) {
-						// move back to normal place
-						player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
-					}
-				});
-			
+			if (!player.options.alwaysShowControls) {
+				// move with controls
+				player.container
+					.bind('mouseenter', function () {
+						// push captions above controls
+						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
-
+					})
+					.bind('mouseleave', function () {
+						if (!media.paused) {
+							// move back to normal place
+							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
+						}
+					});
+			} else {
+				player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+			}
 
 			player.trackToLoad = -1;
 			player.selectedTrack = null;
@@ -1644,3 +1651,4 @@ if (jQuery) {
 	}
 
 })(mejs.$);
+
