@@ -29,7 +29,7 @@ mejs.MediaFeatures = {
 		}
 
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
-		this.hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
+		this.hasNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
 		if (this.isChrome) {
 			this.hasNativeFullScreen = false;
 		}
