@@ -8,6 +8,11 @@
 			normalHeight = 0,
 			normalWidth = 0,
 			container = player.container,
+			docElement = document.documentElement,
+			docStyleOverflow,
+			parentWindow = window.parent,
+			parentiframes,			
+			iframe,
 			fullscreenBtn = 
 				$('<div class="mejs-button mejs-fullscreen-button"><button type="button"></button></div>')
 				.appendTo(controls)
@@ -24,7 +29,10 @@
 						media.setFullscreen(goFullScreen);
 						break;
 					case 'native':
-
+						
+						
+					
+					
 						if (mejs.MediaFeatures.hasNativeFullScreen) {
 							if (goFullScreen) {
 								media.webkitEnterFullScreen();
@@ -35,7 +43,12 @@
 							}
 						} else {
 							if (goFullScreen) {
-
+								
+								// store overflow 
+								docStyleOverflow = docElement.style.overflow;
+								// set it to not show scroll bars so 100% will work
+								docElement.style.overflow = 'hidden';
+								
 								// store
 								normalHeight = player.$media.height();
 								normalWidth = player.$media.width();
@@ -63,7 +76,11 @@
 								player.setControlsSize();
 								media.isFullScreen = true;
 							} else {
-
+								
+								
+								// restore scroll bars to document
+								docElement.style.overflow = docStyleOverflow;													
+							
 								container
 									.removeClass('mejs-container-fullscreen')
 									.width(normalWidth)
@@ -94,7 +111,7 @@
 				setFullScreen(false);
 			}
 		});
-
+			
 	}
 
 })(mejs.$);
