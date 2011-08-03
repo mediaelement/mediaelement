@@ -41,7 +41,7 @@
 				switch (media.pluginType) {
 					case 'flash':
 					case 'silverlight':
-						media.setFullScreen(goFullScreen);
+						media.setFullscreen(goFullScreen);
 						break;
 					case 'native':					
 						if (goFullScreen) {
