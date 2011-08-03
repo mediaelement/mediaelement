@@ -83,8 +83,13 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * remove jQuery dependency
 * deeper WebVTT support (alignment, color, etc.)
 * fullscreen popup control
-* true fullscreen (proposed Safari/Firefox feature)
 * toggle fullscreen type in plugin
+
+*2.1.8 (2011/08/03) - 35.9kb*
+
+* True fullscreen for Safari 5.1
+* Flash/Silverlight fullscreen is now "full window" (except for Firefox which cannot handle adjusting Flash without reloading it)
+
 
 *2.1.7 (2011/07/19) - 35.9kb*
 
