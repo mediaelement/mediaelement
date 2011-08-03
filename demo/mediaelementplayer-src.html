@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../src/js/me-header.js"></script>
+	<script src="../src/js/me-namespace.js"></script>
+	<script src="../src/js/me-utility.js"></script>
+	<script src="../src/js/me-plugindetector.js"></script>
+	<script src="../src/js/me-featuredetection.js"></script>
+	<script src="../src/js/me-mediaelements.js"></script>
+	<script src="../src/js/me-shim.js"></script>
+	
+	<script src="../src/js/mep-header.js"></script>
+	<script src="../src/js/mep-library.js"></script>
+	<script src="../src/js/mep-player.js"></script>
+	<script src="../src/js/mep-feature-playpause.js"></script>
+	<script src="../src/js/mep-feature-stop.js"></script>
+	<script src="../src/js/mep-feature-progress.js"></script>
+	<script src="../src/js/mep-feature-time.js"></script>
+	<script src="../src/js/mep-feature-volume.js"></script>
+	<script src="../src/js/mep-feature-fullscreen.js"></script>
+	<script src="../src/js/mep-feature-tracks.js"></script>
+	
+	<link rel="stylesheet" href="../src/css/mediaelementplayer.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<!-- simple single file method -->
+<video width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+	id="player1" poster="../media/echo-hereweare.jpg" 
+	controls="controls" preload="none"></video>
+	
+<span id="player1-mode"></span>
+
+<script>
+
+$('audio,video').mediaelementplayer({
+	pluginPath: '../build/',
+	success: function(player, node) {
+		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+		console.log(player, node);
+	}
+});
+
+</script>
+
+</body>
+</html>
