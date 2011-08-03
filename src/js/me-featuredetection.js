@@ -1,11 +1,3 @@
-
-// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-if (mejs.PluginDetector.ua.match(/android 2\.[12]/) !== null) {
-	HTMLMediaElement.canPlayType = function(type) {
-		return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'probably' : '';
-	};
-}
-
 // necessary detection (fixes for <IE9)
 mejs.MediaFeatures = {
 	init: function() {
@@ -20,6 +12,7 @@ mejs.MediaFeatures = {
 		this.isiPad = (ua.match(/ipad/i) !== null);
 		this.isiPhone = (ua.match(/iphone/i) !== null);
 		this.isAndroid = (ua.match(/android/i) !== null);
+		this.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
 		this.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		this.isChrome = (ua.match(/chrome/gi) !== null);
 		this.isFirefox = (ua.match(/firefox/gi) !== null);
