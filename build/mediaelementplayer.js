@@ -42,6 +42,8 @@ if (typeof jQuery != 'undefined') {
 		alwaysShowHours: false,
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
+		// force iPad's native controls
+		iPadUseNativeControls: true,
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
 	};
@@ -60,11 +62,11 @@ if (typeof jQuery != 'undefined') {
 			mf = mejs.MediaFeatures;
 			
 		// create options
-		t.options = $.extend({},mejs.MepDefaults,o);
-		t.$media = t.$node = $(node);
+		t.options = $.extend({},mejs.MepDefaults,o);		
 		
 		// these will be reset after the MediaElement.success fires
-		t.node = t.media = t.$media[0];
+		t.$media = t.$node = $(node);
+		t.node = t.media = t.$media[0];		
 		
 		// check for existing player
 		if (typeof t.node.player != 'undefined') {
@@ -141,11 +143,11 @@ if (typeof jQuery != 'undefined') {
 		
 		
 			// use native controls in iPad, iPhone, and Android	
-			if (mf.isiPad || mf.isiPhone) {
+			if ((mf.isiPad && t.options.iPadUseNativeControls) || mf.isiPhone) {
 				// add controls and stop
 				t.$media.attr('controls', 'controls');
 
-				// fix iOS 3 bug
+				// attempt to fix iOS 3 bug
 				t.$media.removeAttr('poster');
 
 				// override Apple's autoplay override for iPads
@@ -154,30 +156,9 @@ if (typeof jQuery != 'undefined') {
 					t.media.play();
 				}
 					
-			} else if (mf.isAndroid) {
-
-				if (t.isVideo) {
-					// Android fails when there are multiple source elements and the type is specified
-					// <video>
-					// <source src="file.mp4" type="video/mp4" />
-					// <source src="file.webm" type="video/webm" />
-					// </video>
-					if (t.$media.find('source').length > 0) {
-						// find an mp4 and make it the root element source
-						t.media.src = t.$media.find('source[src$="mp4"]').attr('src');
-					}
-
-					// attach a click event to the video and hope Android can play it
-					t.$media.click(function() {
-						t.media.play();
-					});
-			
-				} else {
-					// audio?
-					// 2.1 = no support
-					// 2.2 = Flash support
-					// 2.3 = Native HTML5
-				}
+			} else if (mf.isAndroid && t.isVideo) {
+				
+				// leave default player
 
 			} else {
 
@@ -241,22 +222,21 @@ if (typeof jQuery != 'undefined') {
 				feature;
 
 			// make sure it can't create itself again if a plugin reloads
-			if (this.created)
+			if (t.created)
 				return;
 			else
-				this.created = true;			
+				t.created = true;			
 
 			t.media = media;
 			t.domNode = domNode;
 			
-			if (!mf.isiPhone && !mf.isAndroid && !mf.isiPad) {				
+			if (!mf.isiPhone && !mf.isAndroid && !(mf.isiPad && t.options.iPadUseNativeControls)) {				
 				
-
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
 				t.buildoverlays(t, t.controls, t.layers, t.media);
 
-				// grab for use by feautres
+				// grab for use by features
 				t.findTracks();
 
 				// add user-defined features/controls
@@ -272,9 +252,12 @@ if (typeof jQuery != 'undefined') {
 					}
 				}
 
+				t.container.trigger('controlsready');
+				
 				// reset all layers and controls
 				t.setPlayerSize(t.width, t.height);
 				t.setControlsSize();
+				
 
 				// controls fade
 				if (t.isVideo) {

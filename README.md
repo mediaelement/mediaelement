@@ -78,18 +78,21 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.x.0 (proposed)*
 
-* dynamic player creatoin: from `<a href="media.mp4">video</a>` and `<div class="mejs"></div>` specifying src in JavaScript
+* dynamic player creation: from `<a href="media.mp4">video</a>` and `<div class="mejs"></div>` specifying src in JavaScript
 * horizontal volume control
 * remove jQuery dependency
 * deeper WebVTT support (alignment, color, etc.)
 * fullscreen popup control
-* toggle fullscreen type in plugin
+* toggle for iPad to use MediaElement.js player by default (iPadForceNativeControls:true)
 
-*2.1.8 (2011/08/03) - 35.9kb*
+*2.1.9 (2011/08/03) - 36.9kb*
+
+* fixed Android 2.1 and 2.2 playing problems (still need a good 2.3 and 3.0 device. hint. hint.)
+
+*2.1.8 (2011/08/03) - 36.9kb*
 
 * True fullscreen for Safari 5.1
 * Flash/Silverlight fullscreen is now "full window" (except for Firefox which cannot handle adjusting Flash without reloading it)
-
 
 *2.1.7 (2011/07/19) - 35.9kb*
 
