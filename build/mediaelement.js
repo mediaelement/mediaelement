@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.8';
+mejs.version = '2.1.9';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -192,14 +192,6 @@ PluginDetector.addPlugin('acrobat','Adobe Acrobat','application/pdf','AcroPDF.PD
 	return version;
 });
 */
-
-// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-if (mejs.PluginDetector.ua.match(/android 2\.[12]/) !== null) {
-	HTMLMediaElement.canPlayType = function(type) {
-		return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'probably' : '';
-	};
-}
-
 // necessary detection (fixes for <IE9)
 mejs.MediaFeatures = {
 	init: function() {
@@ -214,6 +206,7 @@ mejs.MediaFeatures = {
 		this.isiPad = (ua.match(/ipad/i) !== null);
 		this.isiPhone = (ua.match(/iphone/i) !== null);
 		this.isAndroid = (ua.match(/android/i) !== null);
+		this.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
 		this.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		this.isChrome = (ua.match(/chrome/gi) !== null);
 		this.isFirefox = (ua.match(/firefox/gi) !== null);
@@ -616,6 +609,14 @@ mejs.HtmlMediaElementShim = {
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
 
 		if (playback.method == 'native') {
+			// second fix for android
+			if (mejs.MediaFeatures.isBustedAndroid) {
+				htmlMediaElement.src = playback.url;
+				htmlMediaElement.addEventListener('click', function() {
+						htmlMediaElement.play();
+				}, true);
+			}
+		
 			// add methods to native HTMLMediaElement
 			return this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
@@ -671,6 +672,14 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		// STEP 2: Test for playback method
+		
+		// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
+		if (mejs.MediaFeatures.isBustedAndroid) {
+			htmlMediaElement.canPlayType = function(type) {
+				return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'maybe' : '';
+			};
+		}		
+		
 
 		// test for native playback first
 		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native')) {
