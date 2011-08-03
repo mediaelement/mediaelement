@@ -115,9 +115,7 @@
 
 			// restore scroll bars to document
 			docElement.style.overflow = docStyleOverflow;					
-		
-			console.log('return',normalWidth, normalHeight);
-		
+				
 			container
 				.removeClass('mejs-container-fullscreen')
 				.width(normalWidth)
