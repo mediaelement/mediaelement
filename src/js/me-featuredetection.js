@@ -22,6 +22,7 @@ mejs.MediaFeatures = {
 		this.isAndroid = (ua.match(/android/i) !== null);
 		this.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		this.isChrome = (ua.match(/chrome/gi) !== null);
+		this.isFirefox = (ua.match(/firefox/gi) !== null);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
