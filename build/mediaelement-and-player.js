@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.7';
+mejs.version = '2.1.8';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -216,6 +216,7 @@ mejs.MediaFeatures = {
 		this.isAndroid = (ua.match(/android/i) !== null);
 		this.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		this.isChrome = (ua.match(/chrome/gi) !== null);
+		this.isFirefox = (ua.match(/firefox/gi) !== null);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
@@ -223,7 +224,7 @@ mejs.MediaFeatures = {
 		}
 
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
-		this.hasNativeFullScreen = (typeof v.webkitEnterFullScreen !== 'undefined');
+		this.hasNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
 		if (this.isChrome) {
 			this.hasNativeFullScreen = false;
 		}
@@ -1415,7 +1416,7 @@ if (typeof jQuery != 'undefined') {
 			// show/hide loading			
 			media.addEventListener('loadstart',function() {
 				// for some reason Chrome is firing this event
-				if (mejs.MediaFeatures.isChrome && media.getAttribute('preload') === 'none')
+				if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
 					return;
 					
 				loading.show();
@@ -1884,102 +1885,164 @@ if (typeof jQuery != 'undefined') {
 })(mejs.$);
 
 (function($) {
+	mejs.MediaElementDefaults.forcePluginFullScreen = false;
+	
+	MediaElementPlayer.prototype.isFullScreen = false;
 	MediaElementPlayer.prototype.buildfullscreen = function(player, controls, layers, media) {
 
 		if (!player.isVideo)
 			return;
+			
+		// native events
+		if (mejs.MediaFeatures.hasNativeFullScreen) {
+			player.container.bind('webkitfullscreenchange', function(e) {
+			
+				if (document.webkitIsFullScreen) {
+					// reset the controls once we are fully in full screen
+					player.setControlsSize();
+				} else {				
+					// when a user presses ESC
+					// make sure to put the player back into place								
+					player.exitFullScreen();				
+				}
+			});
+		}
 
 		var 			
 			normalHeight = 0,
 			normalWidth = 0,
 			container = player.container,
+			docElement = document.documentElement,
+			docStyleOverflow,
+			parentWindow = window.parent,
+			parentiframes,			
+			iframe,
 			fullscreenBtn = 
 				$('<div class="mejs-button mejs-fullscreen-button"><button type="button"></button></div>')
 				.appendTo(controls)
 				.click(function() {
-					var goFullscreen = (mejs.MediaFeatures.hasNativeFullScreen) ?
-									!media.webkitDisplayingFullscreen :
-									!media.isFullScreen;
-					setFullScreen(goFullscreen);
-				}),
-			setFullScreen = function(goFullScreen) {
-				switch (media.pluginType) {
-					case 'flash':
-					case 'silverlight':
-						media.setFullscreen(goFullScreen);
-						break;
-					case 'native':
+					var isFullScreen = (mejs.MediaFeatures.hasNativeFullScreen) ?
+									document.webkitIsFullScreen :
+									player.isFullScreen;													
+					
+					if (isFullScreen) {
+						player.exitFullScreen();
+					} else {						
+						player.enterFullScreen();
+					}
+				});
+		
+		player.enterFullScreen = function() {
+			
+			// firefox can't adjust plugin sizes without resetting :(
+			if (player.pluginType !== 'native' && (mejs.MediaFeatures.isFirefox || player.options.forcePluginFullScreen)) {
+				media.setFullscreen(true);
+				//player.isFullScreen = true;
+				return;
+			}		
+			
+			// attempt to set fullscreen
+			if (mejs.MediaFeatures.hasNativeFullScreen) {
+				player.container[0].webkitRequestFullScreen();									
+			}
+								
+			// store overflow 
+			docStyleOverflow = docElement.style.overflow;
+			// set it to not show scroll bars so 100% will work
+			docElement.style.overflow = 'hidden';				
+		
+			// store
+			normalHeight = player.container.height();
+			normalWidth = player.container.width();
 
-						if (mejs.MediaFeatures.hasNativeFullScreen) {
-							if (goFullScreen) {
-								media.webkitEnterFullScreen();
-								media.isFullScreen = true;
-							} else {
-								media.webkitExitFullScreen();
-								media.isFullScreen = false;
-							}
-						} else {
-							if (goFullScreen) {
+			// make full size
+			container
+				.addClass('mejs-container-fullscreen')
+				.width('100%')
+				.height('100%')
+				.css('z-index', 1000);
+				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
+				
+			if (player.pluginType === 'native') {
+				player.$media
+					.width('100%')
+					.height('100%');
+			} else {
+				container.find('object embed')
+					.width('100%')
+					.height('100%');
+				player.media.setVideoSize($(window).width(),$(window).height());
+			}
+			
+			layers.children('div')
+				.width('100%')
+				.height('100%');
 
-								// store
-								normalHeight = player.$media.height();
-								normalWidth = player.$media.width();
+			fullscreenBtn
+				.removeClass('mejs-fullscreen')
+				.addClass('mejs-unfullscreen');
 
-								// make full size
-								container
-									.addClass('mejs-container-fullscreen')
-									.width('100%')
-									.height('100%')
-									.css('z-index', 1000);
+			player.setControlsSize();
+			player.isFullScreen = true;
+		};
+		player.exitFullScreen = function() {
 
-								player.$media
-									.width('100%')
-									.height('100%');
+			// firefox can't adjust plugins
+			if (player.pluginType !== 'native' && mejs.MediaFeatures.isFirefox) {				
+				media.setFullscreen(false);
+				//player.isFullScreen = false;
+				return;
+			}		
+		
+			// come outo of native fullscreen
+			if (mejs.MediaFeatures.hasNativeFullScreen && document.webkitIsFullScreen) {							
+				document.webkitCancelFullScreen();									
+			}	
 
+			// restore scroll bars to document
+			docElement.style.overflow = docStyleOverflow;					
+				
+			container
+				.removeClass('mejs-container-fullscreen')
+				.width(normalWidth)
+				.height(normalHeight)
+				.css('z-index', 1);
+				//.css({position: '', left: '', top: '', right: '', bottom: '', overflow: 'inherit', width: normalWidth + 'px', height: normalHeight + 'px', 'z-index': 1});
+			
+			if (player.pluginType === 'native') {
+				player.$media
+					.width(normalWidth)
+					.height(normalHeight);
+			} else {
+				container.find('object embed')
+					.width(normalWidth)
+					.height(normalHeight);
+					
+				player.media.setVideoSize(normalWidth, normalHeight);
+			}				
 
-								layers.children('div')
-									.width('100%')
-									.height('100%');
+			layers.children('div')
+				.width(normalWidth)
+				.height(normalHeight);
 
-								fullscreenBtn
-									.removeClass('mejs-fullscreen')
-									.addClass('mejs-unfullscreen');
+			fullscreenBtn
+				.removeClass('mejs-unfullscreen')
+				.addClass('mejs-fullscreen');
 
-								player.setControlsSize();
-								media.isFullScreen = true;
-							} else {
-
-								container
-									.removeClass('mejs-container-fullscreen')
-									.width(normalWidth)
-									.height(normalHeight)
-									.css('z-index', 1);
-
-								player.$media
-									.width(normalWidth)
-									.height(normalHeight);
-
-								layers.children('div')
-									.width(normalWidth)
-									.height(normalHeight);
-
-								fullscreenBtn
-									.removeClass('mejs-unfullscreen')
-									.addClass('mejs-fullscreen');
-
-								player.setControlsSize();
-								media.isFullScreen = false;
-							}
-						}
-				}				
-			};
+			player.setControlsSize();
+			player.isFullScreen = false;
+		};
+		
+		$(window).bind('resize',function (e) {
+			player.setControlsSize();
+		});		
 
 		$(document).bind('keydown',function (e) {
-			if (media.isFullScreen && e.keyCode == 27) {
-				setFullScreen(false);
+			if (player.isFullScreen && e.keyCode == 27) {
+				player.exitFullScreen();
 			}
 		});
-
+			
 	}
 
 })(mejs.$);
