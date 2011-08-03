@@ -465,7 +465,7 @@
 			// show/hide loading			
 			media.addEventListener('loadstart',function() {
 				// for some reason Chrome is firing this event
-				if (mejs.MediaFeatures.isChrome && media.getAttribute('preload') === 'none')
+				if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
 					return;
 					
 				loading.show();
