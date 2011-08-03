@@ -152,6 +152,14 @@ mejs.HtmlMediaElementShim = {
 		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
 
 		if (playback.method == 'native') {
+			// second fix for android
+			if (mejs.MediaFeatures.isBustedAndroid) {
+				htmlMediaElement.src = playback.url;
+				htmlMediaElement.addEventListener('click', function() {
+						htmlMediaElement.play();
+				}, true);
+			}
+		
 			// add methods to native HTMLMediaElement
 			return this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
@@ -207,6 +215,14 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		// STEP 2: Test for playback method
+		
+		// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
+		if (mejs.MediaFeatures.isBustedAndroid) {
+			htmlMediaElement.canPlayType = function(type) {
+				return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'maybe' : '';
+			};
+		}		
+		
 
 		// test for native playback first
 		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native')) {
