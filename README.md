@@ -82,6 +82,9 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * horizontal volume control
 * remove jQuery dependency
 * deeper WebVTT support (alignment, color, etc.)
+* fullscreen popup control
+* true fullscreen (proposed Safari/Firefox feature)
+* toggle fullscreen type in plugin
 
 *2.1.7 (2011/07/19) - 35.9kb*
 
