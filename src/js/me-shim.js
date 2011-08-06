@@ -128,13 +128,15 @@ mejs.HtmlMediaElementShim = {
 		var
 			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
-			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video'),
-			supportsMediaTag = (typeof(htmlMediaElement.canPlayType) != 'undefined'),
-			playback = {method:'', url:''},
+			tagName = htmlMediaElement.tagName.toLowerCase(),
+			isMediaTag = (tagName == 'audio' || tagName == 'video'),
+			isVideo = false,
+			src = htmlMediaElement.getAttribute('src'),
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
 			controls =  htmlMediaElement.getAttribute('controls'),
+			playback,
 			prop;
 
 		// extend options
@@ -142,14 +144,24 @@ mejs.HtmlMediaElementShim = {
 			options[prop] = o[prop];
 		}
 
-		// check for real poster
+					
+		// is this a true HTML5 media element
+		if (isMediaTag) {
+			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video');
+		} else {
+			// fake source from <a href=""></a>
+			src = htmlMediaElement.getAttribute('href');		
+		}
+
+		// clean up attributes
+		src = (src == 'undefined' || src == '' || src === null) ? null : src;		
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
 		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
 		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
 
 		// test for HTML5 and plugin capabilities
-		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
+		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, isVideo, src);
 
 		if (playback.method == 'native') {
 			// second fix for android
@@ -161,7 +173,7 @@ mejs.HtmlMediaElementShim = {
 			}
 		
 			// add methods to native HTMLMediaElement
-			return this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
+			return this.updateNative( playback.htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
 			return this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
@@ -170,8 +182,10 @@ mejs.HtmlMediaElementShim = {
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
 		}
 	},
-
-	determinePlayback: function(htmlMediaElement, options, isVideo, supportsMediaTag) {
+	
+	videoRegExp: /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg)/gi,
+	
+	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, isVideo, src) {
 		var
 			mediaFiles = [],
 			i,
@@ -180,25 +194,30 @@ mejs.HtmlMediaElementShim = {
 			l,
 			n,
 			type,
-			result = { method: '', url: ''},
-			src = htmlMediaElement.getAttribute('src'),
+			result = { method: '', url: '', htmlMediaElement: htmlMediaElement},
 			pluginName,
 			pluginVersions,
-			pluginInfo;
-			
-		// clean up src attr
-		if (src == 'undefined' || src == '' || src === null) 
-			src = null;
+			pluginInfo,
+			dummy;
 			
 		// STEP 1: Get URL and type from <video src> or <source src>
 
-		// supplied type overrides all HTML
-		if (typeof (options.type) != 'undefined' && options.type !== '') {
-			mediaFiles.push({type:options.type, url:src});
+		// supplied type overrides <video type> and <source type>
+		if (typeof options.type != 'undefined' && options.type !== '') {
+			
+			// accept either string or array of types
+			if (typeof options.type == 'string') {
+				mediaFiles.push({type:options.type, url:src});
+			} else {
+				
+				for (i=0; i<options.type.length; i++) {
+					mediaFiles.push({type:options.type[i], url:src});
+				}
+			}
 
 		// test for src attribute first
-		} else if (src  !== null) {
-			type = this.checkType(src, htmlMediaElement.getAttribute('type'), isVideo);
+		} else if (src !== null) {
+			type = this.formatType(src, htmlMediaElement.getAttribute('type'));
 			mediaFiles.push({type:type, url:src});
 
 		// then test for <source> elements
@@ -208,7 +227,7 @@ mejs.HtmlMediaElementShim = {
 				n = htmlMediaElement.childNodes[i];
 				if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
 					src = n.getAttribute('src');
-					type = this.checkType(src, n.getAttribute('type'), isVideo);
+					type = this.formatType(src, n.getAttribute('type'));
 					mediaFiles.push({type:type, url:src});
 				}
 			}
@@ -226,6 +245,21 @@ mejs.HtmlMediaElementShim = {
 
 		// test for native playback first
 		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native')) {
+						
+			if (!isMediaTag) {
+				var tagName = 'video';
+				if (mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1)
+					tagName = 'audio';
+				
+				// create a real HTML5 Media Element 
+				dummy = document.createElement(tagName);			
+				htmlMediaElement.parentNode.insertBefore(dummy, htmlMediaElement);
+				htmlMediaElement.style.display = 'none';
+				
+				// use this one from now on
+				result.htmlMediaElement = htmlMediaElement = dummy;
+			}
+				
 			for (i=0; i<mediaFiles.length; i++) {
 				// normal check
 				if (htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== '' 
@@ -233,9 +267,11 @@ mejs.HtmlMediaElementShim = {
 					|| htmlMediaElement.canPlayType(mediaFiles[i].type.replace(/mp3/,'mpeg')).replace(/no/, '') !== '') {
 					result.method = 'native';
 					result.url = mediaFiles[i].url;
-					return result;
+					break;
 				}
-			}
+			}			
+			
+			return result;
 		}
 
 		// if native playback didn't work, then test plugins
@@ -279,13 +315,12 @@ mejs.HtmlMediaElementShim = {
 		return result;
 	},
 
-	checkType: function(url, type, isVideo) {
+	formatType: function(url, type) {
 		var ext;
 
 		// if no type is supplied, fake it with the extension
-		if (url && !type) {
-			ext = url.substring(url.lastIndexOf('.') + 1);
-			return ((isVideo) ? 'video' : 'audio') + '/' + ext;
+		if (url && !type) {		
+			return this.getTypeFromFile(url);
 		} else {
 			// only return the mime part of the type in case the attribute contains the codec
 			// see http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html#the-source-element
@@ -297,6 +332,11 @@ mejs.HtmlMediaElementShim = {
 				return type;
 			}
 		}
+	},
+	
+	getTypeFromFile: function(url) {
+		var ext = url.substring(url.lastIndexOf('.') + 1);
+		return (this.videoRegExp.test(ext) ? 'video' : 'audio') + '/' + ext;
 	},
 
 	createErrorMessage: function(htmlMediaElement, options, downloadUrl, poster) {
