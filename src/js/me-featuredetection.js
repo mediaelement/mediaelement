@@ -21,6 +21,8 @@ mejs.MediaFeatures = {
 		for (i=0; i<html5Elements.length; i++) {
 			v = document.createElement(html5Elements[i]);
 		}
+		
+		this.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || this.isBustedAndroid);
 
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
 		this.hasNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
@@ -30,7 +32,7 @@ mejs.MediaFeatures = {
 		// OS X 10.5 can't do this even if it says it can :(
 		if (this.hasNativeFullScreen && ua.match(/mac os x 10_5/i)) {
 			this.hasNativeFullScreen = false;
-		}
+		}			
 	}
 };
 mejs.MediaFeatures.init();

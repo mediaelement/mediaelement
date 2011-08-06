@@ -60,53 +60,6 @@
 			t.node.player = t;
 		}
 		
-		t.isVideo = (t.media.tagName.toLowerCase() === 'video');
-				
-		/* FUTURE WORK = create player without existing <video> or <audio> node
-		
-		// if not a video or audio tag, then we'll dynamically create it
-		if (tagName == 'video' || tagName == 'audio') {
-			t.$media = $($node);
-		} else if (o.tagName !== '' && o.src !== '') {
-			// create a new node
-			if (o.mode == 'auto' || o.mode == 'native') {
-				
-				$media = $(o.tagName);
-				if (typeof o.src == 'string') {
-					$media.attr('src',o.src);
-				} else if (typeof o.src == 'object') {
-					// create source nodes
-					for (var x in o.src) {
-						$media.append($('<source src="' + o.src[x].src + '" type="' + o.src[x].type + '" />'));
-					}
-				}
-				if (o.type != '') {
-					$media.attr('type',o.type);
-				}
-				if (o.poster != '') {
-					$media.attr('poster',o.poster);
-				}
-				if (o.videoWidth > 0) {
-					$media.attr('width',o.videoWidth);
-				}
-				if (o.videoHeight > 0) {
-					$media.attr('height',o.videoHeight);
-				}
-				
-				$node.clear();
-				$node.append($media);
-				t.$media = $media;
-			} else if (o.mode == 'shim') {
-				$media = $();
-				// doesn't want a media node
-				// let MediaElement object handle this
-			}
-		} else {
-			// fail?
-			return;
-		}	
-		*/
-		
 		t.init();
 
 		return t;
@@ -125,6 +78,7 @@
 					error: function(e) { t.handleError(e);}
 				});
 		
+			t.isVideo = (t.media.tagName.toLowerCase() !== 'audio' && !t.options.isVideo);
 		
 			// use native controls in iPad, iPhone, and Android	
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || mf.isiPhone) {
@@ -227,12 +181,14 @@
 				for (f in t.options.features) {
 					feature = t.options.features[f];
 					if (t['build' + feature]) {
-						try {
+						//try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
-						} catch (e) {
+						//} catch (e) {
 							// TODO: report control error
 							//throw e;
-						}
+							//console.log('error building ' + feature);
+							//console.log(e);
+						//}
 					}
 				}
 
