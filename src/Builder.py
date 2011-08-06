@@ -40,6 +40,7 @@ mep_files.append('mep-feature-time.js')
 mep_files.append('mep-feature-volume.js')
 mep_files.append('mep-feature-fullscreen.js')
 mep_files.append('mep-feature-tracks.js')
+mep_files.append('mep-feature-contextmenu.js')
 
 code = ''
 
