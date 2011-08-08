@@ -78,12 +78,19 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.x.0 (proposed)*
 
-* dynamic player creation: from `<a href="media.mp4">video</a>` and `<div class="mejs"></div>` specifying src in JavaScript
 * horizontal volume control
 * remove jQuery dependency
 * deeper WebVTT support (alignment, color, etc.)
 * fullscreen popup control
 * toggle for iPad to use MediaElement.js player by default (iPadForceNativeControls:true)
+* disable controls (for pre/post roll scenarios)
+
+*2.2.0 (in progress)
+
+* added contextmenu feature
+* updated WebVTT support (still had some SRT formatting restrictions)
+* dynamic player creation: from `<a href="media.mp4">video</a>` and `<div class="mejs"></div>` specifying type (string or array)
+
 
 *2.1.9 (2011/08/03) - 36.9kb*
 
