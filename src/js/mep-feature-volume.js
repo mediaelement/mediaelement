@@ -67,6 +67,13 @@
 		mouseIsDown = false;
 
 		// SLIDER
+		mute
+			.hover(function() {
+				volumeSlider.show();
+			}, function() {
+				volumeSlider.hide();
+			})		
+		
 		volumeSlider
 			.bind('mousedown', function (e) {
 				handleVolumeMove(e);
