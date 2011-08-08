@@ -41,8 +41,16 @@
 								'</li>'	+
 							'</ul>'+
 						'</div>'+
-					'</button>')
+					'</div>')
 						.appendTo(controls)
+						
+						// hover
+						.hover(function() {
+							$(this).find('.mejs-captions-selector').css('visibility','visible');
+						}, function() {
+							$(this).find('.mejs-captions-selector').css('visibility','hidden');
+						})					
+						
 						// handle clicks to the language radio buttons
 						.delegate('input[type=radio]','click',function() {
 							lang = this.value;
@@ -444,8 +452,9 @@
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	mejs.TrackFormatParser = {
-		pattern_identifier: /^[0-9]+$/,
-		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,
+		// match start "chapter-" (or anythingelse)
+		pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
+		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 		split2: function (text, regex) {
 			// normal version for compliant browsers
@@ -465,7 +474,8 @@
 				if (this.pattern_identifier.exec(lines[i])){
 					// skip to the next line where the start --> end time code should be
 					i++;
-					timecode = this.pattern_timecode.exec(lines[i]);
+					timecode = this.pattern_timecode.exec(lines[i]);				
+					
 					if (timecode && i<lines.length){
 						i++;
 						// grab all the (possibly multi-line) text that follows

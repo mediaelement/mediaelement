@@ -319,9 +319,11 @@
 	-moz-border-radius: 0 0 4px 4px ;
 	border-radius: 0 0 4px 4px ;
 }
+/*
 .mejs-controls .mejs-volume-button:hover .mejs-volume-slider {
 	display: block;
 }
+*/
 
 .mejs-controls .mejs-volume-button .mejs-volume-slider .mejs-volume-total {
 	position: absolute;
@@ -389,9 +391,11 @@
 	-moz-border-radius: 0;
 	border-radius: 0;
 }
+/*
 .mejs-controls .mejs-captions-button:hover  .mejs-captions-selector {
 	visibility: visible;
 }
+*/
 
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul {
 	margin: 0;
