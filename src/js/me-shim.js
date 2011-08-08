@@ -130,7 +130,6 @@ mejs.HtmlMediaElementShim = {
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
 			tagName = htmlMediaElement.tagName.toLowerCase(),
 			isMediaTag = (tagName == 'audio' || tagName == 'video'),
-			isVideo = false,
 			src = htmlMediaElement.getAttribute('src'),
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
@@ -161,7 +160,7 @@ mejs.HtmlMediaElementShim = {
 		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
 
 		// test for HTML5 and plugin capabilities
-		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, isVideo, src);
+		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, src);
 
 		if (playback.method == 'native') {
 			// second fix for android
@@ -176,7 +175,7 @@ mejs.HtmlMediaElementShim = {
 			return this.updateNative( playback.htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			return this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
+			return this.createPlugin( htmlMediaElement, options, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
@@ -185,7 +184,7 @@ mejs.HtmlMediaElementShim = {
 	
 	videoRegExp: /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg)/gi,
 	
-	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, isVideo, src) {
+	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, src) {
 		var
 			mediaFiles = [],
 			i,
@@ -194,7 +193,7 @@ mejs.HtmlMediaElementShim = {
 			l,
 			n,
 			type,
-			result = { method: '', url: '', htmlMediaElement: htmlMediaElement},
+			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio')},
 			pluginName,
 			pluginVersions,
 			pluginInfo,
@@ -248,8 +247,10 @@ mejs.HtmlMediaElementShim = {
 						
 			if (!isMediaTag) {
 				var tagName = 'video';
-				if (mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1)
+				if (mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1) {
 					tagName = 'audio';
+					result.isVideo = false;
+				}
 				
 				// create a real HTML5 Media Element 
 				dummy = document.createElement(tagName);			
@@ -271,7 +272,9 @@ mejs.HtmlMediaElementShim = {
 				}
 			}			
 			
-			return result;
+			if (result.method === 'native') {
+				return result;
+			}
 		}
 
 		// if native playback didn't work, then test plugins
