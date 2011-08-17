@@ -7,3 +7,5 @@ build/SilverlightMediaElement.pdb
 build/SilverlightMediaElement.dll
 tests/*
 newfeatures/*
+
+.DS_Store

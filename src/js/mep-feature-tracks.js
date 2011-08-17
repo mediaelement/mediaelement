@@ -9,7 +9,9 @@
 		// a dropdownlist of automatic translations
 		translationSelector: false,
 		// key for tranlsations
-		googleApiKey: ''
+		googleApiKey: '',
+		// callback that's fired after a new language is chosen
+		languageChanged: function(lang) { }
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -67,6 +69,8 @@
 									}
 								}
 							}
+
+							player.options.languageChanged(lang);
 						});
 						//.bind('mouseenter', function() {
 						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')

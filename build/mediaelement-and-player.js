@@ -215,6 +215,8 @@ mejs.MediaFeatures = {
 		for (i=0; i<html5Elements.length; i++) {
 			v = document.createElement(html5Elements[i]);
 		}
+		
+		this.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || this.isBustedAndroid);
 
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
 		this.hasNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
@@ -224,7 +226,7 @@ mejs.MediaFeatures = {
 		// OS X 10.5 can't do this even if it says it can :(
 		if (this.hasNativeFullScreen && ua.match(/mac os x 10_5/i)) {
 			this.hasNativeFullScreen = false;
-		}
+		}			
 	}
 };
 mejs.MediaFeatures.init();
@@ -585,13 +587,14 @@ mejs.HtmlMediaElementShim = {
 		var
 			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
-			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video'),
-			supportsMediaTag = (typeof(htmlMediaElement.canPlayType) != 'undefined'),
-			playback = {method:'', url:''},
+			tagName = htmlMediaElement.tagName.toLowerCase(),
+			isMediaTag = (tagName == 'audio' || tagName == 'video'),
+			src = htmlMediaElement.getAttribute('src'),
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
 			controls =  htmlMediaElement.getAttribute('controls'),
+			playback,
 			prop;
 
 		// extend options
@@ -599,14 +602,24 @@ mejs.HtmlMediaElementShim = {
 			options[prop] = o[prop];
 		}
 
-		// check for real poster
+					
+		// is this a true HTML5 media element
+		if (isMediaTag) {
+			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video');
+		} else {
+			// fake source from <a href=""></a>
+			src = htmlMediaElement.getAttribute('href');		
+		}
+
+		// clean up attributes
+		src = (src == 'undefined' || src == '' || src === null) ? null : src;		
 		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
 		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
 		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
 		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
 
 		// test for HTML5 and plugin capabilities
-		playback = this.determinePlayback(htmlMediaElement, options, isVideo, supportsMediaTag);
+		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, src);
 
 		if (playback.method == 'native') {
 			// second fix for android
@@ -618,17 +631,19 @@ mejs.HtmlMediaElementShim = {
 			}
 		
 			// add methods to native HTMLMediaElement
-			return this.updateNative( htmlMediaElement, options, autoplay, preload, playback);
+			return this.updateNative( playback.htmlMediaElement, options, autoplay, preload, playback);
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
-			return this.createPlugin( htmlMediaElement, options, isVideo, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
+			return this.createPlugin( htmlMediaElement, options, playback.method, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster, autoplay, preload, controls);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( htmlMediaElement, options, (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '', poster );
 		}
 	},
-
-	determinePlayback: function(htmlMediaElement, options, isVideo, supportsMediaTag) {
+	
+	videoRegExp: /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg)/gi,
+	
+	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, src) {
 		var
 			mediaFiles = [],
 			i,
@@ -637,25 +652,30 @@ mejs.HtmlMediaElementShim = {
 			l,
 			n,
 			type,
-			result = { method: '', url: ''},
-			src = htmlMediaElement.getAttribute('src'),
+			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio')},
 			pluginName,
 			pluginVersions,
-			pluginInfo;
-			
-		// clean up src attr
-		if (src == 'undefined' || src == '' || src === null) 
-			src = null;
+			pluginInfo,
+			dummy;
 			
 		// STEP 1: Get URL and type from <video src> or <source src>
 
-		// supplied type overrides all HTML
-		if (typeof (options.type) != 'undefined' && options.type !== '') {
-			mediaFiles.push({type:options.type, url:src});
+		// supplied type overrides <video type> and <source type>
+		if (typeof options.type != 'undefined' && options.type !== '') {
+			
+			// accept either string or array of types
+			if (typeof options.type == 'string') {
+				mediaFiles.push({type:options.type, url:src});
+			} else {
+				
+				for (i=0; i<options.type.length; i++) {
+					mediaFiles.push({type:options.type[i], url:src});
+				}
+			}
 
 		// test for src attribute first
-		} else if (src  !== null) {
-			type = this.checkType(src, htmlMediaElement.getAttribute('type'), isVideo);
+		} else if (src !== null) {
+			type = this.formatType(src, htmlMediaElement.getAttribute('type'));
 			mediaFiles.push({type:type, url:src});
 
 		// then test for <source> elements
@@ -665,7 +685,7 @@ mejs.HtmlMediaElementShim = {
 				n = htmlMediaElement.childNodes[i];
 				if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
 					src = n.getAttribute('src');
-					type = this.checkType(src, n.getAttribute('type'), isVideo);
+					type = this.formatType(src, n.getAttribute('type'));
 					mediaFiles.push({type:type, url:src});
 				}
 			}
@@ -683,6 +703,23 @@ mejs.HtmlMediaElementShim = {
 
 		// test for native playback first
 		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native')) {
+						
+			if (!isMediaTag) {
+				var tagName = 'video';
+				if (mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1) {
+					tagName = 'audio';
+					result.isVideo = false;
+				}
+				
+				// create a real HTML5 Media Element 
+				dummy = document.createElement(tagName);			
+				htmlMediaElement.parentNode.insertBefore(dummy, htmlMediaElement);
+				htmlMediaElement.style.display = 'none';
+				
+				// use this one from now on
+				result.htmlMediaElement = htmlMediaElement = dummy;
+			}
+				
 			for (i=0; i<mediaFiles.length; i++) {
 				// normal check
 				if (htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== '' 
@@ -690,8 +727,12 @@ mejs.HtmlMediaElementShim = {
 					|| htmlMediaElement.canPlayType(mediaFiles[i].type.replace(/mp3/,'mpeg')).replace(/no/, '') !== '') {
 					result.method = 'native';
 					result.url = mediaFiles[i].url;
-					return result;
+					break;
 				}
+			}			
+			
+			if (result.method === 'native') {
+				return result;
 			}
 		}
 
@@ -736,13 +777,12 @@ mejs.HtmlMediaElementShim = {
 		return result;
 	},
 
-	checkType: function(url, type, isVideo) {
+	formatType: function(url, type) {
 		var ext;
 
 		// if no type is supplied, fake it with the extension
-		if (url && !type) {
-			ext = url.substring(url.lastIndexOf('.') + 1);
-			return ((isVideo) ? 'video' : 'audio') + '/' + ext;
+		if (url && !type) {		
+			return this.getTypeFromFile(url);
 		} else {
 			// only return the mime part of the type in case the attribute contains the codec
 			// see http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html#the-source-element
@@ -754,6 +794,11 @@ mejs.HtmlMediaElementShim = {
 				return type;
 			}
 		}
+	},
+	
+	getTypeFromFile: function(url) {
+		var ext = url.substring(url.lastIndexOf('.') + 1);
+		return (this.videoRegExp.test(ext) ? 'video' : 'audio') + '/' + ext;
 	},
 
 	createErrorMessage: function(htmlMediaElement, options, downloadUrl, poster) {
@@ -1020,53 +1065,6 @@ if (typeof jQuery != 'undefined') {
 			t.node.player = t;
 		}
 		
-		t.isVideo = (t.media.tagName.toLowerCase() === 'video');
-				
-		/* FUTURE WORK = create player without existing <video> or <audio> node
-		
-		// if not a video or audio tag, then we'll dynamically create it
-		if (tagName == 'video' || tagName == 'audio') {
-			t.$media = $($node);
-		} else if (o.tagName !== '' && o.src !== '') {
-			// create a new node
-			if (o.mode == 'auto' || o.mode == 'native') {
-				
-				$media = $(o.tagName);
-				if (typeof o.src == 'string') {
-					$media.attr('src',o.src);
-				} else if (typeof o.src == 'object') {
-					// create source nodes
-					for (var x in o.src) {
-						$media.append($('<source src="' + o.src[x].src + '" type="' + o.src[x].type + '" />'));
-					}
-				}
-				if (o.type != '') {
-					$media.attr('type',o.type);
-				}
-				if (o.poster != '') {
-					$media.attr('poster',o.poster);
-				}
-				if (o.videoWidth > 0) {
-					$media.attr('width',o.videoWidth);
-				}
-				if (o.videoHeight > 0) {
-					$media.attr('height',o.videoHeight);
-				}
-				
-				$node.clear();
-				$node.append($media);
-				t.$media = $media;
-			} else if (o.mode == 'shim') {
-				$media = $();
-				// doesn't want a media node
-				// let MediaElement object handle this
-			}
-		} else {
-			// fail?
-			return;
-		}	
-		*/
-		
 		t.init();
 
 		return t;
@@ -1085,6 +1083,7 @@ if (typeof jQuery != 'undefined') {
 					error: function(e) { t.handleError(e);}
 				});
 		
+			t.isVideo = (t.media.tagName.toLowerCase() !== 'audio' && !t.options.isVideo);
 		
 			// use native controls in iPad, iPhone, and Android	
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || mf.isiPhone) {
@@ -1187,12 +1186,14 @@ if (typeof jQuery != 'undefined') {
 				for (f in t.options.features) {
 					feature = t.options.features[f];
 					if (t['build' + feature]) {
-						try {
+						//try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
-						} catch (e) {
+						//} catch (e) {
 							// TODO: report control error
 							//throw e;
-						}
+							//console.log('error building ' + feature);
+							//console.log(e);
+						//}
 					}
 				}
 
@@ -1828,6 +1829,13 @@ if (typeof jQuery != 'undefined') {
 		mouseIsDown = false;
 
 		// SLIDER
+		mute
+			.hover(function() {
+				volumeSlider.show();
+			}, function() {
+				volumeSlider.hide();
+			})		
+		
 		volumeSlider
 			.bind('mousedown', function (e) {
 				handleVolumeMove(e);
@@ -2049,7 +2057,9 @@ if (typeof jQuery != 'undefined') {
 		// a dropdownlist of automatic translations
 		translationSelector: false,
 		// key for tranlsations
-		googleApiKey: ''
+		googleApiKey: '',
+		// callback that's fired after a new language is chosen
+		languageChanged: function(lang) { }
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -2081,8 +2091,16 @@ if (typeof jQuery != 'undefined') {
 								'</li>'	+
 							'</ul>'+
 						'</div>'+
-					'</button>')
+					'</div>')
 						.appendTo(controls)
+						
+						// hover
+						.hover(function() {
+							$(this).find('.mejs-captions-selector').css('visibility','visible');
+						}, function() {
+							$(this).find('.mejs-captions-selector').css('visibility','hidden');
+						})					
+						
 						// handle clicks to the language radio buttons
 						.delegate('input[type=radio]','click',function() {
 							lang = this.value;
@@ -2099,6 +2117,8 @@ if (typeof jQuery != 'undefined') {
 									}
 								}
 							}
+
+							player.options.languageChanged(lang);
 						});
 						//.bind('mouseenter', function() {
 						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
@@ -2484,8 +2504,9 @@ if (typeof jQuery != 'undefined') {
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	mejs.TrackFormatParser = {
-		pattern_identifier: /^[0-9]+$/,
-		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,
+		// match start "chapter-" (or anythingelse)
+		pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
+		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 		split2: function (text, regex) {
 			// normal version for compliant browsers
@@ -2505,7 +2526,8 @@ if (typeof jQuery != 'undefined') {
 				if (this.pattern_identifier.exec(lines[i])){
 					// skip to the next line where the start --> end time code should be
 					i++;
-					timecode = this.pattern_timecode.exec(lines[i]);
+					timecode = this.pattern_timecode.exec(lines[i]);				
+					
 					if (timecode && i<lines.length){
 						i++;
 						// grab all the (possibly multi-line) text that follows
@@ -2643,4 +2665,136 @@ if (typeof jQuery != 'undefined') {
 
 })(mejs.$);
 
+/*
+* ContextMenu Plugin
+* 
+*
+*/
+
+	
+mejs.MepDefaults.contextMenuItems = [
+	// demo of a fullscreen option
+	{ 
+		render: function(player) {
+			
+			// check for fullscreen plugin
+			if (typeof player.enterFullScreen == 'undefined')
+				return null;
+		
+			if (player.isFullScreen) {
+				return "Turn off Fullscreen";
+			} else {
+				return "Go Fullscreen";
+			}
+		},
+		click: function(player) {
+			if (player.isFullScreen) {
+				player.exitFullScreen();
+			} else {
+				player.enterFullScreen();
+			}
+		}
+	}
+	,
+	// demo of a mute/unmute button
+	{ 
+		render: function(player) {
+			if (player.media.muted) {
+				return "Unmute";
+			} else {
+				return "Mute";
+			}
+		},
+		click: function(player) {
+			if (player.media.muted) {
+				player.setMuted(false);
+			} else {
+				player.setMuted(true);
+			}
+		}
+	},
+	// separator
+	{
+		isSeparator: true
+	}
+	,
+	// demo of simple download video
+	{ 
+		render: function(player) {
+			return "Download Video";
+		},
+		click: function(player) {
+			window.location.href = player.media.currentSrc;
+		}
+	}	
+
+];
+
+
+(function($) {
+
+
+
+	MediaElementPlayer.prototype.buildcontextmenu = function(player, controls, layers, media) {
+		
+		// create context menu
+		player.contextMenu = $('<div class="mejs-contextmenu"></div>')
+							.appendTo($('body'))
+							.hide();
+		
+		// create events for showing context menu
+		player.container.bind('contextmenu', function(e) {
+			e.preventDefault();
+			player.renderContextMenu(e.clientX, e.clientY);
+			return false;
+		});
+		player.container.bind('click', function() {
+			player.contextMenu.hide();
+		});	
+	}
+	
+	MediaElementPlayer.prototype.renderContextMenu = function(x,y) {
+		
+		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
+		var t = this,
+			html = '',
+			items = t.options.contextMenuItems;
+		
+		for (var i=0, il=items.length; i<il; i++) {
+			
+			if (items[i].isSeparator) {
+				html += '<div class="mejs-contextmenu-separator"></div>';
+			} else {
+			
+				var rendered = items[i].render(t);
+			
+				// render can return null if the item doesn't need to be used at the moment
+				if (rendered != null) {
+					html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '">' + rendered + '</div>';
+				}
+			}
+		}
+		
+		// position and show the context menu
+		t.contextMenu
+			.empty()
+			.append($(html))
+			.css({top:y, left:x})
+			.show()
+			
+		// bind events
+		t.contextMenu.find('.mejs-contextmenu-item').click(function() {
+			// which one is this?
+			var itemIndex = parseInt( $(this).data('itemindex'), 10 );
+			
+			// perform click action
+			t.options.contextMenuItems[itemIndex].click(t);
+			
+			// close
+			t.contextMenu.hide();
+		});
+		
+	}
+	
+})(mejs.$);
 
