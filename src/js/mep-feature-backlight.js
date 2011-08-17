@@ -10,168 +10,168 @@
 
 
 
-	MediaElementPlayer.prototype.buildbacklight = function(player, controls, layers, media) {
-		if (!player.isVideo)
-			return;
+	$.extend(MediaElementPlayer.prototype, {
+		buildbacklight = function(player, controls, layers, media) {
+			if (!player.isVideo)
+				return;
 
-		//http://www.splashnology.com/blog/html5/382.html
+			//http://www.splashnology.com/blog/html5/382.html
 
-		var 
-			mediaContainer = player.container.find('.mejs-mediaelement').parent(),
-			border = $('<div class="mejs-border"></div>')
-				.prependTo(mediaContainer)
+			var 
+				mediaContainer = player.container.find('.mejs-mediaelement').parent(),
+				border = $('<div class="mejs-border"></div>')
+					.prependTo(mediaContainer)
+					.css('position','absolute')
+					.css('top','-10px')
+					.css('left','-10px')
+					.css('border','solid 10px #010101')
+					.width(player.width).height(player.height),
+				glowBase = $('<div class="mejs-backlight-glow"></div>')
+					.prependTo(mediaContainer)
+					.css('position','absolute')
+					.css('display','none')
+					.css('top',0)
+					.css('left',0)
+					.width(player.width).height(player.height),
+				base = $('<div class="mejs-backlight"></div>')
+					.prependTo(mediaContainer)
+					.css('position','absolute')
+					.css('top',0)
+					.css('left',0)
+					.width(player.width).height(player.height),
+
+				i,
+				copyCanvas = document.createElement('canvas'),
+				copyContext = copyCanvas.getContext('2d'),
+				pixels,
+				keepUpdating = true,
+				isActive = true,
+				timer = null,
+				glowCanvas = document.createElement('canvas'),
+				glowContext = glowCanvas.getContext('2d'),
+				size = player.options.backlightSize,
+				backgroundColor = player.options.backlightBackground,
+				gradient,
+				width = player.width,
+				height = player.height;
+
+			// set sizes
+			copyCanvas.width = width;
+			copyCanvas.height = height;
+			glowCanvas.width = width + size + size;
+			glowCanvas.height = height + size + size;
+
+			// draw glow overlay
+			// top
+			gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, size, 0));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(size, size, width, -size); 
+
+			// tr
+			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, size, 0, width+size, size, size));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(width+size, size, size, -size); 
+
+			// right
+			gradient = addGlow(backgroundColor,glowContext.createLinearGradient(width+size, size, width+size+size, size));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(width+size, size, size, height); 
+
+			// br
+			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, height+size, 0, width+size, height+size, size));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(width+size, height+size, size, size); 
+
+			// bottom
+			var gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size+height, size, size+height+size));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(size, size+height, width, size); 
+
+			// bl
+			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, height+size, 0, size, height+size, size));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(0, height+size, size, size); 
+
+			// left
+			gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, 0, size));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(size, size, -size, height); 
+
+			// tl
+			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, size, 0, size, size, size));
+			glowContext.fillStyle = gradient; 
+			glowContext.fillRect(0, 0, size, size); 
+
+			$(glowCanvas)
 				.css('position','absolute')
-				.css('top','-10px')
-				.css('left','-10px')
-				.css('border','solid 10px #010101')
-				.width(player.width).height(player.height),
-			glowBase = $('<div class="mejs-backlight-glow"></div>')
-				.prependTo(mediaContainer)
-				.css('position','absolute')
-				.css('display','none')
-				.css('top',0)
-				.css('left',0)
-				.width(player.width).height(player.height),
-			base = $('<div class="mejs-backlight"></div>')
-				.prependTo(mediaContainer)
-				.css('position','absolute')
-				.css('top',0)
-				.css('left',0)
-				.width(player.width).height(player.height),
-
-			i,
-			copyCanvas = document.createElement('canvas'),
-			copyContext = copyCanvas.getContext('2d'),
-			pixels,
-			keepUpdating = true,
-			isActive = true,
-			timer = null,
-			glowCanvas = document.createElement('canvas'),
-			glowContext = glowCanvas.getContext('2d'),
-			size = player.options.backlightSize,
-			backgroundColor = player.options.backlightBackground,
-			gradient,
-			width = player.width,
-			height = player.height;
-
-		// set sizes
-		copyCanvas.width = width;
-		copyCanvas.height = height;
-		glowCanvas.width = width + size + size;
-		glowCanvas.height = height + size + size;
-
-		// draw glow overlay
-		// top
-		gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, size, 0));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(size, size, width, -size); 
-
-		// tr
-		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, size, 0, width+size, size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(width+size, size, size, -size); 
-
-		// right
-		gradient = addGlow(backgroundColor,glowContext.createLinearGradient(width+size, size, width+size+size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(width+size, size, size, height); 
-
-		// br
-		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, height+size, 0, width+size, height+size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(width+size, height+size, size, size); 
-
-		// bottom
-		var gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size+height, size, size+height+size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(size, size+height, width, size); 
-
-		// bl
-		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, height+size, 0, size, height+size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(0, height+size, size, size); 
-
-		// left
-		gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, 0, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(size, size, -size, height); 
-
-		// tl
-		gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, size, 0, size, size, size));
-		glowContext.fillStyle = gradient; 
-		glowContext.fillRect(0, 0, size, size); 
-
-		$(glowCanvas)
-			.css('position','absolute')
-			.css('top',-size)
-			.css('left',-size)
-			.appendTo(glowBase);
+				.css('top',-size)
+				.css('left',-size)
+				.appendTo(glowBase);
 
 
-		// add toggle control
-		$('<div class="mejs-backlight-button mejs-backlight-active"><span></span></div>')
-			.appendTo(controls)
-			.click(function() {
-				if (isActive) {
-					delete timer;
-					timer = null;
-					base.hide();
-					glowBase.hide();
-					$(this)
-						.removeClass('mejs-backlight-active')
-						.addClass('mejs-backlight-inactive')
-				} else {
-					updateLights();
-					base.show();
-					glowBase.show();
-					$(this)
-						.removeClass('mejs-backlight-inactive')
-						.addClass('mejs-backlight-active')
+			// add toggle control
+			$('<div class="mejs-backlight-button mejs-backlight-active"><span></span></div>')
+				.appendTo(controls)
+				.click(function() {
+					if (isActive) {
+						delete timer;
+						timer = null;
+						base.hide();
+						glowBase.hide();
+						$(this)
+							.removeClass('mejs-backlight-active')
+							.addClass('mejs-backlight-inactive')
+					} else {
+						updateLights();
+						base.show();
+						glowBase.show();
+						$(this)
+							.removeClass('mejs-backlight-inactive')
+							.addClass('mejs-backlight-active')
+					}
+					isActive = !isActive;
+				});
+
+
+			// http://www.splashnology.com/blog/html5/382.html
+			function updateLights() {
+
+				// get a copy of video
+				copyContext.drawImage(media, 0, 0, media.width, media.height);
+
+				// create the gradient lights
+				addLights(base, copyCanvas, copyContext, 
+					player.options.backlightVerticalLights, 
+					player.options.backlightHorizontalLights, 
+					player.options.backlightSize, 
+					30);
+
+				if (keepUpdating && isActive) {
+					timer = setTimeout(updateLights, player.options.backlightTimeout);
 				}
-				isActive = !isActive;
-			});
-
-
-		// http://www.splashnology.com/blog/html5/382.html
-		function updateLights() {
-
-			// get a copy of video
-			copyContext.drawImage(media, 0, 0, media.width, media.height);
-
-			// create the gradient lights
-			addLights(base, copyCanvas, copyContext, 
-				player.options.backlightVerticalLights, 
-				player.options.backlightHorizontalLights, 
-				player.options.backlightSize, 
-				30);
-
-			if (keepUpdating && isActive) {
-				timer = setTimeout(updateLights, player.options.backlightTimeout);
 			}
+
+
+
+
+			//setTimeout(updateLights, timeOut);
+
+			media.addEventListener('play',function() {
+				if (isActive) {
+					keepUpdating = true;
+					updateLights();
+					glowBase.css('display','');
+				}
+			}, false);
+			media.addEventListener('pause',function() {
+				keepUpdating = false;
+			}, false);
+			media.addEventListener('ended',function() {
+				keepUpdating = false;
+			}, false);
+
 		}
-
-
-
-
-		//setTimeout(updateLights, timeOut);
-
-		media.addEventListener('play',function() {
-			if (isActive) {
-				keepUpdating = true;
-				updateLights();
-				glowBase.css('display','');
-			}
-		}, false);
-		media.addEventListener('pause',function() {
-			keepUpdating = false;
-		}, false);
-		media.addEventListener('ended',function() {
-			keepUpdating = false;
-		}, false);
-
-	};
-
-
+	});
 
 	function addLights(base, canvas, context, vBlocks, hBlocks, size, depth) {
 		base.empty();
