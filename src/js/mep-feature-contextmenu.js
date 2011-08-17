@@ -4,7 +4,6 @@
 *
 */
 
-	
 mejs.MepDefaults.contextMenuItems = [
 	// demo of a fullscreen option
 	{ 
@@ -78,12 +77,15 @@ mejs.MepDefaults.contextMenuItems = [
 		// create events for showing context menu
 		player.container.bind('contextmenu', function(e) {
 			e.preventDefault();
-			player.renderContextMenu(e.clientX, e.clientY);
+			player.renderContextMenu(e.clientX+1, e.clientY+1);
 			return false;
 		});
 		player.container.bind('click', function() {
 			player.contextMenu.hide();
 		});	
+		player.contextMenu.bind('mouseleave', function() {
+			player.contextMenu.hide();
+		});			
 	}
 	
 	MediaElementPlayer.prototype.renderContextMenu = function(x,y) {
