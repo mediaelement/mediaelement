@@ -78,21 +78,22 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.x.0 (proposed)*
 
-* horizontal volume control
-* remove jQuery dependency
+* horizontal, inline volume control
 * deeper WebVTT support (alignment, color, etc.)
 * fullscreen popup control
 * toggle for iPad to use MediaElement.js player by default (iPadForceNativeControls:true)
 * disable controls (for pre/post roll scenarios)
+* partially removed jQuery dependency. You can now use jQuery or Ender.js. There is also a mediaelement-and-player-standalone which includes ender.
+* quality switcher (low, high, normal)
 
 *2.2.0 (in progress)
 
-* added contextmenu feature
+* added contextmenu as a feature. if turned on the default includes: fullscreen toggle, mute toggle, and media download
 * updated WebVTT support (still had some SRT formatting restrictions)
 * dynamic player creation: from `<a href="media.mp4">video</a>` and `<div class="mejs"></div>` specifying type (string or array)
+* Fixed bug where Flash couldn't go fullscreen with track chapters
 
-
-*2.1.9 (2011/08/03) - 36.9kb*
+*2.1.9 (2011/08/04) - 36.9kb*
 
 * fixed Android 2.1 and 2.2 playing problems (still need a good 2.3 and 3.0 device. hint. hint.)
 
