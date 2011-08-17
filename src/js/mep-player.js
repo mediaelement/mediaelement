@@ -29,7 +29,9 @@
 		// force iPad's native controls
 		iPadUseNativeControls: true,
 		// features to show
-		features: ['playpause','current','progress','duration','tracks','volume','fullscreen']		
+		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
+		// only for dynamic
+		isVideo: true
 	};
 
 	mejs.mepIndex = 0;
@@ -41,12 +43,7 @@
 			return new mejs.MediaElementPlayer(node, o);
 		} 
 
-		var
-			t = this,
-			mf = mejs.MediaFeatures;
-			
-		// create options
-		t.options = $.extend({},mejs.MepDefaults,o);		
+		var t = this;
 		
 		// these will be reset after the MediaElement.success fires
 		t.$media = t.$node = $(node);
@@ -59,7 +56,11 @@
 			// attach player to DOM node for reference
 			t.node.player = t;
 		}
+					
+		// create options
+		t.options = $.extend({},mejs.MepDefaults,o);		
 		
+		// start up
 		t.init();
 
 		return t;
@@ -76,9 +77,17 @@
 				meOptions = $.extend(true, {}, t.options, {
 					success: function(media, domNode) { t.meReady(media, domNode); },
 					error: function(e) { t.handleError(e);}
-				});
+				}),
+				tagName = t.media.tagName.toLowerCase();
 		
-			t.isVideo = (t.media.tagName.toLowerCase() !== 'audio' && !t.options.isVideo);
+			t.isDynamic = (tagName !== 'audio' && tagName !== 'video');
+			
+			if (t.isDynamic) {	
+				// get video from src or href?				
+				t.isVideo = t.options.isVideo;						
+			} else {
+				t.isVideo = (tagName !== 'audio' || t.options.isVideo);
+			}
 		
 			// use native controls in iPad, iPhone, and Android	
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || mf.isiPhone) {
