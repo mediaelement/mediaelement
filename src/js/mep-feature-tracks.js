@@ -13,6 +13,8 @@
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
+	
+		hasChapters: false,
 
 		buildtracks: function(player, controls, layers, media) {
 			if (!player.isVideo)
@@ -129,11 +131,13 @@
 			player.container.hover(
 				function () {
 					// chapters
-					player.chapters.css('visibility','visible');
-					player.chapters.fadeIn(200);
+					if (player.hasChapters) {
+						player.chapters.css('visibility','visible');
+						player.chapters.fadeIn(200);
+					}
 				},
 				function () {
-					if (!media.paused) {
+					if (player.hasChapters && !media.paused) {
 						player.chapters.fadeOut(200, function() {
 							$(this).css('visibility','hidden');
 							$(this).css('display','block');
@@ -319,6 +323,7 @@
 			for (i=0; i<t.tracks.length; i++) {
 				if (t.tracks[i].kind == 'chapters' && t.tracks[i].isLoaded) {
 					t.drawChapters(t.tracks[i]);
+					t.hasChapters = true;
 					break;
 				}
 			}
