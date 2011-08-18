@@ -76,53 +76,6 @@ if (typeof jQuery != 'undefined') {
 			t.node.player = t;
 		}
 		
-		t.isVideo = (t.media.tagName.toLowerCase() === 'video');
-				
-		/* FUTURE WORK = create player without existing <video> or <audio> node
-		
-		// if not a video or audio tag, then we'll dynamically create it
-		if (tagName == 'video' || tagName == 'audio') {
-			t.$media = $($node);
-		} else if (o.tagName !== '' && o.src !== '') {
-			// create a new node
-			if (o.mode == 'auto' || o.mode == 'native') {
-				
-				$media = $(o.tagName);
-				if (typeof o.src == 'string') {
-					$media.attr('src',o.src);
-				} else if (typeof o.src == 'object') {
-					// create source nodes
-					for (var x in o.src) {
-						$media.append($('<source src="' + o.src[x].src + '" type="' + o.src[x].type + '" />'));
-					}
-				}
-				if (o.type != '') {
-					$media.attr('type',o.type);
-				}
-				if (o.poster != '') {
-					$media.attr('poster',o.poster);
-				}
-				if (o.videoWidth > 0) {
-					$media.attr('width',o.videoWidth);
-				}
-				if (o.videoHeight > 0) {
-					$media.attr('height',o.videoHeight);
-				}
-				
-				$node.clear();
-				$node.append($media);
-				t.$media = $media;
-			} else if (o.mode == 'shim') {
-				$media = $();
-				// doesn't want a media node
-				// let MediaElement object handle this
-			}
-		} else {
-			// fail?
-			return;
-		}	
-		*/
-		
 		t.init();
 
 		return t;
@@ -141,6 +94,7 @@ if (typeof jQuery != 'undefined') {
 					error: function(e) { t.handleError(e);}
 				});
 		
+			t.isVideo = (t.media.tagName.toLowerCase() !== 'audio' && !t.options.isVideo);
 		
 			// use native controls in iPad, iPhone, and Android	
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || mf.isiPhone) {
@@ -243,12 +197,14 @@ if (typeof jQuery != 'undefined') {
 				for (f in t.options.features) {
 					feature = t.options.features[f];
 					if (t['build' + feature]) {
-						try {
+						//try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
-						} catch (e) {
+						//} catch (e) {
 							// TODO: report control error
 							//throw e;
-						}
+							//console.log('error building ' + feature);
+							//console.log(e);
+						//}
 					}
 				}
 
@@ -884,6 +840,13 @@ if (typeof jQuery != 'undefined') {
 		mouseIsDown = false;
 
 		// SLIDER
+		mute
+			.hover(function() {
+				volumeSlider.show();
+			}, function() {
+				volumeSlider.hide();
+			})		
+		
 		volumeSlider
 			.bind('mousedown', function (e) {
 				handleVolumeMove(e);
@@ -1105,7 +1068,9 @@ if (typeof jQuery != 'undefined') {
 		// a dropdownlist of automatic translations
 		translationSelector: false,
 		// key for tranlsations
-		googleApiKey: ''
+		googleApiKey: '',
+		// callback that's fired after a new language is chosen
+		languageChanged: function(lang) { }
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -1137,8 +1102,16 @@ if (typeof jQuery != 'undefined') {
 								'</li>'	+
 							'</ul>'+
 						'</div>'+
-					'</button>')
+					'</div>')
 						.appendTo(controls)
+						
+						// hover
+						.hover(function() {
+							$(this).find('.mejs-captions-selector').css('visibility','visible');
+						}, function() {
+							$(this).find('.mejs-captions-selector').css('visibility','hidden');
+						})					
+						
 						// handle clicks to the language radio buttons
 						.delegate('input[type=radio]','click',function() {
 							lang = this.value;
@@ -1155,6 +1128,8 @@ if (typeof jQuery != 'undefined') {
 									}
 								}
 							}
+
+							player.options.languageChanged(lang);
 						});
 						//.bind('mouseenter', function() {
 						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
@@ -1540,8 +1515,9 @@ if (typeof jQuery != 'undefined') {
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	mejs.TrackFormatParser = {
-		pattern_identifier: /^[0-9]+$/,
-		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}(,[0-9]{3})?)(.*)$/,
+		// match start "chapter-" (or anythingelse)
+		pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
+		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 		split2: function (text, regex) {
 			// normal version for compliant browsers
@@ -1561,7 +1537,8 @@ if (typeof jQuery != 'undefined') {
 				if (this.pattern_identifier.exec(lines[i])){
 					// skip to the next line where the start --> end time code should be
 					i++;
-					timecode = this.pattern_timecode.exec(lines[i]);
+					timecode = this.pattern_timecode.exec(lines[i]);				
+					
 					if (timecode && i<lines.length){
 						i++;
 						// grab all the (possibly multi-line) text that follows
@@ -1699,3 +1676,135 @@ if (typeof jQuery != 'undefined') {
 
 })(mejs.$);
 
+/*
+* ContextMenu Plugin
+* 
+*
+*/
+
+	
+mejs.MepDefaults.contextMenuItems = [
+	// demo of a fullscreen option
+	{ 
+		render: function(player) {
+			
+			// check for fullscreen plugin
+			if (typeof player.enterFullScreen == 'undefined')
+				return null;
+		
+			if (player.isFullScreen) {
+				return "Turn off Fullscreen";
+			} else {
+				return "Go Fullscreen";
+			}
+		},
+		click: function(player) {
+			if (player.isFullScreen) {
+				player.exitFullScreen();
+			} else {
+				player.enterFullScreen();
+			}
+		}
+	}
+	,
+	// demo of a mute/unmute button
+	{ 
+		render: function(player) {
+			if (player.media.muted) {
+				return "Unmute";
+			} else {
+				return "Mute";
+			}
+		},
+		click: function(player) {
+			if (player.media.muted) {
+				player.setMuted(false);
+			} else {
+				player.setMuted(true);
+			}
+		}
+	},
+	// separator
+	{
+		isSeparator: true
+	}
+	,
+	// demo of simple download video
+	{ 
+		render: function(player) {
+			return "Download Video";
+		},
+		click: function(player) {
+			window.location.href = player.media.currentSrc;
+		}
+	}	
+
+];
+
+
+(function($) {
+
+
+
+	MediaElementPlayer.prototype.buildcontextmenu = function(player, controls, layers, media) {
+		
+		// create context menu
+		player.contextMenu = $('<div class="mejs-contextmenu"></div>')
+							.appendTo($('body'))
+							.hide();
+		
+		// create events for showing context menu
+		player.container.bind('contextmenu', function(e) {
+			e.preventDefault();
+			player.renderContextMenu(e.clientX, e.clientY);
+			return false;
+		});
+		player.container.bind('click', function() {
+			player.contextMenu.hide();
+		});	
+	}
+	
+	MediaElementPlayer.prototype.renderContextMenu = function(x,y) {
+		
+		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
+		var t = this,
+			html = '',
+			items = t.options.contextMenuItems;
+		
+		for (var i=0, il=items.length; i<il; i++) {
+			
+			if (items[i].isSeparator) {
+				html += '<div class="mejs-contextmenu-separator"></div>';
+			} else {
+			
+				var rendered = items[i].render(t);
+			
+				// render can return null if the item doesn't need to be used at the moment
+				if (rendered != null) {
+					html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '">' + rendered + '</div>';
+				}
+			}
+		}
+		
+		// position and show the context menu
+		t.contextMenu
+			.empty()
+			.append($(html))
+			.css({top:y, left:x})
+			.show()
+			
+		// bind events
+		t.contextMenu.find('.mejs-contextmenu-item').click(function() {
+			// which one is this?
+			var itemIndex = parseInt( $(this).data('itemindex'), 10 );
+			
+			// perform click action
+			t.options.contextMenuItems[itemIndex].click(t);
+			
+			// close
+			t.contextMenu.hide();
+		});
+		
+	}
+	
+})(mejs.$);

@@ -27,7 +27,10 @@
 	<source src="../media/echo-hereweare.webm" type="video/webm">	
 	<track kind="subtitles" src="../media/mediaelement.srt" srclang="en" /> 
 	<p>Your browser leaves much to be desired.</p>			
-</video>	
+</video>
+
+
+<p>Currently selected language: <span id="lang">???</span>
 
 <script>
 $('audio,video').mediaelementplayer({
@@ -36,7 +39,10 @@ $('audio,video').mediaelementplayer({
 	// automatically translate into these languages
 	translations:['es','ar','zh','ru'],
 	// enable the dropdown list of languages
-	translationSelector: true
+	translationSelector: true,
+	languageChanged: function(lang) {
+		$('#lang').html(lang);
+	}
 });
 </script>
 
