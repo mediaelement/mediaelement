@@ -346,7 +346,7 @@
 				return;
 
 			if (muted) {
-				_oldVolume = _stream.soundTransform.volume;
+				_oldVolume = (_stream == null) ? _oldVolume : _stream.soundTransform.volume;
 				setVolume(0);
 			} else {
 				setVolume(_oldVolume);
