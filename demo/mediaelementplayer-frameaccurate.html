@@ -16,16 +16,18 @@
 
 <code><pre>
 &lt;video width="640" height="360" id="player2" poster="../media/frameaccuracy_logo.jpg" controls="controls" preload="none"&gt;
-	&lt;!-- MP4 source must come first for iOS --&gt;
-	&lt;source type="video/mp4" src="../media/perfect-timecoded.mp4" /&gt;
+
 	&lt;!-- WebM for Firefox 4 and Opera --&gt;
 	&lt;source type="video/webm" src="../media/perfect-timecoded.webm" /&gt;
+    
+    &lt;source type="video/mp4" src="../media/perfect-timecoded.mp4" /&gt;
+
 	&lt;!-- OGG for Firefox 3 --&gt;
 	&lt;source type="video/ogg" src="../media/perfect-timecoded.ogv" /&gt;
 	&lt;!-- Fallback flash player for no-HTML5 browsers with JavaScript turned off --&gt;
 	&lt;object width="640" height="360" type="application/x-shockwave-flash" data="../build/flashmediaelement.swf"&gt;
 		&lt;param name="movie" value="../build/flashmediaelement.swf" /&gt;
-		&lt;param name="flashvars" value="controls=true&amp;poster=../media/frameaccuracy_logo.jpg&amp;file=../media/perfect-timecoded" /&gt;
+		&lt;param name="flashvars" value="controls=true&amp;poster=../media/frameaccuracy_logo.jpg&amp;file=../media/perfect-timecoded.mp4" /&gt;
 		&lt;!-- Image fall back for non-HTML5 browser with JavaScript turned off and no Flash player installed --&gt;
 		&lt;img src="../media/frameaccuracy_logo.jpg" width="640" height="360" alt="Here we are"
 			title="No video playback capabilities" /&gt;
@@ -36,10 +38,13 @@
 <video width="640" height="360"  type="video/mp4"
 	id="player1" poster="../media/frameaccuracy_logo.jpg" 
 	controls="controls" preload="none">
-    <!-- MP4 source must come first for iOS -->
-    <source type="video/mp4" src="../media/perfect-timecoded.mp4" />
+    
     <!-- WebM for Firefox 4 and Opera -->
     <source type="video/webm" src="../media/perfect-timecoded.webm" />
+    
+    <!-- MP4 source must come first for iOS? -->
+    <source type="video/mp4" src="../media/perfect-timecoded.mp4" />
+
     <!-- OGG for Firefox 3 -->
     <source type="video/ogg" src="../media/perfect-timecoded.ogv" />
     <!-- Fallback flash player for no-HTML5 browsers with JavaScript turned off -->
