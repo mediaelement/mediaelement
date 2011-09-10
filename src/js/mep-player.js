@@ -91,7 +91,7 @@
 		
 			// use native controls in iPad, iPhone, and Android	
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || mf.isiPhone) {
-				// add controls and stop
+					// add controls and stop
 				t.$media.attr('controls', 'controls');
 
 				// attempt to fix iOS 3 bug
@@ -131,8 +131,20 @@
 					.insertBefore(t.$media);
 
 				// move the <video/video> tag into the right spot
-				t.container.find('.mejs-mediaelement').append(t.$media);
-
+				if (mf.isiPad) {
+					// sadly, you can't move nodes in ipads, so we have to destroy and recreate it!
+					var $newMedia = t.$media.clone();
+					
+					t.container.find('.mejs-mediaelement').append($newMedia);
+					
+					t.$media.remove();
+					t.$media = $newMedia;
+					t.media = $newMedia[0]
+					
+				} else {
+					t.container.find('.mejs-mediaelement').append(t.$media);
+				}
+				
 				// find parts
 				t.controls = t.container.find('.mejs-controls');
 				t.layers = t.container.find('.mejs-layers');
