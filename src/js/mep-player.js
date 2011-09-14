@@ -138,8 +138,8 @@
 					t.container.find('.mejs-mediaelement').append($newMedia);
 					
 					t.$media.remove();
-					t.$media = $newMedia;
-					t.media = $newMedia[0]
+					t.$node = t.$media = $newMedia;
+					t.node = t.media = $newMedia[0]
 					
 				} else {
 					t.container.find('.mejs-mediaelement').append(t.$media);
@@ -170,6 +170,59 @@
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 		},
+		
+		showControls: function() {
+			var t = this;
+
+			t.controls
+				.css('visibility','visible')
+				.stop(true, true).fadeIn(200);	
+
+			// any additional controls people might add and want to hide
+			t.container.find('.mejs-control')
+				.css('visibility','visible')
+				.stop(true, true).fadeIn(200);				
+		},
+
+		hideControls: function() {
+			var t = this;
+
+			t.controls.stop(true, true).fadeOut(200, function() {
+				$(this).css('visibility','hidden');
+				$(this).css('display','block');
+			});	
+
+			// any additional controls people might add and want to hide
+			t.container.find('.mejs-control').stop(true, true).fadeOut(200, function() {
+				$(this).css('visibility','hidden');
+				$(this).css('display','block');
+			});	
+		},		
+
+		controlsTimer: null,
+
+		startControlsTimer: function() {
+
+			var t = this;
+
+			t.killControlsTimer('start');
+
+			t.controlsTimer = setTimeout(function() {
+				t.hideControls();
+				t.killControlsTimer('hide');
+			}, 500);
+		},
+
+		killControlsTimer: function(src) {
+
+			var t = this;
+
+			if (t.controlsTimer !== null) {
+				clearTimeout(t.controlsTimer);
+				delete t.controlsTimer;
+				t.controlsTimer = null;
+			}
+		},		
 
 		// Sets up all controls and events
 		meReady: function(media, domNode) {			
@@ -225,17 +278,17 @@
 					// show/hide controls
 					t.container
 						.bind('mouseenter', function () {
-							if (!t.options.alwaysShowControls) {
-								t.controls.css('visibility','visible');
-								t.controls.stop(true, true).fadeIn(200);
+							if (!t.options.alwaysShowControls) {								
+								t.killControlsTimer('enter');
+								t.showControls();							
 							}
+						})
+						.bind('mousemove', function() {
+							t.killControlsTimer('move');
 						})
 						.bind('mouseleave', function () {
 							if (!t.media.paused && !t.options.alwaysShowControls) {
-								t.controls.stop(true, true).fadeOut(200, function() {
-									$(this).css('visibility','hidden');
-									$(this).css('display','block');
-								});
+								t.startControlsTimer();								
 							}
 						});
 						
@@ -298,7 +351,7 @@
 
 
 			if (t.options.success) {
-				t.options.success(t.media, t.domNode);
+				t.options.success(t.media, t.domNode, t);
 			}
 		},
 
