@@ -2,6 +2,7 @@
 mejs.MediaFeatures = {
 	init: function() {
 		var
+			t = this,
 			nav = mejs.PluginDetector.nav,
 			ua = mejs.PluginDetector.ua.toLowerCase(),
 			i,
@@ -9,29 +10,32 @@ mejs.MediaFeatures = {
 			html5Elements = ['source','track','audio','video'];
 
 		// detect browsers (only the ones that have some kind of quirk we need to work around)
-		this.isiPad = (ua.match(/ipad/i) !== null);
-		this.isiPhone = (ua.match(/iphone/i) !== null);
-		this.isAndroid = (ua.match(/android/i) !== null);
-		this.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
-		this.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
-		this.isChrome = (ua.match(/chrome/gi) !== null);
-		this.isFirefox = (ua.match(/firefox/gi) !== null);
+		t.isiPad = (ua.match(/ipad/i) !== null);
+		t.isiPhone = (ua.match(/iphone/i) !== null);
+		t.isAndroid = (ua.match(/android/i) !== null);
+		t.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
+		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
+		t.isChrome = (ua.match(/chrome/gi) !== null);
+		t.isFirefox = (ua.match(/firefox/gi) !== null);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
 			v = document.createElement(html5Elements[i]);
 		}
 		
-		this.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || this.isBustedAndroid);
+		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid);
 
 		// detect native JavaScript fullscreen (Safari only, Chrome fails)
-		this.hasNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
+		t.hasSemiNativeFullScreen = (typeof v.webkitEnterFullscreen !== 'undefined');
+		t.hasTrueNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
 		if (this.isChrome) {
-			this.hasNativeFullScreen = false;
+			t.hasSemiNativeFullScreen = false;
+			t.hasTrueNativeFullScreen = false;
 		}
 		// OS X 10.5 can't do this even if it says it can :(
-		if (this.hasNativeFullScreen && ua.match(/mac os x 10_5/i)) {
-			this.hasNativeFullScreen = false;
+		if (t.hasSemiNativeFullScreen && ua.match(/mac os x 10_5/i)) {
+			t.hasNativeFullScreen = false;
+			t.hasSemiNativeFullScreen = false;
 		}			
 	}
 };
