@@ -171,46 +171,94 @@
 			mejs.MediaElement(t.$media[0], meOptions);
 		},
 		
-		showControls: function() {
-			var t = this;
-
-			t.controls
-				.css('visibility','visible')
-				.stop(true, true).fadeIn(200);	
-
-			// any additional controls people might add and want to hide
-			t.container.find('.mejs-control')
-				.css('visibility','visible')
-				.stop(true, true).fadeIn(200);				
+		controlsAreVisible: true,
+		
+		showControls: function(doAnimation) {
+			var t = this,
+				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			
+			if (t.controlsAreVisible)
+				return;
+			
+			if (doAnimation) {
+				t.controls
+					.css('visibility','visible')
+					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});	
+	
+				// any additional controls people might add and want to hide
+				t.container.find('.mejs-control')
+					.css('visibility','visible')
+					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});	
+					
+			} else {
+				t.controls
+					.css('visibility','visible')
+					.css('display','block');
+	
+				// any additional controls people might add and want to hide
+				t.container.find('.mejs-control')
+					.css('visibility','visible')
+					.css('display','block');
+					
+				t.controlsAreVisible = true;
+			}
+			
 		},
 
-		hideControls: function() {
-			var t = this;
-
-			t.controls.stop(true, true).fadeOut(200, function() {
-				$(this).css('visibility','hidden');
-				$(this).css('display','block');
-			});	
-
-			// any additional controls people might add and want to hide
-			t.container.find('.mejs-control').stop(true, true).fadeOut(200, function() {
-				$(this).css('visibility','hidden');
-				$(this).css('display','block');
-			});	
+		hideControls: function(doAnimation) {
+			console.log('hide doAnimation', doAnimation);
+			var t = this,
+				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			
+			if (!t.controlsAreVisible)
+				return;
+			
+			if (doAnimation) {
+				// fade out main controls
+				t.controls.stop(true, true).fadeOut(200, function() {
+					$(this)
+						.css('visibility','hidden')
+						.css('display','block');
+						
+					t.controlsAreVisible = false;
+				});	
+	
+				// any additional controls people might add and want to hide
+				t.container.find('.mejs-control').stop(true, true).fadeOut(200, function() {
+					$(this)
+						.css('visibility','hidden')
+						.css('display','block');
+				});	
+			} else {
+				
+				// hide main controls
+				t.controls
+					.css('visibility','hidden')
+					.css('display','block');		
+				
+				// hide others
+				t.container.find('.mejs-control')
+					.css('visibility','hidden')
+					.css('display','block');
+					
+				t.controlsAreVisible = false;
+			}
 		},		
 
 		controlsTimer: null,
 
-		startControlsTimer: function() {
+		startControlsTimer: function(timeout) {
 
-			var t = this;
+			var t = this,
+				timeout = typeof timeout != 'undefined' ? timeout : 500;
 
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function() {
+				console.log('timer fired');
 				t.hideControls();
 				t.killControlsTimer('hide');
-			}, 500);
+			}, timeout);
 		},
 
 		killControlsTimer: function(src) {
@@ -223,6 +271,25 @@
 				t.controlsTimer = null;
 			}
 		},		
+		
+		controlsEnabled: true,
+		
+		disableControls: function() {
+			var t= this;
+			
+			t.killControlsTimer();
+			t.hideControls(false);
+			this.controlsEnabled = false;
+		},
+		
+		enableControls: function() {
+			var t= this;
+			
+			t.showControls(false);
+			
+			t.controlsEnabled = true;
+		},		
+		
 
 		// Sets up all controls and events
 		meReady: function(media, domNode) {			
@@ -275,20 +342,50 @@
 
 				// controls fade
 				if (t.isVideo) {
+					// click controls
+					if (t.media.pluginType == 'native') {
+						t.$media.click(function() {
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
+						});
+					} else {
+						$(t.media.pluginElement).click(function() {
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}						
+						});
+					}
+				
+				
 					// show/hide controls
 					t.container
 						.bind('mouseenter', function () {
-							if (!t.options.alwaysShowControls) {								
-								t.killControlsTimer('enter');
-								t.showControls();							
+							if (t.controlsEnabled) {
+								if (!t.options.alwaysShowControls) {								
+									t.killControlsTimer('enter');
+									t.showControls();
+									t.startControlsTimer(2500);		
+								}
 							}
 						})
 						.bind('mousemove', function() {
-							t.killControlsTimer('move');
+							if (t.controlsEnabled) {
+								if (!t.controlsAreVisible)
+									t.showControls();
+								//t.killControlsTimer('move');
+								t.startControlsTimer(2500);
+							}
 						})
 						.bind('mouseleave', function () {
-							if (!t.media.paused && !t.options.alwaysShowControls) {
-								t.startControlsTimer();								
+							if (t.controlsEnabled) {
+								if (!t.media.paused && !t.options.alwaysShowControls) {
+									t.startControlsTimer(1000);								
+								}
 							}
 						});
 						
@@ -323,8 +420,8 @@
 
 					if (t.options.loop) {
 						t.media.play();
-					} else if (!t.options.alwaysShowControls) {
-						t.controls.css('visibility','visible');
+					} else if (!t.options.alwaysShowControls && t.controlsEnabled) {
+						t.showControls();
 					}
 				}, true);
 				
