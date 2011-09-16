@@ -36,6 +36,14 @@
 					totalTop = parseInt(volumeTotal.css('top').replace(/px/,''),10),
 					newY = e.pageY - totalOffset.top,
 					volume = (railHeight - newY) / railHeight
+					
+				// the controls just hide themselves (usually when mouse moves too far up)
+				if (totalOffset.top == 0)
+					return;
+					
+				// 0-1
+				volume = Math.max(0,volume);
+				volume = Math.min(volume,1);						
 
 				// TODO: handle vertical and horizontal CSS
 				// only allow it to move within the rail
