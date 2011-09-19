@@ -1,4 +1,4 @@
-﻿(function ($) {
+(function ($) {
 
 	// default player values
 	mejs.MepDefaults = {
