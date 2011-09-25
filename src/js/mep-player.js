@@ -27,7 +27,11 @@
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// force iPad's native controls
-		iPadUseNativeControls: true,
+		iPadUseNativeControls: false,
+		// force iPad's native controls
+		iPhoneUseNativeControls: false,	
+		// force iPad's native controls
+		AndroidUseNativeControls: false,			
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
@@ -90,8 +94,9 @@
 			}
 		
 			// use native controls in iPad, iPhone, and Android	
-			if ((mf.isiPad && t.options.iPadUseNativeControls) || mf.isiPhone) {
-					// add controls and stop
+			if ((mf.isiPad && t.options.iPadUseNativeControls) || (mf.isiPhone && t.options.iPhoneUseNativeControls)) {
+				
+				// add controls and stop
 				t.$media.attr('controls', 'controls');
 
 				// attempt to fix iOS 3 bug
@@ -103,7 +108,7 @@
 					t.media.play();
 				}
 					
-			} else if (mf.isAndroid && t.isVideo) {
+			} else if (mf.isAndroid && t.AndroidUseNativeControls) {
 				
 				// leave default player
 
@@ -131,7 +136,7 @@
 					.insertBefore(t.$media);
 
 				// move the <video/video> tag into the right spot
-				if (mf.isiPad) {
+				if (mf.isiPad || mf.isiPhone) {
 					// sadly, you can't move nodes in ipads, so we have to destroy and recreate it!
 					var $newMedia = t.$media.clone();
 					
@@ -309,7 +314,7 @@
 			t.media = media;
 			t.domNode = domNode;
 			
-			if (!mf.isiPhone && !mf.isAndroid && !(mf.isiPad && t.options.iPadUseNativeControls)) {				
+			if (!(mf.isAndroid && t.options.AndroidUseNativeControls) && !(mf.isiPad && t.options.iPadUseNativeControls) && !(mf.isiPhone && t.options.iPhoneUseNativeControls)) {				
 				
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
@@ -561,6 +566,11 @@
 						media.pause();
 					}
 				});
+				
+			if (mejs.MediaFeatures.isiOS || mejs.MediaFeatures.isAndroid) {
+				bigPlay.remove();
+				loading.remove();
+			}
 	
 
 			// show/hide big play button
@@ -573,15 +583,16 @@
 			}, false);
 			
 			// show/hide loading			
-			media.addEventListener('waiting',function() {
+			media.addEventListener('loadstart',function() {
+				// for some reason Chrome is firing this event
+				if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
+					return;
+					
 				loading.show();
 			}, false);	
 			media.addEventListener('canplay',function() {
 				loading.hide();
 			}, false);	
-			media.addEventListener('playing',function() {
-				loading.hide();
-			}, false);				
 
 			// error handling
 			media.addEventListener('error',function() {
