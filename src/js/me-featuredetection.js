@@ -12,6 +12,7 @@ mejs.MediaFeatures = {
 		// detect browsers (only the ones that have some kind of quirk we need to work around)
 		t.isiPad = (ua.match(/ipad/i) !== null);
 		t.isiPhone = (ua.match(/iphone/i) !== null);
+		t.isiOS = t.isiPhone || t.isiPad;
 		t.isAndroid = (ua.match(/android/i) !== null);
 		t.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
 		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
