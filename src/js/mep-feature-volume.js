@@ -19,15 +19,31 @@
 
 			positionVolumeHandle = function(volume) {
 
+				if (!volumeSlider.is(':visible')) {
+					volumeSlider.show();
+					positionVolumeHandle(volume);
+					volumeSlider.hide()
+					return;
+				}
+
 				var 
-					top = volumeTotal.height() - (volumeTotal.height() * volume);
+				
+					// height of the full size volume slider background
+					totalHeight = volumeTotal.height(),
+					
+					// top/left of full size volume slider background
+					totalPosition = volumeTotal.position(),
+					
+					// the new top position based on the current volume
+					// 70% volume on 100px height == top:30px
+					newTop = totalHeight - (totalHeight * volume);
 
 				// handle
-				volumeHandle.css('top', top - (volumeHandle.height() / 2));
+				volumeHandle.css('top', totalPosition.top + newTop - (volumeHandle.height() / 2));
 
 				// show the current visibility
-				volumeCurrent.height(volumeTotal.height() - top + parseInt(volumeTotal.css('top').replace(/px/,''),10));
-				volumeCurrent.css('top',  top);
+				volumeCurrent.height(totalHeight - newTop );
+				volumeCurrent.css('top', totalPosition.top + newTop);
 			},
 			handleVolumeMove = function(e) {
 				var
@@ -103,25 +119,26 @@
 
 			// MUTE button
 			mute.find('button').click(function() {
-				if (media.muted) {
-					media.setMuted(false);
-					mute.removeClass('mejs-unmute').addClass('mejs-mute');
-					positionVolumeHandle(1);
-				} else {
-					media.setMuted(true);
-					mute.removeClass('mejs-mute').addClass('mejs-unmute');
-					positionVolumeHandle(0);
-				}
+
+				media.setMuted( !media.muted );
+				
 			});
 
 			// listen for volume change events from other sources
 			media.addEventListener('volumechange', function(e) {
 				if (!mouseIsDown) {
-					positionVolumeHandle(e.target.volume);
+					if (media.muted) {
+						positionVolumeHandle(0);
+						mute.removeClass('mejs-mute').addClass('mejs-unmute');
+					} else {
+						positionVolumeHandle(e.target.volume);
+						mute.removeClass('mejs-unmute').addClass('mejs-mute');
+					}
 				}
 			}, true);
 
 			// set initial volume
+			console.log('init volume',player.options.startVolume);
 			positionVolumeHandle(player.options.startVolume);
 			
 			// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
