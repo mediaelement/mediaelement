@@ -1,7 +1,8 @@
 (function($) {
 	
 	$.extend(mejs.MepDefaults, {
-		forcePluginFullScreen: false
+		forcePluginFullScreen: false,
+		newWindowUrl: ''
 	});
 	
 	$.extend(MediaElementPlayer.prototype, {
@@ -10,13 +11,17 @@
 		
 		docStyleOverflow: null,
 		
+		isInIframe: false,
+		
 		buildfullscreen: function(player, controls, layers, media) {
 
 			if (!player.isVideo)
 				return;
 				
+			player.isInIframe = (window.location != window.parent.location);
+				
 			// native events
-			if (mejs.MediaFeatures.hasNativeFullScreen) {
+			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
 				player.container.bind('webkitfullscreenchange', function(e) {
 				
 					if (document.webkitIsFullScreen) {
@@ -38,7 +43,7 @@
 					$('<div class="mejs-button mejs-fullscreen-button"><button type="button"></button></div>')
 					.appendTo(controls)
 					.click(function() {
-						var isFullScreen = (mejs.MediaFeatures.hasNativeFullScreen) ?
+						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen) ?
 										document.webkitIsFullScreen :
 										player.isFullScreen;													
 						
@@ -67,18 +72,30 @@
 			
 			var t = this;
 			
-			// firefox can't adjust plugin sizes without resetting :(
+			// attempt to do true fullscreen (Safari 5.1 only for now)
+			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+				t.container[0].webkitRequestFullScreen();									
+			} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
+				t.media.webkitEnterFullscreen();
+				return;
+			}
+			
+			// check for iframe launch
+			if (t.isInIframe && t.options.newWindowUrl !== '') {
+				t.pause();
+				window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				return;
+			}
+			
+			// full window code
+			
+			// firefox+flash can't adjust plugin sizes without resetting :(
 			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isFirefox || t.options.forcePluginFullScreen)) {
 				t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
 			}		
-			
-			// attempt to set fullscreen
-			if (mejs.MediaFeatures.hasNativeFullScreen) {
-				t.container[0].webkitRequestFullScreen();									
-			}
-								
+											
 			// store overflow 
 			docStyleOverflow = document.documentElement.style.overflow;
 			// set it to not show scroll bars so 100% will work
@@ -92,9 +109,13 @@
 			t.container
 				.addClass('mejs-container-fullscreen')
 				.width('100%')
-				.height('100%')
-				.css('z-index', 1000);
+				.height('100%');
+				//.css('z-index', 1000);
 				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
+			setTimeout(function() {
+				t.container.css({width: '100%', height: '100%'});
+			}, 500);
+			//console.log('fullscreen', t.container.width());
 				
 			if (t.pluginType === 'native') {
 				t.$media
@@ -131,7 +152,7 @@
 			}		
 		
 			// come outo of native fullscreen
-			if (mejs.MediaFeatures.hasNativeFullScreen && document.webkitIsFullScreen) {							
+			if (mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen) {							
 				document.webkitCancelFullScreen();									
 			}	
 
