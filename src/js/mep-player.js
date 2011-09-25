@@ -573,16 +573,15 @@
 			}, false);
 			
 			// show/hide loading			
-			media.addEventListener('loadstart',function() {
-				// for some reason Chrome is firing this event
-				if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
-					return;
-					
+			media.addEventListener('waiting',function() {
 				loading.show();
 			}, false);	
 			media.addEventListener('canplay',function() {
 				loading.hide();
 			}, false);	
+			media.addEventListener('playing',function() {
+				loading.hide();
+			}, false);				
 
 			// error handling
 			media.addEventListener('error',function() {
