@@ -2,7 +2,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.1.9';
+mejs.version = '2.2.0.dev';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -14,6 +14,6 @@ mejs.plugins = {
 	],
 	flash: [
 		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg']}
-		//,{version: [11,0], types: ['video/webm']} // for future reference
+		//,{version: [12,0], types: ['video/webm']} // for future reference
 	]
 };
