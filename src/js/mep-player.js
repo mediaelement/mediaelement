@@ -458,9 +458,13 @@
 		},
 
 		handleError: function(e) {
+			var t = this;
+			
+			t.controls.hide();
+		
 			// Tell user that the file cannot be played
-			if (this.options.error) {
-				this.options.error(e);
+			if (t.options.error) {
+				t.options.error(e);
 			}
 		},
 
