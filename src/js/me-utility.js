@@ -38,7 +38,7 @@ mejs.Utility = {
 		}
 		return path;
 	},
-	secondsToTimeCode: function(time,forceHours, showFrameCount, fps) {
+	secondsToTimeCode: function(time, forceHours, showFrameCount, fps) {
         //add framecount
         if (typeof showFrameCount == 'undefined') {
             showFrameCount=false;
@@ -49,25 +49,17 @@ mejs.Utility = {
         var hours = Math.floor(time / 3600) % 24,
         	minutes = Math.floor(time / 60) % 60,
         	seconds = Math.floor(time % 60),
-        	frames = '',
-        	result = '';
-
-        if (showFrameCount) {
-            frames = Math.floor(((time % 1)*fps).toFixed(3));
-        }
-
-        result = (hours < 10 ? '0' + hours : hours) + ':'
-				+ (minutes < 10 ? '0' + minutes : minutes) + ':'
-				+ (seconds < 10 ? '0' + seconds : seconds);
-
-        if (showFrameCount) {
-            result += ':' + (frames < 10 ? '0' + frames : frames);
-        }
+        	frames = Math.floor(((time % 1)*fps).toFixed(3)),
+        	result = 
+        			( (forceHours || hours > 0) ? (hours < 10 ? '0' + hours : hours) + ':' : '')
+					+ (minutes < 10 ? '0' + minutes : minutes) + ':'
+					+ (seconds < 10 ? '0' + seconds : seconds)
+					+ ((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');
 
         return result;
 	},
 	
-	timeCodeToSeconds: function(hh_mm_ss_ff, showFrameCount, fps){
+	timeCodeToSeconds: function(hh_mm_ss_ff, forceHours, showFrameCount, fps){
         if (typeof showFrameCount == 'undefined') {
             showFrameCount=false;
         } else if(typeof fps == 'undefined') {
