@@ -24,6 +24,12 @@
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
 		alwaysShowHours: false,
+
+		// show framecount in timecode (##:00:00:00)
+		showTimecodeFrameCount: false,
+		// used when showTimecodeFrameCount is set to true
+		framesPerSecond: 25,
+
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// force iPad's native controls
