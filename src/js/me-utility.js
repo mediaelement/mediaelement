@@ -38,22 +38,55 @@ mejs.Utility = {
 		}
 		return path;
 	},
-	secondsToTimeCode: function(seconds,forceHours) {
-		seconds = Math.round(seconds);
-		var hours,
-		    minutes = Math.floor(seconds / 60);
-		if (minutes >= 60) {
-		    hours = Math.floor(minutes / 60);
-		    minutes = minutes % 60;
-		}
-		hours = hours === undefined ? "00" : (hours >= 10) ? hours : "0" + hours;
-		minutes = (minutes >= 10) ? minutes : "0" + minutes;
-		seconds = Math.floor(seconds % 60);
-		seconds = (seconds >= 10) ? seconds : "0" + seconds;
-		return ((hours > 0 || forceHours === true) ? hours + ":" :'') + minutes + ":" + seconds;
+	secondsToTimeCode: function(time,forceHours, showFrameCount, fps) {
+        //add framecount
+        if (typeof showFrameCount == 'undefined') {
+            showFrameCount=false;
+        } else if(typeof fps == 'undefined') {
+            fps = 25;
+        }
+
+        var hours = Math.floor(time / 3600) % 24,
+        	minutes = Math.floor(time / 60) % 60,
+        	seconds = Math.floor(time % 60),
+        	frames = '',
+        	result = '';
+
+        if (showFrameCount) {
+            frames = Math.floor(((time % 1)*fps).toFixed(3));
+        }
+
+        result = (hours < 10 ? '0' + hours : hours) + ':'
+				+ (minutes < 10 ? '0' + minutes : minutes) + ':'
+				+ (seconds < 10 ? '0' + seconds : seconds);
+
+        if (showFrameCount) {
+            result += ':' + (frames < 10 ? '0' + frames : frames);
+        }
+
+        return result;
 	},
-	timeCodeToSeconds: function(timecode){
-		var tab = timecode.split(':');
-		return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
+	
+	timeCodeToSeconds: function(hh_mm_ss_ff, showFrameCount, fps){
+        if (typeof showFrameCount == 'undefined') {
+            showFrameCount=false;
+        } else if(typeof fps == 'undefined') {
+            fps = 25;
+        }
+
+        var tc_array = hh_mm_ss_ff.split(":"),
+        	tc_hh = parseInt(tc_array[0]),
+        	tc_mm = parseInt(tc_array[1]),
+        	tc_ss = parseInt(tc_array[2]),
+        	tc_ff = 0,
+        	tc_in_seconds = 0;
+        
+        if (showFrameCount) {
+            tc_ff = parseInt(tc_array[3])/fps;
+        }
+        
+        tc_in_seconds = ( tc_hh * 3600 ) + ( tc_mm * 60 ) + tc_ss + tc_ff;
+        
+        return tc_in_seconds;
 	}
 };
