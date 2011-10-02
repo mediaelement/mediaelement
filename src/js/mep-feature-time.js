@@ -5,9 +5,10 @@
 			var t = this;
 			
 			$('<div class="mejs-time">'+
-					'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
-				'</div>')
-				.appendTo(controls);
+					'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>'+
+					'</div>')
+					.appendTo(controls);
 			
 			t.currenttime = t.controls.find('.mejs-currenttime');
 
@@ -16,12 +17,14 @@
 			}, false);
 		},
 
+
 		buildduration: function(player, controls, layers, media) {
 			var t = this;
 			
 			if (controls.children().last().find('.mejs-currenttime').length > 0) {
 				$(' <span> | </span> '+
-				   '<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>')
+				   '<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>')
 					.appendTo(controls.find('.mejs-time'));
 			} else {
 
@@ -29,7 +32,8 @@
 				controls.find('.mejs-currenttime').parent().addClass('mejs-currenttime-container');
 				
 				$('<div class="mejs-time mejs-duration-container">'+
-					'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
+					'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>' +
 				'</div>')
 				.appendTo(controls);
 			}
@@ -45,7 +49,7 @@
 			var t = this;
 
 			if (t.currenttime) {
-				t.currenttime.html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 3600 ));
+				t.currenttime.html(mejs.Utility.secondsToTimeCode(t.media.currentTime, t.options.alwaysShowHours || t.media.duration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25));
 			}
 		},
 		
@@ -53,7 +57,7 @@
 			var t = this;
 			
 			if (t.media.duration && t.durationD) {
-				t.durationD.html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours));
+				t.durationD.html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond || 25));
 			}		
 		}
 	});
