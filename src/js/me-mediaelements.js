@@ -26,6 +26,14 @@ mejs.HtmlMediaElement = {
 	// This can be a url string
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
 	setSrc: function (url) {
+		
+		// Fix for IE9 which can't set .src when there are <source> elements. Awesome, right?
+		var 
+			existingSources = this.getElementsByTagName('source');
+		while (existingSources.length > 0){
+			this.removeChild(existingSources[0]);
+		}
+	
 		if (typeof url == 'string') {
 			this.src = url;
 		} else {
