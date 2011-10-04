@@ -374,6 +374,9 @@
 			// calculate ratios
 			var stageRatio, nativeRatio;
 			
+			_video.x = 0;
+			_video.y = 0;			
+			
 			if(fullscreen == true) {
 				stageRatio = flash.system.Capabilities.screenResolutionX/flash.system.Capabilities.screenResolutionY;
 				nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
@@ -390,8 +393,7 @@
 				} else if (stageRatio == nativeRatio) {
 					_video.height = flash.system.Capabilities.screenResolutionY;
 					_video.width = flash.system.Capabilities.screenResolutionX;
-					_video.x = 0;
-					_video.y = 0;
+
 				}
 			} else {
 				stageRatio = _stageWidth/_stageHeight;
@@ -409,8 +411,6 @@
 				} else if (stageRatio == nativeRatio) {
 					_video.height = _stageHeight;
 					_video.width = _stageWidth;
-					_video.x = 0;
-					_video.y = 0;
 				}
 			}
 
