@@ -103,7 +103,8 @@
 			_bytesLoaded = _stream.bytesLoaded;
 			_bytesTotal = _stream.bytesTotal;
 
-			sendEvent(HtmlMediaEvent.TIMEUPDATE);
+			if (!_isPaused)
+				sendEvent(HtmlMediaEvent.TIMEUPDATE);
 
 			trace("bytes", _bytesLoaded, _bytesTotal);
 
@@ -301,7 +302,10 @@
 
 			_stream.pause();
 			_isPaused = true;
-			_timer.stop();
+			
+			if (_bytesLoaded == _bytesTotal) {
+				_timer.stop();
+			}
 
 			_isPaused = true;
 			sendEvent(HtmlMediaEvent.PAUSE);
