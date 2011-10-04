@@ -6,7 +6,7 @@
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen)
+* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen), [gselva](https://github.com/gselva)
 
 
 ## Installation and Usage
@@ -89,6 +89,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *2.2.0 (in progress)
 
 * controls now display on iPad, iPhone, and Android. Can be turned off using (iPadForceNativeControls:true)
+* fullscreen support for iPad (different from true fullscreen on Safari 5.1)
+* added frameaccurate timecode (via gselva)
 * added contextmenu as a feature. if turned on the default includes: fullscreen toggle, mute toggle, and media download
 * updated WebVTT support (still had some SRT formatting restrictions)
 * dynamic player creation: from `<a href="media.mp4">video</a>` and `<div class="mejs"></div>` specifying type (string or array)
@@ -97,6 +99,9 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * controls now disappear on timeout when mouse is idle (useful for fullscreen)
 * enableControls() and disableControls() (for pre/post roll scenarios)
 * added an autoplay override (especially for WebKit browsers)
+* fixed functionality of mute toggling
+* reorganized plugins to use $.extend
+* updating functionality of loading graphic to account for various browser inconsistencies (loadstart event)
 
 *2.1.9 (2011/08/04) - 36.9kb*
 
