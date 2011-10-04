@@ -308,7 +308,9 @@
 		
 			var t = this,
 				mf = mejs.MediaFeatures,
-				f,
+				autoplayAttr = domNode.getAttribute('autoplay'),
+				autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
+				featureIndex,
 				feature;
 
 			// make sure it can't create itself again if a plugin reloads
@@ -330,8 +332,8 @@
 				t.findTracks();
 
 				// add user-defined features/controls
-				for (f in t.options.features) {
-					feature = t.options.features[f];
+				for (featureIndex in t.options.features) {
+					feature = t.options.features[featureIndex];
 					if (t['build' + feature]) {
 						//try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
@@ -375,7 +377,7 @@
 				
 					// show/hide controls
 					t.container
-						.bind('mouseenter', function () {
+						.bind('mouseenter mouseover', function () {
 							if (t.controlsEnabled) {
 								if (!t.options.alwaysShowControls) {								
 									t.killControlsTimer('enter');
@@ -401,8 +403,8 @@
 						});
 						
 					// check for autoplay
-					if (t.domNode.getAttribute('autoplay') !== null && !t.options.alwaysShowControls) {
-						t.controls.css('visibility','hidden');
+					if (autoplay && !t.options.alwaysShowControls) {
+						t.hideControls();
 					}
 
 					// resizer
@@ -455,6 +457,14 @@
 					t.setPlayerSize(t.width, t.height);
 				}, 50);
 				
+				
+				
+			}
+			
+			// force autoplay for HTML5
+			if (autoplay && media.pluginType == 'native') {
+				media.load();
+				media.play();
 			}
 
 
