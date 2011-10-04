@@ -112,7 +112,7 @@ if (typeof jQuery != 'undefined') {
 				// get video from src or href?				
 				t.isVideo = t.options.isVideo;						
 			} else {
-				t.isVideo = (tagName !== 'audio' || t.options.isVideo);
+				t.isVideo = (tagName !== 'audio' && t.options.isVideo);
 			}
 		
 			// use native controls in iPad, iPhone, and Android	
