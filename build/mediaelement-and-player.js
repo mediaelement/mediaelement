@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.2.0.dev';
+mejs.version = '2.2.0';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -70,23 +70,48 @@ mejs.Utility = {
 		}
 		return path;
 	},
-	secondsToTimeCode: function(seconds,forceHours) {
-		seconds = Math.round(seconds);
-		var hours,
-		    minutes = Math.floor(seconds / 60);
-		if (minutes >= 60) {
-		    hours = Math.floor(minutes / 60);
-		    minutes = minutes % 60;
-		}
-		hours = hours === undefined ? "00" : (hours >= 10) ? hours : "0" + hours;
-		minutes = (minutes >= 10) ? minutes : "0" + minutes;
-		seconds = Math.floor(seconds % 60);
-		seconds = (seconds >= 10) ? seconds : "0" + seconds;
-		return ((hours > 0 || forceHours === true) ? hours + ":" :'') + minutes + ":" + seconds;
+	secondsToTimeCode: function(time, forceHours, showFrameCount, fps) {
+        //add framecount
+        if (typeof showFrameCount == 'undefined') {
+            showFrameCount=false;
+        } else if(typeof fps == 'undefined') {
+            fps = 25;
+        }
+
+        var hours = Math.floor(time / 3600) % 24,
+        	minutes = Math.floor(time / 60) % 60,
+        	seconds = Math.floor(time % 60),
+        	frames = Math.floor(((time % 1)*fps).toFixed(3)),
+        	result = 
+        			( (forceHours || hours > 0) ? (hours < 10 ? '0' + hours : hours) + ':' : '')
+					+ (minutes < 10 ? '0' + minutes : minutes) + ':'
+					+ (seconds < 10 ? '0' + seconds : seconds)
+					+ ((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');
+
+        return result;
 	},
-	timeCodeToSeconds: function(timecode){
-		var tab = timecode.split(':');
-		return tab[0]*60*60 + tab[1]*60 + parseFloat(tab[2].replace(',','.'));
+	
+	timeCodeToSeconds: function(hh_mm_ss_ff, forceHours, showFrameCount, fps){
+        if (typeof showFrameCount == 'undefined') {
+            showFrameCount=false;
+        } else if(typeof fps == 'undefined') {
+            fps = 25;
+        }
+
+        var tc_array = hh_mm_ss_ff.split(":"),
+        	tc_hh = parseInt(tc_array[0]),
+        	tc_mm = parseInt(tc_array[1]),
+        	tc_ss = parseInt(tc_array[2]),
+        	tc_ff = 0,
+        	tc_in_seconds = 0;
+        
+        if (showFrameCount) {
+            tc_ff = parseInt(tc_array[3])/fps;
+        }
+        
+        tc_in_seconds = ( tc_hh * 3600 ) + ( tc_mm * 60 ) + tc_ss + tc_ff;
+        
+        return tc_in_seconds;
 	}
 };
 
@@ -264,6 +289,14 @@ mejs.HtmlMediaElement = {
 	// This can be a url string
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
 	setSrc: function (url) {
+		
+		// Fix for IE9 which can't set .src when there are <source> elements. Awesome, right?
+		var 
+			existingSources = this.getElementsByTagName('source');
+		while (existingSources.length > 0){
+			this.removeChild(existingSources[0]);
+		}
+	
 		if (typeof url == 'string') {
 			this.src = url;
 		} else {
@@ -1054,6 +1087,12 @@ if (typeof jQuery != 'undefined') {
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
 		alwaysShowHours: false,
+
+		// show framecount in timecode (##:00:00:00)
+		showTimecodeFrameCount: false,
+		// used when showTimecodeFrameCount is set to true
+		framesPerSecond: 25,
+
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// force iPad's native controls
@@ -1332,7 +1371,9 @@ if (typeof jQuery != 'undefined') {
 		
 			var t = this,
 				mf = mejs.MediaFeatures,
-				f,
+				autoplayAttr = domNode.getAttribute('autoplay'),
+				autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
+				featureIndex,
 				feature;
 
 			// make sure it can't create itself again if a plugin reloads
@@ -1354,8 +1395,8 @@ if (typeof jQuery != 'undefined') {
 				t.findTracks();
 
 				// add user-defined features/controls
-				for (f in t.options.features) {
-					feature = t.options.features[f];
+				for (featureIndex in t.options.features) {
+					feature = t.options.features[featureIndex];
 					if (t['build' + feature]) {
 						//try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
@@ -1399,7 +1440,7 @@ if (typeof jQuery != 'undefined') {
 				
 					// show/hide controls
 					t.container
-						.bind('mouseenter', function () {
+						.bind('mouseenter mouseover', function () {
 							if (t.controlsEnabled) {
 								if (!t.options.alwaysShowControls) {								
 									t.killControlsTimer('enter');
@@ -1425,8 +1466,8 @@ if (typeof jQuery != 'undefined') {
 						});
 						
 					// check for autoplay
-					if (t.domNode.getAttribute('autoplay') !== null && !t.options.alwaysShowControls) {
-						t.controls.css('visibility','hidden');
+					if (autoplay && !t.options.alwaysShowControls) {
+						t.hideControls();
 					}
 
 					// resizer
@@ -1479,6 +1520,14 @@ if (typeof jQuery != 'undefined') {
 					t.setPlayerSize(t.width, t.height);
 				}, 50);
 				
+				
+				
+			}
+			
+			// force autoplay for HTML5
+			if (autoplay && media.pluginType == 'native') {
+				media.load();
+				media.play();
 			}
 
 
@@ -1927,9 +1976,10 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 			
 			$('<div class="mejs-time">'+
-					'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
-				'</div>')
-				.appendTo(controls);
+					'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>'+
+					'</div>')
+					.appendTo(controls);
 			
 			t.currenttime = t.controls.find('.mejs-currenttime');
 
@@ -1938,12 +1988,14 @@ if (typeof jQuery != 'undefined') {
 			}, false);
 		},
 
+
 		buildduration: function(player, controls, layers, media) {
 			var t = this;
 			
 			if (controls.children().last().find('.mejs-currenttime').length > 0) {
 				$(' <span> | </span> '+
-				   '<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>')
+				   '<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>')
 					.appendTo(controls.find('.mejs-time'));
 			} else {
 
@@ -1951,7 +2003,8 @@ if (typeof jQuery != 'undefined') {
 				controls.find('.mejs-currenttime').parent().addClass('mejs-currenttime-container');
 				
 				$('<div class="mejs-time mejs-duration-container">'+
-					'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
+					'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>' +
 				'</div>')
 				.appendTo(controls);
 			}
@@ -1967,7 +2020,7 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 
 			if (t.currenttime) {
-				t.currenttime.html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 3600 ));
+				t.currenttime.html(mejs.Utility.secondsToTimeCode(t.media.currentTime, t.options.alwaysShowHours || t.media.duration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25));
 			}
 		},
 		
@@ -1975,7 +2028,7 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 			
 			if (t.media.duration && t.durationD) {
-				t.durationD.html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours));
+				t.durationD.html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond || 25));
 			}		
 		}
 	});
