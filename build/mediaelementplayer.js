@@ -40,6 +40,12 @@ if (typeof jQuery != 'undefined') {
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
 		alwaysShowHours: false,
+
+		// show framecount in timecode (##:00:00:00)
+		showTimecodeFrameCount: false,
+		// used when showTimecodeFrameCount is set to true
+		framesPerSecond: 25,
+
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// force iPad's native controls
@@ -318,7 +324,9 @@ if (typeof jQuery != 'undefined') {
 		
 			var t = this,
 				mf = mejs.MediaFeatures,
-				f,
+				autoplayAttr = domNode.getAttribute('autoplay'),
+				autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
+				featureIndex,
 				feature;
 
 			// make sure it can't create itself again if a plugin reloads
@@ -340,8 +348,8 @@ if (typeof jQuery != 'undefined') {
 				t.findTracks();
 
 				// add user-defined features/controls
-				for (f in t.options.features) {
-					feature = t.options.features[f];
+				for (featureIndex in t.options.features) {
+					feature = t.options.features[featureIndex];
 					if (t['build' + feature]) {
 						//try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
@@ -385,7 +393,7 @@ if (typeof jQuery != 'undefined') {
 				
 					// show/hide controls
 					t.container
-						.bind('mouseenter', function () {
+						.bind('mouseenter mouseover', function () {
 							if (t.controlsEnabled) {
 								if (!t.options.alwaysShowControls) {								
 									t.killControlsTimer('enter');
@@ -411,8 +419,8 @@ if (typeof jQuery != 'undefined') {
 						});
 						
 					// check for autoplay
-					if (t.domNode.getAttribute('autoplay') !== null && !t.options.alwaysShowControls) {
-						t.controls.css('visibility','hidden');
+					if (autoplay && !t.options.alwaysShowControls) {
+						t.hideControls();
 					}
 
 					// resizer
@@ -465,6 +473,14 @@ if (typeof jQuery != 'undefined') {
 					t.setPlayerSize(t.width, t.height);
 				}, 50);
 				
+				
+				
+			}
+			
+			// force autoplay for HTML5
+			if (autoplay && media.pluginType == 'native') {
+				media.load();
+				media.play();
 			}
 
 
@@ -913,9 +929,10 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 			
 			$('<div class="mejs-time">'+
-					'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
-				'</div>')
-				.appendTo(controls);
+					'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>'+
+					'</div>')
+					.appendTo(controls);
 			
 			t.currenttime = t.controls.find('.mejs-currenttime');
 
@@ -924,12 +941,14 @@ if (typeof jQuery != 'undefined') {
 			}, false);
 		},
 
+
 		buildduration: function(player, controls, layers, media) {
 			var t = this;
 			
 			if (controls.children().last().find('.mejs-currenttime').length > 0) {
 				$(' <span> | </span> '+
-				   '<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>')
+				   '<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>')
 					.appendTo(controls.find('.mejs-time'));
 			} else {
 
@@ -937,7 +956,8 @@ if (typeof jQuery != 'undefined') {
 				controls.find('.mejs-currenttime').parent().addClass('mejs-currenttime-container');
 				
 				$('<div class="mejs-time mejs-duration-container">'+
-					'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '') + '00:00</span>'+
+					'<span class="mejs-duration">' + (player.options.alwaysShowHours ? '00:' : '')
+					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>' +
 				'</div>')
 				.appendTo(controls);
 			}
@@ -953,7 +973,7 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 
 			if (t.currenttime) {
-				t.currenttime.html(mejs.Utility.secondsToTimeCode(t.media.currentTime | 0, t.options.alwaysShowHours || t.media.duration > 3600 ));
+				t.currenttime.html(mejs.Utility.secondsToTimeCode(t.media.currentTime, t.options.alwaysShowHours || t.media.duration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25));
 			}
 		},
 		
@@ -961,7 +981,7 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 			
 			if (t.media.duration && t.durationD) {
-				t.durationD.html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours));
+				t.durationD.html(mejs.Utility.secondsToTimeCode(t.media.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond || 25));
 			}		
 		}
 	});
