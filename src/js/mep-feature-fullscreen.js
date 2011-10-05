@@ -83,7 +83,9 @@
 			// check for iframe launch
 			if (t.isInIframe && t.options.newWindowUrl !== '') {
 				t.pause();
-				window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				//window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				window.open(t.options.newWindowUrl, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				
 				return;
 			}
 			
@@ -132,9 +134,11 @@
 				.width('100%')
 				.height('100%');
 
-			t.fullscreenBtn
-				.removeClass('mejs-fullscreen')
-				.addClass('mejs-unfullscreen');
+			if (t.fullscreenBtn) {
+				t.fullscreenBtn
+					.removeClass('mejs-fullscreen')
+					.addClass('mejs-unfullscreen');
+			}
 
 			t.setControlsSize();
 			t.isFullScreen = true;
