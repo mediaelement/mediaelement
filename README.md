@@ -86,7 +86,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
 
-*2.2.0 (in progress)
+*2.2.1 (2011/10/06) - 44.1kb
+
+* fixed a bug with fullscreen that caused IE to completely mess up it layout
+* fixed another bug with fullscreen and z-index
+
+*2.2.0 (2011/10/04)
 
 * controls now display on iPad, iPhone, and Android. Can be turned off using (iPadForceNativeControls:true)
 * fullscreen support for iPad (different from true fullscreen on Safari 5.1)
