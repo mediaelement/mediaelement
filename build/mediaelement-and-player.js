@@ -1282,7 +1282,7 @@ if (typeof jQuery != 'undefined') {
 		},
 
 		hideControls: function(doAnimation) {
-			console.log('hide doAnimation', doAnimation);
+			//console.log('hide doAnimation', doAnimation);
 			var t = this,
 				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
@@ -1331,7 +1331,7 @@ if (typeof jQuery != 'undefined') {
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function() {
-				console.log('timer fired');
+				//console.log('timer fired');
 				t.hideControls();
 				t.killControlsTimer('hide');
 			}, timeout);
@@ -1405,8 +1405,8 @@ if (typeof jQuery != 'undefined') {
 						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							console.log('error building ' + feature);
-							console.log(e);
+							//console.log('error building ' + feature);
+							//console.log(e);
 						}
 					}
 				}
@@ -2176,7 +2176,7 @@ if (typeof jQuery != 'undefined') {
 			}, true);
 
 			// set initial volume
-			console.log('init volume',player.options.startVolume);
+			//console.log('init volume',player.options.startVolume);
 			positionVolumeHandle(player.options.startVolume);
 			
 			// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
@@ -3092,7 +3092,7 @@ $.extend(mejs.MepDefaults,
 			});	
 			player.contextMenu.bind('mouseleave', function() {
 
-				console.log('context hover out');
+				//console.log('context hover out');
 				player.startContextMenuTimer();
 				
 			});		
@@ -3100,7 +3100,7 @@ $.extend(mejs.MepDefaults,
 		
 		contextMenuTimeout: null,
 		startContextMenuTimer: function() {
-			console.log('startContextMenuTimer');
+			//console.log('startContextMenuTimer');
 			
 			var t = this;
 			
@@ -3114,7 +3114,7 @@ $.extend(mejs.MepDefaults,
 		killContextMenuTimer: function() {
 			var timer = this.contextMenuTimer;
 			
-			console.log('killContextMenuTimer', timer);
+			//console.log('killContextMenuTimer', timer);
 			
 			if (timer != null) {				
 				clearTimeout(timer);
