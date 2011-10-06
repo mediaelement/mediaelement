@@ -219,7 +219,7 @@
 		},
 
 		hideControls: function(doAnimation) {
-			console.log('hide doAnimation', doAnimation);
+			//console.log('hide doAnimation', doAnimation);
 			var t = this,
 				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
@@ -268,7 +268,7 @@
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function() {
-				console.log('timer fired');
+				//console.log('timer fired');
 				t.hideControls();
 				t.killControlsTimer('hide');
 			}, timeout);
@@ -342,8 +342,8 @@
 						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							console.log('error building ' + feature);
-							console.log(e);
+							//console.log('error building ' + feature);
+							//console.log(e);
 						}
 					}
 				}
