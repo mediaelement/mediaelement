@@ -214,6 +214,8 @@
 				t.controlsAreVisible = true;
 			}
 			
+			t.setControlsSize();
+			
 		},
 
 		hideControls: function(doAnimation) {
@@ -335,14 +337,14 @@
 				for (featureIndex in t.options.features) {
 					feature = t.options.features[featureIndex];
 					if (t['build' + feature]) {
-						//try {
+						try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
-						//} catch (e) {
+						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							//console.log('error building ' + feature);
-							//console.log(e);
-						//}
+							console.log('error building ' + feature);
+							console.log(e);
+						}
 					}
 				}
 
