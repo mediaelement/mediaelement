@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.2.0';
+mejs.version = '2.2.1';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -1277,6 +1277,8 @@ if (typeof jQuery != 'undefined') {
 				t.controlsAreVisible = true;
 			}
 			
+			t.setControlsSize();
+			
 		},
 
 		hideControls: function(doAnimation) {
@@ -1398,14 +1400,14 @@ if (typeof jQuery != 'undefined') {
 				for (featureIndex in t.options.features) {
 					feature = t.options.features[featureIndex];
 					if (t['build' + feature]) {
-						//try {
+						try {
 							t['build' + feature](t, t.controls, t.layers, t.media);
-						//} catch (e) {
+						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							//console.log('error building ' + feature);
-							//console.log(e);
-						//}
+							console.log('error building ' + feature);
+							console.log(e);
+						}
 					}
 				}
 
@@ -2271,7 +2273,9 @@ if (typeof jQuery != 'undefined') {
 			// check for iframe launch
 			if (t.isInIframe && t.options.newWindowUrl !== '') {
 				t.pause();
-				window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				//window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				window.open(t.options.newWindowUrl, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				
 				return;
 			}
 			
@@ -2298,7 +2302,6 @@ if (typeof jQuery != 'undefined') {
 				.addClass('mejs-container-fullscreen')
 				.width('100%')
 				.height('100%');
-				//.css('z-index', 1000);
 				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
 			setTimeout(function() {
 				t.container.css({width: '100%', height: '100%'});
@@ -2320,9 +2323,11 @@ if (typeof jQuery != 'undefined') {
 				.width('100%')
 				.height('100%');
 
-			t.fullscreenBtn
-				.removeClass('mejs-fullscreen')
-				.addClass('mejs-unfullscreen');
+			if (t.fullscreenBtn) {
+				t.fullscreenBtn
+					.removeClass('mejs-fullscreen')
+					.addClass('mejs-unfullscreen');
+			}
 
 			t.setControlsSize();
 			t.isFullScreen = true;
