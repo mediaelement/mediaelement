@@ -85,7 +85,7 @@ $.extend(mejs.MepDefaults,
 			});	
 			player.contextMenu.bind('mouseleave', function() {
 
-				console.log('context hover out');
+				//console.log('context hover out');
 				player.startContextMenuTimer();
 				
 			});		
@@ -93,7 +93,7 @@ $.extend(mejs.MepDefaults,
 		
 		contextMenuTimeout: null,
 		startContextMenuTimer: function() {
-			console.log('startContextMenuTimer');
+			//console.log('startContextMenuTimer');
 			
 			var t = this;
 			
@@ -107,7 +107,7 @@ $.extend(mejs.MepDefaults,
 		killContextMenuTimer: function() {
 			var timer = this.contextMenuTimer;
 			
-			console.log('killContextMenuTimer', timer);
+			//console.log('killContextMenuTimer', timer);
 			
 			if (timer != null) {				
 				clearTimeout(timer);
