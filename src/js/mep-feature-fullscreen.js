@@ -112,7 +112,6 @@
 				.addClass('mejs-container-fullscreen')
 				.width('100%')
 				.height('100%');
-				//.css('z-index', 1000);
 				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
 			setTimeout(function() {
 				t.container.css({width: '100%', height: '100%'});
