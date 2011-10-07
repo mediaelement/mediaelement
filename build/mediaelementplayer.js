@@ -482,7 +482,13 @@ if (typeof jQuery != 'undefined') {
 				
 				// adjust controls whenever window sizes (used to be in fullscreen only)
 				$(window).resize(function() {
-					t.setPlayerSize(t.width, t.height);
+					
+					// the one time we don't want to resize is in Safari 5.1 true fullscreen mode
+					if ( !(mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen)) {
+						t.setPlayerSize(t.width, t.height);
+					}
+					
+					// always adjust controls
 					t.setControlsSize();
 				});				
 
@@ -665,10 +671,10 @@ if (typeof jQuery != 'undefined') {
 			}, false);
 			
 			// show/hide loading			
-			media.addEventListener('loadstart',function() {
+			media.addEventListener('loadeddata',function() {
 				// for some reason Chrome is firing this event
-				if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
-					return;
+				//if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
+				//	return;
 					
 				loading.show();
 			}, false);	
