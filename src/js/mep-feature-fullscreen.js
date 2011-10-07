@@ -40,7 +40,9 @@
 				normalWidth = 0,
 				container = player.container,						
 				fullscreenBtn = 
-					$('<div class="mejs-button mejs-fullscreen-button"><button type="button"  aria-controls="' + t.id + '" title="Fullscreen"></button></div>')
+					$('<div class="mejs-button mejs-fullscreen-button">' + 
+						'<button type="button" aria-controls="' + t.id + '" title="Fullscreen"></button>' + 
+					'</div>')
 					.appendTo(controls)
 					.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen) ?
