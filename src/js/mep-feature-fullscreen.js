@@ -35,12 +35,12 @@
 				});
 			}
 
-			var 			
+			var t = this,		
 				normalHeight = 0,
 				normalWidth = 0,
 				container = player.container,						
 				fullscreenBtn = 
-					$('<div class="mejs-button mejs-fullscreen-button"><button type="button"></button></div>')
+					$('<div class="mejs-button mejs-fullscreen-button"><button type="button"  aria-controls="' + t.id + '" title="Fullscreen"></button></div>')
 					.appendTo(controls)
 					.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen) ?
@@ -54,12 +54,7 @@
 						}
 					});
 			
-			player.fullscreenBtn = fullscreenBtn;
-
-			
-			$(window).bind('resize',function (e) {
-				player.setControlsSize();
-			});		
+			player.fullscreenBtn = fullscreenBtn;	
 
 			$(document).bind('keydown',function (e) {
 				if (player.isFullScreen && e.keyCode == 27) {
