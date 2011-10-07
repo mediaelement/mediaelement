@@ -760,8 +760,8 @@ if (typeof jQuery != 'undefined') {
 			var 
 				t = this,
 				play = 
-				$('<div class="mejs-button mejs-playpause-button mejs-play" type="button" aria-controls="' + t.id + '" title="Play/Pause">' +
-					'<button type="button"></button>' +
+				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
+					'<button type="button" aria-controls="' + t.id + '" title="Play/Pause"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
@@ -800,8 +800,8 @@ if (typeof jQuery != 'undefined') {
 		buildstop: function(player, controls, layers, media) {
 			var t = this,
 				stop = 
-				$('<div class="mejs-button mejs-stop-button mejs-stop"  aria-controls="' + t.id + '" title="Stop">' +
-					'<button type="button"></button>' +
+				$('<div class="mejs-button mejs-stop-button mejs-stop">' +
+					'<button type="button" aria-controls="' + t.id + '" title="Stop"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function() {
@@ -1048,8 +1048,8 @@ if (typeof jQuery != 'undefined') {
 		buildvolume: function(player, controls, layers, media) {
 			var t = this,
 				mute = 
-				$('<div class="mejs-button mejs-volume-button mejs-mute" aria-controls="' + t.id + '" title="Mute/Unmute">'+
-					'<button type="button"></button>'+
+				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
+					'<button type="button" aria-controls="' + t.id + '" title="Mute/Unmute"></button>'+
 					'<div class="mejs-volume-slider">'+ // outer background
 						'<div class="mejs-volume-total"></div>'+ // line background
 						'<div class="mejs-volume-current"></div>'+ // current volume
@@ -1237,7 +1237,9 @@ if (typeof jQuery != 'undefined') {
 				normalWidth = 0,
 				container = player.container,						
 				fullscreenBtn = 
-					$('<div class="mejs-button mejs-fullscreen-button"><button type="button"  aria-controls="' + t.id + '" title="Fullscreen"></button></div>')
+					$('<div class="mejs-button mejs-fullscreen-button">' + 
+						'<button type="button" aria-controls="' + t.id + '" title="Fullscreen"></button>' + 
+					'</div>')
 					.appendTo(controls)
 					.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen) ?
@@ -1423,7 +1425,7 @@ if (typeof jQuery != 'undefined') {
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" ></button>'+
+						'<button type="button" aria-controls="' + this.id + '" title="Captions/Subtitles"></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
