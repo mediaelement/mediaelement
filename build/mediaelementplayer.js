@@ -159,7 +159,8 @@ if (typeof jQuery != 'undefined') {
 
 				// move the <video/video> tag into the right spot
 				if (mf.isiPad || mf.isiPhone) {
-					// sadly, you can't move nodes in ipads, so we have to destroy and recreate it!
+				
+					// sadly, you can't move nodes in iOS, so we have to destroy and recreate it!
 					var $newMedia = t.$media.clone();
 					
 					t.container.find('.mejs-mediaelement').append($newMedia);
@@ -169,6 +170,8 @@ if (typeof jQuery != 'undefined') {
 					t.node = t.media = $newMedia[0]
 					
 				} else {
+					
+					// normal way of moving it into place (doesn't work on iOS)
 					t.container.find('.mejs-mediaelement').append(t.$media);
 				}
 				
@@ -178,7 +181,7 @@ if (typeof jQuery != 'undefined') {
 
 				// determine the size
 				if (t.isVideo) {
-					// priority = videoWidth (forced), width attribute, defaultVideoWidth
+					// priority = videoWidth (forced), width attribute, defaultVideoWidth (for unspecified cases)
 					t.width = (t.options.videoWidth > 0) ? t.options.videoWidth : (t.$media[0].getAttribute('width') !== null) ? t.$media.attr('width') : t.options.defaultVideoWidth;
 					t.height = (t.options.videoHeight > 0) ? t.options.videoHeight : (t.$media[0].getAttribute('height') !== null) ? t.$media.attr('height') : t.options.defaultVideoHeight;
 				} else {
@@ -392,6 +395,7 @@ if (typeof jQuery != 'undefined') {
 						});
 					}
 				
+
 				
 					// show/hide controls
 					t.container
@@ -465,18 +469,23 @@ if (typeof jQuery != 'undefined') {
 						t.updateCurrent();
 					}
 					
+					t.setPlayerSize(t.width, t.height);
 					t.setControlsSize();
 				}, true);
 
 
 				// webkit has trouble doing this without a delay
 				setTimeout(function () {
-					t.setControlsSize();
 					t.setPlayerSize(t.width, t.height);
+					t.setControlsSize();
 				}, 50);
 				
-				
-				
+				// adjust controls whenever window sizes (used to be in fullscreen only)
+				$(window).resize(function() {
+					t.setPlayerSize(t.width, t.height);
+					t.setControlsSize();
+				});				
+
 			}
 			
 			// force autoplay for HTML5
@@ -506,16 +515,51 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 
 			// ie9 appears to need this (jQuery bug?)
-			t.width = parseInt(width, 10);
-			t.height = parseInt(height, 10);
+			//t.width = parseInt(width, 10);
+			//t.height = parseInt(height, 10);
+			
+			if (t.height.toString().indexOf('%') > 0) {
+				// do we have the native dimensions yet?
+				var nativeHeight = (t.media.nativeHeight && t.media.nativeHeight > 0) ? t.media.nativeHeight : t.options.defaultVideoHeight,
+					nativeWidth = (t.media.nativeWidth && t.media.nativeWidth > 0) ? t.media.nativeWidth : t.options.defaultVideoWidth,
+					parentWidth = t.container.parent().width(),
+					newHeight = parseInt(parentWidth * nativeHeight/nativeWidth, 10);
+				
+				// set outer container size
+				t.container
+					.width(parentWidth)
+					.height(newHeight);
+					
+				// set native <video>
+				t.$media
+					.width('100%')
+					.height('100%');
+					
+				// set shims
+				t.container.find('object embed')
+					.width('100%')
+					.height('100%');
+					
+				// if shim is ready, send the size to the embeded plugin	
+				if (t.media.setVideoSize)
+					t.media.setVideoSize(parentWidth, newHeight);
+					
+				// set the layers
+				t.layers.children('.mejs-layer')
+					.width('100%')
+					.height('100%');					
+		
+			} else {
 
-			t.container
-				.width(t.width)
-				.height(t.height);
-
-			t.layers.children('.mejs-layer')
-				.width(t.width)
-				.height(t.height);
+				t.container
+					.width(t.width)
+					.height(t.height);
+	
+				t.layers.children('.mejs-layer')
+					.width(t.width)
+					.height(t.height);
+					
+			}
 		},
 
 		setControlsSize: function() {
@@ -707,8 +751,10 @@ if (typeof jQuery != 'undefined') {
 	// PLAY/pause BUTTON
 	$.extend(MediaElementPlayer.prototype, {
 		buildplaypause: function(player, controls, layers, media) {
-			var play = 
-				$('<div class="mejs-button mejs-playpause-button mejs-play" type="button">' +
+			var 
+				t = this,
+				play = 
+				$('<div class="mejs-button mejs-playpause-button mejs-play" type="button" aria-controls="' + t.id + '" title="Play/Pause">' +
 					'<button type="button"></button>' +
 				'</div>')
 				.appendTo(controls)
@@ -746,8 +792,9 @@ if (typeof jQuery != 'undefined') {
 	// STOP BUTTON
 	$.extend(MediaElementPlayer.prototype, {
 		buildstop: function(player, controls, layers, media) {
-			var stop = 
-				$('<div class="mejs-button mejs-stop-button mejs-stop">' +
+			var t = this,
+				stop = 
+				$('<div class="mejs-button mejs-stop-button mejs-stop"  aria-controls="' + t.id + '" title="Stop">' +
 					'<button type="button"></button>' +
 				'</div>')
 				.appendTo(controls)
@@ -993,8 +1040,9 @@ if (typeof jQuery != 'undefined') {
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildvolume: function(player, controls, layers, media) {
-			var mute = 
-				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
+			var t = this,
+				mute = 
+				$('<div class="mejs-button mejs-volume-button mejs-mute" aria-controls="' + t.id + '" title="Mute/Unmute">'+
 					'<button type="button"></button>'+
 					'<div class="mejs-volume-slider">'+ // outer background
 						'<div class="mejs-volume-total"></div>'+ // line background
@@ -1178,12 +1226,12 @@ if (typeof jQuery != 'undefined') {
 				});
 			}
 
-			var 			
+			var t = this,		
 				normalHeight = 0,
 				normalWidth = 0,
 				container = player.container,						
 				fullscreenBtn = 
-					$('<div class="mejs-button mejs-fullscreen-button"><button type="button"></button></div>')
+					$('<div class="mejs-button mejs-fullscreen-button"><button type="button"  aria-controls="' + t.id + '" title="Fullscreen"></button></div>')
 					.appendTo(controls)
 					.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen) ?
@@ -1197,12 +1245,7 @@ if (typeof jQuery != 'undefined') {
 						}
 					});
 			
-			player.fullscreenBtn = fullscreenBtn;
-
-			
-			$(window).bind('resize',function (e) {
-				player.setControlsSize();
-			});		
+			player.fullscreenBtn = fullscreenBtn;	
 
 			$(document).bind('keydown',function (e) {
 				if (player.isFullScreen && e.keyCode == 27) {
