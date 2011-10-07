@@ -2,8 +2,9 @@
 	// STOP BUTTON
 	$.extend(MediaElementPlayer.prototype, {
 		buildstop: function(player, controls, layers, media) {
-			var stop = 
-				$('<div class="mejs-button mejs-stop-button mejs-stop">' +
+			var t = this,
+				stop = 
+				$('<div class="mejs-button mejs-stop-button mejs-stop"  aria-controls="' + t.id + '" title="Stop">' +
 					'<button type="button"></button>' +
 				'</div>')
 				.appendTo(controls)
