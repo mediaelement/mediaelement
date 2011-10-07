@@ -127,6 +127,12 @@
 	border: 0;
 	background: transparent url(controls.png) 0 0 no-repeat;
 }
+
+/* :focus for accessibility */
+.mejs-controls .mejs-button button:focus {
+	outline: solid 1px yellow;
+}
+
 /* End: CONTROL BAR */
 
 /* Start: Time (current / duration) */
