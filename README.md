@@ -78,21 +78,20 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *Proposed features*
 
-* deeper accessibility functionality
 * horizontal, inline volume control
 * deeper WebVTT support (alignment, color, etc.)
-* fullscreen popup controls
-* responsive (100%)
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
+* additional accessiblity work
 
-*2.2.2 (2011/10/07) - 44.1kb
+*2.2.2 (2011/10/07) - 45.8kb*
 
 * added support for `<video width="100%" height="100%"></video>` (i.e. responsive/adaptive players)
 * added :focus state for buttons to improve accessibility
 * added title and aria-controls attributes to buttons to improve accessibility 
+* changed when loading circle appears (WebKit fires the 'loadstart' event differently than FF or IE)
 
-*2.2.1 (2011/10/06) - 44.1kb
+*2.2.1 (2011/10/06) - 44.1kb*
 
 * fixed a bug with fullscreen that caused IE to completely mess up it layout
 * fixed another bug with fullscreen and z-index
