@@ -84,6 +84,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * quality switcher (low, high, normal)
 * additional accessiblity work
 
+*2.2.3 (2011/10/07b) - 45.8kb*
+
+* updated accessibility again for JAWS and NVDA (thanks to twitter.com/mohammed0204)
+* added CSS class `<html class="mejs-embed">` for `<iframe>` embeds
+
 *2.2.2 (2011/10/07) - 45.8kb*
 
 * added support for `<video width="100%" height="100%"></video>` (i.e. responsive/adaptive players)
@@ -96,7 +101,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * fixed a bug with fullscreen that caused IE to completely mess up it layout
 * fixed another bug with fullscreen and z-index
 
-*2.2.0 (2011/10/04)
+*2.2.0 (2011/10/04)*
 
 * controls now display on iPad, iPhone, and Android. Can be turned off using (iPadForceNativeControls:true)
 * fullscreen support for iPad (different from true fullscreen on Safari 5.1)
