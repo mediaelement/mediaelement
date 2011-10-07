@@ -3,10 +3,11 @@
 	$.extend(MediaElementPlayer.prototype, {
 		buildloop: function(player, controls, layers, media) {
 			var 
+				t = this,
 				// create the loop button
 				loop = 
 				$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
-					'<button></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="Toggle Loop"></button>' +
 				'</div>')
 				// append it to the toolbar
 				.appendTo(controls)
