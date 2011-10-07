@@ -4,8 +4,8 @@
 		buildstop: function(player, controls, layers, media) {
 			var t = this,
 				stop = 
-				$('<div class="mejs-button mejs-stop-button mejs-stop"  aria-controls="' + t.id + '" title="Stop">' +
-					'<button type="button"></button>' +
+				$('<div class="mejs-button mejs-stop-button mejs-stop">' +
+					'<button type="button" aria-controls="' + t.id + '" title="Stop"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function() {

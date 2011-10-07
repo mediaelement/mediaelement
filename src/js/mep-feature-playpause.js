@@ -5,8 +5,8 @@
 			var 
 				t = this,
 				play = 
-				$('<div class="mejs-button mejs-playpause-button mejs-play" type="button" aria-controls="' + t.id + '" title="Play/Pause">' +
-					'<button type="button"></button>' +
+				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
+					'<button type="button" aria-controls="' + t.id + '" title="Play/Pause"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
