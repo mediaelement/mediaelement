@@ -2,8 +2,9 @@
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildvolume: function(player, controls, layers, media) {
-			var mute = 
-				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
+			var t = this,
+				mute = 
+				$('<div class="mejs-button mejs-volume-button mejs-mute" aria-controls="' + t.id + '" title="Mute/Unmute">'+
 					'<button type="button"></button>'+
 					'<div class="mejs-volume-slider">'+ // outer background
 						'<div class="mejs-volume-total"></div>'+ // line background
