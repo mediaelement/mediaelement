@@ -86,6 +86,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
 
+*2.2.2 (2011/10/07) - 44.1kb
+
+* added support for `<video width="100%" height="100%"></video>` (i.e. responsive/adaptive players)
+* added :focus state for buttons to improve accessibility
+* added title and aria-controls attributes to buttons to improve accessibility 
+
 *2.2.1 (2011/10/06) - 44.1kb
 
 * fixed a bug with fullscreen that caused IE to completely mess up it layout
