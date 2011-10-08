@@ -584,27 +584,40 @@
 
 
 		buildposter: function(player, controls, layers, media) {
-			var poster = 
-				$('<div class="mejs-poster mejs-layer">'+
-					'<img />'+
+			var t = this,
+				poster = 
+				$('<div class="mejs-poster mejs-layer">' +
 				'</div>')
 					.appendTo(layers),
-				posterUrl = player.$media.attr('poster'),
-				posterImg = poster.find('img').width(player.width).height(player.height);
+				posterUrl = player.$media.attr('poster');
 
 			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
-			if (player.options.poster != '') {
-				posterImg.attr('src',player.options.poster);
+			if (player.options.poster !== '') {
+				posterUrl = player.options.poster;
+			}	
+				
 			// second, try the real poster
-			} else if (posterUrl !== '' && posterUrl != null) {
-				posterImg.attr('src',posterUrl);
+			if (posterUrl !== '' && posterUrl != null) {
+				t.setPoster(posterUrl);
 			} else {
-				poster.remove();
+				poster.hide();
 			}
 
 			media.addEventListener('play',function() {
 				poster.hide();
 			}, false);
+		},
+		
+		setPoster: function(url) {
+			var t = this,
+				posterDiv = t.container.find('.mejs-poster'),
+				posterImg = posterDiv.find('img');
+				
+			if (posterImg.length == 0) {
+				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
+			}	
+			
+			posterImg.attr('src', url);
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
