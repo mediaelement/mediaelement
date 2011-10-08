@@ -467,8 +467,8 @@
 				// adjust controls whenever window sizes (used to be in fullscreen only)
 				$(window).resize(function() {
 					
-					// the one time we don't want to resize is in Safari 5.1 true fullscreen mode
-					if ( !(mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen)) {
+					// don't resize for fullscreen mode				
+					if ( !(t.isFullScreen || (mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen)) ) {
 						t.setPlayerSize(t.width, t.height);
 					}
 					
