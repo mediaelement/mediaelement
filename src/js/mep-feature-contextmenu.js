@@ -76,9 +76,11 @@ $.extend(mejs.MepDefaults,
 			
 			// create events for showing context menu
 			player.container.bind('contextmenu', function(e) {
-				e.preventDefault();
-				player.renderContextMenu(e.clientX-1, e.clientY-1);
-				return false;
+				if (player.isContextMenuEnabled) {
+					e.preventDefault();
+					player.renderContextMenu(e.clientX-1, e.clientY-1);
+					return false;
+				}
 			});
 			player.container.bind('click', function() {
 				player.contextMenu.hide();
@@ -89,6 +91,14 @@ $.extend(mejs.MepDefaults,
 				player.startContextMenuTimer();
 				
 			});		
+		},
+		
+		isContextMenuEnabled: true,
+		enableContextMenu: function() {
+			this.isContextMenuEnabled = true;
+		},
+		disableContextMenu: function() {
+			this.isContextMenuEnabled = false;
 		},
 		
 		contextMenuTimeout: null,
