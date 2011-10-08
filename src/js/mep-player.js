@@ -509,11 +509,19 @@
 			//t.height = parseInt(height, 10);
 			
 			if (t.height.toString().indexOf('%') > 0) {
+			
 				// do we have the native dimensions yet?
-				var nativeHeight = (t.media.nativeHeight && t.media.nativeHeight > 0) ? t.media.nativeHeight : t.options.defaultVideoHeight,
-					nativeWidth = (t.media.nativeWidth && t.media.nativeWidth > 0) ? t.media.nativeWidth : t.options.defaultVideoWidth,
+				var 
+					nativeWidth = (t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth,
+					nativeHeight = (t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight,
 					parentWidth = t.container.parent().width(),
 					newHeight = parseInt(parentWidth * nativeHeight/nativeWidth, 10);
+					
+				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
+					parentWidth = $(window).width();
+					newHeight = $(window).height();
+				}
+					
 				
 				// set outer container size
 				t.container
@@ -538,7 +546,8 @@
 				t.layers.children('.mejs-layer')
 					.width('100%')
 					.height('100%');					
-		
+			
+			
 			} else {
 
 				t.container
