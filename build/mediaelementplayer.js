@@ -483,8 +483,8 @@ if (typeof jQuery != 'undefined') {
 				// adjust controls whenever window sizes (used to be in fullscreen only)
 				$(window).resize(function() {
 					
-					// the one time we don't want to resize is in Safari 5.1 true fullscreen mode
-					if ( !(mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen)) {
+					// don't resize for fullscreen mode				
+					if ( !(t.isFullScreen || (mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen)) ) {
 						t.setPlayerSize(t.width, t.height);
 					}
 					
@@ -525,11 +525,19 @@ if (typeof jQuery != 'undefined') {
 			//t.height = parseInt(height, 10);
 			
 			if (t.height.toString().indexOf('%') > 0) {
+			
 				// do we have the native dimensions yet?
-				var nativeHeight = (t.media.nativeHeight && t.media.nativeHeight > 0) ? t.media.nativeHeight : t.options.defaultVideoHeight,
-					nativeWidth = (t.media.nativeWidth && t.media.nativeWidth > 0) ? t.media.nativeWidth : t.options.defaultVideoWidth,
+				var 
+					nativeWidth = (t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth,
+					nativeHeight = (t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight,
 					parentWidth = t.container.parent().width(),
 					newHeight = parseInt(parentWidth * nativeHeight/nativeWidth, 10);
+					
+				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
+					parentWidth = $(window).width();
+					newHeight = $(window).height();
+				}
+					
 				
 				// set outer container size
 				t.container
@@ -554,7 +562,8 @@ if (typeof jQuery != 'undefined') {
 				t.layers.children('.mejs-layer')
 					.width('100%')
 					.height('100%');					
-		
+			
+			
 			} else {
 
 				t.container
@@ -600,27 +609,40 @@ if (typeof jQuery != 'undefined') {
 
 
 		buildposter: function(player, controls, layers, media) {
-			var poster = 
-				$('<div class="mejs-poster mejs-layer">'+
-					'<img />'+
+			var t = this,
+				poster = 
+				$('<div class="mejs-poster mejs-layer">' +
 				'</div>')
 					.appendTo(layers),
-				posterUrl = player.$media.attr('poster'),
-				posterImg = poster.find('img').width(player.width).height(player.height);
+				posterUrl = player.$media.attr('poster');
 
 			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
-			if (player.options.poster != '') {
-				posterImg.attr('src',player.options.poster);
+			if (player.options.poster !== '') {
+				posterUrl = player.options.poster;
+			}	
+				
 			// second, try the real poster
-			} else if (posterUrl !== '' && posterUrl != null) {
-				posterImg.attr('src',posterUrl);
+			if (posterUrl !== '' && posterUrl != null) {
+				t.setPoster(posterUrl);
 			} else {
-				poster.remove();
+				poster.hide();
 			}
 
 			media.addEventListener('play',function() {
 				poster.hide();
 			}, false);
+		},
+		
+		setPoster: function(url) {
+			var t = this,
+				posterDiv = t.container.find('.mejs-poster'),
+				posterImg = posterDiv.find('img');
+				
+			if (posterImg.length == 0) {
+				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
+			}	
+			
+			posterImg.attr('src', url);
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
@@ -1219,9 +1241,10 @@ if (typeof jQuery != 'undefined') {
 				
 			// native events
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+				//player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
 				player.container.bind('webkitfullscreenchange', function(e) {
 				
-					if (document.webkitIsFullScreen) {
+					if (mejs.MediaFeatures.isFullScreen()) {
 						// reset the controls once we are fully in full screen
 						player.setControlsSize();
 					} else {				
@@ -1242,9 +1265,7 @@ if (typeof jQuery != 'undefined') {
 					'</div>')
 					.appendTo(controls)
 					.click(function() {
-						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen) ?
-										document.webkitIsFullScreen :
-										player.isFullScreen;													
+						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || player.isFullScreen;													
 						
 						if (isFullScreen) {
 							player.exitFullScreen();
@@ -1256,7 +1277,7 @@ if (typeof jQuery != 'undefined') {
 			player.fullscreenBtn = fullscreenBtn;	
 
 			$(document).bind('keydown',function (e) {
-				if (player.isFullScreen && e.keyCode == 27) {
+				if (((mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || t.isFullScreen) && e.keyCode == 27) {
 					player.exitFullScreen();
 				}
 			});
@@ -1266,9 +1287,22 @@ if (typeof jQuery != 'undefined') {
 			
 			var t = this;
 			
-			// attempt to do true fullscreen (Safari 5.1 only for now)
+			// store overflow 
+			docStyleOverflow = document.documentElement.style.overflow;
+			// set it to not show scroll bars so 100% will work
+			document.documentElement.style.overflow = 'hidden';				
+		
+			// store sizing
+			normalHeight = t.container.height();
+			normalWidth = t.container.width();
+			
+			
+			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				t.container[0].webkitRequestFullScreen();									
+						
+				mejs.MediaFeatures.requestFullScreen(t.container[0]);
+				//return;
+				
 			} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
 				t.media.webkitEnterFullscreen();
 				return;
@@ -1290,16 +1324,7 @@ if (typeof jQuery != 'undefined') {
 				t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
-			}		
-											
-			// store overflow 
-			docStyleOverflow = document.documentElement.style.overflow;
-			// set it to not show scroll bars so 100% will work
-			document.documentElement.style.overflow = 'hidden';				
-		
-			// store
-			normalHeight = t.container.height();
-			normalWidth = t.container.width();
+			}
 
 			// make full size
 			t.container
@@ -1349,8 +1374,8 @@ if (typeof jQuery != 'undefined') {
 			}		
 		
 			// come outo of native fullscreen
-			if (mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen) {							
-				document.webkitCancelFullScreen();									
+			if (mejs.MediaFeatures.hasTrueNativeFullScreen && (mejs.MediaFeatures.isFullScreen() || t.isFullScreen)) {
+				mejs.MediaFeatures.cancelFullScreen();
 			}	
 
 			// restore scroll bars to document
@@ -2087,9 +2112,11 @@ $.extend(mejs.MepDefaults,
 			
 			// create events for showing context menu
 			player.container.bind('contextmenu', function(e) {
-				e.preventDefault();
-				player.renderContextMenu(e.clientX-1, e.clientY-1);
-				return false;
+				if (player.isContextMenuEnabled) {
+					e.preventDefault();
+					player.renderContextMenu(e.clientX-1, e.clientY-1);
+					return false;
+				}
 			});
 			player.container.bind('click', function() {
 				player.contextMenu.hide();
@@ -2100,6 +2127,14 @@ $.extend(mejs.MepDefaults,
 				player.startContextMenuTimer();
 				
 			});		
+		},
+		
+		isContextMenuEnabled: true,
+		enableContextMenu: function() {
+			this.isContextMenuEnabled = true;
+		},
+		disableContextMenu: function() {
+			this.isContextMenuEnabled = false;
 		},
 		
 		contextMenuTimeout: null,
