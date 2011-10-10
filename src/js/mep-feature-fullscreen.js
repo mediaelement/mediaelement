@@ -22,9 +22,10 @@
 				
 			// native events
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+				//player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
 				player.container.bind('webkitfullscreenchange', function(e) {
 				
-					if (document.webkitIsFullScreen) {
+					if (mejs.MediaFeatures.isFullScreen()) {
 						// reset the controls once we are fully in full screen
 						player.setControlsSize();
 					} else {				
@@ -45,9 +46,7 @@
 					'</div>')
 					.appendTo(controls)
 					.click(function() {
-						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen) ?
-										document.webkitIsFullScreen :
-										player.isFullScreen;													
+						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || player.isFullScreen;													
 						
 						if (isFullScreen) {
 							player.exitFullScreen();
@@ -59,7 +58,7 @@
 			player.fullscreenBtn = fullscreenBtn;	
 
 			$(document).bind('keydown',function (e) {
-				if (player.isFullScreen && e.keyCode == 27) {
+				if (((mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || t.isFullScreen) && e.keyCode == 27) {
 					player.exitFullScreen();
 				}
 			});
@@ -69,9 +68,22 @@
 			
 			var t = this;
 			
-			// attempt to do true fullscreen (Safari 5.1 only for now)
+			// store overflow 
+			docStyleOverflow = document.documentElement.style.overflow;
+			// set it to not show scroll bars so 100% will work
+			document.documentElement.style.overflow = 'hidden';				
+		
+			// store sizing
+			normalHeight = t.container.height();
+			normalWidth = t.container.width();
+			
+			
+			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				t.container[0].webkitRequestFullScreen();									
+						
+				mejs.MediaFeatures.requestFullScreen(t.container[0]);
+				//return;
+				
 			} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
 				t.media.webkitEnterFullscreen();
 				return;
@@ -93,16 +105,7 @@
 				t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
-			}		
-											
-			// store overflow 
-			docStyleOverflow = document.documentElement.style.overflow;
-			// set it to not show scroll bars so 100% will work
-			document.documentElement.style.overflow = 'hidden';				
-		
-			// store
-			normalHeight = t.container.height();
-			normalWidth = t.container.width();
+			}
 
 			// make full size
 			t.container
@@ -152,8 +155,8 @@
 			}		
 		
 			// come outo of native fullscreen
-			if (mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen) {							
-				document.webkitCancelFullScreen();									
+			if (mejs.MediaFeatures.hasTrueNativeFullScreen && (mejs.MediaFeatures.isFullScreen() || t.isFullScreen)) {
+				mejs.MediaFeatures.cancelFullScreen();
 			}	
 
 			// restore scroll bars to document
