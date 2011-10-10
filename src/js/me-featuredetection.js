@@ -40,13 +40,10 @@ mejs.MediaFeatures = {
 		
 		t.hasTrueNativeFullScreen = (t.hasWebkitNativeFullScreen || t.hasMozNativeFullScreen);
 		
-		/*
+		
 		if (this.isChrome) {
 			t.hasSemiNativeFullScreen = false;
-			t.hasTrueNativeFullScreen = false;
-			t.hasWebkitNativeFullScreen = false;
 		}
-		*/
 		
 		if (t.hasTrueNativeFullScreen) {
 			t.fullScreenEventName = (t.hasWebkitNativeFullScreen) ? 'webkitfullscreenchange' : 'mozfullscreenchange';
