@@ -84,6 +84,13 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * quality switcher (low, high, normal)
 * additional accessiblity work
 
+*2.2.4 (2011/10/10)*
+
+* True FullScreen support in Firefox (nightly) and Chrome (Canary)
+* more updates for 100% mode
+* enableContextMenu(), disableContextMenu() methods
+* change to poster code to let it be set later
+
 *2.2.3 (2011/10/07b) - 45.8kb*
 
 * updated accessibility again for JAWS and NVDA (thanks to twitter.com/mohammed0204)
@@ -368,11 +375,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ###TODO
 
-2.2 features
-* Error handling
+2.x features
+* HTML5 error handling
 * Flash/SL error codes
-* Add dynamic creation support
-* Inline volume slider?
 * Postroll
 * Flash StageVideo?
-* Support 100% width and height?
