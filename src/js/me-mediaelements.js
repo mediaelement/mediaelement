@@ -198,6 +198,14 @@ mejs.PluginMediaElement.prototype = {
 			this.pluginApi.setFullscreen(fullscreen);
 		}
 	},
+	
+	enterFullScreen: function() {
+		this.setFullscreen(true);
+	},
+	
+	enterFullScreen: function() {
+		this.setFullscreen(false);
+	},	
 
 	// start: fake events
 	addEventListener: function (eventName, callback, bubble) {
