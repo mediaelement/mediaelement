@@ -84,6 +84,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * quality switcher (low, high, normal)
 * additional accessiblity work
 
+*2.2.5 (2011/10/13)*
+
+* fix for Flash fallback in certain scenarios (IE RegExp problem, Firefox fullscreen Flash issue)
+* adjustments for floating time indicator
+
 *2.2.4 (2011/10/10)*
 
 * True FullScreen support in Firefox (nightly) and Chrome (Canary)
