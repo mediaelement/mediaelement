@@ -68,10 +68,19 @@
 			
 			var t = this;
 			
+			
+			
+			// firefox+flash can't adjust plugin sizes without resetting :(
+			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
+				t.media.setFullscreen(true);
+				//player.isFullScreen = true;
+				return;
+			}			
+						
 			// store overflow 
 			docStyleOverflow = document.documentElement.style.overflow;
 			// set it to not show scroll bars so 100% will work
-			document.documentElement.style.overflow = 'hidden';				
+			document.documentElement.style.overflow = 'hidden';			
 		
 			// store sizing
 			normalHeight = t.container.height();
@@ -100,12 +109,7 @@
 			
 			// full window code
 			
-			// firefox+flash can't adjust plugin sizes without resetting :(
-			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isFirefox || t.options.forcePluginFullScreen)) {
-				t.media.setFullscreen(true);
-				//player.isFullScreen = true;
-				return;
-			}
+			
 
 			// make full size
 			t.container
