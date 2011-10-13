@@ -2,7 +2,7 @@
 	
 	$.extend(mejs.MepDefaults, {
 		forcePluginFullScreen: false,
-		newWindowUrl: ''
+		newWindowCallback: function() { return '';}
 	});
 	
 	$.extend(MediaElementPlayer.prototype, {
@@ -102,8 +102,10 @@
 			if (t.isInIframe && t.options.newWindowUrl !== '') {
 				t.pause();
 				//window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
-				window.open(t.options.newWindowUrl, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
-				
+				var url = t.options.newWindowCallback(this);
+				if (url !== '') {
+					window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				}	
 				return;
 			}
 			
