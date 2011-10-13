@@ -253,7 +253,7 @@
 	text-align: center;
 	color: #111;
 }
-.mejs-controls .mejs-time-rail:hover .mejs-time-float {
+.mejs-controls .mejs-time-total:hover .mejs-time-float {
 	visibility: visible;
 }
 .mejs-controls .mejs-time-rail .mejs-time-float-current {
