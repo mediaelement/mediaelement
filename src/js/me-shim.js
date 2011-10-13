@@ -177,8 +177,6 @@ mejs.HtmlMediaElementShim = {
 		}
 	},
 	
-	videoRegExp: /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg|mov)/gi,
-	
 	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, src) {
 		var
 			mediaFiles = [],
@@ -340,7 +338,7 @@ mejs.HtmlMediaElementShim = {
 	
 	getTypeFromFile: function(url) {
 		var ext = url.substring(url.lastIndexOf('.') + 1);
-		return (this.videoRegExp.test(ext) ? 'video' : 'audio') + '/' + ext;
+		return /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg|mov)/gi.test(a) ? 'video' : 'audio') + '/' + ext;
 	},
 
 	createErrorMessage: function(playback, options, poster) {
