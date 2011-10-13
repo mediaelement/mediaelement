@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.2.4';
+mejs.version = '2.2.5';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -681,8 +681,8 @@ mejs.HtmlMediaElementShim = {
 			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
 			tagName = htmlMediaElement.tagName.toLowerCase(),
-			isMediaTag = (tagName == 'audio' || tagName == 'video'),
-			src = htmlMediaElement.getAttribute('src'),
+			isMediaTag = (tagName === 'audio' || tagName === 'video'),
+			src = (isMediaTag) ? htmlMediaElement.getAttribute('src') : htmlMediaElement.getAttribute('href'),
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
@@ -693,15 +693,6 @@ mejs.HtmlMediaElementShim = {
 		// extend options
 		for (prop in o) {
 			options[prop] = o[prop];
-		}
-
-					
-		// is this a true HTML5 media element
-		if (isMediaTag) {
-			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video');
-		} else {
-			// fake source from <a href=""></a>
-			src = htmlMediaElement.getAttribute('href');		
 		}
 
 		// clean up attributes
@@ -735,8 +726,6 @@ mejs.HtmlMediaElementShim = {
 			this.createErrorMessage( playback, options, poster );
 		}
 	},
-	
-	videoRegExp: /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg)/gi,
 	
 	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, src) {
 		var
@@ -788,7 +777,7 @@ mejs.HtmlMediaElementShim = {
 		
 		// in the case of dynamicly created players
 		// check for audio types
-		if (mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1) {
+		if (!isMediaTag && mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1) {
 			result.isVideo = false;
 		}
 		
@@ -899,7 +888,7 @@ mejs.HtmlMediaElementShim = {
 	
 	getTypeFromFile: function(url) {
 		var ext = url.substring(url.lastIndexOf('.') + 1);
-		return (this.videoRegExp.test(ext) ? 'video' : 'audio') + '/' + ext;
+		return (/(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg|mov)/gi.test(a) ? 'video' : 'audio') + '/' + ext;
 	},
 
 	createErrorMessage: function(playback, options, poster) {
@@ -2013,7 +2002,7 @@ if (typeof jQuery != 'undefined') {
 					}					
 				});
 
-			controls.find('.mejs-time-rail')
+			controls.find('.mejs-time-total')
 				.bind('mouseenter', function(e) {
 					mouseIsOver = true;
 				})
@@ -2326,7 +2315,7 @@ if (typeof jQuery != 'undefined') {
 	
 	$.extend(mejs.MepDefaults, {
 		forcePluginFullScreen: false,
-		newWindowUrl: ''
+		newWindowCallback: function() { return '';}
 	});
 	
 	$.extend(MediaElementPlayer.prototype, {
@@ -2392,10 +2381,19 @@ if (typeof jQuery != 'undefined') {
 			
 			var t = this;
 			
+			
+			
+			// firefox+flash can't adjust plugin sizes without resetting :(
+			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
+				t.media.setFullscreen(true);
+				//player.isFullScreen = true;
+				return;
+			}			
+						
 			// store overflow 
 			docStyleOverflow = document.documentElement.style.overflow;
 			// set it to not show scroll bars so 100% will work
-			document.documentElement.style.overflow = 'hidden';				
+			document.documentElement.style.overflow = 'hidden';			
 		
 			// store sizing
 			normalHeight = t.container.height();
@@ -2417,19 +2415,16 @@ if (typeof jQuery != 'undefined') {
 			if (t.isInIframe && t.options.newWindowUrl !== '') {
 				t.pause();
 				//window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
-				window.open(t.options.newWindowUrl, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
-				
+				var url = t.options.newWindowCallback(this);
+				if (url !== '') {
+					window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				}	
 				return;
 			}
 			
 			// full window code
 			
-			// firefox+flash can't adjust plugin sizes without resetting :(
-			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isFirefox || t.options.forcePluginFullScreen)) {
-				t.media.setFullscreen(true);
-				//player.isFullScreen = true;
-				return;
-			}
+			
 
 			// make full size
 			t.container
