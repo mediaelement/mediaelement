@@ -908,7 +908,7 @@ if (typeof jQuery != 'undefined') {
 					}					
 				});
 
-			controls.find('.mejs-time-rail')
+			controls.find('.mejs-time-total')
 				.bind('mouseenter', function(e) {
 					mouseIsOver = true;
 				})
@@ -1221,7 +1221,7 @@ if (typeof jQuery != 'undefined') {
 	
 	$.extend(mejs.MepDefaults, {
 		forcePluginFullScreen: false,
-		newWindowUrl: ''
+		newWindowCallback: function() { return '';}
 	});
 	
 	$.extend(MediaElementPlayer.prototype, {
@@ -1287,10 +1287,19 @@ if (typeof jQuery != 'undefined') {
 			
 			var t = this;
 			
+			
+			
+			// firefox+flash can't adjust plugin sizes without resetting :(
+			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
+				t.media.setFullscreen(true);
+				//player.isFullScreen = true;
+				return;
+			}			
+						
 			// store overflow 
 			docStyleOverflow = document.documentElement.style.overflow;
 			// set it to not show scroll bars so 100% will work
-			document.documentElement.style.overflow = 'hidden';				
+			document.documentElement.style.overflow = 'hidden';			
 		
 			// store sizing
 			normalHeight = t.container.height();
@@ -1312,19 +1321,16 @@ if (typeof jQuery != 'undefined') {
 			if (t.isInIframe && t.options.newWindowUrl !== '') {
 				t.pause();
 				//window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
-				window.open(t.options.newWindowUrl, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
-				
+				var url = t.options.newWindowCallback(this);
+				if (url !== '') {
+					window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+				}	
 				return;
 			}
 			
 			// full window code
 			
-			// firefox+flash can't adjust plugin sizes without resetting :(
-			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isFirefox || t.options.forcePluginFullScreen)) {
-				t.media.setFullscreen(true);
-				//player.isFullScreen = true;
-				return;
-			}
+			
 
 			// make full size
 			t.container
