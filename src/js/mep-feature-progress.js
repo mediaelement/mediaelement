@@ -63,7 +63,7 @@
 					}					
 				});
 
-			controls.find('.mejs-time-rail')
+			controls.find('.mejs-time-total')
 				.bind('mouseenter', function(e) {
 					mouseIsOver = true;
 				})
