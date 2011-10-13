@@ -131,8 +131,8 @@ mejs.HtmlMediaElementShim = {
 			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
 			tagName = htmlMediaElement.tagName.toLowerCase(),
-			isMediaTag = (tagName == 'audio' || tagName == 'video'),
-			src = htmlMediaElement.getAttribute('src'),
+			isMediaTag = (tagName === 'audio' || tagName === 'video'),
+			src = (isMediaTag) ? htmlMediaElement.getAttribute('src') : htmlMediaElement.getAttribute('href'),
 			poster = htmlMediaElement.getAttribute('poster'),
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
@@ -143,15 +143,6 @@ mejs.HtmlMediaElementShim = {
 		// extend options
 		for (prop in o) {
 			options[prop] = o[prop];
-		}
-
-					
-		// is this a true HTML5 media element
-		if (isMediaTag) {
-			isVideo = (htmlMediaElement.tagName.toLowerCase() == 'video');
-		} else {
-			// fake source from <a href=""></a>
-			src = htmlMediaElement.getAttribute('href');		
 		}
 
 		// clean up attributes
@@ -238,7 +229,7 @@ mejs.HtmlMediaElementShim = {
 		
 		// in the case of dynamicly created players
 		// check for audio types
-		if (mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1) {
+		if (!isMediaTag && mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1) {
 			result.isVideo = false;
 		}
 		
