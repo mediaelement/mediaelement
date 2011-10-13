@@ -177,7 +177,7 @@ mejs.HtmlMediaElementShim = {
 		}
 	},
 	
-	videoRegExp: /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg)/gi,
+	videoRegExp: /(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg|mov)/gi,
 	
 	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, src) {
 		var
