@@ -1068,6 +1068,7 @@ if (typeof jQuery != 'undefined') {
 		// url to poster (to fix iOS 3.x)
 		poster: '',
 		// create figcaption from provided string
+		// usefull for screereaders and bots
 		posterCaption: '',
 		// default if the <video width> is not specified
 		defaultVideoWidth: 480,
@@ -1605,7 +1606,7 @@ if (typeof jQuery != 'undefined') {
 			
 			// may you want provide screenreader information 
 			if (player.options.posterCaption && player.options.posterCaption.length) {
-				figure += '<figcaption>' +
+				figure += '<figcaption class="mejs-accessibility">' +
 							 '<span>' +
 							 	player.options.posterCaption + 
 							 '</span>' +

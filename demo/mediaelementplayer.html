@@ -71,8 +71,9 @@ to the <a href="http://www.macromedia.com/support/documentation/en/flashplayer/h
 <span id="player2-mode"></span>
 
 <script>
-
+// provide an caption for screenreaders
 $('audio,video').mediaelementplayer({
+    posterCaption : 'A Video named echo the life.',
 	success: function(player, node) {
 		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
 	}

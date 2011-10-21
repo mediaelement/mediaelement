@@ -36,6 +36,10 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+	/* resets the browser behavior for <figure> */ 
+	margin: 0;
+	padding: 0;
+	display: block;
 }
 .mejs-overlay {
 	position: absolute;
@@ -605,4 +609,15 @@
 .mejs-contextmenu .mejs-contextmenu-item:hover {
 	background: #2C7C91;
 	color: #fff;
+}
+
+
+/* accessibility class for screenreaders and bots */
+.mejs-accessibility { 
+    font-size: 0;
+    left: -999em;
+    text-indent: -999em;
+    position: absolute;
+    line-height: 0em;
+    visibility: hidden;
 }
