@@ -46,8 +46,8 @@ mep_files.append('mep-feature-contextmenu.js')
 code = ''
 
 for item in mep_files:
-        src_file = open('js/' + item,'r')
-        code += src_file.read() + "\n"
+    src_file = open('js/' + item,'r')
+    code += src_file.read() + "\n"
 
 tmp_file = open('../build/' + mep_filename + '.js','w')
 tmp_file.write(code)

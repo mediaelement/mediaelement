@@ -1067,6 +1067,8 @@ if (typeof jQuery != 'undefined') {
 	mejs.MepDefaults = {
 		// url to poster (to fix iOS 3.x)
 		poster: '',
+		// create figcaption from provided string
+		posterCaption: '',
 		// default if the <video width> is not specified
 		defaultVideoWidth: 480,
 		// default if the <video height> is not specified
@@ -1597,11 +1599,23 @@ if (typeof jQuery != 'undefined') {
 
 
 		buildposter: function(player, controls, layers, media) {
-			var poster = 
-				$('<div class="mejs-poster mejs-layer">'+
-					'<img />'+
-				'</div>')
-					.appendTo(layers),
+			
+			// jQuery can handle this
+			var figure = '<figure class="mejs-poster mejs-layer"><img />'; 
+			
+			// may you want provide screenreader information 
+			if (player.options.posterCaption && player.options.posterCaption.length) {
+				figure += '<figcaption>' +
+							 '<span>' +
+							 	player.options.posterCaption + 
+							 '</span>' +
+						  '</figcaption>';
+			}			
+			
+			// dont forget the closing tag
+			figure += '</figure>';
+			
+			var poster = $(figure).appendTo(layers),
 				posterUrl = player.$media.attr('poster'),
 				posterImg = poster.find('img').width(player.width).height(player.height);
 
