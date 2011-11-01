@@ -2,7 +2,7 @@
 	
 	// options
 	$.extend(mejs.MepDefaults, {
-		duration: -1,
+		duration: -1
 	});
 
 
