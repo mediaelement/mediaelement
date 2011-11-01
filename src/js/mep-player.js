@@ -175,9 +175,49 @@
 
 				// determine the size
 				if (t.isVideo) {
-					// priority = videoWidth (forced), width attribute, defaultVideoWidth (for unspecified cases)
-					t.width = (t.options.videoWidth > 0) ? t.options.videoWidth : (t.$media[0].getAttribute('width') !== null) ? t.$media.attr('width') : t.options.defaultVideoWidth;
-					t.height = (t.options.videoHeight > 0) ? t.options.videoHeight : (t.$media[0].getAttribute('height') !== null) ? t.$media.attr('height') : t.options.defaultVideoHeight;
+				
+					/* size priority:
+						(1) videoWidth (forced), 
+						(2) style="width;height;"
+						(3) width attribute,
+						(4) defaultVideoWidth (for unspecified cases)
+					*/
+					
+					if (t.options.videoWidth > 0 || t.options.videoWidth.toString().indexOf('%') > -1) {
+						t.width = t.options.videoWidth;
+					} else if (t.media.style.width !== '' && t.media.style.width !== null) {
+						t.width = t.media.style.width;						
+					} else if (t.media.getAttribute('width') !== null) {
+						t.width = t.$media.attr('width');
+					} else {
+						t.width = t.options.defaultVideoWidth;
+					}
+					
+					if (t.options.videoHeight > 0 || t.options.videoHeight.toString().indexOf('%') > -1) {
+						t.height = t.options.videoHeight;
+					} else if (t.media.style.height !== '' && t.media.style.height !== null) {
+						t.height = t.media.style.height;
+					} else if (t.$media[0].getAttribute('height') !== null) {
+						t.height = t.$media.attr('height');	
+					} else {
+						t.height = t.options.defaultVideoHeight;
+					}					
+					
+					/*
+					t.width = (t.options.videoWidth > 0 || t.options.videoWidth.toString().indexOf('%') > -1) ? 
+								t.options.videoWidth : 
+								(t.$media[0].getAttribute('width') !== null) ? 
+									t.$media.attr('width') : 
+									t.options.defaultVideoWidth;
+					
+					
+					t.height = (t.options.videoHeight > 0 || t.options.videoHeight.toString().indexOf('%') > -1) ? 
+								t.options.videoHeight : 
+								(t.$media[0].getAttribute('height') !== null) ? 
+									t.$media.attr('height') : 
+									t.options.defaultVideoHeight;
+									
+					*/
 				} else {
 					t.width = t.options.audioWidth;
 					t.height = t.options.audioHeight;
@@ -463,8 +503,10 @@
 						t.updateCurrent();
 					}
 					
-					t.setPlayerSize(t.width, t.height);
-					t.setControlsSize();
+					if (!t.isFullScreen) {
+						t.setPlayerSize(t.width, t.height);
+						t.setControlsSize();
+					}
 				}, true);
 
 
