@@ -87,9 +87,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * thin line when controls are off
 * system-wide events
 
-*DEV*
-
-*2.3.0 (2011/11/01)*
+*2.3.0 (2011/11/01) - 48.5kb*
 
 * Fixed bug when fullscreen was called before play pressed
 * Additional classes mejs-audio, mejs-video, mejs-ios, mejs-iphone, mejs-ipad, mejs-android added to contianing `<div>` for styles
@@ -117,7 +115,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.2.2 (2011/10/07) - 45.8kb*
 
-* added support for `<video width="100%" height="100%"></video>` (i.e. responsive/adaptive players)
+* added support for <del>`<video width="100%" height="100%"></video>`</del> (i.e. responsive/adaptive players)
 * added :focus state for buttons to improve accessibility
 * added title and aria-controls attributes to buttons to improve accessibility 
 * changed when loading circle appears (WebKit fires the 'loadstart' event differently than FF or IE)
