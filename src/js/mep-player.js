@@ -139,10 +139,20 @@
 						'</div>' +
 					'</div>')
 					.addClass(t.$media[0].className)
-					.insertBefore(t.$media);
+					.insertBefore(t.$media);	
+					
+				// add classes for user and content
+				t.container.addClass(
+					(mf.isAndroid ? 'mejs-android ' : '') +
+					(mf.isiOS ? 'mejs-ios ' : '') +
+					(mf.isiPad ? 'mejs-ipad ' : '') +
+					(mf.isiPhone ? 'mejs-iphone ' : '') +
+					(mf.isVideo ? 'mejs-video ' : 'mejs-audio ')
+				);	
+					
 
 				// move the <video/video> tag into the right spot
-				if (mf.isiPad || mf.isiPhone) {
+				if (mf.isiOS) {
 				
 					// sadly, you can't move nodes in iOS, so we have to destroy and recreate it!
 					var $newMedia = t.$media.clone();
@@ -660,11 +670,13 @@
 						media.pause();
 					}
 				});
-				
+			
+			/*
 			if (mejs.MediaFeatures.isiOS || mejs.MediaFeatures.isAndroid) {
 				bigPlay.remove();
 				loading.remove();
 			}
+			*/
 	
 
 			// show/hide big play button
