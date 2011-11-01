@@ -1,11 +1,16 @@
 (function($) {
+
+	$.extend(mejs.MepDefaults, {
+		stopText: 'Stop'
+	});
+
 	// STOP BUTTON
 	$.extend(MediaElementPlayer.prototype, {
 		buildstop: function(player, controls, layers, media) {
 			var t = this,
 				stop = 
 				$('<div class="mejs-button mejs-stop-button mejs-stop">' +
-					'<button type="button" aria-controls="' + t.id + '" title="Stop"></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.stopText + '></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function() {
