@@ -120,10 +120,13 @@
 				.width('100%')
 				.height('100%');
 				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
-			setTimeout(function() {
-				t.container.css({width: '100%', height: '100%'});
-			}, 500);
-			//console.log('fullscreen', t.container.width());
+
+			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
+			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+				setTimeout(function() {
+					t.container.css({width: '100%', height: '100%'});
+				}, 500);
+			}
 				
 			if (t.pluginType === 'native') {
 				t.$media
@@ -172,8 +175,7 @@
 			t.container
 				.removeClass('mejs-container-fullscreen')
 				.width(normalWidth)
-				.height(normalHeight)
-				.css('z-index', 1);
+				.height(normalHeight);
 				//.css({position: '', left: '', top: '', right: '', bottom: '', overflow: 'inherit', width: normalWidth + 'px', height: normalHeight + 'px', 'z-index': 1});
 			
 			if (t.pluginType === 'native') {
