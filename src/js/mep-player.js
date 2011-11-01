@@ -724,11 +724,26 @@
 			// show/hide big play button
 			media.addEventListener('play',function() {
 				bigPlay.hide();
+				loading.hide();
 				error.hide();
+			}, false);	
+			
+			media.addEventListener('playing', function() {
+				bigPlay.hide();
+				loading.hide();
+				error.hide();			
 			}, false);
+	
 			media.addEventListener('pause',function() {
-				bigPlay.show();
+				if (!mejs.MediaFeatures.isiPhone) {
+					bigPlay.show();
+				}
 			}, false);
+			
+			media.addEventListener('waiting', function() {
+				loading.show();	
+			}, false);			
+			
 			
 			// show/hide loading			
 			media.addEventListener('loadeddata',function() {
