@@ -115,7 +115,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.2.2 (2011/10/07) - 45.8kb*
 
-* added support for <del>`<video width="100%" height="100%"></video>`</del> (i.e. responsive/adaptive players)
+* added support for <del>`<video width="100%" height="100%"></video>`</del> `<video style="width:100%;height:100%"></video>` (i.e. responsive/adaptive players)
 * added :focus state for buttons to improve accessibility
 * added title and aria-controls attributes to buttons to improve accessibility 
 * changed when loading circle appears (WebKit fires the 'loadstart' event differently than FF or IE)
