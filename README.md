@@ -6,7 +6,7 @@
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen), [gselva](https://github.com/gselva)
+* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen), [gselva](https://github.com/gselva), [erktime](https://github.com/erktime)
 
 
 ## Installation and Usage
@@ -83,6 +83,20 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
 * additional accessiblity work
+* loading state on loading bar (animated?)
+* thin line when controls are off
+* system-wide events
+
+*DEV*
+
+*2.3.0 (2011/11/01)*
+
+* Fixed bug when fullscreen was called before play pressed
+* Additional classes mejs-audio, mejs-video, mejs-ios, mejs-iphone, mejs-ipad, mejs-android added to contianing `<div>` for styles
+* IE9 can't use `<video width="100%">` so you can use using options ({videoHeight:'100%'}) or inline styles. 
+* updated fullscreen code for Safari (erktime)
+* loading indicators shows during 'waiting' event
+* iOS and Android now show "big play" button again (sometimes overlaps on iPhone)
 
 *2.2.5 (2011/10/14)*
 
