@@ -9,7 +9,9 @@
 		// a dropdownlist of automatic translations
 		translationSelector: false,
 		// key for tranlsations
-		googleApiKey: ''
+		googleApiKey: '',
+		
+		tracksText: 'Captions/Subtitles'
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -23,7 +25,7 @@
 			if (player.tracks.length == 0)
 				return;
 
-			var i, options = '';
+			var t= this, i, options = '';
 
 			player.chapters = 
 					$('<div class="mejs-chapters mejs-layer"></div>')
@@ -34,7 +36,7 @@
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" aria-controls="' + this.id + '" title="Captions/Subtitles"></button>'+
+						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.tracksText + '"></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
