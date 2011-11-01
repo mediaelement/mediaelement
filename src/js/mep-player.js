@@ -147,7 +147,7 @@
 					(mf.isiOS ? 'mejs-ios ' : '') +
 					(mf.isiPad ? 'mejs-ipad ' : '') +
 					(mf.isiPhone ? 'mejs-iphone ' : '') +
-					(mf.isVideo ? 'mejs-video ' : 'mejs-audio ')
+					(t.isVideo ? 'mejs-video ' : 'mejs-audio ')
 				);	
 					
 
