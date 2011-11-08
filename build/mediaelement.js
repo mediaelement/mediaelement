@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.3.0';
+mejs.version = '2.3.1';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -240,6 +240,7 @@ mejs.MediaFeatures = {
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null);
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
+		t.hasTouch = ('ontouchstart' in window);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
@@ -258,6 +259,10 @@ mejs.MediaFeatures = {
 		t.hasMozNativeFullScreen = (typeof v.mozRequestFullScreen !== 'undefined');
 		
 		t.hasTrueNativeFullScreen = (t.hasWebkitNativeFullScreen || t.hasMozNativeFullScreen);
+		t.nativeFullScreenEnabled = t.hasTrueNativeFullScreen;
+		if (t.hasMozNativeFullScreen) {
+			t.nativeFullScreenEnabled = v.mozFullScreenEnabled;
+		}
 		
 		
 		if (this.isChrome) {
