@@ -87,6 +87,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * thin line when controls are off
 * system-wide events
 
+*2.3.1 (2011/11/07)*
+
+* Another set of changes to handle various browser native fullscreen issues
+* New control behavior for touch enabled devices (iPad, Android tablets)
+
 *2.3.0 (2011/11/01) - 48.5kb*
 
 * Fixed bug when fullscreen was called before play pressed
