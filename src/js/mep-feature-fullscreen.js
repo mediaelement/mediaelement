@@ -10,6 +10,8 @@
 		
 		isFullScreen: false,
 		
+		isNativeFullScreen: false,
+		
 		docStyleOverflow: null,
 		
 		isInIframe: false,
@@ -23,13 +25,19 @@
 				
 			// native events
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				//player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
-				player.container.bind('webkitfullscreenchange', function(e) {
+				console.log('added change event: ' + mejs.MediaFeatures.fullScreenEventName);
+				
+				player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
+				//player.container.bind('webkitfullscreenchange', function(e) {
+				
+					console.log('fullscreenchange event: ' + mejs.MediaFeatures.isFullScreen());
 				
 					if (mejs.MediaFeatures.isFullScreen()) {
+						player.isNativeFullScreen = true;
 						// reset the controls once we are fully in full screen
 						player.setControlsSize();
-					} else {				
+					} else {
+						player.isNativeFullScreen = false;
 						// when a user presses ESC
 						// make sure to put the player back into place								
 						player.exitFullScreen();				
@@ -87,6 +95,8 @@
 			normalHeight = t.container.height();
 			normalWidth = t.container.width();
 			
+			console.log('true: ' + mejs.MediaFeatures.hasTrueNativeFullScreen + ', semi: ' + mejs.MediaFeatures.hasSemiNativeFullScreen)
+			
 			
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
@@ -100,18 +110,31 @@
 			}
 			
 			// check for iframe launch
-			if (t.isInIframe && t.options.newWindowUrl !== '') {
-				t.pause();
-				//window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+			if (t.isInIframe) {
 				var url = t.options.newWindowCallback(this);
+				
+				
 				if (url !== '') {
-					window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+					
+					// launch immediately
+					if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
+						t.pause();
+						window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+						return;
+					} else {
+						setTimeout(function() {
+							if (!t.isNativeFullScreen) {
+								t.pause();
+								window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');								
+							}
+						}, 250);
+					}
 				}	
-				return;
+				
 			}
 			
 			// full window code
-			
+
 			
 
 			// make full size
