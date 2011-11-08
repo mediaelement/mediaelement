@@ -410,54 +410,75 @@
 
 				// controls fade
 				if (t.isVideo) {
-					// click controls
-					if (t.media.pluginType == 'native') {
-						t.$media.click(function() {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
-						});
-					} else {
-						$(t.media.pluginElement).click(function() {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}						
-						});
-					}
 				
-
-				
-					// show/hide controls
-					t.container
-						.bind('mouseenter mouseover', function () {
-							if (t.controlsEnabled) {
-								if (!t.options.alwaysShowControls) {								
-									t.killControlsTimer('enter');
-									t.showControls();
-									t.startControlsTimer(2500);		
-								}
-							}
-						})
-						.bind('mousemove', function() {
-							if (t.controlsEnabled) {
-								if (!t.controlsAreVisible)
-									t.showControls();
-								//t.killControlsTimer('move');
-								t.startControlsTimer(2500);
-							}
-						})
-						.bind('mouseleave', function () {
-							if (t.controlsEnabled) {
-								if (!t.media.paused && !t.options.alwaysShowControls) {
-									t.startControlsTimer(1000);								
-								}
-							}
-						});
+					if (mejs.MediaFeatures.hasTouch) {
+						console.log("enabling touch control style")
 						
+						// for touch devices (iOS, Android)
+						// show/hide without animation on touch
+						
+						t.$media.bind('touchstart', function() {
+							
+							console.log('touch click. visible: ' + t.controlsAreVisible + ', enabled: ' + t.controlsEnabled);
+							
+							// toggle controls
+							if (t.controlsAreVisible) {
+								t.hideControls(false);
+							} else {
+								if (t.controlsEnabled) {
+									t.showControls(false);
+								}
+							}
+						});					
+					
+					} else {
+						// click controls
+						if (t.media.pluginType == 'native') {
+							t.$media.click(function() {
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}
+							});
+						} else {
+							$(t.media.pluginElement).click(function() {
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}						
+							});
+						}
+					
+						// show/hide controls
+						t.container
+							.bind('mouseenter mouseover', function () {
+								if (t.controlsEnabled) {
+									if (!t.options.alwaysShowControls) {								
+										t.killControlsTimer('enter');
+										t.showControls();
+										t.startControlsTimer(2500);		
+									}
+								}
+							})
+							.bind('mousemove', function() {
+								if (t.controlsEnabled) {
+									if (!t.controlsAreVisible)
+										t.showControls();
+									//t.killControlsTimer('move');
+									t.startControlsTimer(2500);
+								}
+							})
+							.bind('mouseleave', function () {
+								if (t.controlsEnabled) {
+									if (!t.media.paused && !t.options.alwaysShowControls) {
+										t.startControlsTimer(1000);								
+									}
+								}
+							});
+					}
+					
 					// check for autoplay
 					if (autoplay && !t.options.alwaysShowControls) {
 						t.hideControls();
