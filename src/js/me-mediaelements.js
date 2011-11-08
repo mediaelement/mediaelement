@@ -188,7 +188,7 @@ mejs.PluginMediaElement.prototype = {
 			this.pluginElement.style.width = width + 'px';
 			this.pluginElement.style.height = height + 'px';
 		}
-		if (this.pluginApi != null) {
+		if (this.pluginApi != null && this.pluginApi.setVideoSize) {
 			this.pluginApi.setVideoSize(width, height);
 		}
 	},
