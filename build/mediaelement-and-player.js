@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.3.0';
+mejs.version = '2.3.1';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -240,6 +240,7 @@ mejs.MediaFeatures = {
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null);
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
+		t.hasTouch = ('ontouchstart' in window);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
@@ -258,6 +259,10 @@ mejs.MediaFeatures = {
 		t.hasMozNativeFullScreen = (typeof v.mozRequestFullScreen !== 'undefined');
 		
 		t.hasTrueNativeFullScreen = (t.hasWebkitNativeFullScreen || t.hasMozNativeFullScreen);
+		t.nativeFullScreenEnabled = t.hasTrueNativeFullScreen;
+		if (t.hasMozNativeFullScreen) {
+			t.nativeFullScreenEnabled = v.mozFullScreenEnabled;
+		}
 		
 		
 		if (this.isChrome) {
@@ -1520,54 +1525,75 @@ if (typeof jQuery != 'undefined') {
 
 				// controls fade
 				if (t.isVideo) {
-					// click controls
-					if (t.media.pluginType == 'native') {
-						t.$media.click(function() {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
-						});
-					} else {
-						$(t.media.pluginElement).click(function() {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}						
-						});
-					}
 				
-
-				
-					// show/hide controls
-					t.container
-						.bind('mouseenter mouseover', function () {
-							if (t.controlsEnabled) {
-								if (!t.options.alwaysShowControls) {								
-									t.killControlsTimer('enter');
-									t.showControls();
-									t.startControlsTimer(2500);		
-								}
-							}
-						})
-						.bind('mousemove', function() {
-							if (t.controlsEnabled) {
-								if (!t.controlsAreVisible)
-									t.showControls();
-								//t.killControlsTimer('move');
-								t.startControlsTimer(2500);
-							}
-						})
-						.bind('mouseleave', function () {
-							if (t.controlsEnabled) {
-								if (!t.media.paused && !t.options.alwaysShowControls) {
-									t.startControlsTimer(1000);								
-								}
-							}
-						});
+					if (mejs.MediaFeatures.hasTouch) {
+						console.log("enabling touch control style")
 						
+						// for touch devices (iOS, Android)
+						// show/hide without animation on touch
+						
+						t.$media.bind('touchstart', function() {
+							
+							console.log('touch click. visible: ' + t.controlsAreVisible + ', enabled: ' + t.controlsEnabled);
+							
+							// toggle controls
+							if (t.controlsAreVisible) {
+								t.hideControls(false);
+							} else {
+								if (t.controlsEnabled) {
+									t.showControls(false);
+								}
+							}
+						});					
+					
+					} else {
+						// click controls
+						if (t.media.pluginType == 'native') {
+							t.$media.click(function() {
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}
+							});
+						} else {
+							$(t.media.pluginElement).click(function() {
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}						
+							});
+						}
+					
+						// show/hide controls
+						t.container
+							.bind('mouseenter mouseover', function () {
+								if (t.controlsEnabled) {
+									if (!t.options.alwaysShowControls) {								
+										t.killControlsTimer('enter');
+										t.showControls();
+										t.startControlsTimer(2500);		
+									}
+								}
+							})
+							.bind('mousemove', function() {
+								if (t.controlsEnabled) {
+									if (!t.controlsAreVisible)
+										t.showControls();
+									//t.killControlsTimer('move');
+									t.startControlsTimer(2500);
+								}
+							})
+							.bind('mouseleave', function () {
+								if (t.controlsEnabled) {
+									if (!t.media.paused && !t.options.alwaysShowControls) {
+										t.startControlsTimer(1000);								
+									}
+								}
+							});
+					}
+					
 					// check for autoplay
 					if (autoplay && !t.options.alwaysShowControls) {
 						t.hideControls();
@@ -2421,6 +2447,8 @@ if (typeof jQuery != 'undefined') {
 		
 		isFullScreen: false,
 		
+		isNativeFullScreen: false,
+		
 		docStyleOverflow: null,
 		
 		isInIframe: false,
@@ -2434,13 +2462,19 @@ if (typeof jQuery != 'undefined') {
 				
 			// native events
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				//player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
-				player.container.bind('webkitfullscreenchange', function(e) {
+				console.log('added change event: ' + mejs.MediaFeatures.fullScreenEventName);
+				
+				player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
+				//player.container.bind('webkitfullscreenchange', function(e) {
+				
+					console.log('fullscreenchange event: ' + mejs.MediaFeatures.isFullScreen());
 				
 					if (mejs.MediaFeatures.isFullScreen()) {
+						player.isNativeFullScreen = true;
 						// reset the controls once we are fully in full screen
 						player.setControlsSize();
-					} else {				
+					} else {
+						player.isNativeFullScreen = false;
 						// when a user presses ESC
 						// make sure to put the player back into place								
 						player.exitFullScreen();				
@@ -2498,6 +2532,8 @@ if (typeof jQuery != 'undefined') {
 			normalHeight = t.container.height();
 			normalWidth = t.container.width();
 			
+			console.log('true: ' + mejs.MediaFeatures.hasTrueNativeFullScreen + ', semi: ' + mejs.MediaFeatures.hasSemiNativeFullScreen)
+			
 			
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
@@ -2511,18 +2547,31 @@ if (typeof jQuery != 'undefined') {
 			}
 			
 			// check for iframe launch
-			if (t.isInIframe && t.options.newWindowUrl !== '') {
-				t.pause();
-				//window.open(t.options.newWindowUrl, t.id, 'width=' + t.width + ',height=' + t.height + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+			if (t.isInIframe) {
 				var url = t.options.newWindowCallback(this);
+				
+				
 				if (url !== '') {
-					window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+					
+					// launch immediately
+					if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
+						t.pause();
+						window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');
+						return;
+					} else {
+						setTimeout(function() {
+							if (!t.isNativeFullScreen) {
+								t.pause();
+								window.open(url, t.id, 'top=0,left=0,width=' + screen.availWidth + ',height=' + screen.availHeight + ',resizable=yes,scrollbars=no,status=no,toolbar=no');								
+							}
+						}, 250);
+					}
 				}	
-				return;
+				
 			}
 			
 			// full window code
-			
+
 			
 
 			// make full size
