@@ -30,9 +30,8 @@
 		// used when showTimecodeFrameCount is set to true
 		framesPerSecond: 25,
 		
-		// override auto rail width calculation
-		useCssRailWidth : true,
-
+		// automatically calculate the width of the progress bar based on the sizes of other elements
+		autosizeProgress : true,
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// force iPad's native controls
@@ -580,10 +579,6 @@
 
 		setPlayerSize: function(width,height) {
 			var t = this;
-
-			// ie9 appears to need this (jQuery bug?)
-			//t.width = parseInt(width, 10);
-			//t.height = parseInt(height, 10);
 			
 			if (t.height.toString().indexOf('%') > 0) {
 			
@@ -649,16 +644,14 @@
 				others = rail.siblings();
 			
 
-			// Absolute positions can break the layout.
-			// In depth: the rail extends from the outer 
-			// container, this might be ugly.
-			if (t.options && t.options.useCssRailWidth) {
+			// allow the size to come from custom CSS
+			if (t.options && !t.options.autosizeProgress) {
 				// Also, frontends devs can be more flexible 
 				// due the opportunity of absolute positioning.
 				railWidth = parseInt(rail.css('width'));
 			}
 			
-			
+			// attempt to autosize
 			if (railWidth === 0 || !railWidth) {
 				
 				// find the size of all the other controls besides the rail
