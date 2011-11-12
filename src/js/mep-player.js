@@ -516,7 +516,7 @@
 					} else if (!t.options.alwaysShowControls && t.controlsEnabled) {
 						t.showControls();
 					}
-				}, true);
+				}, false);
 				
 				// resize on the first play
 				t.media.addEventListener('loadedmetadata', function(e) {
@@ -531,7 +531,7 @@
 						t.setPlayerSize(t.width, t.height);
 						t.setControlsSize();
 					}
-				}, true);
+				}, false);
 
 
 				// webkit has trouble doing this without a delay

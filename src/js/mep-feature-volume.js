@@ -140,7 +140,7 @@
 						mute.removeClass('mejs-unmute').addClass('mejs-mute');
 					}
 				}
-			}, true);
+			}, false);
 
 			// set initial volume
 			//console.log('init volume',player.options.startVolume);
