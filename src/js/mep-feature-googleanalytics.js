@@ -27,7 +27,7 @@ $.extend(MediaElementPlayer.prototype, {
 					(player.options.googleAnalyticsTitle === '') ? player.currentSrc : player.options.googleAnalyticsTitle
 				]);
 			}
-		}, true);
+		}, false);
 		
 		media.addEventListener('pause', function() {
 			if (typeof _gaq != 'undefined') {
@@ -35,9 +35,9 @@ $.extend(MediaElementPlayer.prototype, {
 					player.options.googleAnalyticsCategory, 
 					player.options.googleAnalyticsEventPause, 
 					(player.options.googleAnalyticsTitle === '') ? player.currentSrc : player.options.googleAnalyticsTitle
-				=]);
+				]);
 			}
-		}, true);	
+		}, false);	
 		
 		media.addEventListener('ended', function() {
 			if (typeof _gaq != 'undefined') {
