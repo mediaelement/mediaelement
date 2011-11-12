@@ -162,7 +162,7 @@ mejs.HtmlMediaElementShim = {
 				htmlMediaElement.src = playback.url;
 				htmlMediaElement.addEventListener('click', function() {
 					htmlMediaElement.play();
-				}, true);
+				}, false);
 			}
 		
 			// add methods to native HTMLMediaElement
