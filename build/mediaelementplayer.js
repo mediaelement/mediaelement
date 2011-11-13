@@ -45,7 +45,9 @@ if (typeof jQuery != 'undefined') {
 		showTimecodeFrameCount: false,
 		// used when showTimecodeFrameCount is set to true
 		framesPerSecond: 25,
-
+		
+		// automatically calculate the width of the progress bar based on the sizes of other elements
+		autosizeProgress : true,
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// force iPad's native controls
@@ -254,8 +256,9 @@ if (typeof jQuery != 'undefined') {
 		controlsAreVisible: true,
 		
 		showControls: function(doAnimation) {
-			var t = this,
-				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			var t = this;
+			
+			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
 			if (t.controlsAreVisible)
 				return;
@@ -529,7 +532,7 @@ if (typeof jQuery != 'undefined') {
 					} else if (!t.options.alwaysShowControls && t.controlsEnabled) {
 						t.showControls();
 					}
-				}, true);
+				}, false);
 				
 				// resize on the first play
 				t.media.addEventListener('loadedmetadata', function(e) {
@@ -544,7 +547,7 @@ if (typeof jQuery != 'undefined') {
 						t.setPlayerSize(t.width, t.height);
 						t.setControlsSize();
 					}
-				}, true);
+				}, false);
 
 
 				// webkit has trouble doing this without a delay
@@ -592,10 +595,6 @@ if (typeof jQuery != 'undefined') {
 
 		setPlayerSize: function(width,height) {
 			var t = this;
-
-			// ie9 appears to need this (jQuery bug?)
-			//t.width = parseInt(width, 10);
-			//t.height = parseInt(height, 10);
 			
 			if (t.height.toString().indexOf('%') > 0) {
 			
@@ -659,15 +658,28 @@ if (typeof jQuery != 'undefined') {
 				current = t.controls.find('.mejs-time-current'),
 				loaded = t.controls.find('.mejs-time-loaded');
 				others = rail.siblings();
+			
 
-			// find the size of all the other controls besides the rail
-			others.each(function() {
-				if ($(this).css('position') != 'absolute') {
-					usedWidth += $(this).outerWidth(true);
-				}
-			});
-			// fit the rail into the remaining space
-			railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
+			// allow the size to come from custom CSS
+			if (t.options && !t.options.autosizeProgress) {
+				// Also, frontends devs can be more flexible 
+				// due the opportunity of absolute positioning.
+				railWidth = parseInt(rail.css('width'));
+			}
+			
+			// attempt to autosize
+			if (railWidth === 0 || !railWidth) {
+				
+				// find the size of all the other controls besides the rail
+				others.each(function() {
+					if ($(this).css('position') != 'absolute') {
+						usedWidth += $(this).outerWidth(true);
+					}
+				});
+				
+				// fit the rail into the remaining space
+				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
+			}
 
 			// outer area
 			rail.width(railWidth);
@@ -1321,7 +1333,7 @@ if (typeof jQuery != 'undefined') {
 						mute.removeClass('mejs-unmute').addClass('mejs-mute');
 					}
 				}
-			}, true);
+			}, false);
 
 			// set initial volume
 			//console.log('init volume',player.options.startVolume);
