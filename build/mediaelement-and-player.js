@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.3.1';
+mejs.version = '2.3.2';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -501,7 +501,7 @@ mejs.PluginMediaElement.prototype = {
 			this.pluginElement.style.width = width + 'px';
 			this.pluginElement.style.height = height + 'px';
 		}
-		if (this.pluginApi != null) {
+		if (this.pluginApi != null && this.pluginApi.setVideoSize) {
 			this.pluginApi.setVideoSize(width, height);
 		}
 	},
@@ -701,11 +701,11 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		// clean up attributes
-		src = (src == 'undefined' || src == '' || src === null) ? null : src;		
-		poster = (typeof poster == 'undefined' || poster === null) ? '' : poster;
-		preload = (typeof preload == 'undefined' || preload === null || preload === 'false') ? 'none' : preload;
-		autoplay = !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
-		controls = !(typeof controls == 'undefined' || controls === null || controls === 'false');
+		src = 		(typeof src == 'undefined' 	|| src === null || src == '') ? null : src;		
+		poster =	(typeof poster == 'undefined' 	|| poster === null) ? '' : poster;
+		preload = 	(typeof preload == 'undefined' 	|| preload === null || preload === 'false') ? 'none' : preload;
+		autoplay = 	!(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
+		controls = 	!(typeof controls == 'undefined' || controls === null || controls === 'false');
 
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, src);
@@ -716,8 +716,8 @@ mejs.HtmlMediaElementShim = {
 			if (mejs.MediaFeatures.isBustedAndroid) {
 				htmlMediaElement.src = playback.url;
 				htmlMediaElement.addEventListener('click', function() {
-						htmlMediaElement.play();
-				}, true);
+					htmlMediaElement.play();
+				}, false);
 			}
 		
 			// add methods to native HTMLMediaElement
@@ -729,6 +729,8 @@ mejs.HtmlMediaElementShim = {
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( playback, options, poster );
+			
+			return this;
 		}
 	},
 	
@@ -865,7 +867,7 @@ mejs.HtmlMediaElementShim = {
 		}
 		
 		// what if there's nothing to play? just grab the first available
-		if (result.method === '') {
+		if (result.method === '' && mediaFiles.length > 0) {
 			result.url = mediaFiles[0].url;
 		}
 
@@ -1010,7 +1012,7 @@ mejs.HtmlMediaElementShim = {
 					specialIEContainer = document.createElement('div');
 					container.appendChild(specialIEContainer);
 					specialIEContainer.outerHTML =
-'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
+'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '">' +
 '<param name="movie" value="' + options.pluginPath + options.flashName + '?x=' + (new Date()) + '" />' +
 '<param name="flashvars" value="' + initVars.join('&amp;') + '" />' +
@@ -1032,7 +1034,7 @@ mejs.HtmlMediaElementShim = {
 'wmode="transparent" ' +
 'allowScriptAccess="always" ' +
 'allowFullScreen="true" ' +
-'type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" ' +
+'type="application/x-shockwave-flash" pluginspage="//www.macromedia.com/go/getflashplayer" ' +
 'src="' + options.pluginPath + options.flashName + '" ' +
 'flashvars="' + initVars.join('&') + '" ' +
 'width="' + width + '" ' +
@@ -1144,7 +1146,9 @@ if (typeof jQuery != 'undefined') {
 		showTimecodeFrameCount: false,
 		// used when showTimecodeFrameCount is set to true
 		framesPerSecond: 25,
-
+		
+		// automatically calculate the width of the progress bar based on the sizes of other elements
+		autosizeProgress : true,
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// force iPad's native controls
@@ -1353,8 +1357,9 @@ if (typeof jQuery != 'undefined') {
 		controlsAreVisible: true,
 		
 		showControls: function(doAnimation) {
-			var t = this,
-				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			var t = this;
+			
+			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
 			if (t.controlsAreVisible)
 				return;
@@ -1628,7 +1633,7 @@ if (typeof jQuery != 'undefined') {
 					} else if (!t.options.alwaysShowControls && t.controlsEnabled) {
 						t.showControls();
 					}
-				}, true);
+				}, false);
 				
 				// resize on the first play
 				t.media.addEventListener('loadedmetadata', function(e) {
@@ -1643,7 +1648,7 @@ if (typeof jQuery != 'undefined') {
 						t.setPlayerSize(t.width, t.height);
 						t.setControlsSize();
 					}
-				}, true);
+				}, false);
 
 
 				// webkit has trouble doing this without a delay
@@ -1691,10 +1696,6 @@ if (typeof jQuery != 'undefined') {
 
 		setPlayerSize: function(width,height) {
 			var t = this;
-
-			// ie9 appears to need this (jQuery bug?)
-			//t.width = parseInt(width, 10);
-			//t.height = parseInt(height, 10);
 			
 			if (t.height.toString().indexOf('%') > 0) {
 			
@@ -1758,15 +1759,28 @@ if (typeof jQuery != 'undefined') {
 				current = t.controls.find('.mejs-time-current'),
 				loaded = t.controls.find('.mejs-time-loaded');
 				others = rail.siblings();
+			
 
-			// find the size of all the other controls besides the rail
-			others.each(function() {
-				if ($(this).css('position') != 'absolute') {
-					usedWidth += $(this).outerWidth(true);
-				}
-			});
-			// fit the rail into the remaining space
-			railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
+			// allow the size to come from custom CSS
+			if (t.options && !t.options.autosizeProgress) {
+				// Also, frontends devs can be more flexible 
+				// due the opportunity of absolute positioning.
+				railWidth = parseInt(rail.css('width'));
+			}
+			
+			// attempt to autosize
+			if (railWidth === 0 || !railWidth) {
+				
+				// find the size of all the other controls besides the rail
+				others.each(function() {
+					if ($(this).css('position') != 'absolute') {
+						usedWidth += $(this).outerWidth(true);
+					}
+				});
+				
+				// fit the rail into the remaining space
+				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
+			}
 
 			// outer area
 			rail.width(railWidth);
@@ -2420,7 +2434,7 @@ if (typeof jQuery != 'undefined') {
 						mute.removeClass('mejs-unmute').addClass('mejs-mute');
 					}
 				}
-			}, true);
+			}, false);
 
 			// set initial volume
 			//console.log('init volume',player.options.startVolume);
