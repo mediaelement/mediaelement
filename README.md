@@ -82,10 +82,17 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * deeper WebVTT support (alignment, color, etc.)
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
-* additional accessiblity work
 * loading state on loading bar (animated?)
 * thin line when controls are off
 * system-wide events
+* keyboard control
+* playlist builder
+
+*2.3.2 (2011/11/12) 49.6kb *
+
+* removed `http` from Flash and Silverlight embeds to support SSL
+* fixed a possible bug when neither `src` nor `type` was specified
+* turned off useCapture for a few events
 
 *2.3.1 (2011/11/07)*
 
@@ -97,7 +104,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 * Fixed bug when fullscreen was called before play pressed
 * Additional classes mejs-audio, mejs-video, mejs-ios, mejs-iphone, mejs-ipad, mejs-android added to contianing `<div>` for styles
-* IE9 can't use `<video width="100%">` so you can use using options ({videoHeight:'100%'}) or inline styles. 
+* IE9 can't use `<video width="100%">` so you must use either options ({videoHeight:'100%'}) or inline style `<video style="width:100%;height:100%;">` 
 * updated fullscreen code for Safari (erktime)
 * loading indicators shows during 'waiting' event
 * iOS and Android now show "big play" button again (sometimes overlaps on iPhone)
