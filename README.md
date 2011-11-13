@@ -88,7 +88,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * keyboard control
 * playlist builder
 
-*2.3.2 (2011/11/12) 49.6kb *
+*2.3.2 (2011/11/12) 49.6kb*
 
 * removed `http` from Flash and Silverlight embeds to support SSL
 * fixed a possible bug when neither `src` nor `type` was specified
