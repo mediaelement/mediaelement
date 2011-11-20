@@ -503,7 +503,11 @@
 
 				// ended for all
 				t.media.addEventListener('ended', function (e) {
-					t.media.setCurrentTime(0);
+					try{
+						t.media.setCurrentTime(0);
+					} catch (exp) {
+						
+					}
 					t.media.pause();
 					
 					if (t.setProgressRail)
