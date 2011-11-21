@@ -1,11 +1,17 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		muteText: 'Mute Toggle'
+		muteText: 'Mute Toggle',
+		hideVolumeOnTouchDevices: true
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildvolume: function(player, controls, layers, media) {
+			
+			// Android and iOS don't support volume controls
+			if (mejs.MediaFeatures.hasTouch && this.options.hideVolumeOnTouchDevices)
+				return;
+			
 			var t = this,
 				mute = 
 				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
