@@ -483,10 +483,13 @@ if (typeof jQuery != 'undefined') {
 							})
 							.bind('mousemove', function() {
 								if (t.controlsEnabled) {
-									if (!t.controlsAreVisible)
+									if (!t.controlsAreVisible) {
 										t.showControls();
+									}
 									//t.killControlsTimer('move');
-									t.startControlsTimer(2500);
+									if (!t.options.alwaysShowControls) {
+										t.startControlsTimer(2500);
+									}
 								}
 							})
 							.bind('mouseleave', function () {
@@ -519,7 +522,11 @@ if (typeof jQuery != 'undefined') {
 
 				// ended for all
 				t.media.addEventListener('ended', function (e) {
-					t.media.setCurrentTime(0);
+					try{
+						t.media.setCurrentTime(0);
+					} catch (exp) {
+						
+					}
 					t.media.pause();
 					
 					if (t.setProgressRail)
@@ -1199,6 +1206,11 @@ if (typeof jQuery != 'undefined') {
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildvolume: function(player, controls, layers, media) {
+			
+			// Android and iOS don't support volume controls
+			if (mejs.MediaFeatures.hasTouch)
+				return;
+			
 			var t = this,
 				mute = 
 				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
@@ -1375,13 +1387,11 @@ if (typeof jQuery != 'undefined') {
 				
 			// native events
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				console.log('added change event: ' + mejs.MediaFeatures.fullScreenEventName);
 				
 				player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
 				//player.container.bind('webkitfullscreenchange', function(e) {
 				
-					console.log('fullscreenchange event: ' + mejs.MediaFeatures.isFullScreen());
-				
+					
 					if (mejs.MediaFeatures.isFullScreen()) {
 						player.isNativeFullScreen = true;
 						// reset the controls once we are fully in full screen
@@ -1444,9 +1454,6 @@ if (typeof jQuery != 'undefined') {
 			// store sizing
 			normalHeight = t.container.height();
 			normalWidth = t.container.width();
-			
-			console.log('true: ' + mejs.MediaFeatures.hasTrueNativeFullScreen + ', semi: ' + mejs.MediaFeatures.hasSemiNativeFullScreen)
-			
 			
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
