@@ -67,9 +67,9 @@ mejs.Utility = {
         }
 
         var tc_array = hh_mm_ss_ff.split(":"),
-        	tc_hh = parseInt(tc_array[0]),
-        	tc_mm = parseInt(tc_array[1]),
-        	tc_ss = parseInt(tc_array[2]),
+        	tc_hh = parseInt(tc_array[0], 10),
+        	tc_mm = parseInt(tc_array[1], 10),
+        	tc_ss = parseInt(tc_array[2], 10),
         	tc_ff = 0,
         	tc_in_seconds = 0;
         
