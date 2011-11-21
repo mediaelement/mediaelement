@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.3.2';
+mejs.version = '2.3.3';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -99,9 +99,9 @@ mejs.Utility = {
         }
 
         var tc_array = hh_mm_ss_ff.split(":"),
-        	tc_hh = parseInt(tc_array[0]),
-        	tc_mm = parseInt(tc_array[1]),
-        	tc_ss = parseInt(tc_array[2]),
+        	tc_hh = parseInt(tc_array[0], 10),
+        	tc_mm = parseInt(tc_array[1], 10),
+        	tc_ss = parseInt(tc_array[2], 10),
         	tc_ff = 0,
         	tc_in_seconds = 0;
         
@@ -516,7 +516,7 @@ mejs.PluginMediaElement.prototype = {
 		this.setFullscreen(true);
 	},
 	
-	enterFullScreen: function() {
+	exitFullScreen: function() {
 		this.setFullscreen(false);
 	},	
 
@@ -552,7 +552,6 @@ mejs.PluginMediaElement.prototype = {
 	}
 	// end: fake events
 };
-
 
 // Handles calls from Flash/Silverlight and reports them as native <video/audio> events and properties
 mejs.MediaPluginBridge = {
