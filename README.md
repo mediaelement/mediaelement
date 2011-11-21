@@ -95,6 +95,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * improved touch controls
 * fixed bug when long videos end: (try/catch)
 * fixed issue with alwaysShowControls
+* removed a console.log in fullscreen that broke IE
 
 *2.3.2 (2011/11/12) 49.6kb*
 
