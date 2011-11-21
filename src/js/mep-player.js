@@ -467,10 +467,13 @@
 							})
 							.bind('mousemove', function() {
 								if (t.controlsEnabled) {
-									if (!t.controlsAreVisible)
+									if (!t.controlsAreVisible) {
 										t.showControls();
+									}
 									//t.killControlsTimer('move');
-									t.startControlsTimer(2500);
+									if (!t.options.alwaysShowControls) {
+										t.startControlsTimer(2500);
+									}
 								}
 							})
 							.bind('mouseleave', function () {

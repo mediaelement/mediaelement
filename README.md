@@ -88,6 +88,15 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * keyboard control
 * playlist builder
 
+*2.3.3 (2011/11/21) - 49.4kb *
+
+* removed volume controls for touch devices (Android and iOS require hardware volume)
+* set a timeout to hide controls on touch devices
+* fixed timecode bug with :09 (used radix)
+* fixed bug when long videos end: (try/catch)
+* fixed issue with `alwaysShowControls`
+* removed a `console.log` in fullscreen that broke IE
+
 *2.3.2 (2011/11/12) 49.6kb*
 
 * removed `http` from Flash and Silverlight embeds to support SSL
