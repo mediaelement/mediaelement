@@ -6,6 +6,11 @@
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildvolume: function(player, controls, layers, media) {
+			
+			// Android and iOS don't support volume controls
+			if (mejs.MediaFeatures.hasTouch)
+				return;
+			
 			var t = this,
 				mute = 
 				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
