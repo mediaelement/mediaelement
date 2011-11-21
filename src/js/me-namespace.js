@@ -15,5 +15,14 @@ mejs.plugins = {
 	flash: [
 		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg']}
 		//,{version: [12,0], types: ['video/webm']} // for future reference
+	],
+	youtube: [
+		{version: null, types: ['video/youtube']}
+	],
+	youtubei: [
+		{version: null, types: ['video/youtubei']}
+	],
+	vimeo: [
+		{version: null, types: ['video/vimeo']}
 	]
 };

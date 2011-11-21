@@ -11,7 +11,7 @@ mejs.MediaPluginBridge = {
 	},
 
 	// when Flash/Silverlight is ready, it calls out to this method
-	initPlugin: function (id) {
+	initPlugin: function (id, ytp) {
 
 		var pluginMediaElement = this.pluginMediaElements[id],
 			htmlMediaElement = this.htmlMediaElements[id];
@@ -25,6 +25,69 @@ mejs.MediaPluginBridge = {
 				pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
 				pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
 				break;
+			case "youtubeflash":
+				
+				pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
+				pluginMediaElement.pluginApi.loadVideoById(pluginMediaElement.youtubeid);
+				
+				var player = pluginMediaElement.pluginApi;
+				
+				console.log('youtube', player, player.addEventListener);
+				
+				setTimeout(function() {
+					player.addEventListener('onstatechange', function(e) {
+						console.log('youtube', e);
+					});
+				}, 500);
+				
+				function createYouTubeEvent(eventName) {
+					var obj = {
+						type: eventName,
+						target: player
+					};
+
+					//if (player && player.getDuration) {
+						
+						// time 
+						//if (player.getCurrentTime() > 0) {
+						    obj.currentTime = player.getCurrentTime()
+						    obj.duration = player.getDuration();
+						//}
+						
+						// sound
+						obj.muted = player.isMuted();
+						obj.paused = false;
+						obj.ended = false;
+						obj.volume = player.getVolume();
+						obj.bytesTotal = player.getVideoBytesTotal();
+						obj.bufferedBytes = player.getVideoBytesLoaded();
+						
+						
+						// fake the newer W3C buffered TimeRange (loaded and total have been removed)
+						var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
+						
+						obj.target.buffered = obj.buffered = {
+							start: function(index) {
+								return 0;
+							},
+							end: function (index) {
+								return bufferedTime;
+							},
+							length: 1
+						};						
+						
+						pluginMediaElement.dispatchEvent(obj.type, obj);
+					//}					
+					
+				}			
+				
+				setInterval(function() {
+					createYouTubeEvent('timeupdate');
+				}, 250);
+				
+				
+				break;
+				
 		}
 
 		if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
@@ -85,7 +148,7 @@ mejs.MediaElementDefaults = {
 	// none: forces fallback view
 	mode: 'auto',
 	// remove or reorder to change plugin priority and availability
-	plugins: ['flash','silverlight'],
+	plugins: ['flash','silverlight','youtube','youtubei','vimeo'],
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// overrides the type specified, useful for dynamic instantiation
@@ -287,14 +350,19 @@ mejs.HtmlMediaElementShim = {
 				for (j=0; j<options.plugins.length; j++) {
 
 					pluginName = options.plugins[j];
-
+			
 					// test version of plugin (for future features)
-					pluginVersions = mejs.plugins[pluginName];
+					pluginVersions = mejs.plugins[pluginName];				
+					
 					for (k=0; k<pluginVersions.length; k++) {
 						pluginInfo = pluginVersions[k];
-
+					
 						// test if user has the correct plugin version
-						if (mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
+						
+						// for youtube/vimeo
+						if (pluginInfo.version == null || 
+							
+							mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
 
 							// test for plugin playback types
 							for (l=0; l<pluginInfo.types.length; l++) {
@@ -408,6 +476,7 @@ mejs.HtmlMediaElementShim = {
 
 		// add container (must be added to DOM before inserting HTML for IE)
 		container.className = 'me-plugin';
+		container.id = pluginid + '_container';
 		htmlMediaElement.parentNode.insertBefore(container, htmlMediaElement);
 
 		// flash/silverlight vars
@@ -486,6 +555,44 @@ mejs.HtmlMediaElementShim = {
 'height="' + height + '"></embed>';
 				}
 				break;
+			
+			case 'youtubeflash':
+				
+				pluginMediaElement.youtubeid = playback.url.substr(playback.url.lastIndexOf('=')+1);
+				
+	
+				container.innerHTML =
+					'<object type="application/x-shockwave-flash" id="' + pluginid + '" data="http://www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + pluginid + '&amp;version=3" ' +
+						'width="' + width + '" height="' + height + '" style="visibility: visible; ">' +
+						'<param name="allowScriptAccess" value="always">' +
+						'<param name="wmode" value="transparent"></object>';
+				
+					
+				break;
+			
+			case 'youtube':
+			
+				pluginMediaElement.youtubeid = playback.url.substr(playback.url.lastIndexOf('=')+1);
+				
+				mejs.YouTubeApi.enqueue(pluginid, pluginMediaElement, container.id, pluginMediaElement.youtubeid, width, height);			
+									
+				break;
+			
+			case 'vimeo':
+				console.log('vimeoid');
+				
+				pluginMediaElement.vimeoid = playback.url.substr(playback.url.lastIndexOf('/')+1);
+				
+				container.innerHTML =
+					'<object width="' + width + '" height="' + height + '">' +
+						'<param name="allowfullscreen" value="true" />' +
+						'<param name="allowscriptaccess" value="always" />' +
+						'<param name="flashvars" value="api=1" />' + 
+						'<param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=' + pluginMediaElement.vimeoid  + '&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" />' +
+						'<embed src="http://vimeo.com/moogaloop.swf?api=1&amp;clip_id=' + pluginMediaElement.vimeoid + '&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="' + width + '" height="' + height + '"></embed>' +
+					'</object>';
+					
+				break;			
 		}
 		// hide original element
 		htmlMediaElement.style.display = 'none';
@@ -540,6 +647,88 @@ mejs.HtmlMediaElementShim = {
 		return htmlMediaElement;
 	}
 };
+
+// JS API
+mejs.YouTubeApi = {
+	started: false,
+	isLoaded: false,
+	loadApi: function() {
+		if (!this.started) {
+			var tag = document.createElement('script');
+			tag.src = "http://www.youtube.com/player_api";
+			var firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			this.started = true;
+		}
+	},
+	queue: [],
+	enqueue: function(id, pluginMediaElement, embedId, videoId, width, height) {
+		var yt = {
+			id: id,
+			pluginMediaElement: pluginMediaElement,
+			embedId: embedId,
+			videoId: videoId,
+			height: height,
+			width: width	
+		}
+		if (this.isLoaded) {
+			this.create(yt);
+		} else {
+			this.loadApi();
+			this.queue.push(yt);
+		}
+	},
+	create: function(settings) {
+		var player = new YT.Player(settings.embedId, {
+			height: settings.height,
+			width: settings.width,
+			videoId: settings.videoId,
+			events: {
+				'onReady': function() {
+					console.log('YOUTUBE read', settings.id, player);
+					
+					settings.pluginMediaElement.pluginApi = player;
+					// init mejs
+					mejs.MediaPluginBridge.initPlugin(settings.id);
+					
+					// create timer?
+					setInterval(function() {
+						//console.log('youtube', player, player.stopVideo);
+						
+					}, 250);					
+				},
+				'onStateChange': function(e) {
+					console.log('state change', settings.id, player);
+					
+					// send events
+					
+				}
+			}
+		});
+		
+			
+	},
+	ready: function() {
+		
+		this.isLoaded = true;
+		
+		while (this.queue.length > 0) {
+			var settings = this.queue.pop();
+			this.create(settings);
+		}	
+	}
+}
+function onYouTubePlayerAPIReady() {
+	console.log('YT API ready');
+	
+	mejs.YouTubeApi.ready();
+}
+
+// Flash API
+onYouTubePlayerReady = function(id) {
+	console.log('yt', id);
+	mejs.MediaPluginBridge.initPlugin(id);	
+}
 
 window.mejs = mejs;
 window.MediaElement = mejs.MediaElement;
