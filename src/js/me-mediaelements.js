@@ -237,7 +237,7 @@ mejs.PluginMediaElement.prototype = {
 		this.setFullscreen(true);
 	},
 	
-	enterFullScreen: function() {
+	exitFullScreen: function() {
 		this.setFullscreen(false);
 	},	
 

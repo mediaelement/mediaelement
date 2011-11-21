@@ -25,13 +25,11 @@
 				
 			// native events
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				console.log('added change event: ' + mejs.MediaFeatures.fullScreenEventName);
 				
 				player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
 				//player.container.bind('webkitfullscreenchange', function(e) {
 				
-					console.log('fullscreenchange event: ' + mejs.MediaFeatures.isFullScreen());
-				
+					
 					if (mejs.MediaFeatures.isFullScreen()) {
 						player.isNativeFullScreen = true;
 						// reset the controls once we are fully in full screen
@@ -94,9 +92,6 @@
 			// store sizing
 			normalHeight = t.container.height();
 			normalWidth = t.container.width();
-			
-			console.log('true: ' + mejs.MediaFeatures.hasTrueNativeFullScreen + ', semi: ' + mejs.MediaFeatures.hasSemiNativeFullScreen)
-			
 			
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
