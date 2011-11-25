@@ -196,8 +196,12 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setVolume: function (volume) {
 		if (this.pluginApi != null) {
-			// same on YouTube and MEjs			
-			this.pluginApi.setVolume(volume);
+			// same on YouTube and MEjs
+			if (this.pluginType == 'youtube') {
+				this.pluginApi.setVolume(volume * 100);
+			} else {
+				this.pluginApi.setVolume(volume);
+			}
 			this.volume = volume;
 		}
 	},
@@ -209,6 +213,8 @@ mejs.PluginMediaElement.prototype = {
 				} else {
 					this.pluginApi.unMute();
 				}
+				this.muted = muted;
+				this.dispatchEvent('volumechange');
 			} else {
 				this.pluginApi.setMuted(muted);
 			}
@@ -228,17 +234,22 @@ mejs.PluginMediaElement.prototype = {
 	},
 
 	setFullscreen: function (fullscreen) {
-		if (this.pluginApi != null) {
+		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.pluginApi.setFullscreen(fullscreen);
 		}
 	},
 	
 	enterFullScreen: function() {
-		this.setFullscreen(true);
+		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
+			this.setFullscreen(true);
+		}		
+		
 	},
 	
 	exitFullScreen: function() {
-		this.setFullscreen(false);
+		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
+			this.setFullscreen(false);
+		}
 	},	
 
 	// start: fake events
