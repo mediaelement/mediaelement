@@ -661,6 +661,12 @@ mejs.HtmlMediaElementShim = {
 	}
 };
 
+/*
+ - test on IE
+ - determine when to use iframe
+ - fullscreen?
+*/
+
 // YouTube Flash and Iframe API
 mejs.YouTubeApi = {
 	isIframeStarted: false,
