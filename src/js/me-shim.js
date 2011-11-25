@@ -584,9 +584,9 @@ mejs.HtmlMediaElementShim = {
 						width: width	
 					};				
 				
-				//mejs.YouTubeIframeApi.enqueue(youtubeSettings);			
+				//mejs.YouTubeApi.enqueue(youtubeSettings);			
 				
-				mejs.YouTubeFlashApi.create(youtubeSettings);			
+				mejs.YouTubeApi.createFlash(youtubeSettings);			
 				
 									
 				break;
@@ -661,31 +661,30 @@ mejs.HtmlMediaElementShim = {
 	}
 };
 
-// JS API
-mejs.YouTubeIframeApi = {
-	started: false,
-	isLoaded: false,
-	loadApi: function() {
-		if (!this.started) {
+// YouTube Flash and Iframe API
+mejs.YouTubeApi = {
+	isIframeStarted: false,
+	isIframeLoaded: false,
+	loadIframeApi: function() {
+		if (!this.isIframeStarted) {
 			var tag = document.createElement('script');
 			tag.src = "http://www.youtube.com/player_api";
 			var firstScriptTag = document.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			this.started = true;
+			this.isIframeStarted = true;
 		}
 	},
-	queue: [],
-	enqueue: function(yt) {
+	iframeQueue: [],
+	enqueueIframe: function(yt) {
 		
 		if (this.isLoaded) {
-			this.create(yt);
+			this.createIframe(yt);
 		} else {
-			this.loadApi();
-			this.queue.push(yt);
+			this.loadIframeApi();
+			this.iframeQueue.push(yt);
 		}
 	},
-	create: function(settings) {
-		
+	createIframe: function(settings) {
 		
 		var
 		pluginMediaElement = settings.pluginMediaElement,	
@@ -696,47 +695,21 @@ mejs.YouTubeIframeApi = {
 			playerVars: {controls:0},
 			events: {
 				'onReady': function() {
-					console.log('YOUTUBE ready', settings.id, player);
 					
+					// hook up iframe object to MEjs
 					settings.pluginMediaElement.pluginApi = player;
+					
 					// init mejs
 					mejs.MediaPluginBridge.initPlugin(settings.id);
 					
-					// create timer?
+					// create timer
 					setInterval(function() {
-						
-						//console.log('youtube', player, player.stopVideo);
-						mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'timeupdate');
+						mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 					}, 250);					
 				},
 				'onStateChange': function(e) {
-					console.log('state change', settings.id, player, e);
 					
-					switch (e.data) {
-						case -1: // not started
-							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
-							//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
-							break;
-						case 0:
-							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'ended');
-							break;
-						case 1:
-							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'play');
-							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'playing');
-							break;
-						case 2:
-							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'pause');
-							break;
-						case 3: // buffering
-							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'progress');
-							break;
-						case 5:
-							// cued?
-							break;						
-						
-					}
-					
-					// send events
+					mejs.YouTubeApi.handleStateChange(e.data, player, pluginMediaElement);
 					
 				}
 			}
@@ -753,10 +726,8 @@ mejs.YouTubeIframeApi = {
 		if (player && player.getDuration) {
 			
 			// time 
-			//if (player.getCurrentTime() > 0) {
-			    pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime()
-			    pluginMediaElement.duration = obj.duration = player.getDuration();
-			//}
+			player.currentTime = pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime()
+			player.duration = pluginMediaElement.duration = obj.duration = player.getDuration();
 			
 			// sound
 			obj.muted = player.isMuted();
@@ -766,13 +737,7 @@ mejs.YouTubeIframeApi = {
 			obj.bytesTotal = player.getVideoBytesTotal();
 			obj.bufferedBytes = player.getVideoBytesLoaded();
 			
-			
-			// apply to Flash/Iframe?
-			//for (i in obj) {
-			//	pluginMediaElement[i] = obj[i];
-			//}			
-			
-			// fake the newer W3C buffered TimeRange (loaded and total have been removed)
+			// fake the W3C buffered TimeRange
 			var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
 			
 			obj.target.buffered = obj.buffered = {
@@ -785,36 +750,27 @@ mejs.YouTubeIframeApi = {
 				length: 1
 			};
 			
-			
-			
-			
 		}
 		
+		// send event up the chain
 		pluginMediaElement.dispatchEvent(obj.type, obj);
-		
 	},	
 	
-	ready: function() {
+	iFrameReady: function() {
 		
-		this.isLoaded = true;
+		this.isIframLoaded = true;
 		
-		while (this.queue.length > 0) {
-			var settings = this.queue.pop();
-			this.create(settings);
+		while (this.iFrameQueue.length > 0) {
+			var settings = this.iFrameQueue.pop();
+			this.createIframe(settings);
 		}	
-	}
-}
-function onYouTubePlayerAPIReady() {
-	mejs.YouTubeIframeApi.ready();
-}
-
-// Flash API
-
-mejs.YouTubeFlashApi = {
-	players: {},
-	create: function(settings) {
+	},
+	
+	// FLASH!
+	flashPlayers: {},
+	createFlash: function(settings) {
 		
-		this.players[settings.pluginId] = settings;
+		this.flashPlayers[settings.pluginId] = settings;
 		
 		settings.container.innerHTML =
 			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="http://www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0" ' +
@@ -823,9 +779,10 @@ mejs.YouTubeFlashApi = {
 				'<param name="wmode" value="transparent">' +
 			'</object>';	
 	},
-	ready: function(id) {
+	
+	flashReady: function(id) {
 		var
-			settings = this.players[id],
+			settings = this.flashPlayers[id],
 			player = document.getElementById(id),
 			pluginMediaElement = settings.pluginMediaElement;
 		
@@ -840,88 +797,50 @@ mejs.YouTubeFlashApi = {
 		var callbackName = settings.containerId + '_callback'
 		
 		window[callbackName] = function(e) {
-			console.log('YouTube event', e);
-			
-			switch (e) {
-				case -1: // not started
-					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
-					//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
-					break;
-				case 0:
-					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'ended');
-					break;
-				case 1:
-					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'play');
-					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'playing');
-					break;
-				case 2:
-					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'pause');
-					break;
-				case 3: // buffering
-					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'progress');
-					break;
-				case 5:
-					// cued?
-					break;						
-				
-			}			
+			mejs.YouTubeApi.handleStateChange(e, player, pluginMediaElement);
 		}
 		
 		player.addEventListener('onStateChange', callbackName);
 		
 		setInterval(function() {
-			mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'timeupdate');
+			mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 		}, 250);
 	},
-	createEvent: function (player, pluginMediaElement, eventName) {
-		var obj = {
-			type: eventName,
-			target: player
-		};
-
-		if (player && player.getDuration) {
-			
-			// time 
-			//if (player.getCurrentTime() > 0) {
-			    player.currentTime = pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime()
-			    player.duration = pluginMediaElement.duration = obj.duration = player.getDuration();
-			//}
-			
-			// sound
-			pluginMediaElement.muted = obj.muted = player.isMuted();
-			obj.paused = false;
-			obj.ended = false;
-			obj.volume = player.getVolume() / 100;
-			obj.bytesTotal = player.getVideoBytesTotal();
-			obj.bufferedBytes = player.getVideoBytesLoaded();
-			
-			
-			// apply to Flash/Iframe?
-			//for (i in obj) {
-			//	pluginMediaElement[i] = obj[i];
-			//}			
-			
-			// fake the newer W3C buffered TimeRange (loaded and total have been removed)
-			var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
-			
-			obj.target.buffered = obj.buffered = {
-				start: function(index) {
-					return 0;
-				},
-				end: function (index) {
-					return bufferedTime;
-				},
-				length: 1
-			};
-					
-		}
 	
-		pluginMediaElement.dispatchEvent(obj.type, obj);
+	handleStateChange: function(youTubeState, player, pluginMediaElement) {
+		switch (youTubeState) {
+			case -1: // not started
+				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
+				//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
+				break;
+			case 0:
+				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'ended');
+				break;
+			case 1:
+				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'play');
+				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'playing');
+				break;
+			case 2:
+				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'pause');
+				break;
+			case 3: // buffering
+				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'progress');
+				break;
+			case 5:
+				// cued?
+				break;						
+			
+		}			
 		
 	}
 }
-onYouTubePlayerReady = function(id) {
-	mejs.YouTubeFlashApi.ready(id);
+// IFRAME
+function onYouTubePlayerAPIReady() {
+	mejs.YouTubeApi.iFrameReady();
+}
+// FLASH
+function onYouTubePlayerReady(id) {
+	mejs.YouTubeApi.flashReady(id);
 }
 
 window.mejs = mejs;
