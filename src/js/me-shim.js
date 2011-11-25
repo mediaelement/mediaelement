@@ -10,7 +10,7 @@ mejs.MediaPluginBridge = {
 	},
 
 	// when Flash/Silverlight is ready, it calls out to this method
-	initPlugin: function (id, ytp) {
+	initPlugin: function (id) {
 
 		var pluginMediaElement = this.pluginMediaElements[id],
 			htmlMediaElement = this.htmlMediaElements[id];
@@ -571,9 +571,23 @@ mejs.HtmlMediaElementShim = {
 			
 			case 'youtube':
 			
-				pluginMediaElement.youtubeid = playback.url.substr(playback.url.lastIndexOf('=')+1);
 				
-				mejs.YouTubeApi.enqueue(pluginid, pluginMediaElement, container.id, pluginMediaElement.youtubeid, width, height);			
+				var
+					videoId = playback.url.substr(playback.url.lastIndexOf('=')+1);
+					youtubeSettings = {
+						container: container,
+						containerId: container.id,
+						pluginMediaElement: pluginMediaElement,
+						pluginId: pluginid,
+						videoId: videoId,
+						height: height,
+						width: width	
+					};				
+				
+				//mejs.YouTubeIframeApi.enqueue(youtubeSettings);			
+				
+				mejs.YouTubeFlashApi.create(youtubeSettings);			
+				
 									
 				break;
 			
@@ -648,7 +662,7 @@ mejs.HtmlMediaElementShim = {
 };
 
 // JS API
-mejs.YouTubeApi = {
+mejs.YouTubeIframeApi = {
 	started: false,
 	isLoaded: false,
 	loadApi: function() {
@@ -661,15 +675,8 @@ mejs.YouTubeApi = {
 		}
 	},
 	queue: [],
-	enqueue: function(id, pluginMediaElement, embedId, videoId, width, height) {
-		var yt = {
-			id: id,
-			pluginMediaElement: pluginMediaElement,
-			embedId: embedId,
-			videoId: videoId,
-			height: height,
-			width: width	
-		}
+	enqueue: function(yt) {
+		
 		if (this.isLoaded) {
 			this.create(yt);
 		} else {
@@ -678,13 +685,18 @@ mejs.YouTubeApi = {
 		}
 	},
 	create: function(settings) {
-		var player = new YT.Player(settings.embedId, {
+		
+		
+		var
+		pluginMediaElement = settings.pluginMediaElement,	
+		player = new YT.Player(settings.containerId, {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
+			playerVars: {controls:0},
 			events: {
 				'onReady': function() {
-					console.log('YOUTUBE read', settings.id, player);
+					console.log('YOUTUBE ready', settings.id, player);
 					
 					settings.pluginMediaElement.pluginApi = player;
 					// init mejs
@@ -692,12 +704,37 @@ mejs.YouTubeApi = {
 					
 					// create timer?
 					setInterval(function() {
-						//console.log('youtube', player, player.stopVideo);
 						
+						//console.log('youtube', player, player.stopVideo);
+						mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 					}, 250);					
 				},
 				'onStateChange': function(e) {
-					console.log('state change', settings.id, player);
+					console.log('state change', settings.id, player, e);
+					
+					switch (e.data) {
+						case -1: // not started
+							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
+							//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
+							break;
+						case 0:
+							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'ended');
+							break;
+						case 1:
+							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'play');
+							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'playing');
+							break;
+						case 2:
+							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'pause');
+							break;
+						case 3: // buffering
+							mejs.YouTubeIframeApi.createEvent(player, pluginMediaElement, 'progress');
+							break;
+						case 5:
+							// cued?
+							break;						
+						
+					}
 					
 					// send events
 					
@@ -705,8 +742,58 @@ mejs.YouTubeApi = {
 			}
 		});
 		
-			
 	},
+	
+	createEvent: function (player, pluginMediaElement, eventName) {
+		var obj = {
+			type: eventName,
+			target: player
+		};
+
+		if (player && player.getDuration) {
+			
+			// time 
+			//if (player.getCurrentTime() > 0) {
+			    pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime()
+			    pluginMediaElement.duration = obj.duration = player.getDuration();
+			//}
+			
+			// sound
+			obj.muted = player.isMuted();
+			obj.paused = false;
+			obj.ended = false;
+			obj.volume = player.getVolume() / 100;
+			obj.bytesTotal = player.getVideoBytesTotal();
+			obj.bufferedBytes = player.getVideoBytesLoaded();
+			
+			
+			// apply to Flash/Iframe?
+			//for (i in obj) {
+			//	pluginMediaElement[i] = obj[i];
+			//}			
+			
+			// fake the newer W3C buffered TimeRange (loaded and total have been removed)
+			var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
+			
+			obj.target.buffered = obj.buffered = {
+				start: function(index) {
+					return 0;
+				},
+				end: function (index) {
+					return bufferedTime;
+				},
+				length: 1
+			};
+			
+			
+			
+			
+		}
+		
+		pluginMediaElement.dispatchEvent(obj.type, obj);
+		
+	},	
+	
 	ready: function() {
 		
 		this.isLoaded = true;
@@ -718,15 +805,123 @@ mejs.YouTubeApi = {
 	}
 }
 function onYouTubePlayerAPIReady() {
-	console.log('YT API ready');
-	
-	mejs.YouTubeApi.ready();
+	mejs.YouTubeIframeApi.ready();
 }
 
 // Flash API
+
+mejs.YouTubeFlashApi = {
+	players: {},
+	create: function(settings) {
+		
+		this.players[settings.pluginId] = settings;
+		
+		settings.container.innerHTML =
+			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="http://www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0" ' +
+				'width="' + settings.width + '" height="' + settings.height + '" style="visibility: visible; ">' +
+				'<param name="allowScriptAccess" value="always">' +
+				'<param name="wmode" value="transparent">' +
+			'</object>';	
+	},
+	ready: function(id) {
+		var
+			settings = this.players[id],
+			player = document.getElementById(id),
+			pluginMediaElement = settings.pluginMediaElement;
+		
+		// hook up and return to MediaELementPlayer.success	
+		pluginMediaElement.pluginApi = 
+		pluginMediaElement.pluginElement = player;
+		mejs.MediaPluginBridge.initPlugin(id);
+		
+		// load the youtube video
+		player.cueVideoById(settings.videoId);
+		
+		var callbackName = settings.containerId + '_callback'
+		
+		window[callbackName] = function(e) {
+			console.log('YouTube event', e);
+			
+			switch (e) {
+				case -1: // not started
+					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
+					//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
+					break;
+				case 0:
+					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'ended');
+					break;
+				case 1:
+					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'play');
+					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'playing');
+					break;
+				case 2:
+					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'pause');
+					break;
+				case 3: // buffering
+					mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'progress');
+					break;
+				case 5:
+					// cued?
+					break;						
+				
+			}			
+		}
+		
+		player.addEventListener('onStateChange', callbackName);
+		
+		setInterval(function() {
+			mejs.YouTubeFlashApi.createEvent(player, pluginMediaElement, 'timeupdate');
+		}, 250);
+	},
+	createEvent: function (player, pluginMediaElement, eventName) {
+		var obj = {
+			type: eventName,
+			target: player
+		};
+
+		if (player && player.getDuration) {
+			
+			// time 
+			//if (player.getCurrentTime() > 0) {
+			    player.currentTime = pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime()
+			    player.duration = pluginMediaElement.duration = obj.duration = player.getDuration();
+			//}
+			
+			// sound
+			pluginMediaElement.muted = obj.muted = player.isMuted();
+			obj.paused = false;
+			obj.ended = false;
+			obj.volume = player.getVolume() / 100;
+			obj.bytesTotal = player.getVideoBytesTotal();
+			obj.bufferedBytes = player.getVideoBytesLoaded();
+			
+			
+			// apply to Flash/Iframe?
+			//for (i in obj) {
+			//	pluginMediaElement[i] = obj[i];
+			//}			
+			
+			// fake the newer W3C buffered TimeRange (loaded and total have been removed)
+			var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
+			
+			obj.target.buffered = obj.buffered = {
+				start: function(index) {
+					return 0;
+				},
+				end: function (index) {
+					return bufferedTime;
+				},
+				length: 1
+			};
+					
+		}
+	
+		pluginMediaElement.dispatchEvent(obj.type, obj);
+		
+	}
+}
 onYouTubePlayerReady = function(id) {
-	console.log('yt', id);
-	mejs.MediaPluginBridge.initPlugin(id);	
+	mejs.YouTubeFlashApi.ready(id);
 }
 
 window.mejs = mejs;
