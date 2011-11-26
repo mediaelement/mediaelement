@@ -146,7 +146,7 @@ def main():
 
 
     # 1)
-    print('bake Binaries')
+    print('Copying Skin Files')
 
     binaries = (
         ('css/bigplay.png', '../build/bigplay.png'),
@@ -177,7 +177,7 @@ def main():
 
 
     # 2)
-    print('bake JavaScript')
+    print('Minifying JavaScript')
 
 
     me_filename       = 'mediaelement'
@@ -234,7 +234,7 @@ def main():
 
 
     # 3)
-    print('brand JavaScript')
+    print('Combining scripts')
 
     # add copyright
     addHeader('js/me-header.js', me_file)
@@ -242,7 +242,7 @@ def main():
    
     
     # 4)
-    print('bake Stylesheets')
+    print('Minifying CSS')
 
     # minify the mep stylesheet
     putFiles(['css/mediaelementplayer.css'], '../build/mediaelementplayer.css')
@@ -250,9 +250,7 @@ def main():
 
 
 
-    print('\n')
     print('Done. Thank you for your patient.')
-    print('\n')
 
 
     # return exit code 0
