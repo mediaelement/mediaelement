@@ -613,7 +613,7 @@
 					.height('100%');
 					
 				// set shims
-				t.container.find('object embed')
+				t.container.find('object, embed, iframe')
 					.width('100%')
 					.height('100%');
 					
