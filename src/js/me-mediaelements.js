@@ -224,12 +224,15 @@ mejs.PluginMediaElement.prototype = {
 
 	// additional non-HTML5 methods
 	setVideoSize: function (width, height) {
-		if ( this.pluginElement.style) {
-			this.pluginElement.style.width = width + 'px';
-			this.pluginElement.style.height = height + 'px';
-		}
-		if (this.pluginApi != null && this.pluginApi.setVideoSize) {
-			this.pluginApi.setVideoSize(width, height);
+		
+		if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
+			if ( this.pluginElement.style) {
+				this.pluginElement.style.width = width + 'px';
+				this.pluginElement.style.height = height + 'px';
+			}
+			if (this.pluginApi != null && this.pluginApi.setVideoSize) {
+				this.pluginApi.setVideoSize(width, height);
+			}
 		}
 	},
 
