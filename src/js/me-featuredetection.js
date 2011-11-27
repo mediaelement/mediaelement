@@ -19,7 +19,7 @@ mejs.MediaFeatures = {
 		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		t.isChrome = (ua.match(/chrome/gi) !== null);
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
-		t.isGecko = (ua.match(/gecko/gi) !== null);
+		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isChrome;
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.hasTouch = ('ontouchstart' in window);
 
