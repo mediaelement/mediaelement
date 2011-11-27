@@ -523,7 +523,7 @@ mejs.HtmlMediaElementShim = {
 						width: width	
 					};				
 				
-				if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) && !mejs.MediaFeatures.isGecko) {
+				if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
 					mejs.YouTubeApi.createFlash(youtubeSettings);
 				} else {
 					mejs.YouTubeApi.enqueueIframe(youtubeSettings);		
@@ -531,6 +531,7 @@ mejs.HtmlMediaElementShim = {
 				
 				break;
 			
+			// DEMO Code. Does NOT work.
 			case 'vimeo':
 				console.log('vimeoid');
 				
@@ -542,7 +543,7 @@ mejs.HtmlMediaElementShim = {
 						'<param name="allowscriptaccess" value="always" />' +
 						'<param name="flashvars" value="api=1" />' + 
 						'<param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=' + pluginMediaElement.vimeoid  + '&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" />' +
-						'<embed src="http://vimeo.com/moogaloop.swf?api=1&amp;clip_id=' + pluginMediaElement.vimeoid + '&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="' + width + '" height="' + height + '"></embed>' +
+						'<embed src="//vimeo.com/moogaloop.swf?api=1&amp;clip_id=' + pluginMediaElement.vimeoid + '&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="' + width + '" height="' + height + '"></embed>' +
 					'</object>';
 					
 				break;			
@@ -719,7 +720,7 @@ mejs.YouTubeApi = {
 		this.flashPlayers[settings.pluginId] = settings;
 		
 		settings.container.innerHTML =
-			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="http://www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0" ' +
+			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="//www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0" ' +
 				'width="' + settings.width + '" height="' + settings.height + '" style="visibility: visible; ">' +
 				'<param name="allowScriptAccess" value="always">' +
 				'<param name="wmode" value="transparent">' +
