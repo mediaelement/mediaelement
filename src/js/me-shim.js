@@ -15,82 +15,21 @@ mejs.MediaPluginBridge = {
 		var pluginMediaElement = this.pluginMediaElements[id],
 			htmlMediaElement = this.htmlMediaElements[id];
 
-		// find the javascript bridge
-		switch (pluginMediaElement.pluginType) {
-			case "flash":
-				pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
-				break;
-			case "silverlight":
-				pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
-				pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
-				break;
-			case "youtubeflash":
-				
-				pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
-				pluginMediaElement.pluginApi.loadVideoById(pluginMediaElement.youtubeid);
-				
-				var player = pluginMediaElement.pluginApi;
-				
-				console.log('youtube', player, player.addEventListener);
-				
-				setTimeout(function() {
-					player.addEventListener('onstatechange', function(e) {
-						console.log('youtube', e);
-					});
-				}, 500);
-				
-				function createYouTubeEvent(eventName) {
-					var obj = {
-						type: eventName,
-						target: player
-					};
-
-					//if (player && player.getDuration) {
-						
-						// time 
-						//if (player.getCurrentTime() > 0) {
-						    obj.currentTime = player.getCurrentTime()
-						    obj.duration = player.getDuration();
-						//}
-						
-						// sound
-						obj.muted = player.isMuted();
-						obj.paused = false;
-						obj.ended = false;
-						obj.volume = player.getVolume();
-						obj.bytesTotal = player.getVideoBytesTotal();
-						obj.bufferedBytes = player.getVideoBytesLoaded();
-						
-						
-						// fake the newer W3C buffered TimeRange (loaded and total have been removed)
-						var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
-						
-						obj.target.buffered = obj.buffered = {
-							start: function(index) {
-								return 0;
-							},
-							end: function (index) {
-								return bufferedTime;
-							},
-							length: 1
-						};						
-						
-						pluginMediaElement.dispatchEvent(obj.type, obj);
-					//}					
-					
-				}			
-				
-				setInterval(function() {
-					createYouTubeEvent('timeupdate');
-				}, 250);
-				
-				
-				break;
-				
-		}
-
-		if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
-			pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
+		if (pluginMediaElement) {
+			// find the javascript bridge
+			switch (pluginMediaElement.pluginType) {
+				case "flash":
+					pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
+					break;
+				case "silverlight":
+					pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
+					pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
+					break;
+			}
+	
+			if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
+				pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
+			}
 		}
 	},
 
@@ -584,11 +523,12 @@ mejs.HtmlMediaElementShim = {
 						width: width	
 					};				
 				
-				//mejs.YouTubeApi.enqueue(youtubeSettings);			
+				if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) && !mejs.MediaFeatures.isGecko) {
+					mejs.YouTubeApi.createFlash(youtubeSettings);
+				} else {
+					mejs.YouTubeApi.enqueueIframe(youtubeSettings);		
+				}
 				
-				mejs.YouTubeApi.createFlash(youtubeSettings);			
-				
-									
 				break;
 			
 			case 'vimeo':
@@ -662,8 +602,8 @@ mejs.HtmlMediaElementShim = {
 };
 
 /*
- - test on IE
- - determine when to use iframe
+ - test on IE (object vs. embed)
+ - determine when to use iframe (Firefox, Safari, Mobile) vs. Flash (Chrome, IE)
  - fullscreen?
 */
 
@@ -706,7 +646,7 @@ mejs.YouTubeApi = {
 					settings.pluginMediaElement.pluginApi = player;
 					
 					// init mejs
-					mejs.MediaPluginBridge.initPlugin(settings.id);
+					mejs.MediaPluginBridge.initPlugin(settings.pluginId);
 					
 					// create timer
 					setInterval(function() {
@@ -732,7 +672,7 @@ mejs.YouTubeApi = {
 		if (player && player.getDuration) {
 			
 			// time 
-			player.currentTime = pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime()
+			player.currentTime = pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime();
 			player.duration = pluginMediaElement.duration = obj.duration = player.getDuration();
 			
 			// sound
@@ -766,8 +706,8 @@ mejs.YouTubeApi = {
 		
 		this.isIframLoaded = true;
 		
-		while (this.iFrameQueue.length > 0) {
-			var settings = this.iFrameQueue.pop();
+		while (this.iframeQueue.length > 0) {
+			var settings = this.iframeQueue.pop();
 			this.createIframe(settings);
 		}	
 	},

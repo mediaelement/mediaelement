@@ -78,7 +78,7 @@
 			
 			
 			// firefox+flash can't adjust plugin sizes without resetting :(
-			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
+			if (t.container.find('object,embed').length > 0 && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
 				t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
@@ -151,7 +151,7 @@
 					.width('100%')
 					.height('100%');
 			} else {
-				t.container.find('object embed')
+				t.container.find('object, embed, iframe')
 					.width('100%')
 					.height('100%');
 				t.media.setVideoSize($(window).width(),$(window).height());
