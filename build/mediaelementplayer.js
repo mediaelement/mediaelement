@@ -1342,7 +1342,7 @@ if (typeof jQuery != 'undefined') {
 						positionVolumeHandle(0);
 						mute.removeClass('mejs-mute').addClass('mejs-unmute');
 					} else {
-						positionVolumeHandle(e.target.volume);
+						positionVolumeHandle(media.volume);
 						mute.removeClass('mejs-unmute').addClass('mejs-mute');
 					}
 				}
