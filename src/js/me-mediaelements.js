@@ -95,25 +95,43 @@ mejs.PluginMediaElement.prototype = {
 	// HTML5 methods
 	play: function () {
 		if (this.pluginApi != null) {
-			this.pluginApi.playMedia();
+			if (this.pluginType == 'youtube') {
+				this.pluginApi.playVideo();
+			} else {
+				this.pluginApi.playMedia();
+			}
 			this.paused = false;
 		}
 	},
 	load: function () {
 		if (this.pluginApi != null) {
-			this.pluginApi.loadMedia();
+			if (this.pluginType == 'youtube') {
+			} else {
+				this.pluginApi.loadMedia();
+			}
+			
 			this.paused = false;
 		}
 	},
 	pause: function () {
 		if (this.pluginApi != null) {
-			this.pluginApi.pauseMedia();
+			if (this.pluginType == 'youtube') {
+				this.pluginApi.pauseVideo();
+			} else {
+				this.pluginApi.pauseMedia();
+			}			
+			
+			
 			this.paused = true;
 		}
 	},
 	stop: function () {
 		if (this.pluginApi != null) {
-			this.pluginApi.stopMedia();
+			if (this.pluginType == 'youtube') {
+				this.pluginApi.stopVideo();
+			} else {
+				this.pluginApi.stopMedia();
+			}	
 			this.paused = true;
 		}
 	},
@@ -165,46 +183,76 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setCurrentTime: function (time) {
 		if (this.pluginApi != null) {
-			this.pluginApi.setCurrentTime(time);
+			if (this.pluginType == 'youtube') {
+				this.pluginApi.seekTo(time);
+			} else {
+				this.pluginApi.setCurrentTime(time);
+			}				
+			
+			
+			
 			this.currentTime = time;
 		}
 	},
 	setVolume: function (volume) {
 		if (this.pluginApi != null) {
-			this.pluginApi.setVolume(volume);
+			// same on YouTube and MEjs
+			if (this.pluginType == 'youtube') {
+				this.pluginApi.setVolume(volume * 100);
+			} else {
+				this.pluginApi.setVolume(volume);
+			}
 			this.volume = volume;
 		}
 	},
 	setMuted: function (muted) {
 		if (this.pluginApi != null) {
-			this.pluginApi.setMuted(muted);
+			if (this.pluginType == 'youtube') {
+				if (muted) {
+					this.pluginApi.mute();
+				} else {
+					this.pluginApi.unMute();
+				}
+				this.muted = muted;
+				this.dispatchEvent('volumechange');
+			} else {
+				this.pluginApi.setMuted(muted);
+			}
 			this.muted = muted;
 		}
 	},
 
 	// additional non-HTML5 methods
 	setVideoSize: function (width, height) {
-		if ( this.pluginElement.style) {
-			this.pluginElement.style.width = width + 'px';
-			this.pluginElement.style.height = height + 'px';
-		}
-		if (this.pluginApi != null && this.pluginApi.setVideoSize) {
-			this.pluginApi.setVideoSize(width, height);
-		}
+		
+		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
+			if ( this.pluginElement.style) {
+				this.pluginElement.style.width = width + 'px';
+				this.pluginElement.style.height = height + 'px';
+			}
+			if (this.pluginApi != null && this.pluginApi.setVideoSize) {
+				this.pluginApi.setVideoSize(width, height);
+			}
+		//}
 	},
 
 	setFullscreen: function (fullscreen) {
-		if (this.pluginApi != null) {
+		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.pluginApi.setFullscreen(fullscreen);
 		}
 	},
 	
 	enterFullScreen: function() {
-		this.setFullscreen(true);
+		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
+			this.setFullscreen(true);
+		}		
+		
 	},
 	
 	exitFullScreen: function() {
-		this.setFullscreen(false);
+		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
+			this.setFullscreen(false);
+		}
 	},	
 
 	// start: fake events
