@@ -1256,26 +1256,29 @@ mejs.YouTubeApi = {
 				}
 			}
 		});
-		
 	},
 	
 	createEvent: function (player, pluginMediaElement, eventName) {
 		var obj = {
 			type: eventName,
-			target: player
+			target: pluginMediaElement
 		};
 
 		if (player && player.getDuration) {
 			
 			// time 
-			player.currentTime = pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime();
-			player.duration = pluginMediaElement.duration = obj.duration = player.getDuration();
+			pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime();
+			pluginMediaElement.duration = obj.duration = player.getDuration();
+			
+			// state
+			obj.paused = pluginMediaElement.paused;
+			obj.ended = pluginMediaElement.ended;			
 			
 			// sound
 			obj.muted = player.isMuted();
-			obj.paused = false;
-			obj.ended = false;
 			obj.volume = player.getVolume() / 100;
+			
+			// progress
 			obj.bytesTotal = player.getVideoBytesTotal();
 			obj.bufferedBytes = player.getVideoBytesLoaded();
 			
@@ -1300,7 +1303,7 @@ mejs.YouTubeApi = {
 	
 	iFrameReady: function() {
 		
-		this.isIframLoaded = true;
+		this.isIframeLoaded = true;
 		
 		while (this.iframeQueue.length > 0) {
 			var settings = this.iframeQueue.pop();
@@ -1378,17 +1381,25 @@ mejs.YouTubeApi = {
 	handleStateChange: function(youTubeState, player, pluginMediaElement) {
 		switch (youTubeState) {
 			case -1: // not started
+				pluginMediaElement.paused = true;
+				pluginMediaElement.ended = true;
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
 				//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
 				break;
 			case 0:
+				pluginMediaElement.paused = false;
+				pluginMediaElement.ended = true;
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'ended');
 				break;
 			case 1:
+				pluginMediaElement.paused = false;
+				pluginMediaElement.ended = false;				
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'play');
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'playing');
 				break;
 			case 2:
+				pluginMediaElement.paused = true;
+				pluginMediaElement.ended = false;				
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'pause');
 				break;
 			case 3: // buffering
