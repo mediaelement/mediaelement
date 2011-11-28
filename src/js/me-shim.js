@@ -86,7 +86,7 @@ mejs.MediaElementDefaults = {
 	// none: forces fallback view
 	mode: 'auto',
 	// remove or reorder to change plugin priority and availability
-	plugins: ['flash','silverlight','youtube','youtubei','vimeo'],
+	plugins: ['flash','silverlight','youtube','vimeo'],
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// overrides the type specified, useful for dynamic instantiation
@@ -492,20 +492,6 @@ mejs.HtmlMediaElementShim = {
 'width="' + width + '" ' +
 'height="' + height + '"></embed>';
 				}
-				break;
-			
-			case 'youtubeflash':
-				
-				pluginMediaElement.youtubeid = playback.url.substr(playback.url.lastIndexOf('=')+1);
-				
-	
-				container.innerHTML =
-					'<object type="application/x-shockwave-flash" id="' + pluginid + '" data="http://www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + pluginid + '&amp;version=3" ' +
-						'width="' + width + '" height="' + height + '" style="visibility: visible; ">' +
-						'<param name="allowScriptAccess" value="always">' +
-						'<param name="wmode" value="transparent"></object>';
-				
-					
 				break;
 			
 			case 'youtube':
