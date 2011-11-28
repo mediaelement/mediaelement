@@ -3596,7 +3596,8 @@ if (typeof jQuery != 'undefined') {
 				type: 'GET',
 				dataType: 'jsonp',
 				success: function(d) {
-					callback(d.responseData.translatedText);
+					
+					callback((d.responseData !== null) ? d.responseData.translatedText : 'No translation');
 				},
 				error: function(e) {
 					callback(null);
