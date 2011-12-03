@@ -284,6 +284,10 @@ mejs.PluginMediaElement.prototype = {
 				callbacks[i].apply(null, args);
 			}
 		}
-	}
+	},
 	// end: fake events
+	
+	remove: function() {
+		mejs.Utility.removeSwf(this.pluginElement.id);
+	}
 };
