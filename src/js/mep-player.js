@@ -276,8 +276,9 @@
 
 		hideControls: function(doAnimation) {
 			//console.log('hide doAnimation', doAnimation);
-			var t = this,
-				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			var t = this;
+			
+			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
 			if (!t.controlsAreVisible)
 				return;
@@ -318,8 +319,9 @@
 
 		startControlsTimer: function(timeout) {
 
-			var t = this,
-				timeout = typeof timeout != 'undefined' ? timeout : 500;
+			var t = this;
+			
+			timeout = typeof timeout != 'undefined' ? timeout : 500;
 
 			t.killControlsTimer('start');
 
@@ -857,6 +859,22 @@
 		},
 		setSrc: function(src) {
 			this.media.setSrc(src);
+		},
+		remove: function() {
+			var t = this;
+			
+			if (t.media.pluginType == 'flash') {
+				t.media.remove();
+			} else if (t.media.pluginTyp == 'native') {
+				t.media.prop('controls', true);
+			}
+			
+			// grab video and put it back in place
+			if (!t.isDynamic) {
+				t.$node.insertBefore(t.container)
+			}
+			
+			t.container.remove();
 		}
 	};
 
@@ -868,6 +886,9 @@
 			});
 		};
 	}
+	
+	// auto enable using JSON attribute
+	//$('.mejs').mediaelementplayer();
 	
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
