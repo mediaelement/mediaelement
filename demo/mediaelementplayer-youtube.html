@@ -35,8 +35,8 @@
 <script>
 
 $('video').mediaelementplayer({
-	success: function(player, node) {
-		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+	success: function(media, node, player) {
+		$('#' + node.id + '-mode').html('mode: ' + media.pluginType);
 	}
 });
 
