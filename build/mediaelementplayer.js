@@ -292,8 +292,9 @@ if (typeof jQuery != 'undefined') {
 
 		hideControls: function(doAnimation) {
 			//console.log('hide doAnimation', doAnimation);
-			var t = this,
-				doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			var t = this;
+			
+			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
 			if (!t.controlsAreVisible)
 				return;
@@ -334,8 +335,9 @@ if (typeof jQuery != 'undefined') {
 
 		startControlsTimer: function(timeout) {
 
-			var t = this,
-				timeout = typeof timeout != 'undefined' ? timeout : 500;
+			var t = this;
+			
+			timeout = typeof timeout != 'undefined' ? timeout : 500;
 
 			t.killControlsTimer('start');
 
@@ -873,6 +875,22 @@ if (typeof jQuery != 'undefined') {
 		},
 		setSrc: function(src) {
 			this.media.setSrc(src);
+		},
+		remove: function() {
+			var t = this;
+			
+			if (t.media.pluginType == 'flash') {
+				t.media.remove();
+			} else if (t.media.pluginTyp == 'native') {
+				t.media.prop('controls', true);
+			}
+			
+			// grab video and put it back in place
+			if (!t.isDynamic) {
+				t.$node.insertBefore(t.container)
+			}
+			
+			t.container.remove();
 		}
 	};
 
@@ -884,6 +902,9 @@ if (typeof jQuery != 'undefined') {
 			});
 		};
 	}
+	
+	// auto enable using JSON attribute
+	//$('.mejs').mediaelementplayer();
 	
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
@@ -1446,7 +1467,9 @@ if (typeof jQuery != 'undefined') {
 			
 			
 			// firefox+flash can't adjust plugin sizes without resetting :(
-			if (t.container.find('object,embed,iframe').length > 0 && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
+			if (/* t.container.find('object,embed,iframe').length > 0 */
+			    t.media.pluginType !== 'native'
+			    && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
 				t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
