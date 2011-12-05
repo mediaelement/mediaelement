@@ -79,16 +79,31 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *Proposed features*
 
 * horizontal, inline volume control
-* deeper WebVTT support (alignment, color, etc.)
+* deeper WebVTT support (alignment, color, etc.) - include captionator?
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
 * loading state on loading bar (animated?)
 * thin line when controls are off
 * system-wide events
-* keyboard control
 * playlist builder
+* fix Flash preload=auto
+* keyboard controls
+* simple startup (`.mejs` class with `data-mejsoptions`)
 
-*2.3.3 (2011/11/21) - 49.4kb *
+*2.4.1 (2011/12/xx) -*
+
+* Fixed fullscreen bug with Firefox (with Video for Everybody syntax)
+* Added `remove()` method to `MediaElement` and `MediaElementPlayer` to safely remove Flash (from IE)
+* Added a demo of MEJS skins to the /demo/ folder
+* Closed issue with `ended` event in Flash (my example works)
+* Flash has better support for `preload="auto"`
+
+*2.4.0 (2011/11/28) - 54.9kb*
+
+* Integration with YouTube API (and intial support for Vimeo API) : http://mediaelementjs.com/examples/?name=youtube
+* Catch when Google Translate fails due to API limits
+
+*2.3.3 (2011/11/21) - 49.4kb*
 
 * removed volume controls for touch devices (Android and iOS require hardware volume)
 * set a timeout to hide controls on touch devices
