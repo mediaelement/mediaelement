@@ -92,11 +92,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.4.1 (2011/12/xx) -*
 
-* Fixed fullscreen bug with Firefox (with Video for Everybody syntax)
-* Added `remove()` method to `MediaElement` and `MediaElementPlayer` to safely remove Flash (from IE)
-* Added a demo of MEJS skins to the /demo/ folder
-* Closed issue with `ended` event in Flash (my example works)
-* Flash has better support for `preload="auto"`
+* Fixed fullscreen bug with Firefox (with Video for Everybody syntax) [270](https://github.com/johndyer/mediaelement/issues/270)
+* Added `remove()` method to `MediaElement` and `MediaElementPlayer` to safely remove Flash (from IE) [111](https://github.com/johndyer/mediaelement/issues/111)
+* Added a demo of MEJS skins to the /demo/ folder 
+* Closed issue with `ended` event in Flash (my example works) [246](https://github.com/johndyer/mediaelement/issues/246)
+* Flash has better support for `preload="auto"` [290](https://github.com/johndyer/mediaelement/issues/290)
 
 *2.4.0 (2011/11/28) - 54.9kb*
 
