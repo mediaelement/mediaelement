@@ -86,11 +86,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * thin line when controls are off
 * system-wide events
 * playlist builder
-* fix Flash preload=auto
+
 * keyboard controls
+* stop other players when one starts
 * simple startup (`.mejs` class with `data-mejsoptions`)
 
-*2.4.1 (2011/12/xx) -*
+*2.4.1 (2011/12/05) - 55.7kb*
 
 * Fixed fullscreen bug with Firefox (with Video for Everybody syntax) [270](https://github.com/johndyer/mediaelement/issues/270)
 * Added `remove()` method to `MediaElement` and `MediaElementPlayer` to safely remove Flash (from IE) [111](https://github.com/johndyer/mediaelement/issues/111)
