@@ -146,11 +146,17 @@
 			// attach player to DOM node for reference
 			t.node.player = t;
 		}
-					
-		// create options
+				
+				
+		// try to get options from data-mejsoptions
+		if (typeof o == 'undefined') {
+			o = t.$node.data('mejsoptions');	
+		}
+			
+		// extend default options
 		t.options = $.extend({},mejs.MepDefaults,o);
 		
-		
+		// add to player array (for focus events)
 		mejs.players.push(t);
 		
 		// start up
@@ -661,7 +667,12 @@
 
 
 			if (t.options.success) {
-				t.options.success(t.media, t.domNode, t);
+				
+				if (typeof t.options.success == 'string') {
+						window[t.options.success](t.media, t.domNode, t);
+				} else {
+						t.options.success(t.media, t.domNode, t);
+				}
 			}
 		},
 
@@ -1004,8 +1015,10 @@
 		};
 	}
 	
-	// auto enable using JSON attribute
-	//$('.mejs').mediaelementplayer();
+	$(document).ready(function() {
+		// auto enable using JSON attribute
+		$('.mejs-player').mediaelementplayer();
+	});
 	
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
