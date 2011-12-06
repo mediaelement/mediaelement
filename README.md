@@ -91,9 +91,9 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *2.4.2 (dev)*
 
 * keyboard controls (up/down controls volume, left/right seeks, space play/pause, f goes fullscreen)
-* `<audio>` now works with 100% for responsive layouts
+* `<audio>` now works with 100% for responsive layouts [283](https://github.com/johndyer/mediaelement/issues/283)
 * Support for auto start with class `mejs-player` and `data-mejsoptions` e.g. `<video src="media.mp4" class="mejs-player" data-mejsoptions='{"features":["playpause","progress","volume"}, "success": "myCallback"}'><video>`
-* With multiple players on a page, when one starts the others pause (toggle `pauseOtherPlayers: true`) 
+* With multiple players on a page, when one starts the others pause (toggle `pauseOtherPlayers: true`) [285](https://github.com/johndyer/mediaelement/issues/285)
 
 *2.4.1 (2011/12/05) - 55.7kb*
 
