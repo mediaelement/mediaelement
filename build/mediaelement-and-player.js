@@ -1595,7 +1595,7 @@ if (typeof jQuery != 'undefined') {
 										}
 								}
 						}
-				},						
+				}					
 		]		
 	};
 
