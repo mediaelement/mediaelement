@@ -101,8 +101,10 @@ if (typeof jQuery != 'undefined') {
 						key: 37, // LEFT
 						action: function(player, media) {
 								if (!media.ended && !media.paused) {
-										player.showControls();
-										player.startControlsTimer();
+										if (player.isVideo) {
+												player.showControls();
+												player.startControlsTimer();
+										}
 										
 										// 5%
 										var newTime = Math.min(media.currentTime - (media.duration * 0.05), media.duration);
@@ -114,8 +116,10 @@ if (typeof jQuery != 'undefined') {
 						key: 39, // RIGHT
 						action: function(player, media) {
 								if (!media.ended && !media.paused) {
-										player.showControls();
-										player.startControlsTimer();
+										if (player.isVideo) {
+												player.showControls();
+												player.startControlsTimer();
+										}
 										
 										// 5%
 										var newTime = Math.max(media.currentTime + (media.duration * 0.05), 0);
