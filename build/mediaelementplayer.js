@@ -28,10 +28,14 @@ if (typeof jQuery != 'undefined') {
 		videoWidth: -1,
 		// if set, overrides <video height>
 		videoHeight: -1,
+		// default if the <audio width> is not specified
+		defaultAudioWidth: 400,
+		// default if the <video height> is not specified
+		defaultAudioHeight: 30,
 		// width of audio player
-		audioWidth: 400,
+		audioWidth: -1,
 		// height of audio player
-		audioHeight: 30,
+		audioHeight: -1,
 		// initial volume when the player starts (overrided by user cookie)
 		startVolume: 0.8,
 		// useful for <audio> player loops
@@ -237,8 +241,25 @@ if (typeof jQuery != 'undefined') {
 									
 					*/
 				} else {
-					t.width = t.options.audioWidth;
-					t.height = t.options.audioHeight;
+					if (t.options.audioWidth > 0 || t.options.audioWidth.toString().indexOf('%') > -1) {
+						t.width = t.options.audioWidth;
+					} else if (t.media.style.width !== '' && t.media.style.width !== null) {
+						t.width = t.media.style.width;						
+					} else if (t.media.getAttribute('width') !== null) {
+						t.width = t.$media.attr('width');
+					} else {
+						t.width = t.options.defaultAudioWidth;
+					}
+					
+					if (t.options.audioHeight > 0 || t.options.audioHeight.toString().indexOf('%') > -1) {
+						t.height = t.options.audioHeight;
+					} else if (t.media.style.height !== '' && t.media.style.height !== null) {
+						t.height = t.media.style.height;
+					} else if (t.$media[0].getAttribute('height') !== null) {
+						t.height = t.$media.attr('height');	
+					} else {
+						t.height = t.options.defaultAudioHeight;
+					}
 				}
 
 				// set the size, while we wait for the plugins to load below
