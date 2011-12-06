@@ -43,10 +43,84 @@
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
-		isVideo: true
+		isVideo: true,
+		
+		// turns keyboard support on and off for this instance
+		enableKeyboard: true,
+		
+		// whenthis player starts, it will pause other players
+		pauseOtherPlayers: true,
+		
+		// array of keyboard actions such as play pause
+		keyActions: [
+				{
+						key: 32, // SPACE
+						action: function(player, media) {
+								if (media.paused || media.ended) {
+										media.play();	
+								} else {
+										media.pause();
+								}										
+						}
+				},
+				{
+						key: 38, // UP
+						action: function(player, media) {
+								var newVolume = Math.min(media.volume + (media.volume * 0.1), 1);
+								media.setVolume(newVolume);
+						}
+				},
+				{
+						key: 40, // DOWN
+						action: function(player, media) {
+								var newVolume = Math.min(media.volume - (media.volume * 0.1), 1);
+								media.setVolume(newVolume);
+						}
+				},
+				{
+						key: 37, // LEFT
+						action: function(player, media) {
+								if (!media.ended && !media.paused) {
+										player.showControls();
+										player.startControlsTimer();
+										
+										// 5%
+										var newTime = Math.min(media.currentTime - (media.duration * 0.05), media.duration);
+										media.setCurrentTime(newTime);
+								}
+						}
+				},
+				{
+						key: 39, // RIGHT
+						action: function(player, media) {
+								if (!media.ended && !media.paused) {
+										player.showControls();
+										player.startControlsTimer();
+										
+										// 5%
+										var newTime = Math.max(media.currentTime + (media.duration * 0.05), 0);
+										media.setCurrentTime(newTime);
+								}
+						}
+				},
+				{
+						key: 70, // f
+						action: function(player, media) {
+								if (typeof player.enterFullScreen != 'undefined') {
+										if (player.isFullScreen) {
+												player.exitFullScreen();
+										} else {
+												player.enterFullScreen();
+										}
+								}
+						}
+				},						
+		]		
 	};
 
 	mejs.mepIndex = 0;
+	
+	mejs.players = [];
 
 	// wraps a MediaElement object in player controls
 	mejs.MediaElementPlayer = function(node, o) {
@@ -70,7 +144,10 @@
 		}
 					
 		// create options
-		t.options = $.extend({},mejs.MepDefaults,o);		
+		t.options = $.extend({},mejs.MepDefaults,o);
+		
+		
+		mejs.players.push(t);
 		
 		// start up
 		t.init();
@@ -80,6 +157,11 @@
 
 	// actual player
 	mejs.MediaElementPlayer.prototype = {
+		
+		hasFocus: false,
+		
+		controlsAreVisible: true,
+		
 		init: function() {
 
 			var
@@ -232,12 +314,12 @@
 				meOptions.pluginWidth = t.height;
 				meOptions.pluginHeight = t.width;				
 			}
+			
+			
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 		},
-		
-		controlsAreVisible: true,
 		
 		showControls: function(doAnimation) {
 			var t = this;
@@ -321,7 +403,7 @@
 
 			var t = this;
 			
-			timeout = typeof timeout != 'undefined' ? timeout : 500;
+			timeout = typeof timeout != 'undefined' ? timeout : 1500;
 
 			t.killControlsTimer('start');
 
@@ -386,6 +468,7 @@
 				
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
+				t.buildkeyboard(t, t.controls, t.layers, t.media);
 				t.buildoverlays(t, t.controls, t.layers, t.media);
 
 				// grab for use by features
@@ -505,6 +588,24 @@
 						}, false);
 					}
 				}
+				
+				// EVENTS
+
+				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
+				media.addEventListener('play', function() {
+						
+						// go through all other players
+						for (var i=0, il=mejs.players.length; i<il; i++) {
+							var p = mejs.players[i];
+							if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
+								p.pause();
+							}
+							p.hasFocus = false;
+						}
+						
+						t.hasFocus = true;
+				},false);
+								
 
 				// ended for all
 				t.media.addEventListener('ended', function (e) {
@@ -565,7 +666,6 @@
 				if (t.media.pluginType == 'youtube') {
 					t.container.find('.mejs-overlay-play').hide();	
 				}
-
 			}
 			
 			// force autoplay for HTML5
@@ -810,6 +910,38 @@
 				error.show();
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);				
+		},
+		
+		buildkeyboard: function(player, controls, layers, media) {
+
+				var t = this;
+				
+				// listen for key presses
+				$(document).keydown(function(e) {
+						
+						if (player.hasFocus && player.options.enableKeyboard) {
+										
+								// find a matching key
+								for (var i=0, il=player.options.keyActions.length; i<il; i++) {
+										var keyAction = player.options.keyActions[i];
+										if (e.keyCode == keyAction.key) {
+												e.preventDefault();
+												keyAction.action(player, media);
+												return false;
+										}
+								}
+						}
+						
+						return true;
+				});
+				
+				// check if someone clicked outside a player region, then kill its focus
+				$(document).click(function() {
+						if ($(event.target).closest('.mejs-container').length == 0) {
+								player.hasFocus = false;
+						}
+				});
+			
 		},
 
 		findTracks: function() {
