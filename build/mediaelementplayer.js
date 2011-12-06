@@ -134,7 +134,7 @@ if (typeof jQuery != 'undefined') {
 										}
 								}
 						}
-				},						
+				}					
 		]		
 	};
 
