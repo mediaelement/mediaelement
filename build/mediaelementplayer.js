@@ -28,14 +28,14 @@ if (typeof jQuery != 'undefined') {
 		videoWidth: -1,
 		// if set, overrides <video height>
 		videoHeight: -1,
-		// default if the <audio width> is not specified
+		// default if the user doesn't specify
 		defaultAudioWidth: 400,
-		// default if the <video height> is not specified
+		// default if the user doesn't specify
 		defaultAudioHeight: 30,
 		// width of audio player
 		audioWidth: -1,
 		// height of audio player
-		audioHeight: -1,
+		audioHeight: -1,		
 		// initial volume when the player starts (overrided by user cookie)
 		startVolume: 0.8,
 		// useful for <audio> player loops
@@ -63,10 +63,84 @@ if (typeof jQuery != 'undefined') {
 		// features to show
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
-		isVideo: true
+		isVideo: true,
+		
+		// turns keyboard support on and off for this instance
+		enableKeyboard: true,
+		
+		// whenthis player starts, it will pause other players
+		pauseOtherPlayers: true,
+		
+		// array of keyboard actions such as play pause
+		keyActions: [
+				{
+						key: 32, // SPACE
+						action: function(player, media) {
+								if (media.paused || media.ended) {
+										media.play();	
+								} else {
+										media.pause();
+								}										
+						}
+				},
+				{
+						key: 38, // UP
+						action: function(player, media) {
+								var newVolume = Math.min(media.volume + 0.1, 1);
+								media.setVolume(newVolume);
+						}
+				},
+				{
+						key: 40, // DOWN
+						action: function(player, media) {
+								var newVolume = Math.max(media.volume - 0.1, 0);
+								media.setVolume(newVolume);
+						}
+				},
+				{
+						key: 37, // LEFT
+						action: function(player, media) {
+								if (!media.ended && !media.paused) {
+										player.showControls();
+										player.startControlsTimer();
+										
+										// 5%
+										var newTime = Math.min(media.currentTime - (media.duration * 0.05), media.duration);
+										media.setCurrentTime(newTime);
+								}
+						}
+				},
+				{
+						key: 39, // RIGHT
+						action: function(player, media) {
+								if (!media.ended && !media.paused) {
+										player.showControls();
+										player.startControlsTimer();
+										
+										// 5%
+										var newTime = Math.max(media.currentTime + (media.duration * 0.05), 0);
+										media.setCurrentTime(newTime);
+								}
+						}
+				},
+				{
+						key: 70, // f
+						action: function(player, media) {
+								if (typeof player.enterFullScreen != 'undefined') {
+										if (player.isFullScreen) {
+												player.exitFullScreen();
+										} else {
+												player.enterFullScreen();
+										}
+								}
+						}
+				},						
+		]		
 	};
 
 	mejs.mepIndex = 0;
+	
+	mejs.players = [];
 
 	// wraps a MediaElement object in player controls
 	mejs.MediaElementPlayer = function(node, o) {
@@ -88,9 +162,18 @@ if (typeof jQuery != 'undefined') {
 			// attach player to DOM node for reference
 			t.node.player = t;
 		}
-					
-		// create options
-		t.options = $.extend({},mejs.MepDefaults,o);		
+				
+				
+		// try to get options from data-mejsoptions
+		if (typeof o == 'undefined') {
+			o = t.$node.data('mejsoptions');	
+		}
+			
+		// extend default options
+		t.options = $.extend({},mejs.MepDefaults,o);
+		
+		// add to player array (for focus events)
+		mejs.players.push(t);
 		
 		// start up
 		t.init();
@@ -100,6 +183,11 @@ if (typeof jQuery != 'undefined') {
 
 	// actual player
 	mejs.MediaElementPlayer.prototype = {
+		
+		hasFocus: false,
+		
+		controlsAreVisible: true,
+		
 		init: function() {
 
 			var
@@ -196,70 +284,34 @@ if (typeof jQuery != 'undefined') {
 				t.layers = t.container.find('.mejs-layers');
 
 				// determine the size
-				if (t.isVideo) {
 				
-					/* size priority:
-						(1) videoWidth (forced), 
-						(2) style="width;height;"
-						(3) width attribute,
-						(4) defaultVideoWidth (for unspecified cases)
-					*/
-					
-					if (t.options.videoWidth > 0 || t.options.videoWidth.toString().indexOf('%') > -1) {
-						t.width = t.options.videoWidth;
-					} else if (t.media.style.width !== '' && t.media.style.width !== null) {
-						t.width = t.media.style.width;						
-					} else if (t.media.getAttribute('width') !== null) {
-						t.width = t.$media.attr('width');
-					} else {
-						t.width = t.options.defaultVideoWidth;
-					}
-					
-					if (t.options.videoHeight > 0 || t.options.videoHeight.toString().indexOf('%') > -1) {
-						t.height = t.options.videoHeight;
-					} else if (t.media.style.height !== '' && t.media.style.height !== null) {
-						t.height = t.media.style.height;
-					} else if (t.$media[0].getAttribute('height') !== null) {
-						t.height = t.$media.attr('height');	
-					} else {
-						t.height = t.options.defaultVideoHeight;
-					}					
-					
-					/*
-					t.width = (t.options.videoWidth > 0 || t.options.videoWidth.toString().indexOf('%') > -1) ? 
-								t.options.videoWidth : 
-								(t.$media[0].getAttribute('width') !== null) ? 
-									t.$media.attr('width') : 
-									t.options.defaultVideoWidth;
-					
-					
-					t.height = (t.options.videoHeight > 0 || t.options.videoHeight.toString().indexOf('%') > -1) ? 
-								t.options.videoHeight : 
-								(t.$media[0].getAttribute('height') !== null) ? 
-									t.$media.attr('height') : 
-									t.options.defaultVideoHeight;
-									
-					*/
+				/* size priority:
+					(1) videoWidth (forced), 
+					(2) style="width;height;"
+					(3) width attribute,
+					(4) defaultVideoWidth (for unspecified cases)
+				*/
+				
+				var capsTagName = tagName.substring(0,1).toUpperCase() + tagName.substring(1);
+				
+				if (t.options[tagName + 'Width'] > 0 || t.options[tagName + 'Width'].toString().indexOf('%') > -1) {
+					t.width = t.options[tagName + 'Width'];
+				} else if (t.media.style.width !== '' && t.media.style.width !== null) {
+					t.width = t.media.style.width;						
+				} else if (t.media.getAttribute('width') !== null) {
+					t.width = t.$media.attr('width');
 				} else {
-					if (t.options.audioWidth > 0 || t.options.audioWidth.toString().indexOf('%') > -1) {
-						t.width = t.options.audioWidth;
-					} else if (t.media.style.width !== '' && t.media.style.width !== null) {
-						t.width = t.media.style.width;						
-					} else if (t.media.getAttribute('width') !== null) {
-						t.width = t.$media.attr('width');
-					} else {
-						t.width = t.options.defaultAudioWidth;
-					}
-					
-					if (t.options.audioHeight > 0 || t.options.audioHeight.toString().indexOf('%') > -1) {
-						t.height = t.options.audioHeight;
-					} else if (t.media.style.height !== '' && t.media.style.height !== null) {
-						t.height = t.media.style.height;
-					} else if (t.$media[0].getAttribute('height') !== null) {
-						t.height = t.$media.attr('height');	
-					} else {
-						t.height = t.options.defaultAudioHeight;
-					}
+					t.width = t.options['default' + capsTagName + 'Width'];
+				}
+				
+				if (t.options[tagName + 'Height'] > 0 || t.options[tagName + 'Height'].toString().indexOf('%') > -1) {
+					t.height = t.options[tagName + 'Height'];
+				} else if (t.media.style.height !== '' && t.media.style.height !== null) {
+					t.height = t.media.style.height;
+				} else if (t.$media[0].getAttribute('height') !== null) {
+					t.height = t.$media.attr('height');	
+				} else {
+					t.height = t.options['default' + capsTagName + 'Height'];
 				}
 
 				// set the size, while we wait for the plugins to load below
@@ -269,12 +321,12 @@ if (typeof jQuery != 'undefined') {
 				meOptions.pluginWidth = t.height;
 				meOptions.pluginHeight = t.width;				
 			}
+			
+			
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 		},
-		
-		controlsAreVisible: true,
 		
 		showControls: function(doAnimation) {
 			var t = this;
@@ -358,7 +410,7 @@ if (typeof jQuery != 'undefined') {
 
 			var t = this;
 			
-			timeout = typeof timeout != 'undefined' ? timeout : 500;
+			timeout = typeof timeout != 'undefined' ? timeout : 1500;
 
 			t.killControlsTimer('start');
 
@@ -423,6 +475,7 @@ if (typeof jQuery != 'undefined') {
 				
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
+				t.buildkeyboard(t, t.controls, t.layers, t.media);
 				t.buildoverlays(t, t.controls, t.layers, t.media);
 
 				// grab for use by features
@@ -542,6 +595,24 @@ if (typeof jQuery != 'undefined') {
 						}, false);
 					}
 				}
+				
+				// EVENTS
+
+				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
+				media.addEventListener('play', function() {
+						
+						// go through all other players
+						for (var i=0, il=mejs.players.length; i<il; i++) {
+							var p = mejs.players[i];
+							if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
+								p.pause();
+							}
+							p.hasFocus = false;
+						}
+						
+						t.hasFocus = true;
+				},false);
+								
 
 				// ended for all
 				t.media.addEventListener('ended', function (e) {
@@ -602,7 +673,6 @@ if (typeof jQuery != 'undefined') {
 				if (t.media.pluginType == 'youtube') {
 					t.container.find('.mejs-overlay-play').hide();	
 				}
-
 			}
 			
 			// force autoplay for HTML5
@@ -613,7 +683,12 @@ if (typeof jQuery != 'undefined') {
 
 
 			if (t.options.success) {
-				t.options.success(t.media, t.domNode, t);
+				
+				if (typeof t.options.success == 'string') {
+						window[t.options.success](t.media, t.domNode, t);
+				} else {
+						t.options.success(t.media, t.domNode, t);
+				}
 			}
 		},
 
@@ -848,6 +923,38 @@ if (typeof jQuery != 'undefined') {
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);				
 		},
+		
+		buildkeyboard: function(player, controls, layers, media) {
+
+				var t = this;
+				
+				// listen for key presses
+				$(document).keydown(function(e) {
+						
+						if (player.hasFocus && player.options.enableKeyboard) {
+										
+								// find a matching key
+								for (var i=0, il=player.options.keyActions.length; i<il; i++) {
+										var keyAction = player.options.keyActions[i];
+										if (e.keyCode == keyAction.key) {
+												e.preventDefault();
+												keyAction.action(player, media);
+												return false;
+										}
+								}
+						}
+						
+						return true;
+				});
+				
+				// check if someone clicked outside a player region, then kill its focus
+				$(document).click(function() {
+						if ($(event.target).closest('.mejs-container').length == 0) {
+								player.hasFocus = false;
+						}
+				});
+			
+		},
 
 		findTracks: function() {
 			var t = this,
@@ -924,8 +1031,10 @@ if (typeof jQuery != 'undefined') {
 		};
 	}
 	
-	// auto enable using JSON attribute
-	//$('.mejs').mediaelementplayer();
+	$(document).ready(function() {
+		// auto enable using JSON attribute
+		$('.mejs-player').mediaelementplayer();
+	});
 	
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
