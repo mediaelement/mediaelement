@@ -12,10 +12,14 @@
 		videoWidth: -1,
 		// if set, overrides <video height>
 		videoHeight: -1,
+		// default if the user doesn't specify
+		defaultAudioWidth: 400,
+		// default if the user doesn't specify
+		defaultAudioHeight: 30,
 		// width of audio player
-		audioWidth: 400,
+		audioWidth: -1,
 		// height of audio player
-		audioHeight: 30,
+		audioHeight: -1,		
 		// initial volume when the player starts (overrided by user cookie)
 		startVolume: 0.8,
 		// useful for <audio> player loops
@@ -66,14 +70,14 @@
 				{
 						key: 38, // UP
 						action: function(player, media) {
-								var newVolume = Math.min(media.volume + (media.volume * 0.1), 1);
+								var newVolume = Math.min(media.volume + 0.1, 1);
 								media.setVolume(newVolume);
 						}
 				},
 				{
 						key: 40, // DOWN
 						action: function(player, media) {
-								var newVolume = Math.min(media.volume - (media.volume * 0.1), 1);
+								var newVolume = Math.max(media.volume - 0.1, 0);
 								media.setVolume(newVolume);
 						}
 				},
@@ -258,53 +262,34 @@
 				t.layers = t.container.find('.mejs-layers');
 
 				// determine the size
-				if (t.isVideo) {
 				
-					/* size priority:
-						(1) videoWidth (forced), 
-						(2) style="width;height;"
-						(3) width attribute,
-						(4) defaultVideoWidth (for unspecified cases)
-					*/
-					
-					if (t.options.videoWidth > 0 || t.options.videoWidth.toString().indexOf('%') > -1) {
-						t.width = t.options.videoWidth;
-					} else if (t.media.style.width !== '' && t.media.style.width !== null) {
-						t.width = t.media.style.width;						
-					} else if (t.media.getAttribute('width') !== null) {
-						t.width = t.$media.attr('width');
-					} else {
-						t.width = t.options.defaultVideoWidth;
-					}
-					
-					if (t.options.videoHeight > 0 || t.options.videoHeight.toString().indexOf('%') > -1) {
-						t.height = t.options.videoHeight;
-					} else if (t.media.style.height !== '' && t.media.style.height !== null) {
-						t.height = t.media.style.height;
-					} else if (t.$media[0].getAttribute('height') !== null) {
-						t.height = t.$media.attr('height');	
-					} else {
-						t.height = t.options.defaultVideoHeight;
-					}					
-					
-					/*
-					t.width = (t.options.videoWidth > 0 || t.options.videoWidth.toString().indexOf('%') > -1) ? 
-								t.options.videoWidth : 
-								(t.$media[0].getAttribute('width') !== null) ? 
-									t.$media.attr('width') : 
-									t.options.defaultVideoWidth;
-					
-					
-					t.height = (t.options.videoHeight > 0 || t.options.videoHeight.toString().indexOf('%') > -1) ? 
-								t.options.videoHeight : 
-								(t.$media[0].getAttribute('height') !== null) ? 
-									t.$media.attr('height') : 
-									t.options.defaultVideoHeight;
-									
-					*/
+				/* size priority:
+					(1) videoWidth (forced), 
+					(2) style="width;height;"
+					(3) width attribute,
+					(4) defaultVideoWidth (for unspecified cases)
+				*/
+				
+				var capsTagName = tagName.substring(0,1).toUpperCase() + tagName.substring(1);
+				
+				if (t.options[tagName + 'Width'] > 0 || t.options[tagName + 'Width'].toString().indexOf('%') > -1) {
+					t.width = t.options[tagName + 'Width'];
+				} else if (t.media.style.width !== '' && t.media.style.width !== null) {
+					t.width = t.media.style.width;						
+				} else if (t.media.getAttribute('width') !== null) {
+					t.width = t.$media.attr('width');
 				} else {
-					t.width = t.options.audioWidth;
-					t.height = t.options.audioHeight;
+					t.width = t.options['default' + capsTagName + 'Width'];
+				}
+				
+				if (t.options[tagName + 'Height'] > 0 || t.options[tagName + 'Height'].toString().indexOf('%') > -1) {
+					t.height = t.options[tagName + 'Height'];
+				} else if (t.media.style.height !== '' && t.media.style.height !== null) {
+					t.height = t.media.style.height;
+				} else if (t.$media[0].getAttribute('height') !== null) {
+					t.height = t.$media.attr('height');	
+				} else {
+					t.height = t.options['default' + capsTagName + 'Height'];
 				}
 
 				// set the size, while we wait for the plugins to load below
