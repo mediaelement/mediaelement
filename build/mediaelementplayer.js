@@ -266,12 +266,12 @@ if (typeof jQuery != 'undefined') {
 			if (doAnimation) {
 				t.controls
 					.css('visibility','visible')
-					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});	
+					.fadeIn(200, function() {t.controlsAreVisible = true;});	
 	
 				// any additional controls people might add and want to hide
 				t.container.find('.mejs-control')
 					.css('visibility','visible')
-					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});	
+					.fadeIn(200, function() {t.controlsAreVisible = true;});	
 					
 			} else {
 				t.controls
