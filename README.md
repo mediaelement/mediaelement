@@ -86,10 +86,14 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * thin line when controls are off
 * system-wide events
 * playlist builder
+* Ogg/Theora playback
 
-* keyboard controls
-* stop other players when one starts
-* simple startup (`.mejs` class with `data-mejsoptions`)
+*2.4.2 (dev)*
+
+* keyboard controls (up/down controls volume, left/right seeks, space play/pause, f goes fullscreen)
+* `<audio>` now works with 100% for responsive layouts
+* Support for auto start with class `mejs-player` and `data-mejsoptions` e.g. `<video src="media.mp4" class="mejs-player" data-mejsoptions='{"features":["playpause","progress","volume"}, "success": "myCallback"}'><video>`
+* With multiple players on a page, when one starts the others pause (toggle `pauseOtherPlayers: true`) 
 
 *2.4.1 (2011/12/05) - 55.7kb*
 
