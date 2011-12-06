@@ -88,7 +88,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
-*2.4.2 (dev)*
+*2.4.2 (2011/12/06) - 57.3kb*
 
 * keyboard controls (up/down controls volume, left/right seeks, space play/pause, f goes fullscreen)
 * `<audio>` now works with 100% for responsive layouts [283](https://github.com/johndyer/mediaelement/issues/283)
