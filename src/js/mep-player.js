@@ -948,7 +948,7 @@
 				});
 				
 				// check if someone clicked outside a player region, then kill its focus
-				$(document).click(function() {
+				$(document).click(function(event) {
 						if ($(event.target).closest('.mejs-container').length == 0) {
 								player.hasFocus = false;
 						}
