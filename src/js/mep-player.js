@@ -105,7 +105,7 @@
 				{
 						keys: [
 								39, // RIGHT
-								228, // Google TV forward
+								228 // Google TV forward
 						], 
 						action: function(player, media) {
 								if (!isNaN(media.duration) && media.duration > 0) {
