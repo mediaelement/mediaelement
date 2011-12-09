@@ -58,7 +58,10 @@
 		// array of keyboard actions such as play pause
 		keyActions: [
 				{
-						key: 32, // SPACE
+						keys: [
+								32, // SPACE
+								179 // GOOGLE play/pause button
+							  ],
 						action: function(player, media) {
 								if (media.paused || media.ended) {
 										media.play();	
@@ -68,23 +71,26 @@
 						}
 				},
 				{
-						key: 38, // UP
+						keys: [38], // UP
 						action: function(player, media) {
 								var newVolume = Math.min(media.volume + 0.1, 1);
 								media.setVolume(newVolume);
 						}
 				},
 				{
-						key: 40, // DOWN
+						keys: [40], // DOWN
 						action: function(player, media) {
 								var newVolume = Math.max(media.volume - 0.1, 0);
 								media.setVolume(newVolume);
 						}
 				},
 				{
-						key: 37, // LEFT
+						keys: [
+								37, // LEFT
+								227 // Google TV rewind
+						],
 						action: function(player, media) {
-								if (!media.ended && !media.paused) {
+								if (!isNaN(media.duration) && media.duration > 0) {
 										if (player.isVideo) {
 												player.showControls();
 												player.startControlsTimer();
@@ -97,9 +103,12 @@
 						}
 				},
 				{
-						key: 39, // RIGHT
+						keys: [
+								39, // RIGHT
+								228, // Google TV forward
+						], 
 						action: function(player, media) {
-								if (!media.ended && !media.paused) {
+								if (!isNaN(media.duration) && media.duration > 0) {
 										if (player.isVideo) {
 												player.showControls();
 												player.startControlsTimer();
@@ -112,7 +121,7 @@
 						}
 				},
 				{
-						key: 70, // f
+						keys: [70], // f
 						action: function(player, media) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
@@ -924,10 +933,13 @@
 								// find a matching key
 								for (var i=0, il=player.options.keyActions.length; i<il; i++) {
 										var keyAction = player.options.keyActions[i];
-										if (e.keyCode == keyAction.key) {
-												e.preventDefault();
-												keyAction.action(player, media);
-												return false;
+										
+										for (var j=0, jl=keyAction.keys.length; j<jl; j++) {
+												if (e.keyCode == keyAction.keys[j]) {
+														e.preventDefault();
+														keyAction.action(player, media);
+														return false;
+												}												
 										}
 								}
 						}
