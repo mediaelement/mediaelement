@@ -30,7 +30,8 @@
 						offset = total.offset(),
 						width = total.outerWidth(),
 						percentage = 0,
-						newTime = 0;
+						newTime = 0,
+						pos = x - offset.left;
 
 
 					if (x > offset.left && x <= width + offset.left && media.duration) {
@@ -43,9 +44,11 @@
 						}
 
 						// position floating time box
-						var pos = x - offset.left;
-						timefloat.css('left', pos);
-						timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );
+						if (!mejs.MediaFeatures.hasTouch) {
+								timefloat.css('left', pos);
+								timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );
+								timefloat.show();
+						}
 					}
 				},
 				mouseIsDown = false,
@@ -66,14 +69,19 @@
 			controls.find('.mejs-time-total')
 				.bind('mouseenter', function(e) {
 					mouseIsOver = true;
+					if (!mejs.MediaFeatures.hasTouch) {
+						timefloat.show();
+					}
 				})
 				.bind('mouseleave',function(e) {
 					mouseIsOver = false;
+					timefloat.hide();
 				});
 
 			$(document)
 				.bind('mouseup', function (e) {
 					mouseIsDown = false;
+					timefloat.hide();
 					//handleMouseMove(e);
 				})
 				.bind('mousemove', function (e) {
