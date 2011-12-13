@@ -51,8 +51,11 @@
 					$('<div class="mejs-button mejs-fullscreen-button">' + 
 						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.fullscreenText + '"></button>' + 
 					'</div>')
-					.appendTo(controls)
-					.click(function() {
+					.appendTo(controls);
+				
+				if (t.media.pluginType === 'native') {
+					
+					fullscreenBtn.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || player.isFullScreen;													
 						
 						if (isFullScreen) {
@@ -61,6 +64,42 @@
 							player.enterFullScreen();
 						}
 					});
+					
+				} else {
+
+					var hideTimeout = null;
+
+					fullscreenBtn
+						.mouseover(function() {
+							console.log('trying to position');
+
+							if (hideTimeout !== null) {
+								clearTimeout(hideTimeout);
+								delete hideTimeout;
+							}
+							
+							var buttonPos = fullscreenBtn.offset(),
+								containerPos = player.container.offset();
+								
+							media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top);
+						
+						})
+						.mouseout(function() {
+								
+							console.log('mouseout fullscreen buton');	
+							
+							if (hideTimeout !== null) {
+								clearTimeout(hideTimeout);
+								delete hideTimeout;
+							}
+							
+							hideTimeout = setTimeout(function() {	
+								media.hideFullscreenButton();
+							}, 1500);
+							
+							
+						})					
+				}
 			
 			player.fullscreenBtn = fullscreenBtn;	
 
