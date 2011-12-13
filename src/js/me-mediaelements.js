@@ -159,6 +159,20 @@ mejs.PluginMediaElement.prototype = {
 
 		return false;
 	},
+	
+	positionFullscreenButton: function(x,y) {
+		console.log('positionFullscreenButton',x,y,this.pluginApi.positionFullscreenButton);
+		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
+			this.pluginApi.positionFullscreenButton(x,y);
+		}
+	},
+	
+	hideFullscreenButton: function() {
+		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
+			this.pluginApi.hideFullscreenButton();
+		}		
+	},	
+	
 
 	// custom methods since not all JavaScript implementations support get/set
 
