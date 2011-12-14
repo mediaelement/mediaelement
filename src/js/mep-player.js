@@ -361,7 +361,6 @@
 		},
 
 		hideControls: function(doAnimation) {
-			//console.log('hide doAnimation', doAnimation);
 			var t = this;
 			
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
@@ -504,14 +503,12 @@
 				if (t.isVideo) {
 				
 					if (mejs.MediaFeatures.hasTouch) {
-						console.log("enabling touch control style")
 						
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
 						
 						t.$media.bind('touchstart', function() {
 							
-							console.log('touch click. visible: ' + t.controlsAreVisible + ', enabled: ' + t.controlsEnabled);
 							
 							// toggle controls
 							if (t.controlsAreVisible) {
