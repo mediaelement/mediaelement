@@ -961,6 +961,7 @@
 					srclang: $(this).attr('srclang').toLowerCase(),
 					src: $(this).attr('src'),
 					kind: $(this).attr('kind'),
+					label: $(this).attr('label'),
 					entries: [],
 					isLoaded: false
 				});
