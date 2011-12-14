@@ -127,6 +127,7 @@
 						
 					return false;
 				});
+				
 			$(document)
 				.bind('mouseup', function (e) {
 					mouseIsDown = false;
