@@ -525,30 +525,26 @@
 					
 					} else {
 						// click controls
-						var clickObect = t.$media,
-								hoverObjects = $(t.container).add(t.controls);
-						
-						if (t.media.pluginType !== 'native') {
-								clickObject = $(t.media.pluginElement.parentNode);
-								//hoverObjects.add(clickObject);
-								hoverObjects = $(clickObject).add(t.controls);
-								//hoverObjects = $([t.container, clickObject, t.controls]); //.find('.me-plugin-overlay');
+						if (t.media.pluginType == 'native') {
+							t.$media.click(function() {
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}
+							});
+						} else {
+							$(t.media.pluginElement).click(function() {
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}						
+							});
 						}
-						
-						console.log('hover objects', hoverObjects);
-						
-						clickObect.click(function() {
-							console.log('clicked');
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
-						});
-
 					
 						// show/hide controls
-						hoverObjects
+						t.container
 							.bind('mouseenter mouseover', function () {
 								if (t.controlsEnabled) {
 									if (!t.options.alwaysShowControls) {								
@@ -557,7 +553,6 @@
 										t.startControlsTimer(2500);		
 									}
 								}
-								console.log('enter', this);
 							})
 							.bind('mousemove', function() {
 								if (t.controlsEnabled) {
@@ -569,8 +564,6 @@
 										t.startControlsTimer(2500);
 									}
 								}
-								
-								console.log('move', this);
 							})
 							.bind('mouseleave', function () {
 								if (t.controlsEnabled) {
@@ -578,8 +571,6 @@
 										t.startControlsTimer(1000);								
 									}
 								}
-								
-								console.log('leave', this);
 							});
 					}
 					
@@ -669,14 +660,6 @@
 					// don't resize for fullscreen mode				
 					if ( !(t.isFullScreen || (mejs.MediaFeatures.hasTrueNativeFullScreen && document.webkitIsFullScreen)) ) {
 						t.setPlayerSize(t.width, t.height);
-					}
-					
-					// adjust player
-					if (t.media.pluginType !== 'native') {
-						var pos = t.container.offset();
-						t.media.pluginElement.parentNode.style.top = pos.top + 'px';
-						t.media.pluginElement.parentNode.style.left = pos.left + 'px';
-						//console.log('adjusting plugin', pos);
 					}
 					
 					// always adjust controls
