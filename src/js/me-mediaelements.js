@@ -161,7 +161,6 @@ mejs.PluginMediaElement.prototype = {
 	},
 	
 	positionFullscreenButton: function(x,y) {
-		console.log('positionFullscreenButton',x,y,this.pluginApi.positionFullscreenButton);
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
 			this.pluginApi.positionFullscreenButton(x,y);
 		}
