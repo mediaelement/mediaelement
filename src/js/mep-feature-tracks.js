@@ -4,12 +4,6 @@
 	$.extend(mejs.MepDefaults, {
 		// this will automatically turn on a <track>
 		startLanguage: '',
-		// a list of languages to auto-translate via Google
-		translations: [],
-		// a dropdownlist of automatic translations
-		translationSelector: false,
-		// key for tranlsations
-		googleApiKey: '',
 		
 		tracksText: 'Captions/Subtitles'
 	});
@@ -98,24 +92,12 @@
 			player.selectedTrack = null;
 			player.isLoadingTrack = false;
 
-			// add user-defined translations
-			if (player.tracks.length > 0 && player.options.translations.length > 0) {
-				for (i=0; i<player.options.translations.length; i++) {
-					player.tracks.push({
-						srclang: player.options.translations[i].toLowerCase(),
-						src: null,
-						kind: 'subtitles', 
-						entries: [],
-						isLoaded: false,
-						isTranslation: true
-					});
-				}
-			}
+			
 
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].isTranslation);
+					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
 
@@ -150,44 +132,7 @@
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
-			}				
-
-			// auto selector
-			if (player.options.translationSelector) {
-				for (i in mejs.language.codes) {
-					options += '<option value="' + i + '">' + mejs.language.codes[i] + '</option>';
-				}
-				player.container.find('.mejs-captions-selector ul').before($(
-					'<select class="mejs-captions-translations">' +
-						'<option value="">--Add Translation--</option>' +
-						options +
-					'</select>'
-				));
-				// add clicks
-				player.container.find('.mejs-captions-translations').change(function() {
-					var
-						option = $(this);
-						lang = option.val();
-					// add this language to the tracks list
-					if (lang != '') {
-						player.tracks.push({
-							srclang: lang,
-							src: null,
-							entries: [],
-							isLoaded: false,
-							isTranslation: true
-						});
-
-						if (!player.isLoadingTrack) {
-							player.trackToLoad--;
-							player.addTrackButton(lang,true);
-							player.options.startLanguage = lang;
-							player.loadNextTrack();
-						}
-					}
-				});
 			}
-
 		},
 
 		loadNextTrack: function() {
@@ -213,7 +158,7 @@
 
 					// create button
 					//t.addTrackButton(track.srclang);
-					t.enableTrackButton(track.srclang);
+					t.enableTrackButton(track.srclang, track.label);
 
 					t.loadNextTrack();
 
@@ -250,14 +195,18 @@
 			}
 		},
 
-		enableTrackButton: function(lang) {
+		enableTrackButton: function(lang, label) {
 			var t = this;
+			
+			if (label === '') {
+				label = mejs.language.codes[lang] || lang;
+			}			
 
 			t.captionsButton
 				.find('input[value=' + lang + ']')
 					.prop('disabled',false)
 				.siblings('label')
-					.html( mejs.language.codes[lang] || lang );
+					.html( label );
 
 			// auto select
 			if (t.options.startLanguage == lang) {
@@ -267,14 +216,16 @@
 			t.adjustLanguageBox();
 		},
 
-		addTrackButton: function(lang, isTranslation) {
-			var t = this,
-				l = mejs.language.codes[lang] || lang;
+		addTrackButton: function(lang, label) {
+			var t = this;
+			if (label === '') {
+				label = mejs.language.codes[lang] || lang;
+			}
 
 			t.captionsButton.find('ul').append(
 				$('<li>'+
 					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + l + ((isTranslation) ? ' (translating)' : ' (loading)') + '</label>'+
+					'<label for="' + t.id + '_captions_' + lang + '">' + label + ' (loading)' + '</label>'+
 				'</li>')
 			);
 
@@ -506,117 +457,7 @@
 			}
 
 			return entries;
-		},
-
-		translateTrackText: function(trackData, fromLang, toLang, googleApiKey, callback) {
-
-			var 
-				entries = {text:[], times:[]},
-				lines,
-				i
-
-			this.translateText( trackData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
-				// split on separators
-				lines = result.split('<a></a>');
-
-				// create new entries
-				for (i=0;i<trackData.text.length; i++) {
-					// add translated line
-					entries.text[i] = lines[i];
-					// copy existing times
-					entries.times[i] = {
-						start: trackData.times[i].start,
-						stop: trackData.times[i].stop,
-						settings: trackData.times[i].settings
-					};
-				}
-
-				callback(entries);
-			});
-		},
-
-		translateText: function(text, fromLang, toLang, googleApiKey, callback) {
-
-			var
-				separatorIndex,
-				chunks = [],
-				chunk,
-				maxlength = 1000,
-				result = '',
-				nextChunk= function() {
-					if (chunks.length > 0) {
-						chunk = chunks.shift();
-						mejs.TrackFormatParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
-							if (r != 'undefined') {
-								result += r;
-							}
-							nextChunk();
-						});
-					} else {
-						callback(result);
-					}
-				};
-
-			// split into chunks
-			while (text.length > 0) {
-				if (text.length > maxlength) {
-					separatorIndex = text.lastIndexOf('.', maxlength);
-					chunks.push(text.substring(0, separatorIndex));
-					text = text.substring(separatorIndex+1);
-				} else {
-					chunks.push(text);
-					text = '';
-				}
-			}
-
-			// start handling the chunks
-			nextChunk();
-		},
-		translateChunk: function(text, fromLang, toLang, googleApiKey, callback) {
-
-			var data = {
-				q: text, 
-				langpair: fromLang + '|' + toLang,
-				v: '1.0'
-			};
-			if (googleApiKey !== '' && googleApiKey !== null) {
-				data.key = googleApiKey;
-			}
-
-			$.ajax({
-				url: 'https://ajax.googleapis.com/ajax/services/language/translate', // 'https://www.google.com/uds/Gtranslate', //'https://ajax.googleapis.com/ajax/services/language/translate', //
-				data: data,
-				type: 'GET',
-				dataType: 'jsonp',
-				success: function(d) {
-					
-					callback((d.responseData !== null) ? d.responseData.translatedText : 'No translation');
-				},
-				error: function(e) {
-					callback(null);
-				}
-			});
 		}
 	};
-	// test for browsers with bad String.split method.
-	if ('x\n\ny'.split(/\n/gi).length != 3) {
-		// add super slow IE8 and below version
-		mejs.TrackFormatParser.split2 = function(text, regex) {
-			var 
-				parts = [], 
-				chunk = '',
-				i;
-
-			for (i=0; i<text.length; i++) {
-				chunk += text.substring(i,i+1);
-				if (regex.test(chunk)) {
-					parts.push(chunk.replace(regex, ''));
-					chunk = '';
-				}
-			}
-			parts.push(chunk);
-			return parts;
-		}
-	}
 
 })(mejs.$);
