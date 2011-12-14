@@ -1,7 +1,7 @@
 (function($) {
 	
 	$.extend(mejs.MepDefaults, {
-		forcePluginFullScreen: false,
+		usePluginFullScreen: false,
 		newWindowCallback: function() { return '';},
 		fullscreenText: 'Fullscreen'
 	});
@@ -53,7 +53,7 @@
 					'</div>')
 					.appendTo(controls);
 				
-				if (t.media.pluginType === 'native') {
+				if (t.media.pluginType === 'native' || (!t.options.usePluginFullScreen && !mejs.MediaFeatures.isFirefox)) {
 					
 					fullscreenBtn.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || player.isFullScreen;													
@@ -71,8 +71,7 @@
 
 					fullscreenBtn
 						.mouseover(function() {
-							console.log('trying to position');
-
+							
 							if (hideTimeout !== null) {
 								clearTimeout(hideTimeout);
 								delete hideTimeout;
@@ -85,9 +84,7 @@
 						
 						})
 						.mouseout(function() {
-								
-							console.log('mouseout fullscreen buton');	
-							
+						
 							if (hideTimeout !== null) {
 								clearTimeout(hideTimeout);
 								delete hideTimeout;
@@ -114,13 +111,9 @@
 			
 			var t = this;
 			
-			
-			
 			// firefox+flash can't adjust plugin sizes without resetting :(
-			if (/* t.container.find('object,embed,iframe').length > 0 */
-			    t.media.pluginType !== 'native'
-			    && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
-				t.media.setFullscreen(true);
+			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isFirefox || t.options.usePluginFullScreen)) {
+				//t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
 			}			
@@ -135,14 +128,16 @@
 			normalWidth = t.container.width();
 			
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
-			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-						
-				mejs.MediaFeatures.requestFullScreen(t.container[0]);
-				//return;
-				
-			} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
-				t.media.webkitEnterFullscreen();
-				return;
+			if (t.media.pluginType === 'native') {
+				if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+							
+					mejs.MediaFeatures.requestFullScreen(t.container[0]);
+					//return;
+					
+				} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
+					t.media.webkitEnterFullscreen();
+					return;
+				}
 			}
 			
 			// check for iframe launch
@@ -181,11 +176,13 @@
 				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
 
 			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
-			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+			// Actually, it seems to be needed for IE8, too
+			//if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
 				setTimeout(function() {
 					t.container.css({width: '100%', height: '100%'});
+					t.setControlsSize();
 				}, 500);
-			}
+			//}
 				
 			if (t.pluginType === 'native') {
 				t.$media
@@ -196,9 +193,9 @@
 					.width('100%')
 					.height('100%');
 					
-				if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
+				//if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
 					t.media.setVideoSize($(window).width(),$(window).height());
-				}
+				//}
 			}
 			
 			t.layers.children('div')
