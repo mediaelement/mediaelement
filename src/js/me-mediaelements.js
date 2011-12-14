@@ -244,13 +244,6 @@ mejs.PluginMediaElement.prototype = {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
-			/*
-			if ( this.pluginElement.parentNode && this.pluginElement.parentNode.style) {
-				this.pluginElement.parentNode.style.width = width + 'px';
-				this.pluginElement.parentNode.style.height = height + 'px';
-			}
-			*/
-			
 			if (this.pluginApi != null && this.pluginApi.setVideoSize) {
 				this.pluginApi.setVideoSize(width, height);
 			}

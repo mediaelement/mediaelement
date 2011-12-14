@@ -53,7 +53,7 @@
 					'</div>')
 					.appendTo(controls);
 				
-				if (t.media.pluginType === 'native' || (t.media.pluginType !== 'native' && !t.options.usePluginFullScreen)) {
+				if (t.media.pluginType === 'native') {
 					
 					fullscreenBtn.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || player.isFullScreen;													
@@ -117,29 +117,25 @@
 			
 			
 			// firefox+flash can't adjust plugin sizes without resetting :(
-			/*
-			if (
+			if (/* t.container.find('object,embed,iframe').length > 0 */
 			    t.media.pluginType !== 'native'
 			    && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
 				t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
-			}
-			*/
+			}			
 						
 			// store overflow 
 			docStyleOverflow = document.documentElement.style.overflow;
 			// set it to not show scroll bars so 100% will work
-			if (!mejs.MediaFeatures.isFirefox) {
-				document.documentElement.style.overflow = 'hidden';			
-			}
+			document.documentElement.style.overflow = 'hidden';			
 		
 			// store sizing
 			normalHeight = t.container.height();
 			normalWidth = t.container.width();
 			
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
-			if (mejs.MediaFeatures.hasTrueNativeFullScreen && t.media.pluginType === 'native') {
+			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
 						
 				mejs.MediaFeatures.requestFullScreen(t.container[0]);
 				//return;
@@ -196,16 +192,13 @@
 					.width('100%')
 					.height('100%');
 			} else {
-				$(t.media.pluginElement.parentNode)
+				t.container.find('object, embed, iframe')
 					.width('100%')
 					.height('100%');
-				
-				t.media.pluginElement.parentNode.style.top = '0';
-				t.media.pluginElement.parentNode.style.left = '0';
 					
-				//if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
+				if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
 					t.media.setVideoSize($(window).width(),$(window).height());
-				//}
+				}
 			}
 			
 			t.layers.children('div')
@@ -224,7 +217,14 @@
 		
 		exitFullScreen: function() {
 			
-			var t = this;			
+			var t = this;		
+		
+			// firefox can't adjust plugins
+			if (t.media.pluginType !== 'native' && mejs.MediaFeatures.isFirefox) {				
+				t.media.setFullscreen(false);
+				//player.isFullScreen = false;
+				return;
+			}		
 		
 			// come outo of native fullscreen
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen && (mejs.MediaFeatures.isFullScreen() || t.isFullScreen)) {
@@ -232,10 +232,8 @@
 			}	
 
 			// restore scroll bars to document
-			if (!mejs.MediaFeatures.isFirefox) {
-				document.documentElement.style.overflow = docStyleOverflow;					
-			}
-			
+			document.documentElement.style.overflow = docStyleOverflow;					
+				
 			t.container
 				.removeClass('mejs-container-fullscreen')
 				.width(normalWidth)
@@ -247,12 +245,9 @@
 					.width(normalWidth)
 					.height(normalHeight);
 			} else {
-				$(t.media.pluginElement.parentNode)
+				t.container.find('object embed')
 					.width(normalWidth)
 					.height(normalHeight);
-					
-				t.media.pluginElement.parentNode.style.top = t.container.offset().top + 'px';
-				t.media.pluginElement.parentNode.style.left = t.container.offset().left + 'px';					
 					
 				t.media.setVideoSize(normalWidth, normalHeight);
 			}				
