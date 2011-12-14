@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.4.3';
+mejs.version = '2.5.0';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -508,6 +508,19 @@ mejs.PluginMediaElement.prototype = {
 
 		return false;
 	},
+	
+	positionFullscreenButton: function(x,y) {
+		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
+			this.pluginApi.positionFullscreenButton(x,y);
+		}
+	},
+	
+	hideFullscreenButton: function() {
+		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
+			this.pluginApi.hideFullscreenButton();
+		}		
+	},	
+	
 
 	// custom methods since not all JavaScript implementations support get/set
 
@@ -1058,7 +1071,12 @@ mejs.HtmlMediaElementShim = {
 		// add container (must be added to DOM before inserting HTML for IE)
 		container.className = 'me-plugin';
 		container.id = pluginid + '_container';
-		htmlMediaElement.parentNode.insertBefore(container, htmlMediaElement);
+		
+		if (playback.isVideo) {
+				htmlMediaElement.parentNode.insertBefore(container, htmlMediaElement);
+		} else {
+				document.body.insertBefore(container, document.body.childNodes[0]);
+		}
 
 		// flash/silverlight vars
 		initVars = [
