@@ -377,7 +377,6 @@ if (typeof jQuery != 'undefined') {
 		},
 
 		hideControls: function(doAnimation) {
-			//console.log('hide doAnimation', doAnimation);
 			var t = this;
 			
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
@@ -520,14 +519,12 @@ if (typeof jQuery != 'undefined') {
 				if (t.isVideo) {
 				
 					if (mejs.MediaFeatures.hasTouch) {
-						console.log("enabling touch control style")
 						
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
 						
 						t.$media.bind('touchstart', function() {
 							
-							console.log('touch click. visible: ' + t.controlsAreVisible + ', enabled: ' + t.controlsEnabled);
 							
 							// toggle controls
 							if (t.controlsAreVisible) {
@@ -541,23 +538,17 @@ if (typeof jQuery != 'undefined') {
 					
 					} else {
 						// click controls
-						if (t.media.pluginType == 'native') {
-							t.$media.click(function() {
-								if (media.paused) {
-									media.play();
-								} else {
-									media.pause();
-								}
-							});
-						} else {
-							$(t.media.pluginElement).click(function() {
-								if (media.paused) {
-									media.play();
-								} else {
-									media.pause();
-								}						
-							});
-						}
+						var clickElement = (t.media.pluginType == 'native') ? t.$media : $(t.media.pluginElement);
+						
+						// click to play/pause
+						clickElement.click(function() {
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
+						});
+						
 					
 						// show/hide controls
 						t.container
@@ -983,6 +974,7 @@ if (typeof jQuery != 'undefined') {
 					srclang: $(this).attr('srclang').toLowerCase(),
 					src: $(this).attr('src'),
 					kind: $(this).attr('kind'),
+					label: $(this).attr('label'),
 					entries: [],
 					isLoaded: false
 				});
@@ -1481,25 +1473,40 @@ if (typeof jQuery != 'undefined') {
 				// set the volume
 				media.setVolume(volume);
 			},
-			mouseIsDown = false;
+			mouseIsDown = false,
+			mouseIsOver = false;
 
 			// SLIDER
 			mute
 				.hover(function() {
 					volumeSlider.show();
+					mouseIsOver = true;
 				}, function() {
-					volumeSlider.hide();
-				})		
+					mouseIsOver = false;	
+						
+					if (!mouseIsDown)	{
+						volumeSlider.hide();
+					}
+				});
 			
 			volumeSlider
+				.bind('mouseover', function() {
+					mouseIsOver = true;	
+				})
 				.bind('mousedown', function (e) {
 					handleVolumeMove(e);
 					mouseIsDown = true;
+						
 					return false;
 				});
+				
 			$(document)
 				.bind('mouseup', function (e) {
 					mouseIsDown = false;
+					
+					if (!mouseIsOver) {
+						volumeSlider.hide();
+					}
 				})
 				.bind('mousemove', function (e) {
 					if (mouseIsDown) {
@@ -1544,7 +1551,7 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 	
 	$.extend(mejs.MepDefaults, {
-		forcePluginFullScreen: false,
+		usePluginFullScreen: false,
 		newWindowCallback: function() { return '';},
 		fullscreenText: 'Fullscreen'
 	});
@@ -1594,8 +1601,11 @@ if (typeof jQuery != 'undefined') {
 					$('<div class="mejs-button mejs-fullscreen-button">' + 
 						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.fullscreenText + '"></button>' + 
 					'</div>')
-					.appendTo(controls)
-					.click(function() {
+					.appendTo(controls);
+				
+				if (t.media.pluginType === 'native' || (!t.options.usePluginFullScreen && !mejs.MediaFeatures.isFirefox)) {
+					
+					fullscreenBtn.click(function() {
 						var isFullScreen = (mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || player.isFullScreen;													
 						
 						if (isFullScreen) {
@@ -1604,6 +1614,39 @@ if (typeof jQuery != 'undefined') {
 							player.enterFullScreen();
 						}
 					});
+					
+				} else {
+
+					var hideTimeout = null;
+
+					fullscreenBtn
+						.mouseover(function() {
+							
+							if (hideTimeout !== null) {
+								clearTimeout(hideTimeout);
+								delete hideTimeout;
+							}
+							
+							var buttonPos = fullscreenBtn.offset(),
+								containerPos = player.container.offset();
+								
+							media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top);
+						
+						})
+						.mouseout(function() {
+						
+							if (hideTimeout !== null) {
+								clearTimeout(hideTimeout);
+								delete hideTimeout;
+							}
+							
+							hideTimeout = setTimeout(function() {	
+								media.hideFullscreenButton();
+							}, 1500);
+							
+							
+						})					
+				}
 			
 			player.fullscreenBtn = fullscreenBtn;	
 
@@ -1618,13 +1661,9 @@ if (typeof jQuery != 'undefined') {
 			
 			var t = this;
 			
-			
-			
 			// firefox+flash can't adjust plugin sizes without resetting :(
-			if (/* t.container.find('object,embed,iframe').length > 0 */
-			    t.media.pluginType !== 'native'
-			    && (mejs.MediaFeatures.isGecko || t.options.forcePluginFullScreen)) {
-				t.media.setFullscreen(true);
+			if (t.media.pluginType !== 'native' && (mejs.MediaFeatures.isFirefox || t.options.usePluginFullScreen)) {
+				//t.media.setFullscreen(true);
 				//player.isFullScreen = true;
 				return;
 			}			
@@ -1639,14 +1678,16 @@ if (typeof jQuery != 'undefined') {
 			normalWidth = t.container.width();
 			
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
-			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-						
-				mejs.MediaFeatures.requestFullScreen(t.container[0]);
-				//return;
-				
-			} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
-				t.media.webkitEnterFullscreen();
-				return;
+			if (t.media.pluginType === 'native') {
+				if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+							
+					mejs.MediaFeatures.requestFullScreen(t.container[0]);
+					//return;
+					
+				} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
+					t.media.webkitEnterFullscreen();
+					return;
+				}
 			}
 			
 			// check for iframe launch
@@ -1685,11 +1726,13 @@ if (typeof jQuery != 'undefined') {
 				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
 
 			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
-			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
+			// Actually, it seems to be needed for IE8, too
+			//if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
 				setTimeout(function() {
 					t.container.css({width: '100%', height: '100%'});
+					t.setControlsSize();
 				}, 500);
-			}
+			//}
 				
 			if (t.pluginType === 'native') {
 				t.$media
@@ -1700,9 +1743,9 @@ if (typeof jQuery != 'undefined') {
 					.width('100%')
 					.height('100%');
 					
-				if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
+				//if (!mejs.MediaFeatures.hasTrueNativeFullScreen) {
 					t.media.setVideoSize($(window).width(),$(window).height());
-				}
+				//}
 			}
 			
 			t.layers.children('div')
@@ -1777,12 +1820,6 @@ if (typeof jQuery != 'undefined') {
 	$.extend(mejs.MepDefaults, {
 		// this will automatically turn on a <track>
 		startLanguage: '',
-		// a list of languages to auto-translate via Google
-		translations: [],
-		// a dropdownlist of automatic translations
-		translationSelector: false,
-		// key for tranlsations
-		googleApiKey: '',
 		
 		tracksText: 'Captions/Subtitles'
 	});
@@ -1871,24 +1908,12 @@ if (typeof jQuery != 'undefined') {
 			player.selectedTrack = null;
 			player.isLoadingTrack = false;
 
-			// add user-defined translations
-			if (player.tracks.length > 0 && player.options.translations.length > 0) {
-				for (i=0; i<player.options.translations.length; i++) {
-					player.tracks.push({
-						srclang: player.options.translations[i].toLowerCase(),
-						src: null,
-						kind: 'subtitles', 
-						entries: [],
-						isLoaded: false,
-						isTranslation: true
-					});
-				}
-			}
+			
 
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].isTranslation);
+					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
 
@@ -1923,44 +1948,7 @@ if (typeof jQuery != 'undefined') {
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
-			}				
-
-			// auto selector
-			if (player.options.translationSelector) {
-				for (i in mejs.language.codes) {
-					options += '<option value="' + i + '">' + mejs.language.codes[i] + '</option>';
-				}
-				player.container.find('.mejs-captions-selector ul').before($(
-					'<select class="mejs-captions-translations">' +
-						'<option value="">--Add Translation--</option>' +
-						options +
-					'</select>'
-				));
-				// add clicks
-				player.container.find('.mejs-captions-translations').change(function() {
-					var
-						option = $(this);
-						lang = option.val();
-					// add this language to the tracks list
-					if (lang != '') {
-						player.tracks.push({
-							srclang: lang,
-							src: null,
-							entries: [],
-							isLoaded: false,
-							isTranslation: true
-						});
-
-						if (!player.isLoadingTrack) {
-							player.trackToLoad--;
-							player.addTrackButton(lang,true);
-							player.options.startLanguage = lang;
-							player.loadNextTrack();
-						}
-					}
-				});
 			}
-
 		},
 
 		loadNextTrack: function() {
@@ -1986,7 +1974,7 @@ if (typeof jQuery != 'undefined') {
 
 					// create button
 					//t.addTrackButton(track.srclang);
-					t.enableTrackButton(track.srclang);
+					t.enableTrackButton(track.srclang, track.label);
 
 					t.loadNextTrack();
 
@@ -2023,14 +2011,18 @@ if (typeof jQuery != 'undefined') {
 			}
 		},
 
-		enableTrackButton: function(lang) {
+		enableTrackButton: function(lang, label) {
 			var t = this;
+			
+			if (label === '') {
+				label = mejs.language.codes[lang] || lang;
+			}			
 
 			t.captionsButton
 				.find('input[value=' + lang + ']')
 					.prop('disabled',false)
 				.siblings('label')
-					.html( mejs.language.codes[lang] || lang );
+					.html( label );
 
 			// auto select
 			if (t.options.startLanguage == lang) {
@@ -2040,14 +2032,16 @@ if (typeof jQuery != 'undefined') {
 			t.adjustLanguageBox();
 		},
 
-		addTrackButton: function(lang, isTranslation) {
-			var t = this,
-				l = mejs.language.codes[lang] || lang;
+		addTrackButton: function(lang, label) {
+			var t = this;
+			if (label === '') {
+				label = mejs.language.codes[lang] || lang;
+			}
 
 			t.captionsButton.find('ul').append(
 				$('<li>'+
 					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + l + ((isTranslation) ? ' (translating)' : ' (loading)') + '</label>'+
+					'<label for="' + t.id + '_captions_' + lang + '">' + label + ' (loading)' + '</label>'+
 				'</li>')
 			);
 
@@ -2279,118 +2273,8 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			return entries;
-		},
-
-		translateTrackText: function(trackData, fromLang, toLang, googleApiKey, callback) {
-
-			var 
-				entries = {text:[], times:[]},
-				lines,
-				i
-
-			this.translateText( trackData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
-				// split on separators
-				lines = result.split('<a></a>');
-
-				// create new entries
-				for (i=0;i<trackData.text.length; i++) {
-					// add translated line
-					entries.text[i] = lines[i];
-					// copy existing times
-					entries.times[i] = {
-						start: trackData.times[i].start,
-						stop: trackData.times[i].stop,
-						settings: trackData.times[i].settings
-					};
-				}
-
-				callback(entries);
-			});
-		},
-
-		translateText: function(text, fromLang, toLang, googleApiKey, callback) {
-
-			var
-				separatorIndex,
-				chunks = [],
-				chunk,
-				maxlength = 1000,
-				result = '',
-				nextChunk= function() {
-					if (chunks.length > 0) {
-						chunk = chunks.shift();
-						mejs.TrackFormatParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
-							if (r != 'undefined') {
-								result += r;
-							}
-							nextChunk();
-						});
-					} else {
-						callback(result);
-					}
-				};
-
-			// split into chunks
-			while (text.length > 0) {
-				if (text.length > maxlength) {
-					separatorIndex = text.lastIndexOf('.', maxlength);
-					chunks.push(text.substring(0, separatorIndex));
-					text = text.substring(separatorIndex+1);
-				} else {
-					chunks.push(text);
-					text = '';
-				}
-			}
-
-			// start handling the chunks
-			nextChunk();
-		},
-		translateChunk: function(text, fromLang, toLang, googleApiKey, callback) {
-
-			var data = {
-				q: text, 
-				langpair: fromLang + '|' + toLang,
-				v: '1.0'
-			};
-			if (googleApiKey !== '' && googleApiKey !== null) {
-				data.key = googleApiKey;
-			}
-
-			$.ajax({
-				url: 'https://ajax.googleapis.com/ajax/services/language/translate', // 'https://www.google.com/uds/Gtranslate', //'https://ajax.googleapis.com/ajax/services/language/translate', //
-				data: data,
-				type: 'GET',
-				dataType: 'jsonp',
-				success: function(d) {
-					
-					callback((d.responseData !== null) ? d.responseData.translatedText : 'No translation');
-				},
-				error: function(e) {
-					callback(null);
-				}
-			});
 		}
 	};
-	// test for browsers with bad String.split method.
-	if ('x\n\ny'.split(/\n/gi).length != 3) {
-		// add super slow IE8 and below version
-		mejs.TrackFormatParser.split2 = function(text, regex) {
-			var 
-				parts = [], 
-				chunk = '',
-				i;
-
-			for (i=0; i<text.length; i++) {
-				chunk += text.substring(i,i+1);
-				if (regex.test(chunk)) {
-					parts.push(chunk.replace(regex, ''));
-					chunk = '';
-				}
-			}
-			parts.push(chunk);
-			return parts;
-		}
-	}
 
 })(mejs.$);
 
