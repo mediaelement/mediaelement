@@ -101,25 +101,39 @@
 				// set the volume
 				media.setVolume(volume);
 			},
-			mouseIsDown = false;
+			mouseIsDown = false,
+			mouseIsOver = false;
 
 			// SLIDER
 			mute
 				.hover(function() {
 					volumeSlider.show();
+					mouseIsOver = true;
 				}, function() {
-					volumeSlider.hide();
-				})		
+					mouseIsOver = false;	
+						
+					if (!mouseIsDown)	{
+						volumeSlider.hide();
+					}
+				});
 			
 			volumeSlider
+				.bind('mouseover', function() {
+					mouseIsOver = true;	
+				})
 				.bind('mousedown', function (e) {
 					handleVolumeMove(e);
 					mouseIsDown = true;
+						
 					return false;
 				});
 			$(document)
 				.bind('mouseup', function (e) {
 					mouseIsDown = false;
+					
+					if (!mouseIsOver) {
+						volumeSlider.hide();
+					}
 				})
 				.bind('mousemove', function (e) {
 					if (mouseIsDown) {
