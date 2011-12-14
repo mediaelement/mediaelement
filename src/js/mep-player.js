@@ -525,23 +525,17 @@
 					
 					} else {
 						// click controls
-						if (t.media.pluginType == 'native') {
-							t.$media.click(function() {
-								if (media.paused) {
-									media.play();
-								} else {
-									media.pause();
-								}
-							});
-						} else {
-							$(t.media.pluginElement).click(function() {
-								if (media.paused) {
-									media.play();
-								} else {
-									media.pause();
-								}						
-							});
-						}
+						var clickElement = (t.media.pluginType == 'native') ? t.$media : $(t.media.pluginElement);
+						
+						// click to play/pause
+						clickElement.click(function() {
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
+						});
+						
 					
 						// show/hide controls
 						t.container
