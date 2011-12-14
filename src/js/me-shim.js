@@ -379,6 +379,7 @@ mejs.HtmlMediaElementShim = {
 			pluginid = 'me_' + playback.method + '_' + (mejs.meIndex++),
 			pluginMediaElement = new mejs.PluginMediaElement(pluginid, playback.method, playback.url),
 			container = document.createElement('div'),
+			overlay = document.createElement('div'),
 			specialIEContainer,
 			node,
 			initVars;
@@ -415,7 +416,32 @@ mejs.HtmlMediaElementShim = {
 		// add container (must be added to DOM before inserting HTML for IE)
 		container.className = 'me-plugin';
 		container.id = pluginid + '_container';
-		htmlMediaElement.parentNode.insertBefore(container, htmlMediaElement);
+		
+		container.style.width = width + 'px';
+		container.style.height = height + 'px';		
+		
+		
+		// don't put there anymore
+		//htmlMediaElement.parentNode.insertBefore(container, htmlMediaElement);
+		// put it in the <body>
+		document.body.insertBefore(container, document.body.childNodes[0]);
+		
+		function findPos(obj) {
+				var curleft = curtop = 0;
+				if (obj.offsetParent) {
+						do {
+								curleft += obj.offsetLeft;
+								curtop += obj.offsetTop;
+						} while (obj = obj.offsetParent);
+				}
+				return [curleft,curtop];
+		}
+		
+		var pos = findPos(htmlMediaElement);
+		
+		container.style.top = pos[1] + 'px';
+		container.style.left = pos[0] + 'px';		
+		
 
 		// flash/silverlight vars
 		initVars = [
@@ -537,8 +563,7 @@ mejs.HtmlMediaElementShim = {
 		// hide original element
 		htmlMediaElement.style.display = 'none';
 
-		// FYI: options.success will be fired by the MediaPluginBridge
-		
+		// FYI: options.success will be fired by the MediaPluginBridge		
 		return pluginMediaElement;
 	},
 
