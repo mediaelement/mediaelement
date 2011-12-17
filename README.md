@@ -79,7 +79,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *Proposed features*
 
 * horizontal, inline volume control
-* deeper WebVTT support (alignment, color, etc.) - include captionator?
+* deeper WebVTT support (alignment, color, etc.) - include captionator, remove google translate?
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
 * loading state on loading bar (animated?)
@@ -87,6 +87,20 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * system-wide events
 * playlist builder
 * Ogg/Theora playback
+
+*2.5.0 (2011/12/15) - 56kb*
+
+* Flash fullscreen now works on hover, so it's much easier to use. For Firefox it's always on, but for others `usePluginFullScreen:true` option
+* For the audio player, Flash objects are positioned outside the main `<div>` which allows the player to be hidden without breaking flash
+* Volume controls was adjusted slightly
+* Removed Google translate features (Google killed the API)
+
+*2.4.3 (2011/12/10)*
+
+* keyboard controls are now an array, allowing multiple keys to do the same thing
+* support for Google TV keybuttons (based on above)
+* arrow keys now move when paused
+* floating time is now handled via JavaScript instead of CSS :hover (and removed from touch devices)
 
 *2.4.2 (2011/12/06) - 57.3kb*
 
