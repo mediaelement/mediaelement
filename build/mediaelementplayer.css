@@ -71,7 +71,7 @@
 	width: 100px;
 	height: 100px;
 	margin: -50px 0 0 -50px;
-	background: url(bigplay.png) top left no-repeat;
+	background: url(bigplay.png) no-repeat;
 }
 .mejs-overlay:hover .mejs-overlay-button{
 	background-position: 0 -100px ;
@@ -97,7 +97,7 @@
 	display:block;
 	width: 80px;
 	height: 80px;
-	background: transparent url(loading.gif) center center no-repeat;
+	background: transparent url(loading.gif) 50% 50% no-repeat;
 }
 
 /* End: LAYERS */
@@ -141,7 +141,7 @@
 .mejs-controls .mejs-button button {
 	cursor: pointer;
 	display: block;
-	font-size: 0px;
+	font-size: 0;
 	line-height: 0;
 	text-decoration: none;
 	margin: 7px 5px;
@@ -150,7 +150,7 @@
 	height: 16px;
 	width: 16px;
 	border: 0;
-	background: transparent url(controls.png) 0 0 no-repeat;
+	background: transparent url(controls.png) no-repeat;
 }
 
 /* :focus for accessibility */
@@ -354,9 +354,9 @@
 	margin: 0;
 }
 .mejs-controls .mejs-volume-button:hover {
-	-webkit-border-radius: 0 0 4px 4px ;
-	-moz-border-radius: 0 0 4px 4px ;
-	border-radius: 0 0 4px 4px ;
+	-webkit-border-radius: 0 0 4px 4px;
+	-moz-border-radius: 0 0 4px 4px;
+	border-radius: 0 0 4px 4px;
 }
 /*
 .mejs-controls .mejs-volume-button:hover .mejs-volume-slider {
@@ -454,7 +454,7 @@
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul li input{
 	clear: both;
 	float: left;
-	margin: 3px 3px 0px 5px;
+	margin: 3px 3px 0 5px;
 }
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul li label{
 	width: 100px;
