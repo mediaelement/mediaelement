@@ -479,6 +479,6 @@
 			parts.push(chunk);
 			return parts;
 		}
-	}		
+	}	
 
 })(mejs.$);
