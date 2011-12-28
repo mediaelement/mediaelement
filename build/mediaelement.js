@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.5.0';
+mejs.version = '2.6.0';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -509,9 +509,9 @@ mejs.PluginMediaElement.prototype = {
 		return false;
 	},
 	
-	positionFullscreenButton: function(x,y) {
+	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-			this.pluginApi.positionFullscreenButton(x,y);
+			this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
 		}
 	},
 	
