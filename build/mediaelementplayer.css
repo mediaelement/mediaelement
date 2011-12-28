@@ -71,7 +71,7 @@
 	width: 100px;
 	height: 100px;
 	margin: -50px 0 0 -50px;
-	background: url(bigplay.png) top left no-repeat;
+	background: url(bigplay.png) no-repeat;
 }
 .mejs-overlay:hover .mejs-overlay-button{
 	background-position: 0 -100px ;
@@ -86,15 +86,18 @@
 	background: #333;
 	background: url(background.png);
 	background: rgba(0, 0, 0, 0.9);
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(50,50,50,0.9)), to(rgba(0,0,0,0.9))); 
-	background: -moz-linear-gradient(top,  rgba(50,50,50,0.9),  rgba(0,0,0,0.9)); 	
-	background: linear-gradient(rgba(50,50,50,0.9),  rgba(0,0,0,0.9)); 	
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50,50,50,0.9)), to(rgba(0,0,0,0.9))); 
+	background: -webkit-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));
+	background: -moz-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));
+	background: -o-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));
+	background: -ms-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));	
+	background: linear-gradient(rgba(50,50,50,0.9), rgba(0,0,0,0.9)); 	
 }
 .mejs-overlay-loading span {
 	display:block;
 	width: 80px;
 	height: 80px;
-	background: transparent url(loading.gif) center center no-repeat;
+	background: transparent url(loading.gif) 50% 50% no-repeat;
 }
 
 /* End: LAYERS */
@@ -110,9 +113,12 @@
 	left: 0;
 	background: url(background.png);
 	background: rgba(0, 0, 0, 0.7);
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(50,50,50,0.7)), to(rgba(0,0,0,0.7))); 
-	background: -moz-linear-gradient(top,  rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 	
-	background: linear-gradient(rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 	
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50,50,50,0.7)), to(rgba(0,0,0,0.7)));
+	background: -webkit-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7)); 
+	background: -moz-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
+	background: -o-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7)); 
+	background: -ms-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7)); 	
+	background: linear-gradient(rgba(50,50,50,0.7), rgba(0,0,0,0.7)); 	
 	height: 30px;
 	width: 100%;
 }
@@ -135,7 +141,7 @@
 .mejs-controls .mejs-button button {
 	cursor: pointer;
 	display: block;
-	font-size: 0px;
+	font-size: 0;
 	line-height: 0;
 	text-decoration: none;
 	margin: 7px 5px;
@@ -144,7 +150,7 @@
 	height: 16px;
 	width: 16px;
 	border: 0;
-	background: transparent url(controls.png) 0 0 no-repeat;
+	background: transparent url(controls.png) no-repeat;
 }
 
 /* :focus for accessibility */
@@ -212,17 +218,23 @@
 	margin: 5px;
 	background: #333;
 	background: rgba(50,50,50,0.8);
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(30,30,30,0.8)), to(rgba(60,60,60,0.8))); 
-	background: -moz-linear-gradient(top, rgba(30,30,30,0.8),  rgba(60,60,60,0.8)); 	
-	background: linear-gradient(rgba(30,30,30,0.8),  rgba(60,60,60,0.8)); 	
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(30,30,30,0.8)), to(rgba(60,60,60,0.8)));
+	background: -webkit-linear-gradient(top, rgba(30,30,30,0.8), rgba(60,60,60,0.8)); 
+	background: -moz-linear-gradient(top, rgba(30,30,30,0.8), rgba(60,60,60,0.8));
+	background: -o-linear-gradient(top, rgba(30,30,30,0.8), rgba(60,60,60,0.8));
+	background: -ms-linear-gradient(top, rgba(30,30,30,0.8), rgba(60,60,60,0.8));
+	background: linear-gradient(rgba(30,30,30,0.8), rgba(60,60,60,0.8)); 	
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#1E1E1E,endColorstr=#3C3C3C);
 }
 .mejs-controls .mejs-time-rail .mejs-time-loaded {
 	background: #3caac8;
 	background: rgba(60,170,200,0.8);
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(44,124,145,0.8)), to(rgba(78,183,212,0.8))); 
-	background: -moz-linear-gradient(top,  rgba(44,124,145,0.8),  rgba(78,183,212,0.8)); 	
-	background: linear-gradient(rgba(44,124,145,0.8),  rgba(78,183,212,0.8)); 	
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(44,124,145,0.8)), to(rgba(78,183,212,0.8))); 
+	background: -webkit-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+	background: -moz-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+	background: -o-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+	background: -ms-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+	background: linear-gradient(rgba(44,124,145,0.8), rgba(78,183,212,0.8)); 	
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#2C7C91,endColorstr=#4EB7D4);
 	width: 0;
 }
@@ -230,8 +242,12 @@
 	width: 0;
 	background: #fff;
 	background: rgba(255,255,255,0.8);
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.9)), to(rgba(200,200,200,0.8))); 
-	background: -moz-linear-gradient(top,  rgba(255,255,255,0.9),  rgba(200,200,200,0.8)); 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,0.9)), to(rgba(200,200,200,0.8)));
+	background: -webkit-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+	background: -moz-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8)); 
+	background: -o-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+	background: -ms-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+	background: linear-gradient(rgba(255,255,255,0.9), rgba(200,200,200,0.8));
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#FFFFFF,endColorstr=#C8C8C8);	
 }
 
@@ -338,9 +354,9 @@
 	margin: 0;
 }
 .mejs-controls .mejs-volume-button:hover {
-	-webkit-border-radius: 0 0 4px 4px ;
-	-moz-border-radius: 0 0 4px 4px ;
-	border-radius: 0 0 4px 4px ;
+	-webkit-border-radius: 0 0 4px 4px;
+	-moz-border-radius: 0 0 4px 4px;
+	border-radius: 0 0 4px 4px;
 }
 /*
 .mejs-controls .mejs-volume-button:hover .mejs-volume-slider {
@@ -438,7 +454,7 @@
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul li input{
 	clear: both;
 	float: left;
-	margin: 3px 3px 0px 5px;
+	margin: 3px 3px 0 5px;
 }
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul li label{
 	width: 100px;
@@ -467,9 +483,12 @@
 	float: left;
 	background: #222;
 	background: rgba(0, 0, 0, 0.7);
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(50,50,50,0.7)), to(rgba(0,0,0,0.7))); 
-	background: -moz-linear-gradient(top,  rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 	
-	background: linear-gradient(rgba(50,50,50,0.7),  rgba(0,0,0,0.7)); 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50,50,50,0.7)), to(rgba(0,0,0,0.7)));
+	background: -webkit-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
+	background: -moz-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
+	background: -o-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
+	background: -ms-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
+	background: linear-gradient(rgba(50,50,50,0.7), rgba(0,0,0,0.7)); 
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#323232,endColorstr=#000000);		
 	overflow: hidden;
 	border: 0;
@@ -491,8 +510,12 @@
 	/*background: #333;*/
 	background: #666;
 	background: rgba(102,102,102, 0.7);
-	background: -webkit-gradient(linear, left top, left bottom, from(rgba(102,102,102,0.7)), to(rgba(50,50,50,0.6))); 
-	background: -moz-linear-gradient(top,  rgba(102,102,102,0.7),  rgba(50,50,50,0.6)); 
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(102,102,102,0.7)), to(rgba(50,50,50,0.6)));
+	background: -webkit-linear-gradient(top, rgba(102,102,102,0.7), rgba(50,50,50,0.6));
+	background: -moz-linear-gradient(top, rgba(102,102,102,0.7), rgba(50,50,50,0.6));
+	background: -o-linear-gradient(top, rgba(102,102,102,0.7), rgba(50,50,50,0.6));
+	background: -ms-linear-gradient(top, rgba(102,102,102,0.7), rgba(50,50,50,0.6));
+	background: linear-gradient(rgba(102,102,102,0.7), rgba(50,50,50,0.6));
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#666666,endColorstr=#323232);		
 }
 .mejs-chapters .mejs-chapter .mejs-chapter-block .ch-title{
