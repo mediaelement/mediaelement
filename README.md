@@ -90,7 +90,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *2.6.0 (2011/12/27)
 
-* added major updates to Flash fullscreen mode [rmhall]
+* added major updates to Flash fullscreen mode controls [rmhall]
+* added sneaky `pointer-events: none` to allow Flash to enter fullscreen in one clean click
 * added missing CSS3 gradients syntaxes (kristerkari)[https://github.com/johndyer/mediaelement/pull/339]
 * added check for left offset to detect when mousedrag exceeds top boundary [jmcneese](https://github.com/johndyer/mediaelement/pull/335)
 
