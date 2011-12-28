@@ -958,7 +958,7 @@
 					srclang: $(this).attr('srclang').toLowerCase(),
 					src: $(this).attr('src'),
 					kind: $(this).attr('kind'),
-					label: $(this).attr('label'),
+					label: track.attr('label') || '',
 					entries: [],
 					isLoaded: false
 				});
