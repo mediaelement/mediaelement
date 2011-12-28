@@ -68,9 +68,62 @@
 				} else {
 
 					var hideTimeout = null,
-						isIE8orLower = true;
+						supportsPointerEvents = (document.documentElement.style.pointerEvents === '');
 						
-					if (isIE8orLower) {
+					if (supportsPointerEvents) {
+						
+						// allows clicking through the fullscreen button and controls down directly to Flash
+						
+						var fullscreenIsDisabled = false;
+						
+						fullscreenBtn
+							.mouseover(function() {
+								
+								if (!t.isFullScreen) {
+									
+									var buttonPos = fullscreenBtn.offset(),
+										containerPos = player.container.offset();
+									
+									media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);									
+									
+									console.log('killing pointer');
+									
+									fullscreenBtn.css('pointer-events', 'none');
+									t.controls.css('pointer-events', 'none');
+									
+									fullscreenIsDisabled = true;
+								}
+							
+							});
+							
+						$(document).mousemove(function(e) {
+							
+							// if the mouse is anywhere but the fullsceen button, then restore it all
+							if (fullscreenIsDisabled) {
+								
+								var fullscreenBtnPos = fullscreenBtn.offset();
+								
+								console.log(fullscreenBtnPos, e.pageY, e.pageX);
+								
+								if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + fullscreenBtn.outerHeight(true) ||
+									e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)
+									) {
+								
+									fullscreenBtn.css('pointer-events', '');
+									t.controls.css('pointer-events', '');
+									
+									fullscreenIsDisabled = false;
+									
+									console.log('restored pointer');
+								}
+							}
+						});
+						
+						
+					} else {
+						
+						// the hover state will show the fullscreen button in Flash to hover up and click
+						
 						fullscreenBtn
 							.mouseover(function() {
 								
@@ -82,7 +135,7 @@
 								var buttonPos = fullscreenBtn.offset(),
 									containerPos = player.container.offset();
 									
-								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top);
+								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, true);
 							
 							})
 							.mouseout(function() {
@@ -97,32 +150,7 @@
 								}, 1500);
 								
 								
-							});
-					} else {
-						
-						// reset
-						t.controls.click(function() {
-							t.controls.css('pointer-events','');
-							fullscreenBtn.css('pointer-events','');
-						});
-						t.container.mouseleave(function() {
-							t.controls.css('pointer-events','');
-							fullscreenBtn.css('pointer-events','');
-						});
-						
-						fullscreenBtn
-							.mouseover(function() {
-								
-								fullscreenBtn.css('pointer-events','none');
-								t.controls.css('pointer-events','none');
-							
-							})
-							.mouseout(function() {
-							
-								fullscreenBtn.css('pointer-events','');
-								t.controls.css('pointer-events','');
-								
-							});
+							});						
 					}
 				}
 			
