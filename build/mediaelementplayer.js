@@ -969,12 +969,15 @@ if (typeof jQuery != 'undefined') {
 
 			// store for use by plugins
 			t.tracks = [];
-			tracktags.each(function() {
+			tracktags.each(function(index, track) {
+				
+				track = $(track);
+				
 				t.tracks.push({
-					srclang: $(this).attr('srclang').toLowerCase(),
-					src: $(this).attr('src'),
-					kind: $(this).attr('kind'),
-					label: $(this).attr('label'),
+					srclang: track.attr('srclang').toLowerCase(),
+					src: track.attr('src'),
+					kind: track.attr('kind'),
+					label: track.attr('label') || '',
 					entries: [],
 					isLoaded: false
 				});
@@ -1551,7 +1554,7 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 	
 	$.extend(mejs.MepDefaults, {
-		usePluginFullScreen: false,
+		usePluginFullScreen: true,
 		newWindowCallback: function() { return '';},
 		fullscreenText: 'Fullscreen'
 	});
@@ -1617,35 +1620,91 @@ if (typeof jQuery != 'undefined') {
 					
 				} else {
 
-					var hideTimeout = null;
-
-					fullscreenBtn
-						.mouseover(function() {
-							
-							if (hideTimeout !== null) {
-								clearTimeout(hideTimeout);
-								delete hideTimeout;
-							}
-							
-							var buttonPos = fullscreenBtn.offset(),
-								containerPos = player.container.offset();
+					var hideTimeout = null,
+						supportsPointerEvents = (document.documentElement.style.pointerEvents === '');
+						
+					if (supportsPointerEvents) {
+						
+						// allows clicking through the fullscreen button and controls down directly to Flash
+						
+						var fullscreenIsDisabled = false;
+						
+						fullscreenBtn
+							.mouseover(function() {
 								
-							media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top);
-						
-						})
-						.mouseout(function() {
-						
-							if (hideTimeout !== null) {
-								clearTimeout(hideTimeout);
-								delete hideTimeout;
+								if (!t.isFullScreen) {
+									
+									var buttonPos = fullscreenBtn.offset(),
+										containerPos = player.container.offset();
+									
+									media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);									
+									
+									console.log('killing pointer');
+									
+									fullscreenBtn.css('pointer-events', 'none');
+									t.controls.css('pointer-events', 'none');
+									
+									fullscreenIsDisabled = true;
+								}
+							
+							});
+							
+						$(document).mousemove(function(e) {
+							
+							// if the mouse is anywhere but the fullsceen button, then restore it all
+							if (fullscreenIsDisabled) {
+								
+								var fullscreenBtnPos = fullscreenBtn.offset();
+								
+								console.log(fullscreenBtnPos, e.pageY, e.pageX);
+								
+								if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + fullscreenBtn.outerHeight(true) ||
+									e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)
+									) {
+								
+									fullscreenBtn.css('pointer-events', '');
+									t.controls.css('pointer-events', '');
+									
+									fullscreenIsDisabled = false;
+									
+									console.log('restored pointer');
+								}
 							}
+						});
+						
+						
+					} else {
+						
+						// the hover state will show the fullscreen button in Flash to hover up and click
+						
+						fullscreenBtn
+							.mouseover(function() {
+								
+								if (hideTimeout !== null) {
+									clearTimeout(hideTimeout);
+									delete hideTimeout;
+								}
+								
+								var buttonPos = fullscreenBtn.offset(),
+									containerPos = player.container.offset();
+									
+								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, true);
 							
-							hideTimeout = setTimeout(function() {	
-								media.hideFullscreenButton();
-							}, 1500);
+							})
+							.mouseout(function() {
 							
-							
-						})					
+								if (hideTimeout !== null) {
+									clearTimeout(hideTimeout);
+									delete hideTimeout;
+								}
+								
+								hideTimeout = setTimeout(function() {	
+									media.hideFullscreenButton();
+								}, 1500);
+								
+								
+							});						
+					}
 				}
 			
 			player.fullscreenBtn = fullscreenBtn;	
@@ -2275,6 +2334,27 @@ if (typeof jQuery != 'undefined') {
 			return entries;
 		}
 	};
+	
+	// test for browsers with bad String.split method.
+	if ('x\n\ny'.split(/\n/gi).length != 3) {
+		// add super slow IE8 and below version
+		mejs.TrackFormatParser.split2 = function(text, regex) {
+			var 
+				parts = [], 
+				chunk = '',
+				i;
+
+			for (i=0; i<text.length; i++) {
+				chunk += text.substring(i,i+1);
+				if (regex.test(chunk)) {
+					parts.push(chunk.replace(regex, ''));
+					chunk = '';
+				}
+			}
+			parts.push(chunk);
+			return parts;
+		}
+	}	
 
 })(mejs.$);
 
