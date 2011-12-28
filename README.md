@@ -6,7 +6,7 @@
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen), [gselva](https://github.com/gselva), [erktime](https://github.com/erktime), [bradleyboy](https://github.com/bradleyboy)
+* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen), [gselva](https://github.com/gselva), [erktime](https://github.com/erktime), [bradleyboy](https://github.com/bradleyboy), [kristerkari](https://github.com/kristerkari), [rmhall](https://github.com/rmhall)
 
 
 ## Installation and Usage
@@ -87,6 +87,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * system-wide events
 * playlist builder
 * Ogg/Theora playback
+
+*2.6.0 (2011/12/27)
+
+* added major updates to Flash fullscreen mode [rmhall]
+* added missing CSS3 gradients syntaxes (kristerkari)[https://github.com/johndyer/mediaelement/pull/339]
+* added check for left offset to detect when mousedrag exceeds top boundary [jmcneese](https://github.com/johndyer/mediaelement/pull/335)
 
 *2.5.0 (2011/12/15) - 56kb*
 

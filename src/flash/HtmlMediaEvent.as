@@ -1,4 +1,4 @@
-﻿package  {
+package  {
 
 	public class HtmlMediaEvent {
 

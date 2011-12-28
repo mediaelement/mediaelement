@@ -953,11 +953,14 @@
 
 			// store for use by plugins
 			t.tracks = [];
-			tracktags.each(function() {
+			tracktags.each(function(index, track) {
+				
+				track = $(track);
+				
 				t.tracks.push({
-					srclang: $(this).attr('srclang').toLowerCase(),
-					src: $(this).attr('src'),
-					kind: $(this).attr('kind'),
+					srclang: track.attr('srclang').toLowerCase(),
+					src: track.attr('src'),
+					kind: track.attr('kind'),
 					label: track.attr('label') || '',
 					entries: [],
 					isLoaded: false

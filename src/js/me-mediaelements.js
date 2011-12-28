@@ -160,9 +160,9 @@ mejs.PluginMediaElement.prototype = {
 		return false;
 	},
 	
-	positionFullscreenButton: function(x,y) {
+	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-			this.pluginApi.positionFullscreenButton(x,y);
+			this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
 		}
 	},
 	
