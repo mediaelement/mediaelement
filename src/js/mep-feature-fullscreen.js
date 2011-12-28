@@ -1,7 +1,7 @@
 (function($) {
 	
 	$.extend(mejs.MepDefaults, {
-		usePluginFullScreen: false,
+		usePluginFullScreen: true,
 		newWindowCallback: function() { return '';},
 		fullscreenText: 'Fullscreen'
 	});
