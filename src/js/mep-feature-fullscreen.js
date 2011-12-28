@@ -67,35 +67,63 @@
 					
 				} else {
 
-					var hideTimeout = null;
-
-					fullscreenBtn
-						.mouseover(function() {
-							
-							if (hideTimeout !== null) {
-								clearTimeout(hideTimeout);
-								delete hideTimeout;
-							}
-							
-							var buttonPos = fullscreenBtn.offset(),
-								containerPos = player.container.offset();
+					var hideTimeout = null,
+						isIE8orLower = true;
+						
+					if (isIE8orLower) {
+						fullscreenBtn
+							.mouseover(function() {
 								
-							media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top);
+								if (hideTimeout !== null) {
+									clearTimeout(hideTimeout);
+									delete hideTimeout;
+								}
+								
+								var buttonPos = fullscreenBtn.offset(),
+									containerPos = player.container.offset();
+									
+								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top);
+							
+							})
+							.mouseout(function() {
+							
+								if (hideTimeout !== null) {
+									clearTimeout(hideTimeout);
+									delete hideTimeout;
+								}
+								
+								hideTimeout = setTimeout(function() {	
+									media.hideFullscreenButton();
+								}, 1500);
+								
+								
+							});
+					} else {
 						
-						})
-						.mouseout(function() {
+						// reset
+						t.controls.click(function() {
+							t.controls.css('pointer-events','');
+							fullscreenBtn.css('pointer-events','');
+						});
+						t.container.mouseleave(function() {
+							t.controls.css('pointer-events','');
+							fullscreenBtn.css('pointer-events','');
+						});
 						
-							if (hideTimeout !== null) {
-								clearTimeout(hideTimeout);
-								delete hideTimeout;
-							}
+						fullscreenBtn
+							.mouseover(function() {
+								
+								fullscreenBtn.css('pointer-events','none');
+								t.controls.css('pointer-events','none');
 							
-							hideTimeout = setTimeout(function() {	
-								media.hideFullscreenButton();
-							}, 1500);
+							})
+							.mouseout(function() {
 							
-							
-						})					
+								fullscreenBtn.css('pointer-events','');
+								t.controls.css('pointer-events','');
+								
+							});
+					}
 				}
 			
 			player.fullscreenBtn = fullscreenBtn;	
