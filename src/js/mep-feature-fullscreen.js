@@ -70,12 +70,13 @@
 					var hideTimeout = null,
 						supportsPointerEvents = (document.documentElement.style.pointerEvents === '');
 						
-					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this
+					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this :(
 						
 						// allows clicking through the fullscreen button and controls down directly to Flash
 						
 						var fullscreenIsDisabled = false;
 						
+						// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
 						fullscreenBtn
 							.mouseover(function() {
 								
@@ -86,8 +87,6 @@
 									
 									media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);									
 									
-									console.log('killing pointer');
-									
 									fullscreenBtn.css('pointer-events', 'none');
 									t.controls.css('pointer-events', 'none');
 									
@@ -95,11 +94,10 @@
 								}
 							
 							});
-							
+						
+						// restore controls anytime the user enters or leaves fullscreen	
 						media.addEventListener('fullscreenchange', function(e) {
-							
-							console.log('change from Flash', e.isFullScreen)
-							
+						
 							// change from Flash
 							if (fullscreenIsDisabled) {
 								fullscreenBtn.css('pointer-events', '');
@@ -108,6 +106,9 @@
 								fullscreenIsDisabled = false;
 							}
 						});
+						
+						// the mouseout event doesn't work on the fullscren button, because we already killed the pointer-events
+						// so we use the document.mousemove event to restore controls when the mouse moves outside the fullscreen button 
 						$(document).mousemove(function(e) {
 							
 							// if the mouse is anywhere but the fullsceen button, then restore it all
@@ -115,8 +116,7 @@
 								
 								var fullscreenBtnPos = fullscreenBtn.offset();
 								
-								console.log(fullscreenBtnPos, e.pageY, e.pageX);
-								
+
 								if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + fullscreenBtn.outerHeight(true) ||
 									e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)
 									) {
@@ -125,8 +125,6 @@
 									t.controls.css('pointer-events', '');
 									
 									fullscreenIsDisabled = false;
-									
-									console.log('restored pointer');
 								}
 							}
 						});
