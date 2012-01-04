@@ -21,6 +21,7 @@ mejs.MediaFeatures = {
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit;
+		t.isOpera = (ua.match(/opera/gi) !== null);
 		t.hasTouch = ('ontouchstart' in window);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
