@@ -1386,7 +1386,7 @@ if (typeof jQuery != 'undefined') {
 			
 			if (typeof t.timecodeStartComps == 'undefined') {
 				if (typeof t.options.timecodeStart != 'undefined') {
-					t.timecodeStartComps = t.options.timecodeStart.split(':').map(function (s) { return +s });
+					t.timecodeStartComps = $.map(t.options.timecodeStart.split(':'), function (s) { return +s });
 				} else {
 					t.timecodeStartComps = [0,0,0,0];
 				}
