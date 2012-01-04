@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.6.0';
+mejs.version = '2.6.1';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -276,6 +276,7 @@ mejs.MediaFeatures = {
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit;
+		t.isOpera = (ua.match(/opera/gi) !== null);
 		t.hasTouch = ('ontouchstart' in window);
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
@@ -3102,7 +3103,7 @@ if (typeof jQuery != 'undefined') {
 					var hideTimeout = null,
 						supportsPointerEvents = (document.documentElement.style.pointerEvents === '');
 						
-					if (supportsPointerEvents) {
+					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this
 						
 						// allows clicking through the fullscreen button and controls down directly to Flash
 						
@@ -3128,6 +3129,18 @@ if (typeof jQuery != 'undefined') {
 							
 							});
 							
+						media.addEventListener('fullscreenchange', function(e) {
+							
+							console.log('change from Flash', e.isFullScreen)
+							
+							// change from Flash
+							if (fullscreenIsDisabled) {
+								fullscreenBtn.css('pointer-events', '');
+								t.controls.css('pointer-events', '');
+								
+								fullscreenIsDisabled = false;
+							}
+						});
 						$(document).mousemove(function(e) {
 							
 							// if the mouse is anywhere but the fullsceen button, then restore it all
