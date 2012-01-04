@@ -70,7 +70,7 @@
 					var hideTimeout = null,
 						supportsPointerEvents = (document.documentElement.style.pointerEvents === '');
 						
-					if (supportsPointerEvents) {
+					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this
 						
 						// allows clicking through the fullscreen button and controls down directly to Flash
 						
@@ -96,6 +96,18 @@
 							
 							});
 							
+						media.addEventListener('fullscreenchange', function(e) {
+							
+							console.log('change from Flash', e.isFullScreen)
+							
+							// change from Flash
+							if (fullscreenIsDisabled) {
+								fullscreenBtn.css('pointer-events', '');
+								t.controls.css('pointer-events', '');
+								
+								fullscreenIsDisabled = false;
+							}
+						});
 						$(document).mousemove(function(e) {
 							
 							// if the mouse is anywhere but the fullsceen button, then restore it all
