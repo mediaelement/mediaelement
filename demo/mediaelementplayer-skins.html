@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+        
+        <link rel="stylesheet" href="../build/mejs-skins.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Skins Demo. Just add a class on the &lt;video class="mejs-myskin" &gt; and then follow the examples in the mejs-skins.css file</p>
+
+<h2>Default Skin</h2>
+
+<video width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+	id="player1" poster="../media/echo-hereweare.jpg" 
+	controls="controls" preload="none"></video>
+
+<h2>TED SKin</h2>
+
+<video class="mejs-ted" width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+	id="player1" poster="../media/echo-hereweare.jpg" 
+	controls="controls" preload="none"></video>
+
+
+<h2>WMP SKin</h2>
+
+<video class="mejs-wmp" width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+	id="player1" poster="../media/echo-hereweare.jpg" 
+	controls="controls" preload="none"></video>
+
+
+<script>
+$('audio,video').mediaelementplayer({
+	success: function(player, node) {
+		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+	}
+});
+
+</script>
+
+
+</body>
+</html>
