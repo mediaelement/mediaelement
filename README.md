@@ -88,7 +88,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
-*2.6.0 (2011/12/27)
+*2.6.1 (2012/01/03)*
+
+* Updated Opera's Flash Fullscreen support (apparently, it doesn't like pointer-events:none with Flash)
+* Added a `fullscreenchange` event to Flash to better track events
+
+*2.6.0 (2011/12/27)*
 
 * added major updates to Flash fullscreen mode controls [rmhall]
 * added sneaky `pointer-events: none` to allow Flash to enter fullscreen in one clean click
