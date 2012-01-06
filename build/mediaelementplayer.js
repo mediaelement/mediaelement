@@ -710,6 +710,7 @@ if (typeof jQuery != 'undefined') {
 		setPlayerSize: function(width,height) {
 			var t = this;
 			
+			// testing for 100% code
 			if (t.height.toString().indexOf('%') > 0) {
 			
 				// do we have the native dimensions yet?
@@ -1627,8 +1628,51 @@ if (typeof jQuery != 'undefined') {
 						
 						// allows clicking through the fullscreen button and controls down directly to Flash
 						
-						var fullscreenIsDisabled = false;
+						/*
+						 When a user puts his mouse over the fullscreen button, the controls are disabled
+						 So we put a div over the video and another one over the controls that caputre mouse movement
+						 and restore the controls once the mouse moves outside of the fullscreen button
+						 NOTE: This assumes the Fullscreen button is on the lower right
+						*/
 						
+						var fullscreenIsDisabled = false,
+							restoreControls = function() {
+								if (fullscreenIsDisabled) {
+									// hide the hovers
+									videoHoverDiv.hide();
+									controlsHoverDiv.hide();
+									
+									// restore the control bar
+									fullscreenBtn.css('pointer-events', '');
+									t.controls.css('pointer-events', '');
+									
+									// store for later
+									fullscreenIsDisabled = false;
+								}
+							},
+							videoHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
+							controlsHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
+							positionHoverDivs = function() {
+								var style = {position: 'absolute', top: 0, left: 0}; //, backgroundColor: '#f00'};
+								videoHoverDiv.css(style);
+								controlsHoverDiv.css(style);
+								
+								// over video, but not controls
+								videoHoverDiv
+									.width( t.container.width() )
+									.height( t.container.height() - t.controls.height() );
+								
+								// over controls, but not the 
+								controlsHoverDiv
+									.width( t.container.width() - fullscreenBtn.width() )
+									.height( t.controls.height() )
+									.css({top: t.container.height() - t.controls.height()});		
+							};
+						
+						$(document).resize(function() {
+							positionHoverDivs();
+						});
+												
 						// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
 						fullscreenBtn
 							.mouseover(function() {
@@ -1638,10 +1682,17 @@ if (typeof jQuery != 'undefined') {
 									var buttonPos = fullscreenBtn.offset(),
 										containerPos = player.container.offset();
 									
+									// move the button in Flash into place
 									media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);									
 									
+									// allows click through
 									fullscreenBtn.css('pointer-events', 'none');
 									t.controls.css('pointer-events', 'none');
+									
+									// show the divs that will restore things
+									videoHoverDiv.show();
+									controlsHoverDiv.show();
+									positionHoverDivs();
 									
 									fullscreenIsDisabled = true;
 								}
@@ -1650,18 +1701,13 @@ if (typeof jQuery != 'undefined') {
 						
 						// restore controls anytime the user enters or leaves fullscreen	
 						media.addEventListener('fullscreenchange', function(e) {
-						
-							// change from Flash
-							if (fullscreenIsDisabled) {
-								fullscreenBtn.css('pointer-events', '');
-								t.controls.css('pointer-events', '');
-								
-								fullscreenIsDisabled = false;
-							}
+							restoreControls();
 						});
+						
 						
 						// the mouseout event doesn't work on the fullscren button, because we already killed the pointer-events
 						// so we use the document.mousemove event to restore controls when the mouse moves outside the fullscreen button 
+						/*
 						$(document).mousemove(function(e) {
 							
 							// if the mouse is anywhere but the fullsceen button, then restore it all
@@ -1681,6 +1727,7 @@ if (typeof jQuery != 'undefined') {
 								}
 							}
 						});
+						*/
 						
 						
 					} else {
