@@ -694,6 +694,7 @@
 		setPlayerSize: function(width,height) {
 			var t = this;
 			
+			// testing for 100% code
 			if (t.height.toString().indexOf('%') > 0) {
 			
 				// do we have the native dimensions yet?
