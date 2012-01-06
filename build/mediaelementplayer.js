@@ -1630,9 +1630,9 @@ if (typeof jQuery != 'undefined') {
 						
 						/*
 						 When a user puts his mouse over the fullscreen button, the controls are disabled
-						 So we put a div over the video and another one over the controls that caputre mouse movement
+						 So we put a div over the video and another one on iether side of the fullscreen button
+						 that caputre mouse movement
 						 and restore the controls once the mouse moves outside of the fullscreen button
-						 NOTE: This assumes the Fullscreen button is on the lower right
 						*/
 						
 						var fullscreenIsDisabled = false,
@@ -1640,7 +1640,8 @@ if (typeof jQuery != 'undefined') {
 								if (fullscreenIsDisabled) {
 									// hide the hovers
 									videoHoverDiv.hide();
-									controlsHoverDiv.hide();
+									controlsLeftHoverDiv.hide();
+									controlsRightHoverDiv.hide();
 									
 									// restore the control bar
 									fullscreenBtn.css('pointer-events', '');
@@ -1651,22 +1652,34 @@ if (typeof jQuery != 'undefined') {
 								}
 							},
 							videoHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
-							controlsHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
+							controlsLeftHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
+							controlsRightHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
 							positionHoverDivs = function() {
 								var style = {position: 'absolute', top: 0, left: 0}; //, backgroundColor: '#f00'};
 								videoHoverDiv.css(style);
-								controlsHoverDiv.css(style);
+								controlsLeftHoverDiv.css(style);
+								controlsRightHoverDiv.css(style);
 								
 								// over video, but not controls
 								videoHoverDiv
 									.width( t.container.width() )
 									.height( t.container.height() - t.controls.height() );
 								
-								// over controls, but not the 
-								controlsHoverDiv
-									.width( t.container.width() - fullscreenBtn.width() )
+								// over controls, but not the fullscreen button
+								var fullScreenBtnOffset = fullscreenBtn.offset().left - t.container.offset().left;
+									fullScreenBtnWidth = fullscreenBtn.outerWidth(true);
+									
+								controlsLeftHoverDiv
+									.width( fullScreenBtnOffset )
 									.height( t.controls.height() )
-									.css({top: t.container.height() - t.controls.height()});		
+									.css({top: t.container.height() - t.controls.height()});
+									
+								// after the fullscreen button
+								controlsRightHoverDiv
+									.width( t.container.width() - fullScreenBtnOffset - fullScreenBtnWidth )
+									.height( t.controls.height() )
+									.css({top: t.container.height() - t.controls.height(),
+										 left: fullScreenBtnOffset + fullScreenBtnWidth});								
 							};
 						
 						$(document).resize(function() {
@@ -1691,7 +1704,8 @@ if (typeof jQuery != 'undefined') {
 									
 									// show the divs that will restore things
 									videoHoverDiv.show();
-									controlsHoverDiv.show();
+									controlsRightHoverDiv.show();
+									controlsLeftHoverDiv.show();
 									positionHoverDivs();
 									
 									fullscreenIsDisabled = true;
