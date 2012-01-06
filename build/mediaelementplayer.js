@@ -1651,9 +1651,9 @@ if (typeof jQuery != 'undefined') {
 									fullscreenIsDisabled = false;
 								}
 							},
-							videoHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
-							controlsLeftHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
-							controlsRightHoverDiv = $('<div />').appendTo(t.container).mouseover(restoreControls),
+							videoHoverDiv = $('<div class="mejs-fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls),
+							controlsLeftHoverDiv = $('<div class="mejs-fullscreen-hover"  />').appendTo(t.container).mouseover(restoreControls),
+							controlsRightHoverDiv = $('<div class="mejs-fullscreen-hover"  />').appendTo(t.container).mouseover(restoreControls),
 							positionHoverDivs = function() {
 								var style = {position: 'absolute', top: 0, left: 0}; //, backgroundColor: '#f00'};
 								videoHoverDiv.css(style);
