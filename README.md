@@ -88,6 +88,15 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
+*2.6.3 (2012/01/08)*
+
+* Sending all options to Flash including colors
+
+*2.6.2 (2012/01/06)*
+
+* Fixed Flash fullscreen button inside an `<iframe>`
+* Fixed flash auto starting in 100% mode
+
 *2.6.1 (2012/01/03)*
 
 * Updated Opera's Flash Fullscreen support (apparently, it doesn't like pointer-events:none with Flash)
