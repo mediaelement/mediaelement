@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.6.2';
+mejs.version = '2.6.3';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -764,6 +764,8 @@ mejs.MediaElementDefaults = {
 	pluginWidth: -1,
 	// overrides <video height>
 	pluginHeight: -1,
+	// additional plugin variables in 'key=value' form
+	pluginVars: [],	
 	// rate in milliseconds for Flash and Silverlight to fire the timeupdate event
 	// larger number is less accurate, but less strain on plugin->JavaScript bridge
 	timerRate: 250,
@@ -1106,6 +1108,9 @@ mejs.HtmlMediaElementShim = {
 		if (controls) {
 			initVars.push('controls=true'); // shows controls in the plugin if desired
 		}
+		if (options.pluginVars) {
+			initVars = initVars.concat(options.pluginVars);
+		}		
 
 		switch (playback.method) {
 			case 'silverlight':
