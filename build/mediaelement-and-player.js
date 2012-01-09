@@ -2335,6 +2335,7 @@ if (typeof jQuery != 'undefined') {
 				return;
 
 			var 
+			t = this,
 			loading = 
 				$('<div class="mejs-overlay mejs-layer">'+
 					'<div class="mejs-overlay-loading"><span></span></div>'+
@@ -2373,13 +2374,13 @@ if (typeof jQuery != 'undefined') {
 			// show/hide big play button
 			media.addEventListener('play',function() {
 				bigPlay.hide();
-				loading.hide();
+				t.loaderHide(layers);
 				error.hide();
 			}, false);	
 			
 			media.addEventListener('playing', function() {
 				bigPlay.hide();
-				loading.hide();
+				t.loaderHide(layers);
 				error.hide();			
 			}, false);
 	
@@ -2390,7 +2391,7 @@ if (typeof jQuery != 'undefined') {
 			}, false);
 			
 			media.addEventListener('waiting', function() {
-				loading.show();	
+				t.loaderShow(layers);
 			}, false);			
 			
 			
@@ -2400,18 +2401,51 @@ if (typeof jQuery != 'undefined') {
 				//if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
 				//	return;
 					
-				loading.show();
+				t.loaderShow(layers);
 			}, false);	
 			media.addEventListener('canplay',function() {
-				loading.hide();
+				t.loaderHide(layers);
 			}, false);	
 
 			// error handling
 			media.addEventListener('error',function() {
-				loading.hide();
+				t.loaderHide(layers);
 				error.show();
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);				
+		},
+		loaderShow: function(layers) {
+			var t = this,
+				loadingTimer, 
+				loadingFrame = 1;
+				
+			$(layers).find('.mejs-overlay-loading').parent().show();
+			
+			t.loaderAnimate(layers, loadingTimer, loadingFrame, true);
+		},
+
+		loaderHide: function(layers) {
+			var t = this;
+			
+			$(layers).find('.mejs-overlay-loading').parent().hide();
+		},
+		
+		loaderAnimate: function(layers, loadingTimer, loadingFrame, animating) {
+			var t = this;
+			
+			$loading = $(layers).find('.mejs-overlay-loading').parent();
+			
+			if (!$loading.is(':visible')){
+				clearInterval(loadingTimer);
+				return;
+			}
+			
+			$loading.find('span').css('top', (loadingFrame * -24) + 'px');
+
+			loadingFrame = (loadingFrame + 1) % 12;
+			
+			loadingTimer = setInterval(function() { t.loaderAnimate(layers, loadingTimer, loadingFrame, true); }, 66);
+			
 		},
 		
 		buildkeyboard: function(player, controls, layers, media) {
