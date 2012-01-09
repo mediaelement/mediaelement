@@ -78,26 +78,21 @@
 }
 .mejs-overlay-loading {
 	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 80px;
-	height: 80px;
-	margin: -40px 0 0 -40px;
-	background: #333;
-	background: url(background.png);
-	background: rgba(0, 0, 0, 0.9);
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50,50,50,0.9)), to(rgba(0,0,0,0.9))); 
-	background: -webkit-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));
-	background: -moz-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));
-	background: -o-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));
-	background: -ms-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));	
-	background: linear-gradient(rgba(50,50,50,0.9), rgba(0,0,0,0.9)); 	
+    height: 24px;
+    left: 50%;
+    margin-left: -12px;
+    margin-top: -12px;
+    overflow: hidden;
+    top: 50%;
+    width: 24px;
 }
 .mejs-overlay-loading span {
-	display:block;
-	width: 80px;
-	height: 80px;
-	background: transparent url(loading.gif) 50% 50% no-repeat;
+	background: transparent url(loading.png)  center center no-repeat;
+	height: 288px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 24px;
 }
 
 /* End: LAYERS */
