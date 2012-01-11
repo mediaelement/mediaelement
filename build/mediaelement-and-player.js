@@ -2783,7 +2783,8 @@ if (typeof jQuery != 'undefined') {
 	
 	// options
 	$.extend(mejs.MepDefaults, {
-		duration: -1
+		duration: -1,
+		timeAndDurationSeparator: ' <span> | </span> '
 	});
 
 
@@ -2810,7 +2811,7 @@ if (typeof jQuery != 'undefined') {
 			var t = this;
 			
 			if (controls.children().last().find('.mejs-currenttime').length > 0) {
-				$(' <span> | </span> '+
+				$(t.options.timeAndDurationSeparator +
 					'<span class="mejs-duration">' + 
 						(t.options.duration > 0 ? 
 							mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours || t.media.duration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25) :
