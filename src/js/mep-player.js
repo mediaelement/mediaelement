@@ -182,6 +182,8 @@
 	mejs.MediaElementPlayer.prototype = {
 		
 		hasFocus: false,
+
+		isSeeking: false,
 		
 		controlsAreVisible: true,
 		
@@ -883,7 +885,7 @@
 			}, false);
 	
 			media.addEventListener('pause',function() {
-				if (!mejs.MediaFeatures.isiPhone) {
+				if (!mejs.MediaFeatures.isiPhone && !player.isSeeking) {
 					bigPlay.show();
 				}
 			}, false);
