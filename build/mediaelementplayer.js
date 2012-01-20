@@ -906,11 +906,6 @@ if (typeof jQuery != 'undefined') {
 				}
 			}, false);
 			
-			media.addEventListener('waiting', function() {
-				loading.show();	
-			}, false);			
-			
-			
 			// show/hide loading			
 			media.addEventListener('loadeddata',function() {
 				// for some reason Chrome is firing this event
