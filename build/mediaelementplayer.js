@@ -905,6 +905,12 @@ if (typeof jQuery != 'undefined') {
 					bigPlay.show();
 				}
 			}, false);
+
+			media.addEventListener('waiting', function() {
+				if (!player.isSeeking) {
+					loading.show();	
+				}
+			}, false);
 			
 			// show/hide loading			
 			media.addEventListener('loadeddata',function() {
