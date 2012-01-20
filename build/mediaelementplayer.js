@@ -198,6 +198,8 @@ if (typeof jQuery != 'undefined') {
 	mejs.MediaElementPlayer.prototype = {
 		
 		hasFocus: false,
+
+		isSeeking: false,
 		
 		controlsAreVisible: true,
 		
@@ -899,7 +901,7 @@ if (typeof jQuery != 'undefined') {
 			}, false);
 	
 			media.addEventListener('pause',function() {
-				if (!mejs.MediaFeatures.isiPhone) {
+				if (!mejs.MediaFeatures.isiPhone && !player.isSeeking) {
 					bigPlay.show();
 				}
 			}, false);
@@ -1052,6 +1054,7 @@ if (typeof jQuery != 'undefined') {
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
 
 })(mejs.$);
+
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
@@ -1089,7 +1092,9 @@ if (typeof jQuery != 'undefined') {
 
 
 			media.addEventListener('pause',function() {
-				play.removeClass('mejs-pause').addClass('mejs-play');
+				if (!player.isSeeking) {
+					play.removeClass('mejs-pause').addClass('mejs-play');
+				}
 			}, false);
 			media.addEventListener('paused',function() {
 				play.removeClass('mejs-pause').addClass('mejs-play');
@@ -1098,6 +1103,7 @@ if (typeof jQuery != 'undefined') {
 	});
 	
 })(mejs.$);
+
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
@@ -1172,6 +1178,10 @@ if (typeof jQuery != 'undefined') {
 
 						// seek to where the mouse is
 						if (mouseIsDown) {
+							if (!media.paused) {
+								player.isSeeking = true;
+								media.pause();
+							}
 							media.setCurrentTime(newTime);
 						}
 
@@ -1212,6 +1222,10 @@ if (typeof jQuery != 'undefined') {
 
 			$(document)
 				.bind('mouseup', function (e) {
+					if (player.isSeeking) {
+						player.isSeeking = false;
+						media.play();
+					}
 					mouseIsDown = false;
 					timefloat.hide();
 					//handleMouseMove(e);
@@ -1294,6 +1308,7 @@ if (typeof jQuery != 'undefined') {
 		}	
 	});
 })(mejs.$);
+
 (function($) {
 	
 	// options
