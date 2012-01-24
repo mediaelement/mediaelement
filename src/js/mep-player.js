@@ -324,6 +324,9 @@
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
+			
+			// controls are shown when loaded
+			t.container.trigger('controlsshown');
 		},
 		
 		showControls: function(doAnimation) {
@@ -337,7 +340,10 @@
 			if (doAnimation) {
 				t.controls
 					.css('visibility','visible')
-					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});	
+					.stop(true, true).fadeIn(200, function() {
+						t.controlsAreVisible = true;
+						t.container.trigger('controlsshown');
+					});	
 	
 				// any additional controls people might add and want to hide
 				t.container.find('.mejs-control')
@@ -355,6 +361,7 @@
 					.css('display','block');
 					
 				t.controlsAreVisible = true;
+				t.container.trigger('controlsshown');
 			}
 			
 			t.setControlsSize();
@@ -377,6 +384,7 @@
 						.css('display','block');
 						
 					t.controlsAreVisible = false;
+					t.container.trigger('controlshidden');
 				});	
 	
 				// any additional controls people might add and want to hide
@@ -398,6 +406,7 @@
 					.css('display','block');
 					
 				t.controlsAreVisible = false;
+				t.container.trigger('controlshidden');
 			}
 		},		
 

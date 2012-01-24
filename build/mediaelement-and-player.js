@@ -1824,6 +1824,9 @@ if (typeof jQuery != 'undefined') {
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
+			
+			// controls are shown when loaded
+			t.container.trigger('controlsshown');
 		},
 		
 		showControls: function(doAnimation) {
@@ -1837,7 +1840,10 @@ if (typeof jQuery != 'undefined') {
 			if (doAnimation) {
 				t.controls
 					.css('visibility','visible')
-					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});	
+					.stop(true, true).fadeIn(200, function() {
+						t.controlsAreVisible = true;
+						t.container.trigger('controlsshown');
+					});	
 	
 				// any additional controls people might add and want to hide
 				t.container.find('.mejs-control')
@@ -1855,6 +1861,7 @@ if (typeof jQuery != 'undefined') {
 					.css('display','block');
 					
 				t.controlsAreVisible = true;
+				t.container.trigger('controlsshown');
 			}
 			
 			t.setControlsSize();
@@ -1877,6 +1884,7 @@ if (typeof jQuery != 'undefined') {
 						.css('display','block');
 						
 					t.controlsAreVisible = false;
+					t.container.trigger('controlshidden');
 				});	
 	
 				// any additional controls people might add and want to hide
@@ -1898,6 +1906,7 @@ if (typeof jQuery != 'undefined') {
 					.css('display','block');
 					
 				t.controlsAreVisible = false;
+				t.container.trigger('controlshidden');
 			}
 		},		
 
@@ -3527,12 +3536,12 @@ if (typeof jQuery != 'undefined') {
 			if (!player.options.alwaysShowControls) {
 				// move with controls
 				player.container
-					.bind('mouseenter', function () {
+					.bind('controlsshown', function () {
 						// push captions above controls
 						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
 					})
-					.bind('mouseleave', function () {
+					.bind('controlshidden', function () {
 						if (!media.paused) {
 							// move back to normal place
 							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
