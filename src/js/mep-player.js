@@ -182,6 +182,8 @@
 	mejs.MediaElementPlayer.prototype = {
 		
 		hasFocus: false,
+
+		isSeeking: false,
 		
 		controlsAreVisible: true,
 		
@@ -884,15 +886,16 @@
 			}, false);
 	
 			media.addEventListener('pause',function() {
-				if (!mejs.MediaFeatures.isiPhone) {
+				if (!mejs.MediaFeatures.isiPhone && !player.isSeeking) {
 					bigPlay.show();
 				}
 			}, false);
-			
+
 			media.addEventListener('waiting', function() {
-				loading.show();	
-			}, false);			
-			
+				if (!player.isSeeking) {
+					loading.show();	
+				}
+			}, false);
 			
 			// show/hide loading			
 			media.addEventListener('loadeddata',function() {
