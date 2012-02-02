@@ -1,4 +1,4 @@
-# GOAL: Make `<video>` and `<audio>` easy. One file. Any browser. Same UI.
+# `<video>` and `<audio>` made easy. One file. Any browser. Same UI.
 
 * Author: John Dyer [http://j.hn/](http://j.hn/)
 * Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
