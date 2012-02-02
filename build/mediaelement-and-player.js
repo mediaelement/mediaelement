@@ -1716,7 +1716,8 @@ if (typeof jQuery != 'undefined') {
 				t.$media.attr('controls', 'controls');
 
 				// attempt to fix iOS 3 bug
-				t.$media.removeAttr('poster');
+				//t.$media.removeAttr('poster');
+                                // no Issue found on iOS3 -ttroxell
 
 				// override Apple's autoplay override for iPads
 				if (mf.isiPad && t.media.getAttribute('autoplay') !== null) {
@@ -2539,6 +2540,7 @@ if (typeof jQuery != 'undefined') {
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
 
 })(mejs.$);
+
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
