@@ -93,6 +93,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 * Removed iOS 3.x poster code [xtat] [James Cross]
 * Fixed bug when player is initially hidden in `display:none;`
+* Workaround for when inside an `<iframe>` and Chrome doesn't correctly report exiting from fullscreen
 
 *2.6.4 (2012/01/10)*
 
