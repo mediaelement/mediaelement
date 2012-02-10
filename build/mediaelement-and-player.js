@@ -3439,6 +3439,11 @@ if (typeof jQuery != 'undefined') {
 				.height('100%');
 				//.css({position: 'fixed', left: 0, top: 0, right: 0, bottom: 0, overflow: 'hidden', width: '100%', height: '100%', 'z-index': 1000});				
 
+			t.container.find('object, embed, iframe, video, .mejs-poster img')
+				.width('100%')
+				.height('100%')
+				.css('margin',0);
+				
 			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
 			// Actually, it seems to be needed for IE8, too
 			//if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
