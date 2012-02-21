@@ -45,7 +45,7 @@
 		// force iPad's native controls
 		AndroidUseNativeControls: false,			
 		// features to show
-		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
+		features: ['playpause','current','progress','duration','tracks','volumeVertical','fullscreen'],
 		// only for dynamic
 		isVideo: true,
 		

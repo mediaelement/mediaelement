@@ -38,7 +38,8 @@ mep_files.append('mep-feature-playpause.js')
 mep_files.append('mep-feature-stop.js')
 mep_files.append('mep-feature-progress.js')
 mep_files.append('mep-feature-time.js')
-mep_files.append('mep-feature-volume.js')
+mep_files.append('mep-feature-volume-vertical.js');
+mep_files.append('mep-feature-volume-horizontal.js');
 mep_files.append('mep-feature-fullscreen.js')
 mep_files.append('mep-feature-tracks.js')
 mep_files.append('mep-feature-contextmenu.js')
