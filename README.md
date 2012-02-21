@@ -78,7 +78,6 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *Proposed features*
 
-* horizontal, inline volume control
 * deeper WebVTT support (alignment, color, etc.) - include captionator, remove google translate?
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
@@ -88,6 +87,9 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
+*2.6.6 (2012/02/21)*
+
+* Adding horizontal, inline volume control and documentation.
 
 *2.6.5 (2012/02/01)*
 
