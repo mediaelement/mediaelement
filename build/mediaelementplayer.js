@@ -61,7 +61,7 @@ if (typeof jQuery != 'undefined') {
 		// force iPad's native controls
 		AndroidUseNativeControls: false,			
 		// features to show
-		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
+		features: ['playpause','current','progress','duration','tracks','volumeVertical','fullscreen'],
 		// only for dynamic
 		isVideo: true,
 		
@@ -1385,7 +1385,7 @@ if (typeof jQuery != 'undefined') {
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
-		buildvolume: function(player, controls, layers, media) {
+		buildvolumeVertical: function(player, controls, layers, media) {
 			
 			// Android and iOS don't support volume controls
 			if (mejs.MediaFeatures.hasTouch && this.options.hideVolumeOnTouchDevices)
@@ -1554,6 +1554,147 @@ if (typeof jQuery != 'undefined') {
 		}
 	});
 	
+})(mejs.$);
+
+/*
+ * Horizontal volume slider
+ *
+ * Adds the ability to contorl volume via a horizontal
+ * sliding control in addition to the base functionality
+ * of a vertical sliding volume control.
+*/
+(function($) {
+	$.extend(MediaElementPlayer.prototype, {
+		buildvolumeHorizontal: function(player, controls, layers, media) {
+      var $mute =
+        $('<div class="mejs-button mejs-volume-button volume-horizontal mejs-mute">' +
+          '<button type="button"></button>' +
+          // outer background
+          '<div class="mejs-volume-slider volume-horizontal">' +
+            // line background
+            '<div class="mejs-volume-total"></div>' +
+            // current volume
+            '<div class="mejs-volume-current"></div>' +
+            // handle
+            '<div class="mejs-volume-handle"></div>' +
+          '</div>' +
+        '</div>');
+      var $volumeSlider = $mute.find('.mejs-volume-slider');
+      var $volumeTotal = $mute.find('.mejs-volume-total');
+      var $volumeCurrent = $mute.find('.mejs-volume-current');
+      var $volumeHandle = $mute.find('.mejs-volume-handle');
+      var restoreVolume = player.options.startVolume;
+      var mouseIsDown = false;
+
+      $mute.appendTo(controls);
+
+      /**
+       * Move the horizontal volume handle to the position in
+       * the volume rail that corresponds to the given volume
+       * percentage.
+       *
+       * @param {Number} represents % of volume
+       * @param {Mumber} optional offset to pass specifying the
+       *    exact offset (in pixels) to move the volume handle
+       *    to. If not passed, the offset will be calculated
+       *    using the volume %, which can be less precise.
+       */
+      function positionVolumeHandle(volume, handleOffset) {
+        var handleWidth = $volumeHandle.width();
+        var middleOfHandle = parseInt(handleWidth / 2);
+        var railWidth = $volumeTotal.width();
+        var handleOffset = handleOffset || $volumeTotal.width() * volume;
+
+        // restrict volume indicator within confines of volume rail
+        // taking into account the width of the handle itself
+        handleOffset = Math.max(handleOffset, middleOfHandle);
+        handleOffset = Math.min(handleOffset, railWidth - middleOfHandle);
+
+        // move the handle to match the mouse
+        $volumeHandle.css('left', handleOffset - middleOfHandle);
+        $volumeCurrent.width(handleOffset + middleOfHandle);
+      };
+
+      /**
+       * Calculates a volume percentage based on the
+       * where the handle will be positioned to relative
+       * to it's previous location
+       *
+       * @param {Event} the mouse move event
+       */
+      function handleVolumeMove(e) {
+        var handleWidth = $volumeHandle.width();
+        var middleOfHandle = parseInt(handleWidth / 2);
+        // offset on the slider the click occured
+        var clickOffset = e.pageX - $volumeTotal.offset().left;
+        // calculated volume %
+        var volume = (clickOffset - middleOfHandle) /
+            ($volumeTotal.width() - handleWidth);
+
+        // set mute status
+        if (volume <= 0) {
+          media.setMuted(true);
+          $mute.removeClass('mejs-mute').addClass('mejs-unmute');
+        } else {
+          media.setMuted(false);
+          $mute.removeClass('mejs-unmute').addClass('mejs-mute');
+        }
+
+        // restrict volume to a value between 0 and 1
+        volume = Math.max(volume, 0);
+        volume = Math.min(volume, 1);
+
+        media.setVolume(volume);
+        positionVolumeHandle(volume, clickOffset);
+      };
+
+      // capture user clicking on the volume indicator
+      $volumeSlider.bind('mousedown', function (e) {
+        handleVolumeMove(e);
+        mouseIsDown = true;
+
+        return false;
+      });
+
+      // capture user sliding volume handle
+      $(document).bind('mousemove', function (e) {
+        if (mouseIsDown) {
+          handleVolumeMove(e);
+        }
+      });
+
+      $(document).bind('mouseup', function (e) {
+        mouseIsDown = false;
+      });
+
+      // mute button toggle
+      $mute.find('button').click(function(e) {
+        media.setMuted(!media.muted);
+      });
+
+      // listen for volume change events from other sources
+      media.addEventListener('volumechange', function(e) {
+        if (!mouseIsDown) {
+          if (media.muted) {
+            positionVolumeHandle(0);
+            $mute.removeClass('mejs-mute').addClass('mejs-unmute');
+          } else {
+            positionVolumeHandle(e.target.volume);
+            $mute.removeClass('mejs-unmute').addClass('mejs-mute');
+          }
+        }
+      }, true);
+
+      // set initial volume
+      positionVolumeHandle(player.options.startVolume);
+
+      // shim gets the startvolume as a parameter, but we have to set
+      // it on the native <video> and <audio> elements
+      if (media.pluginType === 'native') {
+        media.setVolume(player.options.startVolume);
+      }
+    }
+  });
 })(mejs.$);
 
 (function($) {

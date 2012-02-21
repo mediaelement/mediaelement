@@ -401,6 +401,79 @@
 	margin: 0;
 }
 
+/*
+  Horizontal Volume Slider
+*/
+
+.mejs-controls .mejs-button.mejs-volume-button.volume-horizontal {
+  width: 105px;
+}
+
+.mejs-controls .mejs-volume-button .mejs-volume-slider.volume-horizontal {
+  display: block;
+  top: 10px;
+  left: 25px;
+  width: 80px;
+  height: 10px;
+}
+
+.mejs-controls .mejs-volume-button .mejs-volume-slider.volume-horizontal .mejs-volume-total,
+.mejs-controls .mejs-volume-button .mejs-volume-slider.volume-horizontal .mejs-volume-current,
+.mejs-controls .mejs-volume-button .mejs-volume-slider.volume-horizontal .mejs-volume-handle {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.mejs-controls .mejs-volume-button .mejs-volume-slider.volume-horizontal .mejs-volume-total {
+  top: 0px;
+  left: 0px;
+  width: 80px;
+  height: 10px;
+  background: #3caac8;
+  background: rgba(60,170,200,0.8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(44,124,145,0.8)), to(rgba(78,183,212,0.8))); 
+  background: -webkit-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+  background: -moz-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+  background: -o-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+  background: -ms-linear-gradient(top, rgba(44,124,145,0.8), rgba(78,183,212,0.8));
+  background: linear-gradient(rgba(44,124,145,0.8), rgba(78,183,212,0.8)); 	
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#2C7C91,endColorstr=#4EB7D4);
+}
+
+.mejs-controls .mejs-volume-button .mejs-volume-slider.volume-horizontal .mejs-volume-current {
+  top: 0px;
+  left: 0px;
+  width: 100px;
+  height: 10px;
+  background: #fff;
+  background: rgba(255,255,255,0.8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,0.9)), to(rgba(200,200,200,0.8)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  background: -moz-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8)); 
+  background: -o-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  background: -ms-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  background: linear-gradient(rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#FFFFFF,endColorstr=#C8C8C8);	
+}
+
+.mejs-controls .mejs-volume-button .mejs-volume-slider.volume-horizontal .mejs-volume-handle {
+  top: 0px;
+  width: 10px;
+  height: 10px;
+  margin-left: 0px;
+  background: #fff;
+  background: rgba(255,255,255,0.8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255,255,255,0.9)), to(rgba(200,200,200,0.8)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  background: -moz-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8)); 
+  background: -o-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  background: -ms-linear-gradient(top, rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  background: linear-gradient(rgba(255,255,255,0.9), rgba(200,200,200,0.8));
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#FFFFFF,endColorstr=#C8C8C8);	
+}
+
 /* End: Mute/Volume */
 
 
