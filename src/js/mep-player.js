@@ -693,8 +693,13 @@
 
 		setPlayerSize: function(width,height) {
 			var t = this;
-			
-			// testing for 100% code
+
+			t.width = width;
+			t.height = height;
+
+			// XXX: Dirty hack:
+			// If there is a % char in the supplied height value, set size to
+			// 100% of parent container.
 			if (t.height.toString().indexOf('%') > 0) {
 			
 				// do we have the native dimensions yet?
@@ -970,7 +975,7 @@
 		},
 		changeSkin: function(className) {
 			this.container[0].className = 'mejs-container ' + className;
-			this.setPlayerSize();
+			this.setPlayerSize(this.width, this.height);
 			this.setControlsSize();
 		},
 		play: function() {
