@@ -695,12 +695,13 @@
 		setPlayerSize: function(width,height) {
 			var t = this;
 
-			t.width = width;
-			t.height = height;
+			if (typeof width != 'undefined')
+				t.width = width;
+				
+			if (typeof height != 'undefined')
+				t.height = height;
 
-			// XXX: Dirty hack:
-			// If there is a % char in the supplied height value, set size to
-			// 100% of parent container.
+			// detect 100% mode
 			if (t.height.toString().indexOf('%') > 0) {
 			
 				// do we have the native dimensions yet?
