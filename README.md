@@ -92,6 +92,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Added horizontal volume control, the new default for audio (based on work by [gavinlynch](http://github.com/gavinlynch))
 * Possible issues with &lt; IE8 centering resolved
 * Full set of controls under Silverlight ([Birol2010](https://github.com/Birol2010/))
+* YouTube fix [raknam]
 
 *2.6.5 (2012/02/01)*
 
