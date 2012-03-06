@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -46,6 +46,13 @@ namespace SilverlightMediaElement
 		// dummy
 		bool _firedCanPlay = false;
 
+        // mediaElement.Position updates TimelineSlider.Value, and
+        // updating TimelineSlider.Value updates mediaElement.Position, 
+        // this variable helps us break the infinite loop
+        private bool duringTickEvent = false;
+
+        private bool playVideoWhenSliderDragIsOver = false;
+
 		public MainPage(IDictionary<string, string> initParams)
 		{
 			InitializeComponent();
@@ -60,6 +67,9 @@ namespace SilverlightMediaElement
 			media.MediaEnded += new RoutedEventHandler(media_MediaEnded);
 			media.MediaFailed += new EventHandler<ExceptionRoutedEventArgs>(media_MediaFailed);
 			media.MediaOpened += new RoutedEventHandler(media_MediaOpened);
+            media.MouseLeftButtonDown += new MouseButtonEventHandler(media_MouseLeftButtonDown);
+            CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
+            transportControls.Visibility = System.Windows.Visibility.Collapsed;
 
 			// get parameters
 			if (initParams.ContainsKey("id"))
@@ -126,7 +136,7 @@ namespace SilverlightMediaElement
 			// full screen settings
 			Application.Current.Host.Content.FullScreenChanged += new EventHandler(DisplaySizeInformation);
 			Application.Current.Host.Content.Resized += new EventHandler(DisplaySizeInformation);
-			FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
+			//FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
 		   
 			// send out init call			
 			//HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", new object[] {_htmlid});
@@ -137,6 +147,26 @@ namespace SilverlightMediaElement
 			catch { }
 		}
 
+        void media_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            switch (media.CurrentState)
+            {
+                case MediaElementState.Playing:
+                    pauseMedia();
+                    break;
+
+                case MediaElementState.Paused:
+                    playMedia();
+                    break;
+                case MediaElementState.Stopped:
+                    
+                    break;
+                case MediaElementState.Buffering:
+                    pauseMedia();
+                    break;
+            }
+        }
+
 		void media_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
 			SendEvent("click");
 		}
@@ -145,6 +175,12 @@ namespace SilverlightMediaElement
 
 			_videoWidth = Convert.ToInt32(media.NaturalVideoWidth);
 			_videoHeight = Convert.ToInt32(media.NaturalVideoHeight);
+            
+            TimeSpan duration = media.NaturalDuration.TimeSpan;
+            totalTimeTextBlock.Text = TimeSpanToString(duration);
+            UpdateVideoSize();
+
+            playPauseButton.IsChecked = true;
 
 			SendEvent("loadedmetadata");
 		}
@@ -321,8 +357,10 @@ namespace SilverlightMediaElement
 
 			media.Play();
 			_isEnded = false;
-			_isPaused = false;		 
-			
+			_isPaused = false;
+
+            playPauseButton.IsChecked = true;
+
 			//StartTimer();
 		}
 
@@ -335,6 +373,7 @@ namespace SilverlightMediaElement
 			
 			media.Pause();
 			StopTimer();
+            playPauseButton.IsChecked = false;
 		}
 
 		[ScriptableMember]
@@ -359,6 +398,7 @@ namespace SilverlightMediaElement
 
 			media.Stop();
 			StopTimer();
+            playPauseButton.IsChecked = false;
 		}
 
 		[ScriptableMember]
@@ -375,7 +415,7 @@ namespace SilverlightMediaElement
 			WriteDebug("method:setmuted: " + isMuted.ToString());
 
 			media.IsMuted = isMuted;
-
+            muteButton.IsChecked = isMuted;
 			SendEvent("volumechange");
 
 		}
@@ -408,15 +448,189 @@ namespace SilverlightMediaElement
 			this.Height = media.Height = height;
 		}
 
+        [ScriptableMember]
+		public void positionFullscreenButton(int x, int y,bool visibleAndAbove) {
+            if (visibleAndAbove)
+            {
+                //FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                //FullscreenButton.Visibility = System.Windows.Visibility.Visible;
+            }
+		}
+
 		private void FullscreenButton_Click(object sender, RoutedEventArgs e) {
 			Application.Current.Host.Content.IsFullScreen = true;
-			FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
+			//FullscreenButton.Visibility = System.Windows.Visibility.Collapsed;
 		}
 
 		private void DisplaySizeInformation(Object sender, EventArgs e) {
 			this.Width = LayoutRoot.Width = media.Width = Application.Current.Host.Content.ActualWidth;
 			this.Height = LayoutRoot.Height = media.Height = Application.Current.Host.Content.ActualHeight;
+
+            UpdateVideoSize();
 		}
 
+
+
+
+        #region play button
+
+        private void BigPlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            playPauseButton.IsChecked = true;
+            PlayPauseButton_Click(sender, e);
+        }
+
+        private void PlayPauseButton_Click(object sender, RoutedEventArgs e)
+        {
+            bigPlayButton.Visibility = Visibility.Collapsed;
+
+            // this will be the toggle button state after the click has been processed
+            if (playPauseButton.IsChecked == true)
+                playMedia();
+            else
+                pauseMedia();
+        }
+
+       
+
+        #endregion
+
+        #region timelineSlider
+
+        private void Seek(double percentComplete)
+        {
+            if (duringTickEvent)
+                throw new Exception("Can't call Seek() now, you'll get an infinite loop");
+
+            TimeSpan duration = media.NaturalDuration.TimeSpan;
+            int newPosition = (int)(duration.TotalSeconds * percentComplete);
+            media.Position = new TimeSpan(0, 0, newPosition);
+
+            // let the next CompositionTarget.Rendering take care of updating the text blocks
+        }
+
+        private Slider GetSliderParent(object sender)
+        {
+            FrameworkElement element = (FrameworkElement)sender;
+            do
+            {
+                element = (FrameworkElement)VisualTreeHelper.GetParent(element);
+            } while (!(element is Slider));
+            return (Slider)element;
+        }
+
+        private void LeftTrack_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+            FrameworkElement lefttrack = (sender as FrameworkElement).FindName("LeftTrack") as FrameworkElement;
+            FrameworkElement righttrack = (sender as FrameworkElement).FindName("RightTrack") as FrameworkElement;
+            double position = e.GetPosition(lefttrack).X;
+            double width = righttrack.TransformToVisual(lefttrack).Transform(new Point(righttrack.ActualWidth, righttrack.ActualHeight)).X;
+            double percent = position / width;
+            Slider slider = GetSliderParent(sender);
+            slider.Value = percent;
+        }
+
+        private void HorizontalThumb_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            if (GetSliderParent(sender) != timelineSlider) return;
+
+            bool notPlaying = (media.CurrentState == MediaElementState.Paused
+                || media.CurrentState == MediaElementState.Stopped);
+
+            if (notPlaying)
+            {
+                playVideoWhenSliderDragIsOver = false;
+            }
+            else
+            {
+                playVideoWhenSliderDragIsOver = true;
+                media.Pause();
+            }
+        }
+
+        private void HorizontalThumb_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            if (playVideoWhenSliderDragIsOver)
+                media.Play();
+        }
+
+        private void TimelineSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (duringTickEvent)
+                return;
+
+            Seek(timelineSlider.Value);
+        }
+
+        #endregion
+
+        #region updating current time
+
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            duringTickEvent = true;
+
+            TimeSpan duration = media.NaturalDuration.TimeSpan;
+            if (duration.TotalSeconds != 0)
+            {
+                double percentComplete = (media.Position.TotalSeconds / duration.TotalSeconds);
+                timelineSlider.Value = percentComplete;
+                string text = TimeSpanToString(media.Position);
+                if (this.currentTimeTextBlock.Text != text)
+                    this.currentTimeTextBlock.Text = text;
+            }
+
+            duringTickEvent = false;
+        }
+
+        private static string TimeSpanToString(TimeSpan time)
+        {
+            return string.Format("{0:00}:{1:00}", (time.Hours * 60) + time.Minutes, time.Seconds);
+        }
+        #endregion
+
+        private void MuteButton_Click(object sender, RoutedEventArgs e)
+        {
+            //media.IsMuted = (bool)muteButton.IsChecked;
+            setMuted((bool)muteButton.IsChecked);
+        }
+
+        #region fullscreen mode
+
+        private void FullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            var content = Application.Current.Host.Content;
+            content.IsFullScreen = !content.IsFullScreen;
+        }
+
+        private void Content_FullScreenChanged(object sender, EventArgs e)
+        {
+            UpdateVideoSize();
+        }
+
+        private void UpdateVideoSize()
+        {
+            if (App.Current.Host.Content.IsFullScreen)
+            {
+                transportControls.Visibility = System.Windows.Visibility.Visible;
+                // mediaElement takes all available space
+                //VideoRow.Height = new GridLength(1, GridUnitType.Star);
+                //VideoColumn.Width = new GridLength(1, GridUnitType.Star);
+            }
+            else
+            {
+                transportControls.Visibility = System.Windows.Visibility.Collapsed;
+                // mediaElement is only as big as the source video
+                //VideoRow.Height = new GridLength(1, GridUnitType.Auto);
+                //VideoColumn.Width = new GridLength(1, GridUnitType.Auto);
+            }
+        }
+
+        #endregion
 	}
 }
+
