@@ -704,6 +704,7 @@ mejs.YouTubeApi = {
 	
 	iFrameReady: function() {
 		
+		this.isLoaded = true;
 		this.isIframeLoaded = true;
 		
 		while (this.iframeQueue.length > 0) {
