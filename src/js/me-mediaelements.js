@@ -301,6 +301,24 @@ mejs.PluginMediaElement.prototype = {
 	},
 	// end: fake events
 	
+	// fake DOM attribute methods
+	attributes: {},
+	hasAttribute: function(name){
+		return (name in this.attributes);  
+	},
+	removeAttribute: function(name){
+		delete this.attributes[name];
+	},
+	getAttribute: function(name){
+		if (this.hasAttribute(name)) {
+			return this.attributes[name];
+		}
+		return '';
+	},
+	setAttribute: function(name, value){
+		this.attributes[name] = value;
+	},
+
 	remove: function() {
 		mejs.Utility.removeSwf(this.pluginElement.id);
 	}
