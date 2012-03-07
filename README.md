@@ -94,7 +94,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Full set of controls under Silverlight ([Birol2010](https://github.com/Birol2010/))
 * YouTube fix [raknam]
 * Source Chooser plugin [markomarkovic]
-* shim now has a .tagName property [tantalic]
+* shim now has a .tagName property, and other DOM-like methods [tantalic]
+* Poster display fix when HTML5, Flash, and Silverlight are all missing [bruha]
 
 *2.6.5 (2012/02/01)*
 
