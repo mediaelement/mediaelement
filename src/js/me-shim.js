@@ -364,7 +364,7 @@ mejs.HtmlMediaElementShim = {
 		} catch (e) {}
 
 		errorContainer.innerHTML = (poster !== '') ?
-			'<a href="' + playback.url + '"><img src="' + poster + '" /></a>' :
+			'<a href="' + playback.url + '"><img src="' + poster + '" width="100%" height="100%" /></a>' :
 			'<a href="' + playback.url + '"><span>Download File</span></a>';
 
 		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);
