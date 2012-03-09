@@ -93,9 +93,10 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Possible issues with &lt; IE8 centering resolved
 * Full set of controls under Silverlight ([Birol2010](https://github.com/Birol2010/))
 * YouTube fix [raknam]
-* Source Chooser plugin [markomarkovic]
 * shim now has a .tagName property, and other DOM-like methods [tantalic]
-* Poster display fix when HTML5, Flash, and Silverlight are all missing [bruha]
+* Poster display fix when HTML5, Flash, and Silverlight are all missing	 [bruha]
+* Source Chooser plugin [markomarkovic]
+* Fix for flash audio mute [lbernau]
 
 *2.6.5 (2012/02/01)*
 
