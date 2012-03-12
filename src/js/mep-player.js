@@ -97,7 +97,7 @@
 										}
 										
 										// 5%
-										var newTime = Math.min(media.currentTime - (media.duration * 0.05), media.duration);
+										var newTime = Math.max(media.currentTime - (media.duration * 0.05), 0);
 										media.setCurrentTime(newTime);
 								}
 						}
@@ -115,7 +115,7 @@
 										}
 										
 										// 5%
-										var newTime = Math.max(media.currentTime + (media.duration * 0.05), 0);
+										var newTime = Math.min(media.currentTime + (media.duration * 0.05), media.duration);
 										media.setCurrentTime(newTime);
 								}
 						}
