@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tt xml:lang="en" xmlns="http://www.w3.org/2006/04/ttaf1"  xmlns:tts="http://www.w3.org/2006/04/ttaf1#styling">
+  <head>
+        <styling>
+            <style id="b1" tts:color="#cccc00"/>
+       </styling>
+  </head>
+ 
+  <body>
+    <div xml:lang="en" style="b1">
+            <p begin="00:01.7" end="00:05.0">Narrator:  Someone watching a car<br/>accelerate toward light speed</p>
+            <p begin="00:05.0" end="00:07.4">would see something<br/>very strange.</p>
+            <p begin="00:07.4" end="00:10.5">It would seem as though the<br/>car itself were getting shorter</p>
+            <p begin="00:10.5" end="00:14.4">and that time for the person<br/>in the car was slowing down.</p>
+            <p begin="00:14.4" end="00:17.3">However, you wouldn't<br/>see these effects</p>
+            <p begin="00:17.3" end="00:20.6">until the car began to<br/>approach the speed of light.</p>
+            <p begin="00:20.6" end="00:23.0">At 90% of the speed of light</p>
+            <p begin="00:23.0" end="00:28.6">the car would appear to shrink<br/>to 44% of its usual length.</p>
+            <p begin="00:28.6" end="00:30.2">This thought experiment</p>
+            <p begin="00:30.2" end="00:32.5">answered Einstein's<br/>old question</p>
+            <p begin="00:32.5" end="00:33.9">about what he would see</p>
+            <p begin="00:33.9" end="00:36.3">if he traveled along<br/>with a beam of light.</p>
+            <p begin="00:36.3" end="00:38.4">He simply couldn't<br/>make the trip</p>
+            <p begin="00:38.4" end="00:42.1">for at the speed of light,<br/>length would contract to zero</p>
+            <p begin="00:42.1" end="00:44.5">and time would stop.</p>
+   </div>
+  </body>
+</tt>

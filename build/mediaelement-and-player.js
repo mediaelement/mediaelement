@@ -121,6 +121,20 @@ mejs.Utility = {
 		
 		return tc_in_seconds;
 	},
+
+	convertSMPTEtoSeconds: function (SMPTE) {
+		if (typeof SMPTE != "string") return false;
+		var secs = 0;
+		SMPTE = SMPTE.replace(",", ".");
+		var decimalLen = (SMPTE.indexOf(".") != -1) ? SMPTE.split(".")[1].length : 0;
+		SMPTE = SMPTE.split(":").reverse();
+		for (var i = 0; i < SMPTE.length; i++) {
+			var multiplier = 1;
+			if (i > 0) multiplier = Math.pow(60, i); 
+			secs += Number(SMPTE[i]) * multiplier;
+		}
+		return Number(secs.toFixed(decimalLen));
+	},
 	
 	/* borrowed from SWFObject: http://code.google.com/p/swfobject/source/browse/trunk/swfobject/src/swfobject.js#474 */
 	removeSwf: function(id) {
@@ -2280,7 +2294,9 @@ if (typeof jQuery != 'undefined') {
 
 				t.container
 					.width(t.width)
-					.height(t.height);
+					.height(t.height)
+					.addClass("mejs-width-" + t.width)
+					.addClass("mejs-height-" + t.height);
 	
 				t.layers.children('.mejs-layer')
 					.width(t.width)
@@ -3592,19 +3608,16 @@ if (typeof jQuery != 'undefined') {
 						
 						// handle clicks to the language radio buttons
 						.delegate('input[type=radio]','click',function() {
-							lang = this.value;
-
+							var lang = this.value,
+								id = this.getAttribute("id"),
+								index = null;
 							if (lang == 'none') {
 								player.selectedTrack = null;
 							} else {
-								for (i=0; i<player.tracks.length; i++) {
-									if (player.tracks[i].srclang == lang) {
-										player.selectedTrack = player.tracks[i];
-										player.captions.attr('lang', player.selectedTrack.srclang);
-										player.displayCaptions();
-										break;
-									}
-								}
+								index = id.substring(id.lastIndexOf("_") + 1);
+								player.selectedTrack = player.tracks[index];
+								player.captions.attr('lang', player.selectedTrack.srclang);
+								player.displayCaptions();
 							}
 						});
 						//.bind('mouseenter', function() {
@@ -3638,7 +3651,7 @@ if (typeof jQuery != 'undefined') {
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
+					player.addTrackButton(i, player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
 
@@ -3690,16 +3703,22 @@ if (typeof jQuery != 'undefined') {
 		},
 
 		loadTrack: function(index){
+			console.log(index)
 			var
+				TTMLCheck					= /<tt\s+xml/ig,
+			//	TTMLTimestampParserAdv		= /^(\d{2})?:?(\d{2}):(\d{2})\.(\d+)/,
+			//	TTMLTimestampParserHuman	= /^([\d\.]+)[smhdwy]/ig, // Under development, will need to study TTML spec more. :)
 				t = this,
+				index = index,
 				track = t.tracks[index],
 				after = function() {
-
+console.log("----------")
+						console.log(track.label)
 					track.isLoaded = true;
 
 					// create button
 					//t.addTrackButton(track.srclang);
-					t.enableTrackButton(track.srclang, track.label);
+					t.enableTrackButton(index,track.srclang, track.label);
 
 					t.loadNextTrack();
 
@@ -3717,63 +3736,75 @@ if (typeof jQuery != 'undefined') {
 				});
 
 			} else {
-				$.ajax({
-					url: track.src,
-					success: function(d) {
+					$.ajax({
+						url: track.src,
+						dataType: "text",
+						success: function(d) {
+							if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+								track.entries = mejs.TrackFormatParser.dfxp.parse(d);
 
-						// parse the loaded file
-						track.entries = mejs.TrackFormatParser.parse(d);
-						after();
+							} else {	
+								track.entries = mejs.TrackFormatParser.webvvt.parse(d);
+							}
+							after();
 
-						if (track.kind == 'chapters' && t.media.duration > 0) {
-							t.drawChapters(track);
+							if (track.kind == 'chapters' && t.media.duration > 0) {
+								t.drawChapters(track);
+							}
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							t.loadNextTrack();
 						}
-					},
-					error: function() {
-						t.loadNextTrack();
-					}
-				});
+					});
 			}
 		},
 
-		enableTrackButton: function(lang, label) {
+		enableTrackButton: function(index, lang, label) {
 			var t = this;
 			
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
 			}			
 
-			t.captionsButton
-				.find('input[value=' + lang + ']')
+			$('#' + t.id + '_captions_' + index)
 					.prop('disabled',false)
 				.siblings('label')
 					.html( label );
 
 			// auto select
 			if (t.options.startLanguage == lang) {
-				$('#' + t.id + '_captions_' + lang).click();
+				t.captionsButton
+					.find('input[value='+lang+']').eq(0)
+					.click();
 			}
-
+			
+//console.log(t.captionsButton.find('ul').html())
 			t.adjustLanguageBox();
+			
+//console.log(t.captionsButton.find('ul').html())
 		},
 
-		addTrackButton: function(lang, label) {
+		addTrackButton: function(index, lang, label) {
 			var t = this;
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
 			}
-
+	console.log(label)
+console.log(lang)
 			t.captionsButton.find('ul').append(
 				$('<li>'+
-					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + label + ' (loading)' + '</label>'+
+					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + index + '" value="' + lang + '" disabled="disabled" />' +
+					'<label for="' + t.id + '_captions_' + index + '">' + label + ' (loading)' + '</label>'+
 				'</li>')
 			);
-
+			
+//console.log(t.captionsButton.find('ul').html())
 			t.adjustLanguageBox();
+			
+console.log(t.captionsButton.find('ul').html())
 
 			// remove this from the dropdownlist (if it exists)
-			t.container.find('.mejs-captions-translations option[value=' + lang + ']').remove();
+			// t.container.find('.mejs-captions-translations option[value=' + lang + ']').remove();
 		},
 
 		adjustLanguageBox:function() {
@@ -3789,16 +3820,30 @@ if (typeof jQuery != 'undefined') {
 
 			if (typeof this.tracks == 'undefined')
 				return;
-
+				
 			var
 				t = this,
 				i,
+				begin,
+				end,
 				track = t.selectedTrack;
-
+				
+console.log(t.selectedTrack)
 			if (track != null && track.isLoaded) {
 				for (i=0; i<track.entries.times.length; i++) {
-					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){
-						t.captionsText.html(track.entries.text[i]);
+					begin = track.entries.times[i].start;
+					end = track.entries.times[i].stop;
+					if (begin == null) begin = 0.200;
+					if (end == null) end = t.media.duration;
+					if (t.media.currentTime >= begin && t.media.currentTime <= end){
+					//	console.log(track.entries.times[i].start)
+					//	console.log(begin)
+						t.captionsText.html(track.entries.text[i].replace(/\s([^\s<]+)\s*$/,'&nbsp;$1'));
+						if (track.entries.times[i].style && track.entries.times[i].style != null) {
+							t.captionsText.attr("style", track.entries.times[i].style)
+						} else {
+							t.captionsText.removeAttr("style")
+						}
 						t.captions.show();
 						return; // exit out if one is visible;
 					}
@@ -3951,53 +3996,105 @@ if (typeof jQuery != 'undefined') {
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	mejs.TrackFormatParser = {
-		// match start "chapter-" (or anythingelse)
-		pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
-		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
+		webvvt: {
+			// match start "chapter-" (or anythingelse)
+			pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
+			pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
+			parse: function(trackText) {
+				var 
+					i = 0,
+					lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
+					entries = {text:[], times:[]},
+					timecode,
+					text;
+				for(; i<lines.length; i++) {
+					// check for the line number
+					if (this.pattern_identifier.exec(lines[i])){
+						// skip to the next line where the start --> end time code should be
+						i++;
+						timecode = this.pattern_timecode.exec(lines[i]);				
+					
+						if (timecode && i<lines.length){
+							i++;
+							// grab all the (possibly multi-line) text that follows
+							text = lines[i];
+							i++;
+							while(lines[i] !== '' && i<lines.length){
+								text = text + '\n' + lines[i];
+								i++;
+							}
+							text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+							// Text is in a different array so I can use .join
+							entries.text.push(text);
+							entries.times.push(
+							{
+								start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) == 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
+								stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
+								settings: timecode[5]
+							});
+						}
+					}
+				}
+				return entries;
+			}
+		},
+		dfxp: {
+			parse: function(trackText) {
+				trackText = $(trackText).filter("tt");
+				var 
+					i = 0,
+					container = trackText.children("div").eq(0),
+					lines = container.find("p"),
+					styleNode = trackText.find("#" + container.attr("style")),
+					styles,
+					begin,
+					end,
+					text,
+					entries = {text:[], times:[]};
+					
+			
+				if (styleNode.length) {
+					var attributes = styleNode.removeAttr("id").get(0).attributes;
+					if (attributes.length) {
+						styles = {};
+						for (i = 0; i < attributes.length; i++) {
+							styles[attributes[i].name.split(":")[1]] = attributes[i].value;
+						}
+					}
+				}
+				
+				for(i = 0; i<lines.length; i++) {
+					var style;
+					var _temp_times = {
+						start: null,
+						stop: null,
+						style: null
+					};
+					if (lines.eq(i).attr("begin")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					if (!_temp_times.start && lines.eq(i-1).attr("end")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					if (lines.eq(i).attr("end")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					if (!_temp_times.stop && lines.eq(i+1).attr("begin")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					if (styles) {
+						style = "";
+						for (var _style in styles) {
+							style += _style + ":" + styles[_style] + ";";					
+						}
+					}
+					if (style) _temp_times.style = style;
+					if (_temp_times.start == 0) _temp_times.start = 0.200;
+					entries.times.push(_temp_times);
+					text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+					entries.text.push(text);
+					if (entries.times.start == 0) entries.times.start = 2;
+				}
+				return entries;
+			}
+		},
 		split2: function (text, regex) {
 			// normal version for compliant browsers
 			// see below for IE fix
 			return text.split(regex);
-		},
-		parse: function(trackText) {
-			var 
-				i = 0,
-				lines = this.split2(trackText, /\r?\n/),
-				entries = {text:[], times:[]},
-				timecode,
-				text;
-
-			for(; i<lines.length; i++) {
-				// check for the line number
-				if (this.pattern_identifier.exec(lines[i])){
-					// skip to the next line where the start --> end time code should be
-					i++;
-					timecode = this.pattern_timecode.exec(lines[i]);				
-					
-					if (timecode && i<lines.length){
-						i++;
-						// grab all the (possibly multi-line) text that follows
-						text = lines[i];
-						i++;
-						while(lines[i] !== '' && i<lines.length){
-							text = text + '\n' + lines[i];
-							i++;
-						}
-
-						// Text is in a different array so I can use .join
-						entries.text.push(text);
-						entries.times.push(
-						{
-							start: mejs.Utility.timeCodeToSeconds(timecode[1]),
-							stop: mejs.Utility.timeCodeToSeconds(timecode[3]),
-							settings: timecode[5]
-						});
-					}
-				}
-			}
-
-			return entries;
 		}
 	};
 	
