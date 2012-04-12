@@ -1012,7 +1012,7 @@
 			
 			if (t.media.pluginType == 'flash') {
 				t.media.remove();
-			} else if (t.media.pluginTyp == 'native') {
+			} else if (t.media.pluginType == 'native') {
 				t.media.prop('controls', true);
 			}
 			
