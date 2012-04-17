@@ -113,7 +113,7 @@ if (typeof jQuery != 'undefined') {
 										}
 										
 										// 5%
-										var newTime = Math.min(media.currentTime - (media.duration * 0.05), media.duration);
+										var newTime = Math.max(media.currentTime - (media.duration * 0.05), 0);
 										media.setCurrentTime(newTime);
 								}
 						}
@@ -131,7 +131,7 @@ if (typeof jQuery != 'undefined') {
 										}
 										
 										// 5%
-										var newTime = Math.max(media.currentTime + (media.duration * 0.05), 0);
+										var newTime = Math.min(media.currentTime + (media.duration * 0.05), media.duration);
 										media.setCurrentTime(newTime);
 								}
 						}
@@ -778,7 +778,7 @@ if (typeof jQuery != 'undefined') {
 				rail = t.controls.find('.mejs-time-rail'),
 				total = t.controls.find('.mejs-time-total'),
 				current = t.controls.find('.mejs-time-current'),
-				loaded = t.controls.find('.mejs-time-loaded');
+				loaded = t.controls.find('.mejs-time-loaded'),
 				others = rail.siblings();
 			
 
@@ -1028,7 +1028,7 @@ if (typeof jQuery != 'undefined') {
 			
 			if (t.media.pluginType == 'flash') {
 				t.media.remove();
-			} else if (t.media.pluginTyp == 'native') {
+			} else if (t.media.pluginType == 'native') {
 				t.media.prop('controls', true);
 			}
 			
@@ -1118,7 +1118,7 @@ if (typeof jQuery != 'undefined') {
 			var t = this,
 				stop = 
 				$('<div class="mejs-button mejs-stop-button mejs-stop">' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.stopText + '></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.stopText + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function() {
@@ -2515,7 +2515,7 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 
 $.extend(mejs.MepDefaults,
-	contextMenuItems = [
+	{ 'contextMenuItems': [
 		// demo of a fullscreen option
 		{ 
 			render: function(player) {
@@ -2570,7 +2570,7 @@ $.extend(mejs.MepDefaults,
 				window.location.href = player.media.currentSrc;
 			}
 		}	
-	]
+	]}
 );
 
 
