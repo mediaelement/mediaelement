@@ -783,7 +783,6 @@
 							t.media.setVideoSize(newwidth, maxht);
 						
 						rest = sizeElement.width() - maxwdt;
-						rest = wdt - maxwdt;
 	
 						cssRule = {'margin-top':0,'margin-left':'-'+(rest/2)+'px'};
 	
