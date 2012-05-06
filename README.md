@@ -1,4 +1,4 @@
-# GOAL: Make `<video>` and `<audio>` easy. One file. Any browser. Same UI.
+# `<video>` and `<audio>` made easy. One file. Any browser. Same UI.
 
 * Author: John Dyer [http://j.hn/](http://j.hn/)
 * Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
@@ -6,7 +6,7 @@
 * Meaning: Please use this everywhere and it'd be swell if you'd 
 link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen), [gselva](https://github.com/gselva)
+* Contributors: [mikesten](https://github.com/mikesten), [sylvinus](https://github.com/sylvinus), [mattfarina](https://github.com/mattfarina), [romaninsh](https://github.com/romaninsh), [fmalk](https://github.com/fmalk), [jeffrafter](https://github.com/jeffrafter), [sompylasar](https://github.com/sompylasar), [andyfowler](https://github.com/andyfowler), [RobRoy](https://github.com/RobRoy), [jakearchibald](https://github.com/jakearchibald), [seanhellwig](https://github.com/seanhellwig), [CJ-Jackson](https://github.com/CJ-Jackson), [kaichen](https://github.com/kaichen), [gselva](https://github.com/gselva), [erktime](https://github.com/erktime), [bradleyboy](https://github.com/bradleyboy), [kristerkari](https://github.com/kristerkari), [rmhall](https://github.com/rmhall), [tantalic](https://github.com/tantalic), [madesign](http://github.com/madesign), [aschempp](http://github.com/aschempp), [gavinlynch](https://github.com/gavinlynch), [Birol2010](http://github.com/Birol2010)
 
 
 ## Installation and Usage
@@ -78,20 +78,166 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *Proposed features*
 
-* deeper accessibility functionality
-* horizontal, inline volume control
-* deeper WebVTT support (alignment, color, etc.)
-* fullscreen popup controls
-* responsive (100%)
+* deeper WebVTT support (alignment, color, etc.) - include captionator, remove google translate?
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
+* loading state on loading bar (animated?)
+* thin line when controls are off
+* system-wide events
+* playlist builder
+* Ogg/Theora playback
 
-*2.2.1 (2011/10/06) - 44.1kb
+*2.8.1 (2012/04/19)*
+
+* Flash fullscreen: video not fullsized
+* Flash fullscreen: youtube controls not working
+
+*2.8.0 (2012/04/17)*
+
+* Revamped YouTube to work using the Flash shim so that it supports fullscreen
+* Fix for `remove()` method (lennym)
+* Fix possible issue with ContextMenu ( quangvhg)
+* Fix for stop button ( slavva97)
+* Type on `var` and `;` (lennym)
+* Fix for keyboard support forward and backward (myffical)
+
+*2.7.0 (2012/03/12)*
+
+* Added horizontal volume control, the new default for audio (based on work by [gavinlynch](http://github.com/gavinlynch))
+* Possible issues with &lt; IE8 centering resolved
+* Full set of controls under Silverlight ([Birol2010](https://github.com/Birol2010/))
+* YouTube fix [raknam]
+* shim now has a .tagName property, and other DOM-like methods [tantalic]
+* Poster display fix when HTML5, Flash, and Silverlight are all missing	 [bruha]
+* Source Chooser plugin [markomarkovic]
+* Fix for flash audio mute [lbernau]
+
+*2.6.5 (2012/02/01)*
+
+* Removed iOS 3.x poster code [xtat] [James Cross]
+* Fixed bug when player is initially hidden in `display:none;`
+* Workaround for when inside an `<iframe>` and Chrome doesn't correctly report exiting from fullscreen
+
+*2.6.4 (2012/01/10)*
+
+* Fixed a Flash bug when one video ended and another was loaded through `setSrc()` and `load()`
+* Option for markup between current time and duration [tantalic]
+
+*2.6.3 (2012/01/08)*
+
+* Sending all options to Flash including colors
+
+*2.6.2 (2012/01/06)*
+
+* Fixed Flash fullscreen button inside an `<iframe>`
+* Fixed flash auto starting in 100% mode
+
+*2.6.1 (2012/01/03)*
+
+* Updated Opera's Flash Fullscreen support (apparently, it doesn't like pointer-events:none with Flash)
+* Added a `fullscreenchange` event to Flash to better track events
+
+*2.6.0 (2011/12/27)*
+
+* added major updates to Flash fullscreen mode controls [rmhall]
+* added sneaky `pointer-events: none` to allow Flash to enter fullscreen in one clean click
+* added missing CSS3 gradients syntaxes (kristerkari)[https://github.com/johndyer/mediaelement/pull/339]
+* added check for left offset to detect when mousedrag exceeds top boundary [jmcneese](https://github.com/johndyer/mediaelement/pull/335)
+
+*2.5.0 (2011/12/15) - 56kb*
+
+* Flash fullscreen now works on hover, so it's much easier to use. For Firefox it's always on, but for others `usePluginFullScreen:true` option
+* For the audio player, Flash objects are positioned outside the main `<div>` which allows the player to be hidden without breaking flash
+* Volume controls was adjusted slightly
+* Removed Google translate features (Google killed the API)
+
+*2.4.3 (2011/12/10)*
+
+* keyboard controls are now an array, allowing multiple keys to do the same thing
+* support for Google TV keybuttons (based on above)
+* arrow keys now move when paused
+* floating time is now handled via JavaScript instead of CSS :hover (and removed from touch devices)
+
+*2.4.2 (2011/12/06) - 57.3kb*
+
+* keyboard controls (up/down controls volume, left/right seeks, space play/pause, f goes fullscreen)
+* `<audio>` now works with 100% for responsive layouts [283](https://github.com/johndyer/mediaelement/issues/283)
+* Support for auto start with class `mejs-player` and `data-mejsoptions` e.g. `<video src="media.mp4" class="mejs-player" data-mejsoptions='{"features":["playpause","progress","volume"}, "success": "myCallback"}'><video>`
+* With multiple players on a page, when one starts the others pause (toggle `pauseOtherPlayers: true`) [285](https://github.com/johndyer/mediaelement/issues/285)
+
+*2.4.1 (2011/12/05) - 55.7kb*
+
+* Fixed fullscreen bug with Firefox (with Video for Everybody syntax) [270](https://github.com/johndyer/mediaelement/issues/270)
+* Added `remove()` method to `MediaElement` and `MediaElementPlayer` to safely remove Flash (from IE) [111](https://github.com/johndyer/mediaelement/issues/111)
+* Added a demo of MEJS skins to the /demo/ folder 
+* Closed issue with `ended` event in Flash (my example works) [246](https://github.com/johndyer/mediaelement/issues/246)
+* Flash has better support for `preload="auto"` [290](https://github.com/johndyer/mediaelement/issues/290)
+
+*2.4.0 (2011/11/28) - 54.9kb*
+
+* Integration with YouTube API (and intial support for Vimeo API) : http://mediaelementjs.com/examples/?name=youtube
+* Catch when Google Translate fails due to API limits
+
+*2.3.3 (2011/11/21) - 49.4kb*
+
+* removed volume controls for touch devices (Android and iOS require hardware volume)
+* set a timeout to hide controls on touch devices
+* fixed timecode bug with :09 (used radix)
+* fixed bug when long videos end: (try/catch)
+* fixed issue with `alwaysShowControls`
+* removed a `console.log` in fullscreen that broke IE
+
+*2.3.2 (2011/11/12) 49.6kb*
+
+* removed `http` from Flash and Silverlight embeds to support SSL
+* fixed a possible bug when neither `src` nor `type` was specified
+* turned off useCapture for a few events
+
+*2.3.1 (2011/11/07)*
+
+* Another set of changes to handle various browser native fullscreen issues
+* New control behavior for touch enabled devices (iPad, Android tablets)
+* Bug fix for Flash (bradleyboy)
+
+*2.3.0 (2011/11/01) - 48.5kb*
+
+* Fixed bug when fullscreen was called before play pressed
+* Additional classes mejs-audio, mejs-video, mejs-ios, mejs-iphone, mejs-ipad, mejs-android added to contianing `<div>` for styles
+* IE9 can't use `<video width="100%">` so you must use either options ({videoHeight:'100%'}) or inline style `<video style="width:100%;height:100%;">` 
+* updated fullscreen code for Safari (erktime)
+* loading indicators shows during 'waiting' event
+* iOS and Android now show "big play" button again (sometimes overlaps on iPhone)
+
+*2.2.5 (2011/10/14)*
+
+* fix for Flash fallback in certain scenarios (IE RegExp problem, Firefox fullscreen Flash issue)
+* adjustments for floating time indicator
+
+*2.2.4 (2011/10/10)*
+
+* True FullScreen support in Firefox (nightly) and Chrome (Canary)
+* more updates for 100% mode
+* enableContextMenu(), disableContextMenu() methods
+* change to poster code to let it be set later
+
+*2.2.3 (2011/10/07b) - 45.8kb*
+
+* updated accessibility again for JAWS and NVDA (thanks to twitter.com/mohammed0204)
+* added CSS class `<html class="mejs-embed">` for `<iframe>` embeds
+
+*2.2.2 (2011/10/07) - 45.8kb*
+
+* added support for <del>`<video width="100%" height="100%"></video>`</del> `<video style="width:100%;height:100%"></video>` (i.e. responsive/adaptive players)
+* added :focus state for buttons to improve accessibility
+* added title and aria-controls attributes to buttons to improve accessibility 
+* changed when loading circle appears (WebKit fires the 'loadstart' event differently than FF or IE)
+
+*2.2.1 (2011/10/06) - 44.1kb*
 
 * fixed a bug with fullscreen that caused IE to completely mess up it layout
 * fixed another bug with fullscreen and z-index
 
-*2.2.0 (2011/10/04)
+*2.2.0 (2011/10/04)*
 
 * controls now display on iPad, iPhone, and Android. Can be turned off using (iPadForceNativeControls:true)
 * fullscreen support for iPad (different from true fullscreen on Safari 5.1)
@@ -358,11 +504,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ###TODO
 
-2.2 features
-* Error handling
+2.x features
+* HTML5 error handling
 * Flash/SL error codes
-* Add dynamic creation support
-* Inline volume slider?
 * Postroll
 * Flash StageVideo?
-* Support 100% width and height?

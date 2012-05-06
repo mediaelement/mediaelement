@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 import os
 import shutil
@@ -44,12 +42,13 @@ mep_files.append('mep-feature-volume.js')
 mep_files.append('mep-feature-fullscreen.js')
 mep_files.append('mep-feature-tracks.js')
 mep_files.append('mep-feature-contextmenu.js')
+# mep_files.append('mep-feature-sourcechooser.js')
 
 code = ''
 
 for item in mep_files:
-    src_file = open('js/' + item,'r')
-    code += src_file.read() + "\n"
+        src_file = open('js/' + item,'r')
+        code += src_file.read() + "\n"
 
 tmp_file = open('../build/' + mep_filename + '.js','w')
 tmp_file.write(code)
