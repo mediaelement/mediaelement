@@ -26,16 +26,15 @@
 			var i = instances.length;
 			if (i < 1) return false;
 			
+			var acteur;
 			while (i--) {
-				// var handler = $(instances[i]).get(0).player.remove;
-				// handler.apply(this.player);
-				// grab video and put it back in place
 				if (this !== $(instances[i]).get(0)) continue;
-				
-				var acteur = $(instances[i]).get(0).player;
+				else acteur = $(instances[i]).get(0).player;
+				// @see: mep-player.js (remove methods)
 				if (acteur.media.pluginType == 'flash') acteur.media.remove();
 				if (!acteur.isDynamic) acteur.$node.insertBefore(acteur.container);
 				acteur.container.remove();
+				// can delete user-defined properties
 				delete window.mejs.players[i];
 				delete acteur;
 				break;
@@ -44,8 +43,8 @@
 		},
 		init : function(options) {
 			return this.each(function() {
-				new mejs.MediaElementPlayer(this, options)
 				instances.push(this);
+				new mejs.MediaElementPlayer(this, options)
 				$(this).bind('destroyed.mediaelementplayer', methods.teardown);
 			});
 		},
