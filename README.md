@@ -87,6 +87,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
+*2.8.2 (2012/05/15)*
+
+* Fixed volume slider bug when initially hidden
+* Fixed YouTube size problems in Flash mode
+
 *2.8.1 (2012/04/19)*
 
 * Flash fullscreen: video not fullsized
