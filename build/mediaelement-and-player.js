@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.8.1';
+mejs.version = '2.8.2';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -2949,11 +2949,11 @@ if (typeof jQuery != 'undefined') {
 			volumeCurrent = t.container.find('.mejs-volume-current, .mejs-horizontal-volume-current'),
 			volumeHandle = t.container.find('.mejs-volume-handle, .mejs-horizontal-volume-handle'),
 
-			positionVolumeHandle = function(volume) {
+			positionVolumeHandle = function(volume, secondTry) {
 
-				if (!volumeSlider.is(':visible')) {
+				if (!volumeSlider.is(':visible') && typeof secondTry != 'undefined') {
 					volumeSlider.show();
-					positionVolumeHandle(volume);
+					positionVolumeHandle(volume, true);
 					volumeSlider.hide()
 					return;
 				}
