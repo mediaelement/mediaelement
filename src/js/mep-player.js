@@ -852,9 +852,7 @@
 					'<div class="mejs-overlay-error"></div>'+
 				'</div>')
 				.hide() // start out hidden
-				.appendTo(layers),				
-			buffering  = 
-				controls.find('.mejs-time-buffering'),
+				.appendTo(layers),
 			// this needs to come last so it's on top
 			bigPlay = 
 				$('<div class="mejs-overlay mejs-layer mejs-overlay-play">'+
@@ -881,25 +879,25 @@
 			media.addEventListener('play',function() {
 				bigPlay.hide();
 				loading.hide();
-				buffering.hide();
+				controls.find('.mejs-time-buffering').hide();
 				error.hide();
 			}, false);	
 			
 			media.addEventListener('playing', function() {
 				bigPlay.hide();
 				loading.hide();
-				buffering.hide();
+				controls.find('.mejs-time-buffering').hide();
 				error.hide();			
 			}, false);
 
 			media.addEventListener('seeking', function() {
 				loading.show();
-				buffering.show();
+				controls.find('.mejs-time-buffering').show();
 			}, false);
 
 			media.addEventListener('seeked', function() {
 				loading.hide();
-				buffering.hide();
+				controls.find('.mejs-time-buffering').hide();
 			}, false);
 	
 			media.addEventListener('pause',function() {
@@ -910,7 +908,7 @@
 			
 			media.addEventListener('waiting', function() {
 				loading.show();	
-				buffering.show();
+				controls.find('.mejs-time-buffering').show();
 			}, false);			
 			
 			
@@ -921,17 +919,17 @@
 				//	return;
 					
 				loading.show();
-				buffering.show();
+				controls.find('.mejs-time-buffering').show();
 			}, false);	
 			media.addEventListener('canplay',function() {
 				loading.hide();
-				buffering.hide();
+				controls.find('.mejs-time-buffering').hide();
 			}, false);	
 
 			// error handling
 			media.addEventListener('error',function() {
 				loading.hide();
-				buffering.hide();
+				controls.find('.mejs-time-buffering').hide();
 				error.show();
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);				
