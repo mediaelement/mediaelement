@@ -170,23 +170,21 @@
 				})
 				.bind('mousedown', function (e) {
 					handleVolumeMove(e);
+					$(document)
+						.bind('mousemove.vol', function(e) {
+							handleVolumeMove(e);
+						})
+						.bind('mouseup.vol', function () {
+							mouseIsDown = false;
+							$(document).unbind('.vol');
+
+							if (!mouseIsOver && mode == 'vertical') {
+								volumeSlider.hide();
+							}
+						});
 					mouseIsDown = true;
 						
 					return false;
-				});
-				
-			$(document)
-				.bind('mouseup', function (e) {
-					mouseIsDown = false;
-					
-					if (!mouseIsOver && mode == 'vertical') {
-						volumeSlider.hide();
-					}
-				})
-				.bind('mousemove', function (e) {
-					if (mouseIsDown) {
-						handleVolumeMove(e);
-					}
 				});
 
 
