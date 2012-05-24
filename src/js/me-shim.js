@@ -81,7 +81,7 @@ Default options
 mejs.MediaElementDefaults = {
 	// allows testing on HTML5, flash, silverlight
 	// auto: attempts to detect what the browser can do
-        // auto_plugin: prefer plugins and then attempt native HTML5
+	// auto_plugin: prefer plugins and then attempt native HTML5
 	// native: forces HTML5 playback
 	// shim: disallows HTML5, will attempt either Flash or Silverlight
 	// none: forces fallback view
@@ -278,10 +278,10 @@ mejs.HtmlMediaElementShim = {
 					htmlMediaElement.src = result.url;
 				}
 			
-                                // if `auto_plugin` mode, then cache the native result but try plugins.
-                                if (options.mode !== 'auto_plugin') {
-				        return result;
-                                }
+				// if `auto_plugin` mode, then cache the native result but try plugins.
+				if (options.mode !== 'auto_plugin') {
+					return result;
+				}
 			}
 		}
 
@@ -323,11 +323,11 @@ mejs.HtmlMediaElementShim = {
 			}
 		}
 		
-                // at this point, being in 'auto_plugin' mode implies that we tried plugins but failed.
-                // if we have native support then return that.
-                if (options.mode === 'auto_plugin' && result.method === 'native') {
-                        return result;
-                }
+		// at this point, being in 'auto_plugin' mode implies that we tried plugins but failed.
+		// if we have native support then return that.
+		if (options.mode === 'auto_plugin' && result.method === 'native') {
+			return result;
+		}
 
 		// what if there's nothing to play? just grab the first available
 		if (result.method === '' && mediaFiles.length > 0) {
