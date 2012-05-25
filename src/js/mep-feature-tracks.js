@@ -117,7 +117,7 @@
 					// chapters
 					if (player.hasChapters) {
 						player.chapters.css('visibility','visible');
-						player.chapters.fadeIn(200);
+						player.chapters.fadeIn(200).height(player.chapters.find('.mejs-chapter').outerHeight());
 					}
 				},
 				function () {
@@ -258,7 +258,7 @@
 				for (i=0; i<track.entries.times.length; i++) {
 					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){
 						t.captionsText.html(track.entries.text[i]);
-						t.captions.show();
+						t.captions.show().height(0);
 						return; // exit out if one is visible;
 					}
 				}
