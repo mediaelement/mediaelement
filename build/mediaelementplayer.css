@@ -540,6 +540,7 @@
 	left: 0;
 	-xborder-right: solid 1px #fff;
 	width: 10000px;
+	z-index: 1;
 }
 .mejs-chapters .mejs-chapter {
 	position: absolute;
