@@ -87,6 +87,15 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
+*2.9.0 (2012/05/XX)*
+
+* Fixed pointer-events detection in IE9 (when using Flash mode or YouTube)
+* YouTube now shows annotations (using YouTube player rather than chromeless)
+* Fix play/pause when clicking on video when overlays are displayed [markomarkovic]
+* Dont listen to mouse events when there's not a reason to [neverarriving]
+* Adding CSS animated buffer to the time rail [neverarriving]
+* Fix for box-sizing: border-box from cutting off time text. [MatthewCallis]
+
 *2.8.2 (2012/05/15)*
 
 * Fixed volume slider bug when initially hidden
