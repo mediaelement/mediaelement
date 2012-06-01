@@ -87,7 +87,11 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
-*2.9.0 (2012/05/XX)*
+*2.9.1 (2012/06/01)*
+
+* Fixed Firefox 10+ Fullscreen error
+
+*2.9.0 (2012/05/31)*
 
 * Fixed pointer-events detection in IE9 (when using Flash mode or YouTube)
 * YouTube now shows annotations (using YouTube player rather than chromeless)
