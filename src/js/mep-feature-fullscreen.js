@@ -27,7 +27,15 @@
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
 				
 				// chrome doesn't alays fire this in an iframe
-				player.container.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
+				var target = null;
+				
+				if (mejs.MediaFeatures.hasMozNativeFullScreen) {
+					target = $(document);
+				} else {
+					target = player.container;
+				}
+				
+				target.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
 				//player.container.bind('webkitfullscreenchange', function(e) {
 				
 					
