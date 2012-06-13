@@ -71,6 +71,9 @@
 		public function setSize(width:Number, height:Number):void {
 			if (_player != null) {
 				_player.setSize(width, height);
+			} else {
+				initWidth = width;
+				initHeight = height;
 			}
 		}
 
