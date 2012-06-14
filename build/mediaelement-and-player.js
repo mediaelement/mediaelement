@@ -10,6 +10,8 @@
 * Copyright 2010-2012, John Dyer (http://j.hn)
 * Dual licensed under the MIT or GPL Version 2 licenses.
 *
+* Minor changes by Peter Hentges, Capella University 6/14/2012
+*
 */
 // Namespace
 var mejs = mejs || {};
@@ -2318,7 +2320,7 @@ if (typeof jQuery != 'undefined') {
 				});
 				
 				// fit the rail into the remaining space
-				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
+				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.outerWidth(false));
 			}
 
 			// outer area
@@ -2843,7 +2845,7 @@ if (typeof jQuery != 'undefined') {
 	// options
 	$.extend(mejs.MepDefaults, {
 		duration: -1,
-		timeAndDurationSeparator: ' <span> | </span> '
+		timeAndDurationSeparator: ' <span>/</span> '
 	});
 
 
@@ -2925,7 +2927,7 @@ if (typeof jQuery != 'undefined') {
 		muteText: 'Mute Toggle',
 		hideVolumeOnTouchDevices: true,
 		
-		audioVolume: 'horizontal',
+		audioVolume: 'vertical',
 		videoVolume: 'vertical'
 	});
 
@@ -3238,7 +3240,7 @@ if (typeof jQuery != 'undefined') {
 							return !!supports;							
 						})();
 						
-					console.log('supportsPointerEvents', supportsPointerEvents);
+					//console.log('supportsPointerEvents', supportsPointerEvents);
 						
 					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this :(
 						
@@ -3633,7 +3635,7 @@ if (typeof jQuery != 'undefined') {
 						})					
 						
 						// handle clicks to the language radio buttons
-						.delegate('input[type=radio]','click',function() {
+						.delegate('input[type=radio]','faux-click',function() {
 							lang = this.value;
 
 							if (lang == 'none') {
