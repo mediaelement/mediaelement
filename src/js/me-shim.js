@@ -348,7 +348,23 @@ mejs.HtmlMediaElementShim = {
 	
 	getTypeFromFile: function(url) {
 		var ext = url.substring(url.lastIndexOf('.') + 1);
-		return (/(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + ext;
+		return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + this.getTypeFromExtension(ext);
+	},
+	
+	getTypeFromExtension: function(ext) {
+		var ext_types = {
+			'mp4': ['mp4','m4v'],
+			'ogg': ['ogg','ogv','oga'],
+			'webm': ['webm','webmv','webma']
+		};
+		var r = ext;
+		$.each(ext_types, function(key, value) {
+			if (value.indexOf(ext) > -1) {
+				r = key;
+				return;
+			}
+		});
+		return r;
 	},
 
 	createErrorMessage: function(playback, options, poster) {
