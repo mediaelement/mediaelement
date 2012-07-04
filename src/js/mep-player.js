@@ -19,12 +19,11 @@
 
 		// default amount to move back when back key is pressed		
 		defaultSeekBackwardInterval: function(media) {
-      return (media.duration * 0.05);
+			return (media.duration * 0.05);
 		},		
-
 		// default amount to move forward when forward key is pressed				
 		defaultSeekForwardInterval: function(media) {
-      return (media.duration * 0.05);
+			return (media.duration * 0.05);
 		},		
 		
 		// width of audio player
