@@ -718,30 +718,34 @@
 					newHeight = $(window).height();
 				}
 					
-				
-				// set outer container size
-				t.container
-					.width(parentWidth)
-					.height(newHeight);
+				if ( newHeight != 0 ) {
+					// set outer container size
+					t.container
+						.width(parentWidth)
+						.height(newHeight);
+						
+					// set native <video>
+					t.$media
+						.width('100%')
+						.height('100%');
+						
+					// set shims
+					t.container.find('object, embed, iframe')
+						.width('100%')
+						.height('100%');
+						
+					// if shim is ready, send the size to the embeded plugin	
+					if (t.isVideo) {
+						if (t.media.setVideoSize) {
+							t.media.setVideoSize(parentWidth, newHeight);
+						}
+					}
 					
-				// set native <video>
-				t.$media
-					.width('100%')
-					.height('100%');
-					
-				// set shims
-				t.container.find('object, embed, iframe')
-					.width('100%')
-					.height('100%');
-					
-				// if shim is ready, send the size to the embeded plugin	
-				if (t.media.setVideoSize)
-					t.media.setVideoSize(parentWidth, newHeight);
-					
-				// set the layers
-				t.layers.children('.mejs-layer')
-					.width('100%')
-					.height('100%');					
+					// set the layers
+					t.layers.children('.mejs-layer')
+						.width('100%')
+						.height('100%');
+				}
 			
 			
 			} else {
@@ -1027,9 +1031,9 @@
 		remove: function() {
 			var t = this;
 			
-			if (t.media.pluginType == 'flash') {
+			if (t.media.pluginType === 'flash') {
 				t.media.remove();
-			} else if (t.media.pluginType == 'native') {
+			} else if (t.media.pluginType === 'native') {
 				t.$media.prop('controls', true);
 			}
 			
