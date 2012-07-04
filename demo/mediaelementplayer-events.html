@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement - Events</title>
+
+	<script src="../build/jquery.js"></script>
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<h2>Events Demo</h2>
+
+<video width="640" height="360" id="player1">
+
+	<source src="../media/echo-hereweare.mp4" type="video/mp4" title="mp4">
+	<source src="../media/echo-hereweare.webm" type="video/webm" title="webm">
+	<source src="../media/echo-hereweare.ogv" type="video/ogg" title="ogg">
+	<p>Your browser leaves much to be desired.</p>
+
+</video>
+
+<div id="output">
+</div>
+
+
+<span id="player1-mode"></span>
+
+<script>
+$('video').mediaelementplayer({
+	success: function(media, node, player) {
+		var events = ['loadstart', 'play','pause', 'ended'];
+		
+		for (var i=0, il=events.length; i<il; i++) {
+			
+			var eventName = events[i];
+			
+			media.addEventListener(events[i], function(e) {
+				$('#output').append( $('<div>' + e.type + '</div>');
+			});
+			
+		}
+	}
+});
+</script>
+
+</body>
+</html>
