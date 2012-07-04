@@ -540,7 +540,7 @@ mejs.HtmlMediaElementShim = {
 			
 			// DEMO Code. Does NOT work.
 			case 'vimeo':
-				console.log('vimeoid');
+				//console.log('vimeoid');
 				
 				pluginMediaElement.vimeoid = playback.url.substr(playback.url.lastIndexOf('/')+1);
 				
