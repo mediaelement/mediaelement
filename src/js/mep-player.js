@@ -290,10 +290,12 @@
 					(4) defaultVideoWidth (for unspecified cases)
 				*/
 				
-				var capsTagName = tagName.substring(0,1).toUpperCase() + tagName.substring(1);
+				var tagType = (t.isVideo ? 'video' : 'audio'),
+					capsTagName = tagType.substring(0,1).toUpperCase() + tagType.substring(1);
+					
 				
-				if (t.options[tagName + 'Width'] > 0 || t.options[tagName + 'Width'].toString().indexOf('%') > -1) {
-					t.width = t.options[tagName + 'Width'];
+				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
+					t.width = t.options[tagType + 'Width'];
 				} else if (t.media.style.width !== '' && t.media.style.width !== null) {
 					t.width = t.media.style.width;						
 				} else if (t.media.getAttribute('width') !== null) {
@@ -302,8 +304,8 @@
 					t.width = t.options['default' + capsTagName + 'Width'];
 				}
 				
-				if (t.options[tagName + 'Height'] > 0 || t.options[tagName + 'Height'].toString().indexOf('%') > -1) {
-					t.height = t.options[tagName + 'Height'];
+				if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
+					t.height = t.options[tagType + 'Height'];
 				} else if (t.media.style.height !== '' && t.media.style.height !== null) {
 					t.height = t.media.style.height;
 				} else if (t.$media[0].getAttribute('height') !== null) {
@@ -1028,7 +1030,7 @@
 			if (t.media.pluginType == 'flash') {
 				t.media.remove();
 			} else if (t.media.pluginType == 'native') {
-				t.media.prop('controls', true);
+				t.$media.prop('controls', true);
 			}
 			
 			// grab video and put it back in place
