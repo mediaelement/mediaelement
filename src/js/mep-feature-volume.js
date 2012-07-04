@@ -46,13 +46,12 @@
 			volumeCurrent = t.container.find('.mejs-volume-current, .mejs-horizontal-volume-current'),
 			volumeHandle = t.container.find('.mejs-volume-handle, .mejs-horizontal-volume-handle'),
 
-			positionVolumeHandle = function(volume, secondTry) {
+			positionVolumeHandle = function(volume) {
 
-				if (!volumeSlider.is(':visible') && typeof secondTry != 'undefined') {
+				var volumeSliderIsVisible = volumeSlider.is(':visible');
+
+				if (!volumeSliderIsVisible) {
 					volumeSlider.show();
-					positionVolumeHandle(volume, true);
-					volumeSlider.hide()
-					return;
 				}
 			
 				// correct to 0-1
@@ -103,6 +102,10 @@
 	
 					// rezize the current part of the volume bar
 					volumeCurrent.width( newLeft );
+				}
+				
+				if (!volumeSliderIsVisible) {
+					volumeSlider.hide();
 				}
 			},
 			handleVolumeMove = function(e) {
