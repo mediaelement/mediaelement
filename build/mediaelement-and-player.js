@@ -759,6 +759,7 @@ Default options
 mejs.MediaElementDefaults = {
 	// allows testing on HTML5, flash, silverlight
 	// auto: attempts to detect what the browser can do
+	// auto_plugin: prefer plugins and then attempt native HTML5
 	// native: forces HTML5 playback
 	// shim: disallows HTML5, will attempt either Flash or Silverlight
 	// none: forces fallback view
@@ -926,7 +927,7 @@ mejs.HtmlMediaElementShim = {
 		
 
 		// test for native playback first
-		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native')) {
+		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')) {
 						
 			if (!isMediaTag) {
 
@@ -955,12 +956,15 @@ mejs.HtmlMediaElementShim = {
 					htmlMediaElement.src = result.url;
 				}
 			
-				return result;
+				// if `auto_plugin` mode, then cache the native result but try plugins.
+				if (options.mode !== 'auto_plugin') {
+					return result;
+				}
 			}
 		}
 
 		// if native playback didn't work, then test plugins
-		if (options.mode === 'auto' || options.mode === 'shim') {
+		if (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'shim') {
 			for (i=0; i<mediaFiles.length; i++) {
 				type = mediaFiles[i].type;
 
@@ -997,6 +1001,12 @@ mejs.HtmlMediaElementShim = {
 			}
 		}
 		
+		// at this point, being in 'auto_plugin' mode implies that we tried plugins but failed.
+		// if we have native support then return that.
+		if (options.mode === 'auto_plugin' && result.method === 'native') {
+			return result;
+		}
+
 		// what if there's nothing to play? just grab the first available
 		if (result.method === '' && mediaFiles.length > 0) {
 			result.url = mediaFiles[0].url;
@@ -1026,7 +1036,23 @@ mejs.HtmlMediaElementShim = {
 	
 	getTypeFromFile: function(url) {
 		var ext = url.substring(url.lastIndexOf('.') + 1);
-		return (/(mp4|m4v|ogg|ogv|webm|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + ext;
+		return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + this.getTypeFromExtension(ext);
+	},
+	
+	getTypeFromExtension: function(ext) {
+		var ext_types = {
+			'mp4': ['mp4','m4v'],
+			'ogg': ['ogg','ogv','oga'],
+			'webm': ['webm','webmv','webma']
+		};
+		var r = ext;
+		$.each(ext_types, function(key, value) {
+			if (value.indexOf(ext) > -1) {
+				r = key;
+				return;
+			}
+		});
+		return r;
 	},
 
 	createErrorMessage: function(playback, options, poster) {
@@ -1218,7 +1244,7 @@ mejs.HtmlMediaElementShim = {
 			
 			// DEMO Code. Does NOT work.
 			case 'vimeo':
-				console.log('vimeoid');
+				//console.log('vimeoid');
 				
 				pluginMediaElement.vimeoid = playback.url.substr(playback.url.lastIndexOf('/')+1);
 				
@@ -1516,6 +1542,7 @@ function onYouTubePlayerReady(id) {
 window.mejs = mejs;
 window.MediaElement = mejs.MediaElement;
 
+
 /*!
  * MediaElementPlayer
  * http://mediaelementjs.com/
@@ -1553,12 +1580,11 @@ if (typeof jQuery != 'undefined') {
 
 		// default amount to move back when back key is pressed		
 		defaultSeekBackwardInterval: function(media) {
-      return (media.duration * 0.05);
+			return (media.duration * 0.05);
 		},		
-
 		// default amount to move forward when forward key is pressed				
 		defaultSeekForwardInterval: function(media) {
-      return (media.duration * 0.05);
+			return (media.duration * 0.05);
 		},		
 		
 		// width of audio player
@@ -1835,10 +1861,12 @@ if (typeof jQuery != 'undefined') {
 					(4) defaultVideoWidth (for unspecified cases)
 				*/
 				
-				var capsTagName = tagName.substring(0,1).toUpperCase() + tagName.substring(1);
+				var tagType = (t.isVideo ? 'video' : 'audio'),
+					capsTagName = tagType.substring(0,1).toUpperCase() + tagType.substring(1);
+					
 				
-				if (t.options[tagName + 'Width'] > 0 || t.options[tagName + 'Width'].toString().indexOf('%') > -1) {
-					t.width = t.options[tagName + 'Width'];
+				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
+					t.width = t.options[tagType + 'Width'];
 				} else if (t.media.style.width !== '' && t.media.style.width !== null) {
 					t.width = t.media.style.width;						
 				} else if (t.media.getAttribute('width') !== null) {
@@ -1847,8 +1875,8 @@ if (typeof jQuery != 'undefined') {
 					t.width = t.options['default' + capsTagName + 'Width'];
 				}
 				
-				if (t.options[tagName + 'Height'] > 0 || t.options[tagName + 'Height'].toString().indexOf('%') > -1) {
-					t.height = t.options[tagName + 'Height'];
+				if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
+					t.height = t.options[tagType + 'Height'];
 				} else if (t.media.style.height !== '' && t.media.style.height !== null) {
 					t.height = t.media.style.height;
 				} else if (t.$media[0].getAttribute('height') !== null) {
@@ -2261,30 +2289,34 @@ if (typeof jQuery != 'undefined') {
 					newHeight = $(window).height();
 				}
 					
-				
-				// set outer container size
-				t.container
-					.width(parentWidth)
-					.height(newHeight);
+				if ( newHeight != 0 ) {
+					// set outer container size
+					t.container
+						.width(parentWidth)
+						.height(newHeight);
+						
+					// set native <video>
+					t.$media
+						.width('100%')
+						.height('100%');
+						
+					// set shims
+					t.container.find('object, embed, iframe')
+						.width('100%')
+						.height('100%');
+						
+					// if shim is ready, send the size to the embeded plugin	
+					if (t.isVideo) {
+						if (t.media.setVideoSize) {
+							t.media.setVideoSize(parentWidth, newHeight);
+						}
+					}
 					
-				// set native <video>
-				t.$media
-					.width('100%')
-					.height('100%');
-					
-				// set shims
-				t.container.find('object, embed, iframe')
-					.width('100%')
-					.height('100%');
-					
-				// if shim is ready, send the size to the embeded plugin	
-				if (t.media.setVideoSize)
-					t.media.setVideoSize(parentWidth, newHeight);
-					
-				// set the layers
-				t.layers.children('.mejs-layer')
-					.width('100%')
-					.height('100%');					
+					// set the layers
+					t.layers.children('.mejs-layer')
+						.width('100%')
+						.height('100%');
+				}
 			
 			
 			} else {
@@ -2570,10 +2602,10 @@ if (typeof jQuery != 'undefined') {
 		remove: function() {
 			var t = this;
 			
-			if (t.media.pluginType == 'flash') {
+			if (t.media.pluginType === 'flash') {
 				t.media.remove();
-			} else if (t.media.pluginType == 'native') {
-				t.media.prop('controls', true);
+			} else if (t.media.pluginType === 'native') {
+				t.$media.prop('controls', true);
 			}
 			
 			// grab video and put it back in place
@@ -3190,9 +3222,7 @@ if (typeof jQuery != 'undefined') {
 				}
 				
 				target.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
-				//player.container.bind('webkitfullscreenchange', function(e) {
-				
-					
+							
 					if (mejs.MediaFeatures.isFullScreen()) {
 						player.isNativeFullScreen = true;
 						// reset the controls once we are fully in full screen
@@ -3249,7 +3279,7 @@ if (typeof jQuery != 'undefined') {
 							return !!supports;							
 						})();
 						
-					console.log('supportsPointerEvents', supportsPointerEvents);
+					//console.log('supportsPointerEvents', supportsPointerEvents);
 						
 					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this :(
 						
