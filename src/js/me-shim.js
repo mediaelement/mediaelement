@@ -369,7 +369,7 @@ mejs.HtmlMediaElementShim = {
 		};
 		var r = ext;
 		$.each(ext_types, function(key, value) {
-			if (value.indexOf(ext) > -1) {
+			if ($.inArray(ext, value) > -1) {
 				r = key;
 				return;
 			}
