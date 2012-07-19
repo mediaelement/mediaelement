@@ -1902,7 +1902,7 @@ if (typeof jQuery != 'undefined') {
 			
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
-			if (!t.controlsAreVisible)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls) // attempt to fix bug where key access hides controls Issue #548
 				return;
 			
 			if (doAnimation) {
