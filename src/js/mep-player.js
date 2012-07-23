@@ -1055,20 +1055,6 @@
 			t.container.remove();
 		}
 	};
-
-	// turn into jQuery plugin
-	if (typeof jQuery != 'undefined') {
-		jQuery.fn.mediaelementplayer = function (options) {
-			return this.each(function () {
-				new mejs.MediaElementPlayer(this, options);
-			});
-		};
-	}
-	
-	$(document).ready(function() {
-		// auto enable using JSON attribute
-		$('.mejs-player').mediaelementplayer();
-	});
 	
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
