@@ -262,7 +262,8 @@
 
 			// start new connection
 			if (_isRTMP) {
-				_connection.connect(_currentUrl.replace(/\/[^\/]+$/,"/"));
+				var rtmpInfo:Object = parseRTMP(_currentUrl);
+				_connection.connect(rtmpInfo.server);
 			} else {
 				_connection.connect(null);
 			}
@@ -333,7 +334,8 @@
 			} else {
 
 				if (_isRTMP) {
-					_stream.play(_currentUrl.split("/").pop());
+					var rtmpInfo:Object = parseRTMP(_currentUrl);
+					_stream.play(rtmpInfo.stream);
 				} else {
 					_stream.play(_currentUrl);
 				}
@@ -442,6 +444,27 @@
 							"";
 
 			_element.sendEvent(eventName, values);
+		}
+
+		private function parseRTMP(url:String) {
+			var match:Array = url.match(/(.*)\/((flv|mp4|mp3):.*)/);
+			var rtmpInfo:Object = {
+				server: null,
+				stream: null
+			};
+
+			if (match) {
+				rtmpInfo.server = match[1];
+				rtmpInfo.stream = match[2];
+			}
+			else {
+				rtmpInfo.server = url.replace(/\/[^\/]+$/,"/");
+				rtmpInfo.stream = url.split("/").pop();
+			}
+
+			trace("parseRTMP - server: " + rtmpInfo.server + " stream: " + rtmpInfo.stream);
+
+			return rtmpInfo;
 		}
 	}
 }
