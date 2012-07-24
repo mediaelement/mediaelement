@@ -110,6 +110,7 @@
 			addChild(_video);
 
 			_connection = new NetConnection();
+			_connection.client = { onBWDone: function():void{} };
 			_connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler);
 			_connection.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
 			//_connection.connect(null);
