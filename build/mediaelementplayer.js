@@ -81,6 +81,9 @@ if (typeof jQuery != 'undefined') {
 		// whenthis player starts, it will pause other players
 		pauseOtherPlayers: true,
 		
+		// option for fullbleed mode
+		fullbleed: false,
+		
 		// array of keyboard actions such as play pause
 		keyActions: [
 				{
@@ -262,6 +265,9 @@ if (typeof jQuery != 'undefined') {
 				// unique ID
 				t.id = 'mep_' + mejs.mepIndex++;
 
+				// outer container
+				t.outerContainer = t.$media.parent();
+				
 				// build container
 				t.container =
 					$('<div id="' + t.id + '" class="mejs-container">'+
@@ -274,6 +280,10 @@ if (typeof jQuery != 'undefined') {
 					'</div>')
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media);	
+					
+				// extra container to enable full bleed
+				if(t.options.fullbleed)	
+					t.container.wrap('<div class="mejs-fullbleed"/>');				
 					
 				// add classes for user and content
 				t.container.addClass(
@@ -743,7 +753,7 @@ if (typeof jQuery != 'undefined') {
 					parentWidth = $(window).width();
 					newHeight = $(window).height();
 				}
-					
+				
 				if ( newHeight != 0 ) {
 					// set outer container size
 					t.container
@@ -776,13 +786,72 @@ if (typeof jQuery != 'undefined') {
 			
 			} else {
 
-				t.container
-					.width(t.width)
-					.height(t.height);
+				options = mejs.MediaElementDefaults
+				
+				if (options.fullbleed) {
+					
+					var maxht = t.outerContainer.height(),
+						maxwdt = t.outerContainer.width();
 	
-				t.layers.children('.mejs-layer')
-					.width(t.width)
-					.height(t.height);
+					t.container
+						.width('100%')
+						.height('100%');
+		
+					t.layers.children('.mejs-layer')
+						.width('100%')
+						.height('100%');
+						
+					sizeElement = t.container.find('object, embed, iframe, video, .mejs-poster img');
+					
+					var ht = t.height,
+						wdt = t.width,
+						divRatio = (maxht / maxwdt) * 100,
+						imageRatio = (ht / wdt) * 100,
+						cssRule;
+					
+					// Checks which side to scale to
+					if (divRatio > imageRatio) {
+						
+						newratio = (maxht/ht*100);
+						newwidth = wdt/100*newratio;
+						
+						sizeElement.height(maxht).width(newwidth);
+						
+						if (t.media.setVideoSize)
+							t.media.setVideoSize(newwidth, maxht);
+						
+						rest = sizeElement.width() - maxwdt;
+	
+						cssRule = {'margin-top':0,'margin-left':'-'+(rest/2)+'px'};
+	
+					} else {
+						
+						newratio = (maxwdt/wdt*100);
+						newheight = ht/100*newratio;
+						
+						sizeElement.height(newheight).width(maxwdt);
+						
+						if (t.media.setVideoSize)
+							t.media.setVideoSize(maxwdt, newheight);
+						
+						rest = sizeElement.height() - maxht;
+						
+						cssRule = {'margin-left':0,'margin-top':'-'+(rest/2)+'px'};
+					}
+					
+					sizeElement.css(cssRule);
+
+				} else {
+
+					t.container
+						.width(t.width)
+						.height(t.height);
+		
+					t.layers.children('.mejs-layer')
+						.width(t.width)
+						.height(t.height);
+					
+				}
 					
 			}
 		},
