@@ -1046,7 +1046,7 @@ mejs.HtmlMediaElementShim = {
 			'webm': ['webm','webmv','webma']
 		};
 		var r = ext;
-		$.each(ext_types, function(key, value) {
+		mejs.$.each(ext_types, function(key, value) {
 			if (value.indexOf(ext) > -1) {
 				r = key;
 				return;
@@ -2288,7 +2288,7 @@ if (typeof jQuery != 'undefined') {
 					parentWidth = $(window).width();
 					newHeight = $(window).height();
 				}
-					
+				
 				if ( newHeight != 0 ) {
 					// set outer container size
 					t.container
