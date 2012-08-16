@@ -363,9 +363,9 @@ mejs.HtmlMediaElementShim = {
 	
 	getTypeFromExtension: function(ext) {
 		var ext_types = {
-			'mp4': ['mp4','m4v'],
-			'ogg': ['ogg','ogv','oga'],
-			'webm': ['webm','webmv','webma']
+			'mp4': 'mp4,m4v',
+			'ogg': 'ogg,ogv,oga',
+			'webm': 'webm,webmv,webma'
 		};
 		var r = ext;
 		mejs.$.each(ext_types, function(key, value) {
