@@ -714,7 +714,7 @@
 				t.height = height;
 
 			// detect 100% mode
-			if (t.height.toString().indexOf('%') > 0) {
+			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%') {
 			
 				// do we have the native dimensions yet?
 				var 
