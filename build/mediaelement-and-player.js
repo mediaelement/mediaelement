@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.9.1';
+mejs.version = '2.9.3';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -1040,19 +1040,22 @@ mejs.HtmlMediaElementShim = {
 	},
 	
 	getTypeFromExtension: function(ext) {
-		var ext_types = {
-			'mp4': ['mp4','m4v'],
-			'ogg': ['ogg','ogv','oga'],
-			'webm': ['webm','webmv','webma']
-		};
-		var r = ext;
-		$.each(ext_types, function(key, value) {
-			if (value.indexOf(ext) > -1) {
-				r = key;
-				return;
-			}
-		});
-		return r;
+		
+		switch (ext) {
+			case 'mp4':
+			case 'm4v':
+				return 'mp4';
+			case 'webm':
+			case 'webma':
+			case 'webmv':	
+				return 'webm';
+			case 'ogg':
+			case 'oga':
+			case 'ogv':	
+				return 'ogg';
+			default:
+				return ext;
+		}
 	},
 
 	createErrorMessage: function(playback, options, poster) {
@@ -2275,7 +2278,7 @@ if (typeof jQuery != 'undefined') {
 				t.height = height;
 
 			// detect 100% mode
-			if (t.height.toString().indexOf('%') > 0) {
+			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%') {
 			
 				// do we have the native dimensions yet?
 				var 
@@ -2288,7 +2291,7 @@ if (typeof jQuery != 'undefined') {
 					parentWidth = $(window).width();
 					newHeight = $(window).height();
 				}
-					
+				
 				if ( newHeight != 0 ) {
 					// set outer container size
 					t.container
