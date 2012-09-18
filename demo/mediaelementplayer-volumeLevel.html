@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+    
+    <style>
+        .mejs-controls .mejs-mute.mejs-volume-level-1 button,
+        .mejs-controls .mejs-mute.mejs-volume-level-2 button {
+            background: url(../build/volume-levels-2.png);
+        }
+        
+        .mejs-controls .mejs-mute.mejs-volume-level-1 button {
+            background-position: 0px 0px;
+        }
+        
+        .mejs-controls .mejs-mute.mejs-volume-level-2 button {
+            background-position: 0px -16px;
+        }
+    </style>
+    
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<h2>1. Single MP4 File</h2>
+
+<p>This demo demonstrates how to add volume level display to the mute toggle button. Raise and lower the volume and watch how the button icon changes to reflect the changes in volume. This implementation provides up to 100 points of precision.</p>
+
+<p>The class prefix name associated with the volume level can also be change by setting: ""volumeIconLevelClassPrefix" in ths options.</p>
+
+<code><pre>
+&lt;video width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+	id="player1" poster="../media/echo-hereweare.jpg" 
+	controls="controls" preload="none"&gt;&lt;/video&gt;
+
+$('audio,video').mediaelementplayer({
+    volumeIconLevels: 2
+});
+
+.mejs-controls .mejs-mute.mejs-volume-level-1 button,
+.mejs-controls .mejs-mute.mejs-volume-level-2 button {
+    background: url(../build/volume-levels-2.png);
+}
+
+.mejs-controls .mejs-mute.mejs-volume-level-1 button {
+    background-position: 0px 0px;
+}
+
+.mejs-controls .mejs-mute.mejs-volume-level-2 button {
+    background-position: 0px -16px;
+}
+</pre></code>
+
+<!-- simple single file method -->
+<video width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+	id="player1" poster="../media/echo-hereweare.jpg" 
+	controls="controls" preload="none"></video>
+
+<p><b>Note</b>: if you are working with local files, you'll need to add your working directory
+to the <a href="http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html">Flash Global Security Settings</a>.</p>
+
+
+
+<script>
+
+$('audio,video').mediaelementplayer({
+    volumeIconLevels: 2
+});
+
+</script>
+
+</body>
+</html>
