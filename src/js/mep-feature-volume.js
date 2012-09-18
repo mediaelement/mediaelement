@@ -5,7 +5,10 @@
 		hideVolumeOnTouchDevices: true,
 		
 		audioVolume: 'horizontal',
-		videoVolume: 'vertical'
+		videoVolume: 'vertical',
+        
+        volumeIconLevels: 1,
+        volumeIconLevelClassPrefix: 'mejs-volume-level-'
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -14,7 +17,10 @@
 			// Android and iOS don't support volume controls
 			if (mejs.MediaFeatures.hasTouch && this.options.hideVolumeOnTouchDevices)
 				return;
-			
+            
+            if (this.options.volumeIconLevels > 100) this.options.volumeIconLevels = 100;
+            if (this.options.volumeIconLevels < 1) this.options.volumeIconLevels = 1;
+            
 			var t = this,
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
 				mute = (mode == 'horizontal') ?
@@ -57,7 +63,25 @@
 			
 				// correct to 0-1
 				volume = Math.max(0,volume);
-				volume = Math.min(volume,1);					
+				volume = Math.min(volume,1);
+                
+                var levels = t.options.volumeIconLevels,
+                    levelVal = 1 / levels,
+                    clsPrefix = t.options.volumeIconLevelClassPrefix;
+                    
+                for (var i = 0; i <= levels; i++) {
+                    mute.removeClass(clsPrefix + (i + 1));
+                }
+                
+                if (volume > 0) {
+                    for (var j = 0; j < levels; j++) {
+                        if (levelVal * j <= volume &&
+                            levelVal * (j + 1) >= volume) {
+                            mute.addClass(clsPrefix + (j + 1));
+                            break;
+                        }
+                    }
+                }
 				
 				// ajust mute button style
 				if (volume == 0) {
