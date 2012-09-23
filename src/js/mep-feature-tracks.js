@@ -164,35 +164,23 @@
 
 				};
 
-			if (track.isTranslation) {
 
-				// translate the first track
-				mejs.TrackFormatParser.translateTrackText(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {
+			$.ajax({
+				url: track.src,
+				success: function(d) {
 
-					// store the new translation
-					track.entries = newOne;
-
+					// parse the loaded file
+					track.entries = mejs.TrackFormatParser.parse(d);
 					after();
-				});
 
-			} else {
-				$.ajax({
-					url: track.src,
-					success: function(d) {
-
-						// parse the loaded file
-						track.entries = mejs.TrackFormatParser.parse(d);
-						after();
-
-						if (track.kind == 'chapters' && t.media.duration > 0) {
-							t.drawChapters(track);
-						}
-					},
-					error: function() {
-						t.loadNextTrack();
+					if (track.kind == 'chapters' && t.media.duration > 0) {
+						t.drawChapters(track);
 					}
-				});
-			}
+				},
+				error: function() {
+					t.loadNextTrack();
+				}
+			});
 		},
 
 		enableTrackButton: function(lang, label) {
