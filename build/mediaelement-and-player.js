@@ -1942,7 +1942,7 @@ if (typeof jQuery != 'undefined') {
 			
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 			
-			if (!t.controlsAreVisible)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls) // attempted fix for Issue #548
 				return;
 			
 			if (doAnimation) {
