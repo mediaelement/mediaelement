@@ -11,6 +11,8 @@
 	$.extend(MediaElementPlayer.prototype, {
 	
 		hasChapters: false,
+		chaptersLoaded: false,
+		firstChaptersTrack: null,
 
 		buildtracks: function(player, controls, layers, media) {
 			if (!player.isVideo)
@@ -55,12 +57,15 @@
 
 							if (lang == 'none') {
 								player.selectedTrack = null;
+								player.displayChapters();
 							} else {
 								for (i=0; i<player.tracks.length; i++) {
 									if (player.tracks[i].srclang == lang) {
 										player.selectedTrack = player.tracks[i];
 										player.captions.attr('lang', player.selectedTrack.srclang);
 										player.displayCaptions();
+										//MC: re-display chapters w/ new selected language
+										player.displayChapters();
 										break;
 									}
 								}
@@ -91,7 +96,6 @@
 			player.trackToLoad = -1;
 			player.selectedTrack = null;
 			player.isLoadingTrack = false;
-
 			
 
 			// add to list
@@ -103,7 +107,6 @@
 
 			player.loadNextTrack();
 
-
 			media.addEventListener('timeupdate',function(e) {
 				player.displayCaptions();
 			}, false);
@@ -111,28 +114,33 @@
 			media.addEventListener('loadedmetadata', function(e) {
 				player.displayChapters();
 			}, false);
-
-			player.container.hover(
-				function () {
-					// chapters
-					if (player.hasChapters) {
-						player.chapters.css('visibility','visible');
-						player.chapters.fadeIn(200).height(player.chapters.find('.mejs-chapter').outerHeight());
-					}
-				},
-				function () {
-					if (player.hasChapters && !media.paused) {
-						player.chapters.fadeOut(200, function() {
-							$(this).css('visibility','hidden');
-							$(this).css('display','block');
-						});
-					}
-				});
 				
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
 			}
+			
+			
+			t.container. on('mouseenter',
+				function () {
+					// chapters					
+					if (t.hasChapters) {
+						t.chapters.css('visibility','visible');
+						t.chapters.fadeIn(200);
+					}
+				});
+			t.container.on('mouseleave',
+				function () {
+					if (t.hasChapters && !t.media.paused) {
+						t.chapters.fadeOut(200, function() {
+							$(this).css('visibility','hidden');
+							$(this).css('display','block');
+						});
+					}
+				});
+			
+			
+			
 		},
 
 		loadNextTrack: function() {
@@ -160,6 +168,12 @@
 					//t.addTrackButton(track.srclang);
 					t.enableTrackButton(track.srclang, track.label);
 
+					
+					// reloaded?
+					if (!t.chaptersLoaded) {
+						t.displayChapters();
+					}
+
 					t.loadNextTrack();
 
 				};
@@ -185,7 +199,8 @@
 						after();
 
 						if (track.kind == 'chapters' && t.media.duration > 0) {
-							t.drawChapters(track);
+							//was drawChapters. should be displayChapters. this fixes Firefox's need to pick the last chapter track randomly (if 2 or more languages are present).
+							t.displayChapters(track);
 						}
 					},
 					error: function() {
@@ -258,7 +273,7 @@
 				for (i=0; i<track.entries.times.length; i++) {
 					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){
 						t.captionsText.html(track.entries.text[i]);
-						t.captions.show().height(0);
+						t.captions.show();
 						return; // exit out if one is visible;
 					}
 				}
@@ -271,13 +286,29 @@
 		displayChapters: function() {
 			var 
 				t = this,
-				i;
-
+				i,
+				c = 0; // chapter counter
+			
+			
 			for (i=0; i<t.tracks.length; i++) {
-				if (t.tracks[i].kind == 'chapters' && t.tracks[i].isLoaded) {
-					t.drawChapters(t.tracks[i]);
-					t.hasChapters = true;
-					break;
+								
+				if ( (t.tracks[i].kind == 'chapters') && (t.tracks[i].isLoaded) ) {
+					c += 1; // add 1 to chapter counter
+					
+					if ( (t.selectedTrack != null) && (t.selectedTrack.srclang == t.tracks[i].srclang) ) {
+						// src lang of caption matches chapter lang
+						t.chaptersLoaded = true;
+						t.drawChapters(t.tracks[i]);
+						t.hasChapters = true;
+						break;
+					} else if ( ((t.selectedTrack == null) || (t.selectedTrack.srclang == 'none')) && (c == 1) ) {
+						// default set.						
+						t.chaptersLoaded = true;
+						t.drawChapters(t.tracks[i]);
+						t.hasChapters = true;
+						break;
+					}
+					
 				}
 			}
 		},
