@@ -81,11 +81,33 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * deeper WebVTT support (alignment, color, etc.) - include captionator, remove google translate?
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * quality switcher (low, high, normal)
-* loading state on loading bar (animated?)
 * thin line when controls are off
 * system-wide events
 * playlist builder
 * Ogg/Theora playback
+
+*2.9.4 (2012/09/23)
+
+* Improved RTMP parsing [pansapien] https://github.com/johndyer/mediaelement/pull/574
+* Raise an error for unknown video size in Flash [denmarkin] https://github.com/johndyer/mediaelement/pull/571
+* Fix for alwaysShowControls with keyboard interaction [peterh-capella] https://github.com/johndyer/mediaelement/pull/569
+* Support for DFXP captions [justinl-capella] https://github.com/johndyer/mediaelement/pull/420
+
+*2.9.3 (2012/08/23) *
+
+* Allows use of `style="max-width: 100%;"` for responsive video
+* Added type to source buttons in mep-feature-sourcechooser.js:48 [flamadiddle ]
+* Fix use of inArray and $ in src/js/me-shim.js [lftl, Seb33300, eusonic and others] (this was a regression bug from another fix)
+* Fixing syntax error in events demo [JeffreyATW]
+
+*2.9.2 (2012/07/06) *
+
+* Added a few height checks (from Joe Anderson)
+* Removed console.log statements
+* Better file MIME type detection when the "type" attribute is not set (Seb33300)
+* Pass the event keyCode to the keyActions handler, and make seek interval configurable (bborn)
+* Responsive flash fix, YouTube edits (heikki)
+* New `auto_plugin` mode that starts with plugins then tries HTML5 (savil)
 
 *2.9.1 (2012/06/01)*
 
