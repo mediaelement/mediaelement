@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.9.3';
+mejs.version = '2.9.4';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -26,7 +26,7 @@ mejs.plugins = {
 		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/m4a','audio/mp3','audio/wav','audio/mpeg']}
 	],
 	flash: [
-		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg', 'video/youtube', 'video/x-youtube']}
+		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg', 'video/youtube', 'video/x-youtube']}
 		//,{version: [12,0], types: ['video/webm']} // for future reference (hopefully!)
 	],
 	youtube: [
@@ -774,6 +774,8 @@ mejs.MediaElementDefaults = {
 	pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
 	// name of flash file
 	flashName: 'flashmediaelement.swf',
+	// streamer for RTMP streaming
+	flashStreamer: '',
 	// turns on the smoothing filter in Flash
 	enablePluginSmoothing: false,
 	// name of silverlight file
@@ -1151,6 +1153,7 @@ mejs.HtmlMediaElementShim = {
 			'width=' + width,
 			'startvolume=' + options.startVolume,
 			'timerrate=' + options.timerRate,
+			'flashstreamer=' + options.flashStreamer,
 			'height=' + height];
 
 		if (playback.url !== null) {
