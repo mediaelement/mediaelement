@@ -89,6 +89,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 *2.9.4 (2012/09/23)
 
 * Improved RTMP parsing [pansapien] https://github.com/johndyer/mediaelement/pull/574
+* Added `flashStreamer` option to separate streamer from file
 * Raise an error for unknown video size in Flash [denmarkin] https://github.com/johndyer/mediaelement/pull/571
 * Fix for alwaysShowControls with keyboard interaction [peterh-capella] https://github.com/johndyer/mediaelement/pull/569
 * Support for DFXP captions [justinl-capella] https://github.com/johndyer/mediaelement/pull/420
