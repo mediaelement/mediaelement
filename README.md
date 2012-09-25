@@ -86,7 +86,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
-*2.9.4 (2012/09/23)
+*2.9.4 (2012/09/24)
 
 * Improved RTMP parsing [pansapien] https://github.com/johndyer/mediaelement/pull/574
 * Added `flashStreamer` option to separate streamer from file
