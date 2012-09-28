@@ -86,7 +86,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
-*2.9.4 (2012/09/24)
+*2.9.5 (2012/09/26)*
+
+* Fixed faulty FlashMediaElement.swf (due to Git program mashing it)
+* Fixed track element issues introduced by DFXP captions
+
+*2.9.4 (2012/09/24)*
 
 * Improved RTMP parsing [pansapien] https://github.com/johndyer/mediaelement/pull/574
 * Added `flashStreamer` option to separate streamer from file
