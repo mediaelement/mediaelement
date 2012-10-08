@@ -48,7 +48,7 @@
 
 			positionVolumeHandle = function(volume, secondTry) {
 
-				if (!volumeSlider.is(':visible') && typeof secondTry != 'undefined') {
+				if (!volumeSlider.is(':visible') && typeof secondTry == 'undefined') {
 					volumeSlider.show();
 					positionVolumeHandle(volume, true);
 					volumeSlider.hide()
