@@ -64,14 +64,13 @@
 				mouseIsOver = false;
 
 				handleKeyMove = function(sec, e) {
-					if (-1 == sec) {
+					if (-1 == sec || sec >= media.duration) {
 						media.pause();
-						media.setCurrentTime(media.duration - 2);
+						media.setCurrentTime(media.duration - 0.01);
 					} else {
 						media.setCurrentTime(sec);
 					}
 					e.preventDefault();
-
 				};
 
 				updateSlider = function(e) {
