@@ -1,4 +1,10 @@
 (function($) {
+
+	$.extend(mejs.MepDefaults, {
+		progressText: 'Seek bar',
+		seekSeconds: 5
+	});
+
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function(player, controls, layers, media) {
@@ -20,6 +26,7 @@
 
 			var 
 				t = this,
+				op = t.options,
 				total = controls.find('.mejs-time-total'),
 				loaded  = controls.find('.mejs-time-loaded'),
 				current  = controls.find('.mejs-time-current'),
@@ -55,6 +62,74 @@
 				},
 				mouseIsDown = false,
 				mouseIsOver = false;
+
+				handleKeyMove = function(sec, e) {
+					if (-1 == sec) {
+						media.pause();
+						media.setCurrentTime(media.duration - 2);
+					} else {
+						media.setCurrentTime(sec);
+					}
+					e.preventDefault();
+
+				};
+
+				updateSlider = function(e) {
+					var sec = media.currentTime,
+						time = mejs.Utility.secondsToTimeCode(sec),
+						d = media.duration;
+
+					// WAI-ARIA accessibility
+					// Property or attribute? Ender doesn't have prop() - use attr()
+					handle.attr({
+						'aria-valuenow': sec,
+						'aria-valuetext': time,
+						'aria-valuemin': 0,
+						'aria-valuemax': d,
+						'aria-label': op.progressText,
+						'tabindex': 0,
+						'role': 'slider'
+					});
+				};
+
+			// handle keyboard - accessibility.
+			handle.bind('keydown', function(e) {
+
+				if (e.keyCode >= 35 && e.keyCode <= 39) {
+					try {
+					var c = media.currentTime;
+					// mac Command + left/right.
+					if (typeof e.metaKey!='undefined' && e.metaKey) {
+						if (e.keyCode==37) {
+							handleKeyMove(0, e);
+						}
+						else if (e.keyCode==39) {
+							handleKeyMove(-1, e);
+						}
+					} else {
+					switch (e.keyCode) {
+					    case 37: // left
+							handleKeyMove(c - op.seekSeconds, e);
+					    break;
+
+						case 39: // right
+							handleKeyMove(c + op.seekSeconds, e);
+						break;
+
+						case 36: // home (windows)
+							handleKeyMove(0, e);
+						break;
+
+						case 35: // end (windows)
+							handleKeyMove(-1, e);
+						break;
+					}
+					}
+				} catch (ex) {
+					//Error - how to handle?
+				}
+				}
+			});
 
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
@@ -103,6 +178,9 @@
 			media.addEventListener('timeupdate', function(e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
+
+				updateSlider(e);
+
 			}, false);
 			
 			
