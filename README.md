@@ -86,6 +86,12 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * playlist builder
 * Ogg/Theora playback
 
+*2.9.6 () *
+
+* Support of matchMedia where possible	[zachleat]
+* Fix for 100% audio using correct sizing [dougwilson]
+* SVG icons for better Retina support [still working on this]
+
 *2.9.5 (2012/09/26)*
 
 * Fixed faulty FlashMediaElement.swf (due to Git program mashing it)
