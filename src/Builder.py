@@ -17,6 +17,8 @@ me_files.append('me-plugindetector.js')
 me_files.append('me-featuredetection.js')
 me_files.append('me-mediaelements.js')
 me_files.append('me-shim.js')
+me_files.append('me-i18n.js')
+me_files.append('me-i18n-locale-de.js')
 
 code = ''
 
@@ -74,14 +76,14 @@ def addHeader(headerFilename, filename):
 	tmp_file = open(filename)
 	file_txt = tmp_file.read()
 	tmp_file.close()
-	
+
 	# open the file again for writing
 	tmp_file = open(filename, 'w')
 	tmp_file.write(header_txt)
 	# write the original contents
 	tmp_file.write(file_txt)
 	tmp_file.close()
-	
+
 addHeader('js/me-header.js', '../build/' + me_filename + '.min.js')
 addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')
 
