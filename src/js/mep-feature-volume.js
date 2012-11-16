@@ -48,7 +48,7 @@
 
 			positionVolumeHandle = function(volume, secondTry) {
 
-				if (!volumeSlider.is(':visible') && typeof secondTry === 'undefined') {
+				if (!volumeSlider.is(':visible') && typeof secondTry == 'undefined') {
 					volumeSlider.show();
 					positionVolumeHandle(volume, true);
 					volumeSlider.hide()
@@ -81,11 +81,11 @@
 						newTop = totalHeight - (totalHeight * volume);
 	
 					// handle
-					volumeHandle.css(Math.round('top', totalPosition.top + newTop - (volumeHandle.height() / 2)));
+					volumeHandle.css('top', totalPosition.top + newTop - (volumeHandle.height() / 2));
 	
 					// show the current visibility
-					volumeCurrent.height(Math.round(totalHeight - newTop));
-					volumeCurrent.css('top', Math.round(totalPosition.top + newTop));
+					volumeCurrent.height(totalHeight - newTop );
+					volumeCurrent.css('top', totalPosition.top + newTop);
 				} else {
 					var 
 					
@@ -99,10 +99,10 @@
 						newLeft = totalWidth * volume;
 	
 					// handle
-					volumeHandle.css('left', Math.round(totalPosition.left + newLeft - (volumeHandle.width() / 2));
+					volumeHandle.css('left', totalPosition.left + newLeft - (volumeHandle.width() / 2));
 	
 					// rezize the current part of the volume bar
-					volumeCurrent.width(Math.round(newLeft));
+					volumeCurrent.width( newLeft );
 				}
 			},
 			handleVolumeMove = function(e) {
