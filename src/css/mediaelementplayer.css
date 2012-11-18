@@ -76,7 +76,7 @@
 	margin: -50px 0 0 -50px;
 	background: url(bigplay.png) no-repeat;
 }
-.mejs-overlay:hover .mejs-overlay-button{
+.mejs-overlay:hover .mejs-overlay-button {
 	background-position: 0 -100px ;
 }
 .mejs-overlay-loading {
@@ -97,7 +97,7 @@
 	background: linear-gradient(rgba(50,50,50,0.9), rgba(0,0,0,0.9));
 }
 .mejs-overlay-loading span {
-	display:block;
+	display: block;
 	width: 80px;
 	height: 80px;
 	background: transparent url(loading.gif) 50% 50% no-repeat;
@@ -191,10 +191,10 @@
 
 /* Start: Play/pause */
 .mejs-controls .mejs-play button {
-	background-position:0 0;
+	background-position: 0 0;
 }
 .mejs-controls .mejs-pause button {
-	background-position:0 -16px;
+	background-position: 0 -16px;
 }
 /* End: Play/pause */
 
@@ -232,7 +232,7 @@
 	background: linear-gradient(rgba(30,30,30,0.8), rgba(60,60,60,0.8));
 }
 .mejs-controls .mejs-time-rail .mejs-time-buffering {
-	width:100%;
+	width: 100%;
 	background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 	background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
 	background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
@@ -342,10 +342,10 @@
 
 /* Start: Fullscreen */
 .mejs-controls .mejs-fullscreen-button button {
-	background-position:-32px 0;
+	background-position: -32px 0;
 }
 .mejs-controls .mejs-unfullscreen button {
-	background-position:-32px -16px;
+	background-position: -32px -16px;
 }
 /* End: Fullscreen */
 
@@ -355,11 +355,11 @@
 }
 
 .mejs-controls .mejs-mute button {
-	background-position:-16px -16px;
+	background-position: -16px -16px;
 }
 
 .mejs-controls .mejs-unmute button {
-	background-position:-16px 0;
+	background-position: -16px 0;
 }
 
 .mejs-controls .mejs-volume-button {
@@ -504,7 +504,7 @@
 }
 
 .mejs-controls .mejs-captions-button button {
-	background-position:-48px 0;
+	background-position: -48px 0;
 }
 .mejs-controls .mejs-captions-button .mejs-captions-selector {
 	visibility: hidden;
@@ -535,20 +535,20 @@
 	list-style-type: none !important;
 	overflow: hidden;
 }
-.mejs-controls .mejs-captions-button .mejs-captions-selector ul li{
+.mejs-controls .mejs-captions-button .mejs-captions-selector ul li {
 	margin: 0 0 6px 0;
 	padding: 0;
 	list-style-type: none !important;
-	display:block;
+	display: block;
 	color: #fff;
 	overflow: hidden;
 }
-.mejs-controls .mejs-captions-button .mejs-captions-selector ul li input{
+.mejs-controls .mejs-captions-button .mejs-captions-selector ul li input {
 	clear: both;
 	float: left;
 	margin: 3px 3px 0 5px;
 }
-.mejs-controls .mejs-captions-button .mejs-captions-selector ul li label{
+.mejs-controls .mejs-captions-button .mejs-captions-selector ul li label {
 	width: 100px;
 	float: left;
 	padding: 4px 0 0 0;
@@ -611,21 +611,21 @@
 	background: linear-gradient(rgba(102,102,102,0.7), rgba(50,50,50,0.6));
 	filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#666666,endColorstr=#323232);		
 }
-.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-title{
+.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-title {
 	font-size: 12px;
 	font-weight: bold;
 	display: block;
-	white-space:nowrap;
+	white-space: nowrap;
 	text-overflow: ellipsis;
 	margin: 0 0 3px 0;
 	line-height: 12px;
 }
-.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-timespan{
+.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-timespan {
 	font-size: 12px;
 	line-height: 12px;
 	margin: 3px 0 4px 0;
 	display: block;
-	white-space:nowrap;
+	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 
@@ -689,7 +689,7 @@
 
 
 /* Start: Loop */
-.mejs-controls .mejs-loop-off button{
+.mejs-controls .mejs-loop-off button {
 	background-position: -64px -16px;
 }
 .mejs-controls .mejs-loop-on button {
@@ -698,7 +698,7 @@
 /* End: Loop */
 
 /* Start: backlight */
-.mejs-controls .mejs-backlight-off button{
+.mejs-controls .mejs-backlight-off button {
 	background-position: -80px -16px;
 }
 .mejs-controls .mejs-backlight-on button {
@@ -708,7 +708,7 @@
 
 
 /* Start: picture controls */
-.mejs-controls .mejs-picturecontrols-button{
+.mejs-controls .mejs-picturecontrols-button {
 	background-position: -96px 0;
 }
 /* End: picture controls */
@@ -778,20 +778,20 @@
 	list-style-type: none !important;
 	overflow: hidden;
 }
-.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li{
+.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li {
 	margin: 0 0 6px 0;
 	padding: 0;
 	list-style-type: none !important;
-	display:block;
+	display: block;
 	color: #fff;
 	overflow: hidden;
 }
-.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li input{
+.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li input {
 	clear: both;
 	float: left;
 	margin: 3px 3px 0 5px;
 }
-.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li label{
+.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li label {
 	width: 100px;
 	float: left;
 	padding: 4px 0 0 0;
