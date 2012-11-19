@@ -85,12 +85,15 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * system-wide events
 * playlist builder
 * Ogg/Theora playback
+* Better alignment with native MediaElement (using shimichanga.com techniques)	
 
-*2.9.6 () *
+*2.10.0 () *
 
 * Support of matchMedia where possible	[zachleat]
 * Fix for 100% audio using correct sizing [dougwilson]
 * SVG icons for better Retina support [still working on this]
+* Localized buttons [latzt] https://github.com/johndyer/mediaelement/pull/627
+* Volume handle doesn't set initial position properly [JeffreyATW] https://github.com/johndyer/mediaelement/pull/625
 
 *2.9.5 (2012/09/26)*
 
