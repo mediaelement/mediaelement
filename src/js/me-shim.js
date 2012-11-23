@@ -87,7 +87,7 @@ mejs.MediaElementDefaults = {
 	// none: forces fallback view
 	mode: 'auto',
 	// remove or reorder to change plugin priority and availability
-	plugins: ['flash','silverlight','youtube','vimeo'],
+	plugins: ['flash','silverlight','youtube','vimeo', 'dailymotion'],
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// overrides the type specified, useful for dynamic instantiation
@@ -586,6 +586,24 @@ mejs.HtmlMediaElementShim = {
 					'</object>';
 					
 				break;			
+				
+		    case 'dailymotion':
+		    
+		        var
+					videoId = playback.url.substr(playback.url.lastIndexOf('/')+1);
+					dailymotionSettings = {
+						container: container,
+						containerId: container.id,
+						pluginMediaElement: pluginMediaElement,
+						pluginId: pluginid,
+						videoId: videoId,
+						height: height,
+						width: width	
+					};
+					
+				mejs.DailymotionApi.createFlash(dailymotionSettings);
+					
+		        break;
 		}
 		// hide original element
 		htmlMediaElement.style.display = 'none';
@@ -865,6 +883,144 @@ function onYouTubePlayerAPIReady() {
 // FLASH
 function onYouTubePlayerReady(id) {
 	mejs.YouTubeApi.flashReady(id);
+}
+
+// Dailymotion API
+mejs.DailymotionApi = {
+    flashPlayers: {},
+	createFlash: function(settings) {
+		
+		this.flashPlayers[settings.pluginId] = settings;
+		
+		var specialIEContainer,
+			dailymotionUrl = 'http://www.dailymotion.com/swf/' + settings.videoId  + '?chromeless=1&amp;enableApi=1&amp;playerapiid=' + settings.pluginId;
+			
+		if (mejs.MediaFeatures.isIE) {
+			
+			specialIEContainer = document.createElement('div');
+			settings.container.appendChild(specialIEContainer);
+			specialIEContainer.outerHTML = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
+'id="' + settings.pluginId + '" width="' + settings.width + '" height="' + settings.height + '">' +
+	'<param name="movie" value="' + dailymotionUrl + '" />' +
+	'<param name="wmode" value="transparent" />' +
+	'<param name="allowScriptAccess" value="always" />' +
+	'<param name="allowFullScreen" value="true" />' +
+'</object>';
+		} else {
+		settings.container.innerHTML = 
+			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="' + dailymotionUrl + '" ' +
+				'width="' + settings.width + '" height="' + settings.height + '" style="visibility: visible; ">' +
+				'<param name="allowScriptAccess" value="always">' +
+				'<param name="wmode" value="transparent">' +
+				'<param name="allowFullScreen" value="true" />' +
+			'</object>';
+		}
+		
+	},
+    flashReady: function(id) {
+        var 
+            settings = this.flashPlayers[id],
+            player = document.getElementById(id),
+            pluginMediaElement = settings.pluginMediaElement;
+
+        // hook up and return to MediaELementPlayer.success	
+        pluginMediaElement.pluginApi = 
+        pluginMediaElement.pluginElement = player;
+        mejs.MediaPluginBridge.initPlugin(id);
+
+        var callbackName = settings.containerId + '_callback';
+
+        window[callbackName] = function(e) {
+            mejs.DailymotionApi.handleStateChange(e, player, pluginMediaElement);
+        }
+
+        player.addEventListener('onStateChange', callbackName);
+
+        setInterval(function() {
+            mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'timeupdate');
+        }, 250);
+    },
+    handleStateChange: function(dailymotionState, player, pluginMediaElement) {
+        
+		switch (dailymotionState) {
+			case -1: // not started
+				pluginMediaElement.paused = true;
+				pluginMediaElement.ended = true;
+				mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
+				break;
+			case 0:
+				pluginMediaElement.paused = false;
+				pluginMediaElement.ended = true;
+				mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'ended');
+				break;
+			case 1:
+				pluginMediaElement.paused = false;
+				pluginMediaElement.ended = false;				
+				mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'play');
+				mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'playing');
+				break;
+			case 2:
+				pluginMediaElement.paused = true;
+				pluginMediaElement.ended = false;				
+				mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'pause');
+				break;
+			case 3: // buffering
+				mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'progress');
+				break;
+			case 5:
+				// cued?
+				break;						
+			
+		}			
+		
+	},
+	
+	createEvent: function (player, pluginMediaElement, eventName) {
+		var obj = {
+			type: eventName,
+			target: pluginMediaElement
+		};
+
+		if (player && player.getDuration) {
+			
+			// time 
+			pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime();
+			pluginMediaElement.duration = obj.duration = player.getDuration();
+			
+			// state
+			obj.paused = pluginMediaElement.paused;
+			obj.ended = pluginMediaElement.ended;			
+			
+			// sound
+			obj.muted = player.isMuted();
+			obj.volume = player.getVolume() / 100;
+			
+			// progress
+			obj.bytesTotal = player.getVideoBytesTotal();
+			obj.bufferedBytes = player.getVideoBytesLoaded();
+			
+			// fake the W3C buffered TimeRange
+			var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
+			
+			obj.target.buffered = obj.buffered = {
+				start: function(index) {
+					return 0;
+				},
+				end: function (index) {
+					return bufferedTime;
+				},
+				length: 1
+			};
+			
+		}
+		
+		// send event up the chain
+		pluginMediaElement.dispatchEvent(obj.type, obj);
+	}
+}
+
+function onDailymotionPlayerReady(playerId){
+    mejs.DailymotionApi.flashReady(playerId);
 }
 
 window.mejs = mejs;

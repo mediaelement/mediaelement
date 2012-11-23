@@ -21,5 +21,8 @@ mejs.plugins = {
 	],
 	vimeo: [
 		{version: null, types: ['video/vimeo']}
+	],
+	dailymotion: [
+		{version: null, types: ['video/dailymotion']}
 	]
 };

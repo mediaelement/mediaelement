@@ -537,15 +537,15 @@
 						// click controls
 						var clickElement = (t.media.pluginType == 'native') ? t.$media : $(t.media.pluginElement);
 						
-						// click to play/pause
-						clickElement.click(function() {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
-						});
-						
+						if(t.media.pluginType != 'dailymotion') { // fires an exception on IE with dailymotion
+						    clickElement.click(function() {
+							    if (media.paused) {
+								    media.play();
+							    } else {
+								    media.pause();
+							    }
+						    });
+						}
 					
 						// show/hide controls
 						t.container
