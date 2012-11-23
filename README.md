@@ -87,13 +87,15 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)	
 
-*2.10.0 () *
+*2.10.0 (2012/11/23)*
 
 * Support of matchMedia where possible	[zachleat]
 * Fix for 100% audio using correct sizing [dougwilson]
-* SVG icons for better Retina support [still working on this]
+* SVG icons for better Retina support [johndyer]
 * Localized buttons [latzt] https://github.com/johndyer/mediaelement/pull/627
 * Volume handle doesn't set initial position properly [JeffreyATW] https://github.com/johndyer/mediaelement/pull/625
+* Cleaned up some CSS whitespace https://github.com/johndyer/mediaelement/pull/656
+* Vimeo - updated to iframe code (from old megaloop)
 
 *2.9.5 (2012/09/26)*
 
