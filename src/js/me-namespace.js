@@ -2,7 +2,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.9.5';
+mejs.version = '2.10.0';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -20,6 +20,6 @@ mejs.plugins = {
 		{version: null, types: ['video/youtube', 'video/x-youtube']}
 	],
 	vimeo: [
-		{version: null, types: ['video/vimeo']}
+		{version: null, types: ['video/vimeo', 'video/x-vimeo']}
 	]
 };
