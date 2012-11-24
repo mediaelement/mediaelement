@@ -179,8 +179,12 @@
 					
 					after();
 
-					if (track.kind == 'chapters' && t.media.duration > 0) {
-						t.drawChapters(track);
+					if (track.kind == 'chapters') {
+						t.media.addEventListener('play', function(e) {
+							if (t.media.duration > 0) {
+								t.displayChapters(track);
+							}
+						}, false);
 					}
 				},
 				error: function() {
