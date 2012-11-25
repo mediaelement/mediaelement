@@ -928,17 +928,25 @@ mejs.DailymotionApi = {
         pluginMediaElement.pluginElement = player;
         mejs.MediaPluginBridge.initPlugin(id);
 
-        var callbackName = settings.containerId + '_callback';
-
+        // catch onStageChange events
+        var callbackName = settings.containerId + '_onStateChangecallback';
         window[callbackName] = function(e) {
             mejs.DailymotionApi.handleStateChange(e, player, pluginMediaElement);
         }
-
         player.addEventListener('onStateChange', callbackName);
 
+        // simulate timeupdate events
         setInterval(function() {
             mejs.DailymotionApi.createEvent(player, pluginMediaElement, 'timeupdate');
         }, 250);
+        
+        // catch ad start event
+        callbackName = settings.containerId + '_onLinearAdStartcallback';
+        window[callbackName] = function(e) {
+            // ad starts : simulate a play event
+            mejs.DailymotionApi.handleStateChange(1, player, pluginMediaElement);
+        }
+        player.addEventListener('onLinearAdStart', callbackName);
     },
     handleStateChange: function(dailymotionState, player, pluginMediaElement) {
         
