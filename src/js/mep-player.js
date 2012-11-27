@@ -720,7 +720,7 @@
 				var 
 					nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
 					nativeHeight = t.isVideo ? ((t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight) : t.options.defaultAudioHeight,
-					parentWidth = t.container.parent().width(),
+					parentWidth = t.container.parent().closest(':visible').width(),
 					newHeight = parseInt(parentWidth * nativeHeight/nativeWidth, 10);
 					
 				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
