@@ -117,6 +117,10 @@ mejs.MediaElementDefaults = {
 	timerRate: 250,
 	// initial volume for player
 	startVolume: 0.8,
+
+	// Allow user to set the value
+	fullscreenTextDistance: -1,
+
 	success: function () { },
 	error: function () { }
 };
@@ -482,7 +486,8 @@ mejs.HtmlMediaElementShim = {
 			'startvolume=' + options.startVolume,
 			'timerrate=' + options.timerRate,
 			'flashstreamer=' + options.flashStreamer,
-			'height=' + height];
+			'height=' + height,
+			'fullscreenicondistance=' + options.fullscreenTextDistance];
 
 		if (playback.url !== null) {
 			if (playback.method == 'flash') {
