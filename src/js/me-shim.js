@@ -550,17 +550,23 @@ mejs.HtmlMediaElementShim = {
 			case 'youtube':
 			
 				
-				var
-					videoId = playback.url.substr(playback.url.lastIndexOf('=')+1);
-					youtubeSettings = {
-						container: container,
-						containerId: container.id,
-						pluginMediaElement: pluginMediaElement,
-						pluginId: pluginid,
-						videoId: videoId,
-						height: height,
-						width: width	
-					};				
+				var videoId;
+				
+			    // 2 url formats are supported
+			    // http://youtu.be/<videoId>
+			    // http://www.youtube.com/watch?v=<videoId>
+			    if(playback.url.indexOf('youtu.be') != -1) videoId = playback.url.substr(playback.url.lastIndexOf('/')+1);
+			    else videoId = playback.url.substr(playback.url.lastIndexOf('=')+1);
+			    
+				var youtubeSettings = {
+					container: container,
+					containerId: container.id,
+					pluginMediaElement: pluginMediaElement,
+					pluginId: pluginid,
+					videoId: videoId,
+					height: height,
+					width: width	
+				};
 				
 				if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
 					mejs.YouTubeApi.createFlash(youtubeSettings);
