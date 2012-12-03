@@ -829,6 +829,30 @@ mejs.YouTubeApi = {
 		// hook up and return to MediaELementPlayer.success	
 		pluginMediaElement.pluginApi = 
 		pluginMediaElement.pluginElement = player;
+		
+		pluginMediaElement.pluginApi.setSrc = function(url){
+		
+	        // get the Youtube or Dailymotion video ID
+		    var videoId, newPluginType;
+		    if(url.indexOf('youtu.be') != -1) {
+		        videoId = url.substr(url.lastIndexOf('/')+1);
+		        newPluginType = 'youtube';
+		    } else if(url.indexOf('youtube.com') != -1) {
+		        videoId = url.substr(url.lastIndexOf('=')+1);
+		        newPluginType = 'youtube';
+		    } else if(url.indexOf('dailymotion.com') != -1) {
+		        videoId = url.substr(url.lastIndexOf('/')+1);
+		        newPluginType = 'dailymotion';
+		    }
+		    
+		    if(newPluginType == 'dailymotion'){
+		        settings.videoId = videoId;
+		        mejs.DailymotionApi.createFlash(settings);
+		    } else {
+		        this.cueVideoById(videoId);
+		    }
+		};
+		
 		mejs.MediaPluginBridge.initPlugin(id);
 		
 		// load the youtube video
@@ -932,6 +956,30 @@ mejs.DailymotionApi = {
         // hook up and return to MediaELementPlayer.success	
         pluginMediaElement.pluginApi = 
         pluginMediaElement.pluginElement = player;
+        
+        pluginMediaElement.pluginApi.setSrc = function(url){
+            
+            // get the Youtube or Dailymotion video ID
+		    var videoId, newPluginType;
+		    if(url.indexOf('youtu.be') != -1) {
+		        videoId = url.substr(url.lastIndexOf('/')+1);
+		        newPluginType = 'youtube';
+		    } else if(url.indexOf('youtube.com') != -1) {
+		        videoId = url.substr(url.lastIndexOf('=')+1);
+		        newPluginType = 'youtube';
+		    } else if(url.indexOf('dailymotion.com') != -1) {
+		        videoId = url.substr(url.lastIndexOf('/')+1);
+		        newPluginType = 'dailymotion';
+		    }
+		    
+		    if(newPluginType == 'youtube'){
+		        settings.videoId = videoId;
+		        mejs.YouTubeApi.createFlash(settings);
+		    } else {
+		        this.cueVideoById(videoId);
+		    }
+        };
+		
         mejs.MediaPluginBridge.initPlugin(id);
 
         // catch onStageChange events
