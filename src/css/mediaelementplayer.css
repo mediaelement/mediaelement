@@ -180,9 +180,9 @@
 	overflow: hidden;
 	text-align: center;
 	padding: auto 4px;
-	box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	-webkit-box-sizing: content-box;
+	box-sizing: content-box;
 }
 .mejs-container .mejs-controls .mejs-time span {
 	font-size: 11px;
