@@ -43,9 +43,6 @@ mejs.MediaPluginBridge = {
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
 
-		pluginMediaElement.ended = false;
-		pluginMediaElement.paused = true;
-
 		// fake event object to mimic real HTML media event.
 		e = {
 			type: eventName,
