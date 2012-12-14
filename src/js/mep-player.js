@@ -534,14 +534,18 @@
 						});					
 					
 					} else {
-            // click to play/pause
-            t.media.addEventListener('click', function() {
-              if (t.media.paused) {
-                t.media.play();
-              } else {
-                t.media.pause();
-              }
-            });
+						// click controls
+						var clickElement = (t.media.pluginType == 'native') ? t.$media : $(t.media.pluginElement);
+						
+						// click to play/pause
+						clickElement.click(function() {
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
+						});
+						
 					
 						// show/hide controls
 						t.container
