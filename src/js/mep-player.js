@@ -534,18 +534,14 @@
 						});					
 					
 					} else {
-						// click controls
-						var clickElement = (t.media.pluginType == 'native') ? t.$media : $(t.media.pluginElement);
-						
-						// click to play/pause
-						clickElement.click(function() {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
-						});
-						
+            // click to play/pause
+            t.media.addEventListener('click', function() {
+              if (t.media.paused) {
+                t.media.play();
+              } else {
+                t.media.pause();
+              }
+            });
 					
 						// show/hide controls
 						t.container
@@ -713,8 +709,8 @@
 			if (typeof height != 'undefined')
 				t.height = height;
 
-			// detect 100% mode
-			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%') {
+      // detect 100% mode - use currentStyle for IE since css() doesn't return percentages
+      if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 			
 				// do we have the native dimensions yet?
 				var 
