@@ -1801,7 +1801,8 @@ window.MediaElement = mejs.MediaElement;
     exports.de = {
         "Fullscreen" : "Vollbild",
         "Go Fullscreen" : "Vollbild an",
-        "Turn off Fullscreen" : "Vollbild aus"
+        "Turn off Fullscreen" : "Vollbild aus",
+        "Close" : "Schließen"
     };
 
 }(mejs.i18n.locale.strings));
