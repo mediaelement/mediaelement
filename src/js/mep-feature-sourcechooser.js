@@ -35,9 +35,15 @@
 							currentTime = media.currentTime;
 							paused = media.paused;
 							media.setSrc(src);
-							if (!paused) {
-								media.play();
-							}
+							media.load();
+							media.addEventListener('loadedmetadata', function(e){
+				                this.currentTime = currentTime;
+				            }, true);
+				            media.addEventListener('canplay', function(e){
+				            	if (!paused) {
+					            	this.play();
+					            }
+				            }, true);
 						}
 					});
 

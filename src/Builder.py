@@ -44,6 +44,7 @@ mep_files.append('mep-feature-volume.js')
 mep_files.append('mep-feature-fullscreen.js')
 mep_files.append('mep-feature-tracks.js')
 mep_files.append('mep-feature-contextmenu.js')
+mep_files.append('mep-feature-postroll.js')
 # mep_files.append('mep-feature-sourcechooser.js')
 
 code = ''
