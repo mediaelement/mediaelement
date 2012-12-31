@@ -550,18 +550,14 @@ if (typeof jQuery != 'undefined') {
 						});					
 					
 					} else {
-						// click controls
-						var clickElement = (t.media.pluginType == 'native') ? t.$media : $(t.media.pluginElement);
-						
-						// click to play/pause
-						clickElement.click(function() {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
-						});
-						
+            // click to play/pause
+            t.media.addEventListener('click', function() {
+              if (t.media.paused) {
+                t.media.play();
+              } else {
+                t.media.pause();
+              }
+            });
 					
 						// show/hide controls
 						t.container
@@ -729,14 +725,14 @@ if (typeof jQuery != 'undefined') {
 			if (typeof height != 'undefined')
 				t.height = height;
 
-			// detect 100% mode
-			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%') {
+      // detect 100% mode - use currentStyle for IE since css() doesn't return percentages
+      if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 			
 				// do we have the native dimensions yet?
 				var 
 					nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
 					nativeHeight = t.isVideo ? ((t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight) : t.options.defaultAudioHeight,
-					parentWidth = t.container.parent().width(),
+					parentWidth = t.container.parent().closest(':visible').width(),
 					newHeight = parseInt(parentWidth * nativeHeight/nativeWidth, 10);
 					
 				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
@@ -1157,7 +1153,8 @@ if (typeof jQuery != 'undefined') {
 						media.pause();
 					}
 					if (media.currentTime > 0) {
-						media.setCurrentTime(0);	
+						media.setCurrentTime(0);
+                        media.pause();
 						controls.find('.mejs-time-current').width('0px');
 						controls.find('.mejs-time-handle').css('left', '0px');
 						controls.find('.mejs-time-float-current').html( mejs.Utility.secondsToTimeCode(0) );
@@ -1201,7 +1198,7 @@ if (typeof jQuery != 'undefined') {
 					// mouse position relative to the object
 					var x = e.pageX,
 						offset = total.offset(),
-						width = total.outerWidth(),
+						width = total.outerWidth(true),
 						percentage = 0,
 						newTime = 0,
 						pos = x - offset.left;
@@ -1500,7 +1497,7 @@ if (typeof jQuery != 'undefined') {
 						newTop = totalHeight - (totalHeight * volume);
 	
 					// handle
-					volumeHandle.css('top', totalPosition.top + newTop - (volumeHandle.height() / 2));
+					volumeHandle.css('top', Math.round(totalPosition.top + newTop - (volumeHandle.height() / 2)));
 	
 					// show the current visibility
 					volumeCurrent.height(totalHeight - newTop );
@@ -1518,10 +1515,10 @@ if (typeof jQuery != 'undefined') {
 						newLeft = totalWidth * volume;
 	
 					// handle
-					volumeHandle.css('left', totalPosition.left + newLeft - (volumeHandle.width() / 2));
+					volumeHandle.css('left', Math.round(totalPosition.left + newLeft - (volumeHandle.width() / 2)));
 	
 					// rezize the current part of the volume bar
-					volumeCurrent.width( newLeft );
+					volumeCurrent.width( Math.round(newLeft) );
 				}
 			},
 			handleVolumeMove = function(e) {
@@ -1638,6 +1635,7 @@ if (typeof jQuery != 'undefined') {
 	});
 	
 })(mejs.$);
+
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
@@ -2257,8 +2255,12 @@ if (typeof jQuery != 'undefined') {
 					
 					after();
 
-					if (track.kind == 'chapters' && t.media.duration > 0) {
-						t.drawChapters(track);
+					if (track.kind == 'chapters') {
+						t.media.addEventListener('play', function(e) {
+							if (t.media.duration > 0) {
+								t.displayChapters(track);
+							}
+						}, false);
 					}
 				},
 				error: function() {
