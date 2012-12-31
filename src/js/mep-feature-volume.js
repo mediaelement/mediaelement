@@ -81,7 +81,7 @@
 						newTop = totalHeight - (totalHeight * volume);
 	
 					// handle
-					volumeHandle.css('top', totalPosition.top + newTop - (volumeHandle.height() / 2));
+					volumeHandle.css('top', Math.round(totalPosition.top + newTop - (volumeHandle.height() / 2)));
 	
 					// show the current visibility
 					volumeCurrent.height(totalHeight - newTop );
@@ -99,10 +99,10 @@
 						newLeft = totalWidth * volume;
 	
 					// handle
-					volumeHandle.css('left', totalPosition.left + newLeft - (volumeHandle.width() / 2));
+					volumeHandle.css('left', Math.round(totalPosition.left + newLeft - (volumeHandle.width() / 2)));
 	
 					// rezize the current part of the volume bar
-					volumeCurrent.width( newLeft );
+					volumeCurrent.width( Math.round(newLeft) );
 				}
 			},
 			handleVolumeMove = function(e) {
