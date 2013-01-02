@@ -78,14 +78,17 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *Proposed features*
 
-* deeper WebVTT support (alignment, color, etc.) - include captionator, remove google translate?
+* deeper WebVTT support (alignment, color, etc.) - include captionator
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
-* quality switcher (low, high, normal)
 * thin line when controls are off
 * system-wide events
 * playlist builder
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)	
+
+*2.10.2 (in progress)*
+
+* Fix audio height in 100% mode (https://github.com/johndyer/mediaelement/pull/667)
 
 *2.10.1 (2012/12/31)*
 
