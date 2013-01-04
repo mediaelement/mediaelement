@@ -78,13 +78,43 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 *Proposed features*
 
-* deeper WebVTT support (alignment, color, etc.) - include captionator, remove google translate?
+* deeper WebVTT support (alignment, color, etc.) - include captionator
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
-* quality switcher (low, high, normal)
 * thin line when controls are off
 * system-wide events
 * playlist builder
 * Ogg/Theora playback
+* Better alignment with native MediaElement (using shimichanga.com techniques)	
+
+*2.10.2 (in progress)*
+
+* Fix audio height in 100% mode (https://github.com/johndyer/mediaelement/pull/667)
+
+*2.10.1 (2012/12/31)*
+
+* New postroll feature (https://github.com/johndyer/mediaelement/pull/660)
+* PluginMediaElement click-to-pause behavior doesn't work (https://github.com/johndyer/mediaelement/pull/691)
+* Use the normal CSS property name after the vendor prefix (https://github.com/johndyer/mediaelement/pull/686) 
+* Select first source that is supported by the browser (https://github.com/johndyer/mediaelement/pull/679)
+* fixed outerWidth for jQuery 1.8 compatiability (https://github.com/johndyer/mediaelement/pull/680)
+* Fix for Issue #676 when Stop button does not behaves as expected in selected browsers (https://github.com/johndyer/mediaelement/pull/678)
+* Fix source switching on Webkit in SourceChooser (https://github.com/johndyer/mediaelement/pull/675)
+* Better 100% mode handling within non-visible container (https://github.com/johndyer/mediaelement/pull/668)
+* Display chapter tracks for late-loading video sources, including YouTube (https://github.com/johndyer/mediaelement/pull/665)
+* Added SVG Stop icon (https://github.com/johndyer/mediaelement/pull/696)
+* Added SVG source chooser icon (https://github.com/johndyer/mediaelement/pull/669)
+* Adding rounding to volume slider left, top, and and width setters (https://github.com/johndyer/mediaelement/pull/684)
+* Display chapter tracks for late-loading video sources, including YouTube (https://github.com/johndyer/mediaelement/pull/665)
+
+*2.10.0 (2012/11/23)*
+
+* Support of matchMedia where possible	[zachleat]
+* Fix for 100% audio using correct sizing [dougwilson]
+* SVG icons for better Retina support [johndyer]
+* Localized buttons [latzt] https://github.com/johndyer/mediaelement/pull/627
+* Volume handle doesn't set initial position properly [JeffreyATW] https://github.com/johndyer/mediaelement/pull/625
+* Cleaned up some CSS whitespace https://github.com/johndyer/mediaelement/pull/656
+* Vimeo - updated to iframe code (from old megaloop)
 
 *2.9.5 (2012/09/26)*
 

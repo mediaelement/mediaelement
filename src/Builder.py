@@ -17,6 +17,8 @@ me_files.append('me-plugindetector.js')
 me_files.append('me-featuredetection.js')
 me_files.append('me-mediaelements.js')
 me_files.append('me-shim.js')
+me_files.append('me-i18n.js')
+me_files.append('me-i18n-locale-de.js')
 
 code = ''
 
@@ -42,6 +44,7 @@ mep_files.append('mep-feature-volume.js')
 mep_files.append('mep-feature-fullscreen.js')
 mep_files.append('mep-feature-tracks.js')
 mep_files.append('mep-feature-contextmenu.js')
+mep_files.append('mep-feature-postroll.js')
 # mep_files.append('mep-feature-sourcechooser.js')
 
 code = ''
@@ -74,14 +77,14 @@ def addHeader(headerFilename, filename):
 	tmp_file = open(filename)
 	file_txt = tmp_file.read()
 	tmp_file.close()
-	
+
 	# open the file again for writing
 	tmp_file = open(filename, 'w')
 	tmp_file.write(header_txt)
 	# write the original contents
 	tmp_file.write(file_txt)
 	tmp_file.close()
-	
+
 addHeader('js/me-header.js', '../build/' + me_filename + '.min.js')
 addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')
 
@@ -120,7 +123,9 @@ os.system("java -jar yuicompressor-2.4.2.jar ../build/mediaelementplayer.css -o 
 #COPY skin files
 print('Copying Skin Files')
 shutil.copy2('css/controls.png','../build/controls.png')
+shutil.copy2('css/controls.svg','../build/controls.svg')
 shutil.copy2('css/bigplay.png','../build/bigplay.png')
+shutil.copy2('css/bigplay.svg','../build/bigplay.svg')
 shutil.copy2('css/loading.gif','../build/loading.gif')
 
 shutil.copy2('css/mejs-skins.css','../build/mejs-skins.css')

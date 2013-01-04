@@ -30,7 +30,7 @@
 					// mouse position relative to the object
 					var x = e.pageX,
 						offset = total.offset(),
-						width = total.outerWidth(),
+						width = total.outerWidth(true),
 						percentage = 0,
 						newTime = 0,
 						pos = x - offset.left;
