@@ -2541,14 +2541,14 @@ if (typeof jQuery != 'undefined') {
 					nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
 					nativeHeight = t.isVideo ? ((t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight) : t.options.defaultAudioHeight,
 					parentWidth = t.container.parent().closest(':visible').width(),
-					newHeight = parseInt(parentWidth * nativeHeight/nativeWidth, 10);
+					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 					
 				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
 					parentWidth = $(window).width();
 					newHeight = $(window).height();
 				}
 				
-				if ( newHeight != 0 ) {
+				if ( newHeight != 0 && parentWidth != 0 ) {
 					// set outer container size
 					t.container
 						.width(parentWidth)
@@ -3229,7 +3229,10 @@ if (typeof jQuery != 'undefined') {
 		hideVolumeOnTouchDevices: true,
 		
 		audioVolume: 'horizontal',
-		videoVolume: 'vertical'
+		videoVolume: 'vertical',
+        
+        volumeIconLevels: 1,
+        volumeIconLevelClassPrefix: 'mejs-volume-level-'
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -3238,7 +3241,10 @@ if (typeof jQuery != 'undefined') {
 			// Android and iOS don't support volume controls
 			if (mejs.MediaFeatures.hasTouch && this.options.hideVolumeOnTouchDevices)
 				return;
-			
+            
+            if (this.options.volumeIconLevels > 100) this.options.volumeIconLevels = 100;
+            if (this.options.volumeIconLevels < 1) this.options.volumeIconLevels = 1;
+            
 			var t = this,
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
 				mute = (mode == 'horizontal') ?
@@ -3281,7 +3287,25 @@ if (typeof jQuery != 'undefined') {
 			
 				// correct to 0-1
 				volume = Math.max(0,volume);
-				volume = Math.min(volume,1);					
+				volume = Math.min(volume,1);
+                
+                var levels = t.options.volumeIconLevels,
+                    levelVal = 1 / levels,
+                    clsPrefix = t.options.volumeIconLevelClassPrefix;
+                    
+                for (var i = 0; i <= levels; i++) {
+                    mute.removeClass(clsPrefix + (i + 1));
+                }
+                
+                if (volume > 0) {
+                    for (var j = 0; j < levels; j++) {
+                        if (levelVal * j <= volume &&
+                            levelVal * (j + 1) >= volume) {
+                            mute.addClass(clsPrefix + (j + 1));
+                            break;
+                        }
+                    }
+                }
 				
 				// ajust mute button style
 				if (volume == 0) {
