@@ -848,3 +848,179 @@
 	cursor: pointer;
 }
 /* End: Postroll */
+
+/* Start: playlist */
+
+.mejs-playlist{
+    display: none;
+    position: absolute;
+    top: 90px;
+    width: 100%;
+    background: url(background.png);
+	background: rgba(50,50,50,0.7);
+}
+.mejs-controls .mejs-playlist-open button{
+    background-image: url(controls.png);
+    background-position: -176px 0;
+}
+.mejs-controls .mejs-playlist-close button{
+    background-image: url(controls.png);
+    background-position: -176px -16px;
+}
+.mejs-playlist .mejs-close{
+    position: absolute;
+    right: 26px;
+    top: 0;
+    z-index: 2;
+}
+.mejs-playlist .mejs-close button {
+	cursor: pointer;
+	display: block;
+	font-size: 0;
+	line-height: 0;
+	text-decoration: none;
+	margin: 7px 5px;
+	padding: 0;
+	position: absolute;
+	height: 16px;
+	width: 16px;
+	border: 0;
+	background: transparent url(playlist.png) no-repeat -3px -42px;
+}
+.mejs-playlist-content ol{
+    padding: 0;
+}
+.mejs-playlist-content li{
+    list-style: none;
+    margin: 3px 0 3px 10px;
+}
+.mejs-playlist-content li a{
+    color: black;
+    text-decoration: none;
+    display: block;
+    padding: 2px 0 2px 25px;
+    height: 19px;
+}
+.mejs-playlist-content li a[href]{
+    background: transparent url(playlist.png) no-repeat 0 0;
+}
+.mejs-playlist-content li a[href]:hover{
+    color: white;
+    background-position: 0 -20px;
+}
+.mejs-playlist-content .mejs-playlist-nb{
+    margin-right: 4px;
+}
+.mejs-controls .mejs-prev button {
+    background-image: url(controls.png);
+	background-position:-144px 0;
+}
+.mejs-controls .mejs-next button {
+    background-image: url(controls.png);
+	background-position:-160px 0;
+}
+.mejs-controls .mejs-prev button[disabled] {
+	background-position:-144px -16px;
+}
+.mejs-controls .mejs-next button[disabled] {
+	background-position:-160px -16px;
+}
+
+.mejs-video .mejs-playlist-content ol{
+    margin: 30px 10px 10px;
+    position: relative;
+}
+
+.mejs-video .mejs-playlist-content li{
+    display: inline-block;
+    width: 206px;
+    height: 165px;
+    vertical-align: top;
+    margin: 0;
+}
+
+.mejs-video .mejs-playlist-content li a{
+    padding: 0;
+    background: none;
+    text-align: center;
+}
+
+.mejs-video .mejs-playlist-content .mejs-playlist-poster{
+    display: block;
+    height: 100px;
+}
+
+.mejs-video .mejs-playlist-content .mejs-playlist-poster img{
+    height: 100%;
+}
+
+.mejs-video .mejs-playlist-content .mejs-playlist-nb{
+    display: none;
+}
+
+.mejs-video .mejs-playlist{
+    top: 0;
+    height: 100%;
+    z-index: 1;
+}
+
+.mejs-video .mejs-playlist .mejs-block{
+    height: 100%;
+}
+
+.mejs-video .mejs-playlist-content {
+    height: 100%;
+    overflow: hidden;
+}
+
+.mejs-video .mejs-playlist-paging{
+    position: absolute;
+    z-index: 2;
+}
+
+.mejs-video .mejs-playlist-paging ul{
+    margin: 10px;
+    padding: 0;
+}
+
+.mejs-video .mejs-playlist-paging .mejs-page{
+    display: inline;
+    cursor: pointer;
+    margin: 0.2em;
+}
+
+.mejs-video .mejs-playlist-paging .mejs-page-current{
+    font-weight: bold;
+}
+
+.mejs-video .mejs-playlist-paging .mejs-page:hover{
+    color: white;
+}
+
+/* End: playlist */
+
+/* Begin : Audio Poster */
+.mejs-audio .mejs-poster{
+    display: block!important;
+}
+.mejs-audio .mejs-poster img{
+    height: 60px;
+    width: auto;
+}
+/* End : Audio Poster */
+
+/* Begin : Title */
+.mejs-container .mejs-layers .mejs-title{
+    position: absolute;
+    color: white;
+    width: 80%;
+    margin-left: 20%;
+    padding: 8px 0;
+}
+
+.mejs-container .mejs-layers .mejs-title-track{
+    color: #CCC;
+    font-size: 0.9em;
+}
+/* End : Title */
+
