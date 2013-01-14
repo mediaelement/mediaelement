@@ -321,6 +321,7 @@
 	text-align: center;
 	left: 0;
 }
+
 .mejs-controls .mejs-time-rail .mejs-time-float-corner {
 	position: absolute;
 	display: block;
@@ -334,9 +335,19 @@
 	border-radius: 0;
 	top: 15px;
 	left: 13px;
-
 }
 
+.mejs-long-video .mejs-controls .mejs-time-rail .mejs-time-float {
+	width: 48px;
+}
+
+.mejs-long-video .mejs-controls .mejs-time-rail .mejs-time-float-current {
+	width: 44px;
+}
+
+.mejs-long-video .mejs-controls .mejs-time-rail .mejs-time-float-corner {
+	left: 18px;
+}
 
 
 
