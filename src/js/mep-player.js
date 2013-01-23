@@ -34,6 +34,8 @@
 		startVolume: 0.8,
 		// useful for <audio> player loops
 		loop: false,
+		// rewind to beginning when media ends
+                autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
@@ -613,10 +615,12 @@
 
 				// ended for all
 				t.media.addEventListener('ended', function (e) {
-					try{
-						t.media.setCurrentTime(0);
-					} catch (exp) {
-						
+					if(t.options.autoRewind) {
+						try{
+							t.media.setCurrentTime(0);
+						} catch (exp) {
+							
+						}
 					}
 					t.media.pause();
 					
