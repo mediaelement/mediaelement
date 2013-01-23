@@ -33,15 +33,22 @@
 						width = total.outerWidth(true),
 						percentage = 0,
 						newTime = 0,
+						pos = 0;
+
+
+					if (media.duration) {
+						if (x < offset.left) {
+							x = offset.left;
+						} else if (x > width + offset.left) {
+							x = width + offset.left;
+						}
+						
 						pos = x - offset.left;
-
-
-					if (x > offset.left && x <= width + offset.left && media.duration) {
-						percentage = ((x - offset.left) / width);
+						percentage = (pos / width);
 						newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
 						// seek to where the mouse is
-						if (mouseIsDown) {
+						if (mouseIsDown && newTime !== media.getCurrentTime()) {
 							media.setCurrentTime(newTime);
 						}
 
