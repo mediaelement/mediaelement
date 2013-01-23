@@ -1,4 +1,3 @@
-
 /*
 extension methods to <video> or <audio> object to bring it into parity with PluginMediaElement (see below)
 */
@@ -63,6 +62,7 @@ mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
 	this.pluginType = pluginType;
 	this.src = mediaUrl;
 	this.events = {};
+	this.attributes = {};
 };
 
 // JavaScript values and ExternalInterface methods that match HTML5 video properties methods
@@ -304,7 +304,6 @@ mejs.PluginMediaElement.prototype = {
 	// end: fake events
 	
 	// fake DOM attribute methods
-	attributes: {},
 	hasAttribute: function(name){
 		return (name in this.attributes);  
 	},
