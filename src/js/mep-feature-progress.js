@@ -48,7 +48,7 @@
 						newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
 						// seek to where the mouse is
-						if (mouseIsDown && newTime !== media.getCurrentTime()) {
+						if (mouseIsDown && newTime !== player.getCurrentTime()) {
 							media.setCurrentTime(newTime);
 						}
 
