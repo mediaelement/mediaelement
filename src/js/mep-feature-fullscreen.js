@@ -118,6 +118,9 @@
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
 
+                  // prevent clicks from pausing video
+                  t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+
 									// store for later
 									fullscreenIsDisabled = false;
 								}
@@ -173,6 +176,9 @@
 									fullscreenBtn.css('pointer-events', 'none');
 									t.controls.css('pointer-events', 'none');
 
+                  // restore click-to-play
+                  t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
 									// show the divs that will restore things
 									videoHoverDiv.show();
 									controlsRightHoverDiv.show();
@@ -186,6 +192,14 @@
 
 						// restore controls anytime the user enters or leaves fullscreen
 						media.addEventListener('fullscreenchange', function(e) {
+							t.isFullScreen = !t.isFullScreen;
+							// don't allow plugin click to pause video - messes with
+							// plugin's controls
+              if (t.isFullScreen) {
+                t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+              } else {
+                t.media.addEventListener('click', t.clickToPlayPauseCallback);
+              }
 							restoreControls();
 						});
 
