@@ -45,6 +45,8 @@ mep_files.append('mep-feature-fullscreen.js')
 mep_files.append('mep-feature-tracks.js')
 mep_files.append('mep-feature-contextmenu.js')
 mep_files.append('mep-feature-postroll.js')
+mep_files.append('mep-feature-playlist.js')
+mep_files.append('mep-feature-title.js')
 # mep_files.append('mep-feature-sourcechooser.js')
 
 code = ''
@@ -127,6 +129,7 @@ shutil.copy2('css/controls.svg','../build/controls.svg')
 shutil.copy2('css/bigplay.png','../build/bigplay.png')
 shutil.copy2('css/bigplay.svg','../build/bigplay.svg')
 shutil.copy2('css/loading.gif','../build/loading.gif')
+shutil.copy2('css/playlist.png','../build/playlist.png')
 
 shutil.copy2('css/mejs-skins.css','../build/mejs-skins.css')
 shutil.copy2('css/controls-ted.png','../build/controls-ted.png')

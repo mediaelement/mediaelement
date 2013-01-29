@@ -863,6 +863,7 @@
 			}	
 			
 			posterImg.attr('src', url);
+			t.$node.attr('poster',url);
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
