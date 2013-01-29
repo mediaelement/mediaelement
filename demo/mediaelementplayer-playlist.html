@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Video player</p>
+
+<h2>MP4 playlist</h2>
+<video width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+	id="player1" poster="../media/echo-hereweare.jpg" 
+	controls="controls" preload="none"></video>
+
+<script>
+$('video').mediaelementplayer({
+    features: ['prev','playpause','next','progress','current','duration','volume','fullscreen', 'playlist'],
+    success: function(media, node, player){
+        player.loadPlaylist([
+            {title: "Echo conference", src: "../media/echo-hereweare.mp4", poster: "../media/echo-hereweare.jpg"},
+            {title: "Sintel", src: "http://ftp.akl.lt/Video/Sintel/sintel-2048-surround.mp4", poster: "http://www.sintel.org/wp-content/uploads/2010/05/3.2d.png"},
+            {title: "Elephant Dream", src: "http://ia700406.us.archive.org/31/items/ElephantsDream/ed_1024_512kb.mp4", poster: "http://orange.blender.org/wp-content/themes/orange/images/media/gallery/s1_proog.jpg"},
+            {title: "Big Buck Bunny", src: "http://download.blender.org/peach/trailer/trailer_1080p.ogg", poster:"http://media.xiph.org/BBB/BBB-360-png/big_buck_bunny_00640.png"},
+        ]).setPlaylistTitle('AirReview - Landmarks');
+    }
+});
+
+</script>
+
+<p>Audio player</p>
+
+<h2>MP3 playlist</h2>
+<audio id="player2" src="../media/AirReview-Landmarks-02-ChasingCorporate.mp3" type="audio/mp3" controls="controls" poster="../media/AirReview-Landmarks.jpg">
+</audio>
+
+<script>
+$('audio').mediaelementplayer({
+    features: ['title','prev','playpause','next','progress','current','duration','volume', 'playlist'],
+    audioHeight: 90,
+    success: function(media, node, player){
+        player.loadPlaylist([
+            {title: 'Exodus', disk: 'CD1'},
+            {title: 'Chasing Corporate', src: '../media/AirReview-Landmarks-02-ChasingCorporate.mp3'},
+            {title: 'House of All We Left Behind'},
+            {title: 'All Because You\'re Mine', src: 'http://mediaelementjs.com/media/AirReview-Landmarks-04-AllBecauseYoureMine.mp3'},
+            {title: 'Can\'t See the Sun'},
+            {title: 'The Landing', disk:'CD2'},
+            {title: 'Awake'},
+            {title: 'Leaving Savannah'},
+            {title: 'At The Switch'},
+            {title: 'Cartography'},
+            {title: 'Jura'}
+        ]).setPlaylistTitle('AirReview - Landmarks');
+    }
+});
+
+</script>
+
+</body>
+</html>
+
