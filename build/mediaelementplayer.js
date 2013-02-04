@@ -1657,9 +1657,9 @@ if (typeof jQuery != 'undefined') {
 				// set initial volume
 				positionVolumeHandle(player.options.startVolume);
 				
-				// mutes the volume icon if the initial volume is 0
+				// mutes the media and sets the volume icon muted if the initial volume is set to 0
         if (player.options.startVolume === 0) {
-          mute.find('button').click();
+          media.setMuted(true);
         }
 				
 				// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
