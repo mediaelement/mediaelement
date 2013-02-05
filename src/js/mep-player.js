@@ -236,7 +236,7 @@
 					t.media.play();
 				}
 					
-			} else if (mf.isAndroid && t.AndroidUseNativeControls) {
+			} else if (mf.isAndroid && t.options.AndroidUseNativeControls) {
 				
 				// leave default player
 
