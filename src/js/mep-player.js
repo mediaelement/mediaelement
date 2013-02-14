@@ -34,6 +34,8 @@
 		startVolume: 0.8,
 		// useful for <audio> player loops
 		loop: false,
+		// rewind to beginning when media ends
+                autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
@@ -48,6 +50,8 @@
 		autosizeProgress : true,
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
+        // Enable click video element to toggle play/pause
+        clickToPlayPause: true,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -336,6 +340,9 @@
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
+
+			// controls are shown when loaded
+			t.container.trigger('controlsshown');
 		},
 		
 		showControls: function(doAnimation) {
@@ -349,7 +356,10 @@
 			if (doAnimation) {
 				t.controls
 					.css('visibility','visible')
-					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});	
+					.stop(true, true).fadeIn(200, function() {
+					      t.controlsAreVisible = true;
+					      t.container.trigger('controlsshown');
+					});
 	
 				// any additional controls people might add and want to hide
 				t.container.find('.mejs-control')
@@ -367,6 +377,7 @@
 					.css('display','block');
 					
 				t.controlsAreVisible = true;
+				t.container.trigger('controlsshown');
 			}
 			
 			t.setControlsSize();
@@ -389,6 +400,7 @@
 						.css('display','block');
 						
 					t.controlsAreVisible = false;
+					t.container.trigger('controlshidden');
 				});	
 	
 				// any additional controls people might add and want to hide
@@ -410,6 +422,7 @@
 					.css('display','block');
 					
 				t.controlsAreVisible = false;
+				t.container.trigger('controlshidden');
 			}
 		},		
 
@@ -536,10 +549,12 @@
 					} else {
             // click to play/pause
             t.media.addEventListener('click', function() {
-              if (t.media.paused) {
-                t.media.play();
-              } else {
-                t.media.pause();
+              if (t.options.clickToPlayPause) {
+                  if (t.media.paused) {
+                    t.media.play();
+                  } else {
+                    t.media.pause();
+                  }
               }
             });
 					
@@ -613,10 +628,12 @@
 
 				// ended for all
 				t.media.addEventListener('ended', function (e) {
-					try{
-						t.media.setCurrentTime(0);
-					} catch (exp) {
-						
+					if(t.options.autoRewind) {
+						try{
+							t.media.setCurrentTime(0);
+						} catch (exp) {
+							
+						}
 					}
 					t.media.pause();
 					
@@ -849,6 +866,7 @@
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
+            var t = this;
 			if (!player.isVideo)
 				return;
 
@@ -872,11 +890,13 @@
 				'</div>')
 				.appendTo(layers)
 				.click(function() {
-					if (media.paused) {
-						media.play();
-					} else {
-						media.pause();
-					}
+                    if (t.options.clickToPlayPause) {
+                        if (media.paused) {
+                            media.play();
+                        } else {
+                            media.pause();
+                        }
+                    }
 				});
 			
 			/*

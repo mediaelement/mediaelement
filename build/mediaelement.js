@@ -8,14 +8,14 @@
 * Can play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
 *
 * Copyright 2010-2012, John Dyer (http://j.hn)
-* Dual licensed under the MIT or GPL Version 2 licenses.
+* License: MIT
 *
 */
 // Namespace
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.10.1';
+mejs.version = '2.10.3';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -377,7 +377,6 @@ mejs.MediaFeatures = {
 };
 mejs.MediaFeatures.init();
 
-
 /*
 extension methods to <video> or <audio> object to bring it into parity with PluginMediaElement (see below)
 */
@@ -442,6 +441,7 @@ mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
 	this.pluginType = pluginType;
 	this.src = mediaUrl;
 	this.events = {};
+	this.attributes = {};
 };
 
 // JavaScript values and ExternalInterface methods that match HTML5 video properties methods
@@ -683,7 +683,6 @@ mejs.PluginMediaElement.prototype = {
 	// end: fake events
 	
 	// fake DOM attribute methods
-	attributes: {},
 	hasAttribute: function(name){
 		return (name in this.attributes);  
 	},
@@ -1524,7 +1523,7 @@ mejs.YouTubeApi = {
 		// load the youtube video
 		player.cueVideoById(settings.videoId);
 		
-		var callbackName = settings.containerId + '_callback'
+		var callbackName = settings.containerId + '_callback';
 		
 		window[callbackName] = function(e) {
 			mejs.YouTubeApi.handleStateChange(e, player, pluginMediaElement);
