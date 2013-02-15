@@ -22,7 +22,7 @@
 		private var _stream:NetStream;
 		private var _video:Video;
 		private var _element:FlashMediaElement;
-		private var _soundTransform;
+		private var _soundTransform:SoundTransform;
 		private var _oldVolume:Number = 1;
 
 		// event values
@@ -122,7 +122,7 @@
 
 		}
 
-		private function timerHandler(e:TimerEvent) {
+		private function timerHandler(e:TimerEvent):void {
 
 			_bytesLoaded = _stream.bytesLoaded;
 			_bytesTotal = _stream.bytesTotal;
@@ -431,7 +431,7 @@
 		}
 
 
-		private function sendEvent(eventName:String) {
+		private function sendEvent(eventName:String):void {
 
 			// calculate this to mimic HTML5
 			_bufferedTime = _bytesLoaded / _bytesTotal * _duration;
@@ -456,7 +456,7 @@
 			_element.sendEvent(eventName, values);
 		}
 
-		private function parseRTMP(url:String) {
+		private function parseRTMP(url:String):Object {
 			var match:Array = url.match(/(.*)\/((flv|mp4|mp3):.*)/);
 			var rtmpInfo:Object = {
 				server: null,

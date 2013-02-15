@@ -47,6 +47,7 @@
 		private var _nativeVideoHeight:Number = 0;
 
 		// visual elements
+    private var _mediaElementDisplay:FlashMediaElementDisplay = new FlashMediaElementDisplay();
 		private var _output:TextField;
 		private var _fullscreenButton:SimpleButton;
 
@@ -88,7 +89,7 @@
 		private var _isOverStage:Boolean = false;
 
 
-		public function FlashMediaElement() {
+		public function FlashMediaElement():void {
 
 			// show allow this player to be called from a different domain than the HTML page hosting the player
 			Security.allowDomain("*");
@@ -121,6 +122,8 @@
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			_stageWidth = stage.stageWidth;
 			_stageHeight = stage.stageHeight;
+			this.addChild(_mediaElementDisplay);
+			stage.addChild(this);
 
 			//_autoplay = true;
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
@@ -154,7 +157,7 @@
 			
 
 			// position and hide
-			_fullscreenButton = getChildByName("fullscreen_btn") as SimpleButton;
+			_fullscreenButton = _mediaElementDisplay.getChildByName("fullscreen_btn") as SimpleButton;
 			//_fullscreenButton.visible = false;
 			_fullscreenButton.alpha = 0;
 			_fullscreenButton.addEventListener(MouseEvent.CLICK, fullscreenClick, false);
@@ -195,7 +198,7 @@
 
 
 			// controls!
-			_controlBar = getChildByName("controls_mc") as MovieClip;
+			_controlBar = _mediaElementDisplay.getChildByName("controls_mc") as MovieClip;
 			_controlBarBg = _controlBar.getChildByName("controls_bg_mc") as MovieClip;
 			_scrubTrack = _controlBar.getChildByName("scrubTrack") as MovieClip;
 			_scrubBar = _controlBar.getChildByName("scrubBar") as MovieClip;
@@ -223,11 +226,11 @@
 			_volumeUnMuted.addEventListener(MouseEvent.CLICK, toggleVolume, false);
 			
 			_playButton = _controlBar.getChildByName("play_btn") as SimpleButton;
-			_playButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) {
+			_playButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				_mediaElement.play();					 
 			});
 			_pauseButton = _controlBar.getChildByName("pause_btn") as SimpleButton;
-			_pauseButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent) {
+			_pauseButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
 				_mediaElement.pause();					 
 			});
 			_pauseButton.visible = false;
@@ -365,7 +368,7 @@
 		}
 				
 		// START: Controls and events
-		function mouseActivityMove(event:MouseEvent):void {
+		private function mouseActivityMove(event:MouseEvent):void {
 			
 			// if mouse is in the video area
 			if (_autoHide && (mouseX>=0 && mouseX<=stage.stageWidth) && (mouseY>=0 && mouseY<=stage.stageHeight)) {
@@ -379,7 +382,7 @@
 			}
 		}
 		
-		function mouseActivityLeave(event:Event):void {
+		private function mouseActivityLeave(event:Event):void {
 			if (_autoHide) {
 				_isOverStage = false;
 				// This could be move to a nice fade at some point...
@@ -391,7 +394,7 @@
 			}
 		}
 		
-		function idleTimer(event:TimerEvent):void    {
+		private function idleTimer(event:TimerEvent):void    {
           
 			if (_autoHide) {
 				// This could be move to a nice fade at some point...
@@ -405,7 +408,7 @@
 		}
         
 		
-		function scrubMove(event:MouseEvent):void {
+		private function scrubMove(event:MouseEvent):void {
 			
 			//if (_alwaysShowControls) {
 				if (_hoverTime.visible) {
@@ -424,20 +427,20 @@
 			//trace(event);
 		}
 		
-		function scrubOver(event:MouseEvent):void {
+		private function scrubOver(event:MouseEvent):void {
 			_hoverTime.y = _scrubBar.y-(_hoverTime.height/2)+1;
 			_hoverTime.visible = true;
 			trace(event);
 		}
 		
-		function scrubOut(event:MouseEvent):void {
+		private function scrubOut(event:MouseEvent):void {
 			_hoverTime.y = _scrubBar.y+(_hoverTime.height/2)+1;
 			_hoverTime.visible = false;
 			//_hoverTime.x=0;
 			//trace(event);
 		}
 		
-		function scrubClick(event:MouseEvent):void {
+		private function scrubClick(event:MouseEvent):void {
 			//trace(event);
 			var seekBarPosition:Number =  ((event.localX / _scrubTrack.width) *_mediaElement.duration())*_scrubTrack.scaleX;
 
@@ -458,7 +461,7 @@
 			}
 		}
 		
-		function toggleVolume(event:MouseEvent):void {
+		public function toggleVolume(event:MouseEvent):void {
 			trace(event.currentTarget.name);
 			switch(event.currentTarget.name) {
 				case "muted_mc":
@@ -470,7 +473,7 @@
 			}
 		}
 		
-		function toggleVolumeIcons(volume:Number) {
+		private function toggleVolumeIcons(volume:Number):void {
 			if(volume<=0) {
 				_volumeMuted.visible = true;
 				_volumeUnMuted.visible = false;
@@ -480,7 +483,7 @@
 			}
 		}
 		
-		public function positionControls(forced:Boolean=false) {
+		private function positionControls(forced:Boolean=false):void {
 			
 			
 			if ( _controlStyle.toUpperCase() == "FLOATING" && _isFullScreen) {
@@ -584,12 +587,12 @@
 		// END: Controls
 		
 
-		function stageClicked(e:MouseEvent):void {
+		public function stageClicked(e:MouseEvent):void {
 			//_output.appendText("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");
 			sendEvent("click", "");
 		}
 
-		function resizeHandler(e:Event):void {
+		public function resizeHandler(e:Event):void {
 			//_video.scaleX = stage.stageWidth / _stageWidth;
 			//_video.scaleY = stage.stageHeight / _stageHeight;
 			//positionControls();
@@ -598,7 +601,7 @@
 		}
 
 		// START: Fullscreen		
-		function enterFullscreen() {
+		private function enterFullscreen():void {
 			
 			_output.appendText("enterFullscreen()\n"); 
 			
@@ -616,7 +619,7 @@
 			_isFullScreen = true;
 		}
 		
-		function exitFullscreen() {
+		private function exitFullscreen():void {
 		
 			stage.displayState = StageDisplayState.NORMAL;
 				
@@ -626,7 +629,7 @@
 			_isFullScreen = false;	
 		}
 
-		function setFullscreen(gofullscreen:Boolean) {
+		public function setFullscreen(gofullscreen:Boolean):void {
 
 			_output.appendText("setFullscreen: " + gofullscreen.toString() + "\n"); 
 
@@ -653,7 +656,7 @@
 		}
 		
 		// control bar button/icon 
-		function fullScreenIconClick(e:MouseEvent) {
+		public function fullScreenIconClick(e:MouseEvent):void {
 			try {
 				_controlBar.visible = true;
 				setFullscreen(!_isFullScreen);
@@ -663,7 +666,7 @@
 		}
 
 		// special floating fullscreen icon
-		function fullscreenClick(e:MouseEvent) {
+		public function fullscreenClick(e:MouseEvent):void {
 			//_fullscreenButton.visible = false;
 			_fullscreenButton.alpha = 0
 
@@ -677,7 +680,7 @@
 		}
 		
 		
-		function stageFullScreenChanged(e:FullScreenEvent) {
+		public function stageFullScreenChanged(e:FullScreenEvent):void {
 			_output.appendText("fullscreen event: " + e.fullScreen.toString() + "\n");   
 
 			//_fullscreenButton.visible = false;
@@ -693,49 +696,49 @@
 		// END: Fullscreen
 
 		// START: external interface 
-		function playMedia() {
+		public function playMedia():void {
 			_output.appendText("play\n");
 			_mediaElement.play();
 		}
 
-		function loadMedia() {
+		public function loadMedia():void {
 			_output.appendText("load\n");
 			_mediaElement.load();
 		}
 
-		function pauseMedia() {
+		public function pauseMedia():void {
 			_output.appendText("pause\n");
 			_mediaElement.pause();
 		}
 
-		function setSrc(url:String) {
+		public function setSrc(url:String):void {
 			_output.appendText("setSrc: " + url + "\n");
 			_mediaElement.setSrc(url);
 		}
 
-		function stopMedia() {
+		public function stopMedia():void {
 			_output.appendText("stop\n");
 			_mediaElement.stop();
 		}
 
-		function setCurrentTime(time:Number) {
+		public function setCurrentTime(time:Number):void {
 			_output.appendText("seek: " + time.toString() + "\n");
 			_mediaElement.setCurrentTime(time);
 		}
 
-		function setVolume(volume:Number) {
+		public function setVolume(volume:Number):void {
 			_output.appendText("volume: " + volume.toString() + "\n");
 			_mediaElement.setVolume(volume);
 			toggleVolumeIcons(volume);
 		}
 
-		function setMuted(muted:Boolean) {
+		public function setMuted(muted:Boolean):void {
 			_output.appendText("muted: " + muted.toString() + "\n");
 			_mediaElement.setMuted(muted);
 			toggleVolumeIcons(_mediaElement.getVolume());
 		}
 
-		function setVideoSize(width:Number, height:Number) {
+		public function setVideoSize(width:Number, height:Number):void {
 			_output.appendText("setVideoSize: " + width.toString() + "," + height.toString() + "\n");
 
 			_stageWidth = width;
@@ -751,7 +754,7 @@
 			
 		}
 		
-		function positionFullscreenButton(x:Number, y:Number, visibleAndAbove:Boolean ) {
+		public function positionFullscreenButton(x:Number, y:Number, visibleAndAbove:Boolean ):void {
 			
 			_output.appendText("position FS: " + x.toString() + "x" + y.toString() + "\n");
 			
@@ -780,7 +783,7 @@
 			}
 		}
 		
-		function hideFullscreenButton() {
+		public function hideFullscreenButton():void {
 		
 			//_fullscreenButton.visible = false;
 			_fullscreenButton.alpha = 0;
@@ -789,7 +792,7 @@
 		// END: external interface
 		
 
-		function repositionVideo(fullscreen:Boolean = false):void {
+		private function repositionVideo(fullscreen:Boolean = false):void {
 
 			_output.appendText("positioning video\n");
 
@@ -801,7 +804,7 @@
 				}
 	
 				// calculate ratios
-				var stageRatio, nativeRatio;
+				var stageRatio:Number, nativeRatio:Number;
 				
 				_video.x = 0;
 				_video.y = 0;			
@@ -854,7 +857,7 @@
 		}
 
 		// SEND events to JavaScript
-		public function sendEvent(eventName:String, eventValues:String) {			
+		public function sendEvent(eventName:String, eventValues:String):void {			
 
 			// special video event
 			if (eventName == HtmlMediaEvent.LOADEDMETADATA && _isVideo) {
@@ -916,7 +919,7 @@
 		}
 
 
-		function updateControls(eventName:String):void {
+		private function updateControls(eventName:String):void {
 
 			//trace("updating controls");
 			
@@ -958,7 +961,7 @@
 		}
 
 		// START: utility
-		function secondsToTimeCode(seconds:Number):String {
+		private function secondsToTimeCode(seconds:Number):String {
 			var timeCode:String = "";
 			seconds = Math.round(seconds);
 			var minutes:Number = Math.floor(seconds / 60);
@@ -968,7 +971,7 @@
 			return timeCode; //minutes.toString() + ":" + seconds.toString();
 		}
 		
-		function applyColor(item:Object, color:String):void {
+		private function applyColor(item:Object, color:String):void {
 			
 			var myColor:ColorTransform = item.transform.colorTransform;
 			myColor.color = Number(color);
