@@ -1,15 +1,6 @@
+
 // VAST ads plugin
 // Sponsored by Minoto Video
-
-// 2013/02/01		0.5		research
-// 2013/02/09		1.5		build loading mechanism
-// 2013/02/10		2.5		events to play preroll, skip function, start/end calls, \
-// 2013/02/11		2		click events
-
-
-// TODO 
-// - split into generic preroll, postroll
-// - send events
 
 (function($) {
 	
@@ -52,8 +43,24 @@
 				
 				console.log('VAST','mejsprerollstarted');
 				
-				if (t.vastAdTags.length > 0 && t.vastAdTags[0].trackingEvents['start']) {
-					t.adsLoadUrl(t.vastAdTags[0].trackingEvents['start']);
+				if (t.vastAdTags.length > 0) {
+				
+					var adTag = t.vastAdTags[0];
+					
+					// always fire this event
+					if (adTag.trackingEvents['start']) {
+						t.adsLoadUrl(adTag.trackingEvents['start']);
+					}
+
+					// only do impressions once
+					if (!adTag.shown && adTag.impressions.length > 0) {
+						
+						for (var i=0, il=adTag.impressions.length; i<il; i++) {
+							t.adsLoadUrl(adTag.impressions[i]);
+						}
+					}
+					
+					adTag.shown = true;
 				}
 				
 			});
