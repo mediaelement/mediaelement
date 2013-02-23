@@ -12,109 +12,28 @@
 // - send events
 
 (function($) {
-
-	// on time insert into head
-	$('head').append($('<style>' + 
-'.mejs-vast a {' +
-'	display: block; ' +
-'	position: absolute;' + 
-'	right: 0;' + 
-'	top: 0;' +
-'	width: 100%; ' +
-'	height: 100%; ' +
-'	display: block; ' + 
-'}' + 
-'.mejs-vast .mejs-vast-skip-block {' + 
-'	display: block; ' +
-'	position: absolute;' + 
-'	right: 0;' + 
-'	top: 0;' +
-'	padding: 10px; ' +
-'	background: #000; ' + 
-'	background: rgba(0,0,0,0.5); ' +
-'	color: #fff; ' + 
-'}' + 
-'.mejs-vast .mejs-vast-skip-button {' + 
-'	cursor: pointer; ' + 
-'}' + 
-'.mejs-vast .mejs-vast-skip-button:hover {' + 
-'	text-decoration: underline; ' + 
-'}' + 
-	'</style>'));
 	
-
 	$.extend(mejs.MepDefaults, {
 		// URL to vast data: 'http://minotovideo.com/sites/minotovideo.com/files/upload/eday_vast_tag.xml'
-		vastAdTagUrl: '',
-		
-		// if true, allows user to skip the pre-roll ad
-		vastEnableSkip: false,
-		
-		// if vastEnableSkip=true and this is a positive number, it will only allow skipping after the time has elasped
-		vastSkipSeconds: -1
+		vastAdTagUrl: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildvast: function(player, controls, layers, media) {
 
 			var t = this;			
-				
-			// add layer for ad links and skipping
-			player.vastAdLayer = 
-					$('<div class="mejs-layer mejs-overlay mejs-vast">' + 
-							'<a href="#" target="_blank">&nbsp;</a>' + 
-							'<div class="mejs-vast-skip-block">' + 
-								'<span class="mejs-vast-skip-message"></span>' +
-								'<span class="mejs-vast-skip-button">Skip Ad &raquo;</span>' +
-							'</div>' +
-						'</div>')
-							.insertBefore( layers.find('.mejs-overlay-play') )
-							.hide();
 			
-			player.vastAdLayer.find('a')
-						.on('click', $.proxy(t.vastAdClick, t) );
-
-			player.vastSkipBlock = player.vastAdLayer.find('.mejs-vast-skip-block').hide();
-			player.vastSkipMessage = player.vastAdLayer.find('.mejs-vast-skip-message').hide();			
-										
-			player.vastSkipButton = player.vastAdLayer.find('.mejs-vast-skip-button')
-														.on('click', $.proxy(t.vastAdSkipClick, t) );
-							
-							
-			// create proxies (only needed for events we want to remove later)
-			t.vastTryingToStartProxy = 		$.proxy(t.vastTryingToStart, t);
-			t.vastPrerollStartedProxy = 	$.proxy(t.vastPrerollStarted, t);
-			t.vastPrerollUpdateProxy = 		$.proxy(t.vastPrerollUpdate, t);
-			t.vastPrerollEndedProxy = 		$.proxy(t.vastPrerollEnded, t);
-			
-			// check for start
-			t.media.addEventListener('play', 			t.vastTryingToStartProxy );
-			t.media.addEventListener('playing', 		t.vastTryingToStartProxy );
-			t.media.addEventListener('canplay', 		t.vastTryingToStartProxy );
-			t.media.addEventListener('loadedmetadata', 	t.vastTryingToStartProxy );			
-			
-			if (player.options.vastAdTagUrl != '') {
+			// begin loading
+			if (t.options.vastAdTagUrl != '') {
 				t.vastLoadAdTagInfo();
-			}	
-			
-		},
-		
-		
-		vastTryingToStart: function() {
-			
-			var t = this;
-		
-			// make sure to pause until the ad data is loaded
-			if (t.vastAdTagIsLoading && !t.media.paused) {
-				t.media.pause();
-				
-				t.vastStartedPlaying = true;
 			}
-			
-			
-		},		
 		
-		vastCurrentMediaUrl: '',
+			// make sure the preroll ad system is ready (it will ensure it can't be called twice)
+			t.buildads(player, controls, layers, media);	
+			
+			
+			t.vastSetupEvents();					
+		},
 		
 		vastAdTagIsLoading: false,
 		
@@ -123,6 +42,34 @@
 		vastStartedPlaying: false,
 		
 		vastAdTags: [],
+		
+		vastSetupEvents: function() {
+			var t = this;
+			
+			
+			// START: preroll
+			t.container.on('mejsprerollstarted', function() {			
+				
+				console.log('VAST','mejsprerollstarted');
+				
+				if (t.vastAdTags.length > 0 && t.vastAdTags[0].trackingEvents['start']) {
+					t.adsLoadUrl(t.vastAdTags[0].trackingEvents['start']);
+				}
+				
+			});
+			
+			// END: preroll
+			t.container.on('mejsprerollended', function() {			
+
+				console.log('VAST','mejsprerollended');
+				
+				if (t.vastAdTags.length > 0 && t.vastAdTags[0].trackingEvents['complete']) {
+					t.adsLoadUrl(t.vastAdTags[0].trackingEvents['complete']);
+				}
+				
+			});			
+			
+		},
 
 		vastSetAdTagUrl: function(url) {
 		
@@ -130,7 +77,7 @@
 		
 			// set and reset
 			t.options.vastAdTagUrl = url;
-			t.options.vastAdTagIsLoaded = false;
+			t.vastAdTagIsLoaded = false;
 			t.vastAdTags = [];
 		},
 		
@@ -139,9 +86,11 @@
 			
 			var t = this;
 			
+			// set this to stop playback
+			t.adsDataIsLoading = true;
 			t.vastAdTagIsLoading = true;
 			
-			// try straigh load first
+			// try straight load first
 			t.loadAdTagInfoDirect();
 		}, 
 		
@@ -254,26 +203,14 @@
 			t.vastLoaded();
 		},
 
-		
 		vastLoaded: function() {
 			var t = this;
 			
 			t.vastAdTagIsLoaded = true;
 			t.vastAdTagIsLoading = false;
-			
-			// store current URL
-			t.vastCurrentMediaUrl = t.media.src;
-			
-			// attach events
-			t.media.addEventListener('timeupdate', $.proxy(t.vastShowAds, t) );
-			
+			t.adsDataIsLoading = false;
+					
 			t.vastStartPreroll();
-		},
-		
-		vastShowAds: function() {
-			var t = this;
-			
-			// TODO: look through stack for ads (midroll, overlay, etc.)
 		},
 		
 		vastStartPreroll: function() {
@@ -282,139 +219,8 @@
 			var t = this,
 				prerollMediaUrl = t.vastAdTags[0].mediaFiles[0].url;
 				
-			t.media.addEventListener('playing', 	t.vastPrerollStartedProxy );
-			t.media.addEventListener('ended', 		t.vastPrerollEndedProxy )
-			t.media.addEventListener('timeupdate', 	t.vastPrerollUpdateProxy );
-			
-			// change URLs to the preroll ad
-			t.vastCurrentMediaUrl = t.media.src;			
-			t.media.setSrc(prerollMediaUrl);
-			t.media.load();
-			
-			// if autoplay was on, or if the user pressed play 
-			// while the ad data was still loading, then start the ad right away
-			if (t.vastStartedPlaying) {
-				t.media.play();
-			}
-		},
-		
-		vastPrerollStarted: function() {
-			console.log('vastPrerollStarted');
-		
-			var t = this;
-			t.media.removeEventListener('playing', t.vastPrerollStartedProxy);		
-			
-			// turn off controls until the preroll is done
-			t.disableControls();
-			t.hideControls();
-			
-			// enable clicking through
-			t.vastAdLayer.show();
-			t.vastAdLayer.find('a').attr('href', t.vastAdTags[0].clickThrough);
-			
-			// possibly allow the skip button to work
-			if (t.options.vastEnableSkip) {
-				t.vastSkipBlock.show();
-
-				if (t.options.vastSkipSeconds > 0) {
-					t.vastSkipMessage.html('Skip in ' + t.options.vastSkipSeconds.toString() + ' seconds.').show();
-					t.vastSkipButton.hide();					
-				} else {
-					t.vastSkipMessage.hide();
-					t.vastSkipButton.show();					
-				}
-			} else {
-				t.vastSkipBlock.hide();
-			}
-			
-			// send click events
-			if (t.vastAdTags[0].trackingEvents['start']) {
-				t.vastLoadUrl(t.vastAdTags[0].trackingEvents['start']);
-			}
-			
-			t.vastAdTags[0].shown = true;
-		},
-
-		vastPrerollUpdate: function() {
-			console.log('vastPrerollUpdate');
-		
-			var t = this;
-			
-			if (t.options.vastEnableSkip && t.options.vastSkipSeconds > 0) {
-				// update message
-				if (t.media.currentTime > t.options.vastSkipSeconds) {
-					t.vastSkipButton.show();
-					t.vastSkipMessage.hide();				
-				} else {
-					t.vastSkipMessage.html('Skip in ' + Math.round( t.options.vastSkipSeconds - t.media.currentTime ).toString() + ' seconds.')
-				}
-			
-			}
-			
-			
-		},
-		
-		vastPrerollEnded: function() {
-			console.log('vastPrerollEnded');
-			
-			var t = this;
-
-			if (t.vastAdTags[0].trackingEvents['complete']) {
-				t.vastLoadUrl(t.vastAdTags[0].trackingEvents['complete']);
-			}		
-			
-			t.vastRestoreMainMedia();
-		},
-		
-		vastRestoreMainMedia: function() {
-
-			var t = this;
-			
-			t.media.setSrc(t.vastCurrentMediaUrl);
-			t.media.load();
-			t.media.play();
-			
-			t.enableControls();
-			t.showControls();	
-			
-			t.vastAdLayer.hide();				
-			
-			t.media.removeEventListener('ended', 		t.vastPrerollEndedProxy);
-			t.media.removeEventListener('timeupdate', 	t.vastPrerollUpdateProxy);				
-		},
-
-		vastAdClick: function() {
-			console.log('vastAdClicked');
-			
-			var t = this;
-			
-			if (t.media.paused) {
-				t.media.play();
-			} else {
-				t.media.pause();
-			}
-			
-			// open in new window?
-		},
-		
-		vastAdSkipClick: function() {
-			console.log('vastAdSkipClick');		
-
-			var t = this;
-			
-			t.vastRestoreMainMedia();		
-		},
-		
-		vastLoadUrl: function(url) {
-			console.log('vastLoadUrl', url);		
-			
-			var img = new Image(),
-				rnd = Math.round(Math.random()*100000);
-				
-			img.src = url + ((url.indexOf('?') > 0) ? '&' : '?') + 'random' + rnd + '=' + rnd;
-			img.loaded = function() {
-				img = null;
-			}
+			t.options.adsPrerollMediaUrl = prerollMediaUrl;
+			t.adsStartPreroll();
 		}
 		
 	});

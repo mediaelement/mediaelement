@@ -95,13 +95,13 @@
 							.hide();
 			
 			player.adLayer.find('a')
-						.on('click', $.proxy(t.adAdClick, t) );
+						.on('click', $.proxy(t.adadsAdClick, t) );
 
 			player.adSkipBlock = player.adLayer.find('.mejs-ads-skip-block').hide();
 			player.asSkipMessage = player.adLayer.find('.mejs-ads-skip-message').hide();			
 										
 			player.adSkipButton = player.adLayer.find('.mejs-ads-skip-button')
-														.on('click', $.proxy(t.adAdSkipClick, t) );
+														.on('click', $.proxy(t.adadsSkipClick, t) );
 							
 							
 			// create proxies (only needed for events we want to remove later)
@@ -141,7 +141,7 @@
 					
 			var t = this;
 			
-			console.log('adsStartPreroll', t.options.adsPrerollMediaUrl);
+			console.log('adsStartPreroll', 'url', t.options.adsPrerollMediaUrl);
 			
 			
 			t.media.addEventListener('loadedmetadata', 		t.adsPrerollMetaProxy );	
@@ -179,7 +179,7 @@
 			
 			setTimeout(function() {
 				t.controls.find('.mejs-duration').html( 
-					mejs.Utility.secondsToTimeCode(newDuration, t.options.alwaysShowHours || t.media.duration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25)
+					mejs.Utility.secondsToTimeCode(newDuration, t.options.alwaysShowHours || newDuration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25)
 					);
 			}, 250);
 		},
@@ -220,7 +220,7 @@
 		},
 
 		adsPrerollUpdate: function() {
-			console.log('adsPrerollUpdate');
+			//console.log('adsPrerollUpdate');
 		
 			var t = this;
 			
@@ -250,11 +250,15 @@
 		
 		adRestoreMainMedia: function() {
 
+			console.log('adRestoreMainMedia', this.adsCurrentMediaUrl);
+
 			var t = this;
 			
 			t.media.setSrc(t.adsCurrentMediaUrl);
-			t.media.load();
-			t.media.play();
+			setTimeout(function() {
+				t.media.load();
+				t.media.play();
+			}, 10);
 			
 			t.enableControls();
 			t.showControls();	
@@ -268,8 +272,8 @@
 			t.container.trigger('mejsprerollmainstarted');
 		},
 
-		adClick: function(e) {
-			console.log('adClicked');
+		adsAdClick: function(e) {
+			console.log('adsAdClicked');
 			
 			var t = this;
 			
@@ -279,11 +283,11 @@
 				t.media.pause();
 			}
 			
-			t.container.trigger('mejsprerolladclicked');
+			t.container.trigger('mejsprerolladsclicked');
 		},
 		
-		adSkipClick: function() {
-			console.log('adSkipClick');		
+		adsSkipClick: function() {
+			console.log('adsSkipClick');		
 			var t = this;
 			
 			t.container.trigger('mejsprerollskipclicked');			
@@ -292,8 +296,8 @@
 		},
 		
 		// fires off fake XHR requests
-		adLoadUrl: function(url) {
-			console.log('adLoadUrl', url);		
+		adsLoadUrl: function(url) {
+			console.log('adsLoadUrl', url);		
 			
 			var img = new Image(),
 				rnd = Math.round(Math.random()*100000);
