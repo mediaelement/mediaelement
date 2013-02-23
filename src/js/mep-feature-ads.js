@@ -5,7 +5,8 @@
 // 2013/02/09		1.5		build loading mechanism
 // 2013/02/10		2.5		events to play preroll, skip function, start/end calls, \
 // 2013/02/11		2		click events
-
+// ----
+// 2013/02/23		3		split into a generic pre-roll plugin
 
 // TODO 
 // - split into generic preroll, postroll
@@ -83,7 +84,7 @@
 			}
 				
 			// add layer for ad links and skipping
-			player.adLayer = 
+			player.adsLayer = 
 					$('<div class="mejs-layer mejs-overlay mejs-ads">' + 
 							'<a href="#" target="_blank">&nbsp;</a>' + 
 							'<div class="mejs-ads-skip-block">' + 
@@ -94,28 +95,28 @@
 							.insertBefore( layers.find('.mejs-overlay-play') )
 							.hide();
 			
-			player.adLayer.find('a')
-						.on('click', $.proxy(t.adadsAdClick, t) );
+			player.adsLayer.find('a')
+						.on('click', $.proxy(t.adsAdClick, t) );
 
-			player.adSkipBlock = player.adLayer.find('.mejs-ads-skip-block').hide();
-			player.asSkipMessage = player.adLayer.find('.mejs-ads-skip-message').hide();			
+			player.adsSkipBlock = player.adsLayer.find('.mejs-ads-skip-block').hide();
+			player.adsSkipMessage = player.adsLayer.find('.mejs-ads-skip-message').hide();			
 										
-			player.adSkipButton = player.adLayer.find('.mejs-ads-skip-button')
-														.on('click', $.proxy(t.adadsSkipClick, t) );
+			player.adsSkipButton = player.adsLayer.find('.mejs-ads-skip-button')
+														.on('click', $.proxy(t.adsSkipClick, t) );
 							
 							
 			// create proxies (only needed for events we want to remove later)
-			t.adMediaTryingToStartProxy = 	$.proxy(t.adMediaTryingToStart, t);
+			t.adsMediaTryingToStartProxy = 	$.proxy(t.adsMediaTryingToStart, t);
 			t.adsPrerollStartedProxy = 		$.proxy(t.adsPrerollStarted, t);
-			t.adsPrerollMetaProxy = 			$.proxy(t.adsPrerollMeta, t);
+			t.adsPrerollMetaProxy = 		$.proxy(t.adsPrerollMeta, t);
 			t.adsPrerollUpdateProxy = 		$.proxy(t.adsPrerollUpdate, t);
 			t.adsPrerollEndedProxy = 		$.proxy(t.adsPrerollEnded, t);
 			
 			// check for start
-			t.media.addEventListener('play', 			t.adMediaTryingToStartProxy );
-			t.media.addEventListener('playing', 		t.adMediaTryingToStartProxy );
-			t.media.addEventListener('canplay', 		t.adMediaTryingToStartProxy );
-			t.media.addEventListener('loadedmetadata', 	t.adMediaTryingToStartProxy );	
+			t.media.addEventListener('play', 			t.adsMediaTryingToStartProxy );
+			t.media.addEventListener('playing', 		t.adsMediaTryingToStartProxy );
+			t.media.addEventListener('canplay', 		t.adsMediaTryingToStartProxy );
+			t.media.addEventListener('loadedmetadata', 	t.adsMediaTryingToStartProxy );	
 			
 			console.log('setup ads', t.options.adsPrerollMediaUrl);
 			
@@ -125,7 +126,7 @@
 		},
 		
 		
-		adMediaTryingToStart: function() {
+		adsMediaTryingToStart: function() {
 			
 			var t = this;
 		
@@ -195,24 +196,24 @@
 			t.hideControls();
 			
 			// enable clicking through
-			t.adLayer.show();
+			t.adsLayer.show();
 			if (t.options.adsPrerollAdUrl != '') {
-				t.adLayer.find('a').attr('href', t.options.adsPrerollAdUrl);
+				t.adsLayer.find('a').attr('href', t.options.adsPrerollAdUrl);
 			}
 			
 			// possibly allow the skip button to work
 			if (t.options.adsPrerollAdEnableSkip) {
-				t.adSkipBlock.show();
+				t.adsSkipBlock.show();
 
 				if (t.options.adsPrerollAdSkipSeconds > 0) {
-					t.asSkipMessage.html('Skip in ' + t.options.adsPrerollAdSkipSeconds.toString() + ' seconds.').show();
-					t.adSkipButton.hide();					
+					t.adsSkipMessage.html('Skip in ' + t.options.adsPrerollAdSkipSeconds.toString() + ' seconds.').show();
+					t.adsSkipButton.hide();					
 				} else {
-					t.asSkipMessage.hide();
-					t.adSkipButton.show();					
+					t.adsSkipMessage.hide();
+					t.adsSkipButton.show();					
 				}
 			} else {
-				t.adSkipBlock.hide();
+				t.adsSkipBlock.hide();
 			}
 			
 			// send click events
@@ -227,10 +228,10 @@
 			if (t.options.adsPrerollAdEnableSkip && t.options.adsPrerollAdSkipSeconds > 0) {
 				// update message
 				if (t.media.currentTime > t.options.adsPrerollAdSkipSeconds) {
-					t.adSkipButton.show();
-					t.asSkipMessage.hide();				
+					t.adsSkipButton.show();
+					t.adsSkipMessage.hide();				
 				} else {
-					t.asSkipMessage.html('Skip in ' + Math.round( t.options.adsPrerollAdSkipSeconds - t.media.currentTime ).toString() + ' seconds.')
+					t.adsSkipMessage.html('Skip in ' + Math.round( t.options.adsPrerollAdSkipSeconds - t.media.currentTime ).toString() + ' seconds.')
 				}
 			
 			}
@@ -263,7 +264,7 @@
 			t.enableControls();
 			t.showControls();	
 			
-			t.adLayer.hide();				
+			t.adsLayer.hide();				
 			
 			t.media.removeEventListener('ended', 			t.adsPrerollEndedProxy);
 			t.media.removeEventListener('loadedmetadata', 	t.adsPrerollMetaProxy);			
