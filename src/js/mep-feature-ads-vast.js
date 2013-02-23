@@ -191,17 +191,22 @@
 				
 		
 				adNode.find('MediaFile').each(function(index, node) {
-					var mediaFile = $(node);
-				
-					adTag.mediaFiles.push({
-						id: mediaFile.attr('id'),
-						delivery: mediaFile.attr('delivery'),
-						type: mediaFile.attr('type'),
-						bitrate: mediaFile.attr('bitrate'),
-						width: mediaFile.attr('width'),
-						height: mediaFile.attr('height'),
-						url:  $.trim( mediaFile.text() )
-					} );
+					var mediaFile = $(node),
+						type = mediaFile.attr('type');
+						
+					if (t.media.canPlayType(type).replace(/no/,'') != '') {
+					
+						adTag.mediaFiles.push({
+							id: mediaFile.attr('id'),
+							delivery: mediaFile.attr('delivery'),
+							type: mediaFile.attr('type'),
+							bitrate: mediaFile.attr('bitrate'),
+							width: mediaFile.attr('width'),
+							height: mediaFile.attr('height'),
+							url:  $.trim( mediaFile.text() )
+						} );
+						
+					}
 				});		
 				
 			});
@@ -223,11 +228,14 @@
 		vastStartPreroll: function() {
 			console.log('vastStartPreroll');
 						
-			var t = this,
-				prerollMediaUrl = t.vastAdTags[0].mediaFiles[0].url;
+			var t = this;
 				
-			t.options.adsPrerollMediaUrl = prerollMediaUrl;
-			t.adsStartPreroll();
+			// if we have a media URL, then send it up to the ads plugin as a preroll
+			if (t.vastAdTags.length > 0 && t.vastAdTags[0].mediaFiles.length > 0) {
+				
+				t.options.adsPrerollMediaUrl = t.vastAdTags[0].mediaFiles[0].url;
+				t.adsStartPreroll();
+			}
 		}
 		
 	});
