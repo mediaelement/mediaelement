@@ -6,11 +6,8 @@
 // 2013/02/10		2.5		events to play preroll, skip function, start/end calls, \
 // 2013/02/11		2		click events
 // ----
-// 2013/02/23		3		split into a generic pre-roll plugin
+// 2013/02/23		3.5		split into a generic pre-roll plugin
 
-// TODO 
-// - split into generic preroll, postroll
-// - send events
 
 (function($) {
 
