@@ -50,6 +50,8 @@
 		autosizeProgress : true,
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
+		// Display the video control
+		hideVideoControlsOnLoad: false,
         // Enable click video element to toggle play/pause
         clickToPlayPause: true,
 		// force iPad's native controls
@@ -588,7 +590,11 @@
 								}
 							});
 					}
-					
+
+					if(t.options.hideVideoControlsOnLoad) {
+						t.hideControls(false);
+					}
+
 					// check for autoplay
 					if (autoplay && !t.options.alwaysShowControls) {
 						t.hideControls();
