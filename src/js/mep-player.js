@@ -1057,7 +1057,7 @@
 			this.media.setSrc(src);
 		},
 		remove: function() {
-			var t = this, featureIndex;
+			var t = this, featureIndex, feature;
 			
 			// invoke features cleanup
 			for (featureIndex in t.options.features) {
@@ -1102,7 +1102,7 @@
 
 		function splitEvents(events, id) {
 			// add player ID as an event namespace so it's easier to unbind them all later
-			ret = {d: [], w: []};
+			var ret = {d: [], w: []};
 			$.each((events || '').split(' '), function(k, v){
 				ret[rwindow.test(v) ? 'w' : 'd'].push(v + '.' + id);
 			});
