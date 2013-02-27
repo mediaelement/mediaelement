@@ -1,7 +1,7 @@
 /*!
  * This is a i18n.locale language object.
  *
- *<de> German translation by Tim Latz, latz.tim@gmail.com
+ *<de> Traditional chinese translation by Tim Latz, latz.tim@gmail.com
  *
  * @author
  *   Tim Latz (latz.tim@gmail.com)
