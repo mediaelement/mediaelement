@@ -1082,12 +1082,14 @@
 			
 			// grab video and put it back in place
 			if (!t.isDynamic) {
-				if (t.media.pluginType === 'native') {
-					// clone to get rid of all event listeners at once
-					t.$node.clone().insertBefore(t.container);
-					t.$node.remove();
+				if (t.media && t.media.pluginType == 'native') {
+					// detach events from the video
+					// TODO: detach event listeners better than this;
+					//       also detach ONLY the events attached by this plugin!
+					//t.$node.clone().insertBefore(t.container);
+					//t.$node.remove();
 				}
-				else t.$node.insertBefore(t.container)
+				/*else*/ t.$node.insertBefore(t.container)
 			}
 			
 			t.container.remove();
