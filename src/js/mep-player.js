@@ -747,11 +747,11 @@
 						.width(parentWidth)
 						.height(newHeight);
 
-                    // set native <video> or <audio> and shims
-                    t.$media.add(t.container.find('.mejs-shim'))
-                        .width('100%')
-                        .height('100%');
-						
+					// set native <video> or <audio> and shims
+					t.$media.add(t.container.find('.mejs-shim'))
+						.width('100%')
+						.height('100%');
+
 					// if shim is ready, send the size to the embeded plugin	
 					if (t.isVideo) {
 						if (t.media.setVideoSize) {
