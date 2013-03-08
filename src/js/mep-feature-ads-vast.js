@@ -194,7 +194,7 @@
 					var mediaFile = $(node),
 						type = mediaFile.attr('type');
 						
-					if (t.media.canPlayType(type).replace(/no/,'') != '') {
+					if (t.media.canPlayType(type).toString().replace(/no/,'').replace(/false/,'') != '') {
 					
 						adTag.mediaFiles.push({
 							id: mediaFile.attr('id'),
