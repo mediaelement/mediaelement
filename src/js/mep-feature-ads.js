@@ -288,7 +288,8 @@
 			console.log('adsSkipClick');		
 			var t = this;
 			
-			t.container.trigger('mejsprerollskipclicked');			
+			t.container.trigger('mejsprerollskipclicked');
+			t.container.trigger('mejsprerollended');
 		
 			t.adRestoreMainMedia();
 		},
