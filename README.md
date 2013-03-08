@@ -85,6 +85,17 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)	
 
+*2.11.0 (2012/02/24)*
+
+* Preroll ads manager
+* VAST ads plugin (sponsored by Minito Video)
+* Calculate rails size only with visible elements (romanbsd) (https://github.com/johndyer/mediaelement/pull/773)
+* Round calculations of progress bar to prevent fractions (romanbsd) (https://github.com/johndyer/mediaelement/pull/768)
+* Fix AndroidUseNativeControls (LeResKP) (https://github.com/johndyer/mediaelement/pull/749)
+* Muting the volume icon if startVolume is set to 0 (heartcode) (https://github.com/johndyer/mediaelement/pull/747)
+* Make YouTube URL protocol relative (strworkstation) (https://github.com/johndyer/mediaelement/pull/761)
+* Prevent Flash audio player from sending too many 'progress' events (johndyer)
+
 *2.10.3 (2012/01/27)*
 
 * Fix broken scrollbar from API reference error (peterbrook) (https://github.com/johndyer/mediaelement/pull/739)
