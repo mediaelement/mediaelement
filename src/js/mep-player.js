@@ -1091,6 +1091,9 @@
 				}
 				/*else*/ t.$node.insertBefore(t.container)
 			}
+
+			// Remove the player from the mejs.players array so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
+			mejs.players.splice( $.inArray( t, mejs.players ), 1);
 			
 			t.container.remove();
 			t.globalUnbind();
