@@ -71,21 +71,20 @@
 					if (e.which === 1) {
 						mouseIsDown = true;
 						handleMouseMove(e);
-						$(document)
-							.bind('mousemove.dur', function(e) {
-								handleMouseMove(e);
-							})
-							.bind('mouseup.dur', function (e) {
-								mouseIsDown = false;
-								timefloat.hide();
-								$(document).unbind('.dur');
-							});
+						t.globalBind('mousemove.dur', function(e) {
+							handleMouseMove(e);
+						});
+						t.globalBind('mouseup.dur', function (e) {
+							mouseIsDown = false;
+							timefloat.hide();
+							t.globalUnbind('.dur');
+						});
 						return false;
 					}
 				})
 				.bind('mouseenter', function(e) {
 					mouseIsOver = true;
-					$(document).bind('mousemove.dur', function(e) {
+					t.globalBind('mousemove.dur', function(e) {
 						handleMouseMove(e);
 					});
 					if (!mejs.MediaFeatures.hasTouch) {
@@ -95,7 +94,7 @@
 				.bind('mouseleave',function(e) {
 					mouseIsOver = false;
 					if (!mouseIsDown) {
-						$(document).unbind('.dur');
+						t.globalUnbind('.dur');
 						timefloat.hide();
 					}
 				});
