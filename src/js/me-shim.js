@@ -9,6 +9,11 @@ mejs.MediaPluginBridge = {
 		this.htmlMediaElements[id] = htmlMediaElement;
 	},
 
+	unregisterPluginElement: function (id) {
+		delete this.pluginMediaElements[id];
+		delete this.htmlMediaElements[id];
+	},
+
 	// when Flash/Silverlight is ready, it calls out to this method
 	initPlugin: function (id) {
 
