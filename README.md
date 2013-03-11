@@ -100,7 +100,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 * Fix broken scrollbar from API reference error (peterbrook) (https://github.com/johndyer/mediaelement/pull/739)
 
-*2.10.2 (2012/01/26)*
+*2.10.2 (2013/01/26)*
 
 * The project is now MIT-only, instead of dual licensed MIT and GPL (just as jQuery has done: http://jquery.org/license/)
 * Fix audio height in 100% mode (https://github.com/johndyer/mediaelement/pull/667)
