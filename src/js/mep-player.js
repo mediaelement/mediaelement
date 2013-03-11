@@ -236,7 +236,7 @@
 					t.media.play();
 				}
 					
-			} else if (mf.isAndroid && t.AndroidUseNativeControls) {
+			} else if (mf.isAndroid && t.options.AndroidUseNativeControls) {
 				
 				// leave default player
 
@@ -807,7 +807,8 @@
 				
 				// find the size of all the other controls besides the rail
 				others.each(function() {
-					if ($(this).css('position') != 'absolute') {
+					var $this = $(this);
+					if ($this.css('position') != 'absolute' && $this.is(':visible')) {
 						usedWidth += $(this).outerWidth(true);
 					}
 				});
