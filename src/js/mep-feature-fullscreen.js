@@ -364,7 +364,7 @@
 					.width('100%')
 					.height('100%');
 			} else {
-				t.container.find('object, embed, iframe')
+				t.container.find('.mejs-shim')
 					.width('100%')
 					.height('100%');
 
