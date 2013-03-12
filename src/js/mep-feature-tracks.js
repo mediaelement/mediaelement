@@ -4,7 +4,9 @@
 	$.extend(mejs.MepDefaults, {
 		// this will automatically turn on a <track>
 		startLanguage: '',
-		
+		// If true and we only have one track, we don't display the captions menu,
+		// we just toggle the button.
+		toggleOnCaptionsButton: false,
 		tracksText: 'Captions/Subtitles'
 	});
 
@@ -40,35 +42,52 @@
 							'</ul>'+
 						'</div>'+
 					'</div>')
-						.appendTo(controls)
-						
-						// hover
-						.hover(function() {
-							$(this).find('.mejs-captions-selector').css('visibility','visible');
-						}, function() {
-							$(this).find('.mejs-captions-selector').css('visibility','hidden');
-						})					
-						
-						// handle clicks to the language radio buttons
-						.delegate('input[type=radio]','click',function() {
-							lang = this.value;
+						.appendTo(controls);
 
-							if (lang == 'none') {
-								player.selectedTrack = null;
-							} else {
-								for (i=0; i<player.tracks.length; i++) {
-									if (player.tracks[i].srclang == lang) {
-										player.selectedTrack = player.tracks[i];
-										player.captions.attr('lang', player.selectedTrack.srclang);
-										player.displayCaptions();
-										break;
-									}
-								}
-							}
-						});
-						//.bind('mouseenter', function() {
-						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
-						//});
+			var set_track = function(lang){
+				if (lang == 'none') {
+					player.selectedTrack = null;
+					player.captionsButton.removeClass('mejs-captions-enabled');
+				} else {
+					for (i=0; i<player.tracks.length; i++) {
+						if (player.tracks[i].srclang == lang) {
+							if (player.selectedTrack == null)
+							    player.captionsButton.addClass('mejs-captions-enabled');
+							player.selectedTrack = player.tracks[i];
+							player.captions.attr('lang', player.selectedTrack.srclang);
+							player.displayCaptions();
+							break;
+						}
+					}
+				}
+			};
+
+			if (t.options.toggleOnCaptionsButton && player.tracks.length == 1){
+				player.captionsButton.click(function(){
+					if (player.selectedTrack == null)
+						var lang = player.tracks[0].srclang;
+					else
+						var lang = 'none';
+					set_track(lang);
+				});
+			}
+			else{
+				// hover
+				player.captionsButton.hover(function() {
+					$(this).find('.mejs-captions-selector').css('visibility','visible');
+				}, function() {
+					$(this).find('.mejs-captions-selector').css('visibility','hidden');
+				})
+
+				// handle clicks to the language radio buttons
+				.delegate('input[type=radio]','click',function() {
+					lang = this.value;
+					set_track(lang);
+				});
+				//.bind('mouseenter', function() {
+				//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
+				//});
+			}
 
 			if (!player.options.alwaysShowControls) {
 				// move with controls
