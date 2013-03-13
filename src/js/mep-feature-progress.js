@@ -71,21 +71,20 @@
 					if (e.which === 1) {
 						mouseIsDown = true;
 						handleMouseMove(e);
-						$(document)
-							.bind('mousemove.dur', function(e) {
-								handleMouseMove(e);
-							})
-							.bind('mouseup.dur', function (e) {
-								mouseIsDown = false;
-								timefloat.hide();
-								$(document).unbind('.dur');
-							});
+						t.globalBind('mousemove.dur', function(e) {
+							handleMouseMove(e);
+						});
+						t.globalBind('mouseup.dur', function (e) {
+							mouseIsDown = false;
+							timefloat.hide();
+							t.globalUnbind('.dur');
+						});
 						return false;
 					}
 				})
 				.bind('mouseenter', function(e) {
 					mouseIsOver = true;
-					$(document).bind('mousemove.dur', function(e) {
+					t.globalBind('mousemove.dur', function(e) {
 						handleMouseMove(e);
 					});
 					if (!mejs.MediaFeatures.hasTouch) {
@@ -95,7 +94,7 @@
 				.bind('mouseleave',function(e) {
 					mouseIsOver = false;
 					if (!mouseIsDown) {
-						$(document).unbind('.dur');
+						t.globalUnbind('.dur');
 						timefloat.hide();
 					}
 				});
@@ -161,8 +160,8 @@
 				// update bar and handle
 				if (t.total && t.handle) {
 					var 
-						newWidth = t.total.width() * t.media.currentTime / t.media.duration,
-						handlePos = newWidth - (t.handle.outerWidth(true) / 2);
+						newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
+						handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
 
 					t.current.width(newWidth);
 					t.handle.css('left', handlePos);
