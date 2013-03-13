@@ -85,16 +85,25 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)	
 
-*2.11.0 (2012/02/24)*
+*2.11.0 (2012/03/13)*
 
 * Preroll ads manager
 * VAST ads plugin (sponsored by Minito Video)
+* Slides `<track>` type (non-standard HTML5 use)
 * Calculate rails size only with visible elements (romanbsd) (https://github.com/johndyer/mediaelement/pull/773)
 * Round calculations of progress bar to prevent fractions (romanbsd) (https://github.com/johndyer/mediaelement/pull/768)
 * Fix AndroidUseNativeControls (LeResKP) (https://github.com/johndyer/mediaelement/pull/749)
 * Muting the volume icon if startVolume is set to 0 (heartcode) (https://github.com/johndyer/mediaelement/pull/747)
 * Make YouTube URL protocol relative (strworkstation) (https://github.com/johndyer/mediaelement/pull/761)
 * Prevent Flash audio player from sending too many 'progress' events (johndyer)
+* Properly clean up player when calling MediaElementPlayer.remove() (odnamrataizem) (https://github.com/johndyer/mediaelement/pull/779)
+* Add "mejs-shim" class to all shims to prevent improper resizing (JeffreyATW) (https://github.com/johndyer/mediaelement/pull/789)
+* Bug fix for the error "this.pluginApi.pauseMedia is not a function" when using the flash player and removing the dom element. (Jmaharman) https://github.com/johndyer/mediaelement/pull/788
+* Make possible to open youtube links as audio only (Seb33300) https://github.com/johndyer/mediaelement/pull/784
+* Add a few basic Jasmine tests (msgilligan) https://github.com/johndyer/mediaelement/pull/781
+* Add option to hide the video controls on load (eResKP) https://github.com/johndyer/mediaelement/pull/780#issuecomment-14781622
+* [cc] button can now be a toggle when there's just one track (LeResKP) https://github.com/johndyer/mediaelement/pull/793
+* fixed error when srclang was missing
 
 *2.10.3 (2012/01/27)*
 
