@@ -5,7 +5,11 @@
 		// this will automatically turn on a <track>
 		startLanguage: '',
 		
-		tracksText: 'Captions/Subtitles'
+		tracksText: 'Captions/Subtitles',
+		
+		showCaptionsButtonWhenEmpty: false,
+		
+		slidesSelector: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -101,12 +105,22 @@
 				}
 			}
 
+			// start loading tracks
 			player.loadNextTrack();
 
 
 			media.addEventListener('timeupdate',function(e) {
 				player.displayCaptions();
 			}, false);
+			
+			if (player.options.slidesSelector != '') {
+				player.slidesContainer = $(player.options.slidesSelector);
+
+				media.addEventListener('timeupdate',function(e) {
+					player.displaySlides();	
+				}, false);
+			
+			}
 
 			media.addEventListener('loadedmetadata', function(e) {
 				player.displayChapters();
@@ -145,6 +159,8 @@
 			} else {
 				// add done?
 				t.isLoadingTrack = false;
+				
+				t.checkForTracks();	
 			}
 		},
 
@@ -186,6 +202,10 @@
 							}
 						}, false);
 					}
+					
+					if (track.kind == 'slides') {
+						t.setupSlides(track);
+					}					
 				},
 				error: function() {
 					t.loadNextTrack();
@@ -241,6 +261,28 @@
 				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
 			);
 		},
+		
+		checkForTracks: function() {
+			var
+				t = this,
+				hasSubtitles = false;
+			
+			// check if any subtitles
+			if (!t.options.showCaptionsButtonWhenEmpty) {
+				for (i=0; i<t.tracks.length; i++) {
+					if (t.tracks[i].kind == 'subtitles') {
+						hasSubtitles = true;
+						break;
+					}
+				}									
+			}
+			
+			if (!hasSubtitles) {
+				t.captionsButton.hide();
+				t.setControlsSize();
+			}		
+		
+		},
 
 		displayCaptions: function() {
 
@@ -263,6 +305,70 @@
 				t.captions.hide();
 			} else {
 				t.captions.hide();
+			}
+		},
+		
+		setupSlides: function(track) {
+			var t = this;
+				
+			t.slides = track;
+			t.slides.entries.imgs = [t.slides.entries.text.length];
+			t.showSlide(0);
+			
+		},
+		
+		showSlide: function(index) {
+			if (typeof this.tracks == 'undefined' || typeof this.slidesContainer == 'undefined') {
+				return;			
+			}
+								
+			var t = this,
+				url = t.slides.entries.text[index],
+				img = t.slides.entries.imgs[index];
+				
+			if (typeof img == 'undefined' || typeof img.fadeIn == 'undefined') {
+
+				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
+						.on('load', function() {
+							img.appendTo(t.slidesContainer)
+								.hide()
+								.fadeIn()
+								.siblings(':visible')
+									.fadeOut();							
+						
+						});
+			
+			} else {
+			
+				if (!img.is(':visible') && !img.is(':animated')) {
+				
+					console.log('showing existing slide');			
+					
+					img.fadeIn()
+						.siblings(':visible')
+							.fadeOut();			
+				}
+			}
+				
+		},
+		
+		displaySlides: function() {
+		
+			if (typeof this.slides == 'undefined')
+				return;	
+				
+			var 
+				t = this,
+				slides = t.slides,
+				i;				
+		
+			for (i=0; i<slides.entries.times.length; i++) {
+				if (t.media.currentTime >= slides.entries.times[i].start && t.media.currentTime <= slides.entries.times[i].stop){
+				
+					t.showSlide(i);
+					
+					return; // exit out if one is visible;
+				}
 			}
 		},
 
