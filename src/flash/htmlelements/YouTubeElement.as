@@ -1,4 +1,4 @@
-﻿package htmlelements
+package htmlelements
 {
   import flash.display.Sprite;
   import flash.events.*;
@@ -131,7 +131,7 @@
 
       // chromeless
       if (_isChromeless) {
-        _playerLoader.load(new URLRequest("http://www.youtube.com/apiplayer?version=3&controls=1&rel=0&showinfo=0&iv_load_policy=1"));
+        _playerLoader.load(new URLRequest("//www.youtube.com/apiplayer?version=3&controls=1&rel=0&showinfo=0&iv_load_policy=1"));
       }
       
       
@@ -307,7 +307,7 @@
       _youTubeId = getYouTubeId(url);
       
       if (!_playerIsLoaded && !_isChromeless) {
-        _playerLoader.load(new URLRequest("http://www.youtube.com/v/" + _youTubeId + "?version=3&controls=0&rel=0&showinfo=0&iv_load_policy=1"));
+        _playerLoader.load(new URLRequest("//www.youtube.com/v/" + _youTubeId + "?version=3&controls=0&rel=0&showinfo=0&iv_load_policy=1"));
       }
     }
     

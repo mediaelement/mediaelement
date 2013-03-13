@@ -1,4 +1,4 @@
-﻿package htmlelements 
+package htmlelements 
 {
   import flash.events.Event;
   import flash.events.IOErrorEvent;
@@ -37,6 +37,7 @@
     private var _bytesLoaded:Number = 0;
     private var _bytesTotal:Number = 0;
     private var _bufferedTime:Number = 0;
+    private var _bufferingChanged:Boolean = false;
 
     private var _currentUrl:String = "";
     private var _autoplay:Boolean = true;
@@ -82,7 +83,11 @@
       _bytesLoaded = e.bytesLoaded;
       _bytesTotal = e.bytesTotal;
 
-      sendEvent(HtmlMediaEvent.PROGRESS);
+      // this happens too much to send every time
+      //sendEvent(HtmlMediaEvent.PROGRESS);
+      
+      // so now we just trigger a flag and send with the timer
+      _bufferingChanged = true;
     }
 
     private function id3Handler(e:Event):void {
@@ -116,6 +121,14 @@
 
         _duration = duration;
         sendEvent(HtmlMediaEvent.LOADEDMETADATA);
+      }
+      
+      // check for progress
+      if (_bufferingChanged) {
+        
+        sendEvent(HtmlMediaEvent.PROGRESS);
+      
+        _bufferingChanged = false;
       }
 
       // send timeupdate

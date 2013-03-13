@@ -1,4 +1,4 @@
-﻿package htmlelements
+package htmlelements
 {
   import flash.display.Sprite;
   import flash.events.*;
@@ -37,6 +37,7 @@
     private var _bytesTotal:Number = 0;
     private var _bufferedTime:Number = 0;
     private var _bufferEmpty:Boolean = false;
+    private var _bufferingChanged:Boolean = false;
 
     private var _videoWidth:Number = -1;
     private var _videoHeight:Number = -1;
@@ -289,6 +290,10 @@
       // explicitly set the sound since it could have come before the connection was made
       _soundTransform = new SoundTransform(_volume);
       _stream.soundTransform = _soundTransform;            
+      
+      // set the buffer to ensure nice playback
+      _stream.bufferTime = 1;
+      _stream.bufferTimeMax = 3;      
       
       _stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
       _stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
