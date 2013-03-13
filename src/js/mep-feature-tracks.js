@@ -4,11 +4,16 @@
 	$.extend(mejs.MepDefaults, {
 		// this will automatically turn on a <track>
 		startLanguage: '',
-		
+
 		tracksText: 'Captions/Subtitles',
 		
-		showCaptionsButtonWhenEmpty: false,
-		
+		// option to remove the [cc] button when no <track kind="subtitles"> are present
+		hideCaptionsButtonWhenEmpty: true,
+
+		// If true and we only have one track, change captions to popup
+		toggleCaptionsButtonWhenOnlyOne: false,
+
+		// #id or .class		
 		slidesSelector: ''
 	});
 
@@ -23,13 +28,15 @@
 			if (player.tracks.length == 0)
 				return;
 
-			var t= this, i, options = '';
+			var t = this, 
+				i, 
+				options = '';
 
 			player.chapters = 
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();
 			player.captions = 
-					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position"><span class="mejs-captions-text"></span></div></div>')
+					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover"><span class="mejs-captions-text"></span></div></div>')
 						.prependTo(layers).hide();
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
@@ -44,35 +51,42 @@
 							'</ul>'+
 						'</div>'+
 					'</div>')
-						.appendTo(controls)
+						.appendTo(controls);
+			
 						
-						// hover
-						.hover(function() {
-							$(this).find('.mejs-captions-selector').css('visibility','visible');
-						}, function() {
-							$(this).find('.mejs-captions-selector').css('visibility','hidden');
-						})					
-						
-						// handle clicks to the language radio buttons
-						.delegate('input[type=radio]','click',function() {
-							lang = this.value;
+			var subtitleCount = 0;
+			for (i=0; i<player.tracks.length; i++) {
+				if (player.tracks[i].kind == 'subtitles') {
+					subtitleCount++;
+				}
+			}
 
-							if (lang == 'none') {
-								player.selectedTrack = null;
-							} else {
-								for (i=0; i<player.tracks.length; i++) {
-									if (player.tracks[i].srclang == lang) {
-										player.selectedTrack = player.tracks[i];
-										player.captions.attr('lang', player.selectedTrack.srclang);
-										player.displayCaptions();
-										break;
-									}
-								}
-							}
-						});
-						//.bind('mouseenter', function() {
-						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
-						//});
+			// if only one language then just make the button a toggle
+			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount == 1){
+				// click
+				player.captionsButton.on('click',function() {
+					if (player.selectedTrack == null) {
+						var lang = player.tracks[0].srclang;
+					} else {
+						var lang = 'none';
+					}
+					player.setTrack(lang);
+				});
+			} else {
+				// hover
+				player.captionsButton.hover(function() {
+					$(this).find('.mejs-captions-selector').css('visibility','visible');
+				}, function() {
+					$(this).find('.mejs-captions-selector').css('visibility','hidden');
+				})
+
+				// handle clicks to the language radio buttons
+				.on('click','input[type=radio]',function() {
+					lang = this.value;
+					player.setTrack(lang);
+				});
+
+			}
 
 			if (!player.options.alwaysShowControls) {
 				// move with controls
@@ -146,6 +160,28 @@
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
+			}
+		},
+		
+		setTrack: function(lang){
+		
+			var t = this,
+				i;
+		
+			if (lang == 'none') {
+				t.selectedTrack = null;
+				t.captionsButton.removeClass('mejs-captions-enabled');
+			} else {
+				for (i=0; i<t.tracks.length; i++) {
+					if (t.tracks[i].srclang == lang) {
+						if (t.selectedTrack == null)
+						    t.captionsButton.addClass('mejs-captions-enabled');
+						t.selectedTrack = t.tracks[i];
+						t.captions.attr('lang', t.selectedTrack.srclang);
+						t.displayCaptions();
+						break;
+					}
+				}
 			}
 		},
 
@@ -268,20 +304,19 @@
 				hasSubtitles = false;
 			
 			// check if any subtitles
-			if (!t.options.showCaptionsButtonWhenEmpty) {
+			if (t.options.hideCaptionsButtonWhenEmpty) {
 				for (i=0; i<t.tracks.length; i++) {
 					if (t.tracks[i].kind == 'subtitles') {
 						hasSubtitles = true;
 						break;
 					}
-				}									
-			}
-			
-			if (!hasSubtitles) {
-				t.captionsButton.hide();
-				t.setControlsSize();
+				}	
+					
+				if (!hasSubtitles) {
+					t.captionsButton.hide();
+					t.setControlsSize();
+				}													
 			}		
-		
 		},
 
 		displayCaptions: function() {
