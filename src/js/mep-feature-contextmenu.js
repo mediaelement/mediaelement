@@ -92,6 +92,10 @@ $.extend(mejs.MepDefaults,
 				
 			});		
 		},
+
+		cleancontextmenu: function(player) {
+			player.contextMenu.remove();
+		},
 		
 		isContextMenuEnabled: true,
 		enableContextMenu: function() {
