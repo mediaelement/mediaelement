@@ -367,7 +367,7 @@ mejs.HtmlMediaElementShim = {
 	
 	getTypeFromFile: function(url) {
 		url = url.split('?')[0];
-		var ext = url.substring(url.lastIndexOf('.') + 1);
+		var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
 		return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + this.getTypeFromExtension(ext);
 	},
 	
