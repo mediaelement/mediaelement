@@ -261,6 +261,8 @@
 			player.exitFullScreen();
 		},
 
+        containerSizeTimeout: null,
+
 		enterFullScreen: function() {
 
 			var t = this;
@@ -353,7 +355,7 @@
 			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
 			// Actually, it seems to be needed for IE8, too
 			//if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				setTimeout(function() {
+				t.containerSizeTimeout = setTimeout(function() {
 					t.container.css({width: '100%', height: '100%'});
 					t.setControlsSize();
 				}, 500);
@@ -390,6 +392,9 @@
 		exitFullScreen: function() {
 
 			var t = this;
+
+            // Prevent container from attempting to stretch a second time
+            clearTimeout(t.containerSizeTimeout);
 
 			// firefox can't adjust plugins
 			if (t.media.pluginType !== 'native' && mejs.MediaFeatures.isFirefox) {
