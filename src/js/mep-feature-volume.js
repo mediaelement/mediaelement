@@ -170,18 +170,17 @@
 				})
 				.bind('mousedown', function (e) {
 					handleVolumeMove(e);
-					$(document)
-						.bind('mousemove.vol', function(e) {
-							handleVolumeMove(e);
-						})
-						.bind('mouseup.vol', function () {
-							mouseIsDown = false;
-							$(document).unbind('.vol');
+					t.globalBind('mousemove.vol', function(e) {
+						handleVolumeMove(e);
+					});
+					t.globalBind('mouseup.vol', function () {
+						mouseIsDown = false;
+						t.globalUnbind('.vol');
 
-							if (!mouseIsOver && mode == 'vertical') {
-								volumeSlider.hide();
-							}
-						});
+						if (!mouseIsOver && mode == 'vertical') {
+							volumeSlider.hide();
+						}
+					});
 					mouseIsDown = true;
 						
 					return false;
