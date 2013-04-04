@@ -27,15 +27,7 @@
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
 
 				// chrome doesn't alays fire this in an iframe
-				var target = null;
-
-				if (mejs.MediaFeatures.hasMozNativeFullScreen) {
-					target = $(document);
-				} else {
-					target = player.container;
-				}
-
-				target.bind(mejs.MediaFeatures.fullScreenEventName, function(e) {
+				var func = function(e) {
 
 					if (mejs.MediaFeatures.isFullScreen()) {
 						player.isNativeFullScreen = true;
@@ -47,7 +39,13 @@
 						// make sure to put the player back into place
 						player.exitFullScreen();
 					}
-				});
+				};
+
+				if (mejs.MediaFeatures.hasMozNativeFullScreen) {
+					player.globalBind(mejs.MediaFeatures.fullScreenEventName, func);
+				} else {
+					player.container.bind(mejs.MediaFeatures.fullScreenEventName, func);
+				}
 			}
 
 			var t = this,
@@ -153,7 +151,7 @@
 										 left: fullScreenBtnOffset + fullScreenBtnWidth});
 							};
 
-						$(document).resize(function() {
+						t.globalBind('resize', function() {
 							positionHoverDivs();
 						});
 
@@ -193,7 +191,7 @@
 						// the mouseout event doesn't work on the fullscren button, because we already killed the pointer-events
 						// so we use the document.mousemove event to restore controls when the mouse moves outside the fullscreen button
 						/*
-						$(document).mousemove(function(e) {
+						t.globalBind('mousemove', function(e) {
 
 							// if the mouse is anywhere but the fullsceen button, then restore it all
 							if (fullscreenIsDisabled) {
@@ -251,13 +249,18 @@
 
 			player.fullscreenBtn = fullscreenBtn;
 
-			$(document).bind('keydown',function (e) {
+			t.globalBind('keydown',function (e) {
 				if (((mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || t.isFullScreen) && e.keyCode == 27) {
 					player.exitFullScreen();
 				}
 			});
 
 		},
+
+		cleanfullscreen: function(player) {
+			player.exitFullScreen();
+		},
+
 		enterFullScreen: function() {
 
 			var t = this;
@@ -361,7 +364,7 @@
 					.width('100%')
 					.height('100%');
 			} else {
-				t.container.find('object, embed, iframe')
+				t.container.find('.mejs-shim')
 					.width('100%')
 					.height('100%');
 
