@@ -21,7 +21,7 @@
 				
 				// horizontal version
 				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.muteText + '"></button>'+
+					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.muteText + '" aria-label="' + t.options.muteText + '"></button>'+
 				'</div>' +
 				'<div class="mejs-horizontal-volume-slider">'+ // outer background
 					'<div class="mejs-horizontal-volume-total"></div>'+ // line background
@@ -33,7 +33,7 @@
 				
 				// vertical version
 				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.muteText + '"></button>'+
+					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.muteText + '" aria-label="' + t.options.muteText + '"></button>'+
 					'<div class="mejs-volume-slider">'+ // outer background
 						'<div class="mejs-volume-total"></div>'+ // line background
 						'<div class="mejs-volume-current"></div>'+ // current volume
