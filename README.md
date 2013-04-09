@@ -81,9 +81,16 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * thin line when controls are off
 * system-wide events
-* playlist builder
 * Ogg/Theora playback
-* Better alignment with native MediaElement (using shimichanga.com techniques)	
+* Better alignment with native MediaElement (using shimichanga.com techniques)
+
+*2.11.1	(2012/04/09) *
+
+* Removed Ogg, WebM, and MP3 files to keep download under 10MB. Files are now at https://github.com/johndyer/mediaelement-files
+* Protocol relative YouTube URLs for IFRAME API (dtsosie) (https://github.com/johndyer/mediaelement/pull/825)
+* Added aria-label to all button elements (Luzifer) (https://github.com/johndyer/mediaelement/pull/824)
+* Fixed preroll adclick URL (johndyer)
+* Traditional chinese locale strings for i18n module (latzt) (https://github.com/johndyer/mediaelement/pull/820)
 
 *2.11.0 (2012/03/13)*
 
