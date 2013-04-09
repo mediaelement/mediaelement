@@ -12,7 +12,7 @@
 
 			player.sourcechooserButton =
 				$('<div class="mejs-button mejs-sourcechooser-button">'+
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.sourcechooserText + '"></button>'+
+					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.sourcechooserText + '" aria-label="' + t.options.sourcechooserText + '"></button>'+
 					'<div class="mejs-sourcechooser-selector">'+
 						'<ul>'+
 						'</ul>'+
