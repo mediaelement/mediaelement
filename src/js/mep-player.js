@@ -343,8 +343,10 @@
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 
-			// controls are shown when loaded
-			t.container.trigger('controlsshown');
+			if (typeof(t.container) != 'undefined'){
+			    // controls are shown when loaded
+			    t.container.trigger('controlsshown');
+			}
 		},
 		
 		showControls: function(doAnimation) {
