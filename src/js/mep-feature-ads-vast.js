@@ -205,7 +205,6 @@
 							height: mediaFile.attr('height'),
 							url:  $.trim( mediaFile.text() )
 						} );
-						
 					}
 				});		
 				
@@ -234,6 +233,7 @@
 			if (t.vastAdTags.length > 0 && t.vastAdTags[0].mediaFiles.length > 0) {
 				
 				t.options.adsPrerollMediaUrl = t.vastAdTags[0].mediaFiles[0].url;
+				t.options.adsPrerollAdUrl = t.vastAdTags[0].clickThrough;
 				t.adsStartPreroll();
 			}
 		}
