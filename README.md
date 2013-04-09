@@ -84,7 +84,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)
 
-*2.11.1	(2012/04/09) *
+*2.11.1	()*
 
 * Removed Ogg, WebM, and MP3 files to keep download under 10MB. Files are now at https://github.com/johndyer/mediaelement-files
 * Protocol relative YouTube URLs for IFRAME API (dtsosie) (https://github.com/johndyer/mediaelement/pull/825)
