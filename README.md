@@ -91,6 +91,10 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Added aria-label to all button elements (Luzifer) (https://github.com/johndyer/mediaelement/pull/824)
 * Fixed preroll adclick URL (johndyer)
 * Traditional chinese locale strings for i18n module (latzt) (https://github.com/johndyer/mediaelement/pull/820)
+* Allow captions on audio player (LeResKP) (https://github.com/johndyer/mediaelement/pull/819)
+* Fix incorrect path returned by getScriptPath(). (Ciki) (Fix incorrect path returned by getScriptPath())
+* Simple Flash Pseudo-streaming [set enablePseudoStreaming:true, pseudoStreamingStartQueryParam:'start'] (BryanMorgan) (https://github.com/johndyer/mediaelement/pull/814)
+* Overhauling hover div creation and placement (JeffreyATW) (https://github.com/johndyer/mediaelement/pull/813)
 
 *2.11.0 (2012/03/13)*
 
