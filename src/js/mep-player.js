@@ -553,7 +553,8 @@
 					} else {
             // click to play/pause
             t.media.addEventListener('click', function() {
-              if (t.options.clickToPlayPause) {
+              // Check clickTOPlay option and verify fullscreenBtn is incapable of receiving mouse events and therefore enabled
+              if (t.options.clickToPlayPause && (!t.fullscreenBtn || t.fullscreenBtn.css('pointer-events') == '')) {
                   if (t.media.paused) {
                     t.media.play();
                   } else {
