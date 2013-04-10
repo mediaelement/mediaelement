@@ -102,7 +102,11 @@ mejs.MediaElementDefaults = {
 	flashStreamer: '',
 	// turns on the smoothing filter in Flash
 	enablePluginSmoothing: false,
-	// name of silverlight file
+  // enabled pseudo-streaming (seek) on .mp4 files
+  enablePseudoStreaming: false,
+  // start query parameter sent to server for pseudo-streaming
+  pseudoStreamingStartQueryParam: 'start',
+  // name of silverlight file
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
 	defaultVideoWidth: 480,
@@ -484,7 +488,8 @@ mejs.HtmlMediaElementShim = {
 			'startvolume=' + options.startVolume,
 			'timerrate=' + options.timerRate,
 			'flashstreamer=' + options.flashStreamer,
-			'height=' + height];
+			'height=' + height,
+      'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
 
 		if (playback.url !== null) {
 			if (playback.method == 'flash') {
@@ -499,6 +504,9 @@ mejs.HtmlMediaElementShim = {
 		if (options.enablePluginSmoothing) {
 			initVars.push('smoothing=true');
 		}
+    if (options.enablePseudoStreaming) {
+      initVars.push('pseudostreaming=true');
+    }
 		if (controls) {
 			initVars.push('controls=true'); // shows controls in the plugin if desired
 		}
