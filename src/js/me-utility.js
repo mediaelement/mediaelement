@@ -1,4 +1,3 @@
-
 /*
 Utility methods
 */
@@ -20,6 +19,7 @@ mejs.Utility = {
 			j,
 			path = '',
 			name = '',
+			pos,
 			script,
 			scripts = document.getElementsByTagName('script'),
 			il = scripts.length,
@@ -29,8 +29,9 @@ mejs.Utility = {
 			script = scripts[i].src;
 			for (j = 0; j < jl; j++) {
 				name = scriptNames[j];
-				if (script.indexOf(name) > -1) {
-					path = script.substring(0, script.indexOf(name));
+				pos = script.indexOf(name);
+				if (pos > -1 && pos == script.length - name.length) {
+					path = script.substring(0, pos);
 					break;
 				}
 			}
