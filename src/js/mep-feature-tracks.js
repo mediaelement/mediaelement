@@ -22,9 +22,6 @@
 		hasChapters: false,
 
 		buildtracks: function(player, controls, layers, media) {
-			if (!player.isVideo)
-				return;
-
 			if (player.tracks.length == 0)
 				return;
 
@@ -41,7 +38,7 @@
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.tracksText + '"></button>'+
+						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.tracksText + '" aria-label="' + t.options.tracksText + '"></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
