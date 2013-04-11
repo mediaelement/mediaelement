@@ -102,11 +102,11 @@ mejs.MediaElementDefaults = {
 	flashStreamer: '',
 	// turns on the smoothing filter in Flash
 	enablePluginSmoothing: false,
-  // enabled pseudo-streaming (seek) on .mp4 files
-  enablePseudoStreaming: false,
-  // start query parameter sent to server for pseudo-streaming
-  pseudoStreamingStartQueryParam: 'start',
-  // name of silverlight file
+	// enabled pseudo-streaming (seek) on .mp4 files
+	enablePseudoStreaming: false,
+	// start query parameter sent to server for pseudo-streaming
+	pseudoStreamingStartQueryParam: 'start',
+	// name of silverlight file
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
 	defaultVideoWidth: 480,
