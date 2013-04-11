@@ -359,8 +359,10 @@ if (typeof jQuery != 'undefined') {
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 
-			// controls are shown when loaded
-			t.container.trigger('controlsshown');
+			if (typeof(t.container) != 'undefined'){
+			    // controls are shown when loaded
+			    t.container.trigger('controlsshown');
+			}
 		},
 		
 		showControls: function(doAnimation) {
@@ -1109,13 +1111,12 @@ if (typeof jQuery != 'undefined') {
 				/*else*/ t.$node.insertBefore(t.container)
 			}
 
-			// Remove the player from the mejs.players array so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
-			mejs.players.splice( $.inArray( t, mejs.players ), 1);
+			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
+			delete mejs.players[t.id];
 			
 			t.container.remove();
 			t.globalUnbind();
 			delete t.node.player;
-			delete mejs.players[t.id];
 		}
 	};
 
@@ -1854,9 +1855,9 @@ if (typeof jQuery != 'undefined') {
 							restoreControls = function() {
 								if (fullscreenIsDisabled) {
 									// hide the hovers
-									videoHoverDiv.hide();
-									controlsLeftHoverDiv.hide();
-									controlsRightHoverDiv.hide();
+									for (var i in hoverDivs) {
+										hoverDivs[i].hide();
+									}
 
 									// restore the control bar
 									fullscreenBtn.css('pointer-events', '');
@@ -1866,40 +1867,53 @@ if (typeof jQuery != 'undefined') {
 									fullscreenIsDisabled = false;
 								}
 							},
-							videoHoverDiv = $('<div class="mejs-fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls),
-							controlsLeftHoverDiv = $('<div class="mejs-fullscreen-hover"  />').appendTo(t.container).mouseover(restoreControls),
-							controlsRightHoverDiv = $('<div class="mejs-fullscreen-hover"  />').appendTo(t.container).mouseover(restoreControls),
+							hoverDivs = {},
+							hoverDivNames = ['top', 'left', 'right', 'bottom'],
+							i, len,
 							positionHoverDivs = function() {
-								var style = {position: 'absolute', top: 0, left: 0}; //, backgroundColor: '#f00'};
-								videoHoverDiv.css(style);
-								controlsLeftHoverDiv.css(style);
-								controlsRightHoverDiv.css(style);
+								var fullScreenBtnOffsetLeft = fullscreenBtn.offset().left - t.container.offset().left,
+									fullScreenBtnOffsetTop = fullscreenBtn.offset().top - t.container.offset().top,
+									fullScreenBtnWidth = fullscreenBtn.outerWidth(true),
+									fullScreenBtnHeight = fullscreenBtn.outerHeight(true),
+									containerWidth = t.container.width(),
+									containerHeight = t.container.height();
+
+							  for (i in hoverDivs) {
+									hoverDivs[i].css({position: 'absolute', top: 0, left: 0}); //, backgroundColor: '#f00'});
+								}
 
 								// over video, but not controls
-								videoHoverDiv
-									.width( t.container.width() )
-									.height( t.container.height() - t.controls.height() );
+								hoverDivs['top']
+									.width( containerWidth )
+									.height( fullScreenBtnOffsetTop );
 
 								// over controls, but not the fullscreen button
-								var fullScreenBtnOffset = fullscreenBtn.offset().left - t.container.offset().left;
-									fullScreenBtnWidth = fullscreenBtn.outerWidth(true);
-
-								controlsLeftHoverDiv
-									.width( fullScreenBtnOffset )
-									.height( t.controls.height() )
-									.css({top: t.container.height() - t.controls.height()});
+								hoverDivs['left']
+									.width( fullScreenBtnOffsetLeft )
+									.height( fullScreenBtnHeight )
+									.css({top: fullScreenBtnOffsetTop});
 
 								// after the fullscreen button
-								controlsRightHoverDiv
-									.width( t.container.width() - fullScreenBtnOffset - fullScreenBtnWidth )
-									.height( t.controls.height() )
-									.css({top: t.container.height() - t.controls.height(),
-										 left: fullScreenBtnOffset + fullScreenBtnWidth});
+								hoverDivs['right']
+									.width( containerWidth - fullScreenBtnOffsetLeft - fullScreenBtnWidth )
+									.height( fullScreenBtnHeight )
+									.css({top: fullScreenBtnOffsetTop,
+										 left: fullScreenBtnOffsetLeft + fullScreenBtnWidth});
+
+								// under the fullscreen button
+								hoverDivs['bottom']
+									.width( containerWidth )
+									.height( containerHeight - fullScreenBtnHeight - fullScreenBtnOffsetTop )
+									.css({top: fullScreenBtnOffsetTop + fullScreenBtnHeight});
 							};
 
 						t.globalBind('resize', function() {
 							positionHoverDivs();
 						});
+
+						for (i = 0, len = hoverDivNames.length; i < len; i += 1) {
+							hoverDivs[hoverDivNames[i]] = $('<div class="mejs-fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls).hide();
+						}
 
 						// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
 						fullscreenBtn
@@ -1918,9 +1932,9 @@ if (typeof jQuery != 'undefined') {
 									t.controls.css('pointer-events', 'none');
 
 									// show the divs that will restore things
-									videoHoverDiv.show();
-									controlsRightHoverDiv.show();
-									controlsLeftHoverDiv.show();
+								  for (i in hoverDivs) {
+										hoverDivs[i].show();
+									}
 									positionHoverDivs();
 
 									fullscreenIsDisabled = true;
@@ -2006,6 +2020,8 @@ if (typeof jQuery != 'undefined') {
 		cleanfullscreen: function(player) {
 			player.exitFullScreen();
 		},
+
+        containerSizeTimeout: null,
 
 		enterFullScreen: function() {
 
@@ -2099,7 +2115,7 @@ if (typeof jQuery != 'undefined') {
 			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
 			// Actually, it seems to be needed for IE8, too
 			//if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
-				setTimeout(function() {
+				t.containerSizeTimeout = setTimeout(function() {
 					t.container.css({width: '100%', height: '100%'});
 					t.setControlsSize();
 				}, 500);
@@ -2136,6 +2152,9 @@ if (typeof jQuery != 'undefined') {
 		exitFullScreen: function() {
 
 			var t = this;
+
+            // Prevent container from attempting to stretch a second time
+            clearTimeout(t.containerSizeTimeout);
 
 			// firefox can't adjust plugins
 			if (t.media.pluginType !== 'native' && mejs.MediaFeatures.isFirefox) {
@@ -2209,9 +2228,6 @@ if (typeof jQuery != 'undefined') {
 		hasChapters: false,
 
 		buildtracks: function(player, controls, layers, media) {
-			if (!player.isVideo)
-				return;
-
 			if (player.tracks.length == 0)
 				return;
 
