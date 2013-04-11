@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.11.0';
+mejs.version = '2.11.1';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -36,7 +36,6 @@ mejs.plugins = {
 		{version: null, types: ['video/vimeo', 'video/x-vimeo']}
 	]
 };
-
 
 /*
 Utility methods
@@ -59,6 +58,7 @@ mejs.Utility = {
 			j,
 			path = '',
 			name = '',
+			pos,
 			script,
 			scripts = document.getElementsByTagName('script'),
 			il = scripts.length,
@@ -68,8 +68,9 @@ mejs.Utility = {
 			script = scripts[i].src;
 			for (j = 0; j < jl; j++) {
 				name = scriptNames[j];
-				if (script.indexOf(name) > -1) {
-					path = script.substring(0, script.indexOf(name));
+				pos = script.indexOf(name);
+				if (pos > -1 && pos == script.length - name.length) {
+					path = script.substring(0, pos);
 					break;
 				}
 			}
@@ -810,10 +811,10 @@ mejs.MediaElementDefaults = {
 	flashStreamer: '',
 	// turns on the smoothing filter in Flash
 	enablePluginSmoothing: false,
-  // enabled pseudo-streaming (seek) on .mp4 files
-  enablePseudoStreaming: false,
-  // start query parameter sent to server for pseudo-streaming
-  pseudoStreamingStartQueryParam: 'start',
+	// enabled pseudo-streaming (seek) on .mp4 files
+	enablePseudoStreaming: false,
+	// start query parameter sent to server for pseudo-streaming
+	pseudoStreamingStartQueryParam: 'start',
 	// name of silverlight file
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
@@ -1079,7 +1080,7 @@ mejs.HtmlMediaElementShim = {
 	
 	getTypeFromFile: function(url) {
 		url = url.split('?')[0];
-		var ext = url.substring(url.lastIndexOf('.') + 1);
+		var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
 		return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + this.getTypeFromExtension(ext);
 	},
 	
@@ -1196,7 +1197,7 @@ mejs.HtmlMediaElementShim = {
 			'startvolume=' + options.startVolume,
 			'timerrate=' + options.timerRate,
 			'flashstreamer=' + options.flashStreamer,
-      'height=' + height,
+			'height=' + height,
       'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
 
 		if (playback.url !== null) {
@@ -1383,7 +1384,7 @@ mejs.YouTubeApi = {
 	loadIframeApi: function() {
 		if (!this.isIframeStarted) {
 			var tag = document.createElement('script');
-			tag.src = "//www.youtube.com/player_api";
+			tag.src = "http://www.youtube.com/player_api";
 			var firstScriptTag = document.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 			this.isIframeStarted = true;
@@ -1501,7 +1502,7 @@ mejs.YouTubeApi = {
 		*/
 
 		var specialIEContainer,
-			youtubeUrl = '//www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0';
+			youtubeUrl = 'http://www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0';
 			
 		if (mejs.MediaFeatures.isIE) {
 			
@@ -1638,12 +1639,11 @@ window.MediaElement = mejs.MediaElement;
  *   me-i18n-locale.js
  *
  * @params
- *  - $       - zepto || jQuery  ..
  *  - context - document, iframe ..
  *  - exports - CommonJS, window ..
  *
  */
-;(function($, context, exports, undefined) {
+;(function(context, exports, undefined) {
     "use strict";
     var i18n = {
         "locale": {
@@ -1793,7 +1793,8 @@ window.MediaElement = mejs.MediaElement;
 
 // end i18n
     exports.i18n = i18n;
-}(jQuery, document, mejs));
+}(document, mejs));
+
 /*!
  * This is a i18n.locale language object.
  *
