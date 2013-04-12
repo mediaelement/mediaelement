@@ -88,6 +88,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 * Fixed overly aggressive XSS testing (excluding forward slashes)
 * Fixed line endings on Flash (*.as) files (markjaquith) (https://github.com/johndyer/mediaelement/pull/834)
+* Included protocol relative URL for YouTube (Dan Tsosie) (https://github.com/johndyer/mediaelement/pull/832)
 
 *2.11.1	(2013/04/11)*
 
