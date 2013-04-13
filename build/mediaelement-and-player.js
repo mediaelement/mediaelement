@@ -2753,6 +2753,7 @@ if (typeof jQuery != 'undefined') {
 			}	
 			
 			posterImg.attr('src', url);
+			// TODO: remove posterImg, add url as background image to posterDiv. 
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
