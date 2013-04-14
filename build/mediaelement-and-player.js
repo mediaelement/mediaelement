@@ -2748,12 +2748,8 @@ if (typeof jQuery != 'undefined') {
 				posterDiv = t.container.find('.mejs-poster'),
 				posterImg = posterDiv.find('img');
 				
-			if (posterImg.length == 0) {
-				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
-			}	
-			
-			posterImg.attr('src', url);
-			// TODO: remove posterImg, add url as background image to posterDiv. 
+			posterImg.remove();
+			posterDiv.css({'background-image' : 'url(' + url + ')'});
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
