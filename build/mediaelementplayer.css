@@ -52,6 +52,8 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+	background-size: contain ;
+	background-position: 50% 50% ;
 }
 .mejs-poster img {
 	border: 0;
