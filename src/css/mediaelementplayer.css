@@ -60,7 +60,7 @@
 	border: 0;
 	padding: 0;
 	border: 0;
-	display: block;
+	display: none;
 }
 .mejs-overlay {
 	position: absolute;
