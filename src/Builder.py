@@ -112,6 +112,19 @@ tmp_file = open('../build/' + combined_filename + '.min.js','w')
 tmp_file.write(code)
 tmp_file.close()
 
+# For RG build branch only - surround with require magic
+print('RG: Creating require.js version')
+code = ''
+src_file = open('js/rg-require-header.js','r')
+code += src_file.read() + "\n"
+src_file = open('../build/' + combined_filename + '.js','r')
+code += src_file.read() + "\n"
+src_file = open('js/rg-require-footer.js','r')
+code += src_file.read() + "\n"
+
+tmp_file = open('../build/' + combined_filename + '.require.js','w')
+tmp_file.write(code)
+tmp_file.close()
 
 # MINIFY CSS
 print('Minifying CSS')
