@@ -248,7 +248,7 @@ mejs.HtmlMediaElementShim = {
 		
 
 		// test for native playback first
-		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native')) {
+		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'native') && !(mejs.MediaFeatures.isBustedNativeHTTPS)) {
 						
 			if (!isMediaTag) {
 
