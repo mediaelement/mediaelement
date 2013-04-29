@@ -30,3 +30,4 @@ package htmlelements
     function currentProgress():Number;
     
   }
+}
