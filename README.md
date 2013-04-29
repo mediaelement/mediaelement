@@ -84,6 +84,16 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)
 
+*2.11.3	(2013/04/12 in progress)*
+
+* Change to `getScriptPath` to allow querystring variables to be added (for Wordpress Core)
+
+*2.11.2	(2013/04/12)*
+
+* Fixed overly aggressive XSS testing (excluding forward slashes)
+* Fixed line endings on Flash (*.as) files (markjaquith) (https://github.com/johndyer/mediaelement/pull/834)
+* Included protocol relative URL for YouTube (Dan Tsosie) (https://github.com/johndyer/mediaelement/pull/832)
+
 *2.11.1	(2013/04/11)*
 
 Major changes

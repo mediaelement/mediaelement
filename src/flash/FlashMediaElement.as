@@ -1,4 +1,4 @@
-﻿﻿package  
+  package  
 {
   import flash.display.*;
   import flash.events.*;
@@ -6,18 +6,18 @@
   import flash.net.*;
   import flash.text.*;
   import flash.system.*;
-
+  
   import flash.media.Video;
   import flash.net.NetConnection;
   import flash.net.NetStream;
   
   import flash.geom.ColorTransform;
-
+  
   import flash.filters.DropShadowFilter;
   import flash.utils.Timer;
   import flash.external.ExternalInterface;
   import flash.geom.Rectangle;
-
+  
   import htmlelements.IMediaElement;
   import htmlelements.VideoElement;
   import htmlelements.AudioElement;
@@ -41,6 +41,8 @@
     private var _controlStyle:String;
     private var _autoHide:Boolean = true;
     private var _streamer:String = "";
+    private var _enablePseudoStreaming:Boolean;
+    private var _pseudoStreamingStartQueryParam:String;
 
     // native video size (from meta data)
     private var _nativeVideoWidth:Number = 0;
@@ -87,13 +89,40 @@
         private var _idleTime:int;
         private var _isMouseActive:Boolean
     private var _isOverStage:Boolean = false;
+    
+    // security checkes
+    private var securityIssue:Boolean = false; // When SWF parameters contain illegal characters
+    private var directAccess:Boolean = false; // When SWF visited directly with no parameters (or when security issue detected)    
 
 
     public function FlashMediaElement():void {
 
       // show allow this player to be called from a different domain than the HTML page hosting the player
       Security.allowDomain("*");
+      
+      // check for security issues (borrowed from jPLayer)
+      checkFlashVars(loaderInfo.parameters);
+      
+      
+      // add debug output
+      _output = new TextField();
+      _output.textColor = 0xeeeeee;
+      _output.width = stage.stageWidth - 100;
+      _output.height = stage.stageHeight;
+      _output.multiline = true;
+      _output.wordWrap = true;
+      _output.border = false;
+      _output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
 
+      _output.text = "Initializing...\n";
+      addChild(_output);
+      _output.visible = securityIssue;      
+
+      if (securityIssue) {
+        _output.text = "WARNING: Security issue detected. Player stopped.";
+        return;
+      }
+        
       // get parameters
       var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
       _mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
@@ -110,9 +139,11 @@
       _scrubTrackColor = (params['scrubtrackcolor'] != undefined) ? (String(params['scrubtrackcolor'])) : "0x333333";
       _scrubBarColor = (params['scrubbarcolor'] != undefined) ? (String(params['scrubbarcolor'])) : "0xefefef";
       _scrubLoadedColor = (params['scrubloadedcolor'] != undefined) ? (String(params['scrubloadedcolor'])) : "0x3CACC8";
-      
+      _enablePseudoStreaming = (params['pseudostreaming'] != undefined) ? (String(params['pseudostreaming']) == "true") : false;      
+      _pseudoStreamingStartQueryParam = (params['pseudostreamstart'] != undefined) ? (String(params['pseudostreamstart'])) : "start";
       _streamer = (params['flashstreamer'] != undefined) ? (String(params['flashstreamer'])) : "";
 
+      _output.visible = _debug;  
       
       if (isNaN(_timerRate))
         _timerRate = 250;
@@ -140,20 +171,8 @@
       //_alwaysShowControls = true;
 
       //_debug=true;
-      
-      // debugging
-      _output = new TextField();
-      _output.textColor = 0xeeeeee;
-      _output.width = stage.stageWidth - 100;
-      _output.height = stage.stageHeight;
-      _output.multiline = true;
-      _output.wordWrap = true;
-      _output.border = false;
-      _output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
+    
 
-      _output.text = "Initializing...\n";
-      addChild(_output);
-      _output.visible = _debug;
       
 
       // position and hide
@@ -187,6 +206,8 @@
           _video.height = _stageHeight;
           (_video as Video).smoothing = _enableSmoothing;
           (_mediaElement as VideoElement).setReference(this);
+          (_mediaElement as VideoElement).setPseudoStreaming(_enablePseudoStreaming);
+          (_mediaElement as VideoElement).setPseudoStreamingStartParam(_pseudoStreamingStartQueryParam);
           //_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
           addChild(_video);
         }
@@ -352,8 +373,8 @@
       // listen for resize
       stage.addEventListener(Event.RESIZE, resizeHandler);
 
-      // test
-      stage.addEventListener(MouseEvent.MOUSE_DOWN, stageClicked);
+      // send click events up to javascript
+      stage.addEventListener(MouseEvent.CLICK, stageClicked);
       
       // resize
       stage.addEventListener(FullScreenEvent.FULL_SCREEN, stageFullScreenChanged);  
@@ -366,6 +387,34 @@
       addChild(_fullscreenButton);
       
     }
+        
+    // borrowed from jPLayer 
+    // https://github.com/happyworm/jPlayer/blob/e8ca190f7f972a6a421cb95f09e138720e40ed6d/actionscript/Jplayer.as#L228
+    private function checkFlashVars(p:Object):void {
+      var i:Number = 0;
+      for each (var s:String in p) {
+        if (isIllegalChar(s)) {
+          securityIssue = true; // Illegal char found
+        }
+        i++;
+      }
+      if(i === 0 || securityIssue) {
+        directAccess = true;
+      }
+    }
+    
+    private function isIllegalChar(s:String):Boolean {
+      var illegals:String = "' \" ( ) { } * + \\ < >";
+      if(Boolean(s)) { // Otherwise exception if parameter null.
+        for each (var illegal:String in illegals.split(' ')) {
+          if(s.indexOf(illegal) >= 0) {
+            return true; // Illegal char found
+          }
+        }
+      }
+      return false;
+    }        
+        
         
     // START: Controls and events
     private function mouseActivityMove(event:MouseEvent):void {
@@ -589,7 +638,9 @@
 
     public function stageClicked(e:MouseEvent):void {
       //_output.appendText("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");
-      sendEvent("click", "");
+      if (e.target == stage) {
+        sendEvent("click", "");
+      }
     }
 
     public function resizeHandler(e:Event):void {

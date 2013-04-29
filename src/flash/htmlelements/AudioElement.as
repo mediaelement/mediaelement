@@ -173,19 +173,19 @@ package htmlelements
       _sound.addEventListener(Event.ID3,id3Handler);
       _sound.load(new URLRequest(_currentUrl));
       _currentTime = 0;
-      
+
       sendEvent(HtmlMediaEvent.LOADSTART);
 
       _isLoaded = true;
-                        
+
       sendEvent(HtmlMediaEvent.LOADEDDATA);
-      sendEvent(HtmlMediaEvent.CANPLAY);        
+      sendEvent(HtmlMediaEvent.CANPLAY);
       _firedCanPlay = true;
-      
+
       if (_playAfterLoading) {
         _playAfterLoading = false;
         play();
-      }            
+      }
     }
 
     private var _playAfterLoading:Boolean= false;
@@ -214,7 +214,7 @@ package htmlelements
       _timer.stop();
       if (_soundChannel != null) {
         _currentTime = _soundChannel.position/1000;
-        _soundChannel.stop();      
+        _soundChannel.stop();
       }
 
       _isPaused = true;
@@ -254,7 +254,7 @@ package htmlelements
       sendEvent(HtmlMediaEvent.PLAYING);
       if (!_firedCanPlay) {
         sendEvent(HtmlMediaEvent.LOADEDDATA);
-        sendEvent(HtmlMediaEvent.CANPLAY);        
+        sendEvent(HtmlMediaEvent.CANPLAY);
         _firedCanPlay = true;
       }
     }

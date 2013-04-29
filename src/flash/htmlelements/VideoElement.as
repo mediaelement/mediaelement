@@ -11,7 +11,7 @@ package htmlelements
   import FlashMediaElement;
   import HtmlMediaEvent;
 
-  public class VideoElement extends Sprite implements IMediaElement 
+  public class VideoElement extends Sprite implements IMediaElement
   {
     private var _currentUrl:String = "";
     private var _autoplay:Boolean = true;
@@ -38,6 +38,8 @@ package htmlelements
     private var _bufferedTime:Number = 0;
     private var _bufferEmpty:Boolean = false;
     private var _bufferingChanged:Boolean = false;
+    private var _seekOffset:Number = 0;
+
 
     private var _videoWidth:Number = -1;
     private var _videoHeight:Number = -1;
@@ -51,6 +53,8 @@ package htmlelements
     private var _hasStartedPlaying:Boolean = false;
 
     private var _parentReference:Object;
+    private var _pseudoStreamingEnabled:Boolean = false;
+    private var _pseudoStreamingStartQueryParam:String = "start";
 
     public function setReference(arg:Object):void {
       _parentReference = arg;
@@ -59,6 +63,14 @@ package htmlelements
     public function setSize(width:Number, height:Number):void {
       _video.width = width;
       _video.height = height;
+    }
+
+    public function setPseudoStreaming(enablePseudoStreaming:Boolean):void {
+      _pseudoStreamingEnabled = enablePseudoStreaming;
+    }
+
+    public function setPseudoStreamingStartParam(pseudoStreamingStartQueryParam:String):void {
+      _pseudoStreamingStartQueryParam = pseudoStreamingStartQueryParam;
     }
 
     public function get video():Video {
@@ -77,7 +89,7 @@ package htmlelements
     public function duration():Number {
       return _duration;
     }
-    
+
     public function currentProgress():Number {
       if(_stream != null) {
         return Math.round(_stream.bytesLoaded/_stream.bytesTotal*100);
@@ -87,21 +99,24 @@ package htmlelements
     }
 
     public function currentTime():Number {
+      var currentTime:Number = 0;
       if (_stream != null) {
-        return _stream.time;
-      } else {
-        return 0;
+        currentTime = _stream.time;
+        if (_pseudoStreamingEnabled) {
+          currentTime += _seekOffset;
+        }
       }
+      return currentTime;
     }
 
 
     // (1) load()
-    // calls _connection.connect(); 
+    // calls _connection.connect();
     // waits for NetConnection.Connect.Success
     // _stream gets created
 
 
-    public function VideoElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number, streamer:String) 
+    public function VideoElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number, streamer:String)
     {
       _element = element;
       _autoplay = autoplay;
@@ -128,13 +143,15 @@ package htmlelements
       _bytesLoaded = _stream.bytesLoaded;
       _bytesTotal = _stream.bytesTotal;
 
-      if (!_isPaused)
+      if (!_isPaused) {
         sendEvent(HtmlMediaEvent.TIMEUPDATE);
+      }
 
       //trace("bytes", _bytesLoaded, _bytesTotal);
 
       if (_bytesLoaded < _bytesTotal)
         sendEvent(HtmlMediaEvent.PROGRESS);
+
     }
 
     // internal events
@@ -165,20 +182,20 @@ package htmlelements
 
         // STREAM
         case "NetStream.Play.Start":
-        
+
           _isPaused = false;
           sendEvent(HtmlMediaEvent.LOADEDDATA);
           sendEvent(HtmlMediaEvent.CANPLAY);
-          
+
           if (!_isPreloading) {
-          
+
             sendEvent(HtmlMediaEvent.PLAY);
             sendEvent(HtmlMediaEvent.PLAYING);
 
           }
-          
+
           _timer.start();
-          
+
           break;
 
         case "NetStream.Seek.Notify":
@@ -211,27 +228,31 @@ package htmlelements
 
 
     private function onMetaDataHandler(info:Object):void {
-      _duration = info.duration;
+      // Only set the duration when we first load the video
+      if (_duration == 0) {
+        _duration = info.duration;
+      }
       _framerate = info.framerate;
       _videoWidth = info.width;
       _videoHeight = info.height;
 
+
       // set size?
 
       sendEvent(HtmlMediaEvent.LOADEDMETADATA);
-      
-      
-      
+
+
+
       if (_isPreloading) {
-        
+
         _stream.pause();
         _isPaused = true;
         _isPreloading = false;
-        
+
         sendEvent(HtmlMediaEvent.PROGRESS);
         sendEvent(HtmlMediaEvent.TIMEUPDATE);
-      
-      }      
+
+      }
     }
 
 
@@ -241,13 +262,13 @@ package htmlelements
     public function setSrc(url:String):void {
       if (_isConnected && _stream) {
         // stop and restart
-        _stream.pause();        
+        _stream.pause();
       }
 
       _currentUrl = url;
       _isRTMP = !!_currentUrl.match(/^rtmp(s|t|e|te)?\:\/\//) || _streamer != "";
       _isConnected = false;
-      _hasStartedPlaying = false;    
+      _hasStartedPlaying = false;
     }
 
     public function load():void {
@@ -259,8 +280,8 @@ package htmlelements
       }
       _isConnected = false;
       _isPreloading = false;
-      
-      
+
+
       _isEnded = false;
       _bufferEmpty = false;
 
@@ -270,31 +291,31 @@ package htmlelements
         if (_streamer != "") {
           rtmpInfo.server = _streamer;
           rtmpInfo.stream = _currentUrl;
-    
+
         }
         _connection.connect(rtmpInfo.server);
       } else {
         _connection.connect(null);
       }
-      
+
       // in a few moments the "NetConnection.Connect.Success" event will fire
       // and call createConnection which finishes the "load" sequence
       sendEvent(HtmlMediaEvent.LOADSTART);
     }
-    
+
 
     private function connectStream():void {
       trace("connectStream");
       _stream = new NetStream(_connection);
-          
+
       // explicitly set the sound since it could have come before the connection was made
       _soundTransform = new SoundTransform(_volume);
-      _stream.soundTransform = _soundTransform;            
-      
+      _stream.soundTransform = _soundTransform;
+
       // set the buffer to ensure nice playback
       _stream.bufferTime = 1;
-      _stream.bufferTimeMax = 3;      
-      
+      _stream.bufferTimeMax = 3;
+
       _stream.addEventListener(NetStatusEvent.NET_STATUS, netStatusHandler); // same event as connection
       _stream.addEventListener(AsyncErrorEvent.ASYNC_ERROR, asyncErrorHandler);
 
@@ -303,21 +324,21 @@ package htmlelements
       _stream.client = customClient;
 
       _video.attachNetStream(_stream);
-      
+
       // start downloading without playing )based on preload and play() hasn't been called)
       // I wish flash had a load() command to make this less awkward
       if (_preload != "none" && !_playWhenConnected) {
         _isPaused = true;
         //stream.bufferTime = 20;
-        _stream.play(_currentUrl, 0, 0);
+        _stream.play(getCurrentUrl(0), 0, 0);
         _stream.pause();
-        
+
         _isPreloading = true;
-        
+
         //_stream.pause();
         //
         //sendEvent(HtmlMediaEvent.PAUSE); // have to send this because the "playing" event gets sent via event handlers
-      }      
+      }
 
       _isConnected = true;
 
@@ -326,7 +347,7 @@ package htmlelements
         _playWhenConnected = false;
       }
 
-    }    
+    }
 
     public function play():void {
 
@@ -350,13 +371,13 @@ package htmlelements
           var rtmpInfo:Object = parseRTMP(_currentUrl);
           _stream.play(rtmpInfo.stream);
         } else {
-          _stream.play(_currentUrl);
+          _stream.play(getCurrentUrl(0));
         }
         _timer.start();
         _isPaused = false;
         _hasStartedPlaying = true;
-        
-        // don't toss play/playing events here, because we haven't sent a 
+
+        // don't toss play/playing events here, because we haven't sent a
         // canplay / loadeddata event yet. that'll be handled in the net
         // event listener
       }
@@ -369,7 +390,7 @@ package htmlelements
 
       _stream.pause();
       _isPaused = true;
-      
+
       if (_bytesLoaded == _bytesTotal) {
         _timer.stop();
       }
@@ -388,12 +409,32 @@ package htmlelements
       sendEvent(HtmlMediaEvent.STOP);
     }
 
+
     public function setCurrentTime(pos:Number):void {
-      if (_stream == null)
+      if (_stream == null) {
         return;
-      
-      sendEvent(HtmlMediaEvent.SEEKING);
-      _stream.seek(pos);
+      }
+
+      // Calculate the position of the buffered video
+      var bufferPosition:Number = _bytesLoaded / _bytesTotal * _duration;
+
+      if (_pseudoStreamingEnabled) {
+        sendEvent(HtmlMediaEvent.SEEKING);
+        // Normal seek if it is in buffer and this is the first seek
+        if (pos < bufferPosition && _seekOffset == 0) {
+          _stream.seek(pos);
+        }
+        else {
+          // Uses server-side pseudo-streaming to seek
+          _stream.play(getCurrentUrl(pos));
+          _seekOffset = pos;
+        }
+      }
+      else {
+        sendEvent(HtmlMediaEvent.SEEKING);
+        _stream.seek(pos);
+      }
+
       if (!_isEnded) {
         sendEvent(HtmlMediaEvent.TIMEUPDATE);
       }
@@ -402,9 +443,9 @@ package htmlelements
     public function setVolume(volume:Number):void {
       if (_stream != null) {
         _soundTransform = new SoundTransform(volume);
-        _stream.soundTransform = _soundTransform;        
+        _stream.soundTransform = _soundTransform;
       }
-      
+
       _volume = volume;
 
       _isMuted = (_volume == 0);
@@ -442,21 +483,21 @@ package htmlelements
       _bufferedTime = _bytesLoaded / _bytesTotal * _duration;
 
       // build JSON
-      var values:String = 
-              "duration:" + _duration + 
-              ",framerate:" + _framerate + 
-              ",currentTime:" + (_stream != null ? _stream.time : 0) + 
-              ",muted:" + _isMuted + 
-              ",paused:" + _isPaused + 
-              ",ended:" + _isEnded + 
-              ",volume:" + _volume +
-              ",src:\"" + _currentUrl + "\"" +
-              ",bytesTotal:" + _bytesTotal +
-              ",bufferedBytes:" + _bytesLoaded +
-              ",bufferedTime:" + _bufferedTime +
-              ",videoWidth:" + _videoWidth +
-              ",videoHeight:" + _videoHeight +
-              "";
+      var values:String =
+        "duration:" + _duration +
+          ",framerate:" + _framerate +
+          ",currentTime:" + currentTime() +
+          ",muted:" + _isMuted +
+          ",paused:" + _isPaused +
+          ",ended:" + _isEnded +
+          ",volume:" + _volume +
+          ",src:\"" + _currentUrl + "\"" +
+          ",bytesTotal:" + _bytesTotal +
+          ",bufferedBytes:" + _bytesLoaded +
+          ",bufferedTime:" + _bufferedTime +
+          ",videoWidth:" + _videoWidth +
+          ",videoHeight:" + _videoHeight +
+          "";
 
       _element.sendEvent(eventName, values);
     }
@@ -480,6 +521,19 @@ package htmlelements
       trace("parseRTMP - server: " + rtmpInfo.server + " stream: " + rtmpInfo.stream);
 
       return rtmpInfo;
+    }
+
+    private function getCurrentUrl(pos:Number):String {
+      var url:String = _currentUrl;
+      if (_pseudoStreamingEnabled) {
+        if (url.indexOf('?') > -1) {
+          url = url + '&' + _pseudoStreamingStartQueryParam + '=' + pos;
+        }
+        else {
+          url = url + '?' + _pseudoStreamingStartQueryParam + '=' + pos;
+        }
+      }
+      return url;
     }
   }
 }

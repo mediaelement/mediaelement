@@ -1,4 +1,4 @@
-﻿package htmlelements
+package htmlelements
 {
 
   public interface IMediaElement {
@@ -30,5 +30,3 @@
     function currentProgress():Number;
     
   }
-
-}
