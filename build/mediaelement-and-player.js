@@ -335,6 +335,13 @@ mejs.MediaFeatures = {
 		
 		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid);
 
+		// Fix for IE9 on Windows 7N / Windows 7KN (Media Player not installer)
+		try{
+			v.canPlayType("video/mp4");
+		}catch(e){
+			t.supportsMediaTag = false;
+		}
+
 		// detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 		
 		// iOS
