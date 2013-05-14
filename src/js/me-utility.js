@@ -1,4 +1,3 @@
-
 /*
 Utility methods
 */
@@ -18,27 +17,47 @@ mejs.Utility = {
 		var
 			i = 0,
 			j,
-			path = '',
-			name = '',
-			script,
+			codePath = '',
+			testname = '',
+			slashPos,
+			filenamePos,
+			scriptUrl,
+			scriptPath,			
+			scriptFilename,
 			scripts = document.getElementsByTagName('script'),
 			il = scripts.length,
 			jl = scriptNames.length;
-
+			
+		// go through all <script> tags
 		for (; i < il; i++) {
-			script = scripts[i].src;
+			scriptUrl = scripts[i].src;
+			slashPos = scriptUrl.lastIndexOf('/');
+			if (slashPos > -1) {
+				scriptFilename = scriptUrl.substring(slashPos + 1);
+				scriptPath = scriptUrl.substring(0, slashPos + 1);
+			} else {
+				scriptFilename = scriptUrl;
+				scriptPath = '';			
+			}
+			
+			// see if any <script> tags have a file name that matches the 
 			for (j = 0; j < jl; j++) {
-				name = scriptNames[j];
-				if (script.indexOf(name) > -1) {
-					path = script.substring(0, script.indexOf(name));
+				testname = scriptNames[j];
+				filenamePos = scriptFilename.indexOf(testname);
+				if (filenamePos > -1) {
+					codePath = scriptPath;
 					break;
 				}
 			}
-			if (path !== '') {
+			
+			// if we found a path, then break and return it
+			if (codePath !== '') {
 				break;
 			}
 		}
-		return path;
+		
+		// send the best path back
+		return codePath;
 	},
 	secondsToTimeCode: function(time, forceHours, showFrameCount, fps) {
 		//add framecount
@@ -110,7 +129,7 @@ mejs.Utility = {
 	/* borrowed from SWFObject: http://code.google.com/p/swfobject/source/browse/trunk/swfobject/src/swfobject.js#474 */
 	removeSwf: function(id) {
 		var obj = document.getElementById(id);
-		if (obj && obj.nodeName == "OBJECT") {
+		if (obj && /object|embed/i.test(obj.nodeName)) {
 			if (mejs.MediaFeatures.isIE) {
 				obj.style.display = "none";
 				(function(){
