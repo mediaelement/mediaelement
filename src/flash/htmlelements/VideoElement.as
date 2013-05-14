@@ -32,6 +32,7 @@ package htmlelements
     private var _isEnded:Boolean = false;
     private var _volume:Number = 1;
     private var _isMuted:Boolean = false;
+    private var _errorCode = null;
 
     private var _bytesLoaded:Number = 0;
     private var _bytesTotal:Number = 0;
@@ -174,9 +175,11 @@ package htmlelements
         case "NetConnection.Connect.Success":
           connectStream();
           break;
+
         case "NetStream.Play.StreamNotFound":
+          _errorCode = HtmlMediaEvent.MEDIA_ERR_SRC_NOT_SUPPORTED;
           sendEvent(HtmlMediaEvent.ERROR);
-          trace("Unable to locate video"); 
+          this.stop();
           break;
 
         // STREAM
@@ -481,20 +484,25 @@ package htmlelements
       // build JSON
       var values:String =
         "duration:" + _duration +
-          ",framerate:" + _framerate +
-          ",currentTime:" + currentTime() +
-          ",muted:" + _isMuted +
-          ",paused:" + _isPaused +
-          ",ended:" + _isEnded +
-          ",volume:" + _volume +
-          ",src:\"" + _currentUrl + "\"" +
-          ",bytesTotal:" + _bytesTotal +
-          ",bufferedBytes:" + _bytesLoaded +
-          ",bufferedTime:" + _bufferedTime +
-          ",videoWidth:" + _videoWidth +
-          ",videoHeight:" + _videoHeight +
-          "";
-  
+        ",framerate:" + _framerate +
+        ",currentTime:" + currentTime() +
+        ",muted:" + _isMuted +
+        ",paused:" + _isPaused +
+        ",ended:" + _isEnded +
+        ",volume:" + _volume +
+        ",src:\"" + _currentUrl + "\"" +
+        ",bytesTotal:" + _bytesTotal +
+        ",bufferedBytes:" + _bytesLoaded +
+        ",bufferedTime:" + _bufferedTime +
+        ",videoWidth:" + _videoWidth +
+        ",videoHeight:" + _videoHeight;
+        if(eventName == HtmlMediaEvent.ERROR) {
+          values += ",error: { code: " + _errorCode + 
+            ", MEDIA_ERR_ABORTED: " + HtmlMediaEvent.MEDIA_ERR_ABORTED +
+            ", MEDIA_ERR_NETWORK: " + HtmlMediaEvent.MEDIA_ERR_NETWORK +
+            ", MEDIA_ERR_DECODE: " + HtmlMediaEvent.MEDIA_ERR_DECODE +
+            ", MEDIA_ERR_SRC_NOT_SUPPORTED: " + HtmlMediaEvent.MEDIA_ERR_SRC_NOT_SUPPORTED + "}";
+        }
       _element.sendEvent(eventName, values);
     }
 

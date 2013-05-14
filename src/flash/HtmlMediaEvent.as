@@ -26,7 +26,11 @@ package  {
 		// new : 1/2/2012
 		public static var FULLSCREENCHANGE:String = "fullscreenchange";
 		
-		// new : 1/21/2013
+		// new : 5/14/2013
 		public static var ERROR:String = "error";
+		public static var MEDIA_ERR_ABORTED:Number = 1;
+		public static var MEDIA_ERR_NETWORK:Number = 2;
+		public static var MEDIA_ERR_DECODE:Number = 3;
+		public static var MEDIA_ERR_SRC_NOT_SUPPORTED:Number = 4
 	}
 }
