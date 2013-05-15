@@ -32,7 +32,7 @@ package htmlelements
     private var _isEnded:Boolean = false;
     private var _volume:Number = 1;
     private var _isMuted:Boolean = false;
-    private var _errorCode = null;
+    private var _errorCode:Number = 0;
 
     private var _bytesLoaded:Number = 0;
     private var _bytesTotal:Number = 0;
