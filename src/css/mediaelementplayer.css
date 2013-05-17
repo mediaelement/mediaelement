@@ -52,12 +52,19 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+	display: table;
 }
-.mejs-poster img {
+.mejs-poster div {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+.mejs-poster div img {
 	border: 0;
 	padding: 0;
 	border: 0;
-	display: block;
+	max-width: 100%;
+	max-height: 100%;
 }
 .mejs-overlay {
 	position: absolute;
