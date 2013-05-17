@@ -864,7 +864,7 @@
 				posterImg = posterDiv.find('img');
 				
 			if (posterImg.length == 0) {
-				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
+				posterImg = $('<div><img /></div>').appendTo(posterDiv).find('img');
 			}	
 			
 			posterImg.attr('src', url);
