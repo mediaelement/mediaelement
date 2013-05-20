@@ -775,6 +775,11 @@ mejs.MediaPluginBridge = {
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
 
+		// e.g. the event was fired after the pluginMediaElement was removed
+		if (!pluginMediaElement) {
+			return;
+		}
+
 		// fake event object to mimic real HTML media event.
 		e = {
 			type: eventName,
@@ -885,11 +890,11 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		// clean up attributes
-		src = 		(typeof src == 'undefined' 	|| src === null || src == '') ? null : src;		
-		poster =	(typeof poster == 'undefined' 	|| poster === null) ? '' : poster;
-		preload = 	(typeof preload == 'undefined' 	|| preload === null || preload === 'false') ? 'none' : preload;
-		autoplay = 	!(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
-		controls = 	!(typeof controls == 'undefined' || controls === null || controls === 'false');
+		src =			(typeof src == 'undefined'	|| src === null || src == '') ? null : src;		
+		poster =	(typeof poster == 'undefined'		|| poster === null) ? '' : poster;
+		preload =		(typeof preload == 'undefined'	|| preload === null || preload === 'false') ? 'none' : preload;
+		autoplay =	!(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
+		controls =	!(typeof controls == 'undefined' || controls === null || controls === 'false');
 
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, src);
