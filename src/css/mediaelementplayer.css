@@ -52,12 +52,17 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+	background-size: contain ;
+	background-position: 50% 50% ;
+	background-repeat: no-repeat ;
+}
+:root .mejs-poster img {
+	display: none ;
 }
 .mejs-poster img {
 	border: 0;
 	padding: 0;
 	border: 0;
-	display: block;
 }
 .mejs-overlay {
 	position: absolute;
