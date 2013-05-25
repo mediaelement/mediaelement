@@ -868,8 +868,9 @@
 			if (posterImg.length == 0) {
 				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
 			}	
-			
+
 			posterImg.attr('src', url);
+			posterDiv.css({'background-image' : 'url(' + url + ')'});
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
