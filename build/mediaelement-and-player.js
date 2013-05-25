@@ -316,6 +316,7 @@ mejs.MediaFeatures = {
 		t.isiOS = t.isiPhone || t.isiPad;
 		t.isAndroid = (ua.match(/android/i) !== null);
 		t.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
+		t.isBustedNativeHTTPS = (location.protocol === 'https:' && (ua.match(/android [12]\./) !== null || ua.match(/macintosh.* version.* safari/) !== null));
 		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		t.isChrome = (ua.match(/chrome/gi) !== null);
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
@@ -989,7 +990,7 @@ mejs.HtmlMediaElementShim = {
 		
 
 		// test for native playback first
-		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')) {
+		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')  && !(mejs.MediaFeatures.isBustedNativeHTTPS)) {
 						
 			if (!isMediaTag) {
 
@@ -1133,9 +1134,13 @@ mejs.HtmlMediaElementShim = {
 			errorContainer.style.height = htmlMediaElement.height + 'px';
 		} catch (e) {}
 
-		errorContainer.innerHTML = (poster !== '') ?
-			'<a href="' + playback.url + '"><img src="' + poster + '" width="100%" height="100%" /></a>' :
-			'<a href="' + playback.url + '"><span>' + mejs.i18n.t('Download File') + '</span></a>';
+    if (options.customError) {
+      errorContainer.innerHTML = options.customError;
+    } else {
+      errorContainer.innerHTML = (poster !== '') ?
+        '<a href="' + playback.url + '"><img src="' + poster + '" width="100%" height="100%" /></a>' :
+        '<a href="' + playback.url + '"><span>' + mejs.i18n.t('Download File') + '</span></a>';
+    }
 
 		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);
 		htmlMediaElement.style.display = 'none';
@@ -1177,8 +1182,8 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		if (playback.isVideo) {
-			width = (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
-			height = (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;
+			width = (options.pluginWidth > 0) ? options.pluginWidth : (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
+			height = (options.pluginHeight > 0) ? options.pluginHeight : (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;
 		
 			// in case of '%' make sure it's encoded
 			width = mejs.Utility.encodeUrl(width);
@@ -2223,7 +2228,17 @@ if (typeof jQuery != 'undefined') {
 				meOptions.pluginHeight = t.width;				
 			}
 			
-			
+			// create callback during init since it needs access to current
+			// MEP object
+			mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
+        if (t.options.clickToPlayPause) {
+            if (t.media.paused) {
+              t.media.play();
+            } else {
+              t.media.pause();
+            }
+        }
+      };
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
@@ -2437,15 +2452,7 @@ if (typeof jQuery != 'undefined') {
 					
 					} else {
             // click to play/pause
-            t.media.addEventListener('click', function() {
-              if (t.options.clickToPlayPause) {
-                  if (t.media.paused) {
-                    t.media.play();
-                  } else {
-                    t.media.pause();
-                  }
-              }
-            });
+            t.media.addEventListener('click', t.clickToPlayPauseCallback);
 					
 						// show/hide controls
 						t.container
@@ -3733,6 +3740,9 @@ if (typeof jQuery != 'undefined') {
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
 
+                  // prevent clicks from pausing video
+                  t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+
 									// store for later
 									fullscreenIsDisabled = false;
 								}
@@ -3801,6 +3811,9 @@ if (typeof jQuery != 'undefined') {
 									fullscreenBtn.css('pointer-events', 'none');
 									t.controls.css('pointer-events', 'none');
 
+                  // restore click-to-play
+                  t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
 									// show the divs that will restore things
 								  for (i in hoverDivs) {
 										hoverDivs[i].show();
@@ -3814,6 +3827,14 @@ if (typeof jQuery != 'undefined') {
 
 						// restore controls anytime the user enters or leaves fullscreen
 						media.addEventListener('fullscreenchange', function(e) {
+							t.isFullScreen = !t.isFullScreen;
+							// don't allow plugin click to pause video - messes with
+							// plugin's controls
+              if (t.isFullScreen) {
+                t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+              } else {
+                t.media.addEventListener('click', t.clickToPlayPauseCallback);
+              }
 							restoreControls();
 						});
 
