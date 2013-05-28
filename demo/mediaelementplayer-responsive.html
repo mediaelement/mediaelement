@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement - Responsive</title>
+
+	<script src="../build/jquery.js"></script>
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<script src="testforfiles.js"></script>	
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+	
+<style>
+.wrapper {
+	width: 50%;
+}
+</style>	
+	
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<h2>Responsive Demo</h2>
+
+<code><pre>
+&lt;video width="640" height="360" style="width: 100%; height: 100%;" id="player1" preload="none"&gt;
+
+	&lt;!-- Pseudo HTML5 --&gt;
+	&lt;source type="video/youtube" src="http://www.youtube.com/watch?v=nOEw9iiopwI" /&gt;
+
+&lt;/video&gt;
+</pre></code>
+
+<div class="wrapper">
+<video width="640" height="360" style="width: 100%; height: 100%;" id="player1">
+
+    <!-- Pseudo HTML5 -->
+    <source type="video/youtube" src="http://www.youtube.com/watch?v=nOEw9iiopwI" />
+
+</video>
+</div>
+
+<span id="player1-mode"></span>
+
+<script>
+
+$('video').mediaelementplayer({
+	success: function(media, node, player) {
+		$('#' + node.id + '-mode').html('mode: ' + media.pluginType);
+	}
+});
+
+</script>
+
+</body>
+</html>

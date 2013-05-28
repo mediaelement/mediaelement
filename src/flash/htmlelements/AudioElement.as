@@ -38,6 +38,7 @@ package htmlelements
 		private var _bytesLoaded:Number = 0;
 		private var _bytesTotal:Number = 0;
 		private var _bufferedTime:Number = 0;
+		private var _bufferingChanged:Boolean = false;
 
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
@@ -47,12 +48,20 @@ package htmlelements
 		private var _timer:Timer;
 		private var _firedCanPlay:Boolean = false;
 
+		public function setSize(width:Number, height:Number):void {
+			// do nothing!
+		}
+
 		public function duration():Number {
 			return _duration;
 		}
 
 		public function currentTime():Number {
 			return _currentTime;
+		}
+		
+		public function currentProgress():Number {
+				return Math.round(_bytesLoaded/_bytesTotal*100);
 		}
 
 		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number) 
@@ -75,7 +84,11 @@ package htmlelements
 			_bytesLoaded = e.bytesLoaded;
 			_bytesTotal = e.bytesTotal;
 
-			sendEvent(HtmlMediaEvent.PROGRESS);
+			// this happens too much to send every time
+			//sendEvent(HtmlMediaEvent.PROGRESS);
+			
+			// so now we just trigger a flag and send with the timer
+			_bufferingChanged = true;
 		}
 
 		function id3Handler(e:Event):void {
@@ -109,6 +122,14 @@ package htmlelements
 
 				_duration = duration;
 				sendEvent(HtmlMediaEvent.LOADEDMETADATA);
+			}
+			
+			// check for progress
+			if (_bufferingChanged) {
+				
+				sendEvent(HtmlMediaEvent.PROGRESS);
+			
+				_bufferingChanged = false;
 			}
 
 			// send timeupdate
@@ -249,7 +270,17 @@ package htmlelements
 				_soundChannel.soundTransform = _soundTransform;
 			}
 
+			_isMuted = (_volume == 0);
+
 			sendEvent(HtmlMediaEvent.VOLUMECHANGE);
+		}
+		
+		public function getVolume():Number {
+			if(_isMuted) {
+				return 0;
+			} else {
+				return _volume;
+			}
 		}
 
 
@@ -298,3 +329,4 @@ package htmlelements
 	}
 
 }
+
