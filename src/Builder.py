@@ -24,10 +24,10 @@ me_files.append('me-i18n-locale-zh.js')
 code = ''
 
 for item in me_files:
-	src_file = open('js/' + item,'r')
+	src_file = open('js/' + item,'r', encoding="utf8")
 	code += src_file.read() + "\n"
 
-tmp_file = open('../build/' + me_filename + '.js','w')
+tmp_file = open('../build/' + me_filename + '.js','w', encoding="utf8")
 tmp_file.write(code)
 tmp_file.close()
 
@@ -51,10 +51,10 @@ mep_files.append('mep-feature-postroll.js')
 code = ''
 
 for item in mep_files:
-        src_file = open('js/' + item,'r')
+        src_file = open('js/' + item,'r', encoding="utf8")
         code += src_file.read() + "\n"
 
-tmp_file = open('../build/' + mep_filename + '.js','w')
+tmp_file = open('../build/' + mep_filename + '.js','w', encoding="utf8")
 tmp_file.write(code)
 tmp_file.close()
 
@@ -93,22 +93,22 @@ addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')
 # COMBINE into single script
 print('Combining scripts')
 code = ''
-src_file = open('../build/' + me_filename + '.js','r')
+src_file = open('../build/' + me_filename + '.js','r', encoding="utf8")
 code += src_file.read() + "\n"
-src_file = open('../build/' + mep_filename + '.js','r')
+src_file = open('../build/' + mep_filename + '.js','r', encoding="utf8")
 code += src_file.read() + "\n"
 
-tmp_file = open('../build/' + combined_filename + '.js','w')
+tmp_file = open('../build/' + combined_filename + '.js','w', encoding="utf8")
 tmp_file.write(code)
 tmp_file.close()
 
 code = ''
-src_file = open('../build/' + me_filename + '.min.js','r')
+src_file = open('../build/' + me_filename + '.min.js','r', encoding="utf8")
 code += src_file.read() + "\n"
-src_file = open('../build/' + mep_filename + '.min.js','r')
+src_file = open('../build/' + mep_filename + '.min.js','r', encoding="utf8")
 code += src_file.read() + "\n"
 
-tmp_file = open('../build/' + combined_filename + '.min.js','w')
+tmp_file = open('../build/' + combined_filename + '.min.js','w', encoding="utf8")
 tmp_file.write(code)
 tmp_file.close()
 
