@@ -354,7 +354,17 @@ if (typeof jQuery != 'undefined') {
 				meOptions.pluginHeight = t.width;				
 			}
 			
-			
+			// create callback during init since it needs access to current
+			// MEP object
+			mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
+        if (t.options.clickToPlayPause) {
+            if (t.media.paused) {
+              t.media.play();
+            } else {
+              t.media.pause();
+            }
+        }
+      };
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
@@ -568,15 +578,7 @@ if (typeof jQuery != 'undefined') {
 					
 					} else {
             // click to play/pause
-            t.media.addEventListener('click', function() {
-              if (t.options.clickToPlayPause) {
-                  if (t.media.paused) {
-                    t.media.play();
-                  } else {
-                    t.media.pause();
-                  }
-              }
-            });
+            t.media.addEventListener('click', t.clickToPlayPauseCallback);
 					
 						// show/hide controls
 						t.container
@@ -882,8 +884,9 @@ if (typeof jQuery != 'undefined') {
 			if (posterImg.length == 0) {
 				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
 			}	
-			
+
 			posterImg.attr('src', url);
+			posterDiv.css({'background-image' : 'url(' + url + ')'});
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
@@ -1863,6 +1866,9 @@ if (typeof jQuery != 'undefined') {
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
 
+                  // prevent clicks from pausing video
+                  t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+
 									// store for later
 									fullscreenIsDisabled = false;
 								}
@@ -1931,6 +1937,9 @@ if (typeof jQuery != 'undefined') {
 									fullscreenBtn.css('pointer-events', 'none');
 									t.controls.css('pointer-events', 'none');
 
+                  // restore click-to-play
+                  t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
 									// show the divs that will restore things
 								  for (i in hoverDivs) {
 										hoverDivs[i].show();
@@ -1944,6 +1953,14 @@ if (typeof jQuery != 'undefined') {
 
 						// restore controls anytime the user enters or leaves fullscreen
 						media.addEventListener('fullscreenchange', function(e) {
+							t.isFullScreen = !t.isFullScreen;
+							// don't allow plugin click to pause video - messes with
+							// plugin's controls
+              if (t.isFullScreen) {
+                t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+              } else {
+                t.media.addEventListener('click', t.clickToPlayPauseCallback);
+              }
 							restoreControls();
 						});
 
