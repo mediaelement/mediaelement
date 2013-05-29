@@ -175,7 +175,7 @@ package htmlelements
 		}
 		
 		private function onPlayerStateChange(event:Event):void {
-			_element.log.print("State is", Object(event).data);
+			_element.log.print("State is "+Object(event).data);
 			
 			_duration = _player.getDuration();
 			
@@ -214,7 +214,7 @@ package htmlelements
 		}
 		
 		private function onVideoPlaybackQualityChange(event:Event):void {
-			_element.log.print("Current video quality:", Object(event).data);
+			_element.log.print("Current video quality: "+Object(event).data);
 			//resizePlayer(Object(event).data);
 		}
 
