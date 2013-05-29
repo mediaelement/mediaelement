@@ -142,7 +142,7 @@ package htmlelements
 		
 		private function playerLoaderInitHandler(event:Event):void {
 			
-			trace("yt player init");
+			_element.log.print("yt player init");
 			
 			_element.addChild(_playerLoader.content);
 			_element.setControlDepth();
@@ -175,7 +175,7 @@ package htmlelements
 		}
 		
 		private function onPlayerStateChange(event:Event):void {
-			trace("State is", Object(event).data);
+			_element.log.print("State is "+Object(event).data);
 			
 			_duration = _player.getDuration();
 			
@@ -214,7 +214,7 @@ package htmlelements
 		}
 		
 		private function onVideoPlaybackQualityChange(event:Event):void {
-			trace("Current video quality:", Object(event).data);
+			_element.log.print("Current video quality: "+Object(event).data);
 			//resizePlayer(Object(event).data);
 		}
 
@@ -300,7 +300,7 @@ package htmlelements
 
 		// interface members
 		public function setSrc(url:String):void {
-			trace("yt setSrc()" + url );
+			_element.log.print("yt setSrc()" + url );
 			
 			_currentUrl = url;
 			
@@ -316,7 +316,7 @@ package htmlelements
 
 		public function load():void {
 			// do nothing
-			trace("yt load()");
+			_element.log.print("yt load()");
 				
 			if (_playerIsLoaded) {
 				player.loadVideoById(_youTubeId);
