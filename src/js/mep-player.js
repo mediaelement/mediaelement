@@ -1114,7 +1114,14 @@
 			// add player ID as an event namespace so it's easier to unbind them all later
 			var ret = {d: [], w: []};
 			$.each((events || '').split(' '), function(k, v){
-				ret[rwindow.test(v) ? 'w' : 'd'].push(v + '.' + id);
+				var eventname = v + '.' + id;
+				if (eventname.indexOf('.') === 0) {
+					ret.d.push(eventname);
+					ret.w.push(eventname);
+				}
+				else {
+					ret[rwindow.test(v) ? 'w' : 'd'].push(eventname);
+				}
 			});
 			ret.d = ret.d.join(' ');
 			ret.w = ret.w.join(' ');
