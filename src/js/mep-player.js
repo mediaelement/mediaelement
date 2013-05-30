@@ -334,8 +334,8 @@
 				t.setPlayerSize(t.width, t.height);
 				
 				// create MediaElementShim
-				meOptions.pluginWidth = t.height;
-				meOptions.pluginHeight = t.width;				
+				meOptions.pluginWidth = t.width;
+				meOptions.pluginHeight = t.height;				
 			}
 			
 			// create callback during init since it needs access to current
