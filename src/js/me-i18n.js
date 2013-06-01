@@ -58,7 +58,7 @@
      * @see: i18n.methods.t()
      */
     i18n.locale.getLanguage = function () {
-        return mejs.locale || {
+        return i18n.locale || {
             "language" : navigator.language
         };
     };
@@ -197,8 +197,8 @@
 
 	"use strict";
 
-	if ( mejs.locale.language && mejs.locale.strings ) {
-		exports[mejs.locale.language] = mejs.locale.strings;
+	if ( mejs.i18n.locale.language && mejs.i18n.locale.strings ) {
+		exports[mejs.i18n.locale.language] = mejs.i18n.locale.strings;
 	}
 
 }(mejs.i18n.locale.strings));
