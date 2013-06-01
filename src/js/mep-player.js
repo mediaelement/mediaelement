@@ -341,14 +341,14 @@
 			// create callback during init since it needs access to current
 			// MEP object
 			mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
-        if (t.options.clickToPlayPause) {
-            if (t.media.paused) {
-              t.media.play();
-            } else {
-              t.media.pause();
-            }
-        }
-      };
+				if (t.options.clickToPlayPause) {
+					if (t.media.paused) {
+						t.media.play();
+					} else {
+						t.media.pause();
+					}
+				}
+			};
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
@@ -561,8 +561,8 @@
 						});					
 					
 					} else {
-            // click to play/pause
-            t.media.addEventListener('click', t.clickToPlayPauseCallback);
+			            // click to play/pause
+			            t.media.addEventListener('click', t.clickToPlayPauseCallback);
 					
 						// show/hide controls
 						t.container
