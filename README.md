@@ -84,7 +84,24 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)
 
-*2.11.3	(2013/04/12 in progress)*
+*2.11.4 (progress)*
+
+* Fullscreen plugin player toggles play/pause when controls are clicked (JeffreyATW) https://github.com/johndyer/mediaelement/pull/742 
+* Making use of pluginWidth & pluginHeight (simonschuh) https://github.com/johndyer/mediaelement/pull/837
+* Proportional poster images (IE9+ Chrome, Safari, Firefox) (eyefood) https://github.com/johndyer/mediaelement/pull/838
+* Fixed video resolution on seek in flash (efEris) https://github.com/johndyer/mediaelement/pull/839
+* Option for custom error message when no plugins are found. (svoynow-lz) https://github.com/johndyer/mediaelement/pull/842
+* Fix for Safari to play video on HTTPS site (benroy73) https://github.com/johndyer/mediaelement/pull/845
+* Fixes Mute/UnMute when playing from a YouTube source (mbaker3) https://github.com/johndyer/mediaelement/pull/848
+* i18n fixes for better compatibility with WordPress (SergeyBiryukov) https://github.com/johndyer/mediaelement/pull/850
+* Fixing invalid characters restrictions for URLs (sebablanco) https://github.com/johndyer/mediaelement/pull/859
+* Checking for pluginType on media instead of mediaelementplayer in Fullscreen (JeffreyATW) https://github.com/johndyer/mediaelement/pull/865
+* Problem with IE9 on Windows 7 N / Windows 7 KN without WMP installed (sarvaje) https://github.com/johndyer/mediaelement/pull/868
+* Cleanup stylesheet (jawittdesigns)  https://github.com/johndyer/mediaelement/pull/867
+* Properly treat namespace-only events for `globalUnbind()` (odnamrataizem) https://github.com/johndyer/mediaelement/pull/878
+* Fixed issue with slash character separating time (S2) https://github.com/johndyer/mediaelement/pull/879
+
+*2.11.3	(2013/04/13)*
 
 * Change to `getScriptPath` to allow querystring variables to be added (for Wordpress Core)
 
