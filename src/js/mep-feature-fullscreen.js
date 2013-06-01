@@ -179,8 +179,6 @@
 								var buttonPos = fullscreenBtn.offset(),
 									containerPos = player.container.offset();
 									
-								console.log('positioning fulscreen button in flash');
-
 								// move the button in Flash into place
 								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
 
@@ -198,8 +196,6 @@
 								
 								positionHoverDivs();
 								
-								console.log('positioning hoverdivs');
-
 								fullscreenIsDisabled = true;
 							}
 
@@ -227,8 +223,6 @@
 							// if the mouse is anywhere but the fullsceen button, then restore it all
 							if (fullscreenIsDisabled) {
 							
-								
-
 								var fullscreenBtnPos = fullscreenBtn.offset();
 
 
@@ -236,8 +230,6 @@
 									e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)
 									) {
 									
-									console.log('restoring fullscreen');
-
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
 
