@@ -116,8 +116,8 @@
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
 
-                  // prevent clicks from pausing video
-                  t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+									// prevent clicks from pausing video
+									t.media.removeEventListener('click', t.clickToPlayPauseCallback);
 
 									// store for later
 									fullscreenIsDisabled = false;
@@ -134,7 +134,7 @@
 									containerWidth = t.container.width(),
 									containerHeight = t.container.height();
 
-							  for (i in hoverDivs) {
+								for (i in hoverDivs) {
 									hoverDivs[i].css({position: 'absolute', top: 0, left: 0}); //, backgroundColor: '#f00'});
 								}
 
@@ -167,61 +167,67 @@
 							positionHoverDivs();
 						});
 
-						for (i = 0, len = hoverDivNames.length; i < len; i += 1) {
+						for (i = 0, len = hoverDivNames.length; i < len; i++) {
 							hoverDivs[hoverDivNames[i]] = $('<div class="mejs-fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls).hide();
 						}
 
 						// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
-						fullscreenBtn
-							.mouseover(function() {
+						fullscreenBtn.on('mouseover',function() {
 
-								if (!t.isFullScreen) {
+							if (!t.isFullScreen) {
 
-									var buttonPos = fullscreenBtn.offset(),
-										containerPos = player.container.offset();
+								var buttonPos = fullscreenBtn.offset(),
+									containerPos = player.container.offset();
+									
+								console.log('positioning fulscreen button in flash');
 
-									// move the button in Flash into place
-									media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
+								// move the button in Flash into place
+								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
 
-									// allows click through
-									fullscreenBtn.css('pointer-events', 'none');
-									t.controls.css('pointer-events', 'none');
+								// allows click through
+								fullscreenBtn.css('pointer-events', 'none');
+								t.controls.css('pointer-events', 'none');
 
-                  // restore click-to-play
-                  t.media.addEventListener('click', t.clickToPlayPauseCallback);
-
-									// show the divs that will restore things
-								  for (i in hoverDivs) {
-										hoverDivs[i].show();
-									}
-									positionHoverDivs();
-
-									fullscreenIsDisabled = true;
+								// restore click-to-play
+								t.media.addEventListener('click', t.clickToPlayPauseCallback);
+								
+								// show the divs that will restore things
+								for (i in hoverDivs) {
+									hoverDivs[i].show();
 								}
+								
+								positionHoverDivs();
+								
+								console.log('positioning hoverdivs');
 
-							});
+								fullscreenIsDisabled = true;
+							}
+
+						});
 
 						// restore controls anytime the user enters or leaves fullscreen
 						media.addEventListener('fullscreenchange', function(e) {
 							t.isFullScreen = !t.isFullScreen;
 							// don't allow plugin click to pause video - messes with
 							// plugin's controls
-              if (t.isFullScreen) {
-                t.media.removeEventListener('click', t.clickToPlayPauseCallback);
-              } else {
-                t.media.addEventListener('click', t.clickToPlayPauseCallback);
-              }
+							if (t.isFullScreen) {
+								t.media.removeEventListener('click', t.clickToPlayPauseCallback);
+							} else {
+								t.media.addEventListener('click', t.clickToPlayPauseCallback);
+							}
 							restoreControls();
 						});
 
 
 						// the mouseout event doesn't work on the fullscren button, because we already killed the pointer-events
 						// so we use the document.mousemove event to restore controls when the mouse moves outside the fullscreen button
-						/*
+						
 						t.globalBind('mousemove', function(e) {
 
 							// if the mouse is anywhere but the fullsceen button, then restore it all
 							if (fullscreenIsDisabled) {
+							
+								
 
 								var fullscreenBtnPos = fullscreenBtn.offset();
 
@@ -229,6 +235,8 @@
 								if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + fullscreenBtn.outerHeight(true) ||
 									e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)
 									) {
+									
+									console.log('restoring fullscreen');
 
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
@@ -237,7 +245,7 @@
 								}
 							}
 						});
-						*/
+						
 
 
 					} else {
@@ -245,7 +253,7 @@
 						// the hover state will show the fullscreen button in Flash to hover up and click
 
 						fullscreenBtn
-							.mouseover(function() {
+							.on('mouseover', function() {
 
 								if (hideTimeout !== null) {
 									clearTimeout(hideTimeout);
@@ -258,7 +266,7 @@
 								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, true);
 
 							})
-							.mouseout(function() {
+							.on('mouseout', function() {
 
 								if (hideTimeout !== null) {
 									clearTimeout(hideTimeout);
