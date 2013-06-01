@@ -731,14 +731,16 @@
 		setPlayerSize: function(width,height) {
 			var t = this;
 
-			if (typeof width != 'undefined')
+			if (typeof width != 'undefined') {
 				t.width = width;
+			}
 				
-			if (typeof height != 'undefined')
+			if (typeof height != 'undefined') {
 				t.height = height;
+			}
 
-      // detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-      if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
+      		if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 			
 				// do we have the native dimensions yet?
 				var 
@@ -788,6 +790,14 @@
 					.height(t.height);
 					
 			}
+			
+			// special case for big play button so it doesn't go over the controls area
+			var playLayer = t.layers.find('.mejs-overlay-play'),
+				playButton = playLayer.find('.mejs-overlay-button');
+			
+			playLayer.height(t.container.height() - t.controls.height());
+			playButton.css('margin-top', '-' + (playButton.height()/2 - t.controls.height()/2).toString() + 'px'  );					
+				
 		},
 
 		setControlsSize: function() {
