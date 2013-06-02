@@ -178,7 +178,7 @@
 
 								var buttonPos = fullscreenBtn.offset(),
 									containerPos = player.container.offset();
-									
+
 								// move the button in Flash into place
 								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
 
@@ -195,7 +195,7 @@
 								}
 								
 								positionHoverDivs();
-								
+
 								fullscreenIsDisabled = true;
 							}
 
