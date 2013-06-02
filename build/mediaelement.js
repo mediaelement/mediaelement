@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.11.4.dev';
+mejs.version = '2.12.0';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -571,7 +571,7 @@ mejs.PluginMediaElement.prototype = {
 	
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-			this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
+			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
 		}
 	},
 	
@@ -782,9 +782,6 @@ mejs.MediaPluginBridge = {
 			i,
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
-
-		pluginMediaElement.ended = false;
-		pluginMediaElement.paused = true;
 
 		// fake event object to mimic real HTML media event.
 		e = {
@@ -1693,7 +1690,7 @@ window.MediaElement = mejs.MediaElement;
      * @see: i18n.methods.t()
      */
     i18n.locale.getLanguage = function () {
-        return mejs.locale || {
+        return i18n.locale || {
             "language" : navigator.language
         };
     };
@@ -1832,8 +1829,8 @@ window.MediaElement = mejs.MediaElement;
 
 	"use strict";
 
-	if ( mejs.locale.language && mejs.locale.strings ) {
-		exports[mejs.locale.language] = mejs.locale.strings;
+	if ( mejs.i18n.locale.language && mejs.i18n.locale.strings ) {
+		exports[mejs.i18n.locale.language] = mejs.i18n.locale.strings;
 	}
 
 }(mejs.i18n.locale.strings));
