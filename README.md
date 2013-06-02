@@ -84,8 +84,10 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)
 
-*2.11.4 (progress)*
+*2.12.0 (2013/06/02)*
 
+* Removed old media files from repo (reduced filesize from 150MB to 25MB)
+* Added `test.html` to `/tests/` folder to use JS files in `/src/` folder
 * Fullscreen plugin player toggles play/pause when controls are clicked (JeffreyATW) https://github.com/johndyer/mediaelement/pull/742 
 * Making use of pluginWidth & pluginHeight (simonschuh) https://github.com/johndyer/mediaelement/pull/837
 * Proportional poster images (IE9+ Chrome, Safari, Firefox) (eyefood) https://github.com/johndyer/mediaelement/pull/838
