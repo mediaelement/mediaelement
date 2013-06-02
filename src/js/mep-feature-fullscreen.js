@@ -188,12 +188,12 @@
 
 								// restore click-to-play
 								t.media.addEventListener('click', t.clickToPlayPauseCallback);
-								
+
 								// show the divs that will restore things
 								for (i in hoverDivs) {
 									hoverDivs[i].show();
 								}
-								
+
 								positionHoverDivs();
 
 								fullscreenIsDisabled = true;
@@ -217,19 +217,19 @@
 
 						// the mouseout event doesn't work on the fullscren button, because we already killed the pointer-events
 						// so we use the document.mousemove event to restore controls when the mouse moves outside the fullscreen button
-						
+
 						t.globalBind('mousemove', function(e) {
 
 							// if the mouse is anywhere but the fullsceen button, then restore it all
 							if (fullscreenIsDisabled) {
-							
+
 								var fullscreenBtnPos = fullscreenBtn.offset();
 
 
 								if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + fullscreenBtn.outerHeight(true) ||
 									e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)
 									) {
-									
+
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
 
@@ -237,7 +237,7 @@
 								}
 							}
 						});
-						
+
 
 
 					} else {
