@@ -15,11 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-<<<<<<< HEAD
 mejs.version = '2.12.0';
-=======
-mejs.version = '2.11.4.dev';
->>>>>>> origin/master
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -575,11 +571,7 @@ mejs.PluginMediaElement.prototype = {
 	
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-<<<<<<< HEAD
 			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
-=======
-			this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
->>>>>>> origin/master
 		}
 	},
 	
@@ -791,12 +783,6 @@ mejs.MediaPluginBridge = {
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
 
-<<<<<<< HEAD
-=======
-		pluginMediaElement.ended = false;
-		pluginMediaElement.paused = true;
-
->>>>>>> origin/master
 		// fake event object to mimic real HTML media event.
 		e = {
 			type: eventName,
@@ -1704,11 +1690,7 @@ window.MediaElement = mejs.MediaElement;
      * @see: i18n.methods.t()
      */
     i18n.locale.getLanguage = function () {
-<<<<<<< HEAD
         return i18n.locale || {
-=======
-        return mejs.locale || {
->>>>>>> origin/master
             "language" : navigator.language
         };
     };
@@ -1847,13 +1829,8 @@ window.MediaElement = mejs.MediaElement;
 
 	"use strict";
 
-<<<<<<< HEAD
 	if ( mejs.i18n.locale.language && mejs.i18n.locale.strings ) {
 		exports[mejs.i18n.locale.language] = mejs.i18n.locale.strings;
-=======
-	if ( mejs.locale.language && mejs.locale.strings ) {
-		exports[mejs.locale.language] = mejs.locale.strings;
->>>>>>> origin/master
 	}
 
 }(mejs.i18n.locale.strings));
