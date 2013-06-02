@@ -15,7 +15,11 @@
 var mejs = mejs || {};
 
 // version number
+<<<<<<< HEAD
 mejs.version = '2.12.0';
+=======
+mejs.version = '2.11.4.dev';
+>>>>>>> origin/master
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -571,7 +575,11 @@ mejs.PluginMediaElement.prototype = {
 	
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
+<<<<<<< HEAD
 			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
+=======
+			this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
+>>>>>>> origin/master
 		}
 	},
 	
@@ -783,6 +791,12 @@ mejs.MediaPluginBridge = {
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
 
+<<<<<<< HEAD
+=======
+		pluginMediaElement.ended = false;
+		pluginMediaElement.paused = true;
+
+>>>>>>> origin/master
 		// fake event object to mimic real HTML media event.
 		e = {
 			type: eventName,
@@ -1690,7 +1704,11 @@ window.MediaElement = mejs.MediaElement;
      * @see: i18n.methods.t()
      */
     i18n.locale.getLanguage = function () {
+<<<<<<< HEAD
         return i18n.locale || {
+=======
+        return mejs.locale || {
+>>>>>>> origin/master
             "language" : navigator.language
         };
     };
@@ -1829,8 +1847,13 @@ window.MediaElement = mejs.MediaElement;
 
 	"use strict";
 
+<<<<<<< HEAD
 	if ( mejs.i18n.locale.language && mejs.i18n.locale.strings ) {
 		exports[mejs.i18n.locale.language] = mejs.i18n.locale.strings;
+=======
+	if ( mejs.locale.language && mejs.locale.strings ) {
+		exports[mejs.locale.language] = mejs.locale.strings;
+>>>>>>> origin/master
 	}
 
 }(mejs.i18n.locale.strings));
@@ -2244,7 +2267,23 @@ if (typeof jQuery != 'undefined') {
 				meOptions.pluginWidth = t.width;
 				meOptions.pluginHeight = t.height;				
 			}
+<<<<<<< HEAD
 						
+=======
+			
+			// create callback during init since it needs access to current
+			// MEP object
+			mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
+        if (t.options.clickToPlayPause) {
+            if (t.media.paused) {
+              t.media.play();
+            } else {
+              t.media.pause();
+            }
+        }
+      };
+
+>>>>>>> origin/master
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 
@@ -2394,11 +2433,18 @@ if (typeof jQuery != 'undefined') {
 				feature;
 
 			// make sure it can't create itself again if a plugin reloads
+<<<<<<< HEAD
 			if (t.created) {
 				return;
 			} else {
 				t.created = true;			
 			}
+=======
+			if (t.created)
+				return;
+			else
+				t.created = true;			
+>>>>>>> origin/master
 
 			t.media = media;
 			t.domNode = domNode;
@@ -2457,6 +2503,7 @@ if (typeof jQuery != 'undefined') {
 						});					
 					
 					} else {
+<<<<<<< HEAD
 						// create callback here since it needs access to current
 						// MediaElement object			
 						mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
@@ -2474,6 +2521,11 @@ if (typeof jQuery != 'undefined') {
 			            // click to play/pause
 			            t.media.addEventListener('click', t.clickToPlayPauseCallback);	            
 			            					
+=======
+            // click to play/pause
+            t.media.addEventListener('click', t.clickToPlayPauseCallback);
+					
+>>>>>>> origin/master
 						// show/hide controls
 						t.container
 							.bind('mouseenter mouseover', function () {
@@ -2532,6 +2584,7 @@ if (typeof jQuery != 'undefined') {
 
 				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
 				media.addEventListener('play', function() {
+<<<<<<< HEAD
 					var playerIndex;
 					
 					// go through all other players
@@ -2544,6 +2597,20 @@ if (typeof jQuery != 'undefined') {
 					}
 					
 					t.hasFocus = true;
+=======
+						var playerIndex;
+						
+						// go through all other players
+						for (playerIndex in mejs.players) {
+							var p = mejs.players[playerIndex];
+							if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
+								p.pause();
+							}
+							p.hasFocus = false;
+						}
+						
+						t.hasFocus = true;
+>>>>>>> origin/master
 				},false);
 								
 
@@ -2558,12 +2625,19 @@ if (typeof jQuery != 'undefined') {
 					}
 					t.media.pause();
 					
+<<<<<<< HEAD
 					if (t.setProgressRail) {
 						t.setProgressRail();
 					}
 					if (t.setCurrentRail) {
 						t.setCurrentRail();
 					}						
+=======
+					if (t.setProgressRail)
+						t.setProgressRail();
+					if (t.setCurrentRail)
+						t.setCurrentRail();						
+>>>>>>> origin/master
 
 					if (t.options.loop) {
 						t.media.play();
@@ -2622,9 +2696,15 @@ if (typeof jQuery != 'undefined') {
 			if (t.options.success) {
 				
 				if (typeof t.options.success == 'string') {
+<<<<<<< HEAD
 					window[t.options.success](t.media, t.domNode, t);
 				} else {
 					t.options.success(t.media, t.domNode, t);
+=======
+						window[t.options.success](t.media, t.domNode, t);
+				} else {
+						t.options.success(t.media, t.domNode, t);
+>>>>>>> origin/master
 				}
 			}
 		},
@@ -3843,6 +3923,11 @@ if (typeof jQuery != 'undefined') {
 								var buttonPos = fullscreenBtn.offset(),
 									containerPos = player.container.offset();
 									
+<<<<<<< HEAD
+=======
+								console.log('positioning fulscreen button in flash');
+
+>>>>>>> origin/master
 								// move the button in Flash into place
 								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
 
@@ -3860,6 +3945,11 @@ if (typeof jQuery != 'undefined') {
 								
 								positionHoverDivs();
 								
+<<<<<<< HEAD
+=======
+								console.log('positioning hoverdivs');
+
+>>>>>>> origin/master
 								fullscreenIsDisabled = true;
 							}
 
@@ -3887,6 +3977,11 @@ if (typeof jQuery != 'undefined') {
 							// if the mouse is anywhere but the fullsceen button, then restore it all
 							if (fullscreenIsDisabled) {
 							
+<<<<<<< HEAD
+=======
+								
+
+>>>>>>> origin/master
 								var fullscreenBtnPos = fullscreenBtn.offset();
 
 
@@ -3894,6 +3989,11 @@ if (typeof jQuery != 'undefined') {
 									e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)
 									) {
 									
+<<<<<<< HEAD
+=======
+									console.log('restoring fullscreen');
+
+>>>>>>> origin/master
 									fullscreenBtn.css('pointer-events', '');
 									t.controls.css('pointer-events', '');
 
