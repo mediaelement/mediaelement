@@ -374,7 +374,7 @@
 			
 				if (!img.is(':visible') && !img.is(':animated')) {
 				
-					console.log('showing existing slide');			
+					//console.log('showing existing slide');			
 					
 					img.fadeIn()
 						.siblings(':visible')
