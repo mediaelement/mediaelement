@@ -1,4 +1,4 @@
-  package  
+package  
 {
   import flash.display.*;
   import flash.events.*;
@@ -392,8 +392,8 @@
     // https://github.com/happyworm/jPlayer/blob/e8ca190f7f972a6a421cb95f09e138720e40ed6d/actionscript/Jplayer.as#L228
     private function checkFlashVars(p:Object):void {
       var i:Number = 0;
-      for each (var s:String in p) {
-        if (isIllegalChar(s)) {
+      for (var s:String in p) {
+        if (isIllegalChar(p[s], s === 'file')) {
           securityIssue = true; // Illegal char found
         }
         i++;
@@ -402,9 +402,12 @@
         directAccess = true;
       }
     }
-    
-    private function isIllegalChar(s:String):Boolean {
+
+    private function isIllegalChar(s:String, isUrl:Boolean):Boolean {
       var illegals:String = "' \" ( ) { } * + \\ < >";
+      if(isUrl) {
+        illegals = "\" { } \\ < >";
+      }
       if(Boolean(s)) { // Otherwise exception if parameter null.
         for each (var illegal:String in illegals.split(' ')) {
           if(s.indexOf(illegal) >= 0) {
@@ -661,7 +664,7 @@
       
       stage.displayState = StageDisplayState.FULL_SCREEN;
       
-      repositionVideo(true);
+      repositionVideo();
       positionControls();
       updateControls(HtmlMediaEvent.FULLSCREENCHANGE);
       
@@ -711,7 +714,7 @@
       try {
         _controlBar.visible = true;
         setFullscreen(!_isFullScreen);
-        repositionVideo(_isFullScreen);
+        repositionVideo();
       } catch (error:Error) {
       }
     }
@@ -724,7 +727,7 @@
       try {
         _controlBar.visible = true;
         setFullscreen(true);
-        repositionVideo(true);
+        repositionVideo();
         positionControls();
       } catch (error:Error) {
       }
@@ -843,9 +846,15 @@
     // END: external interface
     
 
-    private function repositionVideo(fullscreen:Boolean = false):void {
-
-      _output.appendText("positioning video\n");
+    private function repositionVideo():void {
+    
+      if (stage.displayState == "fullScreen") {
+        fullscreen = true;
+      } else {
+        fullscreen = false;
+      }
+      
+      _output.appendText("positioning video "+stage.displayState+"\n");
 
       if (_mediaElement is VideoElement) {
 
@@ -863,7 +872,7 @@
         if(fullscreen == true) {
           stageRatio = flash.system.Capabilities.screenResolutionX/flash.system.Capabilities.screenResolutionY;
           nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
-      
+
           // adjust size and position
           if (nativeRatio > stageRatio) {
             _mediaElement.setSize(flash.system.Capabilities.screenResolutionX, _nativeVideoHeight * flash.system.Capabilities.screenResolutionX / _nativeVideoWidth);
@@ -878,7 +887,6 @@
         } else {
           stageRatio = _stageWidth/_stageHeight;
           nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
-    
         
           // adjust size and position
           if (nativeRatio > stageRatio) {
@@ -927,12 +935,11 @@
         _output.appendText(_nativeVideoWidth.toString() + "x" + _nativeVideoHeight.toString() + "\n");
         
 
-         if(stage.displayState == "fullScreen" ) {
+        if(stage.displayState == "fullScreen" ) {
           setVideoSize(_nativeVideoWidth, _nativeVideoHeight);
-          repositionVideo(true);
-         } else {
-          repositionVideo();
-         }
+        }
+        repositionVideo();
+        
       }
 
       updateControls(eventName);

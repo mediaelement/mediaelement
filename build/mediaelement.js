@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.11.3';
+mejs.version = '2.12.0';
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -316,6 +316,7 @@ mejs.MediaFeatures = {
 		t.isiOS = t.isiPhone || t.isiPad;
 		t.isAndroid = (ua.match(/android/i) !== null);
 		t.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
+		t.isBustedNativeHTTPS = (location.protocol === 'https:' && (ua.match(/android [12]\./) !== null || ua.match(/macintosh.* version.* safari/) !== null));
 		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		t.isChrome = (ua.match(/chrome/gi) !== null);
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
@@ -334,6 +335,13 @@ mejs.MediaFeatures = {
 		}
 		
 		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid);
+
+		// Fix for IE9 on Windows 7N / Windows 7KN (Media Player not installer)
+		try{
+			v.canPlayType("video/mp4");
+		}catch(e){
+			t.supportsMediaTag = false;
+		}
 
 		// detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 		
@@ -563,7 +571,7 @@ mejs.PluginMediaElement.prototype = {
 	
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-			this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
+			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
 		}
 	},
 	
@@ -989,7 +997,7 @@ mejs.HtmlMediaElementShim = {
 		
 
 		// test for native playback first
-		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')) {
+		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')  && !(mejs.MediaFeatures.isBustedNativeHTTPS)) {
 						
 			if (!isMediaTag) {
 
@@ -1181,8 +1189,8 @@ mejs.HtmlMediaElementShim = {
 		}
 
 		if (playback.isVideo) {
-			width = (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
-			height = (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;
+			width = (options.pluginWidth > 0) ? options.pluginWidth : (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
+			height = (options.pluginHeight > 0) ? options.pluginHeight : (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;
 		
 			// in case of '%' make sure it's encoded
 			width = mejs.Utility.encodeUrl(width);
@@ -1682,7 +1690,7 @@ window.MediaElement = mejs.MediaElement;
      * @see: i18n.methods.t()
      */
     i18n.locale.getLanguage = function () {
-        return {
+        return i18n.locale || {
             "language" : navigator.language
         };
     };
@@ -1816,6 +1824,16 @@ window.MediaElement = mejs.MediaElement;
 // end i18n
     exports.i18n = i18n;
 }(document, mejs));
+
+;(function(exports, undefined) {
+
+	"use strict";
+
+	if ( mejs.i18n.locale.language && mejs.i18n.locale.strings ) {
+		exports[mejs.i18n.locale.language] = mejs.i18n.locale.strings;
+	}
+
+}(mejs.i18n.locale.strings));
 
 /*!
  * This is a i18n.locale language object.

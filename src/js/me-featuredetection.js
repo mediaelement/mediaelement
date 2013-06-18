@@ -16,6 +16,7 @@ mejs.MediaFeatures = {
 		t.isiOS = t.isiPhone || t.isiPad;
 		t.isAndroid = (ua.match(/android/i) !== null);
 		t.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
+		t.isBustedNativeHTTPS = (location.protocol === 'https:' && (ua.match(/android [12]\./) !== null || ua.match(/macintosh.* version.* safari/) !== null));
 		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
 		t.isChrome = (ua.match(/chrome/gi) !== null);
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
@@ -34,6 +35,13 @@ mejs.MediaFeatures = {
 		}
 		
 		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid);
+
+		// Fix for IE9 on Windows 7N / Windows 7KN (Media Player not installer)
+		try{
+			v.canPlayType("video/mp4");
+		}catch(e){
+			t.supportsMediaTag = false;
+		}
 
 		// detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 		
