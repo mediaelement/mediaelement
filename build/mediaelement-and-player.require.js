@@ -1,3 +1,5 @@
+define(['jq', 'jq'], function ($, jQuery, undefined) {
+
 /*!
 * MediaElement.js
 * HTML5 <video> and <audio> shim and player
@@ -5042,4 +5044,10 @@ $.extend(mejs.MepDefaults,
 	});
 
 })(mejs.$);
+
+
+
+  return mejs;
+
+});
 
