@@ -531,73 +531,66 @@
 				// controls fade
 				if (t.isVideo) {
 
-					if (mejs.MediaFeatures.hasTouch) {
+					// for touch devices (iOS, Android)
+					// show/hide without animation on touch
+					t.media.addEventListener('touchstart', function(e) {
+						// toggle controls
+						if (t.controlsAreVisible) {
+							t.hideControls(false);
+						} else {
+							if (t.controlsEnabled) {
+								t.showControls(false);
+							}
+						}
 
-						// for touch devices (iOS, Android)
-						// show/hide without animation on touch
+						//prevent fire click event
+						e.preventDefault();
+					});
 
-						t.$media.bind('touchstart', function() {
-
-
-							// toggle controls
-							if (t.controlsAreVisible) {
-								t.hideControls(false);
+					// create callback here since it needs access to current
+					// MediaElement object
+					mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
+						if (t.options.clickToPlayPause) {
+							if (t.media.paused) {
+								t.media.play();
 							} else {
-								if (t.controlsEnabled) {
-									t.showControls(false);
+								t.media.pause();
+							}
+						}
+					};
+
+					// click to play/pause
+					t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
+					// show/hide controls
+					t.container
+						.bind('mouseenter mouseover', function () {
+							if (t.controlsEnabled) {
+								if (!t.options.alwaysShowControls) {
+									t.killControlsTimer('enter');
+									t.showControls();
+									t.startControlsTimer(2500);
+								}
+							}
+						})
+						.bind('mousemove', function() {
+							if (t.controlsEnabled) {
+								if (!t.controlsAreVisible) {
+									t.showControls();
+								}
+								//t.killControlsTimer('move');
+								if (!t.options.alwaysShowControls) {
+									t.startControlsTimer(2500);
+								}
+							}
+						})
+						.bind('mouseleave', function () {
+							if (t.controlsEnabled) {
+								if (!t.media.paused && !t.options.alwaysShowControls) {
+									t.startControlsTimer(1000);
 								}
 							}
 						});
-
-					} else {
-
-						// create callback here since it needs access to current
-						// MediaElement object
-						mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
-							console.log('media clicked', t.media, t.media.paused);
-
-							if (t.options.clickToPlayPause) {
-								if (t.media.paused) {
-									t.media.play();
-								} else {
-									t.media.pause();
-								}
-							}
-						};
-
-			            // click to play/pause
-			            t.media.addEventListener('click', t.clickToPlayPauseCallback);
-
-						// show/hide controls
-						t.container
-							.bind('mouseenter mouseover', function () {
-								if (t.controlsEnabled) {
-									if (!t.options.alwaysShowControls) {
-										t.killControlsTimer('enter');
-										t.showControls();
-										t.startControlsTimer(2500);
-									}
-								}
-							})
-							.bind('mousemove', function() {
-								if (t.controlsEnabled) {
-									if (!t.controlsAreVisible) {
-										t.showControls();
-									}
-									//t.killControlsTimer('move');
-									if (!t.options.alwaysShowControls) {
-										t.startControlsTimer(2500);
-									}
-								}
-							})
-							.bind('mouseleave', function () {
-								if (t.controlsEnabled) {
-									if (!t.media.paused && !t.options.alwaysShowControls) {
-										t.startControlsTimer(1000);
-									}
-								}
-							});
-					}
 
 					if(t.options.hideVideoControlsOnLoad) {
 						t.hideControls(false);
