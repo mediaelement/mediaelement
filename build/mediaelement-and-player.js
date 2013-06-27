@@ -3357,7 +3357,7 @@ if (typeof jQuery != 'undefined') {
 	// options
 	$.extend(mejs.MepDefaults, {
 		duration: -1,
-		timeAndDurationSeparator: ' <span> / </span> '
+		timeAndDurationSeparator: '<span> | </span>'
 	});
 
 
