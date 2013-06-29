@@ -136,7 +136,7 @@ Fixes and updates
 * Make Flash stage handle CLICK rather than MOUSE_DOWN (odnamrataizem) (https://github.com/johndyer/mediaelement/pull/804)
 
 
-*2.11.0 (2012/03/13)*
+*2.11.0 (2013/03/13)*
 
 * Preroll ads manager
 * VAST ads plugin (sponsored by Minito Video)
@@ -156,7 +156,7 @@ Fixes and updates
 * [cc] button can now be a toggle when there's just one track (LeResKP) https://github.com/johndyer/mediaelement/pull/793
 * fixed error when srclang was missing
 
-*2.10.3 (2012/01/27)*
+*2.10.3 (2013/01/27)*
 
 * Fix broken scrollbar from API reference error (peterbrook) (https://github.com/johndyer/mediaelement/pull/739)
 
