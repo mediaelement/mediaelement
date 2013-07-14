@@ -84,6 +84,17 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)
 
+*2.12.1 (X)*
+
+* More i18n fixes for Wordpress (SergeyBiryukov) https://github.com/johndyer/mediaelement/pull/940
+* Fix touch detection in QtWebKit (peterbrook) https://github.com/johndyer/mediaelement/pull/939
+* Added configuration option httpsBasicAuthSite fix sites using HTTPS basic authentication (benroy73) https://github.com/johndyer/mediaelement/pull/937
+* Fixed backlight plugin error (eviweb) https://github.com/johndyer/mediaelement/pull/932
+* Fix some wrong dates on the change log (heartcode) https://github.com/johndyer/mediaelement/pull/930
+* Add a mejs-fullscreen css class on the root element (fbuecklers) https://github.com/johndyer/mediaelement/pull/925
+* fix for ff switch between fullscreen and normal mode (fbuecklers) https://github.com/johndyer/mediaelement/pull/924
+
+
 *2.12.0 (2013/06/02)*
 
 * Removed old media files from repo (reduced filesize from 150MB to 25MB)
