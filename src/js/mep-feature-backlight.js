@@ -9,7 +9,7 @@
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
-		buildbacklight = function(player, controls, layers, media) {
+		buildbacklight : function(player, controls, layers, media) {
 			if (!player.isVideo)
 				return;
 
