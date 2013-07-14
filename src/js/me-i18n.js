@@ -45,6 +45,7 @@
     "use strict";
     var i18n = {
         "locale": {
+            "language" : '',
             "strings" : {}
         },
         "methods" : {}
@@ -58,10 +59,12 @@
      * @see: i18n.methods.t()
      */
     i18n.locale.getLanguage = function () {
-        return i18n.locale || {
-            "language" : navigator.language
-        };
+        return i18n.locale.language || navigator.language;
     };
+
+    if ( typeof mejsL10n != 'undefined' ) {
+        i18n.locale.language = mejsL10n.language;
+    }
 
     /**
      * Store the language the locale object was initialized with
@@ -171,12 +174,12 @@
 
         if (typeof str === 'string' && str.length > 0) {
 
-            // check every time due languge can change for
+            // check every time due language can change for
             // different reasons (translation, lang switcher ..)
-            var lang = i18n.locale.getLanguage();
+            var language = i18n.locale.getLanguage();
 
             options = options || {
-                "context" : lang.language
+                "context" : language
             };
 
             return i18n.methods.t(str, args, options);
@@ -195,10 +198,10 @@
 
 ;(function(exports, undefined) {
 
-	"use strict";
+    "use strict";
 
-	if ( mejs.i18n.locale.language && mejs.i18n.locale.strings ) {
-		exports[mejs.i18n.locale.language] = mejs.i18n.locale.strings;
-	}
+    if ( typeof mejsL10n != 'undefined' ) {
+        exports[mejsL10n.language] = mejsL10n.strings;
+    };
 
 }(mejs.i18n.locale.strings));
