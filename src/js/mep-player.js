@@ -1063,7 +1063,9 @@
 			this.media.play();
 		},
 		pause: function() {
-			this.media.pause();
+			try {
+				this.media.pause();
+			} catch (e) {}
 		},
 		load: function() {
 			this.media.load();
