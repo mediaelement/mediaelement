@@ -20,6 +20,11 @@
 	overflow: hidden;
 }
 
+.mejs-fullscreen {
+	/* set it to not show scroll bars so 100% will work */
+	overflow: hidden !important;
+}
+
 .mejs-container-fullscreen {
 	position: fixed;
 	left: 0;
