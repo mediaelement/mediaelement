@@ -370,7 +370,7 @@ package htmlelements
 			} else {
 				_player.unMute();
 			}
-			_muted = _player.isMuted();
+			_isMuted = _player.isMuted();
 			sendEvent(HtmlMediaEvent.VOLUMECHANGE);
 		}
 
