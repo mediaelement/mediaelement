@@ -15,7 +15,8 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.12.0';
+mejs.version = '2.12.1'; 
+
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -323,7 +324,7 @@ mejs.MediaFeatures = {
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit;
 		t.isOpera = (ua.match(/opera/gi) !== null);
-		t.hasTouch = ('ontouchstart' in window);
+		t.hasTouch = ('ontouchstart' in window && window.ontouchstart != null);
 		
 		// borrowed from Modernizr
 		t.svg = !! document.createElementNS &&
@@ -783,6 +784,10 @@ mejs.MediaPluginBridge = {
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
 
+		if(!pluginMediaElement){
+            return;
+        }
+        
 		// fake event object to mimic real HTML media event.
 		e = {
 			type: eventName,
@@ -827,6 +832,8 @@ mejs.MediaElementDefaults = {
 	plugins: ['flash','silverlight','youtube','vimeo'],
 	// shows debug errors on screen
 	enablePluginDebug: false,
+	// use plugin for browsers that have trouble with Basic Authentication on HTTPS sites
+	httpsBasicAuthSite: false,
 	// overrides the type specified, useful for dynamic instantiation
 	type: '',
 	// path to Flash and Silverlight plugins
@@ -997,7 +1004,7 @@ mejs.HtmlMediaElementShim = {
 		
 
 		// test for native playback first
-		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')  && !(mejs.MediaFeatures.isBustedNativeHTTPS)) {
+		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')  && !(mejs.MediaFeatures.isBustedNativeHTTPS && options.httpsBasicAuthSite === true)) {
 						
 			if (!isMediaTag) {
 
@@ -1328,7 +1335,7 @@ mejs.HtmlMediaElementShim = {
 			
 			// DEMO Code. Does NOT work.
 			case 'vimeo':
-				//console.log('vimeoid');
+				//
 				
 				pluginMediaElement.vimeoid = playback.url.substr(playback.url.lastIndexOf('/')+1);
 				
@@ -1349,6 +1356,8 @@ mejs.HtmlMediaElementShim = {
 		}
 		// hide original element
 		htmlMediaElement.style.display = 'none';
+		// prevent browser from autoplaying when using a plugin
+		htmlMediaElement.removeAttribute('autoplay');
 
 		// FYI: options.success will be fired by the MediaPluginBridge
 		
@@ -1677,6 +1686,7 @@ window.MediaElement = mejs.MediaElement;
     "use strict";
     var i18n = {
         "locale": {
+            "language" : '',
             "strings" : {}
         },
         "methods" : {}
@@ -1690,10 +1700,12 @@ window.MediaElement = mejs.MediaElement;
      * @see: i18n.methods.t()
      */
     i18n.locale.getLanguage = function () {
-        return i18n.locale || {
-            "language" : navigator.language
-        };
+        return i18n.locale.language || navigator.language;
     };
+
+    if ( typeof mejsL10n != 'undefined' ) {
+        i18n.locale.language = mejsL10n.language;
+    }
 
     /**
      * Store the language the locale object was initialized with
@@ -1803,12 +1815,12 @@ window.MediaElement = mejs.MediaElement;
 
         if (typeof str === 'string' && str.length > 0) {
 
-            // check every time due languge can change for
+            // check every time due language can change for
             // different reasons (translation, lang switcher ..)
-            var lang = i18n.locale.getLanguage();
+            var language = i18n.locale.getLanguage();
 
             options = options || {
-                "context" : lang.language
+                "context" : language
             };
 
             return i18n.methods.t(str, args, options);
@@ -1827,11 +1839,11 @@ window.MediaElement = mejs.MediaElement;
 
 ;(function(exports, undefined) {
 
-	"use strict";
+    "use strict";
 
-	if ( mejs.i18n.locale.language && mejs.i18n.locale.strings ) {
-		exports[mejs.i18n.locale.language] = mejs.i18n.locale.strings;
-	}
+    if ( typeof mejsL10n != 'undefined' ) {
+        exports[mejsL10n.language] = mejsL10n.strings;
+    };
 
 }(mejs.i18n.locale.strings));
 
