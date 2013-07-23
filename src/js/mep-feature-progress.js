@@ -5,6 +5,7 @@
 
 			$('<div class="mejs-time-rail">'+
 				'<span class="mejs-time-total">'+
+					'<span class="mejs-time-buffering"></span>'+
 					'<span class="mejs-time-loaded"></span>'+
 					'<span class="mejs-time-current"></span>'+
 					'<span class="mejs-time-handle"></span>'+
@@ -15,6 +16,7 @@
 				'</span>'+
 			'</div>')
 				.appendTo(controls);
+				controls.find('.mejs-time-buffering').hide();
 
 			var 
 				t = this,
@@ -28,24 +30,34 @@
 					// mouse position relative to the object
 					var x = e.pageX,
 						offset = total.offset(),
-						width = total.outerWidth(),
+						width = total.outerWidth(true),
 						percentage = 0,
-						newTime = 0;
+						newTime = 0,
+						pos = 0;
 
 
-					if (x > offset.left && x <= width + offset.left && media.duration) {
-						percentage = ((x - offset.left) / width);
+					if (media.duration) {
+						if (x < offset.left) {
+							x = offset.left;
+						} else if (x > width + offset.left) {
+							x = width + offset.left;
+						}
+						
+						pos = x - offset.left;
+						percentage = (pos / width);
 						newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
 						// seek to where the mouse is
-						if (mouseIsDown) {
+						if (mouseIsDown && newTime !== media.currentTime) {
 							media.setCurrentTime(newTime);
 						}
 
 						// position floating time box
-						var pos = x - offset.left;
-						timefloat.css('left', pos);
-						timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );
+						if (!mejs.MediaFeatures.hasTouch) {
+								timefloat.css('left', pos);
+								timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );
+								timefloat.show();
+						}
 					}
 				},
 				mouseIsDown = false,
@@ -59,26 +71,31 @@
 					if (e.which === 1) {
 						mouseIsDown = true;
 						handleMouseMove(e);
+						t.globalBind('mousemove.dur', function(e) {
+							handleMouseMove(e);
+						});
+						t.globalBind('mouseup.dur', function (e) {
+							mouseIsDown = false;
+							timefloat.hide();
+							t.globalUnbind('.dur');
+						});
 						return false;
-					}					
-				});
-
-			controls.find('.mejs-time-rail')
+					}
+				})
 				.bind('mouseenter', function(e) {
 					mouseIsOver = true;
+					t.globalBind('mousemove.dur', function(e) {
+						handleMouseMove(e);
+					});
+					if (!mejs.MediaFeatures.hasTouch) {
+						timefloat.show();
+					}
 				})
 				.bind('mouseleave',function(e) {
 					mouseIsOver = false;
-				});
-
-			$(document)
-				.bind('mouseup', function (e) {
-					mouseIsDown = false;
-					//handleMouseMove(e);
-				})
-				.bind('mousemove', function (e) {
-					if (mouseIsDown || mouseIsOver) {
-						handleMouseMove(e);
+					if (!mouseIsDown) {
+						t.globalUnbind('.dur');
+						timefloat.hide();
 					}
 				});
 
@@ -143,8 +160,8 @@
 				// update bar and handle
 				if (t.total && t.handle) {
 					var 
-						newWidth = t.total.width() * t.media.currentTime / t.media.duration,
-						handlePos = newWidth - (t.handle.outerWidth(true) / 2);
+						newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
+						handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
 
 					t.current.width(newWidth);
 					t.handle.css('left', handlePos);

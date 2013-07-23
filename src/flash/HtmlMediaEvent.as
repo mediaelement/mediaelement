@@ -22,5 +22,8 @@
 		
 		// new : 4/12/2011
 		public static var SEEKING:String = "seeking";		
+		
+		// new : 1/2/2012
+		public static var FULLSCREENCHANGE:String = "fullscreenchange";		
 	}
 }

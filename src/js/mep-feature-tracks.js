@@ -4,12 +4,17 @@
 	$.extend(mejs.MepDefaults, {
 		// this will automatically turn on a <track>
 		startLanguage: '',
-		// a list of languages to auto-translate via Google
-		translations: [],
-		// a dropdownlist of automatic translations
-		translationSelector: false,
-		// key for tranlsations
-		googleApiKey: ''
+
+		tracksText: 'Captions/Subtitles',
+		
+		// option to remove the [cc] button when no <track kind="subtitles"> are present
+		hideCaptionsButtonWhenEmpty: true,
+
+		// If true and we only have one track, change captions to popup
+		toggleCaptionsButtonWhenOnlyOne: false,
+
+		// #id or .class		
+		slidesSelector: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -17,24 +22,23 @@
 		hasChapters: false,
 
 		buildtracks: function(player, controls, layers, media) {
-			if (!player.isVideo)
-				return;
-
 			if (player.tracks.length == 0)
 				return;
 
-			var i, options = '';
+			var t = this, 
+				i, 
+				options = '';
 
 			player.chapters = 
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();
 			player.captions = 
-					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position"><span class="mejs-captions-text"></span></div></div>')
+					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover"><span class="mejs-captions-text"></span></div></div>')
 						.prependTo(layers).hide();
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton = 
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" ></button>'+
+						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.tracksText + '" aria-label="' + t.options.tracksText + '"></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
@@ -44,45 +48,52 @@
 							'</ul>'+
 						'</div>'+
 					'</div>')
-						.appendTo(controls)
+						.appendTo(controls);
+			
 						
-						// hover
-						.hover(function() {
-							$(this).find('.mejs-captions-selector').css('visibility','visible');
-						}, function() {
-							$(this).find('.mejs-captions-selector').css('visibility','hidden');
-						})					
-						
-						// handle clicks to the language radio buttons
-						.delegate('input[type=radio]','click',function() {
-							lang = this.value;
+			var subtitleCount = 0;
+			for (i=0; i<player.tracks.length; i++) {
+				if (player.tracks[i].kind == 'subtitles') {
+					subtitleCount++;
+				}
+			}
 
-							if (lang == 'none') {
-								player.selectedTrack = null;
-							} else {
-								for (i=0; i<player.tracks.length; i++) {
-									if (player.tracks[i].srclang == lang) {
-										player.selectedTrack = player.tracks[i];
-										player.captions.attr('lang', player.selectedTrack.srclang);
-										player.displayCaptions();
-										break;
-									}
-								}
-							}
-						});
-						//.bind('mouseenter', function() {
-						//	player.captionsButton.find('.mejs-captions-selector').css('visibility','visible')
-						//});
+			// if only one language then just make the button a toggle
+			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount == 1){
+				// click
+				player.captionsButton.on('click',function() {
+					if (player.selectedTrack == null) {
+						var lang = player.tracks[0].srclang;
+					} else {
+						var lang = 'none';
+					}
+					player.setTrack(lang);
+				});
+			} else {
+				// hover
+				player.captionsButton.hover(function() {
+					$(this).find('.mejs-captions-selector').css('visibility','visible');
+				}, function() {
+					$(this).find('.mejs-captions-selector').css('visibility','hidden');
+				})
+
+				// handle clicks to the language radio buttons
+				.on('click','input[type=radio]',function() {
+					lang = this.value;
+					player.setTrack(lang);
+				});
+
+			}
 
 			if (!player.options.alwaysShowControls) {
 				// move with controls
 				player.container
-					.bind('mouseenter', function () {
+					.bind('controlsshown', function () {
 						// push captions above controls
 						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
 					})
-					.bind('mouseleave', function () {
+					.bind('controlshidden', function () {
 						if (!media.paused) {
 							// move back to normal place
 							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
@@ -96,33 +107,31 @@
 			player.selectedTrack = null;
 			player.isLoadingTrack = false;
 
-			// add user-defined translations
-			if (player.tracks.length > 0 && player.options.translations.length > 0) {
-				for (i=0; i<player.options.translations.length; i++) {
-					player.tracks.push({
-						srclang: player.options.translations[i].toLowerCase(),
-						src: null,
-						kind: 'subtitles', 
-						entries: [],
-						isLoaded: false,
-						isTranslation: true
-					});
-				}
-			}
+			
 
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].isTranslation);
+					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
 
+			// start loading tracks
 			player.loadNextTrack();
 
 
 			media.addEventListener('timeupdate',function(e) {
 				player.displayCaptions();
 			}, false);
+			
+			if (player.options.slidesSelector != '') {
+				player.slidesContainer = $(player.options.slidesSelector);
+
+				media.addEventListener('timeupdate',function(e) {
+					player.displaySlides();	
+				}, false);
+			
+			}
 
 			media.addEventListener('loadedmetadata', function(e) {
 				player.displayChapters();
@@ -133,7 +142,7 @@
 					// chapters
 					if (player.hasChapters) {
 						player.chapters.css('visibility','visible');
-						player.chapters.fadeIn(200);
+						player.chapters.fadeIn(200).height(player.chapters.find('.mejs-chapter').outerHeight());
 					}
 				},
 				function () {
@@ -148,44 +157,29 @@
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
-			}				
-
-			// auto selector
-			if (player.options.translationSelector) {
-				for (i in mejs.language.codes) {
-					options += '<option value="' + i + '">' + mejs.language.codes[i] + '</option>';
-				}
-				player.container.find('.mejs-captions-selector ul').before($(
-					'<select class="mejs-captions-translations">' +
-						'<option value="">--Add Translation--</option>' +
-						options +
-					'</select>'
-				));
-				// add clicks
-				player.container.find('.mejs-captions-translations').change(function() {
-					var
-						option = $(this);
-						lang = option.val();
-					// add this language to the tracks list
-					if (lang != '') {
-						player.tracks.push({
-							srclang: lang,
-							src: null,
-							entries: [],
-							isLoaded: false,
-							isTranslation: true
-						});
-
-						if (!player.isLoadingTrack) {
-							player.trackToLoad--;
-							player.addTrackButton(lang,true);
-							player.options.startLanguage = lang;
-							player.loadNextTrack();
-						}
-					}
-				});
 			}
-
+		},
+		
+		setTrack: function(lang){
+		
+			var t = this,
+				i;
+		
+			if (lang == 'none') {
+				t.selectedTrack = null;
+				t.captionsButton.removeClass('mejs-captions-enabled');
+			} else {
+				for (i=0; i<t.tracks.length; i++) {
+					if (t.tracks[i].srclang == lang) {
+						if (t.selectedTrack == null)
+						    t.captionsButton.addClass('mejs-captions-enabled');
+						t.selectedTrack = t.tracks[i];
+						t.captions.attr('lang', t.selectedTrack.srclang);
+						t.displayCaptions();
+						break;
+					}
+				}
+			}
 		},
 
 		loadNextTrack: function() {
@@ -198,6 +192,8 @@
 			} else {
 				// add done?
 				t.isLoadingTrack = false;
+				
+				t.checkForTracks();	
 			}
 		},
 
@@ -211,51 +207,57 @@
 
 					// create button
 					//t.addTrackButton(track.srclang);
-					t.enableTrackButton(track.srclang);
+					t.enableTrackButton(track.srclang, track.label);
 
 					t.loadNextTrack();
 
 				};
 
-			if (track.isTranslation) {
 
-				// translate the first track
-				mejs.TrackFormatParser.translateTrackText(t.tracks[0].entries, t.tracks[0].srclang, track.srclang, t.options.googleApiKey, function(newOne) {
+			$.ajax({
+				url: track.src,
+				dataType: "text",
+				success: function(d) {
 
-					// store the new translation
-					track.entries = newOne;
-
-					after();
-				});
-
-			} else {
-				$.ajax({
-					url: track.src,
-					success: function(d) {
-
-						// parse the loaded file
-						track.entries = mejs.TrackFormatParser.parse(d);
-						after();
-
-						if (track.kind == 'chapters' && t.media.duration > 0) {
-							t.drawChapters(track);
-						}
-					},
-					error: function() {
-						t.loadNextTrack();
+					// parse the loaded file
+					if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+						track.entries = mejs.TrackFormatParser.dfxp.parse(d);					
+					} else {	
+						track.entries = mejs.TrackFormatParser.webvvt.parse(d);
 					}
-				});
-			}
+					
+					after();
+
+					if (track.kind == 'chapters') {
+						t.media.addEventListener('play', function(e) {
+							if (t.media.duration > 0) {
+								t.displayChapters(track);
+							}
+						}, false);
+					}
+					
+					if (track.kind == 'slides') {
+						t.setupSlides(track);
+					}					
+				},
+				error: function() {
+					t.loadNextTrack();
+				}
+			});
 		},
 
-		enableTrackButton: function(lang) {
+		enableTrackButton: function(lang, label) {
 			var t = this;
+			
+			if (label === '') {
+				label = mejs.language.codes[lang] || lang;
+			}			
 
 			t.captionsButton
 				.find('input[value=' + lang + ']')
 					.prop('disabled',false)
 				.siblings('label')
-					.html( mejs.language.codes[lang] || lang );
+					.html( label );
 
 			// auto select
 			if (t.options.startLanguage == lang) {
@@ -265,14 +267,16 @@
 			t.adjustLanguageBox();
 		},
 
-		addTrackButton: function(lang, isTranslation) {
-			var t = this,
-				l = mejs.language.codes[lang] || lang;
+		addTrackButton: function(lang, label) {
+			var t = this;
+			if (label === '') {
+				label = mejs.language.codes[lang] || lang;
+			}
 
 			t.captionsButton.find('ul').append(
 				$('<li>'+
 					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + l + ((isTranslation) ? ' (translating)' : ' (loading)') + '</label>'+
+					'<label for="' + t.id + '_captions_' + lang + '">' + label + ' (loading)' + '</label>'+
 				'</li>')
 			);
 
@@ -290,6 +294,27 @@
 				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
 			);
 		},
+		
+		checkForTracks: function() {
+			var
+				t = this,
+				hasSubtitles = false;
+			
+			// check if any subtitles
+			if (t.options.hideCaptionsButtonWhenEmpty) {
+				for (i=0; i<t.tracks.length; i++) {
+					if (t.tracks[i].kind == 'subtitles') {
+						hasSubtitles = true;
+						break;
+					}
+				}	
+					
+				if (!hasSubtitles) {
+					t.captionsButton.hide();
+					t.setControlsSize();
+				}													
+			}		
+		},
 
 		displayCaptions: function() {
 
@@ -305,13 +330,77 @@
 				for (i=0; i<track.entries.times.length; i++) {
 					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){
 						t.captionsText.html(track.entries.text[i]);
-						t.captions.show();
+						t.captions.show().height(0);
 						return; // exit out if one is visible;
 					}
 				}
 				t.captions.hide();
 			} else {
 				t.captions.hide();
+			}
+		},
+		
+		setupSlides: function(track) {
+			var t = this;
+				
+			t.slides = track;
+			t.slides.entries.imgs = [t.slides.entries.text.length];
+			t.showSlide(0);
+			
+		},
+		
+		showSlide: function(index) {
+			if (typeof this.tracks == 'undefined' || typeof this.slidesContainer == 'undefined') {
+				return;			
+			}
+								
+			var t = this,
+				url = t.slides.entries.text[index],
+				img = t.slides.entries.imgs[index];
+				
+			if (typeof img == 'undefined' || typeof img.fadeIn == 'undefined') {
+
+				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
+						.on('load', function() {
+							img.appendTo(t.slidesContainer)
+								.hide()
+								.fadeIn()
+								.siblings(':visible')
+									.fadeOut();							
+						
+						});
+			
+			} else {
+			
+				if (!img.is(':visible') && !img.is(':animated')) {
+				
+					console.log('showing existing slide');			
+					
+					img.fadeIn()
+						.siblings(':visible')
+							.fadeOut();			
+				}
+			}
+				
+		},
+		
+		displaySlides: function() {
+		
+			if (typeof this.slides == 'undefined')
+				return;	
+				
+			var 
+				t = this,
+				slides = t.slides,
+				i;				
+		
+			for (i=0; i<slides.entries.times.length; i++) {
+				if (t.media.currentTime >= slides.entries.times[i].start && t.media.currentTime <= slides.entries.times[i].stop){
+				
+					t.showSlide(i);
+					
+					return; // exit out if one is visible;
+				}
 			}
 		},
 
@@ -457,144 +546,109 @@
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	mejs.TrackFormatParser = {
-		// match start "chapter-" (or anythingelse)
-		pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
-		pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
+		webvvt: {
+			// match start "chapter-" (or anythingelse)
+			pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
+			pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
+			parse: function(trackText) {
+				var 
+					i = 0,
+					lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
+					entries = {text:[], times:[]},
+					timecode,
+					text;
+				for(; i<lines.length; i++) {
+					// check for the line number
+					if (this.pattern_identifier.exec(lines[i])){
+						// skip to the next line where the start --> end time code should be
+						i++;
+						timecode = this.pattern_timecode.exec(lines[i]);				
+
+						if (timecode && i<lines.length){
+							i++;
+							// grab all the (possibly multi-line) text that follows
+							text = lines[i];
+							i++;
+							while(lines[i] !== '' && i<lines.length){
+								text = text + '\n' + lines[i];
+								i++;
+							}
+							text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+							// Text is in a different array so I can use .join
+							entries.text.push(text);
+							entries.times.push(
+							{
+								start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) == 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
+								stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
+								settings: timecode[5]
+							});
+						}
+					}
+				}
+				return entries;
+			}
+		},
+		// Thanks to Justin Capella: https://github.com/johndyer/mediaelement/pull/420
+		dfxp: {
+			parse: function(trackText) {
+				trackText = $(trackText).filter("tt");
+				var 
+					i = 0,
+					container = trackText.children("div").eq(0),
+					lines = container.find("p"),
+					styleNode = trackText.find("#" + container.attr("style")),
+					styles,
+					begin,
+					end,
+					text,
+					entries = {text:[], times:[]};
+
+
+				if (styleNode.length) {
+					var attributes = styleNode.removeAttr("id").get(0).attributes;
+					if (attributes.length) {
+						styles = {};
+						for (i = 0; i < attributes.length; i++) {
+							styles[attributes[i].name.split(":")[1]] = attributes[i].value;
+						}
+					}
+				}
+
+				for(i = 0; i<lines.length; i++) {
+					var style;
+					var _temp_times = {
+						start: null,
+						stop: null,
+						style: null
+					};
+					if (lines.eq(i).attr("begin")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					if (!_temp_times.start && lines.eq(i-1).attr("end")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					if (lines.eq(i).attr("end")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					if (!_temp_times.stop && lines.eq(i+1).attr("begin")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					if (styles) {
+						style = "";
+						for (var _style in styles) {
+							style += _style + ":" + styles[_style] + ";";					
+						}
+					}
+					if (style) _temp_times.style = style;
+					if (_temp_times.start == 0) _temp_times.start = 0.200;
+					entries.times.push(_temp_times);
+					text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+					entries.text.push(text);
+					if (entries.times.start == 0) entries.times.start = 2;
+				}
+				return entries;
+			}
+		},
 		split2: function (text, regex) {
 			// normal version for compliant browsers
 			// see below for IE fix
 			return text.split(regex);
-		},
-		parse: function(trackText) {
-			var 
-				i = 0,
-				lines = this.split2(trackText, /\r?\n/),
-				entries = {text:[], times:[]},
-				timecode,
-				text;
-
-			for(; i<lines.length; i++) {
-				// check for the line number
-				if (this.pattern_identifier.exec(lines[i])){
-					// skip to the next line where the start --> end time code should be
-					i++;
-					timecode = this.pattern_timecode.exec(lines[i]);				
-					
-					if (timecode && i<lines.length){
-						i++;
-						// grab all the (possibly multi-line) text that follows
-						text = lines[i];
-						i++;
-						while(lines[i] !== '' && i<lines.length){
-							text = text + '\n' + lines[i];
-							i++;
-						}
-
-						// Text is in a different array so I can use .join
-						entries.text.push(text);
-						entries.times.push(
-						{
-							start: mejs.Utility.timeCodeToSeconds(timecode[1]),
-							stop: mejs.Utility.timeCodeToSeconds(timecode[3]),
-							settings: timecode[5]
-						});
-					}
-				}
-			}
-
-			return entries;
-		},
-
-		translateTrackText: function(trackData, fromLang, toLang, googleApiKey, callback) {
-
-			var 
-				entries = {text:[], times:[]},
-				lines,
-				i
-
-			this.translateText( trackData.text.join(' <a></a>'), fromLang, toLang, googleApiKey, function(result) {
-				// split on separators
-				lines = result.split('<a></a>');
-
-				// create new entries
-				for (i=0;i<trackData.text.length; i++) {
-					// add translated line
-					entries.text[i] = lines[i];
-					// copy existing times
-					entries.times[i] = {
-						start: trackData.times[i].start,
-						stop: trackData.times[i].stop,
-						settings: trackData.times[i].settings
-					};
-				}
-
-				callback(entries);
-			});
-		},
-
-		translateText: function(text, fromLang, toLang, googleApiKey, callback) {
-
-			var
-				separatorIndex,
-				chunks = [],
-				chunk,
-				maxlength = 1000,
-				result = '',
-				nextChunk= function() {
-					if (chunks.length > 0) {
-						chunk = chunks.shift();
-						mejs.TrackFormatParser.translateChunk(chunk, fromLang, toLang, googleApiKey, function(r) {
-							if (r != 'undefined') {
-								result += r;
-							}
-							nextChunk();
-						});
-					} else {
-						callback(result);
-					}
-				};
-
-			// split into chunks
-			while (text.length > 0) {
-				if (text.length > maxlength) {
-					separatorIndex = text.lastIndexOf('.', maxlength);
-					chunks.push(text.substring(0, separatorIndex));
-					text = text.substring(separatorIndex+1);
-				} else {
-					chunks.push(text);
-					text = '';
-				}
-			}
-
-			// start handling the chunks
-			nextChunk();
-		},
-		translateChunk: function(text, fromLang, toLang, googleApiKey, callback) {
-
-			var data = {
-				q: text, 
-				langpair: fromLang + '|' + toLang,
-				v: '1.0'
-			};
-			if (googleApiKey !== '' && googleApiKey !== null) {
-				data.key = googleApiKey;
-			}
-
-			$.ajax({
-				url: 'https://ajax.googleapis.com/ajax/services/language/translate', // 'https://www.google.com/uds/Gtranslate', //'https://ajax.googleapis.com/ajax/services/language/translate', //
-				data: data,
-				type: 'GET',
-				dataType: 'jsonp',
-				success: function(d) {
-					callback(d.responseData.translatedText);
-				},
-				error: function(e) {
-					callback(null);
-				}
-			});
 		}
 	};
+	
 	// test for browsers with bad String.split method.
 	if ('x\n\ny'.split(/\n/gi).length != 3) {
 		// add super slow IE8 and below version
@@ -614,6 +668,6 @@
 			parts.push(chunk);
 			return parts;
 		}
-	}
+	}	
 
 })(mejs.$);
