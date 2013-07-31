@@ -119,7 +119,21 @@ package
 			}
 				
 			// get parameters
-			var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
+			// Use only FlashVars, ignore QueryString
+			var params:Object, pos:int, query:Object;
+
+			params = LoaderInfo(this.root.loaderInfo).parameters;
+			pos = root.loaderInfo.url.indexOf('?');
+			if (pos !== -1) {
+				query = parseStr(root.loaderInfo.url.substr(pos + 1));
+
+				for (var key:String in params) {
+					if (query.hasOwnProperty(trim(key))) {
+						delete params[key];
+					}
+				}
+			}
+
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
@@ -392,6 +406,36 @@ package
 			if(i === 0 || securityIssue) {
 				directAccess = true;
 			}
+		}
+
+		private static function parseStr (str:String) : Object {
+			var hash:Object = {},
+				arr1:Array, arr2:Array;
+			
+			str = unescape(str).replace(/\+/g, " ");
+			
+			arr1 = str.split('&');
+			if (!arr1.length) {
+				return {};
+			}
+			
+			for (var i:uint = 0, length:uint = arr1.length; i < length; i++) {
+				arr2 = arr1[i].split('=');
+				if (!arr2.length) {
+					continue;
+				}
+				hash[trim(arr2[0])] = trim(arr2[1]);
+			} 
+			return hash;
+		}
+		
+		
+		private static function trim(str:String) : String {				
+			if (!str) {
+				return str;	
+			}
+			
+			return str.toString().replace(/^\s*/, '').replace(/\s*$/, '');	
 		}
 
 		private function isIllegalChar(s:String, isUrl:Boolean):Boolean {
