@@ -95,11 +95,6 @@ package
 
 
 		public function FlashMediaElement() {
-
-			// show allow this player to be called from a different domain than the HTML page hosting the player
-			Security.allowDomain("*");
-			Security.allowInsecureDomain('*');
-			
 			// check for security issues (borrowed from jPLayer)
 			checkFlashVars(loaderInfo.parameters);
 			
