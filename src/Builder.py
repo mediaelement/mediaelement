@@ -1,6 +1,10 @@
 import sys
 import os
 import shutil
+import re
+
+def remove_console(text):
+	return re.sub('console.(log|debug)\((.*)\);?', '', text) 
 
 me_filename = 'mediaelement'
 mep_filename = 'mediaelementplayer'
@@ -26,6 +30,8 @@ code = ''
 for item in me_files:
 	src_file = open('js/' + item,'r')
 	code += src_file.read() + "\n"
+	
+code = remove_console(code)
 
 tmp_file = open('../build/' + me_filename + '.js','w')
 tmp_file.write(code)
@@ -51,8 +57,10 @@ mep_files.append('mep-feature-postroll.js')
 code = ''
 
 for item in mep_files:
-        src_file = open('js/' + item,'r')
-        code += src_file.read() + "\n"
+    src_file = open('js/' + item,'r')
+    code += src_file.read() + "\n"
+        
+code = remove_console(code)
 
 tmp_file = open('../build/' + mep_filename + '.js','w')
 tmp_file.write(code)
@@ -85,6 +93,7 @@ def addHeader(headerFilename, filename):
 	# write the original contents
 	tmp_file.write(file_txt)
 	tmp_file.close()
+	
 
 addHeader('js/me-header.js', '../build/' + me_filename + '.min.js')
 addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')
