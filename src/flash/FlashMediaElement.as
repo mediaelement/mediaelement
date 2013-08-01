@@ -98,6 +98,10 @@ package
 			// check for security issues (borrowed from jPLayer)
 			checkFlashVars(loaderInfo.parameters);
 			
+			// allows this player to be called from a different domain than the HTML page hosting the player
+ 			//Security.allowDomain("*");
+			//Security.allowInsecureDomain('*');			
+			
 			
 			// add debug output
 			_output = new TextField();
