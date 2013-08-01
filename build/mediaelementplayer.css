@@ -233,6 +233,7 @@
 
 /* Start: Progress Bar */
 .mejs-controls div.mejs-time-rail {
+	direction: ltr;
 	width: 200px;
 	padding-top: 5px;
 }
