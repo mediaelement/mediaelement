@@ -566,6 +566,7 @@
 							}
 						};
 
+			            // click to play/pause
 			            t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 						// show/hide controls
