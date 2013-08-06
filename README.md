@@ -84,8 +84,20 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)
 
-*2.12.1 (X)*
 
+*2.13.1 (2013/09/?06)*
+
+* Support for fullscreen in IE11 beta
+
+*2.13.0 (2013/09/01)*
+
+* BREAKING FLASH SECURITY CHANGE: Removed `allowDomain("*")` by default. If you use MediaElement.js on a different domain use the `flashmediaelement-cdn.swf` file (nacin) https://github.com/johndyer/mediaelement/pull/956
+* Use only FlashVars and ignore parameters passed via query string.
+* Force LTR in controls (for RTL users) (nacin) https://github.com/johndyer/mediaelement/pull/958
+
+*2.12.1 (2013/08/26)*
+
+* Remove all `console.log` statements in `Builder.py` JD
 * More i18n fixes for Wordpress (SergeyBiryukov) https://github.com/johndyer/mediaelement/pull/940
 * Fix touch detection in QtWebKit (peterbrook) https://github.com/johndyer/mediaelement/pull/939
 * Added configuration option httpsBasicAuthSite fix sites using HTTPS basic authentication (benroy73) https://github.com/johndyer/mediaelement/pull/937
@@ -93,6 +105,13 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Fix some wrong dates on the change log (heartcode) https://github.com/johndyer/mediaelement/pull/930
 * Add a mejs-fullscreen css class on the root element (fbuecklers) https://github.com/johndyer/mediaelement/pull/925
 * fix for ff switch between fullscreen and normal mode (fbuecklers) https://github.com/johndyer/mediaelement/pull/924
+* Multiple fixes: old issue #548, current issues #754 and #902 (peterh-capella) https://github.com/johndyer/mediaelement/pull/923
+* fix firefox detect 100% mode issue (KaptinLin ) https://github.com/johndyer/mediaelement/pull/919
+* Option to show the poster when the video is ended (LeResKP) https://github.com/johndyer/mediaelement/pull/891
+* Fix for Chrome autoplaying when forcing Flash (tjsnyder) https://github.com/johndyer/mediaelement/pull/889
+* Allow SWF to work over insecure domain (sebablanco ) https://github.com/johndyer/mediaelement/pull/897
+* Corrected buffering height on CSS (SourceR85 ) https://github.com/johndyer/mediaelement/pull/875
+* CSS cleanup (awittdesigns) https://github.com/johndyer/mediaelement/pull/883
 
 
 *2.12.0 (2013/06/02)*
