@@ -66,6 +66,9 @@
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
+        
+        // stretching modes
+        stretching: 'auto',
 
 		// turns keyboard support on and off for this instance
 		enableKeyboard: true,
@@ -189,7 +192,12 @@
 
 		// unique ID
 		t.id = 'mep_' + mejs.mepIndex++;
-
+        
+        // outer container
+        if (t.options.stretching === 'fill') {
+            t.outerContainer = t.$media.parent();
+        }
+        
 		// add to player array (for focus events)
 		mejs.players[t.id] = t;
 
@@ -266,6 +274,10 @@
 					'</div>')
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media);
+                    
+                if (t.options.stretching === 'fill') {
+                    t.container.wrap('<div class="mejs-fill-container"/>');
+                }
 
 				// add classes for user and content
 				t.container.addClass(
@@ -739,19 +751,45 @@
 		setPlayerSize: function(width,height) {
 			var t = this;
 
-			if (typeof width != 'undefined') {
-				t.width = width;
-			}
+			// check stretching modes
+            switch(t.options.stretching) {
+                case 'fill':
+                    this.setFillMode();
+                    break;
+                case 'responsive':
+                    this.setResponsiveMode();
+                    break;
+                case 'none':
+                    this.setDimensions();
+                    break;
+                // This is the 'auto' mode
+                default:
+                    if (this.hasFluidMode() === true) {
+                        this.setResponsiveMode();
+                    } else {
+                        this.setDimensions(width, height);
+                    }
+                    break;
+            }
 
-			if (typeof height != 'undefined') {
-				t.height = height;
-			}
+			// special case for big play button so it doesn't go over the controls area
+			var playLayer = t.layers.find('.mejs-overlay-play'),
+				playButton = playLayer.find('.mejs-overlay-button');
 
-			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-      		if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+			playLayer.height(t.container.height() - t.controls.height());
+			playButton.css('margin-top', '-' + (playButton.height()/2 - t.controls.height()/2).toString() + 'px'  );
 
-				// do we have the native dimensions yet?
-				var
+		},
+        
+        hasFluidMode: function() {
+            var t = this;
+            
+            return (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
+        },
+        
+        setResponsiveMode: function() {
+        	// do we have the native dimensions yet?
+				var t = this,
 					nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
 					nativeHeight = t.isVideo ? ((t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight) : t.options.defaultAudioHeight,
 					parentWidth = t.container.parent().closest(':visible').width(),
@@ -785,28 +823,83 @@
 						.width('100%')
 						.height('100%');
 				}
-
-
-			} else {
+        },
+        
+        setFillMode: function() {
+        	var t = this,
+                parent = t.outerContainer,
+                parentWidth = parent.height(),
+                parentHeight = parent.width();
 
 				t.container
-					.width(t.width)
-					.height(t.height);
-
-				t.layers.children('.mejs-layer')
-					.width(t.width)
-					.height(t.height);
-
+                 .width('100%')
+                 .height('100%');
+                 
+                    t.layers.children('.mejs-layer')    
+                        .width('100%')
+                        .height('100%');
+                    
+                    targetElement = t.container.find('object, embed, iframe, video, .mejs-poster img');
+ 	 
+                    // calculate new width and height
+                    var initHeight = t.height,
+                        initWidth = t.width,
+                        divRatio = (parentHeight / parentWidth) * 100,
+                        imageRatio = (initHeight / initWidth) * 100,
+                        cssRule,
+                        finalWidth,
+                        finalHeight,
+                        finalRatio,
+                        difference;
+                        
+                    // Checks which side to scale to
+                    if (divRatio > imageRatio) {
+                        finalRatio = (parentHeight/initHeight*100);
+                        finalWidth = initWidth/100*finalRatio;
+                        targetElement.height(parentHeight).width(finalWidth);
+                        
+                        if (t.media.setVideoSize)
+                            t.media.setVideoSize(finalWidth, parentHeight);
+                        
+                        difference = targetElement.width() - parentWidth;
+                        
+                        cssRule = {'margin-top':0,'margin-left':'-'+(difference/2)+'px'};
+                    } else {
+                    
+                        finalRatio = (parentWidth/initWidth*100);
+                        finalHeight = initHeight/100*finalRatio;
+                        targetElement.height(finalHeight).width(parentWidth);
+                        
+                        if (t.media.setVideoSize)
+                            t.media.setVideoSize(parentWidth, finalHeight);
+                            
+                        difference = targetElement.height() - parentHeight;
+                        
+                        cssRule = {'margin-left':0,'margin-top':'-'+(difference/2)+'px'};
+                    }
+                    
+                    targetElement.css(cssRule);
+        },
+        
+        setDimensions: function(width, height) {
+            var t = this;
+            
+            if (typeof width != 'undefined') {
+				t.width = width;
 			}
 
-			// special case for big play button so it doesn't go over the controls area
-			var playLayer = t.layers.find('.mejs-overlay-play'),
-				playButton = playLayer.find('.mejs-overlay-button');
+			if (typeof height != 'undefined') {
+				t.height = height;
+			}
+                  t.container
+                    .width(t.width)
+					.height(t.height);
 
-			playLayer.height(t.container.height() - t.controls.height());
-			playButton.css('margin-top', '-' + (playButton.height()/2 - t.controls.height()/2).toString() + 'px'  );
+				  t.layers.children('.mejs-layer')
+					.width(t.width)
+					.height(t.height);
+        },
 
-		},
 
 		setControlsSize: function() {
 			var t = this,
