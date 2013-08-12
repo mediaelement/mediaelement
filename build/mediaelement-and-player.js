@@ -1200,8 +1200,8 @@ mejs.HtmlMediaElementShim = {
 			height = (options.pluginHeight > 0) ? options.pluginHeight : (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;
 		
 			// in case of '%' make sure it's encoded
-			width = mejs.Utility.encodeUrl(width);
-			height = mejs.Utility.encodeUrl(height);
+			//width = mejs.Utility.encodeUrl(width);
+			//height = mejs.Utility.encodeUrl(height);
 		
 		} else {
 			if (options.enablePluginDebug) {
@@ -1230,11 +1230,11 @@ mejs.HtmlMediaElementShim = {
 			'isvideo=' + ((playback.isVideo) ? "true" : "false"),
 			'autoplay=' + ((autoplay) ? "true" : "false"),
 			'preload=' + preload,
-			'width=' + width,
+			'width=' + mejs.Utility.encodeUrl(width),
 			'startvolume=' + options.startVolume,
 			'timerrate=' + options.timerRate,
 			'flashstreamer=' + options.flashStreamer,
-			'height=' + height,
+			'height=' +  mejs.Utility.encodeUrl(height),
       'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
 
 		if (playback.url !== null) {
@@ -1287,6 +1287,7 @@ mejs.HtmlMediaElementShim = {
 '<param name="bgcolor" value="#000000" />' +
 '<param name="wmode" value="transparent" />' +
 '<param name="allowScriptAccess" value="always" />' +
+'<param name="scale" value="default" />' +
 '<param name="allowFullScreen" value="true" />' +
 '</object>';
 
@@ -1303,9 +1304,10 @@ mejs.HtmlMediaElementShim = {
 'allowFullScreen="true" ' +
 'type="application/x-shockwave-flash" pluginspage="//www.macromedia.com/go/getflashplayer" ' +
 'src="' + options.pluginPath + options.flashName + '" ' +
-'flashvars="' + initVars.join('&') + '" ' +
 'width="' + width + '" ' +
 'height="' + height + '" ' +
+'scale="default" ' +
+'flashvars="' + initVars.join('&') + '" ' +
 'class="mejs-shim"></embed>';
 				}
 				break;
