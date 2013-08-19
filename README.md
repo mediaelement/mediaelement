@@ -73,6 +73,22 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
+## Building
+
+This version uses [Grunt](http://gruntjs.com/) to build the source files. To get started, make sure you install grunt:
+
+```bash
+npm install -g grunt-cli
+```
+
+Then go to your checked out MediaElement project and run:
+
+```bash
+npm install
+```
+
+This will install all Grunt dependencies and plugins. To build (or rebuild) the source, simply run the `grunt` command. This will populate the `build` directory with the built files.
+
 ### Version History
 
 *Proposed features*

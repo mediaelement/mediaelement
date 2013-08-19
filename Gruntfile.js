@@ -72,7 +72,9 @@ module.exports = function(grunt) {
         },
         copy: {
             build: {
-                src     : ['src/css/*.png', 'src/css/*.svg', 'src/css/*.gif', 'src/css/*.css'],
+                expand  : true,
+                cwd     : 'src/css/',
+                src     : ['*.png', '*.svg', '*.gif', '*.css'],
                 dest    : 'build/',
                 flatten : true,
                 filter  : 'isFile'
