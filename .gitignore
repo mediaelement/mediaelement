@@ -9,3 +9,8 @@ tests/*
 newfeatures/*
 /mejs3/
 /node_modules
+build/*.js
+build/*.css
+build/*.png
+build/*.svg
+build/*.gif
