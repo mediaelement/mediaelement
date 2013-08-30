@@ -30,6 +30,11 @@ mejs.MediaPluginBridge = {
 					pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
 					pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
 					break;
+				case "youtube":
+					pluginMediaElement.pluginApi.setVideoSize = function (width, height) {
+						this.setSize(width, height);
+					};
+					break;
 			}
 	
 			if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
