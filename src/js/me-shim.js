@@ -386,6 +386,7 @@ mejs.HtmlMediaElementShim = {
 		switch (ext) {
 			case 'mp4':
 			case 'm4v':
+			case 'm4a':
 				return 'mp4';
 			case 'webm':
 			case 'webma':
