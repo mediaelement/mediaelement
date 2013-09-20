@@ -828,8 +828,8 @@
         setFillMode: function() {
         	var t = this,
                 parent = t.outerContainer,
-                parentWidth = parent.height(),
-                parentHeight = parent.width();
+                parentWidth = parent.width(),
+                parentHeight = parent.height();
 
 				t.container
                  .width('100%')
