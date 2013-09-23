@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<script src="testforfiles.js"></script>		
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<h2>Frame accurate Playback with Timecode - Multi-codec</h2>
+
+<code><pre>
+&lt;video width="640" height="360" id="player2" poster="../media/frameaccuracy_logo.jpg" controls="controls" preload="none"&gt;
+
+	&lt;!-- WebM for Firefox 4 and Opera --&gt;
+	&lt;source type="video/webm" src="../media/perfect-timecoded.webm" /&gt;
+    
+    &lt;source type="video/mp4" src="../media/perfect-timecoded.mp4" /&gt;
+
+	&lt;!-- OGG for Firefox 3 --&gt;
+	&lt;source type="video/ogg" src="../media/perfect-timecoded.ogv" /&gt;
+	&lt;!-- Fallback flash player for no-HTML5 browsers with JavaScript turned off --&gt;
+	&lt;object width="640" height="360" type="application/x-shockwave-flash" data="../build/flashmediaelement.swf"&gt;
+		&lt;param name="movie" value="../build/flashmediaelement.swf" /&gt;
+		&lt;param name="flashvars" value="controls=true&amp;poster=../media/frameaccuracy_logo.jpg&amp;file=../media/perfect-timecoded.mp4" /&gt;
+		&lt;!-- Image fall back for non-HTML5 browser with JavaScript turned off and no Flash player installed --&gt;
+		&lt;img src="../media/frameaccuracy_logo.jpg" width="640" height="360" alt="Here we are"
+			title="No video playback capabilities" /&gt;
+	&lt;/object&gt;
+&lt;/video&gt;
+</pre></code>
+
+<video width="640" height="360"  type="video/mp4"
+	id="player1" poster="../media/frameaccuracy_logo.jpg" 
+	controls="controls" preload="none">
+    
+    <!-- WebM for Firefox 4 and Opera -->
+    <source type="video/webm" src="../media/perfect-timecoded.webm" />
+    
+    <!-- MP4 source must come first for iOS? -->
+    <source type="video/mp4" src="../media/perfect-timecoded.mp4" />
+
+    <!-- OGG for Firefox 3 -->
+    <source type="video/ogg" src="../media/perfect-timecoded.ogv" />
+    <!-- Fallback flash player for no-HTML5 browsers with JavaScript turned off -->
+    <object width="640" height="360" type="application/x-shockwave-flash" data="../build/flashmediaelement.swf">
+        <param name="movie" value="../build/flashmediaelement.swf" />
+        <param name="flashvars" value="controls=true&amp;file=../media/perfect-timecoded.mp4" />
+        <!-- Image fall back for non-HTML5 browser with JavaScript turned off and no Flash player installed -->
+        <img src="../media/frameaccuracy_logo.jpg" width="640" height="360" alt="Here we are"
+            title="No video playback capabilities" />
+    </object>
+
+
+	</video>
+	
+<span id="player1-mode"></span>
+
+<p><b>Note</b>: if you are working with local files, you'll need to add your working directory
+to the <a href="http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html">Flash Global Security Settings</a>.</p>
+
+
+<script>
+
+$('audio,video').mediaelementplayer({
+		// show framecount in timecode (##:00:00:00)
+		showTimecodeFrameCount: true,
+		// used when showTimecodeFrameCount is set to true
+		framesPerSecond: 25,
+
+		// Hide controls when playing and mouse is not over the video
+		alwaysShowControls: true,
+
+	success: function(player, node) {
+		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+	}
+});
+
+</script>
+
+<input type="button" id="stopall" value="Stop all">
+
+<script>
+$('#stopall').click(function() {
+    $('video, audio').each(function() {
+          $(this)[0].player.pause();		  
+    });
+});
+</script>
+
+
+</body>
+</html>
