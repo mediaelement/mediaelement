@@ -23,7 +23,7 @@ mejs.MediaFeatures = {
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit && !t.isIE;
 		t.isOpera = (ua.match(/opera/gi) !== null);
-		t.hasTouch = ('ontouchstart' in window && window.ontouchstart != null);
+		t.hasTouch = ('ontouchstart' in window); //  && window.ontouchstart != null); // this breaks iOS 7
 		
 		// borrowed from Modernizr
 		t.svg = !! document.createElementNS &&
