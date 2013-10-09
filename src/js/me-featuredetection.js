@@ -17,13 +17,13 @@ mejs.MediaFeatures = {
 		t.isAndroid = (ua.match(/android/i) !== null);
 		t.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
 		t.isBustedNativeHTTPS = (location.protocol === 'https:' && (ua.match(/android [12]\./) !== null || ua.match(/macintosh.* version.* safari/) !== null));
-		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
+		t.isIE = (nav.appName.toLowerCase().match(/trident/gi) !== null);
 		t.isChrome = (ua.match(/chrome/gi) !== null);
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
-		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit;
+		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit && !t.isIE;
 		t.isOpera = (ua.match(/opera/gi) !== null);
-		t.hasTouch = ('ontouchstart' in window && window.ontouchstart != null);
+		t.hasTouch = ('ontouchstart' in window); //  && window.ontouchstart != null); // this breaks iOS 7
 		
 		// borrowed from Modernizr
 		t.svg = !! document.createElementNS &&
@@ -48,30 +48,50 @@ mejs.MediaFeatures = {
 		// iOS
 		t.hasSemiNativeFullScreen = (typeof v.webkitEnterFullscreen !== 'undefined');
 		
-		// Webkit/firefox
+		// W3C
+		t.hasNativeFullscreen = (typeof v.requestFullscreen !== 'undefined');
+		
+		// webkit/firefox/IE11+
 		t.hasWebkitNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
 		t.hasMozNativeFullScreen = (typeof v.mozRequestFullScreen !== 'undefined');
+		t.hasMsNativeFullScreen = (typeof v.msRequestFullscreen !== 'undefined');
 		
-		t.hasTrueNativeFullScreen = (t.hasWebkitNativeFullScreen || t.hasMozNativeFullScreen);
+		t.hasTrueNativeFullScreen = (t.hasWebkitNativeFullScreen || t.hasMozNativeFullScreen || t.hasMsNativeFullScreen);
 		t.nativeFullScreenEnabled = t.hasTrueNativeFullScreen;
+		
+		// Enabled?
 		if (t.hasMozNativeFullScreen) {
-			t.nativeFullScreenEnabled = v.mozFullScreenEnabled;
+			t.nativeFullScreenEnabled = document.mozFullScreenEnabled;
+		} else if (t.hasMsNativeFullScreen) {
+			t.nativeFullScreenEnabled = document.msFullscreenEnabled;		
 		}
 		
-		
-		if (this.isChrome) {
+		if (t.isChrome) {
 			t.hasSemiNativeFullScreen = false;
 		}
 		
 		if (t.hasTrueNativeFullScreen) {
-			t.fullScreenEventName = (t.hasWebkitNativeFullScreen) ? 'webkitfullscreenchange' : 'mozfullscreenchange';
 			
+			t.fullScreenEventName = '';
+			if (t.hasWebkitNativeFullScreen) { 
+				t.fullScreenEventName = 'webkitfullscreenchange';
+				
+			} else if (t.hasMozNativeFullScreen) {
+				t.fullScreenEventName = 'mozfullscreenchange';
+				
+			} else if (t.hasMsNativeFullScreen) {
+				t.fullScreenEventName = 'MSFullscreenChange';
+			}
 			
 			t.isFullScreen = function() {
 				if (v.mozRequestFullScreen) {
 					return d.mozFullScreen;
+				
 				} else if (v.webkitRequestFullScreen) {
 					return d.webkitIsFullScreen;
+				
+				} else if (v.hasMsNativeFullScreen) {
+					return d.msFullscreenElement !== null;
 				}
 			}
 					
@@ -79,16 +99,26 @@ mejs.MediaFeatures = {
 		
 				if (t.hasWebkitNativeFullScreen) {
 					el.webkitRequestFullScreen();
+					
 				} else if (t.hasMozNativeFullScreen) {
 					el.mozRequestFullScreen();
+
+				} else if (t.hasMsNativeFullScreen) {
+					el.msRequestFullscreen();
+
 				}
 			}
 			
 			t.cancelFullScreen = function() {				
 				if (t.hasWebkitNativeFullScreen) {
 					document.webkitCancelFullScreen();
+					
 				} else if (t.hasMozNativeFullScreen) {
 					document.mozCancelFullScreen();
+					
+				} else if (t.hasMsNativeFullScreen) {
+					document.msExitFullscreen();
+					
 				}
 			}	
 			
