@@ -266,6 +266,12 @@ mejs.HtmlMediaElementShim = {
 			};
 		}		
 		
+		// special case for Chromium to specify natively supported video codecs (i.e. WebM and Theora) 
+		if (mejs.MediaFeatures.isChromium) { 
+			htmlMediaElement.canPlayType = function(type) { 
+				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : ''; 
+			}; 
+		}
 
 		// test for native playback first
 		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')  && !(mejs.MediaFeatures.isBustedNativeHTTPS && options.httpsBasicAuthSite === true)) {
