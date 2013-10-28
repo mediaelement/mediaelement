@@ -1,7 +1,7 @@
 /*!
  * This is a i18n.locale language object.
  *
- *<de> German translation by Tim Latz, latz.tim@gmail.com
+ * German translation by Tim Latz, latz.tim@gmail.com
  *
  * @author
  *   Tim Latz (latz.tim@gmail.com)
@@ -16,11 +16,13 @@
 
     "use strict";
 
-    exports.de = {
-        "Fullscreen" : "Vollbild",
-        "Go Fullscreen" : "Vollbild an",
-        "Turn off Fullscreen" : "Vollbild aus",
-        "Close" : "Schließen"
-    };
+    if (typeof exports.de === 'undefined') {
+        exports.de = {
+            "Fullscreen" : "Vollbild",
+            "Go Fullscreen" : "Vollbild an",
+            "Turn off Fullscreen" : "Vollbild aus",
+            "Close" : "Schließen"
+        };
+    }
 
 }(mejs.i18n.locale.strings));
