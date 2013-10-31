@@ -19,16 +19,16 @@
 
 			var t = this;
 
-			if (this.media.pluginType == 'native') {
+			if (t.media.pluginType == 'native') {
 				var s = '<div class="mejs-button mejs-speed-button mejs-speed-100"><button type="button"></button><div class="mejs-speed-selector"><ul>';
 				var i;
-				for (i = 0; i < this.options.speeds.length; i++) {
-					s += '<li><input type="radio" name="speed" value="' + this.options.speeds[i] + '" id="' + this.options.speeds[i] + '" ';
-					if (this.options.speeds[i] == this.options.defaultspeed) {
+				for (i = 0; i < t.options.speeds.length; i++) {
+					s += '<li><input type="radio" name="speed" value="' + t.options.speeds[i] + '" id="' + t.options.speeds[i] + '" ';
+					if (t.options.speeds[i] == t.options.defaultSpeed) {
 						s += 'checked=true ';
-						s += '/><label for="' + this.options.speeds[i] + '" class="mejs-speed-selected">'+ this.options.speeds[i] + 'x</label></li>';
+						s += '/><label for="' + t.options.speeds[i] + '" class="mejs-speed-selected">'+ t.options.speeds[i] + 'x</label></li>';
 					} else {
-						s += '/><label for="' + this.options.speeds[i] + '">'+ this.options.speeds[i] + 'x</label></li>';
+						s += '/><label for="' + t.options.speeds[i] + '">'+ t.options.speeds[i] + 'x</label></li>';
 					}
 				}
 				s += '</ul></div></div>';
