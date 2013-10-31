@@ -107,6 +107,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [38], // UP
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.min(media.volume + 0.1, 1);
 								media.setVolume(newVolume);
 						}
@@ -114,6 +120,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [40], // DOWN
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.max(media.volume - 0.1, 0);
 								media.setVolume(newVolume);
 						}
@@ -155,7 +167,7 @@ if (typeof jQuery != 'undefined') {
 						}
 				},
 				{
-						keys: [70], // f
+						keys: [70], // F
 						action: function(player, media) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
@@ -163,6 +175,21 @@ if (typeof jQuery != 'undefined') {
 										} else {
 												player.enterFullScreen();
 										}
+								}
+						}
+				},
+				{
+						keys: [77], // M
+						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+								if (player.media.muted) {
+										player.setMuted(false);
+								} else {
+										player.setMuted(true);
 								}
 						}
 				}
@@ -2193,6 +2220,9 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = true;
+
+			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
+			t.container.find('.mejs-captions-position').css('bottom', '45px');
 		},
 
 		exitFullScreen: function() {
@@ -2245,6 +2275,9 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = false;
+
+			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-position').css('bottom', '');
 		}
 	});
 
@@ -2271,16 +2304,16 @@ if (typeof jQuery != 'undefined') {
 
 			var t = this;
 
-			if (this.media.pluginType == 'native') {
+			if (t.media.pluginType == 'native') {
 				var s = '<div class="mejs-button mejs-speed-button mejs-speed-100"><button type="button"></button><div class="mejs-speed-selector"><ul>';
 				var i;
-				for (i = 0; i < this.options.speeds.length; i++) {
-					s += '<li><input type="radio" name="speed" value="' + this.options.speeds[i] + '" id="' + this.options.speeds[i] + '" ';
-					if (this.options.speeds[i] == this.options.defaultspeed) {
+				for (i = 0; i < t.options.speeds.length; i++) {
+					s += '<li><input type="radio" name="speed" value="' + t.options.speeds[i] + '" id="' + t.options.speeds[i] + '" ';
+					if (t.options.speeds[i] == t.options.defaultSpeed) {
 						s += 'checked=true ';
-						s += '/><label for="' + this.options.speeds[i] + '" class="mejs-speed-selected">'+ this.options.speeds[i] + 'x</label></li>';
+						s += '/><label for="' + t.options.speeds[i] + '" class="mejs-speed-selected">'+ t.options.speeds[i] + 'x</label></li>';
 					} else {
-						s += '/><label for="' + this.options.speeds[i] + '">'+ this.options.speeds[i] + 'x</label></li>';
+						s += '/><label for="' + t.options.speeds[i] + '">'+ t.options.speeds[i] + 'x</label></li>';
 					}
 				}
 				s += '</ul></div></div>';
