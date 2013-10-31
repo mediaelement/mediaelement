@@ -672,8 +672,8 @@
 	bottom: 0;
 	left: 0;
 	text-align:center;
-	line-height: 22px;
-	font-size: 12px;
+	line-height: 20px;
+	font-size: 16px;
 	color: #fff;
 }
 
@@ -695,13 +695,13 @@
 }
 
 .mejs-captions-position-hover {
-	bottom: 45px;
+	bottom: 35px;
 }
 
 .mejs-captions-text {
 	padding: 3px 5px;
 	background: url(background.png);
-	background: rgba(20, 20, 20, 0.8);
+	background: rgba(20, 20, 20, 0.5);
 
 }
 /* End: Track (Captions and Chapters) */
