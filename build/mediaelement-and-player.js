@@ -324,7 +324,7 @@ mejs.MediaFeatures = {
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit && !t.isIE;
 		t.isOpera = (ua.match(/opera/gi) !== null);
-		t.hasTouch = ('ontouchstart' in window); //  && window.ontouchstart != null); // this breaks iOS 7
+		t.hasTouch = ('ontouchstart' in window && window.ontouchstart != null);
 		
 		// borrowed from Modernizr
 		t.svg = !! document.createElementNS &&
@@ -2012,7 +2012,7 @@ if (typeof jQuery != 'undefined') {
 		// force Android's native controls
 		AndroidUseNativeControls: false,
 		// features to show
-		features: ['playpause','current','progress','duration','speed','tracks','volume','fullscreen'],
+		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
 
@@ -2040,12 +2040,6 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [38], // UP
 						action: function(player, media) {
-								player.container.find('.mejs-volume-slider').css('display','block');
-								if (player.isVideo) {
-										player.showControls();
-										player.startControlsTimer();
-								}
-
 								var newVolume = Math.min(media.volume + 0.1, 1);
 								media.setVolume(newVolume);
 						}
@@ -2053,12 +2047,6 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [40], // DOWN
 						action: function(player, media) {
-								player.container.find('.mejs-volume-slider').css('display','block');
-								if (player.isVideo) {
-										player.showControls();
-										player.startControlsTimer();
-								}
-
 								var newVolume = Math.max(media.volume - 0.1, 0);
 								media.setVolume(newVolume);
 						}
@@ -2100,7 +2088,7 @@ if (typeof jQuery != 'undefined') {
 						}
 				},
 				{
-						keys: [70], // F
+						keys: [70], // f
 						action: function(player, media) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
@@ -2108,21 +2096,6 @@ if (typeof jQuery != 'undefined') {
 										} else {
 												player.enterFullScreen();
 										}
-								}
-						}
-				},
-				{
-						keys: [77], // M
-						action: function(player, media) {
-								player.container.find('.mejs-volume-slider').css('display','block');
-								if (player.isVideo) {
-										player.showControls();
-										player.startControlsTimer();
-								}
-								if (player.media.muted) {
-										player.setMuted(false);
-								} else {
-										player.setMuted(true);
 								}
 						}
 				}
@@ -4153,9 +4126,6 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = true;
-
-			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
-			t.container.find('.mejs-captions-position').css('bottom', '45px');
 		},
 
 		exitFullScreen: function() {
@@ -4208,73 +4178,6 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = false;
-
-			t.container.find('.mejs-captions-text').css('font-size','');
-			t.container.find('.mejs-captions-position').css('bottom', '');
-		}
-	});
-
-})(mejs.$);
-
-(function($) {
-
-	// Speed
-	$.extend(mejs.MepDefaults, {
-
-		speeds: ['1.50', '1.25', '1.00', '0.75'],
-
-		speedStyle: {'1.50': 'mejs-speed-150', '1.25': 'mejs-speed-125', '1.00': 'mejs-speed-100', '0.75': 'mejs-speed-075'},
-
-		defaultSpeed: '1.00'
-
-	});
-
-	$.extend(MediaElementPlayer.prototype, {
-
-		buildspeed: function(player, controls, layers, media) {
-			if (!player.isVideo)
-				return;
-
-			var t = this;
-
-			if (t.media.pluginType == 'native') {
-				var s = '<div class="mejs-button mejs-speed-button mejs-speed-100"><button type="button"></button><div class="mejs-speed-selector"><ul>';
-				var i;
-				for (i = 0; i < t.options.speeds.length; i++) {
-					s += '<li><input type="radio" name="speed" value="' + t.options.speeds[i] + '" id="' + t.options.speeds[i] + '" ';
-					if (t.options.speeds[i] == t.options.defaultSpeed) {
-						s += 'checked=true ';
-						s += '/><label for="' + t.options.speeds[i] + '" class="mejs-speed-selected">'+ t.options.speeds[i] + 'x</label></li>';
-					} else {
-						s += '/><label for="' + t.options.speeds[i] + '">'+ t.options.speeds[i] + 'x</label></li>';
-					}
-				}
-				s += '</ul></div></div>';
-
-				player.speedButton = $(s).appendTo(controls);
-
-				player.speedButton.hover(function() {
-					$(this).find('.mejs-speed-selector').css('visibility', 'visible');
-				}, function() {
-					$(this).find('.mejs-speed-selector').css('visibility', 'hidden');
-				})
-				.on('click', 'input[type=radio]', function() {
-					var lastSpeed = t.options.speedStyle[player.playbackspeed];
-					player.playbackspeed = $(this).attr('value');
-					media.playbackRate = parseFloat($(this).attr('value'));
-					player.speedButton.removeClass(lastSpeed).addClass(t.options.speedStyle[player.playbackspeed]);
-					player.speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
-					player.speedButton.find('input[type=radio]:checked').next().addClass('mejs-speed-selected');
-				});
-
-				player.speedButton.find('li').hover(function() {
-					$(this).css('background-color', 'linear-gradient(rgba(44,124,145,0.8), rgba(78,183,212,0.8))');
-				}, function() {
-					$(this).css('background-color', 'rgba(50,50,50,0)');
-				});
-
-				player.speedButton.find('.mejs-speed-selector').height(this.speedButton.find('.mejs-speed-selector ul').outerHeight(true) + player.speedButton.find('.mejs-speed-translations').outerHeight(true));
-			}
 		}
 	});
 
