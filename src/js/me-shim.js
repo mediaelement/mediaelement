@@ -552,6 +552,7 @@ mejs.HtmlMediaElementShim = {
 '<param name="wmode" value="transparent" />' +
 '<param name="allowScriptAccess" value="always" />' +
 '<param name="allowFullScreen" value="true" />' +
+'<param name="scale" value="default" />' + 
 '</object>';
 
 				} else {
@@ -570,6 +571,7 @@ mejs.HtmlMediaElementShim = {
 'flashvars="' + initVars.join('&') + '" ' +
 'width="' + width + '" ' +
 'height="' + height + '" ' +
+'scale="default"' + 
 'class="mejs-shim"></embed>';
 				}
 				break;
