@@ -1,7 +1,7 @@
 /*!
  * This is a i18n.locale language object.
  *
- *<de> Traditional chinese translation by Tim Latz, latz.tim@gmail.com
+ * Traditional chinese translation by Tim Latz, latz.tim@gmail.com
  *
  * @author
  *   Tim Latz (latz.tim@gmail.com)
@@ -16,11 +16,13 @@
 
     "use strict";
 
-    exports.zh = {
-        "Fullscreen" : "全螢幕",
-        "Go Fullscreen" : "全屏模式",
-        "Turn off Fullscreen" : "退出全屏模式",
-        "Close" : "關閉"
-    };
+    if (typeof exports.zh === 'undefined') {
+        exports.zh = {
+            "Fullscreen" : "全螢幕",
+            "Go Fullscreen" : "全屏模式",
+            "Turn off Fullscreen" : "退出全屏模式",
+            "Close" : "關閉"
+        };
+    }
 
 }(mejs.i18n.locale.strings));
