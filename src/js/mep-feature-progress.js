@@ -35,7 +35,6 @@
 					}
 					
 					var offset = total.offset(),
-						offset = total.offset(),
 						width = total.outerWidth(true),
 						percentage = 0,
 						newTime = 0,
