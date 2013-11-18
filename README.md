@@ -15,62 +15,63 @@ _MediaElementPlayer: HTML5 `<video>` and `<audio>` player_
 A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuery`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
 
 ### 1. Add Script and Stylesheet
-
-	<script src="jquery.js"></script>
-	<script src="mediaelement-and-player.min.js"></script>
-	<link rel="stylesheet" href="mediaelementplayer.css" />
-
+```html
+<script src="jquery.js"></script>
+<script src="mediaelement-and-player.min.js"></script>
+<link rel="stylesheet" href="mediaelementplayer.css" />
+```
 ### 2. Option A: Single H.264 file
 
 If your users have JavaScript and Flash, this is the easist route for all browsers and mobile devices.
-	
-	<video src="myvideo.mp4" width="320" height="240"></video>
-
+```html	
+<video src="myvideo.mp4" width="320" height="240"></video>
+```
 ### 2. Option B: Multiple codecs with Flash fall-through when JavaScript is disabled
 
 This includes multiple codecs for various browsers (H.264 for IE and Safari, WebM for Chrome, Firefox 4, and Opera, Ogg for Firefox 3) as well as a Flash fallback for non HTML5 browsers with JavaScript disabled.
 
-	<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
-		<source type="video/mp4" src="myvideo.mp4" />
-		<source type="video/webm" src="myvideo.webm" />
-		<source type="video/ogg" src="myvideo.ogv" />
-		<object width="320" height="240" type="application/x-shockwave-flash" data="flashmediaelement.swf">
-			<param name="movie" value="flashmediaelement.swf" /> 
-			<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
-			<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
-		</object>
-	</video>
-
+```html
+<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
+	<source type="video/mp4" src="myvideo.mp4" />
+	<source type="video/webm" src="myvideo.webm" />
+	<source type="video/ogg" src="myvideo.ogv" />
+	<object width="320" height="240" type="application/x-shockwave-flash" data="flashmediaelement.swf">
+		<param name="movie" value="flashmediaelement.swf" /> 
+		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
+		<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
+	</object>
+</video>
+```
 ### 3. Run startup script
 
 Make sure this is not in the `<head>` tag or iOS 3 will fail.
+```html
+<script>
+// jQuery method
+$('video').mediaelementplayer();
+</script>
 
-	<script>
-	// jQuery method
-	$('video').mediaelementplayer();
-	</script>
-	
-	<script>
-	// normal JavaScript 
-	var player = new MediaElementPlayer('#player');
-	</script>	
-
+<script>
+// normal JavaScript 
+var player = new MediaElementPlayer('#player');
+</script>	
+```
 ## How it Works: 
 _MediaElement.js: HTML5 `<video>` and `<audio>` shim_
 
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
+```html
+<script src="mediaelement.js"></script>
+<video src="myvideo.mp4" width="320" height="240"></video>
 
-	<script src="mediaelement.js"></script>
-	<video src="myvideo.mp4" width="320" height="240"></video>
-	
-	<script>
-	var v = document.getElementsByTagName("video")[0];
-	new MediaElement(v, {success: function(media) {
-		media.play();
-	}});
-	</script>
-
+<script>
+var v = document.getElementsByTagName("video")[0];
+new MediaElement(v, {success: function(media) {
+	media.play();
+}});
+</script>
+```
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
 ### Version History
