@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>HTML5 MediaElement</title>   
+    
+    <link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+    <script src="../build/jquery.js"></script>  
+    <script src="../build/mediaelement-and-player.js"></script>
+
+    <style>
+      .video-container {
+        position: absolute;
+        top: 200px;
+        right: 20px;
+        left: 20px;
+        bottom: 50px;
+      }
+
+      .mejs-container {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+    </style>
+</head>
+<body>
+    <h1>MediaElementPlayer.js</h1>
+
+    <h2>Autoresize In Flash Demo</h2>
+
+    <code><pre>
+        &lt;div class="video-container"&gt;
+            &lt;video style="max-width:100%; max-height:100%;" src="../media/echo-hereweare.mp4" type="video/mp4" id="player1"
+        controls="controls" preload="none"&gt;&lt;/video&gt;
+    </pre></code>
+
+    <div class="video-container">
+        <video style="max-width:100%; max-height:100%;" src="../media/echo-hereweare.mp4" type="video/mp4" id="player1"
+        controls="controls" preload="none"></video>
+    </div>
+
+    <script>
+        $('video').mediaelementplayer({
+            mode: 'shim',
+            enableAutosize: false,
+            plugins: ['flash'],
+            success: function(player, node) {
+                $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+            }
+        });
+    </script>
+
+
+</body>
+</html>
