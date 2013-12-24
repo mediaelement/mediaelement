@@ -22,6 +22,7 @@ package
 	import htmlelements.VideoElement;
 	import htmlelements.AudioElement;
 	import htmlelements.YouTubeElement;
+	import htmlelements.HLSMediaElement;
 	
 	public class FlashMediaElement extends MovieClip {
 
@@ -197,8 +198,9 @@ package
 
 			// create media element
 			if (_isVideo) {
-				
-				if (_mediaUrl.indexOf("youtube.com") > -1 || _mediaUrl.indexOf("youtu.be") > -1) {
+        if (_mediaUrl.search(/(https?|file)\:\/\/.*?\.m3u8(\?.*)?/i) !== -1) {
+          _mediaElement = new HLSMediaElement(this, _autoplay, _preload, _timerRate, _startVolume);
+				} else if (_mediaUrl.indexOf("youtube.com") > -1 || _mediaUrl.indexOf("youtu.be") > -1) {
 					
 					//Security.allowDomain("http://www.youtube.com");
 					
