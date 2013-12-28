@@ -1,18 +1,22 @@
-package htmlelements
+﻿package htmlelements
 {
   import flash.display.Sprite;
-
+  import flash.media.Video;
+  import flash.media.SoundTransform;
   import org.mangui.HLS.HLS;
   import org.mangui.HLS.HLSEvent;
+  import org.mangui.HLS.HLSStates;
+  import org.mangui.HLS.utils.Log;
 
 public class HLSMediaElement extends Sprite implements IMediaElement {
 
     private var _element:FlashMediaElement;
     private var _autoplay:Boolean = true;
     private var _preload:String = "";
-    private var _preMuteVolume:Number = 0;
     private var _hls:HLS;
     private var _url:String;
+    private var _video:Video;
+    private var _hlsState:String = HLSStates.IDLE;
 
   // event values
   private var _position:Number = 0;
@@ -50,7 +54,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       _hls.addEventListener(HLSEvent.MEDIA_TIME,_mediaTimeHandler);
       _hls.addEventListener(HLSEvent.STATE,_stateHandler);
       _hls.stream.soundTransform = new SoundTransform(_volume);
-      video.attachNetStream(_hls.stream);
+      _video.attachNetStream(_hls.stream);
     }
 
     private function _completeHandler(event:HLSEvent):void {
@@ -64,44 +68,73 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     private function _manifestHandler(event:HLSEvent):void {
       _duration = event.levels[0].duration;
-      sendEvent(HtmlMediaEvent.LOADEDDATA);
+      _videoWidth = event.levels[0].width;
+      _videoHeight = event.levels[0].height; 
+      sendEvent(HtmlMediaEvent.LOADEDMETADATA);
       sendEvent(HtmlMediaEvent.CANPLAY);
     };
 
     private function _mediaTimeHandler(event:HLSEvent):void {
       _position = event.mediatime.position;
       _duration = event.mediatime.duration;
-      _bufferedTime = event.mediatime.buffer;
+      _bufferedTime = event.mediatime.buffer+event.mediatime.position;
       sendEvent(HtmlMediaEvent.PROGRESS);
       sendEvent(HtmlMediaEvent.TIMEUPDATE);
     };
 
     private function _stateHandler(event:HLSEvent):void {
+      _hlsState = event.state;
+      //Log.txt("state:"+ _hlsState);
       switch(event.state) {
           case HLSStates.IDLE:
             break;
           case HLSStates.BUFFERING:
             break;
           case HLSStates.PLAYING:
+            _isPaused = false;
+            _isEnded = false;
             _video.visible = true;
+            sendEvent(HtmlMediaEvent.LOADEDDATA);
             sendEvent(HtmlMediaEvent.PLAY);
             sendEvent(HtmlMediaEvent.PLAYING);
             break;
           case HLSStates.PAUSED:
+            _isPaused = true;
+            _isEnded = false;
             sendEvent(HtmlMediaEvent.PAUSE);
+            sendEvent(HtmlMediaEvent.CANPLAY);
             break;
       }
     };
 
+  public function get video():Video {
+    return _video;
+  }
+
+  public function get videoHeight():Number {
+    return _videoHeight;
+  }
+
+  public function get videoWidth():Number {
+    return _videoWidth;
+  }
+
     public function play():void {
-      _hls.stream.play();
+      //Log.txt("HLSMediaElement:play");
+      if (_hlsState == HLSStates.PAUSED) {
+        _hls.stream.resume();
+      } else {
+        _hls.stream.play();
+      }
     }
 
     public function pause():void {
+      //Log.txt("HLSMediaElement:pause");
       _hls.stream.pause();
     }
 
     public function load():void{
+      //Log.txt("HLSMediaElement:load");		
       if(_url) {
         sendEvent(HtmlMediaEvent.LOADSTART);
         _hls.load(_url);
@@ -113,7 +146,9 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     }
 
     public function setSrc(url:String):void{
+      //Log.txt("HLSMediaElement:setSrc:"+url);
       _url = url;
+      _hls.load(_url);
     }
 
     public function setSize(width:Number, height:Number):void{
@@ -148,10 +183,9 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
         return;
 
       if (muted) {
-        _preMuteVolume = _soundTransform.volume;
-        setVolume(0);
+        _hls.stream.soundTransform = new SoundTransform(0);
       } else {
-        setVolume(_preMuteVolume);
+        setVolume(_volume);
       }
 
       _isMuted = muted;
@@ -173,7 +207,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     // build JSON
     var values:String =
       "duration:" + _duration +
-        ",framerate:" + _hls.stream.framerate +
+        ",framerate:" + _hls.stream.currentFPS +
         ",currentTime:" + _position +
         ",muted:" + _isMuted +
         ",paused:" + _isPaused +
@@ -181,7 +215,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
         ",volume:" + _volume +
         ",src:\"" + _url + "\"" +
         ",bytesTotal:" + Math.round(1000*_duration) +
-        ",bufferedBytes:" + Math.round(1000*_(_position+_bufferedTime)) +
+        ",bufferedBytes:" + Math.round(1000*(_position+_bufferedTime)) +
         ",bufferedTime:" + _bufferedTime +
         ",videoWidth:" + _videoWidth +
         ",videoHeight:" + _videoHeight +

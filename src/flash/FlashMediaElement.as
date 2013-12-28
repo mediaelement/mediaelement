@@ -1,4 +1,4 @@
-package  
+﻿package  
 {
 	import flash.display.*;
 	import flash.events.*;
@@ -200,6 +200,13 @@ package
 			if (_isVideo) {
         if (_mediaUrl.search(/(https?|file)\:\/\/.*?\.m3u8(\?.*)?/i) !== -1) {
           _mediaElement = new HLSMediaElement(this, _autoplay, _preload, _timerRate, _startVolume);
+					_video = (_mediaElement as HLSMediaElement).video;
+					_video.width = _stageWidth;
+					_video.height = _stageHeight;
+					(_video as Video).smoothing = _enableSmoothing;
+					addChild(_video);
+
+
 				} else if (_mediaUrl.indexOf("youtube.com") > -1 || _mediaUrl.indexOf("youtu.be") > -1) {
 					
 					//Security.allowDomain("http://www.youtube.com");
@@ -897,7 +904,7 @@ package
 			
 			_output.appendText("positioning video "+stage.displayState+"\n");
 
-			if (_mediaElement is VideoElement) {
+			if (_mediaElement is VideoElement || _mediaElement is HLSMediaElement) {
 
 				if (isNaN(_nativeVideoWidth) || isNaN(_nativeVideoHeight) || _nativeVideoWidth <= 0 || _nativeVideoHeight <= 0) {
 					_output.appendText("ERR: I dont' have the native dimension\n");
@@ -968,6 +975,9 @@ package
 					if (_mediaElement is VideoElement) {
 						_nativeVideoWidth = (_mediaElement as VideoElement).videoWidth;
 						_nativeVideoHeight = (_mediaElement as VideoElement).videoHeight;
+					} else if(_mediaElement is HLSMediaElement) {
+						_nativeVideoWidth = (_mediaElement as HLSMediaElement).videoWidth;
+						_nativeVideoHeight = (_mediaElement as HLSMediaElement).videoHeight;
 					}
 				} catch (e:Error) {
 					_output.appendText(e.toString() + "\n");
