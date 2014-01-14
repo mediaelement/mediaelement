@@ -11,6 +11,7 @@
 public class HLSMediaElement extends Sprite implements IMediaElement {
 
     private var _element:FlashMediaElement;
+    private var _playqueued:Boolean = false;
     private var _autoplay:Boolean = true;
     private var _preload:String = "";
     private var _hls:HLS;
@@ -22,6 +23,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
   private var _position:Number = 0;
   private var _duration:Number = 0;
   private var _framerate:Number;
+  private var _isManifestLoaded:Boolean = false;
   private var _isPaused:Boolean = true;
   private var _isEnded:Boolean = false;
   private var _volume:Number = 1;
@@ -69,9 +71,14 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     private function _manifestHandler(event:HLSEvent):void {
       _duration = event.levels[0].duration;
       _videoWidth = event.levels[0].width;
-      _videoHeight = event.levels[0].height; 
+      _videoHeight = event.levels[0].height;
+      _isManifestLoaded = true;
       sendEvent(HtmlMediaEvent.LOADEDMETADATA);
       sendEvent(HtmlMediaEvent.CANPLAY);
+      if(_autoplay || _playqueued) {
+        _playqueued = false;
+        _hls.stream.play();
+      }
     };
 
     private function _mediaTimeHandler(event:HLSEvent):void {
@@ -121,6 +128,10 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     public function play():void {
       //Log.txt("HLSMediaElement:play");
+      if(!_isManifestLoaded) {
+        _playqueued = true;
+        return;
+      }
       if (_hlsState == HLSStates.PAUSED) {
         _hls.stream.resume();
       } else {
@@ -129,6 +140,8 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     }
 
     public function pause():void {
+      if(!_isManifestLoaded)
+        return;      
       //Log.txt("HLSMediaElement:pause");
       _hls.stream.pause();
     }
@@ -143,10 +156,17 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     public function stop():void{
       _hls.stream.close();
+      _video.clear();
+      _isManifestLoaded = false;
+      _duration = 0;
+      _position = 0;
+      _playqueued = false;
+      sendEvent(HtmlMediaEvent.STOP);
     }
 
     public function setSrc(url:String):void{
       //Log.txt("HLSMediaElement:setSrc:"+url);
+      stop();
       _url = url;
       _hls.load(_url);
     }
@@ -157,6 +177,8 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     }
 
     public function setCurrentTime(pos:Number):void{
+      if(!_isManifestLoaded)
+        return;      
       sendEvent(HtmlMediaEvent.SEEKING);
       _hls.stream.seek(pos);
     }
