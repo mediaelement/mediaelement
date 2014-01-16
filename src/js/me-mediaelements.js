@@ -97,7 +97,7 @@ mejs.PluginMediaElement.prototype = {
 	// HTML5 methods
 	play: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.playVideo();
 			} else {
 				this.pluginApi.playMedia();
@@ -107,7 +107,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	load: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 			} else {
 				this.pluginApi.loadMedia();
 			}
@@ -117,7 +117,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	pause: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.pauseVideo();
 			} else {
 				this.pluginApi.pauseMedia();
@@ -129,7 +129,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	stop: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.stopVideo();
 			} else {
 				this.pluginApi.stopMedia();
@@ -199,7 +199,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setCurrentTime: function (time) {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.seekTo(time);
 			} else {
 				this.pluginApi.setCurrentTime(time);
@@ -213,7 +213,7 @@ mejs.PluginMediaElement.prototype = {
 	setVolume: function (volume) {
 		if (this.pluginApi != null) {
 			// same on YouTube and MEjs
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.setVolume(volume * 100);
 			} else {
 				this.pluginApi.setVolume(volume);
@@ -223,7 +223,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setMuted: function (muted) {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				if (muted) {
 					this.pluginApi.mute();
 				} else {
