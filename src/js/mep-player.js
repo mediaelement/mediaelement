@@ -37,7 +37,7 @@
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-                autoRewind: true,
+		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
@@ -54,8 +54,8 @@
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
-        // Enable click video element to toggle play/pause
-        clickToPlayPause: true,
+		// Enable click video element to toggle play/pause
+		clickToPlayPause: true,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -79,7 +79,7 @@
 						keys: [
 								32, // SPACE
 								179 // GOOGLE play/pause button
-							  ],
+							],
 						action: function(player, media) {
 								if (media.paused || media.ended) {
 										player.play();
@@ -188,7 +188,11 @@
 		t.options = $.extend({},mejs.MepDefaults,o);
 
 		// unique ID
-		t.id = 'mep_' + mejs.mepIndex++;
+		var id = 'mep_' + mejs.mepIndex++;
+		while( document.getElementById(id) ) {
+			id = 'mep_' + mejs.mepIndex++;
+		}
+		t.id = id;
 
 		// add to player array (for focus events)
 		mejs.players[t.id] = t;
@@ -235,7 +239,7 @@
 
 				// attempt to fix iOS 3 bug
 				//t.$media.removeAttr('poster');
-                                // no Issue found on iOS3 -ttroxell
+					// no Issue found on iOS3 -ttroxell
 
 				// override Apple's autoplay override for iPads
 				if (mf.isiPad && t.media.getAttribute('autoplay') !== null) {
@@ -286,7 +290,7 @@
 
 					t.$media.remove();
 					t.$node = t.$media = $newMedia;
-					t.node = t.media = $newMedia[0]
+					t.node = t.media = $newMedia[0];
 
 				} else {
 
@@ -343,8 +347,8 @@
 			mejs.MediaElement(t.$media[0], meOptions);
 
 			if (typeof(t.container) != 'undefined' && t.controlsAreVisible){
-			    // controls are shown when loaded
-			    t.container.trigger('controlsshown');
+				// controls are shown when loaded
+				t.container.trigger('controlsshown');
 			}
 		},
 
@@ -360,8 +364,8 @@
 				t.controls
 					.css('visibility','visible')
 					.stop(true, true).fadeIn(200, function() {
-					      t.controlsAreVisible = true;
-					      t.container.trigger('controlsshown');
+						t.controlsAreVisible = true;
+						t.container.trigger('controlsshown');
 					});
 
 				// any additional controls people might add and want to hide
@@ -566,8 +570,8 @@
 							}
 						};
 
-			            // click to play/pause
-			            t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
+						// click to play/pause
+						t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 						// show/hide controls
 						t.container
@@ -746,7 +750,7 @@
 			}
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-      		if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 
 				// do we have the native dimensions yet?
 				var
@@ -760,7 +764,7 @@
 					newHeight = $(window).height();
 				}
 
-				if ( newHeight != 0 && parentWidth != 0 ) {
+				if ( newHeight !== 0 && parentWidth !== 0 ) {
 					// set outer container size
 					t.container
 						.width(parentWidth)
@@ -865,7 +869,7 @@
 			}
 
 			// second, try the real poster
-			if (posterUrl !== '' && posterUrl != null) {
+			if (posterUrl !== '' && posterUrl !== null) {
 				t.setPoster(posterUrl);
 			} else {
 				poster.hide();
@@ -887,7 +891,7 @@
 				posterDiv = t.container.find('.mejs-poster'),
 				posterImg = posterDiv.find('img');
 
-			if (posterImg.length == 0) {
+			if (posterImg.length === 0) {
 				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
 			}
 
@@ -1023,7 +1027,7 @@
 
 				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
-						if ($(event.target).closest('.mejs-container').length == 0) {
+						if ($(event.target).closest('.mejs-container').length === 0) {
 								player.hasFocus = false;
 						}
 				});
