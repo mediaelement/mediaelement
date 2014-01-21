@@ -259,16 +259,21 @@
 
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') + '">'+
+					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') + '" tabindex="0">'+
 						'<div class="mejs-inner">'+
 							'<div class="mejs-mediaelement"></div>'+
 							'<div class="mejs-layers"></div>'+
-							'<div class="mejs-controls"></div>'+
+							'<div class="mejs-controls" ></div>'+
 							'<div class="mejs-clear"></div>'+
 						'</div>' +
 					'</div>')
 					.addClass(t.$media[0].className)
-					.insertBefore(t.$media);
+					.insertBefore(t.$media)
+					.focus(function() {
+						t.showControls(true);
+						var playButton = t.container.find('.mejs-playpause-button > button');
+						playButton.focus();
+					});
 
 				// add classes for user and content
 				t.container.addClass(
@@ -1003,9 +1008,8 @@
 
 				var t = this;
 
-				// listen for key presses
+			// listen for key presses
 				t.globalBind('keydown', function(e) {
-
 						if (player.hasFocus && player.options.enableKeyboard) {
 
 								// find a matching key
