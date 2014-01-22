@@ -53,7 +53,7 @@ if (typeof jQuery != 'undefined') {
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-                autoRewind: true,
+		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 		// forces the hour marker (##:00:00)
@@ -70,8 +70,8 @@ if (typeof jQuery != 'undefined') {
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
-        // Enable click video element to toggle play/pause
-        clickToPlayPause: true,
+		// Enable click video element to toggle play/pause
+		clickToPlayPause: true,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -95,12 +95,12 @@ if (typeof jQuery != 'undefined') {
 						keys: [
 								32, // SPACE
 								179 // GOOGLE play/pause button
-							  ],
+							],
 						action: function(player, media) {
 								if (media.paused || media.ended) {
-										media.play();
+										player.play();
 								} else {
-										media.pause();
+										player.pause();
 								}
 						}
 				},
@@ -204,7 +204,11 @@ if (typeof jQuery != 'undefined') {
 		t.options = $.extend({},mejs.MepDefaults,o);
 
 		// unique ID
-		t.id = 'mep_' + mejs.mepIndex++;
+		var id = 'mep_' + mejs.mepIndex++;
+		while( document.getElementById(id) ) {
+			id = 'mep_' + mejs.mepIndex++;
+		}
+		t.id = id;
 
 		// add to player array (for focus events)
 		mejs.players[t.id] = t;
@@ -251,12 +255,11 @@ if (typeof jQuery != 'undefined') {
 
 				// attempt to fix iOS 3 bug
 				//t.$media.removeAttr('poster');
-                                // no Issue found on iOS3 -ttroxell
+					// no Issue found on iOS3 -ttroxell
 
 				// override Apple's autoplay override for iPads
 				if (mf.isiPad && t.media.getAttribute('autoplay') !== null) {
-					t.media.load();
-					t.media.play();
+					t.play();
 				}
 
 			} else if (mf.isAndroid && t.options.AndroidUseNativeControls) {
@@ -303,7 +306,7 @@ if (typeof jQuery != 'undefined') {
 
 					t.$media.remove();
 					t.$node = t.$media = $newMedia;
-					t.node = t.media = $newMedia[0]
+					t.node = t.media = $newMedia[0];
 
 				} else {
 
@@ -360,8 +363,8 @@ if (typeof jQuery != 'undefined') {
 			mejs.MediaElement(t.$media[0], meOptions);
 
 			if (typeof(t.container) != 'undefined' && t.controlsAreVisible){
-			    // controls are shown when loaded
-			    t.container.trigger('controlsshown');
+				// controls are shown when loaded
+				t.container.trigger('controlsshown');
 			}
 		},
 
@@ -377,8 +380,8 @@ if (typeof jQuery != 'undefined') {
 				t.controls
 					.css('visibility','visible')
 					.stop(true, true).fadeIn(200, function() {
-					      t.controlsAreVisible = true;
-					      t.container.trigger('controlsshown');
+						t.controlsAreVisible = true;
+						t.container.trigger('controlsshown');
 					});
 
 				// any additional controls people might add and want to hide
@@ -576,15 +579,15 @@ if (typeof jQuery != 'undefined') {
 
 							if (t.options.clickToPlayPause) {
 								if (t.media.paused) {
-									t.media.play();
+									t.play();
 								} else {
-									t.media.pause();
+									t.pause();
 								}
 							}
 						};
 
-			            // click to play/pause
-			            t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
+						// click to play/pause
+						t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 						// show/hide controls
 						t.container
@@ -678,7 +681,7 @@ if (typeof jQuery != 'undefined') {
 					}
 
 					if (t.options.loop) {
-						t.media.play();
+						t.play();
 					} else if (!t.options.alwaysShowControls && t.controlsEnabled) {
 						t.showControls();
 					}
@@ -726,8 +729,7 @@ if (typeof jQuery != 'undefined') {
 
 			// force autoplay for HTML5
 			if (autoplay && media.pluginType == 'native') {
-				media.load();
-				media.play();
+				t.play();
 			}
 
 
@@ -764,7 +766,7 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-      		if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 
 				// do we have the native dimensions yet?
 				var
@@ -778,7 +780,7 @@ if (typeof jQuery != 'undefined') {
 					newHeight = $(window).height();
 				}
 
-				if ( newHeight != 0 && parentWidth != 0 ) {
+				if ( newHeight !== 0 && parentWidth !== 0 ) {
 					// set outer container size
 					t.container
 						.width(parentWidth)
@@ -883,7 +885,7 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			// second, try the real poster
-			if (posterUrl !== '' && posterUrl != null) {
+			if (posterUrl !== '' && posterUrl !== null) {
 				t.setPoster(posterUrl);
 			} else {
 				poster.hide();
@@ -905,7 +907,7 @@ if (typeof jQuery != 'undefined') {
 				posterDiv = t.container.find('.mejs-poster'),
 				posterImg = posterDiv.find('img');
 
-			if (posterImg.length == 0) {
+			if (posterImg.length === 0) {
 				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
 			}
 
@@ -937,14 +939,12 @@ if (typeof jQuery != 'undefined') {
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
-				.click(function() {
-                    if (t.options.clickToPlayPause) {
-                        if (media.paused) {
-                            media.play();
-                        } else {
-                            media.pause();
-                        }
-                    }
+				.bind('click touchstart', function() {
+					if (t.options.clickToPlayPause) {
+						if (media.paused) {
+							t.play();
+						}
+					}
 				});
 
 			/*
@@ -1043,7 +1043,7 @@ if (typeof jQuery != 'undefined') {
 
 				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
-						if ($(event.target).closest('.mejs-container').length == 0) {
+						if ($(event.target).closest('.mejs-container').length === 0) {
 								player.hasFocus = false;
 						}
 				});
@@ -1076,6 +1076,7 @@ if (typeof jQuery != 'undefined') {
 			this.setControlsSize();
 		},
 		play: function() {
+			this.load();
 			this.media.play();
 		},
 		pause: function() {
@@ -1084,7 +1085,11 @@ if (typeof jQuery != 'undefined') {
 			} catch (e) {}
 		},
 		load: function() {
-			this.media.load();
+			if (!this.isLoaded) {
+				this.media.load();
+			}
+
+			this.isLoaded = true;
 		},
 		setMuted: function(muted) {
 			this.media.setMuted(muted);
@@ -1301,7 +1306,8 @@ if (typeof jQuery != 'undefined') {
 		buildprogress: function(player, controls, layers, media) {
 
 			$('<div class="mejs-time-rail">'+
-				'<span class="mejs-time-total">'+
+				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
+                    '<span class="mejs-offscreen">Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.</span>' +
 					'<span class="mejs-time-buffering"></span>'+
 					'<span class="mejs-time-loaded"></span>'+
 					'<span class="mejs-time-current"></span>'+
@@ -1310,7 +1316,7 @@ if (typeof jQuery != 'undefined') {
 						'<span class="mejs-time-float-current">00:00</span>' + 
 						'<span class="mejs-time-float-corner"></span>' + 
 					'</span>'+
-				'</span>'+
+				'</a>'+
 			'</div>')
 				.appendTo(controls);
 				controls.find('.mejs-time-buffering').hide();
@@ -1323,6 +1329,7 @@ if (typeof jQuery != 'undefined') {
 				handle  = controls.find('.mejs-time-handle'),
 				timefloat  = controls.find('.mejs-time-float'),
 				timefloatcurrent  = controls.find('.mejs-time-float-current'),
+                slider = controls.find('.mejs-time-slider'),
 				handleMouseMove = function (e) {
 					// mouse position relative to the object
 					var x = e.pageX,
@@ -1358,7 +1365,74 @@ if (typeof jQuery != 'undefined') {
 					}
 				},
 				mouseIsDown = false,
-				mouseIsOver = false;
+				mouseIsOver = false,
+                lastKeyPressTime = 0;
+            
+                var updateSlider = function (e) {
+                    
+                    var seconds = media.currentTime,
+                        time = mejs.Utility.secondsToTimeCode(seconds),
+                        duration = media.duration;
+
+                    slider.attr({
+                        'aria-label': 'Video Timeline',
+                        'aria-valuemin': 0,
+                        'aria-valuemax': duration,
+                        'aria-valuenow': seconds,
+                        'aria-valuetext': time,
+                        'role': 'slider',
+                        'tabindex': 0
+                    });
+                    
+                };
+            
+                var restartPlayer = function() {
+                    var now = new Date();                        
+                    if (now - lastKeyPressTime >= 750) {
+                        media.play();
+                    }
+                };
+            
+                slider.bind('keydown', function (e) {
+
+                    var keyCode = e.keyCode;
+                    var skipAmount = 0;
+                    
+                    switch (keyCode) {
+                        case 37: // left
+                            skipAmount = -1;
+                            break;
+                        case 39: // Right
+                            skipAmount = 1;
+                            break;
+                        case 38: // Up
+                            skipAmount = 10;
+                            break;
+                        case 40: // Down
+                            skipAmount = -10;
+                            break;
+                    }
+    
+                    if (skipAmount == 0) {
+                        return;
+                    }
+    
+                    lastKeyPressTime = new Date();
+                    media.pause();
+    
+                    var duration = media.duration;
+                    var seekTime = media.currentTime + skipAmount > duration ? duration : media.currentTime + skipAmount;                
+    
+                    if (seekTime < media.duration) {
+                        setTimeout(restartPlayer, 800);
+                    }
+                        
+                    media.setCurrentTime(seekTime);
+                    
+                    e.preventDefault();
+                    e.stopPropagation();                    
+                    return false;
+                });
 
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
@@ -1399,13 +1473,14 @@ if (typeof jQuery != 'undefined') {
 			// loading
 			media.addEventListener('progress', function (e) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				player.setCurrentRail(e);                
 			}, false);
 
 			// current time
 			media.addEventListener('timeupdate', function(e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
+                updateSlider(e);
 			}, false);
 			
 			

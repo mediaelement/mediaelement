@@ -4,7 +4,8 @@
 		buildprogress: function(player, controls, layers, media) {
 
 			$('<div class="mejs-time-rail">'+
-				'<span class="mejs-time-total">'+
+				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
+                    '<span class="mejs-offscreen">Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.</span>' +
 					'<span class="mejs-time-buffering"></span>'+
 					'<span class="mejs-time-loaded"></span>'+
 					'<span class="mejs-time-current"></span>'+
@@ -13,7 +14,7 @@
 						'<span class="mejs-time-float-current">00:00</span>' + 
 						'<span class="mejs-time-float-corner"></span>' + 
 					'</span>'+
-				'</span>'+
+				'</a>'+
 			'</div>')
 				.appendTo(controls);
 				controls.find('.mejs-time-buffering').hide();
@@ -26,6 +27,7 @@
 				handle  = controls.find('.mejs-time-handle'),
 				timefloat  = controls.find('.mejs-time-float'),
 				timefloatcurrent  = controls.find('.mejs-time-float-current'),
+                slider = controls.find('.mejs-time-slider'),
 				handleMouseMove = function (e) {
 					// mouse position relative to the object
 					var x = e.pageX,
@@ -61,7 +63,74 @@
 					}
 				},
 				mouseIsDown = false,
-				mouseIsOver = false;
+				mouseIsOver = false,
+                lastKeyPressTime = 0;
+            
+                var updateSlider = function (e) {
+                    
+                    var seconds = media.currentTime,
+                        time = mejs.Utility.secondsToTimeCode(seconds),
+                        duration = media.duration;
+
+                    slider.attr({
+                        'aria-label': 'Video Timeline',
+                        'aria-valuemin': 0,
+                        'aria-valuemax': duration,
+                        'aria-valuenow': seconds,
+                        'aria-valuetext': time,
+                        'role': 'slider',
+                        'tabindex': 0
+                    });
+                    
+                };
+            
+                var restartPlayer = function() {
+                    var now = new Date();                        
+                    if (now - lastKeyPressTime >= 750) {
+                        media.play();
+                    }
+                };
+            
+                slider.bind('keydown', function (e) {
+
+                    var keyCode = e.keyCode;
+                    var skipAmount = 0;
+                    
+                    switch (keyCode) {
+                        case 37: // left
+                            skipAmount = -1;
+                            break;
+                        case 39: // Right
+                            skipAmount = 1;
+                            break;
+                        case 38: // Up
+                            skipAmount = 10;
+                            break;
+                        case 40: // Down
+                            skipAmount = -10;
+                            break;
+                    }
+    
+                    if (skipAmount == 0) {
+                        return;
+                    }
+    
+                    lastKeyPressTime = new Date();
+                    media.pause();
+    
+                    var duration = media.duration;
+                    var seekTime = media.currentTime + skipAmount > duration ? duration : media.currentTime + skipAmount;                
+    
+                    if (seekTime < media.duration) {
+                        setTimeout(restartPlayer, 800);
+                    }
+                        
+                    media.setCurrentTime(seekTime);
+                    
+                    e.preventDefault();
+                    e.stopPropagation();                    
+                    return false;
+                });
 
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
@@ -102,13 +171,14 @@
 			// loading
 			media.addEventListener('progress', function (e) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				player.setCurrentRail(e);                
 			}, false);
 
 			// current time
 			media.addEventListener('timeupdate', function(e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
+                updateSlider(e);
 			}, false);
 			
 			
