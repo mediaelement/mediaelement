@@ -153,29 +153,6 @@
 				media.setVolume(volume);
 			},
 
-			getCurrentVolume = function( ) {
-				var volume = null,
-					totalOffset = volumeTotal.offset();
-
-				// calculate the new volume based on the moust position
-				if (mode === 'vertical') {
-					var vtotal = parseInt(volumeTotal.css('height'), 10) +  parseInt(volumeTotal.css('top'),10);
-					volume = ( vtotal - parseInt(volumeCurrent.css('top'), 10) ) / vtotal;
-
-					// the controls just hide themselves (usually when mouse moves too far up)
-					if (totalOffset.top === 0 || totalOffset.left === 0)
-						return;
-
-				} else {
-					var htotal = parseInt(volumeTotal.css('width'), 10) +  parseInt(volumeTotal.css('left'),10);
-					volume = ( htotal - parseInt(volumeCurrent.css('left'), 10) ) / htotal;
-				}
-
-				volume = Math.max(0,volume);
-				volume = Math.min(volume,1);
-
-				return volume;
-			},
 			mouseIsDown = false,
 			mouseIsOver = false;
 
@@ -216,7 +193,7 @@
 				})
 				.bind('keydown', function(e) {
 					var keyCode = e.keyCode;
-					var volume = getCurrentVolume();
+					var volume = media.volume;
 					switch (keyCode) {
 						case 38: // Up
 							volume += 0.1;
@@ -230,6 +207,7 @@
 
 					mouseIsDown = false;
 					positionVolumeHandle( volume );
+					media.setVolume(volume);
 					return false;
 				})
 				.bind('blur', function() {
