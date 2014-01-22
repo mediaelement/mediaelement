@@ -264,7 +264,7 @@
 				// build container
 				t.container =
 					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') +
-						'" tabindex="0" aria-role="application">' +
+						'" tabindex="0" role="application">' +
 						'<div class="mejs-inner">' +
 						'<div class="mejs-mediaelement"></div>' +
 						'<div class="mejs-layers"></div>' +
