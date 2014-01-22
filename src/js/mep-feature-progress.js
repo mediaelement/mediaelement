@@ -1,33 +1,33 @@
-(function($) {
+(function ($) {
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
-		buildprogress: function(player, controls, layers, media) {
+		buildprogress: function (player, controls, layers, media) {
 
-			$('<div class="mejs-time-rail">'+
+			$('<div class="mejs-time-rail">' +
 				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-                    '<span class="mejs-offscreen">Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.</span>' +
-					'<span class="mejs-time-buffering"></span>'+
-					'<span class="mejs-time-loaded"></span>'+
-					'<span class="mejs-time-current"></span>'+
-					'<span class="mejs-time-handle"></span>'+
-					'<span class="mejs-time-float">' + 
-						'<span class="mejs-time-float-current">00:00</span>' + 
-						'<span class="mejs-time-float-corner"></span>' + 
-					'</span>'+
-				'</a>'+
-			'</div>')
+				'<span class="mejs-offscreen">Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.</span>' +
+				'<span class="mejs-time-buffering"></span>' +
+				'<span class="mejs-time-loaded"></span>' +
+				'<span class="mejs-time-current"></span>' +
+				'<span class="mejs-time-handle"></span>' +
+				'<span class="mejs-time-float">' +
+				'<span class="mejs-time-float-current">00:00</span>' +
+				'<span class="mejs-time-float-corner"></span>' +
+				'</span>' +
+				'</a>' +
+				'</div>')
 				.appendTo(controls);
-				controls.find('.mejs-time-buffering').hide();
+			controls.find('.mejs-time-buffering').hide();
 
-			var 
-				t = this,
+			var
+			t = this,
 				total = controls.find('.mejs-time-total'),
-				loaded  = controls.find('.mejs-time-loaded'),
-				current  = controls.find('.mejs-time-current'),
-				handle  = controls.find('.mejs-time-handle'),
-				timefloat  = controls.find('.mejs-time-float'),
-				timefloatcurrent  = controls.find('.mejs-time-float-current'),
-                slider = controls.find('.mejs-time-slider'),
+				loaded = controls.find('.mejs-time-loaded'),
+				current = controls.find('.mejs-time-current'),
+				handle = controls.find('.mejs-time-handle'),
+				timefloat = controls.find('.mejs-time-float'),
+				timefloatcurrent = controls.find('.mejs-time-float-current'),
+				slider = controls.find('.mejs-time-slider'),
 				handleMouseMove = function (e) {
 					// mouse position relative to the object
 					var x = e.pageX,
@@ -44,7 +44,7 @@
 						} else if (x > width + offset.left) {
 							x = width + offset.left;
 						}
-						
+
 						pos = x - offset.left;
 						percentage = (pos / width);
 						newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
@@ -56,81 +56,81 @@
 
 						// position floating time box
 						if (!mejs.MediaFeatures.hasTouch) {
-								timefloat.css('left', pos);
-								timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );
-								timefloat.show();
+							timefloat.css('left', pos);
+							timefloatcurrent.html(mejs.Utility.secondsToTimeCode(newTime));
+							timefloat.show();
 						}
 					}
 				},
 				mouseIsDown = false,
 				mouseIsOver = false,
-                lastKeyPressTime = 0;
-            
-                var updateSlider = function (e) {
-                    
-                    var seconds = media.currentTime,
-                        time = mejs.Utility.secondsToTimeCode(seconds),
-                        duration = media.duration;
+				lastKeyPressTime = 0;
 
-                    slider.attr({
-                        'aria-label': 'Video Timeline',
-                        'aria-valuemin': 0,
-                        'aria-valuemax': duration,
-                        'aria-valuenow': seconds,
-                        'aria-valuetext': time,
-                        'role': 'slider',
-                        'tabindex': 0
-                    });
-                    
-                };
-            
-                var restartPlayer = function() {
-                    var now = new Date();                        
-                    if (now - lastKeyPressTime >= 750) {
-                        media.play();
-                    }
-                };
-            
-                slider.bind('keydown', function (e) {
+			var updateSlider = function (e) {
 
-                    var keyCode = e.keyCode;
-                    var skipAmount = 0;
-                    
-                    switch (keyCode) {
-                        case 37: // left
-                            skipAmount = -1;
-                            break;
-                        case 39: // Right
-                            skipAmount = 1;
-                            break;
-                        case 38: // Up
-                            skipAmount = 10;
-                            break;
-                        case 40: // Down
-                            skipAmount = -10;
-                            break;
-                    }
-    
-                    if (skipAmount == 0) {
-                        return;
-                    }
-    
-                    lastKeyPressTime = new Date();
-                    media.pause();
-    
-                    var duration = media.duration;
-                    var seekTime = media.currentTime + skipAmount > duration ? duration : media.currentTime + skipAmount;                
-    
-                    if (seekTime < media.duration) {
-                        setTimeout(restartPlayer, 800);
-                    }
-                        
-                    media.setCurrentTime(seekTime);
-                    
-                    e.preventDefault();
-                    e.stopPropagation();                    
-                    return false;
-                });
+				var seconds = media.currentTime,
+					time = mejs.Utility.secondsToTimeCode(seconds),
+					duration = media.duration;
+
+				slider.attr({
+					'aria-label': 'Video Timeline',
+					'aria-valuemin': 0,
+					'aria-valuemax': duration,
+					'aria-valuenow': seconds,
+					'aria-valuetext': time,
+					'role': 'slider',
+					'tabindex': 0
+				});
+
+			};
+
+			var restartPlayer = function () {
+				var now = new Date();
+				if (now - lastKeyPressTime >= 750) {
+					media.play();
+				}
+			};
+
+			slider.bind('keydown', function (e) {
+
+				var keyCode = e.keyCode;
+				var skipAmount = 0;
+
+				switch (keyCode) {
+				case 37: // left
+					skipAmount = -1;
+					break;
+				case 39: // Right
+					skipAmount = 1;
+					break;
+				case 38: // Up
+					skipAmount = 10;
+					break;
+				case 40: // Down
+					skipAmount = -10;
+					break;
+				}
+
+				if (skipAmount == 0) {
+					return;
+				}
+
+				lastKeyPressTime = new Date();
+				media.pause();
+
+				var duration = media.duration;
+				var seekTime = media.currentTime + skipAmount > duration ? duration : media.currentTime + skipAmount;
+
+				if (seekTime < media.duration) {
+					setTimeout(restartPlayer, 800);
+				}
+
+				media.setCurrentTime(seekTime);
+
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			});
 
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
@@ -140,7 +140,7 @@
 					if (e.which === 1) {
 						mouseIsDown = true;
 						handleMouseMove(e);
-						t.globalBind('mousemove.dur', function(e) {
+						t.globalBind('mousemove.dur', function (e) {
 							handleMouseMove(e);
 						});
 						t.globalBind('mouseup.dur', function (e) {
@@ -151,16 +151,16 @@
 						return false;
 					}
 				})
-				.bind('mouseenter', function(e) {
+				.bind('mouseenter', function (e) {
 					mouseIsOver = true;
-					t.globalBind('mousemove.dur', function(e) {
+					t.globalBind('mousemove.dur', function (e) {
 						handleMouseMove(e);
 					});
 					if (!mejs.MediaFeatures.hasTouch) {
 						timefloat.show();
 					}
 				})
-				.bind('mouseleave',function(e) {
+				.bind('mouseleave', function (e) {
 					mouseIsOver = false;
 					if (!mouseIsDown) {
 						t.globalUnbind('.dur');
@@ -171,35 +171,35 @@
 			// loading
 			media.addEventListener('progress', function (e) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);                
+				player.setCurrentRail(e);
 			}, false);
 
 			// current time
-			media.addEventListener('timeupdate', function(e) {
+			media.addEventListener('timeupdate', function (e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
-                updateSlider(e);
+				updateSlider(e);
 			}, false);
-			
-			
+
+
 			// store for later use
 			t.loaded = loaded;
 			t.total = total;
 			t.current = current;
 			t.handle = handle;
 		},
-		setProgressRail: function(e) {
+		setProgressRail: function (e) {
 
 			var
-				t = this,
+			t = this,
 				target = (e != undefined) ? e.target : t.media,
-				percent = null;			
+				percent = null;
 
 			// newest HTML5 spec has buffered array (FF4, Webkit)
 			if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
-				// TODO: account for a real array with multiple values (only Firefox 4 has this so far) 
+				// TODO: account for a real array with multiple values (only Firefox 4 has this so far)
 				percent = target.buffered.end(0) / target.duration;
-			} 
+			}
 			// Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
 			// to be anything other than 0. If the byte count is available we use this instead.
 			// Browsers that support the else if do not seem to have the bufferedBytes value and
@@ -209,7 +209,7 @@
 			}
 			// Firefox 3 with an Ogg file seems to go this way
 			else if (e && e.lengthComputable && e.total != 0) {
-				percent = e.loaded/e.total;
+				percent = e.loaded / e.total;
 			}
 
 			// finally update the progress bar
@@ -221,16 +221,16 @@
 				}
 			}
 		},
-		setCurrentRail: function() {
+		setCurrentRail: function () {
 
 			var t = this;
-		
+
 			if (t.media.currentTime != undefined && t.media.duration) {
 
 				// update bar and handle
 				if (t.total && t.handle) {
-					var 
-						newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
+					var
+					newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
 						handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
 
 					t.current.width(newWidth);
@@ -238,6 +238,6 @@
 				}
 			}
 
-		}	
+		}
 	});
 })(mejs.$);

@@ -2,7 +2,7 @@
 
 	$.extend(mejs.MepDefaults, {
 		muteText: mejs.i18n.t('Mute Toggle'),
-		volumentControlText: mejs.i18n.t('Volumen Controls'),
+		volumentControlText: mejs.i18n.t('Volumen Control, use up and down arrows to increase or decrease volume.'),
 		hideVolumeOnTouchDevices: true,
 
 		audioVolume: 'horizontal',
@@ -22,31 +22,32 @@
 
 				// horizontal version
 				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
-					'<span class="mejs-offscreen" aria-role="alert">' + t.options.volumentControlText + '</span>' +
 					'<button type="button" aria-controls="' + t.id +
 						'" title="' + t.options.muteText +
 						'" aria-label="' + t.options.muteText +
 					'"></button>'+
 					'</div>' +
-					'<div class="mejs-horizontal-volume-slider">'+ // outer background
+					'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">'+ // outer background
+						'<span class="mejs-offscreen">' + t.options.volumentControlText + '</span>' +
 						'<div class="mejs-horizontal-volume-total"></div>'+ // line background
 						'<div class="mejs-horizontal-volume-current"></div>'+ // current volume
 						'<div class="mejs-horizontal-volume-handle"></div>'+ // handle
-					'</div>')
+					'</a>')
 				.appendTo(controls) :
 
 				// vertical version
 				$('<div class="mejs-button mejs-volume-button mejs-mute">'+
-					'<span class="mejs-offscreen" aria-role="alert">HEllo' + t.options.volumentControlText + '</span>' +
+
 					'<button type="button" aria-controls="' + t.id +
 						'" title="' + t.options.muteText +
 						'" aria-label="' + t.options.muteText +
 					'"></button>'+
-					'<div class="mejs-volume-slider">'+ // outer background
+					'<a href="javascript:void(0);" class="mejs-volume-slider">'+ // outer background
+						'<span class="mejs-offscreen" >' + t.options.volumentControlText + '</span>' +
 						'<div class="mejs-volume-total"></div>'+ // line background
 						'<div class="mejs-volume-current"></div>'+ // current volume
 						'<div class="mejs-volume-handle"></div>'+ // handle
-					'</div>'+
+					'</a>'+
 				'</div>')
 					.appendTo(controls),
 			volumeSlider = t.container.find('.mejs-volume-slider, .mejs-horizontal-volume-slider'),
@@ -151,6 +152,30 @@
 				}
 				media.setVolume(volume);
 			},
+
+			getCurrentVolume = function( ) {
+				var volume = null,
+					totalOffset = volumeTotal.offset();
+
+				// calculate the new volume based on the moust position
+				if (mode === 'vertical') {
+					var vtotal = parseInt(volumeTotal.css('height'), 10) +  parseInt(volumeTotal.css('top'),10);
+					volume = ( vtotal - parseInt(volumeCurrent.css('top'), 10) ) / vtotal;
+
+					// the controls just hide themselves (usually when mouse moves too far up)
+					if (totalOffset.top === 0 || totalOffset.left === 0)
+						return;
+
+				} else {
+					var htotal = parseInt(volumeTotal.css('width'), 10) +  parseInt(volumeTotal.css('left'),10);
+					volume = ( htotal - parseInt(volumeCurrent.css('left'), 10) ) / htotal;
+				}
+
+				volume = Math.max(0,volume);
+				volume = Math.min(volume,1);
+
+				return volume;
+			},
 			mouseIsDown = false,
 			mouseIsOver = false;
 
@@ -166,25 +191,7 @@
 					if (!mouseIsDown && mode == 'vertical')	{
 						volumeSlider.hide();
 					}
-				})
-			.bind('keypress', function(e){
-				switch(e.which) {
-					case 13: //Enter
-						media.setMuted( !media.muted );
-						e.preventDefault();
-						break;
-					case 38: //Up arrow
-						volume += 0.1;
-						e.preventDefault();
-						break;
-					case 40:
-						volume = volume - 0.1;
-						e.preventDefault();
-						break;
-				}
-				volume = Math.max(0,volume);
-				volume = Math.min(volume,1);
-			});
+				});
 
 			volumeSlider
 				.bind('mouseover', function() {
@@ -206,6 +213,27 @@
 					mouseIsDown = true;
 
 					return false;
+				})
+				.bind('keydown', function(e) {
+					var keyCode = e.keyCode;
+					var volume = getCurrentVolume();
+					switch (keyCode) {
+						case 38: // Up
+							volume += 0.1;
+							break;
+						case 40: // Down
+							volume = volume - 0.1;
+							break;
+						default:
+							return true;
+					}
+
+					mouseIsDown = false;
+					positionVolumeHandle( volume );
+					return false;
+				})
+				.bind('blur', function() {
+					volumeSlider.hide();
 				});
 
 
@@ -213,6 +241,11 @@
 			mute.find('button').click(function() {
 				media.setMuted( !media.muted );
 			});
+
+			mute.find('button').bind('focus', function() {
+				volumeSlider.show();
+			});
+
 
 			// listen for volume change events from other sources
 			media.addEventListener('volumechange', function(e) {
