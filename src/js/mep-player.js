@@ -274,10 +274,12 @@
 						'</div>')
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media)
-					.focus(function () {
-						t.showControls(true);
-						var playButton = t.container.find('.mejs-playpause-button > button');
-						playButton.focus();
+					.focus(function ( e ) {
+						if( !t.controlsAreVisible ) {
+							t.showControls(true);
+							var playButton = t.container.find('.mejs-playpause-button > button');
+							playButton.focus();
+						}
 					});
 
 				// add classes for user and content
@@ -706,7 +708,7 @@
 				}, 50);
 
 				t.container.focusout(function (e) {
-					if( e.relatedTarget ) {
+					if( e.relatedTarget ) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
 						var $target = $(e.relatedTarget);
 						if (t.keyboardAction && $target.parents('.mejs-container').length === 0) {
 							t.keyboardAction = false;
