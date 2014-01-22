@@ -401,7 +401,7 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction)
 				return;
 
 			if (doAnimation) {
@@ -1010,6 +1010,7 @@
 
 			// listen for key presses
 				t.globalBind('keydown', function(e) {
+						t.keyboardAction = true;
 						if (player.hasFocus && player.options.enableKeyboard) {
 
 								// find a matching key
@@ -1031,6 +1032,7 @@
 
 				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
+					t.keyboardAction = false;
 						if ($(event.target).closest('.mejs-container').length === 0) {
 								player.hasFocus = false;
 						}
