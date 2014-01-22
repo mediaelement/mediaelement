@@ -706,10 +706,12 @@
 				}, 50);
 
 				t.container.focusout(function (e) {
-					var $target = $(e.relatedTarget);
-					if (t.keyboardAction && $target.parents('.mejs-container').length === 0) {
-						t.keyboardAction = false;
-						t.hideControls(true);
+					if( e.relatedTarget ) {
+						var $target = $(e.relatedTarget);
+						if (t.keyboardAction && $target.parents('.mejs-container').length === 0) {
+							t.keyboardAction = false;
+							t.hideControls(true);
+						}
 					}
 				});
 
