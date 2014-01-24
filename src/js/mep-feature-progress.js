@@ -1,8 +1,7 @@
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
-		progessOffScreenText: mejs.i18n.t('Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.'),
-
+		progessOffScreenText: mejs.i18n.t('allyProgressSliderControl')
 	});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
@@ -116,7 +115,7 @@
 					break;
 				}
 
-				if (skipAmount == 0) {
+				if (skipAmount === 0) {
 					return;
 				}
 
@@ -197,7 +196,7 @@
 
 			var
 			t = this,
-				target = (e != undefined) ? e.target : t.media,
+				target = (e !== undefined) ? e.target : t.media,
 				percent = null;
 
 			// newest HTML5 spec has buffered array (FF4, Webkit)
@@ -209,11 +208,11 @@
 			// to be anything other than 0. If the byte count is available we use this instead.
 			// Browsers that support the else if do not seem to have the bufferedBytes value and
 			// should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
-			else if (target && target.bytesTotal != undefined && target.bytesTotal > 0 && target.bufferedBytes != undefined) {
+			else if (target && target.bytesTotal !== undefined && target.bytesTotal > 0 && target.bufferedBytes !== undefined) {
 				percent = target.bufferedBytes / target.bytesTotal;
 			}
 			// Firefox 3 with an Ogg file seems to go this way
-			else if (e && e.lengthComputable && e.total != 0) {
+			else if (e && e.lengthComputable && e.total !== 0) {
 				percent = e.loaded / e.total;
 			}
 
@@ -230,7 +229,7 @@
 
 			var t = this;
 
-			if (t.media.currentTime != undefined && t.media.duration) {
+			if (t.media.currentTime !== undefined && t.media.duration) {
 
 				// update bar and handle
 				if (t.total && t.handle) {

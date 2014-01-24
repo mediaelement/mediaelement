@@ -12,17 +12,22 @@
  * @params
  *  - exports - CommonJS, window ..
  */
-;(function(exports, undefined) {
+(function (exports, undefined) {
 
-    "use strict";
+	"use strict";
 
-    if (typeof exports.zh === 'undefined') {
-        exports.zh = {
-            "Fullscreen" : "全螢幕",
-            "Go Fullscreen" : "全屏模式",
-            "Turn off Fullscreen" : "退出全屏模式",
-            "Close" : "關閉"
-        };
-    }
+	if (typeof exports.zh === 'undefined') {
+		exports.zh = {
+			"Fullscreen": "全螢幕",
+			"Go Fullscreen": "全屏模式",
+			"Turn off Fullscreen": "退出全屏模式",
+			"Close": "關閉",
+			"Mute Toggle": "静音切换",
+			"allyVolumeControl": "使用上下箭头键来增加或减小音量。",
+			"allyProgressSliderControl": "使用左/右箭头键来提前一秒，上下箭头到提前十秒。",
+			"Captions/Subtitles" : "标题将以此字幕",
+			"Play/Pause" : "播放或暂停"
+		};
+	}
 
 }(mejs.i18n.locale.strings));

@@ -35,7 +35,7 @@
  *  - exports - CommonJS, window ..
  *
  */
-;(function(context, exports, undefined) {
+(function(context, exports, undefined) {
     "use strict";
     var i18n = {
         "locale": {

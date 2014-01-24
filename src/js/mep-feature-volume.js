@@ -2,7 +2,7 @@
 
 	$.extend(mejs.MepDefaults, {
 		muteText: mejs.i18n.t('Mute Toggle'),
-		volumentControlText: mejs.i18n.t('Volumen Control, use up and down arrows to increase or decrease volume.'),
+		allyVolumentControlText: mejs.i18n.t('allyVolumeControls'),
 		hideVolumeOnTouchDevices: true,
 
 		audioVolume: 'horizontal',
@@ -13,8 +13,9 @@
 		buildvolume: function (player, controls, layers, media) {
 
 			// Android and iOS don't support volume controls
-			if (mejs.MediaFeatures.hasTouch && this.options.hideVolumeOnTouchDevices)
+			if (mejs.MediaFeatures.hasTouch && this.options.hideVolumeOnTouchDevices){
 				return;
+			}
 
 			var t = this,
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
@@ -28,7 +29,7 @@
 					'"></button>' +
 					'</div>' +
 					'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-					'<span class="mejs-offscreen">' + t.options.volumentControlText + '</span>' +
+					'<span class="mejs-offscreen">' + t.options.allyVolumentControlText + '</span>' +
 					'<div class="mejs-horizontal-volume-total"></div>' + // line background
 					'<div class="mejs-horizontal-volume-current"></div>' + // current volume
 					'<div class="mejs-horizontal-volume-handle"></div>' + // handle
@@ -126,8 +127,9 @@
 						volume = (railHeight - newY) / railHeight;
 
 						// the controls just hide themselves (usually when mouse moves too far up)
-						if (totalOffset.top === 0 || totalOffset.left === 0)
+						if (totalOffset.top === 0 || totalOffset.left === 0) {
 							return;
+						}
 
 					} else {
 						var
