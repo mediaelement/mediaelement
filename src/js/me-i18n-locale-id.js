@@ -23,7 +23,8 @@
 			"Mute Toggle": "Toggle bisu",
 			"allyVolumeControl": "Menggunakan atas dan bawah tombol panah untuk menambah atau mengurangi volume.",
 			"allyProgressSliderControl": "Gunakan tombol panah kiri dan kanan untuk memajukan satu detik, atas dan bawah panah untuk memajukan sepuluh detik.",
-			"Captions/Subtitles" : "Sub judul"
+			"Captions/Subtitles" : "Sub judul",
+			"Play/Pause" : "Bermain atau jeda"
 		};
 	}
 
