@@ -3,7 +3,7 @@
 	left: -10000px;
 	overflow: hidden;
 	width: 1px;
-	height: 1px;   
+	height: 1px;
 }
 
 .mejs-container {
@@ -93,15 +93,6 @@
 
 .mejs-overlay-play {
 	cursor: pointer;
-}
-
-.mejs-offscreen {
-	position: absolute;
-	left: -10000px;
-	width: 1000px;
-	overflow: hidden;
-	width: 1px;
-	height: 1px;
 }
 
 .mejs-overlay-button {

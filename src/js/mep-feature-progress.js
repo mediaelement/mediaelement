@@ -1,11 +1,17 @@
 (function ($) {
+
+	$.extend(mejs.MepDefaults, {
+		progessOffScreenText: mejs.i18n.t('Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.'),
+
+	});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function (player, controls, layers, media) {
+			var t = this;
 
 			$('<div class="mejs-time-rail">' +
 				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-				'<span class="mejs-offscreen">Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.</span>' +
+				'<span class="mejs-offscreen">' + t.progessOffScreenText + '</span>' +
 				'<span class="mejs-time-buffering"></span>' +
 				'<span class="mejs-time-loaded"></span>' +
 				'<span class="mejs-time-current"></span>' +
@@ -20,8 +26,7 @@
 			controls.find('.mejs-time-buffering').hide();
 
 			var
-			t = this,
-				total = controls.find('.mejs-time-total'),
+			total = controls.find('.mejs-time-total'),
 				loaded = controls.find('.mejs-time-loaded'),
 				current = controls.find('.mejs-time-current'),
 				handle = controls.find('.mejs-time-handle'),

@@ -12,17 +12,18 @@
  * @params
  *  - exports - CommonJS, window ..
  */
-;(function(exports, undefined) {
+;
+(function (exports, undefined) {
 
-    "use strict";
+	"use strict";
 
-    if (typeof exports.de === 'undefined') {
-        exports.de = {
-            "Fullscreen" : "Vollbild",
-            "Go Fullscreen" : "Vollbild an",
-            "Turn off Fullscreen" : "Vollbild aus",
-            "Close" : "Schließen"
-        };
-    }
+	if (typeof exports.de === 'undefined') {
+		exports.de = {
+			"Fullscreen": "Vollbild",
+			"Go Fullscreen": "Vollbild an",
+			"Turn off Fullscreen": "Vollbild aus",
+			"Close": "Schließen"
+		};
+	}
 
 }(mejs.i18n.locale.strings));
