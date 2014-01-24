@@ -13,9 +13,9 @@
 				render: function (player) {
 
 					// check for fullscreen plugin
-					if (typeof player.enterFullScreen == 'undefined')
+					if (typeof player.enterFullScreen == 'undefined'){
 						return null;
-
+					}
 					if (player.isFullScreen) {
 						return mejs.i18n.t('Turn off Fullscreen');
 					} else {
@@ -48,10 +48,9 @@
 				}
 		},
 		// separator
-			{
+		{
 				isSeparator: true
-		}
-		,
+		},
 		// demo of simple download video
 			{
 				render: function (player) {
@@ -122,9 +121,8 @@
 
 			//console.log('killContextMenuTimer', timer);
 
-			if (timer != null) {
+			if (timer !== null) {
 				clearTimeout(timer);
-				delete timer;
 				timer = null;
 			}
 		},
@@ -149,7 +147,7 @@
 					var rendered = items[i].render(t);
 
 					// render can return null if the item doesn't need to be used at the moment
-					if (rendered != null) {
+					if (rendered !== null) {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random() * 1000000) + '">' + rendered + '</div>';
 					}
 				}
@@ -174,15 +172,16 @@
 					item = t.options.contextMenuItems[itemIndex];
 
 				// bind extra functionality?
-				if (typeof item.show != 'undefined')
+				if (typeof item.show != 'undefined') {
 					item.show($dom, t);
+				}
 
 				// bind click action
 				$dom.click(function () {
 					// perform click action
-					if (typeof item.click != 'undefined')
+					if (typeof item.click != 'undefined') {
 						item.click(t);
-
+					}
 					// close
 					t.contextMenu.hide();
 				});

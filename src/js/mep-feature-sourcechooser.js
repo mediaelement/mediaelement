@@ -29,26 +29,27 @@
 
 					// handle clicks to the language radio buttons
 					.delegate('input[type=radio]', 'click', function() {
-						src = this.value;
+						var src = this.value;
 
 						if (media.currentSrc != src) {
-							currentTime = media.currentTime;
-							paused = media.paused;
+							var currentTime = media.currentTime;
+							var paused = media.paused;
 							media.setSrc(src);
 							media.load();
 							media.addEventListener('loadedmetadata', function(e){
-				                this.currentTime = currentTime;
-				            }, true);
-				            media.addEventListener('canplay', function(e){
-				            	if (!paused) {
-					            	this.play();
-					            }
-				            }, true);
+								this.currentTime = currentTime;
+							}, true);
+							media.addEventListener('canplay', function(e){
+								if (!paused) {
+									this.play();
+								}
+							}, true);
 						}
 					});
 
 			// add to list
-			for (i in media.children) {
+			var src;
+			for (var i in media.children) {
 				src = media.children[i];
 				if (src.nodeName === 'SOURCE' && (media.canPlayType(src.type) == 'probably' || media.canPlayType(src.type) == 'maybe')) {
 					player.addSourceButton(src.src, src.title, src.type, media.src == src.src);
@@ -59,7 +60,7 @@
 
 		addSourceButton: function(src, label, type, isCurrent) {
 			var t = this;
-			if (label === '' || label == undefined) {
+			if (label === '' || label === undefined) {
 				label = src;
 			}
 			type = type.split('/')[1];

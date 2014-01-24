@@ -79,7 +79,7 @@
 				keys: [
 								32, // SPACE
 								179 // GOOGLE play/pause button
-							],
+						],
 				action: function (player, media) {
 					if (media.paused || media.ended) {
 						player.play();
@@ -87,21 +87,21 @@
 						player.pause();
 					}
 				}
-				},
+			},
 			{
 				keys: [38], // UP
 				action: function (player, media) {
 					var newVolume = Math.min(media.volume + 0.1, 1);
 					media.setVolume(newVolume);
 				}
-				},
+			},
 			{
 				keys: [40], // DOWN
 				action: function (player, media) {
 					var newVolume = Math.max(media.volume - 0.1, 0);
 					media.setVolume(newVolume);
 				}
-				},
+			},
 			{
 				keys: [
 								37, // LEFT
@@ -119,7 +119,7 @@
 						media.setCurrentTime(newTime);
 					}
 				}
-				},
+			},
 			{
 				keys: [
 								39, // RIGHT
@@ -137,7 +137,7 @@
 						media.setCurrentTime(newTime);
 					}
 				}
-				},
+			},
 			{
 				keys: [70], // f
 				action: function (player, media) {
@@ -149,7 +149,7 @@
 						}
 					}
 				}
-				}
+			}
 		]
 	};
 
@@ -369,8 +369,9 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (t.controlsAreVisible)
+			if (t.controlsAreVisible) {
 				return;
+			}
 
 			if (doAnimation) {
 				t.controls
@@ -410,8 +411,9 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction) {
 				return;
+			}
 
 			if (doAnimation) {
 				// fade out main controls
@@ -873,10 +875,13 @@
 			// dark space
 			total.width(railWidth - (total.outerWidth(true) - total.width()));
 
-			if (t.setProgressRail)
+			if (t.setProgressRail) {
 				t.setProgressRail();
-			if (t.setCurrentRail)
+			}
+
+			if (t.setCurrentRail) {
 				t.setCurrentRail();
+			}
 		},
 
 
@@ -928,8 +933,9 @@
 
 		buildoverlays: function (player, controls, layers, media) {
 			var t = this;
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
 			var
 			loading =
@@ -1192,15 +1198,23 @@
 		mejs.MediaElementPlayer.prototype.globalBind = function (events, data, callback) {
 			var t = this;
 			events = splitEvents(events, t.id);
-			if (events.d) $(document).bind(events.d, data, callback);
-			if (events.w) $(window).bind(events.w, data, callback);
+			if (events.d) {
+				$(document).bind(events.d, data, callback);
+			}
+			if (events.w) {
+				$(window).bind(events.w, data, callback);
+			}
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function (events, callback) {
 			var t = this;
 			events = splitEvents(events, t.id);
-			if (events.d) $(document).unbind(events.d, callback);
-			if (events.w) $(window).unbind(events.w, callback);
+			if (events.d) {
+				$(document).unbind(events.d, callback);
+			}
+			if (events.w) {
+				$(window).unbind(events.w, callback);
+			}
 		};
 	})();
 
