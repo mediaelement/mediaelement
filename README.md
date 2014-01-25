@@ -85,6 +85,14 @@ You can use this as a standalone library if you wish, or just stick with the ful
 * Ogg/Theora playback
 * Better alignment with native MediaElement (using shimichanga.com techniques)
 
+*2.13.2 (2014/01/24)
+
+* Removed breaking `hasTouch` detection
+* Fixed IE detection https://github.com/johndyer/mediaelement/pull/1018
+* fix play() on ipad does not start playing and double click issue (https://github.com/johndyer/mediaelement/pull/918) [fbuecklers]
+* added scale=default to Flash for better 100% https://github.com/johndyer/mediaelement/pull/963
+* Add code fences for GHFM https://github.com/johndyer/mediaelement/pull/975
+* i18n improvements https://github.com/johndyer/mediaelement/pull/1025
 
 *2.13.1 (2013/09/?06)*
 
