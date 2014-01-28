@@ -2,7 +2,7 @@
 
 	$.extend(mejs.MepDefaults, {
 		muteText: mejs.i18n.t('Mute Toggle'),
-		allyVolumentControlText: mejs.i18n.t('allyVolumeControls'),
+		allyVolumeControlText: mejs.i18n.t('allyVolumeControl'),
 		hideVolumeOnTouchDevices: true,
 
 		audioVolume: 'horizontal',
@@ -29,7 +29,7 @@
 					'"></button>' +
 					'</div>' +
 					'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-					'<span class="mejs-offscreen">' + t.options.allyVolumentControlText + '</span>' +
+					'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
 					'<div class="mejs-horizontal-volume-total"></div>' + // line background
 					'<div class="mejs-horizontal-volume-current"></div>' + // current volume
 					'<div class="mejs-horizontal-volume-handle"></div>' + // handle
@@ -44,7 +44,7 @@
 					'" aria-label="' + t.options.muteText +
 					'"></button>' +
 					'<a href="javascript:void(0);" class="mejs-volume-slider">' + // outer background
-					'<span class="mejs-offscreen" >' + t.options.volumentControlText + '</span>' +
+					'<span class="mejs-offscreen" >' + t.options.allyVolumeControlText + '</span>' +
 					'<div class="mejs-volume-total"></div>' + // line background
 					'<div class="mejs-volume-current"></div>' + // current volume
 					'<div class="mejs-volume-handle"></div>' + // handle

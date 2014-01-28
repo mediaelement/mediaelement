@@ -1356,7 +1356,7 @@ if (typeof jQuery != 'undefined') {
 
 			$('<div class="mejs-time-rail">' +
 				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-				'<span class="mejs-offscreen">' + t.progessOffScreenText + '</span>' +
+				'<span class="mejs-offscreen">' + t.options.progessOffScreenText + '</span>' +
 				'<span class="mejs-time-buffering"></span>' +
 				'<span class="mejs-time-loaded"></span>' +
 				'<span class="mejs-time-current"></span>' +
@@ -1680,7 +1680,7 @@ if (typeof jQuery != 'undefined') {
 
 	$.extend(mejs.MepDefaults, {
 		muteText: mejs.i18n.t('Mute Toggle'),
-		allyVolumentControlText: mejs.i18n.t('allyVolumeControls'),
+		allyVolumeControlText: mejs.i18n.t('allyVolumeControl'),
 		hideVolumeOnTouchDevices: true,
 
 		audioVolume: 'horizontal',
@@ -1707,7 +1707,7 @@ if (typeof jQuery != 'undefined') {
 					'"></button>' +
 					'</div>' +
 					'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-					'<span class="mejs-offscreen">' + t.options.allyVolumentControlText + '</span>' +
+					'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
 					'<div class="mejs-horizontal-volume-total"></div>' + // line background
 					'<div class="mejs-horizontal-volume-current"></div>' + // current volume
 					'<div class="mejs-horizontal-volume-handle"></div>' + // handle
@@ -1722,7 +1722,7 @@ if (typeof jQuery != 'undefined') {
 					'" aria-label="' + t.options.muteText +
 					'"></button>' +
 					'<a href="javascript:void(0);" class="mejs-volume-slider">' + // outer background
-					'<span class="mejs-offscreen" >' + t.options.volumentControlText + '</span>' +
+					'<span class="mejs-offscreen" >' + t.options.allyVolumeControlText + '</span>' +
 					'<div class="mejs-volume-total"></div>' + // line background
 					'<div class="mejs-volume-current"></div>' + // current volume
 					'<div class="mejs-volume-handle"></div>' + // handle
