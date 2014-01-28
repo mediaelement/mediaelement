@@ -2,7 +2,7 @@
 
 	$.extend(mejs.MepDefaults, {
 		usePluginFullScreen: true,
-		newWindowCallback: function() { return '';},
+		newWindowCallback: function() { return '';}
 	});
 
 	$.extend(MediaElementPlayer.prototype, {

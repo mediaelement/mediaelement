@@ -43,7 +43,7 @@ mejs.MediaPluginBridge = {
 	fireEvent: function (id, eventName, values) {
 
 		var
-		e,
+			e,
 			i,
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
@@ -146,7 +146,7 @@ mejs.HtmlMediaElementShim = {
 
 	create: function (el, o) {
 		var
-		options = mejs.MediaElementDefaults,
+			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof (el) == 'string') ? document.getElementById(el) : el,
 			tagName = htmlMediaElement.tagName.toLowerCase(),
 			isMediaTag = (tagName === 'audio' || tagName === 'video'),
