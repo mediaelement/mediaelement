@@ -1,16 +1,15 @@
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
-		muteText: mejs.i18n.t('Mute Toggle'),
-		allyVolumeControlText: mejs.i18n.t('allyVolumeControl'),
 		hideVolumeOnTouchDevices: true,
-
 		audioVolume: 'horizontal',
 		videoVolume: 'vertical'
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildvolume: function (player, controls, layers, media) {
+		var muteText = mejs.i18n.t('Mute Toggle'),
+			allyVolumeControlText = mejs.i18n.t('allyVolumeControl');
 
 			// Android and iOS don't support volume controls
 			if (mejs.MediaFeatures.hasTouch && this.options.hideVolumeOnTouchDevices){
@@ -24,12 +23,12 @@
 				// horizontal version
 				$('<div class="mejs-button mejs-volume-button mejs-mute">' +
 					'<button type="button" aria-controls="' + t.id +
-					'" title="' + t.options.muteText +
-					'" aria-label="' + t.options.muteText +
+					'" title="' + muteText +
+					'" aria-label="' + muteText +
 					'"></button>' +
 					'</div>' +
 					'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-					'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
+					'<span class="mejs-offscreen">' + allyVolumeControlText + '</span>' +
 					'<div class="mejs-horizontal-volume-total"></div>' + // line background
 					'<div class="mejs-horizontal-volume-current"></div>' + // current volume
 					'<div class="mejs-horizontal-volume-handle"></div>' + // handle

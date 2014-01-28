@@ -20,10 +20,17 @@
 		"Turn off Fullscreen": "Turn off Fullscreen",
 		"Close": "Close",
 		"Mute Toggle": "Mute Toggle",
-		"allyVolumeControl": "Use Up/Down Arrow keys to increase or decrease volume.",
-		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
+		"Mute" : "Mute",
+		"Unmute": "Unmute",
 		"Captions/Subtitles" : "Captions/Subtitles",
-		"Play/Pause" : "Play/Pause"
+		"Play/Pause" : "Play/Pause",
+		"Source Chooser" : "Source Chooser",
+		"Stop": "Stop",
+		"Video Timeline" : "Video Timeline",
+		"Toggle Loop" : "Toggle Loop",
+		"Download Video" : "Download Video",
+		"allyVolumeControl": "Use Up/Down Arrow keys to increase or decrease volume.",
+		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds."
 	};
 
 }(mejs.i18n.locale.strings));

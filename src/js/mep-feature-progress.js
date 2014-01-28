@@ -1,16 +1,17 @@
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
-		progessOffScreenText: mejs.i18n.t('allyProgressSliderControl')
+
 	});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function (player, controls, layers, media) {
-			var t = this;
+			var t = this,
+				progessOffScreenText = mejs.i18n.t('allyProgressSliderControl');
 
 			$('<div class="mejs-time-rail">' +
 				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-				'<span class="mejs-offscreen">' + t.options.progessOffScreenText + '</span>' +
+				'<span class="mejs-offscreen">' + progessOffScreenText + '</span>' +
 				'<span class="mejs-time-buffering"></span>' +
 				'<span class="mejs-time-loaded"></span>' +
 				'<span class="mejs-time-current"></span>' +
@@ -74,10 +75,12 @@
 
 				var seconds = media.currentTime,
 					time = mejs.Utility.secondsToTimeCode(seconds),
-					duration = media.duration;
+					duration = media.duration,
+					timeline = mejs.i18n.t('Video Timeline');
+
 
 				slider.attr({
-					'aria-label': 'Video Timeline',
+					'aria-label': timeline,
 					'aria-valuemin': 0,
 					'aria-valuemax': duration,
 					'aria-valuenow': seconds,

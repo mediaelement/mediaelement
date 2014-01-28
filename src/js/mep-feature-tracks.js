@@ -5,7 +5,7 @@
 		// this will automatically turn on a <track>
 		startLanguage: '',
 
-		tracksText: mejs.i18n.t('Captions/Subtitles'),
+
 
 		// option to remove the [cc] button when no <track kind="subtitles"> are present
 		hideCaptionsButtonWhenEmpty: true,
@@ -28,6 +28,7 @@
 
 			var t = this,
 				i,
+				tracksText = mejs.i18n.t('Captions/Subtitles'),
 				options = '';
 
 			if (t.domNode.textTracks) { // if browser will do native captions, prefer mejs captions, loop through tracks and hide

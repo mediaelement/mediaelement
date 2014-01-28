@@ -3,7 +3,6 @@
 	$.extend(mejs.MepDefaults, {
 		usePluginFullScreen: true,
 		newWindowCallback: function() { return '';},
-		fullscreenText: mejs.i18n.t('Fullscreen')
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -52,10 +51,10 @@
 			}
 
 			var t = this,
-
+				fullscreenText = mejs.i18n.t('Fullscreen'),
 				fullscreenBtn =
 					$('<div class="mejs-button mejs-fullscreen-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.fullscreenText + '" aria-label="' + t.options.fullscreenText + '"></button>' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenText + '" aria-label="' + fullscreenText + '"></button>' +
 					'</div>')
 					.appendTo(controls);
 

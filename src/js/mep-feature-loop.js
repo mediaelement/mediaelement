@@ -4,10 +4,11 @@
 		buildloop: function (player, controls, layers, media) {
 			var
 			t = this,
+				LoopToggleTxt = mejs.i18n.t('Toggle Loop'),
 				// create the loop button
 				loop =
 					$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
-						'<button type="button" aria-controls="' + t.id + '" title="Toggle Loop" aria-label="Toggle Loop"></button>' +
+						'<button type="button" aria-controls="' + t.id + '" title="'+LoopToggleTxt+'" aria-label="'+LoopToggleTxt+'"></button>' +
 						'</div>')
 				// append it to the toolbar
 				.appendTo(controls)
