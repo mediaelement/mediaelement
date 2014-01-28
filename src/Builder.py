@@ -25,14 +25,6 @@ me_files.append('me-i18n.js')
 me_files.append('me-i18n-locale-en.js')
 me_files.append('me-i18n-locale-de.js')
 me_files.append('me-i18n-locale-zh.js')
-me_files.append('me-i18n-locale-ar.js')
-me_files.append('me-i18n-locale-es.js')
-me_files.append('me-i18n-locale-fr.js')
-me_files.append('me-i18n-locale-id.js')
-me_files.append('me-i18n-locale-it.js')
-me_files.append('me-i18n-locale-pt.js')
-me_files.append('me-i18n-locale-tr.js')
-
 
 code = ''
 
