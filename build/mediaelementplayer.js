@@ -910,12 +910,12 @@ if (typeof jQuery != 'undefined') {
 				posterUrl = player.$media.attr('poster');
 
 			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
-			if (player.options.poster !== '') {
+			if ( player.options.poster ) {
 				posterUrl = player.options.poster;
 			}
 
 			// second, try the real poster
-			if (posterUrl !== '' && posterUrl !== null) {
+			if ( posterUrl ) {
 				t.setPoster(posterUrl);
 			} else {
 				poster.hide();
@@ -1374,7 +1374,7 @@ if (typeof jQuery != 'undefined') {
 			controls.find('.mejs-time-buffering').hide();
 
 			var
-			total = controls.find('.mejs-time-total'),
+				total = controls.find('.mejs-time-total'),
 				loaded = controls.find('.mejs-time-loaded'),
 				current = controls.find('.mejs-time-current'),
 				handle = controls.find('.mejs-time-handle'),

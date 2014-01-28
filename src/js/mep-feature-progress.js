@@ -26,7 +26,7 @@
 			controls.find('.mejs-time-buffering').hide();
 
 			var
-			total = controls.find('.mejs-time-total'),
+				total = controls.find('.mejs-time-total'),
 				loaded = controls.find('.mejs-time-loaded'),
 				current = controls.find('.mejs-time-current'),
 				handle = controls.find('.mejs-time-handle'),
