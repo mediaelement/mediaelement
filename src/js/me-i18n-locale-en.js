@@ -24,7 +24,10 @@
 			"allyVolumeControl": "Use Up/Down Arrow keys to increase or decrease volume.",
 			"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 			"Captions/Subtitles" : "Captions/Subtitles",
-			"Play/Pause" : "Play/Pause"
+			"Play/Pause" : "Play/Pause",
+            "videoPlayerTitle" : "Video Player",
+            "volumeSlider" : "Volume Slider",
+            "timeSlider" : "Time Slider"
 		};
 	}
 

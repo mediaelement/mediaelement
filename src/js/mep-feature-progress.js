@@ -1,7 +1,9 @@
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
-		progessOffScreenText: mejs.i18n.t('allyProgressSliderControl')
+		progessOffScreenText: mejs.i18n.t('allyProgressSliderControl'),
+        timeSliderText: mejs.i18n.t('timeSlider')        
+        
 	});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
@@ -68,7 +70,9 @@
 				},
 				mouseIsDown = false,
 				mouseIsOver = false,
-				lastKeyPressTime = 0;
+				lastKeyPressTime = 0,
+                startedPaused = false,
+                autoRewindInitial = player.options.autoRewind;
 
 			var updateSlider = function (e) {
 
@@ -77,7 +81,7 @@
 					duration = media.duration;
 
 				slider.attr({
-					'aria-label': 'Video Timeline',
+					'aria-label': t.timeSliderText,
 					'aria-valuemin': 0,
 					'aria-valuemax': duration,
 					'aria-valuenow': seconds,
@@ -89,47 +93,70 @@
 			};
 
 			var restartPlayer = function () {
-				var now = new Date();
-				if (now - lastKeyPressTime >= 750) {
-					media.play();
+				var now = new Date();                
+				if (now - lastKeyPressTime >= 1000) {
+					media.play();                    					                    
 				}
 			};
 
+            slider.bind('focus',function(e){                
+                player.options.autoRewind = false;                
+            });
+            
+            slider.bind('blur',function(e){
+                player.options.autoRewind = autoRewindInitial;
+            });
+            
 			slider.bind('keydown', function (e) {
-
-				var keyCode = e.keyCode;
-				var skipAmount = 0;
-
+                                      
+                if((new Date() - lastKeyPressTime) >= 1000){                            
+                    startedPaused = media.paused;
+                }
+                
+				var keyCode = e.keyCode,				    
+                    duration = media.duration,
+                    seekTime = media.currentTime;
+                
 				switch (keyCode) {
-				case 37: // left
-					skipAmount = -1;
-					break;
-				case 39: // Right
-					skipAmount = 1;
-					break;
-				case 38: // Up
-					skipAmount = 10;
-					break;
-				case 40: // Down
-					skipAmount = -10;
-					break;
-				}
+                    case 37: // left
+                        seekTime -= 1;
+                        break;
+                    case 39: // Right
+                        seekTime += 1;
+                        break;
+                    case 38: // Up
+                        seekTime += Math.floor(duration*.1);
+                        break;
+                    case 40: // Down
+                        seekTime -= Math.floor(duration*.1);
+                        break;
+                    case 36: // Home
+                        seekTime = 0;
+                        break;
+                    case 35: // end
+                        seekTime = duration;
+                        break;
+                    case 10: // enter
+                        media.paused ? media.play() : media.pause();
+                        return;
+                    case 13: // space
+                        media.paused ? media.play() : media.pause();
+                        return;
+                    default:
+                        return;                        
+				}                
 
-				if (skipAmount === 0) {
-					return;
-				}
-
+                seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));        				
 				lastKeyPressTime = new Date();
-				media.pause();
-
-				var duration = media.duration;
-				var seekTime = media.currentTime + skipAmount > duration ? duration : media.currentTime + skipAmount;
-
-				if (seekTime < media.duration) {
-					setTimeout(restartPlayer, 800);
+                if(!startedPaused){
+				    media.pause();
+                }
+				
+				if ( seekTime < media.duration && !startedPaused ) {                    
+					setTimeout( restartPlayer, 1100 );
 				}
-
-				media.setCurrentTime(seekTime);
+                                
+				media.setCurrentTime( seekTime );
 
 				e.preventDefault();
 				e.stopPropagation();
