@@ -23,8 +23,6 @@
 			"Turn off Fullscreen": "Vollbild aus",
 			"Close": "Schließen",
 			"Mute Toggle": "Stummschaltung ein/aus",
-			"allyVolumeControl": "Verwendung auf/ab-Tasten, um erhöhen oder verringern der Lautstärke.",
-			"allyProgressSliderControl": "Verwenden Sie Pfeil nach links/rechts-Tasten, um eine Sekunde, auf/ab-Pfeile, um vorab zehn Sekunden voraus.",
 			"Captions/Subtitles" : "Beschriftungen / Untertitel",
 			"Play/Pause" : "Play oder Pause"
 		};

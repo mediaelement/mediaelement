@@ -1,10 +1,7 @@
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
-		muteText: mejs.i18n.t('Mute Toggle'),
-		allyVolumentControlText: mejs.i18n.t('allyVolumeControls'),
 		hideVolumeOnTouchDevices: true,
-
 		audioVolume: 'horizontal',
 		videoVolume: 'vertical'
 	});
@@ -18,18 +15,20 @@
 			}
 
 			var t = this,
+				muteText = mejs.i18n.t('Mute Toggle'),
+				allyVolumeControlText = mejs.i18n.t('allyVolumeControl'),
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
 				mute = (mode == 'horizontal') ?
 
 				// horizontal version
 				$('<div class="mejs-button mejs-volume-button mejs-mute">' +
 					'<button type="button" aria-controls="' + t.id +
-					'" title="' + t.options.muteText +
-					'" aria-label="' + t.options.muteText +
+					'" title="' + muteText +
+					'" aria-label="' + muteText +
 					'"></button>' +
 					'</div>' +
 					'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-					'<span class="mejs-offscreen">' + t.options.allyVolumentControlText + '</span>' +
+					'<span class="mejs-offscreen">' + allyVolumeControlText + '</span>' +
 					'<div class="mejs-horizontal-volume-total"></div>' + // line background
 					'<div class="mejs-horizontal-volume-current"></div>' + // current volume
 					'<div class="mejs-horizontal-volume-handle"></div>' + // handle
@@ -40,11 +39,11 @@
 				$('<div class="mejs-button mejs-volume-button mejs-mute">' +
 
 					'<button type="button" aria-controls="' + t.id +
-					'" title="' + t.options.muteText +
-					'" aria-label="' + t.options.muteText +
+					'" title="' + muteText +
+					'" aria-label="' + muteText +
 					'"></button>' +
 					'<a href="javascript:void(0);" class="mejs-volume-slider">' + // outer background
-					'<span class="mejs-offscreen" >' + t.options.volumentControlText + '</span>' +
+					'<span class="mejs-offscreen" >' + allyVolumeControlText + '</span>' +
 					'<div class="mejs-volume-total"></div>' + // line background
 					'<div class="mejs-volume-current"></div>' + // current volume
 					'<div class="mejs-volume-handle"></div>' + // handle

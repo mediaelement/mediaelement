@@ -808,7 +808,7 @@ mejs.MediaPluginBridge = {
 	fireEvent: function (id, eventName, values) {
 
 		var
-		e,
+			e,
 			i,
 			bufferedTime,
 			pluginMediaElement = this.pluginMediaElements[id];
@@ -911,7 +911,7 @@ mejs.HtmlMediaElementShim = {
 
 	create: function (el, o) {
 		var
-		options = mejs.MediaElementDefaults,
+			options = mejs.MediaElementDefaults,
 			htmlMediaElement = (typeof (el) == 'string') ? document.getElementById(el) : el,
 			tagName = htmlMediaElement.tagName.toLowerCase(),
 			isMediaTag = (tagName === 'audio' || tagName === 'video'),
@@ -1725,123 +1725,123 @@ window.MediaElement = mejs.MediaElement;
  *  - exports - CommonJS, window ..
  *
  */
-(function(context, exports, undefined) {
-    "use strict";
-    var i18n = {
-        "locale": {
-            "language" : '',
-            "strings" : {}
-        },
-        "methods" : {}
-    };
-// start i18n
+(function (context, exports, undefined) {
+	"use strict";
+	var i18n = {
+		"locale": {
+			"language": '',
+			"strings": {}
+		},
+		"methods": {}
+	};
+	// start i18n
 
 
-    /**
-     * Get language, fallback to browser's language if empty
-     */
-    i18n.getLanguage = function () {
-        var language = i18n.locale.language || window.navigator.userLanguage || window.navigator.language;
-        // convert to iso 639-1 (2-letters, lower case)
-        return language.substr(0, 2).toLowerCase();
-    };
+	/**
+	 * Get language, fallback to browser's language if empty
+	 */
+	i18n.getLanguage = function () {
+		var language = i18n.locale.language || window.navigator.userLanguage || window.navigator.language;
+		// convert to iso 639-1 (2-letters, lower case)
+		return language.substr(0, 2).toLowerCase();
+	};
 
-    // i18n fixes for compatibility with WordPress
-    if ( typeof mejsL10n != 'undefined' ) {
-        i18n.locale.language = mejsL10n.language;
-    }
-
-
-
-    /**
-     * Encode special characters in a plain-text string for display as HTML.
-     */
-    i18n.methods.checkPlain = function (str) {
-        var character, regex,
-        replace = {
-            '&': '&amp;',
-            '"': '&quot;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-        str = String(str);
-        for (character in replace) {
-            if (replace.hasOwnProperty(character)) {
-                regex = new RegExp(character, 'g');
-                str = str.replace(regex, replace[character]);
-            }
-        }
-        return str;
-    };
-
-    /**
-     * Translate strings to the page language or a given language.
-     *
-     *
-     * @param str
-     *   A string containing the English string to translate.
-     *
-     * @param options
-     *   - 'context' (defaults to the default context): The context the source string
-     *     belongs to.
-     *
-     * @return
-     *   The translated string, escaped via i18n.methods.checkPlain()
-     */
-    i18n.methods.t = function (str, options) {
-
-        // Fetch the localized version of the string.
-        if (i18n.locale.strings && i18n.locale.strings[options.context] && i18n.locale.strings[options.context][str]) {
-            str = i18n.locale.strings[options.context][str];
-        }
-
-        return i18n.methods.checkPlain(str);
-    };
+	// i18n fixes for compatibility with WordPress
+	if (typeof mejsL10n != 'undefined') {
+		i18n.locale.language = mejsL10n.language;
+	}
 
 
-    /**
-     * Wrapper for i18n.methods.t()
-     *
-     * @see i18n.methods.t()
-     * @throws InvalidArgumentException
-     */
-    i18n.t = function(str, options) {
 
-        if (typeof str === 'string' && str.length > 0) {
+	/**
+	 * Encode special characters in a plain-text string for display as HTML.
+	 */
+	i18n.methods.checkPlain = function (str) {
+		var character, regex,
+			replace = {
+				'&': '&amp;',
+				'"': '&quot;',
+				'<': '&lt;',
+				'>': '&gt;'
+			};
+		str = String(str);
+		for (character in replace) {
+			if (replace.hasOwnProperty(character)) {
+				regex = new RegExp(character, 'g');
+				str = str.replace(regex, replace[character]);
+			}
+		}
+		return str;
+	};
 
-            // check every time due language can change for
-            // different reasons (translation, lang switcher ..)
-            var language = i18n.getLanguage();
+	/**
+	 * Translate strings to the page language or a given language.
+	 *
+	 *
+	 * @param str
+	 *   A string / variable containing the English string to translate.
+	 *
+	 * @param options
+	 *   - 'context' (defaults to the default context): The context the source string
+	 *     belongs to.
+	 *
+	 * @return
+	 *   The translated string, escaped via i18n.methods.checkPlain()
+	 */
+	i18n.methods.t = function (str, options) {
 
-            options = options || {
-                "context" : language
-            };
+		// Fetch the localized version of the string.
+		if (i18n.locale.strings && i18n.locale.strings[options.context] && i18n.locale.strings[options.context][str]) {
+			str = i18n.locale.strings[options.context][str];
+		} else { //Default to English
+			str = i18n.locale.strings.en[str];
+		}
 
-            return i18n.methods.t(str, options);
-        }
-        else {
-            throw {
-                "name" : 'InvalidArgumentException',
-                "message" : 'First argument is either not a string or empty.'
-            };
-        }
-    };
+		return i18n.methods.checkPlain(str);
+	};
 
-// end i18n
-    exports.i18n = i18n;
+
+	/**
+	 * Wrapper for i18n.methods.t()
+	 *
+	 * @see i18n.methods.t()
+	 * @throws InvalidArgumentException
+	 */
+	i18n.t = function (str, options) {
+
+		if (typeof str === 'string' && str.length > 0) {
+
+			// check every time due language can change for
+			// different reasons (translation, lang switcher ..)
+			var language = i18n.getLanguage();
+
+			options = options || {
+				"context": language
+			};
+
+			return i18n.methods.t(str, options);
+		} else {
+			throw {
+				"name": 'InvalidArgumentException',
+				"message": 'First argument is either not a string or empty.'
+			};
+		}
+	};
+
+	// end i18n
+	exports.i18n = i18n;
 }(document, mejs));
 
 // i18n fixes for compatibility with WordPress
-;(function(exports, undefined) {
+(function (exports, undefined) {
 
-    "use strict";
+	"use strict";
 
-    if ( typeof mejsL10n != 'undefined' ) {
-        exports[mejsL10n.language] = mejsL10n.strings;
-    }
+	if (typeof mejsL10n != 'undefined') {
+		exports[mejsL10n.language] = mejsL10n.strings;
+	}
 
 }(mejs.i18n.locale.strings));
-
 /*!
  * This is a i18n.locale language object.
  *
@@ -1858,19 +1858,24 @@ window.MediaElement = mejs.MediaElement;
 
 	"use strict";
 
-	if (typeof exports.en === 'undefined') {
-		exports.en = {
-			"Fullscreen": "Fullscreen",
-			"Go Fullscreen": "Go Fullscreen",
-			"Turn off Fullscreen": "Turn off Fullscreen",
-			"Close": "Close",
-			"Mute Toggle": "Mute Toggle",
-			"allyVolumeControl": "Use Up/Down Arrow keys to increase or decrease volume.",
-			"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
-			"Captions/Subtitles" : "Captions/Subtitles",
-			"Play/Pause" : "Play/Pause"
-		};
-	}
+	exports.en = {
+		"Fullscreen": "Fullscreen",
+		"Go Fullscreen": "Go Fullscreen",
+		"Turn off Fullscreen": "Turn off Fullscreen",
+		"Close": "Close",
+		"Mute Toggle": "Mute Toggle",
+		"Mute" : "Mute",
+		"Unmute": "Unmute",
+		"Captions/Subtitles" : "Captions/Subtitles",
+		"Play/Pause" : "Play/Pause",
+		"Source Chooser" : "Source Chooser",
+		"Stop": "Stop",
+		"Video Timeline" : "Video Timeline",
+		"Toggle Loop" : "Toggle Loop",
+		"Download Video" : "Download Video",
+		"allyVolumeControl": "Use Up/Down Arrow keys to increase or decrease volume.",
+		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds."
+	};
 
 }(mejs.i18n.locale.strings));
 /*!
@@ -1898,8 +1903,6 @@ window.MediaElement = mejs.MediaElement;
 			"Turn off Fullscreen": "Vollbild aus",
 			"Close": "Schließen",
 			"Mute Toggle": "Stummschaltung ein/aus",
-			"allyVolumeControl": "Verwendung auf/ab-Tasten, um erhöhen oder verringern der Lautstärke.",
-			"allyProgressSliderControl": "Verwenden Sie Pfeil nach links/rechts-Tasten, um eine Sekunde, auf/ab-Pfeile, um vorab zehn Sekunden voraus.",
 			"Captions/Subtitles" : "Beschriftungen / Untertitel",
 			"Play/Pause" : "Play oder Pause"
 		};
@@ -1931,227 +1934,8 @@ window.MediaElement = mejs.MediaElement;
 			"Turn off Fullscreen": "退出全屏模式",
 			"Close": "關閉",
 			"Mute Toggle": "静音切换",
-			"allyVolumeControl": "使用上下箭头键来增加或减小音量。",
-			"allyProgressSliderControl": "使用左/右箭头键来提前一秒，上下箭头到提前十秒。",
 			"Captions/Subtitles" : "标题将以此字幕",
 			"Play/Pause" : "播放或暂停"
-		};
-	}
-
-}(mejs.i18n.locale.strings));
-/*!
- * This is a i18n.locale language object.
- *
- * Arabic
- *
- *
- * @see
- *   me-i18n.js
- *
- * @params
- *  - exports - CommonJS, window ..
- */
-(function (exports, undefined) {
-
-	"use strict";
-
-	if (typeof exports.ar === 'undefined') {
-		exports.ar = {
-			"Fullscreen": "كامل الشاشة",
-			"Go Fullscreen": "الذهاب ملء الشاشة",
-			"Turn off Fullscreen": "إنهاء وضع ملء الشاشة",
-			"Close": "قم بإغلاق",
-			"Mute Toggle": "كتم الصوت",
-			"allyVolumeControls": "استخدام لأعلى وسهم لأسفل مفاتيح زيادة أو إنقاص حجم الصوت.",
-			"allyProgressSliderControl": "استخدام مفاتيح الأسهم الأيمن والأيسر للنهوض بثانية واحدة، والأسهم لتقدم عشر ثوان صعودا وهبوطاً.",
-			"Captions/Subtitles" : "تعليق/ترجمة",
-			"Play/Pause" : "تشغيل أو إيقاف مؤقت"
-		};
-	}
-
-}(mejs.i18n.locale.strings));
-/*!
- * This is a i18n.locale language object.
- *
- * Spanish
- *
- *
- * @see
- *   me-i18n.js
- *
- * @params
- *  - exports - CommonJS, window ..
- */
-(function (exports, undefined) {
-
-	"use strict";
-
-	if (typeof exports.es === 'undefined') {
-		exports.es = {
-			"Fullscreen": "Pantalla completa",
-			"Go Fullscreen": "Ir a pantalla completa",
-			"Turn off Fullscreen": "Cerrar pantalla completa",
-			"Close": "Cerrar",
-			"Mute Toggle": "MUTE",
-			"allyVolumeControl": "Use las teclas de flecha arriba/abajo para aumentar o disminuir el volumen.",
-			"allyProgressSliderControl": "Utilice las teclas de flecha izquierda/derecha para avanzar un segundo, flechas arriba/abajo para avanzar diez segundos.",
-			"Captions/Subtitles" : "Subtítulos",
-			"Play/Pause" : "Reproducir o pausar"
-		};
-	}
-
-}(mejs.i18n.locale.strings));
-/*!
- * This is a i18n.locale language object.
- *
- * French
- *
- *
- * @see
- *   me-i18n.js
- *
- * @params
- *  - exports - CommonJS, window ..
- */
-(function (exports, undefined) {
-
-	"use strict";
-
-	if (typeof exports.fr === 'undefined') {
-		exports.fr = {
-			"Fullscreen": "Plein écran",
-			"Go Fullscreen": "Aller plein écran",
-			"Turn off Fullscreen": "Aortie plein écran",
-			"Close": "Fermer",
-			"Mute Toggle": "Activer/désactiver mise en sourdine",
-			"allyVolumeControl": "Touches utilisation vers le haut et flèche bas pour augmenter ou diminuer le volume.",
-			"allyProgressSliderControl": "Utilisez les touches fléchées gauche et droite pour avancer une seconde, monter et descendre des flèches à dix secondes d'avance.",
-			"Captions/Subtitles": "Légendes / sous-titres",
-			"Play/Pause" : "Play ou Pause"
-		};
-	}
-
-}(mejs.i18n.locale.strings));
-/*!
- * This is a i18n.locale language object.
- *
- * Indonesian
- *
- *
- * @see
- *   me-i18n.js
- *
- * @params
- *  - exports - CommonJS, window ..
- */
-(function (exports, undefined) {
-
-	"use strict";
-
-	if (typeof exports.id === 'undefined') {
-		exports.id = {
-			"Fullscreen": "Layar penuh",
-			"Go Fullscreen": "Aktifkan layar penuh",
-			"Turn off Fullscreen": "Keluar dari layar penuh",
-			"Close": "Tutup",
-			"Mute Toggle": "Toggle bisu",
-			"allyVolumeControl": "Menggunakan atas dan bawah tombol panah untuk menambah atau mengurangi volume.",
-			"allyProgressSliderControl": "Gunakan tombol panah kiri dan kanan untuk memajukan satu detik, atas dan bawah panah untuk memajukan sepuluh detik.",
-			"Captions/Subtitles" : "Sub judul",
-			"Play/Pause" : "Bermain atau jeda"
-		};
-	}
-
-}(mejs.i18n.locale.strings));
-/*!
- * This is a i18n.locale language object.
- *
- * Italian
- *
- *
- * @see
- *   me-i18n.js
- *
- * @params
- *  - exports - CommonJS, window ..
- */
-;(function (exports, undefined) {
-
-	"use strict";
-
-	if (typeof exports.it === 'undefined') {
-		exports.it = {
-			"Fullscreen": "Schermo intero",
-			"Go Fullscreen": "Andare a schermo intero",
-			"Turn off Fullscreen": "Schermo pieno di uscita",
-			"Close": "Chiudere",
-			"Mute Toggle": "Toggle muto",
-			"allyVolumeControl": "Tasti in uso su e freccia giù per aumentare o diminuire il volume.",
-			"allyProgressSliderControl": "Utilizzare i tasti freccia sinistra e destra per avanzare un secondo, frecce per dieci secondi di anticipo.",
-			"Captions/Subtitles" : "Didascalie / sottotitoli",
-			"Play/Pause" : "Play o pausa"
-		};
-	}
-
-}(mejs.i18n.locale.strings));
-/*!
- * This is a i18n.locale language object.
- *
- * Portuguese
- *
- *
- * @see
- *   me-i18n.js
- *
- * @params
- *  - exports - CommonJS, window ..
- */
-(function (exports, undefined) {
-
-	"use strict";
-
-	if (typeof exports.pt === 'undefined') {
-		exports.pt = {
-			"Fullscreen": "Tela cheia",
-			"Go Fullscreen": "Vá em tela cheia",
-			"Turn off Fullscreen": "Tela cheia de saída",
-			"Close": "Fechar",
-			"Mute Toggle": "Mudo",
-			"allyVolumneControl": "Use cima e para baixo teclas de seta para aumentar ou diminuir o volume.",
-			"allyProgressSliderControl": "Use as teclas de seta esquerda e direita para avançar um segundo, subindo e descendo as setas para avançar dez segundos.",
-			"Captions/Subtitles" : "Legenda",
-			"Play/Pause" : "Reproduzir ou pausar"
-		};
-	}
-
-}(mejs.i18n.locale.strings));
-/*!
- * This is a i18n.locale language object.
- *
- * Turkish
- *
- *
- * @see
- *   me-i18n.js
- *
- * @params
- *  - exports - CommonJS, window ..
- */
-(function (exports, undefined) {
-
-	"use strict";
-
-	if (typeof exports.tr === 'undefined') {
-		exports.tr = {
-			"Fullscreen": "Tam ekran",
-			"Go Fullscreen": "Tam ekran gitmek",
-			"Turn off Fullscreen": "Çıkış tam ekran",
-			"Close": "Kapat",
-			"Mute Toggle": "Sesi kapat aç/kapat",
-			"allyVolumeControl": "Kullanım yukarı ve aşağı ok tuşları ses düzeyini azaltmak veya artırmak için.",
-			"allyProgressSliderControl": "Bir saniye, yukarı ve aşağı okları ilerlemeye on saniye ilerletmek için sol ve sağ ok tuşlarını kullanın.",
-			"Captions/Subtitles" : "Yazıları / altyazılı",
-			"Play/Pause" : "Yürütme veya duraklatma"
 		};
 	}
 
@@ -3069,12 +2853,12 @@ if (typeof jQuery != 'undefined') {
 				posterUrl = player.$media.attr('poster');
 
 			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
-			if (player.options.poster !== '') {
+			if ( player.options.poster ) {
 				posterUrl = player.options.poster;
 			}
 
 			// second, try the real poster
-			if (posterUrl !== '' && posterUrl !== null) {
+			if ( posterUrl ) {
 				t.setPoster(posterUrl);
 			} else {
 				poster.hide();
@@ -3425,7 +3209,7 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		playpauseText: mejs.i18n.t('Play/Pause')
+
 	});
 
 	// PLAY/pause BUTTON
@@ -3433,9 +3217,10 @@ if (typeof jQuery != 'undefined') {
 		buildplaypause: function(player, controls, layers, media) {
 			var
 				t = this,
+				playpauseText = mejs.i18n.t('Play/Pause'),
 				play =
 				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.playpauseText + '" aria-label="' + t.options.playpauseText + '"></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + playpauseText + '" aria-label="' + playpauseText + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
@@ -3472,16 +3257,17 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		stopText: 'Stop'
+
 	});
 
 	// STOP BUTTON
 	$.extend(MediaElementPlayer.prototype, {
 		buildstop: function(player, controls, layers, media) {
 			var t = this,
+				stopText = mejs.i18n.t('Stop');
 				stop =
 				$('<div class="mejs-button mejs-stop-button mejs-stop">' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.stopText + '" aria-label="' + t.options.stopText + '"></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + stopText + '" aria-label="' + stopText + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function() {
@@ -3506,16 +3292,17 @@ if (typeof jQuery != 'undefined') {
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
-		progessOffScreenText: mejs.i18n.t('allyProgressSliderControl')
+
 	});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function (player, controls, layers, media) {
-			var t = this;
+			var t = this,
+				progessOffScreenText = mejs.i18n.t('allyProgressSliderControl');
 
 			$('<div class="mejs-time-rail">' +
 				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-				'<span class="mejs-offscreen">' + t.progessOffScreenText + '</span>' +
+				'<span class="mejs-offscreen">' + progessOffScreenText + '</span>' +
 				'<span class="mejs-time-buffering"></span>' +
 				'<span class="mejs-time-loaded"></span>' +
 				'<span class="mejs-time-current"></span>' +
@@ -3530,7 +3317,7 @@ if (typeof jQuery != 'undefined') {
 			controls.find('.mejs-time-buffering').hide();
 
 			var
-			total = controls.find('.mejs-time-total'),
+				total = controls.find('.mejs-time-total'),
 				loaded = controls.find('.mejs-time-loaded'),
 				current = controls.find('.mejs-time-current'),
 				handle = controls.find('.mejs-time-handle'),
@@ -3579,10 +3366,12 @@ if (typeof jQuery != 'undefined') {
 
 				var seconds = media.currentTime,
 					time = mejs.Utility.secondsToTimeCode(seconds),
-					duration = media.duration;
+					duration = media.duration,
+					timeline = mejs.i18n.t('Video Timeline');
+
 
 				slider.attr({
-					'aria-label': 'Video Timeline',
+					'aria-label': timeline,
 					'aria-valuemin': 0,
 					'aria-valuemax': duration,
 					'aria-valuenow': seconds,
@@ -3838,10 +3627,7 @@ if (typeof jQuery != 'undefined') {
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
-		muteText: mejs.i18n.t('Mute Toggle'),
-		allyVolumentControlText: mejs.i18n.t('allyVolumeControls'),
 		hideVolumeOnTouchDevices: true,
-
 		audioVolume: 'horizontal',
 		videoVolume: 'vertical'
 	});
@@ -3855,18 +3641,20 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			var t = this,
+				muteText = mejs.i18n.t('Mute Toggle'),
+				allyVolumeControlText = mejs.i18n.t('allyVolumeControl'),
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
 				mute = (mode == 'horizontal') ?
 
 				// horizontal version
 				$('<div class="mejs-button mejs-volume-button mejs-mute">' +
 					'<button type="button" aria-controls="' + t.id +
-					'" title="' + t.options.muteText +
-					'" aria-label="' + t.options.muteText +
+					'" title="' + muteText +
+					'" aria-label="' + muteText +
 					'"></button>' +
 					'</div>' +
 					'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-					'<span class="mejs-offscreen">' + t.options.allyVolumentControlText + '</span>' +
+					'<span class="mejs-offscreen">' + allyVolumeControlText + '</span>' +
 					'<div class="mejs-horizontal-volume-total"></div>' + // line background
 					'<div class="mejs-horizontal-volume-current"></div>' + // current volume
 					'<div class="mejs-horizontal-volume-handle"></div>' + // handle
@@ -3877,11 +3665,11 @@ if (typeof jQuery != 'undefined') {
 				$('<div class="mejs-button mejs-volume-button mejs-mute">' +
 
 					'<button type="button" aria-controls="' + t.id +
-					'" title="' + t.options.muteText +
-					'" aria-label="' + t.options.muteText +
+					'" title="' + muteText +
+					'" aria-label="' + muteText +
 					'"></button>' +
 					'<a href="javascript:void(0);" class="mejs-volume-slider">' + // outer background
-					'<span class="mejs-offscreen" >' + t.options.volumentControlText + '</span>' +
+					'<span class="mejs-offscreen" >' + allyVolumeControlText + '</span>' +
 					'<div class="mejs-volume-total"></div>' + // line background
 					'<div class="mejs-volume-current"></div>' + // current volume
 					'<div class="mejs-volume-handle"></div>' + // handle
@@ -4099,8 +3887,7 @@ if (typeof jQuery != 'undefined') {
 
 	$.extend(mejs.MepDefaults, {
 		usePluginFullScreen: true,
-		newWindowCallback: function() { return '';},
-		fullscreenText: mejs.i18n.t('Fullscreen')
+		newWindowCallback: function() { return '';}
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -4149,10 +3936,10 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			var t = this,
-
+				fullscreenText = mejs.i18n.t('Fullscreen'),
 				fullscreenBtn =
 					$('<div class="mejs-button mejs-fullscreen-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.fullscreenText + '" aria-label="' + t.options.fullscreenText + '"></button>' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenText + '" aria-label="' + fullscreenText + '"></button>' +
 					'</div>')
 					.appendTo(controls);
 
@@ -4574,8 +4361,6 @@ if (typeof jQuery != 'undefined') {
 		// this will automatically turn on a <track>
 		startLanguage: '',
 
-		tracksText: mejs.i18n.t('Captions/Subtitles'),
-
 		// option to remove the [cc] button when no <track kind="subtitles"> are present
 		hideCaptionsButtonWhenEmpty: true,
 
@@ -4597,6 +4382,7 @@ if (typeof jQuery != 'undefined') {
 
 			var t = this,
 				i,
+				tracksText = mejs.i18n.t('Captions/Subtitles'),
 				options = '';
 
 			if (t.domNode.textTracks) { // if browser will do native captions, prefer mejs captions, loop through tracks and hide
@@ -4613,7 +4399,7 @@ if (typeof jQuery != 'undefined') {
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton =
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.tracksText + '" aria-label="' + t.options.tracksText + '"></button>'+
+						'<button type="button" aria-controls="' + t.id + '" title="' + tracksText + '" aria-label="' + tracksText + '"></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
@@ -5464,7 +5250,7 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		postrollCloseText: mejs.i18n.t('Close')
+
 	});
 
 	// Postroll
@@ -5472,11 +5258,12 @@ if (typeof jQuery != 'undefined') {
 		buildpostroll: function(player, controls, layers, media) {
 			var
 				t = this,
+				postrollCloseText = mejs.i18n.t('Close'),
 				postrollLink = t.container.find('link[rel="postroll"]').attr('href');
 
 			if (typeof postrollLink !== 'undefined') {
 				player.postroll =
-					$('<div class="mejs-postroll-layer mejs-layer"><a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' + t.options.postrollCloseText + '</a><div class="mejs-postroll-layer-content"></div></div>').prependTo(layers).hide();
+					$('<div class="mejs-postroll-layer mejs-layer"><a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' + postrollCloseText + '</a><div class="mejs-postroll-layer-content"></div></div>').prependTo(layers).hide();
 
 				t.media.addEventListener('ended', function (e) {
 					$.ajax({

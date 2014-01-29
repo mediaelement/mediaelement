@@ -1,7 +1,7 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		playpauseText: mejs.i18n.t('Play/Pause')
+
 	});
 
 	// PLAY/pause BUTTON
@@ -9,9 +9,10 @@
 		buildplaypause: function(player, controls, layers, media) {
 			var
 				t = this,
+				playpauseText = mejs.i18n.t('Play/Pause'),
 				play =
 				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.playpauseText + '" aria-label="' + t.options.playpauseText + '"></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + playpauseText + '" aria-label="' + playpauseText + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {

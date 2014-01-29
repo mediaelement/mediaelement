@@ -2,17 +2,18 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		sourcechooserText: 'Source Chooser'
+
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildsourcechooser: function(player, controls, layers, media) {
 
-			var t = this;
+			var t = this,
+				sourcechooserText = mejs.i18n.t('Source Chooser');
 
 			player.sourcechooserButton =
 				$('<div class="mejs-button mejs-sourcechooser-button">'+
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.sourcechooserText + '" aria-label="' + t.options.sourcechooserText + '"></button>'+
+					'<button type="button" aria-controls="' + t.id + '" title="' + sourcechooserText + '" aria-label="' + sourcechooserText + '"></button>'+
 					'<div class="mejs-sourcechooser-selector">'+
 						'<ul>'+
 						'</ul>'+

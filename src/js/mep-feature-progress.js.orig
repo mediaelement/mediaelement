@@ -1,9 +1,13 @@
 (function ($) {
 
 	$.extend(mejs.MepDefaults, {
+<<<<<<< HEAD
 		progessOffScreenText: mejs.i18n.t('allyProgressSliderControl'),
         timeSliderText: mejs.i18n.t('timeSlider')        
         
+=======
+
+>>>>>>> 4f452d7a1fe45a93e43a189e2ed254da0f624e4b
 	});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
@@ -79,10 +83,16 @@
 
 				var seconds = media.currentTime,
 					time = mejs.Utility.secondsToTimeCode(seconds),
-					duration = media.duration;					
+					duration = media.duration,
+					timeline = mejs.i18n.t('Video Timeline');
+
 
 				slider.attr({
+<<<<<<< HEAD
 					'aria-label': t.timeSliderText,
+=======
+					'aria-label': timeline,
+>>>>>>> 4f452d7a1fe45a93e43a189e2ed254da0f624e4b
 					'aria-valuemin': 0,
 					'aria-valuemax': duration,
 					'aria-valuenow': seconds,
