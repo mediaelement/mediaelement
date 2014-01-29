@@ -33,7 +33,8 @@
 		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 		"videoPlayerTitle": "Video Player",
 		"volumeSlider": "Volume Slider",
-		"timeSlider": "Time Slider"
+		"timeSlider": "Time Slider",
+		"Download File" : "Download File"
 	};
 
 }(mejs.i18n.locale.strings));
