@@ -186,7 +186,7 @@
 
 		// extend default options
 		t.options = $.extend({}, mejs.MepDefaults, o);
-
+       
 		// unique ID
 		var id = 'mep_' + mejs.mepIndex++;
 		while (document.getElementById(id)) {
@@ -259,12 +259,12 @@
 				// DESKTOP: use MediaElementPlayer controls
 
 				// remove native controls
-				t.$media.removeAttr('controls');
-
+				t.$media.removeAttr('controls');                
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') +
-						'" tabindex="0" role="application">' +
+					$('<span class="mejs-offscreen">'+ mejs.i18n.t('videoPlayerTitle')+'</span>'+
+                      '<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') +
+						'" tabindex="0" role="application" aria-label="Video Player">' +
 						'<div class="mejs-inner">' +
 						'<div class="mejs-mediaelement"></div>' +
 						'<div class="mejs-layers"></div>' +
