@@ -1,10 +1,6 @@
 (function ($) {
 
-	$.extend(mejs.MepDefaults, {
-		progessOffScreenText: mejs.i18n.t('allyProgressSliderControl'),
-        timeSliderText: mejs.i18n.t('timeSlider')        
-        
-	});
+	$.extend(mejs.MepDefaults, {});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function (player, controls, layers, media) {
@@ -28,7 +24,7 @@
 			controls.find('.mejs-time-buffering').hide();
 
 			var
-				total = controls.find('.mejs-time-total'),
+			total = controls.find('.mejs-time-total'),
 				loaded = controls.find('.mejs-time-loaded'),
 				current = controls.find('.mejs-time-current'),
 				handle = controls.find('.mejs-time-handle'),
@@ -72,17 +68,18 @@
 				mouseIsDown = false,
 				mouseIsOver = false,
 				lastKeyPressTime = 0,
-                startedPaused = false,
-                autoRewindInitial = player.options.autoRewind;
+				startedPaused = false,
+				autoRewindInitial = player.options.autoRewind;
 
 			var updateSlider = function (e) {
 
 				var seconds = media.currentTime,
+					timeSliderText = mejs.i18n.t('timeSlider'),
 					time = mejs.Utility.secondsToTimeCode(seconds),
-					duration = media.duration;					
+					duration = media.duration;
 
 				slider.attr({
-					'aria-label': t.timeSliderText,
+					'aria-label': timeSliderText,
 					'aria-valuemin': 0,
 					'aria-valuemax': duration,
 					'aria-valuenow': seconds,
@@ -94,70 +91,70 @@
 			};
 
 			var restartPlayer = function () {
-				var now = new Date();                
+				var now = new Date();
 				if (now - lastKeyPressTime >= 1000) {
-					media.play();                    					                    
+					media.play();
 				}
 			};
 
-            slider.bind('focus',function(e){                
-                player.options.autoRewind = false;                
-            });
-            
-            slider.bind('blur',function(e){
-                player.options.autoRewind = autoRewindInitial;
-            });
-            
-			slider.bind('keydown', function (e) {
-                                      
-                if((new Date() - lastKeyPressTime) >= 1000){                            
-                    startedPaused = media.paused;
-                }
-                
-				var keyCode = e.keyCode,				    
-                    duration = media.duration,
-                    seekTime = media.currentTime;
-                
-				switch (keyCode) {
-                    case 37: // left
-                        seekTime -= 1;
-                        break;
-                    case 39: // Right
-                        seekTime += 1;
-                        break;
-                    case 38: // Up
-                        seekTime += Math.floor(duration*.1);
-                        break;
-                    case 40: // Down
-                        seekTime -= Math.floor(duration*.1);
-                        break;
-                    case 36: // Home
-                        seekTime = 0;
-                        break;
-                    case 35: // end
-                        seekTime = duration;
-                        break;
-                    case 10: // enter
-                        media.paused ? media.play() : media.pause();
-                        return;
-                    case 13: // space
-                        media.paused ? media.play() : media.pause();
-                        return;
-                    default:
-                        return;                        
-				}                
+			slider.bind('focus', function (e) {
+				player.options.autoRewind = false;
+			});
 
-                seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));        				
-				lastKeyPressTime = new Date();
-                if(!startedPaused){
-				    media.pause();
-                }
-				
-				if ( seekTime < media.duration && !startedPaused ) {                    
-					setTimeout( restartPlayer, 1100 );
+			slider.bind('blur', function (e) {
+				player.options.autoRewind = autoRewindInitial;
+			});
+
+			slider.bind('keydown', function (e) {
+
+				if ((new Date() - lastKeyPressTime) >= 1000) {
+					startedPaused = media.paused;
 				}
-                                
-				media.setCurrentTime( seekTime );
+
+				var keyCode = e.keyCode,
+					duration = media.duration,
+					seekTime = media.currentTime;
+
+				switch (keyCode) {
+				case 37: // left
+					seekTime -= 1;
+					break;
+				case 39: // Right
+					seekTime += 1;
+					break;
+				case 38: // Up
+					seekTime += Math.floor(duration * 0.1);
+					break;
+				case 40: // Down
+					seekTime -= Math.floor(duration * 0.1);
+					break;
+				case 36: // Home
+					seekTime = 0;
+					break;
+				case 35: // end
+					seekTime = duration;
+					break;
+				case 10: // enter
+					media.paused ? media.play() : media.pause();
+					return;
+				case 13: // space
+					media.paused ? media.play() : media.pause();
+					return;
+				default:
+					return;
+				}
+
+				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
+				lastKeyPressTime = new Date();
+				if (!startedPaused) {
+					media.pause();
+				}
+
+				if (seekTime < media.duration && !startedPaused) {
+					setTimeout(restartPlayer, 1100);
+				}
+
+				media.setCurrentTime(seekTime);
 
 				e.preventDefault();
 				e.stopPropagation();

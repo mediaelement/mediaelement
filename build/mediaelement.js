@@ -1874,10 +1874,14 @@ window.MediaElement = mejs.MediaElement;
 		"Toggle Loop" : "Toggle Loop",
 		"Download Video" : "Download Video",
 		"allyVolumeControl": "Use Up/Down Arrow keys to increase or decrease volume.",
-		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds."
+		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
+        "videoPlayerTitle" : "Video Player",
+        "volumeSlider" : "Volume Slider",
+        "timeSlider" : "Time Slider"
 	};
 
 }(mejs.i18n.locale.strings));
+
 /*!
  * This is a i18n.locale language object.
  *

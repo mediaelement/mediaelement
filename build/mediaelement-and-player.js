@@ -1874,10 +1874,14 @@ window.MediaElement = mejs.MediaElement;
 		"Toggle Loop" : "Toggle Loop",
 		"Download Video" : "Download Video",
 		"allyVolumeControl": "Use Up/Down Arrow keys to increase or decrease volume.",
-		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds."
+		"allyProgressSliderControl": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
+        "videoPlayerTitle" : "Video Player",
+        "volumeSlider" : "Volume Slider",
+        "timeSlider" : "Time Slider"
 	};
 
 }(mejs.i18n.locale.strings));
+
 /*!
  * This is a i18n.locale language object.
  *
@@ -2145,7 +2149,7 @@ if (typeof jQuery != 'undefined') {
 
 		// extend default options
 		t.options = $.extend({}, mejs.MepDefaults, o);
-
+       
 		// unique ID
 		var id = 'mep_' + mejs.mepIndex++;
 		while (document.getElementById(id)) {
@@ -2218,12 +2222,12 @@ if (typeof jQuery != 'undefined') {
 				// DESKTOP: use MediaElementPlayer controls
 
 				// remove native controls
-				t.$media.removeAttr('controls');
-
+				t.$media.removeAttr('controls');                
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') +
-						'" tabindex="0" role="application">' +
+					$('<span class="mejs-offscreen">'+ mejs.i18n.t('videoPlayerTitle')+'</span>'+
+                      '<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') +
+						'" tabindex="0" role="application" aria-label="Video Player">' +
 						'<div class="mejs-inner">' +
 						'<div class="mejs-mediaelement"></div>' +
 						'<div class="mejs-layers"></div>' +
@@ -3291,9 +3295,7 @@ if (typeof jQuery != 'undefined') {
 
 (function ($) {
 
-	$.extend(mejs.MepDefaults, {
-
-	});
+	$.extend(mejs.MepDefaults, {});
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function (player, controls, layers, media) {
@@ -3317,7 +3319,7 @@ if (typeof jQuery != 'undefined') {
 			controls.find('.mejs-time-buffering').hide();
 
 			var
-				total = controls.find('.mejs-time-total'),
+			total = controls.find('.mejs-time-total'),
 				loaded = controls.find('.mejs-time-loaded'),
 				current = controls.find('.mejs-time-current'),
 				handle = controls.find('.mejs-time-handle'),
@@ -3360,18 +3362,19 @@ if (typeof jQuery != 'undefined') {
 				},
 				mouseIsDown = false,
 				mouseIsOver = false,
-				lastKeyPressTime = 0;
+				lastKeyPressTime = 0,
+				startedPaused = false,
+				autoRewindInitial = player.options.autoRewind;
 
 			var updateSlider = function (e) {
 
 				var seconds = media.currentTime,
+					timeSliderText = mejs.i18n.t('timeSlider'),
 					time = mejs.Utility.secondsToTimeCode(seconds),
-					duration = media.duration,
-					timeline = mejs.i18n.t('Video Timeline');
-
+					duration = media.duration;
 
 				slider.attr({
-					'aria-label': timeline,
+					'aria-label': timeSliderText,
 					'aria-valuemin': 0,
 					'aria-valuemax': duration,
 					'aria-valuenow': seconds,
@@ -3384,43 +3387,66 @@ if (typeof jQuery != 'undefined') {
 
 			var restartPlayer = function () {
 				var now = new Date();
-				if (now - lastKeyPressTime >= 750) {
+				if (now - lastKeyPressTime >= 1000) {
 					media.play();
 				}
 			};
 
+			slider.bind('focus', function (e) {
+				player.options.autoRewind = false;
+			});
+
+			slider.bind('blur', function (e) {
+				player.options.autoRewind = autoRewindInitial;
+			});
+
 			slider.bind('keydown', function (e) {
 
-				var keyCode = e.keyCode;
-				var skipAmount = 0;
+				if ((new Date() - lastKeyPressTime) >= 1000) {
+					startedPaused = media.paused;
+				}
+
+				var keyCode = e.keyCode,
+					duration = media.duration,
+					seekTime = media.currentTime;
 
 				switch (keyCode) {
 				case 37: // left
-					skipAmount = -1;
+					seekTime -= 1;
 					break;
 				case 39: // Right
-					skipAmount = 1;
+					seekTime += 1;
 					break;
 				case 38: // Up
-					skipAmount = 10;
+					seekTime += Math.floor(duration * 0.1);
 					break;
 				case 40: // Down
-					skipAmount = -10;
+					seekTime -= Math.floor(duration * 0.1);
 					break;
-				}
-
-				if (skipAmount === 0) {
+				case 36: // Home
+					seekTime = 0;
+					break;
+				case 35: // end
+					seekTime = duration;
+					break;
+				case 10: // enter
+					media.paused ? media.play() : media.pause();
+					return;
+				case 13: // space
+					media.paused ? media.play() : media.pause();
+					return;
+				default:
 					return;
 				}
 
+				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
 				lastKeyPressTime = new Date();
-				media.pause();
+				if (!startedPaused) {
+					media.pause();
+				}
 
-				var duration = media.duration;
-				var seekTime = media.currentTime + skipAmount > duration ? duration : media.currentTime + skipAmount;
-
-				if (seekTime < media.duration) {
-					setTimeout(restartPlayer, 800);
+				if (seekTime < media.duration && !startedPaused) {
+					setTimeout(restartPlayer, 1100);
 				}
 
 				media.setCurrentTime(seekTime);
@@ -3797,6 +3823,22 @@ if (typeof jQuery != 'undefined') {
 					}
 				});
 
+            var updateVolumeSlider = function (e) {
+
+                var volume = Math.floor(media.volume*100);
+
+				volumeSlider.attr({
+					'aria-label': mejs.i18n.t('volumeSlider'),
+					'aria-valuemin': 0,
+					'aria-valuemax': 100,
+					'aria-valuenow': volume,
+					'aria-valuetext': volume+'%',
+					'role': 'slider',
+					'tabindex': 0
+				});
+
+			};
+            
 			volumeSlider
 				.bind('mouseover', function () {
 					mouseIsOver = true;
@@ -3822,15 +3864,15 @@ if (typeof jQuery != 'undefined') {
 					var keyCode = e.keyCode;
 					var volume = media.volume;
 					switch (keyCode) {
-					case 38: // Up
-						volume += 0.1;
-						break;
-					case 40: // Down
-						volume = volume - 0.1;
-						break;
-					default:
-						return true;
-					}
+                        case 38: // Up
+                            volume += 0.1;
+                            break;
+                        case 40: // Down
+                            volume = volume - 0.1;
+                            break;
+                        default:
+                            return true;
+                    };
 
 					mouseIsDown = false;
 					positionVolumeHandle(volume);
@@ -3863,6 +3905,9 @@ if (typeof jQuery != 'undefined') {
 						mute.removeClass('mejs-unmute').addClass('mejs-mute');
 					}
 				}
+                
+                updateVolumeSlider(e);
+                
 			}, false);
 
 			if (t.container.is(':visible')) {
