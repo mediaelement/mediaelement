@@ -4,7 +4,7 @@ import shutil
 import re
 
 def remove_console(text):
-	return re.sub('console.(log|debug)\((.*)\);?', '', text) 
+	return re.sub('console.(log|debug)\((.*)\);?', '', text)
 
 me_filename = 'mediaelement'
 mep_filename = 'mediaelementplayer'
@@ -22,6 +22,7 @@ me_files.append('me-featuredetection.js')
 me_files.append('me-mediaelements.js')
 me_files.append('me-shim.js')
 me_files.append('me-i18n.js')
+me_files.append('me-i18n-locale-en.js')
 me_files.append('me-i18n-locale-de.js')
 me_files.append('me-i18n-locale-zh.js')
 
@@ -30,7 +31,7 @@ code = ''
 for item in me_files:
 	src_file = open('js/' + item,'r')
 	code += src_file.read() + "\n"
-	
+
 code = remove_console(code)
 
 tmp_file = open('../build/' + me_filename + '.js','w')
@@ -59,7 +60,7 @@ code = ''
 for item in mep_files:
     src_file = open('js/' + item,'r')
     code += src_file.read() + "\n"
-        
+
 code = remove_console(code)
 
 tmp_file = open('../build/' + mep_filename + '.js','w')
@@ -93,7 +94,7 @@ def addHeader(headerFilename, filename):
 	# write the original contents
 	tmp_file.write(file_txt)
 	tmp_file.close()
-	
+
 
 addHeader('js/me-header.js', '../build/' + me_filename + '.min.js')
 addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')

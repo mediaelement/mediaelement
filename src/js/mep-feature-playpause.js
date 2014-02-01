@@ -1,28 +1,29 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		playpauseText: mejs.i18n.t('Play/Pause')
+
 	});
 
 	// PLAY/pause BUTTON
 	$.extend(MediaElementPlayer.prototype, {
 		buildplaypause: function(player, controls, layers, media) {
-			var 
+			var
 				t = this,
-				play = 
+				playpauseText = mejs.i18n.t('Play/Pause'),
+				play =
 				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.playpauseText + '" aria-label="' + t.options.playpauseText + '"></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + playpauseText + '" aria-label="' + playpauseText + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
 					e.preventDefault();
-				
+
 					if (media.paused) {
 						media.play();
 					} else {
 						media.pause();
 					}
-					
+
 					return false;
 				});
 
@@ -42,5 +43,5 @@
 			}, false);
 		}
 	});
-	
+
 })(mejs.$);
