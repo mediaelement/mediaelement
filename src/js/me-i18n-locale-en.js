@@ -34,7 +34,8 @@
 		"videoPlayerTitle": "Video Player",
 		"volumeSlider": "Volume Slider",
 		"timeSlider": "Time Slider",
-		"Download File" : "Download File"
+		"Download File" : "Download File",
+		"None" : "None"
 	};
 
 }(mejs.i18n.locale.strings));
