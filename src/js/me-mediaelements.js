@@ -242,7 +242,7 @@ mejs.PluginMediaElement.prototype = {
 	setVideoSize: function (width, height) {
 		
 		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if ( this.pluginElement.style) {
+			if (this.pluginElement && this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}

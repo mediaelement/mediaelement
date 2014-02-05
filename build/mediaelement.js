@@ -680,7 +680,7 @@ mejs.PluginMediaElement.prototype = {
 	setVideoSize: function (width, height) {
 		
 		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if ( this.pluginElement.style) {
+			if (this.pluginElement && this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
@@ -795,6 +795,11 @@ mejs.MediaPluginBridge = {
 				case "silverlight":
 					pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
 					pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
+					break;
+				case "youtube":
+					pluginMediaElement.pluginApi.setVideoSize = function (width, height) {
+						this.setSize(width, height);
+					};
 					break;
 			}
 	
