@@ -239,17 +239,20 @@ mejs.PluginMediaElement.prototype = {
 	},
 
 	// additional non-HTML5 methods
-	setVideoSize: function (width, height) {
-		
-		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if ( this.pluginElement.style) {
+	setVideoSize: function(width, height) {
+		if (this.pluginElement != null) {
+			if (this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
-			if (this.pluginApi != null && this.pluginApi.setVideoSize) {
+		}
+		if (this.pluginApi != null) {
+			if (this.pluginType === 'youtube') {
+				this.pluginApi.setSize(width, height);
+			} else {
 				this.pluginApi.setVideoSize(width, height);
 			}
-		//}
+		}
 	},
 
 	setFullscreen: function (fullscreen) {
@@ -257,7 +260,6 @@ mejs.PluginMediaElement.prototype = {
 			this.pluginApi.setFullscreen(fullscreen);
 		}
 	},
-	
 	enterFullScreen: function() {
 		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.setFullscreen(true);
