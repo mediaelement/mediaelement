@@ -94,6 +94,8 @@ mejs.MediaElementDefaults = {
 	mode: 'auto',
 	// remove or reorder to change plugin priority and availability
 	plugins: ['flash','silverlight','youtube','vimeo'],
+	// youtube options
+	youTubeIframeFirst: false,
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// use plugin for browsers that have trouble with Basic Authentication on HTTPS sites
@@ -591,7 +593,8 @@ mejs.HtmlMediaElementShim = {
 						width: width	
 					};				
 				
-				if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
+				var flashFirst = !options.youTubeIframeFirst;
+				if (flashFirst && mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
 					mejs.YouTubeApi.createFlash(youtubeSettings);
 				} else {
 					mejs.YouTubeApi.enqueueIframe(youtubeSettings);		
