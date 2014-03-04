@@ -870,32 +870,54 @@ mejs.YouTubeApi = {
 	handleStateChange: function(youTubeState, player, pluginMediaElement) {
 		switch (youTubeState) {
 			case -1: // not started
+				// -1 is not reliably sent by the IFrame API.
+				//
+				// If the YT.Player object was constructed with a videoId, then -1 
+				// will not be sent until the video begins playing. If 
+				// Player.loadVideoById() is called, -1 will be sent at that time.
+
 				pluginMediaElement.paused = true;
 				pluginMediaElement.ended = true;
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
 				//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
 				break;
-			case 0:
+			case 0: // ended
 				pluginMediaElement.paused = false;
 				pluginMediaElement.ended = true;
+				pluginMediaElement.readyState = pluginMediaElement.HAVE_CURRENT_DATA;
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'ended');
 				break;
-			case 1:
+			case 1: // playing
 				pluginMediaElement.paused = false;
 				pluginMediaElement.ended = false;				
+
+				if (pluginMediaElement.readyState < pluginMediaElement.HAVE_METADATA) {
+					pluginMediaElement.readyState = pluginMediaElement.HAVE_METADATA;
+				}
+
+				// shortcut: just say we have future data. If we want this to be more
+				// accurate we could use getVideoLoadedFraction() in conjunction with 
+				// getCurrentTime() / getDuration().
+				pluginMediaElement.readyState = pluginMediaElement.HAVE_FUTURE_DATA;
+				
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'play');
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'playing');
 				break;
-			case 2:
+			case 2: // pause
 				pluginMediaElement.paused = true;
 				pluginMediaElement.ended = false;				
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'pause');
 				break;
 			case 3: // buffering
+				if (!pluginMediaElement.paused) {
+					pluginMediaElement.readyState = pluginMediaElement.HAVE_CURRENT_DATA;
+				}
+				
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'progress');
 				break;
-			case 5:
-				// cued?
+			case 5: // cued
+				// 5 is not sent reliably by the IFrame API. 
+
 				break;						
 			
 		}			

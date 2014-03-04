@@ -69,6 +69,12 @@ mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
 // http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
 // http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
 mejs.PluginMediaElement.prototype = {
+	// ReadyState
+	HAVE_NOTHING: 0,
+	HAVE_METADATA: 1,
+	HAVE_CURRENT_DATA: 2,
+	HAVE_FUTURE_DATA: 3,
+	HAVE_ENOUGH_DATA: 4,
 
 	// special
 	pluginElement: null,
@@ -89,10 +95,13 @@ mejs.PluginMediaElement.prototype = {
 	error: null,
 	tagName: '',
 
-	// HTML5 get/set properties, but only set (updated by event handlers)
+	// HTML5 get/set properties
 	muted: false,
 	volume: 1,
+
+	// HTML5 get properties (updated by event handlers)
 	currentTime: 0,
+	readyState: 0,
 
 	// HTML5 methods
 	play: function () {
