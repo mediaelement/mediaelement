@@ -111,7 +111,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.playMedia();
 			}
-			this.paused = false;
 		}
 	},
 	load: function () {
@@ -120,8 +119,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.loadMedia();
 			}
-			
-			this.paused = false;
 		}
 	},
 	pause: function () {
@@ -131,9 +128,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.pauseMedia();
 			}			
-			
-			
-			this.paused = true;
 		}
 	},
 	stop: function () {
@@ -143,7 +137,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.stopMedia();
 			}	
-			this.paused = true;
 		}
 	},
 	canPlayType: function(type) {
@@ -213,10 +206,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.setCurrentTime(time);
 			}				
-			
-			
-			
-			this.currentTime = time;
 		}
 	},
 	setVolume: function (volume) {
