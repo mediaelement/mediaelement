@@ -944,6 +944,7 @@ mejs.YouTubeApi = {
 			case 3: // buffering
 				if (!pluginMediaElement.paused) {
 					pluginMediaElement.readyState = pluginMediaElement.HAVE_CURRENT_DATA;
+					mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'waiting');
 				}
 				
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'progress');

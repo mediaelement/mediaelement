@@ -13,6 +13,7 @@
 		public static var ENDED:String = "ended";
 		public static var VOLUMECHANGE:String = "volumechange";
 		public static var STOP:String = "stop";
+		public static var WAITING:String = "waiting";
 		
 		// new : 2/15/2011
 		public static var LOADSTART:String = "loadstart";

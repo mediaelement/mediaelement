@@ -226,6 +226,8 @@ package htmlelements
 				case STATE_BUFFERING:
 					if (!_isPaused) {
 						_readyState = HAVE_CURRENT_DATA;
+						
+						sendEvent(HtmlMediaEvent.WAITING);
 					}
 					
 					break;
