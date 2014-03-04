@@ -249,9 +249,14 @@ package htmlelements
 			if (_playerIsLoaded) {
 				_bytesLoaded = _player.getVideoBytesLoaded();
 				_bytesTotal = _player.getVideoBytesTotal();
-				_currentTime = player.getCurrentTime();
 				
-				if (!_isPaused)
+				var oldTime:Number = _currentTime;
+				var newTime:Number = player.getCurrentTime();
+				if (oldTime == newTime) {
+					return;
+				}
+				_currentTime = newTime;
+				
 					sendEvent(HtmlMediaEvent.TIMEUPDATE);
 	
 				if (_bytesLoaded < _bytesTotal)

@@ -755,8 +755,28 @@ mejs.YouTubeApi = {
 		if (player && player.getDuration) {
 			
 			// time 
-			pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime();
-			pluginMediaElement.duration = obj.duration = player.getDuration();
+			obj.currentTime = player.getCurrentTime();
+			obj.duration = player.getDuration();
+
+			if (eventName === 'timeupdate') {
+				// do not send timeupdate if time has not changed
+				var oldTime = pluginMediaElement.currentTime;
+				var newTime = obj.currentTime;
+				if (oldTime === newTime) {
+					return;
+				}
+			}
+
+			if (eventName === 'timeupdate') {
+				// workaround: only update our cache of the current time on 'timeupdate'
+				// event. Do this because the IFrame-with-Flash case sends a 'pause' on 
+				// every seek. Because our 'timeupdate' is on a timer, it is possible for
+				// the time to have changed within a 'pause' event. If we update the 
+				// cached currentTime within the 'pause' event, then subscribers to 
+				// 'timeupdate' won't have a chance to notice the change.
+				pluginMediaElement.currentTime = obj.currentTime;	
+			}
+			pluginMediaElement.duration = obj.duration;
 			
 			// state
 			obj.paused = pluginMediaElement.paused;
