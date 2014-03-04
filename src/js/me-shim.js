@@ -878,8 +878,6 @@ mejs.YouTubeApi = {
 
 				pluginMediaElement.paused = true;
 				pluginMediaElement.ended = true;
-				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
-				//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
 				break;
 			case 0: // ended
 				pluginMediaElement.paused = false;
@@ -891,8 +889,12 @@ mejs.YouTubeApi = {
 				pluginMediaElement.paused = false;
 				pluginMediaElement.ended = false;				
 
+				// because -1 and 5 are not reliable, we cannot reliably broadcast the
+				// 'loadedmetadata' event until the player has started playing the 
+				// video.
 				if (pluginMediaElement.readyState < pluginMediaElement.HAVE_METADATA) {
 					pluginMediaElement.readyState = pluginMediaElement.HAVE_METADATA;
+					mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
 				}
 
 				// shortcut: just say we have future data. If we want this to be more

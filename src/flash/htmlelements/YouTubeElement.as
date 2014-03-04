@@ -203,6 +203,7 @@ package htmlelements
 					// starts playing
 					if (_readyState < HAVE_METADATA) {
 						_readyState = HAVE_METADATA;
+						sendEvent(HtmlMediaEvent.LOADEDMETADATA);
 					}
 					
 					// shortcut: just say we have future data. If we want this to be more
