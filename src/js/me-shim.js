@@ -732,6 +732,17 @@ mejs.YouTubeApi = {
 					// init mejs
 					mejs.MediaPluginBridge.initPlugin(settings.pluginId);
 					
+					// We're abusing the spec a little here; 'canplay' is supposed to fire
+					// when readyState is HAVE_FUTURE_DATA, and HAVE_FUTURE_DATA is 
+					// intended to indicate when the video would play without buffering. 
+					// In contrast, the precedent here is to broadcast 'canplay' when a 
+					// video is cued by the player.
+					// 
+					// An additional oddity that we're working around here is that the 
+					// CUED (5) event is not reliably sent by the IFrame API. Thus we send
+					// it when the player is ready.
+					mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'canplay');
+
 					// create timer
 					setInterval(function() {
 						mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
