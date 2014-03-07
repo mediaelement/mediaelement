@@ -69,6 +69,8 @@
         
         // stretching modes
         stretching: 'auto',
+        // position to be centered if stretching is fill (top, left or both)
+        centeredOnFill: 'top left',
 
 		// turns keyboard support on and off for this instance
 		enableKeyboard: true,
@@ -742,7 +744,7 @@
 
 			// Tell user that the file cannot be played
 			if (t.options.error) {
-				t.options.error(e);
+			 t.options.error(e);
 			}
 		},
 
@@ -750,25 +752,25 @@
 			var t = this;
 
 			// check stretching modes
-            switch(t.options.stretching) {
-                case 'fill':
-                    this.setFillMode();
-                    break;
-                case 'responsive':
-                    this.setResponsiveMode();
-                    break;
-                case 'none':
-                    this.setDimensions();
-                    break;
-                // This is the 'auto' mode
-                default:
-                    if (this.hasFluidMode() === true) {
-                        this.setResponsiveMode();
-                    } else {
-                        this.setDimensions(width, height);
-                    }
-                    break;
-            }
+   switch(t.options.stretching) {
+    case 'fill':
+     this.setFillMode(t.options.centeredOnFill);
+     break;
+    case 'responsive':
+     this.setResponsiveMode();
+     break;
+    case 'none':
+     this.setDimensions();
+     break;
+     // This is the 'auto' mode
+    default:
+     if (this.hasFluidMode() === true) {
+      this.setResponsiveMode();
+     } else {
+      this.setDimensions(width, height);
+     }
+     break;
+ }
 
 			// special case for big play button so it doesn't go over the controls area
 			var playLayer = t.layers.find('.mejs-overlay-play'),
@@ -798,7 +800,7 @@
 					newHeight = $(window).height();
 				}
 
-				if ( newHeight != 0 && parentWidth != 0 ) {
+				if ( newHeight !== 0 && parentWidth !== 0 ) {
 					// set outer container size
 					t.container
 						.width(parentWidth)
@@ -823,66 +825,63 @@
 				}
         },
         
-        setFillMode: function() {
+        setFillMode: function(centerOptions) {
         	var t = this,
                 parent = t.outerContainer,
                 parentWidth = parent.width(),
                 parentHeight = parent.height();
 
-				t.container
-                 .width('100%')
-                 .height('100%');
+            t.container
+                .width('100%')
+                .height('100%');
                  
-                    t.layers.children('.mejs-layer')    
-                        .width('100%')
-                        .height('100%');
+            t.layers.children('.mejs-layer')
+                .width('100%')
+                .height('100%');
                     
-                    targetElement = t.container.find('object, embed, iframe, video, .mejs-poster img');
+            targetElement = t.container.find('object, embed, iframe, video, .mejs-poster img');
  	 
-                    // calculate new width and height
-                    var initHeight = t.height,
-                        initWidth = t.width,
-                        divRatio = (parentHeight / parentWidth) * 100,
-                        imageRatio = (initHeight / initWidth) * 100,
-                        cssRule,
-                        finalWidth,
-                        finalHeight,
-                        finalRatio,
-                        difference;
-                        
-                    // Checks which side to scale to
-                    if (divRatio > imageRatio) {
-                        finalRatio = (parentHeight/initHeight*100);
-                        finalWidth = initWidth/100*finalRatio;
-                        targetElement.height(parentHeight).width(finalWidth);
-                        
-                        if (t.media.setVideoSize)
-                            t.media.setVideoSize(finalWidth, parentHeight);
-                        
-                        difference = targetElement.width() - parentWidth;
-                        
-                        cssRule = {'margin-top':0,'margin-left':'-'+(difference/2)+'px'};
-                    } else {
-                    
-                        finalRatio = (parentWidth/initWidth*100);
-                        finalHeight = initHeight/100*finalRatio;
-                        targetElement.height(finalHeight).width(parentWidth);
-                        
-                        if (t.media.setVideoSize)
-                            t.media.setVideoSize(parentWidth, finalHeight);
-                            
-                        difference = targetElement.height() - parentHeight;
-                        
-                        cssRule = {'margin-left':0,'margin-top':'-'+(difference/2)+'px'};
-                    }
-                    
-                    targetElement.css(cssRule);
+            // calculate new width and height
+            var initHeight = t.height,
+                initWidth = t.width,
+            // scale to the target width
+                scaleX1 = parentWidth,
+                scaleY1 = (initHeight * parentWidth) / initWidth,
+            // scale to the target height
+                scaleX2 = (initWidth * parentHeight) / initHeight,
+                scaleY2 = parentHeight,
+            // now figure out which one we should use
+                bScaleOnWidth = !(scaleX2 > parentWidth),
+                finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2);
+                finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2),
+                defaultPositions = ['top', 'left'];
+ 
+            if (bScaleOnWidth) {
+                targetElement.height(finalHeight).width(parentWidth);
+                if (t.media.setVideoSize) {
+                    t.media.setVideoSize(parentWidth, finalHeight);
+                }
+            } else {
+                targetElement.height(parentHeight).width(finalWidth);
+                if (t.media.setVideoSize) {
+                    t.media.setVideoSize(finalWidth, parentHeight);
+                }
+            }
+ 
+            centerPos = centerOptions.split(" ") || defaultPositions;
+            centerPos[0] = $.inArray(centerPos[0], defaultPositions) !== -1 ? centerPos[0] : 'none';
+            centerPos[1] = typeof centerPos[1] !== "undefined" && centerPos[1].length && $.inArray(centerPos[1], defaultPositions) !== -1 ? centerPos[1] : 'none';
+ 
+            targetElement.css({
+                'margin-left': centerPos[0] !== 'none' ? Math.floor((parentWidth - finalWidth) / 2) : 0,
+                'margin-top': centerPos[1] !== 'none' ? Math.floor((parentHeight - finalHeight) / 2) : 0
+            });
         },
         
         setDimensions: function(width, height) {
             var t = this;
             
-            if (typeof width != 'undefined') {
+            if (typeof width !== 'undefined') {
 				t.width = width;
 			}
 
