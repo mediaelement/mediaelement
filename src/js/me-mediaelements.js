@@ -3,6 +3,7 @@ extension methods to <video> or <audio> object to bring it into parity with Plug
 */
 mejs.HtmlMediaElement = {
 	pluginType: 'native',
+	sourceType: '',
 	isFullScreen: false,
 
 	setCurrentTime: function (time) {
@@ -42,6 +43,7 @@ mejs.HtmlMediaElement = {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.src = media.src;
+					this.sourceType = media.type;
 					break;
 				}
 			}
@@ -57,10 +59,11 @@ mejs.HtmlMediaElement = {
 /*
 Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
 */
-mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
+mejs.PluginMediaElement = function (pluginid, pluginType, sourceType, mediaUrl) {
 	this.id = pluginid;
 	this.pluginType = pluginType;
 	this.src = mediaUrl;
+	this.sourceType = sourceType;
 	this.events = {};
 	this.attributes = {};
 };
@@ -193,6 +196,7 @@ mejs.PluginMediaElement.prototype = {
 				if (this.canPlayType(media.type)) {
 					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
 					this.src = mejs.Utility.absolutizeUrl(url);
+					this.type = media.type;
 					break;
 				}
 			}

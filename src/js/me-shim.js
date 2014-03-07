@@ -209,7 +209,7 @@ mejs.HtmlMediaElementShim = {
 			l,
 			n,
 			type,
-			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio')},
+			result = { method: '', url: '', type: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio')},
 			pluginName,
 			pluginVersions,
 			pluginInfo,
@@ -290,6 +290,7 @@ mejs.HtmlMediaElementShim = {
 					// special case for Mac/Safari 5.0.3 which answers '' to canPlayType('audio/mp3') but 'maybe' to canPlayType('audio/mpeg')
 					|| htmlMediaElement.canPlayType(mediaFiles[i].type.replace(/mp3/,'mpeg')).replace(/no/, '') !== '') {
 					result.method = 'native';
+					result.type = mediaFiles[i].type;
 					result.url = mediaFiles[i].url;
 					break;
 				}
@@ -336,6 +337,7 @@ mejs.HtmlMediaElementShim = {
 								if (type == pluginInfo.types[l]) {
 									result.method = pluginName;
 									result.url = mediaFiles[i].url;
+									result.type = mediaFiles[i].type;
 									return result;
 								}
 							}
@@ -354,6 +356,7 @@ mejs.HtmlMediaElementShim = {
 		// what if there's nothing to play? just grab the first available
 		if (result.method === '' && mediaFiles.length > 0) {
 			result.url = mediaFiles[0].url;
+			result.type = mediaFiles[0].type;
 		}
 
 		return result;
@@ -441,8 +444,8 @@ mejs.HtmlMediaElementShim = {
 			node,
 			initVars;
 
-		// copy tagName from html media element
-		pluginMediaElement.tagName = htmlMediaElement.tagName
+		pluginMediaElement.tagName = htmlMediaElement.tagName;
+		pluginMediaElement.sourceType = playback.type;
 
 		// copy attributes from html media element to plugin media element
 		for (var i = 0; i < htmlMediaElement.attributes.length; i++) {
@@ -646,6 +649,8 @@ mejs.HtmlMediaElementShim = {
 			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
 		}
 
+		htmlMediaElement.sourceType = playback.type;
+
 		/*
 		Chrome now supports preload="none"
 		if (mejs.MediaFeatures.isChrome) {
@@ -715,7 +720,7 @@ mejs.YouTubeApi = {
 		for (prop in settings.playerVars) {
 			playerVars[prop] = settings.playerVars[prop];
 		}
-		
+
 		var
 		pluginMediaElement = settings.pluginMediaElement,	
 		player = new YT.Player(settings.containerId, {
@@ -745,7 +750,7 @@ mejs.YouTubeApi = {
 
 					// create timer
 					setInterval(function() {
-						mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
+							mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 					}, 250);					
 				},
 				'onStateChange': function(e) {
@@ -765,7 +770,7 @@ mejs.YouTubeApi = {
 
 		if (player && player.getDuration) {
 			
-			// time 
+			// time
 			obj.currentTime = player.getCurrentTime();
 			obj.duration = player.getDuration();
 
@@ -788,7 +793,7 @@ mejs.YouTubeApi = {
 				pluginMediaElement.currentTime = obj.currentTime;	
 			}
 			pluginMediaElement.duration = obj.duration;
-			
+
 			// state
 			obj.paused = pluginMediaElement.paused;
 			obj.ended = pluginMediaElement.ended;			
@@ -815,7 +820,7 @@ mejs.YouTubeApi = {
 			};
 			
 		}
-		
+
 		// send event up the chain
 		pluginMediaElement.dispatchEvent(obj.type, obj);
 	},	
@@ -918,7 +923,7 @@ mejs.YouTubeApi = {
 				break;
 			case 1: // playing
 				pluginMediaElement.paused = false;
-				pluginMediaElement.ended = false;				
+				pluginMediaElement.ended = false;
 
 				// because -1 and 5 are not reliable, we cannot reliably broadcast the
 				// 'loadedmetadata' event until the player has started playing the 
@@ -938,7 +943,7 @@ mejs.YouTubeApi = {
 				break;
 			case 2: // pause
 				pluginMediaElement.paused = true;
-				pluginMediaElement.ended = false;				
+				pluginMediaElement.ended = false;
 				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'pause');
 				break;
 			case 3: // buffering
