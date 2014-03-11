@@ -614,6 +614,9 @@ mejs.HtmlMediaElementShim = {
 						player.pauseVideo = function() {
 							player.api('pause');
 						};
+                                                player.seekTo = function(seconds) {
+                                                        player.api('seekTo', seconds);
+                                                };
 						function createEvent(player, pluginMediaElement, eventName, e) {
 							var obj = {
 								type: eventName,
