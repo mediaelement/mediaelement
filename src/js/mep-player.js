@@ -558,7 +558,7 @@
 							//console.log('media clicked', t.media, t.media.paused);
 
 							if (t.options.clickToPlayPause) {
-								if (t.media.paused) {
+								if (t.media.paused || t.media.ended) {
 									t.play();
 								} else {
 									t.pause();
@@ -921,7 +921,7 @@
 				.appendTo(layers)
 				.bind('click touchstart', function() {
 					if (t.options.clickToPlayPause) {
-						if (media.paused) {
+						if (media.paused || media.ended) {
 							t.play();
 						}
 					}
