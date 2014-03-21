@@ -703,7 +703,7 @@
 
 				// TEMP: needs to be moved somewhere else 
 				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
-				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding player causes missing button on player load 
+				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load 
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
