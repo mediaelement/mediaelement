@@ -117,6 +117,8 @@ mejs.PluginMediaElement.prototype = {
 		}
 	},
 	load: function () {
+		this.error = null;
+		
 		if (this.pluginApi != null) {
 			if (this.pluginType == 'youtube') {
 			} else {

@@ -12,10 +12,10 @@ package htmlelements
 	import flash.net.NetStream;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
-    import flash.net.URLRequestMethod;
+	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	import flash.utils.Timer;
-
+	
 	import FlashMediaElement;
 	
 	import HtmlMediaEvent;
@@ -52,6 +52,8 @@ package htmlelements
 		private var _player:Object = null;
 		private var _playerIsLoaded:Boolean = false;
 		private var _youTubeId:String = "";
+		
+		private static const ERROR_OFFSET:Number = 5000;
 		
 		//http://code.google.com/p/gdata-samples/source/browse/trunk/ytplayer/actionscript3/com/google/youtube/examples/AS3Player.as
 		private static const WIDESCREEN_ASPECT_RATIO:String = "widescreen";
@@ -177,11 +179,13 @@ package htmlelements
 		}		
 		
 		private function onPlayerError(event:Event):void {
-			// trace("Player error:", Object(event).data);
+			var code:int = Object(event).data;
+			trace("onError: code is " + code);
+			_element.sendEvent("error", "code:" + (ERROR_OFFSET + code));
 		}
 		
 		private function onPlayerStateChange(event:Event):void {
-			trace("State is", Object(event).data);
+			trace("State is ", Object(event).data);
 			
 			_duration = _player.getDuration();
 			

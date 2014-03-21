@@ -155,6 +155,7 @@ describe('YouTube plugin', function() {
 			expect(p.player.media.paused).toBe(true);
 			expect(p.player.media.ended).toBe(false);
 			expect(p.player.media.readyState).toBe(p.player.media.HAVE_NOTHING);
+			expect(p.player.media.error).toBeNull();
 		});
 	});
 
@@ -487,6 +488,44 @@ describe('YouTube plugin', function() {
 
 		runs(function() {
 			expect(callback.calls.length).toBeGreaterThan(1);
+		});
+	});
+
+	neckbeard.iterate('p', 'name')
+	.where(player1, player1.name,
+			 player2, player2.name,
+			 player3, player3.name,
+			 player4, player4.name);
+	neckbeard.loop("propagates YouTube errors: #name", function(done, p, name) {
+		var callback = jasmine.createSpy('error callback');
+
+		runs(function() {
+			init(p.id, function() {
+				p.player.media.addEventListener('error', callback);
+
+				switch (p.id) {
+					case player1.id:
+					case player2.id:
+					case player3.id:
+						mejs.YouTubeApi.handleError(2, p.player, p.player.media);
+					break;
+					case player4.id:
+						mejs.MediaPluginBridge.fireEvent(p.player.media.id, 'error', {code: 2 + mejs.YouTubeApi._errorOffset});
+					break;
+				}
+
+				done = true;
+			});
+		});
+
+		waitsFor(function() {
+			return done === true;
+		}, "error event to fire", MAX_WAIT);
+
+		runs(function() {
+			expect(callback).toHaveBeenCalled();
+			expect(p.player.media.error).not.toBeNull();
+			expect(p.player.media.error.code).toBe(mejs.YouTubeApi.ERROR_INVALID_PARAMETER_VALUE);
 		});
 	});
 });

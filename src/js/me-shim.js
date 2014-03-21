@@ -64,6 +64,10 @@ mejs.MediaPluginBridge = {
 			e[i] = values[i];
 		}
 
+		if (e.code) {
+			pluginMediaElement.error = { code: e.code };
+		}
+
 		// fake the newer W3C buffered TimeRange (loaded and total have been removed)
 		bufferedTime = values.bufferedTime || 0;
 
@@ -76,7 +80,7 @@ mejs.MediaPluginBridge = {
 			},
 			length: 1
 		};
-
+		
 		pluginMediaElement.dispatchEvent(e.type, e);
 	}
 };
@@ -694,6 +698,14 @@ mejs.HtmlMediaElementShim = {
 
 // YouTube Flash and Iframe API
 mejs.YouTubeApi = {
+	// onError values
+	_errorOffset: 5000,
+	ERROR_INVALID_PARAMETER_VALUE: 5000 + 2,
+	ERROR_CANNOT_PLAY_HTML5: 5000 + 5,
+	ERROR_VIDEO_NOT_FOUND: 5000 + 100,
+	ERROR_VIDEO_NOT_EMBEDDABLE: 5000 + 101,
+	ERROR_VIDEO_NOT_EMBEDDABLE2: 5000 + 150,
+
 	isIframeStarted: false,
 	isIframeLoaded: false,
 	loadIframeApi: function() {
@@ -752,6 +764,9 @@ mejs.YouTubeApi = {
 					setInterval(function() {
 							mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 					}, 250);					
+				},
+				'onError': function(e) {
+					mejs.YouTubeApi.handleError(e.data, player, pluginMediaElement);
 				},
 				'onStateChange': function(e) {
 					
@@ -824,6 +839,18 @@ mejs.YouTubeApi = {
 		// send event up the chain
 		pluginMediaElement.dispatchEvent(obj.type, obj);
 	},	
+
+	createErrorEvent: function(player, pluginMediaElement, code) {
+		var obj = {
+			type: 'error',
+			target: pluginMediaElement,
+			code: code
+		};
+
+		pluginMediaElement.error = { code: obj.code };
+
+		pluginMediaElement.dispatchEvent(obj.type, obj);
+	},
 	
 	iFrameReady: function() {
 		
@@ -885,24 +912,34 @@ mejs.YouTubeApi = {
 		// hook up and return to MediaELementPlayer.success	
 		pluginMediaElement.pluginApi = 
 		pluginMediaElement.pluginElement = player;
-		mejs.MediaPluginBridge.initPlugin(id);
 		
 		// load the youtube video
 		player.cueVideoById(settings.videoId);
 		
 		var callbackName = settings.containerId + '_callback';
+		var errorCallbackName = settings.containerId + '_errorCallback';
 		
 		window[callbackName] = function(e) {
 			mejs.YouTubeApi.handleStateChange(e, player, pluginMediaElement);
 		}
+		window[errorCallbackName] = function(e) {
+			mejs.YouTubeApi.handleError(e, player, pluginMediaElement);
+		}
 		
 		player.addEventListener('onStateChange', callbackName);
+		player.addEventListener('onError', errorCallbackName);
+		
+		mejs.MediaPluginBridge.initPlugin(id);
 		
 		setInterval(function() {
 			mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 		}, 250);
 	},
 	
+	handleError: function(code, player, pluginMediaElement) {
+		mejs.YouTubeApi.createErrorEvent(player, pluginMediaElement, this._errorOffset + code);
+	},
+
 	handleStateChange: function(youTubeState, player, pluginMediaElement) {
 		switch (youTubeState) {
 			case -1: // not started
