@@ -3,6 +3,7 @@ extension methods to <video> or <audio> object to bring it into parity with Plug
 */
 mejs.HtmlMediaElement = {
 	pluginType: 'native',
+	sourceType: '',
 	isFullScreen: false,
 
 	setCurrentTime: function (time) {
@@ -42,6 +43,7 @@ mejs.HtmlMediaElement = {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.src = media.src;
+					this.sourceType = media.type;
 					break;
 				}
 			}
@@ -57,10 +59,11 @@ mejs.HtmlMediaElement = {
 /*
 Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
 */
-mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
+mejs.PluginMediaElement = function (pluginid, pluginType, sourceType, mediaUrl) {
 	this.id = pluginid;
 	this.pluginType = pluginType;
 	this.src = mediaUrl;
+	this.sourceType = sourceType;
 	this.events = {};
 	this.attributes = {};
 };
@@ -69,6 +72,12 @@ mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
 // http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
 // http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
 mejs.PluginMediaElement.prototype = {
+	// ReadyState
+	HAVE_NOTHING: 0,
+	HAVE_METADATA: 1,
+	HAVE_CURRENT_DATA: 2,
+	HAVE_FUTURE_DATA: 3,
+	HAVE_ENOUGH_DATA: 4,
 
 	// special
 	pluginElement: null,
@@ -89,10 +98,13 @@ mejs.PluginMediaElement.prototype = {
 	error: null,
 	tagName: '',
 
-	// HTML5 get/set properties, but only set (updated by event handlers)
+	// HTML5 get/set properties
 	muted: false,
 	volume: 1,
+
+	// HTML5 get properties (updated by event handlers)
 	currentTime: 0,
+	readyState: 0,
 
 	// HTML5 methods
 	play: function () {
@@ -102,17 +114,16 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.playMedia();
 			}
-			this.paused = false;
 		}
 	},
 	load: function () {
+		this.error = null;
+		
 		if (this.pluginApi != null) {
 			if (this.pluginType == 'youtube') {
 			} else {
 				this.pluginApi.loadMedia();
 			}
-			
-			this.paused = false;
 		}
 	},
 	pause: function () {
@@ -122,9 +133,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.pauseMedia();
 			}			
-			
-			
-			this.paused = true;
 		}
 	},
 	stop: function () {
@@ -134,7 +142,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.stopMedia();
 			}	
-			this.paused = true;
 		}
 	},
 	canPlayType: function(type) {
@@ -191,6 +198,7 @@ mejs.PluginMediaElement.prototype = {
 				if (this.canPlayType(media.type)) {
 					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
 					this.src = mejs.Utility.absolutizeUrl(url);
+					this.type = media.type;
 					break;
 				}
 			}
@@ -204,10 +212,6 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.setCurrentTime(time);
 			}				
-			
-			
-			
-			this.currentTime = time;
 		}
 	},
 	setVolume: function (volume) {
@@ -239,17 +243,20 @@ mejs.PluginMediaElement.prototype = {
 	},
 
 	// additional non-HTML5 methods
-	setVideoSize: function (width, height) {
-		
-		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if ( this.pluginElement.style) {
+	setVideoSize: function(width, height) {
+		if (this.pluginElement != null) {
+			if (this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
-			if (this.pluginApi != null && this.pluginApi.setVideoSize) {
+		}
+		if (this.pluginApi != null) {
+			if (this.pluginType === 'youtube') {
+				this.pluginApi.setSize(width, height);
+			} else {
 				this.pluginApi.setVideoSize(width, height);
 			}
-		//}
+		}
 	},
 
 	setFullscreen: function (fullscreen) {
@@ -257,7 +264,6 @@ mejs.PluginMediaElement.prototype = {
 			this.pluginApi.setFullscreen(fullscreen);
 		}
 	},
-	
 	enterFullScreen: function() {
 		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.setFullscreen(true);
@@ -321,7 +327,9 @@ mejs.PluginMediaElement.prototype = {
 	},
 
 	remove: function() {
+		if (this.pluginElement != null) {
 		mejs.Utility.removeSwf(this.pluginElement.id);
 		mejs.MediaPluginBridge.unregisterPluginElement(this.pluginElement.id);
+	}
 	}
 };

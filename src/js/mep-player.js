@@ -558,7 +558,7 @@
 							//console.log('media clicked', t.media, t.media.paused);
 
 							if (t.options.clickToPlayPause) {
-								if (t.media.paused) {
+								if (t.media.paused || t.media.ended) {
 									t.play();
 								} else {
 									t.pause();
@@ -921,7 +921,7 @@
 				.appendTo(layers)
 				.bind('click touchstart', function() {
 					if (t.options.clickToPlayPause) {
-						if (media.paused) {
+						if (media.paused || media.ended) {
 							t.play();
 						}
 					}
@@ -1091,7 +1091,7 @@
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
-
+			
 			// invoke features cleanup
 			for (featureIndex in t.options.features) {
 				feature = t.options.features[featureIndex];
@@ -1123,10 +1123,11 @@
 				t.media.remove();
 			}
 
+			$('#' + t.id).remove(); // remove container
+
 			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
 			delete mejs.players[t.id];
 
-			t.container.remove();
 			t.globalUnbind();
 			delete t.node.player;
 		}

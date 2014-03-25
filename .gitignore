@@ -8,3 +8,4 @@ build/SilverlightMediaElement.dll
 tests/*
 newfeatures/*
 /mejs3/
+**/*.sublime-*

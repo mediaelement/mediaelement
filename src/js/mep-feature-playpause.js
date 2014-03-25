@@ -17,7 +17,7 @@
 				.click(function(e) {
 					e.preventDefault();
 				
-					if (media.paused) {
+					if (media.paused || media.ended) {
 						media.play();
 					} else {
 						media.pause();

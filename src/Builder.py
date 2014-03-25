@@ -2,6 +2,7 @@ import sys
 import os
 import shutil
 import re
+import codecs
 
 def remove_console(text):
 	return re.sub('console.(log|debug)\((.*)\);?', '', text) 
@@ -28,12 +29,12 @@ me_files.append('me-i18n-locale-zh.js')
 code = ''
 
 for item in me_files:
-	src_file = open('js/' + item,'r')
+	src_file = open('js/' + item, 'r', encoding='utf8')
 	code += src_file.read() + "\n"
 	
 code = remove_console(code)
 
-tmp_file = open('../build/' + me_filename + '.js','w')
+tmp_file = open('../build/' + me_filename + '.js', 'w', encoding='utf8')
 tmp_file.write(code)
 tmp_file.close()
 
@@ -102,12 +103,12 @@ addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')
 # COMBINE into single script
 print('Combining scripts')
 code = ''
-src_file = open('../build/' + me_filename + '.js','r')
+src_file = open('../build/' + me_filename + '.js','r', encoding='utf8')
 code += src_file.read() + "\n"
 src_file = open('../build/' + mep_filename + '.js','r')
 code += src_file.read() + "\n"
 
-tmp_file = open('../build/' + combined_filename + '.js','w')
+tmp_file = open('../build/' + combined_filename + '.js','w', encoding='utf8')
 tmp_file.write(code)
 tmp_file.close()
 
@@ -142,5 +143,7 @@ shutil.copy2('css/mejs-skins.css','../build/mejs-skins.css')
 shutil.copy2('css/controls-ted.png','../build/controls-ted.png')
 shutil.copy2('css/controls-wmp.png','../build/controls-wmp.png')
 shutil.copy2('css/controls-wmp-bg.png','../build/controls-wmp-bg.png')
+
+shutil.copy2('../build/flashmediaelement.swf', '../test/flashmediaelement.swf')
 
 print('DONE!')

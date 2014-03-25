@@ -1,13 +1,12 @@
 describe("HTMLMediaElement", function() {
+  var MAX_WAIT = 10000;
+ 
   var player;
   var element;
   var domElem;
-  var NETWORK_EMPTY = 0, NETWORK_IDLE = 1, NETWORK_LOADING = 2, NETWORK_NO_SOURCE = 3;
-  var HAVE_NOTHING = 0, HAVE_METADATA = 1, HAVE_CURRENT_DATA = 2, HAVE_FUTURE_DATA = 3, HAVE_ENOUGH_DATA = 4;
-  var METADATA_TIMEOUT = 500, ENOUGH_DATA_TIMEOUT = 1000;
 
   beforeEach(function() {
-    $('body').prepend('<video width="640" height="360" id="player1" poster="../media/echo-hereweare.jpg">' +
+    $('body').append('<video width="640" height="360" id="player1" poster="../media/echo-hereweare.jpg">' +
       '<source type="video/mp4" src="../media/echo-hereweare.mp4" ></source>' +
       '<source type="video/webm" src="../media/echo-hereweare.webm" ></source>' +
         '</video>');
@@ -25,10 +24,11 @@ describe("HTMLMediaElement", function() {
   
   afterEach(function() {
     player.remove();
-    player = null;
-    element = null;
+
+    domElem = $('#player1')[0];
     domElem.parentNode.removeChild(domElem);
-    domElem = null;
+    
+    player = element = domElem = null;
   });
 
   it("should be of pluginType native", function() {
@@ -83,8 +83,8 @@ describe("HTMLMediaElement", function() {
 
   it("should HAVE_METADATA within a timeout period", function() {
     waitsFor(function() {
-        return element.readyState >= HAVE_METADATA;
-    }, "Metadata should be loaded", METADATA_TIMEOUT);
+        return element.readyState >= element.HAVE_METADATA;
+    }, "Metadata should be loaded", MAX_WAIT);
   });
 
 });
