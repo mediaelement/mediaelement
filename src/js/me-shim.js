@@ -80,7 +80,7 @@ mejs.MediaPluginBridge = {
 			},
 			length: 1
 		};
-		
+
 		pluginMediaElement.dispatchEvent(e.type, e);
 	}
 };
@@ -153,7 +153,7 @@ mejs.HtmlMediaElementShim = {
 
 	create: function(el, o) {
 		var
-			options = mejs.MediaElementDefaults,
+			options = $.extend(true, {}, mejs.MediaElementDefaults, o),
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
 			tagName = htmlMediaElement.tagName.toLowerCase(),
 			isMediaTag = (tagName === 'audio' || tagName === 'video'),
@@ -164,11 +164,6 @@ mejs.HtmlMediaElementShim = {
 			controls =  htmlMediaElement.getAttribute('controls'),
 			playback,
 			prop;
-
-		// extend options
-		for (prop in o) {
-			options[prop] = o[prop];
-		}
 
 		// clean up attributes
 		src = 		(typeof src == 'undefined' 	|| src === null || src == '') ? null : src;		
