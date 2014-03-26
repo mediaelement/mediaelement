@@ -1126,7 +1126,9 @@
 			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
 			delete mejs.players[t.id];
 
-			t.container.remove();
+			if (typeof t.container == 'object') {
+				t.container.remove();
+			}
 			t.globalUnbind();
 			delete t.node.player;
 		}
