@@ -43,8 +43,8 @@ This includes multiple codecs for various browsers (H.264 for IE and Safari, Web
 </video>
 ```
 
-#### Optional: multiple codecs and fallback for browsers with JavaScript
-In very rare cases, you might have an non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash code.
+#### Optional: Browsers with JavaScript disabled
+In very rare cases, you might have an non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code.
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
 	<source type="video/mp4" src="myvideo.mp4" />
@@ -58,32 +58,34 @@ In very rare cases, you might have an non-HTML5 browser with Flash turned on and
 </video>
 ```
 
-### 3. Run startup script
+### 3. Startup
+
+#### Automatic start
 You can avoid running any startup scripts by added `class="mejs-player"` to the `<video>` or `<audio>` tag. Options can be added using the `data-mejsoptions` attribute
-
-
 ```html	
-<video src="myvideo.mp4" width="320" height="240" class="mejs-player" data-mejsoptions='{"alwaysShowControls": true}'></video>
+<video src="myvideo.mp4" width="320" height="240" 
+		class="mejs-player" 
+		data-mejsoptions='{"alwaysShowControls": true}'></video>
 ```
 
-If you want to start via script you can do it one of two ways:
-
-
+#### Normal JavaScirpt
 ```html
 <script>
-// jQuery method
-$('video').mediaelementplayer({success: function(mediaElement, originalNode) {
-	// do things
-}});
-</script>
-
-<script>
-// normal JavaScript 
 var player = new MediaElementPlayer('#player', {success: function(mediaElement, originalNode) {
 	// do things
 }});
 </script>	
 ```
+
+#### jQuery plugin
+```html
+<script>
+$('video').mediaelementplayer({success: function(mediaElement, originalNode) {
+	// do things
+}});
+</script>
+```
+
 ## How it Works: 
 _MediaElement.js: HTML5 `<video>` and `<audio>` shim_
 
