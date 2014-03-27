@@ -1026,9 +1026,11 @@
 						return true;
 				});
 
-				// check if someone clicked outside a player region, then kill its focus and vise versa
+				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
-					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
+						if ($(event.target).closest('.mejs-container').length == 0) {
+								player.hasFocus = false;
+						}
 				});
 
 		},
