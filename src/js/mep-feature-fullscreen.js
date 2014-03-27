@@ -320,9 +320,16 @@
 						setTimeout(function checkFullscreen() {
 
 							if (t.isNativeFullScreen) {
+								var zoomMultiplier = window["devicePixelRatio"] || 1;
+								// Use a percent error margin since devicePixelRatio is a float and not exact.
+								var percentErrorMargin = 0.002; // 0.2%
+								var windowWidth = zoomMultiplier * $(window).width();
+								var screenWidth = screen.width;
+								var absDiff = Math.abs(screenWidth - windowWidth);
+								var marginError = screenWidth * percentErrorMargin;
 
 								// check if the video is suddenly not really fullscreen
-								if ($(window).width() !== screen.width) {
+								if (absDiff > marginError) {
 									// manually exit
 									t.exitFullScreen();
 								} else {
