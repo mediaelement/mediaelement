@@ -819,7 +819,9 @@
 				total = t.controls.find('.mejs-time-total'),
 				current = t.controls.find('.mejs-time-current'),
 				loaded = t.controls.find('.mejs-time-loaded'),
-				others = rail.siblings();
+				others = rail.siblings(),
+				lastControl = others.last(),
+				lastControlPosition;
 
 
 			// allow the size to come from custom CSS
@@ -843,12 +845,21 @@
 				// fit the rail into the remaining space
 				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
 			}
-
-			// outer area
-			rail.width(railWidth);
-			// dark space
-			total.width(railWidth - (total.outerWidth(true) - total.width()) - 1);
-
+			
+			// resize the rail,
+			// but then check if the last control (say, the fullscreen button) got pushed down
+			// this often happens when zoomed
+			do {				
+				// outer area
+				rail.width(railWidth);
+				// dark space
+				total.width(railWidth - (total.outerWidth(true) - total.width()));				
+			
+				lastControlPosition = lastControl.position();
+				
+				railWidth--;				
+			} while (lastControlPosition.top > 0)
+			
 			if (t.setProgressRail)
 				t.setProgressRail();
 			if (t.setCurrentRail)
