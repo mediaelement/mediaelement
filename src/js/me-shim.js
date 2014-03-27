@@ -603,23 +603,57 @@ mejs.HtmlMediaElementShim = {
 			
 			// DEMO Code. Does NOT work.
 			case 'vimeo':
-				//console.log('vimeoid');
-				
+				var player_id = pluginid + "_player";
 				pluginMediaElement.vimeoid = playback.url.substr(playback.url.lastIndexOf('/')+1);
 				
-				container.innerHTML ='<iframe src="http://player.vimeo.com/video/' + pluginMediaElement.vimeoid + '?portrait=0&byline=0&title=0" width="' + width +'" height="' + height +'" frameborder="0" class="mejs-shim"></iframe>';
-				
-				/*
-				container.innerHTML =
-					'<object width="' + width + '" height="' + height + '" class="mejs-shim">' +
-						'<param name="allowfullscreen" value="true" />' +
-						'<param name="allowscriptaccess" value="always" />' +
-						'<param name="flashvars" value="api=1" />' + 
-						'<param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=' + pluginMediaElement.vimeoid  + '&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" />' +
-						'<embed src="//vimeo.com/moogaloop.swf?api=1&amp;clip_id=' + pluginMediaElement.vimeoid + '&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=00adef&amp;fullscreen=1&amp;autoplay=0&amp;loop=0" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="' + width + '" height="' + height + '" class="mejs-shim"></embed>' +
-					'</object>';
-					*/
-									
+				container.innerHTML ='<iframe src="//player.vimeo.com/video/' + pluginMediaElement.vimeoid + '?api=1&portrait=0&byline=0&title=0&player_id=' + player_id + '" width="' + width +'" height="' + height +'" frameborder="0" class="mejs-shim" id="' + player_id + '"></iframe>';
+				if (typeof($f) == 'function') { // froogaloop available
+					var player = $f(container.childNodes[0]);
+					player.addEvent('ready', function() {
+						player.playVideo = function() {
+							player.api('play');
+						};
+						player.pauseVideo = function() {
+							player.api('pause');
+						};
+                                                player.seekTo = function(seconds) {
+                                                        player.api('seekTo', seconds);
+                                                };
+						function createEvent(player, pluginMediaElement, eventName, e) {
+							var obj = {
+								type: eventName,
+								target: pluginMediaElement
+							};
+							if (eventName == 'timeupdate') {
+								pluginMediaElement.currentTime = obj.currentTime = e.seconds;
+								pluginMediaElement.duration = obj.duration = e.duration;
+							}
+							pluginMediaElement.dispatchEvent(obj.type, obj);
+						}
+						player.addEvent('play', function() {
+							createEvent(player, pluginMediaElement, 'play');
+							createEvent(player, pluginMediaElement, 'playing');
+						});
+						player.addEvent('pause', function() {
+							createEvent(player, pluginMediaElement, 'pause');
+						});
+
+						player.addEvent('finish', function() {
+							createEvent(player, pluginMediaElement, 'ended');
+						});
+						player.addEvent('playProgress', function(e) {
+							createEvent(player, pluginMediaElement, 'timeupdate', e);
+						});
+						pluginMediaElement.pluginApi = player;
+
+						// init mejs
+						mejs.MediaPluginBridge.initPlugin(pluginid);
+
+					});
+				}
+				else {
+					console.warn("You need to include froogaloop for vimeo to work");
+				}
 				break;			
 		}
 		// hide original element
@@ -775,7 +809,7 @@ mejs.YouTubeApi = {
 				},
 				length: 1
 			};
-			
+
 		}
 		
 		// send event up the chain
