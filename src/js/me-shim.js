@@ -581,9 +581,18 @@ mejs.HtmlMediaElementShim = {
 			case 'youtube':
 			
 				
-				var
+				var videoId;
+				// youtu.be url from share button
+				if (playback.url.lastIndexOf("youtu.be") != -1) {
+					videoId = playback.url.substr(playback.url.lastIndexOf('/')+1);
+					if (videoId.indexOf('?') != -1) {
+						videoId = videoId.substr(0, videoId.indexOf('?'));
+					}
+				}
+				else {
 					videoId = playback.url.substr(playback.url.lastIndexOf('=')+1);
-					youtubeSettings = {
+				}
+				youtubeSettings = {
 						container: container,
 						containerId: container.id,
 						pluginMediaElement: pluginMediaElement,
