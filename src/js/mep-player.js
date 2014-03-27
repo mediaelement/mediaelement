@@ -927,7 +927,7 @@
 				.bind('click touchstart', function() {
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
-							t.play();
+							media.play();
 						}
 					}
 				});
