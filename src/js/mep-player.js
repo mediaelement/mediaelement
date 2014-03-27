@@ -1028,9 +1028,7 @@
 
 				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
-						if ($(event.target).closest('.mejs-container').length == 0) {
-								player.hasFocus = false;
-						}
+					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
 				});
 
 		},
