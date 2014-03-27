@@ -22,8 +22,8 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 <script src="mediaelement-and-player.min.js"></script>
 <link rel="stylesheet" href="mediaelementplayer.css" />
 ```
-### 2. Single file
-If your users have JavaScript and/or Flash, this is the easist route for all browsers and mobile devices.
+### 2. Add `<video>` or `<audio>` tags
+If your users have JavaScript and/or Flash, the easist route for all browsers and mobile devices is to use a single MP4 or MP3 file.
 
 ```html	
 <video src="myvideo.mp4" width="320" height="240"></video>
@@ -33,7 +33,7 @@ If your users have JavaScript and/or Flash, this is the easist route for all bro
 ```
 
 #### Optional: multiple codecs
-This includes multiple codecs for various browsers (H.264 for IE and Safari, WebM for Chrome, Firefox 4, and Opera, Ogg for Firefox 3) as well as a Flash fallback for non HTML5 browsers with JavaScript disabled.
+This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and Chrome, WebM for Firefox 4 and Opera, Ogg for Firefox 3).
 
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
