@@ -554,7 +554,7 @@
 
 						// create callback here since it needs access to current
 						// MediaElement object
-						mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
+						t.clickToPlayPauseCallback = function() {
 							//console.log('media clicked', t.media, t.media.paused);
 
 							if (t.options.clickToPlayPause) {
