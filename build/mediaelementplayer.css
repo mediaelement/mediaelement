@@ -187,7 +187,7 @@
 
 /* :focus for accessibility */
 .mejs-controls .mejs-button button:focus {
-	outline: solid 1px yellow;
+	outline: dotted 1px #999;
 }
 
 /* End: CONTROL BAR */
