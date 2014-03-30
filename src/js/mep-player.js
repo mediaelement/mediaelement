@@ -822,6 +822,11 @@
 				others = rail.siblings(),
 				lastControl = others.last(),
 				lastControlPosition;
+				
+			// skip calculation if hidden
+			if (!t.container.is(':visible')) {
+				return;
+			}
 
 
 			// allow the size to come from custom CSS
@@ -858,7 +863,7 @@
 				lastControlPosition = lastControl.position();
 				
 				railWidth--;				
-			} while (lastControlPosition.top > 0)
+			} while (lastControlPosition.top > 0 && railWidth > 0);
 			
 			if (t.setProgressRail)
 				t.setProgressRail();
