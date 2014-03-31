@@ -568,7 +568,7 @@
 
 						// create callback here since it needs access to current
 						// MediaElement object
-						mejs.MediaElementPlayer.prototype.clickToPlayPauseCallback = function() {
+						t.clickToPlayPauseCallback = function() {
 							//console.log('media clicked', t.media, t.media.paused);
 
 							if (t.options.clickToPlayPause) {
@@ -795,6 +795,11 @@
 					parentWidth = t.container.parent().closest(':visible').width(),
 					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 
+				// When we use percent, the newHeight can't be calculated so we get the container height
+				if(isNaN(newHeight)) {
+					newHeight = t.container.parent().closest(':visible').height();
+				}
+
 				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
 					parentWidth = $(window).width();
 					newHeight = $(window).height();
@@ -906,7 +911,14 @@
 				total = t.controls.find('.mejs-time-total'),
 				current = t.controls.find('.mejs-time-current'),
 				loaded = t.controls.find('.mejs-time-loaded'),
-				others = rail.siblings();
+				others = rail.siblings(),
+				lastControl = others.last(),
+				lastControlPosition;
+				
+			// skip calculation if hidden
+			if (!t.container.is(':visible')) {
+				return;
+			}
 
 
 			// allow the size to come from custom CSS
@@ -930,12 +942,21 @@
 				// fit the rail into the remaining space
 				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
 			}
-
-			// outer area
-			rail.width(railWidth);
-			// dark space
-			total.width(railWidth - (total.outerWidth(true) - total.width()));
-
+			
+			// resize the rail,
+			// but then check if the last control (say, the fullscreen button) got pushed down
+			// this often happens when zoomed
+			do {				
+				// outer area
+				rail.width(railWidth);
+				// dark space
+				total.width(railWidth - (total.outerWidth(true) - total.width()));				
+			
+				lastControlPosition = lastControl.position();
+				
+				railWidth--;				
+			} while (lastControlPosition.top > 0 && railWidth > 0);
+			
 			if (t.setProgressRail)
 				t.setProgressRail();
 			if (t.setCurrentRail)
@@ -1014,7 +1035,7 @@
 				.bind('click touchstart', function() {
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
-							t.play();
+							media.play();
 						}
 					}
 				});
@@ -1115,9 +1136,7 @@
 
 				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
-						if ($(event.target).closest('.mejs-container').length == 0) {
-								player.hasFocus = false;
-						}
+					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
 				});
 
 		},
@@ -1218,7 +1237,9 @@
 			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
 			delete mejs.players[t.id];
 
-			t.container.remove();
+			if (typeof t.container == 'object') {
+				t.container.remove();
+			}
 			t.globalUnbind();
 			delete t.node.player;
 		}
