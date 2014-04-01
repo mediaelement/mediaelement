@@ -2901,8 +2901,8 @@ if (typeof jQuery != 'undefined') {
 			
 				lastControlPosition = lastControl.position();
 				
-				railWidth--;				
-			} while (lastControlPosition.top > 0 && railWidth > 0);
+				railWidth--;
+			} while (typeof lastControlPosition !== "undefined" && lastControlPosition.top > 0 && railWidth > 0);
 			
 			if (t.setProgressRail)
 				t.setProgressRail();
