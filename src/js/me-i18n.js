@@ -17,7 +17,7 @@
  * License?
  *
  *   The i18n file uses methods from the Drupal project (drupal.js):
- *     - i18n.methods.t() (modified)
+ *     - i18n.methods.localizeLabel() (modified)
  *     - i18n.methods.checkPlain() (full copy)
  *
  *   The Drupal project is (like mediaelementjs) licensed under GPLv2.
@@ -66,20 +66,24 @@
     /**
      * Encode special characters in a plain-text string for display as HTML.
      */
-    i18n.methods.checkPlain = function (str) {
-        var character, regex,
-        replace = {
-            '&': '&amp;',
-            '"': '&quot;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
+    i18n.methods.escapeSplChars = function (str) {
+        var pattern;
         str = String(str);
-        for (character in replace) {
-            if (replace.hasOwnProperty(character)) {
-                regex = new RegExp(character, 'g');
-                str = str.replace(regex, replace[character]);
-            }
+        if(str.contains('&')){
+            pattern = new RegExp('&', 'g');
+            str = str.replace(pattern, '&amp;');
+        }
+        if(str.contains('<')){
+            pattern = new RegExp('<', 'g');
+            str = str.replace(pattern, '&lt;');
+        }
+        if(str.contains('>')){
+            pattern = new RegExp('>', 'g');
+            str = str.replace(pattern, '&gt;');
+        }
+        if(str.contains('"')){
+            pattern = new RegExp('"', 'g');
+            str = str.replace(pattern, '&quot;');
         }
         return str;
     };
@@ -91,43 +95,28 @@
      * @param str
      *   A string containing the English string to translate.
      *
-     * @param options
+     * @param opts
      *   - 'context' (defaults to the default context): The context the source string
      *     belongs to.
      *
      * @return
-     *   The translated string, escaped via i18n.methods.checkPlain()
+     *   The translated string, escaped via i18n.methods.escapeSplChars()
      */
-    i18n.methods.t = function (str, options) {
 
-        // Fetch the localized version of the string.
-        if (i18n.locale.strings && i18n.locale.strings[options.context] && i18n.locale.strings[options.context][str]) {
-            str = i18n.locale.strings[options.context][str];
-        }
-
-        return i18n.methods.checkPlain(str);
-    };
-
-
-    /**
-     * Wrapper for i18n.methods.t()
-     *
-     * @see i18n.methods.t()
-     * @throws InvalidArgumentException
-     */
-    i18n.t = function(str, options) {
-
+    i18n.localizeLabel = function(str, opts) {
         if (typeof str === 'string' && str.length > 0) {
 
             // check every time due language can change for
             // different reasons (translation, lang switcher ..)
-            var language = i18n.getLanguage();
 
-            options = options || {
-                "context" : language
-            };
+            if(opts==null || opts == undefined){
+                opts = {"context" : language};
+            }
+            if (i18n.locale.strings && i18n.locale.strings[opts.context] && i18n.locale.strings[opts.context][str]) {
+                str = i18n.locale.strings[opts.context][str];
+            }
 
-            return i18n.methods.t(str, options);
+            return i18n.methods.escapeSplChars(str);
         }
         else {
             throw {

@@ -5,7 +5,7 @@
 		// this will automatically turn on a <track>
 		startLanguage: '',
 
-		tracksText: mejs.i18n.t('Captions/Subtitles'),
+		tracksText: mejs.i18n.localizeLabel('Captions/Subtitles'),
 		
 		// option to remove the [cc] button when no <track kind="subtitles"> are present
 		hideCaptionsButtonWhenEmpty: true,
@@ -48,7 +48,7 @@
 							'<ul>'+
 								'<li>'+
 									'<input type="radio" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label for="' + player.id + '_captions_none">' + mejs.i18n.t('None') +'</label>'+
+									'<label for="' + player.id + '_captions_none">' + mejs.i18n.localizeLabel('None') +'</label>'+
 								'</li>'	+
 							'</ul>'+
 						'</div>'+

@@ -17,9 +17,9 @@ $.extend(mejs.MepDefaults,
 					return null;
 			
 				if (player.isFullScreen) {
-					return mejs.i18n.t('Turn off Fullscreen');
+					return mejs.i18n.localizeLabel('Turn off Fullscreen');
 				} else {
-					return mejs.i18n.t('Go Fullscreen');
+					return mejs.i18n.localizeLabel('Go Fullscreen');
 				}
 			},
 			click: function(player) {
@@ -35,9 +35,9 @@ $.extend(mejs.MepDefaults,
 		{ 
 			render: function(player) {
 				if (player.media.muted) {
-					return mejs.i18n.t('Unmute');
+					return mejs.i18n.localizeLabel('Unmute');
 				} else {
-					return mejs.i18n.t('Mute');
+					return mejs.i18n.localizeLabel('Mute');
 				}
 			},
 			click: function(player) {
@@ -56,7 +56,7 @@ $.extend(mejs.MepDefaults,
 		// demo of simple download video
 		{ 
 			render: function(player) {
-				return mejs.i18n.t('Download Video');
+				return mejs.i18n.localizeLabel('Download Video');
 			},
 			click: function(player) {
 				window.location.href = player.media.currentSrc;
