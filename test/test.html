@@ -31,6 +31,11 @@
 		width: 700px;
 		margin: 20px auto;
 	}
+	
+	#video-container {
+		-sdisplay: none;
+		
+	}
 	</style>
 </head>
 <body>
@@ -55,13 +60,33 @@
 <h2>MP4/WebM</h2>
 
 
-<video width="640" height="360" id="player1" controls="controls"  preload="none" poster="../media/echo-hereweare.jpg">
 
-	<source src="../media/echo-hereweare.mp4"  type="video/mp4" /> 	
-		
-	<track kind="subtitles" src="../media/mediaelement.srt" srclang="en"  ></track>
+<div id="video-container">
+
+	<video width="640" height="360" id="player1" controls="controls"  preload="none" poster="../media/echo-hereweare.jpg">
 	
-</video>
+		<source src="../media/echo-hereweare.mp4"  type="video/mp4" /> 	
+			
+		<track kind="subtitles" src="../media/mediaelement.srt" srclang="en"  ></track>
+		
+	</video>
+
+</div>
+
+<input id="showit" type="button" value="show it"  /><br>
+
+<script>
+$('#showit').on('click', function() {
+	if ($('#video-container').is(':visible')) {
+		$('#video-container').hide();
+	} else {
+		$('#video-container').show();
+	}
+	
+	$('#player1')[0].player.setControlsSize();
+});
+</script>
+
 
 <span id="video-mode"></span>
 <div style="min-height: 400px">
@@ -74,7 +99,18 @@
 	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
 	-->
 	
-	<source src="../media/big_buck_bunny.webm"   type="video/webm" />
+	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
+</video>
+
+
+<br>
+
+<video width="640" height="360" id="player3" controls="controls"  preload="none" poster="../media/big_buck_bunny.jpg">
+	<!--
+	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
+	-->
+	
+	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
 </video>
 
 
@@ -184,7 +220,7 @@ $('audio, video').bind('error', function(e) {
 
 jQuery(document).ready(function() {
 	$('audio, video').mediaelementplayer({
-		mode: 'shim',
+		//mode: 'shim',
 	
 		pluginPath:'../build/', 
 		enablePluginSmoothing:true,

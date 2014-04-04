@@ -516,8 +516,8 @@
 						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							//console.log('error building ' + feature);
-							//console.log(e);
+							console.log('error building ' + feature);
+							console.log(e);
 						}
 					}
 				}

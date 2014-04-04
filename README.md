@@ -106,7 +106,14 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 ### Version History
 
-*2.14.0 (2014/03/xx) - in progress*
+*2.14.1 (2014/04/04)*
+
+* Fix infinite loop on progress bar 
+* Add Gruntfile.js build support () []
+* Add #! line to Builder.py for legacy builds (https://github.com/johndyer/mediaelement/pull/1036) [amenonsen]
+
+
+*2.14.0 (2014/03/29)*
 
 * Vimeo support (https://github.com/johndyer/mediaelement/pull/1079) [clkao]
 * fix for aac-audio (itunes-samples etc.) (https://github.com/johndyer/mediaelement/pull/1133) [faebser]
