@@ -532,8 +532,8 @@ if (typeof jQuery != 'undefined') {
 						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							//
-							//
+							
+							
 						}
 					}
 				}
@@ -837,7 +837,12 @@ if (typeof jQuery != 'undefined') {
 				loaded = t.controls.find('.mejs-time-loaded'),
 				others = rail.siblings(),
 				lastControl = others.last(),
-				lastControlPosition;
+				lastControlPosition = null;
+				
+			// skip calculation if hidden
+			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
+				return;
+			}
 
 
 			// allow the size to come from custom CSS
@@ -870,11 +875,12 @@ if (typeof jQuery != 'undefined') {
 				rail.width(railWidth);
 				// dark space
 				total.width(railWidth - (total.outerWidth(true) - total.width()));				
-			
-				lastControlPosition = lastControl.position();
 				
-				railWidth--;				
-			} while (lastControlPosition.top > 0)
+				if (lastControl.css('position') != 'absolute') {
+					lastControlPosition = lastControl.position();				
+					railWidth--;			
+				}
+			} while (lastControlPosition != null && lastControlPosition.top > 0 && railWidth > 0);
 			
 			if (t.setProgressRail)
 				t.setProgressRail();
