@@ -1,26 +1,31 @@
 package  
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.media.*;
-	import flash.net.*;
-	import flash.text.*;
-	import flash.system.*;
-	
+	import flash.display.DisplayObject;
+	import flash.display.LoaderInfo;
+	import flash.display.MovieClip;
+	import flash.display.SimpleButton;
+	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
+	import flash.events.Event;
+	import flash.events.FullScreenEvent;
+	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.external.ExternalInterface;
+	import flash.filters.DropShadowFilter;
+	import flash.geom.ColorTransform;
+	import flash.geom.Rectangle;
 	import flash.media.Video;
+	import flash.net.LocalConnection;
 	import flash.net.NetConnection;
 	import flash.net.NetStream;
-	
-	import flash.geom.ColorTransform;
-	
-	import flash.filters.DropShadowFilter;
+	import flash.system.Capabilities;
+	import flash.text.TextField;
 	import flash.utils.Timer;
-	import flash.external.ExternalInterface;
-	import flash.geom.Rectangle;
 	
+	import htmlelements.AudioElement;
 	import htmlelements.IMediaElement;
 	import htmlelements.VideoElement;
-	import htmlelements.AudioElement;
 	import htmlelements.YouTubeElement;
 	
 	public class FlashMediaElement extends MovieClip {
@@ -43,6 +48,7 @@ package
 		private var _streamer:String = "";
 		private var _enablePseudoStreaming:Boolean;
 		private var _pseudoStreamingStartQueryParam:String;
+		private var _playerVars:String;
 
 		// native video size (from meta data)
 		private var _nativeVideoWidth:Number = 0;
@@ -155,7 +161,8 @@ package
 			_enablePseudoStreaming = (params['pseudostreaming'] != undefined) ? (String(params['pseudostreaming']) == "true") : false;			
 			_pseudoStreamingStartQueryParam = (params['pseudostreamstart'] != undefined) ? (String(params['pseudostreamstart'])) : "start";
 			_streamer = (params['flashstreamer'] != undefined) ? (String(params['flashstreamer'])) : "";
-
+			_playerVars = (params['playerVars'] != undefined) ? decodeURIComponent(String(params['playerVars'])) : null;
+			
 			_output.visible = _debug;	
 			
 			if (isNaN(_timerRate))
@@ -202,7 +209,7 @@ package
 					
 					//Security.allowDomain("http://www.youtube.com");
 					
-					_mediaElement = new YouTubeElement(this, _autoplay, _preload, _timerRate, _startVolume);
+					_mediaElement = new YouTubeElement(this, _autoplay, _preload, _timerRate, _startVolume, _playerVars);
 					_video = (_mediaElement as YouTubeElement).player;
 					
 					// these are set and then used once the player is loaded

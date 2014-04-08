@@ -100,7 +100,13 @@ mejs.MediaElementDefaults = {
 	plugins: ['flash','silverlight','youtube','vimeo'],
 	// youtube options
 	youTubeIframeFirst: false,
-	youTubePlayerVars: {},
+	// youtube player parameters
+	youTubePlayerVars: {
+		autoplay: 0,
+		controls: 0,
+		modestbranding: 1,
+		loop: 0
+	},
 	// shows debug errors on screen
 	enablePluginDebug: false,
 	// use plugin for browsers that have trouble with Basic Authentication on HTTPS sites
@@ -496,8 +502,8 @@ mejs.HtmlMediaElementShim = {
 		// flash/silverlight vars
 		initVars = [
 			'id=' + pluginid,
-			'isvideo=' + ((playback.isVideo) ? "true" : "false"),
-			'autoplay=' + ((autoplay) ? "true" : "false"),
+			'isvideo=' + ((playback.isVideo) ? 'true' : 'false'),
+			'autoplay=' + ((autoplay) ? 'true' : 'false'),
 			'preload=' + preload,
 			'width=' + width,
 			'startvolume=' + options.startVolume,
@@ -505,6 +511,14 @@ mejs.HtmlMediaElementShim = {
 			'flashstreamer=' + options.flashStreamer,
 			'height=' + height,
       'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
+
+		var playerVars = [];
+		for (prop in options.youTubePlayerVars) {
+			playerVars.push(prop + '=' + options.youTubePlayerVars[prop]);
+		}
+		if (playerVars.length > 0) {
+			initVars.push('playerVars=' + encodeURIComponent(playerVars.join('&')));
+		}
 
 		if (playback.url !== null) {
 			if (playback.method == 'flash') {
@@ -764,9 +778,7 @@ mejs.YouTubeApi = {
 					mejs.YouTubeApi.handleError(e.data, player, pluginMediaElement);
 				},
 				'onStateChange': function(e) {
-					
 					mejs.YouTubeApi.handleStateChange(e.data, player, pluginMediaElement);
-					
 				}
 			}
 		});
@@ -872,9 +884,16 @@ mejs.YouTubeApi = {
 				'<param name="wmode" value="transparent">' +
 			'</object>';
 		*/
-
 		var specialIEContainer,
-			youtubeUrl = '//www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0';
+			youtubeUrl = '//www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;';
+
+		var playerVars = [];
+		for (prop in settings.playerVars) {
+			playerVars.push(prop + '=' + settings.playerVars[prop]);
+		}
+		if (playerVars.length > 0) {
+			youtubeUrl += playerVars.join('&amp;');
+		}
 			
 		if (mejs.MediaFeatures.isIE) {
 			
@@ -925,7 +944,7 @@ mejs.YouTubeApi = {
 		player.addEventListener('onError', errorCallbackName);
 		
 		mejs.MediaPluginBridge.initPlugin(id);
-		
+
 		setInterval(function() {
 			mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 		}, 250);

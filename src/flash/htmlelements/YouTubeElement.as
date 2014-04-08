@@ -25,6 +25,7 @@ package htmlelements
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
 		private var _preload:String = "";
+		private var _playerVars:String = "controls=1&rel=0&showinfo=0&iv_load_policy=1";
 		
 		private var _element:FlashMediaElement;
 
@@ -125,12 +126,14 @@ package htmlelements
 		private var _isChromeless:Boolean = false;
 
 
-		public function YouTubeElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number) 
+		public function YouTubeElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number, playerVars:String) 
 		{
 			_element = element;
 			_autoplay = autoplay;
 			_volume = startVolume;
 			_preload = preload;
+			_playerVars = playerVars != null ? playerVars : _playerVars;
+			
 			initHeight = 0;
 			initWidth = 0;
 
@@ -139,7 +142,7 @@ package htmlelements
 
 			// chromeless
 			if (_isChromeless) {
-				_playerLoader.load(new URLRequest("//www.youtube.com/apiplayer?version=3&controls=1&rel=0&showinfo=0&iv_load_policy=1"));
+				_playerLoader.load(new URLRequest("//www.youtube.com/apiplayer?version=3&" + _playerVars));
 			}
 			
 			
@@ -344,7 +347,7 @@ package htmlelements
 			_youTubeId = getYouTubeId(url);
 			
 			if (!_playerIsLoaded && !_isChromeless) {
-				_playerLoader.load(new URLRequest("//www.youtube.com/v/" + _youTubeId + "?version=3&controls=0&rel=0&showinfo=0&iv_load_policy=1"));
+				_playerLoader.load(new URLRequest("//www.youtube.com/v/" + _youTubeId + "?version=3&" + _playerVars));
 			}
 		}
 		
