@@ -15,8 +15,8 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.14.2'; 
-
+mejs.version = '2.14.1'; 
+console.log('ME.js version', mejs.version);
 
 // player number (for missing, same id attr)
 mejs.meIndex = 0;
@@ -463,14 +463,14 @@ mejs.HtmlMediaElement = {
 	// This can be a url string
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
 	setSrc: function (url) {
-		
+
 		// Fix for IE9 which can't set .src when there are <source> elements. Awesome, right?
-		var 
+		var
 			existingSources = this.getElementsByTagName('source');
 		while (existingSources.length > 0){
 			this.removeChild(existingSources[0]);
 		}
-	
+
 		if (typeof url == 'string') {
 			this.src = url;
 		} else {
@@ -549,7 +549,7 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.loadMedia();
 			}
-			
+
 			this.paused = false;
 		}
 	},
@@ -559,9 +559,9 @@ mejs.PluginMediaElement.prototype = {
 				this.pluginApi.pauseVideo();
 			} else {
 				this.pluginApi.pauseMedia();
-			}			
-			
-			
+			}
+
+
 			this.paused = true;
 		}
 	},
@@ -571,7 +571,7 @@ mejs.PluginMediaElement.prototype = {
 				this.pluginApi.stopVideo();
 			} else {
 				this.pluginApi.stopMedia();
-			}	
+			}
 			this.paused = true;
 		}
 	},
@@ -599,19 +599,19 @@ mejs.PluginMediaElement.prototype = {
 
 		return '';
 	},
-	
+
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
 			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
 		}
 	},
-	
+
 	hideFullscreenButton: function() {
 		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
 			this.pluginApi.hideFullscreenButton();
-		}		
-	},	
-	
+		}
+	},
+
 
 	// custom methods since not all JavaScript implementations support get/set
 
@@ -641,10 +641,10 @@ mejs.PluginMediaElement.prototype = {
 				this.pluginApi.seekTo(time);
 			} else {
 				this.pluginApi.setCurrentTime(time);
-			}				
-			
-			
-			
+			}
+
+
+
 			this.currentTime = time;
 		}
 	},
@@ -678,9 +678,9 @@ mejs.PluginMediaElement.prototype = {
 
 	// additional non-HTML5 methods
 	setVideoSize: function (width, height) {
-		
+
 		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if ( this.pluginElement.style) {
+			if (this.pluginElement != null && this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
@@ -695,19 +695,19 @@ mejs.PluginMediaElement.prototype = {
 			this.pluginApi.setFullscreen(fullscreen);
 		}
 	},
-	
+
 	enterFullScreen: function() {
 		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.setFullscreen(true);
-		}		
-		
+		}
+
 	},
-	
+
 	exitFullScreen: function() {
 		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.setFullscreen(false);
 		}
-	},	
+	},
 
 	// start: fake events
 	addEventListener: function (eventName, callback, bubble) {
@@ -726,7 +726,7 @@ mejs.PluginMediaElement.prototype = {
 			}
 		}
 		return false;
-	},	
+	},
 	dispatchEvent: function (eventName) {
 		var i,
 			args,
@@ -740,10 +740,10 @@ mejs.PluginMediaElement.prototype = {
 		}
 	},
 	// end: fake events
-	
+
 	// fake DOM attribute methods
 	hasAttribute: function(name){
-		return (name in this.attributes);  
+		return (name in this.attributes);
 	},
 	removeAttribute: function(name){
 		delete this.attributes[name];
@@ -1928,7 +1928,6 @@ window.MediaElement = mejs.MediaElement;
 
 }(mejs.i18n.locale.strings));
 
-
 /*!
  * MediaElementPlayer
  * http://mediaelementjs.com/
@@ -2387,7 +2386,7 @@ if (typeof jQuery != 'undefined') {
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function() {
-				//
+				//console.log('timer fired');
 				t.hideControls();
 				t.killControlsTimer('hide');
 			}, timeout);
@@ -2463,8 +2462,8 @@ if (typeof jQuery != 'undefined') {
 						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							
-							
+							console.log('error building ' + feature);
+							console.log(e);
 						}
 					}
 				}
@@ -2502,7 +2501,7 @@ if (typeof jQuery != 'undefined') {
 						// create callback here since it needs access to current
 						// MediaElement object
 						t.clickToPlayPauseCallback = function() {
-							//
+							//console.log('media clicked', t.media, t.media.paused);
 
 							if (t.options.clickToPlayPause) {
 								if (t.media.paused) {
@@ -3068,8 +3067,8 @@ if (typeof jQuery != 'undefined') {
 					} catch (e) {
 						// TODO: report control error
 						//throw e;
-						//
-						//
+						//console.log('error building ' + feature);
+						//console.log(e);
 					}
 				}
 			}
@@ -3831,7 +3830,7 @@ if (typeof jQuery != 'undefined') {
 							return !!supports;
 						})();
 
-					//
+					//console.log('supportsPointerEvents', supportsPointerEvents);
 
 					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this :(
 
@@ -4597,7 +4596,7 @@ if (typeof jQuery != 'undefined') {
 			
 				if (!img.is(':visible') && !img.is(':animated')) {
 				
-					//			
+					//console.log('showing existing slide');			
 					
 					img.fadeIn()
 						.siblings(':visible')
@@ -4984,7 +4983,7 @@ $.extend(mejs.MepDefaults,
 			});	
 			player.contextMenu.bind('mouseleave', function() {
 
-				//
+				//console.log('context hover out');
 				player.startContextMenuTimer();
 				
 			});		
@@ -5004,7 +5003,7 @@ $.extend(mejs.MepDefaults,
 		
 		contextMenuTimeout: null,
 		startContextMenuTimer: function() {
-			//
+			//console.log('startContextMenuTimer');
 			
 			var t = this;
 			
@@ -5018,7 +5017,7 @@ $.extend(mejs.MepDefaults,
 		killContextMenuTimer: function() {
 			var timer = this.contextMenuTimer;
 			
-			//
+			//console.log('killContextMenuTimer', timer);
 			
 			if (timer != null) {				
 				clearTimeout(timer);
@@ -5127,4 +5126,3 @@ $.extend(mejs.MepDefaults,
 	});
 
 })(mejs.$);
-
