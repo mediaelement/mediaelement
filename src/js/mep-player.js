@@ -821,7 +821,7 @@
 				loaded = t.controls.find('.mejs-time-loaded'),
 				others = rail.siblings(),
 				lastControl = others.last(),
-				lastControlPosition = null;
+				lastControlDesiredTop = null;
 				
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
@@ -854,17 +854,17 @@
 			// resize the rail,
 			// but then check if the last control (say, the fullscreen button) got pushed down
 			// this often happens when zoomed
+
+			// get desired top position by setting rail width to 0
+			// assumption: the last control doesn't get pushed down when the time-rail has no width
+			rail.width(0);
+			lastControlDesiredTop = lastControl.position().top;
 			do {				
 				// outer area
 				rail.width(railWidth);
 				// dark space
-				total.width(railWidth - (total.outerWidth(true) - total.width()));				
-				
-				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.position();				
-					railWidth--;			
-				}
-			} while (lastControlPosition != null && lastControlPosition.top > 0 && railWidth > 0);
+				total.width(railWidth - (total.outerWidth(true) - total.width()));
+			} while (lastControlDesiredTop != null && lastControl.position().top > lastControlDesiredTop && --railWidth > 0);
 			
 			if (t.setProgressRail)
 				t.setProgressRail();
