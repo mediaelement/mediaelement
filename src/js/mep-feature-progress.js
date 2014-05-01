@@ -27,9 +27,14 @@
 				timefloat  = controls.find('.mejs-time-float'),
 				timefloatcurrent  = controls.find('.mejs-time-float-current'),
 				handleMouseMove = function (e) {
-					// mouse position relative to the object
-					var x = e.pageX,
-						offset = total.offset(),
+					// mouse or touch position relative to the object
+					if (e.originalEvent.changedTouches) {
+						var x = e.originalEvent.changedTouches[0].pageX;
+					}else{
+						var x = e.pageX;
+					}
+					
+					var offset = total.offset(),
 						width = total.outerWidth(true),
 						percentage = 0,
 						newTime = 0,
@@ -66,15 +71,15 @@
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
 			total
-				.bind('mousedown', function (e) {
-					// only handle left clicks
-					if (e.which === 1) {
+				.bind('mousedown touchstart', function (e) {
+					// only handle left clicks or touch
+					if (e.which === 1 || e.which === 0) {
 						mouseIsDown = true;
 						handleMouseMove(e);
-						t.globalBind('mousemove.dur', function(e) {
+						t.globalBind('mousemove.dur touchmove.dur', function(e) {
 							handleMouseMove(e);
 						});
-						t.globalBind('mouseup.dur', function (e) {
+						t.globalBind('mouseup.dur touchend.dur', function (e) {
 							mouseIsDown = false;
 							timefloat.hide();
 							t.globalUnbind('.dur');
