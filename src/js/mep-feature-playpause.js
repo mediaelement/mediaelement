@@ -1,7 +1,8 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		playpauseText: mejs.i18n.localizeLabel('Play/Pause')
+		//playpauseText: mejs.i18n.localizeLabel('Play/Pause')
+        playpauseText: 'Play/Pause'
 	});
 
 	// PLAY/pause BUTTON

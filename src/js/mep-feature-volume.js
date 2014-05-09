@@ -1,7 +1,8 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		muteText: mejs.i18n.localizeLabel('Mute Toggle'),
+		//muteText: mejs.i18n.localizeLabel('Mute Toggle'),
+        muteText: 'Mute Toggle',
 		hideVolumeOnTouchDevices: true,
 		
 		audioVolume: 'horizontal',

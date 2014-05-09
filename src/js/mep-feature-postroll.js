@@ -4,7 +4,8 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		postrollCloseText: mejs.i18n.localizeLabel('Close')
+		//postrollCloseText: mejs.i18n.localizeLabel('Close')
+        postrollCloseText: 'Close'
 	});
 
 	// Postroll

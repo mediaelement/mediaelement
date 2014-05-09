@@ -3,7 +3,8 @@
 	$.extend(mejs.MepDefaults, {
 		usePluginFullScreen: true,
 		newWindowCallback: function() { return '';},
-		fullscreenText: mejs.i18n.localizeLabel('Fullscreen')
+		//fullscreenText: mejs.i18n.localizeLabel('Fullscreen')
+        fullscreenText: 'Fullscreen'
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
