@@ -620,15 +620,33 @@ mejs.HtmlMediaElementShim = {
 				if (typeof($f) == 'function') { // froogaloop available
 					var player = $f(container.childNodes[0]);
 					player.addEvent('ready', function() {
-						player.playVideo = function() {
-							player.api('play');
-						};
-						player.pauseVideo = function() {
-							player.api('pause');
-						};
-                                                player.seekTo = function(seconds) {
-                                                        player.api('seekTo', seconds);
-                                                };
+						$.extend( player, {
+							playVideo: function() {
+								player.api( 'play' );
+							}, 
+							stopVideo: function() {
+								player.api( 'unload' );
+							}, 
+							pauseVideo: function() {
+								player.api( 'pause' );
+							}, 
+							seekTo: function( seconds ) {
+								player.api( 'seekTo', seconds );
+							}, 
+							setVolume: function( volume ) {
+								player.api( 'setVolume', volume );
+							}, 
+							setMuted: function( muted ) {
+								if( muted ) {
+									player.lastVolume = player.api( 'getVolume' );
+									player.api( 'setVolume', 0 );
+								} else {
+									player.api( 'setVolume', player.lastVolume );
+									delete player.lastVolume;
+								}
+							}
+						});
+
 						function createEvent(player, pluginMediaElement, eventName, e) {
 							var obj = {
 								type: eventName,
@@ -640,10 +658,12 @@ mejs.HtmlMediaElementShim = {
 							}
 							pluginMediaElement.dispatchEvent(obj.type, obj);
 						}
+
 						player.addEvent('play', function() {
 							createEvent(player, pluginMediaElement, 'play');
 							createEvent(player, pluginMediaElement, 'playing');
 						});
+
 						player.addEvent('pause', function() {
 							createEvent(player, pluginMediaElement, 'pause');
 						});
@@ -651,14 +671,16 @@ mejs.HtmlMediaElementShim = {
 						player.addEvent('finish', function() {
 							createEvent(player, pluginMediaElement, 'ended');
 						});
+
 						player.addEvent('playProgress', function(e) {
 							createEvent(player, pluginMediaElement, 'timeupdate', e);
 						});
+
+						pluginMediaElement.player = container;
 						pluginMediaElement.pluginApi = player;
 
 						// init mejs
 						mejs.MediaPluginBridge.initPlugin(pluginid);
-
 					});
 				}
 				else {
