@@ -676,7 +676,7 @@ mejs.HtmlMediaElementShim = {
 							createEvent(player, pluginMediaElement, 'timeupdate', e);
 						});
 
-						pluginMediaElement.player = container;
+						pluginMediaElement.pluginElement = container;
 						pluginMediaElement.pluginApi = player;
 
 						// init mejs
