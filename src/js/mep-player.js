@@ -822,7 +822,7 @@
 				others = rail.siblings(),
 				lastControl = others.last(),
 				lastControlPosition = null;
-				
+
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
 				return;
@@ -850,22 +850,22 @@
 				// fit the rail into the remaining space
 				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
 			}
-			
+
 			// resize the rail,
 			// but then check if the last control (say, the fullscreen button) got pushed down
 			// this often happens when zoomed
-			do {				
+			do {
 				// outer area
 				rail.width(railWidth);
 				// dark space
-				total.width(railWidth - (total.outerWidth(true) - total.width()));				
-				
+				total.width(railWidth - (total.outerWidth(true) - total.width()));
+
 				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.position();				
-					railWidth--;			
+					lastControlPosition = lastControl.position();
+					railWidth--;
 				}
 			} while (lastControlPosition != null && lastControlPosition.top > 0 && railWidth > 0);
-			
+
 			if (t.setProgressRail)
 				t.setProgressRail();
 			if (t.setCurrentRail)
@@ -941,7 +941,7 @@
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
-				.bind('click touchstart', function() {
+				.bind('click', function() {
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
 							media.play();
