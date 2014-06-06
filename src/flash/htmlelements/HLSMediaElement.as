@@ -5,7 +5,7 @@
   import flash.media.SoundTransform;
   import org.mangui.HLS.HLS;
   import org.mangui.HLS.HLSEvent;
-  import org.mangui.HLS.HLSStates;
+  import org.mangui.HLS.HLSPlayStates;
   import org.mangui.HLS.utils.Log;
 
 public class HLSMediaElement extends Sprite implements IMediaElement {
@@ -17,7 +17,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     private var _hls:HLS;
     private var _url:String;
     private var _video:Video;
-    private var _hlsState:String = HLSStates.IDLE;
+    private var _hlsState:String = HLSPlayStates.IDLE;
 
   // event values
   private var _position:Number = 0;
@@ -54,7 +54,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       _hls.addEventListener(HLSEvent.ERROR,_errorHandler);
       _hls.addEventListener(HLSEvent.MANIFEST_LOADED,_manifestHandler);
       _hls.addEventListener(HLSEvent.MEDIA_TIME,_mediaTimeHandler);
-      _hls.addEventListener(HLSEvent.STATE,_stateHandler);
+      _hls.addEventListener(HLSEvent.PLAYBACK_STATE,_stateHandler);
       _hls.stream.soundTransform = new SoundTransform(_volume);
       _video.attachNetStream(_hls.stream);
     }
@@ -93,11 +93,12 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       _hlsState = event.state;
       //Log.txt("state:"+ _hlsState);
       switch(event.state) {
-          case HLSStates.IDLE:
+          case HLSPlayStates.IDLE:
             break;
-          case HLSStates.BUFFERING:
+          case HLSPlayStates.PAUSED_BUFFERING:
+          case HLSPlayStates.PLAYING_BUFFERING:
             break;
-          case HLSStates.PLAYING:
+          case HLSPlayStates.PLAYING:
             _isPaused = false;
             _isEnded = false;
             _video.visible = true;
@@ -105,7 +106,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
             sendEvent(HtmlMediaEvent.PLAY);
             sendEvent(HtmlMediaEvent.PLAYING);
             break;
-          case HLSStates.PAUSED:
+          case HLSPlayStates.PAUSED:
             _isPaused = true;
             _isEnded = false;
             sendEvent(HtmlMediaEvent.PAUSE);
@@ -132,7 +133,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
         _playqueued = true;
         return;
       }
-      if (_hlsState == HLSStates.PAUSED) {
+      if (_hlsState == HLSPlayStates.PAUSED || _hlsState == HLSPlayStates.PAUSED_BUFFERING) {
         _hls.stream.resume();
       } else {
         _hls.stream.play();
