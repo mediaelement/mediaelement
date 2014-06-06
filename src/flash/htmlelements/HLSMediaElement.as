@@ -224,7 +224,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     public function currentProgress():Number{
     }
 
-  private function sendEvent(eventName:String) {
+  private function sendEvent(eventName:String):void {
 
     // build JSON
     var values:String =
