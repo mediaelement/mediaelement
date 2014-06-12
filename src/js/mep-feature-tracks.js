@@ -75,19 +75,21 @@
 					player.setTrack(lang);
 				});
 			} else {
-				// hover
-				player.captionsButton.hover(function() {
+				// hover or keyboard focus
+				player.captionsButton.on( 'mouseenter focusin', function() {
 					$(this).find('.mejs-captions-selector').css('visibility','visible');
-				}, function() {
-					$(this).find('.mejs-captions-selector').css('visibility','hidden');
 				})
 
 				// handle clicks to the language radio buttons
 				.on('click','input[type=radio]',function() {
 					lang = this.value;
 					player.setTrack(lang);
-				});
+				});	
 
+				player.captionsButton.on( 'mouseleave focusout', function() {
+					$(this).find(".mejs-captions-selector").css("visibility","hidden")
+				});
+				
 			}
 
 			if (!player.options.alwaysShowControls) {
