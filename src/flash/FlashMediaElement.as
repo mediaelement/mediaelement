@@ -148,13 +148,19 @@ package
 			_startVolume = (params['startvolume'] != undefined) ? (parseFloat(params['startvolume'])) : 0.8;
 			_preload = (params['preload'] != undefined) ? params['preload'] : "none";
 			_controlStyle = (params['controlstyle'] != undefined) ? (String(params['controlstyle'])) : ""; // blank or "floating"
-			_autoHide = (params['autohide'] != undefined) ? (String(params['autohide'])) : true;
+			_autoHide = (params['autohide'] != undefined) ? (String(params['autohide']) == "true") : true;
 			_scrubTrackColor = (params['scrubtrackcolor'] != undefined) ? (String(params['scrubtrackcolor'])) : "0x333333";
 			_scrubBarColor = (params['scrubbarcolor'] != undefined) ? (String(params['scrubbarcolor'])) : "0xefefef";
 			_scrubLoadedColor = (params['scrubloadedcolor'] != undefined) ? (String(params['scrubloadedcolor'])) : "0x3CACC8";
 			_enablePseudoStreaming = (params['pseudostreaming'] != undefined) ? (String(params['pseudostreaming']) == "true") : false;			
 			_pseudoStreamingStartQueryParam = (params['pseudostreamstart'] != undefined) ? (String(params['pseudostreamstart'])) : "start";
 			_streamer = (params['flashstreamer'] != undefined) ? (String(params['flashstreamer'])) : "";
+			
+			// for audio them controls always show them
+			
+			if (!_isVideo && _alwaysShowControls) {
+				_autoHide = false;
+			}
 
 			_output.visible = _debug;	
 			
@@ -188,7 +194,7 @@ package
 
 			// position and hide
 			_fullscreenButton = getChildByName("fullscreen_btn") as SimpleButton;
-			//_fullscreenButton.visible = false;
+			_fullscreenButton.visible = _isVideo;
 			_fullscreenButton.alpha = 0;
 			_fullscreenButton.addEventListener(MouseEvent.CLICK, fullscreenClick, false);
 			_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width;
@@ -245,6 +251,7 @@ package
 			applyColor(_scrubLoaded, _scrubLoadedColor);
 			
 			_fullscreenIcon = _controlBar.getChildByName("fullscreenIcon") as SimpleButton;
+			_fullscreenIcon.visible = _isVideo;
 			
 			// New fullscreenIcon for new fullscreen floating controls
 			//if(_alwaysShowControls && _controlStyle.toUpperCase()=="FLOATING") {
@@ -658,7 +665,7 @@ package
 				_fullscreenIcon.x = _controlBarBg.width - _fullscreenIcon.width - 7;
 				_fullscreenIcon.y = 8;
 				
-				_volumeMuted.x = _volumeUnMuted.x = _fullscreenIcon.x - _volumeMuted.width - 10;
+				_volumeMuted.x = _volumeUnMuted.x = (_isVideo ? _fullscreenIcon.x : _controlBarBg.width) - _volumeMuted.width - 10;
 				_volumeMuted.y = _volumeUnMuted.y = 10;
 				
 				_duration.x = _volumeMuted.x - _volumeMuted.width - _duration.width + 5;
