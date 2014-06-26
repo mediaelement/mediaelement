@@ -1,5 +1,5 @@
 ﻿package  {
-
+//this class is basicly creating static variables to be used in FlashMediaElement.as file
 	public class HtmlMediaEvent {
 
 		public static var LOADED_DATA:String = "loadeddata";

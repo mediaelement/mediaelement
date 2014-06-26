@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+    <script src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+    google.load("language", "1");
+    </script>		
+	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<script src="testforfiles.js"></script>	
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Recommended Setup</p>
+
+
+<h2>MP4/WebM video</h2>
+<video width="360" height="203" id="player2" controls="controls">
+	<source src="../media/echo-hereweare.mp4" type="video/mp4">
+	<source src="../media/echo-hereweare.webm" type="video/webm">	
+	<track kind="subtitles" src="../media/mediaelement.srt" srclang="en" /> 
+	<p>Your browser leaves much to be desired.</p>			
+</video>	
+
+<script>
+$('audio,video').mediaelementplayer({
+	// auto-select this language (instead of starting with "None")
+	startLanguage:'en',
+	// automatically translate into these languages
+	translations:['es','ar','zh','ru'],
+	// enable the dropdown list of languages
+	translationSelector: true
+});
+</script>
+
+</body>
+</html>

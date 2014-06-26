@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<script src="testforfiles.js"></script>	
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Audio player</p>
+
+<h2>MP3</h2>
+<audio id="player2" src="../media/AirReview-Landmarks-02-ChasingCorporate.mp3" type="audio/mp3" controls="controls">		
+</audio>	
+
+<script>
+$('audio,video').mediaelementplayer();
+</script>
+
+</body>
+</html>
+
