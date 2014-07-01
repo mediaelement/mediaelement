@@ -1191,20 +1191,20 @@
 	})();
 
 	// turn into jQuery plugin
-	if (typeof jQuery != 'undefined') {
-		jQuery.fn.mediaelementplayer = function (options) {
+	if (typeof $ != 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
-					var player = jQuery(this).data('mediaelementplayer');
+					var player = $(this).data('mediaelementplayer');
 					if (player) {
 						player.remove();
 					}
-					jQuery(this).removeData('mediaelementplayer');
+					$(this).removeData('mediaelementplayer');
 				});
 			}
 			else {
 				this.each(function () {
-					jQuery(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
+					$(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
 				});
 			}
 			return this;
