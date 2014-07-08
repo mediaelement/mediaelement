@@ -941,7 +941,7 @@
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
-				.bind('click touchstart', function() {
+				.bind('click', function() {  // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
 							media.play();
