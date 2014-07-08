@@ -20,6 +20,7 @@
 	<script src="../src/js/mep-feature-playpause.js" type="text/javascript"></script>
 	<script src="../src/js/mep-feature-progress.js" type="text/javascript"></script>
 	<script src="../src/js/mep-feature-time.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-speed.js" type="text/javascript"></script>	
 	<script src="../src/js/mep-feature-tracks.js" type="text/javascript"></script>
 	<script src="../src/js/mep-feature-volume.js" type="text/javascript"></script>
 	<script src="../src/js/mep-feature-stop.js" type="text/javascript"></script>
@@ -234,7 +235,7 @@ jQuery(document).ready(function() {
 		//usePluginFullScreen: true,
 		//mode: 'native',
 		//plugins: ['silverlight'],
-		//features: ['playpause','volume','stop'],
+		features: ['playpause','progress','volume','speed','fullscreen'],
 		success: function(me,node) {
 			// report type
 			var tagName = node.tagName.toLowerCase();
