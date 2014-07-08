@@ -603,9 +603,7 @@
 									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
-										if (!t.controls.is(':hover')) {
-											t.startControlsTimer(2500);
-										}
+										t.startControlsTimer(2500);
 									}
 								}
 							})
@@ -614,7 +612,7 @@
 									if (!t.controlsAreVisible) {
 										t.showControls();
 									}
-									if (!t.options.alwaysShowControls && !t.controls.is(':hover')) {
+									if (!t.options.alwaysShowControls) {
 										t.startControlsTimer(2500);
 									}
 								}
