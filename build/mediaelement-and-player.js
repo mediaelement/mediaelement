@@ -562,14 +562,24 @@ mejs.PluginMediaElement.prototype = {
 	},
 	
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
-		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-			this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
+		if (this.pluginApi != null) {
+			//cannot test for pluginApi.positionFullscreenButton because of "Invalid InvokeType" error
+			//so justr try and call it
+			try {
+				this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);	
+			}
+			catch(e) {}
 		}
 	},
 	
 	hideFullscreenButton: function() {
-		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
-			this.pluginApi.hideFullscreenButton();
+		if (this.pluginApi != null && this.pluginApi) {
+			//cannot test for pluginApi.hideFullscreenButton because of "Invalid InvokeType" error
+			//so justr try and call it
+			try {
+				this.pluginApi.hideFullscreenButton();
+			}
+			catch(e) {}
 		}		
 	},	
 	
