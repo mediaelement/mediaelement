@@ -900,13 +900,14 @@
 
 div.mejs-speed-button {
 	width: 42px !important;
+	position: relative;
 }
 
 .mejs-controls .mejs-speed-button .mejs-speed-selector {
 	visibility: hidden;
 	position: absolute;
-	bottom: 30px;
-	right: 67px;
+	top: -110px;
+	left: -10px;
 	width: 40px;
 	height: 100px;
 	background: url(background.png);
