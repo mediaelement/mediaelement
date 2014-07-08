@@ -19,6 +19,10 @@
 * VideoElement.as: fix duration on setSrc (https://github.com/johndyer/mediaelement/pull/1127) [rounce]
 * don't hide controls when they're being hovered over (https://github.com/johndyer/mediaelement/pull/1121/files) [rounce]
 * flash: send keydown events up to javascript (https://github.com/johndyer/mediaelement/pull/1120) [rounce]
+* Restore IE6 compatibility for 100% (https://github.com/johndyer/mediaelement/pull/1021) [ryokenau]
+* Added playback speed (HTML5 only), fixed caption's auto-size when fullscreen (https://github.com/johndyer/mediaelement/pull/1027) [cheng-shiwen]
+* Chromium Web Browser Support (https://github.com/johndyer/mediaelement/pull/1020) [ryokenau]
+
 
 *2.14.2 (2014/04/04)*
 
