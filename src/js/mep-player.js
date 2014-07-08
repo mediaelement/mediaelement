@@ -573,10 +573,12 @@
 						t.container
 							.bind('mouseenter mouseover', function () {
 								if (t.controlsEnabled) {
-									if (!t.options.alwaysShowControls) {
+									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
-										t.startControlsTimer(2500);
+										if (!t.controls.is(':hover')) {
+											t.startControlsTimer(2500);
+										}
 									}
 								}
 							})
@@ -585,8 +587,7 @@
 									if (!t.controlsAreVisible) {
 										t.showControls();
 									}
-									//t.killControlsTimer('move');
-									if (!t.options.alwaysShowControls) {
+									if (!t.options.alwaysShowControls && !t.controls.is(':hover')) {
 										t.startControlsTimer(2500);
 									}
 								}
