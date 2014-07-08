@@ -9,6 +9,8 @@
 
 .me-plugin {
 	position: absolute;
+	height: 0;
+	width: 0;
 }
 
 .mejs-embed, .mejs-embed body {
