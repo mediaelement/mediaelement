@@ -49,7 +49,7 @@ package htmlelements
 		
 		// YouTube stuff
 		private var _playerLoader:Loader;
-		private var _player:Object = null;
+		private var _player:DisplayObject = null;
 		private var _playerIsLoaded:Boolean = false;
 		private var _youTubeId:String = "";
 		
@@ -72,8 +72,8 @@ package htmlelements
 		}
 		
 		public function setSize(width:Number, height:Number):void {
-			if (_player != null) {
-				_player.setSize(width, height);
+			if (player != null) {
+				player.setSize(width, height);
 			} else {
 				initHeight = height;
 				initWidth = width;
@@ -117,7 +117,7 @@ package htmlelements
 		private var _isChromeless:Boolean = false;
 
 
-		public function YouTubeElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number) 
+		public function YouTubeElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number):void
 		{
 			_element = element;
 			_autoplay = autoplay;
@@ -158,7 +158,7 @@ package htmlelements
 			_player = _playerLoader.content;
 			
 			if (initHeight > 0 && initWidth > 0)
-				_player.setSize(initWidth, initHeight);
+				setSize(initWidth, initHeight);
 			
 			if (_youTubeId != "") { //  && _isChromeless) {
 				if (_autoplay) {
@@ -177,7 +177,7 @@ package htmlelements
 		private function onPlayerStateChange(event:Event):void {
 			trace("State is", Object(event).data);
 			
-			_duration = _player.getDuration();
+			_duration = player.getDuration();
 			
 			switch (Object(event).data) {
 				case STATE_ENDED:
@@ -218,11 +218,11 @@ package htmlelements
 			//resizePlayer(Object(event).data);
 		}
 
-		private function timerHandler(e:TimerEvent) {
+		private function timerHandler(e:TimerEvent):void {
 			
 			if (_playerIsLoaded) {
-				_bytesLoaded = _player.getVideoBytesLoaded();
-				_bytesTotal = _player.getVideoBytesTotal();
+				_bytesLoaded = player.getVideoBytesLoaded();
+				_bytesTotal = player.getVideoBytesTotal();
 				_currentTime = player.getCurrentTime();
 				
 				if (!_isPaused)
@@ -267,7 +267,7 @@ package htmlelements
 			var parameters:Array = parts[1].split('&');
 			
 			for (var i:Number=0; i<parameters.length; i++) {
-				var paramParts = parameters[i].split('=');
+				var paramParts:Array = parameters[i].split('=');
 				if (paramParts[0] == "v") {
 			
 					youTubeId = paramParts[1];
@@ -332,50 +332,50 @@ package htmlelements
 		
 		public function play():void {
 			if (_playerIsLoaded) {
-				_player.playVideo();
+				player.playVideo();
 			}
 
 		}
 
 		public function pause():void {
 			if (_playerIsLoaded) {
-				_player.pauseVideo();
+				player.pauseVideo();
 			}		
 		}
 
 		public function stop():void {
 			if (_playerIsLoaded) {
-				_player.pauseVideo();
+				player.pauseVideo();
 			}	
 		}
 
 		public function setCurrentTime(pos:Number):void {
 			//_player.seekTo(pos, false);
-			_player.seekTo(pos, true); // works in all places now
+			player.seekTo(pos, true); // works in all places now
 		}
 
 		public function setVolume(volume:Number):void {
-			_player.setVolume(volume*100);
+			player.setVolume(volume*100);
 			_volume = volume;
 		}
 
 		public function getVolume():Number {
-			return _player.getVolume()*100;
+			return player.getVolume()*100;
 		}
 
 		public function setMuted(muted:Boolean):void {
 			if (muted) {
-				_player.mute();
+				player.mute();
 		
 			} else {
-				_player.unMute();
+				player.unMute();
 			}
 			_isMuted = _player.isMuted();
 			sendEvent(HtmlMediaEvent.VOLUMECHANGE);
 		}
 
 
-		private function sendEvent(eventName:String) {
+		private function sendEvent(eventName:String):void {
 
 			// calculate this to mimic HTML5
 			_bufferedTime = _bytesLoaded / _bytesTotal * _duration;
