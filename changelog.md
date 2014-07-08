@@ -10,7 +10,11 @@
 * Fix for silverlight issue with fullscreen button (https://github.com/johndyer/mediaelement/pull/1196) [PaulVrugt]
 * Fix IE10/11 error with `clone()` and `show()` (https://github.com/johndyer/mediaelement/pull/1194) [benjroy]
 * Add bower.json (https://github.com/johndyer/mediaelement/pull/1188) [herby]
-* 
+* i18n : add French translation (https://github.com/johndyer/mediaelement/pull/1177) [kloh-fr]
+* IE8 layout (Adding width and height to .me-plugin) [peterh-capella]
+* Fixes #1113 - Youtube Playbutton on load hidden (https://github.com/johndyer/mediaelement/pull/1140) [LOK-Soft]
+* support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
+* Suport for HLS Streaming via Flash
 
 
 *2.14.2 (2014/04/04)*
