@@ -1017,6 +1017,10 @@
 				error.show();
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);
+
+			media.addEventListener('keydown', function(e) {
+				t.onkeydown(player, media, e);
+			}, false);
 		},
 
 		buildkeyboard: function(player, controls, layers, media) {
@@ -1025,24 +1029,7 @@
 
 				// listen for key presses
 				t.globalBind('keydown', function(e) {
-
-						if (player.hasFocus && player.options.enableKeyboard) {
-
-								// find a matching key
-								for (var i=0, il=player.options.keyActions.length; i<il; i++) {
-										var keyAction = player.options.keyActions[i];
-
-										for (var j=0, jl=keyAction.keys.length; j<jl; j++) {
-												if (e.keyCode == keyAction.keys[j]) {
-														e.preventDefault();
-														keyAction.action(player, media, e.keyCode);
-														return false;
-												}
-										}
-								}
-						}
-
-						return true;
+					return t.onkeydown(player, media, e);
 				});
 
 				// check if someone clicked outside a player region, then kill its focus
@@ -1050,6 +1037,24 @@
 					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
 				});
 
+		},
+		onkeydown: function(player, media, e) {
+			if (player.hasFocus && player.options.enableKeyboard) {
+				// find a matching key
+				for (var i = 0, il = player.options.keyActions.length; i < il; i++) {
+					var keyAction = player.options.keyActions[i];
+
+					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
+						if (e.keyCode == keyAction.keys[j]) {
+							if (typeof(e.preventDefault) == "function") e.preventDefault();
+							keyAction.action(player, media, e.keyCode);
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
 		},
 
 		findTracks: function() {

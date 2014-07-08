@@ -394,6 +394,8 @@ package
 			
 			// resize
 			stage.addEventListener(FullScreenEvent.FULL_SCREEN, stageFullScreenChanged);	
+
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, stageKeyDown);
 		}
 		
 		public function setControlDepth():void {
@@ -690,6 +692,10 @@ package
 			if (e.target == stage) {
 				sendEvent("click", "");
 			}
+		}
+
+		function stageKeyDown(e:KeyboardEvent):void {
+			sendEvent(HtmlMediaEvent.KEYDOWN, "keyCode:'" + e.keyCode + "'");
 		}
 
 		function resizeHandler(e:Event):void {
