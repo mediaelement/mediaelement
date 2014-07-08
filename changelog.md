@@ -2,6 +2,8 @@
 
 *2.15.0 (2014/07 - in progress)*
 
+* support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
+* add Flash/HTTP Live Streaming Support (https://github.com/johndyer/mediaelement/pull/1066) [mangui]
 * Fix jQuery reference in plugin (https://github.com/johndyer/mediaelement/pull/1231) [blackbyte-pl]
 * Added plugin for Universal Google Analytics (https://github.com/johndyer/mediaelement/pull/1229) [louiedp3]
 * Implement keyboard accessibility (https://github.com/johndyer/mediaelement/pull/1221) [joedolson]
@@ -13,9 +15,10 @@
 * i18n : add French translation (https://github.com/johndyer/mediaelement/pull/1177) [kloh-fr]
 * IE8 layout (Adding width and height to .me-plugin) [peterh-capella]
 * Fixes #1113 - Youtube Playbutton on load hidden (https://github.com/johndyer/mediaelement/pull/1140) [LOK-Soft]
-* support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
-* add Flash/HTTP Live Streaming Support (https://github.com/johndyer/mediaelement/pull/1066) [mangui]
-
+* setVideoSize : verify this.pluginElement before this.pluginElement.style (https://github.com/johndyer/mediaelement/pull/1175) [bdecarne]
+* VideoElement.as: fix duration on setSrc (https://github.com/johndyer/mediaelement/pull/1127) [rounce]
+* don't hide controls when they're being hovered over (https://github.com/johndyer/mediaelement/pull/1121/files) [rounce]
+* flash: send keydown events up to javascript (https://github.com/johndyer/mediaelement/pull/1120) [rounce]
 
 *2.14.2 (2014/04/04)*
 
