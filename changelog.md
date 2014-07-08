@@ -14,7 +14,7 @@
 * IE8 layout (Adding width and height to .me-plugin) [peterh-capella]
 * Fixes #1113 - Youtube Playbutton on load hidden (https://github.com/johndyer/mediaelement/pull/1140) [LOK-Soft]
 * support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
-* Suport for HLS Streaming via Flash
+* add Flash/HTTP Live Streaming Support (https://github.com/johndyer/mediaelement/pull/1066) [mangui]
 
 
 *2.14.2 (2014/04/04)*
