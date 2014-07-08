@@ -213,7 +213,7 @@ mejs.PluginMediaElement.prototype = {
 	setVolume: function (volume) {
 		if (this.pluginApi != null) {
 			// same on YouTube and MEjs
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				this.pluginApi.setVolume(volume * 100);
 			} else {
 				this.pluginApi.setVolume(volume);
@@ -223,7 +223,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setMuted: function (muted) {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				if (muted) {
 					this.pluginApi.mute();
 				} else {
