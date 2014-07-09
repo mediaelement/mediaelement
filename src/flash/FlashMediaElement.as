@@ -207,8 +207,9 @@ package
 
 			// create media element
 			if (_isVideo) {
-        if (_mediaUrl.search(/(https?|file)\:\/\/.*?\.m3u8(\?.*)?/i) !== -1) {
-          _mediaElement = new HLSMediaElement(this, _autoplay, _preload, _timerRate, _startVolume);
+				if (_mediaUrl.search(/(https?|file)\:\/\/.*?\.m3u8(\?.*)?/i) !== -1) {
+					
+					_mediaElement = new HLSMediaElement(this, _autoplay, _preload, _timerRate, _startVolume);
 					_video = (_mediaElement as HLSMediaElement).video;
 					_video.width = _stageWidth;
 					_video.height = _stageHeight;
@@ -706,12 +707,12 @@ package
 			}
 		}
 
-		function stageKeyDown(e:KeyboardEvent):void {
+		public function stageKeyDown(e:KeyboardEvent):void {
 			sendEvent(HtmlMediaEvent.KEYDOWN, "keyCode:'" + e.keyCode + "'");
 		}
 
-		function resizeHandler(e:Event):void {
 		public function resizeHandler(e:Event):void {
+		
 			//_video.scaleX = stage.stageWidth / _stageWidth;
 			//_video.scaleY = stage.stageHeight / _stageHeight;
 			//positionControls();
