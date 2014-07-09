@@ -31,8 +31,8 @@ FLEXPATH=../../../../flex_sdk_4.6
 #FLEXPATH=../../../AIRSDK_Compiler
 
 ## flash/mediaelement.swf - debug
-## $FLEXPATH/bin/mxmlc -debug=true -strict=false -warnings=true ./FlashMediaElement.as -o ../../build/flashmediaelement-debug.swf -library-path+="$FLEXPATH/lib" -include-libraries+=./flashmediaelement.swc -include-libraries+=./HLSProvider.swc -use-network=true -headless-server -static-link-runtime-shared-libraries
+## $FLEXPATH/bin/mxmlc -debug=true -strict=false -warnings=true ./FlashMediaElement.as -o ../../build/flashmediaelement-debug.swf -library-path+="$FLEXPATH/lib" -include-libraries+=./flashmediaelement.swc -include-libraries+=./flashls.swc -use-network=true -headless-server -static-link-runtime-shared-libraries
 ##
 ## flash/mediaelement.swf - non-debug
-$FLEXPATH/bin/mxmlc -strict=false -warnings=true ./FlashMediaElement.as -o ../../build/flashmediaelement.swf -library-path+="$FLEXPATH/lib" -include-libraries+=./flashmediaelement.swc -include-libraries+=./HLSProvider.swc -use-network=true -headless-server -static-link-runtime-shared-libraries
+$FLEXPATH/bin/mxmlc -strict=false -warnings=true ./FlashMediaElement.as -o ../../build/flashmediaelement.swf -library-path+="$FLEXPATH/lib" -include-libraries+=./flashmediaelement.swc -include-libraries+=./flashls.swc -use-network=true -headless-server -static-link-runtime-shared-libraries
 ##
