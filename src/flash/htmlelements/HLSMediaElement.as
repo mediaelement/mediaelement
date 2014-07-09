@@ -3,10 +3,10 @@
   import flash.display.Sprite;
   import flash.media.Video;
   import flash.media.SoundTransform;
-  import org.mangui.HLS.HLS;
-  import org.mangui.HLS.HLSEvent;
-  import org.mangui.HLS.HLSPlayStates;
-  import org.mangui.HLS.utils.Log;
+  import org.mangui.hls.HLS;
+  import org.mangui.hls.HLSEvent;
+  import org.mangui.hls.HLSPlayStates;
+  import org.mangui.hls.utils.Log;
 
 public class HLSMediaElement extends Sprite implements IMediaElement {
 
