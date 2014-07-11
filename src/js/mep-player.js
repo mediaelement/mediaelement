@@ -28,6 +28,9 @@
 			return (media.duration * 0.05);
 		},
 
+		// set dimensions via JS instead of CSS
+		setDimensions: true,
+
 		// width of audio player
 		audioWidth: -1,
 		// height of audio player
@@ -338,32 +341,34 @@
 					capsTagName = tagType.substring(0,1).toUpperCase() + tagType.substring(1);
 
 
-				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
-					t.width = t.options[tagType + 'Width'];
-				} else if (t.media.style.width !== '' && t.media.style.width !== null) {
-					t.width = t.media.style.width;
-				} else if (t.media.getAttribute('width') !== null) {
-					t.width = t.$media.attr('width');
-				} else {
-					t.width = t.options['default' + capsTagName + 'Width'];
+				if( t.options.setDimensions ) {
+					if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
+						t.width = t.options[tagType + 'Width'];
+					} else if (t.media.style.width !== '' && t.media.style.width !== null) {
+						t.width = t.media.style.width;
+					} else if (t.media.getAttribute('width') !== null) {
+						t.width = t.$media.attr('width');
+					} else {
+						t.width = t.options['default' + capsTagName + 'Width'];
+					}
+
+					if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
+						t.height = t.options[tagType + 'Height'];
+					} else if (t.media.style.height !== '' && t.media.style.height !== null) {
+						t.height = t.media.style.height;
+					} else if (t.$media[0].getAttribute('height') !== null) {
+						t.height = t.$media.attr('height');
+					} else {
+						t.height = t.options['default' + capsTagName + 'Height'];
+					}
+
+					// set the size, while we wait for the plugins to load below
+					t.setPlayerSize(t.width, t.height);
+
+					// create MediaElementShim
+					meOptions.pluginWidth = t.width;
+					meOptions.pluginHeight = t.height;
 				}
-
-				if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
-					t.height = t.options[tagType + 'Height'];
-				} else if (t.media.style.height !== '' && t.media.style.height !== null) {
-					t.height = t.media.style.height;
-				} else if (t.$media[0].getAttribute('height') !== null) {
-					t.height = t.$media.attr('height');
-				} else {
-					t.height = t.options['default' + capsTagName + 'Height'];
-				}
-
-				// set the size, while we wait for the plugins to load below
-				t.setPlayerSize(t.width, t.height);
-
-				// create MediaElementShim
-				meOptions.pluginWidth = t.width;
-				meOptions.pluginHeight = t.height;
 			}
 
 			// create MediaElement shim
@@ -727,9 +732,9 @@
 					t.setControlsSize();
 				});
 
-				// TEMP: needs to be moved somewhere else 
+				// TEMP: needs to be moved somewhere else
 				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
-				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load 
+				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
