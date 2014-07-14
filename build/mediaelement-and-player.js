@@ -15,7 +15,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.14.1'; 
+mejs.version = '2.15.0'; 
 
 
 // player number (for missing, same id attr)
@@ -27,7 +27,7 @@ mejs.plugins = {
 		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/m4a','audio/mp3','audio/wav','audio/mpeg']}
 	],
 	flash: [
-		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg', 'video/youtube', 'video/x-youtube']}
+		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg', 'video/youtube', 'video/x-youtube', 'application/x-mpegURL']}
 		//,{version: [12,0], types: ['video/webm']} // for future reference (hopefully!)
 	],
 	youtube: [
@@ -320,6 +320,7 @@ mejs.MediaFeatures = {
 		t.isBustedNativeHTTPS = (location.protocol === 'https:' && (ua.match(/android [12]\./) !== null || ua.match(/macintosh.* version.* safari/) !== null));
 		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		t.isChrome = (ua.match(/chrome/gi) !== null);
+		t.isChromium = (ua.match(/chromium/gi) !== null);
 		t.isFirefox = (ua.match(/firefox/gi) !== null);
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit && !t.isIE;
@@ -651,7 +652,7 @@ mejs.PluginMediaElement.prototype = {
 	setVolume: function (volume) {
 		if (this.pluginApi != null) {
 			// same on YouTube and MEjs
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				this.pluginApi.setVolume(volume * 100);
 			} else {
 				this.pluginApi.setVolume(volume);
@@ -661,7 +662,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setMuted: function (muted) {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				if (muted) {
 					this.pluginApi.mute();
 				} else {
@@ -680,7 +681,7 @@ mejs.PluginMediaElement.prototype = {
 	setVideoSize: function (width, height) {
 		
 		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if ( this.pluginElement.style) {
+			if (this.pluginElement && this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
@@ -1032,6 +1033,12 @@ mejs.HtmlMediaElementShim = {
 			};
 		}		
 		
+		// special case for Chromium to specify natively supported video codecs (i.e. WebM and Theora) 
+		if (mejs.MediaFeatures.isChromium) { 
+			htmlMediaElement.canPlayType = function(type) { 
+				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : ''; 
+			}; 
+		}
 
 		// test for native playback first
 		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')  && !(mejs.MediaFeatures.isBustedNativeHTTPS && options.httpsBasicAuthSite === true)) {
@@ -1049,7 +1056,7 @@ mejs.HtmlMediaElementShim = {
 				
 			for (i=0; i<mediaFiles.length; i++) {
 				// normal check
-				if (htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== '' 
+				if (mediaFiles[i].type == "video/m3u8" || htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== ''
 					// special case for Mac/Safari 5.0.3 which answers '' to canPlayType('audio/mp3') but 'maybe' to canPlayType('audio/mpeg')
 					|| htmlMediaElement.canPlayType(mediaFiles[i].type.replace(/mp3/,'mpeg')).replace(/no/, '') !== ''
 					// special case for m4a supported by detecting mp4 support
@@ -1146,7 +1153,7 @@ mejs.HtmlMediaElementShim = {
 	getTypeFromFile: function(url) {
 		url = url.split('?')[0];
 		var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-		return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + this.getTypeFromExtension(ext);
+		return (/(mp4|m4v|ogg|ogv|m3u8|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + this.getTypeFromExtension(ext);
 	},
 	
 	getTypeFromExtension: function(ext) {
@@ -1386,15 +1393,33 @@ mejs.HtmlMediaElementShim = {
 				if (typeof($f) == 'function') { // froogaloop available
 					var player = $f(container.childNodes[0]);
 					player.addEvent('ready', function() {
-						player.playVideo = function() {
-							player.api('play');
-						};
-						player.pauseVideo = function() {
-							player.api('pause');
-						};
-                                                player.seekTo = function(seconds) {
-                                                        player.api('seekTo', seconds);
-                                                };
+						$.extend( player, {
+							playVideo: function() {
+								player.api( 'play' );
+							}, 
+							stopVideo: function() {
+								player.api( 'unload' );
+							}, 
+							pauseVideo: function() {
+								player.api( 'pause' );
+							}, 
+							seekTo: function( seconds ) {
+								player.api( 'seekTo', seconds );
+							}, 
+							setVolume: function( volume ) {
+								player.api( 'setVolume', volume );
+							}, 
+							setMuted: function( muted ) {
+								if( muted ) {
+									player.lastVolume = player.api( 'getVolume' );
+									player.api( 'setVolume', 0 );
+								} else {
+									player.api( 'setVolume', player.lastVolume );
+									delete player.lastVolume;
+								}
+							}
+						});
+
 						function createEvent(player, pluginMediaElement, eventName, e) {
 							var obj = {
 								type: eventName,
@@ -1406,10 +1431,12 @@ mejs.HtmlMediaElementShim = {
 							}
 							pluginMediaElement.dispatchEvent(obj.type, obj);
 						}
+
 						player.addEvent('play', function() {
 							createEvent(player, pluginMediaElement, 'play');
 							createEvent(player, pluginMediaElement, 'playing');
 						});
+
 						player.addEvent('pause', function() {
 							createEvent(player, pluginMediaElement, 'pause');
 						});
@@ -1417,14 +1444,16 @@ mejs.HtmlMediaElementShim = {
 						player.addEvent('finish', function() {
 							createEvent(player, pluginMediaElement, 'ended');
 						});
+
 						player.addEvent('playProgress', function(e) {
 							createEvent(player, pluginMediaElement, 'timeupdate', e);
 						});
+
+						pluginMediaElement.pluginElement = container;
 						pluginMediaElement.pluginApi = player;
 
 						// init mejs
 						mejs.MediaPluginBridge.initPlugin(pluginid);
-
 					});
 				}
 				else {
@@ -2001,8 +2030,8 @@ if (typeof jQuery != 'undefined') {
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
-        // Enable click video element to toggle play/pause
-        clickToPlayPause: true,
+		// Enable click video element to toggle play/pause
+		clickToPlayPause: true,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -2010,7 +2039,7 @@ if (typeof jQuery != 'undefined') {
 		// force Android's native controls
 		AndroidUseNativeControls: false,
 		// features to show
-		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
+		features: ['playpause','current','progress','duration','speed','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
         
@@ -2043,6 +2072,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [38], // UP
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.min(media.volume + 0.1, 1);
 								media.setVolume(newVolume);
 						}
@@ -2050,6 +2085,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [40], // DOWN
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.max(media.volume - 0.1, 0);
 								media.setVolume(newVolume);
 						}
@@ -2091,7 +2132,7 @@ if (typeof jQuery != 'undefined') {
 						}
 				},
 				{
-						keys: [70], // f
+						keys: [70], // F
 						action: function(player, media) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
@@ -2099,6 +2140,21 @@ if (typeof jQuery != 'undefined') {
 										} else {
 												player.enterFullScreen();
 										}
+								}
+						}
+				},
+				{
+						keys: [77], // M
+						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+								if (player.media.muted) {
+										player.setMuted(false);
+								} else {
+										player.setMuted(true);
 								}
 						}
 				}
@@ -2534,7 +2590,7 @@ if (typeof jQuery != 'undefined') {
 						t.container
 							.bind('mouseenter mouseover', function () {
 								if (t.controlsEnabled) {
-									if (!t.options.alwaysShowControls) {
+									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
 										t.startControlsTimer(2500);
@@ -2546,7 +2602,6 @@ if (typeof jQuery != 'undefined') {
 									if (!t.controlsAreVisible) {
 										t.showControls();
 									}
-									//t.killControlsTimer('move');
 									if (!t.options.alwaysShowControls) {
 										t.startControlsTimer(2500);
 									}
@@ -2662,8 +2717,9 @@ if (typeof jQuery != 'undefined') {
 					t.setControlsSize();
 				});
 
-				// TEMP: needs to be moved somewhere else
-				if (t.media.pluginType == 'youtube') {
+				// TEMP: needs to be moved somewhere else 
+				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
+				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load 
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
@@ -2736,8 +2792,9 @@ if (typeof jQuery != 'undefined') {
         
         setResponsiveMode: function() {
         	// do we have the native dimensions yet?
-				var t = this,
-					nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
+            var t = this;
+            if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+					var nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
 					nativeHeight = t.isVideo ? ((t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight) : t.options.defaultAudioHeight,
 					parentWidth = t.container.parent().closest(':visible').width(),
 					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
@@ -2775,6 +2832,7 @@ if (typeof jQuery != 'undefined') {
 						.width('100%')
 						.height('100%');
 				}
+            }
         },
         
         setFillMode: function(centerOptions) {
@@ -2861,7 +2919,7 @@ if (typeof jQuery != 'undefined') {
 				others = rail.siblings(),
 				lastControl = others.last(),
 				lastControlPosition = null;
-				
+
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
 				return;
@@ -2889,22 +2947,22 @@ if (typeof jQuery != 'undefined') {
 				// fit the rail into the remaining space
 				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
 			}
-			
+
 			// resize the rail,
 			// but then check if the last control (say, the fullscreen button) got pushed down
 			// this often happens when zoomed
-			do {				
+			do {
 				// outer area
 				rail.width(railWidth);
 				// dark space
-				total.width(railWidth - (total.outerWidth(true) - total.width()));				
-	
+				total.width(railWidth - (total.outerWidth(true) - total.width()));
+
 				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.position();				
-					railWidth--;			
+					lastControlPosition = lastControl.position();
+					railWidth--;
 				}
 			} while (lastControlPosition != null && lastControlPosition.top > 0 && railWidth > 0);
-			
+
 			if (t.setProgressRail)
 				t.setProgressRail();
 			if (t.setCurrentRail)
@@ -2980,7 +3038,7 @@ if (typeof jQuery != 'undefined') {
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
-				.bind('click touchstart', function() {
+				.bind('click', function() {  // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
 							media.play();
@@ -3054,6 +3112,10 @@ if (typeof jQuery != 'undefined') {
 				error.show();
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);
+
+			media.addEventListener('keydown', function(e) {
+				t.onkeydown(player, media, e);
+			}, false);
 		},
 
 		buildkeyboard: function(player, controls, layers, media) {
@@ -3062,24 +3124,7 @@ if (typeof jQuery != 'undefined') {
 
 				// listen for key presses
 				t.globalBind('keydown', function(e) {
-
-						if (player.hasFocus && player.options.enableKeyboard) {
-
-								// find a matching key
-								for (var i=0, il=player.options.keyActions.length; i<il; i++) {
-										var keyAction = player.options.keyActions[i];
-
-										for (var j=0, jl=keyAction.keys.length; j<jl; j++) {
-												if (e.keyCode == keyAction.keys[j]) {
-														e.preventDefault();
-														keyAction.action(player, media, e.keyCode);
-														return false;
-												}
-										}
-								}
-						}
-
-						return true;
+					return t.onkeydown(player, media, e);
 				});
 
 				// check if someone clicked outside a player region, then kill its focus
@@ -3087,6 +3132,24 @@ if (typeof jQuery != 'undefined') {
 					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
 				});
 
+		},
+		onkeydown: function(player, media, e) {
+			if (player.hasFocus && player.options.enableKeyboard) {
+				// find a matching key
+				for (var i = 0, il = player.options.keyActions.length; i < il; i++) {
+					var keyAction = player.options.keyActions[i];
+
+					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
+						if (e.keyCode == keyAction.keys[j]) {
+							if (typeof(e.preventDefault) == "function") e.preventDefault();
+							keyAction.action(player, media, e.keyCode);
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
 		},
 
 		findTracks: function() {
@@ -3172,7 +3235,7 @@ if (typeof jQuery != 'undefined') {
 				// detach events from the video
 				// TODO: detach event listeners better than this;
 				//       also detach ONLY the events attached by this plugin!
-				t.$node.clone().show().insertBefore(t.container);
+				t.$node.clone().insertBefore(t.container).show();
 				t.$node.remove();
 			} else {
 				t.$node.insertBefore(t.container);
@@ -3230,30 +3293,31 @@ if (typeof jQuery != 'undefined') {
 	})();
 
 	// turn into jQuery plugin
-	if (typeof jQuery != 'undefined') {
-		jQuery.fn.mediaelementplayer = function (options) {
+	if (typeof $ != 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
-					var player = jQuery(this).data('mediaelementplayer');
+					var player = $(this).data('mediaelementplayer');
 					if (player) {
 						player.remove();
 					}
-					jQuery(this).removeData('mediaelementplayer');
+					$(this).removeData('mediaelementplayer');
 				});
 			}
 			else {
 				this.each(function () {
-					jQuery(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
+					$(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
 				});
 			}
 			return this;
 		};
-	}
 
-	$(document).ready(function() {
-		// auto enable using JSON attribute
-		$('.mejs-player').mediaelementplayer();
-	});
+
+		$(document).ready(function() {
+			// auto enable using JSON attribute
+			$('.mejs-player').mediaelementplayer();
+		});
+	}
 
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
@@ -4251,6 +4315,9 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = true;
+
+			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
+			t.container.find('.mejs-captions-position').css('bottom', '45px');
 		},
 
 		exitFullScreen: function() {
@@ -4303,6 +4370,73 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = false;
+
+			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-position').css('bottom', '');
+		}
+	});
+
+})(mejs.$);
+
+(function($) {
+
+	// Speed
+	$.extend(mejs.MepDefaults, {
+
+		speeds: ['1.50', '1.25', '1.00', '0.75'],
+
+		speedStyle: {'1.50': 'mejs-speed-150', '1.25': 'mejs-speed-125', '1.00': 'mejs-speed-100', '0.75': 'mejs-speed-075'},
+
+		defaultSpeed: '1.00'
+
+	});
+
+	$.extend(MediaElementPlayer.prototype, {
+
+		buildspeed: function(player, controls, layers, media) {
+			if (!player.isVideo)
+				return;
+
+			var t = this;
+
+			if (t.media.pluginType == 'native') {
+				var s = '<div class="mejs-button mejs-speed-button mejs-speed-100"><button type="button"></button><div class="mejs-speed-selector"><ul>';
+				var i;
+				for (i = 0; i < t.options.speeds.length; i++) {
+					s += '<li><input type="radio" name="speed" value="' + t.options.speeds[i] + '" id="' + t.options.speeds[i] + '" ';
+					if (t.options.speeds[i] == t.options.defaultSpeed) {
+						s += 'checked=true ';
+						s += '/><label for="' + t.options.speeds[i] + '" class="mejs-speed-selected">'+ t.options.speeds[i] + 'x</label></li>';
+					} else {
+						s += '/><label for="' + t.options.speeds[i] + '">'+ t.options.speeds[i] + 'x</label></li>';
+					}
+				}
+				s += '</ul></div></div>';
+
+				player.speedButton = $(s).appendTo(controls);
+
+				player.speedButton.hover(function() {
+					$(this).find('.mejs-speed-selector').css('visibility', 'visible');
+				}, function() {
+					$(this).find('.mejs-speed-selector').css('visibility', 'hidden');
+				})
+				.on('click', 'input[type=radio]', function() {
+					var lastSpeed = t.options.speedStyle[player.playbackspeed];
+					player.playbackspeed = $(this).attr('value');
+					media.playbackRate = parseFloat($(this).attr('value'));
+					player.speedButton.removeClass(lastSpeed).addClass(t.options.speedStyle[player.playbackspeed]);
+					player.speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
+					player.speedButton.find('input[type=radio]:checked').next().addClass('mejs-speed-selected');
+				});
+
+				player.speedButton.find('li').hover(function() {
+					$(this).css('background-color', 'linear-gradient(rgba(44,124,145,0.8), rgba(78,183,212,0.8))');
+				}, function() {
+					$(this).css('background-color', 'rgba(50,50,50,0)');
+				});
+
+				player.speedButton.find('.mejs-speed-selector').height(this.speedButton.find('.mejs-speed-selector ul').outerHeight(true) + player.speedButton.find('.mejs-speed-translations').outerHeight(true));
+			}
 		}
 	});
 
@@ -4385,19 +4519,21 @@ if (typeof jQuery != 'undefined') {
 					player.setTrack(lang);
 				});
 			} else {
-				// hover
-				player.captionsButton.hover(function() {
+				// hover or keyboard focus
+				player.captionsButton.on( 'mouseenter focusin', function() {
 					$(this).find('.mejs-captions-selector').css('visibility','visible');
-				}, function() {
-					$(this).find('.mejs-captions-selector').css('visibility','hidden');
 				})
 
 				// handle clicks to the language radio buttons
 				.on('click','input[type=radio]',function() {
 					lang = this.value;
 					player.setTrack(lang);
-				});
+				});	
 
+				player.captionsButton.on( 'mouseleave focusout', function() {
+					$(this).find(".mejs-captions-selector").css("visibility","hidden")
+				});
+				
 			}
 
 			if (!player.options.alwaysShowControls) {

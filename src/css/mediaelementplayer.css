@@ -17,6 +17,8 @@
 
 .me-plugin {
 	position: absolute;
+	height: 0;
+	width: 0;
 }
 
 .mejs-embed, .mejs-embed body {
@@ -549,13 +551,13 @@
 	visibility: hidden;
 	position: absolute;
 	bottom: 26px;
-	right: -10px;
-	width: 130px;
+	right: -51px;
+	width: 85px;
 	height: 100px;
 	background: url(background.png);
 	background: rgba(50,50,50,0.7);
 	border: solid 1px transparent;
-	padding: 10px;
+	padding: 10px 10px 0 10px;
 	overflow: hidden;
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
@@ -592,7 +594,7 @@
 }
 
 .mejs-controls .mejs-captions-button .mejs-captions-selector ul li label {
-	width: 100px;
+	width: 55px;
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
@@ -680,8 +682,8 @@
 	bottom: 0;
 	left: 0;
 	text-align:center;
-	line-height: 22px;
-	font-size: 12px;
+	line-height: 20px;
+	font-size: 16px;
 	color: #fff;
 }
 
@@ -703,13 +705,13 @@
 }
 
 .mejs-captions-position-hover {
-	bottom: 45px;
+	bottom: 35px;
 }
 
 .mejs-captions-text {
 	padding: 3px 5px;
 	background: url(background.png);
-	background: rgba(20, 20, 20, 0.8);
+	background: rgba(20, 20, 20, 0.5);
 
 }
 /* End: Track (Captions and Chapters) */
@@ -876,3 +878,92 @@
 	cursor: pointer;
 }
 /* End: Postroll */
+
+
+/* Start: Speed */
+.mejs-controls .mejs-speed-100 button {
+	background: transparent url(speed.svg) no-repeat!important;
+	background-position: 0 0 !important;
+	width: 32px;
+}
+
+.mejs-controls .mejs-speed-075 button {
+	background: transparent url(speed.svg) no-repeat!important;
+	background-position: -32px 0 !important;
+	width: 32px;
+
+}
+
+.mejs-controls .mejs-speed-125 button {
+	background: transparent url(speed.svg) no-repeat!important;
+	background-position: -64px 0 !important;
+	width: 32px;
+}
+
+.mejs-controls .mejs-speed-150 button {
+	background: transparent url(speed.svg) no-repeat!important;
+	background-position: -96px 0 !important;
+	width: 32px;
+}
+
+div.mejs-speed-button {
+	width: 42px !important;
+	position: relative;
+}
+
+.mejs-controls .mejs-speed-button .mejs-speed-selector {
+	visibility: hidden;
+	position: absolute;
+	top: -110px;
+	left: -10px;
+	width: 40px;
+	height: 100px;
+	background: url(background.png);
+	background: rgba(50, 50, 50, 0.7);
+	border: solid 1px transparent;
+	padding: 10px 10px 0 10px;
+	overflow: hidden;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+.mejs-controls .mejs-speed-button .mejs-speed-selector ul li label.mejs-speed-selected {
+	color: rgba(33, 248, 248, 1);
+}
+
+.mejs-controls .mejs-speed-button .mejs-speed-selector ul {
+	margin: 0;
+	padding: 0;
+	display: block;
+	list-style-type: none !important;
+	overflow: hidden;
+}
+
+.mejs-controls .mejs-speed-button .mejs-speed-selector ul li {
+	margin: 0 0 6px 0;
+	padding: 0;
+	list-style-type: none !important;
+	display: block;
+	color: #fff;
+	overflow: hidden;
+}
+
+.mejs-controls .mejs-speed-button .mejs-speed-selector ul li input {
+	clear: both;
+	float: left;
+	margin: 3px 3px 0 5px;
+	display: none;
+}
+
+.mejs-controls .mejs-speed-button .mejs-speed-selector ul li label {
+	width: 60px;
+	float: left;
+	padding: 4px 0 0 0;
+	line-height: 15px;
+	font-family: helvetica, arial;
+	font-size: 11.5px;
+	color: white;
+	margin-left: 5px;
+}
+/* End: Speed */
