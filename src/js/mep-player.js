@@ -341,34 +341,33 @@
 					capsTagName = tagType.substring(0,1).toUpperCase() + tagType.substring(1);
 
 
-				if( t.options.setDimensions ) {
-					if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
-						t.width = t.options[tagType + 'Width'];
-					} else if (t.media.style.width !== '' && t.media.style.width !== null) {
-						t.width = t.media.style.width;
-					} else if (t.media.getAttribute('width') !== null) {
-						t.width = t.$media.attr('width');
-					} else {
-						t.width = t.options['default' + capsTagName + 'Width'];
-					}
 
-					if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
-						t.height = t.options[tagType + 'Height'];
-					} else if (t.media.style.height !== '' && t.media.style.height !== null) {
-						t.height = t.media.style.height;
-					} else if (t.$media[0].getAttribute('height') !== null) {
-						t.height = t.$media.attr('height');
-					} else {
-						t.height = t.options['default' + capsTagName + 'Height'];
-					}
-
-					// set the size, while we wait for the plugins to load below
-					t.setPlayerSize(t.width, t.height);
-
-					// create MediaElementShim
-					meOptions.pluginWidth = t.width;
-					meOptions.pluginHeight = t.height;
+				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
+					t.width = t.options[tagType + 'Width'];
+				} else if (t.media.style.width !== '' && t.media.style.width !== null) {
+					t.width = t.media.style.width;
+				} else if (t.media.getAttribute('width') !== null) {
+					t.width = t.$media.attr('width');
+				} else {
+					t.width = t.options['default' + capsTagName + 'Width'];
 				}
+
+				if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
+					t.height = t.options[tagType + 'Height'];
+				} else if (t.media.style.height !== '' && t.media.style.height !== null) {
+					t.height = t.media.style.height;
+				} else if (t.$media[0].getAttribute('height') !== null) {
+					t.height = t.$media.attr('height');
+				} else {
+					t.height = t.options['default' + capsTagName + 'Height'];
+				}
+
+				// set the size, while we wait for the plugins to load below
+				t.setPlayerSize(t.width, t.height);
+
+				// create MediaElementShim
+				meOptions.pluginWidth = t.width;
+				meOptions.pluginHeight = t.height;
 			}
 
 			// create MediaElement shim
@@ -768,6 +767,10 @@
 
 		setPlayerSize: function(width,height) {
 			var t = this;
+
+			if( !t.options.setDimensions ) {
+				return false;
+			}
 
 			if (typeof width != 'undefined') {
 				t.width = width;
