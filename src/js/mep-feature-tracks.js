@@ -367,7 +367,7 @@
 				
 			if (typeof img == 'undefined' || typeof img.fadeIn == 'undefined') {
 
-				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
+				t.slides.entries.imgs[index] = img = $('<img src="' + url + '" alt="">')
 						.on('load', function() {
 							img.appendTo(t.slidesContainer)
 								.hide()
