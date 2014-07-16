@@ -40,11 +40,7 @@
 					}
 				};
 
-				if (mejs.MediaFeatures.hasMozNativeFullScreen) {
-					player.globalBind(mejs.MediaFeatures.fullScreenEventName, func);
-				} else {
-					player.container.bind(mejs.MediaFeatures.fullScreenEventName, func);
-				}
+				player.globalBind(mejs.MediaFeatures.fullScreenEventName, func);
 			}
 
 			var t = this,
