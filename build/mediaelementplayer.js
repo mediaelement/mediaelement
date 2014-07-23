@@ -70,8 +70,8 @@ if (typeof jQuery != 'undefined') {
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
-        // Enable click video element to toggle play/pause
-        clickToPlayPause: true,
+		// Enable click video element to toggle play/pause
+		clickToPlayPause: true,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -79,7 +79,7 @@ if (typeof jQuery != 'undefined') {
 		// force Android's native controls
 		AndroidUseNativeControls: false,
 		// features to show
-		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
+		features: ['playpause','current','progress','duration','speed','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
 
@@ -107,6 +107,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [38], // UP
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.min(media.volume + 0.1, 1);
 								media.setVolume(newVolume);
 						}
@@ -114,6 +120,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [40], // DOWN
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.max(media.volume - 0.1, 0);
 								media.setVolume(newVolume);
 						}
@@ -155,7 +167,7 @@ if (typeof jQuery != 'undefined') {
 						}
 				},
 				{
-						keys: [70], // f
+						keys: [70], // F
 						action: function(player, media) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
@@ -163,6 +175,21 @@ if (typeof jQuery != 'undefined') {
 										} else {
 												player.enterFullScreen();
 										}
+								}
+						}
+				},
+				{
+						keys: [77], // M
+						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+								if (player.media.muted) {
+										player.setMuted(false);
+								} else {
+										player.setMuted(true);
 								}
 						}
 				}
@@ -456,7 +483,7 @@ if (typeof jQuery != 'undefined') {
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function() {
-				//console.log('timer fired');
+				//
 				t.hideControls();
 				t.killControlsTimer('hide');
 			}, timeout);
@@ -532,8 +559,8 @@ if (typeof jQuery != 'undefined') {
 						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							console.log('error building ' + feature);
-							console.log(e);
+							
+							
 						}
 					}
 				}
@@ -571,7 +598,7 @@ if (typeof jQuery != 'undefined') {
 						// create callback here since it needs access to current
 						// MediaElement object
 						t.clickToPlayPauseCallback = function() {
-							//console.log('media clicked', t.media, t.media.paused);
+							//
 
 							if (t.options.clickToPlayPause) {
 								if (t.media.paused) {
@@ -589,7 +616,7 @@ if (typeof jQuery != 'undefined') {
 						t.container
 							.bind('mouseenter mouseover', function () {
 								if (t.controlsEnabled) {
-									if (!t.options.alwaysShowControls) {
+									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
 										t.startControlsTimer(2500);
@@ -601,7 +628,6 @@ if (typeof jQuery != 'undefined') {
 									if (!t.controlsAreVisible) {
 										t.showControls();
 									}
-									//t.killControlsTimer('move');
 									if (!t.options.alwaysShowControls) {
 										t.startControlsTimer(2500);
 									}
@@ -717,8 +743,9 @@ if (typeof jQuery != 'undefined') {
 					t.setControlsSize();
 				});
 
-				// TEMP: needs to be moved somewhere else
-				if (t.media.pluginType == 'youtube') {
+				// TEMP: needs to be moved somewhere else 
+				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
+				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load 
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
@@ -762,7 +789,7 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-      		if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 
 				// do we have the native dimensions yet?
 				var
@@ -838,7 +865,7 @@ if (typeof jQuery != 'undefined') {
 				others = rail.siblings(),
 				lastControl = others.last(),
 				lastControlPosition = null;
-				
+
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
 				return;
@@ -866,22 +893,22 @@ if (typeof jQuery != 'undefined') {
 				// fit the rail into the remaining space
 				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
 			}
-			
+
 			// resize the rail,
 			// but then check if the last control (say, the fullscreen button) got pushed down
 			// this often happens when zoomed
-			do {				
+			do {
 				// outer area
 				rail.width(railWidth);
 				// dark space
-				total.width(railWidth - (total.outerWidth(true) - total.width()));				
-				
+				total.width(railWidth - (total.outerWidth(true) - total.width()));
+
 				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.position();				
-					railWidth--;			
+					lastControlPosition = lastControl.position();
+					railWidth--;
 				}
 			} while (lastControlPosition != null && lastControlPosition.top > 0 && railWidth > 0);
-			
+
 			if (t.setProgressRail)
 				t.setProgressRail();
 			if (t.setCurrentRail)
@@ -957,7 +984,7 @@ if (typeof jQuery != 'undefined') {
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
-				.bind('click touchstart', function() {
+				.bind('click', function() {  // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
 							media.play();
@@ -1031,6 +1058,10 @@ if (typeof jQuery != 'undefined') {
 				error.show();
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);
+
+			media.addEventListener('keydown', function(e) {
+				t.onkeydown(player, media, e);
+			}, false);
 		},
 
 		buildkeyboard: function(player, controls, layers, media) {
@@ -1039,24 +1070,7 @@ if (typeof jQuery != 'undefined') {
 
 				// listen for key presses
 				t.globalBind('keydown', function(e) {
-
-						if (player.hasFocus && player.options.enableKeyboard) {
-
-								// find a matching key
-								for (var i=0, il=player.options.keyActions.length; i<il; i++) {
-										var keyAction = player.options.keyActions[i];
-
-										for (var j=0, jl=keyAction.keys.length; j<jl; j++) {
-												if (e.keyCode == keyAction.keys[j]) {
-														e.preventDefault();
-														keyAction.action(player, media, e.keyCode);
-														return false;
-												}
-										}
-								}
-						}
-
-						return true;
+					return t.onkeydown(player, media, e);
 				});
 
 				// check if someone clicked outside a player region, then kill its focus
@@ -1064,6 +1078,24 @@ if (typeof jQuery != 'undefined') {
 					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
 				});
 
+		},
+		onkeydown: function(player, media, e) {
+			if (player.hasFocus && player.options.enableKeyboard) {
+				// find a matching key
+				for (var i = 0, il = player.options.keyActions.length; i < il; i++) {
+					var keyAction = player.options.keyActions[i];
+
+					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
+						if (e.keyCode == keyAction.keys[j]) {
+							if (typeof(e.preventDefault) == "function") e.preventDefault();
+							keyAction.action(player, media, e.keyCode);
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
 		},
 
 		findTracks: function() {
@@ -1137,8 +1169,8 @@ if (typeof jQuery != 'undefined') {
 					} catch (e) {
 						// TODO: report control error
 						//throw e;
-						//console.log('error building ' + feature);
-						//console.log(e);
+						//
+						//
 					}
 				}
 			}
@@ -1149,7 +1181,7 @@ if (typeof jQuery != 'undefined') {
 				// detach events from the video
 				// TODO: detach event listeners better than this;
 				//       also detach ONLY the events attached by this plugin!
-				t.$node.clone().show().insertBefore(t.container);
+				t.$node.clone().insertBefore(t.container).show();
 				t.$node.remove();
 			} else {
 				t.$node.insertBefore(t.container);
@@ -1207,30 +1239,31 @@ if (typeof jQuery != 'undefined') {
 	})();
 
 	// turn into jQuery plugin
-	if (typeof jQuery != 'undefined') {
-		jQuery.fn.mediaelementplayer = function (options) {
+	if (typeof $ != 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
-					var player = jQuery(this).data('mediaelementplayer');
+					var player = $(this).data('mediaelementplayer');
 					if (player) {
 						player.remove();
 					}
-					jQuery(this).removeData('mediaelementplayer');
+					$(this).removeData('mediaelementplayer');
 				});
 			}
 			else {
 				this.each(function () {
-					jQuery(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
+					$(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
 				});
 			}
 			return this;
 		};
-	}
 
-	$(document).ready(function() {
-		// auto enable using JSON attribute
-		$('.mejs-player').mediaelementplayer();
-	});
+
+		$(document).ready(function() {
+			// auto enable using JSON attribute
+			$('.mejs-player').mediaelementplayer();
+		});
+	}
 
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
@@ -1900,7 +1933,7 @@ if (typeof jQuery != 'undefined') {
 							return !!supports;
 						})();
 
-					//console.log('supportsPointerEvents', supportsPointerEvents);
+					//
 
 					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this :(
 
@@ -2228,6 +2261,9 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = true;
+
+			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
+			t.container.find('.mejs-captions-position').css('bottom', '45px');
 		},
 
 		exitFullScreen: function() {
@@ -2280,6 +2316,73 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = false;
+
+			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-position').css('bottom', '');
+		}
+	});
+
+})(mejs.$);
+
+(function($) {
+
+	// Speed
+	$.extend(mejs.MepDefaults, {
+
+		speeds: ['1.50', '1.25', '1.00', '0.75'],
+
+		defaultSpeed: '1.00'
+
+	});
+
+	$.extend(MediaElementPlayer.prototype, {
+
+		buildspeed: function(player, controls, layers, media) {
+			if (!player.isVideo)
+				return;
+
+			var t = this;
+
+			if (t.media.pluginType == 'native') {
+				var s = '<div class="mejs-button mejs-speed-button"><button type="button">'+t.options.defaultSpeed+'x</button><div class="mejs-speed-selector"><ul>';
+				var i, ss;
+
+				if ($.inArray(t.options.defaultSpeed, t.options.speeds) === -1) {
+					t.options.speeds.push(t.options.defaultSpeed);
+				}
+
+				t.options.speeds.sort(function(a, b) {
+					return parseFloat(b) - parseFloat(a);
+				});
+
+				for (i = 0; i < t.options.speeds.length; i++) {
+					s += '<li><input type="radio" name="speed" value="' + t.options.speeds[i] + '" id="' + t.options.speeds[i] + '" ';
+					if (t.options.speeds[i] == t.options.defaultSpeed) {
+						s += 'checked=true ';
+						s += '/><label for="' + t.options.speeds[i] + '" class="mejs-speed-selected">'+ t.options.speeds[i] + 'x</label></li>';
+					} else {
+						s += '/><label for="' + t.options.speeds[i] + '">'+ t.options.speeds[i] + 'x</label></li>';
+					}
+				}
+				s += '</ul></div></div>';
+
+				player.speedButton = $(s).appendTo(controls);
+
+				player.playbackspeed = t.options.defaultSpeed;
+
+				player.speedButton
+				.on('click', 'input[type=radio]', function() {
+					player.playbackspeed = $(this).attr('value');
+					media.playbackRate = parseFloat(player.playbackspeed);
+					player.speedButton.find('button').text(player.playbackspeed + 'x');
+					player.speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
+					player.speedButton.find('input[type=radio]:checked').next().addClass('mejs-speed-selected');
+				});
+
+				ss = player.speedButton.find('.mejs-speed-selector');
+				ss.height(this.speedButton.find('.mejs-speed-selector ul').outerHeight(true) + player.speedButton.find('.mejs-speed-translations').outerHeight(true));
+				ss.css('top', (-1 * ss.height()) + 'px');
+			}
 		}
 	});
 
@@ -2362,19 +2465,21 @@ if (typeof jQuery != 'undefined') {
 					player.setTrack(lang);
 				});
 			} else {
-				// hover
-				player.captionsButton.hover(function() {
+				// hover or keyboard focus
+				player.captionsButton.on( 'mouseenter focusin', function() {
 					$(this).find('.mejs-captions-selector').css('visibility','visible');
-				}, function() {
-					$(this).find('.mejs-captions-selector').css('visibility','hidden');
 				})
 
 				// handle clicks to the language radio buttons
 				.on('click','input[type=radio]',function() {
 					lang = this.value;
 					player.setTrack(lang);
-				});
+				});	
 
+				player.captionsButton.on( 'mouseleave focusout', function() {
+					$(this).find(".mejs-captions-selector").css("visibility","hidden")
+				});
+				
 			}
 
 			if (!player.options.alwaysShowControls) {
@@ -2666,7 +2771,7 @@ if (typeof jQuery != 'undefined') {
 			
 				if (!img.is(':visible') && !img.is(':animated')) {
 				
-					//console.log('showing existing slide');			
+					//			
 					
 					img.fadeIn()
 						.siblings(':visible')
@@ -3053,7 +3158,7 @@ $.extend(mejs.MepDefaults,
 			});	
 			player.contextMenu.bind('mouseleave', function() {
 
-				//console.log('context hover out');
+				//
 				player.startContextMenuTimer();
 				
 			});		
@@ -3073,7 +3178,7 @@ $.extend(mejs.MepDefaults,
 		
 		contextMenuTimeout: null,
 		startContextMenuTimer: function() {
-			//console.log('startContextMenuTimer');
+			//
 			
 			var t = this;
 			
@@ -3087,7 +3192,7 @@ $.extend(mejs.MepDefaults,
 		killContextMenuTimer: function() {
 			var timer = this.contextMenuTimer;
 			
-			//console.log('killContextMenuTimer', timer);
+			//
 			
 			if (timer != null) {				
 				clearTimeout(timer);
