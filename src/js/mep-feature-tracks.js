@@ -114,8 +114,6 @@
 			player.selectedTrack = null;
 			player.isLoadingTrack = false;
 
-
-
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
@@ -125,7 +123,6 @@
 
 			// start loading tracks
 			player.loadNextTrack();
-
 
 			media.addEventListener('timeupdate',function(e) {
 				player.displayCaptions();
@@ -335,8 +332,9 @@
 
 			if (track !== null && track.isLoaded) {
 				for (i=0; i<track.entries.times.length; i++) {
-					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){
-						t.captionsText.html(track.entries.text[i]);
+					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop) {
+						// Set the line before the timecode as a class so the cue can be targeted if needed
+						t.captionsText.html(track.entries.text[i]).attr('class', 'mejs-captions-text ' + (track.entries.times[i].identifier || ''));
 						t.captions.show().height(0);
 						return; // exit out if one is visible;
 					}
@@ -554,8 +552,6 @@
 	*/
 	mejs.TrackFormatParser = {
 		webvtt: {
-			// match start "chapter-" (or anythingelse)
-			pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
 			pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 			parse: function(trackText) {
@@ -564,34 +560,35 @@
 					lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
 					entries = {text:[], times:[]},
 					timecode,
-					text;
+					text,
+					identifier;
 				for(; i<lines.length; i++) {
-					// check for the line number
-					if (this.pattern_identifier.exec(lines[i])){
-						// skip to the next line where the start --> end time code should be
-						i++;
-						timecode = this.pattern_timecode.exec(lines[i]);
+					timecode = this.pattern_timecode.exec(lines[i]);
 
-						if (timecode && i<lines.length){
-							i++;
-							// grab all the (possibly multi-line) text that follows
-							text = lines[i];
-							i++;
-							while(lines[i] !== '' && i<lines.length){
-								text = text + '\n' + lines[i];
-								i++;
-							}
-							text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-							// Text is in a different array so I can use .join
-							entries.text.push(text);
-							entries.times.push(
-							{
-								start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) === 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
-								stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
-								settings: timecode[5]
-							});
+					if (timecode && i<lines.length) {
+						if ((i - 1) >= 0 && lines[i - 1] !== '') {
+							identifier = lines[i - 1];
 						}
+						i++;
+						// grab all the (possibly multi-line) text that follows
+						text = lines[i];
+						i++;
+						while(lines[i] !== '' && i<lines.length){
+							text = text + '\n' + lines[i];
+							i++;
+						}
+						text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+						// Text is in a different array so I can use .join
+						entries.text.push(text);
+						entries.times.push(
+						{
+							identifier: identifier,
+							start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) === 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
+							stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
+							settings: timecode[5]
+						});
 					}
+					identifier = '';
 				}
 				return entries;
 			}
