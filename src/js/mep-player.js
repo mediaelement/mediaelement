@@ -791,8 +791,8 @@
 				})();
 
 				var nativeHeight = (function() {
-				if (t.isVideo) {
-					if (t.media.videoHeight && t.media.videoHeight > 0) {
+					if (t.isVideo) {
+						if (t.media.videoHeight && t.media.videoHeight > 0) {
 							return t.media.videoHeight;
 						} else if (t.media.getAttribute('height') !== null) {
 							return t.media.getAttribute('height');
@@ -803,6 +803,7 @@
 						return t.options.defaultAudioHeight;
 					}
 				})();
+
 				var
 					parentWidth = t.container.parent().closest(':visible').width(),
 					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
