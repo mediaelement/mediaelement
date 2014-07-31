@@ -930,6 +930,8 @@ mejs.YouTubeApi = {
 		setInterval(function() {
 			mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
 		}, 250);
+		
+		mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'canplay');
 	},
 	
 	handleStateChange: function(youTubeState, player, pluginMediaElement) {
