@@ -18,5 +18,9 @@
     "!/build/**",
     "!/bower.json",
     "!/README*"
+  ],
+  "main": [
+    "./build/mediaelement-and-player.js",
+    "./build/mediaelementplayer.css"
   ]
 }
