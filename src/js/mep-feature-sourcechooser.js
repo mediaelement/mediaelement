@@ -32,24 +32,29 @@
 						var src = this.value;
 
 						if (media.currentSrc != src) {
-							currentTime = media.currentTime;
-							paused = media.paused;
+							var currentTime = media.currentTime;
+							var paused = media.paused;
+							media.pause();
 							media.setSrc(src);
+
+							media.addEventListener('loadedmetadata', function(e) {
+								media.currentTime = currentTime;
+							}, true);
+
+							var canPlayAfterSourceSwitchHandler = function(e) {
+								if (!paused) {
+									media.play();
+								}
+								media.removeEventListener("canplay", canPlayAfterSourceSwitchHandler);
+							};
+							media.addEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
 							media.load();
-							media.addEventListener('loadedmetadata', function(e){
-				                this.currentTime = currentTime;
-				            }, true);
-				            media.addEventListener('canplay', function(e){
-				            	if (!paused) {
-					            	this.play();
-					            }
-				            }, true);
 						}
-					});
+				});
 
 			// add to list
-			for (var i in media.children) {
-				var src = media.children[i];
+			for (var i in this.node.children) {
+				var src = this.node.children[i];
 				if (src.nodeName === 'SOURCE' && (media.canPlayType(src.type) == 'probably' || media.canPlayType(src.type) == 'maybe')) {
 					player.addSourceButton(src.src, src.title, src.type, media.src == src.src);
 				}
