@@ -175,6 +175,8 @@ public class VideoElement extends Sprite implements IMediaElement
 
       case "NetConnection.Connect.Success":
         connectStream();
+		sendEvent(HtmlMediaEvent.LOADEDDATA);
+        sendEvent(HtmlMediaEvent.CANPLAY);
         break;
       case "NetStream.Play.StreamNotFound":
         trace("Unable to locate video");
