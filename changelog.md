@@ -21,7 +21,13 @@
 * flash: send keydown events up to javascript (https://github.com/johndyer/mediaelement/pull/1120) [rounce]
 * Restore IE6 compatibility for 100% (https://github.com/johndyer/mediaelement/pull/1021) [ryokenau]
 * Added playback speed (HTML5 only), fixed caption's auto-size when fullscreen (https://github.com/johndyer/mediaelement/pull/1027) [cheng-shiwen]
+* Cleaned up playback speed (https://github.com/johndyer/mediaelement/pull/1249) [matthillman]
 * Chromium Web Browser Support (https://github.com/johndyer/mediaelement/pull/1020) [ryokenau]
+* Always listen for the fullscreenchange event on the document (https://github.com/johndyer/mediaelement/pull/1240) [foolip ]
+* The hours are not required on the webvtt format (https://github.com/johndyer/mediaelement/pull/1252) [LeResKP]
+* Fix wrong initial player size when responsive (https://github.com/johndyer/mediaelement/pull/1247) [Wizard13] 
+* Make mejs.MediaFeatures.isFullScreen() more consistent (https://github.com/johndyer/mediaelement/pull/1239) [foolip]
+
 
 
 *2.14.2 (2014/04/04)*
