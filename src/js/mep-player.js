@@ -28,6 +28,9 @@
 			return (media.duration * 0.05);
 		},
 
+		// set dimensions via JS instead of CSS
+		setDimensions: true,
+
 		// width of audio player
 		audioWidth: -1,
 		// height of audio player
@@ -336,6 +339,7 @@
 
 				var tagType = (t.isVideo ? 'video' : 'audio'),
 					capsTagName = tagType.substring(0,1).toUpperCase() + tagType.substring(1);
+
 
 
 				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
@@ -727,9 +731,9 @@
 					t.setControlsSize();
 				});
 
-				// TEMP: needs to be moved somewhere else 
+				// TEMP: needs to be moved somewhere else
 				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
-				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load 
+				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
@@ -763,6 +767,10 @@
 
 		setPlayerSize: function(width,height) {
 			var t = this;
+
+			if( !t.options.setDimensions ) {
+				return false;
+			}
 
 			if (typeof width != 'undefined') {
 				t.width = width;
