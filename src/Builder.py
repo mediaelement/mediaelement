@@ -146,4 +146,37 @@ shutil.copy2('css/controls-ted.png','../build/controls-ted.png')
 shutil.copy2('css/controls-wmp.png','../build/controls-wmp.png')
 shutil.copy2('css/controls-wmp-bg.png','../build/controls-wmp-bg.png')
 
+
+#Flash Build
+print('Building SWF')
+flex_path = '../../flex_sdk_4.6'
+
+flash_in_path = 'flash/FlashMediaElement.as'
+flash_temp_path = 'flash/FlashMediaElement.as.bak'
+flash_out_path = '../build/flashmediaelement.swf'
+flash_cdn_out_path = '../build/flashmediaelement-cdn.swf'
+
+def build_flash(flex_path, flash_in_path, flash_out_path):
+	os.system(flex_path + '/bin/mxmlc -strict=false -warnings=true ' + flash_in_path + ' -o ' + flash_out_path + ' -library-path+="' + flex_path + '/lib" -include-libraries+=flash/flashmediaelement.swc -include-libraries+=flash/flashls.swc -use-network=true -headless-server -static-link-runtime-shared-libraries')
+
+# build main
+build_flash(flex_path, flash_in_path, flash_out_path)
+
+# make cdn version
+flash_code = open(flash_in_path,'r').read()
+flash_code = flash_code.replace('//Security.allowDomain("*");','Security.allowDomain("*");')
+flash_code = flash_code.replace('//Security.allowInsecureDomain("*");','Security.allowInsecureDomain("*");')
+
+# backup
+shutil.move(flash_in_path, flash_temp_path)
+
+flash_cdn = open(flash_in_path,'w')
+flash_cdn.write(flash_code)
+flash_cdn.close()
+
+build_flash(flex_path, flash_in_path, flash_cdn_out_path)
+
+# restore original
+shutil.move(flash_temp_path, flash_in_path)
+
 print('DONE!')
