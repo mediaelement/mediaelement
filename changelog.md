@@ -1,6 +1,6 @@
 ### Version History
 
-*2.15.0 (2014/07 - in progress)*
+*2.15.0 (2014/08 - in progress)*
 
 * support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
 * add Flash/HTTP Live Streaming Support (https://github.com/johndyer/mediaelement/pull/1066) [mangui]
@@ -27,8 +27,8 @@
 * The hours are not required on the webvtt format (https://github.com/johndyer/mediaelement/pull/1252) [LeResKP]
 * Fix wrong initial player size when responsive (https://github.com/johndyer/mediaelement/pull/1247) [Wizard13] 
 * Make mejs.MediaFeatures.isFullScreen() more consistent (https://github.com/johndyer/mediaelement/pull/1239) [foolip]
-
-
+* Fix flash source chooser (https://github.com/johndyer/mediaelement/pull/1191) [dajulia3]
+* Option `setDimensions` to allow deactivation of inline widths and heights at player elements (https://github.com/johndyer/mediaelement/pull/1236) [feeela]
 
 *2.14.2 (2014/04/04)*
 
