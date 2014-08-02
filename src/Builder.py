@@ -6,7 +6,7 @@ import shutil
 import re
 
 def remove_console(text):
-	return re.sub('console.(log|debug)\((.*)\);?', '', text) 
+	return re.sub('console.(log|debug)\((.*)\);?', '', text)
 
 me_filename = 'mediaelement'
 mep_filename = 'mediaelementplayer'
@@ -32,7 +32,7 @@ code = ''
 for item in me_files:
 	src_file = open('js/' + item,'r')
 	code += src_file.read() + "\n"
-	
+
 code = remove_console(code)
 
 tmp_file = open('../build/' + me_filename + '.js','w')
@@ -62,7 +62,7 @@ code = ''
 for item in mep_files:
     src_file = open('js/' + item,'r')
     code += src_file.read() + "\n"
-        
+
 code = remove_console(code)
 
 tmp_file = open('../build/' + mep_filename + '.js','w')
@@ -96,7 +96,7 @@ def addHeader(headerFilename, filename):
 	# write the original contents
 	tmp_file.write(file_txt)
 	tmp_file.close()
-	
+
 
 addHeader('js/me-header.js', '../build/' + me_filename + '.min.js')
 addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')
@@ -140,7 +140,6 @@ shutil.copy2('css/controls.svg','../build/controls.svg')
 shutil.copy2('css/bigplay.png','../build/bigplay.png')
 shutil.copy2('css/bigplay.svg','../build/bigplay.svg')
 shutil.copy2('css/loading.gif','../build/loading.gif')
-shutil.copy2('css/speed.svg','../build/speed.svg')
 
 shutil.copy2('css/mejs-skins.css','../build/mejs-skins.css')
 shutil.copy2('css/controls-ted.png','../build/controls-ted.png')
