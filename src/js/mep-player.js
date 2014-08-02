@@ -63,7 +63,7 @@
 		// force Android's native controls
 		AndroidUseNativeControls: false,
 		// features to show
-		features: ['playpause','current','progress','duration','speed','tracks','volume','fullscreen'],
+		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
 
