@@ -44,6 +44,9 @@ if (typeof jQuery != 'undefined') {
 			return (media.duration * 0.05);
 		},
 
+		// set dimensions via JS instead of CSS
+		setDimensions: true,
+
 		// width of audio player
 		audioWidth: -1,
 		// height of audio player
@@ -70,8 +73,8 @@ if (typeof jQuery != 'undefined') {
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
-        // Enable click video element to toggle play/pause
-        clickToPlayPause: true,
+		// Enable click video element to toggle play/pause
+		clickToPlayPause: true,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -107,6 +110,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [38], // UP
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.min(media.volume + 0.1, 1);
 								media.setVolume(newVolume);
 						}
@@ -114,6 +123,12 @@ if (typeof jQuery != 'undefined') {
 				{
 						keys: [40], // DOWN
 						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+
 								var newVolume = Math.max(media.volume - 0.1, 0);
 								media.setVolume(newVolume);
 						}
@@ -155,7 +170,7 @@ if (typeof jQuery != 'undefined') {
 						}
 				},
 				{
-						keys: [70], // f
+						keys: [70], // F
 						action: function(player, media) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
@@ -163,6 +178,21 @@ if (typeof jQuery != 'undefined') {
 										} else {
 												player.enterFullScreen();
 										}
+								}
+						}
+				},
+				{
+						keys: [77], // M
+						action: function(player, media) {
+								player.container.find('.mejs-volume-slider').css('display','block');
+								if (player.isVideo) {
+										player.showControls();
+										player.startControlsTimer();
+								}
+								if (player.media.muted) {
+										player.setMuted(false);
+								} else {
+										player.setMuted(true);
 								}
 						}
 				}
@@ -327,6 +357,7 @@ if (typeof jQuery != 'undefined') {
 					capsTagName = tagType.substring(0,1).toUpperCase() + tagType.substring(1);
 
 
+
 				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
 					t.width = t.options[tagType + 'Width'];
 				} else if (t.media.style.width !== '' && t.media.style.width !== null) {
@@ -456,7 +487,7 @@ if (typeof jQuery != 'undefined') {
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function() {
-				//console.log('timer fired');
+				//
 				t.hideControls();
 				t.killControlsTimer('hide');
 			}, timeout);
@@ -532,8 +563,8 @@ if (typeof jQuery != 'undefined') {
 						} catch (e) {
 							// TODO: report control error
 							//throw e;
-							console.log('error building ' + feature);
-							console.log(e);
+							
+							
 						}
 					}
 				}
@@ -571,7 +602,7 @@ if (typeof jQuery != 'undefined') {
 						// create callback here since it needs access to current
 						// MediaElement object
 						t.clickToPlayPauseCallback = function() {
-							//console.log('media clicked', t.media, t.media.paused);
+							//
 
 							if (t.options.clickToPlayPause) {
 								if (t.media.paused) {
@@ -589,7 +620,7 @@ if (typeof jQuery != 'undefined') {
 						t.container
 							.bind('mouseenter mouseover', function () {
 								if (t.controlsEnabled) {
-									if (!t.options.alwaysShowControls) {
+									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
 										t.startControlsTimer(2500);
@@ -601,7 +632,6 @@ if (typeof jQuery != 'undefined') {
 									if (!t.controlsAreVisible) {
 										t.showControls();
 									}
-									//t.killControlsTimer('move');
 									if (!t.options.alwaysShowControls) {
 										t.startControlsTimer(2500);
 									}
@@ -718,7 +748,8 @@ if (typeof jQuery != 'undefined') {
 				});
 
 				// TEMP: needs to be moved somewhere else
-				if (t.media.pluginType == 'youtube') {
+				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
+				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
@@ -753,6 +784,10 @@ if (typeof jQuery != 'undefined') {
 		setPlayerSize: function(width,height) {
 			var t = this;
 
+			if( !t.options.setDimensions ) {
+				return false;
+			}
+
 			if (typeof width != 'undefined') {
 				t.width = width;
 			}
@@ -762,14 +797,40 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-      		if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+			if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 
 				// do we have the native dimensions yet?
+				var nativeWidth = (function() {
+					if (t.isVideo) {
+						if (t.media.videoWidth && t.media.videoWidth > 0) {
+							return t.media.videoWidth;
+						} else if (t.media.getAttribute('width') !== null) {
+							return t.media.getAttribute('width');
+						} else {
+							return t.options.defaultVideoWidth;
+						}
+					} else {
+						return t.options.defaultAudioHeight;
+					}
+				})();
+
+				var nativeHeight = (function() {
+					if (t.isVideo) {
+						if (t.media.videoHeight && t.media.videoHeight > 0) {
+							return t.media.videoHeight;
+						} else if (t.media.getAttribute('height') !== null) {
+							return t.media.getAttribute('height');
+						} else {
+							return t.options.defaultVideoHeight;
+						}
+					} else {
+						return t.options.defaultAudioHeight;
+					}
+				})();
+
 				var
-					nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
-					nativeHeight = t.isVideo ? ((t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight) : t.options.defaultAudioHeight,
 					parentWidth = t.container.parent().closest(':visible').width(),
-					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
+					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) > t.container.parent().closest(':visible').height() ? t.container.parent().closest(':visible').height() : parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
 				if(isNaN(newHeight)) {
@@ -838,7 +899,7 @@ if (typeof jQuery != 'undefined') {
 				others = rail.siblings(),
 				lastControl = others.last(),
 				lastControlPosition = null;
-				
+
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
 				return;
@@ -866,22 +927,22 @@ if (typeof jQuery != 'undefined') {
 				// fit the rail into the remaining space
 				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
 			}
-			
+
 			// resize the rail,
 			// but then check if the last control (say, the fullscreen button) got pushed down
 			// this often happens when zoomed
-			do {				
+			do {
 				// outer area
 				rail.width(railWidth);
 				// dark space
-				total.width(railWidth - (total.outerWidth(true) - total.width()));				
-				
+				total.width(railWidth - (total.outerWidth(true) - total.width()));
+
 				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.position();				
-					railWidth--;			
+					lastControlPosition = lastControl.position();
+					railWidth--;
 				}
 			} while (lastControlPosition != null && lastControlPosition.top > 0 && railWidth > 0);
-			
+
 			if (t.setProgressRail)
 				t.setProgressRail();
 			if (t.setCurrentRail)
@@ -957,7 +1018,7 @@ if (typeof jQuery != 'undefined') {
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
-				.bind('click touchstart', function() {
+				.bind('click', function() {  // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
 							media.play();
@@ -1031,6 +1092,10 @@ if (typeof jQuery != 'undefined') {
 				error.show();
 				error.find('mejs-overlay-error').html("Error loading this resource");
 			}, false);
+
+			media.addEventListener('keydown', function(e) {
+				t.onkeydown(player, media, e);
+			}, false);
 		},
 
 		buildkeyboard: function(player, controls, layers, media) {
@@ -1039,24 +1104,7 @@ if (typeof jQuery != 'undefined') {
 
 				// listen for key presses
 				t.globalBind('keydown', function(e) {
-
-						if (player.hasFocus && player.options.enableKeyboard) {
-
-								// find a matching key
-								for (var i=0, il=player.options.keyActions.length; i<il; i++) {
-										var keyAction = player.options.keyActions[i];
-
-										for (var j=0, jl=keyAction.keys.length; j<jl; j++) {
-												if (e.keyCode == keyAction.keys[j]) {
-														e.preventDefault();
-														keyAction.action(player, media, e.keyCode);
-														return false;
-												}
-										}
-								}
-						}
-
-						return true;
+					return t.onkeydown(player, media, e);
 				});
 
 				// check if someone clicked outside a player region, then kill its focus
@@ -1064,6 +1112,24 @@ if (typeof jQuery != 'undefined') {
 					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
 				});
 
+		},
+		onkeydown: function(player, media, e) {
+			if (player.hasFocus && player.options.enableKeyboard) {
+				// find a matching key
+				for (var i = 0, il = player.options.keyActions.length; i < il; i++) {
+					var keyAction = player.options.keyActions[i];
+
+					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
+						if (e.keyCode == keyAction.keys[j]) {
+							if (typeof(e.preventDefault) == "function") e.preventDefault();
+							keyAction.action(player, media, e.keyCode);
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
 		},
 
 		findTracks: function() {
@@ -1137,8 +1203,8 @@ if (typeof jQuery != 'undefined') {
 					} catch (e) {
 						// TODO: report control error
 						//throw e;
-						//console.log('error building ' + feature);
-						//console.log(e);
+						//
+						//
 					}
 				}
 			}
@@ -1149,7 +1215,7 @@ if (typeof jQuery != 'undefined') {
 				// detach events from the video
 				// TODO: detach event listeners better than this;
 				//       also detach ONLY the events attached by this plugin!
-				t.$node.clone().show().insertBefore(t.container);
+				t.$node.clone().insertBefore(t.container).show();
 				t.$node.remove();
 			} else {
 				t.$node.insertBefore(t.container);
@@ -1207,30 +1273,31 @@ if (typeof jQuery != 'undefined') {
 	})();
 
 	// turn into jQuery plugin
-	if (typeof jQuery != 'undefined') {
-		jQuery.fn.mediaelementplayer = function (options) {
+	if (typeof $ != 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
-					var player = jQuery(this).data('mediaelementplayer');
+					var player = $(this).data('mediaelementplayer');
 					if (player) {
 						player.remove();
 					}
-					jQuery(this).removeData('mediaelementplayer');
+					$(this).removeData('mediaelementplayer');
 				});
 			}
 			else {
 				this.each(function () {
-					jQuery(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
+					$(this).data('mediaelementplayer', new mejs.MediaElementPlayer(this, options));
 				});
 			}
 			return this;
 		};
-	}
 
-	$(document).ready(function() {
-		// auto enable using JSON attribute
-		$('.mejs-player').mediaelementplayer();
-	});
+
+		$(document).ready(function() {
+			// auto enable using JSON attribute
+			$('.mejs-player').mediaelementplayer();
+		});
+	}
 
 	// push out to window
 	window.MediaElementPlayer = mejs.MediaElementPlayer;
@@ -1850,11 +1917,7 @@ if (typeof jQuery != 'undefined') {
 					}
 				};
 
-				if (mejs.MediaFeatures.hasMozNativeFullScreen) {
-					player.globalBind(mejs.MediaFeatures.fullScreenEventName, func);
-				} else {
-					player.container.bind(mejs.MediaFeatures.fullScreenEventName, func);
-				}
+				player.globalBind(mejs.MediaFeatures.fullScreenEventName, func);
 			}
 
 			var t = this,
@@ -1900,7 +1963,7 @@ if (typeof jQuery != 'undefined') {
 							return !!supports;
 						})();
 
-					//console.log('supportsPointerEvents', supportsPointerEvents);
+					//
 
 					if (supportsPointerEvents && !mejs.MediaFeatures.isOpera) { // opera doesn't allow this :(
 
@@ -2228,6 +2291,9 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = true;
+
+			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
+			t.container.find('.mejs-captions-position').css('bottom', '45px');
 		},
 
 		exitFullScreen: function() {
@@ -2280,6 +2346,9 @@ if (typeof jQuery != 'undefined') {
 
 			t.setControlsSize();
 			t.isFullScreen = false;
+
+			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-position').css('bottom', '');
 		}
 	});
 
@@ -2287,48 +2356,112 @@ if (typeof jQuery != 'undefined') {
 
 (function($) {
 
-	// add extra default options 
+	// Speed
+	$.extend(mejs.MepDefaults, {
+
+		speeds: ['1.50', '1.25', '1.00', '0.75'],
+
+		defaultSpeed: '1.00'
+
+	});
+
+	$.extend(MediaElementPlayer.prototype, {
+
+		buildspeed: function(player, controls, layers, media) {
+			if (!player.isVideo)
+				return;
+
+			var t = this;
+
+			if (t.media.pluginType == 'native') {
+				var s = '<div class="mejs-button mejs-speed-button"><button type="button">'+t.options.defaultSpeed+'x</button><div class="mejs-speed-selector"><ul>';
+				var i, ss;
+
+				if ($.inArray(t.options.defaultSpeed, t.options.speeds) === -1) {
+					t.options.speeds.push(t.options.defaultSpeed);
+				}
+
+				t.options.speeds.sort(function(a, b) {
+					return parseFloat(b) - parseFloat(a);
+				});
+
+				for (i = 0; i < t.options.speeds.length; i++) {
+					s += '<li><input type="radio" name="speed" value="' + t.options.speeds[i] + '" id="' + t.options.speeds[i] + '" ';
+					if (t.options.speeds[i] == t.options.defaultSpeed) {
+						s += 'checked=true ';
+						s += '/><label for="' + t.options.speeds[i] + '" class="mejs-speed-selected">'+ t.options.speeds[i] + 'x</label></li>';
+					} else {
+						s += '/><label for="' + t.options.speeds[i] + '">'+ t.options.speeds[i] + 'x</label></li>';
+					}
+				}
+				s += '</ul></div></div>';
+
+				player.speedButton = $(s).appendTo(controls);
+
+				player.playbackspeed = t.options.defaultSpeed;
+
+				player.speedButton
+				.on('click', 'input[type=radio]', function() {
+					player.playbackspeed = $(this).attr('value');
+					media.playbackRate = parseFloat(player.playbackspeed);
+					player.speedButton.find('button').text(player.playbackspeed + 'x');
+					player.speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
+					player.speedButton.find('input[type=radio]:checked').next().addClass('mejs-speed-selected');
+				});
+
+				ss = player.speedButton.find('.mejs-speed-selector');
+				ss.height(this.speedButton.find('.mejs-speed-selector ul').outerHeight(true) + player.speedButton.find('.mejs-speed-translations').outerHeight(true));
+				ss.css('top', (-1 * ss.height()) + 'px');
+			}
+		}
+	});
+
+})(mejs.$);
+
+(function($) {
+
+	// add extra default options
 	$.extend(mejs.MepDefaults, {
 		// this will automatically turn on a <track>
 		startLanguage: '',
 
 		tracksText: mejs.i18n.t('Captions/Subtitles'),
-		
+
 		// option to remove the [cc] button when no <track kind="subtitles"> are present
 		hideCaptionsButtonWhenEmpty: true,
 
 		// If true and we only have one track, change captions to popup
 		toggleCaptionsButtonWhenOnlyOne: false,
 
-		// #id or .class		
+		// #id or .class
 		slidesSelector: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
-	
+
 		hasChapters: false,
 
 		buildtracks: function(player, controls, layers, media) {
-			if (player.tracks.length == 0)
+			if (player.tracks.length === 0)
 				return;
 
-			var t = this, 
-				i, 
+			var t = this,
+				i,
 				options = '';
 
 			if (t.domNode.textTracks) { // if browser will do native captions, prefer mejs captions, loop through tracks and hide
-				for (var i = t.domNode.textTracks.length - 1; i >= 0; i--) {
+				for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
 					t.domNode.textTracks[i].mode = "hidden";
 				}
 			}
-			player.chapters = 
+			player.chapters =
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();
-			player.captions = 
+			player.captions =
 					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover"><span class="mejs-captions-text"></span></div></div>')
 						.prependTo(layers).hide();
 			player.captionsText = player.captions.find('.mejs-captions-text');
-			player.captionsButton = 
+			player.captionsButton =
 					$('<div class="mejs-button mejs-captions-button">'+
 						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.tracksText + '" aria-label="' + t.options.tracksText + '"></button>'+
 						'<div class="mejs-captions-selector">'+
@@ -2341,8 +2474,8 @@ if (typeof jQuery != 'undefined') {
 						'</div>'+
 					'</div>')
 						.appendTo(controls);
-			
-						
+
+
 			var subtitleCount = 0;
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
@@ -2354,25 +2487,27 @@ if (typeof jQuery != 'undefined') {
 			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount == 1){
 				// click
 				player.captionsButton.on('click',function() {
-					if (player.selectedTrack == null) {
-						var lang = player.tracks[0].srclang;
+					if (player.selectedTrack === null) {
+						lang = player.tracks[0].srclang;
 					} else {
-						var lang = 'none';
+						lang = 'none';
 					}
 					player.setTrack(lang);
 				});
 			} else {
-				// hover
-				player.captionsButton.hover(function() {
+				// hover or keyboard focus
+				player.captionsButton.on( 'mouseenter focusin', function() {
 					$(this).find('.mejs-captions-selector').css('visibility','visible');
-				}, function() {
-					$(this).find('.mejs-captions-selector').css('visibility','hidden');
 				})
 
 				// handle clicks to the language radio buttons
 				.on('click','input[type=radio]',function() {
 					lang = this.value;
 					player.setTrack(lang);
+				});
+
+				player.captionsButton.on( 'mouseleave focusout', function() {
+					$(this).find(".mejs-captions-selector").css("visibility","hidden");
 				});
 
 			}
@@ -2399,8 +2534,6 @@ if (typeof jQuery != 'undefined') {
 			player.selectedTrack = null;
 			player.isLoadingTrack = false;
 
-			
-
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
 				if (player.tracks[i].kind == 'subtitles') {
@@ -2411,18 +2544,17 @@ if (typeof jQuery != 'undefined') {
 			// start loading tracks
 			player.loadNextTrack();
 
-
 			media.addEventListener('timeupdate',function(e) {
 				player.displayCaptions();
 			}, false);
-			
-			if (player.options.slidesSelector != '') {
+
+			if (player.options.slidesSelector !== '') {
 				player.slidesContainer = $(player.options.slidesSelector);
 
 				media.addEventListener('timeupdate',function(e) {
-					player.displaySlides();	
+					player.displaySlides();
 				}, false);
-			
+
 			}
 
 			media.addEventListener('loadedmetadata', function(e) {
@@ -2445,26 +2577,26 @@ if (typeof jQuery != 'undefined') {
 						});
 					}
 				});
-				
+
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
 			}
 		},
-		
+
 		setTrack: function(lang){
-		
+
 			var t = this,
 				i;
-		
+
 			if (lang == 'none') {
 				t.selectedTrack = null;
 				t.captionsButton.removeClass('mejs-captions-enabled');
 			} else {
 				for (i=0; i<t.tracks.length; i++) {
 					if (t.tracks[i].srclang == lang) {
-						if (t.selectedTrack == null)
-						    t.captionsButton.addClass('mejs-captions-enabled');
+						if (t.selectedTrack === null)
+							t.captionsButton.addClass('mejs-captions-enabled');
 						t.selectedTrack = t.tracks[i];
 						t.captions.attr('lang', t.selectedTrack.srclang);
 						t.displayCaptions();
@@ -2484,8 +2616,8 @@ if (typeof jQuery != 'undefined') {
 			} else {
 				// add done?
 				t.isLoadingTrack = false;
-				
-				t.checkForTracks();	
+
+				t.checkForTracks();
 			}
 		},
 
@@ -2513,11 +2645,11 @@ if (typeof jQuery != 'undefined') {
 
 					// parse the loaded file
 					if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
-						track.entries = mejs.TrackFormatParser.dfxp.parse(d);					
-					} else {	
-						track.entries = mejs.TrackFormatParser.webvvt.parse(d);
+						track.entries = mejs.TrackFormatParser.dfxp.parse(d);
+					} else {
+						track.entries = mejs.TrackFormatParser.webvtt.parse(d);
 					}
-					
+
 					after();
 
 					if (track.kind == 'chapters') {
@@ -2527,10 +2659,10 @@ if (typeof jQuery != 'undefined') {
 							}
 						}, false);
 					}
-					
+
 					if (track.kind == 'slides') {
 						t.setupSlides(track);
-					}					
+					}
 				},
 				error: function() {
 					t.loadNextTrack();
@@ -2540,10 +2672,10 @@ if (typeof jQuery != 'undefined') {
 
 		enableTrackButton: function(lang, label) {
 			var t = this;
-			
+
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
-			}			
+			}
 
 			t.captionsButton
 				.find('input[value=' + lang + ']')
@@ -2553,7 +2685,7 @@ if (typeof jQuery != 'undefined') {
 
 			// auto select
 			if (t.options.startLanguage == lang) {
-				$('#' + t.id + '_captions_' + lang).click();
+				$('#' + t.id + '_captions_' + lang).prop('checked', true).trigger('click');
 			}
 
 			t.adjustLanguageBox();
@@ -2586,12 +2718,12 @@ if (typeof jQuery != 'undefined') {
 				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
 			);
 		},
-		
+
 		checkForTracks: function() {
 			var
 				t = this,
 				hasSubtitles = false;
-			
+
 			// check if any subtitles
 			if (t.options.hideCaptionsButtonWhenEmpty) {
 				for (i=0; i<t.tracks.length; i++) {
@@ -2599,13 +2731,13 @@ if (typeof jQuery != 'undefined') {
 						hasSubtitles = true;
 						break;
 					}
-				}	
-					
+				}
+
 				if (!hasSubtitles) {
 					t.captionsButton.hide();
 					t.setControlsSize();
-				}													
-			}		
+				}
+			}
 		},
 
 		displayCaptions: function() {
@@ -2618,10 +2750,11 @@ if (typeof jQuery != 'undefined') {
 				i,
 				track = t.selectedTrack;
 
-			if (track != null && track.isLoaded) {
+			if (track !== null && track.isLoaded) {
 				for (i=0; i<track.entries.times.length; i++) {
-					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop){
-						t.captionsText.html(track.entries.text[i]);
+					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop) {
+						// Set the line before the timecode as a class so the cue can be targeted if needed
+						t.captionsText.html(track.entries.text[i]).attr('class', 'mejs-captions-text ' + (track.entries.times[i].identifier || ''));
 						t.captions.show().height(0);
 						return; // exit out if one is visible;
 					}
@@ -2631,25 +2764,25 @@ if (typeof jQuery != 'undefined') {
 				t.captions.hide();
 			}
 		},
-		
+
 		setupSlides: function(track) {
 			var t = this;
-				
+
 			t.slides = track;
 			t.slides.entries.imgs = [t.slides.entries.text.length];
 			t.showSlide(0);
-			
+
 		},
-		
+
 		showSlide: function(index) {
 			if (typeof this.tracks == 'undefined' || typeof this.slidesContainer == 'undefined') {
-				return;			
+				return;
 			}
-								
+
 			var t = this,
 				url = t.slides.entries.text[index],
 				img = t.slides.entries.imgs[index];
-				
+
 			if (typeof img == 'undefined' || typeof img.fadeIn == 'undefined') {
 
 				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
@@ -2658,46 +2791,46 @@ if (typeof jQuery != 'undefined') {
 								.hide()
 								.fadeIn()
 								.siblings(':visible')
-									.fadeOut();							
-						
+									.fadeOut();
+
 						});
-			
+
 			} else {
-			
+
 				if (!img.is(':visible') && !img.is(':animated')) {
-				
-					//console.log('showing existing slide');			
-					
+
+					//
+
 					img.fadeIn()
 						.siblings(':visible')
-							.fadeOut();			
+							.fadeOut();
 				}
 			}
-				
+
 		},
-		
+
 		displaySlides: function() {
-		
+
 			if (typeof this.slides == 'undefined')
-				return;	
-				
-			var 
+				return;
+
+			var
 				t = this,
 				slides = t.slides,
-				i;				
-		
+				i;
+
 			for (i=0; i<slides.entries.times.length; i++) {
 				if (t.media.currentTime >= slides.entries.times[i].start && t.media.currentTime <= slides.entries.times[i].stop){
-				
+
 					t.showSlide(i);
-					
+
 					return; // exit out if one is visible;
 				}
 			}
 		},
 
 		displayChapters: function() {
-			var 
+			var
 				t = this,
 				i;
 
@@ -2711,7 +2844,7 @@ if (typeof jQuery != 'undefined') {
 		},
 
 		drawChapters: function(chapters) {
-			var 
+			var
 				t = this,
 				i,
 				dur,
@@ -2737,10 +2870,10 @@ if (typeof jQuery != 'undefined') {
 				//}
 
 				t.chapters.append( $(
-					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + usedPercent.toString() + '%;width: ' + percent.toString() + '%;">' + 
-						'<div class="mejs-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mejs-chapter-block-last' : '') + '">' + 
-							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' + 
-							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop) + '</span>' + 
+					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + usedPercent.toString() + '%;width: ' + percent.toString() + '%;">' +
+						'<div class="mejs-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mejs-chapter-block-last' : '') + '">' +
+							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' +
+							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop) + '</span>' +
 						'</div>' +
 					'</div>'));
 				usedPercent += percent;
@@ -2749,7 +2882,7 @@ if (typeof jQuery != 'undefined') {
 			t.chapters.find('div.mejs-chapter').click(function() {
 				t.media.setCurrentTime( parseFloat( $(this).attr('rel') ) );
 				if (t.media.paused) {
-					t.media.play(); 
+					t.media.play();
 				}
 			});
 
@@ -2776,7 +2909,7 @@ if (typeof jQuery != 'undefined') {
 			nl:'Dutch',
 			en:'English',
 			et:'Estonian',
-			tl:'Filipino',
+			fl:'Filipino',
 			fi:'Finnish',
 			fr:'French',
 			gl:'Galician',
@@ -2801,7 +2934,7 @@ if (typeof jQuery != 'undefined') {
 			fa:'Persian',
 			pl:'Polish',
 			pt:'Portuguese',
-			//'pt-pt':'Portuguese (Portugal)',
+			// 'pt-pt':'Portuguese (Portugal)',
 			ro:'Romanian',
 			ru:'Russian',
 			sr:'Serbian',
@@ -2821,10 +2954,10 @@ if (typeof jQuery != 'undefined') {
 	};
 
 	/*
-	Parses WebVVT format which should be formatted as
+	Parses WebVTT format which should be formatted as
 	================================
 	WEBVTT
-	
+
 	1
 	00:00:01,1 --> 00:00:05,000
 	A line of text
@@ -2832,51 +2965,50 @@ if (typeof jQuery != 'undefined') {
 	2
 	00:01:15,1 --> 00:02:05,000
 	A second line of text
-	
+
 	===============================
 
 	Adapted from: http://www.delphiki.com/html5/playr
 	*/
 	mejs.TrackFormatParser = {
-		webvvt: {
-			// match start "chapter-" (or anythingelse)
-			pattern_identifier: /^([a-zA-z]+-)?[0-9]+$/,
-			pattern_timecode: /^([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ([0-9]{2}:[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
+		webvtt: {
+			pattern_timecode: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 			parse: function(trackText) {
-				var 
+				var
 					i = 0,
 					lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
 					entries = {text:[], times:[]},
 					timecode,
-					text;
+					text,
+					identifier;
 				for(; i<lines.length; i++) {
-					// check for the line number
-					if (this.pattern_identifier.exec(lines[i])){
-						// skip to the next line where the start --> end time code should be
-						i++;
-						timecode = this.pattern_timecode.exec(lines[i]);				
+					timecode = this.pattern_timecode.exec(lines[i]);
 
-						if (timecode && i<lines.length){
-							i++;
-							// grab all the (possibly multi-line) text that follows
-							text = lines[i];
-							i++;
-							while(lines[i] !== '' && i<lines.length){
-								text = text + '\n' + lines[i];
-								i++;
-							}
-							text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-							// Text is in a different array so I can use .join
-							entries.text.push(text);
-							entries.times.push(
-							{
-								start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) == 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
-								stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
-								settings: timecode[5]
-							});
+					if (timecode && i<lines.length) {
+						if ((i - 1) >= 0 && lines[i - 1] !== '') {
+							identifier = lines[i - 1];
 						}
+						i++;
+						// grab all the (possibly multi-line) text that follows
+						text = lines[i];
+						i++;
+						while(lines[i] !== '' && i<lines.length){
+							text = text + '\n' + lines[i];
+							i++;
+						}
+						text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+						// Text is in a different array so I can use .join
+						entries.text.push(text);
+						entries.times.push(
+						{
+							identifier: identifier,
+							start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) === 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
+							stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
+							settings: timecode[5]
+						});
 					}
+					identifier = '';
 				}
 				return entries;
 			}
@@ -2885,7 +3017,7 @@ if (typeof jQuery != 'undefined') {
 		dfxp: {
 			parse: function(trackText) {
 				trackText = $(trackText).filter("tt");
-				var 
+				var
 					i = 0,
 					container = trackText.children("div").eq(0),
 					lines = container.find("p"),
@@ -2921,15 +3053,15 @@ if (typeof jQuery != 'undefined') {
 					if (styles) {
 						style = "";
 						for (var _style in styles) {
-							style += _style + ":" + styles[_style] + ";";					
+							style += _style + ":" + styles[_style] + ";";
 						}
 					}
 					if (style) _temp_times.style = style;
-					if (_temp_times.start == 0) _temp_times.start = 0.200;
+					if (_temp_times.start === 0) _temp_times.start = 0.200;
 					entries.times.push(_temp_times);
 					text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 					entries.text.push(text);
-					if (entries.times.start == 0) entries.times.start = 2;
+					if (entries.times.start === 0) entries.times.start = 2;
 				}
 				return entries;
 			}
@@ -2940,13 +3072,13 @@ if (typeof jQuery != 'undefined') {
 			return text.split(regex);
 		}
 	};
-	
+
 	// test for browsers with bad String.split method.
 	if ('x\n\ny'.split(/\n/gi).length != 3) {
 		// add super slow IE8 and below version
 		mejs.TrackFormatParser.split2 = function(text, regex) {
-			var 
-				parts = [], 
+			var
+				parts = [],
 				chunk = '',
 				i;
 
@@ -2959,8 +3091,8 @@ if (typeof jQuery != 'undefined') {
 			}
 			parts.push(chunk);
 			return parts;
-		}
-	}	
+		};
+	}
 
 })(mejs.$);
 
@@ -3053,7 +3185,7 @@ $.extend(mejs.MepDefaults,
 			});	
 			player.contextMenu.bind('mouseleave', function() {
 
-				//console.log('context hover out');
+				//
 				player.startContextMenuTimer();
 				
 			});		
@@ -3073,7 +3205,7 @@ $.extend(mejs.MepDefaults,
 		
 		contextMenuTimeout: null,
 		startContextMenuTimer: function() {
-			//console.log('startContextMenuTimer');
+			//
 			
 			var t = this;
 			
@@ -3087,7 +3219,7 @@ $.extend(mejs.MepDefaults,
 		killContextMenuTimer: function() {
 			var timer = this.contextMenuTimer;
 			
-			//console.log('killContextMenuTimer', timer);
+			//
 			
 			if (timer != null) {				
 				clearTimeout(timer);
