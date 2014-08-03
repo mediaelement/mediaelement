@@ -1,6 +1,6 @@
 ### Version History
 
-*2.15.0 (2014/08 - in progress)*
+*2.15.0 (2014/08/03)*
 
 * support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
 * add Flash/HTTP Live Streaming Support (https://github.com/johndyer/mediaelement/pull/1066) [mangui]
