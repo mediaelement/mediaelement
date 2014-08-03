@@ -29,6 +29,8 @@
 * Make mejs.MediaFeatures.isFullScreen() more consistent (https://github.com/johndyer/mediaelement/pull/1239) [foolip]
 * Fix flash source chooser (https://github.com/johndyer/mediaelement/pull/1191) [dajulia3]
 * Option `setDimensions` to allow deactivation of inline widths and heights at player elements (https://github.com/johndyer/mediaelement/pull/1236) [feeela]
+* Fix Captions start language is not ticked in Firefox (https://github.com/johndyer/mediaelement/pull/1260)
+* Updated SVG to fix Chrome 38's rendering problems
 
 *2.14.2 (2014/04/04)*
 
