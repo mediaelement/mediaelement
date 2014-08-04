@@ -1,8 +1,8 @@
 /*
  * Adds Internationalization and localization to mediaelement.
  *
- * This file does not contain translations, you have to add the manually.
- * The schema is always the same: me-i18n-locale-[ISO_639-1 Code].js
+ * This file does not contain translations, you have to add them manually.
+ * The schema is always the same: me-i18n-locale-[IETF-language-tag].js
  *
  * Examples are provided both for german and chinese translation.
  *
@@ -11,7 +11,8 @@
  *   http://en.wikipedia.org/wiki/Internationalization_and_localization
  *
  * What langcode should i use?
- *   http://en.wikipedia.org/wiki/ISO_639-1
+ *   http://en.wikipedia.org/wiki/IETF_language_tag
+ *   https://tools.ietf.org/html/rfc5646
  *
  *
  * License?
@@ -37,11 +38,14 @@
  */
 ;(function(context, exports, undefined) {
     "use strict";
+
     var i18n = {
         "locale": {
-            "language" : '',
-            "strings" : {}
+            // Ensure previous values aren't overwritten.
+            "language" : (exports.i18n && exports.i18n.locale.language) || '',
+            "strings" : (exports.i18n && exports.i18n.locale.strings) || {}
         },
+        "ietf_lang_regex" : /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/,
         "methods" : {}
     };
 // start i18n
@@ -49,11 +53,16 @@
 
     /**
      * Get language, fallback to browser's language if empty
+     *
+     * IETF: RFC 5646, https://tools.ietf.org/html/rfc5646
+     * Examples: en, zh-CN, cmn-Hans-CN, sr-Latn-RS, es-419, x-private
      */
     i18n.getLanguage = function () {
         var language = i18n.locale.language || window.navigator.userLanguage || window.navigator.language;
-        // convert to iso 639-1 (2-letters, lower case)
-        return language.substr(0, 2).toLowerCase();
+        return i18n.ietf_lang_regex.exec(language) ? language : null;
+
+        //(WAS: convert to iso 639-1 (2-letters, lower case))
+        //return language.substr(0, 2).toLowerCase();
     };
 
     // i18n fixes for compatibility with WordPress
