@@ -28,6 +28,9 @@
 			return (media.duration * 0.05);
 		},
 
+		// set dimensions via JS instead of CSS
+		setDimensions: true,
+
 		// width of audio player
 		audioWidth: -1,
 		// height of audio player
@@ -63,7 +66,7 @@
 		// force Android's native controls
 		AndroidUseNativeControls: false,
 		// features to show
-		features: ['playpause','current','progress','duration','speed','tracks','volume','fullscreen'],
+		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
         
@@ -350,6 +353,7 @@
 
 				var tagType = (t.isVideo ? 'video' : 'audio'),
 					capsTagName = tagType.substring(0,1).toUpperCase() + tagType.substring(1);
+
 
 
 				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
@@ -741,9 +745,9 @@
 					t.setControlsSize();
 				});
 
-				// TEMP: needs to be moved somewhere else 
+				// TEMP: needs to be moved somewhere else
 				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
-				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load 
+				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
@@ -777,27 +781,31 @@
 
 		setPlayerSize: function(width,height) {
 			var t = this;
+			
+			if( !t.options.setDimensions ) {
+				return false;
+			}
 
 			// check stretching modes
-   switch(t.options.stretching) {
-    case 'fill':
-     this.setFillMode(t.options.centeredOnFill);
-     break;
-    case 'responsive':
-     this.setResponsiveMode();
-     break;
-    case 'none':
-     this.setDimensions();
-     break;
-     // This is the 'auto' mode
-    default:
-     if (this.hasFluidMode() === true) {
-      this.setResponsiveMode();
-     } else {
-      this.setDimensions(width, height);
-     }
-     break;
- }
+   			switch(t.options.stretching) {
+    			case 'fill':
+     				this.setFillMode(t.options.centeredOnFill);
+     				break;
+    			case 'responsive':
+     				this.setResponsiveMode();
+     				break;
+				case 'none':
+					this.setDimensions();
+					break;
+				// This is the 'auto' mode
+				default:
+					if (this.hasFluidMode() === true) {
+						this.setResponsiveMode();
+					} else {
+						this.setDimensions(width, height);
+					}
+					break;
+			}
 
 			// special case for big play button so it doesn't go over the controls area
 			var playLayer = t.layers.find('.mejs-overlay-play'),
@@ -818,10 +826,38 @@
         	// do we have the native dimensions yet?
             var t = this;
             if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
-					var nativeWidth = t.isVideo ? ((t.media.videoWidth && t.media.videoWidth > 0) ? t.media.videoWidth : t.options.defaultVideoWidth) : t.options.defaultAudioWidth,
-					nativeHeight = t.isVideo ? ((t.media.videoHeight && t.media.videoHeight > 0) ? t.media.videoHeight : t.options.defaultVideoHeight) : t.options.defaultAudioHeight,
-					parentWidth = t.container.parent().closest(':visible').width(),
-					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
+					
+				// do we have the native dimensions yet?
+				var nativeWidth = (function() {
+					if (t.isVideo) {
+						if (t.media.videoWidth && t.media.videoWidth > 0) {
+							return t.media.videoWidth;
+						} else if (t.media.getAttribute('width') !== null) {
+							return t.media.getAttribute('width');
+						} else {
+							return t.options.defaultVideoWidth;
+						}
+					} else {
+						return t.options.defaultAudioHeight;
+					}
+				})();
+
+				var nativeHeight = (function() {
+					if (t.isVideo) {
+						if (t.media.videoHeight && t.media.videoHeight > 0) {
+							return t.media.videoHeight;
+						} else if (t.media.getAttribute('height') !== null) {
+							return t.media.getAttribute('height');
+						} else {
+							return t.options.defaultVideoHeight;
+						}
+					} else {
+						return t.options.defaultAudioHeight;
+					}
+				})();
+
+				var parentWidth = t.container.parent().closest(':visible').width(),
+					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) > t.container.parent().closest(':visible').height() ? t.container.parent().closest(':visible').height() : parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
 				if(isNaN(newHeight)) {

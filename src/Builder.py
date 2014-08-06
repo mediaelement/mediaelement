@@ -6,7 +6,7 @@ import shutil
 import re
 
 def remove_console(text):
-	return re.sub('console.(log|debug)\((.*)\);?', '', text) 
+	return re.sub('console.(log|debug)\((.*)\);?', '', text)
 
 me_filename = 'mediaelement'
 mep_filename = 'mediaelementplayer'
@@ -32,7 +32,7 @@ code = ''
 for item in me_files:
 	src_file = open('js/' + item,'r')
 	code += src_file.read() + "\n"
-	
+
 code = remove_console(code)
 
 tmp_file = open('../build/' + me_filename + '.js','w')
@@ -62,7 +62,7 @@ code = ''
 for item in mep_files:
     src_file = open('js/' + item,'r')
     code += src_file.read() + "\n"
-        
+
 code = remove_console(code)
 
 tmp_file = open('../build/' + mep_filename + '.js','w')
@@ -96,7 +96,7 @@ def addHeader(headerFilename, filename):
 	# write the original contents
 	tmp_file.write(file_txt)
 	tmp_file.close()
-	
+
 
 addHeader('js/me-header.js', '../build/' + me_filename + '.min.js')
 addHeader('js/mep-header.js', '../build/' + mep_filename + '.min.js')
@@ -140,11 +140,43 @@ shutil.copy2('css/controls.svg','../build/controls.svg')
 shutil.copy2('css/bigplay.png','../build/bigplay.png')
 shutil.copy2('css/bigplay.svg','../build/bigplay.svg')
 shutil.copy2('css/loading.gif','../build/loading.gif')
-shutil.copy2('css/speed.svg','../build/speed.svg')
 
 shutil.copy2('css/mejs-skins.css','../build/mejs-skins.css')
 shutil.copy2('css/controls-ted.png','../build/controls-ted.png')
 shutil.copy2('css/controls-wmp.png','../build/controls-wmp.png')
 shutil.copy2('css/controls-wmp-bg.png','../build/controls-wmp-bg.png')
+
+
+#Flash Build
+print('Building SWF')
+flex_path = '../../flex_sdk_4.6'
+
+flash_in_path = 'flash/FlashMediaElement.as'
+flash_temp_path = 'flash/FlashMediaElement.as.bak'
+flash_out_path = '../build/flashmediaelement.swf'
+flash_cdn_out_path = '../build/flashmediaelement-cdn.swf'
+
+def build_flash(flex_path, flash_in_path, flash_out_path):
+	os.system(flex_path + '/bin/mxmlc -strict=false -warnings=true ' + flash_in_path + ' -o ' + flash_out_path + ' -library-path+="' + flex_path + '/lib" -include-libraries+=flash/flashmediaelement.swc -include-libraries+=flash/flashls.swc -use-network=true -headless-server -static-link-runtime-shared-libraries')
+
+# build main
+build_flash(flex_path, flash_in_path, flash_out_path)
+
+# make cdn version
+flash_code = open(flash_in_path,'r').read()
+flash_code = flash_code.replace('//Security.allowDomain("*");','Security.allowDomain("*");')
+flash_code = flash_code.replace('//Security.allowInsecureDomain("*");','Security.allowInsecureDomain("*");')
+
+# backup
+shutil.move(flash_in_path, flash_temp_path)
+
+flash_cdn = open(flash_in_path,'w')
+flash_cdn.write(flash_code)
+flash_cdn.close()
+
+build_flash(flex_path, flash_in_path, flash_cdn_out_path)
+
+# restore original
+shutil.move(flash_temp_path, flash_in_path)
 
 print('DONE!')

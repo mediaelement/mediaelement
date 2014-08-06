@@ -1,6 +1,6 @@
 ### Version History
 
-*2.15.0 (2014/07 - in progress)*
+*2.15.0 (2014/08/03)*
 
 * support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
 * add Flash/HTTP Live Streaming Support (https://github.com/johndyer/mediaelement/pull/1066) [mangui]
@@ -21,8 +21,16 @@
 * flash: send keydown events up to javascript (https://github.com/johndyer/mediaelement/pull/1120) [rounce]
 * Restore IE6 compatibility for 100% (https://github.com/johndyer/mediaelement/pull/1021) [ryokenau]
 * Added playback speed (HTML5 only), fixed caption's auto-size when fullscreen (https://github.com/johndyer/mediaelement/pull/1027) [cheng-shiwen]
+* Cleaned up playback speed (https://github.com/johndyer/mediaelement/pull/1249) [matthillman]
 * Chromium Web Browser Support (https://github.com/johndyer/mediaelement/pull/1020) [ryokenau]
-
+* Always listen for the fullscreenchange event on the document (https://github.com/johndyer/mediaelement/pull/1240) [foolip ]
+* The hours are not required on the webvtt format (https://github.com/johndyer/mediaelement/pull/1252) [LeResKP]
+* Fix wrong initial player size when responsive (https://github.com/johndyer/mediaelement/pull/1247) [Wizard13] 
+* Make mejs.MediaFeatures.isFullScreen() more consistent (https://github.com/johndyer/mediaelement/pull/1239) [foolip]
+* Fix flash source chooser (https://github.com/johndyer/mediaelement/pull/1191) [dajulia3]
+* Option `setDimensions` to allow deactivation of inline widths and heights at player elements (https://github.com/johndyer/mediaelement/pull/1236) [feeela]
+* Fix Captions start language is not ticked in Firefox (https://github.com/johndyer/mediaelement/pull/1260)
+* Updated SVG to fix Chrome 38's rendering problems
 
 *2.14.2 (2014/04/04)*
 

@@ -85,13 +85,13 @@ mejs.MediaFeatures = {
 			}
 			
 			t.isFullScreen = function() {
-				if (v.mozRequestFullScreen) {
+				if (t.hasMozNativeFullScreen) {
 					return d.mozFullScreen;
 				
-				} else if (v.webkitRequestFullScreen) {
+				} else if (t.hasWebkitNativeFullScreen) {
 					return d.webkitIsFullScreen;
 				
-				} else if (v.hasMsNativeFullScreen) {
+				} else if (t.hasMsNativeFullScreen) {
 					return d.msFullscreenElement !== null;
 				}
 			}

@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
@@ -36,6 +36,7 @@ module.exports = function(grunt) {
                     'src/js/mep-feature-fullscreen.js',
                     'src/js/mep-feature-tracks.js',
                     'src/js/mep-feature-contextmenu.js',
+                    'src/js/mep-feature-speed.js',
                     'src/js/mep-feature-postroll.js'
                 ],
                 dest: 'local-build/mediaelementplayer.js'
@@ -82,7 +83,7 @@ module.exports = function(grunt) {
         }
     });
 
-    
+
     grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'copy']);
 
 };

@@ -22,12 +22,11 @@ describe("HTMLMediaElement", function() {
       return element !== null;
     }, "MediaElement should have loaded", 5000);
   });
-  
+
   afterEach(function() {
     player.remove();
     player = null;
     element = null;
-    domElem.parentNode.removeChild(domElem);
     domElem = null;
   });
 
@@ -86,5 +85,59 @@ describe("HTMLMediaElement", function() {
         return element.readyState >= HAVE_METADATA;
     }, "Metadata should be loaded", METADATA_TIMEOUT);
   });
+});
+
+describe("sourcechooser with the flash player", function() {
+  var player;
+  var element;
+  var domElem;
+
+  beforeEach(function() {
+      $('body').prepend('<video width="640" height="360" id="player1" poster="../media/echo-hereweare.jpg">' +
+        '<source type="video/mp4" src="../media/other.mp4" title="Other MP$"></source>' +
+        '<source type="video/mp4" src="../media/echo-hereweare.mp4" title="MP4"></source>' +
+        '</video>');
+
+      player = new MediaElementPlayer('#player1', {
+          enableAutosize: false,
+          mode: 'shim',
+          flashName: '../build/flashmediaelement.swf',
+          features: ["playpause", "progress", "sourcechooser"],
+          success: function (mediaElement, domObject) {
+              $element = $(mediaElement);
+          }
+      });
+      waitsFor(function () {
+          return element !== null;
+      }, "MediaElement should have loaded", 5000);
+  });
+
+  afterEach(function() {
+      player.remove();
+      player = null;
+      element = null;
+      domElem = null;
+  });
+
+    it("should be able to switch sources when using the flash shim", function() {
+      waitsFor(function() {
+        return $('.mejs-sourcechooser-selector input[value$="media/echo-hereweare.mp4"]').length != 0
+      }, "Timed Out", 10000);
+        runs(function() {
+            var $echoVideoRadioButton = $('.mejs-sourcechooser-selector input[value$="media/echo-hereweare.mp4"]');
+            var $otherVideoRadioButton = $('.mejs-sourcechooser-selector input[value$="media/other.mp4"]');
+
+            expect($echoVideoRadioButton.length).toEqual(1);
+            expect($otherVideoRadioButton.length).toEqual(1);
+            expect(player.media.src).toMatch(/.*media\/other.mp4/);
+            expect(player.media.paused).toEqual(true);
+
+            $echoVideoRadioButton.trigger('click');
+
+            expect(player.media.src).toMatch(/.*media\/echo-hereweare.mp4/)
+
+        });
+    });
+
 
 });
