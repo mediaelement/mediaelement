@@ -1,7 +1,6 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		//playpauseText: mejs.i18n.t('Play/Pause'),
 		playText: mejs.i18n.t('Play'),
 		pauseText: mejs.i18n.t('Pause')
 	});
