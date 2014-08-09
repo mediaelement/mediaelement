@@ -6,6 +6,7 @@
 	
 	<script src="../build/jquery.js"></script>	
 	<script src="../build/mediaelement-and-player.min.js"></script>
+	<script src="testforfiles.js"></script>	
 	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
 </head>
 <body>
@@ -73,6 +74,7 @@ to the <a href="http://www.macromedia.com/support/documentation/en/flashplayer/h
 <script>
 
 $('audio,video').mediaelementplayer({
+	mode: 'shim',
 	success: function(player, node) {
 		$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
 	}

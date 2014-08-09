@@ -7,3 +7,6 @@ build/SilverlightMediaElement.pdb
 build/SilverlightMediaElement.dll
 tests/*
 newfeatures/*
+/mejs3/
+node_modules
+local-build

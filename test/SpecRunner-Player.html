@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Spec Runner</title>
+
+  <link rel="shortcut icon" type="image/png" href="lib/jasmine-1.3.1/jasmine_favicon.png">
+  <link rel="stylesheet" type="text/css" href="lib/jasmine-1.3.1/jasmine.css">
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+
+  <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.3.1/jasmine-html.js"></script>
+
+	<script src="../build/jquery.js"></script>
+
+  <!-- include source files here... -->
+	<script src="../src/js/me-header.js"></script>
+	<script src="../src/js/me-namespace.js"></script>
+	<script src="../src/js/me-utility.js"></script>
+	<script src="../src/js/me-plugindetector.js"></script>
+	<script src="../src/js/me-featuredetection.js"></script>
+	<script src="../src/js/me-mediaelements.js"></script>
+	<script src="../src/js/me-shim.js"></script>
+	<script src="../src/js/me-i18n.js"></script>
+	<script src="../src/js/me-i18n-locale-de.js"></script>
+
+	<script src="../src/js/mep-header.js"></script>
+	<script src="../src/js/mep-library.js"></script>
+	<script src="../src/js/mep-player.js"></script>
+	<script src="../src/js/mep-feature-playpause.js"></script>
+	<script src="../src/js/mep-feature-stop.js"></script>
+	<script src="../src/js/mep-feature-progress.js"></script>
+	<script src="../src/js/mep-feature-time.js"></script>
+	<script src="../src/js/mep-feature-volume.js"></script>
+	<script src="../src/js/mep-feature-fullscreen.js"></script>
+	<script src="../src/js/mep-feature-tracks.js"></script>
+	<script src="../src/js/mep-feature-contextmenu.js"></script>
+	<script src="../src/js/mep-feature-postroll.js"></script>
+	<script src="../src/js/mep-feature-sourcechooser.js"></script>
+
+  <!-- include spec files here... -->
+<!--  <script src="SpecHelper.js"></script> -->
+  <script src="Spec-Player.js"></script>
+
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var htmlReporter = new jasmine.HtmlReporter();
+
+      jasmineEnv.addReporter(htmlReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+      };
+
+      var currentWindowOnload = window.onload;
+
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+
+    })();
+  </script>
+
+</head>
+
+<body>
+  <!-- VIDEO TAG GETS PREPENDED ABOVE HERE -->
+</body>
+</html>

@@ -17,6 +17,9 @@
 	background: url(controls-ted.png) repeat-x 0 -52px;
 	height: 6px;
 }
+.mejs-ted .mejs-controls .mejs-time-rail .mejs-time-buffering {
+	height: 6px;
+}
 .mejs-ted .mejs-controls .mejs-time-rail .mejs-time-loaded {
 	background-color: none;
 	background: url(controls-ted.png) repeat-x 0 -52px;
@@ -175,6 +178,9 @@
 .mejs-wmp .mejs-controls .mejs-time-rail .mejs-time-total {
 	background-color: transparent;
 	border: solid 1px #ccc;
+	height: 3px;
+}
+.mejs-wmp .mejs-controls .mejs-time-rail .mejs-time-buffering {
 	height: 3px;
 }
 .mejs-wmp .mejs-controls .mejs-time-rail .mejs-time-loaded {
