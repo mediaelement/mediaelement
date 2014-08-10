@@ -1,7 +1,7 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		progressText: 'Seek bar',
+		progressText: mejs.i18n.t('Seek bar'),
 		seekSeconds: 5
 	});
 
@@ -88,7 +88,7 @@
 				updateSlider = function(e) {
 					var sec = media.currentTime,
 						time = mejs.Utility.secondsToTimeCode(sec),
-						d = media.duration;
+						dur = media.duration;
 
 					// WAI-ARIA accessibility
 					// Property or attribute? Ender doesn't have prop() - use attr()
@@ -96,9 +96,10 @@
 						'aria-valuenow': sec,
 						'aria-valuetext': time,
 						'aria-valuemin': 0,
-						'aria-valuemax': d,
+						'aria-valuemax': dur,
 						'aria-label': op.progressText,
 						'tabindex': 0,
+						'draggable': true,
 						'role': 'slider'
 					});
 				};
