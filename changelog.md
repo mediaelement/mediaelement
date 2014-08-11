@@ -1,5 +1,14 @@
 ### Version History
 
+*2.15.1 (2014/08/11)*
+
+* Fixes for various sizing issues with 2.15.0
+* Fix nativeWidth() to return defaultAudioWidth (https://github.com/johndyer/mediaelement/pull/1271)
+* Don't set .me-plugin width/height to 0 (https://github.com/johndyer/mediaelement/pull/1273) [staylor]
+* Remove video-only restriction on playback speed feature (https://github.com/johndyer/mediaelement/pull/1268/files) [phinze]
+* a work around for zero height containers (https://github.com/johndyer/mediaelement/pull/1274) [maimairel]
+
+
 *2.15.0 (2014/08/03)*
 
 * support m3u8 (https://github.com/johndyer/mediaelement/pull/1074) [clkao]
