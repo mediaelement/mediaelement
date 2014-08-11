@@ -794,7 +794,7 @@
 							return t.options.defaultVideoWidth;
 						}
 					} else {
-						return t.options.defaultAudioHeight;
+						return t.options.defaultAudioWidth;
 					}
 				})();
 
