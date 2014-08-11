@@ -810,7 +810,7 @@ if (typeof jQuery != 'undefined') {
 							return t.options.defaultVideoWidth;
 						}
 					} else {
-						return t.options.defaultAudioHeight;
+						return t.options.defaultAudioWidth;
 					}
 				})();
 
@@ -830,11 +830,12 @@ if (typeof jQuery != 'undefined') {
 
 				var
 					parentWidth = t.container.parent().closest(':visible').width(),
-					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) > t.container.parent().closest(':visible').height() ? t.container.parent().closest(':visible').height() : parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
+					parentHeight = t.container.parent().closest(':visible').height(),
+					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
-				if(isNaN(newHeight)) {
-					newHeight = t.container.parent().closest(':visible').height();
+				if(isNaN(newHeight) || ( parentHeight != 0 && newHeight > parentHeight )) {
+					newHeight = parentHeight;
 				}
 
 				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
@@ -2368,9 +2369,6 @@ if (typeof jQuery != 'undefined') {
 	$.extend(MediaElementPlayer.prototype, {
 
 		buildspeed: function(player, controls, layers, media) {
-			if (!player.isVideo)
-				return;
-
 			var t = this;
 
 			if (t.media.pluginType == 'native') {
