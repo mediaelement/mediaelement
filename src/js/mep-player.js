@@ -856,15 +856,10 @@
 					}
 				})();
 
-<<<<<<< HEAD
-				var parentWidth = t.container.parent().closest(':visible').width(),
-					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) > t.container.parent().closest(':visible').height() ? t.container.parent().closest(':visible').height() : parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
-=======
 				var
 					parentWidth = t.container.parent().closest(':visible').width(),
 					parentHeight = t.container.parent().closest(':visible').height(),
 					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
->>>>>>> upstream/master
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
 				if(isNaN(newHeight) || ( parentHeight != 0 && newHeight > parentHeight )) {
