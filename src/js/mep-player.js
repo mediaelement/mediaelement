@@ -823,9 +823,9 @@
         },
         
         setResponsiveMode: function() {
-        	// do we have the native dimensions yet?
+
             var t = this;
-            if (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+            if (t.hasFluidMode) {
 					
 				// do we have the native dimensions yet?
 				var nativeWidth = (function() {
@@ -862,7 +862,7 @@
 					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
-				if(isNaN(newHeight) || ( parentHeight != 0 && newHeight > parentHeight )) {
+				if (isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight && parentHeight > nativeHeight)) {
 					newHeight = parentHeight;
 				}
 
