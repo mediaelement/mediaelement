@@ -677,6 +677,10 @@
 					if(t.options.autoRewind) {
 						try{
 							t.media.setCurrentTime(0);
+                            // Fixing an Android stock browser bug, where "seeked" isn't fired correctly after ending the video and jumping to the beginning
+                            window.setTimeout(function(){
+                                $(t.container).find('.mejs-overlay-loading').parent().hide();
+                            }, 20);
 						} catch (exp) {
 
 						}
