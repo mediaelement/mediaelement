@@ -1,3 +1,11 @@
+.mejs-offscreen{
+ 	position: absolute !important;
+	left: -10000px;
+	overflow: hidden;
+	width: 1px;
+	height: 1px;
+}
+
 .mejs-container {
 	position: relative;
 	background: #000;
