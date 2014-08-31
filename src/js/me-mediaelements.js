@@ -297,7 +297,7 @@ mejs.PluginMediaElement.prototype = {
 		if (callbacks) {
 			args = Array.prototype.slice.call(arguments, 1);
 			for (i = 0; i < callbacks.length; i++) {
-				callbacks[i].apply(null, args);
+				callbacks[i].apply(this, args);
 			}
 		}
 	},
