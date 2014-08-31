@@ -20,7 +20,7 @@ package htmlelements
 	import FlashMediaElement;
 	import HtmlMediaEvent;
 
-	public class YouTubeElement extends Sprite implements IMediaElement 
+	public class YouTubeElement extends Sprite implements IMediaElement
 	{
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
@@ -110,7 +110,7 @@ package htmlelements
 		public var initWidth:Number;
 
 		// (1) load()
-		// calls _connection.connect(); 
+		// calls _connection.connect();
 		// waits for NetConnection.Connect.Success
 		// _stream gets created
 		
@@ -381,13 +381,13 @@ package htmlelements
 			_bufferedTime = _bytesLoaded / _bytesTotal * _duration;
 
 			// build JSON
-			var values:String = 
-							"duration:" + _duration + 
-							",framerate:" + _framerate + 
-							",currentTime:" + _currentTime + 
-							",muted:" + _isMuted + 
-							",paused:" + _isPaused + 
-							",ended:" + _isEnded + 
+			var values:String =
+							"duration:" + _duration +
+							",framerate:" + _framerate +
+							",currentTime:" + _currentTime +
+							",muted:" + _isMuted +
+							",paused:" + _isPaused +
+							",ended:" + _isEnded +
 							",volume:" + _volume +
 							",src:\"" + _currentUrl + "\"" +
 							",bytesTotal:" + _bytesTotal +
