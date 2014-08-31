@@ -142,7 +142,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     public function pause():void {
       if(!_isManifestLoaded)
-        return;      
+        return;
       //Log.txt("HLSMediaElement:pause");
       _hls.stream.pause();
     }
@@ -179,7 +179,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     public function setCurrentTime(pos:Number):void{
       if(!_isManifestLoaded)
-        return;      
+        return;
       sendEvent(HtmlMediaEvent.SEEKING);
       _hls.stream.seek(pos);
     }
