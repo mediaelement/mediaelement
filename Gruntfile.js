@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-text-replace');
+    grunt.loadNpmTasks("grunt-remove-logging");
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -50,6 +51,19 @@ module.exports = function(grunt) {
                     'local-build/mediaelementplayer.js'
                 ],
                 dest: 'local-build/mediaelement-and-player.js'
+            }
+        },
+        removelogging: {
+            dist: {
+                src: [
+                    'local-build/mediaelement.js',
+                    'local-build/mediaelementplayer.js',
+                    'local-build/mediaelement-and-player.js'
+                ]
+            },
+            options: {
+                // Keep `warn` and other methods from the console API
+                methods: ['log']
             }
         },
         uglify: {
@@ -159,7 +173,7 @@ module.exports = function(grunt) {
     });
 
 
-    grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'copy', 'shell:buildFlash',
-        'replace:cdnBuild', 'shell:buildFlashCDN', 'clean:temp']);
+    grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
+        'shell:buildFlash', 'replace:cdnBuild', 'shell:buildFlashCDN', 'clean:temp']);
 
 };
