@@ -9,6 +9,7 @@
     "grunt-contrib-copy": "~0.4.1",
     "grunt-shell": "~1.1.1",
     "grunt-text-replace": "~0.3.12",
-    "grunt-contrib-clean": "~0.6.0"
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-remove-logging": "~0.2.0"
   }
 }
