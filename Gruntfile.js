@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks("grunt-remove-logging");
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -49,6 +50,19 @@ module.exports = function(grunt) {
                 dest: 'local-build/mediaelement-and-player.js'
             }
         },
+        removelogging: {
+            dist: {
+                src: [
+                    'local-build/mediaelement.js',
+                    'local-build/mediaelementplayer.js',
+                    'local-build/mediaelement-and-player.js'
+                ]
+            },
+            options: {
+                // Keep `warn` and other methods from the console API
+                methods: ['log']
+            }
+        },
         uglify: {
             me: {
                 src    : ['local-build/mediaelement.js'],
@@ -84,6 +98,6 @@ module.exports = function(grunt) {
     });
 
 
-    grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'copy']);
+    grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy']);
 
 };
