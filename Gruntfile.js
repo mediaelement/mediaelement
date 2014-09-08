@@ -63,6 +63,10 @@ module.exports = function(grunt) {
             bundle: {
                 src  : ['local-build/mediaelement-and-player.js'],
                 dest : 'local-build/mediaelement-and-player.min.js'
+            },
+            options: {
+                // Preserve comments that start with a bang (like the file header)
+                preserveComments: "some"
             }
         },
         cssmin: {
