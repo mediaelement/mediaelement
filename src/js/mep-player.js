@@ -827,7 +827,7 @@
 					newHeight = $(window).height();
 				}
 
-				if ( newHeight != 0 && parentWidth != 0 ) {
+				if ( newHeight && parentWidth ) {
 					// set outer container size
 					t.container
 						.width(parentWidth)
