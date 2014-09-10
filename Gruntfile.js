@@ -102,6 +102,7 @@ module.exports = function(grunt) {
             }
         },
         clean: {
+          build: ['local-build'],
           temp:  ['tmp']
         },
 
