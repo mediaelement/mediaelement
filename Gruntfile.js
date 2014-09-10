@@ -4,7 +4,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-text-replace');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -86,6 +88,22 @@ module.exports = function(grunt) {
                 filter  : 'isFile'
             }
         },
+        replace: {
+            cdnBuild: {
+                src: ['src/flash/FlashMediaElement.as'],
+                dest: 'tmp/FlashMediaElement.as',
+                replacements: [{
+                    from: '//Security.allowDomain("*");',
+                    to:   'Security.allowDomain("*");'
+                }, {
+                    from: '//Security.allowInsecureDomain("*");',
+                    to:   'Security.allowInsecureDomain("*");'
+                }]
+            }
+        },
+        clean: {
+          temp:  ['tmp']
+        },
 
         // Task that compiles flashmediaelement.swf using the free Flex SDK on Linux/Mac.
         // There are a few prerequisite steps involved in running this task.
@@ -128,11 +146,19 @@ module.exports = function(grunt) {
                     grunt.config.set("flashOut", 'local-build/flashmediaelement.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
+            },
+            buildFlashCDN: {
+                command: function() {
+                    grunt.config.set("flashIn", 'tmp/FlashMediaElement.as');
+                    grunt.config.set("flashOut", 'local-build/flashmediaelement-cdn.swf');
+                    return grunt.config.get("buildFlashCommand");
+                }
             }
         }
     });
 
 
-    grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'copy', 'shell:buildFlash']);
+    grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'copy', 'shell:buildFlash',
+        'replace:cdnBuild', 'shell:buildFlashCDN', 'clean:temp']);
 
 };
