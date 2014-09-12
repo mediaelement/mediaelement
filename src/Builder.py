@@ -25,6 +25,8 @@ me_files.append('me-mediaelements.js')
 me_files.append('me-shim.js')
 me_files.append('me-i18n.js')
 me_files.append('me-i18n-locale-de.js')
+me_files.append('me-i18n-locale-fr.js')
+me_files.append('me-i18n-locale-zh-cn.js')
 me_files.append('me-i18n-locale-zh.js')
 
 code = ''
