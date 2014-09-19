@@ -165,8 +165,19 @@ package htmlelements
 
 		public function load():void {
 
-			if (_currentUrl == "")
+			if (_currentUrl == "") {
 				return;
+			}
+
+			if (_sound) {
+				if (_sound.hasEventListener(ProgressEvent.PROGRESS)) {
+					_sound.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
+				}
+
+				if (_sound.hasEventListener(Event.ID3)) {
+					_sound.removeEventListener(Event.ID3, id3Handler);
+				}
+			}
 
 			_sound = new Sound();
 			//sound.addEventListener(IOErrorEvent.IO_ERROR,errorHandler);
