@@ -1,5 +1,11 @@
 ### Version History
 
+*2.15.2 (2014/09/??) - in progress *
+
+* remove event listeners from flash AudioElement (https://github.com/johndyer/mediaelement/pull/1294) [phinze]
+* mep-feature-ads: Link overlay only when url is given (https://github.com/johndyer/mediaelement/pull/1296) [schrolli]
+* Add repository field to package.json to avoid warning (https://github.com/johndyer/mediaelement/pull/1300) [dmfrancisco]
+
 *2.15.1 (2014/08/11)*
 
 * Fixes for various sizing issues with 2.15.0
