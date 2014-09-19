@@ -1,6 +1,10 @@
 {
   "name": "mediaelement",
   "version": "2.14.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johndyer/mediaelement.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.2.2",
