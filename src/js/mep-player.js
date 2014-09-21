@@ -287,7 +287,7 @@
 				t.container =
 					$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>'+
                     '<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') + 
-                      '" tabindex="0" role="application" aria-label=' + videoPlayerTitle + '">'+
+                      '" tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">'+
 						'<div class="mejs-inner">'+
 							'<div class="mejs-mediaelement"></div>'+
 							'<div class="mejs-layers"></div>'+
