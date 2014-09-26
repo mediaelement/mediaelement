@@ -84,7 +84,6 @@
 							timefloat.hide();
 							t.globalUnbind('.dur');
 						});
-						return false;
 					}
 				})
 				.bind('mouseenter', function(e) {
