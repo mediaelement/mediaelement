@@ -1,4 +1,4 @@
-/*!
+/*
  * This is a i18n.locale language object.
  *
  * French translation by Luc Poupard, Twitter: @klohFR
