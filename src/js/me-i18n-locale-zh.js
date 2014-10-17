@@ -1,4 +1,4 @@
-/*!
+/*
  * This is a i18n.locale language object.
  *
  * Traditional chinese translation by Tim Latz, latz.tim@gmail.com

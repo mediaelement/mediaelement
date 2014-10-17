@@ -1,4 +1,4 @@
-/*!
+/*
  * Adds Internationalization and localization to mediaelement.
  *
  * This file does not contain translations, you have to add the manually.
