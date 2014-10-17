@@ -1,4 +1,4 @@
-/*!
+/*
  * This is a i18n.locale language object.
  *
  * German translation by Tim Latz, latz.tim@gmail.com

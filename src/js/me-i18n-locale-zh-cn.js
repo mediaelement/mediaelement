@@ -1,4 +1,4 @@
-/*!
+/*
  * This is a i18n.locale language object.
  *
  * <zh-CN> Simplified Chinese translation by Michael J. Tong,
