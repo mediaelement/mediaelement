@@ -193,8 +193,8 @@
 			t.hideControls();
 			
 			// enable clicking through
-			t.adsLayer.show();
 			if (t.options.adsPrerollAdUrl != '') {
+				t.adsLayer.show();
 				t.adsLayer.find('a').attr('href', t.options.adsPrerollAdUrl);
 			}
 			
