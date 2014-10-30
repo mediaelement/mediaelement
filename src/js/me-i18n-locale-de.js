@@ -1,10 +1,10 @@
 /*
  * This is a i18n.locale language object.
  *
- * German translation by Tim Latz, latz.tim@gmail.com
+ * German translation by Jalios, Twitter: @Jalios
  *
  * @author
- *   Tim Latz (latz.tim@gmail.com)
+ *   Jalios (Twitter: @Jalios)
  *
  * @see
  *   me-i18n.js
@@ -18,9 +18,17 @@
 
     if (typeof exports.de === 'undefined') {
         exports.de = {
-            "Fullscreen" : "Vollbild",
-            "Go Fullscreen" : "Vollbild an",
-            "Turn off Fullscreen" : "Vollbild aus",
+            "None" : "Entfällt",
+            "Unmute" : "Lautstärke einschalten",
+            "Fullscreen" : "Fullscreen",
+            "Download File" : "Download der Datei",
+            "Mute Toggle" : "Stummschalten",
+            "Play/Pause" : "Abspielen/Pause",
+            "Captions/Subtitles" : "Unterschriften/Untertitel",
+            "Download Video" : "Video herunterladen",
+            "Mute" : "Stummschalten",
+            "Turn off Fullscreen" : "Fullscreen abschalten",
+            "Go Fullscreen" : "Fullscreen einschalten",
             "Close" : "Schließen"
         };
     }
