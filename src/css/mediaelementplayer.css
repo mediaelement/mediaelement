@@ -960,3 +960,19 @@ div.mejs-speed-button {
 	background-color: rgba(255,255,255,.4) !important;
 }
 /* End: Speed */
+
+/* Start: Skip Back */
+
+.mejs-controls .mejs-button.mejs-skip-back-button {
+	background: transparent url(skipback.png) no-repeat;
+	background-position: 3px 3px;
+}
+.mejs-controls .mejs-button.mejs-skip-back-button button {
+	background: transparent;
+	font-size: 9px;
+	line-height: normal;
+	color: #ffffff;
+}
+
+/* End: Skip Back */
+
