@@ -1,6 +1,6 @@
 ### Version History
 
-*2.15.2 (2014/09/??) - in progress *
+*2.16.0 (2014/10/??) - in progress *
 
 * Migration from Builder.py to Grunt (https://github.com/johndyer/mediaelement/pull/1309) [dmfrancisco]
 * remove event listeners from flash AudioElement (https://github.com/johndyer/mediaelement/pull/1294) [phinze]
@@ -9,7 +9,10 @@
 * Fix IE8 error on window resizing (https://github.com/johndyer/mediaelement/pull/1301) [chemerisuk]
 * send `this` to dispatchEvent callbacks (https://github.com/johndyer/mediaelement/pull/1295) [phinze]
 * Added link to MIT license to README.md (https://github.com/johndyer/mediaelement/pull/1303) [SuriyaaKudoIsc]
-
+* Fix for dynamically created players in responsive design (https://github.com/johndyer/mediaelement/pull/1337) [staylor]
+* Added skipback feature (https://github.com/johndyer/mediaelement/pull/1320/files) [matthillman]
+* Allow click/touch event bubbling on time rail (https://github.com/johndyer/mediaelement/pull/1318) [dennyferra]
+* Additional translations for i18n (https://github.com/johndyer/mediaelement/pull/1310/files) [OlivierJaquemet]
 
 *2.15.1 (2014/08/11)*
 
