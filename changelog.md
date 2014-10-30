@@ -11,6 +11,8 @@
 * Added link to MIT license to README.md (https://github.com/johndyer/mediaelement/pull/1303) [SuriyaaKudoIsc]
 * Fix for dynamically created players in responsive design (https://github.com/johndyer/mediaelement/pull/1337) [staylor]
 * Added skipback feature (https://github.com/johndyer/mediaelement/pull/1320/files) [matthillman]
+* Allow click/touch event bubbling on time rail (https://github.com/johndyer/mediaelement/pull/1318) [dennyferra]
+
 
 
 *2.15.1 (2014/08/11)*
