@@ -836,7 +836,7 @@
 					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
-				if(isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight )) {
+				if (isNaN(newHeight)) {
 					newHeight = parentHeight;
 				}
 
