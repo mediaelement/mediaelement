@@ -9,6 +9,7 @@
 * Fix IE8 error on window resizing (https://github.com/johndyer/mediaelement/pull/1301) [chemerisuk]
 * send `this` to dispatchEvent callbacks (https://github.com/johndyer/mediaelement/pull/1295) [phinze]
 * Added link to MIT license to README.md (https://github.com/johndyer/mediaelement/pull/1303) [SuriyaaKudoIsc]
+* Fix for dynamically created players in responsive design (https://github.com/johndyer/mediaelement/pull/1337) [staylor]
 
 
 *2.15.1 (2014/08/11)*
