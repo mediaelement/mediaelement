@@ -282,10 +282,12 @@
 
 				// remove native controls
 				t.$media.removeAttr('controls');
-
+				var videoPlayerTitle = mejs.i18n.t('Video Player');
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') + '">'+
+					$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>'+
+                    '<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') + 
+                      '" tabindex="0" role="application" aria-label=' + videoPlayerTitle + '">'+
 						'<div class="mejs-inner">'+
 							'<div class="mejs-mediaelement"></div>'+
 							'<div class="mejs-layers"></div>'+
@@ -294,7 +296,14 @@
 						'</div>' +
 					'</div>')
 					.addClass(t.$media[0].className)
-					.insertBefore(t.$media);
+					.insertBefore(t.$media)
+					.focus(function ( e ) {
+						if( !t.controlsAreVisible ) {
+							t.showControls(true);
+							var playButton = t.container.find('.mejs-playpause-button > button');
+							playButton.focus();
+						}
+					});
 
 				// add classes for user and content
 				t.container.addClass(
@@ -316,7 +325,7 @@
 
 					t.$media.remove();
 					t.$node = t.$media = $newMedia;
-					t.node = t.media = $newMedia[0]
+					t.node = t.media = $newMedia[0];
 
 				} else {
 
@@ -374,8 +383,8 @@
 			mejs.MediaElement(t.$media[0], meOptions);
 
 			if (typeof(t.container) != 'undefined' && t.controlsAreVisible){
-			    // controls are shown when loaded
-			    t.container.trigger('controlsshown');
+				// controls are shown when loaded
+				t.container.trigger('controlsshown');
 			}
 		},
 
@@ -391,8 +400,8 @@
 				t.controls
 					.css('visibility','visible')
 					.stop(true, true).fadeIn(200, function() {
-					      t.controlsAreVisible = true;
-					      t.container.trigger('controlsshown');
+						t.controlsAreVisible = true;
+						t.container.trigger('controlsshown');
 					});
 
 				// any additional controls people might add and want to hide
@@ -423,7 +432,7 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction)
 				return;
 
 			if (doAnimation) {
@@ -597,8 +606,8 @@
 							}
 						};
 
-			            // click to play/pause
-			            t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
+						// click to play/pause
+						t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 						// show/hide controls
 						t.container
@@ -712,7 +721,16 @@
 					}
 				}, false);
 
-
+				t.container.focusout(function (e) {
+					if( e.relatedTarget ) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
+						var $target = $(e.relatedTarget);
+						if (t.keyboardAction && $target.parents('.mejs-container').length === 0) {
+							t.keyboardAction = false;
+							t.hideControls(true);
+						}
+					}
+				});
+                
 				// webkit has trouble doing this without a delay
 				setTimeout(function () {
 					t.setPlayerSize(t.width, t.height);
@@ -828,6 +846,7 @@
 				}
 
 				if ( newHeight && parentWidth ) {
+
 					// set outer container size
 					t.container
 						.width(parentWidth)
@@ -895,7 +914,7 @@
 			if (t.options && !t.options.autosizeProgress) {
 				// Also, frontends devs can be more flexible
 				// due the opportunity of absolute positioning.
-				railWidth = parseInt(rail.css('width'));
+				railWidth = parseInt(rail.css('width'), 10);
 			}
 
 			// attempt to autosize
@@ -926,7 +945,7 @@
 					lastControlPosition = lastControl.position();
 					railWidth--;
 				}
-			} while (lastControlPosition != null && lastControlPosition.top > 0 && railWidth > 0);
+			} while (lastControlPosition !== null && lastControlPosition.top > 0 && railWidth > 0);
 
 			if (t.setProgressRail)
 				t.setProgressRail();
@@ -949,7 +968,7 @@
 			}
 
 			// second, try the real poster
-			if (posterUrl !== '' && posterUrl != null) {
+			if (posterUrl !== '' && posterUrl !== null) {
 				t.setPoster(posterUrl);
 			} else {
 				poster.hide();
@@ -971,7 +990,7 @@
 				posterDiv = t.container.find('.mejs-poster'),
 				posterImg = posterDiv.find('img');
 
-			if (posterImg.length == 0) {
+			if (posterImg.length === 0) {
 				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
 			}
 
@@ -1087,14 +1106,19 @@
 
 				var t = this;
 
+				t.container.keydown(function () {
+					t.keyboardAction = true;
+				});
+            
 				// listen for key presses
 				t.globalBind('keydown', function(e) {
 					return t.onkeydown(player, media, e);
 				});
+            
 
 				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
-					player.hasFocus = $(event.target).closest('.mejs-container').length != 0;
+					player.hasFocus = $(event.target).closest('.mejs-container').length !== 0;
 				});
 
 		},

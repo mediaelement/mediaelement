@@ -1,3 +1,11 @@
+.mejs-offscreen{
+ 	position: absolute !important;
+	left: -10000px;
+	overflow: hidden;
+	width: 1px;
+	height: 1px;
+}
+
 .mejs-container {
 	position: relative;
 	background: #000;
@@ -208,7 +216,7 @@
 	box-sizing: content-box;
 }
 
-.mejs-container .mejs-controls .mejs-time span {
+.mejs-container .mejs-controls .mejs-time a {
 	color: #fff;
 	font-size: 11px;
 	line-height: 12px;
@@ -240,7 +248,7 @@
 	padding-top: 5px;
 }
 
-.mejs-controls .mejs-time-rail span {
+.mejs-controls .mejs-time-rail span, .mejs-controls .mejs-time-rail a {
 	display: block;
 	position: absolute;
 	width: 180px;
