@@ -483,10 +483,12 @@
 }
 
 /* horizontal version */
-.mejs-controls div.mejs-horizontal-volume-slider {
+.mejs-controls a.mejs-horizontal-volume-slider {
 	height: 26px;
 	width: 60px;
 	position: relative;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
