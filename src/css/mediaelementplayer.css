@@ -321,18 +321,25 @@
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-handle {
-	display: none;
+	display: block;
 	position: absolute;
 	margin: 0;
 	width: 10px;
-	background: #fff;
+	background: transparent;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	cursor: pointer;
-	border: solid 2px #333;
+	border: none;
 	top: -2px;
 	text-align: center;
+}
+
+/*Accessibility: make the handle visible on focus. */
+.mejs-controls .mejs-time-rail:hover .mejs-time-handle,
+.mejs-controls .mejs-time-rail .mejs-time-handle:focus {
+  border: solid 2px #444;
+  background: #f4f4f4;
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-float {
