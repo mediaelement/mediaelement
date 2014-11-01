@@ -13,6 +13,10 @@
 * Added skipback feature (https://github.com/johndyer/mediaelement/pull/1320/files) [matthillman]
 * Allow click/touch event bubbling on time rail (https://github.com/johndyer/mediaelement/pull/1318) [dennyferra]
 * Additional translations for i18n (https://github.com/johndyer/mediaelement/pull/1310/files) [OlivierJaquemet]
+* update HLS support with flashls v0.3.3 (https://github.com/johndyer/mediaelement/pull/1339) [mangui]
+* Make progres bar accessible (https://github.com/johndyer/mediaelement/pull/1292) [rylan] [nfreear]
+* Make volume control accessible (https://github.com/johndyer/mediaelement/pull/1290) [rylan]
+* Fix: Loading animation doesn't disappear Android (https://github.com/johndyer/mediaelement/pull/1288) [MoritzGiessmann]
 
 *2.15.1 (2014/08/11)*
 
