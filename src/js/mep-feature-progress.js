@@ -1,11 +1,17 @@
 (function($) {
+
+	$.extend(mejs.MepDefaults, {
+		progessHelpText: mejs.i18n.t(
+		'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.')
+	});
+
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function(player, controls, layers, media) {
-			var progessOffScreenText = mejs.i18n.t('Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.');
+
 			$('<div class="mejs-time-rail">' +
 				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-				'<span class="mejs-offscreen">' + progessOffScreenText + '</span>' +
+				'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
 				'<span class="mejs-time-buffering"></span>' +
 				'<span class="mejs-time-loaded"></span>' +
 				'<span class="mejs-time-current"></span>' +
@@ -73,7 +79,7 @@
 				lastKeyPressTime = 0,
 				startedPaused = false,
 				autoRewindInitial = player.options.autoRewind;
-            //Ally for slider
+            // Accessibility for slider
             var updateSlider = function (e) {
 
 				var seconds = media.currentTime,
@@ -211,6 +217,7 @@
 			media.addEventListener('timeupdate', function(e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
+				updateSlider(e);
 			}, false);
 			
 			
