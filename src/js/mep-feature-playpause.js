@@ -1,7 +1,8 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		playpauseText: mejs.i18n.t('Play/Pause')
+		playText: mejs.i18n.t('Play'),
+		pauseText: mejs.i18n.t('Pause')
 	});
 
 	// PLAY/pause BUTTON
@@ -9,9 +10,10 @@
 		buildplaypause: function(player, controls, layers, media) {
 			var 
 				t = this,
+				op = t.options,
 				play = 
 				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.playpauseText + '" aria-label="' + t.options.playpauseText + '"></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + op.playText + '" aria-label="' + op.playText + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
@@ -24,21 +26,41 @@
 					}
 					
 					return false;
-				});
+				}),
+				play_btn = play.find('button');
+
+
+			function togglePlayPause(which) {
+				if ('play' === which) {
+					play.removeClass('mejs-play').addClass('mejs-pause');
+					play_btn.attr({
+						'title': op.pauseText,
+						'aria-label': op.pauseText
+					});
+				} else {
+					play.removeClass('mejs-pause').addClass('mejs-play');
+					play_btn.attr({
+						'title': op.playText,
+						'aria-label': op.playText
+					});
+				}
+			};
+			togglePlayPause('pse');
+
 
 			media.addEventListener('play',function() {
-				play.removeClass('mejs-play').addClass('mejs-pause');
+				togglePlayPause('play');
 			}, false);
 			media.addEventListener('playing',function() {
-				play.removeClass('mejs-play').addClass('mejs-pause');
+				togglePlayPause('play');
 			}, false);
 
 
 			media.addEventListener('pause',function() {
-				play.removeClass('mejs-pause').addClass('mejs-play');
+				togglePlayPause('pse');
 			}, false);
 			media.addEventListener('paused',function() {
-				play.removeClass('mejs-pause').addClass('mejs-play');
+				togglePlayPause('pse');
 			}, false);
 		}
 	});
