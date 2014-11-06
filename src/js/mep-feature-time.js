@@ -12,11 +12,13 @@
 		buildcurrent: function(player, controls, layers, media) {
 			var t = this;
 			
-			$('<div class="mejs-time">'+
-					'<span class="mejs-currenttime">' + (player.options.alwaysShowHours ? '00:' : '')
-					+ (player.options.showTimecodeFrameCount? '00:00:00':'00:00')+ '</span>'+
-					'</div>')
-					.appendTo(controls);
+			$('<div class="mejs-time" role="timer" aria-live="off">' +
+					'<span class="mejs-currenttime">' + 
+                        (player.options.alwaysShowHours ? '00:' : '') +
+                        (player.options.showTimecodeFrameCount? '00:00:00':'00:00') + 
+                    '</span>'+
+				'</div>')
+			.appendTo(controls);
 			
 			t.currenttime = t.controls.find('.mejs-currenttime');
 
@@ -34,8 +36,8 @@
 					'<span class="mejs-duration">' + 
 						(t.options.duration > 0 ? 
 							mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours || t.media.duration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25) :
-				   			((player.options.alwaysShowHours ? '00:' : '') + (player.options.showTimecodeFrameCount? '00:00:00':'00:00')) 
-				   		) + 
+							((player.options.alwaysShowHours ? '00:' : '') + (player.options.showTimecodeFrameCount? '00:00:00':'00:00'))
+						) + 
 					'</span>')
 					.appendTo(controls.find('.mejs-time'));
 			} else {
@@ -47,8 +49,8 @@
 					'<span class="mejs-duration">' + 
 						(t.options.duration > 0 ? 
 							mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours || t.media.duration > 3600, t.options.showTimecodeFrameCount,  t.options.framesPerSecond || 25) :
-				   			((player.options.alwaysShowHours ? '00:' : '') + (player.options.showTimecodeFrameCount? '00:00:00':'00:00')) 
-				   		) + 
+							((player.options.alwaysShowHours ? '00:' : '') + (player.options.showTimecodeFrameCount? '00:00:00':'00:00')) 
+						) + 
 					'</span>' +
 				'</div>')
 				.appendTo(controls);
