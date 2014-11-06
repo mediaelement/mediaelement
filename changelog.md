@@ -17,6 +17,9 @@
 * Make progres bar accessible (https://github.com/johndyer/mediaelement/pull/1292) [rylan] [nfreear]
 * Make volume control accessible (https://github.com/johndyer/mediaelement/pull/1290) [rylan]
 * Fix: Loading animation doesn't disappear Android (https://github.com/johndyer/mediaelement/pull/1288) [MoritzGiessmann]
+* Accept IETF language tags, plus accessible play/pause button -- "iet-ou/cr1262/a11y" (https://github.com/johndyer/mediaelement/pull/1270#issuecomment-61791241) [nfreear ]
+* Improved screen reader accessibility of captions (https://github.com/johndyer/mediaelement/pull/1340)
+
 
 *2.15.1 (2014/08/11)*
 
