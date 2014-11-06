@@ -282,12 +282,13 @@
 
 				// remove native controls
 				t.$media.removeAttr('controls');
-				var videoPlayerTitle = mejs.i18n.t('Video Player');
+				var videoPlayerTitle = t.isVideo ?
+					mejs.i18n.t('Video Player') : mejs.i18n.t('Audio Player');
 				// build container
 				t.container =
 					$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>'+
                     '<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') + 
-                      '" tabindex="0" role="application" aria-label=' + videoPlayerTitle + '">'+
+                      '" tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">'+
 						'<div class="mejs-inner">'+
 							'<div class="mejs-mediaelement"></div>'+
 							'<div class="mejs-layers"></div>'+
