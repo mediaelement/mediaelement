@@ -1,6 +1,6 @@
 ### Version History
 
-*2.16.0 (2014/10/??) - in progress *
+*2.16.0 (2014/11/06)*
 
 * Migration from Builder.py to Grunt (https://github.com/johndyer/mediaelement/pull/1309) [dmfrancisco]
 * remove event listeners from flash AudioElement (https://github.com/johndyer/mediaelement/pull/1294) [phinze]
