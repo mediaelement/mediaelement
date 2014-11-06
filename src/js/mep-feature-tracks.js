@@ -38,7 +38,7 @@
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();
 			player.captions =
-					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover"><span class="mejs-captions-text"></span></div></div>')
+					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover" role="log" aria-live="assertive" aria-atomic="false"><span class="mejs-captions-text"></span></div></div>')
 						.prependTo(layers).hide();
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton =
