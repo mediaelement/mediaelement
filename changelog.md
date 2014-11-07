@@ -1,5 +1,9 @@
 ### Version History
 
+*2.16.1 (2014/11/07)*
+
+* Fixed strict `undefined` check for posterUrl issue (https://github.com/johndyer/mediaelement/pull/1348)
+
 *2.16.0 (2014/11/06)*
 
 * Migration from Builder.py to Grunt (https://github.com/johndyer/mediaelement/pull/1309) [dmfrancisco]
