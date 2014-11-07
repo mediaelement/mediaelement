@@ -973,7 +973,7 @@
 			}
 
 			// second, try the real poster
-			if (posterUrl !== '' && posterUrl !== null) {
+			if ( posterUrl ) {
 				t.setPoster(posterUrl);
 			} else {
 				poster.hide();
