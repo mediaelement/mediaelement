@@ -6,3 +6,5 @@
 *.ogv binary
 *.png binary
 *.webm binary
+*.swf binary
+*.xap binary
