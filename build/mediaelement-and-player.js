@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.16.1'; 
+mejs.version = '2.16.2'; 
 
 
 // player number (for missing, same id attr)
@@ -2904,7 +2904,7 @@ if (typeof jQuery != 'undefined') {
 			}
 
 			// second, try the real poster
-			if (posterUrl !== '' && posterUrl !== null) {
+			if ( posterUrl ) {
 				t.setPoster(posterUrl);
 			} else {
 				poster.hide();
