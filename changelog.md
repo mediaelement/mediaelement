@@ -1,5 +1,9 @@
 ### Version History
 
+*2.16.2 (2014/11/15)*
+
+* Fixed broken swf files because of new problem with binary
+
 *2.16.1 (2014/11/07)*
 
 * Fixed strict `undefined` check for posterUrl issue (https://github.com/johndyer/mediaelement/pull/1348)
