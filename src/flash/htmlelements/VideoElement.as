@@ -143,7 +143,7 @@ public class VideoElement extends Sprite implements IMediaElement
     _bytesLoaded = _stream.bytesLoaded;
     _bytesTotal = _stream.bytesTotal;
 
-    if (!_isPaused) {
+    if (_hasStartedPlaying && !_isPaused) {
 		sendEvent(HtmlMediaEvent.TIMEUPDATE);
     }
 
