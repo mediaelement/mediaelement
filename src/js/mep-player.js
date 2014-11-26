@@ -754,9 +754,10 @@
 					t.setControlsSize();
 				});
 
-				// TEMP: needs to be moved somewhere else
-				if (t.media.pluginType == 'youtube' && t.options.autoplay) {
-				//LOK-Soft: added t.options.autoplay to if -- I can only guess this is for hiding play button when autoplaying youtube, general hiding play button layer causes missing button on player load
+				// This is a work-around for a bug in the YouTube iFrame player, which means
+				//  we can't use the play() API for the initial playback on iOS or Android;
+				//  user has to start playback directly by tapping on the iFrame.
+				if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {
 					t.container.find('.mejs-overlay-play').hide();
 				}
 			}
