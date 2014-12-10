@@ -1,8 +1,12 @@
 ### Version History
 
+*2.16.3 (progress)*
+
+* Flash no longer sends timeupdate events before it starts playing
+
 *2.16.2 (2014/11/15)*
 
-* Fixed broken swf files because of new problem with binary
+* Fixed broken swf files because of new problem with binary [OwenEdwards]		
 
 *2.16.1 (2014/11/07)*
 
