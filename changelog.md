@@ -3,6 +3,7 @@
 *2.16.3 (progress)*
 
 * Flash no longer sends timeupdate events before it starts playing
+* Insert the accessible player title span and container div separately (https://github.com/johndyer/mediaelement/pull/1385) [bradyvercher]
 
 *2.16.2 (2014/11/15)*
 
