@@ -96,7 +96,7 @@ namespace SilverlightMediaElement
 			if (initParams.ContainsKey("timerate"))
 				Int32.TryParse(initParams["timerrate"], out _timerRate);
 			if (initParams.ContainsKey("startvolume"))
-				Double.TryParse(initParams["startvolume"], out _volume);
+				Double.TryParse(initParams["startvolume"], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _volume);
 
 			if (_timerRate == 0)
 				_timerRate = 250;
