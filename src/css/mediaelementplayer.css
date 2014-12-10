@@ -486,7 +486,8 @@
 	height: 26px;
 	width: 60px;
 	position: relative;
-    display: table-cell;
+    display: block;
+    float: left;
     vertical-align: middle;
 }
 
