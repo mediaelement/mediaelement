@@ -284,10 +284,11 @@
 				t.$media.removeAttr('controls');
 				var videoPlayerTitle = t.isVideo ?
 					mejs.i18n.t('Video Player') : mejs.i18n.t('Audio Player');
+				// insert description for screen readers
+				$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
 				// build container
 				t.container =
-					$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>'+
-                    '<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') + 
+					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') +
                       '" tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">'+
 						'<div class="mejs-inner">'+
 							'<div class="mejs-mediaelement"></div>'+
@@ -735,7 +736,7 @@
 						}
 					}
 				});
-                
+
 				// webkit has trouble doing this without a delay
 				setTimeout(function () {
 					t.setPlayerSize(t.width, t.height);
@@ -1127,12 +1128,12 @@
 				t.container.keydown(function () {
 					t.keyboardAction = true;
 				});
-            
+
 				// listen for key presses
 				t.globalBind('keydown', function(e) {
 					return t.onkeydown(player, media, e);
 				});
-            
+
 
 				// check if someone clicked outside a player region, then kill its focus
 				t.globalBind('click', function(event) {
