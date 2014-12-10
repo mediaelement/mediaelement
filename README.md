@@ -33,7 +33,7 @@ If your users have JavaScript and/or Flash, the easist route for all browsers an
 <video src="myvideo.mp4" width="320" height="240"></video>
 ```
 ```html	
-<video src="myaudio.mp3"></video>
+<audio src="myaudio.mp3"></audio>
 ```
 
 #### Optional: multiple codecs
