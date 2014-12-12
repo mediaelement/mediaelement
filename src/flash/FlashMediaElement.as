@@ -357,7 +357,7 @@ package
 
 			if (ExternalInterface.available) { //  && !_alwaysShowControls
 
-				_output.appendText("Adding callbacks...\n");
+				_output.appendText("Adding callbacks: " + _jsCallbackFunction + " ...\n");
 				try {
 					if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
 
@@ -379,10 +379,10 @@ package
 						ExternalInterface.addCallback("hideFullscreenButton", hideFullscreenButton);
 
 						// fire init method
-						ExternalInterface.call(_jsCallbackFunction, ExternalInterface.objectID);
+						ExternalInterface.call(_jsInitFunction, ExternalInterface.objectID);
 					}
 
-					_output.appendText("Success...\n");
+					_output.appendText("Success: " + _jsInitFunction + " ...\n");
 
 				} catch (error:SecurityError) {
 					_output.appendText("A SecurityError occurred: " + error.message + "\n");
