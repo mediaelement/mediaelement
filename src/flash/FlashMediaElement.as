@@ -27,6 +27,8 @@ package
 	public class FlashMediaElement extends MovieClip {
 
 		private var _mediaUrl:String;
+		private var _jsInitFunction:String;
+		private var _jsCallbackFunction:String;
 		private var _autoplay:Boolean;
 		private var _preload:String;
 		private var _debug:Boolean;
@@ -141,6 +143,8 @@ package
 			}
 
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
+			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
+			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
@@ -353,7 +357,7 @@ package
 
 			if (ExternalInterface.available) { //  && !_alwaysShowControls
 
-				_output.appendText("Adding callbacks...\n");
+				_output.appendText("Adding callbacks: " + _jsCallbackFunction + " ...\n");
 				try {
 					if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
 
@@ -375,10 +379,10 @@ package
 						ExternalInterface.addCallback("hideFullscreenButton", hideFullscreenButton);
 
 						// fire init method
-						ExternalInterface.call("mejs.MediaPluginBridge.initPlugin", ExternalInterface.objectID);
+						ExternalInterface.call(_jsInitFunction, ExternalInterface.objectID);
 					}
 
-					_output.appendText("Success...\n");
+					_output.appendText("Success: " + _jsInitFunction + " ...\n");
 
 				} catch (error:SecurityError) {
 					_output.appendText("A SecurityError occurred: " + error.message + "\n");
@@ -1040,7 +1044,7 @@ package
 
 				// use set timeout for performance reasons
 				//if (!_alwaysShowControls) {
-					ExternalInterface.call("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
+					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
 				//}
 			}
 		}

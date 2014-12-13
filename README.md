@@ -27,13 +27,13 @@ Changes available at [changelog.md]
 <link rel="stylesheet" href="mediaelementplayer.css" />
 ```
 ### 2. Add `<video>` or `<audio>` tags
-If your users have JavaScript and/or Flash, the easist route for all browsers and mobile devices is to use a single MP4 or MP3 file.
+If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single MP4 or MP3 file.
 
 ```html	
 <video src="myvideo.mp4" width="320" height="240"></video>
 ```
 ```html	
-<video src="myaudio.mp3"></video>
+<audio src="myaudio.mp3"></audio>
 ```
 
 #### Optional: multiple codecs
