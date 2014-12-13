@@ -324,13 +324,6 @@ if (typeof jQuery != 'undefined') {
 						'</div>' +
 					'</div>')
 					.addClass(t.$media[0].className)
-<<<<<<< HEAD
-					.insertBefore(t.$media);
-                    
-                if (t.options.stretching === 'fill') {
-                    t.container.wrap('<div class="mejs-fill-container"/>');
-                }
-=======
 					.insertBefore(t.$media)
 					.focus(function ( e ) {
 						if( !t.controlsAreVisible ) {
@@ -339,7 +332,10 @@ if (typeof jQuery != 'undefined') {
 							playButton.focus();
 						}
 					});
->>>>>>> upstream/master
+
+                                        if (t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
+	                    t.container.wrap('<div class="mejs-fill-container"/>');
+                }
 
 				// add classes for user and content
 				t.container.addClass(
