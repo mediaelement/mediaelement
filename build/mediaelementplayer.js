@@ -334,7 +334,7 @@ if (typeof jQuery != 'undefined') {
 						}
 					});
 
-                                        if (t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
+					if (t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
 	                    t.container.wrap('<div class="mejs-fill-container"/>');
                 }
 
@@ -904,11 +904,7 @@ if (typeof jQuery != 'undefined') {
 					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
-<<<<<<< HEAD
 				if (isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight && parentHeight > nativeHeight)) {
-=======
-				if (isNaN(newHeight)) {
->>>>>>> upstream/master
 					newHeight = parentHeight;
 				}
 
@@ -917,12 +913,8 @@ if (typeof jQuery != 'undefined') {
 					newHeight = $(window).height();
 				}
 
-<<<<<<< HEAD
-				if ( newHeight !== 0 && parentWidth !== 0 ) {
-=======
 				if ( newHeight && parentWidth ) {
 
->>>>>>> upstream/master
 					// set outer container size
 					t.container
 						.width(parentWidth)
