@@ -1,4 +1,4 @@
-/*!
+/*
  * This is a i18n.locale language object.
  *
  * French translation by Luc Poupard, Twitter: @klohFR
@@ -18,7 +18,9 @@
     if (typeof exports.fr === 'undefined') {
         exports.fr = {
             "Download File" : "Télécharger le fichier",
-            "Play/Pause" : "Lecture/Pause",
+            //"Play/Pause" : "Lecture/Pause",
+            "Play" : "Lecture",
+            "Pause" : "Pause",
             "Mute Toggle" : "Activer/désactiver le son",
             "Fullscreen" : "Plein écran",
             "Captions/Subtitles" : "Sous-titres",

@@ -1,5 +1,34 @@
 ### Version History
 
+*2.16.2 (2014/11/15)*
+
+* Fixed broken swf files because of new problem with binary
+
+*2.16.1 (2014/11/07)*
+
+* Fixed strict `undefined` check for posterUrl issue (https://github.com/johndyer/mediaelement/pull/1348)
+
+*2.16.0 (2014/11/06)*
+
+* Migration from Builder.py to Grunt (https://github.com/johndyer/mediaelement/pull/1309) [dmfrancisco]
+* remove event listeners from flash AudioElement (https://github.com/johndyer/mediaelement/pull/1294) [phinze]
+* mep-feature-ads: Link overlay only when url is given (https://github.com/johndyer/mediaelement/pull/1296) [schrolli]
+* Add repository field to package.json to avoid warning (https://github.com/johndyer/mediaelement/pull/1300) [dmfrancisco]
+* Fix IE8 error on window resizing (https://github.com/johndyer/mediaelement/pull/1301) [chemerisuk]
+* send `this` to dispatchEvent callbacks (https://github.com/johndyer/mediaelement/pull/1295) [phinze]
+* Added link to MIT license to README.md (https://github.com/johndyer/mediaelement/pull/1303) [SuriyaaKudoIsc]
+* Fix for dynamically created players in responsive design (https://github.com/johndyer/mediaelement/pull/1337) [staylor]
+* Added skipback feature (https://github.com/johndyer/mediaelement/pull/1320/files) [matthillman]
+* Allow click/touch event bubbling on time rail (https://github.com/johndyer/mediaelement/pull/1318) [dennyferra]
+* Additional translations for i18n (https://github.com/johndyer/mediaelement/pull/1310/files) [OlivierJaquemet]
+* update HLS support with flashls v0.3.3 (https://github.com/johndyer/mediaelement/pull/1339) [mangui]
+* Make progres bar accessible (https://github.com/johndyer/mediaelement/pull/1292) [rylan] [nfreear]
+* Make volume control accessible (https://github.com/johndyer/mediaelement/pull/1290) [rylan]
+* Fix: Loading animation doesn't disappear Android (https://github.com/johndyer/mediaelement/pull/1288) [MoritzGiessmann]
+* Accept IETF language tags, plus accessible play/pause button -- "iet-ou/cr1262/a11y" (https://github.com/johndyer/mediaelement/pull/1270#issuecomment-61791241) [nfreear ]
+* Improved screen reader accessibility of captions (https://github.com/johndyer/mediaelement/pull/1340)
+
+
 *2.15.1 (2014/08/11)*
 
 * Fixes for various sizing issues with 2.15.0

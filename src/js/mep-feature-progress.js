@@ -1,22 +1,29 @@
 (function($) {
+
+	$.extend(mejs.MepDefaults, {
+		progessHelpText: mejs.i18n.t(
+		'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.')
+	});
+
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function(player, controls, layers, media) {
 
-			$('<div class="mejs-time-rail">'+
-				'<span class="mejs-time-total">'+
-					'<span class="mejs-time-buffering"></span>'+
-					'<span class="mejs-time-loaded"></span>'+
-					'<span class="mejs-time-current"></span>'+
-					'<span class="mejs-time-handle"></span>'+
-					'<span class="mejs-time-float">' + 
-						'<span class="mejs-time-float-current">00:00</span>' + 
-						'<span class="mejs-time-float-corner"></span>' + 
-					'</span>'+
-				'</span>'+
-			'</div>')
+			$('<div class="mejs-time-rail">' +
+				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
+				'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
+				'<span class="mejs-time-buffering"></span>' +
+				'<span class="mejs-time-loaded"></span>' +
+				'<span class="mejs-time-current"></span>' +
+				'<span class="mejs-time-handle"></span>' +
+				'<span class="mejs-time-float">' +
+				'<span class="mejs-time-float-current">00:00</span>' +
+				'<span class="mejs-time-float-corner"></span>' +
+				'</span>' +
+				'</a>' +
+				'</div>')
 				.appendTo(controls);
-				controls.find('.mejs-time-buffering').hide();
+			controls.find('.mejs-time-buffering').hide();
 
 			var 
 				t = this,
@@ -26,20 +33,22 @@
 				handle  = controls.find('.mejs-time-handle'),
 				timefloat  = controls.find('.mejs-time-float'),
 				timefloatcurrent  = controls.find('.mejs-time-float-current'),
+                slider = controls.find('.mejs-time-slider'),
 				handleMouseMove = function (e) {
-					// mouse or touch position relative to the object
-					if (e.originalEvent.changedTouches) {
-						var x = e.originalEvent.changedTouches[0].pageX;
-					}else{
-						var x = e.pageX;
-					}
 					
-					var offset = total.offset(),
+                    var offset = total.offset(),
 						width = total.outerWidth(true),
 						percentage = 0,
 						newTime = 0,
-						pos = 0;
-
+						pos = 0,
+                        x;
+                    
+                    // mouse or touch position relative to the object
+					if (e.originalEvent.changedTouches) {
+						x = e.originalEvent.changedTouches[0].pageX;
+					}else{
+						x = e.pageX;
+					}
 
 					if (media.duration) {
 						if (x < offset.left) {
@@ -66,7 +75,101 @@
 					}
 				},
 				mouseIsDown = false,
-				mouseIsOver = false;
+				mouseIsOver = false,
+				lastKeyPressTime = 0,
+				startedPaused = false,
+				autoRewindInitial = player.options.autoRewind;
+            // Accessibility for slider
+            var updateSlider = function (e) {
+
+				var seconds = media.currentTime,
+					timeSliderText = mejs.i18n.t('Time Slider'),
+					time = mejs.Utility.secondsToTimeCode(seconds),
+					duration = media.duration;
+
+				slider.attr({
+					'aria-label': timeSliderText,
+					'aria-valuemin': 0,
+					'aria-valuemax': duration,
+					'aria-valuenow': seconds,
+					'aria-valuetext': time,
+					'role': 'slider',
+					'tabindex': 0
+				});
+
+			};
+            
+            var restartPlayer = function () {
+				var now = new Date();
+				if (now - lastKeyPressTime >= 1000) {
+					media.play();
+				}
+			};
+
+			slider.bind('focus', function (e) {
+				player.options.autoRewind = false;
+			});
+
+			slider.bind('blur', function (e) {
+				player.options.autoRewind = autoRewindInitial;
+			});
+
+			slider.bind('keydown', function (e) {
+
+				if ((new Date() - lastKeyPressTime) >= 1000) {
+					startedPaused = media.paused;
+				}
+
+				var keyCode = e.keyCode,
+					duration = media.duration,
+					seekTime = media.currentTime;
+
+				switch (keyCode) {
+				case 37: // left
+					seekTime -= 1;
+					break;
+				case 39: // Right
+					seekTime += 1;
+					break;
+				case 38: // Up
+					seekTime += Math.floor(duration * 0.1);
+					break;
+				case 40: // Down
+					seekTime -= Math.floor(duration * 0.1);
+					break;
+				case 36: // Home
+					seekTime = 0;
+					break;
+				case 35: // end
+					seekTime = duration;
+					break;
+				case 10: // enter
+					media.paused ? media.play() : media.pause();
+					return;
+				case 13: // space
+					media.paused ? media.play() : media.pause();
+					return;
+				default:
+					return;
+				}
+
+				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
+				lastKeyPressTime = new Date();
+				if (!startedPaused) {
+					media.pause();
+				}
+
+				if (seekTime < media.duration && !startedPaused) {
+					setTimeout(restartPlayer, 1100);
+				}
+
+				media.setCurrentTime(seekTime);
+
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+			});
+
 
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
@@ -84,7 +187,6 @@
 							timefloat.hide();
 							t.globalUnbind('.dur');
 						});
-						return false;
 					}
 				})
 				.bind('mouseenter', function(e) {
@@ -114,6 +216,7 @@
 			media.addEventListener('timeupdate', function(e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
+				updateSlider(e);
 			}, false);
 			
 			
@@ -127,8 +230,8 @@
 
 			var
 				t = this,
-				target = (e != undefined) ? e.target : t.media,
-				percent = null;			
+				target = (e !== undefined) ? e.target : t.media,
+				percent = null;
 
 			// newest HTML5 spec has buffered array (FF4, Webkit)
 			if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
@@ -139,12 +242,12 @@
 			// to be anything other than 0. If the byte count is available we use this instead.
 			// Browsers that support the else if do not seem to have the bufferedBytes value and
 			// should skip to there. Tested in Safari 5, Webkit head, FF3.6, Chrome 6, IE 7/8.
-			else if (target && target.bytesTotal != undefined && target.bytesTotal > 0 && target.bufferedBytes != undefined) {
+			else if (target && target.bytesTotal !== undefined && target.bytesTotal > 0 && target.bufferedBytes !== undefined) {
 				percent = target.bufferedBytes / target.bytesTotal;
 			}
 			// Firefox 3 with an Ogg file seems to go this way
-			else if (e && e.lengthComputable && e.total != 0) {
-				percent = e.loaded/e.total;
+			else if (e && e.lengthComputable && e.total !== 0) {
+				percent = e.loaded / e.total;
 			}
 
 			// finally update the progress bar
@@ -160,7 +263,7 @@
 
 			var t = this;
 		
-			if (t.media.currentTime != undefined && t.media.duration) {
+			if (t.media.currentTime !== undefined && t.media.duration) {
 
 				// update bar and handle
 				if (t.total && t.handle) {
@@ -173,6 +276,6 @@
 				}
 			}
 
-		}	
+		}
 	});
 })(mejs.$);
