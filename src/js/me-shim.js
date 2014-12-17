@@ -561,7 +561,7 @@ mejs.HtmlMediaElementShim = {
 '<param name="quality" value="high" />' +
 '<param name="bgcolor" value="#000000" />' +
 '<param name="wmode" value="transparent" />' +
-'<param name="allowScriptAccess" value="always" />' +
+'<param name="allowScriptAccess" value="sameDomain" />' +
 '<param name="allowFullScreen" value="true" />' +
 '<param name="scale" value="default" />' + 
 '</object>';
@@ -575,7 +575,7 @@ mejs.HtmlMediaElementShim = {
 'quality="high" ' +
 'bgcolor="#000000" ' +
 'wmode="transparent" ' +
-'allowScriptAccess="always" ' +
+'allowScriptAccess="sameDomain" ' +
 'allowFullScreen="true" ' +
 'type="application/x-shockwave-flash" pluginspage="//www.macromedia.com/go/getflashplayer" ' +
 'src="' + options.pluginPath + options.flashName + '" ' +
@@ -877,7 +877,7 @@ mejs.YouTubeApi = {
 		settings.container.innerHTML =
 			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="//www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0" ' +
 				'width="' + settings.width + '" height="' + settings.height + '" style="visibility: visible; " class="mejs-shim">' +
-				'<param name="allowScriptAccess" value="always">' +
+				'<param name="allowScriptAccess" value="sameDomain">' +
 				'<param name="wmode" value="transparent">' +
 			'</object>';
 		*/
@@ -893,14 +893,14 @@ mejs.YouTubeApi = {
 'id="' + settings.pluginId + '" width="' + settings.width + '" height="' + settings.height + '" class="mejs-shim">' +
 	'<param name="movie" value="' + youtubeUrl + '" />' +
 	'<param name="wmode" value="transparent" />' +
-	'<param name="allowScriptAccess" value="always" />' +
+	'<param name="allowScriptAccess" value="sameDomain" />' +
 	'<param name="allowFullScreen" value="true" />' +
 '</object>';
 		} else {
 		settings.container.innerHTML =
 			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="' + youtubeUrl + '" ' +
 				'width="' + settings.width + '" height="' + settings.height + '" style="visibility: visible; " class="mejs-shim">' +
-				'<param name="allowScriptAccess" value="always">' +
+				'<param name="allowScriptAccess" value="sameDomain">' +
 				'<param name="wmode" value="transparent">' +
 			'</object>';
 		}		
