@@ -628,7 +628,7 @@ mejs.HtmlMediaElementShim = {
 				if (typeof($f) == 'function') { // froogaloop available
 					var player = $f(container.childNodes[0]);
 					player.addEvent('ready', function() {
-						$.extend( player, {
+						mejs.$.extend( player, {
 							playVideo: function() {
 								player.api( 'play' );
 							}, 
