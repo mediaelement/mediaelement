@@ -1,6 +1,11 @@
 ### Version History
 
-*2.16.3 (progress)*
+*2.16.4 (progress)*
+
+* Removed reference to jQuery/$ in froogaloop code (https://github.com/johndyer/mediaelement/pull/1394) [staylor]
+* Ensure screen reader text is hidden on long pages (https://github.com/johndyer/mediaelement/pull/1388) [bradyvercher]
+
+*2.16.3 (2014/12/10)*
 
 * Fix for calculating rail width with horizontal volume bar (all audio controls)
 * Insert the accessible player title span and container div separately (https://github.com/johndyer/mediaelement/pull/1385) [bradyvercher]
