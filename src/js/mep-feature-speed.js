@@ -58,7 +58,7 @@
 						var newSpeed = $(this).attr('value');
 						playbackspeed = newSpeed;
 						media.playbackRate = parseFloat(newSpeed);
-						speedButton.find('button').html('test' + newSpeed + t.options.speedChar);
+						speedButton.find('button').html(newSpeed + t.options.speedChar);
 						speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
 						speedButton.find('input[type="radio"]:checked').next().addClass('mejs-speed-selected');
 					});
