@@ -10,8 +10,8 @@
 		buildprogress: function(player, controls, layers, media) {
 
 			$('<div class="mejs-time-rail">' +
-				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-				'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
+				'<span  class="mejs-time-total mejs-time-slider">' +
+				//'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
 				'<span class="mejs-time-buffering"></span>' +
 				'<span class="mejs-time-loaded"></span>' +
 				'<span class="mejs-time-current"></span>' +
@@ -20,7 +20,6 @@
 				'<span class="mejs-time-float-current">00:00</span>' +
 				'<span class="mejs-time-float-corner"></span>' +
 				'</span>' +
-				'</a>' +
 				'</div>')
 				.appendTo(controls);
 			controls.find('.mejs-time-buffering').hide();
