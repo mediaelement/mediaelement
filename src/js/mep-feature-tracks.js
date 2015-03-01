@@ -21,6 +21,14 @@
 
 		hasChapters: false,
 
+		cleartracks: function(player, controls, layers, media){
+			if(player) {
+				if(player.captions) player.captions.remove();
+				if(player.chapters) player.chapters.remove();
+				if(player.captionsText) player.captionsText.remove();
+				if(player.captionsButton) player.captionsButton.remove();
+			}
+		},
 		buildtracks: function(player, controls, layers, media) {
 			if (player.tracks.length === 0)
 				return;
@@ -34,6 +42,7 @@
 					t.domNode.textTracks[i].mode = "hidden";
 				}
 			}
+			t.cleartracks(player, controls, layers, media);
 			player.chapters =
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();
