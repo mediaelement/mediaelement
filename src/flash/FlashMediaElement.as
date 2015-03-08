@@ -220,6 +220,9 @@ package
 					(_video as Video).smoothing = _enableSmoothing;
 					addChild(_video);
 
+					_paramVideoWidth = (params['width'] != undefined) ? (parseInt(params['width'], 10)) : 0;
+					_paramVideoHeight = (params['height'] != undefined) ? (parseInt(params['height'], 10)) : 0;
+
 
 				} else if (_mediaUrl.indexOf("youtube.com") > -1 || _mediaUrl.indexOf("youtu.be") > -1) {
 
@@ -1000,6 +1003,12 @@ package
 					} else if(_mediaElement is HLSMediaElement) {
 						_nativeVideoWidth = (_mediaElement as HLSMediaElement).videoWidth;
 						_nativeVideoHeight = (_mediaElement as HLSMediaElement).videoHeight;
+
+						// Can not get video dimensions from HLS stream, use parameters in FlashVars instead.
+						if (isNaN(_nativeVideoWidth) || isNaN(_nativeVideoHeight) || _nativeVideoWidth <= 0 || _nativeVideoHeight <= 0) {
+							_nativeVideoWidth = _paramVideoWidth;
+							_nativeVideoHeight = _paramVideoHeight;
+						}
 					}
 				} catch (e:Error) {
 					_output.appendText(e.toString() + "\n");
