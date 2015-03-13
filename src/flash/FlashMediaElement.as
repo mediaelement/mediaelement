@@ -423,6 +423,10 @@ package
 
 		}
 
+        public function displayLogMessage(txt:String):void {
+            _output.appendText(txt);
+        }
+
 		// borrowed from jPLayer
 		// https://github.com/happyworm/jPlayer/blob/e8ca190f7f972a6a421cb95f09e138720e40ed6d/actionscript/Jplayer.as#L228
 		private function checkFlashVars(p:Object):void {

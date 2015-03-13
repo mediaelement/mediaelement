@@ -50,6 +50,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       _preload = preload;
       _video = new Video();
       addChild(_video);
+//        HLSSettings.logDebug = true;
       _hls = new HLS();
       _hls.addEventListener(HLSEvent.PLAYBACK_COMPLETE,_completeHandler);
       _hls.addEventListener(HLSEvent.ERROR,_errorHandler);
@@ -67,6 +68,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     };
 
     private function _errorHandler(event:HLSEvent):void {
+        _element.displayLogMessage(event.toString());
     };
 
     private function _manifestHandler(event:HLSEvent):void {
