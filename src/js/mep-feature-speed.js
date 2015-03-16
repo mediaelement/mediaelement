@@ -53,15 +53,18 @@
 
 				playbackspeed = t.options.defaultSpeed;
 
-				speedSelector
-					.on('click', 'input[type="radio"]', function() {
-						var newSpeed = $(this).attr('value');
-						playbackspeed = newSpeed;
-						media.playbackRate = parseFloat(newSpeed);
-						speedButton.find('button').html(newSpeed + t.options.speedChar);
-						speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
-						speedButton.find('input[type="radio"]:checked').next().addClass('mejs-speed-selected');
-					});
+				speedSelector.find('li').unbind().on('click', function() {
+					var current = $(this), newSpeed = current.find('input[type="radio"]').val();
+					// checked radio button
+					current.find('input[type="radio"]').prop("checked", true);
+
+					playbackspeed = newSpeed;
+					media.playbackRate = parseFloat(newSpeed);
+					speedButton.find('button').html(newSpeed + t.options.speedChar);
+					speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
+					speedButton.find('input[type="radio"]:checked').next().addClass('mejs-speed-selected');
+					return false;
+				});
 
 				speedSelector
 					.height(
