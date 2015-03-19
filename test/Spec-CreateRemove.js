@@ -43,4 +43,9 @@ describe("HTMLMediaElement", function() {
     });
   });
 
+  it("should not toThrow a error if node not exists", function() {
+    expect(function() {
+      new MediaElementPlayer('#not-found');
+    }).not.toThrow("Cannot read property 'player' of undefined");
+  });
 });
