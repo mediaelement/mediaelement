@@ -1,0 +1,13 @@
+  $ui: light;
+  // Default variable settings
+  $controlheight: 30px;
+  $hilight: #3caac8;
+  $background: #ccc;
+  $midground: darken($background,30%);
+  $foreground: #010101;
+  $controls: "../assets/images/controls_dark.svg";
+  $controls_fallback: "../assets/images/controls_dark.png";
+
+  @import "common";
+  @import "controls/controls";
+  

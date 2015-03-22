@@ -1,0 +1,90 @@
+
+// Player controls
+div.mejs-controls {
+  z-index: 999;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: $controlheight;
+  @include overlay($midground, $background);
+  div {
+    float: left;
+    width: 26px;
+    height: 26px;
+  }
+  button {
+    background-color: transparent!important;
+
+  }
+}
+
+.mejs-play button {
+  background-position: 0 0;
+}
+
+.mejs-pause button {
+  background-position: 0 -16px;
+}
+
+.mejs-stop button {
+  background-position: -112px 0;
+}
+
+.mejs-fullscreen-button button {
+  background-position: -32px 0;
+}
+
+.mejs-unfullscreen button {
+  background-position: -32px -16px;
+}
+
+.mejs-mute button {
+  background-position: -16px -16px;
+}
+
+.mejs-unmute button {
+  background-position: -16px 0;
+}
+
+.mejs-captions-button button {
+  background-position: -48px 0;
+}
+
+.mejs-loop-off button {
+  background-position: -64px -16px;
+}
+
+.mejs-loop-on button {
+  background-position: -64px 0;
+}
+
+.mejs-backlight-off button {
+  background-position: -80px -16px;
+}
+
+.mejs-backlight-on button {
+  background-position: -80px 0;
+}
+
+.mejs-picturecontrols-button {
+  background-position: -96px 0;
+}
+
+.mejs-sourcechooser-button button {
+  background-position: -128px 0;
+}
+
+.mejs-skip-back-button {
+  background: transparent url(skipback.png) no-repeat;
+  background-position: 3px 3px;
+}
+
+.me-cannotplay {
+  a {
+    font-weight: bold;
+  }
+  span {
+    padding: 15px;
+  }
+}

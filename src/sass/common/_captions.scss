@@ -1,0 +1,74 @@
+
+.mejs-captions-selector {
+  visibility: hidden;
+  overflow: hidden;
+  position: absolute;
+  bottom: 26px;
+  right: -51px;
+  width: 85px;
+  height: 100px;
+  padding: 10px 10px 0 10px;
+  background-color: $background;
+  background-color: rgba($background, 0.7);
+  border: solid 1px transparent;
+
+  li {
+    margin: 0 0 6px 0;
+    padding: 0;
+    display: block;
+    color: $foreground;
+    overflow: hidden;
+  }
+  input {
+    clear: both;
+    float: left;
+    margin: 3px 3px 0 5px;
+  }
+  label {
+    width: 55px;
+    float: left;
+    padding: 4px 0 0 0;
+    line-height: 15px;
+    font-size: 10px;
+  }
+}
+
+.mejs-captions-translations {
+  font-size: 10px;
+  margin: 0 0 5px 0;
+}
+
+.mejs-captions-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  line-height: 20px;
+  font-size: 16px;
+  a {
+    text-decoration: underline;
+  }
+}
+
+.mejs-captions-layer[lang=ar] {
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.mejs-captions-position {
+  position: absolute;
+  width: 100%;
+  bottom: 15px;
+  left: 0;
+}
+
+.mejs-captions-position-hover {
+  bottom: 35px;
+}
+
+.mejs-captions-text {
+  padding: 3px 5px;
+  background: url(background.png);
+  background: rgba(20, 20, 20, 0.5);
+  white-space: pre-wrap;
+}

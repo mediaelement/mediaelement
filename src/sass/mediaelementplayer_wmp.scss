@@ -1,0 +1,12 @@
+  $ui: wmp;
+  // Default variable settings
+  $controlheight: 30px;
+  $hilight: #3caac8;
+  $controls: "../assets/images/controls-wmp.svg";
+  $controls_fallback: "../assets/images/controls-wmp.png";
+  $background:#222;//#010101;
+  $midground: lighten($background,30%);
+  $foreground: #ccc;
+
+  @import "common";
+  @import "controls/controls-wmp";

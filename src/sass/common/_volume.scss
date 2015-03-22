@@ -1,0 +1,72 @@
+
+$vheight: 100px;
+$vwidth: .25 * $vheight;
+div.mejs-volume-button {
+  position: relative;
+
+  a.mejs-volume-slider {
+    display: none;
+    position: absolute;
+    top: -$vheight;
+    left: 0;
+    width: $vwidth;
+    height: $vheight;
+    background-color: $midground;
+    background-color: rgba($midground, 0.7);
+    z-index: 1;
+  }
+
+  div.mejs-volume-total,
+  div.mejs-volume-current {
+    position: absolute;
+    top: 0;
+    left: ($vwidth /2) - 1px;
+    width: 2px;
+    height: $vheight;
+    background-color: $background;
+    background-color: rgba($background, 0.9);
+  }
+
+  div.mejs-volume-handle {
+    cursor: N-resize;
+    position: absolute;
+    left: ($vwidth -($vwidth*.8)) /2;
+    top: -3px;
+    width: $vwidth *0.8;
+    height: $vwidth *0.4;
+    border-radius: 1px;
+    background-color: $foreground;
+    background-color: rgba($foreground, 0.9);
+  }
+}
+
+a.mejs-horizontal-volume-slider {
+  position: relative;
+  display: block;
+  float: left;
+  width: 50px;
+  height: $controlheight * 0.8;
+  margin: 11px 0;
+
+  div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+    height: 8px;
+    font-size: 1px;
+    border-radius: 2px;
+  }
+}
+
+div.mejs-horizontal-volume-total {
+  @include overlay();
+}
+
+div.mejs-horizontal-volume-current {
+  @include overlay($foreground, $foreground);
+}
+
+div.mejs-horizontal-volume-handle {
+  display: none;
+}

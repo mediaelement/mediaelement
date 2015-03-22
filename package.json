@@ -7,13 +7,25 @@
   },
   "devDependencies": {
     "grunt": "~0.4.1",
+    "load-grunt-config": "*",
+    "grunt-concurrent": "*",
+    "grunt-closurecompiler": "^0.9.9",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-cssmin": "~0.6.1",
     "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-imagemin": "^0.9.3",
     "grunt-shell": "~1.1.1",
     "grunt-text-replace": "~0.3.12",
     "grunt-contrib-clean": "~0.6.0",
-    "grunt-remove-logging": "~0.2.0"
+    "grunt-remove-logging": "~0.2.0",
+    "grunt-contrib-compass": "^1.0.1",
+    "grunt-csscomb": "^3.0.0",
+    "grunt-autoprefixer": "^2.2.0",
+    "grunt-newer": "^1.1.0",
+    "grunt-svg2png": "^0.2.7"
+  },
+  "dependencies": {
+    "time-grunt": "*"
   }
 }

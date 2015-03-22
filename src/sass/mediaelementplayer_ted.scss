@@ -1,0 +1,12 @@
+  $ui: ted;
+  // Default variable settings
+  $controlheight: 30px;
+  $hilight: #3caac8;
+  $background:#222;//#010101;
+  $midground: lighten($background,30%);
+  $foreground: #ccc;
+  $controls: "../assets/images/controls-ted.svg";
+  $controls_fallback: "../assets/images/controls-ted.png";
+
+  @import "common";
+  @import "controls/controls-ted";

@@ -1,0 +1,9 @@
+default:
+    - 'concurrent:dist0'
+    - 'concurrent:dist1'
+    - 'concurrent:dist2'
+    - 'concurrent:dist3'
+    - 'concurrent:dist4'
+    - 'concurrent:dist5'
+    - 'concurrent:dist6'
+    - 'concurrent:dist7'

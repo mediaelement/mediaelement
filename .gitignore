@@ -1,3 +1,7 @@
+node_modules
+local-build
+.sass-cache
+
 # silverlight stuff
 src/silverlight/obj/*
 src/silverlight/Bin/*
@@ -8,5 +12,3 @@ build/SilverlightMediaElement.dll
 tests/*
 newfeatures/*
 /mejs3/
-node_modules
-local-build
