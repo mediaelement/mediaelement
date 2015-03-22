@@ -12,15 +12,16 @@
 			$('<div class="mejs-time-rail">' +
 				'<span  class="mejs-time-total mejs-time-slider">' +
 				//'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
-				'<span class="mejs-time-buffering"></span>' +
-				'<span class="mejs-time-loaded"></span>' +
-				'<span class="mejs-time-current"></span>' +
-				'<span class="mejs-time-handle"></span>' +
-				'<span class="mejs-time-float">' +
-				'<span class="mejs-time-float-current">00:00</span>' +
-				'<span class="mejs-time-float-corner"></span>' +
+					'<span class="mejs-time-buffering"></span>' +
+					'<span class="mejs-time-loaded"></span>' +
+					'<span class="mejs-time-current"></span>' +
+					'<span class="mejs-time-handle"></span>' +
+					'<span class="mejs-time-float">' +
+						'<span class="mejs-time-float-current">00:00</span>' +
+						'<span class="mejs-time-float-corner"></span>' +
+					'</span>' +
 				'</span>' +
-				'</div>')
+			'</div>')
 				.appendTo(controls);
 			controls.find('.mejs-time-buffering').hide();
 
