@@ -32,7 +32,7 @@ module.exports = {
     //'shell'
   ],
   dist7: [
-    'copy',
+    'copy:local',
     'clean:temp'
   ]
 };

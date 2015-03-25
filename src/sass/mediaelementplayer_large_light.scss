@@ -1,0 +1,17 @@
+  $ui: light;
+  // Default variable settings
+  $controlheight: 48px;
+  $bsize: 42px;
+  $isize: 32px;
+  $ioffset: 60px;
+  $hilight: #3caac8;
+  $background: #FAFAFA;
+  $midground: darken($background, 15%);
+  $foreground: #010101;
+  $controls: "controls_min_light.svg";
+  $controls_fallback: "controls_large_light.png";
+  $loading: "loading_light.gif";
+  $bigplay: "bigplay.svg";
+
+  @import "common";
+  @import "controls/controls";

@@ -2,6 +2,6 @@
 @mixin overlay($color1: $background, $color2: $midground, $opacity: 0.8) {
   background: $color1;
   background: rgba($color1, $opacity);
-  background: if($ui == light, linear-gradient(rgba($color2, $opacity), rgba($color1, $opacity)),
-  linear-gradient(rgba($color1, $opacity), rgba($color2, $opacity)));
+  background: if($ui == light, linear-gradient(rgba($color1, $opacity), rgba($color2, $opacity)),
+  linear-gradient(rgba($color2, $opacity), rgba($color1, $opacity)));
 }

@@ -1,18 +1,17 @@
-.mejs-audio,
-.mediaelement-audio {}
-
-.mejs-video,
-.mediaelement-video {}
-
 .mediaelement {
   margin: auto;
+}
+
+.mejs-container {
+  position: relative;
   font-family: Helvetica, Arial;
   text-align: center;
-  font-size: 11px;
-  line-height: 11px;
+  font-size: 10px;
+  line-height: 12px;
   white-space: nowrap;
   vertical-align: baseline;
   color: $foreground;
+
   div {
     position: static;
     display: block;
@@ -21,6 +20,7 @@
     border: 0;
     //overflow: hidden;
   }
+
   ul,
   li {
     display: block;
@@ -29,38 +29,9 @@
     margin: 0;
     padding: 0;
   }
-  button {
-    cursor: pointer;
-    display: block;
-    height: 16px;
-    width: 16px;
-    margin: 7px 5px;
-    padding: 0;
-    border: 0;
-    font-size: 0;
-    line-height: 0;
-    text-decoration: none;
-    vertical-align: middle;
-    background-color: transparent!important;
-    background-image: url($controls)!important;
-    background-repeat: no-repeat;
 
-    &:focus,
-    &:hover {
-      background-color: transparent!important;
-      color: $foreground;
-      border-color: $midground;
-      text-decoration: none;
-      background-image: none;
-    }
-    &:focus {
-      outline: dotted 1px #999;
-    }
-  }
   a {
     color: $foreground;
-    font-size: 11px;
-    line-height: 12px;
     display: block;
     width: auto;
     vertical-align: middle;
@@ -69,15 +40,7 @@
 
 // Wrapper / container elements.
 .mejs-container {
-  background-color: $background;
-}
-
-div.mejs-layers {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1;
+  background-color: #000;
 }
 
 div.mejs-background {
@@ -87,11 +50,15 @@ div.mejs-background {
 }
 
 div.mejs-mediaelement {
+  position: relative;
+  z-index: 1;
+}
+
+div.mejs-layers {
   position: absolute;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
+  width: 100%;
   z-index: 1;
 }
 
@@ -109,10 +76,20 @@ div.mejs-poster {
   }
 }
 
-:root .mejs-poster img {
+:root div.mejs-poster img {
   display: none;
 }
 
-.mejs-clear {
+div.mejs-clear {
   clear: both;
 }
+
+.me-cannotplay {
+  a {
+    font-weight: bold;
+  }
+  span {
+    padding: 15px;
+  }
+}
+  

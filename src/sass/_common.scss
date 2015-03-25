@@ -2,13 +2,11 @@
 @import "common/offscreen";
 @import "common/wrappers";
 @import "common/contextmenu";
-@import "common/time";
 @import "common/captions";
-@import "common/chapters";
-@import "common/postroll";
-@import "common/captions";
+//@import "common/chapters";
+//@import "common/postroll";
 
-@import "common/sourcechooser";
+// @import "common/sourcechooser";
 @import "common/speed";
 @import "common/time";
 @import "common/video";
@@ -16,7 +14,6 @@
 
 @import "common/embed";
 @import "common/fullscreen";
-@import "common/overlay";
 @import "common/plugins";
 
 @import "common/no-svg";

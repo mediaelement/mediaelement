@@ -7,3 +7,12 @@ default:
     - 'concurrent:dist5'
     - 'concurrent:dist6'
     - 'concurrent:dist7'
+style:
+    - 'compass'
+    - 'autoprefixer'
+    - 'imagemin'
+    - 'csscomb'
+    - 'cssmin'
+    - 'copy:build'
+build:
+    - 'copy:build'

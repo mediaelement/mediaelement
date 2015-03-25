@@ -1,91 +1,91 @@
-div.mejs-time {
-  box-sizing: content-box;
-  width: auto;
-  height: 17px;
-  padding: 10px 3px 0 3px;
-  overflow: hidden;
-  text-align: center;
-  a {
-    font-size: 11px;
-    line-height: 12px;
-    float: left;
-    margin: 1px 2px 0 0;
+
+$theight:$controlheight / 3;
+$tpad: ($controlheight - $theight)/2;
+
+div.mejs-controls {
+  .mejs-time {
+    box-sizing: content-box;
+    width: auto;
+    margin: 0 .1em;
+    padding: ($theight/2) ($tpad/3) 0;
+    overflow: hidden;
+    text-align: center;
+    a {
+      float: left;
+    }
   }
-}
 
-.mejs-time-rail {
-  direction: ltr;
-  width: 200px;
-
-  span, a {
-    cursor: pointer;
-    display: block;
-    position: absolute;
+  .mejs-time-rail {
+    direction: ltr;
     width: 180px;
-    height: 10px;
-    border-radius: 2px;
+    margin-top: ($controlheight - $theight)/2;
+
+    span, a {
+      cursor: pointer;
+      position: absolute;
+      display: block;
+      height: $theight;
+      border-radius: 2px;
+    }
   }
-}
-span.mejs-time-total {
-  overflow: hidden;
-  margin: 8px 5px;
-  @include overlay($midground, $background);
-}
+  span.mejs-time-total {
+    @include overlay($midground, $background);
+  }
 
-span.mejs-time-current {
-  @include overlay($hilight, darken($hilight, 30%));
-}
+  span.mejs-time-current {
+    @include overlay($hilight, darken($hilight, 30%));
+  }
 
-span.mejs-time-loaded {
-  @include overlay($midground, $foreground);
-}
+  span.mejs-time-loaded {
+    @include overlay($midground, $foreground);
+  }
 
-span.mejs-time-buffering {
-  background-image: linear-gradient(-45deg, rgba($foreground, 0.15) 25%, transparent 25%, transparent 50%, rgba($foreground, 0.15) 50%, rgba($foreground, 0.15) 75%, transparent 75%, transparent);
-  background-size: 15px 15px;
-  animation: buffering-stripes 2s linear infinite;
-}
+  span.mejs-time-buffering {
+    background-image: linear-gradient(-45deg, rgba($foreground, 0.15) 25%, transparent 25%, transparent 50%, rgba($foreground, 0.15) 50%, rgba($foreground, 0.15) 75%, transparent 75%, transparent);
+    background-size: $theight $theight;
+    animation: buffering-stripes 2s linear infinite;
+  }
 
-span.mejs-time-handle {
-  cursor: pointer;
-  display: none;
-  position: absolute;
-  top: 0;
-  width: 10px;
-  margin: 0;
-  text-align: center;
-  background: $foreground;
-  border: solid 2px $midground;
-  border-radius: 5px;
-}
+  span.mejs-time-handle {
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    top: 0;
+    width: $theight;
+    margin: 0;
+    text-align: center;
+    background: $foreground;
+    border: solid 2px $midground;
+  }
 
-span.mejs-time-float {
-  display: none;
-  position: absolute;
-  background: $foreground;
-  width: 36px;
-  height: 17px;
-  border: solid 1px $midground;
-  top: -26px;
-  margin-left: -18px;
-  text-align: center;
-  color: $background;
-}
+  span.mejs-time-float {
+    display: none;
+    position: absolute;
+    background: $foreground;
+    width: 36px;
+    height: 17px;
+    border: solid 1px $midground;
+    top: -26px;
+    margin-left: -18px;
+    text-align: center;
+    color: $background;
+  }
 
-span.mejs-time-float-current {
-  display: block;
-  margin: 2px;
-  width: 30px;
-  left: 0;
-}
+  span.mejs-time-float-current {
+    display: block;
+    margin: 2px;
+    width: 30px;
+    left: 0;
+  }
 
-span.mejs-time-float-corner {
-  width: 0;
-  height: 0;
-  line-height: 0;
-  border: solid 5px $foreground;
-  border-color: $foreground transparent transparent transparent;
-  border-radius: 0;
-  top: 15px;
-  left: 13px;
+  span.mejs-time-float-corner {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    border: solid 5px $foreground;
+    border-color: $foreground transparent transparent transparent;
+    border-radius: 0;
+    top: 15px;
+    left: 13px;
+  }
 }

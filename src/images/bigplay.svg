@@ -1,14 +1,26 @@
-<?xml version="1.0" standalone="no"?>
-<svg id="bigplay" viewBox="0 0 100 200" style="background-color:#ffffff00" version="1.1"
-	xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
-	x="0px" y="0px" width="100px" height="200px"
->
-	<g id="dark">
-		<path id="Polygon"  d="M 72.5 49.5 L 38.75 68.9856 L 38.75 30.0144 L 72.5 49.5 Z" fill="#ffffff" opacity="0.75" />
-		<path id="Ellipse" d="M 13 50.5 C 13 29.7891 29.7891 13 50.5 13 C 71.2109 13 88 29.7891 88 50.5 C 88 71.2109 71.2109 88 50.5 88 C 29.7891 88 13 71.2109 13 50.5 Z" stroke="#ffffff" stroke-width="5" fill="none" opacity="0.75"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="bigplay" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="100px" height="200px" viewBox="0 0 100 200" enable-background="new 0 0 100 200" xml:space="preserve">
+<path fill="none" d="z"/>
+<g id="dark">
+	<g id="Polygon" opacity="0.75" enable-background="new    ">
+		<path fill="#FFFFFF" d="M72.5,49.5L38.75,68.985V30.015L72.5,49.5z"/>
 	</g>
-	<g id="light">
-		<path id="Polygon2"  d="M 72.5 149.5 L 38.75 168.9856 L 38.75 130.0144 L 72.5 149.5 Z" fill="#ffffff" opacity="1.0" />
-		<path id="Ellipse2" d="M 13 150.5 C 13 129.7891 29.7891 113 50.5 113 C 71.2109 113 88 129.7891 88 150.5 C 88 171.211 71.2109 188 50.5 188 C 29.7891 188 13 171.211 13 150.5 Z" stroke="#ffffff" stroke-width="5" fill="none" opacity="1.0"/>
+	<g id="Ellipse" opacity="0.75" enable-background="new    ">
+		<path fill="#FFFFFF" d="M50.5,90.5c-22.056,0-40-17.944-40-40s17.944-40,40-40c22.056,0,40,17.944,40,40S72.556,90.5,50.5,90.5
+			L50.5,90.5z M50.5,15.5c-19.299,0-35,15.701-35,35s15.701,35,35,35s35-15.701,35-35S69.799,15.5,50.5,15.5L50.5,15.5z"/>
 	</g>
+</g>
+<g id="light">
+	<g id="Polygon2">
+		<path fill="#FFFFFF" d="M72.5,149.5l-33.75,19.485v-38.971L72.5,149.5z"/>
+	</g>
+	<g id="Ellipse2">
+		<path fill="#FFFFFF" d="M50.5,190.5c-22.056,0-40-17.944-40-40s17.944-40,40-40c22.056,0,40,17.944,40,40S72.556,190.5,50.5,190.5
+			L50.5,190.5z M50.5,115.5c-19.299,0-35,15.701-35,35s15.701,35,35,35s35-15.701,35-35S69.799,115.5,50.5,115.5L50.5,115.5z"/>
+	</g>
+</g>
+<path fill="none" d="z"/>
 </svg>

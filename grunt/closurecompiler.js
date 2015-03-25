@@ -6,8 +6,8 @@
 module.exports = {
   build: {
     options: {
-      compilation_level: 'SIMPLE_OPTIMIZATIONS', // 'WHITESPACE_ONLY'
-      banner: 'src/js/me-header.js'
+      compilation_level: 'SIMPLE_OPTIMIZATIONS' // 'WHITESPACE_ONLY'
+      //banner: $banner
     },
     files: {
       'local-build/mediaelement.min.js': 'local-build/mediaelement.js',
