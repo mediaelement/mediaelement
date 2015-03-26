@@ -1,6 +1,8 @@
 node_modules
 local-build
 .sass-cache
+.gitignore
+.gitattributes
 
 # silverlight stuff
 src/silverlight/obj/*

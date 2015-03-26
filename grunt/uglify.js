@@ -4,22 +4,39 @@
  */
 
 module.exports = {
-  me: {
-    src: ['local-build/mediaelement.js'],
-    dest: 'local-build/mediaelement.min.js',
-    banner: 'src/js/me-header.js'
-  },
-  mep: {
-    src: ['local-build/mediaelementplayer.js'],
-    dest: 'local-build/mediaelementplayer.min.js',
-    banner: 'src/js/mep-header.js'
-  },
-  bundle: {
-    src: ['local-build/mediaelement-and-player.js'],
-    dest: 'local-build/mediaelement-and-player.min.js'
-  },
-  options: {
-    // Preserve comments that start with a bang (like the file header)
-    preserveComments: "some"
-  }
+    options: {
+      preserveComments: "some",
+      compress: true,
+      mangle: true
+    },
+    minme: {
+      src: ['local-build/mediaelement.base.js'],
+      dest: 'local-build/mediaelement.base.min.js',
+      banner: 'src/js/me-header.js'
+    },
+    minmep: {
+      src: ['local-build/mediaelement.player.js'],
+      dest: 'local-build/mediaelement.player.min.js',
+      banner: 'src/js/mep-header.js'
+    },
+    minbundle: {
+      src: ['local-build/mediaelement.js'],
+      dest: 'local-build/mediaelement.min.js'
+    },
+    // I18n
+    minmei18n: {
+      src: ['local-build/mediaelement.base.i18n.js'],
+      dest: 'local-build/mediaelement.base.i18n.min.js',
+      banner: 'src/js/me-header.js'
+    },
+    minmepi18n: {
+      src: ['local-build/mediaelement.player.i18n.js'],
+      dest: 'local-build/mediaelement.player.i18n.min.js',
+      banner: 'src/js/mep-header.js'
+    },
+    minbundlei18n: {
+      src: ['local-build/mediaelement.i18n.js'],
+      dest: 'local-build/mediaelement.i18n.min.js'
+    }
+  
 };

@@ -1,8 +1,7 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		progessHelpText: mejs.i18n.t(
-		'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.')
+		progessHelpText: 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.'
 	});
 
 	// progress/loaded bar
@@ -82,7 +81,7 @@
             var updateSlider = function (e) {
 
 				var seconds = media.currentTime,
-					timeSliderText = mejs.i18n.t('Time Slider'),
+					timeSliderText = 'Time Slider',
 					time = mejs.Utility.secondsToTimeCode(seconds),
 					duration = media.duration;
 

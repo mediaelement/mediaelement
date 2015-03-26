@@ -23,7 +23,8 @@
     "grunt-csscomb": "^3.0.0",
     "grunt-autoprefixer": "^2.2.0",
     "grunt-newer": "^1.1.0",
-    "grunt-svg2png": "^0.2.7"
+    "grunt-svg2png": "^0.2.7",
+    "grunt-contrib-jshint": "^0.11.1"
   },
   "dependencies": {
     "time-grunt": "*"

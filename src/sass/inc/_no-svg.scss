@@ -1,0 +1,9 @@
+
+.no-svg {
+  .mejs-overlay-button {
+    background-image: url($bigplay_fallback);
+  }
+  .mejs-button button {
+    background-image: $controls_fallback;
+  }
+}

@@ -6,33 +6,32 @@
 module.exports = {
   watch: ['watch'],
   dist0: [
-    'clean:build'
-  ],
-  dist1: [
+    'removelogging',
     'compass',
-    'concat'
+    'concat',
+    'imagemin',
+    'replace'
     // 'svg2png'
   ],
+  dist1: [
+    'autoprefixer'
+    //'closurecompiler'
+  ],
   dist2: [
-    'autoprefixer',
-    'closurecompiler',
-    //'uglify',
-    'imagemin'
+    'csscomb',
+    'uglify'
   ],
   dist3: [
-    'csscomb'
-  ],
-  dist4: [
-    'replace'
-  ],
-  dist5: [
-    'cssmin'
-  ],
-  dist6: [
+    'cssmin',
+    'jshint:js'
     //'shell'
   ],
+  dist4: [
+  ],
+  dist5: [
+  ],
+  dist6: [
+  ],
   dist7: [
-    'copy:local',
-    'clean:temp'
   ]
 };

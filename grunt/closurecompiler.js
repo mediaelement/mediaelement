@@ -11,8 +11,12 @@ module.exports = {
     },
     files: {
       'local-build/mediaelement.min.js': 'local-build/mediaelement.js',
-      'local-build/mediaelementplayer.min.js': 'local-build/mediaelementplayer.js',
-      'local-build/mediaelement-and-player.min.js': 'local-build/mediaelement-and-player.js'
+      'local-build/mediaelement.base.min.js': 'local-build/mediaelement.base.js',
+      'local-build/mediaelement.player.min.js': 'local-build/mediaelement.player.js',
+      // i18n
+      'local-build/mediaelement.i18n.min.js': 'local-build/mediaelement.i18n.js',
+      'local-build/mediaelement.base.i18n.min.js': 'local-build/mediaelement.base.i18n.js',
+      'local-build/mediaelement.player.i18n.min.js': 'local-build/mediaelement.player.i18n.js'
     }
   }
 };

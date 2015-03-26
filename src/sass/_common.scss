@@ -1,20 +1,26 @@
-@import "common/mixins";
-@import "common/offscreen";
-@import "common/wrappers";
-@import "common/contextmenu";
-@import "common/captions";
-//@import "common/chapters";
-//@import "common/postroll";
+/**
+* Import partial styles used by skins.
+*/
 
-// @import "common/sourcechooser";
-@import "common/speed";
-@import "common/time";
-@import "common/video";
-@import "common/volume";
+@import "inc/mixins";
+@import "inc/offscreen";
+@import "inc/wrappers";
+@import "inc/overlay";
+@import "inc/controls";
+@import "inc/contextmenu";
+@import "inc/time";
+@import "inc/video";
+@import "inc/volume";
+@import "inc/embed";
+@import "inc/fullscreen";
 
-@import "common/embed";
-@import "common/fullscreen";
-@import "common/plugins";
+/* Plugin styles */
+@import "inc/plugins";
+//@import "inc/captions";
+//@import "inc/chapters";
+//@import "inc/postroll";
+//@import "inc/sourcechooser";
+//@import "inc/speed";
 
-@import "common/no-svg";
-@import "common/animations";
+@import "inc/no-svg";
+@import "inc/animations";

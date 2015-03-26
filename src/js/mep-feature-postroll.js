@@ -4,7 +4,7 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		postrollCloseText: mejs.i18n.t('Close')
+		postrollCloseText: 'Close'
 	});
 
 	// Postroll

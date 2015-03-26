@@ -1,29 +1,56 @@
-# A custom mediaelement for Drupal
+# A better mediaelement
 
-### `<video>` and `<audio>` made easier.
+### `<video>` and `<audio>` made even easier.
 
-This library is an optimized version (~83kb vs. 109kb) of the mediaelement player featuring an improved grunt build process & simplified custom styling with sass.
+This library is an optimized version of mediaelement.js with everything you need to implement a basic mediaelement player.
 
-Use this lib was designed for the improved mediaelement module for Drupal to allow easy theme switching, but can also be used in place of the standard mediaelement library to cut down on filesize.
+Additional features that aren't part of the basic implementation can be easily added with a custom build.
 
-## Installation and Usage
-This is a drop-in replacement for the standard mediaelement.js library. To integrate with the mediaelement or improved mediaelement module for Drupal:
+Improvements in filesize are largely a result of the improved build process & less/more specific css selectors.
 
-1. Download/git this library and extract to `$base_url/sites/all/libraries/mediaelement`
+ |      |improved|original|
+ |------|------|------|
+ | .js  | 61.6 kb | 76 kb |
+ | .css | 10.3 kb | 19.4 kb |
+ | .svg | 9.7 kb | 10.1 kb |
+ | **total** | **81.6 kb** | **105.5 kb** |
 
-2. Customize the build for your specific needs by configuring the grunt tasks or editing the `/src/` assets.
 
-	- `grunt` : compiles all `/src/` assets to `/local-build/`.
-	- `grunt build` : copies the `/local-build/` to `/build/`.
 
-3. Download/git the mediaelement module and extract to `$base_url/sites/$site/modules/mediaelement`
+## Customization & Configuration
 
-4. Enable the module.
+### Project Structure
+`/grunt/` : configuration files of grunt tasks.
 
-5. Configure module
+`/src/` : all editable assets that will be compiled & processed into `/local-build/`.
 
- 	- global settings : `$base_url/admin/config/media/mediaelement`.
-	- field format settings :  `$base_url/admin/structure/types/manage/$content_type/display`.
+`/local-build/` : compiled assets that have yet to be tested.
+
+`/build/` : compiled assets used in production.
+
+### Available Grunt tasks:
+
+ - `grunt` : compiles all `/src/` assets to `/local-build/`.
+
+ - `grunt style` : compiles css & newer image assets to `/local-build/`.
+
+ - `grunt build` : copies the `/local-build/` to `/build/`.
+
+### Styling
+
+Sass is the preferred method of styling - *css may be edited directly, but isn't recommended*. Styles are broken up into partials for easier inclusion/exclusion of needed elements.
+
+ Compass, Autoprefixer, CSSComb, and CSSMin will be run as part of the  `grunt` & `grunt style` tasks.
+
+### Plugins
+
+Extend the player's functionality by uncommenting the desired plugin from the `meplayer` || `meplayeri18n` task in `/grunt/concat.js` and rebuild the script.
+
+### I18n
+
+I18n functionality has been removed from mediaelement.js (*due to the requirement for a custom build*), but remains available in mediaelement.i18n.js.
+
+To enable translations, uncomment the desired languages from the `meplayeri18n` task in `/grunt/concat.js` and rebuild the script.
 
 ## How it Works:
 Many great HTML5 players have a completely separate Flash UI in fallback mode, but `MediaElementPlayer.js` uses the same HTML/CSS for all players.

@@ -5,6 +5,8 @@
 
 module.exports = {
   options: {
+    force: true,
+    reporterOutput: 'jshints.txt',
     curly: true,
     eqeqeq: true,
     eqnull: true,

@@ -1,8 +1,8 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		muteText: mejs.i18n.t('Mute Toggle'),
-        allyVolumeControlText: mejs.i18n.t('Use Up/Down Arrow keys to increase or decrease volume.'),
+		muteText: 'Mute Toggle',
+        allyVolumeControlText: 'Use Up/Down Arrow keys to increase or decrease volume.',
 		hideVolumeOnTouchDevices: true,
 		
 		audioVolume: 'horizontal',
@@ -173,7 +173,7 @@
                 var volume = Math.floor(media.volume*100);
 
 				volumeSlider.attr({
-					'aria-label': mejs.i18n.t('volumeSlider'),
+					'aria-label': 'volumeSlider',
 					'aria-valuemin': 0,
 					'aria-valuemax': 100,
 					'aria-valuenow': volume,

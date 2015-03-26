@@ -1,0 +1,22 @@
+
+.mejs-fullscreen {
+  /* Hide scrollbars if fullscreen */
+  overflow: hidden !important;
+}
+
+.mejs-container-fullscreen {
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+
+  .mejs-layers,
+  .mejs-mediaelement,
+  video {
+    width: 100%;
+    width: 100vw;
+    height: 100%;
+    height: 100vh;
+  }
+}

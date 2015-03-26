@@ -7,6 +7,16 @@ module.exports = {
   options: {
     cache: false
   },
+  gif: {
+    files: [
+      {
+        expand: true,
+        cwd: 'src/images',
+        src: ['**/*.gif', '!**/min/**'],
+        dest: './local-build/'
+      }
+    ]
+  },
   png: {
     files: [
       {

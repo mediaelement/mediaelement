@@ -1,0 +1,23 @@
+// Size settings
+$controlheight: 48px;
+$bsize: 42px;
+$isize: 32px;
+$ioffset: 60px;
+// Color Swatches
+$hilight: #3caac8;
+$background:  #010101;
+$midground: lighten($background,30%);
+$foreground: #F0F0F0;
+// Images
+$loading: "ME_loading_dark.gif";
+$bigplay: "ME_bigplay.svg";
+$bigplay_fallback: "ME_bigplay.png";
+/* _min_ controls use the fewest images required to implement mediaelement
+  * to keep filesize as small as possible. If all controls are needed (loop,
+  * stop, skipback, etc.) use the ME_controls_dark.png
+*/
+$controls: "ME_controls_min_dark.svg";
+$controls_fallback: "ME_controls_large_dark.png";
+
+@import "common";
+  
