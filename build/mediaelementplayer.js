@@ -1279,6 +1279,11 @@ if (typeof jQuery != 'undefined') {
 			}
 			t.globalUnbind();
 			delete t.node.player;
+		},
+		rebuildtracks: function(){
+			var t = this;
+			t.findTracks();
+			t.buildtracks(t, t.controls, t.layers, t.media);
 		}
 	};
 
@@ -1465,8 +1470,8 @@ if (typeof jQuery != 'undefined') {
 		buildprogress: function(player, controls, layers, media) {
 
 			$('<div class="mejs-time-rail">' +
-				'<a href="javascript:void(0);" class="mejs-time-total mejs-time-slider">' +
-				'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
+				'<span  class="mejs-time-total mejs-time-slider">' +
+				//'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
 				'<span class="mejs-time-buffering"></span>' +
 				'<span class="mejs-time-loaded"></span>' +
 				'<span class="mejs-time-current"></span>' +
@@ -1475,7 +1480,6 @@ if (typeof jQuery != 'undefined') {
 				'<span class="mejs-time-float-current">00:00</span>' +
 				'<span class="mejs-time-float-corner"></span>' +
 				'</span>' +
-				'</a>' +
 				'</div>')
 				.appendTo(controls);
 			controls.find('.mejs-time-buffering').hide();
@@ -2632,7 +2636,7 @@ if (typeof jQuery != 'undefined') {
 						var newSpeed = $(this).attr('value');
 						playbackspeed = newSpeed;
 						media.playbackRate = parseFloat(newSpeed);
-						speedButton.find('button').html('test' + newSpeed + t.options.speedChar);
+						speedButton.find('button').html(newSpeed + t.options.speedChar);
 						speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
 						speedButton.find('input[type="radio"]:checked').next().addClass('mejs-speed-selected');
 					});
@@ -2671,6 +2675,14 @@ if (typeof jQuery != 'undefined') {
 
 		hasChapters: false,
 
+		cleartracks: function(player, controls, layers, media){
+			if(player) {
+				if(player.captions) player.captions.remove();
+				if(player.chapters) player.chapters.remove();
+				if(player.captionsText) player.captionsText.remove();
+				if(player.captionsButton) player.captionsButton.remove();
+			}
+		},
 		buildtracks: function(player, controls, layers, media) {
 			if (player.tracks.length === 0)
 				return;
@@ -2684,6 +2696,7 @@ if (typeof jQuery != 'undefined') {
 					t.domNode.textTracks[i].mode = "hidden";
 				}
 			}
+			t.cleartracks(player, controls, layers, media);
 			player.chapters =
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();

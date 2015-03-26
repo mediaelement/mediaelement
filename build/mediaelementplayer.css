@@ -2,6 +2,7 @@
 /* Accessibility: hide screen reader texts (and prefer "top" for RTL languages). */
 	position: absolute !important;
 	top: -10000px;
+	left: -10000px;
 	overflow: hidden;
 	width: 1px;
 	height: 1px;
@@ -194,7 +195,7 @@
 	background-image: url(controls.png);
 }
 
-/* :focus for accessibility */
+	/* :focus for accessibility */
 .mejs-controls .mejs-button button:focus {
 	outline: dotted 1px #999;
 }
