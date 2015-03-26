@@ -195,7 +195,7 @@
 	background-image: url(controls.png);
 }
 
-/* :focus for accessibility */
+	/* :focus for accessibility */
 .mejs-controls .mejs-button button:focus {
 	outline: dotted 1px #999;
 }
