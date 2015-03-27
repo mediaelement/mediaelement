@@ -113,8 +113,9 @@ div.mejs-clear {
 /* line 89, ../sass/inc/_wrappers.scss */
 .me-cannotplay a {
   font-weight: bold;
+  color: f0f0ff;
 }
-/* line 92, ../sass/inc/_wrappers.scss */
+/* line 93, ../sass/inc/_wrappers.scss */
 .me-cannotplay span {
   padding: 15px;
 }

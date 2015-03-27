@@ -52,108 +52,6 @@
                                                                                        ^ Expected '!==' and instead saw '!='.
    8242 |[90m                    if ( conv && s["throws"] ) {[39m
                                            ^ ['throws'] is better written in dot notation.
-[1m   build\mediaelement.base.i18n.js[22m
-    105 |[90m        if (typeof showFrameCount == 'undefined') {[39m
-                                             ^ Expected '===' and instead saw '=='.
-    107 |[90m        } else if(typeof fps == 'undefined') {[39m
-                                        ^ Expected '===' and instead saw '=='.
-    117 |[90m                        + (minutes < 10 ? '0' + minutes : minutes) + ':'[39m
-                                 ^ Bad line breaking before '+'.
-    118 |[90m                        + (seconds < 10 ? '0' + seconds : seconds)[39m
-                                 ^ Bad line breaking before '+'.
-    119 |[90m                        + ((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');[39m
-                                 ^ Bad line breaking before '+'.
-    125 |[90m        if (typeof showFrameCount == 'undefined') {[39m
-                                             ^ Expected '===' and instead saw '=='.
-    127 |[90m        } else if(typeof fps == 'undefined') {[39m
-                                        ^ Expected '===' and instead saw '=='.
-    149 |[90m        if (typeof SMPTE != 'string') [39m
-                                    ^ Expected '!==' and instead saw '!='.
-    150 |[90m            return false;[39m
-                     ^ Expected '{' and instead saw 'return'.
-    155 |[90m            decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,[39m
-                                                        ^ Expected '!==' and instead saw '!='.
-    177 |[90m                    if (obj.readyState == 4) {[39m
-                                                  ^ Expected '===' and instead saw '=='.
-    192 |[90m                if (typeof obj[i] == "function") {[39m
-                                             ^ Expected '===' and instead saw '=='.
-    210 |[90m        return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;[39m
-                                                  ^ Expected '===' and instead saw '=='.
-    210 |[90m        return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;[39m
-                                                                                     ^ Expected '===' and instead saw '=='.
-    210 |[90m        return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;[39m
-                                                                                                      ^ Expected '===' and instead saw '=='.
-    234 |[90m        if (typeof(this.nav.plugins) != 'undefined' && typeof this.nav.plugins[pluginName] == 'object') {[39m
-                                                ^ Expected '!==' and instead saw '!='.
-    234 |[90m        if (typeof(this.nav.plugins) != 'undefined' && typeof this.nav.plugins[pluginName] == 'object') {[39m
-                                                                                                      ^ Expected '===' and instead saw '=='.
-    236 |[90m            if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {[39m
-                                                                      ^ Expected '!==' and instead saw '!='.
-    243 |[90m        } else if (typeof(window.ActiveXObject) != 'undefined') {[39m
-                                                           ^ Expected '!==' and instead saw '!='.
-    322 |[90m        t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);[39m
-                                                                            ^ Expected '!==' and instead saw '!='.
-    399 |[90m            }[39m
-                      ^ Missing semicolon.
-    413 |[90m            }[39m
-                      ^ Missing semicolon.
-    426 |[90m            }    [39m
-                      ^ Missing semicolon.
-    476 |[90m        if (typeof url == 'string') {[39m
-                                  ^ Expected '===' and instead saw '=='.
-    540 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    540 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    550 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    550 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    560 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    560 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    572 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    572 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    595 |[90m                    if (type == pluginInfo.types[j]) {[39m
-                                        ^ Expected '===' and instead saw '=='.
-    623 |[90m        if (typeof url == 'string') {[39m
-                                  ^ Expected '===' and instead saw '=='.
-    642 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    642 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    656 |[90m            if (this.pluginType == 'youtube') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    666 |[90m            if (this.pluginType == 'youtube') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    722 |[90m        if (!callbacks) return true;[39m
-                                 ^ Expected '{' and instead saw 'return'.
-    837 |[90m    if ( typeof mejsL10n != 'undefined' ) {[39m
-                                    ^ Expected '!==' and instead saw '!='.
-    926 |[90m    if ( typeof mejsL10n != 'undefined' ) {[39m
-                                    ^ Expected '!==' and instead saw '!='.
-   1081 |[90m            htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,[39m
-                                                      ^ Expected '===' and instead saw '=='.
-   1098 |[90m        src =         (typeof src == 'undefined'     || src === null || src == '') ? null : src;        [39m
-                                             ^ Expected '===' and instead saw '=='.
-   1098 |[90m        src =         (typeof src == 'undefined'     || src === null || src == '') ? null : src;        [39m
-                                                                                       ^ Expected '===' and instead saw '=='.
-   1099 |[90m        poster =    (typeof poster == 'undefined'     || poster === null) ? '' : poster;[39m
-                                              ^ Expected '===' and instead saw '=='.
-   1100 |[90m        preload =     (typeof preload == 'undefined'     || preload === null || preload === 'false') ? 'none' : preload;[39m
-                                                 ^ Expected '===' and instead saw '=='.
-   1101 |[90m        autoplay =     !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');[39m
-                                                    ^ Expected '===' and instead saw '=='.
-   1102 |[90m        controls =     !(typeof controls == 'undefined' || controls === null || controls === 'false');[39m
-                                                    ^ Expected '===' and instead saw '=='.
-   1108 |[90m        if (playback.method == 'native') {[39m
-                                       ^ Expected '===' and instead saw '=='.
-   1140 |[90m            result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio')},[39m
-                                                                                                                                            ^ Expected '!==' and instead saw '!='.
-[31m>> [39mToo many errors. (59% scanned).
 [1m   build\mediaelement.base.js[22m
     105 |[90m        if (typeof showFrameCount == 'undefined') {[39m
                                              ^ Expected '===' and instead saw '=='.
@@ -256,108 +154,6 @@
     990 |[90m            if (typeof options.type == 'string') {[39m
                                                ^ Expected '===' and instead saw '=='.
 [31m>> [39mToo many errors. (56% scanned).
-[1m   build\mediaelement.i18n.js[22m
-    105 |[90m        if (typeof showFrameCount == 'undefined') {[39m
-                                             ^ Expected '===' and instead saw '=='.
-    107 |[90m        } else if(typeof fps == 'undefined') {[39m
-                                        ^ Expected '===' and instead saw '=='.
-    117 |[90m                        + (minutes < 10 ? '0' + minutes : minutes) + ':'[39m
-                                 ^ Bad line breaking before '+'.
-    118 |[90m                        + (seconds < 10 ? '0' + seconds : seconds)[39m
-                                 ^ Bad line breaking before '+'.
-    119 |[90m                        + ((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');[39m
-                                 ^ Bad line breaking before '+'.
-    125 |[90m        if (typeof showFrameCount == 'undefined') {[39m
-                                             ^ Expected '===' and instead saw '=='.
-    127 |[90m        } else if(typeof fps == 'undefined') {[39m
-                                        ^ Expected '===' and instead saw '=='.
-    149 |[90m        if (typeof SMPTE != 'string') [39m
-                                    ^ Expected '!==' and instead saw '!='.
-    150 |[90m            return false;[39m
-                     ^ Expected '{' and instead saw 'return'.
-    155 |[90m            decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,[39m
-                                                        ^ Expected '!==' and instead saw '!='.
-    177 |[90m                    if (obj.readyState == 4) {[39m
-                                                  ^ Expected '===' and instead saw '=='.
-    192 |[90m                if (typeof obj[i] == "function") {[39m
-                                             ^ Expected '===' and instead saw '=='.
-    210 |[90m        return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;[39m
-                                                  ^ Expected '===' and instead saw '=='.
-    210 |[90m        return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;[39m
-                                                                                     ^ Expected '===' and instead saw '=='.
-    210 |[90m        return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;[39m
-                                                                                                      ^ Expected '===' and instead saw '=='.
-    234 |[90m        if (typeof(this.nav.plugins) != 'undefined' && typeof this.nav.plugins[pluginName] == 'object') {[39m
-                                                ^ Expected '!==' and instead saw '!='.
-    234 |[90m        if (typeof(this.nav.plugins) != 'undefined' && typeof this.nav.plugins[pluginName] == 'object') {[39m
-                                                                                                      ^ Expected '===' and instead saw '=='.
-    236 |[90m            if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {[39m
-                                                                      ^ Expected '!==' and instead saw '!='.
-    243 |[90m        } else if (typeof(window.ActiveXObject) != 'undefined') {[39m
-                                                           ^ Expected '!==' and instead saw '!='.
-    322 |[90m        t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);[39m
-                                                                            ^ Expected '!==' and instead saw '!='.
-    399 |[90m            }[39m
-                      ^ Missing semicolon.
-    413 |[90m            }[39m
-                      ^ Missing semicolon.
-    426 |[90m            }    [39m
-                      ^ Missing semicolon.
-    476 |[90m        if (typeof url == 'string') {[39m
-                                  ^ Expected '===' and instead saw '=='.
-    540 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    540 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    550 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    550 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    560 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    560 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    572 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    572 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    595 |[90m                    if (type == pluginInfo.types[j]) {[39m
-                                        ^ Expected '===' and instead saw '=='.
-    623 |[90m        if (typeof url == 'string') {[39m
-                                  ^ Expected '===' and instead saw '=='.
-    642 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    642 |[90m            if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {[39m
-                                                                           ^ Expected '===' and instead saw '=='.
-    656 |[90m            if (this.pluginType == 'youtube') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    666 |[90m            if (this.pluginType == 'youtube') {[39m
-                                           ^ Expected '===' and instead saw '=='.
-    722 |[90m        if (!callbacks) return true;[39m
-                                 ^ Expected '{' and instead saw 'return'.
-    837 |[90m    if ( typeof mejsL10n != 'undefined' ) {[39m
-                                    ^ Expected '!==' and instead saw '!='.
-    926 |[90m    if ( typeof mejsL10n != 'undefined' ) {[39m
-                                    ^ Expected '!==' and instead saw '!='.
-   1081 |[90m            htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,[39m
-                                                      ^ Expected '===' and instead saw '=='.
-   1098 |[90m        src =         (typeof src == 'undefined'     || src === null || src == '') ? null : src;        [39m
-                                             ^ Expected '===' and instead saw '=='.
-   1098 |[90m        src =         (typeof src == 'undefined'     || src === null || src == '') ? null : src;        [39m
-                                                                                       ^ Expected '===' and instead saw '=='.
-   1099 |[90m        poster =    (typeof poster == 'undefined'     || poster === null) ? '' : poster;[39m
-                                              ^ Expected '===' and instead saw '=='.
-   1100 |[90m        preload =     (typeof preload == 'undefined'     || preload === null || preload === 'false') ? 'none' : preload;[39m
-                                                 ^ Expected '===' and instead saw '=='.
-   1101 |[90m        autoplay =     !(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');[39m
-                                                    ^ Expected '===' and instead saw '=='.
-   1102 |[90m        controls =     !(typeof controls == 'undefined' || controls === null || controls === 'false');[39m
-                                                    ^ Expected '===' and instead saw '=='.
-   1108 |[90m        if (playback.method == 'native') {[39m
-                                       ^ Expected '===' and instead saw '=='.
-   1140 |[90m            result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio')},[39m
-                                                                                                                                            ^ Expected '!==' and instead saw '!='.
-[31m>> [39mToo many errors. (24% scanned).
 [1m   build\mediaelement.js[22m
     105 |[90m        if (typeof showFrameCount == 'undefined') {[39m
                                              ^ Expected '===' and instead saw '=='.
@@ -460,209 +256,107 @@
     990 |[90m            if (typeof options.type == 'string') {[39m
                                                ^ Expected '===' and instead saw '=='.
 [31m>> [39mToo many errors. (22% scanned).
-[1m   build\mediaelement.player.i18n.js[22m
-     13 |[90mif (typeof jQuery != 'undefined') {[39m
+[1m   build\mediaelement.player.js[22m
+      1 |[90mif (typeof jQuery != 'undefined') {[39m
                              ^ Expected '!==' and instead saw '!='.
-     15 |[90m} else if (typeof ender != 'undefined') {[39m
+      3 |[90m} else if (typeof ender != 'undefined') {[39m
                                    ^ Expected '!==' and instead saw '!='.
-    176 |[90m                                if (typeof player.enterFullScreen != 'undefined') {[39m
+    164 |[90m                                if (typeof player.enterFullScreen != 'undefined') {[39m
                                                                              ^ Expected '!==' and instead saw '!='.
-    221 |[90m        if (typeof t.node.player != 'undefined') {[39m
+    209 |[90m        if (typeof t.node.player != 'undefined') {[39m
                                             ^ Expected '!==' and instead saw '!='.
-    230 |[90m        if (typeof o == 'undefined') {[39m
+    218 |[90m        if (typeof o == 'undefined') {[39m
                                 ^ Expected '===' and instead saw '=='.
-    404 |[90m            if (typeof(t.container) != 'undefined' && t.controlsAreVisible){[39m
+    392 |[90m            if (typeof(t.container) != 'undefined' && t.controlsAreVisible){[39m
                                                ^ Expected '!==' and instead saw '!='.
-    413 |[90m            doAnimation = typeof doAnimation == 'undefined' || doAnimation;[39m
+    401 |[90m            doAnimation = typeof doAnimation == 'undefined' || doAnimation;[39m
                                                         ^ Expected '===' and instead saw '=='.
-    416 |[90m                return;[39m
+    404 |[90m                return;[39m
                          ^ Expected '{' and instead saw 'return'.
-    452 |[90m            doAnimation = typeof doAnimation == 'undefined' || doAnimation;[39m
+    440 |[90m            doAnimation = typeof doAnimation == 'undefined' || doAnimation;[39m
                                                         ^ Expected '===' and instead saw '=='.
-    455 |[90m                return;[39m
+    443 |[90m                return;[39m
                          ^ Expected '{' and instead saw 'return'.
-    497 |[90m            timeout = typeof timeout != 'undefined' ? timeout : 1500;[39m
+    485 |[90m            timeout = typeof timeout != 'undefined' ? timeout : 1500;[39m
                                                 ^ Expected '!==' and instead saw '!='.
-    545 |[90m                autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),[39m
+    533 |[90m                autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),[39m
                                                             ^ Expected '===' and instead saw '=='.
-    693 |[90m                        if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {[39m
+    681 |[90m                        if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {[39m
                                             ^ Expected '!==' and instead saw '!='.
-    778 |[90m                if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {[39m
+    766 |[90m                if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {[39m
                                                   ^ Expected '===' and instead saw '=='.
-    784 |[90m            if (autoplay && media.pluginType == 'native') {[39m
+    772 |[90m            if (autoplay && media.pluginType == 'native') {[39m
                                                         ^ Expected '===' and instead saw '=='.
-    791 |[90m                if (typeof t.options.success == 'string') {[39m
+    779 |[90m                if (typeof t.options.success == 'string') {[39m
                                                         ^ Expected '===' and instead saw '=='.
-    817 |[90m            if (typeof width != 'undefined') {[39m
+    805 |[90m            if (typeof width != 'undefined') {[39m
                                         ^ Expected '!==' and instead saw '!='.
-    821 |[90m            if (typeof height != 'undefined') {[39m
+    809 |[90m            if (typeof height != 'undefined') {[39m
                                          ^ Expected '!==' and instead saw '!='.
-    950 |[90m                    if ($this.css('position') != 'absolute' && $this.is(':visible')) {[39m
+    938 |[90m                    if ($this.css('position') != 'absolute' && $this.is(':visible')) {[39m
                                                          ^ Expected '!==' and instead saw '!='.
-    968 |[90m                if (lastControl.css('position') != 'absolute') {[39m
+    956 |[90m                if (lastControl.css('position') != 'absolute') {[39m
                                                            ^ Expected '!==' and instead saw '!='.
-    975 |[90m                t.setProgressRail();[39m
+    963 |[90m                t.setProgressRail();[39m
                          ^ Expected '{' and instead saw 't'.
-    977 |[90m                t.setCurrentRail();[39m
+    965 |[90m                t.setCurrentRail();[39m
                          ^ Expected '{' and instead saw 't'.
-   1028 |[90m                return;[39m
+   1016 |[90m                return;[39m
                          ^ Expected '{' and instead saw 'return'.
-   1169 |[90m                        if (e.keyCode == keyAction.keys[j]) {[39m
+   1157 |[90m                        if (e.keyCode == keyAction.keys[j]) {[39m
                                                  ^ Expected '===' and instead saw '=='.
-   1170 |[90m                            if (typeof(e.preventDefault) == "function") e.preventDefault();[39m
+   1158 |[90m                            if (typeof(e.preventDefault) == "function") e.preventDefault();[39m
                                                                     ^ Expected '===' and instead saw '=='.
-   1170 |[90m                            if (typeof(e.preventDefault) == "function") e.preventDefault();[39m
+   1158 |[90m                            if (typeof(e.preventDefault) == "function") e.preventDefault();[39m
                                                                                  ^ Expected '{' and instead saw 'e'.
-   1277 |[90m            if (typeof t.container == 'object') {[39m
+   1265 |[90m            if (typeof t.container == 'object') {[39m
                                               ^ Expected '===' and instead saw '=='.
-   1314 |[90m            if (events.d) $(document).bind(events.d, data, callback);[39m
+   1302 |[90m            if (events.d) $(document).bind(events.d, data, callback);[39m
                                    ^ Expected '{' and instead saw '$'.
-   1315 |[90m            if (events.w) $(window).bind(events.w, data, callback);[39m
+   1303 |[90m            if (events.w) $(window).bind(events.w, data, callback);[39m
                                    ^ Expected '{' and instead saw '$'.
-   1321 |[90m            if (events.d) $(document).unbind(events.d, callback);[39m
+   1309 |[90m            if (events.d) $(document).unbind(events.d, callback);[39m
                                    ^ Expected '{' and instead saw '$'.
-   1322 |[90m            if (events.w) $(window).unbind(events.w, callback);[39m
+   1310 |[90m            if (events.w) $(window).unbind(events.w, callback);[39m
                                    ^ Expected '{' and instead saw '$'.
-   1327 |[90m    if (typeof $ != 'undefined') {[39m
+   1315 |[90m    if (typeof $ != 'undefined') {[39m
                             ^ Expected '!==' and instead saw '!='.
-   1373 |[90m                if (typeof player.enterFullScreen == 'undefined')[39m
+   1361 |[90m                if (typeof player.enterFullScreen == 'undefined')[39m
                                                              ^ Expected '===' and instead saw '=='.
-   1374 |[90m                    return null;[39m
+   1362 |[90m                    return null;[39m
                              ^ Expected '{' and instead saw 'return'.
-   1390 |[90m        ,[39m
+   1378 |[90m        ,[39m
                  ^ Comma warnings can be turned off with 'laxcomma'.
-   1389 |[90m        }[39m
+   1377 |[90m        }[39m
                  ^ Bad line breaking before ','.
-   1411 |[90m        }[39m
+   1399 |[90m        }[39m
                  ^ Bad line breaking before ','.
-   1485 |[90m                delete timer;[39m
+   1473 |[90m                delete timer;[39m
                                      ^ Variables should not be deleted.
-   1532 |[90m                if (typeof item.show != 'undefined')[39m
+   1520 |[90m                if (typeof item.show != 'undefined')[39m
                                                 ^ Expected '!==' and instead saw '!='.
-   1533 |[90m                    item.show( $dom , t);[39m
+   1521 |[90m                    item.show( $dom , t);[39m
                              ^ Expected '{' and instead saw 'item'.
-   1538 |[90m                    if (typeof item.click != 'undefined')[39m
+   1526 |[90m                    if (typeof item.click != 'undefined')[39m
                                                      ^ Expected '!==' and instead saw '!='.
-   1539 |[90m                        item.click(t);[39m
+   1527 |[90m                        item.click(t);[39m
                                  ^ Expected '{' and instead saw 'item'.
-   1574 |[90m                return;[39m
+   1562 |[90m                return;[39m
                          ^ Expected '{' and instead saw 'return'.
-   1576 |[90m            player.isInIframe = (window.location != window.parent.location);[39m
+   1564 |[90m            player.isInIframe = (window.location != window.parent.location);[39m
                                                             ^ Expected '!==' and instead saw '!='.
-   1691 |[90m                                hoverDivs['top'][39m
+   1679 |[90m                                hoverDivs['top'][39m
                                                   ^ ['top'] is better written in dot notation.
-   1696 |[90m                                hoverDivs['left'][39m
+   1684 |[90m                                hoverDivs['left'][39m
                                                   ^ ['left'] is better written in dot notation.
-   1702 |[90m                                hoverDivs['right'][39m
+   1690 |[90m                                hoverDivs['right'][39m
                                                   ^ ['right'] is better written in dot notation.
-   1709 |[90m                                hoverDivs['bottom'][39m
+   1697 |[90m                                hoverDivs['bottom'][39m
                                                   ^ ['bottom'] is better written in dot notation.
-   1801 |[90m                                    delete hideTimeout;[39m
+   1789 |[90m                                    delete hideTimeout;[39m
                                                                ^ Variables should not be deleted.
-   1814 |[90m                                    delete hideTimeout;[39m
+   1802 |[90m                                    delete hideTimeout;[39m
                                                                ^ Variables should not be deleted.
 [31m>> [39mToo many errors. (66% scanned).
-[1m   build\mediaelement.player.js[22m
-     13 |[90mif (typeof jQuery != 'undefined') {[39m
-                             ^ Expected '!==' and instead saw '!='.
-     15 |[90m} else if (typeof ender != 'undefined') {[39m
-                                   ^ Expected '!==' and instead saw '!='.
-    176 |[90m                                if (typeof player.enterFullScreen != 'undefined') {[39m
-                                                                             ^ Expected '!==' and instead saw '!='.
-    221 |[90m        if (typeof t.node.player != 'undefined') {[39m
-                                            ^ Expected '!==' and instead saw '!='.
-    230 |[90m        if (typeof o == 'undefined') {[39m
-                                ^ Expected '===' and instead saw '=='.
-    404 |[90m            if (typeof(t.container) != 'undefined' && t.controlsAreVisible){[39m
-                                               ^ Expected '!==' and instead saw '!='.
-    413 |[90m            doAnimation = typeof doAnimation == 'undefined' || doAnimation;[39m
-                                                        ^ Expected '===' and instead saw '=='.
-    416 |[90m                return;[39m
-                         ^ Expected '{' and instead saw 'return'.
-    452 |[90m            doAnimation = typeof doAnimation == 'undefined' || doAnimation;[39m
-                                                        ^ Expected '===' and instead saw '=='.
-    455 |[90m                return;[39m
-                         ^ Expected '{' and instead saw 'return'.
-    497 |[90m            timeout = typeof timeout != 'undefined' ? timeout : 1500;[39m
-                                                ^ Expected '!==' and instead saw '!='.
-    545 |[90m                autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),[39m
-                                                            ^ Expected '===' and instead saw '=='.
-    693 |[90m                        if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {[39m
-                                            ^ Expected '!==' and instead saw '!='.
-    778 |[90m                if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {[39m
-                                                  ^ Expected '===' and instead saw '=='.
-    784 |[90m            if (autoplay && media.pluginType == 'native') {[39m
-                                                        ^ Expected '===' and instead saw '=='.
-    791 |[90m                if (typeof t.options.success == 'string') {[39m
-                                                        ^ Expected '===' and instead saw '=='.
-    817 |[90m            if (typeof width != 'undefined') {[39m
-                                        ^ Expected '!==' and instead saw '!='.
-    821 |[90m            if (typeof height != 'undefined') {[39m
-                                         ^ Expected '!==' and instead saw '!='.
-    950 |[90m                    if ($this.css('position') != 'absolute' && $this.is(':visible')) {[39m
-                                                         ^ Expected '!==' and instead saw '!='.
-    968 |[90m                if (lastControl.css('position') != 'absolute') {[39m
-                                                           ^ Expected '!==' and instead saw '!='.
-    975 |[90m                t.setProgressRail();[39m
-                         ^ Expected '{' and instead saw 't'.
-    977 |[90m                t.setCurrentRail();[39m
-                         ^ Expected '{' and instead saw 't'.
-   1028 |[90m                return;[39m
-                         ^ Expected '{' and instead saw 'return'.
-   1169 |[90m                        if (e.keyCode == keyAction.keys[j]) {[39m
-                                                 ^ Expected '===' and instead saw '=='.
-   1170 |[90m                            if (typeof(e.preventDefault) == "function") e.preventDefault();[39m
-                                                                    ^ Expected '===' and instead saw '=='.
-   1170 |[90m                            if (typeof(e.preventDefault) == "function") e.preventDefault();[39m
-                                                                                 ^ Expected '{' and instead saw 'e'.
-   1277 |[90m            if (typeof t.container == 'object') {[39m
-                                              ^ Expected '===' and instead saw '=='.
-   1314 |[90m            if (events.d) $(document).bind(events.d, data, callback);[39m
-                                   ^ Expected '{' and instead saw '$'.
-   1315 |[90m            if (events.w) $(window).bind(events.w, data, callback);[39m
-                                   ^ Expected '{' and instead saw '$'.
-   1321 |[90m            if (events.d) $(document).unbind(events.d, callback);[39m
-                                   ^ Expected '{' and instead saw '$'.
-   1322 |[90m            if (events.w) $(window).unbind(events.w, callback);[39m
-                                   ^ Expected '{' and instead saw '$'.
-   1327 |[90m    if (typeof $ != 'undefined') {[39m
-                            ^ Expected '!==' and instead saw '!='.
-   1404 |[90m            };[39m
-                      ^ Unnecessary semicolon.
-   1442 |[90m                if (typeof player.enterFullScreen == 'undefined')[39m
-                                                             ^ Expected '===' and instead saw '=='.
-   1443 |[90m                    return null;[39m
-                             ^ Expected '{' and instead saw 'return'.
-   1459 |[90m        ,[39m
-                 ^ Comma warnings can be turned off with 'laxcomma'.
-   1458 |[90m        }[39m
-                 ^ Bad line breaking before ','.
-   1480 |[90m        }[39m
-                 ^ Bad line breaking before ','.
-   1554 |[90m                delete timer;[39m
-                                     ^ Variables should not be deleted.
-   1601 |[90m                if (typeof item.show != 'undefined')[39m
-                                                ^ Expected '!==' and instead saw '!='.
-   1602 |[90m                    item.show( $dom , t);[39m
-                             ^ Expected '{' and instead saw 'item'.
-   1607 |[90m                    if (typeof item.click != 'undefined')[39m
-                                                     ^ Expected '!==' and instead saw '!='.
-   1608 |[90m                        item.click(t);[39m
-                                 ^ Expected '{' and instead saw 'item'.
-   1768 |[90m                    media.paused ? media.play() : media.pause();[39m
-                                                                       ^ Expected an assignment or function call and instead saw an expression.
-   1771 |[90m                    media.paused ? media.play() : media.pause();[39m
-                                                                       ^ Expected an assignment or function call and instead saw an expression.
-   2006 |[90m                return;[39m
-                         ^ Expected '{' and instead saw 'return'.
-   2010 |[90m                mute = (mode == 'horizontal') ?[39m
-                                        ^ Expected '===' and instead saw '=='.
-   2049 |[90m                if (!volumeSlider.is(':visible') && typeof secondTry == 'undefined') {[39m
-                                                                                ^ Expected '===' and instead saw '=='.
-   2070 |[90m                if (mode == 'vertical') {[39m
-                                    ^ Expected '===' and instead saw '=='.
-   2155 |[90m                    if (!mouseIsDown && mode == 'vertical')    {[39m
-                                                        ^ Expected '===' and instead saw '=='.
-[31m>> [39mToo many errors. (78% scanned).
 
-[31m>> [39m332 errors in 7 files
+[31m>> [39m179 errors in 4 files
