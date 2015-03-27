@@ -4,6 +4,7 @@
 
 .mejs-container {
   position: relative;
+  overflow: hidden;
   font-family: Helvetica, Arial;
   text-align: center;
   font-size: 10px;
@@ -11,6 +12,7 @@
   white-space: nowrap;
   vertical-align: baseline;
   color: $foreground;
+  background-color: #000;
 
   div,
   span{
@@ -40,9 +42,6 @@
 }
 
 // Wrapper / container elements.
-.mejs-container {
-  background-color: #000;
-}
 
 div.mejs-background {
   position: absolute;

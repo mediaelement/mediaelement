@@ -23,6 +23,7 @@
 /* line 5, ../sass/inc/_wrappers.scss */
 .mejs-container {
   position: relative;
+  overflow: hidden;
   font-family: Helvetica, Arial;
   text-align: center;
   font-size: 10px;
@@ -30,8 +31,9 @@
   white-space: nowrap;
   vertical-align: baseline;
   color: #f0f0f0;
+  background-color: #000;
 }
-/* line 15, ../sass/inc/_wrappers.scss */
+/* line 17, ../sass/inc/_wrappers.scss */
 .mejs-container div,
 .mejs-container span {
   position: static;
@@ -40,7 +42,7 @@
   padding: 0;
   border: 0;
 }
-/* line 25, ../sass/inc/_wrappers.scss */
+/* line 27, ../sass/inc/_wrappers.scss */
 .mejs-container ul,
 .mejs-container li {
   display: block;
@@ -49,7 +51,7 @@
   margin: 0;
   padding: 0;
 }
-/* line 34, ../sass/inc/_wrappers.scss */
+/* line 36, ../sass/inc/_wrappers.scss */
 .mejs-container a {
   color: #f0f0f0;
   display: block;
@@ -57,25 +59,20 @@
   vertical-align: middle;
 }
 
-/* line 43, ../sass/inc/_wrappers.scss */
-.mejs-container {
-  background-color: #000;
-}
-
-/* line 47, ../sass/inc/_wrappers.scss */
+/* line 46, ../sass/inc/_wrappers.scss */
 div.mejs-background {
   position: absolute;
   top: 0;
   left: 0;
 }
 
-/* line 53, ../sass/inc/_wrappers.scss */
+/* line 52, ../sass/inc/_wrappers.scss */
 div.mejs-mediaelement {
   position: relative;
   z-index: 1;
 }
 
-/* line 58, ../sass/inc/_wrappers.scss */
+/* line 57, ../sass/inc/_wrappers.scss */
 div.mejs-layers {
   position: absolute;
   top: 0;
@@ -84,7 +81,7 @@ div.mejs-layers {
   z-index: 1;
 }
 
-/* line 66, ../sass/inc/_wrappers.scss */
+/* line 65, ../sass/inc/_wrappers.scss */
 div.mejs-poster {
   position: absolute;
   top: 0;
@@ -93,29 +90,29 @@ div.mejs-poster {
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
-/* line 73, ../sass/inc/_wrappers.scss */
+/* line 72, ../sass/inc/_wrappers.scss */
 div.mejs-poster img {
   margin: 0;
   padding: 0;
   border: 0;
 }
 
-/* line 80, ../sass/inc/_wrappers.scss */
+/* line 79, ../sass/inc/_wrappers.scss */
 :root div.mejs-poster img {
   display: none;
 }
 
-/* line 84, ../sass/inc/_wrappers.scss */
+/* line 83, ../sass/inc/_wrappers.scss */
 div.mejs-clear {
   clear: both;
 }
 
-/* line 89, ../sass/inc/_wrappers.scss */
+/* line 88, ../sass/inc/_wrappers.scss */
 .me-cannotplay a {
   font-weight: bold;
   color: f0f0ff;
 }
-/* line 93, ../sass/inc/_wrappers.scss */
+/* line 92, ../sass/inc/_wrappers.scss */
 .me-cannotplay span {
   padding: 15px;
 }
