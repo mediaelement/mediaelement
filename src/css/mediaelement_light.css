@@ -107,16 +107,6 @@ div.mejs-clear {
   clear: both;
 }
 
-/* line 88, ../sass/inc/_wrappers.scss */
-.me-cannotplay a {
-  font-weight: bold;
-  color: f0f0ff;
-}
-/* line 92, ../sass/inc/_wrappers.scss */
-.me-cannotplay span {
-  padding: 15px;
-}
-
 /* line 3, ../sass/inc/_overlay.scss */
 div.mejs-overlay {
   position: relative;
@@ -324,10 +314,10 @@ div.mejs-controls .mejs-time-rail a {
 }
 /* line 31, ../sass/inc/_time.scss */
 div.mejs-controls span.mejs-time-total {
-  background: #cacaca;
-  background: rgba(202, 202, 202, 0.8);
-  background: -webkit-linear-gradient(rgba(1, 1, 1, 0.8), rgba(202, 202, 202, 0.8));
-  background: linear-gradient(rgba(1, 1, 1, 0.8), rgba(202, 202, 202, 0.8));
+  background: #f0f0f0;
+  background: rgba(240, 240, 240, 0.8);
+  background: -webkit-linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
+  background: linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
 }
 /* line 35, ../sass/inc/_time.scss */
 div.mejs-controls span.mejs-time-current {
@@ -338,10 +328,10 @@ div.mejs-controls span.mejs-time-current {
 }
 /* line 39, ../sass/inc/_time.scss */
 div.mejs-controls span.mejs-time-loaded {
-  background: #f0f0f0;
-  background: rgba(240, 240, 240, 0.8);
-  background: -webkit-linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
-  background: linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
+  background: #cacaca;
+  background: rgba(202, 202, 202, 0.8);
+  background: -webkit-linear-gradient(rgba(1, 1, 1, 0.8), rgba(202, 202, 202, 0.8));
+  background: linear-gradient(rgba(1, 1, 1, 0.8), rgba(202, 202, 202, 0.8));
 }
 /* line 43, ../sass/inc/_time.scss */
 div.mejs-controls span.mejs-time-buffering {
@@ -530,10 +520,20 @@ div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-handle 
   height: 100vh;
 }
 
-/* Plugin styles */
-/* line 2, ../sass/inc/_plugins.scss */
-.me-plugin {
-  position: absolute;
+/* line 3, ../sass/inc/_error.scss */
+.me-cannotplay a {
+  font-weight: bold;
+  color: #f0f0ff;
+  background-color: #333;
+}
+/* line 8, ../sass/inc/_error.scss */
+.me-cannotplay a:hover {
+  color: #3caac8;
+  background-color: #4d4d4d;
+}
+/* line 13, ../sass/inc/_error.scss */
+.me-cannotplay span {
+  padding: 15px;
 }
 
 /* line 3, ../sass/inc/_no-svg.scss */
@@ -561,4 +561,9 @@ div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-handle 
   to {
     background-position: 32px 0;
   }
+}
+/* Plugin styles */
+/* line 2, ../sass/inc/_plugins.scss */
+.me-plugin {
+  position: absolute;
 }

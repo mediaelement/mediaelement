@@ -29,7 +29,7 @@ div.mejs-controls {
     }
   }
   span.mejs-time-total {
-      @include overlay($midground, $foreground);
+    @include overlay();
   }
 
   span.mejs-time-current {
@@ -37,7 +37,7 @@ div.mejs-controls {
   }
 
   span.mejs-time-loaded {
-    @include overlay();
+    @include overlay($midground, $foreground);
   }
 
   span.mejs-time-buffering {

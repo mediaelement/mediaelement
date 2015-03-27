@@ -13,6 +13,9 @@
 @import "inc/volume";
 @import "inc/embed";
 @import "inc/fullscreen";
+@import "inc/error";
+@import "inc/no-svg";
+@import "inc/animations";
 
 /* Plugin styles */
 @import "inc/plugins";
@@ -22,5 +25,4 @@
 //@import "inc/sourcechooser";
 //@import "inc/speed";
 
-@import "inc/no-svg";
-@import "inc/animations";
+

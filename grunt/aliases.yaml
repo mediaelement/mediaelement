@@ -13,7 +13,6 @@ style:
     - 'csscomb'
     - 'cssmin'
     - 'copy:local'
-    - 'copy:build'
 build:
     - 'clean:build'
     - 'copy:build'
