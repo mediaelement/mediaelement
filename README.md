@@ -6,19 +6,19 @@ This library is an optimized version of mediaelement.js with everything you need
 
 Additional features that aren't part of the basic implementation can be easily added with a custom build.
 
-Improvements in filesize are largely a result of the build process & less/more specific css selectors.
+Improvements in filesizes are a result of excluding unnecessary plugins from the build process and using less/more specific css selectors.
 
 ## Customization & Configuration
 
 ### Project Structure
 
-`/src/` : all editable assets that will be compiled & processed into `/local-build/`.
+`/src/` : Editable assets that will be compiled & processed into `/local-build/`.
 
-`/local-build/` : compiled assets that have yet to be tested.
+`/local-build/` : Compiled assets that have yet to be tested.
 
-`/build/` : compiled assets used in production.
+`/build/` : Compiled assets used in production.
 
-`/grunt/` : configuration files of grunt tasks.
+`/grunt/` : Configuration files of grunt tasks.
 
 ### Available Grunt tasks:
 
