@@ -30,7 +30,7 @@ Improvements in filesizes are a result of excluding unnecessary plugins from the
 
 ### Styling
 
-Sass is the preferred method of styling - *css may be edited directly, but isn't recommended*. Styles are broken up into partials for easier inclusion/exclusion of needed elements.
+Sass is the preferred method of styling - *css may be edited directly, but isn't recommended*. Styles are broken up into partials in the `/inc/` directory for easier inclusion/exclusion of needed elements.
 
  Compass, Autoprefixer, CSSComb, and CSSMin will be run as part of the  `grunt` & `grunt style` tasks.
 
