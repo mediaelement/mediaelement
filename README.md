@@ -2,25 +2,15 @@
 
 ### `<video>` and `<audio>` made even easier.
 
-This library is an optimized version of mediaelement.js with everything you need to implement a basic mediaelement player.
+This library is an optimized version of mediaelement.js with everything you need to implement a basic mediaelement player and nothing you don't.
 
 Additional features that aren't part of the basic implementation can be easily added with a custom build.
 
-Improvements in filesize are largely a result of the improved build process & less/more specific css selectors.
-
- |      |improved|original|
- |------|------|------|
- | .js  | 61.6 kb | 76 kb |
- | .css | 10.3 kb | 19.4 kb |
- | .svg | 9.7 kb | 10.1 kb |
- | **total** | **81.6 kb** | **105.5 kb** |
-
-
+Improvements in filesize are largely a result of the build process & less/more specific css selectors.
 
 ## Customization & Configuration
 
 ### Project Structure
-`/grunt/` : configuration files of grunt tasks.
 
 `/src/` : all editable assets that will be compiled & processed into `/local-build/`.
 
@@ -28,13 +18,15 @@ Improvements in filesize are largely a result of the improved build process & le
 
 `/build/` : compiled assets used in production.
 
+`/grunt/` : configuration files of grunt tasks.
+
 ### Available Grunt tasks:
 
- - `grunt` : compiles all `/src/` assets to `/local-build/`.
+ - `grunt` : Compiles all `/src/` assets to `/local-build/`.
 
- - `grunt style` : compiles css & newer image assets to `/local-build/`.
+ - `grunt style` : Compiles css & newer image assets to `/local-build/`.
 
- - `grunt build` : copies the `/local-build/` to `/build/`.
+ - `grunt build` : Copies the `/local-build/` to `/build/`.
 
 ### Styling
 
@@ -44,13 +36,13 @@ Sass is the preferred method of styling - *css may be edited directly, but isn't
 
 ### Plugins
 
-Extend the player's functionality by uncommenting the desired plugin from the `meplayer` || `meplayeri18n` task in `/grunt/concat.js` and rebuild the script.
+Extend the player's functionality by uncommenting the desired plugins in `/grunt/concat.js` and rebuild the script.
 
 ### I18n
 
 I18n functionality has been removed from mediaelement.js (*due to the requirement for a custom build*), but remains available in mediaelement.i18n.js.
 
-To enable translations, uncomment the desired languages from the `meplayeri18n` task in `/grunt/concat.js` and rebuild the script.
+To enable translations, uncomment the desired languages in `/grunt/concat.js` and rebuild the script.
 
 ## How it Works:
 Many great HTML5 players have a completely separate Flash UI in fallback mode, but `MediaElementPlayer.js` uses the same HTML/CSS for all players.
