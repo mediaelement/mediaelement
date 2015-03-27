@@ -40,7 +40,7 @@ Extend the player's functionality by uncommenting the desired plugins in `/grunt
 
 ### I18n
 
-I18n functionality has been removed from mediaelement.js (*due to the requirement for a custom build*), but remains available in mediaelement.i18n.js.
+I18n functionality has been removed from mediaelement.js due to the requirement for a custom build of mediaelement.base.js, but i18n sources will be used if a language is included.
 
 To enable translations, uncomment the desired languages in `/grunt/concat.js` and rebuild the script.
 
