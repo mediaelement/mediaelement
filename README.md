@@ -2,7 +2,7 @@
 
 ### `<video>` and `<audio>` made even easier.
 
-This library is an optimized version of mediaelement.js with everything you need to implement a basic mediaelement player and nothing you don't.
+This library is an optimized version of mediaelement.js with an improved build process that includes everything you need to implement a basic mediaelement player and nothing you don't.
 
 Additional features that aren't part of the basic implementation can be easily added with a custom build.
 
