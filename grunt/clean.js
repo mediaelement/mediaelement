@@ -4,6 +4,7 @@
  */
 
 module.exports = {
+  local: ['local-build/**/*.[js,css,gif,png,svg]'],
   build: [
     'build/*.js',
     'build/*.css',
@@ -12,6 +13,5 @@ module.exports = {
     'build/*.svg',
     '!build/jquery.js'
   ],
-  local: ['local-build'],
   temp: ['tmp']
 };

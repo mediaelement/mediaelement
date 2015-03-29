@@ -4,11 +4,10 @@
 
 .mejs-container {
   position: relative;
-  overflow: hidden;
   font-family: Helvetica, Arial;
   text-align: center;
-  font-size: $controlheight / 3;;
-  line-height: 12px;
+  font-size: $controlheight / 3;
+  line-height: $controlheight / 3;
   white-space: nowrap;
   vertical-align: baseline;
   color: $foreground;
@@ -43,29 +42,19 @@
 
 // Wrapper / container elements.
 
-div.mejs-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
 div.mejs-mediaelement {
   position: relative;
-  z-index: 1;
 }
-
-div.mejs-layers {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1;
-}
-
+div.mejs-background,
+div.mejs-layers,
 div.mejs-poster {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+}
+
+div.mejs-poster {
   background-size: contain;
   background-position: 50% 50%;
   background-repeat: no-repeat;

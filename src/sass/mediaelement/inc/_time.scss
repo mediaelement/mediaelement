@@ -5,7 +5,7 @@ $tpad: ($controlheight - $theight)/2;
 div.mejs-controls {
   .mejs-time {
     box-sizing: content-box;
-    width: auto;
+    width:  $controlheight;
     margin: ($controlheight / 3) .1em 0;
     padding: 0 ($tpad/3);
     overflow: hidden;
@@ -29,6 +29,13 @@ div.mejs-controls {
       border-radius: 2px;
     }
   }
+
+  .mejs-time-total,
+  .mejs-time-current,
+  .mejs-time-loaded {
+    transition: width 100ms ease;
+  }
+
   span.mejs-time-total {
     @include overlay();
   }
@@ -49,21 +56,22 @@ div.mejs-controls {
 
   span.mejs-time-handle {
     cursor: pointer;
-    display: none;
+    display: block;
     position: absolute;
-    top: 0;
-    width: $theight;
+    top: -2px;
+    width: $theight/3;
+    height: $theight;
     margin: 0;
-    text-align: center;
     background: $foreground;
-    border: solid 2px $midground;
+    border: solid 2px $background;
   }
 
   span.mejs-time-float {
     position: absolute;
     top: -1.8em;
     width: 3.2em;
-    margin-left: -1.5em;
+    height:  $controlheight / 3;
+    margin-left: -1.6em;
     text-align: center;
     color: $background;
     background: $foreground;

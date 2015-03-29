@@ -16,8 +16,7 @@ div.mejs-controls {
       margin: 0;
       padding: 0;
       background-color: $background;
-      background-color: rgba($background, 0.7);
-      z-index: 1;
+      @include overlay($background, $foreground);
     }
 
     .mejs-volume-total,
