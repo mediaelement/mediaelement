@@ -6,10 +6,11 @@ div.mejs-controls {
   .mejs-time {
     box-sizing: content-box;
     width: auto;
-    margin: 0 .1em;
-    padding: ($theight/2) ($tpad/3) 0;
+    margin: ($controlheight / 3) .1em 0;
+    padding: 0 ($tpad/3);
     overflow: hidden;
     text-align: center;
+    color: $foreground;
     a {
       float: left;
     }
@@ -59,33 +60,28 @@ div.mejs-controls {
   }
 
   span.mejs-time-float {
-    display: none;
     position: absolute;
-    background: $foreground;
-    width: 36px;
-    height: 17px;
-    border: solid 1px $midground;
-    top: -26px;
-    margin-left: -18px;
+    top: -1.8em;
+    width: 3.2em;
+    margin-left: -1.5em;
     text-align: center;
     color: $background;
-  }
+    background: $foreground;
+    border: solid 1px $midground;
 
-  span.mejs-time-float-current {
-    display: block;
-    margin: 2px;
-    width: 30px;
-    left: 0;
+    .mejs-time-float-current {
+      width: 100%;
+    }
   }
 
   span.mejs-time-float-corner {
+    top: 1em;
+    left: 1.5em;
     width: 0;
     height: 0;
     line-height: 0;
-    border: solid 5px $foreground;
-    border-color: $foreground transparent transparent transparent;
+    border: solid 5px;
     border-radius: 0;
-    top: 15px;
-    left: 13px;
+    border-color: $foreground transparent transparent transparent;
   }
 }

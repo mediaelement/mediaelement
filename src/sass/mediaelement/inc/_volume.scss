@@ -46,7 +46,7 @@ div.mejs-controls {
       left: if($vwidth > 32px, 2px, 0.5px);
       width: $vwidth *0.8;
       height: $vwidth *0.3;
-      background: $background;
+      background: $foreground;
       border: $midground 1px solid;
       border-radius: 2px;
     }

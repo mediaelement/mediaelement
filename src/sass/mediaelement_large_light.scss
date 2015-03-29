@@ -7,7 +7,7 @@ $ioffset: 60px;
 $hilight: #3caac8;
 $background: #FAFAFA;
 $midground: darken($background, 15%);
-$foreground: #010101;
+$foreground: #3C3C3C;
 // Images
 $loading: "ME_loading_dark.gif";
 $bigplay: "ME_bigplay.svg";
@@ -19,5 +19,5 @@ $bigplay_fallback: "ME_bigplay.png";
 $controls: "ME_controls_min_light.svg";
 $controls_fallback: "ME_controls_large_light.png";
 // Imports
-@import "common";
+@import "mediaelement/common";
   

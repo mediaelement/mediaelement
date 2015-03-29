@@ -5,7 +5,6 @@ default:
     - 'concurrent:dist2'
     - 'concurrent:dist3'
     - 'copy:local'
-    - 'clean:temp'
 style:
     - 'compass'
     - 'autoprefixer'
