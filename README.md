@@ -2,9 +2,9 @@
 
 ### `<video>` and `<audio>` made even easier.
 
-This library is an optimized version of mediaelement.js with an improved build process that includes everything you need to implement a basic mediaelement player and nothing you don't.
+This library is an optimized build of mediaelement.js that includes everything you need to implement a basic mediaelement player and nothing you don't.
 
-Additional features that aren't part of the basic implementation can be easily added with a custom build.
+Additional features and plugins that aren't part of the standard build can be easily added by uncommenting the feature in `grunt/concat` and rebuilding the script.
 
 Improvements in filesizes are a result of excluding unnecessary plugins from the build process and using less/more specific css selectors.
 
@@ -32,6 +32,8 @@ Improvements in filesizes are a result of excluding unnecessary plugins from the
 
 Sass is the preferred method of styling - *css may be edited directly, but isn't recommended*. Styles are broken up into partials in the `/inc/` directory for easier inclusion/exclusion of needed elements.
 
+`!important` styles should be avoided-
+
  Compass, Autoprefixer, CSSComb, and CSSMin will be run as part of the  `grunt` & `grunt style` tasks.
 
 ### Plugins
@@ -40,9 +42,7 @@ Extend the player's functionality by uncommenting the desired plugins in `/grunt
 
 ### I18n
 
-I18n functionality has been removed from mediaelement.js due to the requirement for a custom build of mediaelement.base.js, but i18n sources will be used if a language is included.
-
-To enable translations, uncomment the desired languages in `/grunt/concat.js` and rebuild the script.
+The mediaelement I18n functionality has been removed from mediaelement.js, moving translation back to Drupal where it belongs.
 
 ## How it Works:
 Many great HTML5 players have a completely separate Flash UI in fallback mode, but `MediaElementPlayer.js` uses the same HTML/CSS for all players.
