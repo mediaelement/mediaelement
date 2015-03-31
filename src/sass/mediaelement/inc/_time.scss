@@ -21,7 +21,7 @@ div.mejs-controls {
     width: 180px;
     margin: ($controlheight / 3) 0 0;
 
-    span, a {
+    span {
       cursor: pointer;
       position: absolute;
       display: block;
@@ -67,6 +67,7 @@ div.mejs-controls {
   }
 
   span.mejs-time-float {
+    display: none;
     position: absolute;
     top: -1.8em;
     width: 3.2em;
