@@ -15,19 +15,19 @@ me.player = {
   variable: [
     /* Switch source for i18n support*/
     'mep-player.js',
-    'mep-feature-contextmenu.js',
-    'mep-feature-fullscreen.js',
     'mep-feature-playpause.js',
     'mep-feature-progress.js',
     'mep-feature-time.js',
-    'mep-feature-volume.js'
+    'mep-feature-volume.js',
+    'mep-feature-fullscreen.js',
+    'mep-feature-contextmenu.js'
       //'mep-feature-postroll.js',
       //'mep-feature-skipback.js',
       //'mep-feature-tracks.js'
   ],
   features: [
-    //'mep-feature-ads-vast.js',
     //'mep-feature-ads.js',
+    //'mep-feature-ads-vast.js',
     //'mep-feature-backlight.js',
     //'mep-feature-endedhtml.js',
     //'mep-feature-googleanalytics.js',
