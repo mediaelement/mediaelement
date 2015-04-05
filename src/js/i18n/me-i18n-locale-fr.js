@@ -11,27 +11,28 @@
  * @params
  *  - exports - CommonJS, window ..
  */
-;(function(exports, undefined) {
+;
+(function (exports, undefined) {
 
-    "use strict";
+  "use strict";
 
-    if (typeof exports.fr === 'undefined') {
-        exports.fr = {
-            "Download File" : "Télécharger le fichier",
-            //"Play/Pause" : "Lecture/Pause",
-            "Play" : "Lecture",
-            "Pause" : "Pause",
-            "Mute Toggle" : "Activer/désactiver le son",
-            "Fullscreen" : "Plein écran",
-            "Captions/Subtitles" : "Sous-titres",
-            "None" : "Aucun",
-            "Go Fullscreen" : "Afficher en plein écran",
-            "Turn off Fullscreen" : "Quitter le mode plein écran",
-            "Unmute" : "Activer le son",
-            "Mute" : "Désactiver le son",
-            "Download Video" : "Télécharger la vidéo",
-            "Close" : "Fermer"
-        };
-    }
+  if (typeof exports.fr === 'undefined') {
+    exports.fr = {
+      "Download File": "Télécharger le fichier",
+      //"Play/Pause" : "Lecture/Pause",
+      "Play": "Lecture",
+      "Pause": "Pause",
+      "Mute Toggle": "Activer/désactiver le son",
+      "Fullscreen": "Plein écran",
+      "Captions/Subtitles": "Sous-titres",
+      "None": "Aucun",
+      "Go Fullscreen": "Afficher en plein écran",
+      "Turn off Fullscreen": "Quitter le mode plein écran",
+      "Unmute": "Activer le son",
+      "Mute": "Désactiver le son",
+      "Download Video": "Télécharger la vidéo",
+      "Close": "Fermer"
+    };
+  }
 
 }(mejs.i18n.locale.strings));

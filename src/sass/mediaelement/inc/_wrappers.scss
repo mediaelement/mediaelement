@@ -44,6 +44,7 @@
 
 div.mejs-mediaelement {
   position: relative;
+  z-index: 5;
 }
 div.mejs-background,
 div.mejs-layers,
@@ -52,6 +53,7 @@ div.mejs-poster {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 6;
 }
 
 div.mejs-poster {

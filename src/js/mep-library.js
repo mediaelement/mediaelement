@@ -1,5 +1,5 @@
 if (typeof jQuery != 'undefined') {
-	mejs.$ = jQuery;
+  mejs.$ = jQuery;
 } else if (typeof ender != 'undefined') {
-	mejs.$ = ender;
+  mejs.$ = ender;
 }

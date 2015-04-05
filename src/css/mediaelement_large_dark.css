@@ -61,9 +61,10 @@
 /* line 45, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-mediaelement {
   position: relative;
+  z-index: 5;
 }
 
-/* line 48, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 49, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-background,
 div.mejs-layers,
 div.mejs-poster {
@@ -71,27 +72,28 @@ div.mejs-poster {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 6;
 }
 
-/* line 57, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 59, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-poster {
   background-size: contain;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
-/* line 61, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 63, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-poster img {
   margin: 0;
   padding: 0;
   border: 0;
 }
 
-/* line 68, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 70, ../sass/mediaelement/inc/_wrappers.scss */
 :root div.mejs-poster img {
   display: none;
 }
 
-/* line 72, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 74, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-clear {
   clear: both;
 }
@@ -132,7 +134,7 @@ div.mejs-overlay .mejs-overlay-loading span {
 
 /* line 6, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls {
-  z-index: 999;
+  z-index: 9;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -176,9 +178,10 @@ div.mejs-controls div {
   margin: 0 0.1em;
   padding: 0;
 }
-/* line 24, ../sass/mediaelement/inc/_controls.scss */
+/* line 22, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls button {
   cursor: pointer;
+  float: left;
   display: block;
   width: 42px;
   height: 42px;
@@ -198,45 +201,45 @@ div.mejs-controls button {
   -webkit-transition: border-color 500ms, background-color 700ms;
   transition: border-color 500ms, background-color 700ms;
 }
-/* line 45, ../sass/mediaelement/inc/_controls.scss */
+/* line 44, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls button:focus,
 div.mejs-controls button:hover {
   background-color: rgba(1, 1, 1, 0.5);
   border-color: #010101;
 }
-/* line 51, ../sass/mediaelement/inc/_controls.scss */
+/* line 50, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls button:focus {
   outline: dotted 1px #999;
 }
-/* line 56, ../sass/mediaelement/inc/_controls.scss */
+/* line 55, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-play button {
   background-position: 4px 4px;
 }
-/* line 60, ../sass/mediaelement/inc/_controls.scss */
+/* line 59, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-pause button {
   background-position: -54px 4px;
 }
-/* line 64, ../sass/mediaelement/inc/_controls.scss */
+/* line 63, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-stop button {
   background-position: -116px 4px;
 }
-/* line 68, ../sass/mediaelement/inc/_controls.scss */
+/* line 67, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-skip-back-button button {
   background-position: -176px 4px;
 }
-/* line 72, ../sass/mediaelement/inc/_controls.scss */
+/* line 71, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-mute button {
   background-position: -296px 4px;
 }
-/* line 76, ../sass/mediaelement/inc/_controls.scss */
+/* line 75, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-unmute button {
   background-position: -356px 4px;
 }
-/* line 80, ../sass/mediaelement/inc/_controls.scss */
+/* line 79, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-fullscreen-button button {
   background-position: -416px 4px;
 }
-/* line 84, ../sass/mediaelement/inc/_controls.scss */
+/* line 83, ../sass/mediaelement/inc/_controls.scss */
 div.mejs-controls .mejs-unfullscreen button {
   background-position: -476px 4px;
 }
@@ -283,17 +286,18 @@ div.mejs-controls .mejs-time {
   text-align: center;
   color: #f0f0f0;
 }
-/* line 14, ../sass/mediaelement/inc/_time.scss */
+/* line 15, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls .mejs-time a {
   float: left;
 }
-/* line 19, ../sass/mediaelement/inc/_time.scss */
+/* line 20, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls .mejs-time-rail {
   direction: ltr;
-  width: 180px;
+  width: 100px;
+  min-width: 50px;
   margin: 16px 0 0;
 }
-/* line 24, ../sass/mediaelement/inc/_time.scss */
+/* line 26, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls .mejs-time-rail span {
   cursor: pointer;
   position: absolute;
@@ -301,35 +305,35 @@ div.mejs-controls .mejs-time-rail span {
   height: 16px;
   border-radius: 2px;
 }
-/* line 33, ../sass/mediaelement/inc/_time.scss */
+/* line 35, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls .mejs-time-total,
 div.mejs-controls .mejs-time-current,
 div.mejs-controls .mejs-time-loaded {
   -webkit-transition: width 100ms ease;
   transition: width 100ms ease;
 }
-/* line 39, ../sass/mediaelement/inc/_time.scss */
+/* line 41, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-total {
   background: #010101;
   background: rgba(1, 1, 1, 0.8);
   background: -webkit-linear-gradient(rgba(78, 78, 78, 0.8), rgba(1, 1, 1, 0.8));
   background: linear-gradient(rgba(78, 78, 78, 0.8), rgba(1, 1, 1, 0.8));
 }
-/* line 43, ../sass/mediaelement/inc/_time.scss */
+/* line 45, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-current {
   background: #3caac8;
   background: rgba(60, 170, 200, 0.8);
   background: -webkit-linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
   background: linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
 }
-/* line 47, ../sass/mediaelement/inc/_time.scss */
+/* line 49, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-loaded {
   background: #4e4e4e;
   background: rgba(78, 78, 78, 0.8);
   background: -webkit-linear-gradient(rgba(240, 240, 240, 0.8), rgba(78, 78, 78, 0.8));
   background: linear-gradient(rgba(240, 240, 240, 0.8), rgba(78, 78, 78, 0.8));
 }
-/* line 51, ../sass/mediaelement/inc/_time.scss */
+/* line 53, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-buffering {
   background-image: -webkit-linear-gradient(135deg, rgba(240, 240, 240, 0.15) 25%, transparent 25%, transparent 50%, rgba(240, 240, 240, 0.15) 50%, rgba(240, 240, 240, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(-45deg, rgba(240, 240, 240, 0.15) 25%, transparent 25%, transparent 50%, rgba(240, 240, 240, 0.15) 50%, rgba(240, 240, 240, 0.15) 75%, transparent 75%, transparent);
@@ -337,7 +341,7 @@ div.mejs-controls span.mejs-time-buffering {
   -webkit-animation: buffering-stripes 2s linear infinite;
   animation: buffering-stripes 2s linear infinite;
 }
-/* line 57, ../sass/mediaelement/inc/_time.scss */
+/* line 59, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-handle {
   cursor: pointer;
   display: block;
@@ -349,7 +353,7 @@ div.mejs-controls span.mejs-time-handle {
   background: #f0f0f0;
   border: solid 2px #010101;
 }
-/* line 69, ../sass/mediaelement/inc/_time.scss */
+/* line 71, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-float {
   display: none;
   position: absolute;
@@ -362,11 +366,11 @@ div.mejs-controls span.mejs-time-float {
   background: #f0f0f0;
   border: solid 1px #4e4e4e;
 }
-/* line 81, ../sass/mediaelement/inc/_time.scss */
+/* line 83, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-float .mejs-time-float-current {
   width: 100%;
 }
-/* line 86, ../sass/mediaelement/inc/_time.scss */
+/* line 88, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-float-corner {
   top: 1em;
   left: 1.5em;
@@ -392,11 +396,12 @@ div.mejs-long-video span.mejs-time-float-corner {
 }
 
 /* line 6, ../sass/mediaelement/inc/_volume.scss */
-div.mejs-controls .mejs-volume-button {
+div.mejs-controls .mejs-volume {
   position: relative;
+  margin: 0;
 }
-/* line 9, ../sass/mediaelement/inc/_volume.scss */
-div.mejs-controls .mejs-volume-button .mejs-volume-slider {
+/* line 15, ../sass/mediaelement/inc/_volume.scss */
+div.mejs-controls .mejs-vertical-volume-slider {
   display: none;
   position: absolute;
   top: -100px;
@@ -411,9 +416,9 @@ div.mejs-controls .mejs-volume-button .mejs-volume-slider {
   background: -webkit-linear-gradient(rgba(240, 240, 240, 0.8), rgba(1, 1, 1, 0.8));
   background: linear-gradient(rgba(240, 240, 240, 0.8), rgba(1, 1, 1, 0.8));
 }
-/* line 22, ../sass/mediaelement/inc/_volume.scss */
-div.mejs-controls .mejs-volume-button .mejs-volume-total,
-div.mejs-controls .mejs-volume-button .mejs-volume-current {
+/* line 28, ../sass/mediaelement/inc/_volume.scss */
+div.mejs-controls .mejs-vertical-volume-total,
+div.mejs-controls .mejs-vertical-volume-current {
   position: absolute;
   top: 0;
   left: 20px;
@@ -421,17 +426,17 @@ div.mejs-controls .mejs-volume-button .mejs-volume-current {
   height: 100px;
   margin: 0;
 }
-/* line 32, ../sass/mediaelement/inc/_volume.scss */
-div.mejs-controls .mejs-volume-button .mejs-volume-total {
+/* line 38, ../sass/mediaelement/inc/_volume.scss */
+div.mejs-controls .mejs-vertical-volume-total {
   background: #4e4e4e;
 }
-/* line 36, ../sass/mediaelement/inc/_volume.scss */
-div.mejs-controls .mejs-volume-button .mejs-volume-current {
+/* line 42, ../sass/mediaelement/inc/_volume.scss */
+div.mejs-controls .mejs-vertical-volume-current {
   background: #3caac8;
   box-shadow: 0 0 0.4em 0 #3caac8 inset;
 }
-/* line 41, ../sass/mediaelement/inc/_volume.scss */
-div.mejs-controls .mejs-volume-button .mejs-volume-handle {
+/* line 47, ../sass/mediaelement/inc/_volume.scss */
+div.mejs-controls .mejs-vertical-volume-handle {
   cursor: N-resize;
   position: absolute;
   top: -6.3px;
@@ -442,16 +447,16 @@ div.mejs-controls .mejs-volume-button .mejs-volume-handle {
   border: #4e4e4e 1px solid;
   border-radius: 2px;
 }
-/* line 54, ../sass/mediaelement/inc/_volume.scss */
+/* line 59, ../sass/mediaelement/inc/_volume.scss */
 div.mejs-controls .mejs-horizontal-volume-slider {
   position: relative;
-  display: block;
   float: left;
   width: 50px;
   height: 48px;
 }
-/* line 61, ../sass/mediaelement/inc/_volume.scss */
-div.mejs-controls .mejs-horizontal-volume-slider div {
+/* line 65, ../sass/mediaelement/inc/_volume.scss */
+div.mejs-controls .mejs-horizontal-volume-slider span {
+  cursor: pointer;
   position: absolute;
   top: 0;
   left: 0;
@@ -461,21 +466,21 @@ div.mejs-controls .mejs-horizontal-volume-slider div {
   font-size: 1px;
   border-radius: 2px;
 }
-/* line 72, ../sass/mediaelement/inc/_volume.scss */
+/* line 77, ../sass/mediaelement/inc/_volume.scss */
 div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
   background: #010101;
   background: rgba(1, 1, 1, 0.8);
   background: -webkit-linear-gradient(rgba(78, 78, 78, 0.8), rgba(1, 1, 1, 0.8));
   background: linear-gradient(rgba(78, 78, 78, 0.8), rgba(1, 1, 1, 0.8));
 }
-/* line 76, ../sass/mediaelement/inc/_volume.scss */
+/* line 81, ../sass/mediaelement/inc/_volume.scss */
 div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current {
   background: #3caac8;
   background: rgba(60, 170, 200, 0.8);
   background: -webkit-linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
   background: linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
 }
-/* line 80, ../sass/mediaelement/inc/_volume.scss */
+/* line 85, ../sass/mediaelement/inc/_volume.scss */
 div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-handle {
   display: none;
 }

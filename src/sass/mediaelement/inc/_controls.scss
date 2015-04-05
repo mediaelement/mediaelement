@@ -4,7 +4,7 @@ $ipos: 4px;
 
 // Player controls
 div.mejs-controls {
-  z-index: 999;
+  z-index: 9;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -15,14 +15,13 @@ div.mejs-controls {
 
   div {
     float: left;
-   // width: $bsize + ($border*2);
-   // height: $bsize + ($border*2);
     margin:  0 .1em;
     padding: 0;
   }
 
   button {
     cursor: pointer;
+    float: left;
     display: block;
     width: $bsize;
     height: $bsize;

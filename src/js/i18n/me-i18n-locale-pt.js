@@ -12,25 +12,26 @@
  * @params
  *  - exports - CommonJS, window ..
  */
-;(function(exports, undefined) {
+;
+(function (exports, undefined) {
 
-    "use strict";
+  "use strict";
 
-    if (typeof exports.pt === 'undefined') {
-        exports.pt = {
-            "None" : "Nenhum",
-            "Unmute" : "Voltar ao som",
-            "Fullscreen" : "Ecrã completo",
-            "Download File" : "Descarregar o ficheiro",
-            "Mute Toggle" : "Alternar silêncio",
-            "Play/Pause" : "Reprodução/Pausa",
-            "Captions/Subtitles" : "Legendas",
-            "Download Video" : "Descarregar o vídeo",
-            "Mute" : "Silêncio",
-            "Turn off Fullscreen" : "Desligar ecrã completo",
-            "Go Fullscreen" : "Ir para ecrã completo",
-            "Close" : "Fechar"
-        };
-    }
+  if (typeof exports.pt === 'undefined') {
+    exports.pt = {
+      "None": "Nenhum",
+      "Unmute": "Voltar ao som",
+      "Fullscreen": "Ecrã completo",
+      "Download File": "Descarregar o ficheiro",
+      "Mute Toggle": "Alternar silêncio",
+      "Play/Pause": "Reprodução/Pausa",
+      "Captions/Subtitles": "Legendas",
+      "Download Video": "Descarregar o vídeo",
+      "Mute": "Silêncio",
+      "Turn off Fullscreen": "Desligar ecrã completo",
+      "Go Fullscreen": "Ir para ecrã completo",
+      "Close": "Fechar"
+    };
+  }
 
 }(mejs.i18n.locale.strings));
