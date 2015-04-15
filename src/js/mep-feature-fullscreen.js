@@ -428,6 +428,10 @@
 
 			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
 			t.container.find('.mejs-captions-position').css('bottom', '45px');
+
+			// ** 13twelve
+			t.container.trigger('enteredfullscreen');
+			// ** / 13twelve
 		},
 
 		exitFullScreen: function() {
@@ -483,6 +487,10 @@
 
 			t.container.find('.mejs-captions-text').css('font-size','');
 			t.container.find('.mejs-captions-position').css('bottom', '');
+
+			// ** 13twelve
+			t.container.trigger('exitedfullscreen');
+			// ** / 13twelve
 		}
 	});
 
