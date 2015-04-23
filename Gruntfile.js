@@ -9,6 +9,20 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks("grunt-remove-logging");
 
+    var featureSources;
+
+    // if commandline list of features, (e.g. --features=playpause,stop,...) build only these included
+    var featureList = grunt.option('features');
+    if (featureList) {
+        featureList = featureList.split(',');
+        featureSources = [];
+        featureList.forEach(function(feature) {
+            var path = 'src/js/mep-feature-' + feature + '.js';
+            if (grunt.file.isFile(path)) {
+                featureSources.push(path);
+            }
+        })
+    }
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
@@ -32,18 +46,20 @@ module.exports = function(grunt) {
                 src: [
                     'src/js/mep-header.js',
                     'src/js/mep-library.js',
-                    'src/js/mep-player.js',
-                    'src/js/mep-feature-playpause.js',
-                    'src/js/mep-feature-stop.js',
-                    'src/js/mep-feature-progress.js',
-                    'src/js/mep-feature-time.js',
-                    'src/js/mep-feature-volume.js',
-                    'src/js/mep-feature-fullscreen.js',
-                    'src/js/mep-feature-speed.js',
-                    'src/js/mep-feature-tracks.js',
-                    'src/js/mep-feature-contextmenu.js',
-                    'src/js/mep-feature-postroll.js'
-                ],
+                    'src/js/mep-player.js'
+                ].concat([
+                        'src/js/mep-feature-playpause.js',
+                        'src/js/mep-feature-stop.js',
+                        'src/js/mep-feature-progress.js',
+                        'src/js/mep-feature-time.js',
+                        'src/js/mep-feature-volume.js',
+                        'src/js/mep-feature-fullscreen.js',
+                        'src/js/mep-feature-speed.js',
+                        'src/js/mep-feature-tracks.js',
+                        'src/js/mep-feature-contextmenu.js',
+                        'src/js/mep-feature-skipback.js',
+                        'src/js/mep-feature-postroll.js'
+                    ] || featureSources),
                 dest: 'local-build/mediaelementplayer.js'
             },
             bundle: {
@@ -147,11 +163,13 @@ module.exports = function(grunt) {
         //
         flexPath: '../flex_sdk_4.6',
         buildFlashCommand: [
-            '<%= flexPath %>/bin/mxmlc -strict=false -warnings=true',
+            '<%= flexPath %>/bin/mxmlc -strict=false -compiler.debug -warnings=true',
             '<%= flashIn %> -o <%= flashOut %>',
             '-library-path+="<%= flexPath %>/lib"',
             '-include-libraries+=src/flash/flashmediaelement.swc',
             '-include-libraries+=src/flash/flashls.swc -use-network=true',
+            '-source-path src/flash',
+            '-target-player 10.0',
             '-headless-server -static-link-runtime-shared-libraries'
         ].join(" "),
 
@@ -173,6 +191,7 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.log.writeln("Building with features", featureList, featureSources)
 
     grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
         'shell:buildFlash', 'replace:cdnBuild', 'shell:buildFlashCDN', 'clean:temp']);
