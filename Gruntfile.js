@@ -190,9 +190,7 @@ module.exports = function(grunt) {
             }
         }
     });
-
-    grunt.log.writeln("Building with features", featureList, featureSources)
-
+    
     grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
         'shell:buildFlash', 'replace:cdnBuild', 'shell:buildFlashCDN', 'clean:temp']);
 
