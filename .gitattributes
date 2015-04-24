@@ -7,4 +7,7 @@
 *.png binary
 *.webm binary
 *.swf binary
+*.swc binary
+*.fla binary
 *.xap binary
+

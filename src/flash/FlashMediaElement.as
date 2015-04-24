@@ -52,7 +52,7 @@ package
 		private var _nativeVideoHeight:Number = 0;
 
 		// visual elements
-    private var _mediaElementDisplay:FlashMediaElementDisplay = new FlashMediaElementDisplay();
+        private var _mediaElementDisplay:FlashMediaElementDisplay = new FlashMediaElementDisplay();
 		private var _output:TextField;
 		private var _fullscreenButton:SimpleButton;
 
@@ -103,8 +103,11 @@ package
 			checkFlashVars(loaderInfo.parameters);
 
 			// allows this player to be called from a different domain than the HTML page hosting the player
- 			//Security.allowDomain("*");
-			//Security.allowInsecureDomain('*');
+            CONFIG::cdnBuild {
+                Security.allowDomain("*");
+                Security.allowInsecureDomain('*');
+			}
+
 
 
 			// add debug output
@@ -921,6 +924,7 @@ package
 
 
 		private function repositionVideo():void {
+            var fullscreen:Boolean;
 
 			if (stage.displayState == "fullScreen") {
 				fullscreen = true;
