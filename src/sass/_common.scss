@@ -1,0 +1,28 @@
+/**
+* Import partial styles used by skins.
+*/
+
+@import "inc/mixins";
+@import "inc/offscreen";
+@import "inc/wrappers";
+@import "inc/overlay";
+@import "inc/controls";
+@import "inc/contextmenu";
+@import "inc/time";
+@import "inc/video";
+@import "inc/volume";
+@import "inc/embed";
+@import "inc/fullscreen";
+@import "inc/error";
+@import "inc/no-svg";
+@import "inc/animations";
+
+/* Plugin styles */
+@import "inc/plugins";
+//@import "inc/captions";
+//@import "inc/chapters";
+//@import "inc/postroll";
+//@import "inc/sourcechooser";
+//@import "inc/speed";
+
+

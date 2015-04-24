@@ -7,8 +7,7 @@ module.exports = {
   options: {
     preserveComments: "some",
     compress: true,
-    mangle: true,
-    force: true
+    mangle: true
   },
   base: {
     src: ['local-build/mediaelement.base.js'],

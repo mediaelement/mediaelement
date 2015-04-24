@@ -1,0 +1,17 @@
+
+.me-cannotplay {
+  a {
+    font-weight: bold;
+    color: #f0f0ff;
+    background-color: lighten(#000, 20%);
+
+    &:hover {
+    color: $hilight;
+    background-color: lighten(#000, 30%);
+    }
+  }
+  span {
+    padding: 15px;
+  }
+}
+  

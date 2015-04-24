@@ -1,0 +1,39 @@
+$lsize: 72px;
+
+div.mejs-overlay {
+  position: relative;
+  top: 0;
+  left: 0;
+  min-height: 100px;
+
+  .mejs-overlay-button,
+  .mejs-overlay-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $lsize;
+    height: $lsize;
+    margin-top: -($lsize/2);
+    margin-left: -($lsize/2);
+  }
+
+  .mejs-overlay-button {
+    cursor: pointer;
+    background: url($bigplay) no-repeat;
+
+  }
+  &:hover {
+    .mejs-overlay-button {
+      background-position: 0 -100px;
+    }
+  }
+
+  .mejs-overlay-loading {
+
+    span {
+      width: $lsize;
+      height: $lsize;
+      background: transparent url($loading) 50% 50% no-repeat;
+    }
+  }
+}

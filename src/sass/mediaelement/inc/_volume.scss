@@ -3,67 +3,62 @@ $vheight: 100px;
 $vwidth: if($bsize > 20px, $bsize, 26px);
 
 div.mejs-controls {
-  .mejs-volume, {
+  .mejs-volume-button {
     position: relative;
-    margin: 0;
 
-    button{
-      //display: inline;
+    .mejs-volume-slider {
+      display: none;
+      position: absolute;
+      top: -$vheight;
+      left: 0;
+      width: $vwidth;
+      height: $vheight;
+      margin: 0;
+      padding: 0;
+      background-color: $background;
+      @include overlay($background, $foreground);
+    }
+
+    .mejs-volume-total,
+    .mejs-volume-current {
+      position: absolute;
+      top: 0;
+      left: ($vwidth /2) - 1px;
+      width: 2px;
+      height: $vheight;
+      margin: 0;
+    }
+
+    .mejs-volume-total {
+      background: lighten($background, 30%);
+    }
+
+    .mejs-volume-current {
+      background: $hilight;
+      box-shadow: 0 0 .4em 0 $hilight inset;
+    }
+
+    .mejs-volume-handle {
+      cursor: N-resize;
+      position: absolute;
+      top: -(($vwidth *0.3)/2);
+      left: if($vwidth > 32px, 2px, 0.5px);
+      width: $vwidth *0.8;
+      height: $vwidth *0.3;
+      background: $foreground;
+      border: $midground 1px solid;
+      border-radius: 2px;
     }
   }
-  // Vertical volume controls for video.
-  .mejs-vertical-volume-slider {
-    display: none;
-    position: absolute;
-    top: -$vheight;
-    left: 0;
-    width: $vwidth;
-    height: $vheight;
-    margin: 0;
-    padding: 0;
-    background-color: $background;
-    @include overlay($background, $foreground);
-  }
 
-  .mejs-vertical-volume-total,
-  .mejs-vertical-volume-current {
-    position: absolute;
-    top: 0;
-    left: ($vwidth /2) - 1px;
-    width: 2px;
-    height: $vheight;
-    margin: 0;
-  }
-
-  .mejs-vertical-volume-total {
-    background: lighten($background, 30%);
-  }
-
-  .mejs-vertical-volume-current {
-    background: $hilight;
-    box-shadow: 0 0 .4em 0 $hilight inset;
-  }
-
-  .mejs-vertical-volume-handle {
-    cursor: N-resize;
-    position: absolute;
-    top: -(($vwidth *0.3)/2);
-    left: 2px;
-    width: $vwidth *0.8;
-    height: $vwidth *0.3;
-    background: $foreground;
-    border: $midground 1px solid;
-    border-radius: 2px;
-  }
-  // Horizontal volume controls for audio.
   .mejs-horizontal-volume-slider {
     position: relative;
+    display: block;
     float: left;
     width: 50px;
     height: $controlheight;
 
-    span {
-      cursor: pointer;
+    div {
       position: absolute;
       top: 0;
       left: 0;
@@ -85,5 +80,6 @@ div.mejs-controls {
     .mejs-horizontal-volume-handle {
       display: none;
     }
+
   }
 }

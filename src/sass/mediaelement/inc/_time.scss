@@ -11,7 +11,6 @@ div.mejs-controls {
     overflow: hidden;
     text-align: center;
     color: $foreground;
-    
     a {
       float: left;
     }
@@ -19,8 +18,7 @@ div.mejs-controls {
 
   .mejs-time-rail {
     direction: ltr;
-    width: 100px;
-    min-width: 50px;
+    width: 180px;
     margin: ($controlheight / 3) 0 0;
 
     span {

@@ -1,0 +1,85 @@
+.mediaelement {
+  margin: auto;
+}
+
+.mejs-container {
+  position: relative;
+  overflow: hidden;
+  font-family: Helvetica, Arial;
+  text-align: center;
+  font-size: 10px;
+  line-height: 12px;
+  white-space: nowrap;
+  vertical-align: baseline;
+  color: $foreground;
+  background-color: #000;
+
+  div,
+  span{
+    position: static;
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    //overflow: hidden;
+  }
+
+  ul,
+  li {
+    display: block;
+    list-style-type: none !important;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    color: $foreground;
+    display: block;
+    width: auto;
+    vertical-align: middle;
+  }
+}
+
+// Wrapper / container elements.
+
+div.mejs-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+div.mejs-mediaelement {
+  position: relative;
+  z-index: 1;
+}
+
+div.mejs-layers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+div.mejs-poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-size: contain;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  img {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+}
+
+:root div.mejs-poster img {
+  display: none;
+}
+
+div.mejs-clear {
+  clear: both;
+}
