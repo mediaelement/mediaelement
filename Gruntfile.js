@@ -9,20 +9,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks("grunt-remove-logging");
 
-    var featureSources;
-
-    // if commandline list of features, (e.g. --features=playpause,stop,...) build only these included
-    var featureList = grunt.option('features');
-    if (featureList) {
-        featureList = featureList.split(',');
-        featureSources = [];
-        featureList.forEach(function(feature) {
-            var path = 'src/js/mep-feature-' + feature + '.js';
-            if (grunt.file.isFile(path)) {
-                featureSources.push(path);
-            }
-        })
-    }
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
@@ -46,20 +32,18 @@ module.exports = function(grunt) {
                 src: [
                     'src/js/mep-header.js',
                     'src/js/mep-library.js',
-                    'src/js/mep-player.js'
-                ].concat([
-                        'src/js/mep-feature-playpause.js',
-                        'src/js/mep-feature-stop.js',
-                        'src/js/mep-feature-progress.js',
-                        'src/js/mep-feature-time.js',
-                        'src/js/mep-feature-volume.js',
-                        'src/js/mep-feature-fullscreen.js',
-                        'src/js/mep-feature-speed.js',
-                        'src/js/mep-feature-tracks.js',
-                        'src/js/mep-feature-contextmenu.js',
-                        'src/js/mep-feature-skipback.js',
-                        'src/js/mep-feature-postroll.js'
-                    ] || featureSources),
+                    'src/js/mep-player.js',
+                    'src/js/mep-feature-playpause.js',
+                    'src/js/mep-feature-stop.js',
+                    'src/js/mep-feature-progress.js',
+                    'src/js/mep-feature-time.js',
+                    'src/js/mep-feature-volume.js',
+                    'src/js/mep-feature-fullscreen.js',
+                    'src/js/mep-feature-speed.js',
+                    'src/js/mep-feature-tracks.js',
+                    'src/js/mep-feature-contextmenu.js',
+                    'src/js/mep-feature-postroll.js'
+                ],
                 dest: 'local-build/mediaelementplayer.js'
             },
             bundle: {
@@ -119,19 +103,6 @@ module.exports = function(grunt) {
                 filter  : 'isFile'
             }
         },
-        replace: {
-            cdnBuild: {
-                src: ['src/flash/FlashMediaElement.as'],
-                dest: 'tmp/FlashMediaElement.as',
-                replacements: [{
-                    from: '//Security.allowDomain("*");',
-                    to:   'Security.allowDomain("*");'
-                }, {
-                    from: '//Security.allowInsecureDomain("*");',
-                    to:   'Security.allowInsecureDomain("*");'
-                }]
-            }
-        },
         clean: {
           build: ['local-build'],
           temp:  ['tmp']
@@ -164,7 +135,8 @@ module.exports = function(grunt) {
         flexPath: '../flex_sdk_4.6',
         buildFlashCommand: [
             '<%= flexPath %>/bin/mxmlc -strict=false -compiler.debug -warnings=true',
-            '<%= flashIn %> -o <%= flashOut %>',
+            'src/flash/FlashMediaElement.as -o <%= flashOut %>',
+            '-define+=CONFIG::cdnBuild,<%= cdnBuild %>',
             '-library-path+="<%= flexPath %>/lib"',
             '-include-libraries+=src/flash/flashmediaelement.swc',
             '-include-libraries+=src/flash/flashls.swc -use-network=true',
@@ -176,22 +148,22 @@ module.exports = function(grunt) {
         shell: {
             buildFlash: {
                 command: function() {
-                    grunt.config.set("flashIn", 'src/flash/FlashMediaElement.as');
+                    grunt.config.set("cdnBuild", 'false');
                     grunt.config.set("flashOut", 'local-build/flashmediaelement.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             },
             buildFlashCDN: {
                 command: function() {
-                    grunt.config.set("flashIn", 'tmp/FlashMediaElement.as');
+                    grunt.config.set("cdnBuild", 'true');
                     grunt.config.set("flashOut", 'local-build/flashmediaelement-cdn.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             }
         }
     });
-    
+
     grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
-        'shell:buildFlash', 'replace:cdnBuild', 'shell:buildFlashCDN', 'clean:temp']);
+        'shell:buildFlash', 'shell:buildFlashCDN', 'clean:temp']);
 
 };
