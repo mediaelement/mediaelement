@@ -84,7 +84,6 @@
 .mejs-poster img {
 	border: 0;
 	padding: 0;
-	border: 0;
 }
 
 .mejs-overlay {
@@ -614,7 +613,7 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	-xborder-right: solid 1px #fff;
+	border-right: solid 1px #fff;
 	width: 10000px;
 	z-index: 1;
 }
