@@ -1,11 +1,10 @@
-/*!
+/*
  * This is a i18n.locale language object.
  *
- * <zh-CN> Simplified Chinese translation by Michael J. Tong,
- *                      michaeljayt@gmail.com
+ * Chinese simplified translation by Jalios, Twitter: @Jalios
  *
  * @author
- *   Michael J. Tong (michaeljayt@gmail.com)
+ *   Jalios (Twitter: @Jalios)
  *
  * @see
  *   me-i18n.js
@@ -19,16 +18,19 @@
 
     exports['zh-CN'] = {
         "Fullscreen" : "全屏",
-        "Go Fullscreen" : "全屏模式",
-        "Turn off Fullscreen" : "退出全屏模式",
+        "Go Fullscreen" : "转向全屏",
+        "Turn off Fullscreen" : "关闭全屏",
         "Close" : "关闭",
         "Download File" : "下载文件",
-        "Play/Pause": "播放/暂停",
-        "Mute Toggle": "打开/取消静音",
-        "Captions/Subtitles": "字幕",
-        "None": "无",
-        "Unmute": "取消静音",
-        "Mute": "打开静音"
+        //"Play/Pause" : "播放/暂停",
+        "Play" : "播放",
+        "Pause" : "暂停",
+        "Mute Toggle" : "静音切换",
+        "Captions/Subtitles" : "字幕/标题",
+        "Download Video" : "下载视频",
+        "None" : "无",
+        "Unmute" : "取消静音",
+        "Mute" : "静音"
     };
 
 }(mejs.i18n.locale.strings));

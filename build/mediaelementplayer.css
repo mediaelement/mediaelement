@@ -1,3 +1,13 @@
+.mejs-offscreen{
+/* Accessibility: hide screen reader texts (and prefer "top" for RTL languages). */
+	position: absolute !important;
+	top: -10000px;
+	left: -10000px;
+	overflow: hidden;
+	width: 1px;
+	height: 1px;
+}
+
 .mejs-container {
 	position: relative;
 	background: #000;
@@ -9,8 +19,6 @@
 
 .me-plugin {
 	position: absolute;
-	height: auto;
-	width: auto;
 }
 
 .mejs-embed, .mejs-embed body {
@@ -187,7 +195,7 @@
 	background-image: url(controls.png);
 }
 
-/* :focus for accessibility */
+	/* :focus for accessibility */
 .mejs-controls .mejs-button button:focus {
 	outline: dotted 1px #999;
 }
@@ -200,7 +208,7 @@
 	display: block;
 	height: 17px;
 	width: auto;
-	padding: 8px 3px 0 3px ;
+	padding: 10px 3px 0 3px ;
 	overflow: hidden;
 	text-align: center;
 	-moz-box-sizing: content-box;
@@ -208,7 +216,7 @@
 	box-sizing: content-box;
 }
 
-.mejs-container .mejs-controls .mejs-time span {
+.mejs-container .mejs-controls .mejs-time a {
 	color: #fff;
 	font-size: 11px;
 	line-height: 12px;
@@ -240,7 +248,7 @@
 	padding-top: 5px;
 }
 
-.mejs-controls .mejs-time-rail span {
+.mejs-controls .mejs-time-rail span, .mejs-controls .mejs-time-rail a {
 	display: block;
 	position: absolute;
 	width: 180px;
@@ -475,10 +483,13 @@
 }
 
 /* horizontal version */
-.mejs-controls div.mejs-horizontal-volume-slider {
+.mejs-controls a.mejs-horizontal-volume-slider {
 	height: 26px;
-	width: 60px;
+	width: 56px;
 	position: relative;
+    display: block;
+    float: left;
+    vertical-align: middle;
 }
 
 .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
@@ -952,3 +963,19 @@ div.mejs-speed-button {
 	background-color: rgba(255,255,255,.4) !important;
 }
 /* End: Speed */
+
+/* Start: Skip Back */
+
+.mejs-controls .mejs-button.mejs-skip-back-button {
+	background: transparent url(skipback.png) no-repeat;
+	background-position: 3px 3px;
+}
+.mejs-controls .mejs-button.mejs-skip-back-button button {
+	background: transparent;
+	font-size: 9px;
+	line-height: normal;
+	color: #ffffff;
+}
+
+/* End: Skip Back */
+
