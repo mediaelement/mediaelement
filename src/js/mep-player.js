@@ -890,13 +890,6 @@
 
 			}
 
-			// special case for big play button so it doesn't go over the controls area
-			var playLayer = t.layers.find('.mejs-overlay-play'),
-				playButton = playLayer.find('.mejs-overlay-button');
-
-			playLayer.height(t.container.height() - t.controls.height());
-			playButton.css('margin-top', '-' + (playButton.height()/2 - t.controls.height()/2).toString() + 'px'  );
-
 		},
 
 		setControlsSize: function() {
