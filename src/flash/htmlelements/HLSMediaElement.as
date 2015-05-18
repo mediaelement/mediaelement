@@ -226,7 +226,12 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       return _position;
     }
 
-    public function currentProgress():Number{
+    public function currentProgress():Number {
+        var progress:Number = 0;
+        if (_duration != 0) {
+            progress = Math.round( ( (_position + _bufferedTime) / _duration) * 100 );
+        }
+        return progress;
     }
 
   private function sendEvent(eventName:String):void {
