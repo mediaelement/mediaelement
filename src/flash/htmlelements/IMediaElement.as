@@ -30,8 +30,8 @@ package htmlelements
 
         /**
          * This is the percentage loaded, in HTML5 MediaElement terms it would be the duration attribute
-         * divided by the sum of currentTime and the time length[s] of all buffered attributes that
-         * follow the currentTime.
+         * divided by the end of the first buffered attribute (this range is assumed to contain the current time,
+         * that is buffered.end(0) >= currentTime, w3c is not clear on where 'back-buffer' ranges fall in)
          *
          * http://dev.w3.org/html5/spec-preview/media-elements.html#dom-mediacontroller-buffered
          *
