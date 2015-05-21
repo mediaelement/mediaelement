@@ -226,6 +226,10 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       return _position;
     }
 
+    public function seekLimit():Number {
+        return _duration;
+    }
+
     public function currentProgress():Number {
         var progress:Number = 0;
         if (_duration != 0) {

@@ -443,6 +443,11 @@ public class VideoElement extends Sprite implements IMediaElement
     }
   }
 
+  // Seems NetStream supports seek? but before metadata is loaded?
+  public function seekLimit():Number {
+    return _duration == 0 ? NaN : _duration;
+  }
+
   public function setVolume(volume:Number):void {
     if (_stream != null) {
       _soundTransform = new SoundTransform(volume);
