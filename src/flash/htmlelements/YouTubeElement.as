@@ -354,7 +354,11 @@ package htmlelements
 			player.seekTo(pos, true); // works in all places now
 		}
 
-		public function setVolume(volume:Number):void {
+    public function seekLimit():Number {
+      return NaN;
+    }
+
+    public function setVolume(volume:Number):void {
 			player.setVolume(volume*100);
 			_volume = volume;
 		}
