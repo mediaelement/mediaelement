@@ -9,6 +9,20 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-text-replace');
     grunt.loadNpmTasks("grunt-remove-logging");
 
+    var featureSources;
+
+    // if commandline list of features, (e.g. --features=playpause,stop,...) build only these included
+    var featureList = grunt.option('features');
+    if (featureList) {
+        featureList = featureList.split(',');
+        featureSources = [];
+        featureList.forEach(function(feature) {
+            var path = 'src/js/mep-feature-' + feature + '.js';
+            if (grunt.file.isFile(path)) {
+                featureSources.push(path);
+            }
+        })
+    }
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
@@ -32,7 +46,8 @@ module.exports = function(grunt) {
                 src: [
                     'src/js/mep-header.js',
                     'src/js/mep-library.js',
-                    'src/js/mep-player.js',
+                    'src/js/mep-player.js'
+                ].concat([
                     'src/js/mep-feature-playpause.js',
                     'src/js/mep-feature-stop.js',
                     'src/js/mep-feature-progress.js',
@@ -42,8 +57,9 @@ module.exports = function(grunt) {
                     'src/js/mep-feature-speed.js',
                     'src/js/mep-feature-tracks.js',
                     'src/js/mep-feature-contextmenu.js',
+                        'src/js/mep-feature-skipback.js',
                     'src/js/mep-feature-postroll.js'
-                ],
+                    ] || featureSources),
                 dest: 'local-build/mediaelementplayer.js'
             },
             bundle: {
