@@ -35,7 +35,7 @@ module.exports = function(grunt) {
                     'src/js/me-featuredetection.js',
                     'src/js/me-mediaelements.js',
                     'src/js/me-shim.js',
-                    'src/js/me-i18n.js',
+                    'src/js/me-i18n.js'
                     // Bug #1263
                     //'src/js/me-i18n-locale-de.js',
                     //'src/js/me-i18n-locale-zh.js'
@@ -47,7 +47,7 @@ module.exports = function(grunt) {
                     'src/js/mep-header.js',
                     'src/js/mep-library.js',
                     'src/js/mep-player.js'
-                ].concat([
+                ].concat(featureSources || [
                     'src/js/mep-feature-playpause.js',
                     'src/js/mep-feature-stop.js',
                     'src/js/mep-feature-progress.js',
@@ -57,9 +57,9 @@ module.exports = function(grunt) {
                     'src/js/mep-feature-speed.js',
                     'src/js/mep-feature-tracks.js',
                     'src/js/mep-feature-contextmenu.js',
-                        'src/js/mep-feature-skipback.js',
+                    'src/js/mep-feature-skipback.js',
                     'src/js/mep-feature-postroll.js'
-                    ] || featureSources),
+                    ]),
                 dest: 'local-build/mediaelementplayer.js'
             },
             bundle: {
