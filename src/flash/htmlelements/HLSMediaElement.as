@@ -211,6 +211,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
       if (muted) {
         _hls.stream.soundTransform = new SoundTransform(0);
+        sendEvent(HtmlMediaEvent.VOLUMECHANGE);
       } else {
         setVolume(_volume);
       }
