@@ -200,6 +200,10 @@
 		t.$media = t.$node = $(node);
 		t.node = t.media = t.$media[0];
 
+		if(!t.node) {
+			return
+		}
+
 		// check for existing player
 		if (typeof t.node.player != 'undefined') {
 			return t.node.player;
@@ -847,7 +851,7 @@
 					newHeight = parentHeight;
 				}
 
-				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
+				if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
 					parentWidth = $(window).width();
 					newHeight = $(window).height();
 				}
