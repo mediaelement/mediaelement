@@ -9,8 +9,12 @@
 * Avoid an error when there are no controls in the control bar (https://github.com/johndyer/mediaelement/pull/1451) [Fab1en]
 * Fix errors when not found elements (https://github.com/johndyer/mediaelement/pull/1445) [dukex]
 * Support ShadowRoot parent (https://github.com/johndyer/mediaelement/pull/1465) [dukex]
+* Can't initialize MediaElement on a virtual DOM in IE8 and lower. (https://github.com/johndyer/mediaelement/pull/1423) [dd32]
 * Fix missing `</span>` tag (https://github.com/johndyer/mediaelement/pull/1498) [kevnk] (https://github.com/johndyer/mediaelement/pull/1501) [hhonisch]
 * Add DailyMotion support in Flash (https://github.com/johndyer/mediaelement/pulls) [Fab1en]
+* change (un)mute button title when status changes (https://github.com/johndyer/mediaelement/pull/1482) [jrglasgow]
+* Bug #1397, Fix for screen reader accessibility of captions (#1340) (https://github.com/johndyer/mediaelement/pull/1398) [nfreear]
+
 
 *2.16.4 (2015/03/01)*
 
