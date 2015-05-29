@@ -1,6 +1,18 @@
 ### Version History
 
-*2.16.4 (progress)*
+*2.17.0 (progress - due by 2015/05/31)*
+
+* Reset size method (https://github.com/johndyer/mediaelement/pull/1434) [LukaszGrela]
+* Fix HLS video full screen size problem (https://github.com/johndyer/mediaelement/pull/1439/files) [wolfg1969]
+* canPlayAfterSourceSwitchHandler is fired twice (https://github.com/johndyer/mediaelement/pull/1441/files) [karroupa]
+* Fixed error display when source not available (https://github.com/johndyer/mediaelement/pull/1442/files)[karroupa]
+* Avoid an error when there are no controls in the control bar (https://github.com/johndyer/mediaelement/pull/1451) [Fab1en]
+* Fix errors when not found elements (https://github.com/johndyer/mediaelement/pull/1445) [dukex]
+* Support ShadowRoot parent (https://github.com/johndyer/mediaelement/pull/1465) [dukex]
+* Fix missing `</span>` tag (https://github.com/johndyer/mediaelement/pull/1498) [kevnk] (https://github.com/johndyer/mediaelement/pull/1501) [hhonisch]
+* Add DailyMotion support in Flash (https://github.com/johndyer/mediaelement/pulls) [Fab1en]
+
+*2.16.4 (2015/03/01)*
 
 * Removed reference to jQuery/$ in froogaloop code (https://github.com/johndyer/mediaelement/pull/1394) [staylor]
 * Ensure screen reader text is hidden on long pages (https://github.com/johndyer/mediaelement/pull/1388) [bradyvercher]
