@@ -1114,7 +1114,7 @@
 				loading.hide();
 				controls.find('.mejs-time-buffering').hide();
 				error.show();
-				error.find('mejs-overlay-error').html("Error loading this resource");
+				error.find('.mejs-overlay-error').html("Error loading this resource");
 			}, false);
 
 			media.addEventListener('keydown', function(e) {
