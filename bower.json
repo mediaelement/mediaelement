@@ -1,6 +1,6 @@
 {
   "name": "mediaelement",
-  "version": "2.16.3",
+  "version": "2.16.4",
   "homepage": "https://github.com/herby/mediaelement",
   "description": "HTML5 <video> and <audio> made easy.",
   "moduleType": [
