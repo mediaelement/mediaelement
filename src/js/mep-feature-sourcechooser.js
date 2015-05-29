@@ -45,7 +45,7 @@
 								if (!paused) {
 									media.play();
 								}
-								media.removeEventListener("canplay", canPlayAfterSourceSwitchHandler);
+								media.removeEventListener("canplay", canPlayAfterSourceSwitchHandler, true);
 							};
 							media.addEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
 							media.load();
