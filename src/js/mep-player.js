@@ -1267,6 +1267,15 @@
 			var t = this;
 			t.findTracks();
 			t.buildtracks(t, t.controls, t.layers, t.media);
+		},
+		resetSize: function(){
+			var t = this;
+			// webkit has trouble doing this without a delay
+			setTimeout(function () {
+				//console.log("resetSize");
+				t.setPlayerSize(t.width, t.height);
+				t.setControlsSize();
+			}, 50);            
 		}
 	};
 
