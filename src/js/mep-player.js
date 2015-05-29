@@ -949,7 +949,7 @@
 				total.width(railWidth - (total.outerWidth(true) - total.width()));
 
 				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.position();
+					lastControlPosition = lastControl.length ? lastControl.position() : null;
 					railWidth--;
 				}
 			} while (lastControlPosition !== null && lastControlPosition.top > 0 && railWidth > 0);
