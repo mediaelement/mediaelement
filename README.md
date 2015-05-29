@@ -72,7 +72,7 @@ You can avoid running any startup scripts by added `class="mejs-player"` to the 
 		data-mejsoptions='{"alwaysShowControls": true}'></video>
 ```
 
-#### Normal JavaScirpt
+#### Normal JavaScript
 ```html
 <script>
 var player = new MediaElementPlayer('#player', {success: function(mediaElement, originalNode) {
