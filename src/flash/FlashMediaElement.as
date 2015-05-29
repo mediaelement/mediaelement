@@ -22,7 +22,9 @@ package
 	import htmlelements.VideoElement;
 	import htmlelements.AudioElement;
 	import htmlelements.YouTubeElement;
+	import htmlelements.DailyMotionElement;
 	import htmlelements.HLSMediaElement;
+
 
 	public class FlashMediaElement extends MovieClip {
 
@@ -235,6 +237,19 @@ package
 					(_mediaElement as YouTubeElement).initWidth = _stageWidth;
 					(_mediaElement as YouTubeElement).initHeight = _stageHeight;
 
+				} else if (_mediaUrl.indexOf("dailymotion.com") > -1 || _mediaUrl.indexOf("dai.ly") > -1) {
+
+					Security.allowDomain("http://www.dailymotion.com");
+
+					_mediaElement = new DailyMotionElement(this, _autoplay, _preload, _timerRate, _startVolume);
+					_video = (_mediaElement as DailyMotionElement).player;
+
+					// these are set and then used once the player is loaded
+					(_mediaElement as DailyMotionElement).initWidth = _stageWidth;
+					(_mediaElement as DailyMotionElement).initHeight = _stageHeight;
+					
+					
+					
 				} else {
 
 					_mediaElement = new VideoElement(this, _autoplay, _preload, _timerRate, _startVolume, _streamer);
@@ -974,7 +989,7 @@ package
 
 				}
 
-			} else if (_mediaElement is YouTubeElement) {
+			} else if (_mediaElement is YouTubeElement || _mediaElement is DailyMotionElement) {
 				if(fullscreen == true) {
 					_mediaElement.setSize(flash.system.Capabilities.screenResolutionX, flash.system.Capabilities.screenResolutionY);
 
