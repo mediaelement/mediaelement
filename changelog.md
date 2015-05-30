@@ -1,6 +1,6 @@
 ### Version History
 
-*2.17.0 (progress - due by 2015/05/31)*
+*2.17.0 (2015/05/30)*
 
 * Reset size method (https://github.com/johndyer/mediaelement/pull/1434) [LukaszGrela]
 * Fix HLS video full screen size problem (https://github.com/johndyer/mediaelement/pull/1439/files) [wolfg1969]
@@ -14,6 +14,7 @@
 * Add DailyMotion support in Flash (https://github.com/johndyer/mediaelement/pulls) [Fab1en]
 * change (un)mute button title when status changes (https://github.com/johndyer/mediaelement/pull/1482) [jrglasgow]
 * Bug #1397, Fix for screen reader accessibility of captions (#1340) (https://github.com/johndyer/mediaelement/pull/1398) [nfreear]
+* Fix Speed control when multiple players are present (https://github.com/johndyer/mediaelement/pull/1506) [LeResKP]
 
 
 *2.16.4 (2015/03/01)*
