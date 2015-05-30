@@ -462,7 +462,7 @@ mejs.HtmlMediaElementShim = {
 		node = htmlMediaElement.parentNode;
 
 		while (node !== null && node.tagName != null && node.tagName.toLowerCase() !== 'body' && 
-				node.parentNode != null && node.parentNode.tagName != null && node.parentNode.constructor.name === "ShadowRoot") {
+				node.parentNode != null && node.parentNode.tagName != null && node.parentNode.constructor != null && node.parentNode.constructor.name === "ShadowRoot") {
 			if (node.parentNode.tagName.toLowerCase() === 'p') {
 				node.parentNode.parentNode.insertBefore(node, node.parentNode);
 				break;
