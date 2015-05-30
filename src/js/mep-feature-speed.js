@@ -21,6 +21,7 @@
 					speedButton = null,
 					speedSelector = null,
 					playbackSpeed = null,
+					inputId = null,
 					html = '<div class="mejs-button mejs-speed-button">' + 
 								'<button type="button">' + t.options.defaultSpeed + t.options.speedChar + '</button>' + 
 								'<div class="mejs-speed-selector">' + 
@@ -35,13 +36,14 @@
 				});
 
 				for (var i = 0, il = t.options.speeds.length; i<il; i++) {
+					inputId = t.id + '-speed-' + t.options.speeds[i];
 					html += '<li>' + 
 								'<input type="radio" name="speed" ' + 
 											'value="' + t.options.speeds[i] + '" ' + 
-											'id="' + t.options.speeds[i] + '" ' +
+											'id="' + inputId + '" ' +
 											(t.options.speeds[i] == t.options.defaultSpeed ? ' checked' : '') + 
 											' />' +
-								'<label for="' + t.options.speeds[i] + '" ' + 
+								'<label for="' + inputId + '" ' +
 											(t.options.speeds[i] == t.options.defaultSpeed ? ' class="mejs-speed-selected"' : '') +
 											'>' + t.options.speeds[i] + t.options.speedChar + '</label>' + 
 							'</li>';
