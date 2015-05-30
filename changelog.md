@@ -14,7 +14,7 @@
 * Add DailyMotion support in Flash (https://github.com/johndyer/mediaelement/pulls) [Fab1en]
 * change (un)mute button title when status changes (https://github.com/johndyer/mediaelement/pull/1482) [jrglasgow]
 * Bug #1397, Fix for screen reader accessibility of captions (#1340) (https://github.com/johndyer/mediaelement/pull/1398) [nfreear]
-
+* Fix Speed control when multiple players are present (https://github.com/johndyer/mediaelement/pull/1506) [LeResKP]
 
 *2.16.4 (2015/03/01)*
 
