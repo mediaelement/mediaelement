@@ -5,6 +5,9 @@ mejs.PluginDetector = {
 	// main public function to test a plug version number PluginDetector.hasPluginVersion('flash',[9,0,125]);
 	hasPluginVersion: function(plugin, v) {
 		var pv = this.plugins[plugin];
+		if (!pv) {
+			return true;
+		}
 		v[1] = v[1] || 0;
 		v[2] = v[2] || 0;
 		return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;
