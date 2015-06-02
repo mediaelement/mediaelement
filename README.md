@@ -62,6 +62,23 @@ In very rare cases, you might have an non-HTML5 browser with Flash turned on and
 </video>
 ```
 
+#### Optional: Source chooser for resolutions/formats
+This features enables the user to choose the resolution/format of the video playing.
+```html
+<video width="360" height="240" controls="controls">
+        <source type="video/mp4" src="myvideo_320p.mp4" title="320p mp4"/>
+        <source type="video/mp4" src="myvideo_720p.mp4" title="720p mp4"/>
+        <source type="video/webm" src="myvideo.webm" />
+        <source type="video/ogg" src="myvideo.ogv" />
+</video>
+
+<script>
+$('audio,video').mediaelementplayer({
+	features: ['playpause','progress','volume','sourcechooser']
+});
+</script>
+```
+
 ### 3. Startup
 
 #### Automatic start
