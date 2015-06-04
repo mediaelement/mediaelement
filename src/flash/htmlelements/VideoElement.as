@@ -363,6 +363,10 @@ public class VideoElement extends Sprite implements IMediaElement
 
     if (_hasStartedPlaying) {
       if (_isPaused) {
+        if( _isEnded ) {
+          _stream.seek(0);
+          _isEnded = false;
+        }
         _stream.resume();
         _timer.start();
         _isPaused = false;
