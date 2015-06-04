@@ -211,8 +211,9 @@ public class VideoElement extends Sprite implements IMediaElement
 
       case "NetStream.Play.Stop":
         _isEnded = true;
-        _isPaused = false;
+        _isPaused = true;
         _timer.stop();
+        sendEvent(HtmlMediaEvent.PAUSE);
         _bufferEmpty ? sendEvent(HtmlMediaEvent.ENDED) : null;
         break;
 
