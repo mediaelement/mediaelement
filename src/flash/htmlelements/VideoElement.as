@@ -356,8 +356,10 @@ public class VideoElement extends Sprite implements IMediaElement
   public function play():void {
 
     if (!_hasStartedPlaying && !_isConnected ) {
-      if( !_playWhenConnected ) load();
-      _playWhenConnected = true;
+      if( !_playWhenConnected ) {
+        _playWhenConnected = true;
+        load();
+      }
       return;
     }
 
