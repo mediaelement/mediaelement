@@ -205,9 +205,11 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     public function setMuted(muted:Boolean):void {
 
-      // ignore if already set
-      if ( (muted && _isMuted) || (!muted && !_isMuted))
+      // ignore if no change
+      if (muted === _isMuted)
         return;
+
+      _isMuted = muted;
 
       if (muted) {
         _hls.stream.soundTransform = new SoundTransform(0);
@@ -215,8 +217,6 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       } else {
         setVolume(_volume);
       }
-
-      _isMuted = muted;
     }
 
     public function duration():Number{
