@@ -43,9 +43,25 @@
                 autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
+
+		/*
+		 * Time format to use. Default: 'mm:ss'
+		 * Supported units:
+		 *   h: hour
+		 *   m: minute
+		 *   s: second
+		 *   f: frame count
+		 * When using 'hh', 'mm', 'ss' or 'ff' we always display 2 digits.
+		 * If you use 'h', 'm', 's' or 'f' we display 1 digit if possible.
+		 *
+		 * Example to display 75 seconds:
+		 * Format 'mm:ss': 01:15
+		 * Format 'm:ss': 1:15
+		 * Format 'm:s': 1:15
+		 */
+		timeFormat: '',
 		// forces the hour marker (##:00:00)
 		alwaysShowHours: false,
-
 		// show framecount in timecode (##:00:00:00)
 		showTimecodeFrameCount: false,
 		// used when showTimecodeFrameCount is set to true
@@ -220,6 +236,28 @@
 
 		// extend default options
 		t.options = $.extend({},mejs.MepDefaults,o);
+
+		if (!t.options.timeFormat) {
+			// Generate the time format according to options
+			t.options.timeFormat = 'mm:ss';
+			if (t.options.alwaysShowHours) {
+				t.options.timeFormat = 'hh:mm:ss';
+			}
+			if (t.options.showTimecodeFrameCount) {
+				t.options.timeFormat += ':ff';
+			}
+		}
+
+		mejs.Utility.calculateTimeFormat(0, t.options, t.options.framesPerSecond || 25);
+
+		// Only change the time format when necessary
+		var duration = null;
+		t.media.addEventListener('timeupdate',function() {
+			if (duration !== this.duration) {
+				duration = this.duration;
+				mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
+			}
+		}, false);
 
 		// unique ID
 		t.id = 'mep_' + mejs.mepIndex++;
