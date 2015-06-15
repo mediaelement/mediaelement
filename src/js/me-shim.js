@@ -398,7 +398,11 @@ mejs.HtmlMediaElementShim = {
 			case 'mp4':
 			case 'm4v':
 			case 'm4a':
+			case 'f4v':
+			case 'f4a':
 				return av + 'mp4';
+			case 'flv':
+				return av + 'x-flv';
 			case 'webm':
 			case 'webma':
 			case 'webmv':	
@@ -407,6 +411,10 @@ mejs.HtmlMediaElementShim = {
 			case 'oga':
 			case 'ogv':	
 				return av + 'ogg';
+			case 'm3u8':
+				return 'application/x-mpegurl';
+			case 'ts':
+				return av + 'mp2t';
 			default:
 				return av + ext;
 		}
