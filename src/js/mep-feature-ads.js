@@ -177,7 +177,7 @@
 			
 			setTimeout(function() {
 				t.controls.find('.mejs-duration').html( 
-					mejs.Utility.secondsToTimeCode(newDuration, t.options, t.options.framesPerSecond || 25)
+					mejs.Utility.secondsToTimeCode(newDuration, t.options)
 					);
 			}, 250);
 		},
