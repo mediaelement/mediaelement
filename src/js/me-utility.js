@@ -136,13 +136,14 @@ mejs.Utility = {
 		}
 		return String(n);
 	},
-	secondsToTimeCode: function(time, options, fps) {
+	secondsToTimeCode: function(time, options) {
 		if (time < 0) {
 			time = 0;
 		}
 
-		if(typeof fps == 'undefined') {
-		    fps = 25;
+		var fps = options.framesPerSecond;
+		if(typeof fps === 'undefined') {
+			fps = 25;
 		}
 
 		var format = options.currentTimeFormat,
