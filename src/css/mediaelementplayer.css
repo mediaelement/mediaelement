@@ -898,7 +898,7 @@ div.mejs-speed-button {
 }
 
 .mejs-controls .mejs-speed-button .mejs-speed-selector {
-	visibility: hidden;
+	display: none;
 	position: absolute;
 	top: -100px;
 	left: -10px;
@@ -914,8 +914,9 @@ div.mejs-speed-button {
 	border-radius: 0;
 }
 
+
 .mejs-controls .mejs-speed-button:hover > .mejs-speed-selector {
-	visibility: visible;
+	display: block;
 }
 
 .mejs-controls .mejs-speed-button .mejs-speed-selector ul li label.mejs-speed-selected {
