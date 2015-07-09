@@ -225,8 +225,6 @@
 
 					track.isLoaded = true;
 
-					// create button
-					//t.addTrackButton(track.srclang);
 					t.enableTrackButton(track.srclang, track.label);
 
 					t.loadNextTrack();
@@ -261,6 +259,7 @@
 					}
 				},
 				error: function() {
+					t.removeTrackButton(track.srclang);
 					t.loadNextTrack();
 				}
 			});
@@ -284,6 +283,14 @@
 				$('#' + t.id + '_captions_' + lang).prop('checked', true).trigger('click');
 			}
 
+			t.adjustLanguageBox();
+		},
+		
+		removeTrackButton: function(lang) {
+			var t = this;
+			
+			t.captionsButton.find('input[value=' + lang + ']').closest('li').remove();
+			
 			t.adjustLanguageBox();
 		},
 
@@ -323,7 +330,7 @@
 			// check if any subtitles
 			if (t.options.hideCaptionsButtonWhenEmpty) {
 				for (i=0; i<t.tracks.length; i++) {
-					if (t.tracks[i].kind == 'subtitles') {
+					if (t.tracks[i].kind == 'subtitles' && t.tracks[i].isLoaded) {
 						hasSubtitles = true;
 						break;
 					}
