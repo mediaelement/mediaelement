@@ -174,6 +174,10 @@
 					}
 				});
 
+			t.container.on('controlsresize', function() {
+				t.adjustLanguageBox();
+			});
+			
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
 				player.chapters.css('visibility','hidden');
