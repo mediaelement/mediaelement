@@ -219,6 +219,10 @@
 				updateSlider(e);
 			}, false);
 			
+			t.container.on('controlsresize', function() {
+				player.setProgressRail();
+				player.setCurrentRail();
+			});
 			
 			// store for later use
 			t.loaded = loaded;
