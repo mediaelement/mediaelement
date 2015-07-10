@@ -365,8 +365,6 @@ mejs.HtmlMediaElementShim = {
 	},
 
 	formatType: function(url, type) {
-		var ext;
-
 		// if no type is supplied, fake it with the extension
 		if (url && !type) {		
 			return this.getTypeFromFile(url);
@@ -453,7 +451,7 @@ mejs.HtmlMediaElementShim = {
 		// copy attributes from html media element to plugin media element
 		for (var i = 0; i < htmlMediaElement.attributes.length; i++) {
 			var attribute = htmlMediaElement.attributes[i];
-			if (attribute.specified == true) {
+			if (attribute.specified) {
 				pluginMediaElement.setAttribute(attribute.name, attribute.value);
 			}
 		}
@@ -974,13 +972,13 @@ mejs.YouTubeApi = {
 	}
 }
 // IFRAME
-function onYouTubePlayerAPIReady() {
+window.onYouTubePlayerAPIReady = function() {
 	mejs.YouTubeApi.iFrameReady();
-}
+};
 // FLASH
-function onYouTubePlayerReady(id) {
+window.onYouTubePlayerReady = function(id) {
 	mejs.YouTubeApi.flashReady(id);
-}
+};
 
 window.mejs = mejs;
 window.MediaElement = mejs.MediaElement;
