@@ -909,8 +909,6 @@
 				railWidth = 0,
 				rail = t.controls.find('.mejs-time-rail'),
 				total = t.controls.find('.mejs-time-total'),
-				current = t.controls.find('.mejs-time-current'),
-				loaded = t.controls.find('.mejs-time-loaded'),
 				others = rail.siblings(),
 				lastControl = others.last(),
 				lastControlPosition = null;
