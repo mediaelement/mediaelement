@@ -1,5 +1,6 @@
 {
   "name": "mediaelement",
+  "license": "MIT",
   "version": "2.17.0",
   "repository": {
     "type": "git",
