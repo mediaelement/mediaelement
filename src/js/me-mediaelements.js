@@ -190,7 +190,7 @@ mejs.PluginMediaElement.prototype = {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
-					this.src = mejs.Utility.absolutizeUrl(url);
+					this.src = mejs.Utility.absolutizeUrl(media.src);
 					break;
 				}
 			}
