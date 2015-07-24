@@ -44,9 +44,11 @@
                         x;
                     
                     // mouse or touch position relative to the object
-					if (e.originalEvent.changedTouches) {
+					if (e.originalEvent && e.originalEvent.changedTouches) {
 						x = e.originalEvent.changedTouches[0].pageX;
-					}else{
+					} else if (e.changedTouches) { // for Zepto
+						x = e.changedTouches[0].pageX;
+					} else {
 						x = e.pageX;
 					}
 
