@@ -14,6 +14,10 @@
 		videoWidth: -1,
 		// if set, overrides <video height>
 		videoHeight: -1,
+		// max available width
+		maxWidth: -1,
+		// max available height
+		maxHeight: -1,
 		// default if the user doesn't specify
 		defaultAudioWidth: 400,
 		// default if the user doesn't specify
@@ -832,6 +836,12 @@
 			}
 		},
 
+		setMaxSize: function(width,height) {
+			var t = this;
+			t.options.maxWidth = width;
+			t.options.maxHeight = height;
+		},
+
 		setPlayerSize: function(width,height) {
 			var t = this;
 
@@ -895,6 +905,14 @@
 				}
 
 				if ( newHeight && parentWidth ) {
+
+					if (t.options.maxWidth > 0 && parentWidth > t.options.maxWidth) {
+						parentWidth = t.options.maxWidth;
+					}
+
+					if (t.options.maxHeight > 0 && newHeight > t.options.maxHeight) {
+						newHeight = t.options.maxHeight;
+					}
 
 					// set outer container size
 					t.container
