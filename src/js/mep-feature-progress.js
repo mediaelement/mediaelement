@@ -69,7 +69,7 @@
 						// position floating time box
 						if (!mejs.MediaFeatures.hasTouch) {
 								timefloat.css('left', pos);
-								timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime) );
+								timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options) );
 								timefloat.show();
 						}
 					}
@@ -84,7 +84,7 @@
 
 				var seconds = media.currentTime,
 					timeSliderText = mejs.i18n.t('Time Slider'),
-					time = mejs.Utility.secondsToTimeCode(seconds),
+					time = mejs.Utility.secondsToTimeCode(seconds, player.options),
 					duration = media.duration;
 
 				slider.attr({
