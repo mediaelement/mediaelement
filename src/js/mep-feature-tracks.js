@@ -40,8 +40,7 @@
 			var t = this,
 				attr = t.options.tracksAriaLive ?
 					'role="log" aria-live="assertive" aria-atomic="false"' : '',
-				i,
-				options = '';
+				i;
 
 			if (t.domNode.textTracks) { // if browser will do native captions, prefer mejs captions, loop through tracks and hide
 				for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
@@ -630,8 +629,6 @@
 					lines = container.find("p"),
 					styleNode = trackText.find("#" + container.attr("style")),
 					styles,
-					begin,
-					end,
 					text,
 					entries = {text:[], times:[]};
 
