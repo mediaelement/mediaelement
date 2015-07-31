@@ -423,7 +423,8 @@ mejs.HtmlMediaElementShim = {
 	createErrorMessage: function(playback, options, poster) {
 		var 
 			htmlMediaElement = playback.htmlMediaElement,
-			errorContainer = document.createElement('div');
+			errorContainer = document.createElement('div'),
+			errorContent = options.customError;
 			
 		errorContainer.className = 'me-cannotplay';
 
@@ -432,13 +433,17 @@ mejs.HtmlMediaElementShim = {
 			errorContainer.style.height = htmlMediaElement.height + 'px';
 		} catch (e) {}
 
-    if (options.customError) {
-      errorContainer.innerHTML = options.customError;
-    } else {
-      errorContainer.innerHTML = (poster !== '') ?
-        '<a href="' + playback.url + '"><img src="' + poster + '" width="100%" height="100%" /></a>' :
-        '<a href="' + playback.url + '"><span>' + mejs.i18n.t('Download File') + '</span></a>';
-    }
+		if (!errorContent) {
+			errorContent = '<a href="' + playback.url + '">';
+
+			if (poster !== '') {
+				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="" />';
+			}
+
+			errorContent += '<span>' + mejs.i18n.t('Download File') + '</span></a>';
+		}
+
+		errorContainer.innerHTML = errorContent;
 
 		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);
 		htmlMediaElement.style.display = 'none';
