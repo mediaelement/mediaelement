@@ -253,21 +253,20 @@
 				}
 				updateVolumeSlider(e);
 			}, false);
-
-			if (t.container.is(':visible')) {
-				// set initial volume
-				positionVolumeHandle(player.options.startVolume);
-
-				// mutes the media and sets the volume icon muted if the initial volume is set to 0
-				if (player.options.startVolume === 0) {
-					media.setMuted(true);
-				}
-
-				// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
-				if (media.pluginType === 'native') {
-					media.setVolume(player.options.startVolume);
-				}
+			
+			// mutes the media and sets the volume icon muted if the initial volume is set to 0
+			if (player.options.startVolume === 0) {
+				media.setMuted(true);
 			}
+			
+			// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
+			if (media.pluginType === 'native') {
+				media.setVolume(player.options.startVolume);
+			}
+			
+			t.container.on('controlsresize', function() {
+				positionVolumeHandle(media.volume);
+			});
 		}
 	});
 	
