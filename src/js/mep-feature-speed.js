@@ -88,12 +88,12 @@
 				speedButton = $(html).appendTo(controls);
 				speedSelector = speedButton.find('.mejs-speed-selector');
 
-				playbackspeed = t.options.defaultSpeed;
+				playbackSpeed = t.options.defaultSpeed;
 
 				speedSelector
 					.on('click', 'input[type="radio"]', function() {
 						var newSpeed = $(this).attr('value');
-						playbackspeed = newSpeed;
+						playbackSpeed = newSpeed;
 						media.playbackRate = parseFloat(newSpeed);
 						speedButton.find('button').html(getSpeedNameFromValue(newSpeed));
 						speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
