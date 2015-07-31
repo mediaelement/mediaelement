@@ -50,6 +50,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       _preload = preload;
       _video = new Video();
       addChild(_video);
+//        HLSSettings.logDebug = true;
       _hls = new HLS();
       _hls.addEventListener(HLSEvent.PLAYBACK_COMPLETE,_completeHandler);
       _hls.addEventListener(HLSEvent.ERROR,_errorHandler);
@@ -68,6 +69,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     };
 
     private function _errorHandler(event:HLSEvent):void {
+        _element.displayLogMessage(event.toString());
     };
 
     private function _manifestHandler(event:HLSEvent):void {
@@ -204,17 +206,18 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     public function setMuted(muted:Boolean):void {
 
-      // ignore if already set
-      if ( (muted && _isMuted) || (!muted && !_isMuted))
+      // ignore if no change
+      if (muted === _isMuted)
         return;
+
+      _isMuted = muted;
 
       if (muted) {
         _hls.stream.soundTransform = new SoundTransform(0);
+        sendEvent(HtmlMediaEvent.VOLUMECHANGE);
       } else {
         setVolume(_volume);
       }
-
-      _isMuted = muted;
     }
 
     public function duration():Number{
@@ -225,7 +228,16 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
       return _position;
     }
 
-    public function currentProgress():Number{
+    public function seekLimit():Number {
+        return _duration;
+    }
+
+    public function currentProgress():Number {
+        var progress:Number = 0;
+        if (_duration != 0) {
+            progress = Math.round( (_bufferedTime / _duration) * 100 );
+        }
+        return progress;
     }
 
   private function sendEvent(eventName:String):void {

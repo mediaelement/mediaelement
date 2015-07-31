@@ -54,7 +54,7 @@ package
 		private var _nativeVideoHeight:Number = 0;
 
 		// visual elements
-    private var _mediaElementDisplay:FlashMediaElementDisplay = new FlashMediaElementDisplay();
+        private var _mediaElementDisplay:FlashMediaElementDisplay = new FlashMediaElementDisplay();
 		private var _output:TextField;
 		private var _fullscreenButton:SimpleButton;
 
@@ -105,8 +105,11 @@ package
 			checkFlashVars(loaderInfo.parameters);
 
 			// allows this player to be called from a different domain than the HTML page hosting the player
- 			//Security.allowDomain("*");
-			//Security.allowInsecureDomain('*');
+            CONFIG::cdnBuild {
+                Security.allowDomain("*");
+                Security.allowInsecureDomain('*');
+			}
+
 
 
 			// add debug output
@@ -279,7 +282,7 @@ package
 			_scrubLoaded = _controlBar.getChildByName("scrubLoaded") as MovieClip;
 
 			_scrubOverlay.buttonMode = true;
-			_scrubOverlay.useHandCursor = true
+			_scrubOverlay.useHandCursor = true;
 
 			applyColor(_scrubTrack, _scrubTrackColor);
 			applyColor(_scrubBar, _scrubBarColor);
@@ -441,6 +444,10 @@ package
 
 		}
 
+        public function displayLogMessage(txt:String):void {
+            _output.appendText(txt);
+        }
+
 		// borrowed from jPLayer
 		// https://github.com/happyworm/jPlayer/blob/e8ca190f7f972a6a421cb95f09e138720e40ed6d/actionscript/Jplayer.as#L228
 		private function checkFlashVars(p:Object):void {
@@ -577,21 +584,11 @@ package
 
 		private function scrubClick(event:MouseEvent):void {
 			//trace(event);
-			var seekBarPosition:Number =  ((event.localX / _scrubTrack.width) *_mediaElement.duration())*_scrubTrack.scaleX;
+			var seekBarPosition:Number = ((event.localX / _scrubTrack.width) * _mediaElement.duration()) * _scrubTrack.scaleX;
 
-			var tmp:Number = (_mediaElement.currentTime()/_mediaElement.duration())*_scrubTrack.width;
-			var canSeekToPosition:Boolean = _scrubLoaded.scaleX > (seekBarPosition / _mediaElement.duration()) *_scrubTrack.scaleX;
-			//var canSeekToPosition:Boolean = true;
+			var canSeekToPosition:Boolean = isNaN(_mediaElement.seekLimit()) ||  ( seekBarPosition <= _mediaElement.duration() && seekBarPosition >= 0 );
 
-			/*
-			amountLoaded = ns.bytesLoaded / ns.bytesTotal;
-			loader.loadbar._width = amountLoaded * 208.9;
-			loader.scrub._x = ns.time / duration * 208.9;
-			*/
-
-			trace("seekBarPosition:"+seekBarPosition, "CanSeekToPosition: "+canSeekToPosition);
-
-			if (seekBarPosition>0 && seekBarPosition<_mediaElement.duration() && canSeekToPosition) {
+			if (canSeekToPosition) {
 					_mediaElement.setCurrentTime(seekBarPosition);
 			}
 		}
@@ -810,7 +807,7 @@ package
 		// special floating fullscreen icon
 		public function fullscreenClick(e:MouseEvent):void {
 			//_fullscreenButton.visible = false;
-			_fullscreenButton.alpha = 0
+			_fullscreenButton.alpha = 0;
 
 			try {
 				_controlBar.visible = true;
@@ -935,6 +932,7 @@ package
 
 
 		private function repositionVideo():void {
+            var fullscreen:Boolean;
 
 			if (stage.displayState == "fullScreen") {
 				fullscreen = true;
@@ -1128,8 +1126,27 @@ package
 
 		private function applyColor(item:Object, color:String):void {
 
-			var myColor:ColorTransform = item.transform.colorTransform;
-			myColor.color = Number(color);
+			var myColor:ColorTransform = new ColorTransform(0, 0, 0, 1);
+      var components:Array = color.split(",");
+      switch (components.length) {
+        case 4:
+          myColor.redOffset = components[0];
+          myColor.greenOffset = components[1];
+          myColor.blueOffset = components[2];
+          myColor.alphaMultiplier = components[3];
+          break;
+
+        case 3:
+          myColor.redOffset = components[0];
+          myColor.greenOffset = components[1];
+          myColor.blueOffset = components[2];
+          break;
+
+        default:
+          myColor.color = Number(color);
+          break;
+      }
+//      trace("Length: "+components.length+" String: "+color+" transform: "+myColor.toString());
 			item.transform.colorTransform = myColor;
 		}
 		// END: utility
