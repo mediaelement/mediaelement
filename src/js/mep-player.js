@@ -996,10 +996,7 @@
 				}
 			} while (lastControlPosition !== null && lastControlPosition.top > 0 && railWidth > 0);
 
-			if (t.setProgressRail)
-				t.setProgressRail();
-			if (t.setCurrentRail)
-				t.setCurrentRail();
+			t.container.trigger('controlsresize');
 		},
 
 
