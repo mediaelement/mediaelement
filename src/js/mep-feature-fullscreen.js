@@ -321,6 +321,16 @@
 								var percentErrorMargin = 0.002; // 0.2%
 								var windowWidth = zoomMultiplier * $(window).width();
 								var screenWidth = screen.width;
+								// ** 13twelve
+								// Screen width is sort of useless: http://www.quirksmode.org/blog/archives/2013/11/screenwidth_is.html
+								// My rMBP ignores devicePixelRatio when returning the values, so fullscreen would always fail the "suddenly not fullscreen" test
+								// Theory: the gap between reported values should give us an indication of browser behavior with screen.width and devicePixelRatio
+								var zoomedWindowWidth = zoomMultiplier * windowWidth;
+								if (Math.abs(screenWidth-windowWidth) > Math.abs(screenWidth-zoomedWindowWidth)) {
+									// screen.width is likely true pixels, not CSS pixels, so we need to use the zoomed window width for comparison
+									windowWidth = zoomedWindowWidth;
+								}
+								// ** / 13twelve
 								var absDiff = Math.abs(screenWidth - windowWidth);
 								var marginError = screenWidth * percentErrorMargin;
 
@@ -333,9 +343,11 @@
 									setTimeout(checkFullscreen, 500);
 								}
 							}
-
-
-						}, 500);
+						// ** 13twelve
+						// If often takes my rMBP longer than 500ms to perform the fullscreen action
+						// adding a little more time here
+						}, 2000);
+						// ** / 13twelve
 					}
 
 				} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
@@ -417,6 +429,10 @@
 
 			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
 			t.container.find('.mejs-captions-position').css('bottom', '45px');
+
+			// ** 13twelve
+			t.container.trigger('enteredfullscreen');
+			// ** / 13twelve
 		},
 
 		exitFullScreen: function() {
@@ -471,6 +487,10 @@
 
 			t.container.find('.mejs-captions-text').css('font-size','');
 			t.container.find('.mejs-captions-position').css('bottom', '');
+
+			// ** 13twelve
+			t.container.trigger('exitedfullscreen');
+			// ** / 13twelve
 		}
 	});
 
