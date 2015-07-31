@@ -101,9 +101,9 @@
 							  ],
 						action: function(player, media) {
 								if (media.paused || media.ended) {
-										player.play();
+										media.play();
 								} else {
-										player.pause();
+										media.pause();
 								}
 						}
 				},
