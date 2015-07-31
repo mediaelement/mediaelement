@@ -62,7 +62,8 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
     private function _completeHandler(event:HLSEvent):void {
       _isEnded = true;
-      _isPaused = false;
+      _isPaused = true;
+      sendEvent(HtmlMediaEvent.PAUSE);
       sendEvent(HtmlMediaEvent.ENDED);
     };
 

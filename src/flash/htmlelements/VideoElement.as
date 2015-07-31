@@ -211,8 +211,9 @@ public class VideoElement extends Sprite implements IMediaElement
 
       case "NetStream.Play.Stop":
         _isEnded = true;
-        _isPaused = false;
+        _isPaused = true;
         _timer.stop();
+        sendEvent(HtmlMediaEvent.PAUSE);
         _bufferEmpty ? sendEvent(HtmlMediaEvent.ENDED) : null;
         break;
 
@@ -354,14 +355,20 @@ public class VideoElement extends Sprite implements IMediaElement
 
   public function play():void {
 
-    if (!_hasStartedPlaying && !_isConnected) {
-      _playWhenConnected = true;
-      load();
+    if (!_hasStartedPlaying && !_isConnected ) {
+      if( !_playWhenConnected ) {
+        _playWhenConnected = true;
+        load();
+      }
       return;
     }
 
     if (_hasStartedPlaying) {
       if (_isPaused) {
+        if( _isEnded ) {
+          _stream.seek(0);
+          _isEnded = false;
+        }
         _stream.resume();
         _timer.start();
         _isPaused = false;
