@@ -67,6 +67,10 @@ package htmlelements
 		public function get player():DisplayObject {
 			return _player;
 		}
+		
+		public function seekLimit():Number {
+			return NaN;
+		}		
 
 		public function setSize(width:Number, height:Number):void {
 			if (player != null) {
