@@ -153,6 +153,7 @@ module.exports = function(grunt) {
             '<%= flexPath %>/bin/mxmlc -strict=false -compiler.debug -warnings=true',
             'src/flash/FlashMediaElement.as -o <%= flashOut %>',
             '-define+=CONFIG::cdnBuild,<%= cdnBuild %>',
+            '-define+=CONFIG::debugBuild,<%= debugBuild %>',
             '-library-path+="<%= flexPath %>/lib"',
             '-include-libraries+=src/flash/flashmediaelement.swc',
             '-include-libraries+=src/flash/flashls.swc -use-network=true',
@@ -165,6 +166,7 @@ module.exports = function(grunt) {
             buildFlash: {
                 command: function() {
                     grunt.config.set("cdnBuild", 'false');
+                    grunt.config.set("debugBuild", 'false');                    
                     grunt.config.set("flashOut", 'local-build/flashmediaelement.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
@@ -172,7 +174,16 @@ module.exports = function(grunt) {
             buildFlashCDN: {
                 command: function() {
                     grunt.config.set("cdnBuild", 'true');
+					grunt.config.set("debugBuild", 'false'); 
                     grunt.config.set("flashOut", 'local-build/flashmediaelement-cdn.swf');
+                    return grunt.config.get("buildFlashCommand");
+                }
+            },
+            buildFlashDebug: {
+                command: function() {
+                    grunt.config.set("debugBuild", 'true');
+                    grunt.config.set("cdnBuild", 'true');                    
+                    grunt.config.set("flashOut", 'local-build/flashmediaelement-debug.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             }
@@ -180,7 +191,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
-        'shell:buildFlash', 'shell:buildFlashCDN', 'clean:temp']);
+        'shell:buildFlash', 'shell:buildFlashCDN', 'shell:buildFlashDebug', 'clean:temp']);
 
     grunt.registerTask('html5only', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy', 'clean:temp']);
 
