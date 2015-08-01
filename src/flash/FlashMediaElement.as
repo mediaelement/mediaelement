@@ -110,24 +110,8 @@ package
                 Security.allowInsecureDomain('*');
 			}
 
-
-
-			// add debug output
-			_output = new TextField();
-			_output.textColor = 0xeeeeee;
-			_output.width = stage.stageWidth - 100;
-			_output.height = stage.stageHeight;
-			_output.multiline = true;
-			_output.wordWrap = true;
-			_output.border = false;
-			_output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
-
-			_output.text = "Initializing...\n";
-			addChild(_output);
-			_output.visible = securityIssue;
-
+			
 			if (securityIssue) {
-				_output.text = "WARNING: Security issue detected. Player stopped.";
 				return;
 			}
 
@@ -151,8 +135,25 @@ package
 			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
 			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
-// no debug info for OWASP
-//			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
+			
+			// no debug info for OWASP
+			CONFIG::debugBuild {
+				_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
+
+				// add debug output
+				_output = new TextField();
+				_output.textColor = 0xeeeeee;
+				_output.width = stage.stageWidth - 100;
+				_output.height = stage.stageHeight;
+				_output.multiline = true;
+				_output.wordWrap = true;
+				_output.border = false;
+				_output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
+				_output.text = "Initializing Flash...\n";
+				
+				addChild(_output);
+				_output.visible = _debug;				
+			}
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
 			_alwaysShowControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
@@ -174,7 +175,7 @@ package
 				_autoHide = false;
 			}
 
-			_output.visible = false; // no debug infor for OWASP _debug;
+
 
 			if (isNaN(_timerRate))
 				_timerRate = 250;
@@ -353,18 +354,20 @@ package
 
 			setControlDepth();
 
-			_output.appendText("stage: " + stage.stageWidth + "x" + stage.stageHeight + "\n");
-			_output.appendText("file: " + _mediaUrl + "\n");
-			_output.appendText("autoplay: " + _autoplay.toString() + "\n");
-			_output.appendText("preload: " + _preload.toString() + "\n");
-			_output.appendText("isvideo: " + _isVideo.toString() + "\n");
-			_output.appendText("smoothing: " + _enableSmoothing.toString() + "\n");
-			_output.appendText("timerrate: " + _timerRate.toString() + "\n");
-			_output.appendText("displayState: " +(stage.hasOwnProperty("displayState")).toString() + "\n");
+			
+			logMessage("stage: " + stage.stageWidth + "x" + stage.stageHeight);
+			logMessage("file: " + _mediaUrl);
+			logMessage("autoplay: " + _autoplay.toString());
+			logMessage("preload: " + _preload.toString());
+			logMessage("isvideo: " + _isVideo.toString());
+			logMessage("smoothing: " + _enableSmoothing.toString());
+			logMessage("timerrate: " + _timerRate.toString());
+			logMessage("displayState: " +(stage.hasOwnProperty("displayState")).toString());
 
 			// attach javascript
-			_output.appendText("ExternalInterface.available: " + ExternalInterface.available.toString() + "\n");
-			_output.appendText("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null)? ExternalInterface.objectID.toString() : "null") + "\n");
+			logMessage("ExternalInterface.available: " + ExternalInterface.available.toString());
+			logMessage("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null)? ExternalInterface.objectID.toString() : "null"));
+	
 
 			if (_mediaUrl != "") {
 				_mediaElement.setSrc(_mediaUrl);
@@ -379,7 +382,9 @@ package
 
 			if (ExternalInterface.available) { //  && !_alwaysShowControls
 
-				_output.appendText("Adding callbacks: " + _jsCallbackFunction + " ...\n");
+				
+				logMessage("Adding callbacks: " + _jsCallbackFunction + " ...");
+				
 				try {
 					if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
 
@@ -403,13 +408,13 @@ package
 						// fire init method
 						ExternalInterface.call(_jsInitFunction, ExternalInterface.objectID);
 					}
+										
+					logMessage("Success: " + _jsInitFunction + " ...");
 
-					_output.appendText("Success: " + _jsInitFunction + " ...\n");
-
-				} catch (error:SecurityError) {
-					_output.appendText("A SecurityError occurred: " + error.message + "\n");
+				} catch (error:SecurityError) {					
+					logMessage("A SecurityError occurred: " + error.message);			
 				} catch (error:Error) {
-					_output.appendText("An Error occurred: " + error.message + "\n");
+					logMessage("An Error occurred: " + error.message);
 				}
 
 			}
@@ -439,14 +444,18 @@ package
 
 		public function setControlDepth():void {
 			// put these on top
-			addChild(_output);
+			if (_output != null) {
+				addChild(_output);
+			}
 			addChild(_controlBar);
 			addChild(_fullscreenButton);
 
 		}
 
-        public function displayLogMessage(txt:String):void {
-            _output.appendText(txt);
+        public function logMessage(txt:String):void {
+            CONFIG::debugBuild {
+	            _output.appendText(txt + "\n");
+	        }
         }
 
 		// borrowed from jPLayer
@@ -721,7 +730,7 @@ package
 
 
 		public function stageClicked(e:MouseEvent):void {
-			//_output.appendText("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");
+			//logMessage("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");
 			if (e.target == stage) {
 				sendEvent("click", "");
 			}
@@ -743,7 +752,7 @@ package
 		// START: Fullscreen
 		private function enterFullscreen():void {
 
-			_output.appendText("enterFullscreen()\n");
+			logMessage("enterFullscreen()");
 
 			var screenRectangle:Rectangle = new Rectangle(0, 0, flash.system.Capabilities.screenResolutionX, flash.system.Capabilities.screenResolutionY);
 			stage.fullScreenSourceRect = screenRectangle;
@@ -771,7 +780,7 @@ package
 
 		public function setFullscreen(gofullscreen:Boolean):void {
 
-			_output.appendText("setFullscreen: " + gofullscreen.toString() + "\n");
+			logMessage("setFullscreen: " + gofullscreen.toString());
 
 			try {
 				//_fullscreenButton.visible = false;
@@ -791,7 +800,7 @@ package
 
 				_isFullScreen = false;
 
-				_output.appendText("error setting fullscreen: " + error.message.toString() + "\n");
+				logMessage("error setting fullscreen: " + error.message.toString());
 			}
 		}
 
@@ -821,7 +830,7 @@ package
 
 
 		public function stageFullScreenChanged(e:FullScreenEvent):void {
-			_output.appendText("fullscreen event: " + e.fullScreen.toString() + "\n");
+			logMessage("fullscreen event: " + e.fullScreen.toString());
 
 			//_fullscreenButton.visible = false;
 			_fullscreenButton.alpha = 0;
@@ -837,49 +846,49 @@ package
 
 		// START: external interface
 		public function playMedia():void {
-			_output.appendText("play\n");
+			logMessage("play");
 			_mediaElement.play();
 		}
 
 		public function loadMedia():void {
-			_output.appendText("load\n");
+			logMessage("load");
 			_mediaElement.load();
 		}
 
 		public function pauseMedia():void {
-			_output.appendText("pause\n");
+			logMessage("pause");
 			_mediaElement.pause();
 		}
 
 		public function setSrc(url:String):void {
-			_output.appendText("setSrc: " + url + "\n");
+			logMessage("setSrc: " + url);
 			_mediaElement.setSrc(url);
 		}
 
 		public function stopMedia():void {
-			_output.appendText("stop\n");
+			logMessage("stop");
 			_mediaElement.stop();
 		}
 
 		public function setCurrentTime(time:Number):void {
-			_output.appendText("seek: " + time.toString() + "\n");
+			logMessage("seek: " + time.toString());
 			_mediaElement.setCurrentTime(time);
 		}
 
 		public function setVolume(volume:Number):void {
-			_output.appendText("volume: " + volume.toString() + "\n");
+			logMessage("volume: " + volume.toString());
 			_mediaElement.setVolume(volume);
 			toggleVolumeIcons(volume);
 		}
 
 		public function setMuted(muted:Boolean):void {
-			_output.appendText("muted: " + muted.toString() + "\n");
+			logMessage("muted: " + muted.toString());
 			_mediaElement.setMuted(muted);
 			toggleVolumeIcons(_mediaElement.getVolume());
 		}
 
 		public function setVideoSize(width:Number, height:Number):void {
-			_output.appendText("setVideoSize: " + width.toString() + "," + height.toString() + "\n");
+			logMessage("setVideoSize: " + width.toString() + "," + height.toString());
 
 			_stageWidth = width;
 			_stageHeight = height;
@@ -888,7 +897,7 @@ package
 				repositionVideo();
 				positionControls();
 				//_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width - 10;
-				_output.appendText("result: " + _video.width.toString() + "," + _video.height.toString() + "\n");
+				logMessage("result: " + _video.width.toString() + "," + _video.height.toString());
 			}
 
 
@@ -896,7 +905,7 @@ package
 
 		public function positionFullscreenButton(x:Number, y:Number, visibleAndAbove:Boolean ):void {
 
-			_output.appendText("position FS: " + x.toString() + "x" + y.toString() + "\n");
+			logMessage("position FS: " + x.toString() + "x" + y.toString());
 
 			// bottom corner
 			/*
@@ -941,12 +950,12 @@ package
 				fullscreen = false;
 			}
 
-			_output.appendText("positioning video "+stage.displayState+"\n");
+			logMessage("positioning video "+stage.displayState);
 
 			if (_mediaElement is VideoElement || _mediaElement is HLSMediaElement) {
 
 				if (isNaN(_nativeVideoWidth) || isNaN(_nativeVideoHeight) || _nativeVideoWidth <= 0 || _nativeVideoHeight <= 0) {
-					_output.appendText("ERR: I dont' have the native dimension\n");
+					logMessage("ERR: I dont' have the native dimension");
 					return;
 				}
 
@@ -1008,7 +1017,7 @@ package
 			// special video event
 			if (eventName == HtmlMediaEvent.LOADEDMETADATA && _isVideo) {
 
-				_output.appendText("METADATA RECEIVED: ");
+				logMessage("METADATA RECEIVED: ");
 
 				try {
 					if (_mediaElement is VideoElement) {
@@ -1025,10 +1034,10 @@ package
 						}
 					}
 				} catch (e:Error) {
-					_output.appendText(e.toString() + "\n");
+					logMessage(e.toString());
 				}
 
-				_output.appendText(_nativeVideoWidth.toString() + "x" + _nativeVideoHeight.toString() + "\n");
+				logMessage(_nativeVideoWidth.toString() + "x" + _nativeVideoHeight.toString());
 
 
 				if(stage.displayState == "fullScreen" ) {
@@ -1045,7 +1054,7 @@ package
 
 			if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
 
-				//_output.appendText("event:" + eventName + " : " + eventValues);
+				//logMessage("event:" + eventName + " : " + eventValues);
 				//trace("event", eventName, eventValues);
 
 				if (eventValues == null)
