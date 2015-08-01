@@ -151,7 +151,8 @@ package
 			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
 			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
-			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
+// no debug info for OWASP
+//			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
 			_alwaysShowControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
@@ -173,7 +174,7 @@ package
 				_autoHide = false;
 			}
 
-			_output.visible = _debug;
+			_output.visible = false; // no debug infor for OWASP _debug;
 
 			if (isNaN(_timerRate))
 				_timerRate = 250;
