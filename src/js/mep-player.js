@@ -1113,17 +1113,30 @@
 
 
 			// show/hide loading
-			media.addEventListener('loadstart',function() {
+			media.addEventListener('loadeddata',function() {
+				// for some reason Chrome is firing this event
+				//if (mejs.MediaFeatures.isChrome && media.getAttribute && media.getAttribute('preload') === 'none')
+				//	return;
+
 				loading.show();
 				controls.find('.mejs-time-buffering').show();
+                // Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices (https://github.com/johndyer/mediaelement/issues/1305)
+                if (mejs.MediaFeatures.isAndroid) {
+                    media.canplayTimeout = window.setTimeout(
+                        function() {
+                            if (document.createEvent) {
+                                var evt = document.createEvent('HTMLEvents');
+                                evt.initEvent('canplay', true, true);
+                                return media.dispatchEvent(evt);
+                            }
+                        }, 300
+                    );
+                }
 			}, false);
-			media.addEventListener('loadeddata',function() {
-				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
- 			}, false);
 			media.addEventListener('canplay',function() {
 				loading.hide();
 				controls.find('.mejs-time-buffering').hide();
+                clearTimeout(media.canplayTimeout); // Clear timeout inside 'loadeddata' to prevent 'canplay' to fire twice
 			}, false);
 
 			// error handling
