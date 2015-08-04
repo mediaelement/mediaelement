@@ -77,7 +77,7 @@ mejs.MediaPluginBridge = {
 			length: 1
 		};
 
-		pluginMediaElement.dispatchEvent(e.type, e);
+		pluginMediaElement.dispatchEvent(e);
 	}
 };
 
@@ -674,15 +674,15 @@ mejs.HtmlMediaElementShim = {
 						}						
 
 						function createEvent(player, pluginMediaElement, eventName, e) {
-							var obj = {
+							var event = {
 								type: eventName,
 								target: pluginMediaElement
 							};
 							if (eventName == 'timeupdate') {
-								pluginMediaElement.currentTime = obj.currentTime = e.seconds;
-								pluginMediaElement.duration = obj.duration = e.duration;
+								pluginMediaElement.currentTime = event.currentTime = e.seconds;
+								pluginMediaElement.duration = event.duration = e.duration;
 							}
-							pluginMediaElement.dispatchEvent(obj.type, obj);
+							pluginMediaElement.dispatchEvent(event);
 						}
 
 						player.addEvent('play', function() {
@@ -832,7 +832,7 @@ mejs.YouTubeApi = {
 	},
 	
 	createEvent: function (player, pluginMediaElement, eventName) {
-		var obj = {
+		var event = {
 			type: eventName,
 			target: pluginMediaElement
 		};
@@ -840,25 +840,25 @@ mejs.YouTubeApi = {
 		if (player && player.getDuration) {
 			
 			// time 
-			pluginMediaElement.currentTime = obj.currentTime = player.getCurrentTime();
-			pluginMediaElement.duration = obj.duration = player.getDuration();
+			pluginMediaElement.currentTime = event.currentTime = player.getCurrentTime();
+			pluginMediaElement.duration = event.duration = player.getDuration();
 			
 			// state
-			obj.paused = pluginMediaElement.paused;
-			obj.ended = pluginMediaElement.ended;			
+			event.paused = pluginMediaElement.paused;
+			event.ended = pluginMediaElement.ended;			
 			
 			// sound
-			obj.muted = player.isMuted();
-			obj.volume = player.getVolume() / 100;
+			event.muted = player.isMuted();
+			event.volume = player.getVolume() / 100;
 			
 			// progress
-			obj.bytesTotal = player.getVideoBytesTotal();
-			obj.bufferedBytes = player.getVideoBytesLoaded();
+			event.bytesTotal = player.getVideoBytesTotal();
+			event.bufferedBytes = player.getVideoBytesLoaded();
 			
 			// fake the W3C buffered TimeRange
-			var bufferedTime = obj.bufferedBytes / obj.bytesTotal * obj.duration;
+			var bufferedTime = event.bufferedBytes / event.bytesTotal * event.duration;
 			
-			obj.target.buffered = obj.buffered = {
+			event.target.buffered = event.buffered = {
 				start: function(index) {
 					return 0;
 				},
@@ -871,7 +871,7 @@ mejs.YouTubeApi = {
 		}
 		
 		// send event up the chain
-		pluginMediaElement.dispatchEvent(obj.type, obj);
+		pluginMediaElement.dispatchEvent(event);
 	},	
 	
 	iFrameReady: function() {
