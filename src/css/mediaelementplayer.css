@@ -17,6 +17,10 @@
 	text-indent: 0;
 }
 
+.mejs-container:focus { 
+	outline: none; 
+}
+
 .me-plugin {
 	position: absolute;
 }
