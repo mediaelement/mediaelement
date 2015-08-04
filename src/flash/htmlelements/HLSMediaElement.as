@@ -69,7 +69,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
     };
 
     private function _errorHandler(event:HLSEvent):void {
-        _element.displayLogMessage(event.toString());
+        _element.logMessage(event.toString());
     };
 
     private function _manifestHandler(event:HLSEvent):void {
