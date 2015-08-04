@@ -250,15 +250,6 @@
 
 		mejs.Utility.calculateTimeFormat(0, t.options, t.options.framesPerSecond || 25);
 
-		// Only change the time format when necessary
-		var duration = null;
-		t.media.addEventListener('timeupdate',function() {
-			if (duration !== this.duration) {
-				duration = this.duration;
-				mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
-			}
-		}, false);
-
 		// unique ID
 		t.id = 'mep_' + mejs.mepIndex++;
 
@@ -768,6 +759,15 @@
 						t.setControlsSize();
 					}
 				}, false);
+				
+				// Only change the time format when necessary
+				var duration = null;
+				t.media.addEventListener('timeupdate',function() {
+					if (duration !== this.duration) {
+						duration = this.duration;
+						mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
+					}
+				}, false);				
 
 				t.container.focusout(function (e) {
 					if( e.relatedTarget ) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
