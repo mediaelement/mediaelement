@@ -1,6 +1,6 @@
 ### Version History
 
-*2.18.0 (2015/XX/XX)*
+*2.18.0 (2015/08/05)*
 
 * add Zepto support to MediaElement (https://github.com/johndyer/mediaelement/pull/1546) @zry656565
 * Move all code/libraries out of FLA to allow grunt build (https://github.com/johndyer/mediaelement/pull/1480) @stevemayhew
