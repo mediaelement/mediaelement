@@ -148,7 +148,7 @@ mejs.HtmlMediaElementShim = {
 
 	create: function(el, o) {
 		var
-			options = mejs.MediaElementDefaults,
+			options = $.extend({},mejs.MediaElementDefaults,o),
 			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
 			tagName = htmlMediaElement.tagName.toLowerCase(),
 			isMediaTag = (tagName === 'audio' || tagName === 'video'),
@@ -161,9 +161,9 @@ mejs.HtmlMediaElementShim = {
 			prop;
 
 		// extend options
-		for (prop in o) {
-			options[prop] = o[prop];
-		}
+		//for (prop in o) {
+		//	options[prop] = o[prop];
+		//}
 
 		// clean up attributes
 		src = 		(typeof src == 'undefined' 	|| src === null || src == '') ? null : src;		
