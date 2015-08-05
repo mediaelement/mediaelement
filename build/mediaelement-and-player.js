@@ -2552,7 +2552,7 @@ if (typeof jQuery != 'undefined') {
 
 						// show/hide controls
 						t.container
-							.bind('mouseenter mouseover', function () {
+							.bind('mouseenter', function () {
 								if (t.controlsEnabled) {
 									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
@@ -3214,7 +3214,7 @@ if (typeof jQuery != 'undefined') {
 				//
 				t.setPlayerSize(t.width, t.height);
 				t.setControlsSize();
-			}, 50);            
+			}, 50);
 		}
 	};
 
