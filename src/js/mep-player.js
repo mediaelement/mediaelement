@@ -1253,6 +1253,8 @@
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
+			
+			t.container.prev('.mejs-offscreen').remove();
 
 			// invoke features cleanup
 			for (featureIndex in t.options.features) {
