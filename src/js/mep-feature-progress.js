@@ -37,7 +37,7 @@
 				handleMouseMove = function (e) {
 					
                     var offset = total.offset(),
-						width = total.outerWidth(true),
+						width = total.width(),
 						percentage = 0,
 						newTime = 0,
 						pos = 0,
