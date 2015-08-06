@@ -3,6 +3,8 @@
 	// Speed
 	$.extend(mejs.MepDefaults, {
 
+		// We also support to pass object like this:
+		// [{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]
 		speeds: ['2.00', '1.50', '1.25', '1.00', '0.75'],
 
 		defaultSpeed: '1.00',
@@ -21,53 +23,90 @@
 					speedButton = null,
 					speedSelector = null,
 					playbackSpeed = null,
-					html = '<div class="mejs-button mejs-speed-button">' + 
-								'<button type="button">' + t.options.defaultSpeed + t.options.speedChar + '</button>' + 
-								'<div class="mejs-speed-selector">' + 
-								'<ul>';
-				
-				if ($.inArray(t.options.defaultSpeed, t.options.speeds) === -1) {
-					t.options.speeds.push(t.options.defaultSpeed);
+					inputId = null;
+
+				var speeds = [];
+				var defaultInArray = false;
+				for (var i=0, len=t.options.speeds.length; i < len; i++) {
+					var s = t.options.speeds[i];
+					if (typeof(s) === 'string'){
+						speeds.push({
+							name: s + t.options.speedChar,
+							value: s
+						});
+						if(s === t.options.defaultSpeed) {
+							defaultInArray = true;
+						}
+					}
+					else {
+						speeds.push(s);
+						if(s.value === t.options.defaultSpeed) {
+							defaultInArray = true;
+						}
+					}
 				}
 
-				t.options.speeds.sort(function(a, b) {
-					return parseFloat(b) - parseFloat(a);
+				if (!defaultInArray) {
+					speeds.push({
+						name: t.options.defaultSpeed + t.options.speedChar,
+						value: t.options.defaultSpeed
+					});
+				}
+
+				speeds.sort(function(a, b) {
+					return parseFloat(b.value) - parseFloat(a.value);
 				});
 
-				for (var i = 0, il = t.options.speeds.length; i<il; i++) {
+				var getSpeedNameFromValue = function(value) {
+					for(i=0,len=speeds.length; i <len; i++) {
+						if (speeds[i].value === value) {
+							return speeds[i].name;
+						}
+					}
+				};
+
+				var html = '<div class="mejs-button mejs-speed-button">' +
+							'<button type="button">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
+							'<div class="mejs-speed-selector">' +
+							'<ul>';
+
+				for (i = 0, il = speeds.length; i<il; i++) {
+					inputId = t.id + '-speed-' + speeds[i].value;
 					html += '<li>' + 
 								'<input type="radio" name="speed" ' + 
-											'value="' + t.options.speeds[i] + '" ' + 
-											'id="' + t.options.speeds[i] + '" ' +
-											(t.options.speeds[i] == t.options.defaultSpeed ? ' checked' : '') + 
+											'value="' + speeds[i].value + '" ' +
+											'id="' + inputId + '" ' +
+											(speeds[i].value === t.options.defaultSpeed ? ' checked' : '') +
 											' />' +
-								'<label for="' + t.options.speeds[i] + '" ' + 
-											(t.options.speeds[i] == t.options.defaultSpeed ? ' class="mejs-speed-selected"' : '') +
-											'>' + t.options.speeds[i] + t.options.speedChar + '</label>' + 
+								'<label for="' + inputId + '" ' +
+											(speeds[i].value === t.options.defaultSpeed ? ' class="mejs-speed-selected"' : '') +
+											'>' + speeds[i].name + '</label>' +
 							'</li>';
 				}
 				html += '</ul></div></div>';
 
 				speedButton = $(html).appendTo(controls);
-				speedSelector = speedButton.find('.mejs-speed-selector');				
+				speedSelector = speedButton.find('.mejs-speed-selector');
 
-				playbackspeed = t.options.defaultSpeed;
+				playbackSpeed = t.options.defaultSpeed;
 
 				speedSelector
 					.on('click', 'input[type="radio"]', function() {
 						var newSpeed = $(this).attr('value');
-						playbackspeed = newSpeed;
+						playbackSpeed = newSpeed;
 						media.playbackRate = parseFloat(newSpeed);
-						speedButton.find('button').html(newSpeed + t.options.speedChar);
+						speedButton.find('button').html(getSpeedNameFromValue(newSpeed));
 						speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
 						speedButton.find('input[type="radio"]:checked').next().addClass('mejs-speed-selected');
 					});
-
-				speedSelector
-					.height(
-						speedButton.find('.mejs-speed-selector ul').outerHeight(true) + 
-						speedButton.find('.mejs-speed-translations').outerHeight(true))
-					.css('top', (-1 * speedSelector.height()) + 'px');
+				speedButton
+					.one( 'mouseenter focusin', function() {
+						speedSelector
+							.height(
+								speedButton.find('.mejs-speed-selector ul').outerHeight(true) +
+								speedButton.find('.mejs-speed-translations').outerHeight(true))
+							.css('top', (-1 * speedSelector.height()) + 'px');
+					});
 			}
 		}
 	});

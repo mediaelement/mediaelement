@@ -43,9 +43,25 @@
                 autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
+
+		/*
+		 * Time format to use. Default: 'mm:ss'
+		 * Supported units:
+		 *   h: hour
+		 *   m: minute
+		 *   s: second
+		 *   f: frame count
+		 * When using 'hh', 'mm', 'ss' or 'ff' we always display 2 digits.
+		 * If you use 'h', 'm', 's' or 'f' we display 1 digit if possible.
+		 *
+		 * Example to display 75 seconds:
+		 * Format 'mm:ss': 01:15
+		 * Format 'm:ss': 1:15
+		 * Format 'm:s': 1:15
+		 */
+		timeFormat: '',
 		// forces the hour marker (##:00:00)
 		alwaysShowHours: false,
-
 		// show framecount in timecode (##:00:00:00)
 		showTimecodeFrameCount: false,
 		// used when showTimecodeFrameCount is set to true
@@ -90,9 +106,9 @@
 							  ],
 						action: function(player, media) {
 								if (media.paused || media.ended) {
-										player.play();
+										media.play();
 								} else {
-										player.pause();
+										media.pause();
 								}
 						}
 				},
@@ -205,12 +221,13 @@
 		t.$media = t.$node = $(node);
 		t.node = t.media = t.$media[0];
 
+		if(!t.node) {
+			return
+		}
+
 		// check for existing player
 		if (typeof t.node.player != 'undefined') {
 			return t.node.player;
-		} else {
-			// attach player to DOM node for reference
-			t.node.player = t;
 		}
 
 
@@ -221,6 +238,19 @@
 
 		// extend default options
 		t.options = $.extend({},mejs.MepDefaults,o);
+
+		if (!t.options.timeFormat) {
+			// Generate the time format according to options
+			t.options.timeFormat = 'mm:ss';
+			if (t.options.alwaysShowHours) {
+				t.options.timeFormat = 'hh:mm:ss';
+			}
+			if (t.options.showTimecodeFrameCount) {
+				t.options.timeFormat += ':ff';
+			}
+		}
+
+		mejs.Utility.calculateTimeFormat(0, t.options, t.options.framesPerSecond || 25);
 
 		// unique ID
 		t.id = 'mep_' + mejs.mepIndex++;
@@ -348,6 +378,9 @@
 					// normal way of moving it into place (doesn't work on iOS)
 					t.container.find('.mejs-mediaelement').append(t.$media);
 				}
+				
+				// needs to be assigned here, after iOS remap
+				t.node.player = t;
 
 				// find parts
 				t.controls = t.container.find('.mejs-controls');
@@ -740,6 +773,15 @@
 						t.setControlsSize();
 					}
 				}, false);
+				
+				// Only change the time format when necessary
+				var duration = null;
+				t.media.addEventListener('timeupdate',function() {
+					if (duration !== this.duration) {
+						duration = this.duration;
+						mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
+					}
+				}, false);				
 
 				t.container.focusout(function (e) {
 					if( e.relatedTarget ) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
@@ -838,17 +880,16 @@
 
 			playLayer.height(t.container.height() - t.controls.height());
 			playButton.css('margin-top', '-' + (playButton.height()/2 - t.controls.height()/2).toString() + 'px'  );
-
 		},
         
         hasFluidMode: function() {
             var t = this;
-            
-            return (t.height.toString().indexOf('%') > 0 || t.$node.css('max-width') === '100%' || parseInt(t.$node.css('max-width').replace(/px/,''), 10) / t.$node.offsetParent().width() === 1 || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
+ 
+            // detect 100% mode - use currentStyle for IE since css() doesn't return percentages
+            return (t.height.toString().indexOf('%') > 0 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== 't.width') || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
         },
         
         setResponsiveMode: function() {
-
             var t = this;
             if (t.hasFluidMode) {
 					
@@ -891,7 +932,7 @@
 					newHeight = parentHeight;
 				}
 
-				if (t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
+				if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
 					parentWidth = $(window).width();
 					newHeight = $(window).height();
 				}
@@ -993,8 +1034,7 @@
 				  t.layers.children('.mejs-layer')
 					.width(t.width)
 					.height(t.height);
-        },
-
+		},
 
 		setControlsSize: function() {
 			var t = this,
@@ -1002,8 +1042,6 @@
 				railWidth = 0,
 				rail = t.controls.find('.mejs-time-rail'),
 				total = t.controls.find('.mejs-time-total'),
-				current = t.controls.find('.mejs-time-current'),
-				loaded = t.controls.find('.mejs-time-loaded'),
 				others = rail.siblings(),
 				lastControl = others.last(),
 				lastControlPosition = null;
@@ -1046,15 +1084,12 @@
 				total.width(railWidth - (total.outerWidth(true) - total.width()));
 
 				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.position();
+					lastControlPosition = lastControl.length ? lastControl.position() : null;
 					railWidth--;
 				}
 			} while (lastControlPosition !== null && lastControlPosition.top > 0 && railWidth > 0);
 
-			if (t.setProgressRail)
-				t.setProgressRail();
-			if (t.setCurrentRail)
-				t.setCurrentRail();
+			t.container.trigger('controlsresize');
 		},
 
 
@@ -1095,7 +1130,7 @@
 				posterImg = posterDiv.find('img');
 
 			if (posterImg.length === 0) {
-				posterImg = $('<img width="100%" height="100%" />').appendTo(posterDiv);
+				posterImg = $('<img width="100%" height="100%" alt="" />').appendTo(posterDiv);
 			}
 
 			posterImg.attr('src', url);
@@ -1207,11 +1242,12 @@
 			}, false);
 
 			// error handling
-			media.addEventListener('error',function() {
+			media.addEventListener('error',function(e) {
+				t.handleError(e);
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
+				bigPlay.hide();
 				error.show();
-				error.find('mejs-overlay-error').html("Error loading this resource");
+				error.find('.mejs-overlay-error').html("Error loading this resource");
 			}, false);
 
 			media.addEventListener('keydown', function(e) {
@@ -1319,6 +1355,8 @@
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
+			
+			t.container.prev('.mejs-offscreen').remove();
 
 			// invoke features cleanup
 			for (featureIndex in t.options.features) {
@@ -1364,6 +1402,15 @@
 			var t = this;
 			t.findTracks();
 			t.buildtracks(t, t.controls, t.layers, t.media);
+		},
+		resetSize: function(){
+			var t = this;
+			// webkit has trouble doing this without a delay
+			setTimeout(function () {
+				//console.log("resetSize");
+				t.setPlayerSize(t.width, t.height);
+				t.setControlsSize();
+			}, 50);            
 		}
 	};
 

@@ -44,9 +44,6 @@
 			}
 
 			var t = this,
-				normalHeight = 0,
-				normalWidth = 0,
-				container = player.container,
 				fullscreenBtn =
 					$('<div class="mejs-button mejs-fullscreen-button">' +
 						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.fullscreenText + '" aria-label="' + t.options.fullscreenText + '"></button>' +
@@ -276,6 +273,9 @@
 					player.exitFullScreen();
 				}
 			});
+			
+			t.normalHeight = 0;
+			t.normalWidth = 0;
 
 		},
 
@@ -300,8 +300,8 @@
             $(document.documentElement).addClass('mejs-fullscreen');
 
 			// store sizing
-			normalHeight = t.container.height();
-			normalWidth = t.container.width();
+			t.normalHeight = t.container.height();
+			t.normalWidth = t.container.width();
 
 			// attempt to do true fullscreen (Safari 5.1 and Firefox Nightly only for now)
 			if (t.media.pluginType === 'native') {
@@ -316,13 +316,25 @@
 						setTimeout(function checkFullscreen() {
 
 							if (t.isNativeFullScreen) {
-								var zoomMultiplier = window["devicePixelRatio"] || 1;
+								var zoomMultiplier = window["devicePixelRatio"] || 1,
 								// Use a percent error margin since devicePixelRatio is a float and not exact.
-								var percentErrorMargin = 0.002; // 0.2%
-								var windowWidth = zoomMultiplier * $(window).width();
-								var screenWidth = screen.width;
-								var absDiff = Math.abs(screenWidth - windowWidth);
-								var marginError = screenWidth * percentErrorMargin;
+									percentErrorMargin = 0.002, // 0.2%
+									windowWidth = zoomMultiplier * $(window).width(),
+									screenWidth = screen.width,
+									// ** 13twelve
+									// Screen width is sort of useless: http://www.quirksmode.org/blog/archives/2013/11/screenwidth_is.html
+									// My rMBP ignores devicePixelRatio when returning the values, so fullscreen would always fail the "suddenly not fullscreen" test
+									// Theory: the gap between reported values should give us an indication of browser behavior with screen.width and devicePixelRatio
+									zoomedWindowWidth = zoomMultiplier * windowWidth;
+									
+								if (Math.abs(screenWidth-windowWidth) > Math.abs(screenWidth-zoomedWindowWidth)) {
+									// screen.width is likely true pixels, not CSS pixels, so we need to use the zoomed window width for comparison
+									windowWidth = zoomedWindowWidth;
+								}
+								// ** / 13twelve
+
+								var absDiff = Math.abs(screenWidth - windowWidth),
+									marginError = screenWidth * percentErrorMargin;
 
 								// check if the video is suddenly not really fullscreen
 								if (absDiff > marginError) {
@@ -333,9 +345,8 @@
 									setTimeout(checkFullscreen, 500);
 								}
 							}
-
-
-						}, 500);
+							
+						}, 1000);
 					}
 
 				} else if (mejs.MediaFeatures.hasSemiNativeFullScreen) {
@@ -417,6 +428,8 @@
 
 			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
 			t.container.find('.mejs-captions-position').css('bottom', '45px');
+
+			t.container.trigger('enteredfullscreen');
 		},
 
 		exitFullScreen: function() {
@@ -443,25 +456,24 @@
 
 			t.container
 				.removeClass('mejs-container-fullscreen')
-				.width(normalWidth)
-				.height(normalHeight);
-				//.css({position: '', left: '', top: '', right: '', bottom: '', overflow: 'inherit', width: normalWidth + 'px', height: normalHeight + 'px', 'z-index': 1});
+				.width(t.normalWidth)
+				.height(t.normalHeight);
 
 			if (t.media.pluginType === 'native') {
 				t.$media
-					.width(normalWidth)
-					.height(normalHeight);
+					.width(t.normalWidth)
+					.height(t.normalHeight);
 			} else {
 				t.container.find('.mejs-shim')
-					.width(normalWidth)
-					.height(normalHeight);
+					.width(t.normalWidth)
+					.height(t.normalHeight);
 
-				t.media.setVideoSize(normalWidth, normalHeight);
+				t.media.setVideoSize(t.normalWidth, t.normalHeight);
 			}
 
 			t.layers.children('div')
-				.width(normalWidth)
-				.height(normalHeight);
+				.width(t.normalWidth)
+				.height(t.normalHeight);
 
 			t.fullscreenBtn
 				.removeClass('mejs-unfullscreen')
@@ -472,6 +484,8 @@
 
 			t.container.find('.mejs-captions-text').css('font-size','');
 			t.container.find('.mejs-captions-position').css('bottom', '');
+
+			t.container.trigger('exitedfullscreen');
 		}
 	});
 

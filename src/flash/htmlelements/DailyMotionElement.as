@@ -10,17 +10,14 @@ package htmlelements
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLVariables;
-    import flash.net.URLRequestMethod;
-    import flash.display.MovieClip;
-	 import flash.display.Loader;
-	 import flash.display.DisplayObject;
-
-	
-
+	import flash.net.URLRequestMethod;
+	import flash.display.MovieClip;
+	import flash.display.Loader;
+	import flash.display.DisplayObject;
 	import FlashMediaElement;
 	import HtmlMediaEvent;
 
-	public class YouTubeElement extends Sprite implements IMediaElement
+	public class DailyMotionElement extends Sprite implements IMediaElement
 	{
 		private var _currentUrl:String = "";
 		private var _autoplay:Boolean = true;
@@ -47,11 +44,11 @@ package htmlelements
 
 		private var _timer:Timer;
 		
-		// YouTube stuff
+		// DailyMotion stuff
 		private var _playerLoader:Loader;
 		private var _player:DisplayObject = null;
 		private var _playerIsLoaded:Boolean = false;
-		private var _youTubeId:String = "";
+		private var _dailyMotionId:String = "";
 		
 		//http://code.google.com/p/gdata-samples/source/browse/trunk/ytplayer/actionscript3/com/google/youtube/examples/AS3Player.as
 		private static const WIDESCREEN_ASPECT_RATIO:String = "widescreen";
@@ -71,6 +68,10 @@ package htmlelements
 			return _player;
 		}
 		
+		public function seekLimit():Number {
+			return NaN;
+		}		
+
 		public function setSize(width:Number, height:Number):void {
 			if (player != null) {
 				player.setSize(width, height);
@@ -78,7 +79,7 @@ package htmlelements
 				initHeight = height;
 				initWidth = width;
 			}
-		}		
+		}
 
 		public function get videoHeight():Number {
 			return _videoHeight;
@@ -113,11 +114,11 @@ package htmlelements
 		// calls _connection.connect();
 		// waits for NetConnection.Connect.Success
 		// _stream gets created
-		
+
 		private var _isChromeless:Boolean = false;
 
 
-		public function YouTubeElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number):void
+		public function DailyMotionElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number):void
 		{
 			_element = element;
 			_autoplay = autoplay;
@@ -131,205 +132,158 @@ package htmlelements
 
 			// chromeless
 			if (_isChromeless) {
-				_playerLoader.load(new URLRequest("//www.youtube.com/apiplayer?version=3&controls=1&rel=0&showinfo=0&iv_load_policy=1"));
+				_playerLoader.load(new URLRequest("//www.dailymotion.com/swf?enableApi=1&chromeless=1"));
 			}
-			
-			
+
 			_timer = new Timer(timerRate);
 			_timer.addEventListener("timer", timerHandler);
 			_timer.start();
 		}
-		
+
 		private function playerLoaderInitHandler(event:Event):void {
-			
-			trace("yt player init");
-			
+
+			trace("dm player init");
+
 			_element.addChild(_playerLoader.content);
 			_element.setControlDepth();
 			_playerLoader.content.addEventListener("onReady", onPlayerReady);
 			_playerLoader.content.addEventListener("onError", onPlayerError);
 			_playerLoader.content.addEventListener("onStateChange", onPlayerStateChange);
 			_playerLoader.content.addEventListener("onPlaybackQualityChange", onVideoPlaybackQualityChange);
-		}		
+		}
 		
 		private function onPlayerReady(event:Event):void {
 			_playerIsLoaded = true;
-			
+
 			_player = _playerLoader.content;
-			
+
 			if (initHeight > 0 && initWidth > 0)
 				setSize(initWidth, initHeight);
-			
-			if (_youTubeId != "") { //  && _isChromeless) {
+
+			if (_dailyMotionId != "") { //  && _isChromeless) {
 				if (_autoplay) {
-					player.loadVideoById(_youTubeId);
+					player.loadVideoById(_dailyMotionId);
 				} else {
-					player.cueVideoById(_youTubeId);
+					player.cueVideoById(_dailyMotionId);
 				}
 				_timer.start();
 			}
-		}		
-		
+		}
+
 		private function onPlayerError(event:Event):void {
 			// trace("Player error:", Object(event).data);
 		}
-		
+
 		private function onPlayerStateChange(event:Event):void {
 			trace("State is", Object(event).data);
-			
+
 			_duration = player.getDuration();
-			
+
 			switch (Object(event).data) {
 				case STATE_ENDED:
 					_isEnded = true;
 					_isPaused = false;
-					
+
 					sendEvent(HtmlMediaEvent.ENDED);
-					
+
 					break;
-				
+
 				case STATE_PLAYING:
 					_isEnded = false;
 					_isPaused = false;
-					
+
 					sendEvent(HtmlMediaEvent.PLAY);
 					sendEvent(HtmlMediaEvent.PLAYING);
 					break;
-				
+
 				case STATE_PAUSED:
 					_isEnded = false;
 					_isPaused = true;
-					
+
 					sendEvent(HtmlMediaEvent.PAUSE);
-					
+
 					break;
-				
+
 				case STATE_CUED:
 					sendEvent(HtmlMediaEvent.CANPLAY);
-					
+
 					// resize?
-					
+
 					break;
 			}
 		}
-		
+
 		private function onVideoPlaybackQualityChange(event:Event):void {
 			trace("Current video quality:", Object(event).data);
 			//resizePlayer(Object(event).data);
 		}
 
 		private function timerHandler(e:TimerEvent):void {
-			
+
 			if (_playerIsLoaded) {
 				_bytesLoaded = player.getVideoBytesLoaded();
 				_bytesTotal = player.getVideoBytesTotal();
 				_currentTime = player.getCurrentTime();
-				
+
 				if (!_isPaused)
 					sendEvent(HtmlMediaEvent.TIMEUPDATE);
-	
+
 				if (_bytesLoaded < _bytesTotal)
 					sendEvent(HtmlMediaEvent.PROGRESS);
 			}
 
 		}
 
-		private function getYouTubeId(url:String):String {
-			// http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-			// http://www.youtube.com/v/VIDEO_ID?version=3
-			// http://youtu.be/Djd6tPrxc08
-			
+		private function getDailyMotionId(url:String):String {
+			// http://www.dailymotion.com/video/VIDEOID_SOME_JUNK_FOR_SEO_ONLY
+			// http://www.dailymotion.com/video/VIDEOID
+			// http://dai.ly/VIDEOID
+
+			var dailyMotionId:String = "";
 			url = unescape(url);
-			
-			var youTubeId:String = "";
-			
-			if (url.indexOf("?") > 0) {
-				// assuming: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-				youTubeId = getYouTubeIdFromParam(url);
-				
-				// if it's http://www.youtube.com/v/VIDEO_ID?version=3
-				if (youTubeId == "") {
-					youTubeId = getYouTubeIdFromUrl(url);
-				}
-			} else {
-				youTubeId = getYouTubeIdFromUrl(url);
-			}
-			
-			return youTubeId;
-		}
-		
-		// http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-		private function getYouTubeIdFromParam(url:String):String {
-			
-			
-			var youTubeId:String = "";
-			var parts:Array = url.split('?');
-			var parameters:Array = parts[1].split('&');
-			
-			for (var i:Number=0; i<parameters.length; i++) {
-				var paramParts:Array = parameters[i].split('=');
-				if (paramParts[0] == "v") {
-			
-					youTubeId = paramParts[1];
-					break;
-				}
-		
-			}
-			
-			
-			return youTubeId;
-		}		
-		
-		
-		// http://www.youtube.com/v/VIDEO_ID?version=3
-		// http://youtu.be/Djd6tPrxc08
-		private function getYouTubeIdFromUrl(url:String):String {
-			
-			
-			var youTubeId:String = "";
-			
+
 			// remove any querystring elements
 			var parts:Array = url.split('?');
 			url = parts[0];
-			
-			youTubeId = url.substring(url.lastIndexOf("/")+1);
-			
-			return youTubeId;
-		}			
+			dailyMotionId = url.substring(url.lastIndexOf("/")+1);
+
+			// remove any junk seo stuff at the end
+			var parts2:Array = dailyMotionId.split('_');
+			dailyMotionId = parts2[0];
+
+			return dailyMotionId;
+		}
 
 
 		// interface members
 		public function setSrc(url:String):void {
-			trace("yt setSrc()" + url );
-			
+			trace("dm setSrc()" + url );
+
 			_currentUrl = url;
-			
-			_youTubeId = getYouTubeId(url);
-			
+
+			_dailyMotionId = getDailyMotionId(url);
+
 			if (!_playerIsLoaded && !_isChromeless) {
-				_playerLoader.load(new URLRequest("//www.youtube.com/v/" + _youTubeId + "?version=3&controls=0&rel=0&showinfo=0&iv_load_policy=1"));
+				_playerLoader.load(new URLRequest("//www.dailymotion.com/swf/" + _dailyMotionId + "?enableApi=1&chromeless=1"));
 			}
 		}
-		
-		
-		
 
 		public function load():void {
 			// do nothing
-			trace("yt load()");
-				
+			trace("dm load()");
+
 			if (_playerIsLoaded) {
-				player.loadVideoById(_youTubeId);
+				player.loadVideoById(_dailyMotionId);
 				_timer.start();
 			}  else {
 				/*
-				if (!_isChromless && _youTubeId != "") {
-					_playerLoader.load(new URLRequest("http://www.youtube.com/v/" + _youTubeId + "?version=3&controls=0&rel=0&showinfo=0&iv_load_policy=1"));
+				if (!_isChromless && _dailyMotionId != "") {
+					_playerLoader.load(new URLRequest("//www.dailymotion.com/swf/" + _dailyMotionId + "?enableApi=1&chromeless=1"));
 				}
 				*/
 			}
 		}
-		
+
 		public function play():void {
 			if (_playerIsLoaded) {
 				player.playVideo();
@@ -340,25 +294,20 @@ package htmlelements
 		public function pause():void {
 			if (_playerIsLoaded) {
 				player.pauseVideo();
-			}		
+			}
 		}
 
 		public function stop():void {
 			if (_playerIsLoaded) {
 				player.pauseVideo();
-			}	
+			}
 		}
 
 		public function setCurrentTime(pos:Number):void {
-			//_player.seekTo(pos, false);
-			player.seekTo(pos, true); // works in all places now
+			player.seekTo(pos);
 		}
 
-    public function seekLimit():Number {
-      return NaN;
-    }
-
-    public function setVolume(volume:Number):void {
+		public function setVolume(volume:Number):void {
 			player.setVolume(volume*100);
 			_volume = volume;
 		}
@@ -370,7 +319,7 @@ package htmlelements
 		public function setMuted(muted:Boolean):void {
 			if (muted) {
 				player.mute();
-		
+
 			} else {
 				player.unMute();
 			}

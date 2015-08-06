@@ -16,13 +16,20 @@
 	vertical-align: top;
 	text-indent: 0;
 }
+
 .mejs-fill-container,.mejs-fill-container .mejs-container{
 	width:100%;
 	height:100%;
 }
+
 .mejs-fill-container{
 	overflow:hidden;
 }
+
+.mejs-container:focus { 
+	outline: none; 
+}
+
 .me-plugin {
 	position: absolute;
 }
@@ -903,7 +910,7 @@ div.mejs-speed-button {
 }
 
 .mejs-controls .mejs-speed-button .mejs-speed-selector {
-	visibility: hidden;
+	display: none;
 	position: absolute;
 	top: -100px;
 	left: -10px;
@@ -919,8 +926,9 @@ div.mejs-speed-button {
 	border-radius: 0;
 }
 
+
 .mejs-controls .mejs-speed-button:hover > .mejs-speed-selector {
-	visibility: visible;
+	display: block;
 }
 
 .mejs-controls .mejs-speed-button .mejs-speed-selector ul li label.mejs-speed-selected {
@@ -968,6 +976,21 @@ div.mejs-speed-button {
 	background-color: rgba(255,255,255,.4) !important;
 }
 /* End: Speed */
+
+/* Start: Jump Forward */
+
+.mejs-controls .mejs-button.mejs-jump-forward-button {
+	background: transparent url(jumpforward.png) no-repeat;
+	background-position: 3px 3px;
+}
+.mejs-controls .mejs-button.mejs-jump-forward-button button {
+	background: transparent;
+	font-size: 9px;
+	line-height: normal;
+	color: #ffffff;
+}
+
+/* End: Jump Forward */
 
 /* Start: Skip Back */
 
