@@ -18,7 +18,7 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 
 ## Change Log
 
-Changes available at [changelog.md]
+Changes available at [Change Log](changelog.md)
 
 ### 1. Add Script and Stylesheet
 ```html
@@ -108,3 +108,13 @@ new MediaElement(v, {success: function(media) {
 ```
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
+## Building MediaElement.js
+
+When developing MediaElement, make changes to the files in the `/src/` directory (not `/build/`) and test the changes with `/test/test.html`.
+
+To compile the changes
+
+1. Install `node.js` with `npm` https://nodejs.org/
+2. At the command prompt type `npm install` which will download all the necessary tools
+3. Type `grunt` to build MediaElement.js
+4. To compile the Flash swf, you'll need to install Flex 4.6. See instructions in grunt.js for details.
