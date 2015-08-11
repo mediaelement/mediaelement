@@ -1,5 +1,10 @@
 ### Version History
 
+*2.18.1 (2015/08/11)*
+
+* More accurate progress bar (https://github.com/johndyer/mediaelement/pull/1557) @khalilravanna 
+* Fix Flash event bug @johndyer via @herby
+
 *2.18.0 (2015/08/05)*
 
 * add Zepto support to MediaElement (https://github.com/johndyer/mediaelement/pull/1546) @zry656565
