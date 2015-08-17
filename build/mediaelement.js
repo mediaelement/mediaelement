@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.18.0'; 
+mejs.version = '2.18.1'; 
 
 
 // player number (for missing, same id attr)
@@ -822,7 +822,7 @@ mejs.PluginMediaElement.prototype = {
 
 		if (callbacks) {
 			for (i = 0; i < callbacks.length; i++) {
-				callbacks[i].apply(this, event);
+				callbacks[i].apply(this, [event]);
 			}
 		}
 	},

@@ -1,6 +1,6 @@
 {
   "name": "mediaelement",
-  "homepage": "https://github.com/herby/mediaelement",
+  "homepage": "https://github.com/ron666/mediaelement",
   "description": "HTML5 <video> and <audio> made easy.",
   "moduleType": [
     "globals"
