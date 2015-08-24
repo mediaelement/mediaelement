@@ -10,6 +10,7 @@ import flash.utils.Timer;
 
 import FlashMediaElement;
 import HtmlMediaEvent;
+import flash.external.ExternalInterface;
 
 public class VideoElement extends Sprite implements IMediaElement
 {
@@ -55,6 +56,9 @@ public class VideoElement extends Sprite implements IMediaElement
   private var _parentReference:Object;
   private var _pseudoStreamingEnabled:Boolean = false;
   private var _pseudoStreamingStartQueryParam:String = "start";
+  private var _pseudoStreamingByteQueryParam:String = "byte";
+
+  private var _keyframes:Object;
 
   public function setReference(arg:Object):void {
     _parentReference = arg;
@@ -71,6 +75,10 @@ public class VideoElement extends Sprite implements IMediaElement
 
   public function setPseudoStreamingStartParam(pseudoStreamingStartQueryParam:String):void {
     _pseudoStreamingStartQueryParam = pseudoStreamingStartQueryParam;
+  }
+
+  public function setPseudoStreamingByteParam(pseudoStreamingByteQueryParam:String):void {
+    _pseudoStreamingByteQueryParam = pseudoStreamingByteQueryParam;
   }
 
   public function get video():Video {
@@ -103,7 +111,8 @@ public class VideoElement extends Sprite implements IMediaElement
     if (_stream != null) {
       currentTime = _stream.time;
       if (_pseudoStreamingEnabled) {
-        currentTime += _seekOffset;
+        // WTH is this here for? It only causes the time to double
+        // currentTime += _seekOffset;
       }
     }
     return currentTime;
@@ -256,8 +265,49 @@ public class VideoElement extends Sprite implements IMediaElement
       sendEvent(HtmlMediaEvent.TIMEUPDATE);
 
     }
+
+    if (_keyframes != null) {
+      // Do nothing
+    } else if (info.seekpoints) {
+        // Convert seekpoints to keyframes
+        _keyframes = {
+            times: [],
+            filepositions: []
+        };
+        for (var j:String in info.seekpoints) {
+            _keyframes.times[j] = Number(info.seekpoints[j]['time']);
+            _keyframes.filepositions[j] = Number(info.seekpoints[j]['offset']);
+        }
+    } else if (info.hasCuePoints && info.cuePoints is Array) {
+        for (var i:uint = info.cuePoints.length; i--;) {
+            var cue:* = info.cuePoints[i];// this is an array with object props
+            info.cuePoints[i] = {
+                type: cue.type,
+                name: cue.name,
+                time: cue.time,
+                parameters: Utils.extend({}, cue.parameters)
+            };
+        }
+    } else if (info.keyframes) {
+        _keyframes = info.keyframes;
+    }
+
   }
 
+  private function findSeekPoint(position:Number):Object {
+      if (!_keyframes || position == 0) {
+          return {byte: 0, time: 0};
+      }
+      for (var i:Number = 0; i < _keyframes.times.length - 1; i++) {
+          if (_keyframes.times[i] <= position && _keyframes.times[i + 1] >= position) {
+              break;
+          }
+      }
+      return {
+          byte: _keyframes.filepositions[i],
+          time: _keyframes.times[i]
+      }
+  }
 
 
 
@@ -430,6 +480,7 @@ public class VideoElement extends Sprite implements IMediaElement
 
     if (_pseudoStreamingEnabled) {
       sendEvent(HtmlMediaEvent.SEEKING);
+      //TODO: Make seeking in psuedostreamed buffer possible
       // Normal seek if it is in buffer and this is the first seek
       if (pos < bufferPosition && _seekOffset == 0) {
         _stream.seek(pos);
@@ -541,11 +592,14 @@ public class VideoElement extends Sprite implements IMediaElement
   private function getCurrentUrl(pos:Number):String {
     var url:String = _currentUrl;
     if (_pseudoStreamingEnabled) {
+      var seekPoint:Object = findSeekPoint(pos);
       if (url.indexOf('?') > -1) {
-        url = url + '&' + _pseudoStreamingStartQueryParam + '=' + pos;
+        url = url + '&' + _pseudoStreamingStartQueryParam + '=' + seekPoint.time;
+        url = url + '&' + _pseudoStreamingByteQueryParam + '=' + seekPoint.byte;
       }
       else {
-        url = url + '?' + _pseudoStreamingStartQueryParam + '=' + pos;
+        url = url + '?' + _pseudoStreamingStartQueryParam + '=' + seekPoint.time;
+        url = url + '&' + _pseudoStreamingByteQueryParam + '=' + seekPoint.byte;
       }
     }
     return url;

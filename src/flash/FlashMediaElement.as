@@ -48,6 +48,7 @@ package
 		private var _streamer:String = "";
 		private var _enablePseudoStreaming:Boolean;
 		private var _pseudoStreamingStartQueryParam:String;
+		private var _pseudoStreamingByteQueryParam:String;
 
 		// native video size (from meta data)
 		private var _nativeVideoWidth:Number = 0;
@@ -167,6 +168,7 @@ package
 			_scrubLoadedColor = (params['scrubloadedcolor'] != undefined) ? (String(params['scrubloadedcolor'])) : "0x3CACC8";
 			_enablePseudoStreaming = (params['pseudostreaming'] != undefined) ? (String(params['pseudostreaming']) == "true") : false;
 			_pseudoStreamingStartQueryParam = (params['pseudostreamstart'] != undefined) ? (String(params['pseudostreamstart'])) : "start";
+			_pseudoStreamingByteQueryParam = (params['pseudostreambyte'] != undefined) ? (String(params['pseudostreambyte'])) : "byte";
 			_streamer = (params['flashstreamer'] != undefined) ? (String(params['flashstreamer'])) : "";
 
 			// for audio them controls always show them
@@ -265,6 +267,7 @@ package
 					(_mediaElement as VideoElement).setReference(this);
 					(_mediaElement as VideoElement).setPseudoStreaming(_enablePseudoStreaming);
 					(_mediaElement as VideoElement).setPseudoStreamingStartParam(_pseudoStreamingStartQueryParam);
+					(_mediaElement as VideoElement).setPseudoStreamingByteParam(_pseudoStreamingByteQueryParam);
 					//_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
 					addChild(_video);
 				}
