@@ -1137,7 +1137,7 @@
 				// listen for key presses
 				t.globalBind('keydown', function(event) {
 					player.hasFocus = $(event.target).closest('.mejs-container').length !== 0;
-					return t.onkeydown(player, media, e);
+					return t.onkeydown(player, media, event);
 				});
 
 
