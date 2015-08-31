@@ -131,17 +131,13 @@ package
 				}
 			}
 
-			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
-			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
-			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
-			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
-			
-			// no debug info for OWASP
-			CONFIG::debugBuild {
-				_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
-
+			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
+			if (_debug) {
 				// add debug output
+				var _outputFormat:TextFormat = new TextFormat();
+				_outputFormat.size = 18;
 				_output = new TextField();
+				_output.defaultTextFormat = _outputFormat;
 				_output.textColor = 0xeeeeee;
 				_output.width = stage.stageWidth - 100;
 				_output.height = stage.stageHeight;
@@ -150,10 +146,13 @@ package
 				_output.border = false;
 				_output.filters = [new DropShadowFilter(1, 0x000000, 45, 1, 2, 2, 1)];
 				_output.text = "Initializing Flash...\n";
-				
+				_output.visible = _debug;
 				addChild(_output);
-				_output.visible = _debug;				
 			}
+			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
+			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
+			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
+			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
 			_alwaysShowControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
@@ -174,7 +173,6 @@ package
 			if (!_isVideo && _alwaysShowControls) {
 				_autoHide = false;
 			}
-
 
 
 			if (isNaN(_timerRate))
@@ -453,7 +451,7 @@ package
 		}
 
         public function logMessage(txt:String):void {
-            CONFIG::debugBuild {
+            if (_output != null) {
 	            _output.appendText(txt + "\n");
 	        }
         }
