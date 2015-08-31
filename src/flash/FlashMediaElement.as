@@ -37,8 +37,6 @@ package
 		private var _isVideo:Boolean;
 		private var _video:DisplayObject;
 		private var _timerRate:Number;
-		private var _stageWidth:Number;
-		private var _stageHeight:Number;
 		private var _enableSmoothing:Boolean;
 		private var _allowedPluginDomain:String;
 		private var _isFullScreen:Boolean = false;
@@ -48,6 +46,7 @@ package
 		private var _streamer:String = "";
 		private var _enablePseudoStreaming:Boolean;
 		private var _pseudoStreamingStartQueryParam:String;
+		private var _fill:Boolean;
 
 		// native video size (from meta data)
 		private var _nativeVideoWidth:Number = 0;
@@ -110,7 +109,6 @@ package
                 Security.allowInsecureDomain('*');
 			}
 
-			
 			if (securityIssue) {
 				return;
 			}
@@ -135,11 +133,12 @@ package
 			if (_debug) {
 				// add debug output
 				var _outputFormat:TextFormat = new TextFormat();
-				_outputFormat.size = 18;
+				_outputFormat.size = 14;
+				_outputFormat.bold = true;
 				_output = new TextField();
 				_output.defaultTextFormat = _outputFormat;
 				_output.textColor = 0xeeeeee;
-				_output.width = stage.stageWidth - 100;
+				_output.width = stage.stageWidth;
 				_output.height = stage.stageHeight;
 				_output.multiline = true;
 				_output.wordWrap = true;
@@ -167,6 +166,7 @@ package
 			_enablePseudoStreaming = (params['pseudostreaming'] != undefined) ? (String(params['pseudostreaming']) == "true") : false;
 			_pseudoStreamingStartQueryParam = (params['pseudostreamstart'] != undefined) ? (String(params['pseudostreamstart'])) : "start";
 			_streamer = (params['flashstreamer'] != undefined) ? (String(params['flashstreamer'])) : "";
+			_fill = (params['fill'] != undefined) ? (String(params['fill']) == "true") : false;
 
 			// for audio them controls always show them
 
@@ -180,9 +180,7 @@ package
 
 			// setup stage and player sizes/scales
 			stage.align = StageAlign.TOP_LEFT;
-			stage.scaleMode = StageScaleMode.NO_SCALE;
-			_stageWidth = stage.stageWidth;
-			_stageHeight = stage.stageHeight;
+			stage.scaleMode = StageScaleMode.EXACT_FIT;
 			this.addChild(_mediaElementDisplay);
 			stage.addChild(this);
 
@@ -202,9 +200,6 @@ package
 
 			//_debug=true;
 
-
-
-
 			// position and hide
 			_fullscreenButton = _mediaElementDisplay.getChildByName("fullscreen_btn") as SimpleButton;
 			_fullscreenButton.visible = _isVideo;
@@ -213,52 +208,44 @@ package
 			_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width;
 			_fullscreenButton.y = stage.stageHeight - _fullscreenButton.height;
 
-
 			// create media element
 			if (_isVideo) {
 				if (_mediaUrl.search(/(https?|file)\:\/\/.*?\.m3u8(\?.*)?/i) !== -1) {
-
 					_mediaElement = new HLSMediaElement(this, _autoplay, _preload, _timerRate, _startVolume);
 					_video = (_mediaElement as HLSMediaElement).video;
-					_video.width = _stageWidth;
-					_video.height = _stageHeight;
+					_video.width = stage.stageWidth;
+					_video.height = stage.stageHeight;
 					(_video as Video).smoothing = _enableSmoothing;
 					addChild(_video);
 
 					_paramVideoWidth = (params['width'] != undefined) ? (parseInt(params['width'], 10)) : 0;
 					_paramVideoHeight = (params['height'] != undefined) ? (parseInt(params['height'], 10)) : 0;
 
-
 				} else if (_mediaUrl.indexOf("youtube.com") > -1 || _mediaUrl.indexOf("youtu.be") > -1) {
-
 					//Security.allowDomain("http://www.youtube.com");
 
 					_mediaElement = new YouTubeElement(this, _autoplay, _preload, _timerRate, _startVolume);
 					_video = (_mediaElement as YouTubeElement).player;
 
 					// these are set and then used once the player is loaded
-					(_mediaElement as YouTubeElement).initWidth = _stageWidth;
-					(_mediaElement as YouTubeElement).initHeight = _stageHeight;
+					(_mediaElement as YouTubeElement).initWidth = stage.stageWidth;
+					(_mediaElement as YouTubeElement).initHeight = stage.stageHeight;
 
 				} else if (_mediaUrl.indexOf("dailymotion.com") > -1 || _mediaUrl.indexOf("dai.ly") > -1) {
-
 					Security.allowDomain("http://www.dailymotion.com");
 
 					_mediaElement = new DailyMotionElement(this, _autoplay, _preload, _timerRate, _startVolume);
 					_video = (_mediaElement as DailyMotionElement).player;
 
 					// these are set and then used once the player is loaded
-					(_mediaElement as DailyMotionElement).initWidth = _stageWidth;
-					(_mediaElement as DailyMotionElement).initHeight = _stageHeight;
-					
-					
-					
-				} else {
+					(_mediaElement as DailyMotionElement).initWidth = stage.stageWidth;
+					(_mediaElement as DailyMotionElement).initHeight = stage.stageHeight;
 
+				} else {
 					_mediaElement = new VideoElement(this, _autoplay, _preload, _timerRate, _startVolume, _streamer);
 					_video = (_mediaElement as VideoElement).video;
-					_video.width = _stageWidth;
-					_video.height = _stageHeight;
+					_video.width = stage.stageWidth;
+					_video.height = stage.stageHeight;
 					(_video as Video).smoothing = _enableSmoothing;
 					(_mediaElement as VideoElement).setReference(this);
 					(_mediaElement as VideoElement).setPseudoStreaming(_enablePseudoStreaming);
@@ -267,91 +254,16 @@ package
 					addChild(_video);
 				}
 			} else {
-
 				//var player2:AudioDecoder = new com.automatastudios.audio.audiodecoder.AudioDecoder();
 				_mediaElement = new AudioElement(this, _autoplay, _preload, _timerRate, _startVolume);
 			}
 
-
-			// controls!
-			_controlBar = _mediaElementDisplay.getChildByName("controls_mc") as MovieClip;
-			_controlBarBg = _controlBar.getChildByName("controls_bg_mc") as MovieClip;
-			_scrubTrack = _controlBar.getChildByName("scrubTrack") as MovieClip;
-			_scrubBar = _controlBar.getChildByName("scrubBar") as MovieClip;
-			_scrubOverlay = _controlBar.getChildByName("scrubOverlay") as MovieClip;
-			_scrubLoaded = _controlBar.getChildByName("scrubLoaded") as MovieClip;
-
-			_scrubOverlay.buttonMode = true;
-			_scrubOverlay.useHandCursor = true;
-
-			applyColor(_scrubTrack, _scrubTrackColor);
-			applyColor(_scrubBar, _scrubBarColor);
-			applyColor(_scrubLoaded, _scrubLoadedColor);
-
-			_fullscreenIcon = _controlBar.getChildByName("fullscreenIcon") as SimpleButton;
-			_fullscreenIcon.visible = _isVideo;
-
-			// New fullscreenIcon for new fullscreen floating controls
-			//if(_alwaysShowControls && _controlStyle.toUpperCase()=="FLOATING") {
-				_fullscreenIcon.addEventListener(MouseEvent.CLICK, fullScreenIconClick, false);
-			//}
-
-			_volumeMuted = _controlBar.getChildByName("muted_mc") as SimpleButton;
-			_volumeUnMuted = _controlBar.getChildByName("unmuted_mc") as SimpleButton;
-
-			_volumeMuted.addEventListener(MouseEvent.CLICK, toggleVolume, false);
-			_volumeUnMuted.addEventListener(MouseEvent.CLICK, toggleVolume, false);
-
-			_playButton = _controlBar.getChildByName("play_btn") as SimpleButton;
-			_playButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
-				_mediaElement.play();
-			});
-			_pauseButton = _controlBar.getChildByName("pause_btn") as SimpleButton;
-			_pauseButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
-				_mediaElement.pause();
-			});
-			_pauseButton.visible = false;
-			_duration = _controlBar.getChildByName("duration_txt") as TextField;
-			_currentTime = _controlBar.getChildByName("currentTime_txt") as TextField;
-			_hoverTime = _controlBar.getChildByName("hoverTime") as MovieClip;
-			_hoverTimeText = _hoverTime.getChildByName("hoverTime_txt") as TextField;
-			_hoverTime.visible=false;
-			_hoverTime.y=(_hoverTime.height/2)+1;
-			_hoverTime.x=0;
-
-
-
-			// Add new timeline scrubber events
-			_scrubOverlay.addEventListener(MouseEvent.MOUSE_MOVE, scrubMove);
-			_scrubOverlay.addEventListener(MouseEvent.CLICK, scrubClick);
-			_scrubOverlay.addEventListener(MouseEvent.MOUSE_OVER, scrubOver);
-			_scrubOverlay.addEventListener(MouseEvent.MOUSE_OUT, scrubOut);
-
-			if (_autoHide) { // && _alwaysShowControls) {
-				// Add mouse activity for show/hide of controls
-				stage.addEventListener(Event.MOUSE_LEAVE, mouseActivityLeave);
-				stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseActivityMove);
-				_inactiveTime = 2500;
-				_timer = new Timer(_inactiveTime)
-				_timer.addEventListener(TimerEvent.TIMER, idleTimer);
-				_timer.start();
-				// set
+			if (_alwaysShowControls) {
+				buildControls();
 			}
-
-			if(_startVolume<=0) {
-				trace("INITIAL VOLUME: "+_startVolume+" MUTED");
-				_volumeMuted.visible=true;
-				_volumeUnMuted.visible=false;
-			} else {
-				trace("INITIAL VOLUME: "+_startVolume+" UNMUTED");
-				_volumeMuted.visible=false;
-				_volumeUnMuted.visible=true;
+			else {
+				removeControls();
 			}
-
-			_controlBar.visible = _alwaysShowControls;
-
-			setControlDepth();
-
 			
 			logMessage("stage: " + stage.stageWidth + "x" + stage.stageHeight);
 			logMessage("file: " + _mediaUrl);
@@ -365,27 +277,24 @@ package
 			// attach javascript
 			logMessage("ExternalInterface.available: " + ExternalInterface.available.toString());
 			logMessage("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null)? ExternalInterface.objectID.toString() : "null"));
-	
 
 			if (_mediaUrl != "") {
 				_mediaElement.setSrc(_mediaUrl);
 			}
 
-			positionControls();
+			if (_output != null) {
+				addChild(_output);
+			}
+			if (_alwaysShowControls) {
+				positionControls();
+				// Fire this once just to set the width on some dynamically sized scrub bar items;
+				_scrubBar.scaleX=0;
+				_scrubLoaded.scaleX=0;
+			}
 
-			// Fire this once just to set the width on some dynamically sized scrub bar items;
-			_scrubBar.scaleX=0;
-			_scrubLoaded.scaleX=0;
-
-
-			if (ExternalInterface.available) { //  && !_alwaysShowControls
-
-				
-				logMessage("Adding callbacks: " + _jsCallbackFunction + " ...");
-				
+			if (ExternalInterface.available) {
 				try {
 					if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
-
 						// add HTML media methods
 						ExternalInterface.addCallback("playMedia", playMedia);
 						ExternalInterface.addCallback("loadMedia", loadMedia);
@@ -402,19 +311,22 @@ package
 
 						ExternalInterface.addCallback("positionFullscreenButton", positionFullscreenButton);
 						ExternalInterface.addCallback("hideFullscreenButton", hideFullscreenButton);
+						logMessage("Callbacks using js function \"" + _jsCallbackFunction + "\" bound.");
 
 						// fire init method
 						ExternalInterface.call(_jsInitFunction, ExternalInterface.objectID);
+						logMessage("Init js function \"" + _jsInitFunction + "\" successfully called.");
 					}
-										
-					logMessage("Success: " + _jsInitFunction + " ...");
-
-				} catch (error:SecurityError) {					
-					logMessage("A SecurityError occurred: " + error.message);			
+					else {
+						logMessage("ExternalInterface has no object id:");
+						logMessage("    - Init function \"" + _jsInitFunction + "\" will not be called.");
+						logMessage("    - Callback function \"" + _jsCallbackFunction + "\" will not be called.");
+					}
+				} catch (error:SecurityError) {
+					logMessage("A SecurityError occurred: " + error.message);
 				} catch (error:Error) {
 					logMessage("An Error occurred: " + error.message);
 				}
-
 			}
 
 			if (_preload != "none") {
@@ -440,14 +352,102 @@ package
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, stageKeyDown);
 		}
 
+		private function removeControls():void {
+			try {
+				_controlBar = _mediaElementDisplay.getChildByName("controls_mc") as MovieClip;
+				_controlBar.parent.removeChild(_controlBar);
+			} catch (error:Error) {
+				logMessage("Failed to remove controls: " + error.message);
+			}
+		}
+
+		private function buildControls():void {
+			_controlBar = _mediaElementDisplay.getChildByName("controls_mc") as MovieClip;
+			_controlBarBg = _controlBar.getChildByName("controls_bg_mc") as MovieClip;
+			_scrubTrack = _controlBar.getChildByName("scrubTrack") as MovieClip;
+			_scrubBar = _controlBar.getChildByName("scrubBar") as MovieClip;
+			_scrubOverlay = _controlBar.getChildByName("scrubOverlay") as MovieClip;
+			_scrubLoaded = _controlBar.getChildByName("scrubLoaded") as MovieClip;
+
+			_scrubOverlay.buttonMode = true;
+			_scrubOverlay.useHandCursor = true;
+
+			applyColor(_scrubTrack, _scrubTrackColor);
+			applyColor(_scrubBar, _scrubBarColor);
+			applyColor(_scrubLoaded, _scrubLoadedColor);
+
+			_fullscreenIcon = _controlBar.getChildByName("fullscreenIcon") as SimpleButton;
+			_fullscreenIcon.visible = _isVideo;
+
+			// New fullscreenIcon for new fullscreen floating controls
+			//if(_alwaysShowControls && _controlStyle.toUpperCase()=="FLOATING") {
+			_fullscreenIcon.addEventListener(MouseEvent.CLICK, fullScreenIconClick, false);
+			//}
+
+			_volumeMuted = _controlBar.getChildByName("muted_mc") as SimpleButton;
+			_volumeUnMuted = _controlBar.getChildByName("unmuted_mc") as SimpleButton;
+
+			_volumeMuted.addEventListener(MouseEvent.CLICK, toggleVolume, false);
+			_volumeUnMuted.addEventListener(MouseEvent.CLICK, toggleVolume, false);
+
+			_playButton = _controlBar.getChildByName("play_btn") as SimpleButton;
+			_playButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				_mediaElement.play();
+			});
+			_pauseButton = _controlBar.getChildByName("pause_btn") as SimpleButton;
+			_pauseButton.addEventListener(MouseEvent.CLICK, function(e:MouseEvent):void {
+				_mediaElement.pause();
+			});
+			_pauseButton.visible = false;
+			_duration = _controlBar.getChildByName("duration_txt") as TextField;
+			_currentTime = _controlBar.getChildByName("currentTime_txt") as TextField;
+			_hoverTime = _controlBar.getChildByName("hoverTime") as MovieClip;
+			_hoverTimeText = _hoverTime.getChildByName("hoverTime_txt") as TextField;
+			_hoverTime.visible=false;
+			_hoverTime.y=(_hoverTime.height/2)+1;
+			_hoverTime.x=0;
+
+			// Add new timeline scrubber events
+			_scrubOverlay.addEventListener(MouseEvent.MOUSE_MOVE, scrubMove);
+			_scrubOverlay.addEventListener(MouseEvent.CLICK, scrubClick);
+			_scrubOverlay.addEventListener(MouseEvent.MOUSE_OVER, scrubOver);
+			_scrubOverlay.addEventListener(MouseEvent.MOUSE_OUT, scrubOut);
+
+			if (_autoHide) { // && _alwaysShowControls) {
+				// Add mouse activity for show/hide of controls
+				stage.addEventListener(Event.MOUSE_LEAVE, mouseActivityLeave);
+				stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseActivityMove);
+				_inactiveTime = 2500;
+				_timer = new Timer(_inactiveTime)
+				_timer.addEventListener(TimerEvent.TIMER, idleTimer);
+				_timer.start();
+			}
+
+			if(_startVolume<=0) {
+				trace("INITIAL VOLUME: "+_startVolume+" MUTED");
+				_volumeMuted.visible=true;
+				_volumeUnMuted.visible=false;
+			} else {
+				trace("INITIAL VOLUME: "+_startVolume+" UNMUTED");
+				_volumeMuted.visible=false;
+				_volumeUnMuted.visible=true;
+			}
+
+			_controlBar.visible = _alwaysShowControls;
+
+			setControlDepth();
+		}
+
 		public function setControlDepth():void {
+			if (!_alwaysShowControls) {
+				return;
+			}
 			// put these on top
 			if (_output != null) {
 				addChild(_output);
 			}
 			addChild(_controlBar);
 			addChild(_fullscreenButton);
-
 		}
 
         public function logMessage(txt:String):void {
@@ -624,8 +624,9 @@ package
 		}
 
 		private function positionControls(forced:Boolean=false):void {
-
-
+			if (!_alwaysShowControls) {
+				return;
+			}
 			if ( _controlStyle.toUpperCase() == "FLOATING" && _isFullScreen) {
 
 				trace("CONTROLS: floating");
@@ -719,13 +720,9 @@ package
 				_scrubBar.width =  _scrubOverlay.width = _scrubTrack.width =  (_duration.x-_duration.width-10)-_duration.width+5;
 				_controlBar.x = 0;
 				_controlBar.y = stage.stageHeight - _controlBar.height;
-
 			}
-
 		}
-
 		// END: Controls
-
 
 		public function stageClicked(e:MouseEvent):void {
 			//logMessage("click: " + e.stageX.toString() +","+e.stageY.toString() + "\n");
@@ -739,17 +736,14 @@ package
 		}
 
 		public function resizeHandler(e:Event):void {
-
-			//_video.scaleX = stage.stageWidth / _stageWidth;
-			//_video.scaleY = stage.stageHeight / _stageHeight;
+			//_video.scaleX = stage.stageWidth / stage.stageWidth;
+			//_video.scaleY = stage.stageHeight / stage.stageHeight;
 			//positionControls();
-
 			repositionVideo();
 		}
 
 		// START: Fullscreen
 		private function enterFullscreen():void {
-
 			logMessage("enterFullscreen()");
 
 			var screenRectangle:Rectangle = new Rectangle(0, 0, flash.system.Capabilities.screenResolutionX, flash.system.Capabilities.screenResolutionY);
@@ -758,20 +752,22 @@ package
 			stage.displayState = StageDisplayState.FULL_SCREEN;
 
 			repositionVideo();
-			positionControls();
-			updateControls(HtmlMediaEvent.FULLSCREENCHANGE);
 
-			_controlBar.visible = true;
+			if (_alwaysShowControls) {
+				positionControls();
+				updateControls(HtmlMediaEvent.FULLSCREENCHANGE);
+				_controlBar.visible = true;
+			}
 
 			_isFullScreen = true;
 		}
 
 		private function exitFullscreen():void {
-
 			stage.displayState = StageDisplayState.NORMAL;
 
-
-			_controlBar.visible = false;
+			if (_alwaysShowControls) {
+				_controlBar.visible = false;
+			}
 
 			_isFullScreen = false;
 		}
@@ -782,7 +778,6 @@ package
 
 			try {
 				//_fullscreenButton.visible = false;
-
 				if (gofullscreen) {
 					enterFullscreen();
 
@@ -791,7 +786,6 @@ package
 				}
 
 			} catch (error:Error) {
-
 				// show the button when the security error doesn't let it work
 				//_fullscreenButton.visible = true;
 				_fullscreenButton.alpha = 1;
@@ -818,7 +812,9 @@ package
 			_fullscreenButton.alpha = 0;
 
 			try {
-				_controlBar.visible = true;
+				if (_alwaysShowControls) {
+					_controlBar.visible = true;
+				}
 				setFullscreen(true);
 				repositionVideo();
 				positionControls();
@@ -836,7 +832,7 @@ package
 
 			sendEvent(HtmlMediaEvent.FULLSCREENCHANGE, "isFullScreen:" + e.fullScreen );
 
-			if (!e.fullScreen) {
+			if (_alwaysShowControls && !e.fullScreen) {
 				_controlBar.visible = _alwaysShowControls;
 			}
 		}
@@ -888,21 +884,15 @@ package
 		public function setVideoSize(width:Number, height:Number):void {
 			logMessage("setVideoSize: " + width.toString() + "," + height.toString());
 
-			_stageWidth = width;
-			_stageHeight = height;
-
 			if (_video != null) {
 				repositionVideo();
 				positionControls();
 				//_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width - 10;
 				logMessage("result: " + _video.width.toString() + "," + _video.height.toString());
 			}
-
-
 		}
 
 		public function positionFullscreenButton(x:Number, y:Number, visibleAndAbove:Boolean ):void {
-
 			logMessage("position FS: " + x.toString() + "x" + y.toString());
 
 			// bottom corner
@@ -935,26 +925,19 @@ package
 			//_fullscreenButton.visible = false;
 			_fullscreenButton.alpha = 0;
 		}
-
 		// END: external interface
 
-
 		private function repositionVideo():void {
-            var fullscreen:Boolean;
-
-			if (stage.displayState == "fullScreen") {
-				fullscreen = true;
-			} else {
-				fullscreen = false;
-			}
+			var fill:Boolean = _fill;
+            var fullscreen:Boolean = stage.displayState == "fullScreen";
 
 			logMessage("positioning video "+stage.displayState);
 
 			if (_mediaElement is VideoElement || _mediaElement is HLSMediaElement) {
 
 				if (isNaN(_nativeVideoWidth) || isNaN(_nativeVideoHeight) || _nativeVideoWidth <= 0 || _nativeVideoHeight <= 0) {
-					logMessage("ERR: I dont' have the native dimension");
-					return;
+					logMessage("Positionning: video's native dimension not found, using stage size.");
+					fill = true;
 				}
 
 				// calculate ratios
@@ -963,10 +946,11 @@ package
 				_video.x = 0;
 				_video.y = 0;
 
-				if(fullscreen == true) {
+				if (fill) {
+					_mediaElement.setSize(stage.stageWidth, stage.stageHeight);
+				} else if (fullscreen) {
 					stageRatio = flash.system.Capabilities.screenResolutionX/flash.system.Capabilities.screenResolutionY;
 					nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
-
 					// adjust size and position
 					if (nativeRatio > stageRatio) {
 						_mediaElement.setSize(flash.system.Capabilities.screenResolutionX, _nativeVideoHeight * flash.system.Capabilities.screenResolutionX / _nativeVideoWidth);
@@ -977,31 +961,26 @@ package
 					} else if (stageRatio == nativeRatio) {
 						_mediaElement.setSize(flash.system.Capabilities.screenResolutionX, flash.system.Capabilities.screenResolutionY);
 					}
-
 				} else {
-					stageRatio = _stageWidth/_stageHeight;
+					stageRatio = stage.stageWidth/stage.stageHeight;
 					nativeRatio = _nativeVideoWidth/_nativeVideoHeight;
 
 					// adjust size and position
 					if (nativeRatio > stageRatio) {
-						_mediaElement.setSize(_stageWidth, _nativeVideoHeight * _stageWidth / _nativeVideoWidth);
-						_video.y = _stageHeight/2 - _video.height/2;
+						_mediaElement.setSize(stage.stageWidth, _nativeVideoHeight * stage.stageWidth / _nativeVideoWidth);
+						_video.y = stage.stageHeight/2 - _video.height/2;
 					} else if (stageRatio > nativeRatio) {
-						_mediaElement.setSize( _nativeVideoWidth * _stageHeight / _nativeVideoHeight, _stageHeight);
-						_video.x = _stageWidth/2 - _video.width/2;
+						_mediaElement.setSize( _nativeVideoWidth * stage.stageHeight / _nativeVideoHeight, stage.stageHeight);
+						_video.x = stage.stageWidth/2 - _video.width/2;
 					} else if (stageRatio == nativeRatio) {
-						_mediaElement.setSize(_stageWidth, _stageHeight);
+						_mediaElement.setSize(stage.stageWidth, stage.stageHeight);
 					}
-
 				}
-
 			} else if (_mediaElement is YouTubeElement || _mediaElement is DailyMotionElement) {
-				if(fullscreen == true) {
+				if (fullscreen) {
 					_mediaElement.setSize(flash.system.Capabilities.screenResolutionX, flash.system.Capabilities.screenResolutionY);
-
 				} else {
-					_mediaElement.setSize(_stageWidth, _stageHeight);
-
+					_mediaElement.setSize(stage.stageWidth, stage.stageHeight);
 				}
 
 			}
@@ -1038,7 +1017,7 @@ package
 				logMessage(_nativeVideoWidth.toString() + "x" + _nativeVideoHeight.toString());
 
 
-				if(stage.displayState == "fullScreen" ) {
+				if (stage.displayState == "fullScreen" ) {
 					setVideoSize(_nativeVideoWidth, _nativeVideoHeight);
 				}
 				repositionVideo();
@@ -1081,11 +1060,12 @@ package
 
 
 		private function updateControls(eventName:String):void {
+			if (!_alwaysShowControls) {
+				return;
+			}
 
 			//trace("updating controls");
-
 			try {
-				// update controls
 				switch (eventName) {
 					case "pause":
 					case "paused":
@@ -1116,9 +1096,7 @@ package
 				}
 			} catch (error:Error) {
 				trace("error: " + error.toString());
-
 			}
-
 		}
 
 		// START: utility
