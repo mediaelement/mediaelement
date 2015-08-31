@@ -64,8 +64,6 @@ package
 		private var _connection:LocalConnection;
 		private var _connectionName:String;
 
-		//private var fullscreen_btn:SimpleButton;
-
 		// CONTROLS
 		private var _alwaysShowControls:Boolean;
 		private var _controlBar:MovieClip;
@@ -199,14 +197,6 @@ package
 			//_alwaysShowControls = true;
 
 			//_debug=true;
-
-			// position and hide
-			_fullscreenButton = _mediaElementDisplay.getChildByName("fullscreen_btn") as SimpleButton;
-			_fullscreenButton.visible = _isVideo;
-			_fullscreenButton.alpha = 0;
-			_fullscreenButton.addEventListener(MouseEvent.CLICK, fullscreenClick, false);
-			_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width;
-			_fullscreenButton.y = stage.stageHeight - _fullscreenButton.height;
 
 			// create media element
 			if (_isVideo) {
@@ -354,6 +344,8 @@ package
 
 		private function removeControls():void {
 			try {
+				_fullscreenButton = _mediaElementDisplay.getChildByName("fullscreen_btn") as SimpleButton;
+				_fullscreenButton.parent.removeChild(_fullscreenButton);
 				_controlBar = _mediaElementDisplay.getChildByName("controls_mc") as MovieClip;
 				_controlBar.parent.removeChild(_controlBar);
 			} catch (error:Error) {
@@ -362,6 +354,13 @@ package
 		}
 
 		private function buildControls():void {
+			_fullscreenButton = _mediaElementDisplay.getChildByName("fullscreen_btn") as SimpleButton;
+			_fullscreenButton.visible = _isVideo;
+			_fullscreenButton.alpha = 0;
+			_fullscreenButton.addEventListener(MouseEvent.CLICK, fullscreenClick, false);
+			_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width;
+			_fullscreenButton.y = stage.stageHeight - _fullscreenButton.height;
+
 			_controlBar = _mediaElementDisplay.getChildByName("controls_mc") as MovieClip;
 			_controlBarBg = _controlBar.getChildByName("controls_bg_mc") as MovieClip;
 			_scrubTrack = _controlBar.getChildByName("scrubTrack") as MovieClip;
@@ -777,18 +776,16 @@ package
 			logMessage("setFullscreen: " + gofullscreen.toString());
 
 			try {
-				//_fullscreenButton.visible = false;
 				if (gofullscreen) {
 					enterFullscreen();
-
 				} else {
 					exitFullscreen();
 				}
-
 			} catch (error:Error) {
 				// show the button when the security error doesn't let it work
-				//_fullscreenButton.visible = true;
-				_fullscreenButton.alpha = 1;
+				if (_fullscreenButton != null) {
+					_fullscreenButton.alpha = 1;
+				}
 
 				_isFullScreen = false;
 
@@ -808,8 +805,7 @@ package
 
 		// special floating fullscreen icon
 		public function fullscreenClick(e:MouseEvent):void {
-			//_fullscreenButton.visible = false;
-			_fullscreenButton.alpha = 0;
+			hideFullscreenButton();
 
 			try {
 				if (_alwaysShowControls) {
@@ -826,8 +822,7 @@ package
 		public function stageFullScreenChanged(e:FullScreenEvent):void {
 			logMessage("fullscreen event: " + e.fullScreen.toString());
 
-			//_fullscreenButton.visible = false;
-			_fullscreenButton.alpha = 0;
+			hideFullscreenButton();
 			_isFullScreen = e.fullScreen;
 
 			sendEvent(HtmlMediaEvent.FULLSCREENCHANGE, "isFullScreen:" + e.fullScreen );
@@ -887,19 +882,12 @@ package
 			if (_video != null) {
 				repositionVideo();
 				positionControls();
-				//_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width - 10;
 				logMessage("result: " + _video.width.toString() + "," + _video.height.toString());
 			}
 		}
 
 		public function positionFullscreenButton(x:Number, y:Number, visibleAndAbove:Boolean ):void {
 			logMessage("position FS: " + x.toString() + "x" + y.toString());
-
-			// bottom corner
-			/*
-			_fullscreenButton.x = stage.stageWidth - _fullscreenButton.width
-			_fullscreenButton.y = stage.stageHeight - _fullscreenButton.height;
-			*/
 
 			// position just above
 			if (visibleAndAbove) {
@@ -921,9 +909,9 @@ package
 		}
 
 		public function hideFullscreenButton():void {
-
-			//_fullscreenButton.visible = false;
-			_fullscreenButton.alpha = 0;
+			if (_fullscreenButton != null) {
+				_fullscreenButton.alpha = 0;
+			}
 		}
 		// END: external interface
 
