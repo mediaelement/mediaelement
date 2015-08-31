@@ -53,7 +53,7 @@ package
 		private var _nativeVideoHeight:Number = 0;
 
 		// visual elements
-        private var _mediaElementDisplay:FlashMediaElementDisplay = new FlashMediaElementDisplay();
+		private var _mediaElementDisplay:FlashMediaElementDisplay = new FlashMediaElementDisplay();
 		private var _output:TextField;
 		private var _fullscreenButton:SimpleButton;
 
@@ -87,9 +87,9 @@ package
 
 		// IDLE Timer for mouse for showing/hiding controls
 		private var _inactiveTime:int;
-        private var _timer:Timer;
-        private var _idleTime:int;
-        private var _isMouseActive:Boolean
+		private var _timer:Timer;
+		private var _idleTime:int;
+		private var _isMouseActive:Boolean
 		private var _isOverStage:Boolean = false;
 
 		// security checkes
@@ -102,9 +102,9 @@ package
 			checkFlashVars(loaderInfo.parameters);
 
 			// allows this player to be called from a different domain than the HTML page hosting the player
-            CONFIG::cdnBuild {
-                Security.allowDomain("*");
-                Security.allowInsecureDomain('*');
+			CONFIG::cdnBuild {
+				Security.allowDomain("*");
+				Security.allowInsecureDomain('*');
 			}
 
 			if (securityIssue) {
@@ -449,14 +449,14 @@ package
 			addChild(_fullscreenButton);
 		}
 
-        public function logMessage(txt:String):void {
-            if (_output != null) {
-	            _output.appendText(txt + "\n");
-	        }
+		public function logMessage(txt:String):void {
+			if (_output != null) {
+				_output.appendText(txt + "\n");
+			}
 			if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
 				ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt + "')", 0);
 			}
-        }
+		}
 
 		// borrowed from jPLayer
 		// https://github.com/happyworm/jPlayer/blob/e8ca190f7f972a6a421cb95f09e138720e40ed6d/actionscript/Jplayer.as#L228
@@ -920,7 +920,7 @@ package
 
 		private function repositionVideo():void {
 			var fill:Boolean = _fill;
-            var fullscreen:Boolean = stage.displayState == "fullScreen";
+			var fullscreen:Boolean = stage.displayState == "fullScreen";
 
 			logMessage("positioning video "+stage.displayState);
 
@@ -1007,12 +1007,10 @@ package
 
 				logMessage(_nativeVideoWidth.toString() + "x" + _nativeVideoHeight.toString());
 
-
 				if (stage.displayState == "fullScreen" ) {
 					setVideoSize(_nativeVideoWidth, _nativeVideoHeight);
 				}
 				repositionVideo();
-
 			}
 
 			updateControls(eventName);
@@ -1021,7 +1019,6 @@ package
 			//trace("CurrentProgress:"+_mediaElement.currentProgress());
 
 			if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
-
 				//logMessage("event:" + eventName + " : " + eventValues);
 				//trace("event", eventName, eventValues);
 
@@ -1034,18 +1031,8 @@ package
 
 				eventValues = "{" + eventValues + "}";
 
-				/*
-				OLD DIRECT METHOD
-				ExternalInterface.call(
-					"function(id, name) { mejs.MediaPluginBridge.fireEvent(id,name," + eventValues + "); }",
-					ExternalInterface.objectID,
-					eventName);
-				*/
-
 				// use set timeout for performance reasons
-				//if (!_alwaysShowControls) {
-					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")", 0);
-				//}
+				ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")", 0);
 			}
 		}
 
@@ -1102,31 +1089,27 @@ package
 		}
 
 		private function applyColor(item:Object, color:String):void {
-
 			var myColor:ColorTransform = new ColorTransform(0, 0, 0, 1);
-      var components:Array = color.split(",");
-      switch (components.length) {
-        case 4:
-          myColor.redOffset = components[0];
-          myColor.greenOffset = components[1];
-          myColor.blueOffset = components[2];
-          myColor.alphaMultiplier = components[3];
-          break;
-
-        case 3:
-          myColor.redOffset = components[0];
-          myColor.greenOffset = components[1];
-          myColor.blueOffset = components[2];
-          break;
-
-        default:
-          myColor.color = Number(color);
-          break;
-      }
-//      trace("Length: "+components.length+" String: "+color+" transform: "+myColor.toString());
+			var components:Array = color.split(",");
+			switch (components.length) {
+				case 4:
+					myColor.redOffset = components[0];
+					myColor.greenOffset = components[1];
+					myColor.blueOffset = components[2];
+					myColor.alphaMultiplier = components[3];
+					break;
+				case 3:
+					myColor.redOffset = components[0];
+					myColor.greenOffset = components[1];
+					myColor.blueOffset = components[2];
+					break;
+				default:
+					myColor.color = Number(color);
+					break;
+			}
+			//trace("Length: "+components.length+" String: "+color+" transform: "+myColor.toString());
 			item.transform.colorTransform = myColor;
 		}
 		// END: utility
-
 	}
 }
