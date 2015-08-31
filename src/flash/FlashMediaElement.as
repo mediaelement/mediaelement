@@ -266,7 +266,7 @@ package
 
 			// attach javascript
 			logMessage("ExternalInterface.available: " + ExternalInterface.available.toString());
-			logMessage("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null)? ExternalInterface.objectID.toString() : "null"));
+			logMessage("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null) ? ExternalInterface.objectID.toString() : "null"));
 
 			if (_mediaUrl != "") {
 				_mediaElement.setSrc(_mediaUrl);
@@ -453,6 +453,9 @@ package
             if (_output != null) {
 	            _output.appendText(txt + "\n");
 	        }
+			if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+				ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt + "')", 0);
+			}
         }
 
 		// borrowed from jPLayer
@@ -1041,7 +1044,7 @@ package
 
 				// use set timeout for performance reasons
 				//if (!_alwaysShowControls) {
-					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")",0);
+					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")", 0);
 				//}
 			}
 		}
