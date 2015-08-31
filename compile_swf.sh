@@ -13,4 +13,6 @@
 flex_path="./src/flash/flex_sdk_4.6"
 target_version="10.1"
 
-$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true "src/flash/FlashMediaElement.as" -o local-build/flashmediaelement.swf -define+=CONFIG::cdnBuild,true -library-path+="$flex_path/lib" -include-libraries+=src/flash/flashmediaelement.swc -include-libraries+=src/flash/flashls.swc -use-network=true -source-path src/flash -target-player $target_version -headless-server -static-link-runtime-shared-libraries
+$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true "src/flash/FlashMediaElement.as" -o local-build/flashmediaelement-cdn.swf -define+=CONFIG::cdnBuild,true -library-path+="$flex_path/lib" -include-libraries+=src/flash/flashmediaelement.swc -include-libraries+=src/flash/flashls.swc -use-network=true -source-path src/flash -target-player $target_version -headless-server -static-link-runtime-shared-libraries
+
+$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true "src/flash/FlashMediaElement.as" -o local-build/flashmediaelement.swf -define+=CONFIG::cdnBuild,false -library-path+="$flex_path/lib" -include-libraries+=src/flash/flashmediaelement.swc -include-libraries+=src/flash/flashls.swc -use-network=true -source-path src/flash -target-player $target_version -headless-server -static-link-runtime-shared-libraries
