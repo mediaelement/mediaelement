@@ -175,19 +175,12 @@ module.exports = function(grunt) {
                     grunt.config.set("flashOut", 'local-build/flashmediaelement-cdn.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
-            },
-            buildFlashDebug: {
-                command: function() {
-                    grunt.config.set("cdnBuild", 'true');                    
-                    grunt.config.set("flashOut", 'local-build/flashmediaelement-debug.swf');
-                    return grunt.config.get("buildFlashCommand");
-                }
             }
         }
     });
 
     grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
-        'shell:buildFlash', 'shell:buildFlashCDN', 'shell:buildFlashDebug', 'clean:temp']);
+        'shell:buildFlash', 'shell:buildFlashCDN', 'clean:temp']);
 
     grunt.registerTask('html5only', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy', 'clean:temp']);
 
