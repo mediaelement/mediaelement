@@ -42,8 +42,6 @@ package {
 		private var _allowedPluginDomain:String;
 		private var _isFullScreen:Boolean = false;
 		private var _startVolume:Number;
-		private var _controlStyle:String;
-		private var _autoHide:Boolean = true;
 		private var _streamer:String = "";
 		private var _enablePseudoStreaming:Boolean;
 		private var _pseudoStreamingStartQueryParam:String;
@@ -66,7 +64,9 @@ package {
 		private var _connectionName:String;
 
 		// CONTROLS
-		private var _alwaysShowControls:Boolean;
+		private var _controlsEnabled:Boolean;
+		private var _controlsStyle:String;
+		private var _controlsAutoHide:Boolean = true;
 		private var _controlBar:MovieClip;
 		private var _controlBarBg:MovieClip;
 		private var _scrubBar:MovieClip;
@@ -155,12 +155,12 @@ package {
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
-			_alwaysShowControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
 			_enableSmoothing = (params['smoothing'] != undefined) ? (String(params['smoothing']) == "true") : false;
 			_startVolume = (params['startvolume'] != undefined) ? (parseFloat(params['startvolume'])) : 0.8;
 			_preload = (params['preload'] != undefined) ? params['preload'] : "none";
-			_controlStyle = (params['controlstyle'] != undefined) ? (String(params['controlstyle'])) : ""; // blank or "floating"
-			_autoHide = (params['autohide'] != undefined) ? (String(params['autohide']) == "true") : true;
+			_controlsEnabled = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
+			_controlsStyle = (params['controlstyle'] != undefined) ? (String(params['controlstyle'])) : ""; // blank or "floating"
+			_controlsAutoHide = (params['autohide'] != undefined) ? (String(params['autohide']) == "true") : true;
 			_scrubTrackColor = (params['scrubtrackcolor'] != undefined) ? (String(params['scrubtrackcolor'])) : "0x333333";
 			_scrubBarColor = (params['scrubbarcolor'] != undefined) ? (String(params['scrubbarcolor'])) : "0xefefef";
 			_scrubLoadedColor = (params['scrubloadedcolor'] != undefined) ? (String(params['scrubloadedcolor'])) : "0x3CACC8";
@@ -170,8 +170,8 @@ package {
 			_fill = (params['fill'] != undefined) ? (String(params['fill']) == "true") : false;
 
 			// always show controls for audio files
-			if (!_isVideo && _alwaysShowControls)
-				_autoHide = false;
+			if (!_isVideo && _controlsEnabled)
+				_controlsAutoHide = false;
 
 			if (isNaN(_timerRate))
 				_timerRate = 250;
@@ -184,7 +184,7 @@ package {
 
 			//_autoplay = true;
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
-			//_alwaysShowControls = true;
+			//_controlsEnabled = true;
 			//_mediaUrl  = "../media/Parades-PastLives.mp3";
 			//_mediaUrl  = "../media/echo-hereweare.mp4";
 
@@ -194,7 +194,7 @@ package {
 			//_mediaUrl = "http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0"; // hosea
 			//_mediaUrl = "http://www.youtube.com/watch?feature=player_embedded&v=m5VDDJlsD6I"; // railer with notes
 
-			//_alwaysShowControls = true;
+			//_controlsEnabled = true;
 
 			//_debug=true;
 
@@ -248,7 +248,7 @@ package {
 				_mediaElement = new AudioElement(this, _autoplay, _preload, _timerRate, _startVolume);
 			}
 
-			if (_alwaysShowControls) {
+			if (_controlsEnabled) {
 				buildControls();
 			}
 			else {
@@ -275,7 +275,7 @@ package {
 			if (_output != null) {
 				addChild(_output);
 			}
-			if (_alwaysShowControls) {
+			if (_controlsEnabled) {
 				positionControls();
 				// Fire this once just to set the width on some dynamically sized scrub bar items;
 				_scrubBar.scaleX=0;
@@ -377,11 +377,7 @@ package {
 
 			_fullscreenIcon = _controlBar.getChildByName("fullscreenIcon") as SimpleButton;
 			_fullscreenIcon.visible = _isVideo;
-
-			// New fullscreenIcon for new fullscreen floating controls
-			//if(_alwaysShowControls && _controlStyle.toUpperCase()=="FLOATING") {
 			_fullscreenIcon.addEventListener(MouseEvent.CLICK, fullScreenIconClick, false);
-			//}
 
 			_volumeMuted = _controlBar.getChildByName("muted_mc") as SimpleButton;
 			_volumeUnMuted = _controlBar.getChildByName("unmuted_mc") as SimpleButton;
@@ -412,7 +408,7 @@ package {
 			_scrubOverlay.addEventListener(MouseEvent.MOUSE_OVER, scrubOver);
 			_scrubOverlay.addEventListener(MouseEvent.MOUSE_OUT, scrubOut);
 
-			if (_autoHide) { // && _alwaysShowControls) {
+			if (_controlsAutoHide) {
 				// Add mouse activity for show/hide of controls
 				stage.addEventListener(Event.MOUSE_LEAVE, mouseActivityLeave);
 				stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseActivityMove);
@@ -422,23 +418,23 @@ package {
 				_timer.start();
 			}
 
-			if(_startVolume<=0) {
-				trace("INITIAL VOLUME: "+_startVolume+" MUTED");
+			if (_startVolume <= 0) {
+				logMessage("INITIAL VOLUME: "+_startVolume+" MUTED");
 				_volumeMuted.visible=true;
 				_volumeUnMuted.visible=false;
 			} else {
-				trace("INITIAL VOLUME: "+_startVolume+" UNMUTED");
+				logMessage("INITIAL VOLUME: "+_startVolume+" UNMUTED");
 				_volumeMuted.visible=false;
 				_volumeUnMuted.visible=true;
 			}
 
-			_controlBar.visible = _alwaysShowControls;
+			_controlBar.visible = _controlsEnabled;
 
 			setControlDepth();
 		}
 
 		public function setControlDepth():void {
-			if (!_alwaysShowControls) {
+			if (!_controlsEnabled) {
 				return;
 			}
 			// put these on top
@@ -469,7 +465,7 @@ package {
 				}
 				i++;
 			}
-			if(i === 0 || securityIssue) {
+			if (i === 0 || securityIssue) {
 				directAccess = true;
 			}
 		}
@@ -506,12 +502,12 @@ package {
 
 		private function isIllegalChar(s:String, isUrl:Boolean):Boolean {
 			var illegals:String = "' \" ( ) { } * + \\ < >";
-			if(isUrl) {
+			if (isUrl) {
 				illegals = "\" { } \\ < >";
 			}
-			if(Boolean(s)) { // Otherwise exception if parameter null.
+			if (Boolean(s)) { // Otherwise exception if parameter null.
 				for each (var illegal:String in illegals.split(' ')) {
-					if(s.indexOf(illegal) >= 0) {
+					if (s.indexOf(illegal) >= 0) {
 						return true; // Illegal char found
 					}
 				}
@@ -523,10 +519,9 @@ package {
 		private function mouseActivityMove(event:MouseEvent):void {
 
 			// if mouse is in the video area
-			if (_autoHide && (mouseX>=0 && mouseX<=stage.stageWidth) && (mouseY>=0 && mouseY<=stage.stageHeight)) {
-
+			if (_controlsAutoHide && (mouseX>=0 && mouseX<=stage.stageWidth) && (mouseY>=0 && mouseY<=stage.stageHeight)) {
 				// This could be move to a nice fade at some point...
-				_controlBar.visible = (_alwaysShowControls || _isFullScreen);
+				_controlBar.visible = _isFullScreen;
 				_isMouseActive = true;
 				_idleTime = 0;
 				_timer.reset();
@@ -535,7 +530,7 @@ package {
 		}
 
 		private function mouseActivityLeave(event:Event):void {
-			if (_autoHide) {
+			if (_controlsAutoHide) {
 				_isOverStage = false;
 				// This could be move to a nice fade at some point...
 				_controlBar.visible = false;
@@ -547,7 +542,7 @@ package {
 		}
 
 		private function idleTimer(event:TimerEvent):void    {
-			if (_autoHide) {
+			if (_controlsAutoHide) {
 				// This could be move to a nice fade at some point...
 				_controlBar.visible = false;
 				_isMouseActive = false;
@@ -576,29 +571,29 @@ package {
 		private function scrubOver(event:MouseEvent):void {
 			_hoverTime.y = _scrubBar.y-(_hoverTime.height/2)+1;
 			_hoverTime.visible = true;
-			trace(event);
+			//logMessage(event);
 		}
 
 		private function scrubOut(event:MouseEvent):void {
 			_hoverTime.y = _scrubBar.y+(_hoverTime.height/2)+1;
 			_hoverTime.visible = false;
 			//_hoverTime.x=0;
-			//trace(event);
+			//logMessage(event);
 		}
 
 		private function scrubClick(event:MouseEvent):void {
-			//trace(event);
+			//logMessage(event);
 			var seekBarPosition:Number = ((event.localX / _scrubTrack.width) * _mediaElement.duration()) * _scrubTrack.scaleX;
 
-			var canSeekToPosition:Boolean = isNaN(_mediaElement.seekLimit()) ||  ( seekBarPosition <= _mediaElement.duration() && seekBarPosition >= 0 );
+			var canSeekToPosition:Boolean = isNaN(_mediaElement.seekLimit()) ||  (seekBarPosition <= _mediaElement.duration() && seekBarPosition >= 0);
 
 			if (canSeekToPosition) {
-					_mediaElement.setCurrentTime(seekBarPosition);
+				_mediaElement.setCurrentTime(seekBarPosition);
 			}
 		}
 
 		public function toggleVolume(event:MouseEvent):void {
-			trace(event.currentTarget.name);
+			//logMessage(event.currentTarget.name);
 			switch(event.currentTarget.name) {
 				case "muted_mc":
 					setMuted(false);
@@ -610,7 +605,7 @@ package {
 		}
 
 		private function toggleVolumeIcons(volume:Number):void {
-			if(volume<=0) {
+			if (volume <= 0) {
 				_volumeMuted.visible = true;
 				_volumeUnMuted.visible = false;
 			} else {
@@ -620,7 +615,7 @@ package {
 		}
 
 		private function positionControls(forced:Boolean=false):void {
-			if (!_alwaysShowControls) {
+			if (!_controlsEnabled) {
 				return;
 			}
 			var contWidth:Number;
@@ -633,7 +628,7 @@ package {
 				contHeight = stage.stageHeight;
 			}
 
-			if (_controlStyle.toUpperCase() == "FLOATING" && _isFullScreen) {
+			if (_controlsStyle.toUpperCase() == "FLOATING" && _isFullScreen) {
 				trace("CONTROLS: floating");
 				_hoverTime.y=(_hoverTime.height/2)+1;
 				_hoverTime.x=0;
@@ -752,7 +747,7 @@ package {
 
 			repositionVideo();
 
-			if (_alwaysShowControls) {
+			if (_controlsEnabled) {
 				updateControls(HtmlMediaEvent.FULLSCREENCHANGE);
 				_controlBar.visible = true;
 			}
@@ -765,7 +760,7 @@ package {
 
 			repositionVideo();
 
-			if (_alwaysShowControls) {
+			if (_controlsEnabled) {
 				_controlBar.visible = false;
 			}
 
@@ -809,7 +804,7 @@ package {
 			hideFullscreenButton();
 
 			try {
-				if (_alwaysShowControls) {
+				if (_controlsEnabled) {
 					_controlBar.visible = true;
 				}
 				setFullscreen(true);
@@ -828,8 +823,8 @@ package {
 
 			sendEvent(HtmlMediaEvent.FULLSCREENCHANGE, "isFullScreen:" + e.fullScreen );
 
-			if (_alwaysShowControls && !e.fullScreen) {
-				_controlBar.visible = _alwaysShowControls;
+			if (_controlsEnabled && !e.fullScreen) {
+				_controlBar.visible = _controlsEnabled;
 			}
 		}
 		// END: Fullscreen
@@ -978,7 +973,7 @@ package {
 					if (_mediaElement is VideoElement) {
 						_nativeVideoWidth = (_mediaElement as VideoElement).videoWidth;
 						_nativeVideoHeight = (_mediaElement as VideoElement).videoHeight;
-					} else if(_mediaElement is HLSMediaElement) {
+					} else if (_mediaElement is HLSMediaElement) {
 						_nativeVideoWidth = (_mediaElement as HLSMediaElement).videoWidth;
 						_nativeVideoHeight = (_mediaElement as HLSMediaElement).videoHeight;
 
@@ -1025,7 +1020,7 @@ package {
 
 
 		private function updateControls(eventName:String):void {
-			if (!_alwaysShowControls) {
+			if (!_controlsEnabled) {
 				return;
 			}
 
@@ -1060,7 +1055,7 @@ package {
 					_scrubLoaded.scaleX = (_mediaElement.currentProgress()*_scrubTrack.scaleX)/100;
 				}
 			} catch (error:Error) {
-				trace("error: " + error.toString());
+				logMessage("Failed to update controls: " + error.toString());
 			}
 		}
 
