@@ -12,7 +12,10 @@
 
 flex_path="./src/flash/flex_sdk_4.6"
 target_version="10.1"
+builds[0]="-define+=CONFIG::cdnBuild,true -define+=CONFIG::debugBuild,true -o local-build/flashmediaelement-debug.swf"
+builds[1]="-define+=CONFIG::cdnBuild,true -define+=CONFIG::debugBuild,false -o local-build/flashmediaelement-cdn.swf"
+builds[2]="-define+=CONFIG::cdnBuild,false -define+=CONFIG::debugBuild,false -o local-build/flashmediaelement.swf"
 
-$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true "src/flash/FlashMediaElement.as" -o local-build/flashmediaelement-cdn.swf -define+=CONFIG::cdnBuild,true -library-path+="$flex_path/lib" -include-libraries+=src/flash/flashmediaelement.swc -include-libraries+=src/flash/flashls.swc -use-network=true -source-path src/flash -target-player $target_version -headless-server -static-link-runtime-shared-libraries
-
-$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true "src/flash/FlashMediaElement.as" -o local-build/flashmediaelement.swf -define+=CONFIG::cdnBuild,false -library-path+="$flex_path/lib" -include-libraries+=src/flash/flashmediaelement.swc -include-libraries+=src/flash/flashls.swc -use-network=true -source-path src/flash -target-player $target_version -headless-server -static-link-runtime-shared-libraries
+for i in 0 1 2; do
+	$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true src/flash/FlashMediaElement.as ${builds[i]} -library-path+=$flex_path/lib -include-libraries+=src/flash/flashmediaelement.swc -include-libraries+=src/flash/flashls.swc -use-network=true -source-path src/flash -target-player $target_version -headless-server -static-link-runtime-shared-libraries
+done

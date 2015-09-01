@@ -33,7 +33,7 @@ package
 		private var _jsCallbackFunction:String;
 		private var _autoplay:Boolean;
 		private var _preload:String;
-		private var _debug:Boolean;
+		private var _debug:Boolean = false;
 		private var _isVideo:Boolean;
 		private var _video:DisplayObject;
 		private var _timerRate:Number;
@@ -127,7 +127,9 @@ package
 				}
 			}
 
-			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
+			CONFIG::debugBuild {
+				_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
+			}
 			if (_debug) {
 				// add debug output
 				var _outputFormat:TextFormat = new TextFormat();
