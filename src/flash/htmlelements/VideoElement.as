@@ -200,9 +200,10 @@ package htmlelements {
 					break;
 
 				case "NetStream.Play.Stop":
+					_timer.stop();
 					_isEnded = true;
 					_isPaused = true;
-					_timer.stop();
+					sendEvent(HtmlMediaEvent.PAUSE);
 					if (_bufferEmpty)
 						sendEvent(HtmlMediaEvent.ENDED);
 					break;
