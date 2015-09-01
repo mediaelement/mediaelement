@@ -140,7 +140,7 @@ package htmlelements {
 			_bytesTotal = _stream.bytesTotal;
 
 			if (_hasStartedPlaying && !_isPaused) {
-			sendEvent(HtmlMediaEvent.TIMEUPDATE);
+				sendEvent(HtmlMediaEvent.TIMEUPDATE);
 			}
 
 			//trace("bytes", _bytesLoaded, _bytesTotal);
@@ -158,7 +158,8 @@ package htmlelements {
 
 				case "NetStream.Buffer.Empty":
 					_bufferEmpty = true;
-					_isEnded ? sendEvent(HtmlMediaEvent.ENDED) : null;
+					if (_isEnded)
+						sendEvent(HtmlMediaEvent.ENDED);
 					break;
 
 				case "NetStream.Buffer.Full":
@@ -202,8 +203,8 @@ package htmlelements {
 					_isEnded = true;
 					_isPaused = true;
 					_timer.stop();
-					sendEvent(HtmlMediaEvent.PAUSE);
-					_bufferEmpty ? sendEvent(HtmlMediaEvent.ENDED) : null;
+					if (_bufferEmpty)
+						sendEvent(HtmlMediaEvent.ENDED);
 					break;
 			}
 		}
@@ -338,8 +339,8 @@ package htmlelements {
 
 			if (_hasStartedPlaying) {
 				if (_isPaused) {
-					if( _isEnded ) {
-						_stream.seek(0);
+					if (_isEnded) {
+						setCurrentTime(0);
 						_isEnded = false;
 					}
 					_stream.resume();
@@ -360,7 +361,7 @@ package htmlelements {
 				_hasStartedPlaying = true;
 
 				// don't toss play/playing events here, because we haven't sent a
-				// canplay / loadeddata event yet. that'll be handled in the net
+				// canplay / loadeddata event yet. that'll be handled in the next
 				// event listener
 			}
 		}
@@ -369,13 +370,11 @@ package htmlelements {
 			if (_stream == null)
 				return;
 
-			_stream.pause();
-			_isPaused = true;
-
 			if (_bytesLoaded == _bytesTotal) {
 				_timer.stop();
 			}
 
+			_stream.pause();
 			_isPaused = true;
 			sendEvent(HtmlMediaEvent.PAUSE);
 		}
@@ -384,9 +383,9 @@ package htmlelements {
 			if (_stream == null)
 				return;
 
+			_timer.stop();
 			_stream.close();
 			_isPaused = false;
-			_timer.stop();
 			sendEvent(HtmlMediaEvent.STOP);
 		}
 
@@ -465,19 +464,19 @@ package htmlelements {
 			// build JSON
 			var values:String =
 				"duration:" + _duration +
-					",framerate:" + _framerate +
-					",currentTime:" + currentTime() +
-					",muted:" + _isMuted +
-					",paused:" + _isPaused +
-					",ended:" + _isEnded +
-					",volume:" + _volume +
-					",src:\"" + _currentUrl + "\"" +
-					",bytesTotal:" + _bytesTotal +
-					",bufferedBytes:" + _bytesLoaded +
-					",bufferedTime:" + _bufferedTime +
-					",videoWidth:" + _videoWidth +
-					",videoHeight:" + _videoHeight +
-					"";
+				",framerate:" + _framerate +
+				",currentTime:" + currentTime() +
+				",muted:" + _isMuted +
+				",paused:" + _isPaused +
+				",ended:" + _isEnded +
+				",volume:" + _volume +
+				",src:\"" + _currentUrl + "\"" +
+				",bytesTotal:" + _bytesTotal +
+				",bufferedBytes:" + _bytesLoaded +
+				",bufferedTime:" + _bufferedTime +
+				",videoWidth:" + _videoWidth +
+				",videoHeight:" + _videoHeight +
+				"";
 
 			_element.sendEvent(eventName, values);
 		}
