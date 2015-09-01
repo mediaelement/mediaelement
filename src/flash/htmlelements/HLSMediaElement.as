@@ -100,6 +100,8 @@
 					break;
 				case HLSPlayStates.PAUSED_BUFFERING:
 				case HLSPlayStates.PLAYING_BUFFERING:
+					_isPaused = true;
+					sendEvent(HtmlMediaEvent.BUFFERING);
 					break;
 				case HLSPlayStates.PLAYING:
 					_isPaused = false;
