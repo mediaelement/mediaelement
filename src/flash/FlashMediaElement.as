@@ -452,9 +452,10 @@ package {
 		public function logMessage(txt:String):void {
 			if (_output != null) {
 				_output.appendText(txt + "\n");
-			}
-			if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
-				ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt + "')", 0);
+				if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+					var pattern:RegExp = /'/g; //'
+					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt.replace(pattern, "’") + "')", 0);
+				}
 			}
 		}
 
@@ -971,7 +972,7 @@ package {
 			// special video event
 			if (eventName == HtmlMediaEvent.LOADEDMETADATA && _isVideo) {
 
-				logMessage("METADATA RECEIVED: ");
+				logMessage("Metadata received:");
 
 				try {
 					if (_mediaElement is VideoElement) {
@@ -988,10 +989,10 @@ package {
 						}
 					}
 				} catch (e:Error) {
-					logMessage(e.toString());
+					logMessage("    No resolution: " + e.toString());
 				}
 
-				logMessage(_nativeVideoWidth.toString() + "x" + _nativeVideoHeight.toString());
+				logMessage("    Resolution: " + _nativeVideoWidth.toString() + "x" + _nativeVideoHeight.toString());
 
 				if (_isFullScreen) {
 					setVideoSize(_nativeVideoWidth, _nativeVideoHeight);

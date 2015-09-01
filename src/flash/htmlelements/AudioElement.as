@@ -134,11 +134,11 @@
 		}
 
 		private function handleEnded():void {
-			_timer.stop();
-			_currentTime = 0;
 			_isEnded = true;
-
+			pause();
 			sendEvent(HtmlMediaEvent.ENDED);
+			_isEnded = false;
+			_currentTime = 0;
 		}
 
 		//events
@@ -150,7 +150,6 @@
 		}
 
 		public function load():void {
-
 			if (_currentUrl == "") {
 				return;
 			}
@@ -159,10 +158,12 @@
 				if (_sound.hasEventListener(ProgressEvent.PROGRESS)) {
 					_sound.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
 				}
-
 				if (_sound.hasEventListener(Event.ID3)) {
 					_sound.removeEventListener(Event.ID3, id3Handler);
 				}
+				try {
+					_sound.close();
+				} catch (err:Error) {}
 			}
 
 			_sound = new Sound();
@@ -227,14 +228,12 @@
 		}
 
 		public function setCurrentTime(pos:Number):void {
-			sendEvent(HtmlMediaEvent.SEEKING);
 			_timer.stop();
+			sendEvent(HtmlMediaEvent.SEEKING);
 			_currentTime = pos;
 			_soundChannel.stop();
-			_sound.length;
 			_soundChannel = _sound.play(_currentTime * 1000, 0, _soundTransform);
 			sendEvent(HtmlMediaEvent.SEEKED);
-
 			_timer.start();
 
 			didStartPlaying();
@@ -246,13 +245,13 @@
 
 		private function didStartPlaying():void {
 			_isPaused = false;
-			sendEvent(HtmlMediaEvent.PLAY);
-			sendEvent(HtmlMediaEvent.PLAYING);
 			if (!_firedCanPlay) {
 				sendEvent(HtmlMediaEvent.LOADEDDATA);
 				sendEvent(HtmlMediaEvent.CANPLAY);
 				_firedCanPlay = true;
 			}
+			sendEvent(HtmlMediaEvent.PLAY);
+			sendEvent(HtmlMediaEvent.PLAYING);
 		}
 
 		public function setVolume(volume:Number):void {
