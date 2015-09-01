@@ -1,5 +1,4 @@
-package
-{
+package {
 	import flash.display.*;
 	import flash.events.*;
 	import flash.media.*;

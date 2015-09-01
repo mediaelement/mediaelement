@@ -1,5 +1,4 @@
-﻿package htmlelements
-{
+﻿package htmlelements {
 	import flash.display.Sprite;
 	import flash.media.Video;
 	import flash.media.SoundTransform;
@@ -241,21 +240,21 @@
 
 		private function sendEvent(eventName:String):void {
 			// build JSON
-			var values:String = "" +
-			"duration:" + _duration +
-			",framerate:" + _hls.stream.currentFPS +
-			",currentTime:" + _position +
-			",muted:" + _isMuted +
-			",paused:" + _isPaused +
-			",ended:" + _isEnded +
-			",volume:" + _volume +
-			",src:\"" + _url + "\"" +
-			",bytesTotal:" + Math.round(1000*_duration) +
-			",bufferedBytes:" + Math.round(1000*(_position+_bufferedTime)) +
-			",bufferedTime:" + _bufferedTime +
-			",videoWidth:" + _videoWidth +
-			",videoHeight:" + _videoHeight +
-			"";
+			var values:String =
+				"duration:" + _duration +
+				",framerate:" + _hls.stream.currentFPS +
+				",currentTime:" + _position +
+				",muted:" + _isMuted +
+				",paused:" + _isPaused +
+				",ended:" + _isEnded +
+				",volume:" + _volume +
+				",src:\"" + _url + "\"" +
+				",bytesTotal:" + Math.round(1000*_duration) +
+				",bufferedBytes:" + Math.round(1000*(_position+_bufferedTime)) +
+				",bufferedTime:" + _bufferedTime +
+				",videoWidth:" + _videoWidth +
+				",videoHeight:" + _videoHeight +
+				"";
 			_element.sendEvent(eventName, values);
 		}
 
