@@ -746,6 +746,9 @@ package
 			//_video.scaleY = stage.stageHeight / _stageHeight;
 			//positionControls();
 
+			_stageWidth = stage.stageWidth;
+			_stageHeight = stage.stageHeight;
+
 			repositionVideo();
 		}
 
