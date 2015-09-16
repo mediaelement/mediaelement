@@ -1,6 +1,4 @@
-﻿
-package htmlelements
-{
+﻿package htmlelements {
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
@@ -13,14 +11,7 @@ package htmlelements
 	import flash.net.URLRequest;
 	import flash.utils.Timer;
 
-
-
-	/**
-	* ...
-	* @author DefaultUser (Tools -> Custom Arguments...)
-	*/
-	public class AudioElement implements IMediaElement
-	{
+	public class AudioElement implements IMediaElement {
 
 		private var _sound:Sound;
 		private var _soundTransform:SoundTransform;
@@ -61,11 +52,10 @@ package htmlelements
 		}
 
 		public function currentProgress():Number {
-				return Math.round(_bytesLoaded/_bytesTotal*100);
+			return Math.round(_bytesLoaded/_bytesTotal*100);
 		}
 
-		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number):void
-		{
+		public function AudioElement(element:FlashMediaElement, autoplay:Boolean, preload:String, timerRate:Number, startVolume:Number):void {
 			_element = element;
 			_autoplay = autoplay;
 			_volume = startVolume;
@@ -107,8 +97,6 @@ package htmlelements
 					year:id3.year
 				};
 			} catch (err:Error) {}
-
-
 		}
 
 		private function timerEventHandler(e:TimerEvent):void {
@@ -146,15 +134,14 @@ package htmlelements
 		}
 
 		private function handleEnded():void {
-			_timer.stop();
-			_currentTime = 0;
 			_isEnded = true;
-
+			pause();
 			sendEvent(HtmlMediaEvent.ENDED);
+			_isEnded = false;
+			_currentTime = 0;
 		}
 
 		//events
-
 
 		// METHODS
 		public function setSrc(url:String):void {
@@ -162,9 +149,7 @@ package htmlelements
 			_isLoaded = false;
 		}
 
-
 		public function load():void {
-
 			if (_currentUrl == "") {
 				return;
 			}
@@ -173,10 +158,12 @@ package htmlelements
 				if (_sound.hasEventListener(ProgressEvent.PROGRESS)) {
 					_sound.removeEventListener(ProgressEvent.PROGRESS, progressHandler);
 				}
-
 				if (_sound.hasEventListener(Event.ID3)) {
 					_sound.removeEventListener(Event.ID3, id3Handler);
 				}
+				try {
+					_sound.close();
+				} catch (err:Error) {}
 			}
 
 			_sound = new Sound();
@@ -203,26 +190,21 @@ package htmlelements
 		private var _playAfterLoading:Boolean= false;
 
 		public function play():void {
-
 			if (!_isLoaded) {
 				_playAfterLoading = true;
 				load();
 				return;
 			}
-
 			_timer.stop();
-
 			_soundChannel = _sound.play(_currentTime*1000, 0, _soundTransform);
 			_soundChannel.removeEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
 			_soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
-
 			_timer.start();
 
 			didStartPlaying();
 		}
 
 		public function pause():void {
-
 			_timer.stop();
 			if (_soundChannel != null) {
 				_currentTime = _soundChannel.position/1000;
@@ -232,7 +214,6 @@ package htmlelements
 			_isPaused = true;
 			sendEvent(HtmlMediaEvent.PAUSE);
 		}
-
 
 		public function stop():void {
 			if (_timer != null) {
@@ -247,37 +228,33 @@ package htmlelements
 		}
 
 		public function setCurrentTime(pos:Number):void {
-			sendEvent(HtmlMediaEvent.SEEKING);
 			_timer.stop();
+			sendEvent(HtmlMediaEvent.SEEKING);
 			_currentTime = pos;
 			_soundChannel.stop();
-			_sound.length;
 			_soundChannel = _sound.play(_currentTime * 1000, 0, _soundTransform);
 			sendEvent(HtmlMediaEvent.SEEKED);
-
 			_timer.start();
 
 			didStartPlaying();
 		}
 
-        public function seekLimit():Number {
-            return NaN;
-        }
+		public function seekLimit():Number {
+			return NaN;
+		}
 
-        private function didStartPlaying():void {
+		private function didStartPlaying():void {
 			_isPaused = false;
-			sendEvent(HtmlMediaEvent.PLAY);
-			sendEvent(HtmlMediaEvent.PLAYING);
 			if (!_firedCanPlay) {
 				sendEvent(HtmlMediaEvent.LOADEDDATA);
 				sendEvent(HtmlMediaEvent.CANPLAY);
 				_firedCanPlay = true;
 			}
+			sendEvent(HtmlMediaEvent.PLAY);
+			sendEvent(HtmlMediaEvent.PLAYING);
 		}
 
-
 		public function setVolume(volume:Number):void {
-
 			_volume = volume;
 			_soundTransform.volume = volume;
 
@@ -298,9 +275,7 @@ package htmlelements
 			}
 		}
 
-
 		public function setMuted(muted:Boolean):void {
-
 			// ignore if already set
 			if ( (muted && _isMuted) || (!muted && !_isMuted))
 				return;
@@ -321,27 +296,24 @@ package htmlelements
 		}
 
 		private function sendEvent(eventName:String):void {
-
 			// calculate this to mimic HTML5
 			_bufferedTime = _bytesLoaded / _bytesTotal * _duration;
 
 			// build JSON
-			var values:String = "duration:" + _duration +
-							",currentTime:" + _currentTime +
-							",muted:" + _isMuted +
-							",paused:" + _isPaused +
-							",ended:" + _isEnded +
-							",volume:" + _volume +
-							",src:\"" + _currentUrl + "\"" +
-							",bytesTotal:" + _bytesTotal +
-							",bufferedBytes:" + _bytesLoaded +
-							",bufferedTime:" + _bufferedTime +
-							"";
+			var values:String =
+				"duration:" + _duration +
+				",currentTime:" + _currentTime +
+				",muted:" + _isMuted +
+				",paused:" + _isPaused +
+				",ended:" + _isEnded +
+				",volume:" + _volume +
+				",src:\"" + _currentUrl + "\"" +
+				",bytesTotal:" + _bytesTotal +
+				",bufferedBytes:" + _bytesLoaded +
+				",bufferedTime:" + _bufferedTime +
+				"";
 
 			_element.sendEvent(eventName, values);
 		}
-
 	}
-
 }
-
