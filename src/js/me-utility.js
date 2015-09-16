@@ -141,6 +141,18 @@ mejs.Utility = {
 			time = 0;
 		}
 
+		// Maintain backward compatibility with method signature before v2.18.
+		if (typeof options !== 'object') {
+			var format = 'm:ss';
+			format = arguments[1] ? 'hh:mm:ss' : format; // forceHours
+			format = arguments[2] ? format + ':ff' : format; // showFrameCount
+
+			options = {
+				currentTimeFormat: format,
+				framesPerSecond: arguments[3] || 25
+			};
+		}
+
 		var fps = options.framesPerSecond;
 		if(typeof fps === 'undefined') {
 			fps = 25;
