@@ -140,7 +140,7 @@ package {
 				_output.defaultTextFormat = _outputFormat;
 				_output.textColor = 0xeeeeee;
 				_output.width = stage.stageWidth;
-				_output.height = stage.stageHeight;
+				_output.height = stage.stageHeight - 40;
 				_output.multiline = true;
 				_output.wordWrap = true;
 				_output.border = false;
@@ -257,6 +257,7 @@ package {
 			
 			logMessage("stage: " + stage.stageWidth + "x" + stage.stageHeight);
 			logMessage("file: " + _mediaUrl);
+			logMessage("controls: " + _controlsEnabled.toString());
 			logMessage("autoplay: " + _autoplay.toString());
 			logMessage("preload: " + _preload.toString());
 			logMessage("isvideo: " + _isVideo.toString());
@@ -521,7 +522,7 @@ package {
 			// if mouse is in the video area
 			if (_controlsAutoHide && (mouseX>=0 && mouseX<=stage.stageWidth) && (mouseY>=0 && mouseY<=stage.stageHeight)) {
 				// This could be move to a nice fade at some point...
-				_controlBar.visible = _isFullScreen;
+				_controlBar.visible = (_controlsEnabled || _isFullScreen);
 				_isMouseActive = true;
 				_idleTime = 0;
 				_timer.reset();
