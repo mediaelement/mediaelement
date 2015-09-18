@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>SWF MediaElement</title>	
+	
+	<script src="firebug-lite/build/firebug-lite.js"></script>
+	
+	<script src="../build/jquery.js"></script>
+
+	<style>
+		.column {
+			background: #ddd;
+			margin: 8px;
+			padding: 8px;
+			float: left;
+		}
+		.player-block {
+			background: #666;
+			color: #fff;
+			width: 640px;
+			height: 360px;
+		}
+		.player-block embed,
+		.player-block object {
+			width: 100%;
+			height: 100%;
+			display: block;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Test with swf used alone</h1>
+
+	<p><a href="../build/flashmediaelement-debug.swf">Link to SWF</a></p>
+	<p><a href="http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_2mb.mp4">Link to video</a></p>
+
+	<div class="column">
+		<h2>Using embed tag:</h2>
+
+		<div class="player-block">
+			<embed flashvars="jsinitfunction=console.log&amp;jscallbackfunction=console.log&amp;controls=true&amp;autoplay=false&amp;debug=true&amp;isvideo=true&amp;pseudostreaming=false&amp;pseudostreamstart=start&amp;file=http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_2mb.mp4&amp;id=player_embed" quality="high" play="true" loop="false" scale="default" wmode="transparent" allowfullscreen="true" allowscriptaccess="always" src="../build/flashmediaelement-debug.swf" name="player_embed" id="player_embed" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+		</div>
+		<p>
+			<button type="button" onclick="javascript: $('#player_embed')[0].playMedia();">Play</button>
+			<button type="button" onclick="javascript: $('#player_embed')[0].pauseMedia();">Pause</button>
+			<button type="button" onclick="javascript: $('#player_embed')[0].setCurrentTime(5);">Seek to 5s</button>
+			<button type="button" onclick="javascript: $('#player_embed')[0].setFullscreen(true);">Fullscreen</button>
+		</p>
+	</div>
+
+	<div class="column">
+		<h2>Using object tag:</h2>
+
+		<div class="player-block">
+			<object id="player_object" type="application/x-shockwave-flash" data="../build/flashmediaelement-debug.swf">
+				<param name="id" value="player_object"/>
+				<param name="name" value="player_object"/>
+				<param name="movie" value="../build/flashmediaelement-debug.swf"/>
+				<param name="quality" value="high"/>
+				<param name="wmode" value="transparent"/>
+				<param name="scale" value="default"/>
+				<param name="loop" value="false"/>
+				<param name="play" value="true"/>
+				<param name="allowfullscreen" value="true"/>
+				<param name="allowscriptaccess" value="always"/>
+				<param name="pluginspage" value="http://www.macromedia.com/go/getflashplayer"/>
+				<param name="flashvars" value="jsinitfunction=console.log&amp;jscallbackfunction=console.log&amp;controls=true&amp;autoplay=false&amp;debug=true&amp;isvideo=true&amp;pseudostreaming=false&amp;pseudostreamstart=start&amp;file=http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_2mb.mp4&amp;id=player_embed"/>
+			</object>
+		</div>
+		<p>
+			<button type="button" onclick="javascript: $('#player_object')[0].playMedia();">Play</button>
+			<button type="button" onclick="javascript: $('#player_object')[0].pauseMedia();">Pause</button>
+			<button type="button" onclick="javascript: $('#player_object')[0].setCurrentTime(5);">Seek to 5s</button>
+			<button type="button" onclick="javascript: $('#player_object')[0].setFullscreen(true);">Fullscreen</button>
+		</p>
+	</div>
+</body>
+</html>
