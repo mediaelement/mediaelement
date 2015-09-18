@@ -224,9 +224,6 @@
 					positionVolumeHandle(volume);
 					media.setVolume(volume);
 					return false;
-				})
-				.bind('blur', function () {
-					volumeSlider.hide();
 				});
 
 			// MUTE button
