@@ -364,7 +364,7 @@
 					// normal way of moving it into place (doesn't work on iOS)
 					t.container.find('.mejs-mediaelement').append(t.$media);
 				}
-				
+
 				// needs to be assigned here, after iOS remap
 				t.node.player = t;
 
@@ -759,7 +759,7 @@
 						t.setControlsSize();
 					}
 				}, false);
-				
+
 				// Only change the time format when necessary
 				var duration = null;
 				t.media.addEventListener('timeupdate',function() {
@@ -767,7 +767,7 @@
 						duration = this.duration;
 						mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
 					}
-				}, false);				
+				}, false);
 
 				t.container.focusout(function (e) {
 					if( e.relatedTarget ) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
@@ -1254,7 +1254,7 @@
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
-			
+
 			t.container.prev('.mejs-offscreen').remove();
 
 			// invoke features cleanup
@@ -1335,16 +1335,20 @@
 		}
 
 		mejs.MediaElementPlayer.prototype.globalBind = function(events, data, callback) {
-			var t = this;
+    	var t = this;
+      var doc = t.node ? t.node.ownerDocument : document;
+
 			events = splitEvents(events, t.id);
-			if (events.d) $(document).bind(events.d, data, callback);
+			if (events.d) $(doc).bind(events.d, data, callback);
 			if (events.w) $(window).bind(events.w, data, callback);
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function(events, callback) {
 			var t = this;
+      var doc = t.node ? t.node.ownerDocument : document;
+
 			events = splitEvents(events, t.id);
-			if (events.d) $(document).unbind(events.d, callback);
+			if (events.d) $(doc).unbind(events.d, callback);
 			if (events.w) $(window).unbind(events.w, callback);
 		};
 	})();
