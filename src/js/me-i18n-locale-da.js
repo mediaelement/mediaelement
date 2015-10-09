@@ -1,10 +1,10 @@
 /*
  * This is a i18n.locale language object.
  *
- * German translation by Jalios, Twitter: @Jalios
+ * Danish translation by Jesper Skytte Hansen, Twitter: @greew
  *
  * @author
- *   Jalios (Twitter: @Jalios)
+ *   Jesper Skytte Hansen (Twitter: @greew)
  *
  * @see
  *   me-i18n.js
