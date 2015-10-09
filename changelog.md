@@ -1,13 +1,15 @@
 ### Version History
 
-*2.18.2 (2015/09/16)*
+*2.18.2 (2015/10/09)*
 
+* event fix for players inside of iframes (https://github.com/johndyer/mediaelement/pull/1597) @meirish
 * Fixed blinking controls issue on Firefox (https://github.com/johndyer/mediaelement/pull/1570) @krrg
 * Better handling of default options (https://github.com/johndyer/mediaelement/pull/1553/files) @ManojKumarDhankhar 
 * Fixes a11y issue with keyboard only users (https://github.com/johndyer/mediaelement/pull/1572) @krrg @neilgupta
 * Flash code cleanup and bug fixes (https://github.com/johndyer/mediaelement/pull/1575) @sdiemer (also @pawelsamselarkena)
 * Keep track of playback speed when the source changes (https://github.com/johndyer/mediaelement/pull/1580) @neilgupta
 * Maintain backward compatibility in secondsToTime() code method signature. (https://github.com/johndyer/mediaelement/pull/1591/files) @bradyvercher
+* Add Danish locale (https://github.com/johndyer/mediaelement/pull/1607) @greew
 
 *2.18.1 (2015/08/11)*
 
