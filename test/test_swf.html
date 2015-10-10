@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>SWF MediaElement</title>	
+	
+	<script src="../build/jquery.js"></script>
+
+	<script>
+		function get_flash_html(swf_url, tag_type, tag_id, flash_vars, flash_attrs, extra) {
+			var attr;
+			var _flash_vars = [];
+			for (attr in flash_vars) {
+				_flash_vars.push(attr+"="+flash_vars[attr]);
+			}
+			_flash_vars.push("id="+tag_id);
+			_flash_vars = _flash_vars.join("&amp;");
+
+			if (!flash_attrs)
+				flash_attrs = {};
+			if (!("allowscriptaccess" in flash_attrs))
+				flash_attrs.allowscriptaccess = "always";
+			if (!("allowfullscreen" in flash_attrs))
+				flash_attrs.allowfullscreen = "true";
+			if (!("wmode" in flash_attrs))
+				flash_attrs.wmode = "transparent";
+			if (!("scale" in flash_attrs))
+				flash_attrs.scale = "default";
+			if (!("loop" in flash_attrs))
+				flash_attrs.loop = "false";
+			if (!("play" in flash_attrs))
+				flash_attrs.play = "true";
+			if (!("quality" in flash_attrs))
+				flash_attrs.quality = "high";
+
+			var html;
+			if (tag_type == "object") {
+				html = "<object id=\""+tag_id+"\" type=\"application/x-shockwave-flash\" data=\""+swf_url+"\" "+(extra ? extra : "")+">\n";
+				html += "<param name=\"name\" value=\""+tag_id+"\"/>\n";
+				html += "<param name=\"id\" value=\""+tag_id+"\"/>\n";
+				html += "<param name=\"movie\" value=\""+swf_url+"\"/>\n";
+				for (attr in flash_attrs) {
+					html += "<param name=\""+attr+"\" value=\""+flash_attrs[attr]+"\"/>\n";
+				}
+				html += "<param name=\"flashvars\" value=\""+_flash_vars+"\"/>\n";
+				html += "<p><a target=\"_blank\" href=\"http://www.adobe.com/go/getflashplayer\">";
+				html += 	"<span>Get Adobe Flash player</span>";
+				html += "</a></p>";
+				html += "</object>\n";
+			}
+			else {
+				html = "<embed pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" ";
+				html += "id=\""+tag_id+"\" name=\""+tag_id+"\" src=\""+swf_url+"\" ";
+				for (attr in flash_attrs) {
+					html += attr+"=\""+flash_attrs[attr]+"\" ";
+				}
+				html += "flashvars=\""+_flash_vars+"\" "+(extra ? extra : "")+"/>";
+			}
+			return html;
+		}
+
+		function log_msg() {
+			if (window.console && window.console.log)
+				console.log.apply(this, arguments);
+		}
+
+		// Code to load test preset
+		var swf_url = "../build/flashmediaelement-debug.swf";
+		var default_file = "http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_2mb.mp4";
+		var preset_defaults = {
+			jsinitfunction: "log_msg",
+			jscallbackfunction: "log_msg",
+			debug: true,
+			controls: true,
+			autoplay: false,
+			isvideo: true,
+			pseudostreaming: false,
+			pseudostreamstart: "start"
+		};
+		var presets = [
+			{
+				file: default_file
+			},
+			{
+				controls: false,
+				file: default_file
+			}
+		];
+		var fields = [
+			{ name: "file", type: "String", def: default_file },
+			{ name: "controls", type: "Boolean", def: true },
+			{ name: "autoplay", type: "Boolean", def: false },
+			{ name: "isvideo", type: "Boolean", def: true }
+			// TODO: add more fields
+		];
+
+		function load_preset(index) {
+			$(".floating-block.active").removeClass("active");
+			$("#preset_"+index).addClass("active");
+			var flash_vars = {};
+			if (index >= 0) {
+				// Static preset
+				flash_vars = presets[index];
+			}
+			else {
+				// Custom preset
+				for (var i=0; i < fields.length; i++) {
+					var value;
+					if (fields[i].type == "Boolean")
+						value = $("#preset_-1 #id_"+fields[i].name).is(":checked");
+					else
+						value = $("#preset_-1 #id_"+fields[i].name).val();
+					flash_vars[fields[i].name] = value;
+				}
+			}
+			// Set default values
+			for (var attr in preset_defaults) {
+				if (!(attr in flash_vars))
+					flash_vars[attr] = preset_defaults[attr];
+			}
+			// Create players
+			var html_embed = get_flash_html(swf_url, "embed", "player_embed", flash_vars);
+			$("#player_embed_place .player-block").html(html_embed);
+			var html_object = get_flash_html(swf_url, "object", "player_object", flash_vars);
+			$("#player_object_place .player-block").html(html_object);
+		}
+
+		$(document).ready(function () {
+			var i, html = "";
+			// Add link to swf
+			$("h1").append(" - <small><a href=\""+swf_url+"\">Link to SWF</a></small>");
+			// Presets
+			for (i=0; i < presets.length; i++) {
+				// Display description and use button
+				html += "<div id=\"preset_"+i+"\" class=\"preset floating-block\">Preset "+(i+1)+": \n";
+				for (var attr in presets[i]) {
+					html += "<br/><label>"+attr+":</label> "+presets[i][attr]+"\n";
+				}
+				html += "<br/><button type=\"button\" onclick=\"javascript: load_preset("+i+");\">Use this preset</button>\n";
+				html += " <a target=\"_blank\" href=\""+presets[i].file+"\">Link to file</a>\n";
+				html += "</div>\n";
+			}
+			// Custom preset form
+			html += "<div id=\"preset_-1\" class=\"preset floating-block\">Custom preset: \n";
+			for (i=0; i < fields.length; i++) {
+				html += "<br/><label for=\"id_"+fields[i].name+"\">"+fields[i].name+":</label> ";
+				if (fields[i].type == "Boolean")
+					html += "<input type=\"checkbox\" "+(fields[i].def ? "checked=\"checked\"" : " ");
+				else
+					html += "<input type=\"text\" value=\""+(fields[i].def ? fields[i].def : "")+"\"";
+				html += "id=\"id_"+fields[i].name+"\" name=\""+fields[i].name+"\"/>";
+			}
+			html += "<br/><button type=\"button\" onclick=\"javascript: load_preset(-1);\">Use this preset</button>\n";
+			html += "</div>\n";
+			$("#presets").html(html);
+			// Load initial preset
+			load_preset(0);
+			$(".player-controls").css("display", "");
+		});
+	</script>
+
+	<style>
+		.floating-block {
+			background: #ddd;
+			margin: 8px;
+			padding: 8px;
+			float: left;
+		}
+		.preset label {
+			padding-left: 10px;
+			font-weight: bold;
+		}
+		.active {
+			background: #cfc;
+		}
+		.player-block {
+			background: #666;
+			color: #fff;
+			width: 640px;
+			height: 360px;
+		}
+		.player-block embed,
+		.player-block object {
+			width: 100%;
+			height: 100%;
+			display: block;
+		}
+		input[type=text] {
+			width: 400px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Test with swf used alone</h1>
+
+	<div id="presets" style="overflow: hidden;">
+		Loading...
+	</div>
+
+	<div style="overflow: hidden;">
+		<div id="player_embed_place" class="floating-block">
+			<h2>Using embed tag:</h2>
+
+			<div class="player-block">
+				Loading...
+			</div>
+			<p class="player-controls" style="display: none;">JS controls:
+				<button type="button" onclick="javascript: $('#player_embed')[0].playMedia();">Play</button>
+				<button type="button" onclick="javascript: $('#player_embed')[0].pauseMedia();">Pause</button>
+				<button type="button" onclick="javascript: $('#player_embed')[0].setCurrentTime(5);">Seek to 5s</button>
+				<button type="button" onclick="javascript: $('#player_embed')[0].setFullscreen(true);">Fullscreen</button>
+			</p>
+		</div>
+
+		<div id="player_object_place" class="floating-block">
+			<h2>Using object tag:</h2>
+
+			<div class="player-block">
+				Loading...
+			</div>
+			<p class="player-controls" style="display: none;">JS controls:
+				<button type="button" onclick="javascript: $('#player_object')[0].playMedia();">Play</button>
+				<button type="button" onclick="javascript: $('#player_object')[0].pauseMedia();">Pause</button>
+				<button type="button" onclick="javascript: $('#player_object')[0].setCurrentTime(5);">Seek to 5s</button>
+				<button type="button" onclick="javascript: $('#player_object')[0].setFullscreen(true);">Fullscreen</button>
+			</p>
+		</div>
+	</div>
+</body>
+</html>

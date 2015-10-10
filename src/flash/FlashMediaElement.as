@@ -140,7 +140,7 @@ package {
 				_output.defaultTextFormat = _outputFormat;
 				_output.textColor = 0xeeeeee;
 				_output.width = stage.stageWidth;
-				_output.height = stage.stageHeight;
+				_output.height = stage.stageHeight - 40;
 				_output.multiline = true;
 				_output.wordWrap = true;
 				_output.border = false;
@@ -149,6 +149,8 @@ package {
 				_output.visible = _debug;
 				addChild(_output);
 			}
+			loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, errorHandler);
+
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
 			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
 			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
@@ -252,6 +254,7 @@ package {
 						
 			logMessage("stage: " + stage.stageWidth + "x" + stage.stageHeight);
 			logMessage("file: " + _mediaUrl);
+			logMessage("controls: " + _alwaysShowControls.toString());
 			logMessage("autoplay: " + _autoplay.toString());
 			logMessage("preload: " + _preload.toString());
 			logMessage("isvideo: " + _isVideo.toString());
@@ -270,12 +273,12 @@ package {
 			if (_output != null) {
 				addChild(_output);
 			}
-			if (_alwaysShowControls) {
+			//if (_alwaysShowControls) {
 				positionControls();
 				// Fire this once just to set the width on some dynamically sized scrub bar items;
 				_scrubBar.scaleX=0;
 				_scrubLoaded.scaleX=0;
-			}
+			//}
 
 			if (ExternalInterface.available) {
 				try {
@@ -441,11 +444,10 @@ package {
 		}
 
 		public function logMessage(txt:String):void {
-			ExternalInterface.call("console.log", txt);
-			
 			if (_output != null) {
 				_output.appendText(txt + "\n");
 				if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+					ExternalInterface.call("console.log", txt);
 					var pattern:RegExp = /'/g; //'
 					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt.replace(pattern, "’") + "')", 0);
 				}
@@ -616,8 +618,6 @@ package {
 			//	return;
 			//}
 			
-			
-			
 			var contWidth:Number;
 			var contHeight:Number;
 			if (_isFullScreen) {
@@ -736,6 +736,13 @@ package {
 			repositionVideo();
 		}
 
+		public function errorHandler(event:UncaughtErrorEvent):void {
+			if (event.error is Error || event.error is ErrorEvent)
+				logMessage("Unhandled error: "+event.error+".");
+			// suppress error dialog
+			event.preventDefault();
+		}
+
 		// START: Fullscreen
 		private function enterFullscreen():void {
 			logMessage("enterFullscreen()");
@@ -760,9 +767,9 @@ package {
 
 			repositionVideo();
 
-			if (!_alwaysShowControls) {
+			//if (!_alwaysShowControls) {
 				_controlBar.visible = false;
-			}
+			//}
 
 			_isFullScreen = false;
 		}
@@ -814,7 +821,6 @@ package {
 			}
 		}
 
-
 		public function stageFullScreenChanged(e:FullScreenEvent):void {
 			logMessage("fullscreen event: " + e.fullScreen.toString());
 
@@ -828,8 +834,6 @@ package {
 			hideFullscreenButton();
 
 			sendEvent(HtmlMediaEvent.FULLSCREENCHANGE, "isFullScreen:" + e.fullScreen );
-
-
 		}
 		// END: Fullscreen
 
