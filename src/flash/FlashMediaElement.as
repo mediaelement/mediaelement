@@ -149,6 +149,8 @@ package {
 				_output.visible = _debug;
 				addChild(_output);
 			}
+			loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, errorHandler);
+
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
 			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
 			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
@@ -271,12 +273,12 @@ package {
 			if (_output != null) {
 				addChild(_output);
 			}
-			if (_alwaysShowControls) {
+			//if (_alwaysShowControls) {
 				positionControls();
 				// Fire this once just to set the width on some dynamically sized scrub bar items;
 				_scrubBar.scaleX=0;
 				_scrubLoaded.scaleX=0;
-			}
+			//}
 
 			if (ExternalInterface.available) {
 				try {
@@ -442,11 +444,10 @@ package {
 		}
 
 		public function logMessage(txt:String):void {
-			ExternalInterface.call("console.log", txt);
-			
 			if (_output != null) {
 				_output.appendText(txt + "\n");
 				if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+					ExternalInterface.call("console.log", txt);
 					var pattern:RegExp = /'/g; //'
 					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt.replace(pattern, "’") + "')", 0);
 				}
@@ -617,8 +618,6 @@ package {
 			//	return;
 			//}
 			
-			
-			
 			var contWidth:Number;
 			var contHeight:Number;
 			if (_isFullScreen) {
@@ -737,6 +736,13 @@ package {
 			repositionVideo();
 		}
 
+		public function errorHandler(event:UncaughtErrorEvent):void {
+			if (event.error is Error || event.error is ErrorEvent)
+				logMessage("Unhandled error: "+event.error+".");
+			// suppress error dialog
+			event.preventDefault();
+		}
+
 		// START: Fullscreen
 		private function enterFullscreen():void {
 			logMessage("enterFullscreen()");
@@ -761,9 +767,9 @@ package {
 
 			repositionVideo();
 
-			if (!_alwaysShowControls) {
+			//if (!_alwaysShowControls) {
 				_controlBar.visible = false;
-			}
+			//}
 
 			_isFullScreen = false;
 		}
@@ -815,7 +821,6 @@ package {
 			}
 		}
 
-
 		public function stageFullScreenChanged(e:FullScreenEvent):void {
 			logMessage("fullscreen event: " + e.fullScreen.toString());
 
@@ -829,8 +834,6 @@ package {
 			hideFullscreenButton();
 
 			sendEvent(HtmlMediaEvent.FULLSCREENCHANGE, "isFullScreen:" + e.fullScreen );
-
-
 		}
 		// END: Fullscreen
 
