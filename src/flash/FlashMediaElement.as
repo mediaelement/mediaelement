@@ -64,7 +64,7 @@ package {
 		private var _connectionName:String;
 
 		// CONTROLS
-		private var _controlsEnabled:Boolean;
+		private var _alwaysShowControls:Boolean;
 		private var _controlsStyle:String;
 		private var _controlsAutoHide:Boolean = true;
 		private var _controlBar:MovieClip;
@@ -158,7 +158,7 @@ package {
 			_enableSmoothing = (params['smoothing'] != undefined) ? (String(params['smoothing']) == "true") : false;
 			_startVolume = (params['startvolume'] != undefined) ? (parseFloat(params['startvolume'])) : 0.8;
 			_preload = (params['preload'] != undefined) ? params['preload'] : "none";
-			_controlsEnabled = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
+			_alwaysShowControls = (params['controls'] != undefined) ? (String(params['controls']) == "true") : false;
 			_controlsStyle = (params['controlstyle'] != undefined) ? (String(params['controlstyle'])) : ""; // blank or "floating"
 			_controlsAutoHide = (params['autohide'] != undefined) ? (String(params['autohide']) == "true") : true;
 			_scrubTrackColor = (params['scrubtrackcolor'] != undefined) ? (String(params['scrubtrackcolor'])) : "0x333333";
@@ -170,7 +170,7 @@ package {
 			_fill = (params['fill'] != undefined) ? (String(params['fill']) == "true") : false;
 
 			// always show controls for audio files
-			if (!_isVideo && _controlsEnabled)
+			if (!_isVideo && _alwaysShowControls)
 				_controlsAutoHide = false;
 
 			if (isNaN(_timerRate))
@@ -184,7 +184,7 @@ package {
 
 			//_autoplay = true;
 			//_mediaUrl  = "http://mediafiles.dts.edu/chapel/mp4/20100609.mp4";
-			//_controlsEnabled = true;
+			//_alwaysShowControls = true;
 			//_mediaUrl  = "../media/Parades-PastLives.mp3";
 			//_mediaUrl  = "../media/echo-hereweare.mp4";
 
@@ -194,7 +194,7 @@ package {
 			//_mediaUrl = "http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0"; // hosea
 			//_mediaUrl = "http://www.youtube.com/watch?feature=player_embedded&v=m5VDDJlsD6I"; // railer with notes
 
-			//_controlsEnabled = true;
+			//_alwaysShowControls = true;
 
 			//_debug=true;
 
@@ -248,16 +248,11 @@ package {
 				_mediaElement = new AudioElement(this, _autoplay, _preload, _timerRate, _startVolume);
 			}
 
-			if (_controlsEnabled) {
-				buildControls();
-			}
-			else {
-				removeControls();
-			}
-			
+			buildControls();
+						
 			logMessage("stage: " + stage.stageWidth + "x" + stage.stageHeight);
 			logMessage("file: " + _mediaUrl);
-			logMessage("controls: " + _controlsEnabled.toString());
+			logMessage("controls: " + _alwaysShowControls.toString());
 			logMessage("autoplay: " + _autoplay.toString());
 			logMessage("preload: " + _preload.toString());
 			logMessage("isvideo: " + _isVideo.toString());
@@ -276,7 +271,7 @@ package {
 			if (_output != null) {
 				addChild(_output);
 			}
-			if (_controlsEnabled) {
+			if (_alwaysShowControls) {
 				positionControls();
 				// Fire this once just to set the width on some dynamically sized scrub bar items;
 				_scrubBar.scaleX=0;
@@ -429,15 +424,15 @@ package {
 				_volumeUnMuted.visible=true;
 			}
 
-			_controlBar.visible = _controlsEnabled;
+			_controlBar.visible = _alwaysShowControls;
 
 			setControlDepth();
 		}
 
 		public function setControlDepth():void {
-			if (!_controlsEnabled) {
-				return;
-			}
+			//if (!_alwaysShowControls) {
+			//	return;
+			//}
 			// put these on top
 			if (_output != null) {
 				addChild(_output);
@@ -447,6 +442,8 @@ package {
 		}
 
 		public function logMessage(txt:String):void {
+			ExternalInterface.call("console.log", txt);
+			
 			if (_output != null) {
 				_output.appendText(txt + "\n");
 				if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
@@ -522,7 +519,7 @@ package {
 			// if mouse is in the video area
 			if (_controlsAutoHide && (mouseX>=0 && mouseX<=stage.stageWidth) && (mouseY>=0 && mouseY<=stage.stageHeight)) {
 				// This could be move to a nice fade at some point...
-				_controlBar.visible = (_controlsEnabled || _isFullScreen);
+				_controlBar.visible = (_alwaysShowControls || _isFullScreen);
 				_isMouseActive = true;
 				_idleTime = 0;
 				_timer.reset();
@@ -616,9 +613,12 @@ package {
 		}
 
 		private function positionControls(forced:Boolean=false):void {
-			if (!_controlsEnabled) {
-				return;
-			}
+			//if (!_alwaysShowControls) {
+			//	return;
+			//}
+			
+			
+			
 			var contWidth:Number;
 			var contHeight:Number;
 			if (_isFullScreen) {
@@ -748,10 +748,10 @@ package {
 
 			repositionVideo();
 
-			if (_controlsEnabled) {
-				updateControls(HtmlMediaEvent.FULLSCREENCHANGE);
+			//if (_alwaysShowControls) {
 				_controlBar.visible = true;
-			}
+				updateControls(HtmlMediaEvent.FULLSCREENCHANGE);				
+			//}
 
 			_isFullScreen = true;
 		}
@@ -761,7 +761,7 @@ package {
 
 			repositionVideo();
 
-			if (_controlsEnabled) {
+			if (!_alwaysShowControls) {
 				_controlBar.visible = false;
 			}
 
@@ -805,9 +805,9 @@ package {
 			hideFullscreenButton();
 
 			try {
-				if (_controlsEnabled) {
+				//if (_alwaysShowControls) {
 					_controlBar.visible = true;
-				}
+				//}
 				setFullscreen(true);
 				repositionVideo();
 				positionControls();
@@ -819,14 +819,18 @@ package {
 		public function stageFullScreenChanged(e:FullScreenEvent):void {
 			logMessage("fullscreen event: " + e.fullScreen.toString());
 
-			hideFullscreenButton();
 			_isFullScreen = e.fullScreen;
+			
+			if (!_isFullScreen) {
+				_controlBar.visible = _alwaysShowControls;
+			}			
+			
+			repositionVideo();			
+			hideFullscreenButton();
 
 			sendEvent(HtmlMediaEvent.FULLSCREENCHANGE, "isFullScreen:" + e.fullScreen );
 
-			if (_controlsEnabled && !e.fullScreen) {
-				_controlBar.visible = _controlsEnabled;
-			}
+
 		}
 		// END: Fullscreen
 
@@ -885,8 +889,8 @@ package {
 
 		public function positionFullscreenButton(x:Number, y:Number, visibleAndAbove:Boolean ):void {
 			logMessage("position FS: " + x.toString() + "x" + y.toString());
-			if (!_fullscreenButton)
-				return;
+			//if (!_fullscreenButton)
+			//	return;
 
 			// position just above
 			if (visibleAndAbove) {
@@ -1021,11 +1025,11 @@ package {
 
 
 		private function updateControls(eventName:String):void {
-			if (!_controlsEnabled) {
-				return;
-			}
+			//if (!_controls.visible) {
+			//	return;
+			//}
 
-			//trace("updating controls");
+			logMessage("updating controls");
 			try {
 				switch (eventName) {
 					case "pause":
