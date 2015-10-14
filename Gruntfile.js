@@ -167,7 +167,7 @@ module.exports = function(grunt) {
                 command: function() {
                     grunt.config.set("cdnBuild", 'false');
                     grunt.config.set("debugBuild", 'false');
-                    grunt.config.set("flashOut", 'build/flashmediaelement.swf');
+                    grunt.config.set("flashOut", 'local-build/flashmediaelement.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             },
@@ -175,7 +175,7 @@ module.exports = function(grunt) {
                 command: function() {
                     grunt.config.set("cdnBuild", 'true');
                     grunt.config.set("debugBuild", 'false');
-                    grunt.config.set("flashOut", 'build/flashmediaelement-cdn.swf');
+                    grunt.config.set("flashOut", 'local-build/flashmediaelement-cdn.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             },
@@ -183,7 +183,7 @@ module.exports = function(grunt) {
                 command: function() {
                     grunt.config.set("cdnBuild", 'true');
                     grunt.config.set("debugBuild", 'true');
-                    grunt.config.set("flashOut", 'build/flashmediaelement-debug.swf');
+                    grunt.config.set("flashOut", 'local-build/flashmediaelement-debug.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             }
