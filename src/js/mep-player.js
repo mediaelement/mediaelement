@@ -330,7 +330,7 @@
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media)
 					.focus(function ( e ) {
-						if( !t.controlsAreVisible ) {
+						if( !t.controlsAreVisible && t.controlsEnabled ) {
 							t.showControls(true);
 							var playButton = t.container.find('.mejs-playpause-button > button');
 							playButton.focus();
