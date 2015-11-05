@@ -166,24 +166,24 @@ module.exports = function(grunt) {
             buildFlash: {
                 command: function() {
                     grunt.config.set("cdnBuild", 'false');
-                    grunt.config.set("debugBuild", 'false');                    
-                    grunt.config.set("flashOut", 'local-build/flashmediaelement.swf');
+                    grunt.config.set("debugBuild", 'false');
+                    grunt.config.set("flashOut", 'build/flashmediaelement.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             },
             buildFlashCDN: {
                 command: function() {
                     grunt.config.set("cdnBuild", 'true');
-					grunt.config.set("debugBuild", 'false'); 
-                    grunt.config.set("flashOut", 'local-build/flashmediaelement-cdn.swf');
+                    grunt.config.set("debugBuild", 'false');
+                    grunt.config.set("flashOut", 'build/flashmediaelement-cdn.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             },
             buildFlashDebug: {
                 command: function() {
+                    grunt.config.set("cdnBuild", 'true');
                     grunt.config.set("debugBuild", 'true');
-                    grunt.config.set("cdnBuild", 'true');                    
-                    grunt.config.set("flashOut", 'local-build/flashmediaelement-debug.swf');
+                    grunt.config.set("flashOut", 'build/flashmediaelement-debug.swf');
                     return grunt.config.get("buildFlashCommand");
                 }
             }
