@@ -25,10 +25,11 @@ mejs.MediaFeatures = {
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit && !t.isIE;
 		t.isOpera = (ua.match(/opera/gi) !== null);
 		t.hasTouch = ('ontouchstart' in window); //  && window.ontouchstart != null); // this breaks iOS 7
-		
-		// borrowed from Modernizr
-		t.svg = !! document.createElementNS &&
-				!! document.createElementNS('http://www.w3.org/2000/svg','svg').createSVGRect;
+
+		// Borrowed from `Modernizr.svgasimg`, sources:
+		// - https://github.com/Modernizr/Modernizr/issues/687
+		// - https://github.com/Modernizr/Modernizr/pull/1209/files
+		t.svgAsImg = !!document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Image', '1.1');
 
 		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
 		for (i=0; i<html5Elements.length; i++) {
