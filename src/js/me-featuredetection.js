@@ -35,7 +35,7 @@ mejs.MediaFeatures = {
 		for (i=0; i<html5Elements.length; i++) {
 			v = document.createElement(html5Elements[i]);
 		}
-		
+
 		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid);
 
 		// Fix for IE9 on Windows 7N / Windows 7KN (Media Player not installer)
@@ -46,62 +46,62 @@ mejs.MediaFeatures = {
 		}
 
 		// detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
-		
+
 		// iOS
 		t.hasSemiNativeFullScreen = (typeof v.webkitEnterFullscreen !== 'undefined');
-		
+
 		// W3C
 		t.hasNativeFullscreen = (typeof v.requestFullscreen !== 'undefined');
-		
+
 		// webkit/firefox/IE11+
 		t.hasWebkitNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
 		t.hasMozNativeFullScreen = (typeof v.mozRequestFullScreen !== 'undefined');
 		t.hasMsNativeFullScreen = (typeof v.msRequestFullscreen !== 'undefined');
-		
+
 		t.hasTrueNativeFullScreen = (t.hasWebkitNativeFullScreen || t.hasMozNativeFullScreen || t.hasMsNativeFullScreen);
 		t.nativeFullScreenEnabled = t.hasTrueNativeFullScreen;
-		
+
 		// Enabled?
 		if (t.hasMozNativeFullScreen) {
 			t.nativeFullScreenEnabled = document.mozFullScreenEnabled;
 		} else if (t.hasMsNativeFullScreen) {
-			t.nativeFullScreenEnabled = document.msFullscreenEnabled;		
+			t.nativeFullScreenEnabled = document.msFullscreenEnabled;
 		}
-		
+
 		if (t.isChrome) {
 			t.hasSemiNativeFullScreen = false;
 		}
-		
+
 		if (t.hasTrueNativeFullScreen) {
-			
+
 			t.fullScreenEventName = '';
-			if (t.hasWebkitNativeFullScreen) { 
+			if (t.hasWebkitNativeFullScreen) {
 				t.fullScreenEventName = 'webkitfullscreenchange';
-				
+
 			} else if (t.hasMozNativeFullScreen) {
 				t.fullScreenEventName = 'mozfullscreenchange';
-				
+
 			} else if (t.hasMsNativeFullScreen) {
 				t.fullScreenEventName = 'MSFullscreenChange';
 			}
-			
+
 			t.isFullScreen = function() {
 				if (t.hasMozNativeFullScreen) {
 					return d.mozFullScreen;
-				
+
 				} else if (t.hasWebkitNativeFullScreen) {
 					return d.webkitIsFullScreen;
-				
+
 				} else if (t.hasMsNativeFullScreen) {
 					return d.msFullscreenElement !== null;
 				}
 			}
-					
+
 			t.requestFullScreen = function(el) {
-		
+
 				if (t.hasWebkitNativeFullScreen) {
 					el.webkitRequestFullScreen();
-					
+
 				} else if (t.hasMozNativeFullScreen) {
 					el.mozRequestFullScreen();
 
@@ -110,29 +110,29 @@ mejs.MediaFeatures = {
 
 				}
 			}
-			
-			t.cancelFullScreen = function() {				
+
+			t.cancelFullScreen = function() {
 				if (t.hasWebkitNativeFullScreen) {
 					document.webkitCancelFullScreen();
-					
+
 				} else if (t.hasMozNativeFullScreen) {
 					document.mozCancelFullScreen();
-					
+
 				} else if (t.hasMsNativeFullScreen) {
 					document.msExitFullscreen();
-					
+
 				}
-			}	
-			
+			}
+
 		}
-		
-		
+
+
 		// OS X 10.5 can't do this even if it says it can :(
 		if (t.hasSemiNativeFullScreen && ua.match(/mac os x 10_5/i)) {
 			t.hasNativeFullScreen = false;
 			t.hasSemiNativeFullScreen = false;
 		}
-		
+
 	}
 };
 mejs.MediaFeatures.init();
