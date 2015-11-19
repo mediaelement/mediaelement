@@ -441,6 +441,10 @@ package {
 		}
 
 		public function logMessage(txt:String):void {
+			if (!_debug) {
+				return;
+			}
+			
 			ExternalInterface.call("console.log", txt);
 			
 			if (_output != null) {
