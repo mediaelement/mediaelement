@@ -117,4 +117,4 @@ To compile the changes
 1. Install `node.js` with `npm` https://nodejs.org/
 2. At the command prompt type `npm install` which will download all the necessary tools
 3. Type `grunt` to build MediaElement.js
-4. To compile the Flash swf, you'll need to install Flex 4.6. See instructions in grunt.js for details.
+4. To compile the Flash swf, you'll need to install Flex 4.6. See instructions in Gruntfile.js for details.
