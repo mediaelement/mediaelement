@@ -190,7 +190,6 @@
 			
 			// turn off controls until the preroll is done
 			t.disableControls();
-			t.hideControls();
 			
 			// enable clicking through
 			if (t.options.adsPrerollAdUrl != '') {
@@ -259,7 +258,6 @@
 			}, 10);
 			
 			t.enableControls();
-			t.showControls();	
 			
 			t.adsLayer.hide();				
 			
