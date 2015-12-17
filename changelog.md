@@ -1,5 +1,11 @@
 ### Version History
 
+* No longer clone media DOM element on iOS (https://github.com/johndyer/mediaelement/pull/1661)
+* Expose fragment playing event in HLSMediaElement (https://github.com/johndyer/mediaelement/pull/1655)
+* Flash: Only log to console if debug is true (https://github.com/johndyer/mediaelement/pull/1651/files)
+* Detect svgAsImg support to fix old FF (https://github.com/johndyer/mediaelement/pull/1649) @axnd
+* Correcting swf compilation instruction location (https://github.com/johndyer/mediaelement/pull/1618/files) @che-effe
+
 *2.18.2 (2015/10/09)*
 
 * event fix for players inside of iframes (https://github.com/johndyer/mediaelement/pull/1597) @meirish
