@@ -1,10 +1,16 @@
 ### Version History
 
+
+*2.19.0 (2015/12/18)*
+
 * No longer clone media DOM element on iOS (https://github.com/johndyer/mediaelement/pull/1661)
 * Expose fragment playing event in HLSMediaElement (https://github.com/johndyer/mediaelement/pull/1655)
 * Flash: Only log to console if debug is true (https://github.com/johndyer/mediaelement/pull/1651/files)
 * Detect svgAsImg support to fix old FF (https://github.com/johndyer/mediaelement/pull/1649) @axnd
 * Correcting swf compilation instruction location (https://github.com/johndyer/mediaelement/pull/1618/files) @che-effe
+* Brazilian Portuguese translation (https://github.com/johndyer/mediaelement/pull/1648/files) @odnamrataizem
+* Hide controls only when available (https://github.com/johndyer/mediaelement/pull/1644/files) @nseibert  
+* removed duplicate calls to hide- and showControls() (https://github.com/johndyer/mediaelement/pull/1616/files) @schrolli  
 
 *2.18.2 (2015/10/09)*
 
