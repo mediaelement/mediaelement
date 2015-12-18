@@ -2,7 +2,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.18.2'; 
+mejs.version = '2.19.0'; 
 console.log('ME.js version', mejs.version);
 
 // player number (for missing, same id attr)
