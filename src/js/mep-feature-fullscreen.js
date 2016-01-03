@@ -164,7 +164,8 @@
 						}
 
 						// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
-						fullscreenBtn.on('mouseover',function() {
+						fullscreenBtn 
+							.mouseover(function() {
 
 							if (!t.isFullScreen) {
 
@@ -237,7 +238,7 @@
 						// the hover state will show the fullscreen button in Flash to hover up and click
 
 						fullscreenBtn
-							.on('mouseover', function() {
+							.mouseover(function() {
 
 								if (hideTimeout !== null) {
 									clearTimeout(hideTimeout);
@@ -250,7 +251,7 @@
 								media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, true);
 
 							})
-							.on('mouseout', function() {
+							.mouseout(function() {
 
 								if (hideTimeout !== null) {
 									clearTimeout(hideTimeout);
