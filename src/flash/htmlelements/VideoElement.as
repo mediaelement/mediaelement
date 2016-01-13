@@ -54,6 +54,8 @@ package htmlelements {
 		private var _parentReference:Object;
 		private var _pseudoStreamingEnabled:Boolean = false;
 		private var _pseudoStreamingStartQueryParam:String = "start";
+		private var _pseudoStreamingType:String = "time";
+		private var _pseudoStreamingBytePositions:Array = [];
 
 		public function setReference(arg:Object):void {
 			_parentReference = arg;
@@ -70,6 +72,10 @@ package htmlelements {
 
 		public function setPseudoStreamingStartParam(pseudoStreamingStartQueryParam:String):void {
 			_pseudoStreamingStartQueryParam = pseudoStreamingStartQueryParam;
+		}
+
+		public function setPseudoStreamingType(pseudoStreamingType:String):void {
+			_pseudoStreamingType = pseudoStreamingType;
 		}
 
 		public function get video():Video {
@@ -226,6 +232,11 @@ package htmlelements {
 			_framerate = info.framerate;
 			_videoWidth = info.width;
 			_videoHeight = info.height;
+
+			// For byte based pseudo-streaming, find seekpoints from metadata
+			if ("byte" == _pseudoStreamingType && _pseudoStreamingEnabled) {
+				findBytePosition(info);
+			}
 
 			// set size?
 			sendEvent(HtmlMediaEvent.LOADEDMETADATA);
@@ -506,6 +517,11 @@ package htmlelements {
 		private function getCurrentUrl(pos:Number):String {
 			var url:String = _currentUrl;
 			if (_pseudoStreamingEnabled) {
+				// Convert the time position into a byte from which video has to be loaded
+				if ("byte" == _pseudoStreamingType) {
+					pos = getBytePosition(pos);
+				}
+
 				if (url.indexOf('?') > -1) {
 					url = url + '&' + _pseudoStreamingStartQueryParam + '=' + pos;
 				}
@@ -514,6 +530,51 @@ package htmlelements {
 				}
 			}
 			return url;
+		}
+
+		/**
+		 * Extracts positions from media metadata and stores it in an array in the form of `seekpoints` objects
+		 *
+		 * @param info
+         */
+		private function findBytePosition(info:Object):void {
+			var i:int;
+
+			if (info.keyframes) {
+				for (i=0; i<info.keyframes.times.length; i++) {
+					var seekpoint:Object = { time:Number, offset:Number };
+						seekpoint.time = info.keyframes.times[i];
+						seekpoint.offset = info.keyframes.filepositions[i];
+
+					_pseudoStreamingBytePositions.push(seekpoint);
+				}
+			}
+
+			if (info.seekpoints) {
+				for (i=0; i<info.seekpoints.length; i++) {
+					_pseudoStreamingBytePositions.push(info.seekpoints[i]);
+				}
+			}
+
+			_pseudoStreamingBytePositions.sortOn('time', Array.NUMERIC);
+		}
+
+		/**
+		 * Get the video's byte that is nearest to input time
+		 *
+		 * @param	time	Number of seconds
+		 * @return			Nearest position
+		 */
+		private function getBytePosition(time:Number):Number {
+			var i:int;
+
+			for (i=0; i<_pseudoStreamingBytePositions.lenght; i++) {
+				if (_pseudoStreamingBytePositions[i].time >= time && time <= _pseudoStreamingBytePositions[i + 1].time) {
+					return _pseudoStreamingBytePositions[i].offset;
+				}
+			}
+
+			return 0;
 		}
 	}
 }

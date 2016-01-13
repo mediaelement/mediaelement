@@ -114,6 +114,8 @@ mejs.MediaElementDefaults = {
 	enablePseudoStreaming: false,
 	// start query parameter sent to server for pseudo-streaming
 	pseudoStreamingStartQueryParam: 'start',
+	// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
+	pseudoStreamingType: 'time',
 	// name of silverlight file
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
@@ -532,7 +534,8 @@ mejs.HtmlMediaElementShim = {
 			'timerrate=' + options.timerRate,
 			'flashstreamer=' + options.flashStreamer,
 			'height=' + height,
-			'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
+			'pseudostreamstart=' + options.pseudoStreamingStartQueryParam,
+			'pseudostreamtype=' + options.pseudoStreamingType];
 
 		if (playback.url !== null) {
 			if (playback.method == 'flash') {
