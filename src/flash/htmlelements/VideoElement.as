@@ -107,7 +107,7 @@ package htmlelements {
 			var currentTime:Number = 0;
 			if (_stream != null) {
 				currentTime = _stream.time;
-				if (_pseudoStreamingEnabled) {
+				if (_pseudoStreamingEnabled && "time" == _pseudoStreamingType) {
 					currentTime += _seekOffset;
 				}
 			}
@@ -516,19 +516,13 @@ package htmlelements {
 
 		private function getCurrentUrl(pos:Number):String {
 			var url:String = _currentUrl;
-			if (_pseudoStreamingEnabled) {
-				// Convert the time position into a byte from which video has to be loaded
-				if ("byte" == _pseudoStreamingType) {
-					pos = getBytePosition(pos);
-				}
 
-				if (url.indexOf('?') > -1) {
-					url = url + '&' + _pseudoStreamingStartQueryParam + '=' + pos;
-				}
-				else {
-					url = url + '?' + _pseudoStreamingStartQueryParam + '=' + pos;
-				}
+			if (_pseudoStreamingEnabled) {
+				url += (url.indexOf('?') > -1) ? '&' : '?';
+				url += _pseudoStreamingStartQueryParam + '=';
+				url += ("byte" == _pseudoStreamingType) ? getBytePosition(pos).toString() : pos.toString();
 			}
+
 			return url;
 		}
 
@@ -538,6 +532,7 @@ package htmlelements {
 		 * @param info
          */
 		private function findBytePosition(info:Object):void {
+			_pseudoStreamingBytePositions.splice(0);
 			var i:int;
 
 			if (info.keyframes) {
@@ -568,7 +563,7 @@ package htmlelements {
 		private function getBytePosition(time:Number):Number {
 			var i:int;
 
-			for (i=0; i<_pseudoStreamingBytePositions.lenght; i++) {
+			for (i=0; i<_pseudoStreamingBytePositions.length; i++) {
 				if (_pseudoStreamingBytePositions[i].time >= time && time <= _pseudoStreamingBytePositions[i + 1].time) {
 					return _pseudoStreamingBytePositions[i].offset;
 				}
