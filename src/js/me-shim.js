@@ -816,8 +816,14 @@ mejs.YouTubeApi = {
 			events: {
 				'onReady': function() {
 					
+					// wrapper to match
+					player.setVideoSize = function(width, height) {
+						player.setSize(width, height);
+					}
+					
 					// hook up iframe object to MEjs
 					settings.pluginMediaElement.pluginApi = player;
+					settings.pluginMediaElement.pluginElement = document.getElementById(settings.containerId);
 					
 					// init mejs
 					mejs.MediaPluginBridge.initPlugin(settings.pluginId);
