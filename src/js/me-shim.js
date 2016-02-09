@@ -633,10 +633,11 @@ mejs.HtmlMediaElementShim = {
 						width: width	
 					};				
 				
-				if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
-					mejs.YouTubeApi.createFlash(youtubeSettings, options);
-				} else {
+				// favor iframe version of YouTube
+				if (window.postMessage) {
 					mejs.YouTubeApi.enqueueIframe(youtubeSettings);		
+				} else if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
+					mejs.YouTubeApi.createFlash(youtubeSettings, options);
 				}
 				
 				break;
@@ -811,12 +812,18 @@ mejs.YouTubeApi = {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: {controls:0},
+			playerVars: {controls:0,wmode:'transparent'},
 			events: {
 				'onReady': function() {
 					
+					// wrapper to match
+					player.setVideoSize = function(width, height) {
+						player.setSize(width, height);
+					}
+					
 					// hook up iframe object to MEjs
 					settings.pluginMediaElement.pluginApi = player;
+					settings.pluginMediaElement.pluginElement = document.getElementById(settings.containerId);
 					
 					// init mejs
 					mejs.MediaPluginBridge.initPlugin(settings.pluginId);

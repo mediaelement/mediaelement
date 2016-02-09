@@ -1424,8 +1424,8 @@
 		}
 
 		mejs.MediaElementPlayer.prototype.globalBind = function(events, data, callback) {
-    	var t = this;
-      var doc = t.node ? t.node.ownerDocument : document;
+    		var t = this;
+			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
 			if (events.d) $(doc).bind(events.d, data, callback);
@@ -1434,7 +1434,7 @@
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function(events, callback) {
 			var t = this;
-      var doc = t.node ? t.node.ownerDocument : document;
+			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
 			if (events.d) $(doc).unbind(events.d, callback);
