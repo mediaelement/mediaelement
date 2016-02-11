@@ -22,9 +22,9 @@
 
 					// hover
 					.hover(function() {
-						$(this).find('.mejs-sourcechooser-selector').css('visibility','visible');
+						$(this).find('.mejs-sourcechooser-selector').removeClass('mejs-offscreen');
 					}, function() {
-						$(this).find('.mejs-sourcechooser-selector').css('visibility','hidden');
+						$(this).find('.mejs-sourcechooser-selector').addClass('mejs-offscreen');
 					})
 
 					// handle clicks to the language radio buttons
