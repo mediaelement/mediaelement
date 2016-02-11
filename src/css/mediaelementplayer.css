@@ -1,11 +1,10 @@
 .mejs-offscreen{
-/* Accessibility: hide screen reader texts (and prefer "top" for RTL languages). */
+/* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).  Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
+	clip: rect(1px, 1px, 1px, 1px);
 	position: absolute !important;
-	top: -10000px;
-	left: -10000px;
-	overflow: hidden;
-	width: 1px;
 	height: 1px;
+	width: 1px;
+	overflow: hidden;
 }
 
 .mejs-container {
