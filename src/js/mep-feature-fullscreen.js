@@ -404,11 +404,13 @@
 					.width('100%')
 					.height('100%');	
 				
-				var win = $(window),
-					winW = win.width(),
-					winH = win.height();
-						
-				t.media.setVideoSize(winW,winH);			
+				setTimeout(function() {
+					var win = $(window),
+						winW = win.width(),
+						winH = win.height();
+							
+					t.media.setVideoSize(winW,winH);			
+				}, 500);
 			}
 
 			t.layers.children('div')
