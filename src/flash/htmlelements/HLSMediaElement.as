@@ -112,6 +112,7 @@
 					_isEnded = false;
 					_video.visible = true;
 					sendEvent(HtmlMediaEvent.LOADEDDATA);
+					sendEvent(HtmlMediaEvent.CANPLAY);
 					sendEvent(HtmlMediaEvent.PLAY);
 					sendEvent(HtmlMediaEvent.PLAYING);
 					break;
