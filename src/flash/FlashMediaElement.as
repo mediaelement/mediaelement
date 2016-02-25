@@ -45,6 +45,7 @@ package {
 		private var _streamer:String = "";
 		private var _enablePseudoStreaming:Boolean;
 		private var _pseudoStreamingStartQueryParam:String;
+		private var _pseudoStreamingType:String;
 		private var _fill:Boolean;
 
 		// native video size (from meta data)
@@ -166,6 +167,7 @@ package {
 			_scrubLoadedColor = (params['scrubloadedcolor'] != undefined) ? (String(params['scrubloadedcolor'])) : "0x3CACC8";
 			_enablePseudoStreaming = (params['pseudostreaming'] != undefined) ? (String(params['pseudostreaming']) == "true") : false;
 			_pseudoStreamingStartQueryParam = (params['pseudostreamstart'] != undefined) ? (String(params['pseudostreamstart'])) : "start";
+			_pseudoStreamingType = (params['pseudostreamtype'] != undefined) ? (String(params['pseudostreamtype'])) : "time";
 			_streamer = (params['flashstreamer'] != undefined) ? (String(params['flashstreamer'])) : "";
 			_fill = (params['fill'] != undefined) ? (String(params['fill']) == "true") : false;
 
@@ -240,6 +242,7 @@ package {
 					(_mediaElement as VideoElement).setReference(this);
 					(_mediaElement as VideoElement).setPseudoStreaming(_enablePseudoStreaming);
 					(_mediaElement as VideoElement).setPseudoStreamingStartParam(_pseudoStreamingStartQueryParam);
+					(_mediaElement as VideoElement).setPseudoStreamingType(_pseudoStreamingType);
 					//_video.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
 					addChild(_video);
 				}
@@ -258,6 +261,8 @@ package {
 			logMessage("smoothing: " + _enableSmoothing.toString());
 			logMessage("timerrate: " + _timerRate.toString());
 			logMessage("displayState: " +(stage.hasOwnProperty("displayState")).toString());
+			logMessage("pseudostreaming: " + _enablePseudoStreaming.toString());
+			logMessage("pseudostreamingtype: " + _pseudoStreamingType);
 
 			// attach javascript
 			logMessage("ExternalInterface.available: " + ExternalInterface.available.toString());

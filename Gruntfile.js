@@ -148,7 +148,7 @@ module.exports = function(grunt) {
         // Note: There doesn't seem to be an available SWC library that defines the YouTube player API.
         //       Remove the -strict compiler option to see warnings coming from YouTube API calls.
         //
-        flexPath: '../flex_sdk_4.6',
+        flexPath: './src/flash/flex_sdk_4.6',
         buildFlashCommand: [
             '<%= flexPath %>/bin/mxmlc -strict=false -compiler.debug -warnings=true',
             'src/flash/FlashMediaElement.as -o <%= flashOut %>',
@@ -158,7 +158,7 @@ module.exports = function(grunt) {
             '-include-libraries+=src/flash/flashmediaelement.swc',
             '-include-libraries+=src/flash/flashls.swc -use-network=true',
             '-source-path src/flash',
-            '-target-player 10.0',
+            '-target-player 10.1',
             '-headless-server -static-link-runtime-shared-libraries'
         ].join(" "),
 
