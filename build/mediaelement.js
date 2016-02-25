@@ -636,7 +636,7 @@ mejs.PluginMediaElement.prototype = {
 	// HTML5 methods
 	play: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				this.pluginApi.playVideo();
 			} else {
 				this.pluginApi.playMedia();
@@ -646,7 +646,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	load: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 			} else {
 				this.pluginApi.loadMedia();
 			}
@@ -656,7 +656,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	pause: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				this.pluginApi.pauseVideo();
 			} else {
 				this.pluginApi.pauseMedia();
@@ -668,7 +668,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	stop: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				this.pluginApi.stopVideo();
 			} else {
 				this.pluginApi.stopMedia();
@@ -702,15 +702,23 @@ mejs.PluginMediaElement.prototype = {
 	},
 	
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
-		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
-		}
+		if (this.pluginApi != null) {
+	        	//cannot test for pluginApi.positionFullscreenButton because of "Invalid InvokeType" error
+            		//so just try and call it
+            		try {
+                    	this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
+            		}
+	        	catch (e) { }
+	    	}
 	},
 	
 	hideFullscreenButton: function() {
-		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
-			this.pluginApi.hideFullscreenButton();
-		}		
+		//cannot test for pluginApi.hideFullscreenButton because of "Invalid InvokeType" error
+            	//so just try and call it
+            	try {
+	        	this.pluginApi.hideFullscreenButton();
+            	}
+	        catch(e) {}
 	},	
 	
 
@@ -729,7 +737,7 @@ mejs.PluginMediaElement.prototype = {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
-					this.src = mejs.Utility.absolutizeUrl(media.src);
+					this.src = mejs.Utility.absolutizeUrl(url);
 					break;
 				}
 			}
@@ -738,7 +746,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setCurrentTime: function (time) {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
+			if (this.pluginType == 'youtube') {
 				this.pluginApi.seekTo(time);
 			} else {
 				this.pluginApi.setCurrentTime(time);
@@ -769,7 +777,7 @@ mejs.PluginMediaElement.prototype = {
 					this.pluginApi.unMute();
 				}
 				this.muted = muted;
-				this.dispatchEvent({type:'volumechange'});
+				this.dispatchEvent('volumechange');
 			} else {
 				this.pluginApi.setMuted(muted);
 			}
@@ -781,7 +789,7 @@ mejs.PluginMediaElement.prototype = {
 	setVideoSize: function (width, height) {
 		
 		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if (this.pluginElement && this.pluginElement.style) {
+			if ( this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
@@ -820,7 +828,7 @@ mejs.PluginMediaElement.prototype = {
 		var callbacks = this.events[eventName];
 		if (!callbacks) return true;
 		if (!callback) { this.events[eventName] = []; return true; }
-		for (var i = 0; i < callbacks.length; i++) {
+		for (i = 0; i < callbacks.length; i++) {
 			if (callbacks[i] === callback) {
 				this.events[eventName].splice(i, 1);
 				return true;
@@ -828,14 +836,15 @@ mejs.PluginMediaElement.prototype = {
 		}
 		return false;
 	},	
-	dispatchEvent: function (event) {
+	dispatchEvent: function (eventName) {
 		var i,
 			args,
-			callbacks = this.events[event.type];
+			callbacks = this.events[eventName];
 
 		if (callbacks) {
+			args = Array.prototype.slice.call(arguments, 1);
 			for (i = 0; i < callbacks.length; i++) {
-				callbacks[i].apply(this, [event]);
+				callbacks[i].apply(null, args);
 			}
 		}
 	},
@@ -980,6 +989,8 @@ mejs.MediaElementDefaults = {
 	enablePseudoStreaming: false,
 	// start query parameter sent to server for pseudo-streaming
 	pseudoStreamingStartQueryParam: 'start',
+	// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
+	pseudoStreamingType: 'time',
 	// name of silverlight file
 	silverlightName: 'silverlightmediaelement.xap',
 	// default if the <video width> is not specified
@@ -1398,7 +1409,8 @@ mejs.HtmlMediaElementShim = {
 			'timerrate=' + options.timerRate,
 			'flashstreamer=' + options.flashStreamer,
 			'height=' + height,
-			'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
+			'pseudostreamstart=' + options.pseudoStreamingStartQueryParam,
+			'pseudostreamtype=' + options.pseudoStreamingType];
 
 		if (playback.url !== null) {
 			if (playback.method == 'flash') {
