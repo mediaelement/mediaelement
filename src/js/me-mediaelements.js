@@ -97,7 +97,7 @@ mejs.PluginMediaElement.prototype = {
 	// HTML5 methods
 	play: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.playVideo();
 			} else {
 				this.pluginApi.playMedia();
@@ -107,7 +107,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	load: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 			} else {
 				this.pluginApi.loadMedia();
 			}
@@ -117,7 +117,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	pause: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.pauseVideo();
 			} else {
 				this.pluginApi.pauseMedia();
@@ -129,7 +129,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	stop: function () {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.stopVideo();
 			} else {
 				this.pluginApi.stopMedia();
@@ -163,23 +163,15 @@ mejs.PluginMediaElement.prototype = {
 	},
 	
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
-		if (this.pluginApi != null) {
-	        	//cannot test for pluginApi.positionFullscreenButton because of "Invalid InvokeType" error
-            		//so just try and call it
-            		try {
-                    	this.pluginApi.positionFullscreenButton(x,y,visibleAndAbove);
-            		}
-	        	catch (e) { }
-	    	}
+		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
+			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
+		}
 	},
 	
 	hideFullscreenButton: function() {
-		//cannot test for pluginApi.hideFullscreenButton because of "Invalid InvokeType" error
-            	//so just try and call it
-            	try {
-	        	this.pluginApi.hideFullscreenButton();
-            	}
-	        catch(e) {}
+		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
+			this.pluginApi.hideFullscreenButton();
+		}		
 	},	
 	
 
@@ -198,7 +190,7 @@ mejs.PluginMediaElement.prototype = {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
-					this.src = mejs.Utility.absolutizeUrl(url);
+					this.src = mejs.Utility.absolutizeUrl(media.src);
 					break;
 				}
 			}
@@ -207,7 +199,7 @@ mejs.PluginMediaElement.prototype = {
 	},
 	setCurrentTime: function (time) {
 		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
+			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
 				this.pluginApi.seekTo(time);
 			} else {
 				this.pluginApi.setCurrentTime(time);
@@ -238,7 +230,7 @@ mejs.PluginMediaElement.prototype = {
 					this.pluginApi.unMute();
 				}
 				this.muted = muted;
-				this.dispatchEvent('volumechange');
+				this.dispatchEvent({type:'volumechange'});
 			} else {
 				this.pluginApi.setMuted(muted);
 			}
@@ -250,7 +242,7 @@ mejs.PluginMediaElement.prototype = {
 	setVideoSize: function (width, height) {
 		
 		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if ( this.pluginElement.style) {
+			if (this.pluginElement && this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
@@ -289,7 +281,7 @@ mejs.PluginMediaElement.prototype = {
 		var callbacks = this.events[eventName];
 		if (!callbacks) return true;
 		if (!callback) { this.events[eventName] = []; return true; }
-		for (i = 0; i < callbacks.length; i++) {
+		for (var i = 0; i < callbacks.length; i++) {
 			if (callbacks[i] === callback) {
 				this.events[eventName].splice(i, 1);
 				return true;
@@ -297,15 +289,14 @@ mejs.PluginMediaElement.prototype = {
 		}
 		return false;
 	},	
-	dispatchEvent: function (eventName) {
+	dispatchEvent: function (event) {
 		var i,
 			args,
-			callbacks = this.events[eventName];
+			callbacks = this.events[event.type];
 
 		if (callbacks) {
-			args = Array.prototype.slice.call(arguments, 1);
 			for (i = 0; i < callbacks.length; i++) {
-				callbacks[i].apply(null, args);
+				callbacks[i].apply(this, [event]);
 			}
 		}
 	},
