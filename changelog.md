@@ -1,5 +1,9 @@
 ### Version History
 
+*2.19.1 (2016/02/26)*
+
+* Fix for closed caption button caused by previous 508 change
+
 *2.19.0 (2016/02/24)*
 
 * YouTube now uses HTML5 iframe API as a priority to Flash
