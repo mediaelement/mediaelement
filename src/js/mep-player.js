@@ -19,6 +19,12 @@
 		// default if the user doesn't specify
 		defaultAudioHeight: 30,
 
+                // Possible values:
+                // null: let mediaelement decide if the 100% mode should be used
+                // true: force the 100% mode
+                // false: no 100% mode
+                enable100PercentMode: null,
+
 		// default amount to move back when back key is pressed
 		defaultSeekBackwardInterval: function(media) {
 			return (media.duration * 0.05);
@@ -841,7 +847,17 @@
                             maxWidth = maxWidth.replace(/px$/, '');
                         }
 
-                        if (t.height.toString().indexOf('%') > 0 || (maxWidth!== 'none' && maxWidth.toString() !== t.width.toString()) || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+                        var use100PercentMode = function() {
+                            // check if we should use the 100% mode
+                            if (t.options.enable100PercentMode !== null) {
+                                return t.options.enable100PercentMode;
+                            }
+                            return (t.height.toString().indexOf('%') > 0 ||
+                                    (maxWidth!== 'none' && maxWidth.toString() !== t.width.toString()) ||
+                                    (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
+                        };
+
+                        if (use100PercentMode()) {
 				// do we have the native dimensions yet?
 				var nativeWidth = (function() {
 					if (t.isVideo) {
