@@ -462,7 +462,7 @@ if (typeof jQuery != 'undefined') {
 
 			if (doAnimation) {
 				t.controls
-					.css('visibility','visible')
+					.removeClass('mejs-offscreen')
 					.stop(true, true).fadeIn(200, function() {
 						t.controlsAreVisible = true;
 						t.container.trigger('controlsshown');
@@ -470,17 +470,17 @@ if (typeof jQuery != 'undefined') {
 
 				// any additional controls people might add and want to hide
 				t.container.find('.mejs-control')
-					.css('visibility','visible')
+					.removeClass('mejs-offscreen')
 					.stop(true, true).fadeIn(200, function() {t.controlsAreVisible = true;});
 
 			} else {
 				t.controls
-					.css('visibility','visible')
+					.removeClass('mejs-offscreen')
 					.css('display','block');
 
 				// any additional controls people might add and want to hide
 				t.container.find('.mejs-control')
-					.css('visibility','visible')
+					.removeClass('mejs-offscreen')
 					.css('display','block');
 
 				t.controlsAreVisible = true;
@@ -503,7 +503,7 @@ if (typeof jQuery != 'undefined') {
 				// fade out main controls
 				t.controls.stop(true, true).fadeOut(200, function() {
 					$(this)
-						.css('visibility','hidden')
+						.addClass('mejs-offscreen')
 						.css('display','block');
 
 					t.controlsAreVisible = false;
@@ -513,19 +513,19 @@ if (typeof jQuery != 'undefined') {
 				// any additional controls people might add and want to hide
 				t.container.find('.mejs-control').stop(true, true).fadeOut(200, function() {
 					$(this)
-						.css('visibility','hidden')
+						.addClass('mejs-offscreen')
 						.css('display','block');
 				});
 			} else {
 
 				// hide main controls
 				t.controls
-					.css('visibility','hidden')
+					.addClass('mejs-offscreen')
 					.css('display','block');
 
 				// hide others
 				t.container.find('.mejs-control')
-					.css('visibility','hidden')
+					.addClass('mejs-offscreen')
 					.css('display','block');
 
 				t.controlsAreVisible = false;
@@ -2666,11 +2666,13 @@ if (typeof jQuery != 'undefined') {
 					.width('100%')
 					.height('100%');	
 				
-				var win = $(window),
-					winW = win.width(),
-					winH = win.height();
-						
-				t.media.setVideoSize(winW,winH);			
+				setTimeout(function() {
+					var win = $(window),
+						winW = win.width(),
+						winH = win.height();
+							
+					t.media.setVideoSize(winW,winH);			
+				}, 500);
 			}
 
 			t.layers.children('div')
@@ -2968,7 +2970,7 @@ if (typeof jQuery != 'undefined') {
 			} else {
 				// hover or keyboard focus
 				player.captionsButton.on( 'mouseenter focusin', function() {
-					$(this).find('.mejs-captions-selector').css('visibility','visible');
+					$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
 				})
 
 				// handle clicks to the language radio buttons
@@ -2978,7 +2980,7 @@ if (typeof jQuery != 'undefined') {
 				});
 
 				player.captionsButton.on( 'mouseleave focusout', function() {
-					$(this).find(".mejs-captions-selector").css("visibility","hidden");
+					$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
 				});
 
 			}
@@ -3036,14 +3038,14 @@ if (typeof jQuery != 'undefined') {
 				function () {
 					// chapters
 					if (player.hasChapters) {
-						player.chapters.css('visibility','visible');
+						player.chapters.removeClass('mejs-offscreen');
 						player.chapters.fadeIn(200).height(player.chapters.find('.mejs-chapter').outerHeight());
 					}
 				},
 				function () {
 					if (player.hasChapters && !media.paused) {
 						player.chapters.fadeOut(200, function() {
-							$(this).css('visibility','hidden');
+							$(this).addClass('mejs-offscreen');
 							$(this).css('display','block');
 						});
 					}
@@ -3052,10 +3054,10 @@ if (typeof jQuery != 'undefined') {
 			t.container.on('controlsresize', function() {
 				t.adjustLanguageBox();
 			});
-			
+
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
-				player.chapters.css('visibility','hidden');
+				player.chapters.addClass('mejs-offscreen');
 			}
 		},
 
@@ -3164,12 +3166,12 @@ if (typeof jQuery != 'undefined') {
 
 			t.adjustLanguageBox();
 		},
-		
+
 		removeTrackButton: function(lang) {
 			var t = this;
-			
+
 			t.captionsButton.find('input[value=' + lang + ']').closest('li').remove();
-			
+
 			t.adjustLanguageBox();
 		},
 
