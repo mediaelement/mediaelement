@@ -835,8 +835,13 @@
 			}
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-			if (t.height.toString().indexOf('%') > 0 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== 't.width') || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
+                        var maxWidth = t.$node.css('max-width');
+                        if (typeof(maxWidth) === 'string') {
+                            // Remove the pixel unit if present to compare correctly
+                            maxWidth = maxWidth.replace(/px$/, '');
+                        }
 
+                        if (t.height.toString().indexOf('%') > 0 || (maxWidth!== 'none' && maxWidth.toString() !== t.width.toString()) || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
 				// do we have the native dimensions yet?
 				var nativeWidth = (function() {
 					if (t.isVideo) {
