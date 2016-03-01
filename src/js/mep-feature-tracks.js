@@ -90,9 +90,11 @@
 					player.setTrack(lang);
 				});
 			} else {
+				var captionsSelector = player.captionsButton.find('.mejs-captions-selector');
+				captionsSelector.addClass('mejs-captions-selector-enabled');
 				// hover or keyboard focus
 				player.captionsButton.on( 'mouseenter focusin', function() {
-					$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
+					captionsSelector.removeClass('mejs-offscreen');
 				})
 
 				// handle clicks to the language radio buttons
@@ -102,7 +104,7 @@
 				});
 
 				player.captionsButton.on( 'mouseleave focusout', function() {
-					$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
+					captionsSelector.addClass("mejs-offscreen");
 				});
 
 			}
