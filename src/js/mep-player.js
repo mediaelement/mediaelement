@@ -1170,7 +1170,7 @@
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode == keyAction.keys[j]) {
 							if (typeof(e.preventDefault) == "function") e.preventDefault();
-							keyAction.action(player, media, e.keyCode);
+							keyAction.action(player, media, e.keyCode, e);
 							return false;
 						}
 					}
