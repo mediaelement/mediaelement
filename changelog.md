@@ -1,5 +1,16 @@
 ### Version History
 
+*2.19.1 (2016/02/26)*
+
+* Fix for closed caption button caused by previous 508 change
+
+*2.19.0 (2016/02/24)*
+
+* YouTube now uses HTML5 iframe API as a priority to Flash
+* Simplified Fullscreen code for older browsers without native API support
+* 508 Accessibility Fixes #1690 @rtackett
+* Fix a minor typo in Readme #1693 @pra85
+* Fix wrong "currentSrc" call in ga plugins #1687 @ivanteoh
 
 *2.19.0 (2015/12/18)*
 
