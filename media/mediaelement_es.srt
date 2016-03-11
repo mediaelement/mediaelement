@@ -1,0 +1,61 @@
+0
+00:00:00,1 --> 00:00:04
+HTML5 & lt; de vídeo & gt; y & lt; audio & gt; se suponía que iba a ser impresionante, potente y divertido.
+
+1
+00:00:04 --> 00:00:07
+Pero los proveedores de navegadores no podían ponerse de acuerdo sobre un códec
+
+2
+00:00:07 --> 00:00:10
+y los navegadores más antiguos no son compatibles con & lt; de vídeo & gt; en absoluto.
+
+3
+00:00:10 --> 00:00:12
+Esto significa & lt; vídeo src = "myfile.mp4" / & gt; no funciona ...
+
+4
+00:00:12 --> 00:00:14
+hasta ahora.
+
+5
+00:00:14 --> 00:00:18
+Presentación de MediaElement.js, una HTML5 & lt; de vídeo & gt; y & lt; audio & gt; jugador
+
+6
+00:00:18 --> 00:00:21
+que se ve y funciona igual en todos los navegadores (incluso iPhone y Android).
+
+7
+00:00:21 --> 00:00:24
+Para los navegadores más antiguos, tiene flash de encargo y los plugins de Silverlight
+
+8
+00:00:24 --> 00:00:27
+que replicar completamente la API HTML5 MediaElement
+
+9
+00:00:27 --> 00:00:30
+para que pueda construir una interfaz de usuario de control coherente utilizando sólo HTML y CSS.
+
+10
+00:00:30 --> 00:00:33
+MediaElement.js incluso soporta los estándares más nuevos
+
+11
+00:00:33 --> 00:00:36
+como el & lt; track & gt; elemento que permite a los subtítulos que estás leyendo en este momento.
+
+12
+00:00:36 --> 00:00:39
+Los subtítulos aunque se pueden traducir en cualquier idioma mediante la API de traducción de Google.
+
+13
+00:00:39 --> 00:00:42
+Como beneficio adicional, los retrocesos Flash y Silverlight le permiten utilizar archivos FLV y WMV.
+
+14
+00:00:42 --> 00:00:45
+Espero te guste.
+
+Ven y sígueme en <a href="http://twitter.com/johndyer"> twitter.com/johndyer </a>
