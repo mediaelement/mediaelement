@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.19.0'; 
+mejs.version = '2.20.1'; 
 
 
 // player number (for missing, same id attr)
@@ -28,8 +28,9 @@ mejs.plugins = {
 		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/m4a','audio/mp3','audio/wav','audio/mpeg']}
 	],
 	flash: [
-		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg', 'video/youtube', 'video/x-youtube', 'video/dailymotion', 'video/x-dailymotion', 'application/x-mpegURL']}
-		//,{version: [12,0], types: ['video/webm']} // for future reference (hopefully!)
+		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg', 'video/dailymotion', 'video/x-dailymotion', 'application/x-mpegURL']}
+		// 'video/youtube', 'video/x-youtube', 
+		// ,{version: [12,0], types: ['video/webm']} // for future reference (hopefully!)
 	],
 	youtube: [
 		{version: null, types: ['video/youtube', 'video/x-youtube', 'audio/youtube', 'audio/x-youtube']}
@@ -445,10 +446,32 @@ mejs.MediaFeatures = {
 			t.supportsMediaTag = false;
 		}
 
+		t.supportsPointerEvents = (function() {
+			// TAKEN FROM MODERNIZR
+			var element = document.createElement('x'),
+				documentElement = document.documentElement,
+				getComputedStyle = window.getComputedStyle,
+				supports;
+			if(!('pointerEvents' in element.style)){
+				return false;
+			}
+			element.style.pointerEvents = 'auto';
+			element.style.pointerEvents = 'x';
+			documentElement.appendChild(element);
+			supports = getComputedStyle &&
+				getComputedStyle(element, '').pointerEvents === 'auto';
+			documentElement.removeChild(element);
+			return !!supports;
+		})();
+
+
+		 // Older versions of Firefox can't move plugins around without it resetting,
+		t.hasFirefoxPluginMovingProblem = false;
+
 		// detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 
 		// iOS
-		t.hasSemiNativeFullScreen = (typeof v.webkitEnterFullscreen !== 'undefined');
+		t.hasiOSFullScreen = (typeof v.webkitEnterFullscreen !== 'undefined');
 
 		// W3C
 		t.hasNativeFullscreen = (typeof v.requestFullscreen !== 'undefined');
@@ -469,7 +492,7 @@ mejs.MediaFeatures = {
 		}
 
 		if (t.isChrome) {
-			t.hasSemiNativeFullScreen = false;
+			t.hasiOSFullScreen = false;
 		}
 
 		if (t.hasTrueNativeFullScreen) {
@@ -528,9 +551,9 @@ mejs.MediaFeatures = {
 
 
 		// OS X 10.5 can't do this even if it says it can :(
-		if (t.hasSemiNativeFullScreen && ua.match(/mac os x 10_5/i)) {
+		if (t.hasiOSFullScreen && ua.match(/mac os x 10_5/i)) {
 			t.hasNativeFullScreen = false;
-			t.hasSemiNativeFullScreen = false;
+			t.hasiOSFullScreen = false;
 		}
 
 	}
@@ -1499,10 +1522,11 @@ mejs.HtmlMediaElementShim = {
 						width: width	
 					};				
 				
-				if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
-					mejs.YouTubeApi.createFlash(youtubeSettings, options);
-				} else {
+				// favor iframe version of YouTube
+				if (window.postMessage) {
 					mejs.YouTubeApi.enqueueIframe(youtubeSettings);		
+				} else if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
+					mejs.YouTubeApi.createFlash(youtubeSettings, options);
 				}
 				
 				break;
@@ -1677,12 +1701,18 @@ mejs.YouTubeApi = {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: {controls:0},
+			playerVars: {controls:0,wmode:'transparent'},
 			events: {
 				'onReady': function() {
 					
+					// wrapper to match
+					player.setVideoSize = function(width, height) {
+						player.setSize(width, height);
+					}
+					
 					// hook up iframe object to MEjs
 					settings.pluginMediaElement.pluginApi = player;
+					settings.pluginMediaElement.pluginElement = document.getElementById(settings.containerId);
 					
 					// init mejs
 					mejs.MediaPluginBridge.initPlugin(settings.pluginId);
