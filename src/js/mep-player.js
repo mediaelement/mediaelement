@@ -972,7 +972,7 @@
 					lastControlPosition = lastControl.length ? lastControl.position() : null;
 					railWidth--;
 				}
-			} while (lastControlPosition !== null && lastControlPosition.top > 0 && railWidth > 0);
+			} while (lastControlPosition !== null && lastControlPosition.top.toFixed(2) > 0 && railWidth > 0);
 
 			t.container.trigger('controlsresize');
 		},
