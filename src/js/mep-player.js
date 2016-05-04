@@ -787,6 +787,7 @@
 				//  user has to start playback directly by tapping on the iFrame.
 				if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {
 					t.container.find('.mejs-overlay-play').hide();
+                    t.container.find('.mejs-poster').hide();
 				}
 			}
 
