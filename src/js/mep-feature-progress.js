@@ -100,8 +100,8 @@
 				});
 
 			};
-            
-            var restartPlayer = function () {
+
+				var restartPlayer = function () {
 				var now = new Date();
 				if (now - lastKeyPressTime >= 1000) {
 					media.play();
@@ -124,20 +124,18 @@
 
 				var keyCode = e.keyCode,
 					duration = media.duration,
-					seekTime = media.currentTime;
+					seekTime = media.currentTime,
+					seekForward  = player.options.defaultSeekForwardInterval(duration),
+					seekBackward = player.options.defaultSeekBackwardInterval(duration);
 
 				switch (keyCode) {
 				case 37: // left
-					seekTime -= 1;
+				case 40: // Down
+					seekTime -= seekBackward;
 					break;
 				case 39: // Right
-					seekTime += 1;
-					break;
 				case 38: // Up
-					seekTime += Math.floor(duration * 0.1);
-					break;
-				case 40: // Down
-					seekTime -= Math.floor(duration * 0.1);
+					seekTime += seekForward;
 					break;
 				case 36: // Home
 					seekTime = 0;
@@ -145,10 +143,8 @@
 				case 35: // end
 					seekTime = duration;
 					break;
-				case 10: // enter
-					media.paused ? media.play() : media.pause();
-					return;
-				case 13: // space
+				case 32: // space
+				case 13: // enter
 					media.paused ? media.play() : media.pause();
 					return;
 				default:
