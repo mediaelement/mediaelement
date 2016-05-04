@@ -174,7 +174,7 @@
                 var volume = Math.floor(media.volume*100);
 
 				volumeSlider.attr({
-					'aria-label': mejs.i18n.t('volumeSlider'),
+					'aria-label': mejs.i18n.t('Volume Slider'),
 					'aria-valuemin': 0,
 					'aria-valuemax': 100,
 					'aria-valuenow': volume,
