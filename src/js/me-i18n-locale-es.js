@@ -29,7 +29,10 @@
             "Mute" : "Silencio",
             "Turn off Fullscreen" : "Desconectar pantalla completa",
             "Go Fullscreen" : "Ir a pantalla completa",
-            "Close" : "Cerrar"
+            "Close" : "Cerrar",
+	    "Skip ad": "Salta publicidad",
+	    "Skip in": "Salta en",
+	    "seconds": "segundos"
         };
     }
 
