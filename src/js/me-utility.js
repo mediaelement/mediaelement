@@ -252,5 +252,11 @@ mejs.Utility = {
 			}
 			obj.parentNode.removeChild(obj);
 		}		
-	}
+	},
+    determineScheme: function(url) {
+        if (url && url.indexOf("://") != -1) {
+            return url.substr(0, url.indexOf("://")+3);
+        }
+        return "//"; // let user agent figure this out
+    }
 };
