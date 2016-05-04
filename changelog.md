@@ -1,5 +1,18 @@
 ### Version History
 
+*2.19.0 (2016/xx/xx)*
+
+* Removed Chrome iframe fullscreen fix (https://github.com/johndyer/mediaelement/pull/1736) @13twelve
+* Detect YouTube scheme (https://github.com/johndyer/mediaelement/pull/1730) @silkentrance 
+* Handle keydown events only for focused mediaelement (https://github.com/johndyer/mediaelement/pull/1732) @lucash
+* Fix bad i18n string; create template for translating (https://github.com/johndyer/mediaelement/pull/1722) @cjbarth 
+* Fix lastControlPosition.top in browser zoom mode (https://github.com/johndyer/mediaelement/pull/1718) @DmitryKrekota
+* Constrain volume to 0-1 range with arrow keys (https://github.com/johndyer/mediaelement/pull/1717) @tennety
+* Pass the entire event object to the key action (https://github.com/johndyer/mediaelement/pull/1701) @tennety
+* Support for VAST3 adpods (https://github.com/johndyer/mediaelement/pull/1702) @cherylquirion
+* Allow progress to follow configuration (https://github.com/johndyer/mediaelement/pull/1703) @tennety
+* YouTube: poster hiding and multi-pause issues (https://github.com/johndyer/mediaelement/pull/1719) @msant7
+
 *2.19.1 (2016/02/26)*
 
 * Fix for closed caption button caused by previous 508 change
