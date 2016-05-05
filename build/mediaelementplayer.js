@@ -781,6 +781,16 @@ if (typeof jQuery != 'undefined') {
 					if (duration !== this.duration) {
 						duration = this.duration;
 						mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
+						
+						// make sure to fill in and resize the controls (e.g., 00:00 => 01:13:15
+						if (t.updateDuration) {
+							t.updateDuration();
+						}
+						if (t.updateCurrent) {
+							t.updateCurrent();
+						}
+						t.setControlsSize();
+						
 					}
 				}, false);
 
@@ -817,6 +827,7 @@ if (typeof jQuery != 'undefined') {
 				//  user has to start playback directly by tapping on the iFrame.
 				if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {
 					t.container.find('.mejs-overlay-play').hide();
+                    t.container.find('.mejs-poster').hide();
 				}
 			}
 
@@ -1002,7 +1013,7 @@ if (typeof jQuery != 'undefined') {
 					lastControlPosition = lastControl.length ? lastControl.position() : null;
 					railWidth--;
 				}
-			} while (lastControlPosition !== null && lastControlPosition.top > 0 && railWidth > 0);
+			} while (lastControlPosition !== null && lastControlPosition.top.toFixed(2) > 0 && railWidth > 0);
 
 			t.container.trigger('controlsresize');
 		},
@@ -1180,7 +1191,8 @@ if (typeof jQuery != 'undefined') {
 
 				// listen for key presses
 				t.globalBind('keydown', function(event) {
-					player.hasFocus = $(event.target).closest('.mejs-container').length !== 0;
+					player.hasFocus = $(event.target).closest('.mejs-container').length !== 0
+						&& $(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
 					return t.onkeydown(player, media, event);
 				});
 
@@ -1200,7 +1212,7 @@ if (typeof jQuery != 'undefined') {
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode == keyAction.keys[j]) {
 							if (typeof(e.preventDefault) == "function") e.preventDefault();
-							keyAction.action(player, media, e.keyCode);
+							keyAction.action(player, media, e.keyCode, e);
 							return false;
 						}
 					}
@@ -1607,8 +1619,8 @@ if (typeof jQuery != 'undefined') {
 				});
 
 			};
-            
-            var restartPlayer = function () {
+
+				var restartPlayer = function () {
 				var now = new Date();
 				if (now - lastKeyPressTime >= 1000) {
 					media.play();
@@ -1631,20 +1643,18 @@ if (typeof jQuery != 'undefined') {
 
 				var keyCode = e.keyCode,
 					duration = media.duration,
-					seekTime = media.currentTime;
+					seekTime = media.currentTime,
+					seekForward  = player.options.defaultSeekForwardInterval(duration),
+					seekBackward = player.options.defaultSeekBackwardInterval(duration);
 
 				switch (keyCode) {
 				case 37: // left
-					seekTime -= 1;
+				case 40: // Down
+					seekTime -= seekBackward;
 					break;
 				case 39: // Right
-					seekTime += 1;
-					break;
 				case 38: // Up
-					seekTime += Math.floor(duration * 0.1);
-					break;
-				case 40: // Down
-					seekTime -= Math.floor(duration * 0.1);
+					seekTime += seekForward;
 					break;
 				case 36: // Home
 					seekTime = 0;
@@ -1652,10 +1662,8 @@ if (typeof jQuery != 'undefined') {
 				case 35: // end
 					seekTime = duration;
 					break;
-				case 10: // enter
-					media.paused ? media.play() : media.pause();
-					return;
-				case 13: // space
+				case 32: // space
+				case 13: // enter
 					media.paused ? media.play() : media.pause();
 					return;
 				default:
@@ -2064,7 +2072,7 @@ if (typeof jQuery != 'undefined') {
                 var volume = Math.floor(media.volume*100);
 
 				volumeSlider.attr({
-					'aria-label': mejs.i18n.t('volumeSlider'),
+					'aria-label': mejs.i18n.t('Volume Slider'),
 					'aria-valuemin': 0,
 					'aria-valuemax': 100,
 					'aria-valuenow': volume,
@@ -2101,10 +2109,10 @@ if (typeof jQuery != 'undefined') {
 					var volume = media.volume;
 					switch (keyCode) {
                         case 38: // Up
-                            volume += 0.1;
+                            volume = Math.min(volume + 0.1, 1);
                             break;
                         case 40: // Down
-                            volume = volume - 0.1;
+                            volume = Math.max(0, volume - 0.1);
                             break;
                         default:
                             return true;
@@ -2501,24 +2509,10 @@ if (typeof jQuery != 'undefined') {
 					setTimeout(function checkFullscreen() {
 
 						if (t.isNativeFullScreen) {
-							var zoomMultiplier = window["devicePixelRatio"] || 1,
-							// Use a percent error margin since devicePixelRatio is a float and not exact.
-								percentErrorMargin = 0.002, // 0.2%
-								windowWidth = zoomMultiplier * $(window).width(),
+							var percentErrorMargin = 0.002, // 0.2%
+								windowWidth = $(window).width(),
 								screenWidth = screen.width,
-								// ** 13twelve
-								// Screen width is sort of useless: http://www.quirksmode.org/blog/archives/2013/11/screenwidth_is.html
-								// My rMBP ignores devicePixelRatio when returning the values, so fullscreen would always fail the "suddenly not fullscreen" test
-								// Theory: the gap between reported values should give us an indication of browser behavior with screen.width and devicePixelRatio
-								zoomedWindowWidth = zoomMultiplier * windowWidth;
-								
-							if (Math.abs(screenWidth-windowWidth) > Math.abs(screenWidth-zoomedWindowWidth)) {
-								// screen.width is likely true pixels, not CSS pixels, so we need to use the zoomed window width for comparison
-								windowWidth = zoomedWindowWidth;
-							}
-							// ** / 13twelve
-
-							var absDiff = Math.abs(screenWidth - windowWidth),
+								absDiff = Math.abs(screenWidth - windowWidth),
 								marginError = screenWidth * percentErrorMargin;
 
 							// check if the video is suddenly not really fullscreen
