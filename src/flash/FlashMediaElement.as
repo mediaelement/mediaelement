@@ -274,8 +274,7 @@ package {
 
 						ExternalInterface.addCallback("positionFullscreenButton", positionFullscreenButton);
 						ExternalInterface.addCallback("hideFullscreenButton", hideFullscreenButton);
-						logMessage("Callbacks using js function \"" + _jsCallbackFunction + "\" bound.");
-
+						
 						// fire init method
 						ExternalInterface.call(ExternalInterface.objectID + '_init');
 						logMessage("Init js function \"" + ExternalInterface.objectID + '_init' + "\" successfully called.");
@@ -427,7 +426,7 @@ package {
 				_output.appendText(txt + "\n");
 				if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
 					var pattern:RegExp = /'/g; //'
-					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt.replace(pattern, "’") + "')", 0);
+					ExternalInterface.call("setTimeout", ExternalInterface.objectID + "_event('message','" + txt.replace(pattern, "’") + "')", 0);
 				}
 			}
 		}
