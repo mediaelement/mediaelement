@@ -1,6 +1,6 @@
 ### Version History
 
-*2.19.0 (2016/xx/xx)*
+*2.21.0 (2016/05/05)*
 
 * Removed Chrome iframe fullscreen fix (https://github.com/johndyer/mediaelement/pull/1736) @13twelve
 * Detect YouTube scheme (https://github.com/johndyer/mediaelement/pull/1730) @silkentrance 
@@ -12,6 +12,8 @@
 * Support for VAST3 adpods (https://github.com/johndyer/mediaelement/pull/1702) @cherylquirion
 * Allow progress to follow configuration (https://github.com/johndyer/mediaelement/pull/1703) @tennety
 * YouTube: poster hiding and multi-pause issues (https://github.com/johndyer/mediaelement/pull/1719) @msant7
+* Simplified plugin callback functions and querystring checking @johdneyr
+* Fix for timerail when duration is over 1 hour  #1727 @johndyer
 
 *2.19.1 (2016/02/26)*
 
