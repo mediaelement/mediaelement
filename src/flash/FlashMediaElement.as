@@ -28,8 +28,6 @@ package {
 	public class FlashMediaElement extends MovieClip {
 
 		private var _mediaUrl:String;
-		private var _jsInitFunction:String;
-		private var _jsCallbackFunction:String;
 		private var _autoplay:Boolean;
 		private var _preload:String;
 		private var _debug:Boolean = false;
@@ -132,8 +130,6 @@ package {
 				addChild(_output);
 			}
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
-			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
-			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
@@ -281,13 +277,11 @@ package {
 						logMessage("Callbacks using js function \"" + _jsCallbackFunction + "\" bound.");
 
 						// fire init method
-						ExternalInterface.call(_jsInitFunction, ExternalInterface.objectID);
-						logMessage("Init js function \"" + _jsInitFunction + "\" successfully called.");
+						ExternalInterface.call(ExternalInterface.objectID + '_init');
+						logMessage("Init js function \"" + ExternalInterface.objectID + '_init' + "\" successfully called.");
 					}
 					else {
 						logMessage("ExternalInterface has no object id:");
-						logMessage("    - Init function \"" + _jsInitFunction + "\" will not be called.");
-						logMessage("    - Callback function \"" + _jsCallbackFunction + "\" will not be called.");
 					}
 				} catch (error:SecurityError) {
 					logMessage("A SecurityError occurred: " + error.message);
@@ -966,7 +960,7 @@ package {
 				eventValues = "{" + eventValues + "}";
 
 				// use set timeout for performance reasons
-				ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")", 0);
+				ExternalInterface.call("setTimeout", ExternalInterface.objectID + '_event' + "('" + eventName + "'," + eventValues + ")", 0);
 			}
 		}
 

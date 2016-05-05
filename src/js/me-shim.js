@@ -1,86 +1,3 @@
-// Handles calls from Flash/Silverlight and reports them as native <video/audio> events and properties
-mejs.MediaPluginBridge = {
-
-	pluginMediaElements:{},
-	htmlMediaElements:{},
-
-	registerPluginElement: function (id, pluginMediaElement, htmlMediaElement) {
-		this.pluginMediaElements[id] = pluginMediaElement;
-		this.htmlMediaElements[id] = htmlMediaElement;
-	},
-
-	unregisterPluginElement: function (id) {
-		delete this.pluginMediaElements[id];
-		delete this.htmlMediaElements[id];
-	},
-
-	// when Flash/Silverlight is ready, it calls out to this method
-	initPlugin: function (id) {
-
-		var pluginMediaElement = this.pluginMediaElements[id],
-			htmlMediaElement = this.htmlMediaElements[id];
-
-		if (pluginMediaElement) {
-			// find the javascript bridge
-			switch (pluginMediaElement.pluginType) {
-				case "flash":
-					pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(id);
-					break;
-				case "silverlight":
-					pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
-					pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
-					break;
-			}
-	
-			if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
-				pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
-			}
-		}
-	},
-
-	// receives events from Flash/Silverlight and sends them out as HTML5 media events
-	// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
-	fireEvent: function (id, eventName, values) {
-
-		var
-			e,
-			i,
-			bufferedTime,
-			pluginMediaElement = this.pluginMediaElements[id];
-
-		if(!pluginMediaElement){
-            return;
-        }
-        
-		// fake event object to mimic real HTML media event.
-		e = {
-			type: eventName,
-			target: pluginMediaElement
-		};
-
-		// attach all values to element and event object
-		for (i in values) {
-			pluginMediaElement[i] = values[i];
-			e[i] = values[i];
-		}
-
-		// fake the newer W3C buffered TimeRange (loaded and total have been removed)
-		bufferedTime = values.bufferedTime || 0;
-
-		e.target.buffered = e.buffered = {
-			start: function(index) {
-				return 0;
-			},
-			end: function (index) {
-				return bufferedTime;
-			},
-			length: 1
-		};
-
-		pluginMediaElement.dispatchEvent(e);
-	}
-};
-
 /*
 Default options
 */
@@ -508,8 +425,7 @@ mejs.HtmlMediaElementShim = {
 
 		// register plugin
 		pluginMediaElement.success = options.success;
-		mejs.MediaPluginBridge.registerPluginElement(pluginid, pluginMediaElement, htmlMediaElement);
-
+		
 		// add container (must be added to DOM before inserting HTML for IE)
 		container.className = 'me-plugin';
 		container.id = pluginid + '_container';
@@ -519,44 +435,100 @@ mejs.HtmlMediaElementShim = {
 		} else {
 				document.body.insertBefore(container, document.body.childNodes[0]);
 		}
+		
+		if (playback.method === 'flash' || playback.method === 'silverlight') {
 
-		// flash/silverlight vars
-		initVars = [
-			'id=' + pluginid,
-			'jsinitfunction=' + "mejs.MediaPluginBridge.initPlugin",
-			'jscallbackfunction=' + "mejs.MediaPluginBridge.fireEvent",
-			'isvideo=' + ((playback.isVideo) ? "true" : "false"),
-			'autoplay=' + ((autoplay) ? "true" : "false"),
-			'preload=' + preload,
-			'width=' + width,
-			'startvolume=' + options.startVolume,
-			'timerrate=' + options.timerRate,
-			'flashstreamer=' + options.flashStreamer,
-			'height=' + height,
-			'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
-
-		if (playback.url !== null) {
-			if (playback.method == 'flash') {
-				initVars.push('file=' + mejs.Utility.encodeUrl(playback.url));
-			} else {
-				initVars.push('file=' + playback.url);
+			// flash/silverlight vars
+			initVars = [
+				'id=' + pluginid,
+				'isvideo=' + ((playback.isVideo) ? "true" : "false"),
+				'autoplay=' + ((autoplay) ? "true" : "false"),
+				'preload=' + preload,
+				'width=' + width,
+				'startvolume=' + options.startVolume,
+				'timerrate=' + options.timerRate,
+				'flashstreamer=' + options.flashStreamer,
+				'height=' + height,
+				'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
+	
+			if (playback.url !== null) {
+				if (playback.method == 'flash') {
+					initVars.push('file=' + mejs.Utility.encodeUrl(playback.url));
+				} else {
+					initVars.push('file=' + playback.url);
+				}
 			}
+			if (options.enablePluginDebug) {
+				initVars.push('debug=true');
+			}
+			if (options.enablePluginSmoothing) {
+				initVars.push('smoothing=true');
+			}
+			if (options.enablePseudoStreaming) {
+				initVars.push('pseudostreaming=true');
+			}
+			if (controls) {
+				initVars.push('controls=true'); // shows controls in the plugin if desired
+			}
+			if (options.pluginVars) {
+				initVars = initVars.concat(options.pluginVars);
+			}		
+			
+			// call from plugin
+			window[pluginid + '_init'] = function() {
+				switch (pluginMediaElement.pluginType) {
+					case 'flash':
+						pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(pluginid);
+						break;
+					case 'silverlight':
+						pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
+						pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
+						break;
+				}
+	
+				if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
+					pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
+				}
+			}
+			
+			// event call from plugin
+			window[pluginid + '_event'] = function(eventName, values) {
+		
+				var
+					e,
+					i,
+					bufferedTime;
+		        
+				// fake event object to mimic real HTML media event.
+				e = {
+					type: eventName,
+					target: pluginMediaElement
+				};
+		
+				// attach all values to element and event object
+				for (i in values) {
+					pluginMediaElement[i] = values[i];
+					e[i] = values[i];
+				}
+		
+				// fake the newer W3C buffered TimeRange (loaded and total have been removed)
+				bufferedTime = values.bufferedTime || 0;
+		
+				e.target.buffered = e.buffered = {
+					start: function(index) {
+						return 0;
+					},
+					end: function (index) {
+						return bufferedTime;
+					},
+					length: 1
+				};
+		
+				pluginMediaElement.dispatchEvent(e);
+			}			
+			
+			
 		}
-		if (options.enablePluginDebug) {
-			initVars.push('debug=true');
-		}
-		if (options.enablePluginSmoothing) {
-			initVars.push('smoothing=true');
-		}
-		if (options.enablePseudoStreaming) {
-			initVars.push('pseudostreaming=true');
-		}
-		if (controls) {
-			initVars.push('controls=true'); // shows controls in the plugin if desired
-		}
-		if (options.pluginVars) {
-			initVars = initVars.concat(options.pluginVars);
-		}		
 
 		switch (playback.method) {
 			case 'silverlight':
