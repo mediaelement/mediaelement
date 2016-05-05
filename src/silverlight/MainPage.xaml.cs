@@ -320,7 +320,7 @@ namespace SilverlightMediaElement
 			try {
 				CultureInfo invCulture = CultureInfo.InvariantCulture;
 
-				HtmlPage.Window.Invoke("setTimeout", _htmlid +  + "_event('" + name + "'," +
+				HtmlPage.Window.Invoke("setTimeout", _htmlid + "_event('" + name + "'," +
 				@"{" +
 						@"""name"": """ + name + @"""" +
 						@", ""currentTime"":" + (media.Position.TotalSeconds).ToString(invCulture) + @"" +
