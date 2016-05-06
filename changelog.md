@@ -1,6 +1,6 @@
 ### Version History
 
-*2.21.1 (2016/05/xx)*
+*2.21.1 (2016/05/06)*
 
 * Fix YouTube embed functionality from 2.21.0 plugin handling updates @johndyer
 * Added more Vimeo API functionality @johndyer
