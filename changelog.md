@@ -1,5 +1,11 @@
 ### Version History
 
+*2.21.1 (2016/05/xx)*
+
+* Fix YouTube embed functionality from 2.21.0 plugin handling updates @johndyer
+* Added more Vimeo API functionality @johndyer
+* Move source-chooser offscreen on load (https://github.com/johndyer/mediaelement/pull/1713) @tennety
+
 *2.21.0 (2016/05/05)*
 
 * Removed Chrome iframe fullscreen fix (https://github.com/johndyer/mediaelement/pull/1736) @13twelve
