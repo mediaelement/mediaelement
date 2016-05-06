@@ -684,8 +684,7 @@ mejs.HtmlMediaElementShim = {
 						pluginMediaElement.pluginElement = container;
 						pluginMediaElement.pluginApi = player;
 
-						// init mejs
-						mejs.MediaPluginBridge.initPlugin(pluginid);
+						pluginMediaElement.success(pluginMediaElement, pluginMediaElement.pluginElement);						
 					});
 				}
 				else {
@@ -698,8 +697,6 @@ mejs.HtmlMediaElementShim = {
 		// prevent browser from autoplaying when using a plugin
 		htmlMediaElement.removeAttribute('autoplay');
 
-		// FYI: options.success will be fired by the MediaPluginBridge
-		
 		return pluginMediaElement;
 	},
 
@@ -800,7 +797,7 @@ mejs.YouTubeApi = {
 					settings.pluginMediaElement.pluginElement = document.getElementById(settings.containerId);
 					
 					// init mejs
-					mejs.MediaPluginBridge.initPlugin(settings.pluginId);
+					pluginMediaElement.success(pluginMediaElement, pluginMediaElement.pluginElement);
 					
 					// create timer
 					setInterval(function() {
@@ -919,7 +916,8 @@ mejs.YouTubeApi = {
 		// hook up and return to MediaELementPlayer.success	
 		pluginMediaElement.pluginApi = 
 		pluginMediaElement.pluginElement = player;
-		mejs.MediaPluginBridge.initPlugin(id);
+		
+		settings.success(pluginMediaElement, pluginMediaElement.pluginElement);
 		
 		// load the youtube video
 		player.cueVideoById(settings.videoId);
