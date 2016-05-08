@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.21.1'; 
+mejs.version = '2.21.2'; 
 
 
 // player number (for missing, same id attr)
@@ -1448,7 +1448,7 @@ mejs.HtmlMediaElementShim = {
 					specialIEContainer.outerHTML =
 '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
 'id="' + pluginid + '" width="' + width + '" height="' + height + '" class="mejs-shim">' +
-'<param name="movie" value="' + options.pluginPath + options.flashName + '?x=' + (new Date().getTime()) + '" />' +
+'<param name="movie" value="' + options.pluginPath + options.flashName + '?' + (new Date().getTime()) + '" />' +
 '<param name="flashvars" value="' + initVars.join('&amp;') + '" />' +
 '<param name="quality" value="high" />' +
 '<param name="bgcolor" value="#000000" />' +
