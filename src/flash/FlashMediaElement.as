@@ -25,13 +25,9 @@ package {
 	import htmlelements.HLSMediaElement;
 
 	[SWF(backgroundColor="0x000000")] // Set SWF background color
-
-
 	public class FlashMediaElement extends MovieClip {
 
 		private var _mediaUrl:String;
-		private var _jsInitFunction:String;
-		private var _jsCallbackFunction:String;
 		private var _autoplay:Boolean;
 		private var _preload:String;
 		private var _debug:Boolean = false;
@@ -99,8 +95,10 @@ package {
 
 
 		public function FlashMediaElement() {
-			// check for security issues (borrowed from jPLayer)
-			checkFlashVars(loaderInfo.parameters);
+
+			if (isIllegalQuerystring()) {
+				return;
+			}
 
 			// allows this player to be called from a different domain than the HTML page hosting the player
 			CONFIG::cdnBuild {
@@ -108,25 +106,7 @@ package {
 				Security.allowInsecureDomain('*');
 			}
 
-			if (securityIssue) {
-				return;
-			}
-
-			// get parameters
-			// Use only FlashVars, ignore QueryString
-			var params:Object, pos:int, query:Object;
-
-			params = LoaderInfo(this.root.loaderInfo).parameters;
-			pos = root.loaderInfo.url.indexOf('?');
-			if (pos !== -1) {
-				query = parseStr(root.loaderInfo.url.substr(pos + 1));
-
-				for (var key:String in params) {
-					if (query.hasOwnProperty(trim(key))) {
-						delete params[key];
-					}
-				}
-			}
+			var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
 
 			CONFIG::debugBuild {
 				_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
@@ -150,8 +130,6 @@ package {
 				addChild(_output);
 			}
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
-			_jsInitFunction = (params['jsinitfunction'] != undefined) ? String(params['jsinitfunction']) : "";
-			_jsCallbackFunction = (params['jscallbackfunction'] != undefined) ? String(params['jscallbackfunction']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
@@ -296,16 +274,13 @@ package {
 
 						ExternalInterface.addCallback("positionFullscreenButton", positionFullscreenButton);
 						ExternalInterface.addCallback("hideFullscreenButton", hideFullscreenButton);
-						logMessage("Callbacks using js function \"" + _jsCallbackFunction + "\" bound.");
-
+						
 						// fire init method
-						ExternalInterface.call(_jsInitFunction, ExternalInterface.objectID);
-						logMessage("Init js function \"" + _jsInitFunction + "\" successfully called.");
+						ExternalInterface.call(ExternalInterface.objectID + '_init');
+						logMessage("Init js function \"" + ExternalInterface.objectID + '_init' + "\" successfully called.");
 					}
 					else {
 						logMessage("ExternalInterface has no object id:");
-						logMessage("    - Init function \"" + _jsInitFunction + "\" will not be called.");
-						logMessage("    - Callback function \"" + _jsCallbackFunction + "\" will not be called.");
 					}
 				} catch (error:SecurityError) {
 					logMessage("A SecurityError occurred: " + error.message);
@@ -451,47 +426,24 @@ package {
 				_output.appendText(txt + "\n");
 				if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
 					var pattern:RegExp = /'/g; //'
-					ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','message','" + txt.replace(pattern, "’") + "')", 0);
+					ExternalInterface.call("setTimeout", ExternalInterface.objectID + "_event('message','" + txt.replace(pattern, "’") + "')", 0);
 				}
 			}
 		}
 
-		// borrowed from jPLayer
-		// https://github.com/happyworm/jPlayer/blob/e8ca190f7f972a6a421cb95f09e138720e40ed6d/actionscript/Jplayer.as#L228
-		private function checkFlashVars(p:Object):void {
-			var i:Number = 0;
-			for (var s:String in p) {
-				if (isIllegalChar(p[s], s === 'file')) {
-					securityIssue = true; // Illegal char found
-				}
-				i++;
-			}
-			if (i === 0 || securityIssue) {
-				directAccess = true;
-			}
+		private function isIllegalQuerystring():Boolean {
+			var query:String = '';
+			var pos:Number = root.loaderInfo.url.indexOf('?') ;
+			
+			if ( pos > -1 ) {
+			    query = root.loaderInfo.url.substring( pos );
+			    if ( ! /^\?\d+$/.test( query ) ) {
+			        return true;
+			    }
+			}			
+			
+			return false;
 		}
-
-		private static function parseStr (str:String) : Object {
-			var hash:Object = {},
-				arr1:Array, arr2:Array;
-
-			str = unescape(str).replace(/\+/g, " ");
-
-			arr1 = str.split('&');
-			if (!arr1.length) {
-				return {};
-			}
-
-			for (var i:uint = 0, length:uint = arr1.length; i < length; i++) {
-				arr2 = arr1[i].split('=');
-				if (!arr2.length) {
-					continue;
-				}
-				hash[trim(arr2[0])] = trim(arr2[1]);
-			}
-			return hash;
-		}
-
 
 		private static function trim(str:String) : String {
 			if (!str) {
@@ -499,21 +451,6 @@ package {
 			}
 
 			return str.toString().replace(/^\s*/, '').replace(/\s*$/, '');
-		}
-
-		private function isIllegalChar(s:String, isUrl:Boolean):Boolean {
-			var illegals:String = "' \" ( ) { } * + \\ < >";
-			if (isUrl) {
-				illegals = "\" { } \\ < >";
-			}
-			if (Boolean(s)) { // Otherwise exception if parameter null.
-				for each (var illegal:String in illegals.split(' ')) {
-					if (s.indexOf(illegal) >= 0) {
-						return true; // Illegal char found
-					}
-				}
-			}
-			return false;
 		}
 
 		// START: Controls and events
@@ -1022,7 +959,7 @@ package {
 				eventValues = "{" + eventValues + "}";
 
 				// use set timeout for performance reasons
-				ExternalInterface.call("setTimeout", _jsCallbackFunction + "('" + ExternalInterface.objectID + "','" + eventName + "'," + eventValues + ")", 0);
+				ExternalInterface.call("setTimeout", ExternalInterface.objectID + '_event' + "('" + eventName + "'," + eventValues + ")", 0);
 			}
 		}
 

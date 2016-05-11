@@ -26,8 +26,6 @@ namespace SilverlightMediaElement
 
 		// variables
 		string _mediaUrl;
-        string _jsInitFunction;
-        string _jsCallbackFunction;
 		string _preload;
 		string _htmlid;
 		bool _autoplay = false;
@@ -78,10 +76,6 @@ namespace SilverlightMediaElement
 				_htmlid = initParams["id"];			
 			if (initParams.ContainsKey("file"))
 				_mediaUrl = initParams["file"];
-            if (initParams.ContainsKey("jsinitfunction"))
-                _jsInitFunction = initParams["jsinitfunction"];
-            if (initParams.ContainsKey("jscallbackfunction"))
-                _jsCallbackFunction = initParams["jscallbackfunction"];
 			if (initParams.ContainsKey("autoplay") && initParams["autoplay"] == "true")
 				_autoplay = true;
 			if (initParams.ContainsKey("debug") && initParams["debug"] == "true")
@@ -148,7 +142,7 @@ namespace SilverlightMediaElement
 			//HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", new object[] {_htmlid});
 			try
 			{
-                HtmlPage.Window.Eval(_jsInitFunction + "('" + _htmlid + "');");
+                HtmlPage.Window.Eval(_htmlid + "_init();");
 			}
 			catch { }
 		}
@@ -326,7 +320,7 @@ namespace SilverlightMediaElement
 			try {
 				CultureInfo invCulture = CultureInfo.InvariantCulture;
 
-				HtmlPage.Window.Invoke("setTimeout", _jsCallbackFunction + "('" + _htmlid + "','" + name + "'," +
+				HtmlPage.Window.Invoke("setTimeout", _htmlid + "_event('" + name + "'," +
 				@"{" +
 						@"""name"": """ + name + @"""" +
 						@", ""currentTime"":" + (media.Position.TotalSeconds).ToString(invCulture) + @"" +

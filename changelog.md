@@ -1,5 +1,30 @@
 ### Version History
 
+*2.21.2 (2016/05/08)*
+
+* Fixed IE8 compatibility with new security update
+
+*2.21.1 (2016/05/06)*
+
+* Fix YouTube embed functionality from 2.21.0 plugin handling updates @johndyer
+* Added more Vimeo API functionality @johndyer
+* Move source-chooser offscreen on load (https://github.com/johndyer/mediaelement/pull/1713) @tennety
+
+*2.21.0 (2016/05/05)*
+
+* Simplified plugin callback functions and querystring checking (security update) @johndyer
+* Removed Chrome iframe fullscreen fix (https://github.com/johndyer/mediaelement/pull/1736) @13twelve
+* Detect YouTube scheme (https://github.com/johndyer/mediaelement/pull/1730) @silkentrance 
+* Handle keydown events only for focused mediaelement (https://github.com/johndyer/mediaelement/pull/1732) @lucash
+* Fix bad i18n string; create template for translating (https://github.com/johndyer/mediaelement/pull/1722) @cjbarth 
+* Fix lastControlPosition.top in browser zoom mode (https://github.com/johndyer/mediaelement/pull/1718) @DmitryKrekota
+* Constrain volume to 0-1 range with arrow keys (https://github.com/johndyer/mediaelement/pull/1717) @tennety
+* Pass the entire event object to the key action (https://github.com/johndyer/mediaelement/pull/1701) @tennety
+* Support for VAST3 adpods (https://github.com/johndyer/mediaelement/pull/1702) @cherylquirion
+* Allow progress to follow configuration (https://github.com/johndyer/mediaelement/pull/1703) @tennety
+* YouTube: poster hiding and multi-pause issues (https://github.com/johndyer/mediaelement/pull/1719) @msant7
+* Fix for timerail when duration is over 1 hour  #1727 @johndyer
+
 *2.19.1 (2016/02/26)*
 
 * Fix for closed caption button caused by previous 508 change
