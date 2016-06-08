@@ -74,6 +74,7 @@ mejs.HtmlMediaElementShim = {
 			autoplay =  htmlMediaElement.getAttribute('autoplay'),
 			preload =  htmlMediaElement.getAttribute('preload'),
 			controls =  htmlMediaElement.getAttribute('controls'),
+			loop =  htmlMediaElement.getAttribute('loop'),
 			playback,
 			prop;
 
@@ -92,13 +93,14 @@ mejs.HtmlMediaElementShim = {
 		preload = 	(typeof preload == 'undefined' 	|| preload === null || preload === 'false') ? 'none' : preload;
 		autoplay = 	!(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
 		controls = 	!(typeof controls == 'undefined' || controls === null || controls === 'false');
+		loop = 	!(typeof loop == 'undefined' || loop === null || loop === 'false');
 
 		// test for HTML5 and plugin capabilities
 		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, src);
 		playback.url = (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '';
         playback.scheme = mejs.Utility.determineScheme(playback.url);
 
-		if (playback.method == 'native') {
+		if (playback.method == 'native' || playback.method == 'hls') {
 			// second fix for android
 			if (mejs.MediaFeatures.isBustedAndroid) {
 				htmlMediaElement.src = playback.url;
@@ -112,7 +114,7 @@ mejs.HtmlMediaElementShim = {
 		} else if (playback.method !== '') {
 			// create plugin to mimic HTMLMediaElement
 			
-			return this.createPlugin( playback,  options, poster, autoplay, preload, controls);
+			return this.createPlugin( playback,  options, poster, autoplay, preload, controls, loop);
 		} else {
 			// boo, no HTML5, no Flash, no Silverlight.
 			this.createErrorMessage( playback, options, poster );
@@ -373,7 +375,7 @@ mejs.HtmlMediaElementShim = {
 		options.error(htmlMediaElement);
 	},
 
-	createPlugin:function(playback, options, poster, autoplay, preload, controls) {
+	createPlugin:function(playback, options, poster, autoplay, preload, controls, loop) {
 		var 
 			htmlMediaElement = playback.htmlMediaElement,
 			width = 1,
@@ -443,6 +445,7 @@ mejs.HtmlMediaElementShim = {
 				'id=' + pluginid,
 				'isvideo=' + ((playback.isVideo) ? "true" : "false"),
 				'autoplay=' + ((autoplay) ? "true" : "false"),
+				'loop=' + ((loop) ? "true" : "false"),
 				'preload=' + preload,
 				'width=' + width,
 				'startvolume=' + options.startVolume,
