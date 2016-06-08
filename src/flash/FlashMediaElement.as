@@ -242,7 +242,7 @@ package {
 			logMessage("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null) ? ExternalInterface.objectID.toString() : "null"));
 
 			if (_mediaUrl != "") {
-				_mediaElement.setSrc(_mediaUrl);
+				_mediaElement.setSrc(sanitizeMediaUrl(_mediaUrl));
 			}
 
 			if (_output != null) {
@@ -708,6 +708,11 @@ package {
 			_isFullScreen = false;
 		}
 
+		private function sanitizeMediaUrl(url:String):String {
+			//Remove protocol to avoid crossdomain problem
+			return url.replace(/http(s)?:/i, "");
+		}
+
 		public function setFullscreen(gofullscreen:Boolean):void {
 
 			logMessage("setFullscreen: " + gofullscreen.toString());
@@ -792,7 +797,8 @@ package {
 
 		public function setSrc(url:String):void {
 			logMessage("setSrc: " + url);
-			_mediaElement.setSrc(url);
+			//Remove protocol to avoid crossdomain problem
+			_mediaElement.setSrc(sanitizeMediaUrl(url));
 		}
 
 		public function stopMedia():void {
