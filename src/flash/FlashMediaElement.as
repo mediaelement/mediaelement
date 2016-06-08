@@ -710,7 +710,8 @@ package {
 
 		private function sanitizeMediaUrl(url:String):String {
 			//Remove protocol to avoid crossdomain problem
-			return url.replace(/http(s)?:/i, "");
+			var urlLess:String = url.replace(/http(s)?:/i, "");
+			return (loaderInfo.url.indexOf("https:") === 0 ? "https": "http:") + urlLess;
 		}
 
 		public function setFullscreen(gofullscreen:Boolean):void {
