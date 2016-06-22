@@ -24,10 +24,13 @@
 &lt;/video&gt;
 </pre></code>
 
-<video width="640" height="360" id="player1">
+<video width="640" height="360" id="player1" loop="true" autoplay="true" preload="none">
     
     <!-- Pseudo HTML5 -->
-    <source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" />
+    <!--<source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" />-->
+<!--    <source type="application/x-mpegURL" src="//ferrari-view.4me.it/api/xpublisher/resources/weebopublisher/getContentDescriptor.m3u8?clientId=ferrari&contentId=196b0fd3-b5ba-43a7-9cca-d2b37b903e97&channelType=STREAMHTTPIOSHD&v=8&locale=IT" />-->
+<!--    <source type="application/x-mpegURL" src="http://rtl-radio-stream.4mecloud.it/live/rtlcool/rtlcool/playlist.m3u8" />-->
+    <source type="application/x-mpegURL" src="http://rtl-radio-stream.4mecloud.it/live/rtlcool/rtlcool/playlist.m3u8" />
 
 </video>
 	
@@ -59,8 +62,9 @@ function userSubmit() {
    loadStream(document.getElementById('userInput').value);
 }
 function loadStream(url) {
+	$('video')[0].player.pause();
 $('video')[0].player.setSrc(url);
-$('video')[0].player.play();
+//$('video')[0].player.play();
 }
 
 </script>

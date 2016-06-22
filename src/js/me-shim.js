@@ -100,7 +100,7 @@ mejs.HtmlMediaElementShim = {
 		playback.url = (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '';
         playback.scheme = mejs.Utility.determineScheme(playback.url);
 
-		if (playback.method == 'native' || playback.method == 'hls') {
+		if (playback.method == 'native' || playback.method == 'hlsjs') {
 			// second fix for android
 			if (mejs.MediaFeatures.isBustedAndroid) {
 				htmlMediaElement.src = playback.url;
