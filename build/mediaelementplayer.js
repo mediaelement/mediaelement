@@ -368,10 +368,16 @@ if (typeof jQuery != 'undefined') {
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media)
 					.focus(function ( e ) {
-						if( !t.controlsAreVisible ) {
+						if( !t.controlsAreVisible && !t.hasFocus ) {
 							t.showControls(true);
-							var playButton = t.container.find('.mejs-playpause-button > button');
-							playButton.focus();
+                           
+                           // In versions older than IE11, the focus causes the playbar to be displayed
+                           // if user clicks on the Play/Pause button in the control bar once it attempts
+                           // to hide it
+                           if (!t.hasMsNativeFullScreen) {
+                               var playButton = t.container.find('.mejs-playpause-button > button');
+                               playButton.focus();
+                           }
 						}
 					});
  
