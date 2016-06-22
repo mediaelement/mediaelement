@@ -978,6 +978,14 @@ public class FlashMediaElement extends MovieClip {
 			handleLoop(eventName);
 	}
 
+
+	public function sendEventCustom(eventName:String, eventValues:Object):void {
+		if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+			// use set timeout for performance reasons
+			ExternalInterface.call(ExternalInterface.objectID + '_event', eventName, eventValues);
+		}
+	}
+
 	private function handleLoop(eventName:String):void {
 		switch (eventName) {
 			case HtmlMediaEvent.ENDED:

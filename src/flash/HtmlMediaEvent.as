@@ -34,5 +34,8 @@
 
 		// new : 11/23/2015
 		public static var FRAGMENT_PLAYING:String = "fragmentplaying";
+
+		// new: 13/06/2015
+		public static var METADATA_READY:String = "metadataready";
 	}
 }
