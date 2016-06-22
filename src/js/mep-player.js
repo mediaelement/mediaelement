@@ -346,7 +346,7 @@
                            // In versions older than IE11, the focus causes the playbar to be displayed
                            // if user clicks on the Play/Pause button in the control bar once it attempts
                            // to hide it
-                           if (!t.hasMsNativeFullScreen) {
+                           if (!t.isIE || (t.isIE && t.hasMsNativeFullScreen)) {
                                var playButton = t.container.find('.mejs-playpause-button > button');
                                playButton.focus();
                            }
@@ -705,7 +705,7 @@
 				// EVENTS
 
 				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
-				media.addEventListener('play', function() {
+				t.media.addEventListener('play', function() {
 					var playerIndex;
 
 					// go through all other players
