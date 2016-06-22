@@ -18,8 +18,17 @@
 	text-indent: 0;
 }
 
-.mejs-container:focus {
-	outline: none;
+.mejs-fill-container,.mejs-fill-container .mejs-container{
+	width:100%;
+	height:100%;
+}
+
+.mejs-fill-container{
+	overflow:hidden;
+}
+
+.mejs-container:focus { 
+	outline: none; 
 }
 
 .me-plugin {
@@ -34,7 +43,6 @@
 	background: #000;
 	overflow: hidden;
 }
-
 .mejs-fullscreen {
 	/* set it to not show scroll bars so 100% will work */
 	overflow: hidden !important;

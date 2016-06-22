@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>
+
+
+	<script src="../build/jquery.js"></script>
+	<script src="../build/mediaelement-and-player.min.js"></script>
+    <script src="testforfiles.js"></script>
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<h2>Adjust the size of your window and you'll see the behavior</h2>
+
+<h3>Stretching: 'auto'</h3>
+<p>Since the width="100%" height="100%" attributes is not set in the first video player tag, nothing is going to happen (stretching is 'none')...</p>
+
+<div style="width: 70%;">
+<video width="360" height="203" id="player1" controls="controls">
+    <source type="video/mp4" src="../media/echo-hereweare.mp4" />
+    <source type="video/webm" src="../media/echo-hereweare.webm" />
+    <source type="video/ogg" src="../media/echo-hereweare.ogv" />
+    <p>Your browser leaves much to be desired.</p>
+</video>
+<br>
+<p>... But in this one those attributes are set, so a responsive behavior will be set.</p>
+<video width="100%" height="100%" id="player2" controls="controls">
+    <source type="video/mp4" src="../media/echo-hereweare.mp4" />
+    <source type="video/webm" src="../media/echo-hereweare.webm" />
+    <source type="video/ogg" src="../media/echo-hereweare.ogv" />
+    <p>Your browser leaves much to be desired.</p>
+</video>
+</div>
+
+<h3>Stretching: 'responsive'</h3>
+<p>Doesn't matter if width="100%" height="100%" attributes are set, player will be responsive</p>
+
+<div style="width: 70%">
+<video width="360" height="203" id="player3" controls="controls">
+    <source type="video/mp4" src="../media/echo-hereweare.mp4" />
+    <source type="video/webm" src="../media/echo-hereweare.webm" />
+    <source type="video/ogg" src="../media/echo-hereweare.ogv" />
+    <p>Your browser leaves much to be desired.</p>
+</video>
+</div>
+
+<h3>Stretching: 'fill'</h3>
+<p>Special size: mostly used for background videos; it all depends of the dimensions of the parent container</p>
+
+<div style="width: 70%; height: 500px; margin: 0">
+<video width="360" height="203" id="player4" controls="controls">
+    <source type="video/mp4" src="../media/echo-hereweare.mp4" />
+    <source type="video/webm" src="../media/echo-hereweare.webm" />
+    <source type="video/ogg" src="../media/echo-hereweare.ogv" />
+    <p>Your browser leaves much to be desired.</p>
+</video>
+</div>
+
+<script>
+$('#player1').mediaelementplayer();
+$('#player2').mediaelementplayer();
+$('#player3').mediaelementplayer({
+    stretching: 'responsive'
+});
+$('#player4').mediaelementplayer({
+    stretching: 'fill'
+});
+</script>
+
+</body>
+</html>

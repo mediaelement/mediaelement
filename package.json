@@ -5,7 +5,7 @@
   "main": "build/mediaelement.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/johndyer/mediaelement.git"
+    "url": "git+https://github.com/johndyer/mediaelement.git"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -17,5 +17,17 @@
     "grunt-remove-logging": "~0.2.0",
     "grunt-shell": "~1.1.1",
     "grunt-text-replace": "~0.3.12"
-  }
+  },
+  "description": "One file. Any browser. Same UI.",
+  "bugs": {
+    "url": "https://github.com/johndyer/mediaelement/issues"
+  },
+  "homepage": "https://github.com/johndyer/mediaelement#readme",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": ""
 }
