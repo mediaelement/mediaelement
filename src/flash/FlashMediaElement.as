@@ -246,7 +246,7 @@ public class FlashMediaElement extends MovieClip {
 		logMessage("ExternalInterface.objectID: " + ((ExternalInterface.objectID != null) ? ExternalInterface.objectID.toString() : "null"));
 
 		if (_mediaUrl != "") {
-			_mediaElement.setSrc(sanitizeMediaUrl(_mediaUrl));
+			_mediaElement.setSrc(_mediaUrl);
 		}
 
 		if (_output != null) {
@@ -712,12 +712,6 @@ public class FlashMediaElement extends MovieClip {
 		_isFullScreen = false;
 	}
 
-	private function sanitizeMediaUrl(url:String):String {
-		//Remove protocol to avoid crossdomain problem
-		var urlLess:String = url.replace(/http(s)?:/i, "");
-		return (loaderInfo.url.indexOf("https:") === 0 ? "https": "http:") + urlLess;
-	}
-
 	public function setFullscreen(gofullscreen:Boolean):void {
 
 		logMessage("setFullscreen: " + gofullscreen.toString());
@@ -802,8 +796,7 @@ public class FlashMediaElement extends MovieClip {
 
 	public function setSrc(url:String):void {
 		logMessage("setSrc: " + url);
-		//Remove protocol to avoid crossdomain problem
-		_mediaElement.setSrc(sanitizeMediaUrl(url));
+		_mediaElement.setSrc(url);
 	}
 
 	public function stopMedia():void {
