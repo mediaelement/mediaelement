@@ -360,16 +360,10 @@ if (typeof jQuery != 'undefined') {
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media)
 					.focus(function ( e ) {
-						if( !t.controlsAreVisible  && !t.hasFocus ) {
+						if( !t.controlsAreVisible ) {
 							t.showControls(true);
-							
-                           // In versions older than IE11, the focus causes the playbar to be displayed
-                           // if user clicks on the Play/Pause button in the control bar once it attempts
-                           // to hide it
-                           if (!t.hasMsNativeFullScreen) {
-                              var playButton = t.container.find('.mejs-playpause-button > button');
-                              playButton.focus();
-                           }
+							var playButton = t.container.find('.mejs-playpause-button > button');
+							playButton.focus();
 						}
 					});
 
@@ -721,7 +715,7 @@ if (typeof jQuery != 'undefined') {
 				// EVENTS
 
 				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
-				t.media.addEventListener('play', function() {
+				media.addEventListener('play', function() {
 					var playerIndex;
 
 					// go through all other players
