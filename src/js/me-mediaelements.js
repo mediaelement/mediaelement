@@ -323,6 +323,5 @@ mejs.PluginMediaElement.prototype = {
 
 	remove: function() {
 		mejs.Utility.removeSwf(this.pluginElement.id);
-		mejs.MediaPluginBridge.unregisterPluginElement(this.pluginElement.id);
 	}
 };
