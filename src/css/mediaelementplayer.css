@@ -572,7 +572,7 @@
 	border-radius: 0;
 }
 
-.mejs-controls .mejs-captions-button:hover  .mejs-captions-selector {
+.mejs-controls .mejs-captions-button:hover .mejs-captions-selector.mejs-captions-selector-enabled {
 	visibility: visible;
 }
 
