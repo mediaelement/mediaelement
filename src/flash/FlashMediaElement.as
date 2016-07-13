@@ -177,19 +177,19 @@ package {
 			//_debug=true;
 
 			// create media element
-			if (_isVideo) {
-				if (_mediaUrl.search(/(https?|file)\:\/\/.*?\.m3u8(\?.*)?/i) !== -1) {
-					_mediaElement = new HLSMediaElement(this, _autoplay, _preload, _timerRate, _startVolume);
-					_video = (_mediaElement as HLSMediaElement).video;
-					_video.width = stage.stageWidth;
-					_video.height = stage.stageHeight;
-					(_video as Video).smoothing = _enableSmoothing;
-					addChild(_video);
+			if (_mediaUrl.search(/(https?|file)\:\/\/.*?\.m3u8(\?.*)?/i) !== -1) {
+				_mediaElement = new HLSMediaElement(this, _autoplay, _preload, _timerRate, _startVolume);
+				_video = (_mediaElement as HLSMediaElement).video;
+				_video.width = stage.stageWidth;
+				_video.height = stage.stageHeight;
+				(_video as Video).smoothing = _enableSmoothing;
+				addChild(_video);
 
-					_paramVideoWidth = (params['width'] != undefined) ? (parseInt(params['width'], 10)) : 0;
-					_paramVideoHeight = (params['height'] != undefined) ? (parseInt(params['height'], 10)) : 0;
+				_paramVideoWidth = (params['width'] != undefined) ? (parseInt(params['width'], 10)) : 0;
+				_paramVideoHeight = (params['height'] != undefined) ? (parseInt(params['height'], 10)) : 0;
 
-				} else if (_mediaUrl.indexOf("youtube.com") > -1 || _mediaUrl.indexOf("youtu.be") > -1) {
+			}else if (_isVideo) {
+				if (_mediaUrl.indexOf("youtube.com") > -1 || _mediaUrl.indexOf("youtu.be") > -1) {
 					//Security.allowDomain("http://www.youtube.com");
 
 					_mediaElement = new YouTubeElement(this, _autoplay, _preload, _timerRate, _startVolume);
