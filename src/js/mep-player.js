@@ -994,7 +994,10 @@
 			 .width('100%')
 			 .height('100%');
 			
-			targetElement = t.container.find('object, embed, iframe, video, .mejs-poster img');
+			// This prevents an issue when displaying poster
+			t.container.find('.mejs-poster img').css('display', 'block');
+			
+			targetElement = t.container.find('object, embed, iframe, video');
 			
 			// calculate new width and height
 			var initHeight = t.height,
