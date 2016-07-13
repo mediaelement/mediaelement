@@ -866,7 +866,12 @@
             		// check stretching modes
             		switch(t.options.stretching) {
                 		case 'fill':
-                    			this.setFillMode();
+        				// The 'fill' effect only makes sense on video; for audio we will set the dimensions
+                    			if (t.isVideo) {
+                    				this.setFillMode();
+ 					} else {
+                                		this.setDimensions(t.width, t.height);
+ 					}
                     			break;
                 		case 'responsive':
                     			this.setResponsiveMode();
@@ -968,9 +973,18 @@
  
 	        setFillMode: function() {
 			var t = this,
-				parent = t.outerContainer,
-				parentWidth = parent.width(),
-				parentHeight = parent.height();
+				parent = t.outerContainer;
+ 
+    			if (!parent.width()) {
+                		parent.height(t.$media.width());
+            		}
+ 
+            		if (!parent.height()) {
+                		parent.height(t.$media.height());
+            		}
+ 
+            		var parentWidth = parent.width(),
+                		parentHeight = parent.height();
 			
 			t.container
 			 .width('100%')
@@ -993,9 +1007,8 @@
 				scaleY2 = parentHeight,
 			// now figure out which one we should use
 				bScaleOnWidth = !(scaleX2 > parentWidth),
-				finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2);
-				finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2),
-				defaultPositions = ['top', 'left'];
+				finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2),
+				finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2);
 			
 			if (bScaleOnWidth) {
 				targetElement.height(finalHeight).width(parentWidth);
