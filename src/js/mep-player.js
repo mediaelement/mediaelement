@@ -44,6 +44,14 @@
 		// resize to media dimensions
 		enableAutosize: true,
 
+		// Instead of relying on current dimensions to resize responsive
+		// video containers in 100% mode, use a ratio for more consistent resizing.
+		useResizeRatio: false,
+
+		// The ratio value to use for resizing if useResizeRatio is enabled.
+		// This will be set automatically; no need to pass in a config value.
+		resizeRatio: null,
+
 		/*
 		 * Time format to use. Default: 'mm:ss'
 		 * Supported units:
@@ -837,7 +845,8 @@
 		},
 
 		setPlayerSize: function(width,height) {
-			var t = this;
+			var t = this,
+					useResizeRatio = t.options.useResizeRatio;
 
 			if( !t.options.setDimensions ) {
 				return false;
@@ -883,10 +892,17 @@
 					}
 				})();
 
+				// If useResizeRatio is enabled but a ratio value doesn't exist,
+				// set it using the current (initial) dimensions.
+				if (useResizeRatio && !t.options.resizeRatio) {
+					t.options.resizeRatio = nativeWidth / nativeHeight;
+				}
+
 				var
 					parentWidth = t.container.parent().closest(':visible').width(),
 					parentHeight = t.container.parent().closest(':visible').height(),
-					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
+					newHeightRaw = useResizeRatio ? parentWidth / t.options.resizeRatio : parentWidth * nativeHeight/nativeWidth,
+					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(newHeightRaw, 10) : nativeHeight;
 
 				// When we use percent, the newHeight can't be calculated so we get the container height
 				if (isNaN(newHeight)) {
