@@ -564,12 +564,12 @@
 
 			if (!(mf.isAndroid && t.options.AndroidUseNativeControls) && !(mf.isiPad && t.options.iPadUseNativeControls) && !(mf.isiPhone && t.options.iPhoneUseNativeControls)) {
 
-				// If Hls load elements
-				if (mf.hlsInstance !== null) {
-					mf.hlsInstance.attachMedia(t.media);
-
-					mf.hlsInstance.on(Hls.Events.MEDIA_ATTACHED, function () {
-            mf.hlsInstance.loadSource(mejs.HtmlMediaElement.originalSrc);
+				// Load media through HLS if browser allows it
+				var hls = mf.hlsInstance;
+				if (hls !== null) {
+					hls.attachMedia(t.media);
+					hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+            					hls.loadSource(mejs.HtmlMediaElement.originalSrc);
 					});
 				}
 
@@ -1233,7 +1233,7 @@
 		},
 		play: function() {
 			if (mf.hlsInstance !== null) {
-				console.log('playing');
+				// Once Manifest file has been read, media can be played
 				mf.hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
 					this.media.play();
 				});
@@ -1271,9 +1271,10 @@
 		},
 		setSrc: function(src) {
 			if (mf.hlsInstance !== null) {
-
-        mejs.HtmlMediaElement.originalSrc = src;
-        mf.hlsInstance.attachMedia(this.media);
+				
+				// Update originalSrc as part of the workflow
+			        mejs.HtmlMediaElement.originalSrc = src;
+			        mf.hlsInstance.attachMedia(this.media);
 				mf.hlsInstance.loadSource(src);
         
 			} else {
