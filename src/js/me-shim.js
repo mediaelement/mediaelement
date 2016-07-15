@@ -113,90 +113,103 @@ mejs.HtmlMediaElementShim = {
 
 			if (hls !== null) {
         hls.attachMedia(htmlMediaElement);
-        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-          hls.loadSource(src);
-        });
 
+        // Bind hls.js events in media element
+				var hlsEvents = Hls.Events;
 
-        hls.on(Hls.Events.ERROR, function (event, data) {
-          switch (data.details) {
-            case Hls.ErrorDetails.MANIFEST_LOAD_ERROR:
-              var errorMessage;
-              try {
-                errorMessage = 'cannot load ' + src + '. HTTP response code ' + data.response.status + "\n" + data.response.statusText + "\n";
-                if (data.response.status === 0) {
-                  errorMessage += 'this might be a CORS issue, consider installing https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi or check the source URL';
-                }
-              } catch (err) {
-                  errorMessage = 'cannot load ' + data.url + '. Reason: Load ' + data.event.type;
-              }
-              console.log(errorMessage);
-              break;
-            case Hls.ErrorDetails.MANIFEST_LOAD_TIMEOUT:
-              console.log('timeout while loading manifest');
-              break;
-            case Hls.ErrorDetails.MANIFEST_PARSING_ERROR:
-              console.log('error while parsing manifest:' + data.reason);
-              break;
-            case Hls.ErrorDetails.LEVEL_LOAD_ERROR:
-              console.log('error while loading level playlist');
-              break;
-            case Hls.ErrorDetails.LEVEL_LOAD_TIMEOUT:
-              console.log('timeout while loading level playlist');
-              break;
-            case Hls.ErrorDetails.LEVEL_SWITCH_ERROR:
-              console.log('error while trying to switch to level ' + data.level);
-              break;
-            case Hls.ErrorDetails.FRAG_LOAD_ERROR:
-              console.log('error while loading fragment ' + data.frag.url);
-              break;
-            case Hls.ErrorDetails.FRAG_LOAD_TIMEOUT:
-              console.log('timeout while loading fragment ' + data.frag.url);
-              break;
-            case Hls.ErrorDetails.FRAG_LOOP_LOADING_ERROR:
-              console.log('Frag Loop Loading Error');
-              break;
-            case Hls.ErrorDetails.FRAG_DECRYPT_ERROR:
-              console.log('Decrypting Error:' + data.reason);
-              break;
-            case Hls.ErrorDetails.FRAG_PARSING_ERROR:
-              console.log('Parsing Error:' + data.reason);
-              break;
-            case Hls.ErrorDetails.KEY_LOAD_ERROR:
-              console.log('error while loading key ' + data.frag.decryptdata.uri);
-              break;
-            case Hls.ErrorDetails.KEY_LOAD_TIMEOUT:
-              console.log('timeout while loading key ' + data.frag.decryptdata.uri);
-              break;
-            case Hls.ErrorDetails.BUFFER_APPEND_ERROR:
-              console.log('Buffer Append Error');
-              break;
-            case Hls.ErrorDetails.BUFFER_ADD_CODEC_ERROR:
-              console.log('Buffer Add Codec Error for ' + data.mimeType + ':' + data.err.message);
-              break;
-            case Hls.ErrorDetails.BUFFER_APPENDING_ERROR:
-              console.log('Buffer Appending Error');
-              break;
-            default:
-              break;
-          }
+				Object.keys(hlsEvents).forEach(function (key) {
+					var etype = hlsEvents[key];
 
-          if (data.fatal) {
-            switch (data.type) {
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                console.log('Media error');
-                break;
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                console.log('Network error');
-                break;
-              default:
-                console.log('Unrecoverable error');
-                hls.destroy();
-                hls = null;
-                break;
-            }
-          }
-        });
+					hls.on(etype, function (e, data) {
+						if (key === 'MEDIA_ATTACHED') {
+							hls.loadSource(src);
+						} else if (key === 'ERROR') {
+							switch (data.details) {
+								case Hls.ErrorDetails.MANIFEST_LOAD_ERROR:
+									var errorMessage;
+									try {
+										errorMessage = 'Cannot load ' + src + '. HTTP response code ' + data.response.status + "\n";
+										errorMessage +=  data.response.statusText + "\n";
+										if (data.response.status === 0) {
+											errorMessage += 'this might be a CORS issue, consider installing ';
+											errorMessage += 'https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi';
+											errorMessage += ' or check the source URL';
+										}
+									} catch (err) {
+										errorMessage = 'Cannot load ' + data.url + '. Reason: Load ' + data.event.type;
+									}
+									console.log(errorMessage);
+									break;
+								case Hls.ErrorDetails.MANIFEST_LOAD_TIMEOUT:
+									console.log('Timeout while loading manifest');
+									break;
+								case Hls.ErrorDetails.MANIFEST_PARSING_ERROR:
+									console.log('Error while parsing manifest:' + data.reason);
+									break;
+								case Hls.ErrorDetails.LEVEL_LOAD_ERROR:
+									console.log('Error while loading level playlist');
+									break;
+								case Hls.ErrorDetails.LEVEL_LOAD_TIMEOUT:
+									console.log('Timeout while loading level playlist');
+									break;
+								case Hls.ErrorDetails.LEVEL_SWITCH_ERROR:
+									console.log('Error while trying to switch to level ' + data.level);
+									break;
+								case Hls.ErrorDetails.FRAG_LOAD_ERROR:
+									console.log('Error while loading fragment ' + data.frag.url);
+									break;
+								case Hls.ErrorDetails.FRAG_LOAD_TIMEOUT:
+									console.log('Timeout while loading fragment ' + data.frag.url);
+									break;
+								case Hls.ErrorDetails.FRAG_LOOP_LOADING_ERROR:
+									console.log('Frag Loop Loading Error');
+									break;
+								case Hls.ErrorDetails.FRAG_DECRYPT_ERROR:
+									console.log('Decrypting Error:' + data.reason);
+									break;
+								case Hls.ErrorDetails.FRAG_PARSING_ERROR:
+									console.log('Parsing Error:' + data.reason);
+									break;
+								case Hls.ErrorDetails.KEY_LOAD_ERROR:
+									console.log('error while loading key ' + data.frag.decryptdata.uri);
+									break;
+								case Hls.ErrorDetails.KEY_LOAD_TIMEOUT:
+									console.log('timeout while loading key ' + data.frag.decryptdata.uri);
+									break;
+								case Hls.ErrorDetails.BUFFER_APPEND_ERROR:
+									console.log('Buffer Append Error');
+									break;
+								case Hls.ErrorDetails.BUFFER_ADD_CODEC_ERROR:
+									console.log('Buffer Add Codec Error for ' + data.mimeType + ':' + data.err.message);
+									break;
+								case Hls.ErrorDetails.BUFFER_APPENDING_ERROR:
+									console.log('Buffer Appending Error');
+									break;
+								default:
+									break;
+							}
+						}
+
+						if (data.fatal) {
+							switch (data.type) {
+								case Hls.ErrorTypes.MEDIA_ERROR:
+									console.log('Media error');
+									break;
+								case Hls.ErrorTypes.NETWORK_ERROR:
+									console.log('Network error');
+									break;
+								default:
+									console.log('Unrecoverable error');
+									hls.destroy();
+									hls = null;
+									break;
+							}
+						} else {
+							var event = new Event(e, { bubbles: false, cancelable: false });
+							htmlMediaElement.dispatchEvent(event);
+						}
+					});
+				});
       }
 
 			// add methods to native HTMLMediaElement

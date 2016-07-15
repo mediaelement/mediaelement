@@ -217,7 +217,9 @@
                 var tagName = node.tagName.toLowerCase();
                 $('#' + tagName + '-mode').html( me.pluginType  + ': success' + ', touch: ' + mejs.MediaFeatures.hasTouch);
 
-
+                me.addEventListener(Hls.Events.FRAG_LOADED, function(event,data) {
+                  console.log('Fragment loaded');
+                });
                 if (tagName == 'audio') {
 
                     me.addEventListener('progress',function(e) {
