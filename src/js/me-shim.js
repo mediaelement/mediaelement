@@ -112,9 +112,9 @@ mejs.HtmlMediaElementShim = {
 			var hls = mejs.MediaFeatures.supportsBustedHls ? new Hls(options) : null;
 
 			if (hls !== null) {
-        hls.attachMedia(htmlMediaElement);
+        			hls.attachMedia(htmlMediaElement);
 
-        // Bind hls.js events in media element
+        			// Bind hls.js events in media element
 				var hlsEvents = Hls.Events;
 
 				Object.keys(hlsEvents).forEach(function (key) {
@@ -210,7 +210,7 @@ mejs.HtmlMediaElementShim = {
 						}
 					});
 				});
-      }
+      			}
 
 			// add methods to native HTMLMediaElement
 			return this.updateNative(playback, options, autoplay, preload);
