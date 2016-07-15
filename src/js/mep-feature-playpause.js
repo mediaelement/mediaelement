@@ -20,19 +20,20 @@
 					e.preventDefault();
 
 					if (media.paused) {
+						
+						var hls = mejs.MediaFeatures.hlsInstance;
 
-					  var hls = mejs.MediaFeatures.hlsInstance;
-
-            // If Hls load elements
-            if (hls !== null) {
-
-              hls.attachMedia(media);
-              hls.loadSource(mejs.HtmlMediaElement.originalSrc);
-              hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                media.play();
-              });
-
-            } else  {
+						// If hls object found, use event to play media
+						if (hls !== null) {
+						
+							hls.attachMedia(media);
+							hls.loadSource(mejs.HtmlMediaElement.originalSrc);
+							
+							hls.on(Hls.Events.MANIFEST_PARSED, function () {
+								media.play();
+							});
+						
+						} else  {
 							media.play();
 						}
 					} else {
