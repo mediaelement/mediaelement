@@ -25,42 +25,38 @@ mejs.HtmlMediaElement = {
 	// This can be a url string
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
 	setSrc: function (url) {
-
-    // Fix for IE9 which can't set .src when there are <source> elements. Awesome, right?
-    var
-      existingSources = this.getElementsByTagName('source');
-    while (existingSources.length > 0) {
-      this.removeChild(existingSources[0]);
-    }
-
-    if (typeof url == 'string') {
-      this.src = url;
-    } else {
-      var i, media;
-
-      for (i = 0; i < url.length; i++) {
-        media = url[i];
-        if (this.canPlayType(media.type)) {
-          this.src = media.src;
-          break;
-        }
-      }
-    }
-
-    // Load media through HLS if browser allows it
-    if (mejs.MediaFeatures.supportsBustedHls) {
-      if (this.hls !== null) {
-        this.hls = new Hls(mejs.MediaElementDefaults);
-      }
-
-      this.hls.detachMedia();
-      this.hls.attachMedia(this);
-      this.hls.loadSource(url);
-
-    }
-
-
-  },
+		
+		// Fix for IE9 which can't set .src when there are <source> elements. Awesome, right?
+		var existingSources = this.getElementsByTagName('source');
+		while (existingSources.length > 0) {
+			this.removeChild(existingSources[0]);
+		}
+	
+		if (typeof url == 'string') {
+			this.src = url;
+		} else {
+			var i, media;
+			
+			for (i = 0; i < url.length; i++) {
+				media = url[i];
+				if (this.canPlayType(media.type)) {
+					this.src = media.src;
+					break;
+				}
+			}
+		}
+		
+		// Load media through HLS if browser allows it
+		if (mejs.MediaFeatures.supportsBustedHls) {
+			if (this.hls !== null) {
+				this.hls = new Hls(mejs.MediaElementDefaults);
+			}
+		
+			this.hls.detachMedia();
+			this.hls.attachMedia(this);
+			this.hls.loadSource(url);
+		}
+	},
 
 	setVideoSize: function (width, height) {
 		this.width = width;
