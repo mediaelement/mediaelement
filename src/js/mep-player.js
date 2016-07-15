@@ -40,7 +40,7 @@
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-    autoRewind: true,
+    		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 
@@ -231,7 +231,7 @@
 		}
 
 		// extend default options
-    t.options = $.extend({},mejs.MepDefaults,o);
+    		t.options = $.extend({},mejs.MepDefaults,o);
 
 		if (!t.options.timeFormat) {
 			// Generate the time format according to options
@@ -287,9 +287,9 @@
 			}
 
 			// Create instance of Hls
-      if (typeof t.hlsInstance === 'undefined' && mf.supportsBustedHls) {
-        t.hlsInstance = new Hls(meOptions);
-      }
+			if (typeof t.hlsInstance === 'undefined' && mf.supportsBustedHls) {
+				t.hlsInstance = new Hls(meOptions);
+			}
 
 			// use native controls in iPad, iPhone, and Android
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || (mf.isiPhone && t.options.iPhoneUseNativeControls)) {
@@ -1228,15 +1228,7 @@
 			this.setControlsSize();
 		},
 		play: function() {
-			if (mf.hlsInstance !== null) {
-				// Once Manifest file has been read, media can be played
-				mf.hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-					this.media.play();
-				});
-			} else {
-				this.load();
-				this.media.play();
-			}
+			this.media.play();
 		},
 		pause: function() {
 			try {
