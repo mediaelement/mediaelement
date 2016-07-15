@@ -55,6 +55,16 @@
 
         <h2>HLS</h2>
 
+        <h3>Audio</h3>
+        <audio id="player2" preload="none" type="audio/mp3" controls="controls" type="application/x-mpegURL"
+               src="http://www.streambox.fr/playlists/test_001/stream.m3u8">
+          <p>Your browser leaves much to be desired.</p>
+        </audio>
+
+        <span id="audio-mode"></span>
+
+
+        <h3>Video</h3>
         <video width="640" height="360" id="player1" controls="controls" preload="none"
                type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8"></video>
 
@@ -178,13 +188,13 @@
 
 
 <script  type="text/javascript">
-    $('video').bind('error', function(e) {
+    $('audio, video').bind('error', function(e) {
 
         //console.log('error',this, e, this.src, this.error.code);
     });
 
     jQuery(document).ready(function() {
-        $('video').mediaelementplayer({
+        $('video, audio').mediaelementplayer({
             //mode: 'shim',
 
             // Hls config
