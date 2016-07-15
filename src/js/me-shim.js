@@ -115,6 +115,7 @@ mejs.HtmlMediaElementShim = {
         			hls.attachMedia(htmlMediaElement);
 
         			// Bind hls.js events in media element
+				// for reference: https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-runtime-events
 				var hlsEvents = Hls.Events;
 
 				Object.keys(hlsEvents).forEach(function (key) {
