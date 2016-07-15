@@ -225,7 +225,6 @@
 			return t.node.player;
 		}
 
-
 		// try to get options from data-mejsoptions
 		if (typeof o == 'undefined') {
 			o = t.$node.data('mejsoptions');
@@ -332,7 +331,7 @@
 					.focus(function ( e ) {
 						if( !t.controlsAreVisible  && !t.hasFocus ) {
 							t.showControls(true);
-							
+
                            // In versions older than IE11, the focus causes the playbar to be displayed
                            // if user clicks on the Play/Pause button in the control bar once it attempts
                            // to hide it
@@ -565,6 +564,15 @@
 
 			if (!(mf.isAndroid && t.options.AndroidUseNativeControls) && !(mf.isiPad && t.options.iPadUseNativeControls) && !(mf.isiPhone && t.options.iPhoneUseNativeControls)) {
 
+				// If Hls load elements
+				if (mf.hlsInstance !== null) {
+					mf.hlsInstance.attachMedia(t.media);
+
+					mf.hlsInstance.on(Hls.Events.MEDIA_ATTACHED, function () {
+            mf.hlsInstance.loadSource(mejs.HtmlMediaElement.originalSrc);
+					});
+				}
+
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
 				t.buildkeyboard(t, t.controls, t.layers, t.media);
@@ -757,7 +765,7 @@
 					if (duration !== this.duration) {
 						duration = this.duration;
 						mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
-						
+
 						// make sure to fill in and resize the controls (e.g., 00:00 => 01:13:15
 						if (t.updateDuration) {
 							t.updateDuration();
@@ -766,7 +774,7 @@
 							t.updateCurrent();
 						}
 						t.setControlsSize();
-						
+
 					}
 				}, false);
 
@@ -1224,8 +1232,15 @@
 			this.setControlsSize();
 		},
 		play: function() {
-			this.load();
-			this.media.play();
+			if (mf.hlsInstance !== null) {
+				console.log('playing');
+				mf.hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+					this.media.play();
+				});
+			} else {
+				this.load();
+				this.media.play();
+			}
 		},
 		pause: function() {
 			try {
@@ -1255,7 +1270,15 @@
 			return this.media.volume;
 		},
 		setSrc: function(src) {
-			this.media.setSrc(src);
+			if (mf.hlsInstance !== null) {
+
+        mejs.HtmlMediaElement.originalSrc = src;
+        mf.hlsInstance.attachMedia(this.media);
+				mf.hlsInstance.loadSource(src);
+        
+			} else {
+				this.media.setSrc(src);
+			}
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
