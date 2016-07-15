@@ -722,8 +722,8 @@ mejs.HtmlMediaElementShim = {
 		var htmlMediaElement = playback.htmlMediaElement,
 			m;
 
-    // Save original URL before Hls transforms it
-    mejs.HtmlMediaElement.originalSrc = htmlMediaElement.getAttribute('src');
+    		// Save original URL before Hls transforms it
+    		mejs.HtmlMediaElement.originalSrc = htmlMediaElement.getAttribute('src');
 
 		// add methods to video object to bring it into parity with Flash Object
 		for (m in mejs.HtmlMediaElement) {
