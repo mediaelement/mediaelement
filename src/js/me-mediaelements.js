@@ -4,7 +4,7 @@ extension methods to <video> or <audio> object to bring it into parity with Plug
 mejs.HtmlMediaElement = {
 	pluginType: 'native',
 	isFullScreen: false,
-  originalSrc: '',
+  	originalSrc: '',
 
 	setCurrentTime: function (time) {
 		this.currentTime = time;
