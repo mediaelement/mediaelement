@@ -52,6 +52,8 @@ mejs.MediaElementDefaults = {
 	error: function () { }
 };
 
+
+
 /*
 Determines if a browser supports the <video> or <audio> element
 and returns either the native element or a Flash/Silverlight version that
@@ -85,7 +87,6 @@ mejs.HtmlMediaElementShim = {
 			options[prop] = o[prop];
 		}
 
-
 		// clean up attributes
 		src = 		(typeof src == 'undefined' 	|| src === null || src == '') ? null : src;
 		poster =	(typeof poster == 'undefined' 	|| poster === null) ? '' : poster;
@@ -106,6 +107,16 @@ mejs.HtmlMediaElementShim = {
 					htmlMediaElement.play();
 				}, false);
 			}
+
+      // Load media through HLS if browser allows it
+      var hls = mejs.MediaFeatures.supportsBustedHls ? new Hls(options) : null;
+
+      if (hls !== null) {
+        hls.attachMedia(htmlMediaElement);
+        hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+          hls.loadSource(src);
+        });
+      }
 
 			// add methods to native HTMLMediaElement
 			return this.updateNative(playback, options, autoplay, preload);

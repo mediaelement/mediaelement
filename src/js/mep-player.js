@@ -40,7 +40,7 @@
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-                autoRewind: true,
+    autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 
@@ -231,7 +231,7 @@
 		}
 
 		// extend default options
-		t.options = $.extend({},mejs.MepDefaults,o);
+    t.options = $.extend({},mejs.MepDefaults,o);
 
 		if (!t.options.timeFormat) {
 			// Generate the time format according to options
@@ -285,6 +285,11 @@
 			} else {
 				t.isVideo = (tagName !== 'audio' && t.options.isVideo);
 			}
+
+			// Create instance of Hls
+      if (typeof t.hlsInstance === 'undefined' && mf.supportsBustedHls) {
+        t.hlsInstance = new Hls(meOptions);
+      }
 
 			// use native controls in iPad, iPhone, and Android
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || (mf.isiPhone && t.options.iPhoneUseNativeControls)) {
@@ -563,15 +568,6 @@
 			t.domNode = domNode;
 
 			if (!(mf.isAndroid && t.options.AndroidUseNativeControls) && !(mf.isiPad && t.options.iPadUseNativeControls) && !(mf.isiPhone && t.options.iPhoneUseNativeControls)) {
-
-				// Load media through HLS if browser allows it
-				var hls = mf.hlsInstance;
-				if (hls !== null) {
-					hls.attachMedia(t.media);
-					hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-            					hls.loadSource(mejs.HtmlMediaElement.originalSrc);
-					});
-				}
 
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
@@ -1270,16 +1266,7 @@
 			return this.media.volume;
 		},
 		setSrc: function(src) {
-			if (mf.hlsInstance !== null) {
-				
-				// Update originalSrc as part of the workflow
-			        mejs.HtmlMediaElement.originalSrc = src;
-			        mf.hlsInstance.attachMedia(this.media);
-				mf.hlsInstance.loadSource(src);
-        
-			} else {
-				this.media.setSrc(src);
-			}
+      this.media.setSrc(src);
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;

@@ -38,10 +38,10 @@ mejs.MediaFeatures = {
 		}
 
 		// Test if HLS.js is installed and if browser supports it
-		var supportsBustedHls = false;
+		t.supportsBustedHls = false;
 
 		if (typeof Hls !== 'undefined') {
-			supportsBustedHls = (function() {
+			t.supportsBustedHls = (function() {
 				// No support of MediaSource Extensions in browser
 				if (!Hls.isSupported()) {
 					return false;
@@ -59,9 +59,7 @@ mejs.MediaFeatures = {
 			})();
 		}
 
-		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid || supportsBustedHls);
-		// @todo Bring configuration when calling library
-		t.hlsInstance  = supportsBustedHls ? new Hls() : null;
+		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid || t.supportsBustedHls);
 
 		// Fix for IE9 on Windows 7N / Windows 7KN (Media Player not installer)
 		try{
