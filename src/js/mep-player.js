@@ -857,31 +857,31 @@
 				t.height = height;
 			}
  
-					// check stretching modes
-					switch(t.options.stretching) {
-						case 'fill':
-						// The 'fill' effect only makes sense on video; for audio we will set the dimensions
-								if (t.isVideo) {
-									this.setFillMode();
- 					} else {
-										this.setDimensions(t.width, t.height);
- 					}
-								break;
-						case 'responsive':
-								this.setResponsiveMode();
-								break;
-						case 'none':
-								this.setDimensions(t.width, t.height);
-								break;
-						// This is the 'auto' mode
-						default:
-								if (this.hasFluidMode() === true) {
-									this.setResponsiveMode();
-								} else {
-									this.setDimensions(t.width, t.height);
-								}
-								break;
+			// check stretching modes
+			switch (t.options.stretching) {
+				case 'fill':
+					// The 'fill' effect only makes sense on video; for audio we will set the dimensions
+					if (t.isVideo) {
+						this.setFillMode();
+					} else {
+						this.setDimensions(t.width, t.height);
 					}
+					break;
+				case 'responsive':
+					this.setResponsiveMode();
+					break;
+				case 'none':
+					this.setDimensions(t.width, t.height);
+					break;
+				// This is the 'auto' mode
+				default:
+					if (this.hasFluidMode() === true) {
+						this.setResponsiveMode();
+					} else {
+						this.setDimensions(t.width, t.height);
+					}
+					break;
+			}
 		},
  
 		hasFluidMode: function() {
@@ -894,75 +894,72 @@
 		setResponsiveMode: function() {
 			var t = this;
 		
-			if (t.hasFluidMode()) {
-			
-				// do we have the native dimensions yet?
-				var nativeWidth = (function() {
-					if (t.isVideo) {
-						if (t.media.videoWidth && t.media.videoWidth > 0) {
-							return t.media.videoWidth;
-						} else if (t.media.getAttribute('width') !== null) {
-							return t.media.getAttribute('width');
-						} else {
-							return t.options.defaultVideoWidth;
-						}
+			// do we have the native dimensions yet?
+			var nativeWidth = (function() {
+				if (t.isVideo) {
+					if (t.media.videoWidth && t.media.videoWidth > 0) {
+						return t.media.videoWidth;
+					} else if (t.media.getAttribute('width') !== null) {
+						return t.media.getAttribute('width');
 					} else {
-						return t.options.defaultAudioWidth;
+						return t.options.defaultVideoWidth;
 					}
-				})();
-			
-				var nativeHeight = (function() {
-					if (t.isVideo) {
-						if (t.media.videoHeight && t.media.videoHeight > 0) {
-							return t.media.videoHeight;
-						} else if (t.media.getAttribute('height') !== null) {
-							return t.media.getAttribute('height');
-						} else {
-							return t.options.defaultVideoHeight;
-						}
+				} else {
+					return t.options.defaultAudioWidth;
+				}
+			})();
+		
+			var nativeHeight = (function() {
+				if (t.isVideo) {
+					if (t.media.videoHeight && t.media.videoHeight > 0) {
+						return t.media.videoHeight;
+					} else if (t.media.getAttribute('height') !== null) {
+						return t.media.getAttribute('height');
 					} else {
-						return t.options.defaultAudioHeight;
+						return t.options.defaultVideoHeight;
 					}
-				})();
-			
-				var parentWidth = t.container.parent().closest(':visible').width(),
-				parentHeight = t.container.parent().closest(':visible').height(),
-				newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
-				
-				// When we use percent, the newHeight can't be calculated so we get the container height
-				if (isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight && parentHeight > nativeHeight)) {
-					newHeight = parentHeight;
+				} else {
+					return t.options.defaultAudioHeight;
 				}
+			})();
+		
+			var parentWidth = t.container.parent().closest(':visible').width(),
+			parentHeight = t.container.parent().closest(':visible').height(),
+			newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
 			
-				if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
-					parentWidth = $(window).width();
-					newHeight = $(window).height();
-				}
+			// When we use percent, the newHeight can't be calculated so we get the container height
+			if (isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight && parentHeight > nativeHeight)) {
+				newHeight = parentHeight;
+			}
+		
+			if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
+				parentWidth = $(window).width();
+				newHeight = $(window).height();
+			}
+		
+			if ( newHeight && parentWidth ) {
 			
-				if ( newHeight && parentWidth ) {
+				// set outer container size
+				t.container
+					.width(parentWidth)
+					.height(newHeight);
 				
-					// set outer container size
-					t.container
-					 .width(parentWidth)
-					 .height(newHeight);
-					
-					// set native <video> or <audio> and shims
-					t.$media.add(t.container.find('.mejs-shim'))
-					 .width('100%')
-					 .height('100%');
-					
-					// if shim is ready, send the size to the embeded plugin
-					if (t.isVideo) {
-						if (t.media.setVideoSize) {
-							t.media.setVideoSize(parentWidth, newHeight);
-						}
+				// set native <video> or <audio> and shims
+				t.$media.add(t.container.find('.mejs-shim'))
+					.width('100%')
+					.height('100%');
+				
+				// if shim is ready, send the size to the embeded plugin
+				if (t.isVideo) {
+					if (t.media.setVideoSize) {
+						t.media.setVideoSize(parentWidth, newHeight);
 					}
-			
-					// set the layers
-					t.layers.children('.mejs-layer')
-					 .width('100%')
-					 .height('100%');
 				}
+		
+				// set the layers
+				t.layers.children('.mejs-layer')
+					.width('100%')
+					.height('100%');
 			}
 		},
  
@@ -971,7 +968,7 @@
 				parent = t.outerContainer;
  
 			if (!parent.width()) {
-					parent.height(t.$media.width());
+				parent.height(t.$media.width());
 			}
  
 			if (!parent.height()) {
