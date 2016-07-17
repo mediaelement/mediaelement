@@ -18,6 +18,15 @@
 	text-indent: 0;
 }
 
+.mejs-fill-container,.mejs-fill-container .mejs-container{
+    	width: 100%;
+    	height: 100%;
+}
+
+.mejs-fill-container{
+    	overflow: hidden;
+}
+
 .mejs-container:focus {
 	outline: none;
 }

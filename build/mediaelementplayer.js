@@ -70,7 +70,7 @@ if (typeof jQuery != 'undefined') {
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-                autoRewind: true,
+				autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 
@@ -115,6 +115,9 @@ if (typeof jQuery != 'undefined') {
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
+ 
+		// stretching modes (auto, fill, responsive, none)
+		stretching: 'auto',
 
 		// turns keyboard support on and off for this instance
 		enableKeyboard: true,
@@ -128,7 +131,7 @@ if (typeof jQuery != 'undefined') {
 						keys: [
 								32, // SPACE
 								179 // GOOGLE play/pause button
-							  ],
+								 ],
 						action: function(player, media) {
 								if (media.paused || media.ended) {
 										media.play();
@@ -325,7 +328,7 @@ if (typeof jQuery != 'undefined') {
 
 				// attempt to fix iOS 3 bug
 				//t.$media.removeAttr('poster');
-                                // no Issue found on iOS3 -ttroxell
+								// no Issue found on iOS3 -ttroxell
 
 				// override Apple's autoplay override for iPads
 				if (mf.isiPad && t.media.getAttribute('autoplay') !== null) {
@@ -360,12 +363,23 @@ if (typeof jQuery != 'undefined') {
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media)
 					.focus(function ( e ) {
-						if( !t.controlsAreVisible ) {
+						if( !t.controlsAreVisible && !t.hasFocus ) {
 							t.showControls(true);
-							var playButton = t.container.find('.mejs-playpause-button > button');
-							playButton.focus();
+							// In versions older than IE11, the focus causes the playbar to be displayed
+							// if user clicks on the Play/Pause button in the control bar once it attempts
+							// to hide it
+							if (!t.hasMsNativeFullScreen) {
+								var playButton = t.container.find('.mejs-playpause-button > button');
+								playButton.focus();
+							}
 						}
 					});
+ 
+				if (t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
+					// outer container
+					t.outerContainer = t.$media.parent();
+					t.container.wrap('<div class="mejs-fill-container"/>');
+				}
 
 				// add classes for user and content
 				t.container.addClass(
@@ -565,7 +579,6 @@ if (typeof jQuery != 'undefined') {
 			t.controlsEnabled = true;
 		},
 
-
 		// Sets up all controls and events
 		meReady: function(media, domNode) {
 
@@ -628,7 +641,6 @@ if (typeof jQuery != 'undefined') {
 						// show/hide without animation on touch
 
 						t.$media.bind('touchstart', function() {
-
 
 							// toggle controls
 							if (t.controlsAreVisible) {
@@ -715,7 +727,7 @@ if (typeof jQuery != 'undefined') {
 				// EVENTS
 
 				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
-				media.addEventListener('play', function() {
+				t.media.addEventListener('play', function() {
 					var playerIndex;
 
 					// go through all other players
@@ -736,10 +748,10 @@ if (typeof jQuery != 'undefined') {
 					if(t.options.autoRewind) {
 						try{
 							t.media.setCurrentTime(0);
-                            // Fixing an Android stock browser bug, where "seeked" isn't fired correctly after ending the video and jumping to the beginning
-                            window.setTimeout(function(){
-                                $(t.container).find('.mejs-overlay-loading').parent().hide();
-                            }, 20);
+							// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after ending the video and jumping to the beginning
+							window.setTimeout(function(){
+								$(t.container).find('.mejs-overlay-loading').parent().hide();
+							}, 20);
 						} catch (exp) {
 
 						}
@@ -823,11 +835,11 @@ if (typeof jQuery != 'undefined') {
 				});
 
 				// This is a work-around for a bug in the YouTube iFrame player, which means
-				//  we can't use the play() API for the initial playback on iOS or Android;
-				//  user has to start playback directly by tapping on the iFrame.
+				//	we can't use the play() API for the initial playback on iOS or Android;
+				//	user has to start playback directly by tapping on the iFrame.
 				if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {
 					t.container.find('.mejs-overlay-play').hide();
-                    t.container.find('.mejs-poster').hide();
+					t.container.find('.mejs-poster').hide();
 				}
 			}
 
@@ -874,92 +886,177 @@ if (typeof jQuery != 'undefined') {
 			if (typeof height != 'undefined') {
 				t.height = height;
 			}
-
-			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-			if (t.height.toString().indexOf('%') > 0 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== 't.width') || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%')) {
-
-				// do we have the native dimensions yet?
-				var nativeWidth = (function() {
+ 
+			// check stretching modes
+			switch (t.options.stretching) {
+				case 'fill':
+					// The 'fill' effect only makes sense on video; for audio we will set the dimensions
 					if (t.isVideo) {
-						if (t.media.videoWidth && t.media.videoWidth > 0) {
-							return t.media.videoWidth;
-						} else if (t.media.getAttribute('width') !== null) {
-							return t.media.getAttribute('width');
-						} else {
-							return t.options.defaultVideoWidth;
-						}
+						this.setFillMode();
 					} else {
-						return t.options.defaultAudioWidth;
+						this.setDimensions(t.width, t.height);
 					}
-				})();
-
-				var nativeHeight = (function() {
-					if (t.isVideo) {
-						if (t.media.videoHeight && t.media.videoHeight > 0) {
-							return t.media.videoHeight;
-						} else if (t.media.getAttribute('height') !== null) {
-							return t.media.getAttribute('height');
-						} else {
-							return t.options.defaultVideoHeight;
-						}
+					break;
+				case 'responsive':
+					this.setResponsiveMode();
+					break;
+				case 'none':
+					this.setDimensions(t.width, t.height);
+					break;
+				// This is the 'auto' mode
+				default:
+					if (this.hasFluidMode() === true) {
+						this.setResponsiveMode();
 					} else {
-						return t.options.defaultAudioHeight;
+						this.setDimensions(t.width, t.height);
 					}
-				})();
-
-				var
-					parentWidth = t.container.parent().closest(':visible').width(),
-					parentHeight = t.container.parent().closest(':visible').height(),
-					newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
-
-				// When we use percent, the newHeight can't be calculated so we get the container height
-				if (isNaN(newHeight)) {
-					newHeight = parentHeight;
-				}
-
-				if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
-					parentWidth = $(window).width();
-					newHeight = $(window).height();
-				}
-
-				if ( newHeight && parentWidth ) {
-
-					// set outer container size
-					t.container
-						.width(parentWidth)
-						.height(newHeight);
-
-					// set native <video> or <audio> and shims
-					t.$media.add(t.container.find('.mejs-shim'))
-						.width('100%')
-						.height('100%');
-
-					// if shim is ready, send the size to the embeded plugin
-					if (t.isVideo) {
-						if (t.media.setVideoSize) {
-							t.media.setVideoSize(parentWidth, newHeight);
-						}
-					}
-
-					// set the layers
-					t.layers.children('.mejs-layer')
-						.width('100%')
-						.height('100%');
-				}
-
-
-			} else {
-
-				t.container
-					.width(t.width)
-					.height(t.height);
-
-				t.layers.children('.mejs-layer')
-					.width(t.width)
-					.height(t.height);
-
+					break;
 			}
-
+		},
+ 
+		hasFluidMode: function() {
+			var t = this;
+	 
+			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
+			return (t.height.toString().indexOf('%') > 0 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== 't.width') || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
+		},
+ 
+		setResponsiveMode: function() {
+			var t = this;
+		
+			// do we have the native dimensions yet?
+			var nativeWidth = (function() {
+				if (t.isVideo) {
+					if (t.media.videoWidth && t.media.videoWidth > 0) {
+						return t.media.videoWidth;
+					} else if (t.media.getAttribute('width') !== null) {
+						return t.media.getAttribute('width');
+					} else {
+						return t.options.defaultVideoWidth;
+					}
+				} else {
+					return t.options.defaultAudioWidth;
+				}
+			})();
+		
+			var nativeHeight = (function() {
+				if (t.isVideo) {
+					if (t.media.videoHeight && t.media.videoHeight > 0) {
+						return t.media.videoHeight;
+					} else if (t.media.getAttribute('height') !== null) {
+						return t.media.getAttribute('height');
+					} else {
+						return t.options.defaultVideoHeight;
+					}
+				} else {
+					return t.options.defaultAudioHeight;
+				}
+			})();
+		
+			var parentWidth = t.container.parent().closest(':visible').width(),
+			parentHeight = t.container.parent().closest(':visible').height(),
+			newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
+			
+			// When we use percent, the newHeight can't be calculated so we get the container height
+			if (isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight && parentHeight > nativeHeight)) {
+				newHeight = parentHeight;
+			}
+		
+			if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
+				parentWidth = $(window).width();
+				newHeight = $(window).height();
+			}
+		
+			if ( newHeight && parentWidth ) {
+			
+				// set outer container size
+				t.container
+					.width(parentWidth)
+					.height(newHeight);
+				
+				// set native <video> or <audio> and shims
+				t.$media.add(t.container.find('.mejs-shim'))
+					.width('100%')
+					.height('100%');
+				
+				// if shim is ready, send the size to the embeded plugin
+				if (t.isVideo) {
+					if (t.media.setVideoSize) {
+						t.media.setVideoSize(parentWidth, newHeight);
+					}
+				}
+		
+				// set the layers
+				t.layers.children('.mejs-layer')
+					.width('100%')
+					.height('100%');
+			}
+		},
+ 
+		setFillMode: function() {
+			var t = this,
+				parent = t.outerContainer;
+ 
+			if (!parent.width()) {
+				parent.height(t.$media.width());
+			}
+ 
+			if (!parent.height()) {
+				parent.height(t.$media.height());
+			}
+ 
+			var parentWidth = parent.width(),
+				parentHeight = parent.height();
+			
+			t.setDimensions('100%', '100%');
+			
+			// This prevents an issue when displaying poster
+			t.container.find('.mejs-poster img').css('display', 'block');
+			
+			targetElement = t.container.find('object, embed, iframe, video');
+			
+			// calculate new width and height
+			var initHeight = t.height,
+				initWidth = t.width,
+				// scale to the target width
+				scaleX1 = parentWidth,
+				scaleY1 = (initHeight * parentWidth) / initWidth,
+				// scale to the target height
+				scaleX2 = (initWidth * parentHeight) / initHeight,
+				scaleY2 = parentHeight,
+				// now figure out which one we should use
+				bScaleOnWidth = !(scaleX2 > parentWidth),
+				finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2),
+				finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2);
+			
+			if (bScaleOnWidth) {
+				targetElement.height(finalHeight).width(parentWidth);
+				if (t.media.setVideoSize) {
+					t.media.setVideoSize(parentWidth, finalHeight);
+				}
+			} else {
+				targetElement.height(parentHeight).width(finalWidth);
+				if (t.media.setVideoSize) {
+					t.media.setVideoSize(finalWidth, parentHeight);
+				}
+			}
+			
+			targetElement.css({
+				'margin-left': Math.floor((parentWidth - finalWidth) / 2),
+				'margin-top': 0
+			});
+		},
+	 
+		setDimensions: function(width, height) {
+			var t = this;
+			
+			t.container
+				.width(width)
+				.height(height);
+			
+			t.layers.children('.mejs-layer')
+				.width(width)
+				.height(height);
 		},
 
 		setControlsSize: function() {
@@ -976,7 +1073,6 @@ if (typeof jQuery != 'undefined') {
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
 				return;
 			}
-
 
 			// allow the size to come from custom CSS
 			if (t.options && !t.options.autosizeProgress) {
@@ -1064,7 +1160,7 @@ if (typeof jQuery != 'undefined') {
 		},
 
 		buildoverlays: function(player, controls, layers, media) {
-            var t = this;
+			var t = this;
 			if (!player.isVideo)
 				return;
 
@@ -1087,7 +1183,7 @@ if (typeof jQuery != 'undefined') {
 					'<div class="mejs-overlay-button"></div>'+
 				'</div>')
 				.appendTo(layers)
-				.bind('click', function() {  // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
+				.bind('click', function() {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 					if (t.options.clickToPlayPause) {
 						if (media.paused) {
 							media.play();
@@ -1148,23 +1244,23 @@ if (typeof jQuery != 'undefined') {
 
 				loading.show();
 				controls.find('.mejs-time-buffering').show();
-                // Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices (https://github.com/johndyer/mediaelement/issues/1305)
-                if (mejs.MediaFeatures.isAndroid) {
-                    media.canplayTimeout = window.setTimeout(
-                        function() {
-                            if (document.createEvent) {
-                                var evt = document.createEvent('HTMLEvents');
-                                evt.initEvent('canplay', true, true);
-                                return media.dispatchEvent(evt);
-                            }
-                        }, 300
-                    );
-                }
+				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices (https://github.com/johndyer/mediaelement/issues/1305)
+				if (mejs.MediaFeatures.isAndroid) {
+					media.canplayTimeout = window.setTimeout(
+						function() {
+							if (document.createEvent) {
+								var evt = document.createEvent('HTMLEvents');
+								evt.initEvent('canplay', true, true);
+								return media.dispatchEvent(evt);
+							}
+						}, 300
+					);
+				}
 			}, false);
 			media.addEventListener('canplay',function() {
 				loading.hide();
 				controls.find('.mejs-time-buffering').hide();
-                clearTimeout(media.canplayTimeout); // Clear timeout inside 'loadeddata' to prevent 'canplay' to fire twice
+				clearTimeout(media.canplayTimeout); // Clear timeout inside 'loadeddata' to prevent 'canplay' to fire twice
 			}, false);
 
 			// error handling
@@ -1306,7 +1402,7 @@ if (typeof jQuery != 'undefined') {
 				t.$media.prop('controls', true);
 				// detach events from the video
 				// TODO: detach event listeners better than this;
-				//       also detach ONLY the events attached by this plugin!
+				//		 also detach ONLY the events attached by this plugin!
 				t.$node.clone().insertBefore(t.container).show();
 				t.$node.remove();
 			} else {
@@ -1364,7 +1460,7 @@ if (typeof jQuery != 'undefined') {
 		}
 
 		mejs.MediaElementPlayer.prototype.globalBind = function(events, data, callback) {
-    		var t = this;
+			var t = this;
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
