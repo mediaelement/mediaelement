@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.21.2'; 
+mejs.version = '2.22.0'; 
 
 
 // player number (for missing, same id attr)
@@ -891,7 +891,6 @@ mejs.PluginMediaElement.prototype = {
 
 	remove: function() {
 		mejs.Utility.removeSwf(this.pluginElement.id);
-		mejs.MediaPluginBridge.unregisterPluginElement(this.pluginElement.id);
 	}
 };
 
@@ -1491,7 +1490,11 @@ mejs.HtmlMediaElementShim = {
 					}
 				}
 				else {
-					videoId = playback.url.substr(playback.url.lastIndexOf('=')+1);
+					// https://www.youtube.com/watch?v=
+					var videoIdMatch = playback.url.match( /[?&]v=([^&#]+)|&|#|$/ );
+					if ( videoIdMatch ) {
+						videoId = videoIdMatch[1];
+					}
 				}
 				youtubeSettings = {
 						container: container,
