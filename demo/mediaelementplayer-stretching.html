@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement - Stretching mechanism</title>
+	
+	<script src="../build/jquery.js"></script>	
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+    
+	<style>
+		html, body {
+			height:100%;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>MediaElementPlayer.js</h1>
+	<p>The 'fill' effect will make the video to take the entire width of the parent container</p>
+	
+	
+	<!-- simple single file method -->
+	<video width="640" height="360" src="../media/echo-hereweare.mp4" type="video/mp4" 
+		id="player1" poster="../media/echo-hereweare.jpg" 
+		controls="controls" preload="none"></video>
+		
+	<span id="player1-mode"></span>
+	
+	<p><b>Note</b>: if you are working with local files, you'll need to add your working directory
+	to the <a href="http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html">Flash Global Security Settings</a>.</p>
+	
+	<script>
+	
+	$('audio,video').mediaelementplayer({
+		stretching: 'fill',
+		success: function(player, node) {
+			$('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+		}
+	});
+	
+	</script>
+	
+	<input type="button" id="stopall" value="Stop all">
+	
+	<script>
+		$('#stopall').click(function() {
+		    $('video, audio').each(function() {
+		          $(this)[0].player.pause();		  
+		    });
+		});
+	</script>
+</body>
+</html>
