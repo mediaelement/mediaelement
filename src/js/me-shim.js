@@ -48,6 +48,8 @@ mejs.MediaElementDefaults = {
 	timerRate: 250,
 	// initial volume for player
 	startVolume: 0.8,
+	// custom error message in case media cannot be played
+	customError: "",
 	success: function () { },
 	error: function () { }
 };
@@ -355,7 +357,31 @@ mejs.HtmlMediaElementShim = {
 			errorContainer.style.height = htmlMediaElement.height + 'px';
 		} catch (e) {}
 
-		if (!errorContent) {
+        var isFlashRequired = (options.plugins.indexOf('flash') > -1 ||options.plugins.indexOf('youtube') > -1 ||
+            options.plugins.indexOf('vimeo') > -1),
+            isSilverlightRequired = (options.plugins.indexOf('silverlight') > -1),
+            flashVersion = mejs.Utility.detectedFlashVersion();
+
+		if (isFlashRequired && !flashVersion) {
+            errorContent = '<p>You have not installed Flash; please download it <a href="https://get.adobe.com/flashplayer/" target="_blank">here</a>';
+        } else if (flashVersion) {
+            var version = flashVersion.split('.'),
+                minVersion = mejs.plugins.flash.version;
+
+            if (version[0] < minVersion[0] || (version[0] === minVersion[0] && version[1] === minVersion[1] &&
+                version[2] < minVersion[2])) {
+                errorContent = '<p>The version of Flash you are using is out-of-date; please download the latest version <a href="https://get.adobe.com/flashplayer/" target="_blank">here</a>';
+            }
+        } else if (isSilverlightRequired && !mejs.Utility.detectedSilverlight()) {
+            errorContent = '<p>You have not installed Silverlight; please download it <a href="https://www.microsoft.com/getsilverlight/Get-Started/Install/Default.aspx" target="_blank">here</a>';
+        } else if (mejs.Utility.detectedSilverlight()) {
+            var version = mejs.PluginDetector.plugins['silverlight'],
+                minVersion = mejs.plugins.silverlight.version;
+
+            if (version[0] < minVersion[0]) {
+                errorContent = '<p>The version of Silverlight you are using is out-of-date; please download the latest version <a href="https://www.microsoft.com/getsilverlight/Get-Started/Install/Default.aspx" target="_blank">here</a>';
+            }
+        } else if (!errorContent) {
 			errorContent = '<a href="' + playback.url + '">';
 
 			if (poster !== '') {
