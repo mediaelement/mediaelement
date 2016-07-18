@@ -253,15 +253,15 @@ mejs.Utility = {
 			obj.parentNode.removeChild(obj);
 		}		
 	},
-    determineScheme: function(url) {
-        if (url && url.indexOf("://") != -1) {
-            return url.substr(0, url.indexOf("://")+3);
-        }
-        return "//"; // let user agent figure this out
-    },
+	determineScheme: function(url) {
+		if (url && url.indexOf("://") != -1) {
+			return url.substr(0, url.indexOf("://")+3);
+		}
+		return "//"; // let user agent figure this out
+	},
 	detectedFlashVersion: function() {
 
-    	// This code will provide the major.minor.release version of Flash
+    		// This code will provide the major.minor.release version of Flash
 		// More information in https://code.google.com/p/doctype-mirror/wiki/ArticleDetectFlash#The_code
 		// and http://stackoverflow.com/questions/12866060/detecting-pepper-ppapi-flash-with-javascript
 
