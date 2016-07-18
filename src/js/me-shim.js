@@ -250,7 +250,7 @@ mejs.HtmlMediaElementShim = {
 					pluginVersions = mejs.plugins[pluginName];
 
 					for (var key in pluginVersions) {
-						pluginInfo = pluginVersions[k];
+						pluginInfo = pluginVersions[key];
 					
 						// test if user has the correct plugin version
 						
