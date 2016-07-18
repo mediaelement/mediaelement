@@ -1,5 +1,15 @@
 ### Version History
 
+*2.22.0 (2016/07/17)*
+
+* Introduce new stretching models (stretching: 'fill','responsive') (https://github.com/johndyer/mediaelement/pull/1760) @ron666
+* Fix for IE9-10 fullscreen control hover issues (https://github.com/johndyer/mediaelement/pull/1760) @ron666
+* Update Flash HLS to v0.4.4.21 (https://github.com/johndyer/mediaelement/pull/1762) @ale-grosselle
+* Update Flash HLS to accept audio (https://github.com/johndyer/mediaelement/pull/1763) @ale-grosselle
+* Updated Korean translation (#1743) @Jinkwon 
+* Improve video ID parsing for YouTube URLs (https://github.com/johndyer/mediaelement/pull/1774) @ocean90
+* Removed extrainous call to removePlugin @johndyer 
+
 *2.21.2 (2016/05/08)*
 
 * Fixed IE8 compatibility with new security update
