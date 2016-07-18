@@ -868,6 +868,13 @@
 					}
 					break;
 				case 'responsive':
+					// If the required values in the element are not set, set them automatically
+					if (!this.hasFluidMode()) {
+						t.$media.attr({
+							'style': 'width:100%; height:100%; max-width:100%; max-height: 100%'
+						});
+					}
+
 					this.setResponsiveMode();
 					break;
 				case 'none':
