@@ -699,7 +699,11 @@ mejs.HtmlMediaElementShim = {
 					}
 				}
 				else {
-					videoId = playback.url.substr(playback.url.lastIndexOf('=')+1);
+					// https://www.youtube.com/watch?v=
+					var videoIdMatch = playback.url.match( /[?&]v=([^&#]+)|&|#|$/ );
+					if ( videoIdMatch ) {
+						videoId = videoIdMatch[1];
+					}
 				}
 				youtubeSettings = {
 						container: container,
