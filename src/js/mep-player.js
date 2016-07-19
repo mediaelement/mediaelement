@@ -40,7 +40,7 @@
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-				autoRewind: true,
+		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 
@@ -75,6 +75,10 @@
 		hideVideoControlsOnLoad: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
+		// Time in ms to hide controls
+		defaultVisibilityTimer: 1500,
+		// Use default timer to unify the time it will take to hide controls across the player
+		setDefaultVisibilityTimer: false,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -509,7 +513,12 @@
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : 1500;
+			// Check if global visibility timer was set; if so, use the default visibility timer
+			if (t.options.setDefaultVisibilityTimer) {
+				timeout = t.options.defaultVisibilityTimer;
+			} else {
+				timeout = typeof timeout != 'undefined' ? timeout : t.options.defaultVisibilityTimer;
+			}
 
 			t.killControlsTimer('start');
 
