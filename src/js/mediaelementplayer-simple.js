@@ -27,31 +27,31 @@ function removeEvent( obj, type, fn ) {
 
 function getElementsByClassName(class_name, node, tag) {
 
-    if (node == null) {
-        node = document;
-    }
+	if (node == null) {
+		node = document;
+	}
 	if (node.getElementsByClassName) {
 		return node.getElementsByClassName(class_name);
 	}
-    if (tag == null) {
-        tag = '*';
-    }
+	if (tag == null) {
+		tag = '*';
+	}
 
-    var classElements = new Array();
-    var j = 0, teststr;
-    var els = node.getElementsByTagName(tag);
-    var elsLen = els.length;
+	var classElements = new Array();
+	var j = 0, teststr;
+	var els = node.getElementsByTagName(tag);
+	var elsLen = els.length;
 
-    for (i = 0; i < elsLen; i++) {
-        if (els[i].className.indexOf(class_name) != -1) {
-            teststr = "," + els[i].className.split(" ").join(",") + ",";
-            if (teststr.indexOf("," + class_name + ",") != -1) {
-                classElements[j] = els[i];
-                j++;
-            }
-        }
-    }
-    return classElements;
+	for (i = 0; i < elsLen; i++) {
+		if (els[i].className.indexOf(class_name) != -1) {
+			teststr = "," + els[i].className.split(" ").join(",") + ",";
+			if (teststr.indexOf("," + class_name + ",") != -1) {
+				classElements[j] = els[i];
+				j++;
+			}
+		}
+	}
+	return classElements;
 }
 
 function getMousePosition(e) {
@@ -73,17 +73,17 @@ function getMousePosition(e) {
 }
 
 function getNodePosition(obj) {
-    var curleft = 0,
-        curtop = 0;
+	var curleft = 0,
+		curtop = 0;
 
-    if (obj.offsetParent) {
-        do {
-            curleft += obj.offsetLeft;
-            curtop += obj.offsetTop;
-        } while (obj = obj.offsetParent);
+	if (obj.offsetParent) {
+		do {
+			curleft += obj.offsetLeft;
+			curtop += obj.offsetTop;
+		} while (obj = obj.offsetParent);
 
-        return { x: curleft, y: curtop };
-    }
+		return { x: curleft, y: curtop };
+	}
 }
 
 function getStyle(idOrObj, styleProp) {
@@ -120,44 +120,46 @@ var fadeEffect = {
 	}
 };
 
-
 mejs.addEvent = addEvent;
 mejs.removeEvent = removeEvent;
 mejs.getElementsByClassName = getElementsByClassName;
 
 mejs.id = 1000;
 
+mejs.MediaElementPlayerSimpleDefaults = {
+	
+};
 
 function MediaElementPlayerSimple(idOrObj, options) {
 
-	var original = typeof(idOrObj) == 'string' ? doc.getElementById(idOrObj) : original,
+	var original = typeof(idOrObj) === 'string' ? doc.getElementById(idOrObj) : idOrObj,
 
-		id = original.id ? original.id : 'mejs_' + mejs.id++,
+		id = original && original.id ? original.id : 'mejs_' + mejs.id++,
 
-		autoplay = typeof original.autoplay != 'undefined' && original.autoplay != '',
+		autoplay = original && typeof original.autoplay != 'undefined' && original.autoplay != '',
 
 		tagName = original.tagName.toLowerCase(),
-		
+
 		isVideo = (tagName == 'video' || tagName == 'iframe'),
 
 		container = doc.createElement('div'),
 		controls = doc.createElement('div'),
 
-		originalWidth = isVideo ? 
-							original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) : 
+		originalWidth = isVideo ?
+							original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) :
 							350,
-							
+
 		originalHeight = original.offsetHeight > 0 ? original.offsetHeight : parseInt(original.height),
 
 		mediaElement = null,
-		
+
 		t = this;
-		
+
 	t.id = id;
 	t.options = options;
 	t.original = original;
-	t.isVideo = isVideo;	
-		
+	t.isVideo = isVideo;
+
 	// Container
 	container.id = id + '_container';
 	container.className = 'mejs-simple-container mejs-simple-' + original.tagName.toLowerCase();
@@ -169,37 +171,31 @@ function MediaElementPlayerSimple(idOrObj, options) {
 	original.removeAttribute('controls');
 	controls.style.opacity = 1.0;
 	container.appendChild(original);
-	
+
 	mediaElement = new mejs.MediaElement(id, t.options);
 	t.mediaElement = mediaElement;
-	
+
 	mediaElement.addEventListener('click', function() {
 		if (mediaElement.paused) {
 			mediaElement.play();
 		} else {
 			mediaElement.pause();
 		}
-	});	
-	
-		
+	});
+
 	t.container = container;
 	t.controls = controls;
-	
+
 	t.createUI();
-	
+
 	t.createPlayPause(mediaElement, controls);
 	t.createCurrentTime(mediaElement, controls);
 	t.createProgress(mediaElement, controls);
 	t.createDuration(mediaElement, controls);
 	t.createMute(mediaElement, controls);
 	t.createFullscreen(mediaElement, controls);
-	
-	t.resizeControls();	
-	
 
-	// HTML5 media API
-	//mejs.src = url;
-	//mejs.load();
+	t.resizeControls();
 
 	if (autoplay) {
 		mediaElement.play();
@@ -211,7 +207,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 MediaElementPlayerSimple.prototype = {
 
 	createUI: function() {
-	
+
 		var t = this,
 			id = this.id,
 			controls = t.controls,
@@ -220,19 +216,19 @@ MediaElementPlayerSimple.prototype = {
 			isVideo = t.isVideo,
 			isPlaying = false,
 			original = t.original,
-			originalWidth = isVideo ? 
-							original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) : 
+			originalWidth = isVideo ?
+							original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) :
 							350;
-	
+
 		// CONTROLS
 		controls.className = 'mejs-simple-controls';
 		controls.id = id + '_controls';
 		container.appendChild(controls);
-	
+
 		if (isVideo) {
 			//controls.style.width = (originalWidth - 20) + 'px';
 		}
-	
+
 		addEvent(controls, 'mouseover', function() {
 			clearControlsTimeout();
 		});
@@ -245,45 +241,45 @@ MediaElementPlayerSimple.prototype = {
 		});
 		mediaElement.addEventListener('pause', function() {
 			isPlaying = false;
-		});		
+		});
 		mediaElement.addEventListener('ended', function() {
 			isPlaying = false;
-		});		
+		});
 		mediaElement.addEventListener('seeked', function() {
 			isPlaying = true;
-		});		
-	
+		});
+
 		mediaElement.addEventListener('mouseover', function() {
 			clearControlsTimeout();
 			showControls();
 		});
-	
+
 		mediaElement.addEventListener('mouseout', mouseLeave);
-		mediaElement.addEventListener('mouseleave', mouseLeave);	
-		
+		mediaElement.addEventListener('mouseleave', mouseLeave);
+
 		function mouseLeave() {
 			if (isVideo && isPlaying) {
 				startControlsTimeout();
-			}			
-		}	
-	
+			}
+		}
+
 		var controlsTimeout = null;
-	
+
 		function startControlsTimeout() {
 			clearControlsTimeout();
-	
+
 			controlsTimeout = setTimeout(function() {
 				hideControls();
 			}, 200);
 		}
-	
+
 		function clearControlsTimeout() {
 			if (controlsTimeout != null) {
 				clearTimeout(controlsTimeout);
 				controlsTimeout = null;
 			}
 		}
-	
+
 		function showControls() {
 			//controls.style.display = '';
 			fadeEffect.init(id + '_controls', 1);
@@ -291,49 +287,47 @@ MediaElementPlayerSimple.prototype = {
 		function hideControls() {
 			//controls.style.display = 'none';
 			fadeEffect.init(id + '_controls', 0);
-		}	
-		
-		addEvent(win, 'resize', function() { t.resizeControls() });	
-		
+		}
+
+		addEvent(win, 'resize', function() { t.resizeControls() });
+
 	},
-	
+
 	resizeControls: function() {
-	
-		var 
+
+		var
 			t = this,
 			controls = t.controls,
 			progress = null,
 			combinedControlsWidth = 0,
 			controlsBoundaryWidth = controls.offsetWidth;
-		
+
 		for (var i=0, il=controls.childNodes.length; i<il; i++) {
 			var control = controls.childNodes[i];
-				
+
 			if (control.className.indexOf('ui-time-total') > -1) {
 				progress = control;
-				
+
 				var horizontalSize =
-									parseInt(getStyle(control, 'margin-left'),10) + 
+									parseInt(getStyle(control, 'margin-left'),10) +
 									parseInt(getStyle(control, 'margin-right'),10) ;
-									
+
 				combinedControlsWidth += horizontalSize;
-								
+
 			} else {
 				var horizontalSize =
-									parseInt(getStyle(control, 'width'),10) + 
-									parseInt(getStyle(control, 'margin-left'),10) + 
+									parseInt(getStyle(control, 'width'),10) +
+									parseInt(getStyle(control, 'margin-left'),10) +
 									parseInt(getStyle(control, 'margin-right'),10) ;
-				
+
 				combinedControlsWidth += horizontalSize;
-				
 			}
-		}		
-		
+		}
+
 		if (progress !== null && !isNaN(controlsBoundaryWidth) && !isNaN(combinedControlsWidth)) {
 			progress.style.width = (controlsBoundaryWidth - combinedControlsWidth) + 'px';
 		}
 	},
-				
 
 	createPlayPause: function(mediaElement, controls) {
 		var uiPlayBtn = doc.createElement('input');
@@ -344,10 +338,6 @@ MediaElementPlayerSimple.prototype = {
 		controls.appendChild(uiPlayBtn);
 
 		addEvent(uiPlayBtn, 'click', function() {
-
-			console.log('play/pause click', mediaElement.getPaused()); // , mediaElement.paused.toString(), mediaElement.paused === true, mediaElement.paused === 'true', mediaElement.paused.toString() === 'true');
-
-			//if (mediaElement.paused.toString() == 'true') {
 			if (mediaElement.getPaused()) {
 				mediaElement.play();
 			} else {
@@ -369,14 +359,13 @@ MediaElementPlayerSimple.prototype = {
 
 		mediaElement.addEventListener('ended', function() {
 			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-pause/gi,'') + ' ui-button-play';
-		}, false);	
-		
+		}, false);
+
 		mediaElement.addEventListener('loadstart', function() {
-			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-pause/gi,'') + ' ui-button-play';			
+			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-pause/gi,'') + ' ui-button-play';
 		});
-			
 	},
-	
+
 	createMute: function(mediaElement, controls) {
 		var uiMuteBtn = doc.createElement('input');
 
@@ -386,10 +375,10 @@ MediaElementPlayerSimple.prototype = {
 		controls.appendChild(uiMuteBtn);
 
 		addEvent(uiMuteBtn, 'click', function() {
-			
+
 			console.log('mute clicked');
 			console.log('--', mediaElement.muted);
-			
+
 			if (mediaElement.muted) {
 				mediaElement.muted = false;
 			} else {
@@ -405,8 +394,6 @@ MediaElementPlayerSimple.prototype = {
 				uiMuteBtn.className = uiMuteBtn.className.replace(/ui-button-muted/gi,'') + ' ui-button-unmuted';
 			}
 		}, false);
-
-
 	},
 
 	createCurrentTime: function(mediaElement, controls) {
@@ -422,14 +409,11 @@ MediaElementPlayerSimple.prototype = {
 			if (!isNaN(currentTime)) {
 				uiCurrentTime.innerHTML = mejs.Utils.secondsToTimeCode(currentTime);
 			}
-
 		}, false);
-		
+
 		mediaElement.addEventListener('loadedmetadata', function() {
-
 			uiCurrentTime.innerHTML = mejs.Utils.secondsToTimeCode(0);
-
-		}, false);		
+		}, false);
 
 	},
 
@@ -437,7 +421,6 @@ MediaElementPlayerSimple.prototype = {
 		var uiTimeBarTotal = doc.createElement('div'),
 			uiTimeBarLoaded = doc.createElement('div'),
 			uiTimeBarCurrent = doc.createElement('div');
-
 
 		// time bar!
 		uiTimeBarTotal.className = 'ui-time-total';
@@ -457,11 +440,11 @@ MediaElementPlayerSimple.prototype = {
 		});
 		mediaElement.addEventListener('loadstart', function() {
 			uiTimeBarCurrent.style.width = '0px';
-			uiTimeBarLoaded.style.width = '0px';			
+			uiTimeBarLoaded.style.width = '0px';
 		});
 		mediaElement.addEventListener('loadedmetadata', function() {
 			uiTimeBarCurrent.style.width = '0px';
-			uiTimeBarLoaded.style.width = '0px';			
+			uiTimeBarLoaded.style.width = '0px';
 		});
 
 		mediaElement.addEventListener('progress', function(e) {
@@ -480,7 +463,6 @@ MediaElementPlayerSimple.prototype = {
 		});
 
 		addEvent(uiTimeBarTotal, 'click', function(e) {
-
 			var mousePos = getMousePosition(e),
 				barPos = getNodePosition(uiTimeBarTotal),
 				clickWidth = mousePos.x - barPos.x,
@@ -490,9 +472,7 @@ MediaElementPlayerSimple.prototype = {
 
 			mediaElement.currentTime = newTime;
 		});
-		
 	},
-
 
 	createDuration: function(mediaElement, controls) {
 		var uiDuration = doc.createElement('span');
@@ -500,13 +480,13 @@ MediaElementPlayerSimple.prototype = {
 		uiDuration.className = 'ui-time';
 		uiDuration.innerHTML = '00:00';
 		controls.appendChild(uiDuration);
-		
+
 		function setDuration() {
 			var duration = mediaElement.duration;
 			if (isNaN(duration) || duration == Infinity) {
 				duration = 0;
 			}
-			uiDuration.innerHTML = mejs.Utils.secondsToTimeCode(duration);		
+			uiDuration.innerHTML = mejs.Utils.secondsToTimeCode(duration);
 		}
 
 		mediaElement.addEventListener('timeupdate', setDuration, false);
@@ -514,8 +494,8 @@ MediaElementPlayerSimple.prototype = {
 	},
 
 	createFullscreen: function(mediaElement, controls) {
-			
-		if (!this.isVideo) 
+
+		if (!this.isVideo)
 			return;
 
 		var t = this,
@@ -530,7 +510,7 @@ MediaElementPlayerSimple.prototype = {
 		controls.appendChild(uiFullscreenBtn);
 
 		addEvent(uiFullscreenBtn, 'click', function() {
-		
+
 			console.log('fullscreen btn', isFullscreen);
 
 			if (isFullscreen) {
@@ -545,14 +525,13 @@ MediaElementPlayerSimple.prototype = {
 					doc.mozCancelFullScreen();
 				} else {
 					// full window code for old browsers
-					
 				}
 
 			} else {
-			
+
 				// store for later!
 				oldWidth = container.offsetWidth;
-				oldHeight= container.offsetHeight;			
+				oldHeight= container.offsetHeight;
 
 				if (container.requestFullscreen) {
 					container.requestFullscreen();
@@ -564,7 +543,6 @@ MediaElementPlayerSimple.prototype = {
 					container.mozRequestFullScreen();
 				} else {
 					// full window code for old browsers
-						
 				}
 			}
 		});
@@ -584,48 +562,32 @@ MediaElementPlayerSimple.prototype = {
 				adjustForFullscreen();
 			});
 		}
-		
-		
+
 		function adjustForFullscreen() {
-		
-			
-		
+
 			if (isFullscreen) {
-			
+
 				uiFullscreenBtn.className = uiFullscreenBtn.className.replace(/ui-button-fullscreen/gi,'') + ' ui-button-exitfullscreen';
-	
+
 				container.style.width = '100%';
 				container.style.height = '100%';
-				
-				console.log('fullscreen', container.style.width, container.style.height, container.offsetWidth,  container.offsetHeight);
-	
-				//mejs.style.width = container.offsetWidth + 'px';
-				//mejs.style.height = container.offsetHeight + 'px';
+
 				mediaElement.setSize( container.offsetWidth,  container.offsetHeight);
-	
-								
-				//controls.style.width = (container.offsetWidth - 20) + 'px';
 			} else {
-			
+
 				uiFullscreenBtn.className = uiFullscreenBtn.className.replace(/ui-button-exitfullscreen/gi,'') + ' ui-button-fullscreen';
-							
+
 				container.style.width = oldWidth + 'px';
 				container.style.height = oldHeight + 'px';
-				//controls.style.width = (oldWidth - 20)+ 'px';
-	
+
 				mediaElement.setSize( oldWidth, oldHeight);
 			}
-			
-			
-			t.resizeControls();
-			
-		}		
 
+			t.resizeControls();
+		}
 	}
-	
 }
 
-mejs.MediaElementPlayerSimple = MediaElementPlayerSimple;
-win.MediaElementPlayerSimple = MediaElementPlayerSimple;
+win.MediaElementPlayerSimple = mejs.MediaElementPlayerSimple = MediaElementPlayerSimple;
 
 })(mejs, window, document);
