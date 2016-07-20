@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+	<title>MediaElement.js 3.0 - audio/video unification library</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	<!--[if lte IE 8]>
+	<script src="../src/js/console.js"></script>
+	<![endif]-->	
+	
+	<link href="demo.css" rel="stylesheet" />
+	
+	<!-- main shimichanga stuff -->	
+	<script src="../src/js/mediaelement-heade.js"></script>
+	<script src="../src/js/mediaelement-namespace.js"></script>	
+	<script src="../src/js/mediaelement-utility.js"></script>
+	<script src="../src/js/mediaelement-core.js"></script>
+	<script src="../src/js/mediaelement-renderer-html5.js"></script>
+	<script src="../src/js/mediaelement-renderer-flash.js"></script>
+	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>	
+	<script src="../src/js/mediaelement-renderer-youtube-flash.js"></script>	
+	
+	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>		
+	<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>			
+	
+	<!-- Optional: Javascript libraries -->
+	<!--
+	<script src="../src/js/mejs-renderer-silverlight.js"></script>	
+	<script src="../src/js/mejs-renderer-youtube.js"></script>
+	<script src="../src/js/lib/jsmad.min.js"></script>
+	<script src="../src/js/lib/audiolib.min.js"></script>
+	<script src="../src/js/mejs-renderer-jsmad.js"></script>
+	-->
+	
+	<!-- Optional: Player -->
+	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet" />
+	<script src="../src/js/mediaelementplayer-simple.js"></script>
+	
+<style>
+#commands {
+	padding: 0 0 50px 0;
+}
+#commands .command {
+	display: block;
+	margin: 2px;
+	cursor: pointer;
+}	
+#commands .command:hover {	
+	background-color: #eaedb8;
+}
+
+</style>
+
+
+</head>
+<body>
+
+<div id="container">
+	
+	<h1>MediaElement.js</h1>
+	
+	<p>Experimental HTML5 audio/video shim with fully native HTML5 syntax (get/set) wrapped around HTML5, YouTube, Vimeo, Soundcloud, Flash, Silverlight, JSMad, and other libraries.
+	
+		
+	<div class="players" id="player1-container">
+
+		<h2>Video Player</h2>
+
+		<video id="player1" width="640" height="360" preload="none" >
+
+			<!--	
+			<source src="../media/big_buck_bunny.webm" type="video/webm" /> 						
+			<source src="../media/we_stand_ready_320x180.flv" />				
+			<source src="http://youtu.be/xmWuqd5y77M" />	
+			<source src="rtmp://fms.12E5.edgecastcdn.net/0012E5/mp4:videos/8Juv1MVa-485.mp4" type="video/rtmp" />
+			<source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" />
+			-->	
+			
+			<source src="../media/big_buck_bunny.mp4" type="video/mp4" /> 
+			
+		</video>
+		
+		<div id="player1-renderename">Render info</div>
+		
+		<div id="commands">
+			<span class="command">
+				document.getElementById('player1').src = '../media/big_buck_bunny.mp4'; 
+			</span>
+			<span class="command">
+				document.getElementById('player1').src = '../media/big_buck_bunny.webm'; 
+			</span>
+			<span class="command">
+				document.getElementById('player1').src = '../media/echo-hereweare.mp4'; 
+			</span>
+			<span class="command">
+				document.getElementById('player1').src = '../media/virtual_robotics_lab.wmv'; 
+			</span>	
+			<span class="command">
+				document.getElementById('player1').src = '../media/we_stand_ready_320x180.flv'; 
+			</span>	
+			<span class="command">
+				document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8'; 
+			</span>	
+			<span class="command">
+				document.getElementById('player1').src = 'rtmp://fms.12E5.edgecastcdn.net/0012E5/mp4:videos/8Juv1MVa-485.mp4'; 
+			</span>							
+			
+			<span class="command">
+				document.getElementById('player1').src = 'http://www.dailymotion.com/video/x35yawy_3-homemade-nut-butter-cup-recipes_lifestyle'; 
+			</span>			
+			
+			<span class="command">
+				document.getElementById('player1').src = 'https://www.youtube.com/watch?v=twYp6W6vt2U'; 
+			</span>
+			<span class="command">
+				document.getElementById('player1').src = 'https://www.youtube.com/watch?v=9bZkp7q19f0'; 
+			</span>
+			<span class="command">
+				document.getElementById('player1').src = 'http://youtu.be/xmWuqd5y77M'; 
+			</span>	
+			
+			
+			
+	
+			<span class="command">
+				
+			</span>										
+			<span class="command">
+				document.getElementById('player1').play();
+			</span>										
+			<span class="command">
+				document.getElementById('player1').pause();
+			</span>										
+			<span class="command">
+				document.getElementById('player1').muted = false;
+			</span>
+			<span class="command">
+				document.getElementById('player1').muted = true;
+			</span>											
+			<span class="command">
+				document.getElementById('player1').volume = 0.5;
+			</span>												
+			<span class="command">
+				document.getElementById('player1').volume = 1;
+			</span>	
+			<span class="command">
+				document.getElementById('player1').currentTime = 26;
+			</span>																								
+		</div>
+
+	</div><!-- /.player -->
+	
+		<div class="players" id="player2-container">
+
+
+		<h2>Audio Player</h2>
+
+		<audio id="player2" preload="none" controls>
+
+			<source src="../media/audio.mp3" type="audio/mp3" /> 
+	
+		</audio>
+		
+		<div id="player2-renderename"></div>
+		
+		<div id="commands">
+			<span class="command">
+				document.getElementById('player2').src = '../media/audio.ogg'; document.getElementById('player2').load();
+			</span>
+			<span class="command">
+				document.getElementById('player2').src = '../media/AirReview-Landmarks-02-ChasingCorporate.mp3'; document.getElementById('player2').load();
+			</span>
+			
+			<span class="command">
+				document.getElementById('player2').src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true';
+			</span>
+			
+			<!--
+				<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>			
+				-->
+								
+			<span class="command">
+				document.getElementById('player2').load();
+			</span>										
+			<span class="command">
+				document.getElementById('player2').play();
+			</span>										
+			<span class="command">
+				document.getElementById('player2').pause();
+			</span>										
+			<span class="command">
+				document.getElementById('player2').muted = false;
+			</span>
+			<span class="command">
+				document.getElementById('player2').muted = true;
+			</span>											
+			<span class="command">
+				document.getElementById('player2').volume = 0.5;
+			</span>												
+			<span class="command">
+				document.getElementById('player2').volume = 1;
+			</span>	
+			<span class="command">
+				document.getElementById('player2').currentTime = 26;
+			</span>																								
+		</div>
+	</div><!-- /.player -->	
+		
+</div>  <!-- /#container -->
+		   
+<script>
+
+function createPlayer(id) {
+
+	//mejs.Renderers.order = ['flash_video', 'html5'];
+	
+	var player = new MediaElementPlayerSimple(id),
+		mediaElement = player.mediaElement,
+		container = document.getElementById(id + '-container'),
+		uiRendererName = document.getElementById(id + '-renderename');
+	
+	
+	mediaElement.addEventListener('loadedmetadata', function(e) {
+		
+		var src = mediaElement.src;
+		
+		if (src != null) {
+			uiRendererName.innerHTML = src.substring(src.lastIndexOf('/')+1) + ' : rendered by ' + mediaElement.rendererName;
+		} else {
+			uiRendererName.innerHTML = 'Error finding src. Renderer: ' + mediaElement.rendererName;
+		}
+			
+	}, false);
+	
+	
+	mediaElement.addEventListener('error', function(e) {
+		
+		uiRendererName.innerHTML = e.message;
+			
+	}, false);	
+	
+	
+	var commands = mejs.getElementsByClassName('command', container);
+	
+	console.log('commands', commands.length);
+	
+	for  (var i=0, il=commands.length; i<il; i++) {
+		
+		(function(command) {
+		
+			
+				mejs.addEvent(command, 'click', function() {
+					
+					eval(command.innerHTML);
+					
+					var parts = command.innerHTML.split('.src');
+					if (parts.length > 1) {
+						eval(parts[0] + '.load();');
+					}
+				});	
+			
+		
+		})(commands[i]);
+		
+	
+	}
+}
+
+
+createPlayer('player1');
+createPlayer('player2');
+
+</script>
+	
+</body>
+</html>
