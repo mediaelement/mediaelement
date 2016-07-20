@@ -1,5 +1,11 @@
 ### Version History
 
+*2.22.1 (2016/07/xx)*
+
+* Fix wrong parameter in progress bar seek https://github.com/johndyer/mediaelement/pull/1784 @marjune163
+* Fix fullscreen YouTube in Safari https://github.com/johndyer/mediaelement/pull/1783 @ron666
+* Add missing string to the English locale template https://github.com/johndyer/mediaelement/pull/1782 @ocean90 
+
 *2.22.0 (2016/07/17)*
 
 * Introduce new stretching models (stretching: 'fill','responsive') (https://github.com/johndyer/mediaelement/pull/1760) @ron666
