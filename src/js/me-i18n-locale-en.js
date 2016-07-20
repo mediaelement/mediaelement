@@ -44,6 +44,7 @@
 
             // mep-feature-progress
             "Time Slider": "Time Slider",
+            "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
             // mep-feature-skipback
             "Skip back %1 seconds": "Skip back %1 seconds",
