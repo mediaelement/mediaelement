@@ -11,9 +11,10 @@
 	<link href="demo.css" rel="stylesheet" />
 	
 	<!-- main shimichanga stuff -->	
-	<script src="../src/js/mediaelement-heade.js"></script>
+	<script src="../src/js/mediaelement-header.js"></script>
 	<script src="../src/js/mediaelement-namespace.js"></script>	
 	<script src="../src/js/mediaelement-utility.js"></script>
+	<script src="../src/js/mediaelement-utility-oldie.js"></script>	
 	<script src="../src/js/mediaelement-core.js"></script>
 	<script src="../src/js/mediaelement-renderer-html5.js"></script>
 	<script src="../src/js/mediaelement-renderer-flash.js"></script>
@@ -59,12 +60,16 @@
 	
 	<h1>MediaElement.js</h1>
 	
-	<p>Experimental HTML5 audio/video shim with fully native HTML5 syntax (get/set) wrapped around HTML5, YouTube, Vimeo, Soundcloud, Flash, Silverlight, JSMad, and other libraries.
+	<h2>audio/video unification library</h2>
+	
+	<p>MediaElement is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer that can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, Silverlight, JSMad, and other libraries.</p>
+	
+	<p>MediaElementPlayer is built off of MediaElement and creates a fully featured player on top of the unified syntax from MediaElement.</p>
 	
 		
 	<div class="players" id="player1-container">
 
-		<h2>Video Player</h2>
+		<h3>Video Player</h3>
 
 		<video id="player1" width="640" height="360" preload="none" >
 
@@ -117,13 +122,6 @@
 			</span>
 			<span class="command">
 				document.getElementById('player1').src = 'http://youtu.be/xmWuqd5y77M'; 
-			</span>	
-			
-			
-			
-	
-			<span class="command">
-				
 			</span>										
 			<span class="command">
 				document.getElementById('player1').play();
@@ -150,10 +148,10 @@
 
 	</div><!-- /.player -->
 	
-		<div class="players" id="player2-container">
+	<div class="players" id="player2-container">
 
 
-		<h2>Audio Player</h2>
+		<h3>Audio Player</h3>
 
 		<audio id="player2" preload="none" controls>
 
