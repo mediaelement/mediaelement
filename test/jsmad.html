@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+	<title>MediaElement.js 3.0 - audio/video unification library</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
+	<!--[if lte IE 8]>
+	<script src="../src/js/console.js"></script>
+	<![endif]-->	
+	
+	<!-- MediaElement Core renderers -->	
+	<script src="../src/js/mediaelement-header.js"></script>
+	<script src="../src/js/mediaelement-namespace.js"></script>	
+	<script src="../src/js/mediaelement-utility.js"></script>
+	<script src="../src/js/mediaelement-utility-oldie.js"></script>	
+	<script src="../src/js/mediaelement-core.js"></script>
+	<script src="../src/js/mediaelement-renderer-html5.js"></script>
+	<script src="../src/js/mediaelement-renderer-flash.js"></script>
+	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>		
+	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>		
+	<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>			
+
+	<script src="../src/lib/jsmad/jsmad.min.js"></script>		
+	<script src="../src/lib/jsmad/audiolib.min.js"></script>	
+	<script src="../src/js/mediaelement-renderer-jsmad.js"></script>	
+	
+	<!-- Optional: Player -->
+	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet" />
+	<script src="../src/js/mediaelementplayer-simple.js"></script>
+
+</head>
+<body>
+
+<div id="container">
+	
+	<h1>MediaElement.js</h1>
+	
+	<h2>JsMad tester</h2>
+	
+	<audio id="player1" preload="none" controls>
+
+		<source src="../media/audio.mp3" type="audio/mp3" /> 
+
+	</audio>
+		   
+<script>
+	
+// limit to only jsmad
+mejs.Renderers.order = ['jsmad'];	
+
+var player = new MediaElementPlayerSimple('player1');
+
+</script>
+	
+</body>
+</html>

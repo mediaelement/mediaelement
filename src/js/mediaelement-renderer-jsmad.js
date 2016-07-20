@@ -1,4 +1,4 @@
-(function(win, doc, shimi, undef) {
+(function(win, doc, mejs, undef) {
 
 JsMadRenderer = {
 	name: 'jsmad',
@@ -30,8 +30,54 @@ JsMadRenderer = {
 		// JSMAD player
 		jsmad.jsMad = null;
 		
+		jsmad.loadSrc = function(filename) {
+			
+			console.log('create JSMAD', filename);
+			
+			new Mad.Player.fromURL( filename, function( player ) {
+					//self.usePlayer( player );
+					
+				console.log('JS MAD', 'loaded player', player);
+											
+				jsmad.jsMad = player;
+				
+				jsmad.jsMad.onPlay = function() {
+					mediaElement.dispatchEvent('play');
+				}
+				jsmad.jsMad.onPause = function() {
+					mediaElement.dispatchEvent('pause');
+				}
+				jsmad.jsMad.onProgress = function( current, total, preload ) {
+					//t.wrapper.dispatchEvent('progress');
+					mediaElement.dispatchEvent('timeupdate');
+					
+					jsmad.jsMad.currentTime = current;
+					jsmad.jsMad.duration = total;
+				}
+				
+				jsmad.jsMad.createDevice();
+				
+				mediaElement.dispatchEvent('ready');
+				
+				// do call stack
+				for (var i=0, il=t.apiStack.length; i<il; i++) {
+					
+					var stackItem = t.apiStack[i];
+					
+					console.log('stack', stackItem.type);
+					
+					if (stackItem.type === 'set') {
+						jsmad[stackItem.propName] = stackItem.value;
+					} else if (stackItem.type === 'call') {
+						jsmad[stackItem.methodName]();
+					}
+				}							
+				
+			});
+		}
+		
 		// wrappers for get/set
-		var props = shimi.html5media.properties;
+		var props = mejs.html5media.properties;
 		for (var i=0, il=props.length; i<il; i++) {
 			
 			// wrap in function to retain scope
@@ -70,46 +116,9 @@ JsMadRenderer = {
 					console.log('[JSMAD set]: ' + propName + ' = ' + value);
 					
 					if (propName == 'src') {
-						new Mad.Player.fromURL( value, function( player ) {
-								//self.usePlayer( player );
-								
-							console.log('JS MAD', 'loaded player', player);
-														
-							jsmad.jsMad = player;
-							
-							jsmad.jsMad.onPlay = function() {
-								mediaElement.dispatchEvent('play');
-							}
-							jsmad.jsMad.onPause = function() {
-								mediaElement.dispatchEvent('pause');
-							}
-							jsmad.jsMad.onProgress = function( current, total, preload ) {
-								//t.wrapper.dispatchEvent('progress');
-								mediaElement.dispatchEvent('timeupdate');
-								
-								jsmad.jsMad.currentTime = current;
-								jsmad.jsMad.duration = total;
-							}
-							
-							jsmad.jsMad.createDevice();
-							
-							mediaElement.dispatchEvent('ready');
-							
-							// do call stack
-							for (var i=0, il=t.apiStack.length; i<il; i++) {
-								
-								var stackItem = t.apiStack[i];
-								
-								console.log('stack', stackItem.type);
-								
-								if (stackItem.type === 'set') {
-									jsmad[stackItem.propName] = stackItem.value;
-								} else if (stackItem.type === 'call') {
-									jsmad[stackItem.methodName]();
-								}
-							}							
-							
-						});
+						
+						jsmad.loadSrc(value);
+						
 					} else {
 						
 						if (t.jsMad != null) {							
@@ -125,20 +134,20 @@ JsMadRenderer = {
 		}
 		
 		// add wrappers for native methods
-		var methods = shimichanga.html5media.methods;
+		var methods = mejs.html5media.methods;
 		for (var i=0, il=methods.length; i<il; i++) {
 			(function(methodName) {
 	
 				// run the method on the native HTMLMediaElement
 				jsmad[methodName] = function() {
 					
-					console.log('[JSMAD ' + methodName + '()]', t.jsLib);
+					console.log('[JSMAD ' + methodName + '()]', jsmad.jsMad);
 					
 					if (jsmad.jsMad != null) {
 				
 						switch (methodName) {
 							case 'play':
-								console.log('[JSMAD setPlaying(true)', t.jsMad);
+								console.log('[JSMAD setPlaying(true)', jsmad.jsMad);
 					
 								jsmad.jsMad.setPlaying(true);
 								break;
@@ -163,8 +172,14 @@ JsMadRenderer = {
 				};
 			
 			})(methods[i]);		
-		}		
+		}
 		
+		jsmad.show = function() {};
+		jsmad.hide = function() {};		
+		
+		if (mediaFiles && mediaFiles.length > 0) {
+			jsmad.loadSrc(mediaFiles[0].src);
+		}		
 		
 		return jsmad;
 	}
