@@ -89,11 +89,10 @@ mejs.Renderers = {
 	}
 };
 
-
 mejs.MediaElementOptionsDefaults = {
 	renderers: [],
 	fakeNodeName: 'mediaelementwrapper',
-	pluginPath: 'build/'
+	pluginPath: 'build/',
 }
 
 // Outside Wrapper returns a fake DOM element with properties that look like
