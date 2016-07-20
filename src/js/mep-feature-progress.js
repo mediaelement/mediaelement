@@ -125,8 +125,8 @@
 				var keyCode = e.keyCode,
 					duration = media.duration,
 					seekTime = media.currentTime,
-					seekForward  = player.options.defaultSeekForwardInterval(duration),
-					seekBackward = player.options.defaultSeekBackwardInterval(duration);
+					seekForward  = player.options.defaultSeekForwardInterval(media),
+					seekBackward = player.options.defaultSeekBackwardInterval(media);
 
 				switch (keyCode) {
 				case 37: // left
