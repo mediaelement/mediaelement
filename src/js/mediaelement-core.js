@@ -92,7 +92,7 @@ mejs.Renderers = {
 mejs.MediaElementOptionsDefaults = {
 	renderers: [],
 	fakeNodeName: 'mediaelementwrapper',
-	pluginPath: 'build/',
+	pluginPath: 'build/'
 }
 
 // Outside Wrapper returns a fake DOM element with properties that look like
@@ -218,9 +218,7 @@ mejs.MediaElement = function (id, options) {
 			// find a renderer and URL match
 			renderInfo = mejs.Renderers.selectRenderer( mediaFiles );
 
-
 			console.log('SRC selection', renderInfo);
-
 
 			// did we find a renderer?
 			if (renderInfo === null) {
@@ -249,7 +247,7 @@ mejs.MediaElement = function (id, options) {
 				event.message = 'Error creating renderer';
 				mediaElement.dispatchEvent(event);
 			}
-		}
+		};
 	
 	mejs.Utils.addProperty(mediaElement, 'src', getSrc, setSrc);
 	mediaElement['getSrc'] = getSrc;
@@ -275,7 +273,6 @@ mejs.MediaElement = function (id, options) {
 
 		})(methods[i]);
 	}
-
 
 	// IE && iOS
 	if (!mediaElement.addEventListener) {
@@ -341,10 +338,8 @@ mejs.MediaElement = function (id, options) {
 	// returns (true|false) whether it found the renderer
 	mediaElement.changeRenderer = function(rendererName, mediaFiles) {
 
-		//console.log('[wrapper changeRenderer(' + rendererName + ')]', mediaElement.renderer ? mediaElement.renderer.name : '', mediaElement.renderers, mediaElement.renderer );
-
 		// check for a match on the current renderer
-		if (mediaElement.renderer !== null && mediaElement.renderer.name == rendererName) {
+		if (mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
 
 			console.log('Already using: ' + rendererName);
 			
@@ -417,7 +412,6 @@ mejs.MediaElement = function (id, options) {
 		}
 	}
 
-
 	// find <source> elements
 	if (mediaElement.originalNode != null) {
 		var mediaFiles = [];
@@ -445,7 +439,6 @@ mejs.MediaElement = function (id, options) {
 				}
 				break;
 		}
-
 
 		if (mediaFiles.length > 0) {
 			console.log('initializing src', mediaFiles[0].src);
