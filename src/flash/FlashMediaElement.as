@@ -823,8 +823,9 @@ public class FlashMediaElement extends MovieClip {
 
 	public function setVideoSize(width:Number, height:Number):void {
 		logMessage("setVideoSize: " + width.toString() + "," + height.toString());
-
 		if (_video != null) {
+			_nativeVideoWidth = width;
+			_nativeVideoHeight = height;
 			repositionVideo();
 			positionControls();
 			logMessage("result: " + _video.width.toString() + "," + _video.height.toString());

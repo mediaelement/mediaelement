@@ -109,6 +109,16 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 		_bufferedTime = event.mediatime.buffer+event.mediatime.position;
 		sendEvent(HtmlMediaEvent.PROGRESS);
 		sendEvent(HtmlMediaEvent.TIMEUPDATE);
+
+		//Is setted dimension?
+		var videoWidth:int = _video.videoWidth;
+		var videoHeight:int = _video.videoHeight;
+		var neverSetted:Boolean = _videoWidth <= 0 || _videoHeight <= 0;
+		if (videoWidth && videoHeight && neverSetted) {
+			_videoHeight = videoHeight;
+			_videoWidth = videoWidth;
+			_element.setVideoSize(_videoWidth, _videoHeight);
+		}
 	};
 
 	private function _stateHandler(event:HLSEvent):void {
