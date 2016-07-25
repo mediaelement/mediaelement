@@ -385,7 +385,8 @@ mejs.HtmlMediaElementShim = {
 			container = document.createElement('div'),
 			specialIEContainer,
 			node,
-			initVars;
+			initVars,
+			customPlugins = mejs['plugin' + playback.method];
 
 		// copy tagName from html media element
 		pluginMediaElement.tagName = htmlMediaElement.tagName
@@ -717,6 +718,10 @@ mejs.HtmlMediaElementShim = {
 				}
 				break;			
 		}
+		//Custom Plugins:
+		if(customPlugins)
+			customPlugins(pluginMediaElement, htmlMediaElement);
+
 		// hide original element
 		htmlMediaElement.style.display = 'none';
 		// prevent browser from autoplaying when using a plugin
