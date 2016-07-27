@@ -41,17 +41,16 @@ SoundCloudApi = {
 
 			// Attach handlers for all browsers
 			script.onload = script.onreadystatechange = function() {
-					if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
-						done = true;
-						SoundCloudApi.apiReady();
+				if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
+					done = true;
+					SoundCloudApi.apiReady();
 
-
-						// Handle memory leak in IE
-						script.onload = script.onreadystatechange = null;
-						if ( head && script.parentNode ) {
-							head.removeChild( script );
-						}
+					// Handle memory leak in IE
+					script.onload = script.onreadystatechange = null;
+					if ( head && script.parentNode ) {
+						head.removeChild( script );
 					}
+				}
 			};
 			head.appendChild(script);
 			this.isSDKStarted = true;
@@ -60,7 +59,7 @@ SoundCloudApi = {
 
 	apiReady: function() {
 
-		console.log('SC API REady');
+		console.log('Soundcloud API Loaded');
 
 		this.isLoaded = true;
 		this.isSDKLoaded = true;
@@ -73,7 +72,7 @@ SoundCloudApi = {
 
 	createIframe: function(settings) {
 
-		console.log('creating iframe', settings);
+		//console.log('creating iframe', settings);
 
 		var player = SC.Widget(settings.iframe);
 		window['__ready__' + settings.id](player);
@@ -227,7 +226,7 @@ SoundCloudIframeRenderer = {
 		for (var i=0, il=methods.length; i<il; i++) {
 			(function(methodName) {
 
-				// run the method on the native HTMLMediaElement
+				// run the method on the Soundcloud API
 				sc[methodName] = function() {
 					console.log('[' + options.prefix + ' ' + methodName + '()]');
 
@@ -252,13 +251,13 @@ SoundCloudIframeRenderer = {
 			})(methods[i]);
 		}
 
-		// add a ready method that YouTube can fire
+		// add a ready method that SC can fire
 		win['__ready__' + sc.id] = function(_scPlayer) {
 
 			scPlayerReady = true;
 			mediaElement.scPlayer = scPlayer = _scPlayer;
 
-			console.log('sc ready', scPlayer);
+			console.log('Soundcloud ready', sc.id, scPlayer);
 
 			// do call stack
 			for (var i=0, il=apiStack.length; i<il; i++) {
