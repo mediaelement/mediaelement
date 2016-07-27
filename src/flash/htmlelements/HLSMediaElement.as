@@ -86,7 +86,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 			}
 			_element.sendEventCustom(HtmlMediaEvent.METADATA_READY, id3Obj);
 		}
-		_element.sendEventDirect(HtmlMediaEvent.METADATA_READY, id3Obj);
+		sendEvent(HtmlMediaEvent.METADATA_READY, id3Obj);
 	};
 
 	private function _manifestHandler(event:HLSEvent):void {
