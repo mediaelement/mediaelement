@@ -97,20 +97,25 @@ mejs.MediaElementOptionsDefaults = {
 
 // Outside Wrapper returns a fake DOM element with properties that look like
 // a real HTMLMediaElement
-mejs.MediaElement = function (id, options) {
+mejs.MediaElement = function (idOrNode, options) {
 
 	options = mejs.Utils.extend( options, mejs.MediaElementOptionsDefaults );
-
-	// create our node (note: older versions of iOS don't support Object.defineProperty on DOM nodes)
-	var mediaElement = doc.createElement( options.fakeNodeName);
+	
+	// create our node (note: older versions of iOS don't support Object.defineProperty on DOM nodes)	
+	var	mediaElement = doc.createElement(options.fakeNodeName);
 
 	mediaElement.options = options;
-
-	// check for existing node
-	mediaElement.originalNode = doc.getElementById(id);
+	
+	var id = idOrNode;
+	
+	if (typeof idOrNode === 'string') {
+		mediaElement.originalNode = doc.getElementById(idOrNode);
+	} else {
+		mediaElement.originalNode = idOrNode;
+		id = idOrNode.id;
+	}
 
 	id = id || 'mejs_' + Math.random().toString().slice(2);
-
 
 	if (mediaElement.originalNode !== null && mediaElement.appendChild) {
 		// change id
@@ -137,7 +142,6 @@ mejs.MediaElement = function (id, options) {
 
 		// wrap in function to retain scope
 		(function(propName) {
-
 
 			// src is a special one below
 			if (propName != 'src') {
@@ -169,7 +173,6 @@ mejs.MediaElement = function (id, options) {
 
 				mediaElement['get' + capName] = getFn;
 				mediaElement['set' + capName] = setFn;
-
 			}
 
 		})(props[i]);
@@ -186,8 +189,7 @@ mejs.MediaElement = function (id, options) {
 			}
 		},
 		setSrc = function(value) {
-			console.log('[wrapper set]: SRC: ', value);
-
+			//console.log('[wrapper set]: SRC: ', value);
 
 			var renderInfo,
 				mediaFiles = [];
@@ -210,15 +212,14 @@ mejs.MediaElement = function (id, options) {
 								});
 
 				}
-
 			}
 
-			console.log('SRC test', mediaFiles);
+			//console.log('SRC test', mediaFiles);
 
 			// find a renderer and URL match
 			renderInfo = mejs.Renderers.selectRenderer( mediaFiles );
 
-			console.log('SRC selection', renderInfo);
+			//console.log('SRC selection', renderInfo);
 
 			// did we find a renderer?
 			if (renderInfo === null) {
@@ -232,16 +233,7 @@ mejs.MediaElement = function (id, options) {
 			// turn on the renderer (this checks for the existing renderer already)
 			mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
-			if (mediaElement.renderer !== null) {
-
-				// send the command down to the renderer
-				
-				// remove, no longer
-				//mediaElement.renderer.setSrc( renderInfo.src );
-
-			} else {
-				
-				// sad panda
+			if (mediaElement.renderer === null) {
 				var event = document.createEvent("HTMLEvents");
 				event.initEvent('error', false, false);
 				event.message = 'Error creating renderer';
@@ -264,7 +256,6 @@ mejs.MediaElement = function (id, options) {
 			mediaElement[methodName] = function() {
 				console.log('[wrapper ' + mediaElement.id + '.' + methodName + '()]', mediaElement.renderer);
 				if (mediaElement.renderer != null) {
-					// return mediaElement.renderer[methodName].apply(mediaElement.renderer, arguments);
 					return mediaElement.renderer[methodName](arguments);
 				} else {
 					return null;
@@ -388,7 +379,7 @@ mejs.MediaElement = function (id, options) {
 				newRenderer = new newRendererType.create(mediaElement, renderOptions, mediaFiles);
 				newRenderer.name = rendererName;
 
-				console.log('Switching to: ', newRendererType);
+				//console.log('Switching to: ', newRendererType);
 
 				// store for later
 				mediaElement.renderers[newRendererType.name] = newRenderer;
