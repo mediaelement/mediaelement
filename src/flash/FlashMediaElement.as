@@ -111,6 +111,19 @@ public class FlashMediaElement extends MovieClip {
 
 		var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
 
+		//Thron specific methods:
+		if(ExternalInterface.available){
+			try{
+				var sb:Boolean = ExternalInterface.call("_THConfig.standBy", params["th_id"]);
+				if(sb !== true)
+					return sendEvent("error");
+			}catch(e:Error){
+				return sendEvent("error");
+			}
+		}else{
+			return sendEvent("error");
+		}
+
 		CONFIG::debugBuild {
 			_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
 		}
