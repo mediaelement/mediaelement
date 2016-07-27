@@ -150,11 +150,10 @@ module.exports = function(grunt) {
         //
         flexPath: '../flex_sdk_4.6',
         buildFlashCommand: [
-            '<%= flexPath %>/bin/mxmlc -strict=false -compiler.debug -warnings=true',
+            'mxmlc -strict=false -compiler.debug -warnings=true',
             'src/flash/FlashMediaElement.as -o <%= flashOut %>',
             '-define+=CONFIG::cdnBuild,<%= cdnBuild %>',
             '-define+=CONFIG::debugBuild,<%= debugBuild %>',
-            '-library-path+="<%= flexPath %>/lib"',
             '-include-libraries+=src/flash/flashmediaelement.swc',
             '-include-libraries+=src/flash/flashls.swc -use-network=true',
             '-source-path src/flash',
