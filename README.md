@@ -1,10 +1,12 @@
-# A better mediaelement
+# A better mediaelement for Drupal 7
 
 ### `<video>` and `<audio>` made even easier.
 
 This library is an optimized build of mediaelement.js that includes everything you need to implement a basic mediaelement player and nothing you don't.
 
 Additional features and plugins that aren't part of the standard build can be easily added by uncommenting the feature in `grunt/concat` and rebuilding the script.
+
+All i18n features have been removed from the standard build in favor of passing the needed language features as parameters from Drupal.
 
 Improvements in filesizes are a result of excluding unnecessary plugins from the build process and using less/more specific css selectors.
 
@@ -40,17 +42,13 @@ Sass is the preferred method of styling - *css may be edited directly, but isn't
 
 Extend the player's functionality by uncommenting the desired plugins in `/grunt/concat.js` and rebuild the script.
 
-### I18n
-
-The mediaelement I18n functionality has been removed from mediaelement.js, moving translation back to Drupal where it belongs.
-
 ## How it Works:
 Many great HTML5 players have a completely separate Flash UI in fallback mode, but `MediaElementPlayer.js` uses the same HTML/CSS for all players.
 
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using.
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
 ```html
-<script src="mediaelement.js"></script>
+<script src="imediaelement/build/mediaelement.js"></script>
 <video src="myvideo.mp4" width="320" height="240"></video>
 
 <script>
@@ -60,3 +58,4 @@ new MediaElement(v, {success: function(media) {
 }});
 </script>
 ```
+
