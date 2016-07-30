@@ -26,7 +26,7 @@ import htmlelements.HLSMediaElement;
 
 [SWF(backgroundColor="0x000000")] // Set SWF background color
 public class FlashMediaElement extends MovieClip {
-	//Useful to handle loop operation
+
 	private var _mediaUrl:String;
 	private var _autoplay:Boolean;
 	private var _preload:String;
