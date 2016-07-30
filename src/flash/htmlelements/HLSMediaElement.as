@@ -94,8 +94,6 @@
 			_bufferedTime = event.mediatime.buffer+event.mediatime.position;
 			sendEvent(HtmlMediaEvent.PROGRESS);
 			sendEvent(HtmlMediaEvent.TIMEUPDATE);
-
-			//Is setted dimension?
 			var videoWidth:int = _video.videoWidth;
 			var videoHeight:int = _video.videoHeight;
 			var neverSetted:Boolean = _videoWidth <= 0 || _videoHeight <= 0;
