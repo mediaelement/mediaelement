@@ -227,7 +227,7 @@ package {
 			}
 
 			buildControls();
-
+						
 			logMessage("stage: " + stage.stageWidth + "x" + stage.stageHeight);
 			logMessage("file: " + _mediaUrl);
 			logMessage("autoplay: " + _autoplay.toString());
@@ -274,7 +274,7 @@ package {
 
 						ExternalInterface.addCallback("positionFullscreenButton", positionFullscreenButton);
 						ExternalInterface.addCallback("hideFullscreenButton", hideFullscreenButton);
-
+						
 						// fire init method
 						ExternalInterface.call(ExternalInterface.objectID + '_init');
 						logMessage("Init js function \"" + ExternalInterface.objectID + '_init' + "\" successfully called.");
@@ -419,9 +419,9 @@ package {
 			if (!_debug) {
 				return;
 			}
-
+			
 			ExternalInterface.call("console.log", txt);
-
+			
 			if (_output != null) {
 				_output.appendText(txt + "\n");
 				if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
@@ -434,14 +434,14 @@ package {
 		private function isIllegalQuerystring():Boolean {
 			var query:String = '';
 			var pos:Number = root.loaderInfo.url.indexOf('?') ;
-
+			
 			if ( pos > -1 ) {
-				query = root.loaderInfo.url.substring( pos );
-				if ( ! /^\?\d+$/.test( query ) ) {
-					return true;
-				}
-			}
-
+			    query = root.loaderInfo.url.substring( pos );
+			    if ( ! /^\?\d+$/.test( query ) ) {
+			        return true;
+			    }
+			}			
+			
 			return false;
 		}
 
@@ -556,9 +556,9 @@ package {
 			//if (!_alwaysShowControls) {
 			//	return;
 			//}
-
-
-
+			
+			
+			
 			var contWidth:Number;
 			var contHeight:Number;
 			if (_isFullScreen) {
@@ -609,18 +609,18 @@ package {
 			} else {
 				trace("CONTROLS: normal, original");
 				/*
-				 // Original style bottom display
-				 _hoverTime.y=(_hoverTime.height/2)+1;
-				 _hoverTime.x=0;
-				 _controlBarBg.width = contWidth;
-				 _controlBar.y = contHeight - _controlBar.height;
-				 _duration.x = contWidth - _duration.width - 10;
-				 //_currentTime.x = contWidth - _duration.width - 10 - _currentTime.width - 10;
-				 _currentTime.x = _playButton.x+_playButton.width;
-				 _scrubTrack.width = (_duration.x-_duration.width-10)-_duration.width+10;
-				 _scrubOverlay.width = _scrubTrack.width;
-				 _scrubBar.width = _scrubTrack.width;
-				 */
+				// Original style bottom display
+				_hoverTime.y=(_hoverTime.height/2)+1;
+				_hoverTime.x=0;
+				_controlBarBg.width = contWidth;
+				_controlBar.y = contHeight - _controlBar.height;
+				_duration.x = contWidth - _duration.width - 10;
+				//_currentTime.x = contWidth - _duration.width - 10 - _currentTime.width - 10;
+				_currentTime.x = _playButton.x+_playButton.width;
+				_scrubTrack.width = (_duration.x-_duration.width-10)-_duration.width+10;
+				_scrubOverlay.width = _scrubTrack.width;
+				_scrubBar.width = _scrubTrack.width;
+				*/
 
 				// FLOATING MODE BOTTOM DISPLAY - similar to normal
 				trace("THAT WAY!");
@@ -689,8 +689,8 @@ package {
 			repositionVideo();
 
 			//if (_alwaysShowControls) {
-			_controlBar.visible = true;
-			updateControls(HtmlMediaEvent.FULLSCREENCHANGE);
+				_controlBar.visible = true;
+				updateControls(HtmlMediaEvent.FULLSCREENCHANGE);				
 			//}
 
 			_isFullScreen = true;
@@ -746,7 +746,7 @@ package {
 
 			try {
 				//if (_alwaysShowControls) {
-				_controlBar.visible = true;
+					_controlBar.visible = true;
 				//}
 				setFullscreen(true);
 				repositionVideo();
@@ -760,12 +760,12 @@ package {
 			logMessage("fullscreen event: " + e.fullScreen.toString());
 
 			_isFullScreen = e.fullScreen;
-
+			
 			if (!_isFullScreen) {
 				_controlBar.visible = _alwaysShowControls;
-			}
-
-			repositionVideo();
+			}			
+			
+			repositionVideo();			
 			hideFullscreenButton();
 
 			sendEvent(HtmlMediaEvent.FULLSCREENCHANGE, "isFullScreen:" + e.fullScreen );
@@ -819,6 +819,7 @@ package {
 
 		public function setVideoSize(width:Number, height:Number):void {
 			logMessage("setVideoSize: " + width.toString() + "," + height.toString());
+
 			if (_video != null) {
 				_nativeVideoWidth = width;
 				_nativeVideoHeight = height;
