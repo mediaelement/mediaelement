@@ -73,6 +73,8 @@
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
+		// Hide completely controls in audio element (mostly used for background sound that autoplays)
+		hideAudioControls: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
 		// force iPad's native controls
@@ -344,6 +346,19 @@
 							}
 						}
 					});
+
+				// When no elements in controls, hide bar completely
+				if (!t.options.features.length) {
+
+					if (t.isVideo || t.options.hideAudioControls) {
+						t.container.find('.mejs-controls').hide();
+					}
+
+					// In case of audio, remove the bar by changing background
+					if (!t.isVideo && t.options.hideAudioControls) {
+						t.container.css('background', 'transparent');
+					}
+				}
  
 				if (t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
 					// outer container
@@ -581,6 +596,12 @@
 				t.findTracks();
 
 				// add user-defined features/controls
+				// In the event that t.options.features is empty on audio
+				// set default ones unless flag is true
+				if (!t.isVideo && !t.options.features.length && !t.options.hideAudioControls) {
+					t.options.features = ['playpause','current','progress','duration', 'volume'];
+				}
+
 				for (featureIndex in t.options.features) {
 					feature = t.options.features[featureIndex];
 					if (t['build' + feature]) {
