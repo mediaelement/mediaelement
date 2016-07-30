@@ -71,7 +71,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 	};
 
 	private function _fragmentHandler(event:HLSEvent):void {
-			sendEvent(HtmlMediaEvent.FRAGMENT_PLAYING);
+		sendEvent(HtmlMediaEvent.FRAGMENT_PLAYING);
 	};
 
 	private function _manifestHandler(event:HLSEvent):void {
@@ -168,7 +168,7 @@ public class HLSMediaElement extends Sprite implements IMediaElement {
 
 	public function load():void{
 		//Log.txt("HLSMediaElement:load");
-		if (_url) {
+		if(_url) {
 			sendEvent(HtmlMediaEvent.LOADSTART);
 			_hls.load(_url);
 		}
