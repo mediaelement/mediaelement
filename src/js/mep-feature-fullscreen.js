@@ -315,7 +315,7 @@
 
 			var t = this;
 
-			if (mejs.MediaFeatures.hasiOSFullScreen && typeof t.media.webkitEnterFullscreen === 'function') {
+			if (mejs.MediaFeatures.isiOS && mejs.MediaFeatures.hasiOSFullScreen && typeof t.media.webkitEnterFullscreen === 'function') {
 			    t.media.webkitEnterFullscreen();
 				return;
 			}
