@@ -441,6 +441,10 @@ mejs.MediaElement = function (idOrNode, options) {
 
 	// TEMP
 	//mediaElement.load();
+	
+	if (options.success) {		
+		options.success(mediaElement, mediaElement.originalNode);		
+	}
 
 	return mediaElement;
 };
