@@ -1,6 +1,6 @@
 (function(mejs, win, doc, undefined) {
 
-mejs.Utils = {
+mejs.Utility = mejs.Utils = {
 	addProperty: function(obj, name, onGet, onSet) {
 
 		// wrapper functions
@@ -272,11 +272,101 @@ mejs.Utils = {
 
 		// Return the modified object
 		return target;
-	}
+	},
+	/*
+	 * Calculate the time format to use. We have a default format set in the
+	 * options but it can be imcomplete. We ajust it according to the media
+	 * duration.
+	 *
+	 * We support format like 'hh:mm:ss:ff'.
+	 */
+	calculateTimeFormat: function(time, options, fps) {
+		if (time < 0) {
+			time = 0;
+		}
+
+		if(typeof fps == 'undefined') {
+		    fps = 25;
+		}
+
+		var format = options.timeFormat,
+			firstChar = format[0],
+			firstTwoPlaces = (format[1] == format[0]),
+			separatorIndex = firstTwoPlaces? 2: 1,
+			separator = ':',
+			hours = Math.floor(time / 3600) % 24,
+			minutes = Math.floor(time / 60) % 60,
+			seconds = Math.floor(time % 60),
+			frames = Math.floor(((time % 1)*fps).toFixed(3)),
+			lis = [
+				[frames, 'f'],
+				[seconds, 's'],
+				[minutes, 'm'],
+				[hours, 'h']
+			];
+
+		// Try to get the separator from the format
+		if (format.length < separatorIndex) {
+			separator = format[separatorIndex];
+		}
+
+		var required = false;
+
+		for (var i=0, len=lis.length; i < len; i++) {
+			if (format.indexOf(lis[i][1]) !== -1) {
+				required=true;
+			}
+			else if (required) {
+				var hasNextValue = false;
+				for (var j=i; j < len; j++) {
+					if (lis[j][0] > 0) {
+						hasNextValue = true;
+						break;
+					}
+				}
+
+				if (! hasNextValue) {
+					break;
+				}
+
+				if (!firstTwoPlaces) {
+					format = firstChar + format;
+				}
+				format = lis[i][1] + separator + format;
+				if (firstTwoPlaces) {
+					format = lis[i][1] + format;
+				}
+				firstChar = lis[i][1];
+			}
+		}
+		options.currentTimeFormat = format;
+	},
+	
+	convertSMPTEtoSeconds: function (SMPTE) {
+		if (typeof SMPTE != 'string') 
+			return false;
+
+		SMPTE = SMPTE.replace(',', '.');
+		
+		var secs = 0,
+			decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
+			multiplier = 1;
+		
+		SMPTE = SMPTE.split(':').reverse();
+		
+		for (var i = 0; i < SMPTE.length; i++) {
+			multiplier = 1;
+			if (i > 0) {
+				multiplier = Math.pow(60, i); 
+			}
+			secs += Number(SMPTE[i]) * multiplier;
+		}
+		return Number(secs.toFixed(decimalLen));
+	}		
 }
 
 
-mejs.Features = (function() {
+mejs.MediaFeatures = mejs.Features = (function() {
 
 	var features = {},
 		nav = win.navigator,
