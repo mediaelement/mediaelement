@@ -450,9 +450,16 @@ mejs.HtmlMediaElementShim = {
 				'flashstreamer=' + options.flashStreamer,
 				'height=' + height,
 				'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
-	
+
+			if (poster) {
+				if (playback.method === 'flash') {
+					initVars.push('image=' + mejs.Utility.encodeUrl(poster));
+				} else {
+					initVars.push('image=' + poster);
+				}
+			}
 			if (playback.url !== null) {
-				if (playback.method == 'flash') {
+				if (playback.method === 'flash') {
 					initVars.push('file=' + mejs.Utility.encodeUrl(playback.url));
 				} else {
 					initVars.push('file=' + playback.url);
