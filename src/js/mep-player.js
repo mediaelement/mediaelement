@@ -74,7 +74,7 @@
 		// Display the video control
 		hideVideoControlsOnLoad: false,
 		// Hide control bar when video is paused
-		hideVideoControlOnPause: true,
+		hideVideoControlOnPause: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
 		// force iPad's native controls
