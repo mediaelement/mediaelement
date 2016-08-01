@@ -76,9 +76,11 @@
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
 		// Time in ms to hide controls
-		defaultVisibilityTimer: 1500,
-		// Use default timer to unify the time it will take to hide controls across the player
-		setDefaultVisibilityTimer: false,
+		controlsTimeoutDefault: 1500,
+		// Time in ms to trigger the timer when mouse moves
+		controlsTimeoutMouseEnter: 2500,
+		// Time in ms to trigger the timer when mouse leaves
+		controlsTimeoutMouseLeave: 1000,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -513,12 +515,7 @@
 
 			var t = this;
 
-			// Check if global visibility timer was set; if so, use the default visibility timer
-			if (t.options.setDefaultVisibilityTimer) {
-				timeout = t.options.defaultVisibilityTimer;
-			} else {
-				timeout = typeof timeout != 'undefined' ? timeout : t.options.defaultVisibilityTimer;
-			}
+			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -657,7 +654,7 @@
 									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
@@ -667,14 +664,14 @@
 										t.showControls();
 									}
 									if (!t.options.alwaysShowControls) {
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
 							.bind('mouseleave', function () {
 								if (t.controlsEnabled) {
 									if (!t.media.paused && !t.options.alwaysShowControls) {
-										t.startControlsTimer(1000);
+										t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 									}
 								}
 							});
