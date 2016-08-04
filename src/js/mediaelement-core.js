@@ -99,7 +99,7 @@ mejs.MediaElementOptionsDefaults = {
 // a real HTMLMediaElement
 mejs.MediaElement = function (idOrNode, options) {
 
-	options = mejs.Utils.extend( options, mejs.MediaElementOptionsDefaults );
+	options = mejs.Utils.extend( mejs.MediaElementOptionsDefaults, options );
 	
 	// create our node (note: older versions of iOS don't support Object.defineProperty on DOM nodes)	
 	var	mediaElement = doc.createElement(options.fakeNodeName);
