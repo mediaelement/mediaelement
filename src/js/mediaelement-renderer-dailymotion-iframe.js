@@ -1,6 +1,6 @@
 (function(win, doc, shimi, undef) {
 
-// regisert youtube type
+// register youtube type
 mejs.Utils.typeChecks.push(function(url) {
 
 	url = new String(url).toLowerCase();

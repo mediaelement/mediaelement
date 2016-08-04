@@ -127,7 +127,6 @@ mejs.getElementsByClassName = getElementsByClassName;
 mejs.id = 1000;
 
 mejs.MediaElementPlayerSimpleDefaults = {
-	
 };
 
 function MediaElementPlayerSimple(idOrObj, options) {

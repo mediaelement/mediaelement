@@ -65,9 +65,15 @@ iframe {
 	
 	<video  width="640" height="360" preload="none" class="mejs-player" >
 		<source src="rtmp://fms.12E5.edgecastcdn.net/0012E5/mp4:videos/8Juv1MVa-485.mp4" /> 		
-	</video>	
-	
-	
+	</video>
+
+	<h3>HLS Stream</h3>
+
+	<video  width="640" height="360" preload="none" class="mejs-player" >
+		<source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" />
+	</video>
+
+
 	<h3>HTML5 MP3</h3>
 
 	<audio preload="none" controls class="mejs-player">
@@ -86,7 +92,9 @@ iframe {
 	var elements = mejs.getElementsByClassName('mejs-player');
 	
 	for (var i=0, il=elements.length; i<il; i++) {
-		var player = new MediaElementPlayerSimple(elements[i]);
+		var player = new MediaElementPlayerSimple(elements[i], {
+			pluginPath: '../build/'
+		});
 	}
 	
 </script>		
