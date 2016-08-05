@@ -383,14 +383,15 @@ mejs.MediaFeatures = mejs.Features = (function() {
 	features.isiPhone = (ua.match(/iphone/i) !== null);
 	features.isiOS = features.isiPhone || features.isiPad;
 	features.isAndroid = (ua.match(/android/i) !== null);
-	features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1);
+	features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+	features.isChrome = (ua.match(/chrome/gi) !== null);
+	features.isFirefox = (ua.match(/firefox/gi) !== null);
+	features.isSafari = ua.match(/safari/gi) !== null && !features.isChrome;
 
 	/*
 	Possibly add back in when needed
 
 	features.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
-	features.isChrome = (ua.match(/chrome/gi) !== null);
-	features.isFirefox = (ua.match(/firefox/gi) !== null);
 	features.isWebkit = (ua.match(/webkit/gi) !== null);
 	features.isGecko = (ua.match(/gecko/gi) !== null) && !features.isWebkit;
 	features.isOpera = (ua.match(/opera/gi) !== null);
@@ -401,7 +402,29 @@ mejs.MediaFeatures = mejs.Features = (function() {
 	features.svg = 	!! doc.createElementNS &&
 					!! doc.createElementNS('http://www.w3.org/2000/svg','svg').createSVGRect;
 
-	features.supportsMediaTag = (typeof video.canPlayType != 'undefined' || features.isBustedAndroid);
+	// Test if HLS.js is supported by browser
+	features.canSupportHls = false;
+
+	if (typeof Hls !== 'undefined') {
+		features.canSupportHls = (function() {
+			// No support of MediaSource Extensions in browser
+			if (!Hls.isSupported()) {
+				return false;
+			}
+
+			// Running HLS library FF v44 on Windows is buggy
+			if (features.isFirefox && nav.platform.indexOf('Win') !== -1 && ua.indexOf('44.') !== -1) {
+				return false;
+			}
+
+			// Browser compatibility in https://github.com/dailymotion/hls.js#user-content-compatibility;
+			// Safari is on beta so not supported
+			// Win8 IE11+ supported
+			return ua.indexOf('trident/7') !== -1 || !features.isSafari;
+		})();
+	}
+
+	features.supportsMediaTag = (typeof video.canPlayType != 'undefined' || features.isBustedAndroid || features.canSupportHls);
 
 	return features;
 })();
