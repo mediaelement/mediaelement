@@ -346,59 +346,42 @@ if (hasFlash) {
 
 		create: FlashMediaElementRenderer.create
 
-	}
+	};
 	mejs.Renderers.add(FlashMediaElementVideoRenderer);
 
-	// AUDIO - ogg
-	FlashMediaElementAudioOggRenderer = {
-		name: 'flash_audio_ogg',
+	// HLS Streaming (if browser doesn't support hls.js library)
+	if (!mejs.MediaFeatures.canSupportHls) {
 
-		canPlayType: function(type) {
-			var supportedMediaTypes = ['audio/ogg','audio/oga'];
+		mejs.Utils.typeChecks.push(function(url) {
 
-			return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
-		},
+			url = new String(url).toLowerCase();
 
-		// options
-		options: {
-			prefix: 'flash_audio',
-			filename: 'mediaelement-flash-audio-ogg.swf'
-		},
+			if (url.indexOf('.m3u8') > -1) {
+				return 'application/x-mpegURL';
+			} else {
+				return null;
+			}
+		});
 
-		create: FlashMediaElementRenderer.create
+		FlashMediaElementHlsVideoRenderer = {
+			name: 'flash_hls',
+
+			canPlayType: function(type) {
+				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
+
+				return (!mejs.MediaFeatures.canSupportHls && hasFlash && supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			// options
+			options: {
+				prefix: 'flash_hls',
+				filename: 'mediaelement-flash-video-hls.swf'
+			},
+
+			create: FlashMediaElementRenderer.create
+		};
+		mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
 	}
-	mejs.Renderers.add(FlashMediaElementAudioOggRenderer);
-
-	// HLS Streaming
-	mejs.Utils.typeChecks.push(function(url) {
-
-		url = new String(url).toLowerCase();
-
-		if (url.indexOf('.m3u8') > -1) {
-			return 'application/x-mpegURL';
-		} else {
-			return null;
-		}
-	});
-
-	FlashMediaElementHlsVideoRenderer = {
-		name: 'flash_hls',
-
-		canPlayType: function(type) {
-			var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
-
-			return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
-		},
-
-		// options
-		options: {
-			prefix: 'flash_hls',
-			filename: 'mediaelement-flash-video-hls.swf'
-		},
-
-		create: FlashMediaElementRenderer.create
-	}
-	mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
 
 	// AUDIO - ogg
 	FlashMediaElementAudioOggRenderer = {
