@@ -48,36 +48,37 @@ iframe {
 
 	<video width="640" height="360" preload="none" class="mejs-player" poster="../media/echo-hereweare.jpg">
 		<source src="../media/echo-hereweare.mp4" type="video/mp4" />
+		<track src="../media/mediaelement.srt" type="subtitles" lang="en">
 	</video>	
 	
 	<h3>YouTube</h3>
 	
-	<iframe width="640" height="360" src="https://www.youtube.com/watch?v=twYp6W6vt2U" class="mejs-player" allowfullscreen frameborder="0">
+	<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U" class="mejs-player" allowfullscreen frameborder="0">
 	</iframe>		
 	
 	<h3>Dailymotion</h3>
 	
-	<iframe width="640" height="360" src="http://www.dailymotion.com/video/x35yawy_3-homemade-nut-butter-cup-recipes_lifestyle" class="mejs-player" allowfullscreen frameborder="0">
-	</iframe>
+	<!--<iframe width="640" height="360" class="mejs-player" allowfullscreen frameborder="0">-->
+	<!--</iframe>-->
 	
 
 	<h3>RTMP Stream</h3>
 	
 	<video  width="640" height="360" preload="none" class="mejs-player" >
-		<source src="rtmp://fms.12E5.edgecastcdn.net/0012E5/mp4:videos/8Juv1MVa-485.mp4" /> 		
+		<source src="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4" type="rtmp/mp4" />
 	</video>
 
 	<h3>HLS Stream</h3>
 
 	<video  width="640" height="360" preload="none" class="mejs-player" >
-		<source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" />
+		<source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
 	</video>
 
 
 	<h3>HTML5 MP3</h3>
 
 	<audio preload="none" controls class="mejs-player">
-		<source src="../media/audio.mp3" type="audio/mp3" /> 
+		<source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3" />
 	</audio>
 	
 	<h3>Soundcloud</h3>
