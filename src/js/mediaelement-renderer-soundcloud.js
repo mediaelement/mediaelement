@@ -1,6 +1,6 @@
 (function(win, doc, mejs, undef) {
 
-// regisert youtube type
+// register youtube type
 mejs.Utils.typeChecks.push(function(url) {
 
 	url = new String(url).toLowerCase();
@@ -114,11 +114,13 @@ SoundCloudIframeRenderer = {
 			paused = true,
 			volume = 0,
 			muted = false,
-			ended = false;
+			ended = false,
+			i,
+			il;
 
 		// wrappers for get/set
 		var props = mejs.html5media.properties;
-		for (var i=0, il=props.length; i<il; i++) {
+		for (i=0, il=props.length; i<il; i++) {
 
 			// wrap in function to retain scope
 			(function(propName) {
@@ -153,10 +155,10 @@ SoundCloudIframeRenderer = {
 
 							case 'buffered':
 								return {
-									start: function(index) {
+									start: function() {
 										return 0;
 									},
-									end: function (index) {
+									end: function () {
 										return bufferedTime * duration;
 									},
 									length: 1
@@ -169,7 +171,7 @@ SoundCloudIframeRenderer = {
 					} else {
 						return null;
 					}
-				}
+				};
 
 				sc['set' + capName] = function(value) {
 					//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
@@ -216,14 +218,14 @@ SoundCloudIframeRenderer = {
 						// store for after "READY" event fires
 						apiStack.push({type: 'set', propName: propName, value: value});
 					}
-				}
+				};
 
 			})(props[i]);
 		}
 
 		// add wrappers for native methods
 		var methods = mejs.html5media.methods;
-		for (var i=0, il=methods.length; i<il; i++) {
+		for (i=0, il=methods.length; i<il; i++) {
 			(function(methodName) {
 
 				// run the method on the Soundcloud API
@@ -260,7 +262,7 @@ SoundCloudIframeRenderer = {
 			console.log('Soundcloud ready', sc.id, scPlayer);
 
 			// do call stack
-			for (var i=0, il=apiStack.length; i<il; i++) {
+			for (i=0, il=apiStack.length; i<il; i++) {
 
 				var stackItem = apiStack[i];
 
@@ -341,7 +343,7 @@ SoundCloudIframeRenderer = {
 				var event = mejs.Utils.createEvent(initEvents[i], sc);
 				mediaElement.dispatchEvent(event);
 			}
-		}
+		};
 
 		// container for API API
 		scIframe = doc.createElement('iframe');
@@ -365,21 +367,21 @@ SoundCloudIframeRenderer = {
 
 		sc.setSize = function(width, height) {
 			// nothing here, audio only
-		}
+		};
 		sc.hide = function() {
 			sc.pause();
 			if (scIframe) {
 				scIframe.style.display = 'none';
 			}
-		}
+		};
 		sc.show = function() {
 			if (scIframe) {
 				scIframe.style.display = '';
 			}
-		}
+		};
 		sc.destroy = function() {
 			scPlayer.destroy();
-		}
+		};
 
 		return sc;
 	}
