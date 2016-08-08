@@ -209,7 +209,6 @@ mejs.Utility = mejs.Utils = {
 		var parts = time.split(':'),
 			hours = 0,
 			minutes = 0,
-			seconds	= 0,
 			frames = 0,
 			seconds = 0;
 
