@@ -8,10 +8,17 @@ var HtmlMediaElement = {
 
 		var mediaElement = doc.createElement('video');
 
-		if (mediaElement.canPlayType && mejs.MediaFeatures.canSupportHls) {
-			var mediaTypes = ['application/x-mpegURL', 'video/mp4', 'audio/mp3'];
+		if (mejs.MediaFeatures.canSupportHls) {
+
+			var mediaTypes = mejs.html5media.mediaTypes;
+			if (mejs.html5media.mediaTypes.indexOf('application/x-mpegURL') === -1) {
+				mediaTypes.push('application/x-mpegURL');
+			}
+
 			return mediaTypes.indexOf(type) > -1;
-		} else if (mediaElement.canPlayType) {
+		}
+
+		if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/,'');
 		} else {
 			return '';
@@ -118,7 +125,7 @@ var HtmlMediaElement = {
 
 			node.src = mediaFiles[0].src;
 
-			if (player !== null) {
+			if (player !== null && mejs.Utils.getExtension(node.src) === 'm3u8') {
 				player.attachMedia(node);
 
 				player.on(Hls.Events.MEDIA_ATTACHED, function() {
