@@ -362,7 +362,7 @@ mejs.Utility = mejs.Utils = {
 		}
 		return Number(secs.toFixed(decimalLen));
 	}		
-}
+};
 
 
 mejs.MediaFeatures = mejs.Features = (function() {
