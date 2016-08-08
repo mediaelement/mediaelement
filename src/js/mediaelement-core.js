@@ -29,7 +29,7 @@ mejs.html5media = {
 				'audio/mp3','audio/ogg','audio/oga','audio/wav','audio/mpeg'
 				,'video/mp4','video/webm','video/ogg'
 				]
-}
+};
 
 
 // a list of possible renderers (HTML5, Flash, YouTube, Soundcloud, pure JS, etc.)
@@ -48,20 +48,20 @@ mejs.Renderers = {
 	// go through the renders and return the first one that supports the given type
 	// accepts string:type
 	// or array [{src:'',type:''}]
-	getRendererByType: function(mediaType) {
-		var t = this;
-
-		for (var i=0, il=t.order.length; i<il; i++) {
-			var rendererName = t.order[i],
-				renderer = t.renderers[rendererName];
-
-			if (render.canPlayType(mediaType) != '') {
-				return rendererName;
-			}
-		}
-
-		return null;
-	},
+	// getRendererByType: function(mediaType) {
+	// 	var t = this;
+    //
+	// 	for (var i=0, il=t.order.length; i<il; i++) {
+	// 		var rendererName = t.order[i],
+	// 			renderer = t.renderers[rendererName];
+    //
+	// 		if (renderer.canPlayType(mediaType) != '') {
+	// 			return rendererName;
+	// 		}
+	// 	}
+    //
+	// 	return null;
+	// },
 
 	// array [{src:'',type:''}]
 	selectRenderer: function(mediaFiles) {
@@ -82,10 +82,10 @@ mejs.Renderers = {
 		}
 
 		return null;
-	},
+	// },
 
-	getRendererByUrl: function(url) {
-		return this.getRendererByType( mejs.Utils.getTypeFromFile(url) );
+	// getRendererByUrl: function(url) {
+	// 	return this.getRendererByType( mejs.Utils.getTypeFromFile(url) );
 	}
 };
 
@@ -93,7 +93,7 @@ mejs.MediaElementOptionsDefaults = {
 	renderers: [],
 	fakeNodeName: 'mediaelementwrapper',
 	pluginPath: 'build/'
-}
+};
 
 // Outside Wrapper returns a fake DOM element with properties that look like
 // a real HTMLMediaElement
@@ -137,8 +137,11 @@ mejs.MediaElement = function (idOrNode, options) {
 	mediaElement.rendererName = null;
 
 	// add properties get/set
-	var props = mejs.html5media.properties;
-	for (var i=0, il=props.length; i<il; i++) {
+	var
+		props = mejs.html5media.properties,
+		i,
+		il;
+	for (i=0, il=props.length; i<il; i++) {
 
 		// wrap in function to retain scope
 		(function(propName) {
@@ -169,7 +172,7 @@ mejs.MediaElement = function (idOrNode, options) {
 						}
 					};
 
-				mejs.Utils.addProperty(mediaElement, propName, getFn, setFn)
+				mejs.Utils.addProperty(mediaElement, propName, getFn, setFn);
 
 				mediaElement['get' + capName] = getFn;
 				mediaElement['set' + capName] = setFn;
@@ -220,10 +223,11 @@ mejs.MediaElement = function (idOrNode, options) {
 			renderInfo = mejs.Renderers.selectRenderer( mediaFiles );
 
 			//console.log('SRC selection', renderInfo);
+			var event;
 
 			// did we find a renderer?
 			if (renderInfo === null) {
-				var event = document.createEvent("HTMLEvents");
+				event = document.createEvent("HTMLEvents");
 				event.initEvent('error', false, false);
 				event.message = 'No renderer found';
 				mediaElement.dispatchEvent(event);
@@ -234,7 +238,7 @@ mejs.MediaElement = function (idOrNode, options) {
 			mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 			if (mediaElement.renderer === null) {
-				var event = document.createEvent("HTMLEvents");
+				event = document.createEvent("HTMLEvents");
 				event.initEvent('error', false, false);
 				event.message = 'Error creating renderer';
 				mediaElement.dispatchEvent(event);
@@ -247,7 +251,7 @@ mejs.MediaElement = function (idOrNode, options) {
 
 	// add methods
 	var methods = mejs.html5media.methods;
-	for (var i=0, il=methods.length; i<il; i++) {
+	for (i=0, il=methods.length; i<il; i++) {
 
 		// wrap in function to retain scope
 		(function(methodName) {
@@ -271,7 +275,7 @@ mejs.MediaElement = function (idOrNode, options) {
 		mediaElement.events = {};
 
 		// start: fake events
-		mediaElement.addEventListener = function (eventName, callback, bubble) {
+		mediaElement.addEventListener = function (eventName, callback) {
 			// create or find the array of callbacks for this eventName
 			mediaElement.events[eventName] = mediaElement.events[eventName] || [];
 
@@ -305,11 +309,12 @@ mejs.MediaElement = function (idOrNode, options) {
 				}
 			}
 			return false;
-		}
+		};
+
 		mediaElement.dispatchEvent = function (event) {
 
 			var i,
-				args,
+				//args,
 				callbacks = mediaElement.events[event.type];
 
 			//console.log('mejs event', event, mediaElement.events);
@@ -323,7 +328,7 @@ mejs.MediaElement = function (idOrNode, options) {
 					callbacks[i].apply(null, [event]);
 				}
 			}
-		}
+		};
 	}
 
 	// returns (true|false) whether it found the renderer
@@ -395,13 +400,13 @@ mejs.MediaElement = function (idOrNode, options) {
 		console.log('-- ERROR finding: ' + rendererName);
 
 		return false;
-	}
+	};
 
 	mediaElement.setSize = function(width, height) {
 		if (mediaElement.renderer != null) {
 			mediaElement.renderer.setSize(width, height);
 		}
-	}
+	};
 
 	// find <source> elements
 	if (mediaElement.originalNode != null) {
@@ -416,7 +421,7 @@ mejs.MediaElement = function (idOrNode, options) {
 
 			case 'audio':
 			case 'video':
-				var i, n, src, type;
+				var n, src, type;
 
 				// test <source> types to see if they are usable
 				for (i = 0; i < mediaElement.originalNode.childNodes.length; i++) {

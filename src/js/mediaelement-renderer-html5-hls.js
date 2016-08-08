@@ -29,6 +29,8 @@
         create: function (mediaElement, options, mediaFiles) {
 
             var node = null,
+                i,
+                il,
                 id = mediaElement.id + '_html5';
 
             // CREATE NODE
@@ -45,7 +47,7 @@
 
             // WRAPPERS for PROPs
             var props = mejs.html5media.properties;
-            for (var i=0, il=props.length; i<il; i++) {
+            for (i=0, il=props.length; i<il; i++) {
 
                 // wrap in function to retain scope
                 (function(propName) {
@@ -67,7 +69,7 @@
 
             events = events.concat(['click','mouseover','mouseout']);
 
-            for (var i=0, il=events.length; i<il; i++) {
+            for (i=0, il=events.length; i<il; i++) {
                 (function(eventName) {
 
                     node.addEventListener(eventName, function(e) {
@@ -129,7 +131,7 @@
                     Object.keys(hlsEvents).forEach(function (key) {
                         var etype = hlsEvents[key];
 
-                        player.on(etype, function (e, data) {
+                        player.on(etype, function (e) {
                             var event = new Event(e, { bubbles: false, cancelable: false });
                             mediaElement.dispatchEvent(event);
                         });
