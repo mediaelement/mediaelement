@@ -9,7 +9,7 @@ function addEvent( obj, type, fn ) {
 		obj.addEventListener( type, fn, false );
 	} else if ( obj.attachEvent ) {
 		obj['e'+type+fn] = fn;
-		obj[type+fn] = function(){obj['e'+type+fn]( window.event );}
+		obj[type+fn] = function(){obj['e'+type+fn]( window.event );};
 		obj.attachEvent( 'on'+type, obj[type+fn] );
 	}
 
@@ -37,7 +37,7 @@ function getElementsByClassName(class_name, node, tag) {
 		tag = '*';
 	}
 
-	var classElements = new Array();
+	var classElements = [];
 	var j = 0, teststr;
 	var els = node.getElementsByTagName(tag);
 	var elsLen = els.length;
@@ -58,7 +58,7 @@ function getMousePosition(e) {
 	var x = 0,
 		y = 0;
 
-	if (!e) var e = window.event;
+	if (!e) e = window.event;
 
 	if (e.pageX || e.pageY) {
 		x = e.pageX;
@@ -69,7 +69,7 @@ function getMousePosition(e) {
 		y = e.clientY + doc.body.scrollTop + doc.documentElement.scrollTop;
 	}
 
-	return { x: x, y: x};
+	return { x: x, y: y};
 }
 
 function getNodePosition(obj) {
@@ -135,7 +135,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 
 		id = original && original.id ? original.id : 'mejs_' + mejs.id++,
 
-		autoplay = original && typeof original.autoplay != 'undefined' && original.autoplay != '',
+		autoplay = original && typeof original.autoplay !== 'undefined' && original.autoplay === true,
 
 		tagName = original.tagName.toLowerCase(),
 
@@ -163,7 +163,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 	container.id = id + '_container';
 	container.className = 'mejs-simple-container mejs-simple-' + original.tagName.toLowerCase();
 	container.style.width = originalWidth + 'px';
-	container.style.height = originalHeight + 'px'
+	container.style.height = originalHeight + 'px';
 
 	// Create SHIM
 	original.parentElement.insertBefore(container, original);
@@ -213,11 +213,11 @@ MediaElementPlayerSimple.prototype = {
 			container = t.container,
 			mediaElement = t.mediaElement,
 			isVideo = t.isVideo,
-			isPlaying = false,
-			original = t.original,
-			originalWidth = isVideo ?
-							original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) :
-							350;
+			isPlaying = false;
+			// original = t.original,
+			// originalWidth = isVideo ?
+			// 				original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) :
+			//				350;
 
 		// CONTROLS
 		controls.className = 'mejs-simple-controls';
@@ -302,19 +302,19 @@ MediaElementPlayerSimple.prototype = {
 			controlsBoundaryWidth = controls.offsetWidth;
 
 		for (var i=0, il=controls.childNodes.length; i<il; i++) {
-			var control = controls.childNodes[i];
+			var control = controls.childNodes[i], horizontalSize;
 
 			if (control.className.indexOf('ui-time-total') > -1) {
 				progress = control;
 
-				var horizontalSize =
+				horizontalSize =
 									parseInt(getStyle(control, 'margin-left'),10) +
 									parseInt(getStyle(control, 'margin-right'),10) ;
 
 				combinedControlsWidth += horizontalSize;
 
 			} else {
-				var horizontalSize =
+				horizontalSize =
 									parseInt(getStyle(control, 'width'),10) +
 									parseInt(getStyle(control, 'margin-left'),10) +
 									parseInt(getStyle(control, 'margin-right'),10) ;
@@ -378,11 +378,7 @@ MediaElementPlayerSimple.prototype = {
 			console.log('mute clicked');
 			console.log('--', mediaElement.muted);
 
-			if (mediaElement.muted) {
-				mediaElement.muted = false;
-			} else {
-				mediaElement.muted = true;
-			}
+			mediaElement.muted = !mediaElement.muted;
 
 		});
 
@@ -431,7 +427,7 @@ MediaElementPlayerSimple.prototype = {
 		uiTimeBarCurrent.className = 'ui-time-current';
 		uiTimeBarTotal.appendChild(uiTimeBarCurrent);
 
-		mediaElement.addEventListener('timeupdate', function(e) {
+		mediaElement.addEventListener('timeupdate', function() {
 			var outsideWidth = uiTimeBarTotal.offsetWidth,
 				percent = mediaElement.currentTime / mediaElement.duration;
 
@@ -446,12 +442,12 @@ MediaElementPlayerSimple.prototype = {
 			uiTimeBarLoaded.style.width = '0px';
 		});
 
-		mediaElement.addEventListener('progress', function(e) {
+		mediaElement.addEventListener('progress', function() {
 
 			var buffered = mediaElement.buffered,
 				duration = mediaElement.duration,
 				outsideWidth = uiTimeBarTotal.offsetWidth,
-				percent = 0
+				percent = 0;
 
 			if (buffered && buffered.length > 0 && buffered.end && duration) {
 				// TODO: account for a real array with multiple values (only Firefox 4 has this so far)
@@ -585,7 +581,7 @@ MediaElementPlayerSimple.prototype = {
 			t.resizeControls();
 		}
 	}
-}
+};
 
 win.MediaElementPlayerSimple = mejs.MediaElementPlayerSimple = MediaElementPlayerSimple;
 
