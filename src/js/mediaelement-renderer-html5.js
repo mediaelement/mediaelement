@@ -8,8 +8,8 @@ var HtmlMediaElement = {
 
 		var mediaElement = doc.createElement('video');
 
-		if (mejs.MediaFeatures.canSupportHls) {
-			var mediaTypes = ['application/x-mpegURL'];
+		if (mediaElement.canPlayType && mejs.MediaFeatures.canSupportHls) {
+			var mediaTypes = ['application/x-mpegURL', 'video/mp4', 'audio/mp3'];
 			return mediaTypes.indexOf(type) > -1;
 		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/,'');
