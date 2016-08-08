@@ -18,7 +18,6 @@
 	<script src="../src/js/mediaelement-utility-oldie.js"></script>	
 	<script src="../src/js/mediaelement-core.js"></script>
 	<script src="../src/js/mediaelement-renderer-html5.js"></script>
-	<script src="../src/js/mediaelement-renderer-hls.js"></script>
 	<script src="../src/js/mediaelement-renderer-flash.js"></script>
 	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>		
 	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>		
@@ -97,7 +96,10 @@ iframe {
 	
 	for (var i=0, il=elements.length; i<il; i++) {
 		var player = new MediaElementPlayerSimple(elements[i], {
-			pluginPath: '../build/'
+			pluginPath: '../build/',
+			hls: {
+				debug: true
+			}
 		});
 	}
 	

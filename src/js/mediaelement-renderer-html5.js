@@ -8,7 +8,10 @@ var HtmlMediaElement = {
 
 		var mediaElement = doc.createElement('video');
 
-		if (mediaElement.canPlayType) {
+		if (mejs.MediaFeatures.canSupportHls) {
+			var mediaTypes = ['application/x-mpegURL'];
+			return mediaTypes.indexOf(type) > -1;
+		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/,'');
 		} else {
 			return '';
@@ -19,9 +22,11 @@ var HtmlMediaElement = {
 	create: function (mediaElement, options, mediaFiles) {
 
 		var node = null,
+			player = mejs.MediaFeatures.canSupportHls ? new Hls(options.hls) : null,
+			hlsEvents = mejs.MediaFeatures.canSupportHls ? Hls.Events : null,
 			id = mediaElement.id + '_html5';
 
-		// CREATE NODe
+		// CREATE NODE
 		if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
 
 			node =  document.createElement('audio');
@@ -60,6 +65,19 @@ var HtmlMediaElement = {
 		for (var i=0, il=events.length; i<il; i++) {
 			(function(eventName) {
 
+				switch (eventName) {
+					case 'loadedmetadata':
+						if (player !== null) {
+							player.trigger(hlsEvents.MEDIA_ATTACHED);
+						}
+						break;
+					case 'loadeddata':
+						if (player !== null) {
+							player.trigger(hlsEvents.MANIFEST_PARSED);
+						}
+						break;
+				}
+
 				node.addEventListener(eventName, function(e) {
 					// copy event
 
@@ -82,22 +100,35 @@ var HtmlMediaElement = {
 			node.style.height = height + 'px';
 
 			return node;
-		}
+		};
 
 		node.hide = function() {
 			node.style.display = 'none';
 
 			return node;
-		}
+		};
 
 		node.show = function() {
 			node.style.display = '';
 
 			return node;
-		}
+		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
+
 			node.src = mediaFiles[0].src;
+
+			if (player !== null) {
+				player.attachMedia(node);
+
+				player.on(Hls.Events.MEDIA_ATTACHED, function() {
+					player.loadSource(mediaFiles[0].src);
+
+					player.on(Hls.Events.MANIFEST_PARSED, function() {
+						node.play();
+					});
+				});
+			}
 		}
 
 		var event = mejs.Utils.createEvent('rendererready', node);
