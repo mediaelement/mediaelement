@@ -34,13 +34,12 @@
                     options.debug = options.hlsDebug;
                 }
 
-                var hls = {}, node = mediaElement.originalNode, player = null;
+                var hls = {}, node = mediaElement.originalNode, player = new Hls(options);
                 hls.options = options;
                 hls.id = mediaElement.id + '_' + hls.options.prefix;
-                
+
                 hls.loadSrc = function (filename) {
 
-                    player = new Hls(options);
                     player.attachMedia(node);
 
                     player.on(Hls.Events.MEDIA_ATTACHED, function() {

@@ -8,16 +8,6 @@ var HtmlMediaElement = {
 
 		var mediaElement = doc.createElement('video');
 
-		if (mejs.MediaFeatures.canSupportHls) {
-
-			var mediaTypes = mejs.html5media.mediaTypes;
-			if (mejs.html5media.mediaTypes.indexOf('application/x-mpegURL') === -1) {
-				mediaTypes.push('application/x-mpegURL');
-			}
-
-			return mediaTypes.indexOf(type) > -1;
-		}
-
 		if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/,'');
 		} else {
@@ -29,8 +19,6 @@ var HtmlMediaElement = {
 	create: function (mediaElement, options, mediaFiles) {
 
 		var node = null,
-			player = mejs.MediaFeatures.canSupportHls ? new Hls(options.hls) : null,
-			hlsEvents = mejs.MediaFeatures.canSupportHls ? Hls.Events : null,
 			id = mediaElement.id + '_html5';
 
 		// CREATE NODE
@@ -64,26 +52,11 @@ var HtmlMediaElement = {
 			})(props[i]);
 		}
 
-		// BUBBLE EVENTS
 		var events = mejs.html5media.events;
-
-		events = events.concat(['click','mouseover','mouseout']);
+		events = events.concat(['click','mouseover','mouseout'].join(Hls.Events));
 
 		for (var i=0, il=events.length; i<il; i++) {
 			(function(eventName) {
-
-				switch (eventName) {
-					case 'loadedmetadata':
-						if (player !== null) {
-							player.trigger(hlsEvents.MEDIA_ATTACHED);
-						}
-						break;
-					case 'loadeddata':
-						if (player !== null) {
-							player.trigger(hlsEvents.MANIFEST_PARSED);
-						}
-						break;
-				}
 
 				node.addEventListener(eventName, function(e) {
 					// copy event
@@ -122,20 +95,7 @@ var HtmlMediaElement = {
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-
 			node.src = mediaFiles[0].src;
-
-			if (player !== null && mejs.Utils.getExtension(node.src) === 'm3u8') {
-				player.attachMedia(node);
-
-				player.on(Hls.Events.MEDIA_ATTACHED, function() {
-					player.loadSource(mediaFiles[0].src);
-
-					player.on(Hls.Events.MANIFEST_PARSED, function() {
-						node.play();
-					});
-				});
-			}
 		}
 
 		var event = mejs.Utils.createEvent('rendererready', node);
