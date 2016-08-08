@@ -29,8 +29,6 @@
         create: function (mediaElement, options, mediaFiles) {
 
             var node = null,
-                player = mejs.MediaFeatures.canSupportHls ? new Hls(options.hls) : null,
-                hlsEvents = mejs.MediaFeatures.canSupportHls ? Hls.Events : null,
                 id = mediaElement.id + '_html5';
 
             // CREATE NODE
@@ -72,19 +70,6 @@
             for (var i=0, il=events.length; i<il; i++) {
                 (function(eventName) {
 
-                    switch (eventName) {
-                        case 'loadedmetadata':
-                            if (player !== null) {
-                                player.trigger(hlsEvents.MEDIA_ATTACHED);
-                            }
-                            break;
-                        case 'loadeddata':
-                            if (player !== null) {
-                                player.trigger(hlsEvents.MANIFEST_PARSED);
-                            }
-                            break;
-                    }
-
                     node.addEventListener(eventName, function(e) {
                         // copy event
 
@@ -125,14 +110,28 @@
 
                 node.src = mediaFiles[0].src;
 
-                if (player !== null && mejs.Utils.getExtension(node.src) === 'm3u8') {
+                if (mejs.MediaFeatures.canSupportHls && mejs.Utils.getExtension(node.src) === 'm3u8') {
+
+                    var
+                        player = new Hls(options.hls),
+                        hlsEvents = Hls.Events;
+
                     player.attachMedia(node);
 
-                    player.on(Hls.Events.MEDIA_ATTACHED, function() {
+                    player.on(hlsEvents.MEDIA_ATTACHED, function() {
                         player.loadSource(mediaFiles[0].src);
 
-                        player.on(Hls.Events.MANIFEST_PARSED, function() {
+                        player.on(hlsEvents.MANIFEST_PARSED, function() {
                             node.play();
+                        });
+                    });
+
+                    Object.keys(hlsEvents).forEach(function (key) {
+                        var etype = hlsEvents[key];
+
+                        player.on(etype, function (e, data) {
+                            var event = new Event(e, { bubbles: false, cancelable: false });
+                            mediaElement.dispatchEvent(event);
                         });
                     });
                 }
