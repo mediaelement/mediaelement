@@ -9,7 +9,7 @@ mejs.PluginDetector = {
 		var pv = this.plugins[plugin];
 		v[1] = v[1] || 0;
 		v[2] = v[2] || 0;
-		return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;
+		return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2]));
 	},
 
 	// cached values
@@ -68,10 +68,12 @@ mejs.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwave
 });
 
 
-FlashMediaElementRenderer = {
+var FlashMediaElementRenderer = {
 	create: function (mediaElement, options, mediaFiles) {
 
-		var flash = {};
+		var flash = {},
+			i,
+			il;
 
 		// store main variable
 		flash.options = options;
@@ -85,7 +87,7 @@ FlashMediaElementRenderer = {
 
 		// mediaElements for get/set
 		var props = mejs.html5media.properties;
-		for (var i=0, il=props.length; i<il; i++) {
+		for (i=0, il=props.length; i<il; i++) {
 
 			// wrap in function to retain scope
 			(function(propName) {
@@ -108,10 +110,10 @@ FlashMediaElementRenderer = {
 								//console.log('buffered', value);
 
 								return  {
-									start: function(index) {
+									start: function() {
 										return 0;
 									},
-									end: function (index) {
+									end: function () {
 										return value;
 									},
 									length: 1
@@ -127,7 +129,7 @@ FlashMediaElementRenderer = {
 					} else {
 						return null;
 					}
-				}
+				};
 
 				flash['set' + capName] = function(value) {
 					//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value);
@@ -147,7 +149,7 @@ FlashMediaElementRenderer = {
 					if (propName == 'src') {
 					//	flash.load();
 					}
-				}
+				};
 
 			})(props[i]);
 		}
@@ -155,7 +157,7 @@ FlashMediaElementRenderer = {
 		// add mediaElements for native methods
 		var methods = mejs.html5media.methods;
 		methods.push('stop');
-		for (var i=0, il=methods.length; i<il; i++) {
+		for (i=0, il=methods.length; i<il; i++) {
 			(function(methodName) {
 
 				// run the method on the native HTMLMediaElement
@@ -204,15 +206,15 @@ FlashMediaElementRenderer = {
 					flash[stackItem.methodName]();
 				}
 			}
-		}
+		};
 
-		win['__event__' + flash.id] = function(eventName, values) {
+		win['__event__' + flash.id] = function(eventName) {
 
 			var event = mejs.Utils.createEvent(eventName, flash);
 
 			// send event from Flash up to the mediaElement
 			flash.mediaElement.dispatchEvent(event);
-		}
+		};
 
 		// insert Flash object
 		flash.flashWrapper = document.createElement('div');
@@ -280,7 +282,7 @@ FlashMediaElementRenderer = {
 					flash.flashNode.style.clip = 'rect(0 0 0 0);';
 				} catch (e){}
 			}
-		}
+		};
 		flash.show = function() {
 			if (isVideo) {
 				flash.flashNode.style.position = '';
@@ -290,13 +292,13 @@ FlashMediaElementRenderer = {
 					flash.flashNode.style.clip = '';
 				} catch (e) {}
 			}
-		}
+		};
 		flash.setSize = function(width, height) {
 			flash.flashNode.style.width = width + 'px';
-			flash.flashNode.style.height = height + 'px'
+			flash.flashNode.style.height = height + 'px';
 
 			flash.flashApi['fire_setSize'](width, height);
-		}
+		};
 
 
 		if (mediaFiles && mediaFiles.length > 0) {
@@ -315,7 +317,7 @@ if (hasFlash) {
 
 	mejs.Utils.typeChecks.push(function(url) {
 
-		url = new String(url).toLowerCase();
+		url = url.toLowerCase();
 
 		if (url.indexOf('rtmp') > -1) {
 			if (url.indexOf('.mp3') > -1) {
@@ -329,7 +331,7 @@ if (hasFlash) {
 	});
 
 	// VIDEO
-	FlashMediaElementVideoRenderer = {
+	var FlashMediaElementVideoRenderer = {
 		name: 'flash_video',
 
 		canPlayType: function(type) {
@@ -354,7 +356,7 @@ if (hasFlash) {
 
 		mejs.Utils.typeChecks.push(function(url) {
 
-			url = new String(url).toLowerCase();
+			url = url.toLowerCase();
 
 			if (url.indexOf('.m3u8') > -1) {
 				return 'application/x-mpegURL';
@@ -363,7 +365,7 @@ if (hasFlash) {
 			}
 		});
 
-		FlashMediaElementHlsVideoRenderer = {
+		var FlashMediaElementHlsVideoRenderer = {
 			name: 'flash_hls',
 
 			canPlayType: function(type) {
@@ -384,7 +386,7 @@ if (hasFlash) {
 	}
 
 	// AUDIO - ogg
-	FlashMediaElementAudioOggRenderer = {
+	var FlashMediaElementAudioOggRenderer = {
 		name: 'flash_audio_ogg',
 
 		canPlayType: function(type) {
@@ -400,7 +402,7 @@ if (hasFlash) {
 		},
 
 		create: FlashMediaElementRenderer.create
-	}
+	};
 	mejs.Renderers.add(FlashMediaElementAudioOggRenderer);
 }
 

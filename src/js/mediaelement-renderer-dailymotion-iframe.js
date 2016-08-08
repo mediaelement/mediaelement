@@ -3,9 +3,9 @@
 // register youtube type
 mejs.Utils.typeChecks.push(function(url) {
 
-	url = new String(url).toLowerCase();
+	url = url.toLowerCase();
 
-	if (url.indexOf('dailymotion.com') > -1 | url.indexOf('dai.ly') > -1) {
+	if (url.indexOf('dailymotion.com') > -1 || url.indexOf('dai.ly') > -1) {
 		return 'video/dailymotion';
 	} else {
 		return null;

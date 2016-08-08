@@ -127,6 +127,8 @@ mejs.getElementsByClassName = getElementsByClassName;
 mejs.id = 1000;
 
 mejs.MediaElementPlayerSimpleDefaults = {
+	playText: mejs.i18n.t('Play'),
+	pauseText: mejs.i18n.t('Pause')
 };
 
 function MediaElementPlayerSimple(idOrObj, options) {
@@ -184,6 +186,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 
 	t.container = container;
 	t.controls = controls;
+	t.options = mejs.Utils.extend(mejs.MediaElementPlayerSimpleDefaults, t.options);
 
 	t.createUI();
 
@@ -329,11 +332,17 @@ MediaElementPlayerSimple.prototype = {
 	},
 
 	createPlayPause: function(mediaElement, controls) {
-		var uiPlayBtn = doc.createElement('input');
+		var t = this,
+			uiPlayBtn = doc.createElement('input'),
+			options = t.options;
 
 		uiPlayBtn.className = 'ui-button ui-button-play';
 		//uiPlayBtn.disabled = true;
 		uiPlayBtn.type = 'button';
+
+		uiPlayBtn.title = options.playText;
+		uiPlayBtn.setAttribute('aria-label', options.playText);
+		uiPlayBtn.setAttribute('aria-controls', mediaElement.id);
 		controls.appendChild(uiPlayBtn);
 
 		addEvent(uiPlayBtn, 'click', function() {
@@ -346,22 +355,21 @@ MediaElementPlayerSimple.prototype = {
 
 		// events
 		mediaElement.addEventListener('play', function() {
-			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-play/gi,'') + ' ui-button-pause';
-		}, false);
-		mediaElement.addEventListener('playing', function() {
-			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-play/gi,'') + ' ui-button-pause';
+			uiPlayBtn.className = uiPlayBtn.className.replace(/\s*ui-button-play\s*/gi,'') + ' ui-button-pause';
+			uiPlayBtn.title = options.pauseText;
+			uiPlayBtn.setAttribute('aria-label', options.pauseText);
 		}, false);
 
 		mediaElement.addEventListener('pause', function() {
-			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-pause/gi,'') + ' ui-button-play';
-		}, false);
-
-		mediaElement.addEventListener('ended', function() {
-			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-pause/gi,'') + ' ui-button-play';
+			uiPlayBtn.className = uiPlayBtn.className.replace(/\s*ui-button-pause\s*/gi,'') + ' ui-button-play';
+			uiPlayBtn.title = options.playText;
+			uiPlayBtn.setAttribute('aria-label', options.playText);
 		}, false);
 
 		mediaElement.addEventListener('loadstart', function() {
-			uiPlayBtn.className = uiPlayBtn.className.replace(/ui-button-pause/gi,'') + ' ui-button-play';
+			uiPlayBtn.className = uiPlayBtn.className.replace(/\s*ui-button-pause\s*/gi,'') + ' ui-button-play';
+			uiPlayBtn.title = options.playText;
+			uiPlayBtn.setAttribute('aria-label', options.playText);
 		});
 	},
 

@@ -34,8 +34,11 @@ var HtmlMediaElement = {
 		node.setAttribute('id', id);
 
 		// WRAPPERS for PROPs
-		var props = mejs.html5media.properties;
-		for (var i=0, il=props.length; i<il; i++) {
+		var
+			props = mejs.html5media.properties,
+			i,
+			il;
+		for (i=0, il=props.length; i<il; i++) {
 
 			// wrap in function to retain scope
 			(function(propName) {
@@ -55,7 +58,7 @@ var HtmlMediaElement = {
 		var events = mejs.html5media.events;
 		events = events.concat(['click','mouseover','mouseout'].join(Hls.Events));
 
-		for (var i=0, il=events.length; i<il; i++) {
+		for (i=0, il=events.length; i<il; i++) {
 			(function(eventName) {
 
 				node.addEventListener(eventName, function(e) {
