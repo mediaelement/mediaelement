@@ -781,7 +781,7 @@
 						var $target = $(e.relatedTarget);
 						if (t.keyboardAction && $target.parents('.mejs-container').length === 0) {
 							t.keyboardAction = false;
-							if (t.isVideo) {
+							if (t.isVideo && !t.options.alwaysShowControls) {
 								t.hideControls(true);
 							}
 
