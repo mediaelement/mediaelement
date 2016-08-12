@@ -20,12 +20,26 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 
 Changes available at [Change Log](changelog.md)
 
+### 0. Setup MIME-types (optional)
+On Linux/Apache servers, create a filed called .htaccess with the following text and upload it to the root of your website
+```
+AddType video/ogg .ogv
+AddType video/mp4 .mp4
+AddType video/webm .webm
+```
+On Windows/IIS servers, please follow Microsoft's instructions on how to add/edit MIME types on [IIS6](http://www.microsoft.com/technet/prodtechnol/WindowsServer2003/Library/IIS/eb5556e2-f6e1-4871-b9ca-b8cf6f9c8134.mspx?mfr=true) and [IIS7](https://technet.microsoft.com/en-us/library/cc725608(v=ws.10).aspx).
+
+If you are working with local files and plan to test Flash playback, make sure you go to the [Flash Security Settings](http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html) page and add your working directory. Also, things tend to work best when you use absolute paths.
+
 ### 1. Add Script and Stylesheet
 ```html
 <script src="jquery.js"></script>
 <script src="mediaelement-and-player.min.js"></script>
 <link rel="stylesheet" href="mediaelementplayer.css" />
 ```
+
+Note: to support IE6-8, this code must appear in the `<head>` tag. If you cannot place the MediaElement.js code in the `<head>` you need to install something like [html5shiv](https://github.com/afarkas/html5shiv).
+
 ### 2. Add `<video>` or `<audio>` tags
 If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single MP4 or MP3 file.
 
@@ -118,3 +132,7 @@ To compile the changes
 2. At the command prompt type `npm install` which will download all the necessary tools
 3. Type `grunt` to build MediaElement.js
 4. To compile the Flash swf, you'll need to install Flex 4.6. See instructions in Gruntfile.js for details.
+
+## API and Configuration Parameters
+   
+`MediaElement.js` has many options that you can take advantage from. Visit [API and Configuration Parameters](api.md) for more details.
