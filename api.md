@@ -107,7 +107,7 @@ MediaElementPlayer is a complete audio and video player, but you can also use ju
 
 Method | Description
 -------- | ------------
-load | Reload the audio/video element; is used to update the audio/video element after changing the source or other settings
+load | Reload the audio/video element; also, it is used to update the audio/video element after changing the source or other settings
 play | Start playing the audio/video
 pause | Halt (pauses) the currently playing audio or video
 stop | Only present to support Flash RTMP streaming. The equivalent for other situations is "pause"
