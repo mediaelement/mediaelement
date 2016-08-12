@@ -98,9 +98,18 @@ var player = new MediaElementPlayer('#player', {success: function(mediaElement, 
 #### jQuery plugin
 ```html
 <script>
-$('video').mediaelementplayer({success: function(mediaElement, originalNode) {
+$('#mediaplayer').mediaelementplayer({success: function(mediaElement, originalNode) {
 	// do things
 }});
+
+// To access player after its creation through jQuery use:
+var player = $('#mediaplayer')[0].player;
+
+// With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
+// i.e., if you wanna exit fullscreen on iPhone using the player, use this:
+var player = $('#mediaplayer')[0];
+player.webkitExitFullScreen();
+ 
 </script>
 ```
 
@@ -109,6 +118,8 @@ _MediaElement.js: HTML5 `<video>` and `<audio>` shim_
 
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
+
+To know which plugin you are using (native, Flash, Silverlight, etc.), use an instance of the player and use the **pluginType** property for it.
 ```html
 <script src="mediaelement.js"></script>
 <video src="myvideo.mp4" width="320" height="240"></video>
@@ -117,6 +128,8 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 var v = document.getElementsByTagName("video")[0];
 new MediaElement(v, {success: function(media) {
 	media.play();
+	
+	console.log(media.pluginType);
 }});
 </script>
 ```
