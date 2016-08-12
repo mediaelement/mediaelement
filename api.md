@@ -62,36 +62,44 @@ error: function () { }
 Including the above, `MediaElementPlayer` object allows the following extra configuration elements.
 
 ```javascript
+// Start point to detect changes on media time duration
 duration: -1,
+// Separator between the curren time and the total duration of media being played
 timeAndDurationSeparator: '<span> | </span>',
+// Touch devices 
 hideVolumeOnTouchDevices: true,
+// Position of volume slider on audio element
 audioVolume: 'horizontal',
+// Position of volume slider on video element
 videoVolume: 'vertical',
+// Flag to activate detection of Pointer events
 usePluginFullScreen: true,
-newWindowCallback: function() { return '';},
-// We also support to pass object like this:
+// Enable speeding media; accounts for strings or objects like
 // [{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]
 speeds: ['2.00', '1.50', '1.25', '1.00', '0.75'],
-defaultSpeed: '1.00',		
+// Initial speed of media
+defaultSpeed: '1.00',	
+// Character used to stop speeding media
 speedChar: 'x',
-// this will automatically turn on a <track>
+// Automatically turn on a <track>
 startLanguage: '',
-tracksText: mejs.i18n.t('Captions/Subtitles'),
 // By default, no WAI-ARIA live region - don't make a
 // screen reader speak captions over an audio track.
 tracksAriaLive: false,
-// option to remove the [cc] button when no <track kind="subtitles"> are present
+// Option to remove the [cc] button when no <track kind="subtitles"> are present
 hideCaptionsButtonWhenEmpty: true,
 // If true and we only have one track, change captions to popup
 toggleCaptionsButtonWhenOnlyOne: false,
 // #id or .class
 slidesSelector: '',
+// Milliseconds to skip back media
 skipBackInterval: 30,
 // The following items are set for accessibility purposes
 playText: mejs.i18n.t('Play'),
 pauseText: mejs.i18n.t('Pause'),
 stopText: mejs.i18n.t('Stop'),
-postrollCloseText: mejs.i18n.t('Close')
+tracksText: mejs.i18n.t('Captions/Subtitles'),
+postrollCloseText: mejs.i18n.t('Close'),
 progessHelpText: mejs.i18n.t('Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.'),
 allyVolumeControlText: mejs.i18n.t('Use Up/Down Arrow keys to increase or decrease volume.'),
 muteText: mejs.i18n.t('Mute Toggle'),
