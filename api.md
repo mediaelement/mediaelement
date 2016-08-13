@@ -64,15 +64,16 @@ Including the above, `MediaElementPlayer` object allows the following extra conf
 ```javascript
 // Start point to detect changes on media time duration
 duration: -1,
-// Separator between the curren time and the total duration of media being played
+// Separator between the current time and the total duration of media being played
 timeAndDurationSeparator: '<span> | </span>',
-// Touch devices 
+// Touch devices (specially mobile devices) have different way to handle volume, 
+// so no need to display it
 hideVolumeOnTouchDevices: true,
 // Position of volume slider on audio element
 audioVolume: 'horizontal',
 // Position of volume slider on video element
 videoVolume: 'vertical',
-// Flag to activate detection of Pointer events
+// Flag to activate detection of Pointer events when on fullscreen mode
 usePluginFullScreen: true,
 // Enable speeding media; accounts for strings or objects like
 // [{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]
@@ -94,7 +95,7 @@ toggleCaptionsButtonWhenOnlyOne: false,
 slidesSelector: '',
 // Milliseconds to skip back media
 skipBackInterval: 30,
-// The following items are set for accessibility purposes
+// The following items are set for accessibility purposes in different elements of the player
 playText: mejs.i18n.t('Play'),
 pauseText: mejs.i18n.t('Pause'),
 stopText: mejs.i18n.t('Stop'),
