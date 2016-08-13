@@ -112,6 +112,8 @@ skipBackText: mejs.i18n.t('Skip back %1 seconds'), // %1 will be replaced with s
 
 MediaElementPlayer is a complete audio and video player, but you can also use just the MediaElement object which replaces `<video>` and `<audio>` with a Flash player that mimics the properties, methods, and events of HTML MediaElement API.
 
+### Properties
+
 ### Methods
 
 Method | Description
@@ -119,7 +121,9 @@ Method | Description
 load | Reload the audio/video element; also, it is used to update the audio/video element after changing the source or other settings
 play | Start playing the audio/video
 pause | Halt (pauses) the currently playing audio or video
-stop | Only present to support Flash RTMP streaming. The equivalent for other situations is "pause"
+stop | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is "pause"
+
+**Note:** canPlayType() method is used internally and accounts for other types of media to be played (such as HLS, RTMP, etc.); addTextTrack() is replaced also with more code to manage clsoed captioning and tracks. For that reason, they are not listed.
 
 ### Events
 
