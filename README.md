@@ -31,6 +31,8 @@ On Windows/IIS servers, please follow Microsoft's instructions on how to add/edi
 
 If you are working with local files and plan to test Flash playback, make sure you go to the [Flash Security Settings](http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html) page and add your working directory. Also, things tend to work best when you use absolute paths.
 
+For more information about how to set up a server to serve media properly and other general topics about video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
+
 ### 1. Add Script and Stylesheet
 ```html
 <script src="jquery.js"></script>
