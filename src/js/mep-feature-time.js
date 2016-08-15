@@ -55,7 +55,7 @@
 			t.durationD = t.controls.find('.mejs-duration');
 
 			media.addEventListener('timeupdate',function() {
-				if (t.controlsAreVisible) {
+				if (t.controlsAreVisible) { 
 					player.updateDuration();
 				}
 			}, false);
