@@ -113,7 +113,7 @@ skipBackText: mejs.i18n.t('Skip back %1 seconds'), // %1 will be replaced with s
 MediaElementPlayer is a complete audio and video player, but you can also use just the MediaElement object which replaces `<video>` and `<audio>` with a Flash player that mimics the properties, methods, and events of HTML MediaElement API.
 
 ### Properties
-All properties are listed in https://www.w3.org/2010/05/video/mediaevents.html; they can be accessed through an instance of player as dcescribed [here](README.md#user-content-3-startup)
+All properties are listed in https://www.w3.org/2010/05/video/mediaevents.html; they can be accessed through an instance of player as described [here](README.md#user-content-3-startup)
 
 ### Methods
 
