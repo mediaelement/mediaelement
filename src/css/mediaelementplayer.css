@@ -12,7 +12,7 @@
 .mejs-container {
 	position: relative;
 	background: #000;
-	font-family: Helvetica, Arial;
+	font-family: "Helvetica", Arial, serif;
 	text-align: left;
 	vertical-align: top;
 	text-indent: 0;
@@ -98,7 +98,6 @@
 .mejs-poster img {
 	border: 0;
 	padding: 0;
-	border: 0;
 }
 
 .mejs-overlay {
@@ -186,7 +185,7 @@
 	height: 26px;
 	font-size: 11px;
 	line-height: 11px;
-	font-family: Helvetica, Arial;
+	font-family: "Helvetica", Arial, serif;
 	border: 0;
 }
 
@@ -613,7 +612,7 @@
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: helvetica, arial;
+	font-family: "Helvetica", Arial, serif;
 	font-size: 10px;
 }
 
@@ -626,7 +625,7 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	-xborder-right: solid 1px #fff;
+	border-right: solid 1px #fff;
 	width: 10000px;
 	z-index: 1;
 }
@@ -795,7 +794,7 @@
 }
 
 .mejs-contextmenu .mejs-contextmenu-item {
-	font-family: Helvetica, Arial;
+	font-family: "Helvetica", Arial, serif;
 	font-size: 12px;
 	padding: 4px 6px;
 	cursor: pointer;
@@ -860,7 +859,7 @@
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: helvetica, arial;
+	font-family: "Helvetica", Arial, serif;
 	font-size: 10px;
 }
 /* End: Source Chooser */
@@ -964,8 +963,8 @@ div.mejs-speed-button {
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: helvetica, arial;
-	font-size: 11.5px;
+	font-family: "Helvetica", Arial, serif;
+	font-size: 11px;
 	color: white;
 	margin-left: 5px;
 	cursor: pointer;
@@ -980,8 +979,7 @@ div.mejs-speed-button {
 /* Start: Jump Forward */
 
 .mejs-controls .mejs-button.mejs-jump-forward-button {
-	background: transparent url(jumpforward.png) no-repeat;
-	background-position: 3px 3px;
+	background: transparent url("jumpforward.png") no-repeat 3px 3px;
 }
 .mejs-controls .mejs-button.mejs-jump-forward-button button {
 	background: transparent;
@@ -995,8 +993,7 @@ div.mejs-speed-button {
 /* Start: Skip Back */
 
 .mejs-controls .mejs-button.mejs-skip-back-button {
-	background: transparent url(skipback.png) no-repeat;
-	background-position: 3px 3px;
+	background: transparent url("skipback.png") no-repeat 3px 3px;
 }
 .mejs-controls .mejs-button.mejs-skip-back-button button {
 	background: transparent;
