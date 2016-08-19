@@ -2,7 +2,7 @@
 
 *2.22.1 (2016/08/18)*
 
-* Fix wrong parameter sent to defaultSeekForwardInterval and defaultSeekBackwardInterval (https://github.com/johndyer/mediaelement/pull/1784) @marjune163
+* Fix wrong parameter sent to defaultSeekForwardInterval and defaultSeekBackwardInterval options (https://github.com/johndyer/mediaelement/pull/1784) @marjune163
 * Fullscreen in Safari Mac must show player skin (https://github.com/johndyer/mediaelement/pull/1794) @ale-grosselle
 * Fix for aspect ratio when playing Hls Flash video if m3u8 does not have a resolution indicated (https://github.com/johndyer/mediaelement/pull/1791) @ale-grosselle
 * Only focus the play button when the control bar is not hidden (https://github.com/johndyer/mediaelement/pull/1798) @schrolli
