@@ -73,8 +73,6 @@
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
-		// Hide control bar when video is paused
-		hideVideoControlOnPause: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
 		// force iPad's native controls
@@ -468,8 +466,7 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
-				(!t.options.hideVideoControlOnPause && t.media.paused))
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused)
 				return;
 
 			if (doAnimation) {
