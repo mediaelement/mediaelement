@@ -31,7 +31,7 @@
 			player.isInIframe = (window.location != window.parent.location);	
 		
 			// detect on start
-			media.addEventListener('play', function() { player.detectFullscreenMode(); });
+			media.addEventListener('canplay', function() { player.detectFullscreenMode(); });
 				
 			// build button
 			var t = this,
