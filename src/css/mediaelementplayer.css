@@ -12,7 +12,7 @@
 .mejs-container {
 	position: relative;
 	background: #000;
-	font-family: Helvetica, Arial;
+	font-family: "Helvetica", Arial, serif;
 	text-align: left;
 	vertical-align: top;
 	text-indent: 0;
@@ -98,7 +98,6 @@
 .mejs-poster img {
 	border: 0;
 	padding: 0;
-	border: 0;
 }
 
 .mejs-overlay {
@@ -118,11 +117,11 @@
 	width: 100px;
 	height: 100px;
 	margin: -50px 0 0 -50px;
-	background: url(bigplay.svg) no-repeat;
+	background: url("bigplay.svg") no-repeat;
 }
 
 .no-svg .mejs-overlay-button {
-	background-image: url(bigplay.png);
+	background-image: url("bigplay.png");
 }
 
 .mejs-overlay:hover .mejs-overlay-button {
@@ -137,7 +136,7 @@
 	height: 80px;
 	margin: -40px 0 0 -40px;
 	background: #333;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(0, 0, 0, 0.9);
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50,50,50,0.9)), to(rgba(0,0,0,0.9)));
 	background: -webkit-linear-gradient(top, rgba(50,50,50,0.9), rgba(0,0,0,0.9));
@@ -151,7 +150,7 @@
 	display: block;
 	width: 80px;
 	height: 80px;
-	background: transparent url(loading.gif) 50% 50% no-repeat;
+	background: transparent url("loading.gif") 50% 50% no-repeat;
 }
 
 /* End: LAYERS */
@@ -164,7 +163,7 @@
 	padding: 0;
 	bottom: 0;
 	left: 0;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(0, 0, 0, 0.7);
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50,50,50,0.7)), to(rgba(0,0,0,0.7)));
 	background: -webkit-linear-gradient(top, rgba(50,50,50,0.7), rgba(0,0,0,0.7));
@@ -186,7 +185,7 @@
 	height: 26px;
 	font-size: 11px;
 	line-height: 11px;
-	font-family: Helvetica, Arial;
+	font-family: "Helvetica", Arial, serif;
 	border: 0;
 }
 
@@ -202,11 +201,11 @@
 	height: 16px;
 	width: 16px;
 	border: 0;
-	background: transparent url(controls.svg) no-repeat;
+	background: transparent url("controls.svg") no-repeat;
 }
 
 .no-svg .mejs-controls .mejs-button button {
-	background-image: url(controls.png);
+	background-image: url("controls.png");
 }
 
 	/* :focus for accessibility */
@@ -435,7 +434,7 @@
 	display: none;
 	height: 115px;
 	width: 25px;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(50, 50, 50, 0.7);
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
@@ -571,7 +570,7 @@
 	right: -51px;
 	width: 85px;
 	height: 100px;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(50,50,50,0.7);
 	border: solid 1px transparent;
 	padding: 10px 10px 0 10px;
@@ -613,7 +612,7 @@
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: helvetica, arial;
+	font-family: "Helvetica", Arial, serif;
 	font-size: 10px;
 }
 
@@ -626,7 +625,7 @@
 	position: absolute;
 	top: 0;
 	left: 0;
-	-xborder-right: solid 1px #fff;
+	border-right: solid 1px #fff;
 	width: 10000px;
 	z-index: 1;
 }
@@ -725,7 +724,7 @@
 
 .mejs-captions-text {
 	padding: 3px 5px;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(20, 20, 20, 0.5);
 	white-space: pre-wrap;
 }
@@ -795,7 +794,7 @@
 }
 
 .mejs-contextmenu .mejs-contextmenu-item {
-	font-family: Helvetica, Arial;
+	font-family: "Helvetica", Arial, serif;
 	font-size: 12px;
 	padding: 4px 6px;
 	cursor: pointer;
@@ -822,7 +821,7 @@
 	right: -10px;
 	width: 130px;
 	height: 100px;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(50,50,50,0.7);
 	border: solid 1px transparent;
 	padding: 10px;
@@ -860,7 +859,7 @@
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: helvetica, arial;
+	font-family: "Helvetica", Arial, serif;
 	font-size: 10px;
 }
 /* End: Source Chooser */
@@ -872,7 +871,7 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(50,50,50,0.7);
 	z-index: 1000;
 	overflow: hidden;
@@ -885,7 +884,7 @@
 	position: absolute;
 	right: 0;
 	top: 0;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(50,50,50,0.7);
 	color: #fff;
 	padding: 4px;
@@ -916,7 +915,7 @@ div.mejs-speed-button {
 	left: -10px;
 	width: 60px;
 	height: 100px;
-	background: url(background.png);
+	background: url("background.png");
 	background: rgba(50, 50, 50, 0.7);
 	border: solid 1px transparent;
 	padding: 0;
@@ -964,8 +963,8 @@ div.mejs-speed-button {
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: helvetica, arial;
-	font-size: 11.5px;
+	font-family: "Helvetica", Arial, serif;
+	font-size: 11px;
 	color: white;
 	margin-left: 5px;
 	cursor: pointer;
@@ -980,8 +979,7 @@ div.mejs-speed-button {
 /* Start: Jump Forward */
 
 .mejs-controls .mejs-button.mejs-jump-forward-button {
-	background: transparent url(jumpforward.png) no-repeat;
-	background-position: 3px 3px;
+	background: transparent url("jumpforward.png") no-repeat 3px 3px;
 }
 .mejs-controls .mejs-button.mejs-jump-forward-button button {
 	background: transparent;
@@ -995,8 +993,7 @@ div.mejs-speed-button {
 /* Start: Skip Back */
 
 .mejs-controls .mejs-button.mejs-skip-back-button {
-	background: transparent url(skipback.png) no-repeat;
-	background-position: 3px 3px;
+	background: transparent url("skipback.png") no-repeat 3px 3px;
 }
 .mejs-controls .mejs-button.mejs-skip-back-button button {
 	background: transparent;
