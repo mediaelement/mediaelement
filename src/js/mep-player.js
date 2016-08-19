@@ -333,7 +333,7 @@
 					.addClass(t.$media[0].className)
 					.insertBefore(t.$media)
 					.focus(function ( e ) {
-						if( !t.controlsAreVisible && !t.hasFocus ) {
+						if( !t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 							t.showControls(true);
 							// In versions older than IE11, the focus causes the playbar to be displayed
 							// if user clicks on the Play/Pause button in the control bar once it attempts
