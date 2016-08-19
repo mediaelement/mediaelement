@@ -622,54 +622,54 @@
 							}
 						});
 
-					} else {
+					} 
 
-						// create callback here since it needs access to current
-						// MediaElement object
-						t.clickToPlayPauseCallback = function() {
-							//console.log('media clicked', t.media, t.media.paused);
+					// create callback here since it needs access to current
+					// MediaElement object
+					t.clickToPlayPauseCallback = function() {
+						//console.log('media clicked', t.media, t.media.paused);
 
-							if (t.options.clickToPlayPause) {
-								if (t.media.paused) {
-									t.play();
-								} else {
-									t.pause();
+						if (t.options.clickToPlayPause) {
+							if (t.media.paused) {
+								t.play();
+							} else {
+								t.pause();
+							}
+						}
+					};
+
+					// click to play/pause
+					t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
+
+					// show/hide controls
+					t.container
+						.bind('mouseenter', function () {
+							if (t.controlsEnabled) {
+								if (!t.options.alwaysShowControls ) {
+									t.killControlsTimer('enter');
+									t.showControls();
+									t.startControlsTimer(2500);
 								}
 							}
-						};
-
-						// click to play/pause
-						t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
-
-						// show/hide controls
-						t.container
-							.bind('mouseenter', function () {
-								if (t.controlsEnabled) {
-									if (!t.options.alwaysShowControls ) {
-										t.killControlsTimer('enter');
-										t.showControls();
-										t.startControlsTimer(2500);
-									}
+						})
+						.bind('mousemove', function() {
+							if (t.controlsEnabled) {
+								if (!t.controlsAreVisible) {
+									t.showControls();
 								}
-							})
-							.bind('mousemove', function() {
-								if (t.controlsEnabled) {
-									if (!t.controlsAreVisible) {
-										t.showControls();
-									}
-									if (!t.options.alwaysShowControls) {
-										t.startControlsTimer(2500);
-									}
+								if (!t.options.alwaysShowControls) {
+									t.startControlsTimer(2500);
 								}
-							})
-							.bind('mouseleave', function () {
-								if (t.controlsEnabled) {
-									if (!t.media.paused && !t.options.alwaysShowControls) {
-										t.startControlsTimer(1000);
-									}
+							}
+						})
+						.bind('mouseleave', function () {
+							if (t.controlsEnabled) {
+								if (!t.media.paused && !t.options.alwaysShowControls) {
+									t.startControlsTimer(1000);
 								}
-							});
-					}
+							}
+						});
+					
 
 					if(t.options.hideVideoControlsOnLoad) {
 						t.hideControls(false);
