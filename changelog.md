@@ -1,5 +1,16 @@
 ### Version History
 
+*2.22.1 (2016/08/18)*
+
+* Fix wrong parameter sent to defaultSeekForwardInterval and defaultSeekBackwardInterval (https://github.com/johndyer/mediaelement/pull/1784) @marjune163
+* Fullscreen in Safari Mac must show player skin (https://github.com/johndyer/mediaelement/pull/1794) @ale-grosselle
+* Fix for aspect ratio when playing Hls Flash video if m3u8 does not have a resolution indicated (https://github.com/johndyer/mediaelement/pull/1791) @ale-grosselle
+* Only focus the play button when the control bar is not hidden (https://github.com/johndyer/mediaelement/pull/1798) @schrolli
+* Avoid hiding audio controls when tabbing (#) (https://github.com/johndyer/mediaelement/pull/1804) @ron666
+* Stylesheet minor fixes (https://github.com/johndyer/mediaelement/pull/1808) @ron666
+* Time update on rail only when controls are visible (#) (https://github.com/johndyer/mediaelement/pull/1801) @ron666
+* ARIA attributes for big play button to continue improving player accessibility (https://github.com/johndyer/mediaelement/pull/1803) @ron666
+
 *2.22.0 (2016/07/17)*
 
 * Introduce new stretching models (stretching: 'fill','responsive') (https://github.com/johndyer/mediaelement/pull/1760) @ron666
