@@ -22,7 +22,10 @@
 			t.currenttime = t.controls.find('.mejs-currenttime');
 
 			media.addEventListener('timeupdate',function() {
-				player.updateCurrent();
+				if (t.controlsAreVisible) {
+					player.updateCurrent();
+				}
+
 			}, false);
 		},
 
@@ -52,7 +55,9 @@
 			t.durationD = t.controls.find('.mejs-duration');
 
 			media.addEventListener('timeupdate',function() {
-				player.updateDuration();
+				if (t.controlsAreVisible) {
+					player.updateDuration();
+				}
 			}, false);
 		},
 		
