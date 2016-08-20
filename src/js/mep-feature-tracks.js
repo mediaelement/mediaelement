@@ -665,7 +665,6 @@
 					entries.times.push(_temp_times);
 					text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 					entries.text.push(text);
-					if (entries.times.start === 0) entries.times.start = 2;
 				}
 				return entries;
 			}
