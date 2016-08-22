@@ -16,15 +16,9 @@ _MediaElementPlayer: HTML5 `<video>` and `<audio>` player_
 
 A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuery`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
 
-## Change Log
+The full documentation on how to install MediaElementJs is available at [Installation and Usage](installation.md)
 
-Changes available at [Change Log](changelog.md)
-
-## Installation
-
-The full documentation on how to install MediaElementJs is available at [Installation](installation.md)
-
-## How it Works: 
+## How it Works
 _MediaElement.js: HTML5 `<video>` and `<audio>` shim_
 
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
@@ -60,3 +54,7 @@ To compile the changes
 ## API and Configuration Parameters
    
 `MediaElement.js` has many options that you can take advantage from. Visit [API and Configuration Parameters](api.md) for more details.
+
+## Change Log
+
+Changes available at [Change Log](changelog.md)

@@ -1,6 +1,8 @@
-# Installation
+# Installation and Usage
 
-## 0. Setup MIME-types (optional)
+## Installation 
+
+### 0. Setup MIME-types (optional)
 On Linux/Apache servers, create a filed called .htaccess with the following text and upload it to the root of your website
 ```
 AddType video/ogg .ogv
@@ -13,7 +15,7 @@ If you are working with local files and plan to test Flash playback, make sure y
 
 For more information about how to set up a server to serve media properly and other general and useful topics about dealing with HTML5 video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
 
-## 1. Add Script and Stylesheet
+### 1. Add Script and Stylesheet
 ```html
 <script src="jquery.js"></script>
 <script src="mediaelement-and-player.min.js"></script>
@@ -62,7 +64,7 @@ If you wish to install the sources in different folders (i.e., all Javascript fi
 </style>
 ```
 
-## 2. Add `<video>` or `<audio>` tags
+### 2. Add `<video>` or `<audio>` tags
 If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single MP4 or MP3 file.
 
 ```html	
@@ -72,7 +74,7 @@ If your users have JavaScript and/or Flash, the easiest route for all browsers a
 <audio src="myaudio.mp3"></audio>
 ```
 
-### Optional: multiple codecs
+#### Optional: multiple codecs
 This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and Chrome, WebM for Firefox 4 and Opera, Ogg for Firefox 3).
 
 ```html
@@ -83,7 +85,7 @@ This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and 
 </video>
 ```
 
-### Optional: Browsers with JavaScript disabled
+#### Optional: Browsers with JavaScript disabled
 In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code.
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
@@ -98,7 +100,7 @@ In very rare cases, you might have a non-HTML5 browser with Flash turned on and 
 </video>
 ```
 
-## 3. Startup
+## Usage
 
 ### Automatic start
 You can avoid running any startup scripts by added `class="mejs-player"` to the `<video>` or `<audio>` tag. Options can be added using the `data-mejsoptions` attribute
