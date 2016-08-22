@@ -42,6 +42,46 @@ For more information about how to set up a server to serve media properly and ot
 
 Note: to support IE6-8, this code must appear in the `<head>` tag. If you cannot place the MediaElement.js code in the `<head>` you need to install something like [html5shiv](https://github.com/afarkas/html5shiv).
 
+If you wish to install the sources in different folders (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash/Silverlight files in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
+```html
+<link rel="stylesheet" href="/path/to/mediaelementplayer.css" />
+
+<style>
+.mejs-overlay-loading, .mejs-container .mejs-controls, 
+.mejs-controls .mejs-volume-button .mejs-volume-slider,
+.mejs-controls .mejs-captions-button .mejs-captions-selector,
+.mejs-captions-text, .mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector,
+.mejs-postroll-layer, .mejs-postroll-close,
+.mejs-controls .mejs-speed-button .mejs-speed-selector {
+    background: url("/path/to/background.png");
+}
+
+.no-svg .mejs-overlay-button {
+    background-image: url("/path/to/bigplay.png");
+}
+
+.no-svg .mejs-controls .mejs-button button {
+	background-image: url("/path/to/controls.png");
+}
+
+.mejs-controls .mejs-button.mejs-jump-forward-button {
+    background: transparent url("/path/to/jumpforward.png") no-repeat 3px 3px;
+}
+
+.mejs-controls .mejs-button.mejs-skip-back-button {
+    background: transparent url("/path/to/skipback.png") no-repeat 3px 3px;
+}
+
+.mejs-overlay-button {
+    background: url("/path/to/bigplay.svg") no-repeat;
+}
+
+.mejs-controls .mejs-button button {
+    background: transparent url("/path/to/controls.svg") no-repeat;
+}
+</style>
+```
+
 ### 2. Add `<video>` or `<audio>` tags
 If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single MP4 or MP3 file.
 
@@ -113,6 +153,22 @@ var player = $('#mediaplayer')[0];
 player.webkitExitFullScreen();
  
 </script>
+```
+
+**NOTE:** If sources are installed in different folders, only update the ```pluginPath``` option with the location of the Flash/Silverlight files. Also, update ```flashName``` and ```silverlightName``` options **only if those files were renamed**.
+```html
+<script>
+$('#mediaplayer').mediaelementplayer({
+    pluginPath: '/path/to/flash_silverlight_folder',
+    
+    // Optional: the name of both files is different than 'flashmediaelement.swf' and 'silverlightmediaelement.xap', respectively.
+    flashName: 'newflashname.swf',
+    silverlightName: 'newsilverlightname.xap',
+    
+    success: function(mediaElement, originalNode) {
+	// do things
+    }
+});
 ```
 
 ## How it Works: 
