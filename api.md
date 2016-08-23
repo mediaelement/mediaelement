@@ -141,3 +141,5 @@ playing	| The media actually has started playing
 pause | The media is paused either by the user or programmatically
 ended | The media has reach the end (a useful event for messages like "thanks for listening")
 volumechange | Volume is changed (including setting the volume to "mute")
+
+**Note:** the player only starts if it's visible, so the _ready_ event won't be called as long as the player is hidden.
