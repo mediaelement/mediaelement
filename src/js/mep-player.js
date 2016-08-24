@@ -4,11 +4,8 @@
  * @param {HTMLElement} targetNode - the node to compare against sourceNode
  */
 function isAfter(sourceNode, targetNode) {
-	if (!sourceNode) {
-		throw new TypeError('Source node is missing or undefined');
-	}
-
 	return !!(
+		sourceNode &&
 		targetNode &&
 		sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
 	);
