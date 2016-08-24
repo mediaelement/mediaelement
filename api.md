@@ -62,6 +62,93 @@ error: function () { }
 Including the above, `MediaElementPlayer` object allows the following extra configuration elements.
 
 ```javascript
+// url to poster (to fix iOS 3.x)
+poster: '',
+// When the video is ended, we can show the poster.
+showPosterWhenEnded: false,
+// default if the <video width> is not specified
+defaultVideoWidth: 480,
+// default if the <video height> is not specified
+defaultVideoHeight: 270,
+// if set, overrides <video width>
+videoWidth: -1,
+// if set, overrides <video height>
+videoHeight: -1,
+// default if the user doesn't specify
+defaultAudioWidth: 400,
+// default if the user doesn't specify
+defaultAudioHeight: 30,
+// default amount to move back when back key is pressed
+defaultSeekBackwardInterval: function(media) {
+  return (media.duration * 0.05);
+},
+// default amount to move forward when forward key is pressed
+defaultSeekForwardInterval: function(media) {
+	return (media.duration * 0.05);
+},
+// set dimensions via JS instead of CSS
+setDimensions: true,
+// width of audio player
+audioWidth: -1,
+// height of audio player
+audioHeight: -1,
+// initial volume when the player starts (overrided by user cookie)
+startVolume: 0.8,
+// useful for <audio> player loops
+loop: false,
+// rewind to beginning when media ends
+autoRewind: true,
+// resize to media dimensions
+enableAutosize: true,
+/*
+ * Time format to use. Default: 'mm:ss'
+ * Supported units:
+ *   h: hour
+ *   m: minute
+ *   s: second
+ *   f: frame count
+ * When using 'hh', 'mm', 'ss' or 'ff' we always display 2 digits.
+ * If you use 'h', 'm', 's' or 'f' we display 1 digit if possible.
+ *
+ * Example to display 75 seconds:
+ * Format 'mm:ss': 01:15
+ * Format 'm:ss': 1:15
+ * Format 'm:s': 1:15
+ */
+timeFormat: '',
+// forces the hour marker (##:00:00)
+alwaysShowHours: false,
+// show framecount in timecode (##:00:00:00)
+showTimecodeFrameCount: false,
+// used when showTimecodeFrameCount is set to true
+framesPerSecond: 25,
+// automatically calculate the width of the progress bar based on the sizes of other elements
+autosizeProgress : true,
+// Hide controls when playing and mouse is not over the video
+alwaysShowControls: false,
+// Display the video control
+hideVideoControlsOnLoad: false,
+// Enable click video element to toggle play/pause
+clickToPlayPause: true,
+// force iPad's native controls
+iPadUseNativeControls: false,
+// force iPhone's native controls
+iPhoneUseNativeControls: false,
+// force Android's native controls
+AndroidUseNativeControls: false,
+// features to show
+features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
+// only for dynamic
+isVideo: true,
+// stretching modes (auto, fill, responsive, none)
+stretching: 'auto',
+// turns keyboard support on and off for this instance
+enableKeyboard: true,
+// whenthis player starts, it will pause other players
+pauseOtherPlayers: true,
+// array of keyboard actions such as play pause
+// Accepts array of objects in format: {keys: [1,2,3...], action: function(player, media) { ... }}
+keyActions: [...]
 // Start point to detect changes on media time duration
 duration: -1,
 // Separator between the current time and the total duration of media being played
