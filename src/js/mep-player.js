@@ -605,7 +605,7 @@
 				// controls fade
 				if (t.isVideo) {
 
-					if (mejs.MediaFeatures.hasTouch) {
+					if (mejs.MediaFeatures.hasTouch && !t.options.alwaysShowControls) {
 
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
