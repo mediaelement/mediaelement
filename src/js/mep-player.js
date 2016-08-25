@@ -481,7 +481,7 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || media.ended)
 				return;
 
 			if (doAnimation) {
@@ -626,7 +626,7 @@
 				// controls fade
 				if (t.isVideo) {
 
-					if (mejs.MediaFeatures.hasTouch) {
+					if (mejs.MediaFeatures.hasTouch && !t.options.alwaysShowControls) {
 
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
@@ -656,6 +656,10 @@
 								} else {
 									t.pause();
 								}
+
+								var button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
+									pressed = button.attr('aria-pressed');
+								button.attr('aria-pressed', !pressed);
 							}
 						};
 
@@ -1174,7 +1178,7 @@
 			// this needs to come last so it's on top
 			bigPlay =
 				$('<div class="mejs-overlay mejs-layer mejs-overlay-play">'+
-					'<div class="mejs-overlay-button"></div>'+
+					'<div class="mejs-overlay-button" role="button" aria-label="' + mejs.i18n.t('Play') + '" aria-pressed="false"></div>'+
 				'</div>')
 				.appendTo(layers)
 				.bind('click', function() {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
@@ -1182,6 +1186,10 @@
 						if (media.paused) {
 							media.play();
 						}
+
+						var button = $(this).find('.mejs-overlay-button'),
+							pressed = button.attr('aria-pressed');
+						button.attr('aria-pressed', !!pressed);
 					}
 				});
 
