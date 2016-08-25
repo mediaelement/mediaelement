@@ -4,6 +4,7 @@
 
 * Fix wrong parameter sent to defaultSeekForwardInterval and defaultSeekBackwardInterval options (https://github.com/johndyer/mediaelement/pull/1784) @marjune163
 * Fullscreen in Safari Mac must show player skin (https://github.com/johndyer/mediaelement/pull/1794) @ale-grosselle
+* Add missing string to the English locale template https://github.com/johndyer/mediaelement/pull/1782 @ocean90 
 * Fix for aspect ratio when playing Hls Flash video if m3u8 does not have a resolution indicated (#1790) (https://github.com/johndyer/mediaelement/pull/1791) @ale-grosselle
 * Only focus the play button when the control bar is not hidden (https://github.com/johndyer/mediaelement/pull/1798) @schrolli
 * Avoid hiding audio controls when tabbing (#1668) (https://github.com/johndyer/mediaelement/pull/1804) @ron666
