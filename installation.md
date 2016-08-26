@@ -152,3 +152,5 @@ $('#mediaplayer').mediaelementplayer({
     }
 });
 ```
+________
+[Back to Main](README.md)
