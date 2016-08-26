@@ -1,4 +1,4 @@
-# API and Configuration Parameters
+# API and Configuration
 
 ## Configuration
 
