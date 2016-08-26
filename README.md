@@ -18,6 +18,18 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
 
+## Browser and Device support
+
+Format | Support
+------ | -------
+**mp4** | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
+**webm** | Please visit http://caniuse.com/#feat=webm for comprehensive information
+**mp3** | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
+**m3u8** | Safari and iOS (native); all browsers that support **Flash** (version 10 or later)
+**rtmp/flv** | All browsers that support **Flash** (version 10 or later)
+**wmv/wma** | All browsers that support **Silverlight**
+**YouTube** | All browsers since it uses `iframe` tag
+
 
 ## Installation and Usage
 
