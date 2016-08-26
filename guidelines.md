@@ -46,10 +46,30 @@ Unless you are developing a fix for a reported issue, the development of a new f
 })(mejs.$);
 
 ```
+If the feature must be integrated in the core package, place it inside `/src/` folder; otherwise, to use it immediately, just call it after the main files and add its name in the `features` configuration.
+```html
+<script src="jquery.js"></script>
+<script src="mediaelement-and-player.min.js"></script>
+<link rel="stylesheet" href="mediaelementplayer.css" />
+<script src="mejs-feature-[feature_name].js"></script>
+
+<video id="player1" width="320" height="240"></video>
+
+<script>
+$(document).ready(function() {
  
+    // create player
+    $('#player1').mediaelementplayer({
+        // add desired features in order
+        features: ['playpause','[feature_name]','current','progress','duration','volume']
+    });
+});
+</script>
+```
+
 ## Node.js <a id="nodejs"></a>
 
-Since `MediaElement.js` uses [Grunt](http://gruntjs.com/) to compile it, Node.js is required. Download it at https://nodejs.org/ and follow the steps to install it.
+Since `MediaElement.js` uses [Grunt](http://gruntjs.com/) to compile it, Node.js is required. Download it at https://nodejs.org/ and follow the steps to install it, or install `node.js` with `npm`.
 
 Once installed, at the command prompt, type `npm install`, which will download all the necessary tools.
 
