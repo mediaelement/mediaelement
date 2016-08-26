@@ -21,7 +21,9 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 ## Installation and Usage
 
-The full documentation on how to install MediaElementJs is available at [Installation and Usage](installation.md)
+The full documentation on how to install MediaElementJs is available at [Installation](installation.md).
+
+A guide on how to use it and some useful tips are available at [Usage and Tips](usage.md).
 
 
 ## API and Configuration
@@ -31,7 +33,7 @@ The full documentation on how to install MediaElementJs is available at [Install
 
 ## Guidelines for Contributors
 
-If you want to contribute to improve this package, please read [Guidelines](guidelines.md) 
+If you want to contribute to improve this package, please read [Guidelines](guidelines.md).
 
 ## How it Works
 _MediaElement.js: HTML5 `<video>` and `<audio>` shim_
