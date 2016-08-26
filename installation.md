@@ -1,8 +1,6 @@
-# Installation and Usage
+# Installation
 
-## Installation 
-
-### 0. Setup MIME-types (optional)
+## 0. Setup MIME-types (optional)
 On Linux/Apache servers, create a filed called .htaccess with the following text and upload it to the root of your website
 ```
 AddType video/ogg .ogv
@@ -15,7 +13,7 @@ If you are working with local files and plan to test Flash playback, make sure y
 
 For more information about how to set up a server to serve media properly and other general and useful topics about dealing with HTML5 video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
 
-### 1. Add Script and Stylesheet
+## 1. Add Script and Stylesheet
 ```html
 <script src="jquery.js"></script>
 <script src="mediaelement-and-player.min.js"></script>
@@ -24,7 +22,7 @@ For more information about how to set up a server to serve media properly and ot
 
 Note: to support IE6-8, this code must appear in the `<head>` tag. If you cannot place the MediaElement.js code in the `<head>` you need to install something like [html5shiv](https://github.com/afarkas/html5shiv).
 
-If you wish to install the sources in different folders (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash/Silverlight files in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
+If you wish to install the sources in different directories (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash/Silverlight files in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
 ```html
 <link rel="stylesheet" href="/path/to/mediaelementplayer.css" />
 
@@ -64,7 +62,9 @@ If you wish to install the sources in different folders (i.e., all Javascript fi
 </style>
 ```
 
-### 2. Add `<video>` or `<audio>` tags
+Also, update ```pluginPath``` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash/Silverlight files to make _shim_ mode to work. Also, update ```flashName``` and ```silverlightName``` configuration options **only if those files were renamed**.
+
+## 2. Add `<video>` or `<audio>` tags
 If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single MP4 or MP3 file.
 
 ```html	
@@ -74,7 +74,7 @@ If your users have JavaScript and/or Flash, the easiest route for all browsers a
 <audio src="myaudio.mp3"></audio>
 ```
 
-#### Optional: multiple codecs
+### Optional: multiple codecs
 This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and Chrome, WebM for Firefox 4 and Opera, Ogg for Firefox 3).
 
 ```html
@@ -85,7 +85,7 @@ This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and 
 </video>
 ```
 
-#### Optional: Browsers with JavaScript disabled
+### Optional: Browsers with JavaScript disabled
 In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code.
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
@@ -100,57 +100,25 @@ In very rare cases, you might have a non-HTML5 browser with Flash turned on and 
 </video>
 ```
 
-## Usage
 
-### Automatic start
-You can avoid running any startup scripts by added `class="mejs-player"` to the `<video>` or `<audio>` tag. Options can be added using the `data-mejsoptions` attribute
-```html	
-<video src="myvideo.mp4" width="320" height="240" 
-		class="mejs-player" 
-		data-mejsoptions='{"alwaysShowControls": true}'></video>
-```
+### Optional: Use of Closed Captioning
 
-### Normal JavaScript
+The way to setup closed captioning is by using the `track` tag as follows:
 ```html
-<script>
-var player = new MediaElementPlayer('#player', {success: function(mediaElement, originalNode) {
-	// do things
-}});
-</script>	
+<video ...>
+    <source ...>
+    ... 
+    <track src="subtitles_en.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="en" label="English">
+    <track src="subtitles_es.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="es" label="Spanish">
+    ...
+</video>
 ```
 
-### jQuery plugin
-```html
-<script>
-$('#mediaplayer').mediaelementplayer({success: function(mediaElement, originalNode) {
-	// do things
-}});
+This works perfectly on any browser that supports HTML5 natively; however, to make this work across browsers, an AJAX request is performed to parse the content of the subtitles file.
 
-// To access player after its creation through jQuery use:
-var player = $('#mediaplayer')[0].player;
+That's why is important to put the caption files **in the same domain as the player is**. Otherwise, the request of the file will be denied.
 
-// With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
-// i.e., if you wanna exit fullscreen on iPhone using the player, use this:
-var player = $('#mediaplayer')[0];
-player.webkitExitFullScreen();
- 
-</script>
-```
+As a final note, to display closed captioning in iOS, they will need to be transcoded it in the video. To learn more about this topic, please read [The Zencoder guide to closed captioning for web, mobile, and connected TV](http://blog.zencoder.com/2012/07/13/closed-captioning-for-web-mobile-and-tv/) 
 
-**NOTE:** If sources are installed in different folders, only update the ```pluginPath``` option with the location of the Flash/Silverlight files. Also, update ```flashName``` and ```silverlightName``` options **only if those files were renamed**.
-```html
-<script>
-$('#mediaplayer').mediaelementplayer({
-    pluginPath: '/path/to/flash_silverlight_folder',
-    
-    // Optional: the name of both files is different than 'flashmediaelement.swf' and 'silverlightmediaelement.xap', respectively.
-    flashName: 'newflashname.swf',
-    silverlightName: 'newsilverlightname.xap',
-    
-    success: function(mediaElement, originalNode) {
-	// do things
-    }
-});
-```
 ________
 [Back to Main](README.md)

@@ -21,9 +21,9 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 ## Installation and Usage
 
-The full documentation on how to install MediaElementJs is available at [Installation](installation.md).
+The full documentation on how to install `MediaElement.js` is available at [Installation](installation.md).
 
-A guide on how to use it and some useful tips are available at [Usage and Tips](usage.md).
+A brief guide on how to create and use instances of `MediaElement` available at [Usage](usage.md).
 
 
 ## API and Configuration
@@ -35,25 +35,6 @@ A guide on how to use it and some useful tips are available at [Usage and Tips](
 
 If you want to contribute to improve this package, please read [Guidelines](guidelines.md).
 
-## How it Works
-_MediaElement.js: HTML5 `<video>` and `<audio>` shim_
-
-
-To know which plugin you are using (native, Flash, Silverlight, etc.), use an instance of the player and use the **pluginType** property for it.
-```html
-<script src="mediaelement.js"></script>
-<video src="myvideo.mp4" width="320" height="240"></video>
-
-<script>
-var v = document.getElementsByTagName("video")[0];
-new MediaElement(v, {success: function(media) {
-	media.play();
-	
-	console.log(media.pluginType);
-}});
-</script>
-```
-You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
 ## Change Log
 
