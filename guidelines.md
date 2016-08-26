@@ -1,4 +1,4 @@
-# Guidelines
+# Guidelines for Contributors
 
 * [Development](#development)
 * [Node.js](#nodejs)
@@ -72,6 +72,7 @@ If during the development wasn't necessary to do any changes to the Flash files,
 If, on the other hand, only the ActionScript files were affected, type `sh compile_swf.sh` and it will build the compiled files in `/local-build/` directory. Then just copy the files and put them inside `/build/` directory.
 
 Finally, if changes were done to the `FlashMediaElement.fla` file:
+
 1. Open it in the Flash Professional IDE. 
 2. Go to the menu item `File->Publish Settings`
 3. Click the `Flash` tab
