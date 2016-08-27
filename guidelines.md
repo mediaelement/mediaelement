@@ -22,6 +22,7 @@ Unless you are developing a fix for a reported issue, the development of a new f
 	$.extend(mejs.MepDefaults, {
 		// Any variable that can be configured by the end user belongs here.
 		// Make sure is unique by checking API and Configuration file.
+		// Add comments about the nature of each of these variables.
 	});
 
 	
@@ -46,7 +47,7 @@ Unless you are developing a fix for a reported issue, the development of a new f
 })(mejs.$);
 
 ```
-If the feature must be integrated in the core package, place it inside `/src/` folder; otherwise, to use it immediately, just call it after the main files and add its name in the `features` configuration.
+If the feature must be integrated in the core package, place it inside `/src/` folder and, if code integrates any configuration variables, make sure you also write comments about their purpose, and add them into [API and Configuration](api.md) to keep documentation up-to-date; otherwise, to use it immediately, just call it after the main files and add its name in the `features` configuration.
 ```html
 <script src="jquery.js"></script>
 <script src="mediaelement-and-player.min.js"></script>
