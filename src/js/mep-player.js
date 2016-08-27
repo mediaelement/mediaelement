@@ -747,7 +747,10 @@
 				}, false);
 
 				// resize on the first play
-				t.media.addEventListener('loadedmetadata', function(e) {
+				t.media.addEventListener('loadedmetadata', function() {
+
+					mejs.Utility.calculateTimeFormat(t.duration, t.options, t.options.framesPerSecond || 25);
+
 					if (t.updateDuration) {
 						t.updateDuration();
 					}
