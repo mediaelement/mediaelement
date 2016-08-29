@@ -40,7 +40,7 @@
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-				autoRewind: true,
+		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 
@@ -77,6 +77,12 @@
 		hideAudioControls: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
+		// Time in ms to hide controls
+		controlsTimeoutDefault: 1500,
+		// Time in ms to trigger the timer when mouse moves
+		controlsTimeoutMouseEnter: 2500,
+		// Time in ms to trigger the timer when mouse leaves
+		controlsTimeoutMouseLeave: 1000,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -524,7 +530,7 @@
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : 1500;
+			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -673,7 +679,7 @@
 									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
@@ -683,14 +689,14 @@
 										t.showControls();
 									}
 									if (!t.options.alwaysShowControls) {
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
 							.bind('mouseleave', function () {
 								if (t.controlsEnabled) {
 									if (!t.media.paused && !t.options.alwaysShowControls) {
-										t.startControlsTimer(1000);
+										t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 									}
 								}
 							});
