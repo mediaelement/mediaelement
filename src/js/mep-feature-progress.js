@@ -183,7 +183,7 @@
 						});
 						t.globalBind('mouseup.dur touchend.dur', function (e) {
 							mouseIsDown = false;
-							timefloat.hide();
+							t.timefloat.hide();
 							t.globalUnbind('.dur');
 						});
 					}
