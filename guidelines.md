@@ -13,8 +13,7 @@ Unless you are developing a fix for a reported issue, the development of a new f
 * File name format: `mep-feature-[feature_name].js`.
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
 * Test the changes with `/test/test.html`. Make sure you download the media files from https://github.com/johndyer/mediaelement-files and place them inside the `/media/` directory.
-
-### Template
+* A code template to build a feature is presented below.
 
 ```javascript
 (function($) {
@@ -47,7 +46,7 @@ Unless you are developing a fix for a reported issue, the development of a new f
 })(mejs.$);
 
 ```
-If the feature must be integrated in the core package, place it inside `/src/` folder and, if code integrates any configuration variables, make sure you also write comments about their purpose, and add them into [API and Configuration](api.md) to keep documentation up-to-date; otherwise, to use it immediately, just call it after the main files and add its name in the `features` configuration.
+If the feature must be integrated in the core package, place it inside `/src/` folder to be reviewed and, if code integrates any configuration variables, make sure you also write comments about their purpose, and add them into [API and Configuration](api.md) to keep documentation up-to-date; otherwise, to use it immediately, just call it after the main files and add its name in the `features` configuration.
 ```html
 <script src="jquery.js"></script>
 <script src="mediaelement-and-player.min.js"></script>
