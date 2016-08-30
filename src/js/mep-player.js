@@ -898,15 +898,21 @@
 		},
  
 		hasFluidMode: function() {
-			var t = this;
-	 
+			var t = this,
+				maxWidth = t.$node.css('max-width');
+
+			if (typeof(maxWidth) === 'string') {
+				// Remove the pixel unit if present to compare correctly
+				maxWidth = maxWidth.replace(/px$/, '');
+			}
+
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-			return (t.height.toString().indexOf('%') > 0 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== 't.width') || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
+			return (t.height.toString().indexOf('%') > 0 || (maxWidth !== 'none' && maxWidth.toString() !== t.width.toString()) || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
 		},
- 
+
 		setResponsiveMode: function() {
 			var t = this;
-		
+
 			// do we have the native dimensions yet?
 			var nativeWidth = (function() {
 				if (t.isVideo) {
@@ -921,7 +927,7 @@
 					return t.options.defaultAudioWidth;
 				}
 			})();
-		
+
 			var nativeHeight = (function() {
 				if (t.isVideo) {
 					if (t.media.videoHeight && t.media.videoHeight > 0) {
@@ -935,45 +941,41 @@
 					return t.options.defaultAudioHeight;
 				}
 			})();
-		
-			var parentWidth = t.container.parent().closest(':visible').width(),
-			parentHeight = t.container.parent().closest(':visible').height(),
-			newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
-			
-			// When we use percent, the newHeight can't be calculated so we get the container height
-			if (isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight && parentHeight > nativeHeight)) {
-				newHeight = parentHeight;
-			}
-		
-			if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
-				parentWidth = $(window).width();
-				newHeight = $(window).height();
-			}
-		
-			if ( newHeight && parentWidth ) {
-			
-				// set outer container size
-				t.container
-					.width(parentWidth)
-					.height(newHeight);
-				
-				// set native <video> or <audio> and shims
-				t.$media.add(t.container.find('.mejs-shim'))
-					.width('100%')
-					.height('100%');
-				
-				// if shim is ready, send the size to the embeded plugin
-				if (t.isVideo) {
-					if (t.media.setVideoSize) {
-						t.media.setVideoSize(parentWidth, newHeight);
-					}
+
+			// Set responsive media based on aspect ratio workflow
+			// @see https://css-tricks.com/NetMag/FluidWidthVideo/Article-FluidWidthVideo.php
+			t.$media.attr('data-aspect-ratio', nativeHeight / nativeWidth).removeAttr('height')
+					.removeAttr('width');
+
+			var ratio = t.$media.attr('data-aspect-ratio'),
+				newWidth = t.container.parent().closest(':visible').width(),
+				newHeight = newWidth * ratio;
+
+			// set outer container size
+			t.container
+				.width(newWidth)
+				.height(newHeight);
+
+			// set native <video> or <audio> and shims
+			t.$media.add(t.container.find('.mejs-shim'))
+				.width('100%')
+				.height('100%');
+
+			// if shim is ready, send the size to the embeded plugin
+			if (t.isVideo) {
+				if (t.media.setVideoSize) {
+					t.media.setVideoSize(newWidth, newHeight);
 				}
-		
-				// set the layers
-				t.layers.children('.mejs-layer')
-					.width('100%')
-					.height('100%');
 			}
+
+			// set the layers
+			t.layers.children('.mejs-layer')
+				.width('100%')
+				.height('100%');
+
+
+			t.$media.width(newWidth)
+				.height(newHeight);
 		},
  
 		setFillMode: function() {
