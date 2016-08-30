@@ -1006,3 +1006,26 @@ div.mejs-speed-button {
 
 /* End: Skip Back */
 
+/* Start: Transcript */
+.mejs-transcript-area {
+	background: white;
+	border: 1px solid #000;
+	border-left: none;
+	border-right: none;width:100%;
+	height: 200px;
+	overflow-y: scroll;
+	bottom: 0;
+}
+
+.mejs-transcript-area, .mejs-transcript-language {
+	position: relative;
+}
+
+.mejs-transcript-line {
+	position: relative;
+	padding: 5px;
+	cursor: pointer;
+	line-height: 1.3;
+}
+/* End: Transcript */
+
