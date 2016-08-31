@@ -1397,27 +1397,8 @@
 						videoId = videoIdMatch[1];
 					}
 				}
-				/* removeEventListener not working on YouTube API - see https://code.google.com/p/gdata-issues/issues/detail?id=6700 */
-				function addRemovableEventListener (player, eventName, callback) {
-					var callbackName = 'youtubeCallbackFunction' + Math.random().toString(36).substr(2, 7);
-					window[callbackName] = callback;
-					player.addEventListener(eventName, callbackName);
 
-					return function () {
-						window[callbackName] = function () {}; // make the callback inactive
-					};
-				}
-				function onCustomStateChange(e) {
-					if (e.data == 1) {
-						removeThisListener();
-						e.target.pauseVideo();
-						e.target.seekTo(0);
-					}
-				}
-				if (this.media.pluginApi.getPlayerState() !== 1) {
-					var removeThisListener = addRemovableEventListener(this.media.pluginApi, 'onStateChange', onCustomStateChange);
-				}
-				this.media.pluginApi.loadVideoById(videoId);
+				this.media.pluginApi.cueVideoById(videoId);
 			}
 			else {
 				this.media.setSrc(src);
