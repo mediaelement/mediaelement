@@ -1365,8 +1365,11 @@
 			return this.media.volume;
 		},
 		setSrc: function(src) {
+			var
+				t = this;
+
 			// If using YouTube, its API is different to load a specific source
-			if (this.media.pluginType === 'youtube') {
+			if (t.media.pluginType === 'youtube') {
 				var videoId;
 
 				if (typeof src !== 'string') {
@@ -1382,10 +1385,10 @@
 				}
 
 				// youtu.be url from share button
-				if (src.lastIndexOf("youtu.be") != -1) {
+				if (src.lastIndexOf('youtu.be') !== -1) {
 					videoId = src.substr(src.lastIndexOf('/') + 1);
 
-					if (videoId.indexOf('?') != -1) {
+					if (videoId.indexOf('?') !== -1) {
 						videoId = videoId.substr(0, videoId.indexOf('?'));
 					}
 
@@ -1398,10 +1401,15 @@
 					}
 				}
 
-				this.media.pluginApi.cueVideoById(videoId);
+				if (t.media.getAttribute('autoplay') !== null) {
+					t.media.pluginApi.loadVideoById(videoId);
+				} else {
+					t.media.pluginApi.cueVideoById(videoId);
+				}
+
 			}
 			else {
-				this.media.setSrc(src);
+				t.media.setSrc(src);
 			}
 		},
 		remove: function() {
