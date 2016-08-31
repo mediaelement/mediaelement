@@ -1365,7 +1365,63 @@
 			return this.media.volume;
 		},
 		setSrc: function(src) {
-			this.media.setSrc(src);
+			// If using YouTube, its API is different to load a specific source
+			if (this.media.pluginType === 'youtube') {
+				var videoId;
+
+				if (typeof src !== 'string') {
+					var i, media;
+
+					for (i=0; i<src.length; i++) {
+						media = src[i];
+						if (this.canPlayType(media.type)) {
+							src = media.src;
+							break;
+						}
+					}
+				}
+
+				// youtu.be url from share button
+				if (src.lastIndexOf("youtu.be") != -1) {
+					videoId = src.substr(src.lastIndexOf('/') + 1);
+
+					if (videoId.indexOf('?') != -1) {
+						videoId = videoId.substr(0, videoId.indexOf('?'));
+					}
+
+				} else {
+					// https://www.youtube.com/watch?v=
+					var videoIdMatch = src.match(/[?&]v=([^&#]+)|&|#|$/);
+
+					if (videoIdMatch) {
+						videoId = videoIdMatch[1];
+					}
+				}
+				/* removeEventListener not working on YouTube API - see https://code.google.com/p/gdata-issues/issues/detail?id=6700 */
+				function addRemovableEventListener (player, eventName, callback) {
+					var callbackName = 'youtubeCallbackFunction' + Math.random().toString(36).substr(2, 7);
+					window[callbackName] = callback;
+					player.addEventListener(eventName, callbackName);
+
+					return function () {
+						window[callbackName] = function () {}; // make the callback inactive
+					};
+				}
+				function onCustomStateChange(e) {
+					if (e.data == 1) {
+						removeThisListener();
+						e.target.pauseVideo();
+						e.target.seekTo(0);
+					}
+				}
+				if (this.media.pluginApi.getPlayerState() !== 1) {
+					var removeThisListener = addRemovableEventListener(this.media.pluginApi, 'onStateChange', onCustomStateChange);
+				}
+				this.media.pluginApi.loadVideoById(videoId);
+			}
+			else {
+				this.media.setSrc(src);
+			}
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
