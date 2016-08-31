@@ -386,7 +386,7 @@ mejs.HtmlMediaElementShim = {
 			initVars;
 
 		// copy tagName from html media element
-		pluginMediaElement.tagName = htmlMediaElement.tagName
+		pluginMediaElement.tagName = htmlMediaElement.tagName;
 
 		// copy attributes from html media element to plugin media element
 		for (var i = 0; i < htmlMediaElement.attributes.length; i++) {
@@ -617,7 +617,6 @@ mejs.HtmlMediaElementShim = {
 				} else if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
 					mejs.YouTubeApi.createFlash(youtubeSettings, options);
 				}
-				
 				break;
 			
 			// DEMO Code. Does NOT work.
@@ -634,19 +633,19 @@ mejs.HtmlMediaElementShim = {
 		
 						player.playVideo = function() {
 							player.api( 'play' );
-						} 
+						};
 						player.stopVideo = function() {
 							player.api( 'unload' );
-						} 
+						};
 						player.pauseVideo = function() {
 							player.api( 'pause' );
-						} 
+						};
 						player.seekTo = function( seconds ) {
 							player.api( 'seekTo', seconds );
-						}
+						};
 						player.setVolume = function( volume ) {
 							player.api( 'setVolume', volume );
-						}
+						};
 						player.setMuted = function( muted ) {
 							if( muted ) {
 								player.lastVolume = player.api( 'getVolume' );
@@ -655,11 +654,11 @@ mejs.HtmlMediaElementShim = {
 								player.api( 'setVolume', player.lastVolume );
 								delete player.lastVolume;
 							}
-						}
+						};
 						// parity with YT player
 						player.getPlayerState = function() {
 							return playerState;
-						}			
+						};
 
 						function createEvent(player, pluginMediaElement, eventName, e) {
 							var event = {
