@@ -2,7 +2,7 @@
 
 	$.extend(mejs.MepDefaults, {
 		// Enable tooltip that shows time in progress bar
-		enableProgressTooltip: false,
+		enableProgressTooltip: true,
 		progressHelpText: mejs.i18n.t(
 		'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.')
 	});
