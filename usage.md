@@ -1,7 +1,12 @@
 # Usage
 
+* [Automatic start](#automatic)
+* [Vanilla JavaScript](#vanilla)
+* [jQuery](#jquery)
+
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
+<a id="automatic"></a>
 ## Automatic start
 You can avoid running any startup scripts by added `class="mejs-player"` to the `<video>` or `<audio>` tag. Options can be added using the `data-mejsoptions` attribute.
 ```html	
@@ -10,7 +15,8 @@ You can avoid running any startup scripts by added `class="mejs-player"` to the 
 		data-mejsoptions='{"alwaysShowControls": true}'></video>
 ```
 
-## Normal JavaScript
+<a id="vanilla"></a>
+## Vanilla JavaScript
 ```html
 <script>
 var player = new MediaElementPlayer('#player', {success: function(mediaElement, originalNode) {
@@ -19,7 +25,8 @@ var player = new MediaElementPlayer('#player', {success: function(mediaElement, 
 </script>	
 ```
 
-## Through jQuery plugin
+<a id="jquery"></a>
+## jQuery
 ```html
 <script>
 $('#mediaplayer').mediaelementplayer({success: function(mediaElement, originalNode) {
