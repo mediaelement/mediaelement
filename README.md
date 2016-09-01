@@ -51,3 +51,7 @@ If you want to contribute to improve this package, please read [Guidelines](guid
 ## Change Log
 
 Changes available at [Change Log](changelog.md)
+
+## TODO list
+
+New features and pending bugs can be found at [TODO list](TODO.md).
