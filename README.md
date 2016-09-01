@@ -9,6 +9,17 @@ One file. Any browser. Same UI.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
 
+# Table of Contents
+
+* [Introduction](#intro)
+* [Browser and Device support](#browser-support)
+* [Installation and Usage](#installation)
+* [API and Configuration](#api)
+* [Guidelines for Contributors](#guidelines)
+* [Change Log](#changelog)
+* [TODO list](#todo)
+
+<a id="intro"></a>
 ## Introduction
 
 _MediaElementPlayer: HTML5 `<video>` and `<audio>` player_
@@ -18,6 +29,7 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
 
+<a id="browser-support"></a>
 ## Browser and Device support
 
 Format | Support
@@ -30,28 +42,29 @@ Format | Support
 **wmv/wma** | All browsers that support **Silverlight**
 **YouTube** | All browsers since it uses `iframe` tag
 
-
+<a id="installation"></a>
 ## Installation and Usage
 
 The full documentation on how to install `MediaElement.js` is available at [Installation](installation.md).
 
 A brief guide on how to create and use instances of `MediaElement` available at [Usage](usage.md).
 
-
+<a id="api"></a>
 ## API and Configuration
    
 `MediaElement.js` has many options that you can take advantage from. Visit [API and Configuration](api.md) for more details.
 
-
+<a id="guidelines"></a>
 ## Guidelines for Contributors
 
 If you want to contribute to improve this package, please read [Guidelines](guidelines.md).
 
-
+<a id="changelog"></a>
 ## Change Log
 
 Changes available at [Change Log](changelog.md)
 
+<a id="todo"></a>
 ## TODO list
 
 New features and pending bugs can be found at [TODO list](TODO.md).
