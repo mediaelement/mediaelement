@@ -194,13 +194,14 @@ toggleCaptionsButtonWhenOnlyOne: false,
 slidesSelector: '',
 // Milliseconds to skip back media
 skipBackInterval: 30,
+// Enable tooltip that shows time in progress bar
+enableProgressTooltip: true,
 // The following items are set for accessibility purposes in different elements of the player
 playText: mejs.i18n.t('Play'),
 pauseText: mejs.i18n.t('Pause'),
 stopText: mejs.i18n.t('Stop'),
 tracksText: mejs.i18n.t('Captions/Subtitles'),
 postrollCloseText: mejs.i18n.t('Close'),
-progessHelpText: mejs.i18n.t('Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.'),
 allyVolumeControlText: mejs.i18n.t('Use Up/Down Arrow keys to increase or decrease volume.'),
 muteText: mejs.i18n.t('Mute Toggle'),
 fullscreenText: mejs.i18n.t('Fullscreen'),
