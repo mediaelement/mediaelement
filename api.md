@@ -1,7 +1,18 @@
 # API and Configuration
 
+* [Configuration](#development)
+    * [Standalone](#standalone)
+    * [MediaElementPlayer](#player)
+* [API](#api)
+    * [Properties](#properties)
+    * [Methods](#methods)
+    * [Events](#events)
+
+
+<a id="configuration"></a>
 ## Configuration
 
+<a id="standalone"></a>
 ### Standalone
 
 As a standalone library, _MediaElement.js_ can be configured using the following settings.
@@ -57,6 +68,7 @@ success: function (mediaElement, domObject) { },
 error: function () { }
 ```
 
+<a id="player"></a>
 ### MediaElementPlayer
 
 Including the above, `MediaElementPlayer` object allows the following extra configuration elements.
@@ -195,13 +207,16 @@ fullscreenText: mejs.i18n.t('Fullscreen'),
 skipBackText: mejs.i18n.t('Skip back %1 seconds'), // %1 will be replaced with skipBackInterval in this string
 ```
 
+<a id="api"></a>
 ## API
 
 MediaElementPlayer is a complete audio and video player, but you can also use just the MediaElement object which replaces `<video>` and `<audio>` with a Flash player that mimics the properties, methods, and events of HTML MediaElement API.
 
+<a id="properties"></a>
 ### Properties
 All properties are listed in https://www.w3.org/2010/05/video/mediaevents.html; they can be accessed through an instance of player as described [here](usage.md).
 
+<a id="methods"></a>
 ### Methods
 
 Method | Description
@@ -214,6 +229,7 @@ remove() | Destroy the video/audio player instance
 
 **Note:** ```canPlayType()``` method is used internally and accounts for other types of media to be played (such as HLS, RTMP, etc.); ```addTextTrack()``` is replaced also with more code to manage clsoed captioning and tracks. For that reason, they are not listed.
 
+<a id="events"></a>
 ### Events
 
 Event | Action(s) executed when...
