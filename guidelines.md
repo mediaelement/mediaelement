@@ -5,7 +5,8 @@
 * [Flex SDK](#flex)
 * [Building](#building)
 
-## Development <a id="development"></a>
+<a id="development"></a>
+## Development
 
 Unless you are developing a fix for a reported issue, the development of a new feature follows specific conventions.
 
@@ -67,13 +68,15 @@ $(document).ready(function() {
 </script>
 ```
 
-## Node.js <a id="nodejs"></a>
+<a id="nodejs"></a>
+## Node.js
 
 Since `MediaElement.js` uses [Grunt](http://gruntjs.com/) to compile it, Node.js is required. Download it at https://nodejs.org/ and follow the steps to install it, or install `node.js` with `npm`.
 
 Once installed, at the command prompt, type `npm install`, which will download all the necessary tools.
 
-## Flex SDK <a id="flex"></a>
+<a id="flex"></a>
+## Flex SDK
 
 One of the subtasks involved during the compiling of `MediaElement.js` is the compiling of the Flash files. In order to do it, Flex SDK needs to be installed.
 
@@ -83,7 +86,8 @@ One of the subtasks involved during the compiling of `MediaElement.js` is the co
 3. Create a symlink from the install location to this directory (eg: ```ln -s /usr/local/flex_sdk_4.6 /path/to/mediaelement/src/flash```)
 4. If you do not have the required player global swc file (version **10.1**), download it from https://helpx.adobe.com/flash-player/kb/archived-flash-player-versions.html and place it inside ```/path/to/flex_sdk_4.6/frameworks/libs/player/10.1/playerglobal.swc```
 
-## Building <a id="building"></a>
+<a id="building"></a>
+## Building
 
 To compile ALL the files, just type `grunt` in the root of the project. 
 
