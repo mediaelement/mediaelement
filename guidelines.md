@@ -89,9 +89,9 @@ One of the subtasks involved during the compiling of `MediaElement.js` is the co
 <a id="building"></a>
 ## Building
 
-To compile ALL the files, just type `grunt` in the root of the project. 
+To compile ALL the files, in your Terminal window just type `grunt` in the root of the project. 
 
-If during the development wasn't necessary to do any changes to the Flash files, type `grunt html5only`. That way, the Flash files will remain intact.
+If during the development wasn't necessary to do any changes to the Flash files, type `grunt html5only`. That way, the Flash files will remain intact. You can also type `grunt debug_html5` to avoid removing the console messages.
 
 If, on the other hand, only the ActionScript files were affected, type `sh compile_swf.sh` and it will build the compiled files in `/local-build/` directory. Then just copy the files and put them inside `/build/` directory.
 
