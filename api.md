@@ -64,6 +64,9 @@ pluginVars: [],
 timerRate: 250,
 // initial volume for player
 startVolume: 0.8,
+// custom error message in case media cannot be played; otherwise, Download File
+// link will be displayed
+customError: "",
 success: function (mediaElement, domObject) { },
 error: function () { }
 ```
