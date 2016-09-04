@@ -461,6 +461,9 @@ mejs.HtmlMediaElementShim = {
 					initVars.push('file=' + playback.url);
 				}
 			}
+			if (htmlMediaElement.getAttribute('type') === 'audio/mp4') {
+				initVars.push('isvideo=true');
+			}
 			if (options.enablePluginDebug) {
 				initVars.push('debug=true');
 			}
