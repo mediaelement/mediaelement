@@ -1,4 +1,4 @@
-# `<video>` and `<audio>` made easy. 
+# `MediaElement.js`: `<video>` and `<audio>` made easy. 
 
 One file. Any browser. Same UI.
 
@@ -9,112 +9,62 @@ One file. Any browser. Same UI.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
 
+# Table of Contents
 
-## Installation and Usage
+* [Introduction](#intro)
+* [Browser and Device support](#browser-support)
+* [Installation and Usage](#installation)
+* [API and Configuration](#api)
+* [Guidelines for Contributors](#guidelines)
+* [Change Log](#changelog)
+* [TODO list](#todo)
+
+<a id="intro"></a>
+## Introduction
 
 _MediaElementPlayer: HTML5 `<video>` and `<audio>` player_
 
 A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuery`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
 
+`MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
+Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
+
+<a id="browser-support"></a>
+## Browser and Device support
+
+Format | Support
+------ | -------
+**mp4** | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
+**webm** | Please visit http://caniuse.com/#feat=webm for comprehensive information
+**mp3** | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
+**m3u8** | Safari and iOS (native); all browsers that support **Flash** (version 10 or later)
+**rtmp/flv** | All browsers that support **Flash** (version 10 or later)
+**wmv/wma** | All browsers that support **Silverlight**
+**YouTube** | All browsers since it uses `iframe` tag
+
+<a id="installation"></a>
+## Installation and Usage
+
+The full documentation on how to install `MediaElement.js` is available at [Installation](installation.md).
+
+A brief guide on how to create and use instances of `MediaElement` available at [Usage](usage.md).
+
+<a id="api"></a>
+## API and Configuration
+   
+`MediaElement.js` has many options that you can take advantage from. Visit [API and Configuration](api.md) for more details.
+
+<a id="guidelines"></a>
+## Guidelines for Contributors
+
+If you want to contribute to improve this package, please read [Guidelines](guidelines.md).
+
+<a id="changelog"></a>
 ## Change Log
 
 Changes available at [Change Log](changelog.md)
 
-### 1. Add Script and Stylesheet
-```html
-<script src="jquery.js"></script>
-<script src="mediaelement-and-player.min.js"></script>
-<link rel="stylesheet" href="mediaelementplayer.css" />
-```
-### 2. Add `<video>` or `<audio>` tags
-If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single MP4 or MP3 file.
+<a id="todo"></a>
+## TODO list
 
-```html	
-<video src="myvideo.mp4" width="320" height="240"></video>
-```
-```html	
-<audio src="myaudio.mp3"></audio>
-```
-
-#### Optional: multiple codecs
-This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and Chrome, WebM for Firefox 4 and Opera, Ogg for Firefox 3).
-
-```html
-<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
-	<source type="video/mp4" src="myvideo.mp4" />
-	<source type="video/webm" src="myvideo.webm" />
-	<source type="video/ogg" src="myvideo.ogv" />
-</video>
-```
-
-#### Optional: Browsers with JavaScript disabled
-In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code.
-```html
-<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
-	<source type="video/mp4" src="myvideo.mp4" />
-	<source type="video/webm" src="myvideo.webm" />
-	<source type="video/ogg" src="myvideo.ogv" />
-	<object width="320" height="240" type="application/x-shockwave-flash" data="flashmediaelement.swf">
-		<param name="movie" value="flashmediaelement.swf" /> 
-		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
-		<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
-	</object>
-</video>
-```
-
-### 3. Startup
-
-#### Automatic start
-You can avoid running any startup scripts by added `class="mejs-player"` to the `<video>` or `<audio>` tag. Options can be added using the `data-mejsoptions` attribute
-```html	
-<video src="myvideo.mp4" width="320" height="240" 
-		class="mejs-player" 
-		data-mejsoptions='{"alwaysShowControls": true}'></video>
-```
-
-#### Normal JavaScript
-```html
-<script>
-var player = new MediaElementPlayer('#player', {success: function(mediaElement, originalNode) {
-	// do things
-}});
-</script>	
-```
-
-#### jQuery plugin
-```html
-<script>
-$('video').mediaelementplayer({success: function(mediaElement, originalNode) {
-	// do things
-}});
-</script>
-```
-
-## How it Works: 
-_MediaElement.js: HTML5 `<video>` and `<audio>` shim_
-
-`MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
-Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
-```html
-<script src="mediaelement.js"></script>
-<video src="myvideo.mp4" width="320" height="240"></video>
-
-<script>
-var v = document.getElementsByTagName("video")[0];
-new MediaElement(v, {success: function(media) {
-	media.play();
-}});
-</script>
-```
-You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
-
-## Building MediaElement.js
-
-When developing MediaElement, make changes to the files in the `/src/` directory (not `/build/`) and test the changes with `/test/test.html`.
-
-To compile the changes
-
-1. Install `node.js` with `npm` https://nodejs.org/
-2. At the command prompt type `npm install` which will download all the necessary tools
-3. Type `grunt` to build MediaElement.js
-4. To compile the Flash swf, you'll need to install Flex 4.6. See instructions in Gruntfile.js for details.
+New features and pending bugs can be found at [TODO list](TODO.md).

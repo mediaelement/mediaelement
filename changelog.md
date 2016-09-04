@@ -861,13 +861,3 @@ Fixes and updates
 *1.0.0 (2010/08/09)*
 
 * initial release
-
-
-*Someday/Maybe features*
-
-* deeper WebVTT support (alignment, color, etc.) - include captionator
-* Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
-* thin line when controls are off
-* system-wide events
-* Ogg/Theora playback
-* Better alignment with native MediaElement (using shimichanga.com techniques)
