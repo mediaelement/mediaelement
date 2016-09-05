@@ -9,6 +9,7 @@
 		buildsourcechooser: function(player, controls, layers, media) {
 
 			var t = this;
+			var hoverTimeout;
 
 			player.sourcechooserButton =
 				$('<div class="mejs-button mejs-sourcechooser-button">'+
@@ -22,9 +23,13 @@
 
 					// hover
 					.hover(function() {
+						clearTimeout(hoverTimeout);
 						$(this).find('.mejs-sourcechooser-selector').removeClass('mejs-offscreen');
 					}, function() {
-						$(this).find('.mejs-sourcechooser-selector').addClass('mejs-offscreen');
+						var self = $(this);
+						hoverTimeout = setTimeout(function () {
+							self.find('.mejs-sourcechooser-selector').addClass('mejs-offscreen');
+						}, 500);
 					})
 
 					// handle clicks to the language radio buttons

@@ -191,6 +191,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
 		'shell:buildFlash', 'shell:buildFlashCDN', 'shell:buildFlashDebug', 'clean:temp']);
 
-	grunt.registerTask('html5only', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy', 'clean:temp']);
+    grunt.registerTask('html5only', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy', 'clean:temp']);
+    grunt.registerTask('debug_html5', ['concat', 'uglify', 'cssmin', 'copy', 'clean:temp']);
 
 };
