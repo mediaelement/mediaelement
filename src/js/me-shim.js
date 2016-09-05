@@ -441,10 +441,21 @@ mejs.HtmlMediaElementShim = {
 		
 		if (playback.method === 'flash' || playback.method === 'silverlight') {
 
+			var canPlayVideo = htmlMediaElement.getAttribute('type') === 'audio/mp4',
+				childrenSources = htmlMediaElement.getElementsByTagName('source');
+
+			if (childrenSources && !canPlayVideo) {
+				for (var i = 0, total = childrenSources.length; i < total; i++) {
+					if (childrenSources[i].getAttribute('type') === 'audio/mp4') {
+						canPlayVideo = true;
+					}
+				}
+			}
+
 			// flash/silverlight vars
 			initVars = [
 				'id=' + pluginid,
-				'isvideo=' + ((playback.isVideo) ? "true" : "false"),
+				'isvideo=' + ((playback.isVideo || canPlayVideo) ? "true" : "false"),
 				'autoplay=' + ((autoplay) ? "true" : "false"),
 				'preload=' + preload,
 				'width=' + width,
@@ -460,9 +471,6 @@ mejs.HtmlMediaElementShim = {
 				} else {
 					initVars.push('file=' + playback.url);
 				}
-			}
-			if (htmlMediaElement.getAttribute('type') === 'audio/mp4') {
-				initVars.push('isvideo=true');
 			}
 			if (options.enablePluginDebug) {
 				initVars.push('debug=true');
