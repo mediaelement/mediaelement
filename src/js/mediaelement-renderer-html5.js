@@ -6,19 +6,23 @@
 
         canPlayType: function(type) {
 
-            var mediaElement = doc.createElement('video');
+            var
+                mediaElement = doc.createElement('video'),
+                mediaTypes = mejs.html5media.mediaTypes
+                ;
 
-            if (mejs.MediaFeatures.canSupportHls) {
-
-                var mediaTypes = mejs.html5media.mediaTypes;
-                if (mejs.html5media.mediaTypes.indexOf('application/x-mpegURL') === -1) {
+            if (mejs.MediaFeatures.supportsHls) {
+                if (mediaTypes.indexOf('application/x-mpegURL') === -1) {
                     mediaTypes.push('application/x-mpegURL');
                 }
 
                 return mediaTypes.indexOf(type) > -1;
-            }
 
-            if (mediaElement.canPlayType) {
+            } else if (mejs.MediaFeatures.supportsDash) {
+
+                return true;
+
+            } else if (mediaElement.canPlayType) {
                 return mediaElement.canPlayType(type).replace(/no/,'');
             } else {
                 return '';
@@ -112,19 +116,25 @@
 
                 node.src = mediaFiles[0].src;
 
-                if (mejs.MediaFeatures.canSupportHls && mejs.Utils.getExtension(node.src) === 'm3u8') {
+                var
+                    extension = mejs.Utils.getExtension(node.src),
+                    player
+                    ;
 
-                    var
-                        player = new Hls(options.hls),
-                        hlsEvents = Hls.Events;
+                if (mejs.MediaFeatures.supportsHls && extension === 'm3u8') {
 
+                    var hlsEvents = Hls.Events;
+
+                    player = new Hls(options.hls);
                     player.attachMedia(node);
 
                     player.on(hlsEvents.MEDIA_ATTACHED, function() {
                         player.loadSource(mediaFiles[0].src);
 
                         player.on(hlsEvents.MANIFEST_PARSED, function() {
-                            node.play();
+                            if (node.getAttribute('autoplay')) {
+                                node.play();
+                            }
                         });
                     });
 
@@ -136,6 +146,12 @@
                             mediaElement.dispatchEvent(event);
                         });
                     });
+
+                } else if (mejs.MediaFeatures.supportsDash && extension === 'mpd') {
+
+                    player = dashjs.MediaPlayer().create();
+                    player.initialize(node, node.src, true);
+
                 }
             }
 
