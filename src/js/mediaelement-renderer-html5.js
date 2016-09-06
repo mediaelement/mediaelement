@@ -19,8 +19,11 @@
                 return mediaTypes.indexOf(type) > -1;
 
             } else if (mejs.MediaFeatures.supportsDash) {
+                if (mediaTypes.indexOf('application/dash+xml') === -1) {
+                    mediaTypes.push('application/dash+xml');
+                }
 
-                return true;
+                return mediaTypes.indexOf(type) > -1;
 
             } else if (mediaElement.canPlayType) {
                 return mediaElement.canPlayType(type).replace(/no/,'');
