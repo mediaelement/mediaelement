@@ -1,116 +1,154 @@
 (function(win, doc, mejs, undefined) {
 
 // wraps the native HTML5 <audio> or <video> tag and bubbles its properties, events, and methods up to the mediaElement
-var HtmlMediaElement = {
-	name: 'html5',
+    var HtmlMediaElement = {
+        name: 'html5',
 
-	canPlayType: function(type) {
+        canPlayType: function(type) {
 
-		var mediaElement = doc.createElement('video');
+            var mediaElement = doc.createElement('video');
 
-		if (mediaElement.canPlayType) {
-			return mediaElement.canPlayType(type).replace(/no/,'');
-		} else {
-			return '';
-		}
-	},
-	options: null,
+            if (mejs.MediaFeatures.canSupportHls) {
 
-	create: function (mediaElement, options, mediaFiles) {
+                var mediaTypes = mejs.html5media.mediaTypes;
+                if (mejs.html5media.mediaTypes.indexOf('application/x-mpegURL') === -1) {
+                    mediaTypes.push('application/x-mpegURL');
+                }
 
-		var node = null,
-			id = mediaElement.id + '_html5';
+                return mediaTypes.indexOf(type) > -1;
+            }
 
-		// CREATE NODE
-		if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
+            if (mediaElement.canPlayType) {
+                return mediaElement.canPlayType(type).replace(/no/,'');
+            } else {
+                return '';
+            }
+        },
+        options: null,
 
-			node =  document.createElement('audio');
-			mediaElement.appendChild(node);
+        create: function (mediaElement, options, mediaFiles) {
 
-		} else {
-			node = mediaElement.originalNode;
-		}
+            var node = null,
+                i,
+                il,
+                id = mediaElement.id + '_html5';
 
-		node.setAttribute('id', id);
+            // CREATE NODE
+            if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
 
-		// WRAPPERS for PROPs
-		var
-			props = mejs.html5media.properties,
-			i,
-			il;
-		for (i=0, il=props.length; i<il; i++) {
+                node =  document.createElement('audio');
+                mediaElement.appendChild(node);
 
-			// wrap in function to retain scope
-			(function(propName) {
-				var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+            } else {
+                node = mediaElement.originalNode;
+            }
 
-				node['get' + capName] = function() {
-					return node[propName];
-				};
+            node.setAttribute('id', id);
 
-				node['set' + capName] = function(value) {
-					node[propName] = value;
-				};
+            // WRAPPERS for PROPs
+            var props = mejs.html5media.properties;
+            for (i=0, il=props.length; i<il; i++) {
 
-			})(props[i]);
-		}
+                // wrap in function to retain scope
+                (function(propName) {
+                    var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
-		var events = mejs.html5media.events;
-		events = events.concat(['click','mouseover','mouseout'].join(Hls.Events));
+                    node['get' + capName] = function() {
+                        return node[propName];
+                    };
 
-		for (i=0, il=events.length; i<il; i++) {
-			(function(eventName) {
+                    node['set' + capName] = function(value) {
+                        node[propName] = value;
+                    };
 
-				node.addEventListener(eventName, function(e) {
-					// copy event
+                })(props[i]);
+            }
 
-					var event = doc.createEvent('HTMLEvents');
-					event.initEvent(e.type, e.bubbles, e.cancelable);
-					event.srcElement = e.srcElement;
-					event.target = e.srcElement;
+            // BUBBLE EVENTS
+            var events = mejs.html5media.events;
 
-					//var ev = mejs.Utils.extend({}, e);
+            events = events.concat(['click','mouseover','mouseout']);
 
-					mediaElement.dispatchEvent(event);
-				});
+            for (i=0, il=events.length; i<il; i++) {
+                (function(eventName) {
 
-			})(events[i]);
-		}
+                    node.addEventListener(eventName, function(e) {
+                        // copy event
 
-		// HELPER METHODS
-		node.setSize = function(width, height) {
-			node.style.width = width + 'px';
-			node.style.height = height + 'px';
+                        var event = doc.createEvent('HTMLEvents');
+                        event.initEvent(e.type, e.bubbles, e.cancelable);
+                        event.srcElement = e.srcElement;
+                        event.target = e.srcElement;
 
-			return node;
-		};
+                        //var ev = mejs.Utils.extend({}, e);
 
-		node.hide = function() {
-			node.style.display = 'none';
+                        mediaElement.dispatchEvent(event);
+                    });
 
-			return node;
-		};
+                })(events[i]);
+            }
 
-		node.show = function() {
-			node.style.display = '';
+            // HELPER METHODS
+            node.setSize = function(width, height) {
+                node.style.width = width + 'px';
+                node.style.height = height + 'px';
 
-			return node;
-		};
+                return node;
+            };
 
-		if (mediaFiles && mediaFiles.length > 0) {
-			node.src = mediaFiles[0].src;
-		}
+            node.hide = function() {
+                node.style.display = 'none';
 
-		var event = mejs.Utils.createEvent('rendererready', node);
-		mediaElement.dispatchEvent(event);
+                return node;
+            };
 
-		return node;
-	}
-};
+            node.show = function() {
+                node.style.display = '';
+
+                return node;
+            };
+
+            if (mediaFiles && mediaFiles.length > 0) {
+
+                node.src = mediaFiles[0].src;
+
+                if (mejs.MediaFeatures.canSupportHls && mejs.Utils.getExtension(node.src) === 'm3u8') {
+
+                    var
+                        player = new Hls(options.hls),
+                        hlsEvents = Hls.Events;
+
+                    player.attachMedia(node);
+
+                    player.on(hlsEvents.MEDIA_ATTACHED, function() {
+                        player.loadSource(mediaFiles[0].src);
+
+                        player.on(hlsEvents.MANIFEST_PARSED, function() {
+                            node.play();
+                        });
+                    });
+
+                    Object.keys(hlsEvents).forEach(function (key) {
+                        var etype = hlsEvents[key];
+
+                        player.on(etype, function (e) {
+                            var event = new Event(e, { bubbles: false, cancelable: false });
+                            mediaElement.dispatchEvent(event);
+                        });
+                    });
+                }
+            }
+
+            var event = mejs.Utils.createEvent('rendererready', node);
+            mediaElement.dispatchEvent(event);
+
+            return node;
+        }
+    };
 
 // add to list of possible renderers
-mejs.Renderers.add(HtmlMediaElement);
+    mejs.Renderers.add(HtmlMediaElement);
 
-window.HtmlMediaElement = mejs.HtmlMediaElement = HtmlMediaElement;
+    window.HtmlMediaElement = mejs.HtmlMediaElement = HtmlMediaElement;
 
 })(window, document, window.mejs || {});
