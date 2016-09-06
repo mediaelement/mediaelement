@@ -26,7 +26,7 @@ mejs.html5media = {
 				],
 
 	mediaTypes: [
-				'audio/mp3','audio/ogg','audio/oga','audio/wav','audio/mpeg'
+				'audio/mp3','audio/ogg','audio/oga','audio/wav','audio/mpeg', 'audio/mp4'
 				,'video/mp4','video/webm','video/ogg'
 				]
 };
