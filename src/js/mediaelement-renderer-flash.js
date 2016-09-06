@@ -351,8 +351,8 @@ if (hasFlash) {
 	};
 	mejs.Renderers.add(FlashMediaElementVideoRenderer);
 
-	// HLS Streaming (if browser doesn't support hls.js library)
-	if (!mejs.MediaFeatures.canSupportHls) {
+	// HLS Streaming (if browser doesn't support hls "natively")
+	if (!mejs.MediaFeatures.supportsHls) {
 
 		mejs.Utils.typeChecks.push(function(url) {
 
