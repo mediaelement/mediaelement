@@ -725,10 +725,6 @@ mejs.HtmlMediaElementShim = {
 				} else if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
 					mejs.YouTubeApi.createFlash(youtubeSettings, options);
 				}
-<<<<<<< HEAD
-
-=======
->>>>>>> upstream/master
 				break;
 
 			// DEMO Code. Does NOT work.
@@ -745,15 +741,6 @@ mejs.HtmlMediaElementShim = {
 
 						player.playVideo = function() {
 							player.api( 'play' );
-<<<<<<< HEAD
-						}
-						player.stopVideo = function() {
-							player.api( 'unload' );
-						}
-						player.pauseVideo = function() {
-							player.api( 'pause' );
-						}
-=======
 						};
 						player.stopVideo = function() {
 							player.api( 'unload' );
@@ -761,7 +748,6 @@ mejs.HtmlMediaElementShim = {
 						player.pauseVideo = function() {
 							player.api( 'pause' );
 						};
->>>>>>> upstream/master
 						player.seekTo = function( seconds ) {
 							player.api( 'seekTo', seconds );
 						};
@@ -780,11 +766,7 @@ mejs.HtmlMediaElementShim = {
 						// parity with YT player
 						player.getPlayerState = function() {
 							return playerState;
-<<<<<<< HEAD
-						}
-=======
 						};
->>>>>>> upstream/master
 
 						function createEvent(player, pluginMediaElement, eventName, e) {
 							var event = {
