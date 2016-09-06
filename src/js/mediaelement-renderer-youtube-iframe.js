@@ -1,4 +1,4 @@
-(function(win, doc, shimi, undef) {
+(function(win, doc, mejs, undef) {
 
 // register youtube type
 mejs.Utils.typeChecks.push(function(url) {
@@ -13,7 +13,7 @@ mejs.Utils.typeChecks.push(function(url) {
 });
 
 // YouTube Flash and Iframe API
-YouTubeApi = {
+var YouTubeApi = {
 	isIframeStarted: false,
 	isIframeLoaded: false,
 
@@ -53,7 +53,7 @@ YouTubeApi = {
 
 		console.log('creating iframe', settings);
 
-		var player = new YT.Player(settings.containerId, settings);
+		return new YT.Player(settings.containerId, settings);
 	},
 
 	// src
@@ -106,13 +106,11 @@ YouTubeApi = {
 			return null;
 		}
 
-		var youTubeId = "",
-			parts = url.split('?');
+		var parts = url.split('?');
 
 		url = parts[0];
-		youTubeId = url.substring(url.lastIndexOf('/')+1);
 
-		return youTubeId;
+		return url.substring(url.lastIndexOf('/')+1);
 	}
 };
 
@@ -120,9 +118,9 @@ YouTubeApi = {
 window['onYouTubePlayerAPIReady'] = function() {
 	console.log('onYouTubePlayerAPIReady');
 	YouTubeApi.iFrameReady();
-}
+};
 
-YouTubeIframeRenderer = {
+var YouTubeIframeRenderer = {
 	name: 'youtube_iframe',
 
 	// if Flash is installed, returns an array of video types
@@ -146,14 +144,15 @@ YouTubeIframeRenderer = {
 		// API objects
 		var apiStack = [],
 			youTubeApiReady = false,
-			youTubeApi = null,
 			paused = true,
 			ended = false,
-			youTubeIframe = null;
+			youTubeIframe = null,
+			i,
+			il;
 
 		// wrappers for get/set
 		var props = mejs.html5media.properties;
-		for (var i=0, il=props.length; i<il; i++) {
+		for (i=0, il=props.length; i<il; i++) {
 
 			// wrap in function to retain scope
 			(function(propName) {
@@ -192,10 +191,10 @@ YouTubeIframeRenderer = {
 								var percentLoaded = youTubeApi.getVideoLoadedFraction(),
 									duration = youTubeApi.getDuration();
 								return {
-									start: function(index) {
+									start: function() {
 										return 0;
 									},
-									end: function (index) {
+									end: function () {
 										return percentLoaded * duration;
 									},
 									length: 1
@@ -208,21 +207,25 @@ YouTubeIframeRenderer = {
 					} else {
 						return null;
 					}
-				}
+				};
 
 				youtube['set' + capName] = function(value) {
 					//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
 
-					// send value to Flash
 					if (youTubeApi !== null) {
 
-						// do somethign
+						// do something
 						switch (propName) {
 
 							case 'src':
-								var url = typeof value == 'string' ? value : value[0].src;
+								var url = typeof value == 'string' ? value : value[0].src,
+									videoId = YouTubeApi.getYouTubeId(url);
 
-								youTubeApi.cueVideoById( YouTubeApi.getYouTubeId(url) );
+								if (mediaElement.getAttribute('autoplay')) {
+									youTubeApi.loadVideoById(videoId);
+								} else {
+									youTubeApi.cueVideoById(videoId);
+								}
 								break;
 
 							case 'currentTime':
@@ -262,7 +265,7 @@ YouTubeIframeRenderer = {
 
 		// add wrappers for native methods
 		var methods = mejs.html5media.methods;
-		for (var i=0, il=methods.length; i<il; i++) {
+		for (i=0, il=methods.length; i<il; i++) {
 			(function(methodName) {
 
 				// run the method on the native HTMLMediaElement
@@ -307,10 +310,8 @@ YouTubeIframeRenderer = {
 				videoId: videoId,
 				height: height,
 				width: width,
-				videoId: videoId,
 				playerVars: {controls:0,rel:0, disablekb:1, showinfo:0, modestbranding:0, html5:1, playsinline: 1}, //
 				origin: location.host,
-
 				events: {
 					onReady: function(e) {
 
@@ -319,7 +320,7 @@ YouTubeIframeRenderer = {
 						mediaElement.youTubeState = youTubeState = {paused: true, ended: false};
 
 						// do call stack
-						for (var i=0, il=apiStack.length; i<il; i++) {
+						for (i=0, il=apiStack.length; i<il; i++) {
 
 							var stackItem = apiStack[i];
 
@@ -342,8 +343,8 @@ YouTubeIframeRenderer = {
 
 						var events = ['mouseover','mouseout'];
 
-						for (var i in events) {
-							var eventName = events[i];
+						for (var j in events) {
+							var eventName = events[j];
 							mejs.addEvent(youTubeIframe, eventName, function(e) {
 
 								console.log('youtube iframe', e.type);
@@ -357,7 +358,7 @@ YouTubeIframeRenderer = {
 						// send init events
 						var initEvents = ['rendererready','loadeddata','loadedmetadata','canplay'];
 
-						for (var i=0, il=initEvents.length; i<il; i++) {
+						for (i=0, il=initEvents.length; i<il; i++) {
 							var event = mejs.Utils.createEvent(initEvents[i], youtube);
 							mediaElement.dispatchEvent(event);
 						}
@@ -385,7 +386,7 @@ YouTubeIframeRenderer = {
 							case 1:	// YT.PlayerState.PLAYING
 								events = ['play','playing'];
 								paused = false;
-								ended = false
+								ended = false;
 
 								youtube.startInterval();
 
@@ -432,26 +433,26 @@ YouTubeIframeRenderer = {
 				mediaElement.youTubeState = youTubeState = _youTubeState;
 			}
 
-		}
+		};
 
 		youtube.setSize = function(width, height) {
 			youTubeApi.setSize(width, height);
-		}
+		};
 		youtube.hide = function() {
 			youtube.stopInterval();
 			youtube.pause();
 			if (youTubeIframe) {
 				youTubeIframe.style.display = 'none';
 			}
-		}
+		};
 		youtube.show = function() {
 			if (youTubeIframe) {
 				youTubeIframe.style.display = '';
 			}
-		}
+		};
 		youtube.destroy = function() {
 			youTubeApi.destroy();
-		}
+		};
 		youtube.interval = null;
 
 		youtube.startInterval = function() {
@@ -462,12 +463,12 @@ YouTubeIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 
 			}, 250);
-		}
+		};
 		youtube.stopInterval = function() {
 			if (youtube.interval) {
 				clearInterval(youtube.interval);
 			}
-		}
+		};
 
 		return youtube;
 	}
@@ -475,7 +476,7 @@ YouTubeIframeRenderer = {
 
 // filtering out IE6-8
 // IE6-7 don't have postMessage so don't support <iframe> API
-// IE8 doesn't fire the onReady event, so it doens't work - not sure if Google problem or not.
+// IE8 doesn't fire the onReady event, so it doesn't work - not sure if Google problem or not.
 if (window.postMessage && typeof window.addEventListener) {
 	mejs.Renderers.add(YouTubeIframeRenderer);
 }
