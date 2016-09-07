@@ -8,24 +8,23 @@
 
             var
                 mediaElement = doc.createElement('video'),
-                mediaTypes = mejs.html5media.mediaTypes
+                mediaTypes = mejs.html5media.mediaTypes,
+                isMseSource = type.indexOf('mpegURL') > -1 || type.indexOf('dash+xml') > -1
                 ;
 
-            if (mejs.MediaFeatures.supportsHls) {
-                if (mediaTypes.indexOf('application/x-mpegURL') === -1) {
-                    mediaTypes.push('application/x-mpegURL');
-                }
+            // Test for MSE elements before going for HTML5 default ones
+            if (mejs.MediaFeatures.hasMse && isMseSource) {
 
-                return mediaTypes.indexOf(type) > -1;
-
-            } else if (mejs.MediaFeatures.supportsDash) {
-                if (mediaTypes.indexOf('application/dash+xml') === -1) {
+                if (type.indexOf('mpegURL') > -1 && mediaTypes.indexOf('application/x-mpegURL') === -1) {
+                    mediaTypes.push('application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL');
+                } else if (type.indexOf('dash+xml') > -1) {
                     mediaTypes.push('application/dash+xml');
                 }
 
                 return mediaTypes.indexOf(type) > -1;
+            }
 
-            } else if (mediaElement.canPlayType) {
+            if (mediaElement.canPlayType) {
                 return mediaElement.canPlayType(type).replace(/no/,'');
             } else {
                 return '';
@@ -152,9 +151,7 @@
 
                 } else if (mejs.MediaFeatures.supportsDash && extension === 'mpd') {
 
-                    player = dashjs.MediaPlayer().create();
-                    player.initialize(node, node.src, true);
-
+                    player = dashjs.MediaPlayerFactory.create(node);
                 }
             }
 
