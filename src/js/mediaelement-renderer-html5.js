@@ -16,7 +16,7 @@
             if (mejs.MediaFeatures.hasMse && isMseSource) {
 
                 if (type.indexOf('mpegURL') > -1 && mediaTypes.indexOf('application/x-mpegURL') === -1) {
-                    mediaTypes.push('application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL');
+                    mediaTypes.push('application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL', 'audio/hls', 'video/hls');
                 } else if (type.indexOf('dash+xml') > -1) {
                     mediaTypes.push('application/dash+xml');
                 }
