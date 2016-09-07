@@ -335,7 +335,8 @@ if (hasFlash) {
 		name: 'flash_video',
 
 		canPlayType: function(type) {
-			var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp'];
+			var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'video/3gpp',
+				'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
 
 			return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 		},
