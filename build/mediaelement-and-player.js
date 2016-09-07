@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.22.1';
+mejs.version = '2.23.0';
 
 
 // player number (for missing, same id attr)
@@ -883,7 +883,7 @@ mejs.PluginMediaElement.prototype = {
 		if (this.hasAttribute(name)) {
 			return this.attributes[name];
 		}
-		return '';
+		return null;
 	},
 	setAttribute: function(name, value){
 		this.attributes[name] = value;
@@ -944,6 +944,9 @@ mejs.MediaElementDefaults = {
 	timerRate: 250,
 	// initial volume for player
 	startVolume: 0.8,
+	// custom error message in case media cannot be played; otherwise, Download File
+	// link will be displayed
+	customError: "",
 	success: function () { },
 	error: function () { }
 };
@@ -1282,7 +1285,7 @@ mejs.HtmlMediaElementShim = {
 			initVars;
 
 		// copy tagName from html media element
-		pluginMediaElement.tagName = htmlMediaElement.tagName
+		pluginMediaElement.tagName = htmlMediaElement.tagName;
 
 		// copy attributes from html media element to plugin media element
 		for (var i = 0; i < htmlMediaElement.attributes.length; i++) {
@@ -1513,7 +1516,6 @@ mejs.HtmlMediaElementShim = {
 				} else if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
 					mejs.YouTubeApi.createFlash(youtubeSettings, options);
 				}
-				
 				break;
 			
 			// DEMO Code. Does NOT work.
@@ -1530,19 +1532,19 @@ mejs.HtmlMediaElementShim = {
 		
 						player.playVideo = function() {
 							player.api( 'play' );
-						} 
+						};
 						player.stopVideo = function() {
 							player.api( 'unload' );
-						} 
+						};
 						player.pauseVideo = function() {
 							player.api( 'pause' );
-						} 
+						};
 						player.seekTo = function( seconds ) {
 							player.api( 'seekTo', seconds );
-						}
+						};
 						player.setVolume = function( volume ) {
 							player.api( 'setVolume', volume );
-						}
+						};
 						player.setMuted = function( muted ) {
 							if( muted ) {
 								player.lastVolume = player.api( 'getVolume' );
@@ -1551,11 +1553,11 @@ mejs.HtmlMediaElementShim = {
 								player.api( 'setVolume', player.lastVolume );
 								delete player.lastVolume;
 							}
-						}
+						};
 						// parity with YT player
 						player.getPlayerState = function() {
 							return playerState;
-						}			
+						};
 
 						function createEvent(player, pluginMediaElement, eventName, e) {
 							var event = {
@@ -1701,14 +1703,14 @@ mejs.YouTubeApi = {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: {controls:0,wmode:'transparent'},
+			playerVars: {controls:0, wmode:'transparent'},
 			events: {
-				'onReady': function() {
+				'onReady': function(e) {
 					
 					// wrapper to match
 					player.setVideoSize = function(width, height) {
 						player.setSize(width, height);
-					}
+					};
 					
 					// hook up iframe object to MEjs
 					settings.pluginMediaElement.pluginApi = player;
@@ -1716,11 +1718,17 @@ mejs.YouTubeApi = {
 					
 					// init mejs
 					pluginMediaElement.success(pluginMediaElement, pluginMediaElement.pluginElement);
+
+					mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'canplay');
 					
 					// create timer
 					setInterval(function() {
 						mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
-					}, 250);					
+					}, 250);
+
+					if (typeof pluginMediaElement.attributes.autoplay !== 'undefined') {
+						player.playVideo();
+					}
 				},
 				'onStateChange': function(e) {
 					
@@ -2137,7 +2145,7 @@ if (typeof jQuery != 'undefined') {
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-				autoRewind: true,
+		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
 
@@ -2172,6 +2180,12 @@ if (typeof jQuery != 'undefined') {
 		hideVideoControlsOnLoad: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
+		// Time in ms to hide controls
+		controlsTimeoutDefault: 1500,
+		// Time in ms to trigger the timer when mouse moves
+		controlsTimeoutMouseEnter: 2500,
+		// Time in ms to trigger the timer when mouse leaves
+		controlsTimeoutMouseLeave: 1000,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -2563,7 +2577,7 @@ if (typeof jQuery != 'undefined') {
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended)
 				return;
 
 			if (doAnimation) {
@@ -2606,7 +2620,7 @@ if (typeof jQuery != 'undefined') {
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : 1500;
+			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -2702,7 +2716,7 @@ if (typeof jQuery != 'undefined') {
 				// controls fade
 				if (t.isVideo) {
 
-					if (mejs.MediaFeatures.hasTouch) {
+					if (mejs.MediaFeatures.hasTouch && !t.options.alwaysShowControls) {
 
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
@@ -2749,7 +2763,7 @@ if (typeof jQuery != 'undefined') {
 									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
@@ -2759,14 +2773,14 @@ if (typeof jQuery != 'undefined') {
 										t.showControls();
 									}
 									if (!t.options.alwaysShowControls) {
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
 							.bind('mouseleave', function () {
 								if (t.controlsEnabled) {
 									if (!t.media.paused && !t.options.alwaysShowControls) {
-										t.startControlsTimer(1000);
+										t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 									}
 								}
 							});
@@ -2844,7 +2858,10 @@ if (typeof jQuery != 'undefined') {
 				}, false);
 
 				// resize on the first play
-				t.media.addEventListener('loadedmetadata', function(e) {
+				t.media.addEventListener('loadedmetadata', function() {
+
+					mejs.Utility.calculateTimeFormat(t.duration, t.options, t.options.framesPerSecond || 25);
+
 					if (t.updateDuration) {
 						t.updateDuration();
 					}
@@ -3453,7 +3470,52 @@ if (typeof jQuery != 'undefined') {
 			return this.media.volume;
 		},
 		setSrc: function(src) {
-			this.media.setSrc(src);
+			var
+				t = this;
+
+			// If using YouTube, its API is different to load a specific source
+			if (t.media.pluginType === 'youtube') {
+				var videoId;
+
+				if (typeof src !== 'string') {
+					var i, media;
+
+					for (i=0; i<src.length; i++) {
+						media = src[i];
+						if (this.canPlayType(media.type)) {
+							src = media.src;
+							break;
+						}
+					}
+				}
+
+				// youtu.be url from share button
+				if (src.lastIndexOf('youtu.be') !== -1) {
+					videoId = src.substr(src.lastIndexOf('/') + 1);
+
+					if (videoId.indexOf('?') !== -1) {
+						videoId = videoId.substr(0, videoId.indexOf('?'));
+					}
+
+				} else {
+					// https://www.youtube.com/watch?v=
+					var videoIdMatch = src.match(/[?&]v=([^&#]+)|&|#|$/);
+
+					if (videoIdMatch) {
+						videoId = videoIdMatch[1];
+					}
+				}
+
+				if (t.media.getAttribute('autoplay') !== null) {
+					t.media.pluginApi.loadVideoById(videoId);
+				} else {
+					t.media.pluginApi.cueVideoById(videoId);
+				}
+
+			}
+			else {
+				t.media.setSrc(src);
+			}
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
@@ -3694,7 +3756,9 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		progessHelpText: mejs.i18n.t(
+		// Enable tooltip that shows time in progress bar
+		enableProgressTooltip: true,
+		progressHelpText: mejs.i18n.t(
 		'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.')
 	});
 
@@ -3702,41 +3766,49 @@ if (typeof jQuery != 'undefined') {
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function(player, controls, layers, media) {
 
+			var
+				t = this,
+				mouseIsDown = false,
+				mouseIsOver = false,
+				lastKeyPressTime = 0,
+				startedPaused = false,
+				autoRewindInitial = player.options.autoRewind,
+				tooltip = player.options.enableProgressTooltip ? '<span class="mejs-time-float">' +
+					'<span class="mejs-time-float-current">00:00</span>' +
+					'<span class="mejs-time-float-corner"></span>' +
+				'</span>' : "";
+
 			$('<div class="mejs-time-rail">' +
 				'<span  class="mejs-time-total mejs-time-slider">' +
-				//'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
+				//'<span class="mejs-offscreen">' + this.options.progressHelpText + '</span>' +
 					'<span class="mejs-time-buffering"></span>' +
 					'<span class="mejs-time-loaded"></span>' +
 					'<span class="mejs-time-current"></span>' +
 					'<span class="mejs-time-handle"></span>' +
-					'<span class="mejs-time-float">' +
-						'<span class="mejs-time-float-current">00:00</span>' +
-						'<span class="mejs-time-float-corner"></span>' +
-					'</span>' +
+					 tooltip +
 				'</span>' +
 			'</div>')
 				.appendTo(controls);
 			controls.find('.mejs-time-buffering').hide();
 
-			var 
-				t = this,
-				total = controls.find('.mejs-time-total'),
-				loaded  = controls.find('.mejs-time-loaded'),
-				current  = controls.find('.mejs-time-current'),
-				handle  = controls.find('.mejs-time-handle'),
-				timefloat  = controls.find('.mejs-time-float'),
-				timefloatcurrent  = controls.find('.mejs-time-float-current'),
-                slider = controls.find('.mejs-time-slider'),
-				handleMouseMove = function (e) {
-					
-                    var offset = total.offset(),
-						width = total.width(),
+			t.total = controls.find('.mejs-time-total');
+			t.loaded  = controls.find('.mejs-time-loaded');
+			t.current  = controls.find('.mejs-time-current');
+			t.handle  = controls.find('.mejs-time-handle');
+			t.timefloat  = controls.find('.mejs-time-float');
+			t.timefloatcurrent  = controls.find('.mejs-time-float-current');
+			t.slider = controls.find('.mejs-time-slider');
+
+			var handleMouseMove = function (e) {
+
+					var offset = t.total.offset(),
+						width = t.total.width(),
 						percentage = 0,
 						newTime = 0,
 						pos = 0,
-                        x;
-                    
-                    // mouse or touch position relative to the object
+						x;
+
+					// mouse or touch position relative to the object
 					if (e.originalEvent && e.originalEvent.changedTouches) {
 						x = e.originalEvent.changedTouches[0].pageX;
 					} else if (e.changedTouches) { // for Zepto
@@ -3751,7 +3823,7 @@ if (typeof jQuery != 'undefined') {
 						} else if (x > width + offset.left) {
 							x = width + offset.left;
 						}
-						
+
 						pos = x - offset.left;
 						percentage = (pos / width);
 						newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
@@ -3763,53 +3835,47 @@ if (typeof jQuery != 'undefined') {
 
 						// position floating time box
 						if (!mejs.MediaFeatures.hasTouch) {
-								timefloat.css('left', pos);
-								timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options) );
-								timefloat.show();
+							t.timefloat.css('left', pos);
+							t.timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options) );
+							t.timefloat.show();
 						}
 					}
 				},
-				mouseIsDown = false,
-				mouseIsOver = false,
-				lastKeyPressTime = 0,
-				startedPaused = false,
-				autoRewindInitial = player.options.autoRewind;
-            // Accessibility for slider
-            var updateSlider = function (e) {
+				// Accessibility for slider
+				updateSlider = function (e) {
 
-				var seconds = media.currentTime,
-					timeSliderText = mejs.i18n.t('Time Slider'),
-					time = mejs.Utility.secondsToTimeCode(seconds, player.options),
-					duration = media.duration;
+					var seconds = media.currentTime,
+						timeSliderText = mejs.i18n.t('Time Slider'),
+						time = mejs.Utility.secondsToTimeCode(seconds, player.options),
+						duration = media.duration;
 
-				slider.attr({
-					'aria-label': timeSliderText,
-					'aria-valuemin': 0,
-					'aria-valuemax': duration,
-					'aria-valuenow': seconds,
-					'aria-valuetext': time,
-					'role': 'slider',
-					'tabindex': 0
-				});
+					t.slider.attr({
+						'aria-label': timeSliderText,
+						'aria-valuemin': 0,
+						'aria-valuemax': duration,
+						'aria-valuenow': seconds,
+						'aria-valuetext': time,
+						'role': 'slider',
+						'tabindex': 0
+					});
 
-			};
+				},
+				restartPlayer = function () {
+					var now = new Date();
+					if (now - lastKeyPressTime >= 1000) {
+						media.play();
+					}
+				};
 
-				var restartPlayer = function () {
-				var now = new Date();
-				if (now - lastKeyPressTime >= 1000) {
-					media.play();
-				}
-			};
-
-			slider.bind('focus', function (e) {
+			t.slider.bind('focus', function (e) {
 				player.options.autoRewind = false;
 			});
 
-			slider.bind('blur', function (e) {
+			t.slider.bind('blur', function (e) {
 				player.options.autoRewind = autoRewindInitial;
 			});
 
-			slider.bind('keydown', function (e) {
+			t.slider.bind('keydown', function (e) {
 
 				if ((new Date() - lastKeyPressTime) >= 1000) {
 					startedPaused = media.paused;
@@ -3822,26 +3888,26 @@ if (typeof jQuery != 'undefined') {
 					seekBackward = player.options.defaultSeekBackwardInterval(media);
 
 				switch (keyCode) {
-				case 37: // left
-				case 40: // Down
-					seekTime -= seekBackward;
-					break;
-				case 39: // Right
-				case 38: // Up
-					seekTime += seekForward;
-					break;
-				case 36: // Home
-					seekTime = 0;
-					break;
-				case 35: // end
-					seekTime = duration;
-					break;
-				case 32: // space
-				case 13: // enter
-					media.paused ? media.play() : media.pause();
-					return;
-				default:
-					return;
+					case 37: // left
+					case 40: // Down
+						seekTime -= seekBackward;
+						break;
+					case 39: // Right
+					case 38: // Up
+						seekTime += seekForward;
+						break;
+					case 36: // Home
+						seekTime = 0;
+						break;
+					case 35: // end
+						seekTime = duration;
+						break;
+					case 32: // space
+					case 13: // enter
+						media.paused ? media.play() : media.pause();
+						return;
+					default:
+						return;
 				}
 
 				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
@@ -3864,7 +3930,7 @@ if (typeof jQuery != 'undefined') {
 
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
-			total
+			t.total
 				.bind('mousedown touchstart', function (e) {
 					// only handle left clicks or touch
 					if (e.which === 1 || e.which === 0) {
@@ -3875,7 +3941,9 @@ if (typeof jQuery != 'undefined') {
 						});
 						t.globalBind('mouseup.dur touchend.dur', function (e) {
 							mouseIsDown = false;
-							timefloat.hide();
+							if (typeof t.timefloat !== 'undefined') {
+								t.timefloat.hide();
+							}
 							t.globalUnbind('.dur');
 						});
 					}
@@ -3885,15 +3953,17 @@ if (typeof jQuery != 'undefined') {
 					t.globalBind('mousemove.dur', function(e) {
 						handleMouseMove(e);
 					});
-					if (!mejs.MediaFeatures.hasTouch) {
-						timefloat.show();
+					if (typeof t.timefloat !== 'undefined' && !mejs.MediaFeatures.hasTouch) {
+						t.timefloat.show();
 					}
 				})
 				.bind('mouseleave',function(e) {
 					mouseIsOver = false;
 					if (!mouseIsDown) {
 						t.globalUnbind('.dur');
-						timefloat.hide();
+						if (typeof t.timefloat !== 'undefined') {
+							t.timefloat.hide();
+						}
 					}
 				});
 
@@ -3909,17 +3979,11 @@ if (typeof jQuery != 'undefined') {
 				player.setCurrentRail(e);
 				updateSlider(e);
 			}, false);
-			
-			t.container.on('controlsresize', function() {
-				player.setProgressRail();
-				player.setCurrentRail();
+
+			t.container.on('controlsresize', function(e) {
+				player.setProgressRail(e);
+				player.setCurrentRail(e);
 			});
-			
-			// store for later use
-			t.loaded = loaded;
-			t.total = total;
-			t.current = current;
-			t.handle = handle;
 		},
 		setProgressRail: function(e) {
 
@@ -4338,7 +4402,13 @@ if (typeof jQuery != 'undefined') {
 			}
 			
 			t.container.on('controlsresize', function() {
-				positionVolumeHandle(media.volume);
+				if (media.muted) {
+					positionVolumeHandle(0);
+					mute.removeClass('mejs-mute').addClass('mejs-unmute');
+				} else {
+					positionVolumeHandle(media.volume);
+					mute.removeClass('mejs-unmute').addClass('mejs-mute');
+				}
 			});
 		}
 	});
@@ -4378,7 +4448,7 @@ if (typeof jQuery != 'undefined') {
 			player.isInIframe = (window.location != window.parent.location);	
 		
 			// detect on start
-			media.addEventListener('play', function() { player.detectFullscreenMode(); });
+			media.addEventListener('loadstart', function() { player.detectFullscreenMode(); });
 				
 			// build button
 			var t = this,
@@ -4989,7 +5059,8 @@ if (typeof jQuery != 'undefined') {
 			var t = this,
 				attr = t.options.tracksAriaLive ?
 					'role="log" aria-live="assertive" aria-atomic="false"' : '',
-				i;
+				i,
+				kind;
 
 			if (t.domNode.textTracks) { // if browser will do native captions, prefer mejs captions, loop through tracks and hide
 				for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
@@ -5022,7 +5093,8 @@ if (typeof jQuery != 'undefined') {
 
 			var subtitleCount = 0;
 			for (i=0; i<player.tracks.length; i++) {
-				if (player.tracks[i].kind == 'subtitles') {
+				kind = player.tracks[i].kind;
+				if (kind === 'subtitles' || kind === 'captions') {
 					subtitleCount++;
 				}
 			}
@@ -5080,7 +5152,8 @@ if (typeof jQuery != 'undefined') {
 
 			// add to list
 			for (i=0; i<player.tracks.length; i++) {
-				if (player.tracks[i].kind == 'subtitles') {
+				kind = player.tracks[i].kind;
+				if (kind === 'subtitles' || kind === 'captions') {
 					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
@@ -5088,20 +5161,20 @@ if (typeof jQuery != 'undefined') {
 			// start loading tracks
 			player.loadNextTrack();
 
-			media.addEventListener('timeupdate',function(e) {
+			media.addEventListener('timeupdate',function() {
 				player.displayCaptions();
 			}, false);
 
 			if (player.options.slidesSelector !== '') {
 				player.slidesContainer = $(player.options.slidesSelector);
 
-				media.addEventListener('timeupdate',function(e) {
+				media.addEventListener('timeupdate',function() {
 					player.displaySlides();
 				}, false);
 
 			}
 
-			media.addEventListener('loadedmetadata', function(e) {
+			media.addEventListener('loadedmetadata', function() {
 				player.displayChapters();
 			}, false);
 
@@ -5199,7 +5272,7 @@ if (typeof jQuery != 'undefined') {
 					after();
 
 					if (track.kind == 'chapters') {
-						t.media.addEventListener('play', function(e) {
+						t.media.addEventListener('play', function() {
 							if (t.media.duration > 0) {
 								t.displayChapters(track);
 							}
@@ -5281,8 +5354,9 @@ if (typeof jQuery != 'undefined') {
 
 			// check if any subtitles
 			if (t.options.hideCaptionsButtonWhenEmpty) {
-				for (i=0; i<t.tracks.length; i++) {
-					if (t.tracks[i].kind == 'subtitles' && t.tracks[i].isLoaded) {
+				for (var i=0; i<t.tracks.length; i++) {
+					var kind = t.tracks[i].kind;
+					if ((kind === 'subtitles' || kind === 'captions') && t.tracks[i].isLoaded) {
 						hasSubtitles = true;
 						break;
 					}
@@ -5614,7 +5688,6 @@ if (typeof jQuery != 'undefined') {
 					entries.times.push(_temp_times);
 					text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 					entries.text.push(text);
-					if (entries.times.start === 0) entries.times.start = 2;
 				}
 				return entries;
 			}
