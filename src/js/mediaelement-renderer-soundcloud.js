@@ -176,10 +176,9 @@ SoundCloudIframeRenderer = {
 				sc['set' + capName] = function(value) {
 					//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
 
-					// send value to Flash
 					if (scPlayer !== null) {
 
-						// do somethign
+						// do something
 						switch (propName) {
 
 							case 'src':
