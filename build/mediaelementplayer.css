@@ -723,10 +723,12 @@
 }
 
 .mejs-captions-text {
-	padding: 3px 5px;
+	padding: 0;
 	background: url("background.png");
 	background: rgba(20, 20, 20, 0.5);
 	white-space: pre-wrap;
+	-webkit-box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
+	box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
 }
 /* End: Track (Captions and Chapters) */
 

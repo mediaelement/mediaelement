@@ -1,5 +1,22 @@
 ### Version History
 
+*2.23.0 (2016/09/06)*
+
+* Changed way to detect fullscreen method by using _onloadstart_ event (https://github.com/johndyer/mediaelement/pull/1815) @ale-grosselle
+* Preserve volume muted when resizing player (https://github.com/johndyer/mediaelement/pull/1813) @ron666
+* Allow double lines of captions, added missing _captions_ type in tracks workflow and minor typo fix (https://github.com/johndyer/mediaelement/pull/1800) @ron666
+* Touch devices controls fix for #1820 (https://github.com/johndyer/mediaelement/issues/603) @ron666
+* Show controls when video is paused or ended (https://github.com/johndyer/mediaelement/pull/1786) @ron666
+* Progress bar variables set properly to fix #1600 (https://github.com/johndyer/mediaelement/pull/1824) @ron666
+* Configurable controls visibility time (https://github.com/johndyer/mediaelement/pull/1787) @ron666
+* Added delay when hovering out of control button (https://github.com/johndyer/mediaelement/pull/1615) @schrolli
+* Added new Grunt task to compile all html5 elements including console messages (https://github.com/johndyer/mediaelement/pull/1614) @schrolli
+* Added call to format time properly when metadata has been loaded (https://github.com/johndyer/mediaelement/pull/1826) @ron666
+* Added time tracker tooltip configuration to enable/disable it (#1692) (https://github.com/johndyer/mediaelement/pull/1830) @ron666
+* Set source properly on YouTube videos properly per @dazweeja's comments (https://github.com/johndyer/mediaelement/pull/1829) @ron666
+* Documentation improvements and addition of TODO list (https://github.com/johndyer/mediaelement/pull/1805) @ron666
+* Added missing error message configuration in documentation and in player settings
+
 *2.22.1 (2016/08/18)*
 
 * Fix wrong parameter sent to defaultSeekForwardInterval and defaultSeekBackwardInterval options (https://github.com/johndyer/mediaelement/pull/1784) @marjune163
@@ -20,7 +37,7 @@
 * Update Flash HLS to accept audio (https://github.com/johndyer/mediaelement/pull/1763) @ale-grosselle
 * Updated Korean translation (#1743) @Jinkwon 
 * Improve video ID parsing for YouTube URLs (https://github.com/johndyer/mediaelement/pull/1774) @ocean90
-* Removed extrainous call to removePlugin @johndyer 
+* Removed extraneous call to removePlugin @johndyer 
 
 *2.21.2 (2016/05/08)*
 
