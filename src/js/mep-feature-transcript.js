@@ -28,7 +28,8 @@
                 languageSelect = [];
 
             // Create transcript area
-            player.transcript = $('<div class="mejs-transcript"><div class="mejs-transcript-area"></div><div class="mejs-clear"></div></div>')
+            t.transcript = player.transcript =
+                $('<div class="mejs-transcript"><div class="mejs-transcript-area"></div><div class="mejs-clear"></div></div>')
                 .insertAfter(scope);
 
             // Only create toggle list of more than 1 language is available
@@ -59,20 +60,17 @@
                     var lines = "";
                     // parse the loaded file
                     if (typeof d === 'string' && (/<tt\s+xml/ig).exec(d)) {
-                        lines = mejs.TrackFormatParser.dfxp.parse(d);
+                        t.selectedTrack.entries = mejs.TrackFormatParser.dfxp.parse(d);
                     } else {
-                        lines = mejs.TrackFormatParser.webvtt.parse(d);
+                        t.selectedTrack.entries = mejs.TrackFormatParser.webvtt.parse(d);
                     }
 
-
                     player.transcript.find('.mejs-transcript-area').html('<div class="mejs-transcript-line">' +
-                        lines.text.join('</div><div class="mejs-transcript-line">') + '</div>');
+                        t.selectedTrack.entries.text.join('</div><div class="mejs-transcript-line">') + '</div>');
                 },
                 error: function() {
                 }
             });
-
-            t.transcriptText = player.transcript.find('.mejs-transcript-line');
 
             // Update transcript position
             media.addEventListener('timeupdate',function() {
@@ -90,16 +88,15 @@
 
             if (track !== null) {
                 for (var i = 0, total = track.entries.times.length; i < total; i++) {
+                    var currentLine = t.transcript.find('.mejs-transcript-line:eq(' + i + ')');
                     if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop) {
-                        // Set the line before the timecode as a class so the cue can be targeted if needed
-                        t.captionsText.html(track.entries.text[i]).attr('class', 'mejs-captions-text ' + (track.entries.times[i].identifier || ''));
-                        t.captions.show().height(0);
-                        return; // exit out if one is visible;
+                        // Scroll to the position
+                        currentLine.addClass('current').attr('tabindex', 1).focus();
+                        return;
+                    } else {
+                        currentLine.removeClass('current').removeAttr('tabindex').blur();
                     }
                 }
-                t.captions.hide();
-            } else {
-                t.captions.hide();
             }
         }
     });
