@@ -32,9 +32,9 @@
 						var self = $(this);
 						hoverTimeout = setTimeout(function () {
 							self.find('.mejs-sourcechooser-selector')
-							.removeClass('mejs-offscreen')
-							.attr('aria-expanded', 'true')
-							.attr('aria-hidden', 'false');
+								.addClass('mejs-offscreen')
+								.attr('aria-expanded', 'false')
+								.attr('aria-hidden', 'true');
 						}, 500);
 					})
 
