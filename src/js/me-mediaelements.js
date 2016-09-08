@@ -315,7 +315,7 @@ mejs.PluginMediaElement.prototype = {
 		if (this.hasAttribute(name)) {
 			return this.attributes[name];
 		}
-		return '';
+		return null;
 	},
 	setAttribute: function(name, value){
 		this.attributes[name] = value;
