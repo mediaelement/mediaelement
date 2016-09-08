@@ -47,10 +47,30 @@
                     .prependTo(player.transcript);
             }
 
-            t.selectedTrack = player.tracks[0];
-
             // Mute video completely to favor transcript
             media.setMuted(true);
+
+            t.loadTranscript(player.tracks[0]);
+
+            player.transcriptToggle.on('change', function() {
+                for (var i = 0, total = player.tracks.length; i < total && total > 1; i++) {
+                    if (player.tracks[i].srclang === $(this).val()) {
+                        t.loadTranscript(player.tracks[i]);
+                    }
+                }
+
+            });
+
+            // Update transcript position
+            media.addEventListener('timeupdate',function() {
+                t.updateTranscriptPosition();
+            }, false);
+        },
+        loadTranscript: function(track) {
+
+            var t = this;
+            
+            t.selectedTrack = track;
 
             // Build content of transcript area with first caption content
             $.ajax({
@@ -65,17 +85,12 @@
                         t.selectedTrack.entries = mejs.TrackFormatParser.webvtt.parse(d);
                     }
 
-                    player.transcript.find('.mejs-transcript-area').html('<div class="mejs-transcript-line">' +
+                    t.transcript.find('.mejs-transcript-area').html('<div class="mejs-transcript-line">' +
                         t.selectedTrack.entries.text.join('</div><div class="mejs-transcript-line">') + '</div>');
                 },
                 error: function() {
                 }
             });
-
-            // Update transcript position
-            media.addEventListener('timeupdate',function() {
-                t.updateTranscriptPosition();
-            }, false);
         },
         updateTranscriptPosition: function() {
             if (typeof this.tracks === 'undefined') {
