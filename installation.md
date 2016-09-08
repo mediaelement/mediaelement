@@ -67,7 +67,7 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 }
 
 .mejs-controls .mejs-button button {
-    background: transparent url("/path/to/controls.svg") no-repeat;
+    background-image: url("/path/to/controls.svg");
 }
 </style>
 ```
