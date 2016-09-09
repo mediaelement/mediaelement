@@ -13,27 +13,61 @@
 
 			player.sourcechooserButton =
 				$('<div class="mejs-button mejs-sourcechooser-button">'+
-					'<button type="button" aria-controls="' + t.id + '" title="' + t.options.sourcechooserText + '" aria-label="' + t.options.sourcechooserText + '"></button>'+
-					'<div class="mejs-sourcechooser-selector mejs-offscreen">'+
-						'<ul>'+
-						'</ul>'+
-					'</div>'+
-				'</div>')
+						'<button type="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + t.options.sourcechooserText + '" aria-label="' + t.options.sourcechooserText + '"></button>'+
+						'<div class="mejs-sourcechooser-selector mejs-offscreen" role="menu" aria-expanded="false" aria-hidden="true">'+
+							'<ul>'+
+							'</ul>'+
+						'</div>'+
+					'</div>')
 					.appendTo(controls)
 
 					// hover
 					.hover(function() {
 						clearTimeout(hoverTimeout);
-						$(this).find('.mejs-sourcechooser-selector').removeClass('mejs-offscreen');
+						$(this).find('.mejs-sourcechooser-selector')
+							.removeClass('mejs-offscreen')
+							.attr('aria-expanded', 'true')
+							.attr('aria-hidden', 'false');
 					}, function() {
 						var self = $(this);
 						hoverTimeout = setTimeout(function () {
-							self.find('.mejs-sourcechooser-selector').addClass('mejs-offscreen');
+							self.find('.mejs-sourcechooser-selector')
+								.addClass('mejs-offscreen')
+								.attr('aria-expanded', 'false')
+								.attr('aria-hidden', 'true');
 						}, 500);
 					})
 
-					// handle clicks to the language radio buttons
+					// keyboard menu activation
+					.on('keydown', function (e) {
+					  var keyCode = e.keyCode;
+
+					  switch (keyCode) {
+							case 32: // space
+								$(this).find('.mejs-sourcechooser-selector')
+									.removeClass('mejs-offscreen')
+									.attr('aria-expanded', 'true')
+									.attr('aria-hidden', 'false')
+									.find('input[type=radio]:checked').first().focus();
+								break;
+							case 27: // esc
+								$(this).find('.mejs-sourcechooser-selector')
+									.addClass('mejs-offscreen')
+									.attr('aria-expanded', 'false')
+									.attr('aria-hidden', 'true');
+								$(this).find('button').focus();
+								break;
+							default:
+								return true;
+								}
+							})
+
+					// handle clicks to the source radio buttons
 					.delegate('input[type=radio]', 'click', function() {
+						// set aria states
+						$(this).attr('aria-selected', true).attr('checked', 'checked');
+						$(this).closest('.mejs-sourcechooser-selector').find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
+
 						var src = this.value;
 
 						if (media.currentSrc != src) {
@@ -76,9 +110,9 @@
 
 			t.sourcechooserButton.find('ul').append(
 				$('<li>'+
-					'<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + ' />'+
-					'<label for="' + t.id + '_sourcechooser_' + label + type + '">' + label + ' (' + type + ')</label>'+
-				'</li>')
+						'<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + 'aria-selected="' + isCurrent + '"' + ' />'+
+						'<label for="' + t.id + '_sourcechooser_' + label + type + '">' + label + ' (' + type + ')</label>'+
+					'</li>')
 			);
 
 			t.adjustSourcechooserBox();
