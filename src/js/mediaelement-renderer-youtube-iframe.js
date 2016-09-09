@@ -304,13 +304,14 @@ var YouTubeIframeRenderer = {
 			width = mediaElement.originalNode.width,
 			videoId = YouTubeApi.getYouTubeId( mediaFiles[0].src ),
 			//videoId = 'xmWuqd5y77M',
+			defaultVars = {controls:0,rel:0, disablekb:1, showinfo:0, modestbranding:0, html5:1, playsinline: 1},
 			youtubeSettings = {
 				id: youtube.id,
 				containerId: youtubeContainer.id,
 				videoId: videoId,
 				height: height,
 				width: width,
-				playerVars: {controls:0,rel:0, disablekb:1, showinfo:0, modestbranding:0, html5:1, playsinline: 1}, //
+				playerVars: mejs.Utility.extend({}, defaultVars, youtube.options.youTubeVars),
 				origin: location.host,
 				events: {
 					onReady: function(e) {
