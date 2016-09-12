@@ -1,11 +1,11 @@
 (function(win, doc, mejs, undef) {
 
     /**
-     * Register Vimeo type
+     * Register Vimeo type based on URL structure
      */
     mejs.Utils.typeChecks.push(function(url) {
 
-        url = url.toLowerCase();
+        url = new String(url).toLowerCase();
 
         if (url.indexOf('vimeo') > -1) {
             return 'video/x-vimeo';
@@ -152,6 +152,7 @@
         }
     };
 
+    // Register Vimeo event globally
     window['onVimeoPlayerAPIReady'] = function() {
         vimeoApi.iFrameReady();
     };
@@ -201,8 +202,6 @@
                 // wrap in function to retain scope
                 (function(propName) {
 
-                    // add to flash state that we will store
-
                     var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
                     vimeo['get' + capName] = function() {
@@ -226,11 +225,10 @@
                                     return ended;
 
                                 case 'src':
-                                    return vimeoPlayer.getVideoUrl();
-
-                                case 'loop':
-                                    return vimeoPlayer.getLoop();
-
+                                    vimeoPlayer.getVideoUrl().then(function(url) {
+                                        return url;
+                                    });
+                                    break;
                                 case 'buffered':
                                     return {
                                         start: function() {
@@ -250,7 +248,6 @@
                     };
 
                     vimeo['set' + capName] = function(value) {
-                        //console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
 
                         if (vimeoPlayer !== null) {
 
@@ -262,7 +259,6 @@
                                         videoId = vimeoApi.getVimeoId(url);
 
                                     vimeoPlayer.loadVideo(videoId).then(function() {
-
                                         if (mediaElement.getAttribute('autoplay')) {
                                             vimeoPlayer.play();
                                         }
@@ -274,6 +270,7 @@
 
                                 case 'currentTime':
                                     vimeoPlayer.setCurrentTime(value).then(function() {
+                                        currentTime = value;
                                         mediaElement.dispatchEvent({type:'timeupdate'});
                                     }).catch(function(error) {
                                         vimeoApi.errorHandler(error);
@@ -313,7 +310,6 @@
 
                     // run the method on the Soundcloud API
                     vimeo[methodName] = function() {
-                        console.log('[' + options.prefix + ' ' + methodName + '()]');
 
                         if (vimeoPlayer !== null) {
 
@@ -341,14 +337,10 @@
                 vimeoApiReady = true;
                 mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
 
-                // console.log('Vimeo ready', vimeo.id, vimeoPlayer);
-
                 // do call stack
                 for (i=0, il=apiStack.length; i<il; i++) {
 
                     var stackItem = apiStack[i];
-
-                    console.log('Vimeo stack', stackItem.type);
 
                     if (stackItem.type === 'set') {
                         var propName = stackItem.propName,
@@ -361,65 +353,93 @@
                 }
 
                 vimeoPlayer.on('loaded', function() {
-                    vimeoPlayer.getDuration().then(function(seconds) {
-                        duration = seconds;
 
-                        var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
-                        mediaElement.dispatchEvent(event);
-                    }).catch(function(error) {
-                        vimeoApi.errorHandler(error);
-                    });
-                });
-
-                vimeoPlayer.on('progress', function() {
                     vimeoPlayer.getDuration().then(function(loadProgress) {
+
                         if (duration > 0) {
                             bufferedTime = duration * loadProgress;
                         }
 
-                        var event = mejs.Utils.createEvent('progress', vimeo);
+                        var event = mejs.Utils.createEvent('timeupdate', vimeo);
                         mediaElement.dispatchEvent(event);
+
                     }).catch(function(error) {
                         vimeoApi.errorHandler(error);
                     });
+
                     vimeoPlayer.getDuration().then(function(seconds) {
                         duration = seconds;
 
-                        var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
+                        var event = mejs.Utils.createEvent('loadmetadata', vimeo);
                         mediaElement.dispatchEvent(event);
                     }).catch(function(error) {
                         vimeoApi.errorHandler(error);
                     });
+
                 });
+
+                vimeoPlayer.on('progress', function() {
+
+                    paused = vimeo.mediaElement.getPaused();
+
+                    vimeoPlayer.getDuration().then(function(loadProgress) {
+
+                        if (duration > 0) {
+                            bufferedTime = duration * loadProgress;
+                        }
+
+                        var event = mejs.Utils.createEvent('timeupdate', vimeo);
+                        mediaElement.dispatchEvent(event);
+
+                    }).catch(function(error) {
+                        vimeoApi.errorHandler(error);
+                    });
+
+                    vimeoPlayer.getDuration().then(function(seconds) {
+                        duration = seconds;
+
+                        var event = mejs.Utils.createEvent('loadmetadata', vimeo);
+                        mediaElement.dispatchEvent(event);
+                    }).catch(function(error) {
+                        vimeoApi.errorHandler(error);
+                    });
+
+                });
+
                 vimeoPlayer.on('timeupdate', function() {
-                    paused = false;
+
+                    paused = vimeo.mediaElement.getPaused();
                     ended = false;
 
                     vimeoPlayer.getCurrentTime().then(function(seconds) {
                         currentTime = seconds;
+
                         var event = mejs.Utils.createEvent('timeupdate', vimeo);
                         mediaElement.dispatchEvent(event);
                     });
+
                 });
                 vimeoPlayer.on('play', function() {
+                    paused = false;
+                    ended = false;
+
                     vimeoPlayer.play().then(function() {
-
-                        paused = false;
-                        ended = false;
-
                         event = mejs.Utils.createEvent('play', vimeo);
                         mediaElement.dispatchEvent(event);
+
                     }).catch(function(error) {
                         vimeoApi.errorHandler(error);
                     });
                 });
                 vimeoPlayer.on('pause', function() {
-                    vimeoPlayer.pause().then(function() {
+                    paused = true;
+                    ended = false;
 
-                        paused = true;
+                    vimeoPlayer.pause().then(function() {
 
                         event = mejs.Utils.createEvent('pause', vimeo);
                         mediaElement.dispatchEvent(event);
+
                     }).catch(function(error) {
                         vimeoApi.errorHandler(error);
                     });
@@ -441,18 +461,22 @@
                 }
             };
 
-            // CREATE Vimeo
             var
                 height = mediaElement.originalNode.height,
                 width = mediaElement.originalNode.width,
                 vimeoContainer = doc.createElement('iframe')
                 ;
 
-            vimeoContainer.id = vimeo.id;
-            vimeoContainer.width = width;
-            vimeoContainer.height = height;
-            vimeoContainer.frameBorder = 0;
-            vimeoContainer.src = mediaFiles[0].src;
+            // Create Vimeo <iframe>
+            vimeoContainer.setAttribute('id', vimeo.id);
+            vimeoContainer.setAttribute('width', width);
+            vimeoContainer.setAttribute('height', height);
+            vimeoContainer.setAttribute('frameBorder', 0);
+            vimeoContainer.setAttribute('src', mediaFiles[0].src);
+            vimeoContainer.setAttribute('webkitallowfullscreen', '');
+            vimeoContainer.setAttribute('mozallowfullscreen', '');
+            vimeoContainer.setAttribute('allowfullscreen', '');
+
             mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
             mediaElement.originalNode.style.display = 'none';
 
@@ -465,12 +489,12 @@
             vimeo.hide = function() {
                 vimeo.pause();
                 if (vimeoPlayer) {
-                    vimeoPlayer.style.display = 'none';
+                    vimeoContainer.style.display = 'none';
                 }
             };
             vimeo.show = function() {
                 if (vimeoPlayer) {
-                    vimeoPlayer.style.display = '';
+                    vimeoContainer.style.display = '';
                 }
             };
 
