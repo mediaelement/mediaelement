@@ -143,6 +143,7 @@ var YouTubeIframeRenderer = {
 
 		// API objects
 		var apiStack = [],
+			youTubeApi = null,
 			youTubeApiReady = false,
 			paused = true,
 			ended = false,

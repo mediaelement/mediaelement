@@ -208,7 +208,7 @@ function createPlayer(id) {
 
 	//mejs.Renderers.order = ['flash_video', 'html5'];
 	
-	var player = new MediaElementPlayerSimple(id),
+	var player = new MediaElementPlayerSimple(id, {pluginPath: '../build/'}),
 		mediaElement = player.mediaElement,
 		container = document.getElementById(id + '-container'),
 		uiRendererName = document.getElementById(id + '-renderename');

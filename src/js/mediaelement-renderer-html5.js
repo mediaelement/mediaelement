@@ -17,7 +17,7 @@
 
                 if (type.indexOf('mpegURL') > -1 && mediaTypes.indexOf('application/x-mpegURL') === -1) {
                     mediaTypes.push('application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL', 'audio/hls', 'video/hls');
-                } else if (type.indexOf('dash+xml') > -1) {
+                } else if (type.indexOf('dash+xml') > -1 && mediaTypes.indexOf('application/dash+xml') === -1) {
                     mediaTypes.push('application/dash+xml');
                 }
 
@@ -153,14 +153,15 @@
 
                     player = dashjs.MediaPlayer().create();
 
-                    // set options before initializing player
-                    if (typeof options.dash !== 'undefined' && options.dash.debug === false) {
-                        player.getDebug().setLogToBrowserConsole(false);
-                    }
-
                     var autoplay = mediaElement.originalNode.getAttribute('autoplay');
 
                     player.initialize(node, node.src, autoplay);
+                    player.getDebug().setLogToBrowserConsole(false);
+
+                    // set options before initializing player
+                    // if (typeof options.dash !== 'undefined' && options.dash.debug === true) {
+                    //    player.getDebug().setLogToBrowserConsole(true);
+                    // }
                 }
             }
 
