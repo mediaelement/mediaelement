@@ -93,7 +93,6 @@
          */
         createIframe: function(settings) {
             var player = new Vimeo.Player(settings.iframe);
-            player.loadVideo(settings.src);
             window['__ready__' + settings.id](player);
         },
 
@@ -156,6 +155,7 @@
     window['onVimeoPlayerAPIReady'] = function() {
         vimeoApi.iFrameReady();
     };
+
     var vimeoIframeRenderer = {
 
         name: 'vimeo_iframe',
@@ -273,7 +273,9 @@
                                     break;
 
                                 case 'currentTime':
-                                    vimeoPlayer.setCurrentTime(value).catch(function(error) {
+                                    vimeoPlayer.setCurrentTime(value).then(function() {
+                                        mediaElement.dispatchEvent({type:'timeupdate'});
+                                    }).catch(function(error) {
                                         vimeoApi.errorHandler(error);
                                     });
                                     break;
@@ -373,10 +375,10 @@
                     vimeoPlayer.getDuration().then(function(loadProgress) {
                         if (duration > 0) {
                             bufferedTime = duration * loadProgress;
-
-                            var event = mejs.Utils.createEvent('progress', vimeo);
-                            mediaElement.dispatchEvent(event);
                         }
+
+                        var event = mejs.Utils.createEvent('progress', vimeo);
+                        mediaElement.dispatchEvent(event);
                     }).catch(function(error) {
                         vimeoApi.errorHandler(error);
                     });
@@ -447,8 +449,7 @@
             // send it off for async loading and creation
             vimeoApi.enqueueIframe({
                 iframe: vimeoContainer,
-                id: vimeo.id,
-                src: vimeoApi.getVimeoId(vimeoContainer.src)
+                id: vimeo.id
             });
 
             vimeo.hide = function() {
