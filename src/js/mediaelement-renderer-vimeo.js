@@ -1,7 +1,17 @@
+/**
+ * Vimeo renderer
+ *
+ * Uses <iframe> approach and uses Vimeo API to manipulate it.
+ * All Vimeo calls return a Promise so this renderer accounts for that
+ * to update all the necessary values to interact with MediaElement player.
+ * @see https://github.com/vimeo/player.js
+ *
+ */
 (function(win, doc, mejs, undef) {
 
     /**
      * Register Vimeo type based on URL structure
+     *
      */
     mejs.Utils.typeChecks.push(function(url) {
 
@@ -30,8 +40,8 @@
         iframeQueue: [],
 
         /**
-         *
-         * @param {Object} vimeo
+         * Create a queue to prepare the creation of <iframe>
+         * @param {Object} vimeo - an object with settings needed to create <iframe>
          */
         enqueueIframe: function(vimeo) {
 
@@ -44,13 +54,12 @@
         },
 
         /**
+         * Load Vimeo API's script on the header of the document
          *
          */
         loadIframeApi: function() {
 
             if (!this.isIframeStarted) {
-
-
 
                 var
                     script = doc.createElement('script'),
@@ -74,6 +83,7 @@
         },
 
         /**
+         * Process queue of request to create Vimeo iframe element
          *
          */
         iFrameReady: function() {
@@ -88,8 +98,9 @@
         },
 
         /**
+         * Create a new instance of Vimeo API player and trigger a custom event to initialize it
          *
-         * @param {Object} settings
+         * @param {Object} settings - an object with settings needed to create <iframe>
          */
         createIframe: function(settings) {
             var player = new Vimeo.Player(settings.iframe);
@@ -97,8 +108,9 @@
         },
 
         /**
+         * Extract numeric value from Vimeo to be loaded by API
          *
-         * @param {String} url
+         * @param {String} url - Vimeo full URL to grab the number Id of the source
          * @return int
          */
         getVimeoId: function(url) {
@@ -115,8 +127,10 @@
         },
 
         /**
+         * Generate custom errors for Vimeo based on the API specifications
          *
          * @param {Object} error
+         * @see https://github.com/vimeo/player.js#error
          */
         errorHandler: function(error) {
             switch (error.name) {
@@ -152,7 +166,10 @@
         }
     };
 
-    // Register Vimeo event globally
+    /*
+     * Register Vimeo event globally
+     *
+     */
     window['onVimeoPlayerAPIReady'] = function() {
         vimeoApi.iFrameReady();
     };
@@ -165,6 +182,7 @@
             prefix: 'vimeo_iframe'
         },
         /**
+         * Determine if a specific element type can be played with this render
          *
          * @param {String} type
          * @return {boolean}
@@ -174,6 +192,14 @@
 
             return mediaTypes.indexOf(type) > -1;
         },
+        /**
+         * Create the player instance and add all native events/methods/properties as possible
+         *
+         * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+         * @param {Array} options All the player configuration options passed through constructor
+         * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+         * @return {Object}
+         */
         create: function (mediaElement, options, mediaFiles) {
 
             // exposed object
@@ -332,6 +358,7 @@
                 })(methods[i]);
             }
 
+            // Initial method to register all Vimeo events when initializing <iframe>
             win['__ready__' + vimeo.id] = function(_vimeoPlayer) {
 
                 vimeoApiReady = true;
@@ -455,7 +482,7 @@
                 vimeoContainer = doc.createElement('iframe')
                 ;
 
-            // Create Vimeo <iframe>
+            // Create Vimeo <iframe> markup
             vimeoContainer.setAttribute('id', vimeo.id);
             vimeoContainer.setAttribute('width', width);
             vimeoContainer.setAttribute('height', height);
@@ -468,7 +495,6 @@
             mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
             mediaElement.originalNode.style.display = 'none';
 
-            // send it off for async loading and creation
             vimeoApi.enqueueIframe({
                 iframe: vimeoContainer,
                 id: vimeo.id
