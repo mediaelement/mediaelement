@@ -361,8 +361,8 @@
                 }
 
                 vimeoPlayer.on('loaded', function() {
-                    vimeoPlayer.getDuration().then(function(_duration) {
-                        duration = _duration;
+                    vimeoPlayer.getDuration().then(function(seconds) {
+                        duration = seconds;
 
                         var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
                         mediaElement.dispatchEvent(event);
@@ -382,13 +382,23 @@
                     }).catch(function(error) {
                         vimeoApi.errorHandler(error);
                     });
-                    vimeoPlayer.getDuration().then(function(_duration) {
-                        duration = _duration;
+                    vimeoPlayer.getDuration().then(function(seconds) {
+                        duration = seconds;
 
                         var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
                         mediaElement.dispatchEvent(event);
                     }).catch(function(error) {
                         vimeoApi.errorHandler(error);
+                    });
+                });
+                vimeoPlayer.on('timeupdate', function() {
+                    paused = false;
+                    ended = false;
+
+                    vimeoPlayer.getCurrentTime().then(function(seconds) {
+                        currentTime = seconds;
+                        var event = mejs.Utils.createEvent('timeupdate', vimeo);
+                        mediaElement.dispatchEvent(event);
                     });
                 });
                 vimeoPlayer.on('play', function() {
