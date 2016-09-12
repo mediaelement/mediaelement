@@ -1,116 +1,205 @@
 (function(win, doc, mejs, undefined) {
 
 // wraps the native HTML5 <audio> or <video> tag and bubbles its properties, events, and methods up to the mediaElement
-var HtmlMediaElement = {
-	name: 'html5',
+    var HtmlMediaElement = {
+        name: 'html5',
 
-	canPlayType: function(type) {
+        canPlayType: function(type) {
 
-		var mediaElement = doc.createElement('video');
+            var
+                mediaElement = doc.createElement('video'),
+                mediaTypes = mejs.html5media.mediaTypes,
+                isMseSource = type.indexOf('mpegURL') > -1 || type.indexOf('dash+xml') > -1
+                ;
 
-		if (mediaElement.canPlayType) {
-			return mediaElement.canPlayType(type).replace(/no/,'');
-		} else {
-			return '';
-		}
-	},
-	options: null,
+            // Test for MSE elements before going for HTML5 default ones
+            if (mejs.MediaFeatures.hasMse && isMseSource) {
 
-	create: function (mediaElement, options, mediaFiles) {
+                if (type.indexOf('mpegURL') > -1 && mediaTypes.indexOf('application/x-mpegURL') === -1) {
+                    mediaTypes.push('application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL', 'audio/hls', 'video/hls');
+                } else if (type.indexOf('dash+xml') > -1 && mediaTypes.indexOf('application/dash+xml') === -1) {
+                    mediaTypes.push('application/dash+xml');
+                }
 
-		var node = null,
-			id = mediaElement.id + '_html5';
+                return mediaTypes.indexOf(type) > -1;
+            }
 
-		// CREATE NODE
-		if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
+            if (mediaElement.canPlayType) {
+                return mediaElement.canPlayType(type).replace(/no/,'');
+            } else {
+                return '';
+            }
+        },
+        options: null,
 
-			node =  document.createElement('audio');
-			mediaElement.appendChild(node);
+        create: function (mediaElement, options, mediaFiles) {
 
-		} else {
-			node = mediaElement.originalNode;
-		}
+            var node = null,
+                i,
+                il,
+                id = mediaElement.id + '_html5';
 
-		node.setAttribute('id', id);
+            // CREATE NODE
+            if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
 
-		// WRAPPERS for PROPs
-		var
-			props = mejs.html5media.properties,
-			i,
-			il;
-		for (i=0, il=props.length; i<il; i++) {
+                node =  document.createElement('audio');
+                mediaElement.appendChild(node);
 
-			// wrap in function to retain scope
-			(function(propName) {
-				var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+            } else {
+                node = mediaElement.originalNode;
+            }
 
-				node['get' + capName] = function() {
-					return node[propName];
-				};
+            node.setAttribute('id', id);
 
-				node['set' + capName] = function(value) {
-					node[propName] = value;
-				};
+            // WRAPPERS for PROPs
+            var props = mejs.html5media.properties;
+            for (i=0, il=props.length; i<il; i++) {
 
-			})(props[i]);
-		}
+                // wrap in function to retain scope
+                (function(propName) {
+                    var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
-		var events = mejs.html5media.events;
-		events = events.concat(['click','mouseover','mouseout'].join(Hls.Events));
+                    node['get' + capName] = function() {
+                        return node[propName];
+                    };
 
-		for (i=0, il=events.length; i<il; i++) {
-			(function(eventName) {
+                    node['set' + capName] = function(value) {
+                        if (propName === 'src') {
+                            if (mejs.MediaFeatures.supportsHls && extension === 'm3u8') {
 
-				node.addEventListener(eventName, function(e) {
-					// copy event
+                                if (typeof player === 'undefined') {
+                                    player = new Hls(options.hls);
+                                } else {
+                                    player.detachMedia();
+                                }
 
-					var event = doc.createEvent('HTMLEvents');
-					event.initEvent(e.type, e.bubbles, e.cancelable);
-					event.srcElement = e.srcElement;
-					event.target = e.srcElement;
+                                player.attachMedia(node);
 
-					//var ev = mejs.Utils.extend({}, e);
+                                player.on(hlsEvents.MEDIA_ATTACHED, function() {
+                                    player.loadSource(mediaFiles[0].src);
 
-					mediaElement.dispatchEvent(event);
-				});
+                                    player.on(hlsEvents.MANIFEST_PARSED, function() {
+                                        if (node.getAttribute('autoplay')) {
+                                            node.play();
+                                        }
+                                    });
+                                });
 
-			})(events[i]);
-		}
+                            } else if (mejs.MediaFeatures.supportsDash && extension === 'mpd') {
 
-		// HELPER METHODS
-		node.setSize = function(width, height) {
-			node.style.width = width + 'px';
-			node.style.height = height + 'px';
+                            }
+                        }
+                        node[propName] = value;
+                    };
 
-			return node;
-		};
+                })(props[i]);
+            }
 
-		node.hide = function() {
-			node.style.display = 'none';
+            // BUBBLE EVENTS
+            var events = mejs.html5media.events;
 
-			return node;
-		};
+            events = events.concat(['click','mouseover','mouseout']);
 
-		node.show = function() {
-			node.style.display = '';
+            for (i=0, il=events.length; i<il; i++) {
+                (function(eventName) {
 
-			return node;
-		};
+                    node.addEventListener(eventName, function(e) {
+                        // copy event
 
-		if (mediaFiles && mediaFiles.length > 0) {
-			node.src = mediaFiles[0].src;
-		}
+                        var event = doc.createEvent('HTMLEvents');
+                        event.initEvent(e.type, e.bubbles, e.cancelable);
+                        event.srcElement = e.srcElement;
+                        event.target = e.srcElement;
 
-		var event = mejs.Utils.createEvent('rendererready', node);
-		mediaElement.dispatchEvent(event);
+                        //var ev = mejs.Utils.extend({}, e);
 
-		return node;
-	}
-};
+                        mediaElement.dispatchEvent(event);
+                    });
+
+                })(events[i]);
+            }
+
+            // HELPER METHODS
+            node.setSize = function(width, height) {
+                node.style.width = width + 'px';
+                node.style.height = height + 'px';
+
+                return node;
+            };
+
+            node.hide = function() {
+                node.style.display = 'none';
+
+                return node;
+            };
+
+            node.show = function() {
+                node.style.display = '';
+
+                return node;
+            };
+
+            if (mediaFiles && mediaFiles.length > 0) {
+
+                node.src = mediaFiles[0].src;
+
+                var
+                    extension = mejs.Utils.getExtension(node.src),
+                    player
+                    ;
+
+                if (mejs.MediaFeatures.supportsHls && extension === 'm3u8') {
+
+                    var hlsEvents = Hls.Events;
+
+                    player = new Hls(options.hls);
+                    player.attachMedia(node);
+
+                    player.on(hlsEvents.MEDIA_ATTACHED, function() {
+                        player.loadSource(mediaFiles[0].src);
+
+                        player.on(hlsEvents.MANIFEST_PARSED, function() {
+                            if (node.getAttribute('autoplay')) {
+                                node.play();
+                            }
+                        });
+                    });
+
+                    Object.keys(hlsEvents).forEach(function (key) {
+                        var etype = hlsEvents[key];
+
+                        player.on(etype, function (e) {
+                            var event = new Event(e, { bubbles: false, cancelable: false });
+                            mediaElement.dispatchEvent(event);
+                        });
+                    });
+
+                } else if (mejs.MediaFeatures.supportsDash && extension === 'mpd') {
+
+                    player = dashjs.MediaPlayer().create();
+
+                    var autoplay = mediaElement.originalNode.getAttribute('autoplay');
+
+                    player.initialize(node, node.src, autoplay);
+                    player.getDebug().setLogToBrowserConsole(false);
+
+                    // set options before initializing player
+                    // if (typeof options.dash !== 'undefined' && options.dash.debug === true) {
+                    //    player.getDebug().setLogToBrowserConsole(true);
+                    // }
+                }
+            }
+
+            var event = mejs.Utils.createEvent('rendererready', node);
+            mediaElement.dispatchEvent(event);
+
+            return node;
+        }
+    };
 
 // add to list of possible renderers
-mejs.Renderers.add(HtmlMediaElement);
+    mejs.Renderers.add(HtmlMediaElement);
 
-window.HtmlMediaElement = mejs.HtmlMediaElement = HtmlMediaElement;
+    window.HtmlMediaElement = mejs.HtmlMediaElement = HtmlMediaElement;
 
 })(window, document, window.mejs || {});
