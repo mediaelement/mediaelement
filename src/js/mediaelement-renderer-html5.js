@@ -151,7 +151,16 @@
 
                 } else if (mejs.MediaFeatures.supportsDash && extension === 'mpd') {
 
-                    player = dashjs.MediaPlayerFactory.create(node);
+                    player = dashjs.MediaPlayer().create();
+
+                    // set options before initializing player
+                    if (typeof options.dash !== 'undefined' && options.dash.debug === false) {
+                        player.getDebug().setLogToBrowserConsole(false);
+                    }
+
+                    var autoplay = mediaElement.originalNode.getAttribute('autoplay');
+
+                    player.initialize(node, node.src, autoplay);
                 }
             }
 
