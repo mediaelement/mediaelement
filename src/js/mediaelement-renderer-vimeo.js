@@ -48,27 +48,10 @@
          */
         loadIframeApi: function() {
             if (!this.isIframeStarted) {
-
-                var head = doc.getElementsByTagName("head")[0] || doc.documentElement,
-                    script = doc.createElement("script"),
-                    done = false;
-
-                script.src = 'https://player.vimeo.com/api/player.js';
-
-                // Attach handlers for all browsers
-                script.onload = script.onreadystatechange = function() {
-                    if ( !done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
-                        done = true;
-                        vimeoApi.iFrameReady();
-
-                        // Handle memory leak in IE
-                        script.onload = script.onreadystatechange = null;
-                        if ( head && script.parentNode ) {
-                            head.removeChild( script );
-                        }
-                    }
-                };
-                head.appendChild(script);
+                var tag = document.createElement('script');
+                tag.src = "//player.vimeo.com/api/player.js";
+                var firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
                 this.isIframeStarted = true;
             }
         },
@@ -488,14 +471,10 @@
 
             vimeo.hide = function() {
                 vimeo.pause();
-                if (vimeoPlayer) {
-                    vimeoContainer.style.display = 'none';
-                }
+                vimeoContainer.style.display = 'none';
             };
             vimeo.show = function() {
-                if (vimeoPlayer) {
-                    vimeoContainer.style.display = '';
-                }
+                vimeoContainer.style.display = '';
             };
 
             return vimeo;
