@@ -6,7 +6,10 @@
 	
 	<!--[if lte IE 8]>
 	<script src="../src/js/console.js"></script>
-	<![endif]-->	
+	<![endif]-->
+
+	<script src="../src/lib/hls.js/hls.min.js"></script>
+	<script src="../src/lib/dash.js/dash.all.min.js"></script>
 	
 	<!-- MediaElement Core renderers -->	
 	<script src="../src/js/mediaelement-header.js"></script>
@@ -16,7 +19,8 @@
 	<script src="../src/js/mediaelement-core.js"></script>
 	<script src="../src/js/mediaelement-renderer-html5.js"></script>
 	<script src="../src/js/mediaelement-renderer-flash.js"></script>
-	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>		
+	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+	<script src="../src/js/mediaelement-renderer-vimeo.js"></script>
 	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>		
 	<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
 	<script src="../src/js/me-i18n.js"></script>
@@ -94,22 +98,30 @@
 				document.getElementById('player1').src = '../media/echo-hereweare.mp4'; 
 			</span>
 			<span class="command">
-				document.getElementById('player1').src = '../media/virtual_robotics_lab.wmv'; 
+				document.getElementById('player1').src = '../media/Low5MB.wmv';
 			</span>	
 			<span class="command">
 				document.getElementById('player1').src = '../media/we_stand_ready_320x180.flv'; 
 			</span>	
 			<span class="command">
-				document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8'; 
+				document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8';
 			</span>	
 			<span class="command">
-				document.getElementById('player1').src = 'rtmp://fms.12E5.edgecastcdn.net/0012E5/mp4:videos/8Juv1MVa-485.mp4'; 
+				document.getElementById('player1').src = 'rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4';
 			</span>							
 			
 			<span class="command">
-				document.getElementById('player1').src = 'http://www.dailymotion.com/video/x35yawy_3-homemade-nut-butter-cup-recipes_lifestyle'; 
-			</span>			
-			
+				document.getElementById('player1').src = 'http://www.dailymotion.com/embed/video/x2lzodk';
+			</span>
+
+			<span class="command">
+				document.getElementById('player1').src = 'https://player.vimeo.com/video/59777392?title=0&byline=0&portrait=0&badge=0';
+			</span>
+
+			<span class="command">
+				document.getElementById('player1').src = 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd';
+			</span>
+
 			<span class="command">
 				document.getElementById('player1').src = 'https://www.youtube.com/watch?v=twYp6W6vt2U'; 
 			</span>
@@ -217,7 +229,7 @@ function createPlayer(id) {
 	mediaElement.addEventListener('loadedmetadata', function(e) {
 		
 		var src = mediaElement.src;
-		
+
 		if (src != null) {
 			uiRendererName.innerHTML = src.substring(src.lastIndexOf('/')+1) + ' : rendered by ' + mediaElement.rendererName;
 		} else {
