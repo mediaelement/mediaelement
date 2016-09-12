@@ -12,3 +12,4 @@ node_modules
 local-build
 # PhpStorm/WebStorm configuration
 .idea
+media
