@@ -13,7 +13,7 @@
 
 			player.sourcechooserButton =
 				$('<div class="mejs-button mejs-sourcechooser-button">'+
-						'<button type="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + t.options.sourcechooserText + '" aria-label="' + t.options.sourcechooserText + '"></button>'+
+						'<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + t.options.sourcechooserText + '" aria-label="' + t.options.sourcechooserText + '"></button>'+
 						'<div class="mejs-sourcechooser-selector mejs-offscreen" role="menu" aria-expanded="false" aria-hidden="true">'+
 							'<ul>'+
 							'</ul>'+
@@ -40,10 +40,11 @@
 
 					// keyboard menu activation
 					.on('keydown', function (e) {
-					  var keyCode = e.keyCode;
+						var keyCode = e.keyCode;
 
-					  switch (keyCode) {
+						switch (keyCode) {
 							case 32: // space
+							case 13: // enter
 								$(this).find('.mejs-sourcechooser-selector')
 									.removeClass('mejs-offscreen')
 									.attr('aria-expanded', 'true')
@@ -61,6 +62,18 @@
 								return true;
 								}
 							})
+
+					// close menu when tabbing away
+					.on('focusout', function (e) {
+						var parent = $(e.relatedTarget).closest('.mejs-sourcechooser-button');
+						if (!parent.length && !parent.find('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
+							// focus is outside the control, but the menu is visible; close it
+							player.sourcechooserButton.find('.mejs-sourcechooser-selector')
+								.addClass('mejs-offscreen')
+								.attr('aria-expanded', 'false')
+								.attr('aria-hidden', 'true');
+						}
+					})
 
 					// handle clicks to the source radio buttons
 					.delegate('input[type=radio]', 'click', function() {
@@ -98,7 +111,6 @@
 					player.addSourceButton(src.src, src.title, src.type, media.src == src.src);
 				}
 			}
-
 		},
 
 		addSourceButton: function(src, label, type, isCurrent) {
