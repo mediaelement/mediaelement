@@ -1,3 +1,12 @@
+/**
+ * Native HLS renderer
+ *
+ * Uses DailyMotion's hls.js, which is a JavaScript library which implements an HTTP Live Streaming client.
+ * It relies on HTML5 video and MediaSource Extensions for playback.
+ * This renderer integrates new events associated with m3u8 files the same way Flash version of Hls does.
+ * @see https://github.com/dailymotion/hls.js
+ *
+ */
 (function(win, doc, mejs, undef) {
 
     if (mejs.MediaFeatures.hasMse) {
@@ -21,12 +30,20 @@
             /**
              * @var {boolean}
              */
-            isScriptLoaded: false,
+            isMediaStarted: false,
+            /**
+             * @var {boolean}
+             */
+            isMediaLoaded: false,
             /**
              * @var {Array}
              */
             creationQueue: [],
 
+            /**
+             * Create a queue to prepare the loading of an HLS source
+             * @param {Object} settings - an object with settings needed to load an HLS player instance
+             */
             prepareSettings: function(settings) {
                 if (this.isLoaded) {
                     this.createInstance(settings);
@@ -37,7 +54,7 @@
             },
 
             loadScript: function() {
-                if (!this.isScriptLoaded) {
+                if (!this.isMediaStarted) {
 
                     var
                         script = doc.createElement('script'),
@@ -57,14 +74,13 @@
                     };
 
                     firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-                    this.isScriptLoaded = true;
+                    this.isMediaStarted = true;
                 }
             },
 
             mediaReady: function() {
-
                 this.isLoaded = true;
-                this.isScriptLoaded = true;
+                this.isMediaLoaded = true;
 
                 while (this.creationQueue.length > 0) {
                     var settings = this.creationQueue.pop();
@@ -124,23 +140,17 @@
 
                         node['set' + capName] = function (value) {
                             if (hlsPlayer !== null) {
+                                node[propName] = value;
+
                                 if (propName === 'src') {
 
                                     hlsPlayer.detachMedia();
                                     hlsPlayer.attachMedia(node);
 
                                     hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
-                                        hlsPlayer.loadSource(mediaFiles[0].src);
-
-                                        hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function () {
-                                            if (node.getAttribute('autoplay')) {
-                                                node.play();
-                                            }
-                                        });
+                                        hlsPlayer.loadSource(value);
                                     });
                                 }
-
-                                node[propName] = value;
                             } else {
                                 // store for after "READY" event fires
                                 stack.push({type: 'set', propName: propName, value: value});
@@ -182,15 +192,18 @@
 
                             if (eventName === 'loadedmetadata') {
 
+                                hlsPlayer.detachMedia();
+
+                                var url = node.src;
+
                                 hlsPlayer.attachMedia(node);
                                 hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
-                                    hlsPlayer.loadSource(mediaFiles[0].src);
+                                    hlsPlayer.loadSource(url);
                                 });
                             }
 
                             node.addEventListener(eventName, function (e) {
                                 // copy event
-
                                 var event = doc.createEvent('HTMLEvents');
                                 event.initEvent(e.type, e.bubbles, e.cancelable);
                                 event.srcElement = e.srcElement;
@@ -203,12 +216,22 @@
                     }
                 };
 
+                var filteredAttributes = ['id', 'src', 'style'];
+                for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
+                    var attribute = originalNode.attributes[j];
+                    if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
+                        node.setAttribute(attribute.name, attribute.value);
+                    }
+                }
+
                 node.setAttribute('id', id);
                 node.setAttribute('src', mediaFiles[0].src);
+                node.className = '';
 
                 originalNode.parentNode.insertBefore(node, originalNode);
                 originalNode.removeAttribute('autoplay');
                 originalNode.style.display = 'none';
+
 
                 NativeHls.prepareSettings({
                     options: options.hlsVars,
@@ -224,6 +247,7 @@
                 };
 
                 node.hide = function () {
+                    node.pause();
                     node.style.display = 'none';
                     return node;
                 };
