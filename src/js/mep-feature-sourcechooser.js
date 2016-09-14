@@ -24,18 +24,17 @@
 					// hover
 					.hover(function() {
 						clearTimeout(hoverTimeout);
-						$(this).find('.mejs-sourcechooser-selector')
-							.removeClass('mejs-offscreen')
-							.attr('aria-expanded', 'true')
-							.attr('aria-hidden', 'false');
+						player.showSourcechooserSelector();
 					}, function() {
 						var self = $(this);
 						hoverTimeout = setTimeout(function () {
-							self.find('.mejs-sourcechooser-selector')
-								.addClass('mejs-offscreen')
-								.attr('aria-expanded', 'false')
-								.attr('aria-hidden', 'true');
+						player.hideSourcechooserSelector();
 						}, 500);
+					})
+
+					// Handle click so that screen readers can open the menu
+					.click(function (e) {
+						player.showSourcechooserSelector();
 					})
 
 					// keyboard menu activation
@@ -45,17 +44,12 @@
 						switch (keyCode) {
 							case 32: // space
 							case 13: // enter
+								player.showSourcechooserSelector();
 								$(this).find('.mejs-sourcechooser-selector')
-									.removeClass('mejs-offscreen')
-									.attr('aria-expanded', 'true')
-									.attr('aria-hidden', 'false')
 									.find('input[type=radio]:checked').first().focus();
 								break;
 							case 27: // esc
-								$(this).find('.mejs-sourcechooser-selector')
-									.addClass('mejs-offscreen')
-									.attr('aria-expanded', 'false')
-									.attr('aria-hidden', 'true');
+								player.hideSourcechooserSelector();
 								$(this).find('button').focus();
 								break;
 							default:
@@ -68,10 +62,7 @@
 						var parent = $(e.relatedTarget).closest('.mejs-sourcechooser-button');
 						if (!parent.length && !parent.find('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
 							// focus is outside the control, but the menu is visible; close it
-							player.sourcechooserButton.find('.mejs-sourcechooser-selector')
-								.addClass('mejs-offscreen')
-								.attr('aria-expanded', 'false')
-								.attr('aria-hidden', 'true');
+							player.hideSourcechooserSelector();
 						}
 					})
 
@@ -137,6 +128,24 @@
 			t.sourcechooserButton.find('.mejs-sourcechooser-selector').height(
 				t.sourcechooserButton.find('.mejs-sourcechooser-selector ul').outerHeight(true)
 			);
+		},
+
+		hideSourcechooserSelector: function () {
+			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
+				.addClass('mejs-offscreen')
+				.attr('aria-expanded', 'false')
+				.attr('aria-hidden', 'true')
+				.find('input[type=radio]') // make radios not fucusable
+				.attr('tabindex', '-1');
+		},
+
+		showSourcechooserSelector: function () {
+			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
+				.removeClass('mejs-offscreen')
+				.attr('aria-expanded', 'true')
+				.attr('aria-hidden', 'false')
+				.find('input[type=radio]')
+				.removeAttr('tabindex');
 		}
 	});
 
