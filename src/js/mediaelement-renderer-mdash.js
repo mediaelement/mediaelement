@@ -97,9 +97,7 @@
 
             options: {
                 prefix: 'native_mdash',
-                dashVars: {
-
-                }
+                dashVars: {}
             },
 
             canPlayType: function (type) {
