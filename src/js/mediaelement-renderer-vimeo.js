@@ -83,7 +83,7 @@
         },
 
         /**
-         * Process queue of request to create Vimeo iframe element
+         * Process queue of Vimeo <iframe> element creation
          *
          */
         iFrameReady: function() {
