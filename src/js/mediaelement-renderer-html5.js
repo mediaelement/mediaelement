@@ -56,7 +56,7 @@ var HtmlMediaElement = {
 		}
 
 		var events = mejs.html5media.events;
-		events = events.concat(['click','mouseover','mouseout'].join(Hls.Events));
+		events = events.concat(['click','mouseover','mouseout']);
 
 		for (i=0, il=events.length; i<il; i++) {
 			(function(eventName) {

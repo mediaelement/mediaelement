@@ -403,8 +403,6 @@ mejs.MediaFeatures = mejs.Features = (function() {
 
 	// Test if Media Source Extensions are supported by browser
 	features.hasMse = ('MediaSource' in window);
-	features.supportsHls = (features.hasMse && typeof Hls !== 'undefined' && Hls.isSupported());
-	features.supportsDash = (features.hasMse && typeof dashjs !== 'undefined');
 
 	features.supportsMediaTag = (typeof video.canPlayType != 'undefined' || features.isBustedAndroid || features.hasMse);
 
