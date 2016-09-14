@@ -1,127 +1,242 @@
-(function(win, doc, shimi, undef) {
+(function(win, doc, mejs, undef) {
 
-    if (mejs.MediaFeatures.canSupportHls) {
+    if (mejs.MediaFeatures.hasMse) {
 
-        // register native HLS type
+        /**
+         * Register Native HLS type based on URL structure
+         *
+         */
         mejs.Utils.typeChecks.push(function (url) {
 
-            url = new String(url).toLowerCase();
+            url = url.toLowerCase();
 
-            if (url.indexOf('.m3u8') > -1) {
+            if (url.indexOf('m3u8') > -1) {
                 return 'application/x-mpegURL';
             } else {
                 return null;
             }
         });
 
+        var NativeHls = {
+            /**
+             * @var {boolean}
+             */
+            isScriptLoaded: false,
+            /**
+             * @var {Array}
+             */
+            creationQueue: [],
+
+            prepareSettings: function(settings) {
+                if (this.isLoaded) {
+                    this.createInstance(settings);
+                } else {
+                    this.loadScript();
+                    this.creationQueue.push(settings);
+                }
+            },
+
+            loadScript: function() {
+                if (!this.isScriptLoaded) {
+
+                    var
+                        script = doc.createElement('script'),
+                        firstScriptTag = doc.getElementsByTagName('script')[0],
+                        done = false;
+
+                    script.src = '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+
+                    // Attach handlers for all browsers
+                    script.onload = script.onreadystatechange = function () {
+                        if (!done && (!this.readyState || typeof this.readyState === 'undefined' ||
+                            this.readyState === 'loaded' || this.readyState === 'complete')) {
+                            done = true;
+                            NativeHls.mediaReady();
+                            script.onload = script.onreadystatechange = null;
+                        }
+                    };
+
+                    firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+                    this.isScriptLoaded = true;
+                }
+            },
+
+            mediaReady: function() {
+
+                this.isLoaded = true;
+                this.isScriptLoaded = true;
+
+                while (this.creationQueue.length > 0) {
+                    var settings = this.creationQueue.pop();
+                    this.createInstance(settings);
+                }
+            },
+
+            createInstance: function (settings) {
+                var player = new Hls(settings.options);
+                win['__ready__' + settings.id](player);
+            }
+        };
+
         var HlsNativeRenderer = {
             name: 'native_hls',
 
             options: {
-                prefix: 'native_hls'
+                prefix: 'native_hls',
+                hlsVars: {}
             },
 
             canPlayType: function (type) {
 
-                var mediaTypes = ['application/x-mpegURL'];
-
-                return mejs.MediaFeatures.canSupportHls && mediaTypes.indexOf(type) > -1;
+                var mediaTypes = ['application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL', 'audio/hls', 'video/hls'];
+                return mediaTypes.indexOf(type) > -1;
             },
 
             create: function (mediaElement, options, mediaFiles) {
 
-                if (typeof options.hlsDebug !== 'undefined') {
-                    options.debug = options.hlsDebug;
-                }
+                var
+                    node = null,
+                    originalNode = mediaElement.originalNode,
+                    i,
+                    il,
+                    id = mediaElement.id + '_' + options.prefix,
+                    hlsPlayer,
+                    stack = {}
+                    ;
 
-                var hls = {}, node = mediaElement.originalNode, player = new Hls(options);
-                hls.options = options;
-                hls.id = mediaElement.id + '_' + hls.options.prefix;
+                node = originalNode.cloneNode(true);
 
-                hls.loadSrc = function (filename) {
-
-                    player.attachMedia(node);
-
-                    player.on(Hls.Events.MEDIA_ATTACHED, function() {
-                        player.loadSource(filename);
-
-                        player.on(Hls.Events.MANIFEST_PARSED, function() {
-                            node.play();
-                        });
-                    });
-                };
-
-                if (mediaFiles && mediaFiles.length > 0) {
-                    hls.loadSrc(mediaFiles[0].src);
-                }
-
-                // mediaElements for get/set
+                // WRAPPERS for PROPs
                 var props = mejs.html5media.properties;
-                for (var i=0, il=props.length; i<il; i++) {
+                for (i = 0, il = props.length; i < il; i++) {
 
                     // wrap in function to retain scope
-                    (function(propName) {
-                        var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+                    (function (propName) {
+                        var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
-                        hls['get' + capName] = function() {
-                            return node[propName];
+                        node['get' + capName] = function () {
+                            if (hlsPlayer !== null) {
+                                return node[propName];
+                            } else {
+                                return null;
+                            }
                         };
 
-                        hls['set' + capName] = function(value) {
-                            node[propName] = value;
+                        node['set' + capName] = function (value) {
+                            if (hlsPlayer !== null) {
+                                if (propName === 'src') {
+
+                                    hlsPlayer.detachMedia();
+                                    hlsPlayer.attachMedia(node);
+
+                                    hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
+                                        hlsPlayer.loadSource(mediaFiles[0].src);
+
+                                        hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function () {
+                                            if (node.getAttribute('autoplay')) {
+                                                node.play();
+                                            }
+                                        });
+                                    });
+                                }
+
+                                node[propName] = value;
+                            } else {
+                                // store for after "READY" event fires
+                                stack.push({type: 'set', propName: propName, value: value});
+                            }
                         };
 
                     })(props[i]);
                 }
 
-                // add wrappers for native methods
-                var methods = mejs.html5media.methods;
-                methods.push('stop');
-                for (var i=0, il=methods.length; i<il; i++) {
-                    (function(methodName) {
+                // Initial method to register all HLS events
+                win['__ready__' + id] = function(_hlsPlayer) {
 
-                        hls[methodName] = function() {
-                            if (methodName === 'stop') {
-                                return player.stopLoad();
+                    mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
+
+                    console.log('Native HLS ready', hlsPlayer);
+
+                    // do call stack
+                    for (i=0, il=stack.length; i<il; i++) {
+
+                        var stackItem = stack[i];
+
+                        if (stackItem.type === 'set') {
+                            var propName = stackItem.propName,
+                                capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+
+                            node['set' + capName](stackItem.value);
+                        } else if (stackItem.type === 'call') {
+                            node[stackItem.methodName]();
+                        }
+                    }
+
+                    // BUBBLE EVENTS
+                    var events = mejs.html5media.events;
+
+                    events = events.concat(['click', 'mouseover', 'mouseout']);
+
+                    for (i = 0, il = events.length; i < il; i++) {
+                        (function (eventName) {
+
+                            if (eventName === 'loadedmetadata') {
+
+                                hlsPlayer.attachMedia(node);
+                                hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
+                                    hlsPlayer.loadSource(mediaFiles[0].src);
+                                });
                             }
 
-                            return node[methodName](arguments);
-                        };
+                            node.addEventListener(eventName, function (e) {
+                                // copy event
 
-                    })(methods[i]);
-                }
+                                var event = doc.createEvent('HTMLEvents');
+                                event.initEvent(e.type, e.bubbles, e.cancelable);
+                                event.srcElement = e.srcElement;
+                                event.target = e.srcElement;
 
-                var events = mejs.html5media.events, hlsEvents = Hls.Events;
-                events = events.concat(['click','mouseover','mouseout']);
+                                mediaElement.dispatchEvent(event);
+                            });
 
-                for (var i=0, il=events.length; i<il; i++) {
-                    (function(eventName) {
+                        })(events[i]);
+                    }
+                };
 
-                        switch (eventName) {
-                            case 'loadedmetadata':
-                                player.trigger(hlsEvents.MEDIA_ATTACHED);
-                                break;
-                            case 'loadeddata':
-                                player.trigger(hlsEvents.MANIFEST_PARSED);
-                                break;
-                        }
+                node.setAttribute('id', id);
+                node.setAttribute('src', mediaFiles[0].src);
 
-                    })(events[i]);
-                }
+                originalNode.parentNode.insertBefore(node, originalNode);
+                originalNode.removeAttribute('autoplay');
+                originalNode.style.display = 'none';
 
-                // Object.keys(hlsEvents).forEach(function (key) {
-                //     var etype = hlsEvents[key];
-                //
-                //     player.on(etype, function (e, data) {
-                //         var event = new Event(e, { bubbles: false, cancelable: false });
-                //         mediaElement.dispatchEvent(event);
-                //     });
-                // });
+                NativeHls.prepareSettings({
+                    options: options.hlsVars,
+                    id: id
+                });
 
-                hls.hide = function() {};
-                hls.show = function() {};
+                // HELPER METHODS
+                node.setSize = function (width, height) {
+                    node.style.width = width + 'px';
+                    node.style.height = height + 'px';
 
-                return hls;
+                    return node;
+                };
+
+                node.hide = function () {
+                    node.style.display = 'none';
+                    return node;
+                };
+
+                node.show = function () {
+                    node.style.display = '';
+                    return node;
+                };
+
+                var event = mejs.Utils.createEvent('rendererready', node);
+                mediaElement.dispatchEvent(event);
+
+                return node;
             }
         };
 
