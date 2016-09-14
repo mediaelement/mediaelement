@@ -352,8 +352,9 @@ if (hasFlash) {
 	};
 	mejs.Renderers.add(FlashMediaElementVideoRenderer);
 
-	// HLS Streaming (if browser doesn't support hls "natively")
-	if (!mejs.MediaFeatures.supportsHls) {
+	// MSE Streaming (if browser doesn't support it)
+	// @todo Include support for M-DASH
+	if (!mejs.MediaFeatures.hasMse) {
 
 		mejs.Utils.typeChecks.push(function(url) {
 
@@ -372,7 +373,7 @@ if (hasFlash) {
 			canPlayType: function(type) {
 				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
 
-				return (!mejs.MediaFeatures.canSupportHls && hasFlash && supportedMediaTypes.indexOf(type) > -1);
+				return (supportedMediaTypes.indexOf(type) > -1);
 			},
 
 			// options
