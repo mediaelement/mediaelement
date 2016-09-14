@@ -8,10 +8,6 @@
 	<script src="../src/js/console.js"></script>
 	<![endif]-->
 
-	<!-- Hls.js -->
-	<script src="../src/lib/hls.js/hls.min.js"></script>
-	<script src="../src/lib/dash.js/dash.all.min.js"></script>
-
 	<!-- MediaElement Core renderers -->
 	<script src="../src/js/mediaelement-header.js"></script>
 	<script src="../src/js/mediaelement-namespace.js"></script>
@@ -19,6 +15,8 @@
 	<script src="../src/js/mediaelement-utility-oldie.js"></script>
 	<script src="../src/js/mediaelement-core.js"></script>
 	<script src="../src/js/mediaelement-renderer-html5.js"></script>
+	<script src="../src/js/mediaelement-renderer-hls.js"></script>
+	<script src="../src/js/mediaelement-renderer-mdash.js"></script>
 	<script src="../src/js/mediaelement-renderer-flash.js"></script>
 	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
 	<script src="../src/js/mediaelement-renderer-vimeo.js"></script>
@@ -114,9 +112,6 @@ iframe {
 	for (var i=0, il=elements.length; i<il; i++) {
 		var player = new MediaElementPlayerSimple(elements[i], {
 			pluginPath: '../build/'
-//			hls: {
-//				debug: true
-//			}
 		});
 	}
 
