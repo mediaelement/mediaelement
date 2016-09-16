@@ -1,4 +1,4 @@
-(function(win, doc, mejs, undef) {
+(function(win, doc, mejs, undefined) {
 
 
 // Core detector, plugins are added below

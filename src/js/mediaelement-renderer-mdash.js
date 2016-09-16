@@ -7,7 +7,7 @@
  * @see https://github.com/Dash-Industry-Forum/dash.js
  *
  */
-(function(win, doc, mejs, undef) {
+(function(win, doc, mejs, undefined) {
 
     if (mejs.MediaFeatures.hasMse) {
 
