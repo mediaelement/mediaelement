@@ -1,116 +1,134 @@
+/**
+ * Native HTML5 Renderer
+ *
+ * Wraps the native HTML5 <audio> or <video> tag and bubbles its properties, events, and methods up to the mediaElement.
+ */
 (function(win, doc, mejs, undefined) {
 
-// wraps the native HTML5 <audio> or <video> tag and bubbles its properties, events, and methods up to the mediaElement
-var HtmlMediaElement = {
-	name: 'html5',
+	var HtmlMediaElement = {
 
-	canPlayType: function(type) {
+		name: 'html5',
 
-		var mediaElement = doc.createElement('video');
+		options: null,
 
-		if (mediaElement.canPlayType) {
-			return mediaElement.canPlayType(type).replace(/no/,'');
-		} else {
-			return '';
-		}
-	},
-	options: null,
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {String}
+		 */
+		canPlayType: function(type) {
 
-	create: function (mediaElement, options, mediaFiles) {
+			var mediaElement = doc.createElement('video');
 
-		var node = null,
-			id = mediaElement.id + '_html5';
+			if (mediaElement.canPlayType) {
+				return mediaElement.canPlayType(type).replace(/no/,'');
+			} else {
+				return '';
+			}
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Array} options All the player configuration options passed through constructor
+		 * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
 
-		// CREATE NODE
-		if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
+			var node = null,
+				id = mediaElement.id + '_html5';
 
-			node =  document.createElement('audio');
-			mediaElement.appendChild(node);
+			// CREATE NODE
+			if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
 
-		} else {
-			node = mediaElement.originalNode;
-		}
+				node =  document.createElement('audio');
+				mediaElement.appendChild(node);
 
-		node.setAttribute('id', id);
+			} else {
+				node = mediaElement.originalNode;
+			}
 
-		// WRAPPERS for PROPs
-		var
-			props = mejs.html5media.properties,
-			i,
-			il;
-		for (i=0, il=props.length; i<il; i++) {
+			node.setAttribute('id', id);
 
-			// wrap in function to retain scope
-			(function(propName) {
-				var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+			// WRAPPERS for PROPs
+			var
+				props = mejs.html5media.properties,
+				i,
+				il;
+			for (i=0, il=props.length; i<il; i++) {
 
-				node['get' + capName] = function() {
-					return node[propName];
-				};
+				// wrap in function to retain scope
+				(function(propName) {
+					var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
-				node['set' + capName] = function(value) {
-					node[propName] = value;
-				};
+					node['get' + capName] = function() {
+						return node[propName];
+					};
 
-			})(props[i]);
-		}
+					node['set' + capName] = function(value) {
+						node[propName] = value;
+					};
 
-		var events = mejs.html5media.events;
-		events = events.concat(['click','mouseover','mouseout']);
+				})(props[i]);
+			}
 
-		for (i=0, il=events.length; i<il; i++) {
-			(function(eventName) {
+			var events = mejs.html5media.events;
+			events = events.concat(['click','mouseover','mouseout']);
 
-				node.addEventListener(eventName, function(e) {
-					// copy event
+			for (i=0, il=events.length; i<il; i++) {
+				(function(eventName) {
 
-					var event = doc.createEvent('HTMLEvents');
-					event.initEvent(e.type, e.bubbles, e.cancelable);
-					event.srcElement = e.srcElement;
-					event.target = e.srcElement;
+					node.addEventListener(eventName, function(e) {
+						// copy event
 
-					//var ev = mejs.Utils.extend({}, e);
+						var event = doc.createEvent('HTMLEvents');
+						event.initEvent(e.type, e.bubbles, e.cancelable);
+						event.srcElement = e.srcElement;
+						event.target = e.srcElement;
 
-					mediaElement.dispatchEvent(event);
-				});
+						//var ev = mejs.Utils.extend({}, e);
 
-			})(events[i]);
-		}
+						mediaElement.dispatchEvent(event);
+					});
 
-		// HELPER METHODS
-		node.setSize = function(width, height) {
-			node.style.width = width + 'px';
-			node.style.height = height + 'px';
+				})(events[i]);
+			}
+
+			// HELPER METHODS
+			node.setSize = function(width, height) {
+				node.style.width = width + 'px';
+				node.style.height = height + 'px';
+
+				return node;
+			};
+
+			node.hide = function() {
+				node.style.display = 'none';
+
+				return node;
+			};
+
+			node.show = function() {
+				node.style.display = '';
+
+				return node;
+			};
+
+			if (mediaFiles && mediaFiles.length > 0) {
+				node.src = mediaFiles[0].src;
+			}
+
+			var event = mejs.Utils.createEvent('rendererready', node);
+			mediaElement.dispatchEvent(event);
 
 			return node;
-		};
-
-		node.hide = function() {
-			node.style.display = 'none';
-
-			return node;
-		};
-
-		node.show = function() {
-			node.style.display = '';
-
-			return node;
-		};
-
-		if (mediaFiles && mediaFiles.length > 0) {
-			node.src = mediaFiles[0].src;
 		}
+	};
 
-		var event = mejs.Utils.createEvent('rendererready', node);
-		mediaElement.dispatchEvent(event);
+	mejs.Renderers.add(HtmlMediaElement);
 
-		return node;
-	}
-};
-
-// add to list of possible renderers
-mejs.Renderers.add(HtmlMediaElement);
-
-window.HtmlMediaElement = mejs.HtmlMediaElement = HtmlMediaElement;
+	window.HtmlMediaElement = mejs.HtmlMediaElement = HtmlMediaElement;
 
 })(window, document, window.mejs || {});
