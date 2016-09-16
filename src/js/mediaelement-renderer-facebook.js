@@ -243,7 +243,9 @@
 			/**
 			 * Create a new Facebook player and attach all its events
 			 *
-			 * This method creates a <div> element that, once the API is available, will generate an <iframe>
+			 * This method creates a <div> element that, once the API is available, will generate an <iframe>.
+			 * Valid URL format(s):
+			 *  - https://www.facebook.com/johndyer/videos/10107816243681884/
 			 *
 			 * @param {String} url
 			 * @param {Object} config
@@ -370,10 +372,8 @@
 			fbWrapper.startInterval = function() {
 				// create timer
 				fbWrapper.interval = setInterval(function() {
-
 					var event = mejs.Utils.createEvent('timeupdate', fbWrapper);
 					mediaElement.dispatchEvent(event);
-
 				}, 250);
 			};
 			fbWrapper.stopInterval = function() {
