@@ -13,6 +13,7 @@ One file. Any browser. Same UI.
 
 * [Introduction](#intro)
 * [Browser and Device support](#browser-support)
+* [`MediaElement.js` v3 Migrating Document](#migration)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
 * [Guidelines for Contributors](#guidelines)
@@ -37,10 +38,23 @@ Format | Support
 **mp4** | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
 **webm** | Please visit http://caniuse.com/#feat=webm for comprehensive information
 **mp3** | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
-**m3u8** | Safari and iOS (native); all browsers that support **Flash** (version 10 or later)
+**ogg** | Please visit http://caniuse.com/#search=ogg for comprehensive information
+**ogv** | Please visit http://caniuse.com/#search=ogv for comprehensive information
+**wav** | Please visit http://caniuse.com/#feat=wav for comprehensive information
+**m3u8** | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support **Flash** (version 10 or later)
+**mpd** | Browsers that support MSE through `dash.js` library; rest of the browsers that support **Flash** (version 10 or later)
 **rtmp/flv** | All browsers that support **Flash** (version 10 or later)
 **wmv/wma** | All browsers that support **Silverlight**
 **YouTube** | All browsers since it uses `iframe` tag
+**Vimeo** | All browsers since it uses `iframe` tag
+**Facebook** | All browsers since it uses `iframe` tag
+**DailyMotion** | All browsers since it uses `iframe` tag
+**SoundCloud** | All browsers since it uses `iframe` tag
+
+<a id="migration"></a>
+## `MediaElement.js` v3 Migrating Document
+
+Find out what are the new features on version 3 on [Migrating Document](migration.md).
 
 <a id="installation"></a>
 ## Installation and Usage
