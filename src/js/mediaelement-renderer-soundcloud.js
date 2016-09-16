@@ -1,4 +1,4 @@
-(function(win, doc, mejs, undef) {
+(function(win, doc, mejs, undefined) {
 
 // register youtube type
 mejs.Utils.typeChecks.push(function(url) {

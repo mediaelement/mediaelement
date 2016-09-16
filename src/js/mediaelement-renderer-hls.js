@@ -7,7 +7,7 @@
  * @see https://github.com/dailymotion/hls.js
  *
  */
-(function(win, doc, mejs, undef) {
+(function(win, doc, mejs, undefined) {
 
     if (mejs.MediaFeatures.hasMse) {
 
@@ -99,7 +99,58 @@
 
             options: {
                 prefix: 'native_hls',
-                hlsVars: {}
+                /**
+                 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
+                 */
+                hls: {
+                    autoStartLoad: true,
+                    startPosition : -1,
+                    capLevelToPlayerSize: false,
+                    debug: false,
+                    defaultAudioCodec: undefined,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 600,
+                    maxBufferSize: 60*1000*1000,
+                    maxBufferHole: 0.5,
+                    maxSeekHole: 2,
+                    seekHoleNudgeDuration: 0.01,
+                    maxFragLookUpTolerance: 0.2,
+                    liveSyncDurationCount: 3,
+                    liveMaxLatencyDurationCount: 10,
+                    enableWorker: true,
+                    enableSoftwareAES: true,
+                    manifestLoadingTimeOut: 10000,
+                    manifestLoadingMaxRetry: 6,
+                    manifestLoadingRetryDelay: 500,
+                    manifestLoadingMaxRetryTimeout : 64000,
+                    levelLoadingTimeOut: 10000,
+                    levelLoadingMaxRetry: 6,
+                    levelLoadingRetryDelay: 500,
+                    levelLoadingMaxRetryTimeout: 64000,
+                    fragLoadingTimeOut: 20000,
+                    fragLoadingMaxRetry: 6,
+                    fragLoadingRetryDelay: 500,
+                    fragLoadingMaxRetryTimeout: 64000,
+                    startFragPrefech: false,
+                    appendErrorMaxRetry: 3,
+                    // loader: function(){},
+                    fLoader: undefined,
+                    pLoader: undefined,
+                    xhrSetup: undefined,
+                    fetchSetup: undefined,
+                    // abrController: function() {},
+                    // timelineController: function() {},
+                    enableCEA708Captions: true,
+                    stretchShortVideoTrack: true,
+                    forceKeyFrameOnDiscontinuity: true,
+                    abrEwmaFastLive: 5.0,
+                    abrEwmaSlowLive: 9.0,
+                    abrEwmaFastVoD: 4.0,
+                    abrEwmaSlowVoD: 15.0,
+                    abrEwmaDefaultEstimate: 500000,
+                    abrBandWidthFactor: 0.8,
+                    abrBandWidthUpFactor: 0.7
+                }
             },
 
             canPlayType: function (type) {
@@ -234,7 +285,7 @@
 
 
                 NativeHls.prepareSettings({
-                    options: options.hlsVars,
+                    options: options.hls,
                     id: id
                 });
 

@@ -1,4 +1,4 @@
-(function(win, doc, shimi, undef) {
+(function(win, doc, shimi, undefined) {
 
 // Register DailyMotion type
 mejs.Utils.typeChecks.push(function(url) {

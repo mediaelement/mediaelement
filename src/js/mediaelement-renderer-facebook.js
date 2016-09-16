@@ -4,7 +4,7 @@
  * It creates an <iframe> from a <div> with specific configuration.
  * @see https://developers.facebook.com/docs/plugins/embedded-video-player
  */
-(function(win, doc, mejs, undef) {
+(function(win, doc, mejs, undefined) {
 
 	/**
 	 * Register Facebook type based on URL structure
