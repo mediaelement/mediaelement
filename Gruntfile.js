@@ -42,7 +42,7 @@ module.exports = function(grunt) {
 			},
 			mep: {
 				src: [
-					'src/js/mediaelementplayer-header.js',
+					'src/js/mediaelement-header.js',
 					'src/js/mediaelementplayer-library.js',
 					'src/js/mediaelementplayer-player.js'
 				].concat(featureSources || [
@@ -90,7 +90,7 @@ module.exports = function(grunt) {
 			mep: {
 				src	   : ['build/mediaelementplayer.js'],
 				dest   : 'build/mediaelementplayer.min.js',
-				banner : 'src/js/mediaelementplayer-header.js'
+				banner : 'src/js/mediaelement-header.js'
 			},
 			bundle: {
 				src	 : ['build/mediaelement-and-player.js'],
