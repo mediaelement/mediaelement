@@ -1,28 +1,18 @@
 (function($) {
 
-    // add extra default options
-    $.extend(mejs.MepDefaults, {
-        // this will automatically turn on a <track>
-        enableTranscript: false
-    });
-
     $.extend(MediaElementPlayer.prototype, {
 
-        /**
-         *
-         * @param player
-         * @param jQuery controls
-         * @param layers
-         * @param media
-         * @return void
-         */
+        isTranscriptEnabled: false,
+
         buildtranscript: function(player, controls, layers, media) {
 
             var t = this;
 
-            if (player.tracks.length === 0 || !t.options.enableTranscript || !t.isVideo) {
+            if (player.tracks.length === 0 || !t.isVideo) {
                 return;
             }
+
+            t.isTranscriptEnabled = true;
 
             var scope = media.closest('.mejs-inner'),
                 languageSelect = [];
@@ -45,21 +35,21 @@
             if (languageSelect.length > 1) {
                 player.transcriptToggle = $('<select class="mejs-transcript-language">' + languageSelect.join('') + '</select>')
                     .prependTo(player.transcript);
+
+                player.transcriptToggle.on('change', function() {
+                    for (var i = 0, total = player.tracks.length; i < total && total > 1; i++) {
+                        if (player.tracks[i].srclang === $(this).val()) {
+                            t.loadTranscript(player.tracks[i]);
+                        }
+                    }
+
+                });
             }
 
             // Mute video completely to favor transcript
             media.setMuted(true);
 
             t.loadTranscript(player.tracks[0]);
-
-            player.transcriptToggle.on('change', function() {
-                for (var i = 0, total = player.tracks.length; i < total && total > 1; i++) {
-                    if (player.tracks[i].srclang === $(this).val()) {
-                        t.loadTranscript(player.tracks[i]);
-                    }
-                }
-
-            });
 
             // Update transcript position
             media.addEventListener('timeupdate',function() {
@@ -69,7 +59,7 @@
         loadTranscript: function(track) {
 
             var t = this;
-            
+
             t.selectedTrack = track;
 
             // Build content of transcript area with first caption content
@@ -112,6 +102,17 @@
                         currentLine.removeClass('current').removeAttr('tabindex').blur();
                     }
                 }
+            }
+        },
+        toggleTranscript: function() {
+            var t = this;
+
+            if (t.isTranscriptEnabled) {
+                // Remove all
+                t.transcript.remove();
+                t.media.setMute(false);
+            } else {
+                t.buildtranscript(t, t.controls, t.layers, t.media);
             }
         }
     });
