@@ -75,7 +75,7 @@ SoundCloudApi = {
 		//console.log('creating iframe', settings);
 
 		var player = SC.Widget(settings.iframe);
-		window['__ready__' + settings.id](player);
+		win['__ready__' + settings.id](player);
 	}
 };
 

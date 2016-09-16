@@ -41,15 +41,16 @@
 
         /**
          * Create a queue to prepare the creation of <iframe>
-         * @param {Object} vimeo - an object with settings needed to create <iframe>
+         *
+         * @param {Object} settings - an object with settings needed to create <iframe>
          */
-        enqueueIframe: function(vimeo) {
+        enqueueIframe: function(settings) {
 
             if (this.isLoaded) {
-                this.createIframe(vimeo);
+                this.createIframe(settings);
             } else {
                 this.loadIframeApi();
-                this.iframeQueue.push(vimeo);
+                this.iframeQueue.push(settings);
             }
         },
 
@@ -108,13 +109,14 @@
         },
 
         /**
-         * Extract numeric value from Vimeo to be loaded by API
+         * Extract numeric value from Vimeo to be loaded through API
+         * Valid URL format(s):
+         *  - https://player.vimeo.com/video/59777392
          *
          * @param {String} url - Vimeo full URL to grab the number Id of the source
-         * @return int
+         * @return {int}
          */
         getVimeoId: function(url) {
-            // https://player.vimeo.com/video/59777392
             if (url == undefined || url == null) {
                 return null;
             }
@@ -129,8 +131,8 @@
         /**
          * Generate custom errors for Vimeo based on the API specifications
          *
-         * @param {Object} error
          * @see https://github.com/vimeo/player.js#error
+         * @param {Object} error
          */
         errorHandler: function(error) {
             switch (error.name) {

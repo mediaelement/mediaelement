@@ -56,11 +56,17 @@ var YouTubeApi = {
 		return new YT.Player(settings.containerId, settings);
 	},
 
-	// src
+	/**
+	 * Extract ID from YouTube's URL to be loaded through API
+	 * Valid URL format(s):
+	 * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+	 * - http://www.youtube.com/v/VIDEO_ID?version=3
+	 * - http://youtu.be/Djd6tPrxc08
+	 *
+	 * @param {String} url
+	 * @return {string}
+	 */
 	getYouTubeId: function(url) {
-		// http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-		// http://www.youtube.com/v/VIDEO_ID?version=3
-		// http://youtu.be/Djd6tPrxc08
 
 		var youTubeId = "";
 
@@ -115,7 +121,7 @@ var YouTubeApi = {
 };
 
 // IFRAME
-window['onYouTubePlayerAPIReady'] = function() {
+win['onYouTubePlayerAPIReady'] = function() {
 	console.log('onYouTubePlayerAPIReady');
 	YouTubeApi.iFrameReady();
 };
