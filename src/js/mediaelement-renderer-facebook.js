@@ -1,402 +1,391 @@
-/*
-	https://developers.facebook.com/docs/plugins/embedded-video-player/api#event-reference
-*/
-(function(win, doc, shimi, undef) {
+/**
+ * Facebook renderer
+ *
+ * It creates an <iframe> from a <div> with specific configuration.
+ * @see https://developers.facebook.com/docs/plugins/embedded-video-player
+ */
+(function(win, doc, mejs, undef) {
 
-// register youtube type
-mejs.Utils.typeChecks.push(function(url) {
+	/**
+	 * Register Facebook type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function(url) {
 
-	url = new String(url).toLowerCase();
+		url = url.toLowerCase();
 
-	if (url.indexOf('facebook') > -1) {
-		return 'video/x-facebook';
-	} else {
-		return null;
-	}
-});
-
-// YouTube Flash and Iframe API
-FacebookApi = {
-	isIframeStarted: false,
-	isIframeLoaded: false,
-
-	iframeQueue: [],
-	enqueueIframe: function(yt) {
-
-		if (this.isLoaded) {
-			this.createIframe(yt);
+		if (url.indexOf('facebook') > -1) {
+			return 'video/x-facebook';
 		} else {
-			this.loadIframeApi();
-			this.iframeQueue.push(yt);
+			return null;
 		}
-	},
+	});
 
-	loadIframeApi: function() {
-		if (!this.isIframeStarted) {
-			var tag = document.createElement('script');
-			tag.src = "//connect.facebook.net/en_US/sdk.js";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			this.isIframeStarted = true;
-		}
-	},
+	var FacebookRenderer = {
+		name: 'facebook',
 
-	iFrameReady: function() {
+		options: {
+			prefix: 'facebook',
+			fbVars: {
+				appId: '{your-app-id}',
+				xfbml: true,
+				version: 'v2.6'
+			}
+		},
 
-		this.isLoaded = true;
-		this.isIframeLoaded = true;
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {boolean}
+		 */
+		canPlayType: function(type) {
+			var mediaTypes = ['video/facebook','video/x-facebook'];
 
-		while (this.iframeQueue.length > 0) {
-			var settings = this.iframeQueue.pop();
-			this.createIframe(settings);
-		}
-	},
+			return mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Array} options All the player configuration options passed through constructor
+		 * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
 
-	createIframe: function(settings) {
+			var
+				fbWrapper = {},
+				fbApi = null,
+				fbDiv = null,
+				apiStack = [],
+				paused = true,
+				ended = false,
+				hasStartedPlaying = false,
+				src = '',
+				eventHandler = {},
+				i,
+				il
+				;
 
-		console.log('creating iframe', settings);
+			fbWrapper.options = options;
+			fbWrapper.id = mediaElement.id + '_' + options.prefix;
+			fbWrapper.mediaElement = mediaElement;
 
-		var player = new YT.Player(settings.containerId, settings);
-	},
+			// wrappers for get/set
+			var props = mejs.html5media.properties;
+			for (i=0, il=props.length; i<il; i++) {
 
-	// src
-	getFacebookVideoId: function(url) {
-		// https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fjohndyer%2Fvideos%2F10107816243681884%2F&show_text=0&width=640
-		// https://www.facebook.com/johndyer/videos/10107816243681884/
+				// wrap in function to retain scope
+				(function(propName) {
 
-		// TEMP
-		var facebookVideoId = "10107816243681884";
-	}
-};
+					var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
-// IFRAME
-window['fbAsyncInit'] = function() {
-	console.log('fbAsyncInit');
-	//YouTubeApi.iFrameReady();
-}
+					fbWrapper['get' + capName] = function() {
 
-FacebookRenderer = {
-	name: 'facebook',
+						if (fbApi !== null) {
+							var value = null;
 
-	// if Flash is installed, returns an array of video types
-	canPlayType: function(type) {
-		var mediaTypes = ['video/facebook','video/x-facebook'];
+							// figure out how to get youtube dta here
+							switch (propName) {
+								case 'currentTime':
+									return fbApi.getCurrentPosition();
 
-		return mediaTypes.indexOf(type) > -1;
-	},
-	options: {
-		prefix: 'facebook'
-	},
+								case 'duration':
+									return fbApi.getDuration();
 
-	create: function (mediaElement, options, mediaFiles) {
+								case 'volume':
+									return fbApi.getVolume();
 
-		// exposed object
-		var fbWrapper = {};
-		fbWrapper.options = options;
-		fbWrapper.id = mediaElement.id + '_' + options.prefix;
-		fbWrapper.mediaElement = mediaElement;
+								case 'paused':
+									return paused;
 
-		// API objects
-		var
-			fbApi = null,
-			fbDiv = null,
-			apiStack = [],
-			paused = true,
-			ended = false,
-			hasStartedPlaying = false,
-			src = '';
+								case 'ended':
+									return ended;
 
-		// wrappers for get/set
-		var props = mejs.html5media.properties;
-		for (var i=0, il=props.length; i<il; i++) {
+								case 'muted':
+									return fbApi.isMuted();
 
-			// wrap in function to retain scope
-			(function(propName) {
+								case 'buffered':
+									return {
+										start: function() {
+											return 0;
+										},
+										end: function () {
+											return 0;
+										},
+										length: 1
+									};
+								case 'src':
+									return src;
+							}
 
-				// add to flash state that we will store
-
-				var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
-
-				fbWrapper['get' + capName] = function() {
-					
-					console.log('FB.get' + propName, fbApi.getDuration());
-					
-					if (fbApi !== null) {
-						var value = null;
-
-						// figure out how to get youtube dta here
-						switch (propName) {
-							case 'currentTime':
-								return fbApi.getCurrentPosition();
-
-							case 'duration':
-								return fbApi.getDuration();
-
-							case 'volume':
-								return fbApi.getVolume();
-
-							case 'paused':
-								return paused;
-
-							case 'ended':
-								return ended;
-
-							case 'muted':
-								return fbApi.isMuted(); // ?
-
-							case 'buffered':
-								return {
-									start: function(index) {
-										return 0;
-									},
-									end: function (index) {
-										return 0;
-									},
-									length: 1
-								};
-							case 'src':
-								return src;
+							return value;
+						} else {
+							return null;
 						}
+					};
 
-						return value;
-					} else {
-						return null;
+					fbWrapper['set' + capName] = function(value) {
+
+						if (fbApi !== null) {
+
+							switch (propName) {
+
+								case 'src':
+									var url = typeof value == 'string' ? value : value[0].src;
+
+									// Only way is to destroy instance and all the events fired,
+									// and create new one
+									fbDiv.parentNode.removeChild(fbDiv);
+									createFacebookEmbed(url, options.fbVars);
+
+									// This method reloads video on-demand
+									FB.XFBML.parse();
+
+									break;
+
+								case 'currentTime':
+									fbApi.seek(value);
+									break;
+
+								case 'muted':
+									if (value) {
+										fbApi.mute();
+									} else {
+										fbApi.unmute();
+									}
+									setTimeout(function() {
+										mediaElement.dispatchEvent({type:'volumechange'});
+									}, 50);
+									break;
+
+								case 'volume':
+									fbApi.setVolume(value);
+									setTimeout(function() {
+										mediaElement.dispatchEvent({type:'volumechange'});
+									}, 50);
+									break;
+
+								default:
+									console.log('facebook ' + id, propName, 'UNSUPPORTED property');
+							}
+
+						} else {
+							// store for after "READY" event fires
+							apiStack.push({type: 'set', propName: propName, value: value});
+						}
+					}
+
+				})(props[i]);
+			}
+
+			// add wrappers for native methods
+			var methods = mejs.html5media.methods;
+			for (i=0, il=methods.length; i<il; i++) {
+				(function(methodName) {
+
+					// run the method on the native HTMLMediaElement
+					fbWrapper[methodName] = function() {
+
+						if (fbApi !== null) {
+
+							// DO method
+							switch (methodName) {
+								case 'play':
+									return fbApi.play();
+								case 'pause':
+									return fbApi.pause();
+								case 'load':
+									return null;
+
+							}
+
+						} else {
+							apiStack.push({type: 'call', methodName: methodName});
+						}
+					};
+
+				})(methods[i]);
+			}
+
+
+			/**
+			 * Dispatch a list of events
+			 *
+			 * @private
+			 * @param {Array} events
+			 */
+			function sendEvents(events) {
+				for (var i=0, il=events.length; i<il; i++) {
+					var event = mejs.Utils.createEvent(events[i], fbWrapper);
+					mediaElement.dispatchEvent(event);
+				}
+			}
+
+			/**
+			 * Determine if an object contains any elements
+			 *
+			 * @see http://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+			 * @param {Object} instance
+			 * @return {boolean}
+			 */
+			function isEmpty(instance) {
+				for(var key in instance) {
+					if (instance.hasOwnProperty(key)) {
+						return false;
 					}
 				}
 
-				fbWrapper['set' + capName] = function(value) {
-					//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
+				return true;
+			}
 
-					if (fbApi !== null) {
+			/**
+			 * Create a new Facebook player and attach all its events
+			 *
+			 * This method creates a <div> element that, once the API is available, will generate an <iframe>
+			 *
+			 * @param {String} url
+			 * @param {Object} config
+			 */
+			function createFacebookEmbed(url, config) {
 
-						// do somethign
-						switch (propName) {
+				fbDiv = doc.createElement('div');
+				fbDiv.id = fbWrapper.id;
+				fbDiv.className = "fb-video" ;
+				fbDiv.setAttribute("data-href", url);
+				fbDiv.setAttribute("data-width", mediaElement.originalNode.width);
+				fbDiv.setAttribute("data-allowfullscreen", "true");
 
-							case 'src':
-								var url = typeof value == 'string' ? value : value[0].src;
+				mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
+				mediaElement.originalNode.style.display = 'none';
 
-								createFacebookEmbed(url);
+                /*
+                 * Register Facebook API event globally
+                 *
+                 */
+				win['fbAsyncInit'] = function() {
 
-								// sad :(
-								break;
+					FB.init(config);
 
-							case 'currentTime':
-								fbApi.seek(value);
-								break;
+					FB.Event.subscribe('xfbml.ready', function(msg) {
 
-							case 'muted':
-								if (value) {
-									fbApi.mute(); // ?
-								} else {
-									fbApi.unMute(); // ?
+						console.log("Facebook ready event", msg);
+
+						if (msg.type === 'video') {
+
+							fbApi = msg.instance;
+
+							// remove previous listeners
+							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
+							for (i = 0, il = fbEvents.length; i<il; i++) {
+								var event = fbEvents[i], handler = eventHandler[event];
+								if (!isEmpty(handler) && typeof handler.removeListener === 'function') {
+									handler.removeListener(event);
 								}
-								setTimeout(function() {
-									mediaElement.dispatchEvent({type:'volumechange'});
-								}, 50);
-								break;
+							}
 
-							case 'volume':
-								fbApi.setVolume(value);
-								setTimeout(function() {
-									mediaElement.dispatchEvent({type:'volumechange'});
-								}, 50);
-								break;
+							// do call stack
+							for (var i=0, il=apiStack.length; i<il; i++) {
 
-							default:
-								console.log('youtube ' + id, propName, 'UNSUPPORTED property');
+								var stackItem = apiStack[i];
+
+								console.log('stack', stackItem.type);
+
+								if (stackItem.type === 'set') {
+									var propName = stackItem.propName,
+										capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+
+									fbWrapper['set' + capName](stackItem.value);
+								} else if (stackItem.type === 'call') {
+									fbWrapper[stackItem.methodName]();
+								}
+							}
+
+							console.log('FB INIT');
+							sendEvents(['rendererready','ready','loadeddata','canplay']);
+
+							// Custom Facebook events
+							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function() {
+								console.log('FB EVENT','startedPlaying');
+								if (!hasStartedPlaying) {
+									sendEvents(['loadedmetadata', 'timeupdate']);
+									hasStartedPlaying = true;
+								}
+								paused = false;
+								ended = false;
+								sendEvents(['play', 'playing', 'timeupdate']);
+							});
+							eventHandler.paused = fbApi.subscribe('paused', function() {
+								console.log('FB EVENT','paused');
+								paused = true;
+								ended = false;
+								sendEvents(['paused']);
+							});
+							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function() {
+								paused = false;
+								ended = true;
+								sendEvents(['ended']);
+							});
+							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function() {
+								sendEvents(['progress', 'timeupdate']);
+							});
+							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function() {
+								sendEvents(['progress', 'timeupdate']);
+							});
 						}
-
-					} else {
-						// store for after "READY" event fires
-						apiStack.push({type: 'set', propName: propName, value: value});
-					}
-				}
-
-			})(props[i]);
-		}
-
-		// add wrappers for native methods
-		var methods = mejs.html5media.methods;
-		for (var i=0, il=methods.length; i<il; i++) {
-			(function(methodName) {
-
-				// run the method on the native HTMLMediaElement
-				fbWrapper[methodName] = function() {
-					console.log('[' + options.prefix + ' ' + methodName + '()]', fbApi);
-
-					if (fbApi !== null) {
-
-						// DO method
-						switch (methodName) {
-							case 'play':
-								return fbApi.play();
-							case 'pause':
-								return fbApi.pause();
-							case 'load':
-								return null;
-
-						}
-
-					} else {
-						apiStack.push({type: 'call', methodName: methodName});
-					}
+					});
 				};
 
-			})(methods[i]);
-		}
-		
-
-		function sendEvents(events) {
-			for (var i=0, il=events.length; i<il; i++) {
-				var event = mejs.Utils.createEvent(events[i], fbWrapper);
-				mediaElement.dispatchEvent(event);
+				(function(d, s, id){
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) {return;}
+					js = d.createElement(s); js.id = id;
+					js.src = "//connect.facebook.net/en_US/sdk.js";
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
 			}
-		}		
 
-		function createFacebookEmbed(url) {
+			if (mediaFiles.length > 0) {
+				createFacebookEmbed(mediaFiles[0].src, options.fbVars);
+			}
 
-			// create facebook div
-			fbDiv = doc.createElement('div');
-			fbDiv.id = fbWrapper.id;
-			fbDiv.className = "fb-video" ;
-			fbDiv.setAttribute("data-href", url); // mediaFiles[0].src; // "https://www.facebook.com/facebook/videos/10153231379946729/";
-			fbDiv.setAttribute("data-width", mediaElement.originalNode.width);
-			fbDiv.setAttribute("data-allowfullscreen", "true");
+			fbWrapper.hide = function() {
+				fbWrapper.stopInterval();
+				fbWrapper.pause();
+				if (fbDiv) {
+					fbDiv.style.display = 'none';
+				}
+			};
+			fbWrapper.show = function() {
+				if (fbDiv) {
+					fbDiv.style.display = '';
+				}
+			};
+			fbWrapper.destroy = function() {
+				//youTubeApi.destroy();
+			};
+			fbWrapper.interval = null;
 
-			mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
-			mediaElement.originalNode.style.display = 'none';
+			fbWrapper.startInterval = function() {
+				// create timer
+				fbWrapper.interval = setInterval(function() {
 
-			// attach to window
-			window.fbAsyncInit = function() {
-				FB.init({
-					appId      : '{your-app-id}',
-					xfbml      : true,
-					version    : 'v2.5'
-				});
+					var event = mejs.Utils.createEvent('timeupdate', fbWrapper);
+					mediaElement.dispatchEvent(event);
 
-				// Get Embedded Video Player API Instance
-				FB.Event.subscribe('xfbml.ready', function(msg) {
-
-					console.log("Facebook ready event", msg);
-
-					if (msg.type === 'video') {
-
-						// get object
-						fbApi = msg.instance;
-
-						// do call stack
-						for (var i=0, il=apiStack.length; i<il; i++) {
-
-							var stackItem = apiStack[i];
-
-							console.log('stack', stackItem.type);
-
-							if (stackItem.type === 'set') {
-								var propName = stackItem.propName,
-									capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
-
-								fbWrapper['set' + capName](stackItem.value);
-							} else if (stackItem.type === 'call') {
-								fbWrapper[stackItem.methodName]();
-							}
-						}
-
-						console.log('FB INIT');
-						sendEvents(['rendererready','ready','loadeddata','canplay']);
-
-						fbApi.subscribe('startedPlaying', function() {
-							console.log('FB EVENT','startedPlaying');
-							if (!hasStartedPlaying) {
-								sendEvents(['loadedmetadata']);
-								hasStartedPlaying = true;
-							}
-							paused = false;
-							ended = false;
-							sendEvents(['play', 'playing']);
-						});
-						fbApi.subscribe('paused', function() {
-							console.log('FB EVENT','paused');
-							paused = true;
-							ended = false;
-							sendEvents(['paused']);
-						});
-						fbApi.subscribe('finishedPlaying', function() {
-							paused = false;
-							ended = true;
-							sendEvents(['ended']);
-						});
-						fbApi.subscribe('startedBuffering', function() {
-							sendEvents(['progress']);
-						});
-						fbApi.subscribe('finishedBuffering', function() {
-							//sendEvents(['buffered']);
-						});
-					}
-				});
+				}, 250);
+			};
+			fbWrapper.stopInterval = function() {
+				if (fbWrapper.interval) {
+					clearInterval(fbWrapper.interval);
+				}
 			};
 
-			//
-			(function(d, s, id){
-				var js, fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) {return;}
-				js = d.createElement(s); js.id = id;
-				js.src = "//connect.facebook.net/en_US/sdk.js";
-				fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));
+			return fbWrapper;
 		}
+	};
 
-		if (mediaFiles.length > 0) {
-			createFacebookEmbed(mediaFiles[0].src);
-		}
-
-
-		// send it off for async loading and creation
-		//YouTubeApi.enqueueIframe(youtubeSettings);
-
-
-		fbWrapper.setSize = function(width, height) {
-		}
-		fbWrapper.hide = function() {
-			fbWrapper.stopInterval();
-			fbWrapper.pause();
-			if (fbDiv) {
-				fbDiv.style.display = 'none';
-			}
-		}
-		fbWrapper.show = function() {
-			if (fbDiv) {
-				fbDiv.style.display = '';
-			}
-		}
-		fbWrapper.destroy = function() {
-			//youTubeApi.destroy();
-		}
-		fbWrapper.interval = null;
-
-		fbWrapper.startInterval = function() {
-			// create timer
-			youtube.interval = setInterval(function() {
-
-				var event = mejs.Utils.createEvent('timeupdate', fbWrapper);
-				mediaElement.dispatchEvent(event);
-
-			}, 250);
-		}
-		fbWrapper.stopInterval = function() {
-			if (youtube.interval) {
-				clearInterval(youtube.interval);
-			}
-		}
-
-		return fbWrapper;
-	}
-};
-
-// filtering out IE6-8
-// IE6-7 don't have postMessage so don't support <iframe> API
-// IE8 doesn't fire the onReady event, so it doens't work - not sure if Google problem or not.
-if (window.postMessage && typeof window.addEventListener) {
 	mejs.Renderers.add(FacebookRenderer);
-}
 
 })(window, document, window.mejs || {});
