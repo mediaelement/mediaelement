@@ -53,6 +53,10 @@
                 }
             },
 
+            /**
+             * Load hls.js script on the header of the document
+             *
+             */
             loadScript: function() {
                 if (!this.isMediaStarted) {
 
@@ -78,6 +82,10 @@
                 }
             },
 
+            /**
+             * Process queue of HLS player creation
+             *
+             */
             mediaReady: function() {
                 this.isLoaded = true;
                 this.isMediaLoaded = true;
@@ -88,7 +96,13 @@
                 }
             },
 
+            /**
+             * Create a new instance of HLS player and trigger a custom event to initialize it
+             *
+             * @param {Object} settings - an object with settings needed to instantiate HLS object
+             */
             createInstance: function (settings) {
+                console.log(settings);
                 var player = new Hls(settings.options);
                 win['__ready__' + settings.id](player);
             }
@@ -100,7 +114,10 @@
             options: {
                 prefix: 'native_hls',
                 /**
+                 * Custom configuration for HLS player
+                 *
                  * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
+                 * @var {Object}
                  */
                 hls: {
                     autoStartLoad: true,
@@ -152,13 +169,25 @@
                     abrBandWidthUpFactor: 0.7
                 }
             },
-
+            /**
+             * Determine if a specific element type can be played with this render
+             *
+             * @param {String} type
+             * @return {boolean}
+             */
             canPlayType: function (type) {
 
                 var mediaTypes = ['application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL', 'audio/hls', 'video/hls'];
                 return mediaTypes.indexOf(type) > -1;
             },
-
+            /**
+             * Create the player instance and add all native events/methods/properties as possible
+             *
+             * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+             * @param {Array} options All the player configuration options passed through constructor
+             * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+             * @return {Object}
+             */
             create: function (mediaElement, options, mediaFiles) {
 
                 var
@@ -172,6 +201,7 @@
                     ;
 
                 node = originalNode.cloneNode(true);
+                options = mejs.Utils.extend(options, mediaElement.options);
 
                 // WRAPPERS for PROPs
                 var props = mejs.html5media.properties;
@@ -234,7 +264,7 @@
                     }
 
                     // BUBBLE EVENTS
-                    var events = mejs.html5media.events;
+                    var events = mejs.html5media.events, hlsEvents = Hls.Events;
 
                     events = events.concat(['click', 'mouseover', 'mouseout']);
 
@@ -248,7 +278,7 @@
                                 var url = node.src;
 
                                 hlsPlayer.attachMedia(node);
-                                hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
+                                hlsPlayer.on(hlsEvents.MEDIA_ATTACHED, function() {
                                     hlsPlayer.loadSource(url);
                                 });
                             }
@@ -264,6 +294,36 @@
                             });
 
                         })(events[i]);
+                    }
+
+                    /**
+                     * Custom HLS events
+                     *
+                     * These events can be attached to the original node using addEventListener and the name of the event,
+                     * not using Hls.Events object
+                     * @see https://github.com/dailymotion/hls.js/blob/master/src/events.js
+                     * @see https://github.com/dailymotion/hls.js/blob/master/src/errors.js
+                     * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
+                     * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
+                     */
+                    for (var eventType in hlsEvents) {
+
+                        if (hlsEvents.hasOwnProperty(eventType)) {
+                            hlsPlayer.on(hlsEvents[eventType], function (e, data) {
+                                var event = mejs.Utils.createEvent(e, node);
+                                mediaElement.dispatchEvent(event);
+
+                                if (e === 'ERROR') {
+
+                                    // Destroy instance of player if unknown error found
+                                    if (data.fatal && e ===  Hls.ErrorTypes.OTHER_ERROR) {
+                                        hlsPlayer.destroy();
+                                    }
+
+                                    console.error(e, data);
+                                }
+                            });
+                        }
                     }
                 };
 
@@ -282,7 +342,6 @@
                 originalNode.parentNode.insertBefore(node, originalNode);
                 originalNode.removeAttribute('autoplay');
                 originalNode.style.display = 'none';
-
 
                 NativeHls.prepareSettings({
                     options: options.hls,
@@ -306,6 +365,10 @@
                 node.show = function () {
                     node.style.display = '';
                     return node;
+                };
+
+                node.destroy = function() {
+                    hlsPlayer.destroy();
                 };
 
                 var event = mejs.Utils.createEvent('rendererready', node);
