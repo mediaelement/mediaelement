@@ -7,7 +7,7 @@
  * @see https://github.com/vimeo/player.js
  *
  */
-(function(win, doc, mejs, undef) {
+(function(win, doc, mejs, undefined) {
 
     /**
      * Register Vimeo type based on URL structure

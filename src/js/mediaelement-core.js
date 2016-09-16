@@ -1,6 +1,6 @@
 "use strict";
 
-(function(mejs, win, doc, undef) {
+(function(mejs, win, doc, undefined) {
 
 // HTML5 Media API that will be mimiced
 mejs.html5media = {
