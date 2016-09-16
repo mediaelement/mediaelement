@@ -32,26 +32,28 @@
 </head>
 <body>
 
-<div id="container">
-	
-	<h1>MediaElement.js</h1>
-	
-	<h2>JsMad tester</h2>
-	
-	<audio id="player1" preload="none" controls>
+	<div id="container">
 
-		<source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3" />
+		<h1>MediaElement.js</h1>
 
-	</audio>
+		<h2>JsMad tester</h2>
+
+		<audio id="player1" preload="none" controls>
+
+			<source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3" />
+
+		</audio>
+
+	</div>
 		   
-<script>
-	
-// limit to only jsmad
-mejs.Renderers.order = ['jsmad'];	
+	<script>
 
-var player = new MediaElementPlayerSimple('player1');
+	// limit to only jsmad
+	mejs.Renderers.order = ['jsmad'];
 
-</script>
+	var player = new MediaElementPlayerSimple('player1');
+
+	</script>
 	
 </body>
 </html>
