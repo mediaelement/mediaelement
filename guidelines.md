@@ -8,13 +8,15 @@
 <a id="development"></a>
 ## Development
 
-Unless you are developing a fix for a reported issue, the development of a new feature follows specific conventions.
+### General Conventions
 
 * Tab size is **8** for indentation.
-* File name format: `mep-feature-[feature_name].js`.
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
-* Test the changes with `/test/test.html`. Make sure you download the media files from https://github.com/johndyer/mediaelement-files and place them inside the `/media/` directory.
-* A code template to build a feature is presented below.
+* Make sure you download the necessary media files from https://github.com/johndyer/mediaelement-files and place them inside the `/media/` directory.
+
+### Features
+
+The file name for them by default is: `mediaelementplayer-feature-[feature_name].js`.
 
 ```javascript
 (function($) {
@@ -47,6 +49,7 @@ Unless you are developing a fix for a reported issue, the development of a new f
 })(mejs.$);
 
 ```
+
 If the feature must be integrated in the core package, place it inside `/src/` folder to be reviewed and, if code integrates any configuration variables, make sure you also write comments about their purpose, and add them into [API and Configuration](api.md) to keep documentation up-to-date; otherwise, to use it immediately, just call it after the main files and add its name in the `features` configuration.
 ```html
 <script src="jquery.js"></script>
@@ -67,6 +70,19 @@ $(document).ready(function() {
 });
 </script>
 ```
+
+### Renders
+
+* The file name for them by default is: `mediaelement-renderer-[renderer_name].js`.
+* Add the HTML needed to display new media in `/test/simpleplayer.html`.
+* Create a `/test/[renderer_name].html` to show the renderer in an isolated way.
+* Add an entry or two in `/test/alpha.html` to confirm that media for new renderer can be changed easily. Example:
+
+```html
+ <span class="command">
+    document.getElementById('playerId').src = '/path/to/new_media.extension'; 
+</span>
+ ```
 
 <a id="nodejs"></a>
 ## Node.js
