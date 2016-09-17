@@ -194,7 +194,7 @@ mejs.HtmlMediaElementShim = {
 		}		
 		
 		// special case for Chromium to specify natively supported video codecs (i.e. WebM and Theora) 
-		if (mejs.MediaFeatures.isChromium) {
+		if (result.isVideo && mejs.MediaFeatures.isChromium) {
 			htmlMediaElement.canPlayType = function(type) { 
 				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : '';
 			}; 
