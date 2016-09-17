@@ -133,7 +133,7 @@ mejs.HtmlMediaElementShim = {
 			l,
 			n,
 			type,
-			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio'), scheme: ''},
+			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() !== 'audio'), scheme: ''},
 			pluginName,
 			pluginVersions,
 			pluginInfo,
@@ -187,16 +187,16 @@ mejs.HtmlMediaElementShim = {
 		// STEP 2: Test for playback method
 		
 		// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-		if (mejs.MediaFeatures.isBustedAndroid) {
+		if (result.isVideo && mejs.MediaFeatures.isBustedAndroid) {
 			htmlMediaElement.canPlayType = function(type) {
 				return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'maybe' : '';
 			};
 		}		
 		
 		// special case for Chromium to specify natively supported video codecs (i.e. WebM and Theora) 
-		if (mejs.MediaFeatures.isChromium) { 
+		if (result.isVideo && mejs.MediaFeatures.isChromium) {
 			htmlMediaElement.canPlayType = function(type) { 
-				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : ''; 
+				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : '';
 			}; 
 		}
 
