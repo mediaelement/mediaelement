@@ -39,27 +39,17 @@
         <h2>Native HLS Stream</h2>
 
         <video  width="640" height="360" preload="none" class="mejs-player" >
-            <source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
+            <source src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
         </video>
 
     </div>
     <script>
 
 
-        var elements = mejs.getElementsByClassName('mejs-player'), pl;
+        var elements = mejs.getElementsByClassName('mejs-player');
 
         for (var i=0, il=elements.length; i<il; i++) {
-           pl = new MediaElementPlayerSimple(elements[i], {
-               hls: {
-                   debug: true
-               },
-               success: function(media) {
-                   console.log(media.options);
-                   media.addEventListener('hlsMediaAttached', function() {
-                       console.log('Attached!');
-                   });
-               }
-           });
+           var player = new MediaElementPlayerSimple(elements[i]);
         }
 
     </script>
