@@ -65,7 +65,7 @@
                         firstScriptTag = doc.getElementsByTagName('script')[0],
                         done = false;
 
-                    script.src = '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+                    script.src = 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
                     // Attach handlers for all browsers
                     script.onload = script.onreadystatechange = function () {
