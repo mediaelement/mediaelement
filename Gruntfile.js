@@ -122,7 +122,7 @@ module.exports = function(grunt) {
                 expand  : true,
                 cwd     : 'src/js/',
                 src     : ['me-i18n-locale-*.js'],
-                dest    : 'build/translations',
+                dest    : 'build/lang',
                 flatten : true,
                 filter  : 'isFile'
             }
