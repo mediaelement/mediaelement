@@ -920,7 +920,6 @@ mejs.YouTubeApi = {
 	},
 	createIframe: function(settings) {
 
-		console.log(settings.variables);
 		var
 		pluginMediaElement = settings.pluginMediaElement,
 		defaultVars = {controls:0, wmode:'transparent'},
