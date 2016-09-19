@@ -18,18 +18,17 @@
 
     if (typeof exports.ja === 'undefined') {
         exports.ja = {
-            "None" : "なし",
-            "Unmute" : "ミュートを解除",
-            "Fullscreen" : "全画面",
-            "Download File" : "ファイルをダウンロードする",
-            "Mute Toggle" : "ミュートトグル",
-            "Play/Pause" : "再生/一時停止",
-            "Captions/Subtitles" : "キャプション/字幕",
-            "Download Video" : "動画をダウンロードする",
-            "Mute" : "ミュート",
-            "Turn off Fullscreen" : "全画面をオフにする",
-            "Go Fullscreen" : "全画面にする",
-            "Close" : "閉じる"
+            'mejs.none' : "なし",
+            'mejs.unmute' : "ミュートを解除",
+            'mejs.fullscreen' : "全画面",
+            'mejs.download-file' : "ファイルをダウンロードする",
+            'mejs.mute-toggle' : "ミュートトグル",
+            'mejs.captions-subtitles' : "キャプション/字幕",
+            'mejs.download-video' : "動画をダウンロードする",
+            'mejs.mute' : "ミュート",
+            'mejs.fullscreen-off' : "全画面をオフにする",
+            'mejs.fullscreen-on' : "全画面にする",
+            'mejs.close' : "閉じる"
         };
     }
 

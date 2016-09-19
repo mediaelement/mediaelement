@@ -18,18 +18,17 @@
 
     if (typeof exports.pt === 'undefined') {
         exports.pt = {
-            "None" : "Nenhum",
-            "Unmute" : "Voltar ao som",
-            "Fullscreen" : "Ecrã completo",
-            "Download File" : "Descarregar o ficheiro",
-            "Mute Toggle" : "Alternar silêncio",
-            "Play/Pause" : "Reprodução/Pausa",
-            "Captions/Subtitles" : "Legendas",
-            "Download Video" : "Descarregar o vídeo",
-            "Mute" : "Silêncio",
-            "Turn off Fullscreen" : "Desligar ecrã completo",
-            "Go Fullscreen" : "Ir para ecrã completo",
-            "Close" : "Fechar"
+            'mejs.none' : "Nenhum",
+            'mejs.unmute' : "Voltar ao som",
+            'mejs.fullscreen' : "Ecrã completo",
+            'mejs.download-file' : "Descarregar o ficheiro",
+            'mejs.mute-toggle' : "Alternar silêncio",
+            'mejs.captions-subtitles' : "Legendas",
+            'mejs.download-video' : "Descarregar o vídeo",
+            'mejs.mute' : "Silêncio",
+            'mejs.fullscreen-off' : "Desligar ecrã completo",
+            'mejs.fullscreen-on' : "Ir para ecrã completo",
+            'mejs.close' : "Fechar"
         };
     }
 

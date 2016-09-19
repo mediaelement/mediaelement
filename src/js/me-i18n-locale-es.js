@@ -18,21 +18,19 @@
 
     if (typeof exports.es === 'undefined') {
         exports.es = {
-            "None" : "Ninguno",
-            "Unmute" : "Reactivar silencio",
-            "Fullscreen" : "Pantalla completa",
-            "Download File" : "Descargar archivo",
-            "Mute Toggle" : "Alternar silencio",
-            "Play/Pause" : "Reproducción/Pausa",
-            "Captions/Subtitles" : "Leyendas/Subtítulos",
-            "Download Video" : "Descargar vídeo",
-            "Mute" : "Silencio",
-            "Turn off Fullscreen" : "Desconectar pantalla completa",
-            "Go Fullscreen" : "Ir a pantalla completa",
-            "Close" : "Cerrar",
-	    "Skip ad": "Salta publicidad",
-	    "Skip in": "Salta en",
-	    "seconds": "segundos"
+            'mejs.none' : "Ninguno",
+            'mejs.unmute' : "Reactivar silencio",
+            'mejs.fullscreen' : "Pantalla completa",
+            'mejs.download-file' : "Descargar archivo",
+            'mejs.mute-toggle' : "Alternar silencio",
+            'mejs.captions-subtitles' : "Leyendas/Subtítulos",
+            'mejs.download-video' : "Descargar vídeo",
+            'mejs.mute' : "Silencio",
+            'mejs.fullscreen-off' : "Desconectar pantalla completa",
+            'mejs.fullscreen-on' : "Ir a pantalla completa",
+            'mejs.close' : "Cerrar",
+            'mejs.ad-skip': "Salta publicidad",
+            'mejs.ad-skip-info': "Salta en %1 segundos"
         };
     }
 
