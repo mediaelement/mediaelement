@@ -3,8 +3,7 @@
 	$.extend(mejs.MepDefaults, {
 		// Enable tooltip that shows time in progress bar
 		enableProgressTooltip: true,
-		progressHelpText: mejs.i18n.t(
-		'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.')
+		progressHelpText: mejs.i18n.t('mejs.time-help-text')
 	});
 
 	// progress/loaded bar
@@ -90,7 +89,7 @@
 				updateSlider = function (e) {
 
 					var seconds = media.currentTime,
-						timeSliderText = mejs.i18n.t('Time Slider'),
+						timeSliderText = mejs.i18n.t('mejs.time-slider'),
 						time = mejs.Utility.secondsToTimeCode(seconds, player.options),
 						duration = media.duration;
 

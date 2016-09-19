@@ -9,8 +9,8 @@
 $.extend(mejs.MepDefaults, {
 	googleAnalyticsTitle: '',
 	googleAnalyticsCategory: 'Videos',
-	googleAnalyticsEventPlay: 'Play',
-	googleAnalyticsEventPause: 'Pause',
+	googleAnalyticsEventPlay: 'mejs.play',
+	googleAnalyticsEventPause: 'mejs.pause',
 	googleAnalyticsEventEnded: 'Ended',
 	googleAnalyticsEventTime: 'Time'
 });
