@@ -49,6 +49,8 @@ enablePseudoStreaming: false,
 pseudoStreamingStartQueryParam: 'start',
 // name of silverlight file
 silverlightName: 'silverlightmediaelement.xap',
+// Extra configuration for YouTube <iframe>
+youtubeIframeVars: {},
 // default if the <video width> is not specified
 defaultVideoWidth: 480,
 // default if the <video height> is not specified
