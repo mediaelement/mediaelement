@@ -67,7 +67,7 @@
                     firstScriptTag = doc.getElementsByTagName('script')[0],
                     done = false;
 
-                script.src = '//player.vimeo.com/api/player.js';
+                script.src = 'https://player.vimeo.com/api/player.js';
 
                 // Attach handlers for all browsers
                 script.onload = script.onreadystatechange = function() {

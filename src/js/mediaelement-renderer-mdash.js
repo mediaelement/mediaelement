@@ -57,7 +57,7 @@
                         firstScriptTag = doc.getElementsByTagName('script')[0],
                         done = false;
 
-                    script.src = '//cdn.dashjs.org/latest/dash.all.min.js';
+                    script.src = 'https://cdn.dashjs.org/latest/dash.all.min.js';
 
                     // Attach handlers for all browsers
                     script.onload = script.onreadystatechange = function () {
