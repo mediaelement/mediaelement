@@ -17,20 +17,19 @@
 
     if (typeof exports.fr === 'undefined') {
         exports.fr = {
-            "Download File" : "Télécharger le fichier",
-            //"Play/Pause" : "Lecture/Pause",
-            "Play" : "Lecture",
-            "Pause" : "Pause",
-            "Mute Toggle" : "Activer/désactiver le son",
-            "Fullscreen" : "Plein écran",
-            "Captions/Subtitles" : "Sous-titres",
-            "None" : "Aucun",
-            "Go Fullscreen" : "Afficher en plein écran",
-            "Turn off Fullscreen" : "Quitter le mode plein écran",
-            "Unmute" : "Activer le son",
-            "Mute" : "Désactiver le son",
-            "Download Video" : "Télécharger la vidéo",
-            "Close" : "Fermer"
+            'mejs.download-file' : "Télécharger le fichier",
+            'mejs.play' : "Lecture",
+            'mejs.pause' : 'mejs.pause',
+            'mejs.mute-toggle' : "Activer/désactiver le son",
+            'mejs.fullscreen' : "Plein écran",
+            'mejs.captions-subtitles' : "Sous-titres",
+            'mejs.none' : "Aucun",
+            'mejs.fullscreen-on' : "Afficher en plein écran",
+            'mejs.fullscreen-off' : "Quitter le mode plein écran",
+            'mejs.unmute' : "Activer le son",
+            'mejs.mute' : "Désactiver le son",
+            'mejs.download-video' : "Télécharger la vidéo",
+            'mejs.close' : "Fermer"
         };
     }
 

@@ -17,20 +17,19 @@
     "use strict";
 
     exports['zh-CN'] = {
-        "Fullscreen" : "全屏",
-        "Go Fullscreen" : "转向全屏",
-        "Turn off Fullscreen" : "关闭全屏",
-        "Close" : "关闭",
-        "Download File" : "下载文件",
-        //"Play/Pause" : "播放/暂停",
-        "Play" : "播放",
-        "Pause" : "暂停",
-        "Mute Toggle" : "静音切换",
-        "Captions/Subtitles" : "字幕/标题",
-        "Download Video" : "下载视频",
-        "None" : "无",
-        "Unmute" : "取消静音",
-        "Mute" : "静音"
+        'mejs.fullscreen' : "全屏",
+        'mejs.fullscreen-on' : "转向全屏",
+        'mejs.fullscreen-off' : "关闭全屏",
+        'mejs.close' : "关闭",
+        'mejs.download-file' : "下载文件",
+        'mejs.play' : "播放",
+        'mejs.pause' : "暂停",
+        'mejs.mute-toggle' : "静音切换",
+        'mejs.captions-subtitles' : "字幕/标题",
+        'mejs.download-video' : "下载视频",
+        'mejs.none' : "无",
+        'mejs.unmute' : "取消静音",
+        'mejs.mute' : "静音"
     };
 
 }(mejs.i18n.locale.strings));
