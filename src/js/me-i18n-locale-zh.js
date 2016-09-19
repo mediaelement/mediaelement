@@ -18,18 +18,17 @@
 
     if (typeof exports.zh === 'undefined') {
         exports.zh = {
-            "Fullscreen" : "全屏",
-            "Go Fullscreen" : "轉向全屏",
-            "Turn off Fullscreen" : "關閉全屏",
-            "None" : "沒有",
-            "Unmute" : "取消靜音",
-            "Download File" : "下載文件",
-            "Mute Toggle" : "靜音切換",
-            "Play/Pause" : "播放/暫停",
-            "Captions/Subtitles" : "字幕/標題",
-            "Download Video" : "下載視頻",
-            "Mute" : "靜音",
-            "Close" : "關閉"
+            'mejs.fullscreen' : "全屏",
+            'mejs.fullscreen-on' : "轉向全屏",
+            'mejs.fullscreen-off' : "關閉全屏",
+            'mejs.none' : "沒有",
+            'mejs.unmute' : "取消靜音",
+            'mejs.download-file' : "下載文件",
+            'mejs.mute-toggle' : "靜音切換",
+            'mejs.captions-subtitles' : "字幕/標題",
+            'mejs.download-video' : "下載視頻",
+            'mejs.mute' : "靜音",
+            'mejs.close' : "關閉"
         };
     }
 

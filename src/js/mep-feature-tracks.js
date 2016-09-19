@@ -5,7 +5,7 @@
 		// this will automatically turn on a <track>
 		startLanguage: '',
 
-		tracksText: mejs.i18n.t('Captions/Subtitles'),
+		tracksText: mejs.i18n.t('mejs.captions-subtitles'),
 
 		// By default, no WAI-ARIA live region - don't make a
 		// screen reader speak captions over an audio track.
@@ -64,7 +64,7 @@
 							'<ul>'+
 								'<li>'+
 									'<input type="radio" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label for="' + player.id + '_captions_none">' + mejs.i18n.t('None') +'</label>'+
+									'<label for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') +'</label>'+
 								'</li>'	+
 							'</ul>'+
 						'</div>'+

@@ -4,9 +4,6 @@
  * This file does not contain translations, you have to add them manually.
  * The schema is always the same: me-i18n-locale-[IETF-language-tag].js
  *
- * Examples are provided both for german and chinese translation.
- *
- *
  * What is the concept beyond i18n?
  *   http://en.wikipedia.org/wiki/Internationalization_and_localization
  *
@@ -40,6 +37,7 @@
     "use strict";
 
     var i18n = {
+        "default_language": 'en',
         "locale": {
             // Ensure previous values aren't overwritten.
             "language" : (exports.i18n && exports.i18n.locale.language) || '',
@@ -97,8 +95,8 @@
      * Translate strings to the page language or a given language.
      *
      *
-     * @param str
-     *   A string containing the English string to translate.
+     * @param uid
+     *   A string containing a unique id of the translated text to retrieve.
      *
      * @param options
      *   - 'context' (defaults to the default context): The context the source string
@@ -107,12 +105,21 @@
      * @return
      *   The translated string, escaped via i18n.methods.checkPlain()
      */
-    i18n.methods.t = function (str, options) {
+    i18n.methods.t = function (uid, options) {
+        var str;
 
         // Fetch the localized version of the string.
-        if (i18n.locale.strings && i18n.locale.strings[options.context] && i18n.locale.strings[options.context][str]) {
-            str = i18n.locale.strings[options.context][str];
+        if (i18n.locale.strings && i18n.locale.strings[options.context]) {
+            str = i18n.locale.strings[options.context][uid];
         }
+
+        // Fallback to default language if requested uid is not translated
+        if (!str && i18n.locale.strings && i18n.locale.strings[i18n.default_language]) {
+            str = i18n.locale.strings[i18n.default_language][uid];
+        }
+
+        // As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
+        str = str || uid;
 
         return i18n.methods.checkPlain(str);
     };

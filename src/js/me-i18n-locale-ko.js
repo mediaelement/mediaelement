@@ -18,18 +18,17 @@
 
     if (typeof exports.ko === 'undefined') {
         exports.ko = {
-            "None" : "없음",
-            "Unmute" : "음소거 해제",
-            "Fullscreen" : "전체화면",
-            "Download File" : "파일 다운로드",
-            "Mute Toggle" : "음소거 전환",
-            "Play/Pause" : "재생/정지",
-            "Captions/Subtitles" : "캡션/자막",
-            "Download Video" : "비디오 다운로드",
-            "Mute" : "음소거",
-            "Turn off Fullscreen" : "전체화면 해제",
-            "Go Fullscreen" : "전체화면 가기",
-            "Close" : "닫기"
+            'mejs.none' : "없음",
+            'mejs.unmute' : "음소거 해제",
+            'mejs.fullscreen' : "전체화면",
+            'mejs.download-file' : "파일 다운로드",
+            'mejs.mute-toggle' : "음소거 전환",
+            'mejs.captions-subtitles' : "캡션/자막",
+            'mejs.download-video' : "비디오 다운로드",
+            'mejs.mute' : "음소거",
+            'mejs.fullscreen-off' : "전체화면 해제",
+            'mejs.fullscreen-on' : "전체화면 가기",
+            'mejs.close' : "닫기"
         };
     }
 
