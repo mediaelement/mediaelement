@@ -12,7 +12,7 @@
     if (mejs.MediaFeatures.hasMse) {
 
         /**
-         * Register Native M-Dash type based on URL structure
+         * Register Native M(PEG)-Dash type based on URL structure
          *
          */
         mejs.Utils.typeChecks.push(function (url) {
@@ -49,6 +49,10 @@
                 }
             },
 
+            /**
+             * Load dash.all.min.js script on the header of the document
+             *
+             */
             loadScript: function() {
                 if (!this.isScriptLoaded) {
 
@@ -74,6 +78,10 @@
                 }
             },
 
+            /**
+             * Process queue of Dash player creation
+             *
+             */
             mediaReady: function() {
 
                 this.isLoaded = true;
@@ -85,9 +93,14 @@
                 }
             },
 
+            /**
+             * Create a new instance of Dash player and trigger a custom event to initialize it
+             *
+             * @param {Object} settings - an object with settings needed to instantiate HLS object
+             */
             createInstance: function (settings) {
+
                 var player = dashjs.MediaPlayer().create();
-                player.getDebug().setLogToBrowserConsole(false);
                 win['__ready__' + settings.id](player);
             }
         };
@@ -97,15 +110,27 @@
 
             options: {
                 prefix: 'native_mdash',
-                dashVars: {}
+                dash: {}
             },
-
+            /**
+             * Determine if a specific element type can be played with this render
+             *
+             * @param {String} type
+             * @return {boolean}
+             */
             canPlayType: function (type) {
 
                 var mediaTypes = ['application/dash+xml'];
                 return mediaTypes.indexOf(type) > -1;
             },
-
+            /**
+             * Create the player instance and add all native events/methods/properties as possible
+             *
+             * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+             * @param {Array} options All the player configuration options passed through constructor
+             * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+             * @return {Object}
+             */
             create: function (mediaElement, options, mediaFiles) {
 
                 var
@@ -162,6 +187,10 @@
 
                     mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
+                    // By default, console log is off
+                    dashPlayer.getDebug().setLogToBrowserConsole(false);
+
+
                     console.log('Native M-Dash ready', dashPlayer);
 
                     // do call stack
@@ -180,7 +209,7 @@
                     }
 
                     // BUBBLE EVENTS
-                    var events = mejs.html5media.events;
+                    var events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events;
 
                     events = events.concat(['click', 'mouseover', 'mouseout']);
 
@@ -188,9 +217,6 @@
                         (function (eventName) {
 
                             if (eventName === 'loadedmetadata') {
-
-                                console.log(node);
-
                                 dashPlayer.initialize(node, node.src, false);
                             }
 
@@ -208,7 +234,26 @@
                         })(events[i]);
                     }
 
-                    // Custom Dash events
+                    /**
+                     * Custom M(PEG)-DASH events
+                     *
+                     * These events can be attached to the original node using addEventListener and the name of the event,
+                     * not using dashjs.MediaPlayer.events object
+                     * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
+                     */
+                    for (var eventType in dashEvents) {
+
+                        if (dashEvents.hasOwnProperty(eventType)) {
+                            dashPlayer.on(dashEvents[eventType], function (e, data) {
+                                var event = mejs.Utils.createEvent(e, node);
+                                mediaElement.dispatchEvent(event);
+
+                                if (e === 'error') {
+                                    console.error(e, data);
+                                }
+                            });
+                        }
+                    }
                 };
 
                 var filteredAttributes = ['id', 'src', 'style'];
@@ -228,7 +273,7 @@
                 originalNode.style.display = 'none';
 
                 NativeDash.prepareSettings({
-                    options: options.dashVars,
+                    options: options.dash,
                     id: id
                 });
 
