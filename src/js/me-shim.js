@@ -608,7 +608,7 @@ mejs.HtmlMediaElementShim = {
 				if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
 					pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
 				}
-			}
+			};
 
 			// event call from plugin
 			window[pluginid + '_event'] = function(eventName, values) {
@@ -727,8 +727,9 @@ mejs.HtmlMediaElementShim = {
 						videoId: videoId,
 						height: height,
 						width: width,
-                        scheme: playback.scheme
-					};
+                        scheme: playback.scheme,
+						variables: options.youtubeIframeVars
+					};				
 
 				// favor iframe version of YouTube
 				if (window.postMessage) {
@@ -919,13 +920,15 @@ mejs.YouTubeApi = {
 	},
 	createIframe: function(settings) {
 
+		console.log(settings.variables);
 		var
 		pluginMediaElement = settings.pluginMediaElement,
+		defaultVars = {controls:0, wmode:'transparent'},
 		player = new YT.Player(settings.containerId, {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: {controls:0, wmode:'transparent'},
+			playerVars: $.extend({}, defaultVars, settings.variables),
 			events: {
 				'onReady': function(e) {
 					
@@ -1074,8 +1077,8 @@ mejs.YouTubeApi = {
 
 		window[callbackName] = function(e) {
 			mejs.YouTubeApi.handleStateChange(e, player, pluginMediaElement);
-		}
-
+		};
+		
 		player.addEventListener('onStateChange', callbackName);
 
 		setInterval(function() {
