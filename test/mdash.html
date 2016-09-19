@@ -46,20 +46,10 @@
     <script>
 
 
-        var elements = mejs.getElementsByClassName('mejs-player'), pl;
+        var elements = mejs.getElementsByClassName('mejs-player');
 
         for (var i=0, il=elements.length; i<il; i++) {
-           pl = new MediaElementPlayerSimple(elements[i], {
-               hls: {
-                   debug: true
-               },
-               success: function(media) {
-                   console.log(media.options);
-                   media.addEventListener('hlsMediaAttached', function() {
-                       console.log('Attached!');
-                   });
-               }
-           });
+            var player = new MediaElementPlayerSimple(elements[i]);
         }
 
     </script>
