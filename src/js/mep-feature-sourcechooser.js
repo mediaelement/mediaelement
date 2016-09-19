@@ -43,6 +43,12 @@
 
 						switch (keyCode) {
 							case 32: // space
+								if (!mejs.MediaFeatures.isFirefox) { // space sends the click event in Firefox
+									player.showSourcechooserSelector();
+								}
+								$(this).find('.mejs-sourcechooser-selector')
+									.find('input[type=radio]:checked').first().focus();
+								break;
 							case 13: // enter
 								player.showSourcechooserSelector();
 								$(this).find('.mejs-sourcechooser-selector')
@@ -59,11 +65,15 @@
 
 					// close menu when tabbing away
 					.on('focusout', function (e) {
-						var parent = $(e.relatedTarget).closest('.mejs-sourcechooser-button');
-						if (!parent.length && !parent.find('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
-							// focus is outside the control, but the menu is visible; close it
-							player.hideSourcechooserSelector();
-						}
+						// Firefox does NOT support e.relatedTarget to see which element
+						// just lost focus, so wait to find the next focused element
+						setTimeout(function () {
+							var parent = $(document.activeElement).closest('.mejs-sourcechooser-selector');
+							if (!parent.length && !parent.find('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
+								// focus is outside the control, but the menu is visible; close it
+								player.hideSourcechooserSelector();
+							}
+						}, 0);
 					})
 
 					// handle clicks to the source radio buttons
