@@ -102,7 +102,6 @@
              * @param {Object} settings - an object with settings needed to instantiate HLS object
              */
             createInstance: function (settings) {
-                console.log(settings);
                 var player = new Hls(settings.options);
                 win['__ready__' + settings.id](player);
             }

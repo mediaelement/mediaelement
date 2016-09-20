@@ -55,7 +55,6 @@
                     debug: true
                 },
                 success: function(media) {
-                    console.log(media.options);
                     media.addEventListener('hlsMediaAttached', function() {
                         console.log('Attached!');
                     });
