@@ -4,6 +4,8 @@
  * Uses <iframe> approach and uses Vimeo API to manipulate it.
  * All Vimeo calls return a Promise so this renderer accounts for that
  * to update all the necessary values to interact with MediaElement player.
+ * Note: IE8 implements ECMAScript 3 that does not allow bare keywords in dot notation;
+ * that's why instead of using .catch ['catch'] is being used.
  * @see https://github.com/vimeo/player.js
  *
  */
@@ -291,7 +293,7 @@
                                             vimeoPlayer.play();
                                         }
 
-                                    }).catch(function(error) {
+                                    })['catch'](function(error) {
                                         vimeoApi.errorHandler(error);
                                     });
                                     break;
@@ -300,7 +302,7 @@
                                     vimeoPlayer.setCurrentTime(value).then(function() {
                                         currentTime = value;
                                         mediaElement.dispatchEvent({type:'timeupdate'});
-                                    }).catch(function(error) {
+                                    })['catch'](function(error) {
                                         vimeoApi.errorHandler(error);
                                     });
                                     break;
@@ -308,13 +310,13 @@
                                 case 'volume':
                                     vimeoPlayer.setVolume(value).then(function() {
                                         mediaElement.dispatchEvent({type:'volumechange'});
-                                    }).catch(function(error) {
+                                    })['catch'](function(error) {
                                         vimeoApi.errorHandler(error);
                                     });
                                     break;
 
                                 case 'loop':
-                                    vimeoPlayer.setLoop(value).catch(function(error) {
+                                    vimeoPlayer.setLoop(value)['catch'](function(error) {
                                         vimeoApi.errorHandler(error);
                                     });
                                     break;
@@ -407,7 +409,7 @@
                         var event = mejs.Utils.createEvent('timeupdate', vimeo);
                         mediaElement.dispatchEvent(event);
 
-                    }).catch(function(error) {
+                    })['catch'](function(error) {
                         vimeoApi.errorHandler(error);
                     });
 
@@ -417,7 +419,7 @@
 
                         var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
                         mediaElement.dispatchEvent(event);
-                    }).catch(function(error) {
+                    })['catch'](function(error) {
                         vimeoApi.errorHandler(error);
                     });
 
@@ -438,7 +440,7 @@
                             bufferedTime = duration * loadProgress;
                         }
 
-                    }).catch(function(error) {
+                    })['catch'](function(error) {
                         vimeoApi.errorHandler(error);
                     });
 
@@ -462,7 +464,7 @@
                     paused = false;
                     ended = false;
 
-                    vimeoPlayer.play().catch(function(error) {
+                    vimeoPlayer.play()['catch'](function(error) {
                         vimeoApi.errorHandler(error);
                     });
 
@@ -473,7 +475,7 @@
                     paused = true;
                     ended = false;
 
-                    vimeoPlayer.pause().catch(function(error) {
+                    vimeoPlayer.pause()['catch'](function(error) {
                         vimeoApi.errorHandler(error);
                     });
 
