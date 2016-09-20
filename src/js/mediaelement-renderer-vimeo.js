@@ -29,15 +29,15 @@
     var vimeoApi = {
 
         /**
-         * @var {boolean}
+         * @type {boolean}
          */
         isIframeStarted: false,
         /**
-         * @var {boolean}
+         * @type {boolean}
          */
         isIframeLoaded: false,
         /**
-         * @var {Array}
+         * @type {Array}
          */
         iframeQueue: [],
 

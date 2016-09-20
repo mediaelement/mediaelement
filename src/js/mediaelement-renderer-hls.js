@@ -28,15 +28,15 @@
 
         var NativeHls = {
             /**
-             * @var {boolean}
+             * @type {boolean}
              */
             isMediaStarted: false,
             /**
-             * @var {boolean}
+             * @type {boolean}
              */
             isMediaLoaded: false,
             /**
-             * @var {Array}
+             * @type {Array}
              */
             creationQueue: [],
 
@@ -116,7 +116,7 @@
                  * Custom configuration for HLS player
                  *
                  * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
-                 * @var {Object}
+                 * @type {Object}
                  */
                 hls: {
                     autoStartLoad: true,
