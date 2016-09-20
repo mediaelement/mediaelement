@@ -1,7 +1,8 @@
 /**
- * MediaElement core
+ * MediaElement utilities
  *
- * This file is the foundation to create/render the media.
+ * This file contains global functions and polyfills needed to support old browsers.
+ *
  */
 (function(win, doc, mejs, undefined) {
 
@@ -17,8 +18,8 @@
 
 		/**
 		 *
-		 * @param obj
-		 * @param name
+		 * @param {Object} obj
+		 * @param {String} name
 		 * @param onGet
 		 * @param onSet
 		 */
@@ -91,8 +92,8 @@
 
 		/**
 		 *
-		 * @param eventName
-		 * @param target
+		 * @param {String} eventName
+		 * @param {} target
 		 * @return {*}
 		 */
 		createEvent: function(eventName, target) {
@@ -131,9 +132,9 @@
 
 		/**
 		 *
-		 * @param url
-		 * @param type
-		 * @return {*}
+		 * @param {String} url
+		 * @param {String} type
+		 * @return {String}
 		 */
 		formatType: function(url, type) {
 
@@ -147,8 +148,8 @@
 
 		/**
 		 *
-		 * @param url
-		 * @return {*}
+		 * @param {String} url
+		 * @return {String}
 		 */
 		getTypeFromFile: function(url) {
 
@@ -176,8 +177,8 @@
 
 		/**
 		 *
-		 * @param url
-		 * @return {string}
+		 * @param {String} url
+		 * @return {String}
 		 */
 		getExtension: function(url) {
 			var withoutQuerystring = url.split('?')[0],
@@ -188,12 +189,12 @@
 
 		/**
 		 *
-		 * @param ext
-		 * @return {*}
+		 * @param {String} extension
+		 * @return {String}
 		 */
-		normalizeExtension: function(ext) {
+		normalizeExtension: function(extension) {
 
-			switch (ext) {
+			switch (extension) {
 				case 'mp4':
 				case 'm4v':
 					return 'mp4';
@@ -206,14 +207,14 @@
 				case 'ogv':
 					return 'ogg';
 				default:
-					return ext;
+					return extension;
 			}
 		},
 
 		/**
 		 *
-		 * @param url
-		 * @return {string}
+		 * @param {String} url
+		 * @return {String}
 		 */
 		encodeUrl: function(url) {
 			return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
@@ -221,17 +222,17 @@
 
 		/**
 		 *
-		 * @param s
+		 * @param {String} output
 		 * @return {string}
 		 */
-		escapeHTML: function(s) {
-			return s.toString().split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
+		escapeHTML: function(output) {
+			return output.toString().split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
 		},
 
 		/**
 		 *
-		 * @param url
-		 * @return {*}
+		 * @param {String} url
+		 * @return {String}
 		 */
 		absolutizeUrl: function(url) {
 			var el = document.createElement('div');
@@ -241,11 +242,11 @@
 
 		/**
 		 *
-		 * @param time
-		 * @param forceHours
-		 * @param showFrameCount
-		 * @param fps
-		 * @return {string}
+		 * @param {number} time
+		 * @param {boolean} forceHours
+		 * @param {boolean} showFrameCount
+		 * @param {number} fps - Frames per second
+		 * @return {String}
 		 */
 		secondsToTimeCode: function(time, forceHours, showFrameCount, fps) {
 			//add framecount
@@ -270,10 +271,10 @@
 
 		/**
 		 *
-		 * @param time
-		 * @param forceHours
-		 * @param showFrameCount
-		 * @param fps
+		 * @param {number} time
+		 * @param {boolean} forceHours
+		 * @param {boolean} showFrameCount
+		 * @param {number} fps - Frames per second
 		 * @return {number}
 		 */
 		timeCodeToSeconds: function(time, forceHours, showFrameCount, fps){
@@ -320,7 +321,7 @@
 
 		/**
 		 *
-		 * @return {*|{}}
+		 * @return {Object}
 		 */
 		extend: function() {
 			// borrowed from ender
@@ -363,9 +364,9 @@
 		 *
 		 * There is a default format set in the options but it can be incomplete, so it is adjusted according to the media
 		 * duration. Format: 'hh:mm:ss:ff'
-		 * @param time
-		 * @param options
-		 * @param fps
+		 * @param {number} time
+		 * @param {Object} options
+		 * @param {number} fps - Frames per second
 		 */
 		calculateTimeFormat: function(time, options, fps) {
 			if (time < 0) {
@@ -431,11 +432,11 @@
 
 		/**
 		 *
-		 * @param SMPTE
-		 * @return {*}
+		 * @param {String} SMPTE
+		 * @return {number}
 		 */
 		convertSMPTEtoSeconds: function (SMPTE) {
-			if (typeof SMPTE != 'string')
+			if (typeof SMPTE !== 'string')
 				return false;
 
 			SMPTE = SMPTE.replace(',', '.');
@@ -459,6 +460,7 @@
 
 	/**
 	 * @class {mejs.MediaFeatures}
+	 * @class {mejs.Features}
 	 */
 	mejs.MediaFeatures = mejs.Features = (function() {
 
