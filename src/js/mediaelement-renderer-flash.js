@@ -13,16 +13,16 @@
 	mejs.PluginDetector = {
 
 		/**
-		 * @var {String}
+		 * @type {String}
 		 */
 		nav: win.navigator,
 		/**
-		 * @var {String}
+		 * @type {String}
 		 */
 		ua: win.navigator.userAgent.toLowerCase(),
 		/**
 		 * Cached version numbers
-		 * @var {Array}
+		 * @type {Array}
 		 */
 		plugins: [],
 
