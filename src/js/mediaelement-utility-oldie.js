@@ -64,3 +64,32 @@ if (!Array.prototype.indexOf) {
 		return -1;
 	};
 }
+
+// createEvent for IE8 or other old browsers that do not implement it.
+// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
+if (typeof document.createEvent === 'undefined') {
+	document.createEvent = function(event) {
+
+		var e;
+
+		e = document.createEventObject();
+		e.timeStamp = (new Date()).getTime();
+		e.enumerable = true;
+		e.writable = true;
+		e.configurable = true;
+
+		e.initEvent = function(type, bubbles, cancelable) {
+			this.type = type;
+			this.bubbles = !!bubbles;
+			this.cancelable = !!cancelable;
+			if (!this.bubbles) {
+				this.stopPropagation = function() {
+					this.stoppedPropagation = true;
+					this.cancelBubble = true;
+				};
+			}
+		};
+
+		return e;
+	};
+}
