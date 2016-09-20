@@ -24,15 +24,15 @@
 
 	var DailyMotionApi = {
 		/**
-		 * @var {boolean}
+		 * @type {boolean}
 		 */
 		isSDKStarted: false,
 		/**
-		 * @var {boolean}
+		 * @type {boolean}
 		 */
 		isSDKLoaded: false,
 		/**
-		 * @var {Array}
+		 * @type {Array}
 		 */
 		iframeQueue: [],
 

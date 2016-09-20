@@ -28,11 +28,11 @@
 
         var NativeDash = {
             /**
-             * @var {boolean}
+             * @type {boolean}
              */
             isMediaLoaded: false,
             /**
-             * @var {Array}
+             * @type {Array}
              */
             creationQueue: [],
 
