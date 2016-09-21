@@ -32,11 +32,6 @@
 						}, 500);
 					})
 
-					// Handle click so that screen readers can open the menu
-					.click(function (e) {
-						player.showSourcechooserSelector();
-					})
-
 					// keyboard menu activation
 					.on('keydown', function (e) {
 						var keyCode = e.keyCode;
@@ -64,17 +59,17 @@
 							})
 
 					// close menu when tabbing away
-					.on('focusout', function (e) {
+					.on('focusout', mejs.Utility.debounce(function (e) { // Safari triggers focusout multiple times
 						// Firefox does NOT support e.relatedTarget to see which element
 						// just lost focus, so wait to find the next focused element
 						setTimeout(function () {
 							var parent = $(document.activeElement).closest('.mejs-sourcechooser-selector');
-							if (!parent.length && !parent.find('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
-								// focus is outside the control, but the menu is visible; close it
+							if (!parent.length) {
+								// focus is outside the control; close menu
 								player.hideSourcechooserSelector();
 							}
 						}, 0);
-					})
+					}, 100))
 
 					// handle clicks to the source radio buttons
 					.delegate('input[type=radio]', 'click', function() {
@@ -103,7 +98,17 @@
 							media.addEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
 							media.load();
 						}
-				});
+					})
+
+					// Handle click so that screen readers can toggle the menu
+					.delegate('button', 'click', function (e) {
+						if ($(this).siblings('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
+							player.showSourcechooserSelector();
+							$(this).siblings('.mejs-sourcechooser-selector').find('input[type=radio]:checked').first().focus();
+						} else {
+							player.hideSourcechooserSelector();
+						}
+					});
 
 			// add to list
 			for (var i in this.node.children) {
@@ -124,7 +129,7 @@
 			t.sourcechooserButton.find('ul').append(
 				$('<li>'+
 						'<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + 'aria-selected="' + isCurrent + '"' + ' />'+
-						'<label for="' + t.id + '_sourcechooser_' + label + type + '">' + label + ' (' + type + ')</label>'+
+						'<label for="' + t.id + '_sourcechooser_' + label + type + '" aria-hidden="true">' + label + ' (' + type + ')</label>'+
 					'</li>')
 			);
 
@@ -155,7 +160,7 @@
 				.attr('aria-expanded', 'true')
 				.attr('aria-hidden', 'false')
 				.find('input[type=radio]')
-				.removeAttr('tabindex');
+				.attr('tabindex', '0');
 		}
 	});
 
