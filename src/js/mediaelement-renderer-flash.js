@@ -70,7 +70,7 @@
 				ax;
 
 			// Firefox, Webkit, Opera
-			if (typeof(this.nav.plugins) != 'undefined' && typeof this.nav.plugins[pluginName] == 'object') {
+			if (typeof(this.nav.plugins) !== 'undefined' && typeof this.nav.plugins[pluginName] === 'object') {
 				description = this.nav.plugins[pluginName].description;
 				if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
 					version = description.replace(pluginName, '').replace(/^\s+/,'').replace(/\sr/gi,'.').split('.');
@@ -79,7 +79,7 @@
 					}
 				}
 			// Internet Explorer / ActiveX
-			} else if (typeof(window.ActiveXObject) != 'undefined') {
+			} else if (typeof(window.ActiveXObject) !== 'undefined') {
 				try {
 					ax = new ActiveXObject(activeX);
 					if (ax) {
@@ -379,6 +379,10 @@
 
 	if (hasFlash) {
 
+		/**
+		 * Register media type based on URL structure if Flash is detected
+		 *
+		 */
 		mejs.Utils.typeChecks.push(function(url) {
 
 			url = url.toLowerCase();
@@ -398,17 +402,21 @@
 		var FlashMediaElementVideoRenderer = {
 			name: 'flash_video',
 
-			canPlayType: function(type) {
-				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'video/3gpp',
-					'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
-
-				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
-			},
-
-			// options
 			options: {
 				prefix: 'flash_video',
 				filename: 'mediaelement-flash-video.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {boolean}
+			 */
+			canPlayType: function(type) {
+				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'video/3gpp',
+					'audio/mp4'];
+
+				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 			},
 
 			create: FlashMediaElementRenderer.create
@@ -434,37 +442,92 @@
 			var FlashMediaElementHlsVideoRenderer = {
 				name: 'flash_hls',
 
+				options: {
+					prefix: 'flash_hls',
+					filename: 'mediaelement-flash-video-hls.swf'
+				},
+				/**
+				 * Determine if a specific element type can be played with this render
+				 *
+				 * @param {String} type
+				 * @return {boolean}
+				 */
 				canPlayType: function(type) {
 					var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
 
 					return (supportedMediaTypes.indexOf(type) > -1);
 				},
 
-				// options
-				options: {
-					prefix: 'flash_hls',
-					filename: 'mediaelement-flash-video-hls.swf'
-				},
-
 				create: FlashMediaElementRenderer.create
 			};
 			mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
+
+			// var FlashMediaElementMdashVideoRenderer = {
+			// 	name: 'flash_mdash',
+            //
+			// 	options: {
+			// 		prefix: 'flash_mdash',
+			// 		filename: 'mediaelement-flash-video-mdash.swf'
+			// 	},
+			// 	/**
+			// 	 * Determine if a specific element type can be played with this render
+			// 	 *
+			// 	 * @param {String} type
+			// 	 * @return {boolean}
+			// 	 */
+			// 	canPlayType: function(type) {
+			// 		var supportedMediaTypes = ['application/dash-xml'];
+            //
+			// 		return (supportedMediaTypes.indexOf(type) > -1);
+			// 	},
+            //
+			// 	create: FlashMediaElementRenderer.create
+			// };
+			// mejs.Renderers.add(FlashMediaElementMdashVideoRenderer);
 		}
+
+		// AUDIO
+		var FlashMediaElementAudioOggRenderer = {
+			name: 'flash_audio',
+
+			options: {
+				prefix: 'flash_audio_ogg',
+				filename: 'mediaelement-flash-audio.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {boolean}
+			 */
+			canPlayType: function(type) {
+				var supportedMediaTypes = ['audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
+
+				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			create: FlashMediaElementRenderer.create
+		};
+		mejs.Renderers.add(FlashMediaElementAudioOggRenderer);
 
 		// AUDIO - ogg
 		var FlashMediaElementAudioOggRenderer = {
 			name: 'flash_audio_ogg',
 
+			options: {
+				prefix: 'flash_audio_ogg',
+				filename: 'mediaelement-flash-audio-ogg.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {boolean}
+			 */
 			canPlayType: function(type) {
 				var supportedMediaTypes = ['audio/ogg','audio/oga'];
 
 				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
-			},
-
-			// options
-			options: {
-				prefix: 'flash_audio',
-				filename: 'mediaelement-flash-audio-ogg.swf'
 			},
 
 			create: FlashMediaElementRenderer.create
