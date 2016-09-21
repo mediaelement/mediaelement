@@ -65,7 +65,7 @@ if (!Array.prototype.indexOf) {
 	};
 }
 
-// createEvent for IE8 or other old browsers that do not implement it.
+// document.createEvent for IE8 or other old browsers that do not implement it
 // Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
 if (typeof document.createEvent === 'undefined') {
 	document.createEvent = function(event) {

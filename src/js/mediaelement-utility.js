@@ -20,8 +20,8 @@
 		 *
 		 * @param {Object} obj
 		 * @param {String} name
-		 * @param onGet
-		 * @param onSet
+		 * @param {callback} onGet
+		 * @param {callback} onSet
 		 */
 		addProperty: function(obj, name, onGet, onSet) {
 
@@ -82,19 +82,15 @@
 				}
 
 				// add the property event change only once
-				//if (typeof obj.hasPropertyChangeEvent == 'undefined') {
-					obj.attachEvent('onpropertychange', onPropertyChange);
-					//obj.hasPropertyChangeEvent = true;
-				//}
-
+				obj.attachEvent('onpropertychange', onPropertyChange);
 			}
 		},
 
 		/**
 		 *
 		 * @param {String} eventName
-		 * @param {} target
-		 * @return {*}
+		 * @param {Element} target
+		 * @return {Object}
 		 */
 		createEvent: function(eventName, target) {
 			var event = null;
@@ -131,6 +127,7 @@
 		},
 
 		/**
+		 * Get the format of a specific media, either based on URL or its mime type
 		 *
 		 * @param {String} url
 		 * @param {String} type
@@ -147,6 +144,7 @@
 		},
 
 		/**
+		 * Get the type of media based on URL structure
 		 *
 		 * @param {String} url
 		 * @return {String}
@@ -159,16 +157,14 @@
 			for (var i=0, il=this.typeChecks.length; i<il; i++) {
 				type = this.typeChecks[i](url);
 
-				if (type != null) {
+				if (type !== null) {
 					return type;
 				}
 			}
 
-
 			// the do standard extension check
 			var ext = this.getExtension(url),
 				normalizedExt = this.normalizeExtension(ext);
-
 
 			type =  (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + normalizedExt;
 
@@ -176,6 +172,7 @@
 		},
 
 		/**
+		 * Get media file extension from URL
 		 *
 		 * @param {String} url
 		 * @return {String}
@@ -188,6 +185,7 @@
 		},
 
 		/**
+		 * Get standard extension of a media file
 		 *
 		 * @param {String} extension
 		 * @return {String}
@@ -241,6 +239,7 @@
 		},
 
 		/**
+		 * Format a numeric time in format '00:00:00'
 		 *
 		 * @param {number} time
 		 * @param {boolean} forceHours
@@ -270,8 +269,9 @@
 		},
 
 		/**
+		 * Convert a '00:00:00' tiem string into seconds
 		 *
-		 * @param {number} time
+		 * @param {String} time
 		 * @param {boolean} forceHours
 		 * @param {boolean} showFrameCount
 		 * @param {number} fps - Frames per second
@@ -320,6 +320,7 @@
 		},
 
 		/**
+		 * Merge the contents of two or more objects together into the first object
 		 *
 		 * @return {Object}
 		 */
@@ -360,7 +361,7 @@
 		},
 
 		/**
-		 * Calculate the time format to use.
+		 * Calculate the time format to use
 		 *
 		 * There is a default format set in the options but it can be incomplete, so it is adjusted according to the media
 		 * duration. Format: 'hh:mm:ss:ff'
@@ -431,6 +432,7 @@
 		},
 
 		/**
+		 * Convert Society of Motion Picture and Television Engineers (SMTPE) time code into seconds
 		 *
 		 * @param {String} SMPTE
 		 * @return {number}
