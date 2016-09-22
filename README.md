@@ -44,12 +44,13 @@ Format | Support
 **m3u8** | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support **Flash** (version 10 or later)
 **mpd** | Browsers that support MSE through `dash.js` library; rest of the browsers that support **Flash** (version 10 or later)
 **rtmp/flv** | All browsers that support **Flash** (version 10 or later)
-**wmv/wma** | All browsers that support **Silverlight**
 **YouTube** | All browsers since it uses `iframe` tag
 **Vimeo** | All browsers since it uses `iframe` tag
 **Facebook** | All browsers since it uses `iframe` tag
 **DailyMotion** | All browsers since it uses `iframe` tag
 **SoundCloud** | All browsers since it uses `iframe` tag
+
+**Note:** Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
 
 <a id="migration"></a>
 ## `MediaElement.js` v3 Migrating Document
