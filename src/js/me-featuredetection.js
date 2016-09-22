@@ -24,6 +24,7 @@ mejs.MediaFeatures = {
 		t.isWebkit = (ua.match(/webkit/gi) !== null);
 		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit && !t.isIE;
 		t.isOpera = (ua.match(/opera/gi) !== null);
+		t.isSafari = ua.match(/safari/gi) !== null && !t.isChrome;
 		t.hasTouch = ('ontouchstart' in window); //  && window.ontouchstart != null); // this breaks iOS 7
 
 		// Borrowed from `Modernizr.svgasimg`, sources:
@@ -36,7 +37,29 @@ mejs.MediaFeatures = {
 			v = document.createElement(html5Elements[i]);
 		}
 
-		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid);
+		// Test if HLS.js is installed and if browser supports it
+		t.supportsBustedHls = false;
+
+		if (typeof Hls !== 'undefined') {
+			t.supportsBustedHls = (function() {
+				// No support of MediaSource Extensions in browser
+				if (!Hls.isSupported()) {
+					return false;
+				}
+
+				// Running HLS library FF v44 on Windows is buggy
+				if (t.isFirefox && nav.platform.indexOf('Win') !== -1 && ua.indexOf('44.') !== -1) {
+					return false;
+				}
+
+				// Browser compatibility in https://github.com/dailymotion/hls.js#user-content-compatibility;
+				// Safari is on beta so not supported
+				// IE11+ supported
+				return ua.indexOf('trident/7') !== -1 || !t.isSafari;
+			})();
+		}
+
+		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid || t.supportsBustedHls);
 
 		// Fix for IE9 on Windows 7N / Windows 7KN (Media Player not installer)
 		try{
@@ -154,7 +177,6 @@ mejs.MediaFeatures = {
 			t.hasNativeFullScreen = false;
 			t.hasiOSFullScreen = false;
 		}
-
 	}
 };
 mejs.MediaFeatures.init();

@@ -27,9 +27,8 @@ mejs.HtmlMediaElement = {
 	setSrc: function (url) {
 		
 		// Fix for IE9 which can't set .src when there are <source> elements. Awesome, right?
-		var 
-			existingSources = this.getElementsByTagName('source');
-		while (existingSources.length > 0){
+		var existingSources = this.getElementsByTagName('source');
+		while (existingSources.length > 0) {
 			this.removeChild(existingSources[0]);
 		}
 	
@@ -37,14 +36,25 @@ mejs.HtmlMediaElement = {
 			this.src = url;
 		} else {
 			var i, media;
-
-			for (i=0; i<url.length; i++) {
+			
+			for (i = 0; i < url.length; i++) {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
 					this.src = media.src;
 					break;
 				}
 			}
+		}
+		
+		// Load media through HLS if browser allows it
+		if (mejs.MediaFeatures.supportsBustedHls) {
+			if (this.hls !== null) {
+				this.hls = new Hls(mejs.MediaElementDefaults);
+			}
+		
+			this.hls.detachMedia();
+			this.hls.attachMedia(this);
+			this.hls.loadSource(url);
 		}
 	},
 
@@ -111,7 +121,7 @@ mejs.PluginMediaElement.prototype = {
 			} else {
 				this.pluginApi.loadMedia();
 			}
-			
+
 			this.paused = false;
 		}
 	},
@@ -123,9 +133,9 @@ mejs.PluginMediaElement.prototype = {
                 }
 			} else {
 				this.pluginApi.pauseMedia();
-			}			
-			
-			
+			}
+
+
 			this.paused = true;
 		}
 	},
@@ -135,7 +145,7 @@ mejs.PluginMediaElement.prototype = {
 				this.pluginApi.stopVideo();
 			} else {
 				this.pluginApi.stopMedia();
-			}	
+			}
 			this.paused = true;
 		}
 	},
@@ -163,19 +173,19 @@ mejs.PluginMediaElement.prototype = {
 
 		return '';
 	},
-	
+
 	positionFullscreenButton: function(x,y,visibleAndAbove) {
 		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
 			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
 		}
 	},
-	
+
 	hideFullscreenButton: function() {
 		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
 			this.pluginApi.hideFullscreenButton();
-		}		
-	},	
-	
+		}
+	},
+
 
 	// custom methods since not all JavaScript implementations support get/set
 
@@ -205,10 +215,10 @@ mejs.PluginMediaElement.prototype = {
 				this.pluginApi.seekTo(time);
 			} else {
 				this.pluginApi.setCurrentTime(time);
-			}				
-			
-			
-			
+			}
+
+
+
 			this.currentTime = time;
 		}
 	},
@@ -242,7 +252,7 @@ mejs.PluginMediaElement.prototype = {
 
 	// additional non-HTML5 methods
 	setVideoSize: function (width, height) {
-		
+
 		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
 			if (this.pluginElement && this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
@@ -259,19 +269,19 @@ mejs.PluginMediaElement.prototype = {
 			this.pluginApi.setFullscreen(fullscreen);
 		}
 	},
-	
+
 	enterFullScreen: function() {
 		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.setFullscreen(true);
-		}		
-		
+		}
+
 	},
-	
+
 	exitFullScreen: function() {
 		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
 			this.setFullscreen(false);
 		}
-	},	
+	},
 
 	// start: fake events
 	addEventListener: function (eventName, callback, bubble) {
@@ -290,7 +300,7 @@ mejs.PluginMediaElement.prototype = {
 			}
 		}
 		return false;
-	},	
+	},
 	dispatchEvent: function (event) {
 		var i,
 			args,
@@ -303,10 +313,10 @@ mejs.PluginMediaElement.prototype = {
 		}
 	},
 	// end: fake events
-	
+
 	// fake DOM attribute methods
 	hasAttribute: function(name){
-		return (name in this.attributes);  
+		return (name in this.attributes);
 	},
 	removeAttribute: function(name){
 		delete this.attributes[name];

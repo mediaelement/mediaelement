@@ -237,14 +237,13 @@
 			return t.node.player;
 		}
 
-
 		// try to get options from data-mejsoptions
 		if (typeof o == 'undefined') {
 			o = t.$node.data('mejsoptions');
 		}
 
 		// extend default options
-		t.options = $.extend({},mejs.MepDefaults,o);
+    		t.options = $.extend({},mejs.MepDefaults,o);
 
 		if (!t.options.timeFormat) {
 			// Generate the time format according to options
@@ -299,6 +298,11 @@
 				t.isVideo = (tagName !== 'audio' && t.options.isVideo);
 			}
 
+			// Create instance of Hls
+			if (typeof t.hlsInstance === 'undefined' && mf.supportsBustedHls) {
+				t.hlsInstance = new Hls(meOptions);
+			}
+
 			// use native controls in iPad, iPhone, and Android
 			if ((mf.isiPad && t.options.iPadUseNativeControls) || (mf.isiPhone && t.options.iPhoneUseNativeControls)) {
 
@@ -344,6 +348,7 @@
 					.focus(function ( e ) {
 						if( !t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 							t.showControls(true);
+
 							// In versions older than IE11, the focus causes the playbar to be displayed
 							// if user clicks on the Play/Pause button in the control bar once it attempts
 							// to hide it
@@ -779,7 +784,7 @@
 					if (duration !== this.duration) {
 						duration = this.duration;
 						mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
-						
+
 						// make sure to fill in and resize the controls (e.g., 00:00 => 01:13:15
 						if (t.updateDuration) {
 							t.updateDuration();
@@ -788,7 +793,7 @@
 							t.updateCurrent();
 						}
 						t.setControlsSize();
-						
+
 					}
 				}, false);
 
@@ -1337,7 +1342,6 @@
 			this.setControlsSize();
 		},
 		play: function() {
-			this.load();
 			this.media.play();
 		},
 		pause: function() {
