@@ -54,19 +54,19 @@ soundcloud | video/soundcloud, video/x-soundcloud | All browsers since it uses `
 <a id="migration"></a>
 ## What's New on `MediaElement.js` version 3.0
 
-Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
+* Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
 
-Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback.
+* Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback.
 
-Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
+* Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
 
-Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
+* Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
 
-<!--Integrated use of [JSMad](https://github.com/fasterthanlime/jsmad) (if indicated) to decode `mp3` audio.-->
+<!--* Integrated use of [JSMad](https://github.com/fasterthanlime/jsmad) (if indicated) to decode `mp3` audio.-->
 
-Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
+* Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
 
-Addition of error propagation from Flash to Javascript.
+* Addition of error propagation from Flash to Javascript.
 
 
 <a id="installation"></a>
