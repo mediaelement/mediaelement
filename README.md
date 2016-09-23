@@ -13,7 +13,7 @@ One file. Any browser. Same UI.
 
 * [Introduction](#intro)
 * [Browser and Device support](#browser-support)
-* [`MediaElement.js` v3 Migrating Document](#migration)
+* [What's New on `MediaElement.js` version 3.0](#migration)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
 * [Guidelines for Contributors](#guidelines)
@@ -33,29 +33,41 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 <a id="browser-support"></a>
 ## Browser and Device support
 
-Format | Support
------- | -------
-**mp4** | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
-**webm** | Please visit http://caniuse.com/#feat=webm for comprehensive information
-**mp3** | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
-**ogg** | Please visit http://caniuse.com/#search=ogg for comprehensive information
-**ogv** | Please visit http://caniuse.com/#search=ogv for comprehensive information
-**wav** | Please visit http://caniuse.com/#feat=wav for comprehensive information
-**m3u8** | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support **Flash** (version 10 or later)
-**mpd** | Browsers that support MSE through `dash.js` library; rest of the browsers that support **Flash** (version 10 or later)
-**rtmp/flv** | All browsers that support **Flash** (version 10 or later)
-**YouTube** | All browsers since it uses `iframe` tag
-**Vimeo** | All browsers since it uses `iframe` tag
-**Facebook** | All browsers since it uses `iframe` tag
-**DailyMotion** | All browsers since it uses `iframe` tag
-**SoundCloud** | All browsers since it uses `iframe` tag
+Format | MIME Type | Support
+------ | --------- | -------
+mp4 | video/mp4, audio/mp4, audio/mpeg | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
+webm | video/webm | Please visit http://caniuse.com/#feat=webm for comprehensive information
+mp3 | audio/mp3 | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
+ogg/ogv | audio/ogg, audio/oga, video/ogg | Please visit http://caniuse.com/#search=ogg for comprehensive information
+wav | audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav | Please visit http://caniuse.com/#feat=wav for comprehensive information
+m3u8 | application/x-mpegURL, vnd.apple.mpegURL, audio/mpegURL, audio/hls, video/hls | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support Flash (version 10 or later)
+mpd | application/dash+xml | Browsers that support MSE through `dash.js` library; rest of the browsers that support Flash (version 10 or later)
+rtmp/flv | video/mp4, video/flv, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 | All browsers that support `Flash` (version 10 or later)
+youtube | video/youtube, video/x-youtube | All browsers since it uses `iframe` tag
+vimeo | video/vimeo, video/x-vimeo | All browsers since it uses `iframe` tag
+facebook | video/facebook, video/x-facebook | All browsers since it uses `iframe` tag
+dailymotion | video/dailymotion, video/x-dailymotion | All browsers since it uses `iframe` tag
+soundcloud | video/soundcloud, video/x-soundcloud | All browsers since it uses `iframe` tag
 
 **Note:** Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
 
 <a id="migration"></a>
-## `MediaElement.js` v3 Migrating Document
+## What's New on `MediaElement.js` version 3.0
 
-Find out what are the new features on version 3 on [Migrating Document](migration.md).
+Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
+
+Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback.
+
+Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
+
+Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
+
+<!--Integrated use of [JSMad](https://github.com/fasterthanlime/jsmad) (if indicated) to decode `mp3` audio.-->
+
+Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
+
+Addition of error propagation from Flash to Javascript.
+
 
 <a id="installation"></a>
 ## Installation and Usage
