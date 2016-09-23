@@ -20,7 +20,7 @@
         url = url.toLowerCase();
 
         if (url.indexOf('vimeo') > -1) {
-            return 'video/x-vimeo';
+            return 'video/vimeo';
         } else {
             return null;
         }
