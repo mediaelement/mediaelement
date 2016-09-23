@@ -30,6 +30,23 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
 
+<a id="migration"></a>
+## * What's New on `MediaElement.js` version 3.0
+
+* Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
+
+* Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback.
+
+* Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
+
+* Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
+
+<!--* Integrated use of [JSMad](https://github.com/fasterthanlime/jsmad) (if indicated) to decode `mp3` audio.-->
+
+* Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
+
+* Addition of error propagation from Flash to Javascript.
+
 <a id="browser-support"></a>
 ## Browser and Device support
 
@@ -50,23 +67,6 @@ dailymotion | video/dailymotion, video/x-dailymotion | All browsers since it use
 soundcloud | video/soundcloud, video/x-soundcloud | All browsers since it uses `iframe` tag
 
 **Note:** Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
-
-<a id="migration"></a>
-## What's New on `MediaElement.js` version 3.0
-
-* Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
-
-* Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback.
-
-* Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
-
-* Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
-
-<!--* Integrated use of [JSMad](https://github.com/fasterthanlime/jsmad) (if indicated) to decode `mp3` audio.-->
-
-* Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
-
-* Addition of error propagation from Flash to Javascript.
 
 
 <a id="installation"></a>
