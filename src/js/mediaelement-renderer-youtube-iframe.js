@@ -6,7 +6,7 @@ mejs.Utils.typeChecks.push(function(url) {
 	url = new String(url).toLowerCase();
 
 	if (url.indexOf('youtube') > -1 || url.indexOf('youtu.be') > -1) {
-		return 'video/x-youtube';
+		return 'video/youtube';
 	} else {
 		return null;
 	}

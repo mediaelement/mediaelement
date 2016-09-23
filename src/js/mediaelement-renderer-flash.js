@@ -413,8 +413,7 @@
 			 * @return {boolean}
 			 */
 			canPlayType: function(type) {
-				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'video/3gpp',
-					'audio/mp4'];
+				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'];
 
 				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 			},
