@@ -19,7 +19,7 @@
         exports.fr = {
             'mejs.download-file' : "Télécharger le fichier",
             'mejs.play' : "Lecture",
-            'mejs.pause' : 'mejs.pause',
+            'mejs.pause' : "Pause",
             'mejs.mute-toggle' : "Activer/désactiver le son",
             'mejs.fullscreen' : "Plein écran",
             'mejs.captions-subtitles' : "Sous-titres",
@@ -29,7 +29,18 @@
             'mejs.unmute' : "Activer le son",
             'mejs.mute' : "Désactiver le son",
             'mejs.download-video' : "Télécharger la vidéo",
-            'mejs.close' : "Fermer"
+            'mejs.close' : "Fermer",
+            'mejs.time-jump-forward': "Avancer de %1 secondes",
+            'mejs.time-slider': "Curseur temporel",
+            'mejs.time-help-text': "Utilisez les flèches Gauche/Droite du clavier pour avancer d'une seconde, les flèches Haut/Bas pour avancer de 10 secondes.",
+            'mejs.time-skip-back': "Reculer de %1 secondes",
+            'mejs.volume-help-text': "Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.",
+            'mejs.volume-slider': "Volume",
+            'mejs.video-player': "Lecteur Vidéo",
+            'mejs.audio-player': "Lecteur Audio",
+            'mejs.ad-skip': "Passer la publicité",
+            'mejs.ad-skip-info': "Passer la publicité dans %1 secondes"
+            	
         };
     }
 
