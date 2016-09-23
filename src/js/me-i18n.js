@@ -37,7 +37,7 @@
     "use strict";
 
     var i18n = {
-        "default_language": 'en',
+        "default": 'en',
         "locale": {
             // Ensure previous values aren't overwritten.
             "language" : (exports.i18n && exports.i18n.locale.language) || '',
@@ -114,8 +114,8 @@
         }
 
         // Fallback to default language if requested uid is not translated
-        if (!str && i18n.locale.strings && i18n.locale.strings[i18n.default_language]) {
-            str = i18n.locale.strings[i18n.default_language][uid];
+        if (!str && i18n.locale.strings && i18n.locale.strings[i18n.default]) {
+            str = i18n.locale.strings[i18n.default][uid];
         }
 
         // As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
