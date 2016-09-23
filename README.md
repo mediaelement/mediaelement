@@ -35,7 +35,7 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
 
-* Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback.
+* Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback (in progress).
 
 * Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
 
