@@ -1,8 +1,8 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		muteText: mejs.i18n.t('Mute Toggle'),
-        allyVolumeControlText: mejs.i18n.t('Use Up/Down Arrow keys to increase or decrease volume.'),
+		muteText: mejs.i18n.t('mejs.mute-toggle'),
+        allyVolumeControlText: mejs.i18n.t('mejs.volume-help-text'),
 		hideVolumeOnTouchDevices: true,
 		
 		audioVolume: 'horizontal',
@@ -71,10 +71,10 @@
 				// ajust mute button style
 				if (volume === 0) {
 					mute.removeClass('mejs-mute').addClass('mejs-unmute');
-					mute.children('button').attr('title', mejs.i18n.t('Unmute')).attr('aria-label', mejs.i18n.t('Unmute'));
+					mute.children('button').attr('title', mejs.i18n.t('mejs.unmute')).attr('aria-label', mejs.i18n.t('mejs.unmute'));
 				} else {
 					mute.removeClass('mejs-unmute').addClass('mejs-mute');
-					mute.children('button').attr('title', mejs.i18n.t('Mute')).attr('aria-label', mejs.i18n.t('Mute'));
+					mute.children('button').attr('title', mejs.i18n.t('mejs.mute')).attr('aria-label', mejs.i18n.t('mejs.mute'));
 				}
 
                 // top/left of full size volume slider background
@@ -174,7 +174,7 @@
                 var volume = Math.floor(media.volume*100);
 
 				volumeSlider.attr({
-					'aria-label': mejs.i18n.t('Volume Slider'),
+					'aria-label': mejs.i18n.t('mejs.volume-slider'),
 					'aria-valuemin': 0,
 					'aria-valuemax': 100,
 					'aria-valuenow': volume,

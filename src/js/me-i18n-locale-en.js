@@ -19,50 +19,56 @@
     if (typeof exports.en === 'undefined') {
         exports.en = {
             // me-shim
-            "Download File": "Download File",
+            'mejs.download-file': 'Download File',
 
             // mep-feature-contextmenu
-            "Turn off Fullscreen": "Turn off Fullscreen",
-            "Go Fullscreen" : "Go Fullscreen",
+            'mejs.fullscreen-off': 'Turn off Fullscreen',
+            'mejs.fullscreen-on' : 'Go Fullscreen',
             // Duplicated from mep-feature-volume
-            // "Unmute" : "Unmute",
-            // "Mute" : "Mute",
-            "Download Video" : "Download Video",
+            // 'mejs.unmute' : 'Unmute',
+            // 'mejs.mute' : 'Mute',
+            'mejs.download-video' : 'Download Video',
 
             // mep-feature-fullscreen
-            "Fullscreen" : "Fullscreen",
+            'mejs.fullscreen' : 'Fullscreen',
 
             // mep-feature-jumpforward
-            "Jump forward %1 seconds": "Jump forward %1 seconds",
+            'mejs.time-jump-forward': 'Jump forward %1 seconds',
 
             // mep-feature-playpause
-            "Play": "Play",
-            "Pause": "Pause",
+            'mejs.play': 'Play',
+            'mejs.pause': 'Pause',
 
             // mep-feature-postroll
-            "Close" : "Close",
+            'mejs.close' : 'Close',
 
             // mep-feature-progress
-            "Time Slider": "Time Slider",
-            "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
+            'mejs.time-slider': 'Time Slider',
+            'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
 
             // mep-feature-skipback
-            "Skip back %1 seconds": "Skip back %1 seconds",
+            'mejs.time-skip-back': 'Skip back %1 seconds',
 
             // mep-feature-tracks
-            "Captions/Subtitles" : "Captions/Subtitles",
-            "None" : "None",
+            'mejs.captions-subtitles' : 'Captions/Subtitles',
+            'mejs.none' : 'None',
 
             // mep-feature-volume
-            "Mute Toggle" : "Mute Toggle",
-            "Use Up/Down Arrow keys to increase or decrease volume.": "Use Up/Down Arrow keys to increase or decrease volume.",
-            "Unmute" : "Unmute",
-            "Mute" : "Mute",
-            "Volume Slider": "Volume Slider",
+            'mejs.mute-toggle' : 'Mute Toggle',
+            'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
+            'mejs.unmute' : 'Unmute',
+            'mejs.mute' : 'Mute',
+            'mejs.volume-slider': 'Volume Slider',
 
             // mep-player
-            "Video Player": "Video Player",
-            "Audio Player": "Audio Player"
+            'mejs.video-player': 'Video Player',
+            'mejs.audio-player': 'Audio Player',
+            	
+            // mep-feature-ads
+            'mejs.ad-skip': 'Skip ad',
+            'mejs.ad-skip-info': 'Skip in %1 seconds',
+
+            'mejs.source-chooser': 'Source Chooser'
         };
     }
 
