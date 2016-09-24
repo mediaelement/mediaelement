@@ -48,6 +48,9 @@ mejs.MediaElementDefaults = {
 	timerRate: 250,
 	// initial volume for player
 	startVolume: 0.8,
+	// custom error message in case media cannot be played; otherwise, Download File
+	// link will be displayed
+	customError: "",
 	success: function () { },
 	error: function () { }
 };
@@ -130,7 +133,7 @@ mejs.HtmlMediaElementShim = {
 			l,
 			n,
 			type,
-			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio'), scheme: ''},
+			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() !== 'audio'), scheme: ''},
 			pluginName,
 			pluginVersions,
 			pluginInfo,
@@ -184,16 +187,16 @@ mejs.HtmlMediaElementShim = {
 		// STEP 2: Test for playback method
 		
 		// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-		if (mejs.MediaFeatures.isBustedAndroid) {
+		if (result.isVideo && mejs.MediaFeatures.isBustedAndroid) {
 			htmlMediaElement.canPlayType = function(type) {
 				return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'maybe' : '';
 			};
 		}		
 		
 		// special case for Chromium to specify natively supported video codecs (i.e. WebM and Theora) 
-		if (mejs.MediaFeatures.isChromium) { 
+		if (result.isVideo && mejs.MediaFeatures.isChromium) {
 			htmlMediaElement.canPlayType = function(type) { 
-				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : ''; 
+				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : '';
 			}; 
 		}
 
@@ -362,7 +365,7 @@ mejs.HtmlMediaElementShim = {
 				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="" />';
 			}
 
-			errorContent += '<span>' + mejs.i18n.t('Download File') + '</span></a>';
+			errorContent += '<span>' + mejs.i18n.t('mejs.download-file') + '</span></a>';
 		}
 
 		errorContainer.innerHTML = errorContent;
@@ -386,7 +389,7 @@ mejs.HtmlMediaElementShim = {
 			initVars;
 
 		// copy tagName from html media element
-		pluginMediaElement.tagName = htmlMediaElement.tagName
+		pluginMediaElement.tagName = htmlMediaElement.tagName;
 
 		// copy attributes from html media element to plugin media element
 		for (var i = 0; i < htmlMediaElement.attributes.length; i++) {
@@ -438,10 +441,21 @@ mejs.HtmlMediaElementShim = {
 		
 		if (playback.method === 'flash' || playback.method === 'silverlight') {
 
+			var canPlayVideo = htmlMediaElement.getAttribute('type') === 'audio/mp4',
+				childrenSources = htmlMediaElement.getElementsByTagName('source');
+
+			if (childrenSources && !canPlayVideo) {
+				for (var i = 0, total = childrenSources.length; i < total; i++) {
+					if (childrenSources[i].getAttribute('type') === 'audio/mp4') {
+						canPlayVideo = true;
+					}
+				}
+			}
+
 			// flash/silverlight vars
 			initVars = [
 				'id=' + pluginid,
-				'isvideo=' + ((playback.isVideo) ? "true" : "false"),
+				'isvideo=' + ((playback.isVideo || canPlayVideo) ? "true" : "false"),
 				'autoplay=' + ((autoplay) ? "true" : "false"),
 				'preload=' + preload,
 				'width=' + width,
@@ -489,7 +503,7 @@ mejs.HtmlMediaElementShim = {
 				if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
 					pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
 				}
-			}
+			};
 			
 			// event call from plugin
 			window[pluginid + '_event'] = function(eventName, values) {
@@ -608,7 +622,8 @@ mejs.HtmlMediaElementShim = {
 						videoId: videoId,
 						height: height,
 						width: width,
-                        scheme: playback.scheme
+                        scheme: playback.scheme,
+						variables: options.youtubeIframeVars
 					};				
 				
 				// favor iframe version of YouTube
@@ -617,7 +632,6 @@ mejs.HtmlMediaElementShim = {
 				} else if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
 					mejs.YouTubeApi.createFlash(youtubeSettings, options);
 				}
-				
 				break;
 			
 			// DEMO Code. Does NOT work.
@@ -634,19 +648,19 @@ mejs.HtmlMediaElementShim = {
 		
 						player.playVideo = function() {
 							player.api( 'play' );
-						} 
+						};
 						player.stopVideo = function() {
 							player.api( 'unload' );
-						} 
+						};
 						player.pauseVideo = function() {
 							player.api( 'pause' );
-						} 
+						};
 						player.seekTo = function( seconds ) {
 							player.api( 'seekTo', seconds );
-						}
+						};
 						player.setVolume = function( volume ) {
 							player.api( 'setVolume', volume );
-						}
+						};
 						player.setMuted = function( muted ) {
 							if( muted ) {
 								player.lastVolume = player.api( 'getVolume' );
@@ -655,11 +669,11 @@ mejs.HtmlMediaElementShim = {
 								player.api( 'setVolume', player.lastVolume );
 								delete player.lastVolume;
 							}
-						}
+						};
 						// parity with YT player
 						player.getPlayerState = function() {
 							return playerState;
-						}			
+						};
 
 						function createEvent(player, pluginMediaElement, eventName, e) {
 							var event = {
@@ -798,21 +812,22 @@ mejs.YouTubeApi = {
 		}
 	},
 	createIframe: function(settings) {
-		
+
 		var
-		pluginMediaElement = settings.pluginMediaElement,	
+		pluginMediaElement = settings.pluginMediaElement,
+		defaultVars = {controls:0, wmode:'transparent'},
 		player = new YT.Player(settings.containerId, {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: {controls:0,wmode:'transparent'},
+			playerVars: $.extend({}, defaultVars, settings.variables),
 			events: {
-				'onReady': function() {
+				'onReady': function(e) {
 					
 					// wrapper to match
 					player.setVideoSize = function(width, height) {
 						player.setSize(width, height);
-					}
+					};
 					
 					// hook up iframe object to MEjs
 					settings.pluginMediaElement.pluginApi = player;
@@ -820,11 +835,17 @@ mejs.YouTubeApi = {
 					
 					// init mejs
 					pluginMediaElement.success(pluginMediaElement, pluginMediaElement.pluginElement);
+
+					mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'canplay');
 					
 					// create timer
 					setInterval(function() {
 						mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
-					}, 250);					
+					}, 250);
+
+					if (typeof pluginMediaElement.attributes.autoplay !== 'undefined') {
+						player.playVideo();
+					}
 				},
 				'onStateChange': function(e) {
 					
@@ -948,7 +969,7 @@ mejs.YouTubeApi = {
 		
 		window[callbackName] = function(e) {
 			mejs.YouTubeApi.handleStateChange(e, player, pluginMediaElement);
-		}
+		};
 		
 		player.addEventListener('onStateChange', callbackName);
 		
