@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.23.0';
+mejs.version = '2.23.1';
 
 
 // player number (for missing, same id attr)
@@ -28,7 +28,7 @@ mejs.plugins = {
 		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/m4a','audio/mp3','audio/wav','audio/mpeg']}
 	],
 	flash: [
-		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a','audio/mpeg', 'video/dailymotion', 'video/x-dailymotion', 'application/x-mpegURL']}
+		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a', 'audio/mp4', 'audio/mpeg', 'video/dailymotion', 'video/x-dailymotion', 'application/x-mpegURL', 'audio/ogg']}
 		// 'video/youtube', 'video/x-youtube', 
 		// ,{version: [12,0], types: ['video/webm']} // for future reference (hopefully!)
 	],
@@ -300,7 +300,23 @@ mejs.Utility = {
             return url.substr(0, url.indexOf("://")+3);
         }
         return "//"; // let user agent figure this out
-    }
+    },
+
+	// taken from underscore
+	debounce: function(func, wait, immediate) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) func.apply(context, args);
+		};
+	}
 };
 
 
@@ -1029,7 +1045,7 @@ mejs.HtmlMediaElementShim = {
 			l,
 			n,
 			type,
-			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() != 'audio'), scheme: ''},
+			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() !== 'audio'), scheme: ''},
 			pluginName,
 			pluginVersions,
 			pluginInfo,
@@ -1083,16 +1099,16 @@ mejs.HtmlMediaElementShim = {
 		// STEP 2: Test for playback method
 		
 		// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-		if (mejs.MediaFeatures.isBustedAndroid) {
+		if (result.isVideo && mejs.MediaFeatures.isBustedAndroid) {
 			htmlMediaElement.canPlayType = function(type) {
 				return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'maybe' : '';
 			};
 		}		
 		
 		// special case for Chromium to specify natively supported video codecs (i.e. WebM and Theora) 
-		if (mejs.MediaFeatures.isChromium) { 
+		if (result.isVideo && mejs.MediaFeatures.isChromium) {
 			htmlMediaElement.canPlayType = function(type) { 
-				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : ''; 
+				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : '';
 			}; 
 		}
 
@@ -1261,7 +1277,7 @@ mejs.HtmlMediaElementShim = {
 				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="" />';
 			}
 
-			errorContent += '<span>' + mejs.i18n.t('Download File') + '</span></a>';
+			errorContent += '<span>' + mejs.i18n.t('mejs.download-file') + '</span></a>';
 		}
 
 		errorContainer.innerHTML = errorContent;
@@ -1337,10 +1353,21 @@ mejs.HtmlMediaElementShim = {
 		
 		if (playback.method === 'flash' || playback.method === 'silverlight') {
 
+			var canPlayVideo = htmlMediaElement.getAttribute('type') === 'audio/mp4',
+				childrenSources = htmlMediaElement.getElementsByTagName('source');
+
+			if (childrenSources && !canPlayVideo) {
+				for (var i = 0, total = childrenSources.length; i < total; i++) {
+					if (childrenSources[i].getAttribute('type') === 'audio/mp4') {
+						canPlayVideo = true;
+					}
+				}
+			}
+
 			// flash/silverlight vars
 			initVars = [
 				'id=' + pluginid,
-				'isvideo=' + ((playback.isVideo) ? "true" : "false"),
+				'isvideo=' + ((playback.isVideo || canPlayVideo) ? "true" : "false"),
 				'autoplay=' + ((autoplay) ? "true" : "false"),
 				'preload=' + preload,
 				'width=' + width,
@@ -1388,7 +1415,7 @@ mejs.HtmlMediaElementShim = {
 				if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
 					pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
 				}
-			}
+			};
 			
 			// event call from plugin
 			window[pluginid + '_event'] = function(eventName, values) {
@@ -1507,7 +1534,8 @@ mejs.HtmlMediaElementShim = {
 						videoId: videoId,
 						height: height,
 						width: width,
-                        scheme: playback.scheme
+                        scheme: playback.scheme,
+						variables: options.youtubeIframeVars
 					};				
 				
 				// favor iframe version of YouTube
@@ -1696,14 +1724,15 @@ mejs.YouTubeApi = {
 		}
 	},
 	createIframe: function(settings) {
-		
+
 		var
-		pluginMediaElement = settings.pluginMediaElement,	
+		pluginMediaElement = settings.pluginMediaElement,
+		defaultVars = {controls:0, wmode:'transparent'},
 		player = new YT.Player(settings.containerId, {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: {controls:0, wmode:'transparent'},
+			playerVars: $.extend({}, defaultVars, settings.variables),
 			events: {
 				'onReady': function(e) {
 					
@@ -1852,7 +1881,7 @@ mejs.YouTubeApi = {
 		
 		window[callbackName] = function(e) {
 			mejs.YouTubeApi.handleStateChange(e, player, pluginMediaElement);
-		}
+		};
 		
 		player.addEventListener('onStateChange', callbackName);
 		
@@ -1916,9 +1945,6 @@ window.MediaElement = mejs.MediaElement;
  * This file does not contain translations, you have to add them manually.
  * The schema is always the same: me-i18n-locale-[IETF-language-tag].js
  *
- * Examples are provided both for german and chinese translation.
- *
- *
  * What is the concept beyond i18n?
  *   http://en.wikipedia.org/wiki/Internationalization_and_localization
  *
@@ -1952,6 +1978,7 @@ window.MediaElement = mejs.MediaElement;
     "use strict";
 
     var i18n = {
+        "default": 'en',
         "locale": {
             // Ensure previous values aren't overwritten.
             "language" : (exports.i18n && exports.i18n.locale.language) || '',
@@ -2009,8 +2036,8 @@ window.MediaElement = mejs.MediaElement;
      * Translate strings to the page language or a given language.
      *
      *
-     * @param str
-     *   A string containing the English string to translate.
+     * @param uid
+     *   A string containing a unique id of the translated text to retrieve.
      *
      * @param options
      *   - 'context' (defaults to the default context): The context the source string
@@ -2019,12 +2046,21 @@ window.MediaElement = mejs.MediaElement;
      * @return
      *   The translated string, escaped via i18n.methods.checkPlain()
      */
-    i18n.methods.t = function (str, options) {
+    i18n.methods.t = function (uid, options) {
+        var str;
 
         // Fetch the localized version of the string.
-        if (i18n.locale.strings && i18n.locale.strings[options.context] && i18n.locale.strings[options.context][str]) {
-            str = i18n.locale.strings[options.context][str];
+        if (i18n.locale.strings && i18n.locale.strings[options.context]) {
+            str = i18n.locale.strings[options.context][uid];
         }
+
+        // Fallback to default language if requested uid is not translated
+        if (!str && i18n.locale.strings && i18n.locale.strings[i18n.default]) {
+            str = i18n.locale.strings[i18n.default][uid];
+        }
+
+        // As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
+        str = str || uid;
 
         return i18n.methods.checkPlain(str);
     };
@@ -2069,6 +2105,80 @@ window.MediaElement = mejs.MediaElement;
 
     if ( typeof mejsL10n != 'undefined' ) {
         exports[mejsL10n.language] = mejsL10n.strings;
+    }
+
+}(mejs.i18n.locale.strings));
+
+/*!
+ * This is a i18n.locale language object.
+ *
+ * English; This can serve as a template for other languages to translate
+ *
+ * @author
+ *   TBD
+ *
+ * @see
+ *   me-i18n.js
+ *
+ * @params
+ *  - exports - CommonJS, window ..
+ */
+;(function(exports, undefined) {
+
+    "use strict";
+
+    if (typeof exports.en === 'undefined') {
+        exports.en = {
+            // me-shim
+            'mejs.download-file': 'Download File',
+
+            // mep-feature-contextmenu
+            'mejs.fullscreen-off': 'Turn off Fullscreen',
+            'mejs.fullscreen-on' : 'Go Fullscreen',
+            // Duplicated from mep-feature-volume
+            // 'mejs.unmute' : 'Unmute',
+            // 'mejs.mute' : 'Mute',
+            'mejs.download-video' : 'Download Video',
+
+            // mep-feature-fullscreen
+            'mejs.fullscreen' : 'Fullscreen',
+
+            // mep-feature-jumpforward
+            'mejs.time-jump-forward': 'Jump forward %1 seconds',
+
+            // mep-feature-playpause
+            'mejs.play': 'Play',
+            'mejs.pause': 'Pause',
+
+            // mep-feature-postroll
+            'mejs.close' : 'Close',
+
+            // mep-feature-progress
+            'mejs.time-slider': 'Time Slider',
+            'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
+
+            // mep-feature-skipback
+            'mejs.time-skip-back': 'Skip back %1 seconds',
+
+            // mep-feature-tracks
+            'mejs.captions-subtitles' : 'Captions/Subtitles',
+            'mejs.none' : 'None',
+
+            // mep-feature-volume
+            'mejs.mute-toggle' : 'Mute Toggle',
+            'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
+            'mejs.unmute' : 'Unmute',
+            'mejs.mute' : 'Mute',
+            'mejs.volume-slider': 'Volume Slider',
+
+            // mep-player
+            'mejs.video-player': 'Video Player',
+            'mejs.audio-player': 'Audio Player',
+            	
+            // mep-feature-ads
+            'mejs.ad-skip': 'Skip ad',
+            'mejs.ad-skip-info': 'Skip in %1 seconds',
+        };
     }
 
 }(mejs.i18n.locale.strings));
