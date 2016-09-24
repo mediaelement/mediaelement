@@ -54,6 +54,7 @@ module.exports = function(grunt) {
 					'src/js/mediaelementplayer-feature-fullscreen.js',
 					'src/js/mediaelementplayer-feature-speed.js',
 					'src/js/mediaelementplayer-feature-tracks.js',
+					'src/js/mediaelementplayer-feature-sourcechooser.js',
 					'src/js/mediaelementplayer-feature-contextmenu.js',
 					'src/js/mediaelementplayer-feature-skipback.js',
 					'src/js/mediaelementplayer-feature-postroll.js'
@@ -109,18 +110,26 @@ module.exports = function(grunt) {
 		},
 		copy: {
 			build: {
-				expand	: true,
-				cwd		: 'src/css/',
-				src		: ['*.png', '*.svg', '*.gif', '*.css'],
-				dest	: 'build/',
+				expand  : true,
+				cwd     : 'src/css/',
+				src     : ['*.png', '*.svg', '*.gif', '*.css'],
+				dest    : 'build/',
 				flatten : true,
-				filter	: 'isFile'
+				filter  : 'isFile'
+			},
+			translation: {
+				expand  : true,
+				cwd     : 'src/js/',
+				src     : ['me-i18n-locale-*.js'],
+				dest    : 'build/lang',
+				flatten : true,
+				filter  : 'isFile'
 			}
 		},
-		clean: {
-		  build: ['build'],
-		  temp:	 ['tmp']
-		},
+        clean: {
+          build: ['build'],
+          temp:  ['tmp']
+        },
 
 		// Task that compiles flashmediaelement.swf using the free Flex SDK on Linux/Mac.
 		// There are a few prerequisite steps involved in running this task.
