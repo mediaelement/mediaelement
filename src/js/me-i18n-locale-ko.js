@@ -18,18 +18,28 @@
 
     if (typeof exports.ko === 'undefined') {
         exports.ko = {
-            "None" : "없음",
-            "Unmute" : "음소거 해제",
-            "Fullscreen" : "전체화면",
-            "Download File" : "파일 다운로드",
-            "Mute Toggle" : "음소거 전환",
-            "Play/Pause" : "재생/정지",
-            "Captions/Subtitles" : "캡션/자막",
-            "Download Video" : "비디오 다운로드",
-            "Mute" : "음소거",
-            "Turn off Fullscreen" : "전체화면 해제",
-            "Go Fullscreen" : "전체화면 가기",
-            "Close" : "닫기"
+
+            'mejs.audio-player' : "오디오 플레이어",
+            'mejs.captions-subtitles' : "캡션/자막",
+            'mejs.close' : "종료",
+            'mejs.download-file' : "파일 다운로드",
+            'mejs.download-video' : "비디오 다운로드",
+            'mejs.fullscreen' : "전체화면",
+            'mejs.fullscreen-off' : "전체화면 해제",
+            'mejs.fullscreen-on' : "전체화면 가기",
+            'mejs.mute' : "말 없는",
+            'mejs.mute-toggle' : "음소거 전환",
+            'mejs.none' : "없음",
+            'mejs.pause' : "정지",
+            'mejs.play' : "작동",
+            'mejs.time-help-text' : "1초 전진하려면 좌/우측 화살표를 사용하시고 10초 전진하려면 위/아래 화살표를 사용하세요.",
+            'mejs.time-skip-back' : "1초 % 를 뒤로 건너뛰세요",
+            'mejs.time-slider' : "시간 슬라이더",
+            'mejs.unmute' : "음소거 해제",
+            'mejs.video-player' : "비디오 플레이어",
+            'mejs.volume-help-text' : "볼륨을 높이거나 낮추려면 위/아래 화살표를 이용하세요.",
+            'mejs.volume-slider' : "볼륨 슬라이더"
+
         };
     }
 
