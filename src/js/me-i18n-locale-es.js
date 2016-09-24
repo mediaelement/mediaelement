@@ -18,21 +18,30 @@
 
     if (typeof exports.es === 'undefined') {
         exports.es = {
-            "None" : "Ninguno",
-            "Unmute" : "Reactivar silencio",
-            "Fullscreen" : "Pantalla completa",
-            "Download File" : "Descargar archivo",
-            "Mute Toggle" : "Alternar silencio",
-            "Play/Pause" : "Reproducción/Pausa",
-            "Captions/Subtitles" : "Leyendas/Subtítulos",
-            "Download Video" : "Descargar vídeo",
-            "Mute" : "Silencio",
-            "Turn off Fullscreen" : "Desconectar pantalla completa",
-            "Go Fullscreen" : "Ir a pantalla completa",
-            "Close" : "Cerrar",
-	    "Skip ad": "Salta publicidad",
-	    "Skip in": "Salta en",
-	    "seconds": "segundos"
+
+            'mejs.ad-skip': "Salta publicidad",
+            'mejs.ad-skip-info': "Salta en %1 segundos",
+            'mejs.audio-player' : "Reproductor de audio",
+            'mejs.captions-subtitles' : "Leyendas/Subtítulos",
+            'mejs.close' : "Cerrar",
+            'mejs.download-file' : "Descargar archivo",
+            'mejs.download-video' : "Descargar vídeo",
+            'mejs.fullscreen' : "Pantalla completa",
+            'mejs.fullscreen-off' : "Desconectar pantalla completa",
+            'mejs.fullscreen-on' : "Ir a pantalla completa",
+            'mejs.mute' : "Silencio",
+            'mejs.mute-toggle' : "Alternar silencio",
+            'mejs.none' : "Ninguno",
+            'mejs.pause' : "Pausa",
+            'mejs.play' : "Reproducción",
+            'mejs.time-help-text' : "Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.",
+            'mejs.time-skip-back' : "Saltar atrás %1 segundos",
+            'mejs.time-slider' : "Control deslizante de tiempo",
+            'mejs.unmute' : "Reactivar silencio",
+            'mejs.video-player' : "Reproductor de vídeo",
+            'mejs.volume-help-text' : "Use las flechas Arriba/Abajo para subir o bajar el volumen.",
+            'mejs.volume-slider' : "Control deslizante de volumen"
+
         };
     }
 
