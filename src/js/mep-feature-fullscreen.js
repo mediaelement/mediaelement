@@ -3,7 +3,7 @@
 	$.extend(mejs.MepDefaults, {
 		usePluginFullScreen: true,
 		newWindowCallback: function() { return '';},
-		fullscreenText: mejs.i18n.t('Fullscreen')
+		fullscreenText: mejs.i18n.t('mejs.fullscreen')
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -31,7 +31,7 @@
 			player.isInIframe = (window.location != window.parent.location);	
 		
 			// detect on start
-			media.addEventListener('play', function() { player.detectFullscreenMode(); });
+			media.addEventListener('loadstart', function() { player.detectFullscreenMode(); });
 				
 			// build button
 			var t = this,

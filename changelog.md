@@ -1,9 +1,37 @@
 ### Version History
 
+*2.23.1 (2016/09/26)*
+
+* Fix documentation in regards of control icons with CSS in different path (https://github.com/johndyer/mediaelement/pull/1837) @jangrewe
+* Added a new element to customize YouTube iframe, to solve #1840 (https://github.com/johndyer/mediaelement/pull/1842) @ron666
+* Fix issues with Chromium not playing audio files properly (https://github.com/johndyer/mediaelement/pull/1843) @ron666
+* Fix for issue related to space bar and Firefox triggering click event, causing issues in Accessibility (https://github.com/johndyer/mediaelement/pull/1848) @ron666
+* Update I18N to use unique id instead of strings (https://github.com/johndyer/mediaelement/pull/1845) @OlivierJaquemet
+* Make the sourcechooser feature keyboard-friendly for Accessibility purposes (https://github.com/johndyer/mediaelement/pull/1841) @tennety
+* Integration of `grunt` task to set translation files inside `/build/` folder (https://github.com/johndyer/mediaelement/pull/1834) @ron666
+
+*2.23.0 (2016/09/06)*
+
+* Changed way to detect fullscreen method by using _onloadstart_ event (https://github.com/johndyer/mediaelement/pull/1815) @ale-grosselle
+* Preserve volume muted when resizing player (https://github.com/johndyer/mediaelement/pull/1813) @ron666
+* Allow double lines of captions, added missing _captions_ type in tracks workflow and minor typo fix (https://github.com/johndyer/mediaelement/pull/1800) @ron666
+* Touch devices controls fix for #1820 (https://github.com/johndyer/mediaelement/issues/603) @ron666
+* Show controls when video is paused or ended (https://github.com/johndyer/mediaelement/pull/1786) @ron666
+* Progress bar variables set properly to fix #1600 (https://github.com/johndyer/mediaelement/pull/1824) @ron666
+* Configurable controls visibility time (https://github.com/johndyer/mediaelement/pull/1787) @ron666
+* Added delay when hovering out of control button (https://github.com/johndyer/mediaelement/pull/1615) @schrolli
+* Added new Grunt task to compile all html5 elements including console messages (https://github.com/johndyer/mediaelement/pull/1614) @schrolli
+* Added call to format time properly when metadata has been loaded (https://github.com/johndyer/mediaelement/pull/1826) @ron666
+* Added time tracker tooltip configuration to enable/disable it (#1692) (https://github.com/johndyer/mediaelement/pull/1830) @ron666
+* Set source properly on YouTube videos properly per @dazweeja's comments (https://github.com/johndyer/mediaelement/pull/1829) @ron666
+* Documentation improvements and addition of TODO list (https://github.com/johndyer/mediaelement/pull/1805) @ron666
+* Added missing error message configuration in documentation and in player settings
+
 *2.22.1 (2016/08/18)*
 
 * Fix wrong parameter sent to defaultSeekForwardInterval and defaultSeekBackwardInterval options (https://github.com/johndyer/mediaelement/pull/1784) @marjune163
 * Fullscreen in Safari Mac must show player skin (https://github.com/johndyer/mediaelement/pull/1794) @ale-grosselle
+* Add missing string to the English locale template https://github.com/johndyer/mediaelement/pull/1782 @ocean90 
 * Fix for aspect ratio when playing Hls Flash video if m3u8 does not have a resolution indicated (#1790) (https://github.com/johndyer/mediaelement/pull/1791) @ale-grosselle
 * Only focus the play button when the control bar is not hidden (https://github.com/johndyer/mediaelement/pull/1798) @schrolli
 * Avoid hiding audio controls when tabbing (#1668) (https://github.com/johndyer/mediaelement/pull/1804) @ron666
@@ -19,7 +47,7 @@
 * Update Flash HLS to accept audio (https://github.com/johndyer/mediaelement/pull/1763) @ale-grosselle
 * Updated Korean translation (#1743) @Jinkwon 
 * Improve video ID parsing for YouTube URLs (https://github.com/johndyer/mediaelement/pull/1774) @ocean90
-* Removed extrainous call to removePlugin @johndyer 
+* Removed extraneous call to removePlugin @johndyer 
 
 *2.21.2 (2016/05/08)*
 
@@ -860,13 +888,3 @@ Fixes and updates
 *1.0.0 (2010/08/09)*
 
 * initial release
-
-
-*Someday/Maybe features*
-
-* deeper WebVTT support (alignment, color, etc.) - include captionator
-* Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
-* thin line when controls are off
-* system-wide events
-* Ogg/Theora playback
-* Better alignment with native MediaElement (using shimichanga.com techniques)
