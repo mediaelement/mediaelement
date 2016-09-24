@@ -18,18 +18,28 @@
 
     if (typeof exports.ja === 'undefined') {
         exports.ja = {
-            "None" : "なし",
-            "Unmute" : "ミュートを解除",
-            "Fullscreen" : "全画面",
-            "Download File" : "ファイルをダウンロードする",
-            "Mute Toggle" : "ミュートトグル",
-            "Play/Pause" : "再生/一時停止",
-            "Captions/Subtitles" : "キャプション/字幕",
-            "Download Video" : "動画をダウンロードする",
-            "Mute" : "ミュート",
-            "Turn off Fullscreen" : "全画面をオフにする",
-            "Go Fullscreen" : "全画面にする",
-            "Close" : "閉じる"
+
+            'mejs.audio-player' : "オーディオプレーヤー",
+            'mejs.captions-subtitles' : "キャプション/字幕",
+            'mejs.close' : "閉じる",
+            'mejs.download-file' : "ファイルをダウンロードする",
+            'mejs.download-video' : "動画をダウンロードする",
+            'mejs.fullscreen' : "全画面",
+            'mejs.fullscreen-off' : "全画面をオフにする",
+            'mejs.fullscreen-on' : "全画面にする",
+            'mejs.mute' : "ミュート",
+            'mejs.mute-toggle' : "ミュートトグル",
+            'mejs.none' : "なし",
+            'mejs.pause' : "一時停止",
+            'mejs.play' : "再生",
+            'mejs.time-help-text' : "1秒進めるには左/右矢印をキーを、10秒進めるには上/下矢印を使います。",
+            'mejs.time-skip-back' : "%1秒スキップバックする",
+            'mejs.time-slider' : "タイムスライダー",
+            'mejs.unmute' : "ミュートを解除",
+            'mejs.video-player' : "ビデオプレーヤー",
+            'mejs.volume-help-text' : "音量を上げたり下げたりするには、上/下矢印を使います。",
+            'mejs.volume-slider' : "音量スライダー"
+
         };
     }
 
