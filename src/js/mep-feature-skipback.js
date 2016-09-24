@@ -4,7 +4,7 @@
 	$.extend(mejs.MepDefaults, {
 		skipBackInterval: 30,
 		// %1 will be replaced with skipBackInterval in this string
-		skipBackText: mejs.i18n.t('Skip back %1 seconds')
+		skipBackText: mejs.i18n.t('mejs.time-skip-back')
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
