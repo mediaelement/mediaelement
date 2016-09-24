@@ -58,8 +58,7 @@ module.exports = function(grunt) {
                     'src/js/mep-feature-tracks.js',
                     'src/js/mep-feature-contextmenu.js',
                     'src/js/mep-feature-skipback.js',
-                    'src/js/mep-feature-postroll.js',
-                    'src/js/mep-feature-markers.js'
+                    'src/js/mep-feature-postroll.js'
                     ]),
                 dest: 'build/mediaelementplayer.js'
             },
