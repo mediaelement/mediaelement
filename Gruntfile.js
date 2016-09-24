@@ -120,10 +120,13 @@ module.exports = function(grunt) {
 			translation: {
 				expand  : true,
 				cwd     : 'src/js/',
-				src     : ['me-i18n-locale-*.js'],
-				dest    : 'build/lang',
+				src     : ['mediaelement-i18n-locale-*.js'],
+				dest    : 'build/lang/',
 				flatten : true,
-				filter  : 'isFile'
+				filter  : 'isFile',
+				rename: function(dest, src) {
+					return dest + src.replace('mediaelement', 'me');
+				}
 			}
 		},
         clean: {
