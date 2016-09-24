@@ -2178,6 +2178,8 @@ window.MediaElement = mejs.MediaElement;
             // mep-feature-ads
             'mejs.ad-skip': 'Skip ad',
             'mejs.ad-skip-info': 'Skip in %1 seconds',
+
+            'mejs.source-chooser': 'Source Chooser'
         };
     }
 
@@ -5838,7 +5840,7 @@ if (typeof jQuery != 'undefined') {
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		sourcechooserText: 'Source Chooser'
+		sourcechooserText: mejs.i18n.t('mejs.source-chooser')
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
