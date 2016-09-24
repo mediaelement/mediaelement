@@ -40,7 +40,8 @@
             'mejs.unmute' : "Reactivar silencio",
             'mejs.video-player' : "Reproductor de vídeo",
             'mejs.volume-help-text' : "Use las flechas Arriba/Abajo para subir o bajar el volumen.",
-            'mejs.volume-slider' : "Control deslizante de volumen"
+            'mejs.volume-slider' : "Control deslizante de volumen",
+            'mejs.source-chooser': "Selector de media"
 
         };
     }

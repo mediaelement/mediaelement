@@ -2,7 +2,7 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		sourcechooserText: 'Source Chooser'
+		sourcechooserText: mejs.i18n.t('mejs.source-chooser')
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
