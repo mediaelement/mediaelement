@@ -67,6 +67,8 @@
             // mep-feature-ads
             'mejs.ad-skip': 'Skip ad',
             'mejs.ad-skip-info': 'Skip in %1 seconds',
+
+            'mejs.source-chooser': 'Source Chooser'
         };
     }
 
