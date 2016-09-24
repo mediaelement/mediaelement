@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>HTML5 MediaElement</title>
+    <script src="../build/jquery.js"></script>
+    <script src="testforfiles.js"></script>
+
+    <script src="../build/mediaelement-and-player.min.js"></script>
+    <script src="../build/lang/me-i18n-locale-de.js"></script>
+    <script src="../build/lang/me-i18n-locale-en.js"></script>
+    <script src="../build/lang/me-i18n-locale-fr.js"></script>
+    <script src="../build/lang/me-i18n-locale-it.js"></script>
+    <script src="../build/lang/me-i18n-locale-ja.js"></script>
+    <script src="../build/lang/me-i18n-locale-ko.js"></script>
+    <script src="../build/lang/me-i18n-locale-pt.js"></script>
+    <script src="../build/lang/me-i18n-locale-pt-br.js"></script>
+    <script src="../build/lang/me-i18n-locale-zh.js"></script>
+    <script src="../build/lang/me-i18n-locale-zh-cn.js"></script>
+    <link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+
+
+
+</head>
+<body>
+
+<h1>MediaElement.js - i18n</h1>
+
+<p>This is only the Flash/Silverlight Shim for older browsers or browsers without the codec you need. It is not a full player.</p>
+
+<h2>MP4 video (as src)</h2>
+<video width="360" height="203" id="player1" src="../media/echo-hereweare.mp4" type="video/mp4" controls="controls"></video>
+
+<input type="button" id="pp" value="toggle" />
+<span id="time"></span>
+
+<div>
+    <form action="#" method="get">
+        <label>Language <select name="lang">
+            <option value="en" selected >English</option>
+            <option value="de">Deutsch/ German (de)</option>
+            <option value="fr">Français/ French (fr)</option>
+            <option value="ja">日本語 / Japanese (ja)</option>
+            <option value="ko">한국어/조선말 / Korean (ko)</option>
+            <option value="zh-CN">简体中文 / Simplified Chinese (zh-CN)</option>
+            <option value="zh">繁體中文/ Traditional Chinese (zh-TW)</option>
+        </select>
+        </label>
+    </form>
+</div>
+
+<script>
+
+    $('select').on('change', function() {
+        mejs.i18n.locale.language = $(this).val();
+    });
+
+    $('audio,video').mediaelementplayer({
+        success: function(player, node) {
+
+            $(player).closest(".mejs-container").attr("lang", mejs.i18n.getLanguage());
+            $("html").attr("lang", mejs.i18n.getLanguage());
+
+            $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
+
+            player.play();
+
+            player.addEventListener('timeupdate', function() {
+                document.getElementById('time').innerHTML = player.currentTime;
+            }, false);
+
+            document.getElementById('pp')['onclick'] = function() {
+                if (player.paused)
+                    player.play();
+                else
+                    player.pause();
+            };
+        }
+    });
+</script>
+
+</body>
+</html>
