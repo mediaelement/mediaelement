@@ -1056,7 +1056,8 @@
 				total = t.controls.find('.mejs-time-total'),
 				others = rail.siblings(),
 				lastControl = others.last(),
-				lastControlPosition = null;
+				lastControlPosition = null,
+				avoidAutosizeProgress = t.options && !t.options.autosizeProgress;
 
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
@@ -1064,7 +1065,7 @@
 			}
 
 			// allow the size to come from custom CSS
-			if (t.options && !t.options.autosizeProgress) {
+			if (avoidAutosizeProgress) {
 				// Also, frontends devs can be more flexible
 				// due the opportunity of absolute positioning.
 				railWidth = parseInt(rail.css('width'), 10);
@@ -1090,7 +1091,12 @@
 			// this often happens when zoomed
 			do {
 				// outer area
-				rail.width(railWidth);
+				// we only want to set an inline style with the width of the rail
+				// if we're trying to autosize.
+				if (!avoidAutosizeProgress) {
+					rail.width(railWidth);
+				}
+
 				// dark space
 				total.width(railWidth - (total.outerWidth(true) - total.width()));
 
