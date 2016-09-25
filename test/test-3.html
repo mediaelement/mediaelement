@@ -4,50 +4,47 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<title>HTML5 MediaElement</title>	
-	
-	<script src="firebug-lite/build/firebug-lite.js"></script>
-	
-	<script>
-	if (typeof window.console == 'undefined') {
-		window.console = {log:function() {}};
-	}	
-	</script>
+	<title>HTML5 MediaElement</title>
+
+	<!--[if lte IE 8]>
+	<script src="../src/js/console.js"></script>
+	<![endif]-->
 	
 	<script src="../build/jquery.js"></script>
 
 	<script src="../src/js/mediaelement-header.js"></script>
-	<script src="../src/js/mediaelement-namespace.js"></script>	
+	<script src="../src/js/mediaelement-namespace.js"></script>
 	<script src="../src/js/mediaelement-utility.js"></script>
-	<script src="../src/js/mediaelement-utility-oldie.js"></script>	
+	<script src="../src/js/mediaelement-utility-oldie.js"></script>
 	<script src="../src/js/mediaelement-core.js"></script>
 	<script src="../src/js/mediaelement-renderer-html5.js"></script>
+	<script src="../src/js/mediaelement-renderer-mdash.js"></script>
+	<script src="../src/js/mediaelement-renderer-hls.js"></script>
 	<script src="../src/js/mediaelement-renderer-flash.js"></script>
-	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>		
-	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>		
-	<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>				
-	<script src="../src/js/me-i18n.js"></script>
+	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+	<script src="../src/js/mediaelement-renderer-vimeo.js"></script>
+	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+	<script src="../src/js/mediaelement-renderer-facebook.js"></script>
+	<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
 
-	<script src="../src/js/mep-player.js"></script>
-	<script src="../src/js/mep-feature-playpause.js"></script>
-	<script src="../src/js/mep-feature-progress.js"></script>
-	<script src="../src/js/mep-feature-time.js"></script>
-	<script src="../src/js/mep-feature-speed.js"></script>	
-	<script src="../src/js/mep-feature-tracks.js"></script>
-	<script src="../src/js/mep-feature-volume.js"></script>
-	<script src="../src/js/mep-feature-stop.js"></script>
-	<script src="../src/js/mep-feature-fullscreen.js"></script>
+	<script src="../src/js/mediaelementplayer-library.js"></script>
+	<script src="../src/js/mediaelement-i18n.js"></script>
+	<script src="../src/js/mediaelementplayer-player.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-playpause.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-progress.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-time.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-speed.js"></script>	
+	<script src="../src/js/mediaelementplayer-feature-tracks.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-volume.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-stop.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-fullscreen.js"></script>
+
 	<link rel="stylesheet" href="../src/css/mediaelementplayer.css" />
 		
 	<style>
 	#container{
 		width: 700px;
 		margin: 20px auto;
-	}
-	
-	#video-container {
-		-sdisplay: none;
-		
 	}
 	</style>
 </head>
@@ -64,7 +61,7 @@
 
 <h2>MP3 audio (as src)</h2>
 
-<audio id="player2" src="../media/test.mp3" preload="none" type="audio/mp3" controls="controls">
+<audio id="player2" src="../media/AirReview-Landmarks-02-ChasingCorporate.mp3" preload="none" type="audio/mp3" controls="controls">
 	<p>Your browser leaves much to be desired.</p>			
 </audio>
 
@@ -80,7 +77,7 @@
 	
 		<source src="../media/echo-hereweare.mp4"  type="video/mp4" /> 	
 			
-		<track kind="subtitles" src="../media/mediaelement.srt" srclang="en"  ></track>
+		<track kind="subtitles" src="../media/mediaelement.srt" srclang="en" />
 		
 	</video>
 
