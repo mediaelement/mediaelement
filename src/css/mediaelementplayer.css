@@ -817,7 +817,6 @@
 }
 
 .mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector {
-	visibility: hidden;
 	position: absolute;
 	bottom: 26px;
 	right: -10px;
