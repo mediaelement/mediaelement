@@ -271,7 +271,10 @@
 		return t;
 	};
 
-	// actual player
+	/**
+	 * @constructor
+	 * @class {mejs.MediaElementPlayer}
+	 */
 	mejs.MediaElementPlayer.prototype = {
 
 		hasFocus: false,
