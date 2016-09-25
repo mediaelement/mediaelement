@@ -80,7 +80,7 @@
 						// position floating time box
 						if (!mejs.MediaFeatures.hasTouch) {
 							t.timefloat.css('left', pos);
-							t.timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options) );
+							t.timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options.alwaysShowHours));
 							t.timefloat.show();
 						}
 					}
@@ -90,7 +90,7 @@
 
 					var seconds = media.currentTime,
 						timeSliderText = mejs.i18n.t('mejs.time-slider'),
-						time = mejs.Utility.secondsToTimeCode(seconds, player.options),
+						time = mejs.Utility.secondsToTimeCode(seconds, player.options.alwaysShowHours),
 						duration = media.duration;
 
 					t.slider.attr({
@@ -147,6 +147,10 @@
 						seekTime = duration;
 						break;
 					case 32: // space
+						if (!mejs.Utility.isFirefox) {
+							media.paused ? media.play() : media.pause();
+						}
+						return;
 					case 13: // enter
 						media.paused ? media.play() : media.pause();
 						return;
@@ -173,7 +177,6 @@
 
 
 			// handle clicks
-			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
 			t.total
 				.bind('mousedown touchstart', function (e) {
 					// only handle left clicks or touch
