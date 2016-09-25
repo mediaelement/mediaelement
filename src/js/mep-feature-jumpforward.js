@@ -4,7 +4,7 @@
 	$.extend(mejs.MepDefaults, {
 		jumpForwardInterval: 30,
 		// %1 will be replaced with jumpForwardInterval in this string
-		jumpForwardText: mejs.i18n.t('Jump forward %1 seconds')
+		jumpForwardText: mejs.i18n.t('mejs.time-jump-forward')
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
