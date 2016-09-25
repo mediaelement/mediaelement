@@ -2,7 +2,7 @@
 	
 	// options
 	$.extend(mejs.MepDefaults, {
-		duration: -1,
+		duration: 0,
 		timeAndDurationSeparator: '<span> | </span>'
 	});
 
@@ -14,7 +14,7 @@
 			
 			$('<div class="mejs-time" role="timer" aria-live="off">' +
 					'<span class="mejs-currenttime">' + 
-						mejs.Utility.secondsToTimeCode(0, player.options) +
+						mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours) +
                     '</span>'+
 				'</div>')
 			.appendTo(controls);
@@ -36,7 +36,7 @@
 			if (controls.children().last().find('.mejs-currenttime').length > 0) {
 				$(t.options.timeAndDurationSeparator +
 					'<span class="mejs-duration">' + 
-						mejs.Utility.secondsToTimeCode(t.options.duration, t.options) +
+						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>')
 					.appendTo(controls.find('.mejs-time'));
 			} else {
@@ -46,7 +46,7 @@
 				
 				$('<div class="mejs-time mejs-duration-container">'+
 					'<span class="mejs-duration">' + 
-						mejs.Utility.secondsToTimeCode(t.options.duration, t.options) +
+						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>' +
 				'</div>')
 				.appendTo(controls);
@@ -71,7 +71,7 @@
 			}
 
 			if (t.currenttime) {
-				t.currenttime.html(mejs.Utility.secondsToTimeCode(currentTime, t.options));
+				t.currenttime.html(mejs.Utility.secondsToTimeCode(currentTime, t.options.alwaysShowHours));
 			}
 		},
 		
@@ -79,19 +79,20 @@
 			var t = this;
 			
 			var duration = t.media.duration;
+
+			if (isNaN(duration) || duration == Infinity || duration < 0) {
+				t.media.duration = t.options.duration = duration = 0;
+			}
+
 			if (t.options.duration > 0) {
 				duration = t.options.duration;
-			}
-			
-			if (isNaN(duration)) {
-				duration = 0;
 			}
 
 			//Toggle the long video class if the video is longer than an hour.
 			t.container.toggleClass("mejs-long-video", duration > 3600);
 			
 			if (t.durationD && duration > 0) {
-				t.durationD.html(mejs.Utility.secondsToTimeCode(duration, t.options));
+				t.durationD.html(mejs.Utility.secondsToTimeCode(duration, t.options.alwaysShowHours));
 			}		
 		}
 	});
