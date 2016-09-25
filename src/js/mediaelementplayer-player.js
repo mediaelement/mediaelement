@@ -18,7 +18,6 @@
 		defaultAudioWidth: 400,
 		// default if the user doesn't specify
 		defaultAudioHeight: 30,
-
 		// default amount to move back when back key is pressed
 		defaultSeekBackwardInterval: function(media) {
 			return (media.duration * 0.05);
@@ -27,15 +26,13 @@
 		defaultSeekForwardInterval: function(media) {
 			return (media.duration * 0.05);
 		},
-
 		// set dimensions via JS instead of CSS
 		setDimensions: true,
-
 		// width of audio player
 		audioWidth: -1,
 		// height of audio player
 		audioHeight: -1,
-		// initial volume when the player starts (overrided by user cookie)
+		// initial volume when the player starts (overridden by user cookie)
 		startVolume: 0.8,
 		// useful for <audio> player loops
 		loop: false,
@@ -43,7 +40,6 @@
 		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
-
 		/*
 		 * Time format to use. Default: 'mm:ss'
 		 * Supported units:
@@ -66,7 +62,6 @@
 		showTimecodeFrameCount: false,
 		// used when showTimecodeFrameCount is set to true
 		framesPerSecond: 25,
-
 		// automatically calculate the width of the progress bar based on the sizes of other elements
 		autosizeProgress : true,
 		// Hide controls when playing and mouse is not over the video
@@ -91,17 +86,13 @@
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
- 
 		// stretching modes (auto, fill, responsive, none)
 		stretching: 'auto',
-
 		// turns keyboard support on and off for this instance
 		enableKeyboard: true,
-
-		// whenthis player starts, it will pause other players
+		// when this player starts, it will pause other players
 		pauseOtherPlayers: true,
-
-		// array of keyboard actions such as play pause
+		// array of keyboard actions such as play/pause
 		keyActions: [
 				{
 						keys: [
@@ -121,7 +112,7 @@
 				},
 				{
 						keys: [38], // UP
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								player.container.find('.mejs-volume-slider').css('display','block');
 								if (player.isVideo) {
 										player.showControls();
@@ -134,7 +125,7 @@
 				},
 				{
 						keys: [40], // DOWN
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								player.container.find('.mejs-volume-slider').css('display','block');
 								if (player.isVideo) {
 										player.showControls();
@@ -150,7 +141,7 @@
 								37, // LEFT
 								227 // Google TV rewind
 						],
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								if (!isNaN(media.duration) && media.duration > 0) {
 										if (player.isVideo) {
 												player.showControls();
@@ -168,7 +159,7 @@
 								39, // RIGHT
 								228 // Google TV forward
 						],
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								if (!isNaN(media.duration) && media.duration > 0) {
 										if (player.isVideo) {
 												player.showControls();
@@ -183,7 +174,7 @@
 				},
 				{
 						keys: [70], // F
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
 												player.exitFullScreen();
@@ -195,7 +186,7 @@
 				},
 				{
 						keys: [77], // M
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								player.container.find('.mejs-volume-slider').css('display','block');
 								if (player.isVideo) {
 										player.showControls();
@@ -215,8 +206,16 @@
 
 	mejs.players = {};
 
-	// wraps a MediaElement object in player controls
+	/**
+	 * Wrap a MediaElement object in player controls
+	 *
+	 * @constructor
+	 * @param {Element} node
+	 * @param {Object} o
+	 * @return {?MediaElementPlayer}
+	 */
 	mejs.MediaElementPlayer = function(node, o) {
+
 		// enforce object, even without "new" (via John Resig)
 		if ( !(this instanceof mejs.MediaElementPlayer) ) {
 			return new mejs.MediaElementPlayer(node, o);
@@ -229,7 +228,7 @@
 		t.node = t.media = t.$media[0];
 
 		if(!t.node) {
-			return
+			return null;
 		}
 
 		// check for existing player
@@ -287,7 +286,7 @@
 				t = this,
 				mf = mejs.MediaFeatures,
 				// options for MediaElement (shim)
-				meOptions = $.extend(true, {}, t.options, {
+				meOptions = $.extend({}, t.options, {
 					success: function(media, domNode) { t.meReady(media, domNode); },
 					error: function(e) { t.handleError(e);}
 				}),
@@ -761,6 +760,7 @@
 				// resize on the first play
 				t.media.addEventListener('loadedmetadata', function() {
 
+					console.log(t.options);
 					mejs.Utility.calculateTimeFormat(t.duration, t.options, t.options.framesPerSecond || 25);
 
 					if (t.updateDuration) {

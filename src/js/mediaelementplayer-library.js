@@ -1,6 +1,6 @@
-if (typeof jQuery != 'undefined') {
+if (typeof jQuery !== 'undefined') {
 	mejs.$ = jQuery;
-} else if (typeof Zepto != 'undefined') {
+} else if (typeof Zepto !== 'undefined') {
 	mejs.$ = Zepto;
 
 	// define `outerWidth` method which has not been realized in Zepto
@@ -13,6 +13,6 @@ if (typeof jQuery != 'undefined') {
 		return width
 	}
 
-} else if (typeof ender != 'undefined') {
+} else if (typeof ender !== 'undefined') {
 	mejs.$ = ender;
 }
