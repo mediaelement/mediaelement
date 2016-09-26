@@ -16,8 +16,8 @@
 
     "use strict";
 
-    if (typeof exports.en === 'undefined') {
-        exports.en = {
+    if (typeof exports.de === 'undefined') {
+        exports.de = {
             // me-shim
             'mejs.download-file': 'Datei herunterladen',
 
