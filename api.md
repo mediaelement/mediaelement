@@ -201,16 +201,23 @@ slidesSelector: '',
 skipBackInterval: 30,
 // Enable tooltip that shows time in progress bar
 enableProgressTooltip: true,
+// Specify the color of marker
+markerColor: '#E9BC3D',
+// Specify marker times in seconds 
+markers: [],
+// Callback function invoked when a marker position is reached
+markerCallback: function(media, time) {}
 // The following items are set for accessibility purposes in different elements of the player
-playText: mejs.i18n.t('Play'),
-pauseText: mejs.i18n.t('Pause'),
-stopText: mejs.i18n.t('Stop'),
-tracksText: mejs.i18n.t('Captions/Subtitles'),
-postrollCloseText: mejs.i18n.t('Close'),
-allyVolumeControlText: mejs.i18n.t('Use Up/Down Arrow keys to increase or decrease volume.'),
-muteText: mejs.i18n.t('Mute Toggle'),
-fullscreenText: mejs.i18n.t('Fullscreen'),
-skipBackText: mejs.i18n.t('Skip back %1 seconds'), // %1 will be replaced with skipBackInterval in this string
+// They must follow syntax ID => translation inside each of the language files (i.e., me-i18n-locale-en.js)
+playText: mejs.i18n.t('mejs.play'),
+pauseText: mejs.i18n.t('mejs.pause'),
+tracksText: mejs.i18n.t('mejs.captions-subtitles'),
+postrollCloseText: mejs.i18n.t('mejs.close'),
+muteText: mejs.i18n.t('mejs.mute-toggle'),
+allyVolumeControlText: mejs.i18n.t('mejs.volume-help-text'),
+fullscreenText: mejs.i18n.t('mejs.fullscreen'),
+skipBackText: mejs.i18n.t('mejs.time-skip-back'),
+sourcechooserText: mejs.i18n.t('mejs.source-chooser')
 ```
 
 <a id="api"></a>
