@@ -61,7 +61,8 @@ module.exports = function(grunt) {
 					'src/js/mediaelementplayer-feature-sourcechooser.js',
 					'src/js/mediaelementplayer-feature-contextmenu.js',
 					'src/js/mediaelementplayer-feature-skipback.js',
-					'src/js/mediaelementplayer-feature-postroll.js'
+					'src/js/mediaelementplayer-feature-postroll.js',
+					'src/js/mediaelementplayer-feature-markers.js'
 					]),
 				dest: 'build/mediaelementplayer.js'
 			},
