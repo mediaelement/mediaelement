@@ -175,13 +175,16 @@
 				{
 						keys: [70], // F
 						action: function(player, media, key, event) {
+
+							if (!event.ctrlKey) {
 								if (typeof player.enterFullScreen != 'undefined') {
-										if (player.isFullScreen) {
-												player.exitFullScreen();
-										} else {
-												player.enterFullScreen();
-										}
+									if (player.isFullScreen) {
+										player.exitFullScreen();
+									} else {
+										player.enterFullScreen();
+									}
 								}
+							}
 						}
 				},
 				{
