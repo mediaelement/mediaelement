@@ -486,7 +486,7 @@
 		}
 
 		// AUDIO
-		var FlashMediaElementAudioOggRenderer = {
+		var FlashMediaElementAudioRenderer = {
 			name: 'flash_audio',
 
 			options: {
@@ -507,7 +507,7 @@
 
 			create: FlashMediaElementRenderer.create
 		};
-		mejs.Renderers.add(FlashMediaElementAudioOggRenderer);
+		mejs.Renderers.add(FlashMediaElementAudioRenderer);
 
 		// AUDIO - ogg
 		var FlashMediaElementAudioOggRenderer = {
@@ -535,6 +535,20 @@
 
 		// Register Flash renderer if Flash was found
 		window.FlashMediaElementRenderer = mejs.FlashMediaElementRenderer = FlashMediaElementRenderer;
+
+	} else {
+
+		// Errors
+		// 1) Version is not the one required
+		// 2) No Flash installed/enabled
+		if (mejs.PluginDetector.plugins['flash'][0] === 0 &&
+			mejs.PluginDetector.plugins['flash'][1] === 0 &&
+			mejs.PluginDetector.plugins['flash'][2] === 0
+		) {
+			console.error('No Flash installed/detected');
+		} else {
+			console.error('Flash version not up-to-date');
+		}
 	}
 
 })(window, document, window.mejs || {});

@@ -2,7 +2,6 @@
 
 	$.extend(mejs.MepDefaults, {
 		usePluginFullScreen: true,
-		newWindowCallback: function() { return '';},
 		fullscreenText: mejs.i18n.t('mejs.fullscreen')
 	});
 
@@ -94,12 +93,12 @@
 			});
 			
 			t.normalHeight = 0;
-			t.normalWidth = 0;					
+			t.normalWidth = 0;
 					
 			// setup native fullscreen event
 			if (mejs.MediaFeatures.hasTrueNativeFullScreen) {
 
-				// chrome doesn't alays fire this in an iframe
+				// chrome doesn't always fire this in an iframe
 				var fullscreenChanged = function(e) {
 					if (player.isFullScreen) {
 						if (mejs.MediaFeatures.isFullScreen()) {
@@ -381,23 +380,23 @@
 				}, 500);
 			//}
 
-			if (t.media.pluginType === 'native') {
+			// if (t.media.pluginType === 'native') {
 				t.$media
 					.width('100%')
 					.height('100%');
-			} else {
-				t.container.find('.mejs-shim')
-					.width('100%')
-					.height('100%');	
-				
-				setTimeout(function() {
-					var win = $(window),
-						winW = win.width(),
-						winH = win.height();
-							
-					t.media.setVideoSize(winW,winH);			
-				}, 500);
-			}
+			// } else {
+				// t.container.find('.mejs-shim')
+				// 	.width('100%')
+				// 	.height('100%');
+				//
+				// setTimeout(function() {
+				// 	var win = $(window),
+				// 		winW = win.width(),
+				// 		winH = win.height();
+				//
+				// 	t.media.setVideoSize(winW,winH);
+				// }, 500);
+			// }
 
 			t.layers.children('div')
 				.width('100%')
@@ -447,17 +446,17 @@
 				.width(t.normalWidth)
 				.height(t.normalHeight);
 
-			if (t.media.pluginType === 'native') {
+			// if (t.media.pluginType === 'native') {
 				t.$media
 					.width(t.normalWidth)
 					.height(t.normalHeight);
-			} else {
-				t.container.find('.mejs-shim')
-					.width(t.normalWidth)
-					.height(t.normalHeight);
-
-				t.media.setVideoSize(t.normalWidth, t.normalHeight);
-			}
+			// } else {
+			// 	t.container.find('.mejs-shim')
+			// 		.width(t.normalWidth)
+			// 		.height(t.normalHeight);
+            //
+			// 	t.media.setVideoSize(t.normalWidth, t.normalHeight);
+			// }
 
 			t.layers.children('div')
 				.width(t.normalWidth)
