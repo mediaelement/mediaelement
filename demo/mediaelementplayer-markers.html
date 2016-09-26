@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>
+
+
+	<script src="../build/jquery.js"></script>
+	<script src="../build/mediaelement-and-player.min.js"></script>
+	<script src="testforfiles.js"></script>		
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Recommended Setup</p>
+
+
+<h2>MP4/WebM video</h2>
+<video width="360" height="203" id="player2" controls="controls">
+	<source src="../media/echo-hereweare.mp4" type="video/mp4" title="mp4">
+	<source src="../media/echo-hereweare.webm" type="video/webm" title="webm">
+	<source src="../media/echo-hereweare.ogv" type="video/ogg" title="ogg">
+	<p>Your browser leaves much to be desired.</p>
+
+	<link rel="postroll" href="./mediaelementplayer-postroll-content.html" />
+</video>
+
+<script>
+$('audio,video').mediaelementplayer({
+	features: ['playpause','current','progress','duration','markers'], //Adding the feature 'markers' enables this plugin
+    markerColor: '#FCD730', // Optional : Specify the color of the marker
+    markers:['4','16','20','25','35','40'], // Specify marker times in seconds 
+    markerCallback:function(media,time){ // Callback function invoked when a marker position is reached
+       /* Your Code */
+       console.log(time);
+    }
+});
+</script>
+<style>
+.postroll {
+	padding: 5%;
+	color: #fff;
+}
+</style>
+
+</body>
+</html>
