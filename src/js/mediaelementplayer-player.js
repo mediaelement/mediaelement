@@ -419,6 +419,8 @@
 					t.height = t.options['default' + capsTagName + 'Height'];
 				}
 
+				t.initialAspectRatio = t.height / t.width;
+
 				// set the size, while we wait for the plugins to load below
 				t.setPlayerSize(t.width, t.height);
 
@@ -947,13 +949,33 @@
 					return t.options.defaultAudioHeight;
 				}
 			})();
-		
-			var parentWidth = t.container.parent().closest(':visible').width(),
-			parentHeight = t.container.parent().closest(':visible').height(),
-			newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * nativeHeight/nativeWidth, 10) : nativeHeight;
+
+			// Use media aspect ratio if received; otherwise, the initially stored initial aspect ratio
+			var
+				aspectRatio = (function() {
+					ratio = 1;
+					if (!t.isVideo) {
+						return ratio;
+					}
+
+					if (t.media.videoWidth && t.media.videoWidth > 0 && t.media.videoHeight && t.media.videoHeight > 0) {
+						ratio = t.media.videoHeight/t.media.videoWidth;
+					} else  {
+						ratio = t.initialAspectRatio;
+					}
+
+					if (isNaN(ratio) || ratio < 0.01 || ratio > 100) {
+						ratio = 1;
+					}
+
+					return ratio;
+				})(),
+				parentWidth = t.container.parent().closest(':visible').width(),
+				parentHeight = t.container.parent().closest(':visible').height(),
+				newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * aspectRatio, 10) : nativeHeight;
 			
-			// When we use percent, the newHeight can't be calculated so we get the container height
-			if (isNaN(newHeight) || ( parentHeight !== 0 && newHeight > parentHeight && parentHeight > nativeHeight)) {
+			// If we were unable to compute newHeight, get the container height instead
+			if (isNaN(newHeight)) {
 				newHeight = parentHeight;
 			}
 		
