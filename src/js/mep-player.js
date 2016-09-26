@@ -100,6 +100,9 @@
 
 		// whenthis player starts, it will pause other players
 		pauseOtherPlayers: true,
+		
+		// whether this player can be paused by other players
+		canBePausedByOtherPlayers: true,
 
 		// array of keyboard actions such as play pause
 		keyActions: [
@@ -716,7 +719,7 @@
 					// go through all other players
 					for (playerIndex in mejs.players) {
 						var p = mejs.players[playerIndex];
-						if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
+						if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended && p.options.canBePausedByOtherPlayers) {
 							p.pause();
 						}
 						p.hasFocus = false;
