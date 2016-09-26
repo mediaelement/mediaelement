@@ -33,10 +33,14 @@ module.exports = function(grunt) {
 					'src/js/mediaelement-utility.js',
 					'src/js/mediaelement-core.js',
 					'src/js/mediaelement-renderer-html5.js',
-					'src/js/mediaelement-renderer-flash.js',
+					'src/js/mediaelement-renderer-hls.js',
+					'src/js/mediaelement-renderer-mdash.js',
 					'src/js/mediaelement-renderer-youtube-iframe.js',
+					'src/js/mediaelement-renderer-vimeo.js',
 					'src/js/mediaelement-renderer-dailymotion-iframe.js',
-					'src/js/mediaelement-renderer-soundcloud.js'
+					'src/js/mediaelement-renderer-facebook.js',
+					'src/js/mediaelement-renderer-soundcloud.js',
+					'src/js/mediaelement-renderer-flash.js'
 				],
 				dest: 'build/mediaelement.js'
 			},
