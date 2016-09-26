@@ -179,7 +179,7 @@
 			(function(propName) {
 
 				// src is a special one below
-				if (propName != 'src') {
+				if (propName !== 'src') {
 
 					var capName = propName.substring(0,1).toUpperCase() + propName.substring(1),
 
@@ -449,13 +449,13 @@
 		 * @param {number} height
 		 */
 		mediaElement.setSize = function(width, height) {
-			if (mediaElement.renderer != null) {
+			if (mediaElement.renderer !== null) {
 				mediaElement.renderer.setSize(width, height);
 			}
 		};
 
 		// find <source> elements
-		if (mediaElement.originalNode != null) {
+		if (mediaElement.originalNode !== null) {
 			var mediaFiles = [];
 
 			switch (mediaElement.originalNode.nodeName.toLowerCase()) {
@@ -467,10 +467,24 @@
 
 				case 'audio':
 				case 'video':
-					var n, src, type;
+					var
+						n,
+						src,
+						type,
+						sources = mediaElement.originalNode.childNodes.length,
+						nodeSource = mediaElement.originalNode.getAttribute('src')
+					;
+
+					// Consider if node contains the `src` and `type` attributes
+					if (nodeSource) {
+						mediaFiles.push({
+							type: mejs.Utility.getTypeFromFile(nodeSource) || '',
+							src: nodeSource
+						});
+					}
 
 					// test <source> types to see if they are usable
-					for (i = 0; i < mediaElement.originalNode.childNodes.length; i++) {
+					for (i = 0; i < sources; i++) {
 						n = mediaElement.originalNode.childNodes[i];
 						if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
 							src = n.getAttribute('src');
@@ -496,6 +510,10 @@
 		if (options.success) {
 			options.success(mediaElement, mediaElement.originalNode);
 		}
+
+		// if (options.error) {
+		// 	options.error(mediaElement, mediaElement.originalNode);
+		// }
 
 		return mediaElement;
 	};
