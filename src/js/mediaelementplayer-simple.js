@@ -27,13 +27,13 @@ function removeEvent( obj, type, fn ) {
 
 function getElementsByClassName(class_name, node, tag) {
 
-	if (node === null) {
+	if (node == null) {
 		node = document;
 	}
-	if (node.getElementsByClassName) {
+	if (node.getElementsByClassName != null) {
 		return node.getElementsByClassName(class_name);
 	}
-	if (tag === null) {
+	if (tag == null) {
 		tag = '*';
 	}
 

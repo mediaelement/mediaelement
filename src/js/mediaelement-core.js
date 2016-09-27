@@ -241,7 +241,7 @@
 
 						mediaFiles.push({
 							src: src,
-							type: (type === '' || type === null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
+							type: (type === '' || type == null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
 						});
 
 					}
