@@ -182,7 +182,7 @@ SoundCloudIframeRenderer = {
 						switch (propName) {
 
 							case 'src':
-								var url = typeof value == 'string' ? value : value[0].src;
+								var url = typeof value === 'string' ? value : value[0].src;
 
 								scPlayer.load( url );
 								break;

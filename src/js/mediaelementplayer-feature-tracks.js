@@ -1,54 +1,81 @@
+/**
+ * Closed Captions (CC) button
+ *
+ * This feature enables the displaying of a CC button in the control bar, and also contains the methods to start media
+ * with a certain language (if available), toggle captions, etc.
+ */
 (function($) {
 
-	// add extra default options
+	// Feature configuration
 	$.extend(mejs.MepDefaults, {
-		// this will automatically turn on a <track>
+		/**
+		 * Default language to start media using ISO 639-2 Language Code List (en, es, it, etc.)
+		 * @see https://www.loc.gov/standards/iso639-2/php/code_list.php
+		 * @type {String}
+		 */
 		startLanguage: '',
-
+		/**
+		 * @type {String}
+		 */
 		tracksText: mejs.i18n.t('mejs.captions-subtitles'),
-
-		// By default, no WAI-ARIA live region - don't make a
-		// screen reader speak captions over an audio track.
+		/**
+		 * Avoid to screen reader speak captions over an audio track.
+		 *
+		 * @type {Boolean}
+		 */
 		tracksAriaLive: false,
-
-		// option to remove the [cc] button when no <track kind="subtitles"> are present
+		/**
+		 * Remove the [cc] button when no track nodes are present
+		 * @type {Boolean}
+		 */
 		hideCaptionsButtonWhenEmpty: true,
-
-		// If true and we only have one track, change captions to popup
+		/**
+		 * Change captions to pop-up if true and only one track node is found
+		 * @type {Boolean}
+		 */
 		toggleCaptionsButtonWhenOnlyOne: false,
-
-		// #id or .class
+		/**
+		 * @type {String}
+		 */
 		slidesSelector: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
 
+		/**
+		 * @type {Boolean}
+		 */
 		hasChapters: false,
 
-		cleartracks: function(player, controls, layers, media){
-			if(player) {
-				if(player.captions) player.captions.remove();
-				if(player.chapters) player.chapters.remove();
-				if(player.captionsText) player.captionsText.remove();
-				if(player.captionsButton) player.captionsButton.remove();
-			}
-		},
+		/**
+		 * Feature constructor.
+		 *
+		 * Always has to be prefixed with build and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 * @param {$} controls
+		 * @param {$} layers
+		 * @param {HTMLElement} media
+		 */
 		buildtracks: function(player, controls, layers, media) {
-			if (player.tracks.length === 0)
+			if (player.tracks.length === 0) {
 				return;
+			}
 
-			var t = this,
-				attr = t.options.tracksAriaLive ?
-					'role="log" aria-live="assertive" aria-atomic="false"' : '',
+			var
+				t = this,
+				attr = t.options.tracksAriaLive ? 'role="log" aria-live="assertive" aria-atomic="false"' : '',
 				i,
-				kind;
+				kind
+			;
 
-			if (t.domNode.textTracks) { // if browser will do native captions, prefer mejs captions, loop through tracks and hide
+			// If browser will do native captions, prefer mejs captions, loop through tracks and hide
+			if (t.domNode.textTracks) {
 				for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
 					t.domNode.textTracks[i].mode = "hidden";
 				}
 			}
-			t.cleartracks(player, controls, layers, media);
+
+			t.cleartracks(player);
 			player.chapters =
 					$('<div class="mejs-chapters mejs-layer"></div>')
 						.prependTo(layers).hide();
@@ -81,7 +108,7 @@
 			}
 
 			// if only one language then just make the button a toggle
-			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount == 1){
+			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1){
 				// click
 				player.captionsButton.on('click',function() {
 					if (player.selectedTrack === null) {
@@ -132,7 +159,9 @@
 			player.isLoadingTrack = false;
 
 			// add to list
-			for (i=0; i<player.tracks.length; i++) {
+			var total = player.tracks.length;
+
+			for (i = 0; i < total; i++) {
 				kind = player.tracks[i].kind;
 				if (kind === 'subtitles' || kind === 'captions') {
 					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
@@ -186,17 +215,46 @@
 			}
 		},
 
+		/**
+		 * Feature destroy
+		 *
+		 * Always has to be prefixed with build and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 */
+		cleartracks: function(player){
+			if (player) {
+				if (player.captions) {
+					player.captions.remove();
+				}
+				if (player.chapters) {
+					player.chapters.remove();
+				}
+				if (player.captionsText) {
+					player.captionsText.remove();
+				}
+				if (player.captionsButton) {
+					player.captionsButton.remove();
+				}
+			}
+		},
+
+		/**
+		 *
+		 * @param {String} lang
+		 */
 		setTrack: function(lang){
 
-			var t = this,
-				i;
+			var
+				t = this,
+				i
+			;
 
-			if (lang == 'none') {
+			if (lang === 'none') {
 				t.selectedTrack = null;
 				t.captionsButton.removeClass('mejs-captions-enabled');
 			} else {
 				for (i=0; i<t.tracks.length; i++) {
-					if (t.tracks[i].srclang == lang) {
+					if (t.tracks[i].srclang === lang) {
 						if (t.selectedTrack === null)
 							t.captionsButton.addClass('mejs-captions-enabled');
 						t.selectedTrack = t.tracks[i];
@@ -208,6 +266,9 @@
 			}
 		},
 
+		/**
+		 *
+		 */
 		loadNextTrack: function() {
 			var t = this;
 
@@ -223,6 +284,10 @@
 			}
 		},
 
+		/**
+		 *
+		 * @param index
+		 */
 		loadTrack: function(index){
 			var
 				t = this,
@@ -235,16 +300,17 @@
 
 					t.loadNextTrack();
 
-				};
+				}
+			;
 
-
+			// Load content of caption to mimic default native behavior
 			$.ajax({
 				url: track.src,
-				dataType: "text",
+				dataType: 'text',
 				success: function(d) {
 
 					// parse the loaded file
-					if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+					if (typeof d === "string" && (/<tt\s+xml/ig).exec(d)) {
 						track.entries = mejs.TrackFormatParser.dfxp.parse(d);
 					} else {
 						track.entries = mejs.TrackFormatParser.webvtt.parse(d);
@@ -252,7 +318,7 @@
 
 					after();
 
-					if (track.kind == 'chapters') {
+					if (track.kind === 'chapters') {
 						t.media.addEventListener('play', function() {
 							if (t.media.duration > 0) {
 								t.displayChapters(track);
@@ -260,7 +326,7 @@
 						}, false);
 					}
 
-					if (track.kind == 'slides') {
+					if (track.kind === 'slides') {
 						t.setupSlides(track);
 					}
 				},
@@ -271,6 +337,11 @@
 			});
 		},
 
+		/**
+		 *
+		 * @param {String} lang - The language code
+		 * @param {String} label
+		 */
 		enableTrackButton: function(lang, label) {
 			var t = this;
 
@@ -282,16 +353,20 @@
 				.find('input[value=' + lang + ']')
 					.prop('disabled',false)
 				.siblings('label')
-					.html( label );
+					.html(label);
 
 			// auto select
-			if (t.options.startLanguage == lang) {
+			if (t.options.startLanguage === lang) {
 				$('#' + t.id + '_captions_' + lang).prop('checked', true).trigger('click');
 			}
 
 			t.adjustLanguageBox();
 		},
 
+		/**
+		 *
+		 * @param {String} lang
+		 */
 		removeTrackButton: function(lang) {
 			var t = this;
 
@@ -300,6 +375,11 @@
 			t.adjustLanguageBox();
 		},
 
+		/**
+		 *
+		 * @param {String} lang - The language code
+		 * @param {String} label
+		 */
 		addTrackButton: function(lang, label) {
 			var t = this;
 			if (label === '') {
@@ -319,6 +399,9 @@
 			t.container.find('.mejs-captions-translations option[value=' + lang + ']').remove();
 		},
 
+		/**
+		 *
+		 */
 		adjustLanguageBox:function() {
 			var t = this;
 			// adjust the size of the outer box
@@ -328,10 +411,14 @@
 			);
 		},
 
+		/**
+		 *
+		 */
 		checkForTracks: function() {
 			var
 				t = this,
-				hasSubtitles = false;
+				hasSubtitles = false
+			;
 
 			// check if any subtitles
 			if (t.options.hideCaptionsButtonWhenEmpty) {
@@ -350,15 +437,19 @@
 			}
 		},
 
+		/**
+		 *
+		 */
 		displayCaptions: function() {
 
-			if (typeof this.tracks == 'undefined')
+			if (typeof this.tracks === 'undefined')
 				return;
 
 			var
 				t = this,
 				i,
-				track = t.selectedTrack;
+				track = t.selectedTrack
+			;
 
 			if (track !== null && track.isLoaded) {
 				for (i=0; i<track.entries.times.length; i++) {
@@ -375,6 +466,10 @@
 			}
 		},
 
+		/**
+		 *
+		 * @param {HTMLElement} track
+		 */
 		setupSlides: function(track) {
 			var t = this;
 
@@ -384,8 +479,12 @@
 
 		},
 
+		/**
+		 *
+		 * @param {Number} index
+		 */
 		showSlide: function(index) {
-			if (typeof this.tracks == 'undefined' || typeof this.slidesContainer == 'undefined') {
+			if (typeof this.tracks === 'undefined' || typeof this.slidesContainer === 'undefined') {
 				return;
 			}
 
@@ -393,7 +492,7 @@
 				url = t.slides.entries.text[index],
 				img = t.slides.entries.imgs[index];
 
-			if (typeof img == 'undefined' || typeof img.fadeIn == 'undefined') {
+			if (typeof img === 'undefined' || typeof img.fadeIn === 'undefined') {
 
 				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
 						.on('load', function() {
@@ -419,15 +518,20 @@
 
 		},
 
+		/**
+		 *
+		 */
 		displaySlides: function() {
 
-			if (typeof this.slides == 'undefined')
+			if (typeof this.slides === 'undefined') {
 				return;
+			}
 
 			var
 				t = this,
 				slides = t.slides,
-				i;
+				i
+			;
 
 			for (i=0; i<slides.entries.times.length; i++) {
 				if (t.media.currentTime >= slides.entries.times[i].start && t.media.currentTime <= slides.entries.times[i].stop){
@@ -439,13 +543,16 @@
 			}
 		},
 
+		/**
+		 *
+		 */
 		displayChapters: function() {
 			var
 				t = this,
 				i;
 
 			for (i=0; i<t.tracks.length; i++) {
-				if (t.tracks[i].kind == 'chapters' && t.tracks[i].isLoaded) {
+				if (t.tracks[i].kind === 'chapters' && t.tracks[i].isLoaded) {
 					t.drawChapters(t.tracks[i]);
 					t.hasChapters = true;
 					break;
@@ -453,23 +560,27 @@
 			}
 		},
 
+		/**
+		 *
+		 * @param {Object} chapters
+		 */
 		drawChapters: function(chapters) {
 			var
 				t = this,
 				i,
 				dur,
-				//width,
-				//left,
 				percent = 0,
-				usedPercent = 0;
+				usedPercent = 0,
+				total = chapters.entries.times.length
+			;
 
 			t.chapters.empty();
 
-			for (i=0; i<chapters.entries.times.length; i++) {
+			for (i = 0; i<total; i++) {
 				dur = chapters.entries.times[i].stop - chapters.entries.times[i].start;
 				percent = Math.floor(dur / t.media.duration * 100);
 				if (percent + usedPercent > 100 || // too large
-					i == chapters.entries.times.length-1 && percent + usedPercent < 100) // not going to fill it in
+					i === chapters.entries.times.length-1 && percent + usedPercent < 100) // not going to fill it in
 					{
 					percent = 100 - usedPercent;
 				}
@@ -500,66 +611,68 @@
 		}
 	});
 
-
-
+	/**
+	 * Map all possible languages with their respective code
+	 *
+	 * @constructor
+	 */
 	mejs.language = {
 		codes:  {
-			af:'Afrikaans',
-			sq:'Albanian',
-			ar:'Arabic',
-			be:'Belarusian',
-			bg:'Bulgarian',
-			ca:'Catalan',
-			zh:'Chinese',
-			'zh-cn':'Chinese Simplified',
-			'zh-tw':'Chinese Traditional',
-			hr:'Croatian',
-			cs:'Czech',
-			da:'Danish',
-			nl:'Dutch',
-			en:'English',
-			et:'Estonian',
-			fl:'Filipino',
-			fi:'Finnish',
-			fr:'French',
-			gl:'Galician',
-			de:'German',
-			el:'Greek',
-			ht:'Haitian Creole',
-			iw:'Hebrew',
-			hi:'Hindi',
-			hu:'Hungarian',
-			is:'Icelandic',
-			id:'Indonesian',
-			ga:'Irish',
-			it:'Italian',
-			ja:'Japanese',
-			ko:'Korean',
-			lv:'Latvian',
-			lt:'Lithuanian',
-			mk:'Macedonian',
-			ms:'Malay',
-			mt:'Maltese',
-			no:'Norwegian',
-			fa:'Persian',
-			pl:'Polish',
-			pt:'Portuguese',
-			// 'pt-pt':'Portuguese (Portugal)',
-			ro:'Romanian',
-			ru:'Russian',
-			sr:'Serbian',
-			sk:'Slovak',
-			sl:'Slovenian',
-			es:'Spanish',
-			sw:'Swahili',
-			sv:'Swedish',
-			tl:'Tagalog',
-			th:'Thai',
-			tr:'Turkish',
-			uk:'Ukrainian',
-			vi:'Vietnamese',
-			cy:'Welsh',
-			yi:'Yiddish'
+			af: mejs.i18n.t('mejs.afrikaans'),
+			sq: mejs.i18n.t('mejs.albanian'),
+			ar: mejs.i18n.t('mejs.arabic'),
+			be: mejs.i18n.t('mejs.belarusian'),
+			bg: mejs.i18n.t('mejs.bulgarian'),
+			ca: mejs.i18n.t('mejs.catalan'),
+			zh: mejs.i18n.t('mejs.chinese'),
+			'zh-cn': mejs.i18n.t('mejs.chinese-simplified'),
+			'zh-tw': mejs.i18n.t('mejs.chines-traditional'),
+			hr: mejs.i18n.t('mejs.croatian'),
+			cs: mejs.i18n.t('mejs.czech'),
+			da: mejs.i18n.t('mejs.danish'),
+			nl: mejs.i18n.t('mejs.dutch'),
+			en: mejs.i18n.t('mejs.english'),
+			et: mejs.i18n.t('mejs.estonian'),
+			fl: mejs.i18n.t('mejs.filipino'),
+			fi: mejs.i18n.t('mejs.finnish'),
+			fr: mejs.i18n.t('mejs.french'),
+			gl: mejs.i18n.t('mejs.galician'),
+			de: mejs.i18n.t('mejs.german'),
+			el: mejs.i18n.t('mejs.greek'),
+			ht: mejs.i18n.t('mejs.haitian-creole'),
+			iw: mejs.i18n.t('mejs.hebrew'),
+			hi: mejs.i18n.t('mejs.hindi'),
+			hu: mejs.i18n.t('mejs.hungarian'),
+			is: mejs.i18n.t('mejs.icelandic'),
+			id: mejs.i18n.t('mejs.indonesian'),
+			ga: mejs.i18n.t('mejs.irish'),
+			it: mejs.i18n.t('mejs.italian'),
+			ja: mejs.i18n.t('mejs.japanese'),
+			ko: mejs.i18n.t('mejs.korean'),
+			lv: mejs.i18n.t('mejs.latvian'),
+			lt: mejs.i18n.t('mejs.lithuanian'),
+			mk: mejs.i18n.t('mejs.macedonian'),
+			ms: mejs.i18n.t('mejs.malay'),
+			mt: mejs.i18n.t('mejs.maltese'),
+			no: mejs.i18n.t('mejs.norwegian'),
+			fa: mejs.i18n.t('mejs.persian'),
+			pl: mejs.i18n.t('mejs.polish'),
+			pt: mejs.i18n.t('mejs.portuguese'),
+			ro: mejs.i18n.t('mejs.romanian'),
+			ru: mejs.i18n.t('mejs.russian'),
+			sr: mejs.i18n.t('mejs.serbian'),
+			sk: mejs.i18n.t('mejs.slovak'),
+			sl: mejs.i18n.t('mejs.slovenian'),
+			es: mejs.i18n.t('mejs.spanish'),
+			sw: mejs.i18n.t('mejs.swahili'),
+			sv: mejs.i18n.t('mejs.swedish'),
+			tl: mejs.i18n.t('mejs.tagalog'),
+			th: mejs.i18n.t('mejs.thai'),
+			tr: mejs.i18n.t('mejs.turkish'),
+			uk: mejs.i18n.t('mejs.ukrainian'),
+			vi: mejs.i18n.t('mejs.vietnamese'),
+			cy: mejs.i18n.t('mejs.welsh'),
+			yi: mejs.i18n.t('mejs.yiddish')
 		}
 	};
 
@@ -582,8 +695,16 @@
 	*/
 	mejs.TrackFormatParser = {
 		webvtt: {
+			/**
+			 * @type {String}
+			 */
 			pattern_timecode: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
+			/**
+			 *
+			 * @param {String} trackText
+			 * @returns {{text: Array, times: Array}}
+			 */
 			parse: function(trackText) {
 				var
 					i = 0,
@@ -625,6 +746,11 @@
 		},
 		// Thanks to Justin Capella: https://github.com/johndyer/mediaelement/pull/420
 		dfxp: {
+			/**
+			 *
+			 * @param {String} trackText
+			 * @returns {{text: Array, times: Array}}
+			 */
 			parse: function(trackText) {
 				trackText = $(trackText).filter("tt");
 				var
@@ -673,6 +799,12 @@
 				return entries;
 			}
 		},
+		/**
+		 *
+		 * @param {String} text
+		 * @param {String} regex
+		 * @returns {Array}
+		 */
 		split2: function (text, regex) {
 			// normal version for compliant browsers
 			// see below for IE fix

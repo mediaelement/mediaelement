@@ -54,7 +54,7 @@
 					.on('mouseover', function() {
 						
 						// very old browsers with a plugin
-						if (t.fullscreenMode == 'plugin-hover') {						
+						if (t.fullscreenMode === 'plugin-hover') {
 							if (hideTimeout !== null) {
 								clearTimeout(hideTimeout);
 								delete hideTimeout;
@@ -69,7 +69,7 @@
 					})
 					.on('mouseout', function() {
 
-						if (t.fullscreenMode == 'plugin-hover') {						
+						if (t.fullscreenMode === 'plugin-hover') {
 							if (hideTimeout !== null) {
 								clearTimeout(hideTimeout);
 								delete hideTimeout;
@@ -87,7 +87,7 @@
 			player.fullscreenBtn = fullscreenBtn;
 
 			t.globalBind('keydown',function (e) {
-				if (e.keyCode == 27 && ((mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || t.isFullScreen)) {
+				if (e.keyCode === 27 && ((mejs.MediaFeatures.hasTrueNativeFullScreen && mejs.MediaFeatures.isFullScreen()) || t.isFullScreen)) {
 					player.exitFullScreen();
 				}
 			});
@@ -121,13 +121,16 @@
 		
 		detectFullscreenMode: function() {
 			
-			var t = this,
+			var
+				t = this,
 				mode = '',
-				features = mejs.MediaFeatures;
+				features = mejs.MediaFeatures,
+				isNative = t.media.id.match(/html5/)
+				;
 			
-			if (features.hasTrueNativeFullScreen && t.media.pluginType === 'native') {
+			if (features.hasTrueNativeFullScreen && isNative) {
 				mode = 'native-native';
-			} else if (features.hasTrueNativeFullScreen && t.media.pluginType !== 'native' && !features.hasFirefoxPluginMovingProblem) {
+			} else if (features.hasTrueNativeFullScreen && !isNative && !features.hasFirefoxPluginMovingProblem) {
 				mode = 'plugin-native';					
 			} else if (t.usePluginFullScreen) { 
 				if (mejs.MediaFeatures.supportsPointerEvents) {
@@ -312,7 +315,10 @@
 
 		enterFullScreen: function() {
 
-			var t = this;
+			var
+				t = this,
+				isNative = t.media.id.match(/html5/)
+			;
 
 			if (mejs.MediaFeatures.isiOS && mejs.MediaFeatures.hasiOSFullScreen && typeof t.media.webkitEnterFullscreen === 'function') {
 			    t.media.webkitEnterFullscreen();
@@ -359,7 +365,7 @@
 					}, 1000);
 				}
 				
-			} else if (t.fullscreeMode == 'fullwindow') {				
+			} else if (t.fullscreeMode === 'fullwindow') {
 				// move into position
 				
 			}			
@@ -380,23 +386,23 @@
 				}, 500);
 			//}
 
-			// if (t.media.pluginType === 'native') {
+			if (isNative) {
 				t.$media
 					.width('100%')
 					.height('100%');
-			// } else {
-				// t.container.find('.mejs-shim')
-				// 	.width('100%')
-				// 	.height('100%');
-				//
-				// setTimeout(function() {
-				// 	var win = $(window),
-				// 		winW = win.width(),
-				// 		winH = win.height();
-				//
-				// 	t.media.setVideoSize(winW,winH);
-				// }, 500);
-			// }
+			} else {
+				t.container.find('.mejs-shim')
+					.width('100%')
+					.height('100%');
+
+				setTimeout(function() {
+					var win = $(window),
+						winW = win.width(),
+						winH = win.height();
+
+					t.media.setVideoSize(winW,winH);
+				}, 500);
+			}
 
 			t.layers.children('div')
 				.width('100%')
@@ -419,7 +425,10 @@
 
 		exitFullScreen: function() {
 
-			var t = this;
+			var
+				t = this,
+				isNative = t.media.id.match(/html5/)
+			;
 
             // Prevent container from attempting to stretch a second time
             clearTimeout(t.containerSizeTimeout);
@@ -446,17 +455,17 @@
 				.width(t.normalWidth)
 				.height(t.normalHeight);
 
-			// if (t.media.pluginType === 'native') {
+			if (isNative) {
 				t.$media
 					.width(t.normalWidth)
 					.height(t.normalHeight);
-			// } else {
-			// 	t.container.find('.mejs-shim')
-			// 		.width(t.normalWidth)
-			// 		.height(t.normalHeight);
-            //
-			// 	t.media.setVideoSize(t.normalWidth, t.normalHeight);
-			// }
+			} else {
+				t.container.find('.mejs-shim')
+					.width(t.normalWidth)
+					.height(t.normalHeight);
+
+				t.media.setVideoSize(t.normalWidth, t.normalHeight);
+			}
 
 			t.layers.children('div')
 				.width(t.normalWidth)

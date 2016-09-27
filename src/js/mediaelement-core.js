@@ -125,9 +125,9 @@
 	 * with all its methods/properties/events.
 	 *
 	 * @constructor
-	 * @param {{String|Element}} idOrNode
+	 * @param {{String|HTMLElement}} idOrNode
 	 * @param {Array} options
-	 * @return {Element}
+	 * @return {HTMLElement}
 	 */
 	mejs.MediaElement = function (idOrNode, options) {
 
@@ -228,7 +228,7 @@
 					mediaFiles = [];
 
 				// clean up URLs
-				if (typeof value == 'string') {
+				if (typeof value === 'string') {
 					mediaFiles.push({
 						src: value,
 						type: mejs.Utils.getTypeFromFile(value)
@@ -241,7 +241,7 @@
 
 						mediaFiles.push({
 							src: src,
-							type: (type == '' || type === null || typeof type == 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
+							type: (type === '' || type === null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
 						});
 
 					}
@@ -370,7 +370,7 @@
 		 *
 		 * @param {String} rendererName
 		 * @param {Object[]} mediaFiles
-		 * @return {boolean}
+		 * @return {Boolean}
 		 */
 		mediaElement.changeRenderer = function(rendererName, mediaFiles) {
 
@@ -486,7 +486,7 @@
 					// test <source> types to see if they are usable
 					for (i = 0; i < sources; i++) {
 						n = mediaElement.originalNode.childNodes[i];
-						if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
+						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
 

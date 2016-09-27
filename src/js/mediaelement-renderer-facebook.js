@@ -37,7 +37,7 @@
 		 * Determine if a specific element type can be played with this render
 		 *
 		 * @param {String} type
-		 * @return {boolean}
+		 * @return {Boolean}
 		 */
 		canPlayType: function(type) {
 			var mediaTypes = ['video/facebook','video/x-facebook'];
@@ -133,7 +133,7 @@
 							switch (propName) {
 
 								case 'src':
-									var url = typeof value == 'string' ? value : value[0].src;
+									var url = typeof value === 'string' ? value : value[0].src;
 
 									// Only way is to destroy instance and all the events fired,
 									// and create new one
@@ -228,7 +228,7 @@
 			 *
 			 * @see http://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
 			 * @param {Object} instance
-			 * @return {boolean}
+			 * @return {Boolean}
 			 */
 			function isEmpty(instance) {
 				for(var key in instance) {

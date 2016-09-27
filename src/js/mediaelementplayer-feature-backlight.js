@@ -281,16 +281,16 @@
 	function getMidColors(canvas, context, blocks, blockDepth, side) {
 		var width = canvas.width,
 			height = canvas.height,
-			blockHeight = (side == 'top' || side == 'bottom') ? blockDepth : Math.ceil(height / blocks), // height of the analyzed block
-			blockWidth = (side == 'top' || side == 'bottom') ? Math.ceil(width / blocks) : blockDepth,
+			blockHeight = (side === 'top' || side === 'bottom') ? blockDepth : Math.ceil(height / blocks), // height of the analyzed block
+			blockWidth = (side === 'top' || side === 'bottom') ? Math.ceil(width / blocks) : blockDepth,
 			result = [],
 			imgdata,
 			i;
 
-		if (side == 'top' || side == 'bottom') {
+		if (side === 'top' || side === 'bottom') {
 			for (i = 0; i < blocks; i++) {
 				try {
-					imgdata = context.getImageData(i*blockWidth, (side == 'top') ? 0 : height - blockHeight , blockWidth, blockHeight);
+					imgdata = context.getImageData(i*blockWidth, (side === 'top') ? 0 : height - blockHeight , blockWidth, blockHeight);
 					result.push( 
 						calcMidColor(imgdata.data)
 					);
@@ -302,7 +302,7 @@
 
 			for (i = 0; i < blocks; i++) {
 				try {
-					imgdata = context.getImageData( (side == 'right') ? width - blockWidth : 0, i*blockHeight, blockWidth, blockHeight);
+					imgdata = context.getImageData( (side === 'right') ? width - blockWidth : 0, i*blockHeight, blockWidth, blockHeight);
 					result.push( 
 						calcMidColor(imgdata.data)
 					);

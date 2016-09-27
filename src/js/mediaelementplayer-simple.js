@@ -27,13 +27,13 @@ function removeEvent( obj, type, fn ) {
 
 function getElementsByClassName(class_name, node, tag) {
 
-	if (node == null) {
+	if (node === null) {
 		node = document;
 	}
 	if (node.getElementsByClassName) {
 		return node.getElementsByClassName(class_name);
 	}
-	if (tag == null) {
+	if (tag === null) {
 		tag = '*';
 	}
 
@@ -87,7 +87,7 @@ function getNodePosition(obj) {
 }
 
 function getStyle(idOrObj, styleProp) {
-	var obj = typeof idOrObj == 'string' ? document.getElementById(id) : idOrObj,
+	var obj = typeof idOrObj === 'string' ? document.getElementById(id) : idOrObj,
 		val;
 	if (obj.currentStyle) {
 		val = obj.currentStyle[styleProp];
@@ -109,7 +109,7 @@ var fadeEffect = {
 		this.elem.si = setInterval(function(){fadeEffect.tween()}, 5);
 	},
 	tween:function(){
-		if (this.alpha == this.target) {
+		if (this.alpha === this.target) {
 			clearInterval(this.elem.si);
 		} else {
 			var value = Math.round(this.alpha + ((this.target - this.alpha) * .05)) + (1 * this.flag);
@@ -141,7 +141,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 
 		tagName = original.tagName.toLowerCase(),
 
-		isVideo = (tagName == 'video' || tagName == 'iframe'),
+		isVideo = (tagName === 'video' || tagName === 'iframe'),
 
 		container = doc.createElement('div'),
 		controls = doc.createElement('div'),
@@ -486,7 +486,7 @@ MediaElementPlayerSimple.prototype = {
 
 		function setDuration() {
 			var duration = mediaElement.duration;
-			if (isNaN(duration) || duration == Infinity) {
+			if (isNaN(duration) || duration === Infinity) {
 				duration = 0;
 			}
 			uiDuration.innerHTML = mejs.Utils.secondsToTimeCode(duration);

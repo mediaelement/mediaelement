@@ -57,7 +57,7 @@
 
 					//console.log('onPropertyChange', event.propertyName);
 
-					if (event.propertyName == name) {
+					if (event.propertyName === name) {
 
 						// temporarily remove the event so it doesn't fire again and create a loop
 						obj.detachEvent('onpropertychange', onPropertyChange);
@@ -89,7 +89,7 @@
 		/**
 		 *
 		 * @param {String} eventName
-		 * @param {Element} target
+		 * @param {HTMLElement} target
 		 * @return {Object}
 		 */
 		createEvent: function(eventName, target) {
@@ -242,16 +242,16 @@
 		 * Format a numeric time in format '00:00:00'
 		 *
 		 * @param {number} time
-		 * @param {boolean} forceHours
-		 * @param {boolean} showFrameCount
+		 * @param {Boolean} forceHours
+		 * @param {Boolean} showFrameCount
 		 * @param {number} fps - Frames per second
 		 * @return {String}
 		 */
 		secondsToTimeCode: function(time, forceHours, showFrameCount, fps) {
 			//add framecount
-			if (typeof showFrameCount == 'undefined') {
+			if (typeof showFrameCount === 'undefined') {
 				  showFrameCount=false;
-			} else if(typeof fps == 'undefined') {
+			} else if(typeof fps === 'undefined') {
 				  fps = 25;
 			}
 
@@ -272,15 +272,15 @@
 		 * Convert a '00:00:00' tiem string into seconds
 		 *
 		 * @param {String} time
-		 * @param {boolean} forceHours
-		 * @param {boolean} showFrameCount
+		 * @param {Boolean} forceHours
+		 * @param {Boolean} showFrameCount
 		 * @param {number} fps - Frames per second
 		 * @return {number}
 		 */
 		timeCodeToSeconds: function(time, forceHours, showFrameCount, fps){
-			if (typeof showFrameCount == 'undefined') {
+			if (typeof showFrameCount === 'undefined') {
 				  showFrameCount=false;
-			} else if(typeof fps == 'undefined') {
+			} else if(typeof fps === 'undefined') {
 				  fps = 25;
 			}
 
@@ -374,7 +374,7 @@
 				time = 0;
 			}
 
-			if(typeof fps == 'undefined') {
+			if(typeof fps === 'undefined') {
 				fps = 25;
 			}
 

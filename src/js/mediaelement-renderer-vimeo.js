@@ -29,11 +29,11 @@
     var vimeoApi = {
 
         /**
-         * @type {boolean}
+         * @type {Boolean}
          */
         isIframeStarted: false,
         /**
-         * @type {boolean}
+         * @type {Boolean}
          */
         isIframeLoaded: false,
         /**
@@ -119,7 +119,7 @@
          * @return {int}
          */
         getVimeoId: function(url) {
-            if (url == undefined || url == null) {
+            if (url === undefined || url === null) {
                 return null;
             }
 
@@ -190,7 +190,7 @@
          * Determine if a specific element type can be played with this render
          *
          * @param {String} type
-         * @return {boolean}
+         * @return {Boolean}
          */
         canPlayType: function(type) {
             var mediaTypes = ['video/vimeo', 'video/x-vimeo'];
@@ -285,7 +285,7 @@
                             switch (propName) {
 
                                 case 'src':
-                                    var url = typeof value == 'string' ? value : value[0].src,
+                                    var url = typeof value === 'string' ? value : value[0].src,
                                         videoId = vimeoApi.getVimeoId(url);
 
                                     vimeoPlayer.loadVideo(videoId).then(function() {
