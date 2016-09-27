@@ -580,7 +580,7 @@
 				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
-				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
+				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr == null || autoplayAttr === 'false'),
 				featureIndex,
 				feature;
 
@@ -736,7 +736,7 @@
 						t.media.addEventListener('loadedmetadata', function(e) {
 							// if the <video height> was not set and the options.videoHeight was not set
 							// then resize to the real dimensions
-							if (t.options.videoHeight <= 0 && t.domNode.getAttribute('height') === null && !isNaN(e.target.videoHeight)) {
+							if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') && !isNaN(e.target.videoHeight)) {
 								t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
 								t.setControlsSize();
 								t.media.setVideoSize(e.target.videoWidth, e.target.videoHeight);
