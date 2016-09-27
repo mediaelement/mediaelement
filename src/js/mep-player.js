@@ -560,9 +560,9 @@
 
 		// Sets up all controls and events
 		meReady: function(media, domNode) {
-
-
-			var t = this,
+			
+			var
+				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
 				autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
