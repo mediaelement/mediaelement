@@ -28,7 +28,7 @@
 
         var NativeDash = {
             /**
-             * @type {boolean}
+             * @type {Boolean}
              */
             isMediaLoaded: false,
             /**
@@ -116,7 +116,7 @@
              * Determine if a specific element type can be played with this render
              *
              * @param {String} type
-             * @return {boolean}
+             * @return {Boolean}
              */
             canPlayType: function (type) {
 

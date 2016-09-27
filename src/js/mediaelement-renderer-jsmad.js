@@ -138,7 +138,7 @@
 
 						console.log('[JSMAD set]: ' + propName + ' = ' + value);
 
-						if (propName == 'src') {
+						if (propName === 'src') {
 
 							jsmad.loadSrc(value);
 

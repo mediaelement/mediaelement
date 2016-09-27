@@ -18,7 +18,7 @@
 		buildspeed: function(player, controls, layers, media) {
 			var t = this;
 
-			if (t.media.pluginType == 'native') {
+			if (t.media.pluginType === 'native') {
 				var 
 					speedButton = null,
 					speedSelector = null,

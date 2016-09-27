@@ -212,7 +212,7 @@
 	 * Wrap a MediaElement object in player controls
 	 *
 	 * @constructor
-	 * @param {Element} node
+	 * @param {HTMLElement} node
 	 * @param {Object} o
 	 * @return {?MediaElementPlayer}
 	 */
@@ -240,7 +240,7 @@
 
 
 		// try to get options from data-mejsoptions
-		if (typeof o == 'undefined') {
+		if (typeof o === 'undefined') {
 			o = t.$node.data('mejsoptions');
 		}
 
@@ -449,7 +449,7 @@
 		showControls: function(doAnimation) {
 			var t = this;
 
-			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			doAnimation = typeof doAnimation === 'undefined' || doAnimation;
 
 			if (t.controlsAreVisible)
 				return;
@@ -488,7 +488,7 @@
 		hideControls: function(doAnimation) {
 			var t = this;
 
-			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
+			doAnimation = typeof doAnimation === 'undefined' || doAnimation;
 
 			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended)
 				return;
@@ -580,7 +580,7 @@
 				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
-				autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
+				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature;
 
@@ -602,14 +602,14 @@
 				if (!t.isVideo && !t.options.features.length) {
 
 					// force autoplay for HTML5
-					if (autoplay && media.pluginType == 'native') {
+					if (autoplay && media.pluginType === 'native') {
 						t.play();
 					}
 
 
 					if (t.options.success) {
 
-						if (typeof t.options.success == 'string') {
+						if (typeof t.options.success === 'string') {
 							window[t.options.success](t.media, t.domNode, t);
 						} else {
 							t.options.success(t.media, t.domNode, t);
@@ -865,21 +865,21 @@
 				// This is a work-around for a bug in the YouTube iFrame player, which means
 				//	we can't use the play() API for the initial playback on iOS or Android;
 				//	user has to start playback directly by tapping on the iFrame.
-				if (t.media.pluginType == 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {
+				if (t.media.pluginType === 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {
 					t.container.find('.mejs-overlay-play').hide();
 					t.container.find('.mejs-poster').hide();
 				}
 			}
 
 			// force autoplay for HTML5
-			if (autoplay && media.pluginType == 'native') {
+			if (autoplay && media.pluginType === 'native') {
 				t.play();
 			}
 
 
 			if (t.options.success) {
 
-				if (typeof t.options.success == 'string') {
+				if (typeof t.options.success === 'string') {
 					window[t.options.success](t.media, t.domNode, t);
 				} else {
 					t.options.success(t.media, t.domNode, t);
@@ -1358,8 +1358,8 @@
 					var keyAction = player.options.keyActions[i];
 
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
-						if (e.keyCode == keyAction.keys[j]) {
-							if (typeof(e.preventDefault) == "function") e.preventDefault();
+						if (e.keyCode === keyAction.keys[j]) {
+							if (typeof(e.preventDefault) === "function") e.preventDefault();
 							keyAction.action(player, media, e.keyCode, e);
 							return false;
 						}
@@ -1513,7 +1513,7 @@
 			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
 			delete mejs.players[t.id];
 
-			if (typeof t.container == 'object') {
+			if (typeof t.container === 'object') {
 				t.container.remove();
 			}
 			t.globalUnbind();
