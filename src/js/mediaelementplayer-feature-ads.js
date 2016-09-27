@@ -154,7 +154,7 @@
 			
 			// change URLs to the preroll ad. Only save the video to be shown on first
 			// ad showing.
-			if (t.options.indexPreroll == 0) {
+			if (t.options.indexPreroll === 0) {
 				t.adsCurrentMediaUrl = t.media.src;
 				t.adsCurrentMediaDuration = t.media.duration;
 			}
@@ -318,7 +318,7 @@
 		// tells calling function if ads have finished running
 		prerollAdsFinished: function() {
 			var t = this;
-			if ( t.options.indexPreroll == t.options.adsPrerollMediaUrl.length )
+			if ( t.options.indexPreroll === t.options.adsPrerollMediaUrl.length )
 				return true;
 			else
 				return false;

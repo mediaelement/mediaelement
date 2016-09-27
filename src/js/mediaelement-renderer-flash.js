@@ -30,7 +30,7 @@
 		 * Test a plugin version number
 		 * @param {String} plugin - In this scenario 'flash' will be tested
 		 * @param {Array} v - An array containing the version up to 3 numbers (major, minor, revision)
-		 * @return {boolean}
+		 * @return {Boolean}
 		 */
 		hasPluginVersion: function(plugin, v) {
 			var pv = this.plugins[plugin];
@@ -146,9 +146,10 @@
 					var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
 					flash['get' + capName] = function() {
+
 						if (flash.flashApi !== null) {
 
-							if (typeof flash.flashApi['get_' + propName] != 'undefined') {
+							if (typeof flash.flashApi['get_' + propName] !== 'undefined') {
 								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
 
 								//console.log('[' + options.prefix + ' get]: ' + propName + ' = ' + value);
@@ -182,7 +183,7 @@
 					flash['set' + capName] = function(value) {
 						//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value);
 
-						if (propName == 'src') {
+						if (propName === 'src') {
 							value = mejs.Utils.absolutizeUrl(value);
 						}
 
@@ -194,7 +195,7 @@
 							flash.flashApiStack.push({type: 'set', propName: propName, value: value});
 						}
 
-						if (propName == 'src') {
+						if (propName === 'src') {
 						//	flash.load();
 						}
 					};
@@ -410,7 +411,7 @@
 			 * Determine if a specific element type can be played with this render
 			 *
 			 * @param {String} type
-			 * @return {boolean}
+			 * @return {Boolean}
 			 */
 			canPlayType: function(type) {
 				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'];
@@ -449,7 +450,7 @@
 				 * Determine if a specific element type can be played with this render
 				 *
 				 * @param {String} type
-				 * @return {boolean}
+				 * @return {Boolean}
 				 */
 				canPlayType: function(type) {
 					var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
@@ -472,7 +473,7 @@
 			// 	 * Determine if a specific element type can be played with this render
 			// 	 *
 			// 	 * @param {String} type
-			// 	 * @return {boolean}
+			// 	 * @return {Boolean}
 			// 	 */
 			// 	canPlayType: function(type) {
 			// 		var supportedMediaTypes = ['application/dash-xml'];
@@ -497,7 +498,7 @@
 			 * Determine if a specific element type can be played with this render
 			 *
 			 * @param {String} type
-			 * @return {boolean}
+			 * @return {Boolean}
 			 */
 			canPlayType: function(type) {
 				var supportedMediaTypes = ['audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
@@ -521,7 +522,7 @@
 			 * Determine if a specific element type can be played with this render
 			 *
 			 * @param {String} type
-			 * @return {boolean}
+			 * @return {Boolean}
 			 */
 			canPlayType: function(type) {
 				var supportedMediaTypes = ['audio/ogg','audio/oga'];
@@ -539,16 +540,20 @@
 	} else {
 
 		// Errors
-		// 1) Version is not the one required
-		// 2) No Flash installed/enabled
+		var error = "";
+
 		if (mejs.PluginDetector.plugins['flash'][0] === 0 &&
 			mejs.PluginDetector.plugins['flash'][1] === 0 &&
 			mejs.PluginDetector.plugins['flash'][2] === 0
 		) {
-			console.error('No Flash installed/detected');
+			error = 'No Flash installed/detected.';
 		} else {
-			console.error('Flash version not up-to-date');
+			error = 'Flash version not up-to-date.';
 		}
+
+		error += ' Please download the latest version from https://get.adobe.com/flashplayer/';
+
+		console.error(error);
 	}
 
 })(window, document, window.mejs || {});

@@ -94,7 +94,7 @@ var YouTubeApi = {
 
 		for (var i=0, il=parameters.length; i<il; i++) {
 			var paramParts = parameters[i].split('=');
-			if (paramParts[0] == 'v') {
+			if (paramParts[0] === 'v') {
 				youTubeId = paramParts[1];
 				break;
 			}
@@ -108,7 +108,7 @@ var YouTubeApi = {
 	// http://youtu.be/Djd6tPrxc08
 	getYouTubeIdFromUrl: function(url) {
 
-		if (url == undefined || url == null) {
+		if (url === undefined || url === null) {
 			return null;
 		}
 
@@ -225,7 +225,7 @@ var YouTubeIframeRenderer = {
 						switch (propName) {
 
 							case 'src':
-								var url = typeof value == 'string' ? value : value[0].src,
+								var url = typeof value === 'string' ? value : value[0].src,
 									videoId = YouTubeApi.getYouTubeId(url);
 
 								if (mediaElement.getAttribute('autoplay')) {

@@ -113,15 +113,15 @@
 			// add to list
 			for (var i in this.node.children) {
 				var src = this.node.children[i];
-				if (src.nodeName === 'SOURCE' && (media.canPlayType(src.type) == 'probably' || media.canPlayType(src.type) == 'maybe')) {
-					player.addSourceButton(src.src, src.title, src.type, media.src == src.src);
+				if (src.nodeName === 'SOURCE' && (media.canPlayType(src.type) === 'probably' || media.canPlayType(src.type) === 'maybe')) {
+					player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
 				}
 			}
 		},
 
 		addSourceButton: function(src, label, type, isCurrent) {
 			var t = this;
-			if (label === '' || label == undefined) {
+			if (label === '' || label === undefined) {
 				label = src;
 			}
 			type = type.split('/')[1];

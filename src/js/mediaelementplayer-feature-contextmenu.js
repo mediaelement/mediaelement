@@ -13,7 +13,7 @@ $.extend(mejs.MepDefaults,
 			render: function(player) {
 				
 				// check for fullscreen plugin
-				if (typeof player.enterFullScreen == 'undefined')
+				if (typeof player.enterFullScreen === 'undefined')
 					return null;
 			
 				if (player.isFullScreen) {

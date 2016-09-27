@@ -24,11 +24,11 @@
 
 	var DailyMotionApi = {
 		/**
-		 * @type {boolean}
+		 * @type {Boolean}
 		 */
 		isSDKStarted: false,
 		/**
-		 * @type {boolean}
+		 * @type {Boolean}
 		 */
 		isSDKLoaded: false,
 		/**
@@ -153,7 +153,7 @@
 		 * Determine if a specific element type can be played with this render
 		 *
 		 * @param {String} type
-		 * @return {boolean}
+		 * @return {Boolean}
 		 */
 		canPlayType: function(type) {
 			var mediaTypes = ['video/dailymotion','video/x-dailymotion'];
@@ -251,7 +251,7 @@
 							switch (propName) {
 
 								case 'src':
-									var url = typeof value == 'string' ? value : value[0].src;
+									var url = typeof value === 'string' ? value : value[0].src;
 
 									dmPlayer.load( DailyMotionApi.getDailyMotionId(url) );
 									break;
