@@ -68,8 +68,6 @@
 		alwaysShowControls: false,
 		// Display the video control
 		hideVideoControlsOnLoad: false,
-		// Hide completely controls in audio element (mostly used for background audio)
-		hideAudioControls: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
 		// Time in ms to hide controls
@@ -222,7 +220,7 @@
 		t.node = t.media = t.$media[0];
 
 		if(!t.node) {
-			return
+			return;
 		}
 
 		// check for existing player
@@ -311,7 +309,7 @@
 
 				// leave default player
 
-			} else {
+			} else if (t.isVideo || (!t.isVideo && t.options.features.length)) {
 
 				// DESKTOP: use MediaElementPlayer controls
 
@@ -349,18 +347,10 @@
 
 				// When no elements in controls, hide bar completely
 				if (!t.options.features.length) {
-
-					if (t.isVideo || t.options.hideAudioControls) {
-						t.container.find('.mejs-controls').hide();
-					}
-
-					// In case of audio, remove the bar by changing background
-					if (!t.isVideo && t.options.hideAudioControls) {
-						t.container.css('background', 'transparent');
-					}
+					t.container.css('background', 'transparent').find('.mejs-controls').hide();
 				}
  
-				if (t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
+				if (t.isVideo && t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
 					// outer container
 					t.outerContainer = t.$media.parent();
 					t.container.wrap('<div class="mejs-fill-container"/>');
@@ -427,11 +417,15 @@
 				meOptions.pluginWidth = t.width;
 				meOptions.pluginHeight = t.height;
 			}
+			// Hide media completely for audio that doesn't have any features
+			else if (!t.isVideo && !t.options.features.length) {
+				t.$media.hide();
+			}
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 
-			if (typeof(t.container) != 'undefined' && t.controlsAreVisible){
+			if (typeof(t.container) !== 'undefined' && t.options.features.length && t.controlsAreVisible) {
 				// controls are shown when loaded
 				t.container.trigger('controlsshown');
 			}
@@ -587,6 +581,29 @@
 
 			if (!(mf.isAndroid && t.options.AndroidUseNativeControls) && !(mf.isiPad && t.options.iPadUseNativeControls) && !(mf.isiPhone && t.options.iPhoneUseNativeControls)) {
 
+				// In the event that no features are specified for audio,
+				// create only MediaElement instance rather than
+				// doing all the work to create a full player
+				if (!t.isVideo && !t.options.features.length) {
+
+					// force autoplay for HTML5
+					if (autoplay && media.pluginType == 'native') {
+						t.play();
+					}
+
+
+					if (t.options.success) {
+
+						if (typeof t.options.success == 'string') {
+							window[t.options.success](t.media, t.domNode, t);
+						} else {
+							t.options.success(t.media, t.domNode, t);
+						}
+					}
+
+					return;
+				}
+
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
 				t.buildkeyboard(t, t.controls, t.layers, t.media);
@@ -596,12 +613,6 @@
 				t.findTracks();
 
 				// add user-defined features/controls
-				// In the event that `features` is empty on audio
-				// set default ones unless `hideAudioControls` is true
-				if (!t.isVideo && !t.options.features.length && !t.options.hideAudioControls) {
-					t.options.features = ['playpause','current','progress','duration', 'volume'];
-				}
-
 				for (featureIndex in t.options.features) {
 					feature = t.options.features[featureIndex];
 					if (t['build' + feature]) {
@@ -721,7 +732,7 @@
 
 				// EVENTS
 
-				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
+				// FOCUS: when a video starts playing, it takes focus from other players (possibly pausing them)
 				t.media.addEventListener('play', function() {
 					var playerIndex;
 
