@@ -1428,52 +1428,7 @@
 			return this.media.volume;
 		},
 		setSrc: function(src) {
-			var
-				t = this;
-
-			// If using YouTube, its API is different to load a specific source
-			if (t.media.pluginType === 'youtube') {
-				var videoId;
-
-				if (typeof src !== 'string') {
-					var i, media;
-
-					for (i=0; i<src.length; i++) {
-						media = src[i];
-						if (this.canPlayType(media.type)) {
-							src = media.src;
-							break;
-						}
-					}
-				}
-
-				// youtu.be url from share button
-				if (src.lastIndexOf('youtu.be') !== -1) {
-					videoId = src.substr(src.lastIndexOf('/') + 1);
-
-					if (videoId.indexOf('?') !== -1) {
-						videoId = videoId.substr(0, videoId.indexOf('?'));
-					}
-
-				} else {
-					// https://www.youtube.com/watch?v=
-					var videoIdMatch = src.match(/[?&]v=([^&#]+)|&|#|$/);
-
-					if (videoIdMatch) {
-						videoId = videoIdMatch[1];
-					}
-				}
-
-				if (t.media.getAttribute('autoplay') !== null) {
-					t.media.pluginApi.loadVideoById(videoId);
-				} else {
-					t.media.pluginApi.cueVideoById(videoId);
-				}
-
-			}
-			else {
-				t.media.setSrc(src);
-			}
+			t.media.setSrc(src);
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;
