@@ -9,7 +9,9 @@
 
 		name: 'html5',
 
-		options: null,
+		options: {
+			prefix: 'html5'
+		},
 
 		/**
 		 * Determine if a specific element type can be played with this render

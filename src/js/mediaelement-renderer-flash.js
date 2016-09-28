@@ -211,10 +211,10 @@
 
 					// run the method on the native HTMLMediaElement
 					flash[methodName] = function() {
-						//console.log('[' + options.prefix + ' ' + methodName + '()]');
+						console.log('[' + options.prefix + ' ' + methodName + '()]');
 
 						if (flash.flashApi != null) {
-							// senc call up to Flash ExternalInterface API
+							// send call up to Flash ExternalInterface API
 							if (flash.flashApi['fire_' + methodName]) {
 								flash.flashApi['fire_' + methodName]();
 							} else {
@@ -503,7 +503,7 @@
 			 * @return {Boolean}
 			 */
 			canPlayType: function(type) {
-				var supportedMediaTypes = ['audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
+				var supportedMediaTypes = ['audio/mp3'];
 
 				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 			},
@@ -511,6 +511,30 @@
 			create: FlashMediaElementRenderer.create
 		};
 		mejs.Renderers.add(FlashMediaElementAudioRenderer);
+
+		// AUDIO - wav
+		// var FlashMediaElementAudioWavRenderer = {
+		// 	name: 'flash_audio_wav',
+		//
+		// 	options: {
+		// 		prefix: 'flash_audio_wav',
+		// 		filename: 'mediaelement-flash-audio-wav.swf'
+		// 	},
+		// 	/**
+		// 	 * Determine if a specific element type can be played with this render
+		// 	 *
+		// 	 * @param {String} type
+		// 	 * @return {Boolean}
+		// 	 */
+		// 	canPlayType: function(type) {
+		// 		var supportedMediaTypes = ['audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
+		//
+		// 		return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
+		// 	},
+		//
+		// 	create: FlashMediaElementRenderer.create
+		// };
+		// mejs.Renderers.add(FlashMediaElementAudioWavRenderer);
 
 		// AUDIO - ogg
 		var FlashMediaElementAudioOggRenderer = {
