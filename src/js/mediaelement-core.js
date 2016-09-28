@@ -88,7 +88,7 @@
 					renderer = t.renderers[rendererName];
 
 				for (var j=0, jl=mediaFiles.length; j<jl; j++) {
-					if (renderer.canPlayType(mediaFiles[j].type) != '' ) {
+					if (renderer.canPlayType(mediaFiles[j].type)) {
 						return {
 							rendererName: rendererName,
 							src: mediaFiles[j].src
@@ -126,7 +126,7 @@
 	 *
 	 * @constructor
 	 * @param {{String|HTMLElement}} idOrNode
-	 * @param {Array} options
+	 * @param {Object} options
 	 * @return {HTMLElement}
 	 */
 	mejs.MediaElement = function (idOrNode, options) {
