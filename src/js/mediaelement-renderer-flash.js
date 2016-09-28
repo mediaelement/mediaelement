@@ -113,8 +113,8 @@
 		 * Create the player instance and add all native events/methods/properties as possible
 		 *
 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-		 * @param {Array} options All the player configuration options passed through constructor
-		 * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
 		 * @return {Object}
 		 */
 		create: function (mediaElement, options, mediaFiles) {
@@ -367,9 +367,15 @@
 
 
 			if (mediaFiles && mediaFiles.length > 0) {
-				console.log('FLASH', 'init, set src', mediaFiles[0].src);
-				flash.setSrc( mediaFiles[0].src );
-				flash.load();
+
+				for (i = 0, il = mediaFiles.length; i < il; i++) {
+					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+						console.log('FLASH', 'init, set src', mediaFiles[i].src);
+						flash.setSrc(mediaFiles[i].src);
+						flash.load();
+						break;
+					}
+				}
 			}
 
 			return flash;
@@ -394,7 +400,15 @@
 				} else {
 					return 'video/rtmp';
 				}
-			} else {
+			} else if (url.indexOf('.m3u8') > -1) {
+				return 'application/x-mpegURL';
+			}
+			//
+			// else if (url.indexOf('.mpd') > -1) {
+			//	return 'application/dash+xml';
+			// }
+			//
+			else {
 				return null;
 			}
 		});
@@ -424,67 +438,53 @@
 		};
 		mejs.Renderers.add(FlashMediaElementVideoRenderer);
 
-		// MSE Streaming (if browser doesn't support it)
-		// @todo Include support for M(PEG)-DASH
-		if (!mejs.MediaFeatures.hasMse) {
+		// HLS
+		var FlashMediaElementHlsVideoRenderer = {
+			name: 'flash_hls',
 
-			mejs.Utils.typeChecks.push(function(url) {
+			options: {
+				prefix: 'flash_hls',
+				filename: 'mediaelement-flash-video-hls.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {Boolean}
+			 */
+			canPlayType: function(type) {
+				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
 
-				url = url.toLowerCase();
+				return (supportedMediaTypes.indexOf(type) > -1);
+			},
 
-				if (url.indexOf('.m3u8') > -1) {
-					return 'application/x-mpegURL';
-				} else {
-					return null;
-				}
-			});
+			create: FlashMediaElementRenderer.create
+		};
+		mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
 
-			var FlashMediaElementHlsVideoRenderer = {
-				name: 'flash_hls',
-
-				options: {
-					prefix: 'flash_hls',
-					filename: 'mediaelement-flash-video-hls.swf'
-				},
-				/**
-				 * Determine if a specific element type can be played with this render
-				 *
-				 * @param {String} type
-				 * @return {Boolean}
-				 */
-				canPlayType: function(type) {
-					var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
-
-					return (supportedMediaTypes.indexOf(type) > -1);
-				},
-
-				create: FlashMediaElementRenderer.create
-			};
-			mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
-
-			// var FlashMediaElementMdashVideoRenderer = {
-			// 	name: 'flash_mdash',
-            //
-			// 	options: {
-			// 		prefix: 'flash_mdash',
-			// 		filename: 'mediaelement-flash-video-mdash.swf'
-			// 	},
-			// 	/**
-			// 	 * Determine if a specific element type can be played with this render
-			// 	 *
-			// 	 * @param {String} type
-			// 	 * @return {Boolean}
-			// 	 */
-			// 	canPlayType: function(type) {
-			// 		var supportedMediaTypes = ['application/dash-xml'];
-            //
-			// 		return (supportedMediaTypes.indexOf(type) > -1);
-			// 	},
-            //
-			// 	create: FlashMediaElementRenderer.create
-			// };
-			// mejs.Renderers.add(FlashMediaElementMdashVideoRenderer);
-		}
+		// M(PEG)-DASH
+		// var FlashMediaElementMdashVideoRenderer = {
+		// 	name: 'flash_mdash',
+		//
+		// 	options: {
+		// 		prefix: 'flash_mdash',
+		// 		filename: 'mediaelement-flash-video-mdash.swf'
+		// 	},
+		// 	/**
+		// 	 * Determine if a specific element type can be played with this render
+		// 	 *
+		// 	 * @param {String} type
+		// 	 * @return {Boolean}
+		// 	 */
+		// 	canPlayType: function(type) {
+		// 		var supportedMediaTypes = ['application/dash-xml'];
+		//
+		// 		return (supportedMediaTypes.indexOf(type) > -1);
+		// 	},
+		//
+		// 	create: FlashMediaElementRenderer.create
+		// };
+		// mejs.Renderers.add(FlashMediaElementMdashVideoRenderer);
 
 		// AUDIO
 		var FlashMediaElementAudioRenderer = {
@@ -539,19 +539,15 @@
 
 	} else {
 
-		// Errors
-		var error = "";
-
-		if (mejs.PluginDetector.plugins['flash'][0] === 0 &&
+		// Possible errors:
+		// 1) Flash is not installed or disabled
+		// 2) Flash is not the version required
+		var error = (mejs.PluginDetector.plugins['flash'][0] === 0 &&
 			mejs.PluginDetector.plugins['flash'][1] === 0 &&
-			mejs.PluginDetector.plugins['flash'][2] === 0
-		) {
-			error = 'No Flash installed/detected.';
-		} else {
-			error = 'Flash version not up-to-date.';
-		}
-
-		error += ' Please download the latest version from https://get.adobe.com/flashplayer/';
+			mejs.PluginDetector.plugins['flash'][2] === 0) ?
+			'Make sure you have Flash enabled; otherwise, download the latest version from https://get.adobe.com/flashplayer/' :
+			'Current version of Flash is not up-to-date. Download the latest version from https://get.adobe.com/flashplayer/'
+		;
 
 		console.error(error);
 	}
