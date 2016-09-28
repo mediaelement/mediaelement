@@ -201,8 +201,8 @@
          * Create the player instance and add all native events/methods/properties as possible
          *
          * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-         * @param {Array} options All the player configuration options passed through constructor
-         * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+         * @param {Object} options All the player configuration options passed through constructor
+         * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
          * @return {Object}
          */
         create: function (mediaElement, options, mediaFiles) {
