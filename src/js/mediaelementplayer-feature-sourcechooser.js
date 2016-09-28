@@ -1,11 +1,29 @@
-// Source Chooser Plugin
+/**
+ * Source chooser button
+ *
+ * This feature creates a button to speed media in different levels.
+ */
 (function($) {
 
+	// Feature configuration
 	$.extend(mejs.MepDefaults, {
+		/**
+		 * @type {String}
+		 */
 		sourcechooserText: mejs.i18n.t('mejs.source-chooser')
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
+
+		/**
+		 * Feature constructor.
+		 *
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 * @param {$} controls
+		 * @param {$} layers
+		 * @param {HTMLElement} media
+		 */
 		buildsourcechooser: function(player, controls, layers, media) {
 
 			var t = this;
@@ -119,6 +137,13 @@
 			}
 		},
 
+		/**
+		 *
+		 * @param {String} src
+		 * @param {String} label
+		 * @param {String} type
+		 * @param {Boolean} isCurrent
+		 */
 		addSourceButton: function(src, label, type, isCurrent) {
 			var t = this;
 			if (label === '' || label == undefined) {
@@ -128,15 +153,18 @@
 
 			t.sourcechooserButton.find('ul').append(
 				$('<li>'+
-						'<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + 'aria-selected="' + isCurrent + '"' + ' />'+
-						'<label for="' + t.id + '_sourcechooser_' + label + type + '" aria-hidden="true">' + label + ' (' + type + ')</label>'+
-					'</li>')
+					'<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + 'aria-selected="' + isCurrent + '"' + ' />'+
+					'<label for="' + t.id + '_sourcechooser_' + label + type + '" aria-hidden="true">' + label + ' (' + type + ')</label>'+
+				'</li>')
 			);
 
 			t.adjustSourcechooserBox();
 
 		},
 
+		/**
+		 *
+		 */
 		adjustSourcechooserBox: function() {
 			var t = this;
 			// adjust the size of the outer box
@@ -145,15 +173,21 @@
 			);
 		},
 
+		/**
+		 *
+		 */
 		hideSourcechooserSelector: function () {
 			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
 				.addClass('mejs-offscreen')
 				.attr('aria-expanded', 'false')
 				.attr('aria-hidden', 'true')
-				.find('input[type=radio]') // make radios not fucusable
+				.find('input[type=radio]') // make radios not focusable
 				.attr('tabindex', '-1');
 		},
 
+		/**
+		 *
+		 */
 		showSourcechooserSelector: function () {
 			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
 				.removeClass('mejs-offscreen')

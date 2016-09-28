@@ -1,6 +1,21 @@
+/**
+ * Loop button
+ *
+ * This feature creates a loop button in the control bar to toggle its behavior. It will restart media once finished
+ * if activated
+ */
 (function($) {
-	// loop toggle
+
 	$.extend(MediaElementPlayer.prototype, {
+		/**
+		 * Feature constructor.
+		 *
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 * @param {$} controls
+		 * @param {$} layers
+		 * @param {HTMLElement} media
+		 */
 		buildloop: function(player, controls, layers, media) {
 			var 
 				t = this,
