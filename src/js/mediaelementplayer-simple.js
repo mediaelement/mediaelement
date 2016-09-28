@@ -147,11 +147,12 @@ function MediaElementPlayerSimple(idOrObj, options) {
 		controls = doc.createElement('div'),
 
 		originalWidth = isVideo ?
-							original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) :
-							350,
+						original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) :
+						350,
 
-		originalHeight = original.offsetHeight > 0 ? original.offsetHeight : parseInt(original.height),
-
+		originalHeight = isVideo ?
+						original.offsetHeight > 0 ? original.offsetHeight : parseInt(original.height) :
+						50,
 		mediaElement = null,
 
 		t = this;
