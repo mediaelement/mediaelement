@@ -109,7 +109,7 @@ var fadeEffect = {
 		this.elem.si = setInterval(function(){fadeEffect.tween()}, 5);
 	},
 	tween:function(){
-		if (this.alpha === this.target) {
+		if (this.alpha == this.target) {
 			clearInterval(this.elem.si);
 		} else {
 			var value = Math.round(this.alpha + ((this.target - this.alpha) * .05)) + (1 * this.flag);
@@ -486,7 +486,7 @@ MediaElementPlayerSimple.prototype = {
 
 		function setDuration() {
 			var duration = mediaElement.duration;
-			if (isNaN(duration) || duration === Infinity) {
+			if (isNaN(duration) || duration == Infinity) {
 				duration = 0;
 			}
 			uiDuration.innerHTML = mejs.Utils.secondsToTimeCode(duration);

@@ -80,7 +80,7 @@
 			
 			var duration = t.media.duration;
 
-			if (isNaN(duration) || duration === Infinity || duration < 0) {
+			if (isNaN(duration) || duration == Infinity || duration < 0) {
 				t.media.duration = t.options.duration = duration = 0;
 			}
 

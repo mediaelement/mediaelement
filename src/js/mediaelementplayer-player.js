@@ -582,7 +582,8 @@
 				autoplayAttr = domNode.getAttribute('autoplay'),
 				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr == null || autoplayAttr === 'false'),
 				featureIndex,
-				feature;
+				feature
+			;
 
 			// make sure it can't create itself again if a plugin reloads
 			if (t.created) {

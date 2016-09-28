@@ -3,7 +3,7 @@
 // register youtube type
 mejs.Utils.typeChecks.push(function(url) {
 
-	url = new String(url).toLowerCase();
+	url = url.toLowerCase();
 
 	if (url.indexOf('soundcloud.com') > -1) {
 		return 'video/soundcloud';
