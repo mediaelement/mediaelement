@@ -38,15 +38,25 @@
 
         <h2>Native M(PEG)-Dash Stream</h2>
 
+        <p>This test demonstrates the combination of 2 streaming files (DASH + HLS) as the best approach to
+            support most devices</p>
+        <p><strong>Note:</strong> They are different to show the dynamic nature of the player choosing the best option for each browser/device</p>
+        <p><strong>Note:</strong> iOS plays natively HLS over DASH</p>
+
         <video  width="640" height="360" preload="none" class="mejs-player" >
+
             <source src="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd" type="application/dash+xml" />
+            <source src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
+
         </video>
 
     </div>
     <script>
 
-
         var elements = mejs.getElementsByClassName('mejs-player');
+
+        // Show the order of renderers to ensure support in different scenarios
+        mejs.Renderers.order = ['native_mdash', 'native_hls', 'flash_hls', 'flash_video'];
 
         for (var i=0, il=elements.length; i<il; i++) {
             var player = new MediaElementPlayerSimple(elements[i], {
