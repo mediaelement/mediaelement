@@ -463,6 +463,8 @@
 		mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
 
 		// M(PEG)-DASH
+		// For now only native
+		// @see http://www.streamingmedia.com/Articles/Editorial/Featured-Articles/The-State-of-MPEG-DASH-2016-110099.aspx
 		// var FlashMediaElementMdashVideoRenderer = {
 		// 	name: 'flash_mdash',
 		//
