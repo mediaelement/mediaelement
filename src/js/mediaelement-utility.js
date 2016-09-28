@@ -498,12 +498,12 @@
 		// borrowed from Modernizr
 		features.hasTouch = ('ontouchstart' in window);
 		features.svg = 	!! doc.createElementNS &&
-						!! doc.createElementNS('http://www.w3.org/2000/svg','svg').createSVGRect;
+				!! doc.createElementNS('http://www.w3.org/2000/svg','svg').createSVGRect;
 
 		// Test if Media Source Extensions are supported by browser
 		features.hasMse = ('MediaSource' in window);
 
-		features.supportsMediaTag = (typeof video.canPlayType != 'undefined' || features.isBustedAndroid || features.hasMse);
+		features.supportsMediaTag = (typeof video.canPlayType !== 'undefined' || features.isBustedAndroid || features.hasMse);
 
 		return features;
 	})();

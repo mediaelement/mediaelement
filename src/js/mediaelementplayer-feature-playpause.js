@@ -22,7 +22,7 @@
 		/**
 		 * Feature constructor.
 		 *
-		 * Always has to be prefixed with build and the name that will be used in MepDefaults.features list
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 		 * @param {MediaElementPlayer} player
 		 * @param {$} controls
 		 * @param {$} layers

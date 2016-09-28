@@ -603,7 +603,9 @@
 				if (!t.isVideo && !t.options.features.length) {
 
 					// force autoplay for HTML5
-					if (autoplay && media.pluginType === 'native') {
+					var isNative = t.media.id.match(/(native|html5)/);
+
+					if (autoplay && isNative) {
 						t.play();
 					}
 
@@ -866,14 +868,16 @@
 				// This is a work-around for a bug in the YouTube iFrame player, which means
 				//	we can't use the play() API for the initial playback on iOS or Android;
 				//	user has to start playback directly by tapping on the iFrame.
-				if (t.media.pluginType === 'youtube' && ( mf.isiOS || mf.isAndroid ) ) {
+				if (t.media.id.match(/youtube_iframe/) && ( mf.isiOS || mf.isAndroid ) ) {
 					t.container.find('.mejs-overlay-play').hide();
 					t.container.find('.mejs-poster').hide();
 				}
 			}
 
 			// force autoplay for HTML5
-			if (autoplay && media.pluginType === 'native') {
+			var isNative = t.media.id.match(/(native|html5)/);
+
+			if (autoplay && isNative) {
 				t.play();
 			}
 
@@ -1462,11 +1466,13 @@
 				t.$node.insertBefore(t.container);
 			}
 
-			if (t.media.pluginType !== 'native') {
+			var isNative = t.media.id.match(/(native|html5)/);
+
+			if (!isNative) {
 				t.media.remove();
 			}
 
-			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existance flash api.
+			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existent Flash API.
 			delete mejs.players[t.id];
 
 			if (typeof t.container === 'object') {
