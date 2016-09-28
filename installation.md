@@ -7,6 +7,7 @@
     * [Multiple codecs (Optional)](#multi-codecs)
     * [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
     * [Use of Closed Captioning (Optional)](#closed-captioning)
+* [3. Set default language (Optional)](#language)
     
 
 <a id="mime-types"></a>
@@ -142,7 +143,52 @@ This works perfectly on any browser that supports HTML5 natively; however, to ma
 
 That's why is important to put the caption files **in the same domain as the player is**. Otherwise, the request of the file will be denied.
 
-As a final note, to display closed captioning in iOS, they will need to be transcoded it in the video. To learn more about this topic, please read [The Zencoder guide to closed captioning for web, mobile, and connected TV](http://blog.zencoder.com/2012/07/13/closed-captioning-for-web-mobile-and-tv/) 
+As a final note, to display closed captioning in iOS, they will need to be transcoded it in the video. To learn more about this topic, please read [The Zencoder guide to closed captioning for web, mobile, and connected TV](http://blog.zencoder.com/2012/07/13/closed-captioning-for-web-mobile-and-tv/).
+
+<a id="language"></a>
+## 3. Set default language (Optional)
+
+By default, all the strings in `MediaElementJS` are in English. If you wanna set a different language for them, you need to set the language code via `mejs.i18n.locale.language` before the player instantiation, and specify the language in the media container in the `success` callback.
+
+Optionally, just can set the attribute `lang` in the `<html>` tag with the one you set before, to declare the default language of the text in the rest of the page as well.
+
+```html
+<script>
+
+    mejs.i18n.locale.language = 'de'; // Setting German language
+    
+    $('audio,video').mediaelementplayer({
+        success: function(player, node) {
+        
+            $(player).closest('.mejs-container').attr('lang', mejs.i18n.getLanguage());
+            
+            $('html').attr('lang', mejs.i18n.getLanguage());
+            
+            // More code
+        }
+    });
+</script>
+```
+
+Available languages:
+* Czech (cs)
+* German (de)
+* English (en)
+* Spanish; Castilian (es)
+* French (fr)
+* Hungarian (hu)
+* Italian (it)
+* Japanese (ja)
+* Korean (ko)
+* Polish (pl)
+* Portuguese (pt)
+* Brazilian Portuguese (pt-BR)
+* Romanian (ro)
+* Russian (ru)
+* Slovak (sk)
+* Simplified Chinese (zh-CN)
+* Traditional Chinese (zh-TW)
+
 ________
 
 [Back to Main](README.md)
