@@ -8,7 +8,7 @@ if (!Array.prototype.indexOf) {
 
 	// 1. Let O be the result of calling ToObject passing
 	//	   the this value as the argument.
-	if (this === null) {
+	if (this == null) {
 		throw new TypeError('"this" is null or not defined');
 	}
 
@@ -28,7 +28,7 @@ if (!Array.prototype.indexOf) {
 	//	   ToInteger(fromIndex); else let n be 0.
 	var n = +fromIndex || 0;
 
-	if (Math.abs(n) === Infinity) {
+	if (Math.abs(n) == Infinity) {
 		n = 0;
 	}
 
