@@ -1,13 +1,34 @@
+/**
+ * Progress/loaded bar
+ *
+ * This feature creates a progress bar with a slider in the control bar, and updates it based on native events.
+ */
 (function($) {
 
+	// Feature configuration
 	$.extend(mejs.MepDefaults, {
-		// Enable tooltip that shows time in progress bar
+		/**
+		 * Enable tooltip that shows time in progress bar
+		 * @type {Boolean}
+		 */
 		enableProgressTooltip: true,
+		/**
+		 * @type {String}
+		 */
 		progressHelpText: mejs.i18n.t('mejs.time-help-text')
 	});
 
-	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
+
+		/**
+		 * Feature constructor.
+		 *
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 * @param {$} controls
+		 * @param {$} layers
+		 * @param {HTMLElement} media
+		 */
 		buildprogress: function(player, controls, layers, media) {
 
 			var
@@ -43,6 +64,11 @@
 			t.timefloatcurrent  = controls.find('.mejs-time-float-current');
 			t.slider = controls.find('.mejs-time-slider');
 
+			/**
+			 *
+			 * @private
+			 * @param {Event} e
+			 */
 			var handleMouseMove = function (e) {
 
 					var offset = t.total.offset(),
@@ -85,8 +111,11 @@
 						}
 					}
 				},
-				// Accessibility for slider
-				updateSlider = function (e) {
+				/**
+				 * Update elements in progress bar for accessibility purposes
+				 * @private
+				 */
+				updateSlider = function () {
 
 					var seconds = media.currentTime,
 						timeSliderText = mejs.i18n.t('mejs.time-slider'),
@@ -104,6 +133,10 @@
 					});
 
 				},
+				/**
+				 *
+				 * @private
+				 */
 				restartPlayer = function () {
 					var now = new Date();
 					if (now - lastKeyPressTime >= 1000) {
@@ -111,6 +144,7 @@
 					}
 				};
 
+			// Events
 			t.slider.bind('focus', function (e) {
 				player.options.autoRewind = false;
 			});
@@ -232,6 +266,12 @@
 				player.setCurrentRail(e);
 			});
 		},
+
+		/**
+		 * Calculate the progress on the media and update progress bar's width
+		 *
+		 * @param {Event} e
+		 */
 		setProgressRail: function(e) {
 
 			var
@@ -265,6 +305,10 @@
 				}
 			}
 		},
+		/**
+		 * Update the slider's width depending on the current time
+		 *
+		 */
 		setCurrentRail: function() {
 
 			var t = this;

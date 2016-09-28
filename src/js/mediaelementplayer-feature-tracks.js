@@ -50,7 +50,7 @@
 		/**
 		 * Feature constructor.
 		 *
-		 * Always has to be prefixed with build and the name that will be used in MepDefaults.features list
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 		 * @param {MediaElementPlayer} player
 		 * @param {$} controls
 		 * @param {$} layers
@@ -218,7 +218,7 @@
 		/**
 		 * Feature destroy
 		 *
-		 * Always has to be prefixed with build and the name that will be used in MepDefaults.features list
+		 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 		 * @param {MediaElementPlayer} player
 		 */
 		cleartracks: function(player){

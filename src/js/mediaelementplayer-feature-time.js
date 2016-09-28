@@ -1,14 +1,35 @@
+/**
+ * Current/duration times
+ *
+ * This feature creates/updates the duration and progress times in the control bar, based on native events.
+ */
 (function($) {
-	
-	// options
+
+	// Feature configuration
 	$.extend(mejs.MepDefaults, {
+		/**
+		 * The initial duration
+		 * @type {Number}
+		 */
 		duration: 0,
+		/**
+		 * @type {String}
+		 */
 		timeAndDurationSeparator: '<span> | </span>'
 	});
 
 
-	// current and duration 00:00 / 00:00
 	$.extend(MediaElementPlayer.prototype, {
+
+		/**
+		 * Current time constructor.
+		 *
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 * @param {$} controls
+		 * @param {$} layers
+		 * @param {HTMLElement} media
+		 */
 		buildcurrent: function(player, controls, layers, media) {
 			var t = this;
 			
@@ -29,7 +50,15 @@
 			}, false);
 		},
 
-
+		/**
+		 * Duration time constructor.
+		 *
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 * @param {$} controls
+		 * @param {$} layers
+		 * @param {HTMLElement} media
+		 */
 		buildduration: function(player, controls, layers, media) {
 			var t = this;
 			
@@ -60,7 +89,11 @@
 				}
 			}, false);
 		},
-		
+
+		/**
+		 * Update the current time and output it in format 00:00
+		 *
+		 */
 		updateCurrent:  function() {
 			var t = this;
 			
@@ -74,7 +107,11 @@
 				t.currenttime.html(mejs.Utility.secondsToTimeCode(currentTime, t.options.alwaysShowHours));
 			}
 		},
-		
+
+		/**
+		 * Update the duration time and output it in format 00:00
+		 *
+		 */
 		updateDuration: function() {
 			var t = this;
 			

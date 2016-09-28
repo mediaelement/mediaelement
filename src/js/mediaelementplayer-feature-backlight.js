@@ -394,7 +394,7 @@
 	}
 
 	/**
-	 * Convers HSV color to RGB model
+	 * Converts HSV color to RGB model
 	 * @param {Number[]} RGB color
 	 * @return {Number[]} HSV color
 	 */

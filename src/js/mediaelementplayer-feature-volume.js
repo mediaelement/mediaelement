@@ -35,7 +35,7 @@
 		/**
 		 * Feature constructor.
 		 *
-		 * Always has to be prefixed with build and the name that will be used in MepDefaults.features list
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 		 * @param {MediaElementPlayer} player
 		 * @param {$} controls
 		 * @param {$} layers
@@ -305,7 +305,9 @@
 			}
 
 			// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
-			if (media.pluginType === 'native') {
+			var isNative = t.media.id.match(/(native|html5)/);
+
+			if (isNative) {
 				media.setVolume(player.options.startVolume);
 			}
 
