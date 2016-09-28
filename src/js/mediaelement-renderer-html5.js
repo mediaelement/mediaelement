@@ -31,8 +31,8 @@
 		 * Create the player instance and add all native events/methods/properties as possible
 		 *
 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-		 * @param {Array} options All the player configuration options passed through constructor
-		 * @param {Array} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
 		 * @return {Object}
 		 */
 		create: function (mediaElement, options, mediaFiles) {
@@ -117,7 +117,12 @@
 			};
 
 			if (mediaFiles && mediaFiles.length > 0) {
-				node.src = mediaFiles[0].src;
+				for (i = 0, il = mediaFiles.length; i < il; i++) {
+					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+						node.src = mediaFiles[i].src;
+						break;
+					}
+				}
 			}
 
 			var event = mejs.Utils.createEvent('rendererready', node);
