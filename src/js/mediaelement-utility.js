@@ -12,7 +12,7 @@
 	 */
 	mejs.Utility = mejs.Utils = {
 		/**
-		 * @type {callback[]}
+		 * @type {Function[]}
 		 */
 		typeChecks: [],
 
@@ -20,8 +20,8 @@
 		 *
 		 * @param {Object} obj
 		 * @param {String} name
-		 * @param {callback} onGet
-		 * @param {callback} onSet
+		 * @param {Function} onGet
+		 * @param {Function} onSet
 		 */
 		addProperty: function(obj, name, onGet, onSet) {
 
