@@ -119,7 +119,7 @@
          * @return {int}
          */
         getVimeoId: function(url) {
-            if (url === undefined || url === null) {
+            if (url == undefined || url == null) {
                 return null;
             }
 

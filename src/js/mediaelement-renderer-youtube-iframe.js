@@ -3,7 +3,7 @@
 // register youtube type
 mejs.Utils.typeChecks.push(function(url) {
 
-	url = new String(url).toLowerCase();
+	url = url.toLowerCase();
 
 	if (url.indexOf('youtube') > -1 || url.indexOf('youtu.be') > -1) {
 		return 'video/youtube';
@@ -108,7 +108,7 @@ var YouTubeApi = {
 	// http://youtu.be/Djd6tPrxc08
 	getYouTubeIdFromUrl: function(url) {
 
-		if (url === undefined || url === null) {
+		if (url == undefined || url == null) {
 			return null;
 		}
 
