@@ -13,38 +13,65 @@
 * Tab size is **8** for indentation.
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
 * Make sure you download the necessary media files from https://github.com/johndyer/mediaelement-files and place them inside the `/media/` directory.
+* Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product. 
 
 ### Features
 
-The file name for them by default is: `mediaelementplayer-feature-[feature_name].js`.
+The file name for them by default is: `mediaelementplayer-feature-[feature_name].js`. To keep consistency across the code, please follow the template above, including the long comments.
 
 ```javascript
+/**
+ * [Name of feature]
+ *
+ * [Description]
+ */
 (function($) {
 
-	$.extend(mejs.MepDefaults, {
-		// Any variable that can be configured by the end user belongs here.
-		// Make sure is unique by checking API and Configuration file.
-		// Add comments about the nature of each of these variables.
-	});
+    // Feature configuration
+    $.extend(mejs.MepDefaults, {
+        // Any variable that can be configured by the end user belongs here.
+        // Make sure is unique by checking API and Configuration file.
+        // Add comments about the nature of each of these variables.
+    });
 
 	
-	$.extend(MediaElementPlayer.prototype, {
-	
-	    // Public variables
-	
-		build[feature_name]: function(player, controls, layers, media) {
-		    // This allows us to access options and other useful elements already set.
-		    // Adding variables to the object is a good idea if you plan to reuse 
-		    // those variables in further operations.
-			var t = this;
-
+    $.extend(MediaElementPlayer.prototype, {
+    
+        // Public variables (also documented according to JSDoc specifications)
+    
+        /**
+         * Feature constructor.
+         *
+         * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+         * @param {MediaElementPlayer} player
+         * @param {$} controls
+         * @param {$} layers
+         * @param {HTMLElement} media
+         */
+        build[feature_name]: function(player, controls, layers, media) {
+            // This allows us to access options and other useful elements already set.
+            // Adding variables to the object is a good idea if you plan to reuse 
+            // those variables in further operations.
+            var t = this;
+            
             // All code required inside here to keep it private;
             // otherwise, you can create more methods or add variables
             // outside of this scope
-		}
-		
-		// Public methods
-	});
+        }
+        
+        // Optionally, each feature can be destroyed setting a `clean` method
+        /**
+         * Feature destructor.
+         *
+         * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
+         * @param {MediaElementPlayer} player
+         */
+        clean[feature_name]: function(player, controls, layers, media) {
+        
+        }
+                
+        // Other optional public methods (all documented according to JSDoc specifications)
+    });
 	
 })(mejs.$);
 
@@ -73,7 +100,237 @@ $(document).ready(function() {
 
 ### Renders
 
-* The file name for them by default is: `mediaelement-renderer-[renderer_name].js`.
+The file name for them by default is: `mediaelement-renderer-[renderer_name].js`. To keep consistency across the code, please follow the template above, including the long comments.
+
+```javascript
+/**
+ * [Name of renderer]
+ *
+ * [Description]
+ * @see [URL to API if any is used]
+ */
+(function(win, doc, mejs, undefined) {
+    
+    /**
+     * Register [name of renderer] type based on URL structure
+     *
+     */
+    mejs.Utils.typeChecks.push(function(url) {
+    
+        url = url.toLowerCase();
+        
+        if (url.indexOf('[token to identify renderer through URL]') > -1) {
+            return '[custom MIME Type]';
+        } else {
+            return null;
+        }
+    });
+    .
+    // It could be more code involved to load API properly, and even register a global event for the API.
+    // Check `/src/js/mediaelement-renderer-*` files to see what approach fits the best on your development
+    //
+    //win['[keyNameEvent]'] = function() {	
+    //    // Your code to initiate renderer
+    //};
+    
+    var [camelCaseRendererName] = {
+        // A unique name for the renderer
+        name: 'dailymotion_iframe',
+        
+        options: {
+            // MUST match with renderer name
+            prefix: 'dailymotion_iframe'
+        },
+        
+        /**
+         * Determine if a specific element type can be played with this render
+         *
+         * @param {String} type
+         * @return {Boolean}
+         */
+        canPlayType: function(type) {
+            var mediaTypes = [ [list of custom MIME types (including the one above) that the renderer can play] ];
+            
+            return mediaTypes.indexOf(type) > -1;
+        },
+        /**
+         * Create the player instance and add all native events/methods/properties as possible
+         *
+         * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+         * @param {Object} options All the player configuration options passed through constructor
+         * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+         * @return {Object}
+        */
+        create: function (mediaElement, options, mediaFiles) {
+            // General container
+            var container = {};
+        
+            container.options = options;
+            container.id = mediaElement.id + '_' + options.prefix;
+            container.mediaElement = mediaElement;
+        
+            var
+                apiStack = [],
+                i,
+                il,
+                customPlayer = null,
+                events,
+                containerDOM = null
+            ;
+            
+            // More code prior binding native properties/methods/events
+            
+            var props = mejs.html5media.properties;
+            for (i=0, il=props.length; i<il; i++) {
+            
+                // wrap in function to retain scope
+                (function(propName) {
+                
+                    // add to flash state that we will store
+                    
+                    var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+                    
+                    container['get' + capName] = function() {
+                        if (customPlayer !== null) {
+                            var value = null;
+                            
+                            // figure out how to get dm dta here
+                            switch (propName) {
+                                // Add your code for each property (i.e., getSrc, getCurrentTime, etc.)
+                            }
+                        } else {
+                            return null;
+                        }
+                    };
+                    container['set' + capName] = function(value) {
+                        if (customPlayer !== null) {
+                        
+                            switch (propName) {
+                                // Add your code for each property (i.e., setSrc, setCurrentTime, etc.)
+                            }
+                        }  else {
+                            // store for after "READY" event fires
+                            apiStack.push({type: 'set', propName: propName, value: value});
+                        }
+                    };
+                
+                })(props[i]);
+            }
+            
+            var methods = mejs.html5media.methods;
+            for (i=0, il=methods.length; i<il; i++) {
+                (function(methodName) {
+                
+                    // run the method on the native HTMLMediaElement
+                    container[methodName] = function() {
+                    
+                        if (customPlayer !== null) {
+                        
+                            switch (methodName) {
+                                // Add your code for each native method (i.e., play, pause, load, etc.)
+                            }
+                        } else {
+                            apiStack.push({type: 'call', methodName: methodName});
+                        }
+                    };
+                
+                })(methods[i]);
+            }
+            
+            // Tends to be the norm to use a global event to register all the native events, plus the custom 
+            // events for the renderer, depending on the specifications of the renderer's API
+            // The following code MUST be executed during the creation of the renderer, either outside of this scope
+            // or below when creating the DOM for the renderer
+            win['__ready__' + container.id] = function(_customPlayer) {
+                //
+                mediaElement.customPlayer = customPlayer = _customPlayer;
+                
+                // do call stack
+                for (i=0, il=apiStack.length; i<il; i++) {
+                
+                    var stackItem = apiStack[i];
+    
+                    if (stackItem.type === 'set') {
+                        var propName = stackItem.propName,
+                            capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+                
+                            container['set' + capName](stackItem.value);
+                    } else if (stackItem.type === 'call') {
+                        container[stackItem.methodName]();
+                    }
+                }
+                
+                containerDOM = doc.getElementById(dm.id);
+                
+                // Make sure to include Mouse events
+                events = ['mouseover','mouseout'];
+                for (var j in events) {
+                    var eventName = events[j];
+                    mejs.addEvent(dmIframe, eventName, function(e) {
+                        var event = mejs.Utils.createEvent(e.type, dm);
+                
+                        mediaElement.dispatchEvent(event);
+                    });
+                }
+                
+                // BUBBLE EVENTS up
+                events = mejs.html5media.events;
+                events = events.concat(['click','mouseover','mouseout']);
+                
+                for (i=0, il=events.length; i<il; i++) {
+                    (function(eventName) {
+                    
+                        // Any code related to trigger events
+                        // generally it follows the convention above:
+                        
+                        customPlayer.addEventListener(eventName, function (e) {
+                            // copy event
+                            var event = mejs.Utils.createEvent(e.type, dmPlayer);
+                            mediaElement.dispatchEvent(event);
+                        });
+                    
+                    })(events[i]);
+                }
+
+                // All custom events (if any)
+                ...
+                
+                // give initial events
+                var initEvents = ['rendererready','loadeddata','loadedmetadata','canplay'];
+
+                for (var i=0, il=initEvents.length; i<il; i++) {
+                    var event = mejs.Utils.createEvent(initEvents[i], container);
+                    mediaElement.dispatchEvent(event);
+                }
+            }
+            
+            // Create new markup for renderer and hide original one
+            ...
+            
+            // Some methods must be created to override default behaviors, such as show()/hide(), etc.
+            
+            container.hide = function() {
+                // Add your code to hide media
+            };
+            container.show = function() {
+                // Add your code to show media
+            };
+            
+            ...
+            
+            return container;
+            
+        }
+    };
+    
+    mejs.Renderers.add([camelCaseRendererName]);
+
+})(window, document, window.mejs || {});
+
+```
+
+Another things to consider when developing a new renderer:
+
 * Add the HTML needed to display new media in `/test/simpleplayer.html`.
 * Create a `/test/[renderer_name].html` to show the renderer in an isolated way.
 * Add an entry or two in `/test/alpha.html` to confirm that media for new renderer can be changed easily. Example:
