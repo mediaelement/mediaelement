@@ -216,7 +216,7 @@
 		},
 
 		/**
-		 * Feature destroy
+		 * Feature destructor.
 		 *
 		 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 		 * @param {MediaElementPlayer} player

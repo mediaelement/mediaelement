@@ -35,7 +35,7 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
 
-* Ability to play Facebook, SoundCloud, M(PEG)-Dash using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [DASH.as](https://github.com/castlabs/dashas) for Flash fallback (in progress).
+* Ability to play Facebook, SoundCloud, M(PEG)-DASH using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support.
 
 * Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
 
@@ -45,7 +45,9 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
 
-* Addition of error propagation from Flash to Javascript.
+<!--* Addition of error propagation from Flash to Javascript.-->
+
+* Deprecated use of `pluginType` element
 
 <a id="browser-support"></a>
 ## Browser and Device support
