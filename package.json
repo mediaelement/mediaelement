@@ -3,11 +3,16 @@
   "license": "MIT",
   "version": "2.23.1",
   "main": "build/mediaelement.js",
+  "scripts": {
+    "start": "stylelint \"./src/scss/mediaelement.scss\" --syntax scss"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/johndyer/mediaelement.git"
   },
   "devDependencies": {
+    "babel-core": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "~0.3.0",
@@ -16,6 +21,11 @@
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-remove-logging": "~0.2.0",
     "grunt-shell": "~1.1.1",
-    "grunt-text-replace": "~0.3.12"
+    "grunt-text-replace": "~0.3.12",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-sass": "^2.3.2",
+    "stylelint": "^7.3.1",
+    "stylelint-scss": "^1.3.4"
   }
 }
