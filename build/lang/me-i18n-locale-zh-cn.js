@@ -15,8 +15,8 @@
 ;(function(exports, undefined) {
 
     "use strict";
-
-    exports['zh-CN'] = {
+    if (typeof exports['zh-CN'] === 'undefined') {
+        exports['zh-CN'] = {
 
             'mejs.audio-player' : "音频播放器",
             'mejs.captions-subtitles' : "字幕/标题",
