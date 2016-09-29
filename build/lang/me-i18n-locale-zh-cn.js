@@ -15,6 +15,7 @@
 ;(function(exports, undefined) {
 
     "use strict";
+
     if (typeof exports['zh-CN'] === 'undefined') {
         exports['zh-CN'] = {
 
