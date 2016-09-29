@@ -68,14 +68,26 @@
 
 <script>
 
+    function getQueryStringValue (key) {
+        return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+    }
+
+    var lang = getQueryStringValue('lang') || 'en';
+    mejs.i18n.locale.language = lang;
+
     $('select').on('change', function() {
-        mejs.i18n.locale.language = $(this).val();
-    });
+        var separator = (window.location.href.indexOf("?")===-1)? "?" : "&";
+        window.location.href = window.location.href + separator + "lang=" + $(this).val();
+    }).val(lang);
 
     $('audio,video').mediaelementplayer({
         success: function(player, node) {
 
+            mejs.i18n.locale.language = mejs.i18n.getLanguage();
+
             $(player).closest(".mejs-container").attr("lang", mejs.i18n.getLanguage());
+
+            // Optional
             $("html").attr("lang", mejs.i18n.getLanguage());
 
             $('#' + node.id + '-mode').html('mode: ' + player.pluginType);
