@@ -1,0 +1,8 @@
+﻿/**
+* Here CSS for focus support
+*/
+@import "variables";
+
+.mejs-container:focus {
+	outline: none;
+}
