@@ -5,7 +5,7 @@
 		// this will automatically turn on a <track>
 		startLanguage: '',
 
-		tracksText: mejs.i18n.t('mejs.captions-subtitles'),
+		tracksText: '',
 
 		// By default, no WAI-ARIA live region - don't make a
 		// screen reader speak captions over an audio track.
@@ -40,6 +40,7 @@
 			var t = this,
 				attr = t.options.tracksAriaLive ?
 					'role="log" aria-live="assertive" aria-atomic="false"' : '',
+				tracksTitle = t.options.tracksText ? t.options.tracksText : mejs.i18n.t('mejs.captions-subtitles'),
 				i,
 				kind;
 
@@ -59,7 +60,7 @@
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton =
 					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" aria-controls="' + t.id + '" title="' + t.options.tracksText + '" aria-label="' + t.options.tracksText + '"></button>'+
+						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>'+
 						'<div class="mejs-captions-selector">'+
 							'<ul>'+
 								'<li>'+
