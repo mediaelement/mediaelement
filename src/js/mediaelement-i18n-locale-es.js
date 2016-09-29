@@ -38,7 +38,7 @@
             'mejs.time-skip-back' : "Saltar atrás %1 segundos",
             'mejs.time-slider' : "Control deslizante de tiempo",
             'mejs.unmute' : "Reactivar silencio",
-            'mejs.video-player' : "Reproductor de vídeo",
+            'mejs.video-player' : "Reproductor de video",
             'mejs.volume-help-text' : "Use las flechas Arriba/Abajo para subir o bajar el volumen.",
             'mejs.volume-slider' : "Control deslizante de volumen",
             'mejs.source-chooser': "Selector de media",
