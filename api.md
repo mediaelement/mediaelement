@@ -207,17 +207,17 @@ markerColor: '#E9BC3D',
 markers: [],
 // Callback function invoked when a marker position is reached
 markerCallback: function(media, time) {}
-// The following items are set for accessibility purposes in different elements of the player
-// They must follow syntax ID => translation inside each of the language files (i.e., me-i18n-locale-en.js)
-playText: mejs.i18n.t('mejs.play'),
-pauseText: mejs.i18n.t('mejs.pause'),
-tracksText: mejs.i18n.t('mejs.captions-subtitles'),
-postrollCloseText: mejs.i18n.t('mejs.close'),
-muteText: mejs.i18n.t('mejs.mute-toggle'),
-allyVolumeControlText: mejs.i18n.t('mejs.volume-help-text'),
-fullscreenText: mejs.i18n.t('mejs.fullscreen'),
-skipBackText: mejs.i18n.t('mejs.time-skip-back'),
-sourcechooserText: mejs.i18n.t('mejs.source-chooser')
+// Customizable text elements
+// NOTE: They won't be translated if set through here, unless the proper translation is added
+playText: '',
+pauseText: '',
+tracksText: '',
+postrollCloseText: '',
+muteText: '',
+allyVolumeControlText: '',
+fullscreenText: '',
+skipBackText: '',
+sourcechooserText: '',
 ```
 
 <a id="api"></a>

@@ -14,7 +14,7 @@
 		/**
 		 * @type {String}
 		 */
-		jumpForwardText: mejs.i18n.t('mejs.time-jump-forward')
+		jumpForwardText: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -30,8 +30,9 @@
 		buildjumpforward: function (player, controls, layers, media) {
 			var
 				t = this,
+				forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText : mejs.i18n.t('mejs.time-jump-forward'),
 				// Replace %1 with skip back interval
-				forwardText = t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval),
+				forwardText = forwardTitle.replace('%1', forwardTitle),
 				// create the loop button
 				loop =
 					$('<div class="mejs-button mejs-jump-forward-button">' +
