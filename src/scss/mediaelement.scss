@@ -4,7 +4,7 @@
 .mejs-offscreen {
   /* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).  Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
   /*@todo support for IE10+ and Edge if it really needs*/
-  clip-path: polygon(0px 0px, 0px 0px, 0px 0px, 0px 0px);
+  clip-path: polygon(0 0, 0 0, 0 0, 0 0);
   position: absolute !important;
   height: 1px;
   width: 1px;
@@ -13,7 +13,7 @@
 
 .mejs-container {
   position: relative;
-  background: #000;
+  background: $me-black;
   font-family: "Helvetica", Arial, serif;
   text-align: left;
   vertical-align: top;
@@ -137,15 +137,15 @@
   width: 80px;
   height: 80px;
   margin: -40px 0 0 -40px;
-  background: #333;
+  background: $me-gray-1;
   background: url("background.png");
-  background: rgba(0, 0, 0, 0.9);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50, 50, 50, 0.9)), to(rgba(0, 0, 0, 0.9)));
-  background: -webkit-linear-gradient(top, rgba(50, 50, 50, 0.9), rgba(0, 0, 0, 0.9));
-  background: -moz-linear-gradient(top, rgba(50, 50, 50, 0.9), rgba(0, 0, 0, 0.9));
-  background: -o-linear-gradient(top, rgba(50, 50, 50, 0.9), rgba(0, 0, 0, 0.9));
-  background: -ms-linear-gradient(top, rgba(50, 50, 50, 0.9), rgba(0, 0, 0, 0.9));
-  background: linear-gradient(rgba(50, 50, 50, 0.9), rgba(0, 0, 0, 0.9));
+  background: rgba(0, 0, 0, .9);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50, 50, 50, .9)), to(rgba(0, 0, 0, .9)));
+  background: -webkit-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: -moz-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: -o-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: -ms-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: linear-gradient(rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
 }
 
 .mejs-overlay-loading span {
@@ -166,13 +166,13 @@
   bottom: 0;
   left: 0;
   background: url("background.png");
-  background: rgba(0, 0, 0, 0.7);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50, 50, 50, 0.7)), to(rgba(0, 0, 0, 0.7)));
-  background: -webkit-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: -moz-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: -o-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: -ms-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: linear-gradient(rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
+  background: rgba(0, 0, 0, .7);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50, 50, 50, .7)), to(rgba(0, 0, 0, .7)));
+  background: -webkit-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: -moz-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: -o-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: -ms-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: linear-gradient(rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
   height: 30px;
   width: 100%;
 }
@@ -213,14 +213,14 @@
 
 /* :focus for accessibility */
 .mejs-controls .mejs-button button:focus {
-  outline: dotted 1px #999;
+  outline: dotted 1px $me-gray-2;
 }
 
 /* End: CONTROL BAR */
 
 /* Start: Time (Current / Duration) */
 .mejs-container .mejs-controls .mejs-time {
-  color: #fff;
+  color: $me-white;
   display: block;
   height: 17px;
   width: auto;
@@ -233,7 +233,7 @@
 }
 
 .mejs-container .mejs-controls .mejs-time a {
-  color: #fff;
+  color: $me-white;
   font-size: 11px;
   line-height: 12px;
   display: block;
@@ -279,24 +279,24 @@
 
 .mejs-controls .mejs-time-rail .mejs-time-total {
   margin: 5px;
-  background: #333;
-  background: rgba(50, 50, 50, 0.8);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(30, 30, 30, 0.8)), to(rgba(60, 60, 60, 0.8)));
-  background: -webkit-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: -moz-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: -o-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: -ms-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: linear-gradient(rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
+  background: $me-gray-1;
+  background: rgba(50, 50, 50, .8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(30, 30, 30, .8)), to(rgba(60, 60, 60, .8)));
+  background: -webkit-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: -moz-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: -o-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: -ms-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: linear-gradient(rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-buffering {
   width: 100%;
-  background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(0.25, rgba(255, 255, 255, 0.15)), color-stop(0.25, transparent), color-stop(0.5, transparent), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.75, rgba(255, 255, 255, 0.15)), color-stop(0.75, transparent), to(transparent));
-  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: -ms-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image: -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, rgba(255, 255, 255, .15)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .15)), color-stop(.75, rgba(255, 255, 255, .15)), color-stop(.75, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(-45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image: -moz-linear-gradient(-45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image: -ms-linear-gradient(-45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
   -webkit-background-size: 15px 15px;
   -moz-background-size: 15px 15px;
   -o-background-size: 15px 15px;
@@ -355,25 +355,25 @@
 
 .mejs-controls .mejs-time-rail .mejs-time-loaded {
   background: #3caac8;
-  background: rgba(60, 170, 200, 0.8);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(44, 124, 145, 0.8)), to(rgba(78, 183, 212, 0.8)));
-  background: -webkit-linear-gradient(top, rgba(44, 124, 145, 0.8), rgba(78, 183, 212, 0.8));
-  background: -moz-linear-gradient(top, rgba(44, 124, 145, 0.8), rgba(78, 183, 212, 0.8));
-  background: -o-linear-gradient(top, rgba(44, 124, 145, 0.8), rgba(78, 183, 212, 0.8));
-  background: -ms-linear-gradient(top, rgba(44, 124, 145, 0.8), rgba(78, 183, 212, 0.8));
-  background: linear-gradient(rgba(44, 124, 145, 0.8), rgba(78, 183, 212, 0.8));
+  background: rgba(60, 170, 200, .8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(44, 124, 145, .8)), to(rgba(78, 183, 212, .8)));
+  background: -webkit-linear-gradient(top, rgba(44, 124, 145, .8), rgba(78, 183, 212, .8));
+  background: -moz-linear-gradient(top, rgba(44, 124, 145, .8), rgba(78, 183, 212, .8));
+  background: -o-linear-gradient(top, rgba(44, 124, 145, .8), rgba(78, 183, 212, .8));
+  background: -ms-linear-gradient(top, rgba(44, 124, 145, .8), rgba(78, 183, 212, .8));
+  background: linear-gradient(rgba(44, 124, 145, .8), rgba(78, 183, 212, .8));
   width: 0;
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-current {
-  background: #fff;
-  background: rgba(255, 255, 255, 0.8);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, 0.9)), to(rgba(200, 200, 200, 0.8)));
-  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: -o-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
+  background: $me-white;
+  background: rgba(255, 255, 255, .8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, .9)), to(rgba(200, 200, 200, .8)));
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: -o-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
   width: 0;
 }
 
@@ -382,12 +382,12 @@
   position: absolute;
   margin: 0;
   width: 10px;
-  background: #fff;
+  background: $me-white;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   cursor: pointer;
-  border: solid 2px #333;
+  border: solid 2px $me-gray-1;
   top: -2px;
   text-align: center;
 }
@@ -395,14 +395,14 @@
 .mejs-controls .mejs-time-rail .mejs-time-float {
   position: absolute;
   display: none;
-  background: #eee;
+  background: $me-gray-5;
   width: 36px;
   height: 17px;
-  border: solid 1px #333;
+  border: solid 1px $me-gray-1;
   top: -26px;
   margin-left: -18px;
   text-align: center;
-  color: #111;
+  color: $me-dark-gray-2;
 }
 
 .mejs-controls .mejs-time-rail .mejs-time-float-current {
@@ -419,8 +419,8 @@
   width: 0;
   height: 0;
   line-height: 0;
-  border: solid 5px #eee;
-  border-color: #eee transparent transparent transparent;
+  border: solid 5px $me-gray-5;
+  border-color: $me-gray-5 transparent transparent transparent;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -479,7 +479,7 @@
   height: 115px;
   width: 25px;
   background: url("background.png");
-  background: rgba(50, 50, 50, 0.7);
+  background: rgba(50, 50, 50, .7);
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -508,8 +508,8 @@
   top: 8px;
   width: 2px;
   height: 100px;
-  background: #ddd;
-  background: rgba(255, 255, 255, 0.5);
+  background: $me-gray-4;
+  background: rgba(255, 255, 255, .5);
   margin: 0;
 }
 
@@ -519,8 +519,8 @@
   top: 8px;
   width: 2px;
   height: 100px;
-  background: #ddd;
-  background: rgba(255, 255, 255, 0.9);
+  background: $me-gray-4;
+  background: rgba(255, 255, 255, .9);
   margin: 0;
 }
 
@@ -530,8 +530,8 @@
   top: -3px;
   width: 16px;
   height: 6px;
-  background: #ddd;
-  background: rgba(255, 255, 255, 0.9);
+  background: $me-gray-4;
+  background: rgba(255, 255, 255, .9);
   cursor: N-resize;
   -webkit-border-radius: 1px;
   -moz-border-radius: 1px;
@@ -561,14 +561,14 @@
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  background: #333;
-  background: rgba(50, 50, 50, 0.8);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(30, 30, 30, 0.8)), to(rgba(60, 60, 60, 0.8)));
-  background: -webkit-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: -moz-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: -o-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: -ms-linear-gradient(top, rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
-  background: linear-gradient(rgba(30, 30, 30, 0.8), rgba(60, 60, 60, 0.8));
+  background: $me-gray-1;
+  background: rgba(50, 50, 50, .8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(30, 30, 30, .8)), to(rgba(60, 60, 60, .8)));
+  background: -webkit-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: -moz-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: -o-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: -ms-linear-gradient(top, rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+  background: linear-gradient(rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
 }
 
 .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current {
@@ -583,14 +583,14 @@
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
-  background: #fff;
-  background: rgba(255, 255, 255, 0.8);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, 0.9)), to(rgba(200, 200, 200, 0.8)));
-  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: -o-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
-  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(200, 200, 200, 0.8));
+  background: $me-white;
+  background: rgba(255, 255, 255, .8);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, .9)), to(rgba(200, 200, 200, .8)));
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: -o-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+  background: linear-gradient(rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
 }
 
 .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-handle {
@@ -616,7 +616,7 @@
   width: 85px;
   height: 100px;
   background: url("background.png");
-  background: rgba(50, 50, 50, 0.7);
+  background: rgba(50, 50, 50, .7);
   border: solid 1px transparent;
   padding: 10px 10px 0 10px;
   overflow: hidden;
@@ -642,7 +642,7 @@
   padding: 0;
   list-style-type: none !important;
   display: block;
-  color: #fff;
+  color: $me-white;
   overflow: hidden;
 }
 
@@ -670,7 +670,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  border-right: solid 1px #fff;
+  border-right: solid 1px $me-white;
   width: 10000px;
   z-index: 1;
 }
@@ -678,26 +678,26 @@
 .mejs-chapters .mejs-chapter {
   position: absolute;
   float: left;
-  background: #222;
-  background: rgba(0, 0, 0, 0.7);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50, 50, 50, 0.7)), to(rgba(0, 0, 0, 0.7)));
-  background: -webkit-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: -moz-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: -o-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: -ms-linear-gradient(top, rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  background: linear-gradient(rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#323232, endColorstr=#000000);
+  background: $me-dark-gray-1;
+  background: rgba(0, 0, 0, .7);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50, 50, 50, .7)), to(rgba(0, 0, 0, .7)));
+  background: -webkit-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: -moz-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: -o-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: -ms-linear-gradient(top, rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  background: linear-gradient(rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#323232, endColorstr=$me-);
   overflow: hidden;
   border: 0;
 }
 
 .mejs-chapters .mejs-chapter .mejs-chapter-block {
   font-size: 11px;
-  color: #fff;
+  color: $me-white;
   padding: 5px;
   display: block;
-  border-right: solid 1px #333;
-  border-bottom: solid 1px #333;
+  border-right: solid 1px $me-gray-1;
+  border-bottom: solid 1px $me-gray-1;
   cursor: pointer;
 }
 
@@ -706,15 +706,15 @@
 }
 
 .mejs-chapters .mejs-chapter .mejs-chapter-block:hover {
-  background: #666;
-  background: rgba(102, 102, 102, 0.7);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(102, 102, 102, 0.7)), to(rgba(50, 50, 50, 0.6)));
-  background: -webkit-linear-gradient(top, rgba(102, 102, 102, 0.7), rgba(50, 50, 50, 0.6));
-  background: -moz-linear-gradient(top, rgba(102, 102, 102, 0.7), rgba(50, 50, 50, 0.6));
-  background: -o-linear-gradient(top, rgba(102, 102, 102, 0.7), rgba(50, 50, 50, 0.6));
-  background: -ms-linear-gradient(top, rgba(102, 102, 102, 0.7), rgba(50, 50, 50, 0.6));
-  background: linear-gradient(rgba(102, 102, 102, 0.7), rgba(50, 50, 50, 0.6));
-  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=#666666, endColorstr=#323232);
+  background: $me-gray-3;
+  background: rgba(102, 102, 102, .7);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(102, 102, 102, .7)), to(rgba(50, 50, 50, .6)));
+  background: -webkit-linear-gradient(top, rgba(102, 102, 102, .7), rgba(50, 50, 50, .6));
+  background: -moz-linear-gradient(top, rgba(102, 102, 102, .7), rgba(50, 50, 50, .6));
+  background: -o-linear-gradient(top, rgba(102, 102, 102, .7), rgba(50, 50, 50, .6));
+  background: -ms-linear-gradient(top, rgba(102, 102, 102, .7), rgba(50, 50, 50, .6));
+  background: linear-gradient(rgba(102, 102, 102, .7), rgba(50, 50, 50, .6));
+  filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, startColorstr=$me-gray-3, endColorstr=#323232);
 }
 
 .mejs-chapters .mejs-chapter .mejs-chapter-block .ch-title {
@@ -743,11 +743,11 @@
   text-align: center;
   line-height: 20px;
   font-size: 16px;
-  color: #fff;
+  color: $me-white;
 }
 
 .mejs-captions-layer a {
-  color: #fff;
+  color: $me-white;
   text-decoration: underline;
 }
 
@@ -770,10 +770,10 @@
 .mejs-captions-text {
   padding: 0;
   background: url("background.png");
-  background: rgba(20, 20, 20, 0.5);
+  background: rgba(20, 20, 20, .5);
   white-space: pre-wrap;
-  -webkit-box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
-  box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
+  -webkit-box-shadow: 5px 0 0 rgba(20, 20, 20, .5), -5px 0 0 rgba(20, 20, 20, .5);
+  box-shadow: 5px 0 0 rgba(20, 20, 20, .5), -5px 0 0 rgba(20, 20, 20, .5);
 }
 
 /* End: Track (Captions and Chapters) */
@@ -783,7 +783,7 @@
 }
 
 .me-cannotplay a {
-  color: #fff;
+  color: $me-white;
   font-weight: bold;
 }
 
@@ -831,8 +831,8 @@
   border-radius: 4px;
   top: 0;
   left: 0;
-  background: #fff;
-  border: solid 1px #999;
+  background: $me-white;
+  border: solid 1px $me-gray-2;
   z-index: 1001; /* make sure it shows on fullscreen */
 }
 
@@ -840,7 +840,7 @@
   height: 1px;
   font-size: 0;
   margin: 5px 6px;
-  background: #333;
+  background: $me-gray-1;
 }
 
 .mejs-contextmenu .mejs-contextmenu-item {
@@ -848,12 +848,12 @@
   font-size: 12px;
   padding: 4px 6px;
   cursor: pointer;
-  color: #333;
+  color: $me-gray-1;
 }
 
 .mejs-contextmenu .mejs-contextmenu-item:hover {
-  background: #2C7C91;
-  color: #fff;
+  background: $me-blue-1;
+  color: $me-white;
 }
 
 /* Start: Source Chooser */
@@ -872,7 +872,7 @@
   width: 130px;
   height: 100px;
   background: url("background.png");
-  background: rgba(50, 50, 50, 0.7);
+  background: rgba(50, 50, 50, .7);
   border: solid 1px transparent;
   padding: 10px;
   overflow: hidden;
@@ -894,7 +894,7 @@
   padding: 0;
   list-style-type: none !important;
   display: block;
-  color: #fff;
+  color: $me-white;
   overflow: hidden;
 }
 
@@ -923,7 +923,7 @@
   width: 100%;
   height: 100%;
   background: url("background.png");
-  background: rgba(50, 50, 50, 0.7);
+  background: rgba(50, 50, 50, .7);
   z-index: 1000;
   overflow: hidden;
 }
@@ -938,8 +938,8 @@
   right: 0;
   top: 0;
   background: url("background.png");
-  background: rgba(50, 50, 50, 0.7);
-  color: #fff;
+  background: rgba(50, 50, 50, .7);
+  color: $me-white;
   padding: 4px;
   z-index: 100;
   cursor: pointer;
@@ -958,7 +958,7 @@ div.mejs-speed-button {
   width: 36px;
   font-size: 11px;
   line-height: normal;
-  color: #ffffff;
+  color: $me-white;
 }
 
 .mejs-controls .mejs-speed-button .mejs-speed-selector {
@@ -969,7 +969,7 @@ div.mejs-speed-button {
   width: 60px;
   height: 100px;
   background: url("background.png");
-  background: rgba(50, 50, 50, 0.7);
+  background: rgba(50, 50, 50, .7);
   border: solid 1px transparent;
   padding: 0;
   overflow: hidden;
@@ -999,7 +999,7 @@ div.mejs-speed-button {
   padding: 0 10px;
   list-style-type: none !important;
   display: block;
-  color: #fff;
+  color: $me-white;
   overflow: hidden;
 }
 
@@ -1039,7 +1039,7 @@ div.mejs-speed-button {
   background: transparent;
   font-size: 9px;
   line-height: normal;
-  color: #ffffff;
+  color: $me-white;
 }
 
 /* End: Jump Forward */
@@ -1054,7 +1054,7 @@ div.mejs-speed-button {
   background: transparent;
   font-size: 9px;
   line-height: normal;
-  color: #ffffff;
+  color: $me-white;
 }
 
 /* End: Skip Back */
