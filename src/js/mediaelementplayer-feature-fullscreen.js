@@ -459,7 +459,7 @@
 						winW = win.width(),
 						winH = win.height();
 
-					t.media.setVideoSize(winW, winH);
+					t.media.setSize(winW, winH);
 				}, 500);
 			}
 
@@ -517,7 +517,7 @@
 				.width(t.normalWidth)
 				.height(t.normalHeight);
 
-				t.media.setVideoSize(t.normalWidth, t.normalHeight);
+				t.media.setSize(t.normalWidth, t.normalHeight);
 			}
 
 			t.layers.children('div')

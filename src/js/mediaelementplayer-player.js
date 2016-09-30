@@ -742,7 +742,7 @@
 							if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') && !isNaN(e.target.videoHeight)) {
 								t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
 								t.setControlsSize();
-								t.media.setVideoSize(e.target.videoWidth, e.target.videoHeight);
+								t.media.setSize(e.target.videoWidth, e.target.videoHeight);
 							}
 						}, false);
 					}
@@ -799,7 +799,6 @@
 				// resize on the first play
 				t.media.addEventListener('loadedmetadata', function() {
 
-					console.log(t.options);
 					mejs.Utility.calculateTimeFormat(t.duration, t.options, t.options.framesPerSecond || 25);
 
 					if (t.updateDuration) {
@@ -1034,8 +1033,8 @@
 				
 				// if shim is ready, send the size to the embeded plugin
 				if (t.isVideo) {
-					if (t.media.setVideoSize) {
-						t.media.setVideoSize(parentWidth, newHeight);
+					if (t.media.setSize) {
+						t.media.setSize(parentWidth, newHeight);
 					}
 				}
 		
@@ -1084,13 +1083,13 @@
 			
 			if (bScaleOnWidth) {
 				targetElement.height(finalHeight).width(parentWidth);
-				if (t.media.setVideoSize) {
-					t.media.setVideoSize(parentWidth, finalHeight);
+				if (t.media.setSize) {
+					t.media.setSize(parentWidth, finalHeight);
 				}
 			} else {
 				targetElement.height(parentHeight).width(finalWidth);
-				if (t.media.setVideoSize) {
-					t.media.setVideoSize(finalWidth, parentHeight);
+				if (t.media.setSize) {
+					t.media.setSize(finalWidth, parentHeight);
 				}
 			}
 			
