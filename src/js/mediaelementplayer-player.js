@@ -883,7 +883,6 @@
 						t.media.pause();
 					}
 
-
 					if (t.setProgressRail) {
 						t.setProgressRail();
 					}
