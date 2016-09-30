@@ -18,7 +18,6 @@
 		defaultAudioWidth: 400,
 		// default if the user doesn't specify
 		defaultAudioHeight: 30,
-
 		// default amount to move back when back key is pressed
 		defaultSeekBackwardInterval: function(media) {
 			return (media.duration * 0.05);
@@ -27,10 +26,8 @@
 		defaultSeekForwardInterval: function(media) {
 			return (media.duration * 0.05);
 		},
-
 		// set dimensions via JS instead of CSS
 		setDimensions: true,
-
 		// width of audio player
 		audioWidth: -1,
 		// height of audio player
@@ -40,10 +37,9 @@
 		// useful for <audio> player loops
 		loop: false,
 		// rewind to beginning when media ends
-				autoRewind: true,
+		autoRewind: true,
 		// resize to media dimensions
 		enableAutosize: true,
-
 		/*
 		 * Time format to use. Default: 'mm:ss'
 		 * Supported units:
@@ -66,7 +62,6 @@
 		showTimecodeFrameCount: false,
 		// used when showTimecodeFrameCount is set to true
 		framesPerSecond: 25,
-
 		// automatically calculate the width of the progress bar based on the sizes of other elements
 		autosizeProgress : true,
 		// Hide controls when playing and mouse is not over the video
@@ -75,6 +70,12 @@
 		hideVideoControlsOnLoad: false,
 		// Enable click video element to toggle play/pause
 		clickToPlayPause: true,
+		// Time in ms to hide controls
+		controlsTimeoutDefault: 1500,
+		// Time in ms to trigger the timer when mouse moves
+		controlsTimeoutMouseEnter: 2500,
+		// Time in ms to trigger the timer when mouse leaves
+		controlsTimeoutMouseLeave: 1000,
 		// force iPad's native controls
 		iPadUseNativeControls: false,
 		// force iPhone's native controls
@@ -85,16 +86,12 @@
 		features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
 		// only for dynamic
 		isVideo: true,
- 
 		// stretching modes (auto, fill, responsive, none)
 		stretching: 'auto',
-
 		// turns keyboard support on and off for this instance
 		enableKeyboard: true,
-
-		// whenthis player starts, it will pause other players
+		// when this player starts, it will pause other players
 		pauseOtherPlayers: true,
-
 		// array of keyboard actions such as play pause
 		keyActions: [
 				{
@@ -102,17 +99,20 @@
 								32, // SPACE
 								179 // GOOGLE play/pause button
 								 ],
-						action: function(player, media) {
+						action: function(player, media, key, event) {
+
+							if (!mejs.MediaFeatures.isFirefox) {
 								if (media.paused || media.ended) {
-										media.play();
+									media.play();
 								} else {
-										media.pause();
+									media.pause();
 								}
+							}
 						}
 				},
 				{
 						keys: [38], // UP
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								player.container.find('.mejs-volume-slider').css('display','block');
 								if (player.isVideo) {
 										player.showControls();
@@ -125,7 +125,7 @@
 				},
 				{
 						keys: [40], // DOWN
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								player.container.find('.mejs-volume-slider').css('display','block');
 								if (player.isVideo) {
 										player.showControls();
@@ -141,7 +141,7 @@
 								37, // LEFT
 								227 // Google TV rewind
 						],
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								if (!isNaN(media.duration) && media.duration > 0) {
 										if (player.isVideo) {
 												player.showControls();
@@ -159,7 +159,7 @@
 								39, // RIGHT
 								228 // Google TV forward
 						],
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								if (!isNaN(media.duration) && media.duration > 0) {
 										if (player.isVideo) {
 												player.showControls();
@@ -174,7 +174,7 @@
 				},
 				{
 						keys: [70], // F
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								if (typeof player.enterFullScreen != 'undefined') {
 										if (player.isFullScreen) {
 												player.exitFullScreen();
@@ -186,7 +186,7 @@
 				},
 				{
 						keys: [77], // M
-						action: function(player, media) {
+						action: function(player, media, key, event) {
 								player.container.find('.mejs-volume-slider').css('display','block');
 								if (player.isVideo) {
 										player.showControls();
@@ -220,7 +220,7 @@
 		t.node = t.media = t.$media[0];
 
 		if(!t.node) {
-			return
+			return;
 		}
 
 		// check for existing player
@@ -309,14 +309,14 @@
 
 				// leave default player
 
-			} else {
+			} else if (t.isVideo || (!t.isVideo && t.options.features.length)) {
 
 				// DESKTOP: use MediaElementPlayer controls
 
 				// remove native controls
 				t.$media.removeAttr('controls');
 				var videoPlayerTitle = t.isVideo ?
-					mejs.i18n.t('Video Player') : mejs.i18n.t('Audio Player');
+					mejs.i18n.t('mejs.video-player') : mejs.i18n.t('mejs.audio-player');
 				// insert description for screen readers
 				$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
 				// build container
@@ -344,8 +344,13 @@
 							}
 						}
 					});
+
+				// When no elements in controls, hide bar completely
+				if (!t.options.features.length) {
+					t.container.css('background', 'transparent').find('.mejs-controls').hide();
+				}
  
-				if (t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
+				if (t.isVideo && t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
 					// outer container
 					t.outerContainer = t.$media.parent();
 					t.container.wrap('<div class="mejs-fill-container"/>');
@@ -412,11 +417,15 @@
 				meOptions.pluginWidth = t.width;
 				meOptions.pluginHeight = t.height;
 			}
+			// Hide media completely for audio that doesn't have any features
+			else if (!t.isVideo && !t.options.features.length) {
+				t.$media.hide();
+			}
 
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 
-			if (typeof(t.container) != 'undefined' && t.controlsAreVisible){
+			if (typeof(t.container) !== 'undefined' && t.options.features.length && t.controlsAreVisible) {
 				// controls are shown when loaded
 				t.container.trigger('controlsshown');
 			}
@@ -466,7 +475,7 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended)
 				return;
 
 			if (doAnimation) {
@@ -509,7 +518,7 @@
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : 1500;
+			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -551,9 +560,9 @@
 
 		// Sets up all controls and events
 		meReady: function(media, domNode) {
-
-
-			var t = this,
+			
+			var
+				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
 				autoplay = !(typeof autoplayAttr == 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
@@ -571,6 +580,29 @@
 			t.domNode = domNode;
 
 			if (!(mf.isAndroid && t.options.AndroidUseNativeControls) && !(mf.isiPad && t.options.iPadUseNativeControls) && !(mf.isiPhone && t.options.iPhoneUseNativeControls)) {
+
+				// In the event that no features are specified for audio,
+				// create only MediaElement instance rather than
+				// doing all the work to create a full player
+				if (!t.isVideo && !t.options.features.length) {
+
+					// force autoplay for HTML5
+					if (autoplay && media.pluginType == 'native') {
+						t.play();
+					}
+
+
+					if (t.options.success) {
+
+						if (typeof t.options.success == 'string') {
+							window[t.options.success](t.media, t.domNode, t);
+						} else {
+							t.options.success(t.media, t.domNode, t);
+						}
+					}
+
+					return;
+				}
 
 				// two built in features
 				t.buildposter(t, t.controls, t.layers, t.media);
@@ -605,7 +637,7 @@
 				// controls fade
 				if (t.isVideo) {
 
-					if (mejs.MediaFeatures.hasTouch) {
+					if (mejs.MediaFeatures.hasTouch && !t.options.alwaysShowControls) {
 
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
@@ -652,7 +684,7 @@
 									if (!t.options.alwaysShowControls ) {
 										t.killControlsTimer('enter');
 										t.showControls();
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
@@ -662,14 +694,14 @@
 										t.showControls();
 									}
 									if (!t.options.alwaysShowControls) {
-										t.startControlsTimer(2500);
+										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
 							})
 							.bind('mouseleave', function () {
 								if (t.controlsEnabled) {
 									if (!t.media.paused && !t.options.alwaysShowControls) {
-										t.startControlsTimer(1000);
+										t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 									}
 								}
 							});
@@ -700,7 +732,7 @@
 
 				// EVENTS
 
-				// FOCUS: when a video starts playing, it takes focus from other players (possibily pausing them)
+				// FOCUS: when a video starts playing, it takes focus from other players (possibly pausing them)
 				t.media.addEventListener('play', function() {
 					var playerIndex;
 
@@ -747,7 +779,10 @@
 				}, false);
 
 				// resize on the first play
-				t.media.addEventListener('loadedmetadata', function(e) {
+				t.media.addEventListener('loadedmetadata', function() {
+
+					mejs.Utility.calculateTimeFormat(t.duration, t.options, t.options.framesPerSecond || 25);
+
 					if (t.updateDuration) {
 						t.updateDuration();
 					}
@@ -1044,7 +1079,8 @@
 				total = t.controls.find('.mejs-time-total'),
 				others = rail.siblings(),
 				lastControl = others.last(),
-				lastControlPosition = null;
+				lastControlPosition = null,
+				avoidAutosizeProgress = t.options && !t.options.autosizeProgress;
 
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
@@ -1052,7 +1088,7 @@
 			}
 
 			// allow the size to come from custom CSS
-			if (t.options && !t.options.autosizeProgress) {
+			if (avoidAutosizeProgress) {
 				// Also, frontends devs can be more flexible
 				// due the opportunity of absolute positioning.
 				railWidth = parseInt(rail.css('width'), 10);
@@ -1078,7 +1114,12 @@
 			// this often happens when zoomed
 			do {
 				// outer area
-				rail.width(railWidth);
+				// we only want to set an inline style with the width of the rail
+				// if we're trying to autosize.
+				if (!avoidAutosizeProgress) {
+					rail.width(railWidth);
+				}
+
 				// dark space
 				total.width(railWidth - (total.outerWidth(true) - total.width()));
 
@@ -1157,7 +1198,7 @@
 			// this needs to come last so it's on top
 			bigPlay =
 				$('<div class="mejs-overlay mejs-layer mejs-overlay-play">'+
-					'<div class="mejs-overlay-button" role="button" aria-label="' + mejs.i18n.t('Play') + '" aria-pressed="false"></div>'+
+					'<div class="mejs-overlay-button" role="button" aria-label="' + mejs.i18n.t('mejs.play') + '" aria-pressed="false"></div>'+
 				'</div>')
 				.appendTo(layers)
 				.bind('click', function() {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
@@ -1356,7 +1397,52 @@
 			return this.media.volume;
 		},
 		setSrc: function(src) {
-			this.media.setSrc(src);
+			var
+				t = this;
+
+			// If using YouTube, its API is different to load a specific source
+			if (t.media.pluginType === 'youtube') {
+				var videoId;
+
+				if (typeof src !== 'string') {
+					var i, media;
+
+					for (i=0; i<src.length; i++) {
+						media = src[i];
+						if (this.canPlayType(media.type)) {
+							src = media.src;
+							break;
+						}
+					}
+				}
+
+				// youtu.be url from share button
+				if (src.lastIndexOf('youtu.be') !== -1) {
+					videoId = src.substr(src.lastIndexOf('/') + 1);
+
+					if (videoId.indexOf('?') !== -1) {
+						videoId = videoId.substr(0, videoId.indexOf('?'));
+					}
+
+				} else {
+					// https://www.youtube.com/watch?v=
+					var videoIdMatch = src.match(/[?&]v=([^&#]+)|&|#|$/);
+
+					if (videoIdMatch) {
+						videoId = videoIdMatch[1];
+					}
+				}
+
+				if (t.media.getAttribute('autoplay') !== null) {
+					t.media.pluginApi.loadVideoById(videoId);
+				} else {
+					t.media.pluginApi.cueVideoById(videoId);
+				}
+
+			}
+			else {
+				t.media.setSrc(src);
+			}
 		},
 		remove: function() {
 			var t = this, featureIndex, feature;

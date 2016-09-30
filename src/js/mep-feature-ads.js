@@ -91,7 +91,7 @@
 							'<a href="#" target="_blank">&nbsp;</a>' + 
 							'<div class="mejs-ads-skip-block">' + 
 								'<span class="mejs-ads-skip-message"></span>' +
-								'<span class="mejs-ads-skip-button">' + mejs.i18n.t('Skip ad') + '&raquo;</span>' +
+								'<span class="mejs-ads-skip-button">' + mejs.i18n.t('mejs.ad-skip') + '&raquo;</span>' +
 							'</div>' +
 						'</div>')
 							.insertBefore( layers.find('.mejs-overlay-play') )
@@ -214,7 +214,8 @@
 				t.adsSkipBlock.show();
 
 				if (t.options.adsPrerollAdSkipSeconds > 0) {
-					t.adsSkipMessage.html(mejs.i18n.t('Skip in') + ' ' + t.options.adsPrerollAdSkipSeconds.toString() + ' ' + mejs.i18n.t('seconds') ).show();
+					
+					t.adsSkipMessage.html( mejs.i18n.t('mejs.ad-skip-info').replace('%1', t.options.adsPrerollAdSkipSeconds.toString()) ).show();
 					t.adsSkipButton.hide();					
 				} else {
 					t.adsSkipMessage.hide();
@@ -239,7 +240,7 @@
 					t.adsSkipButton.show();
 					t.adsSkipMessage.hide();				
 				} else {
-					t.adsSkipMessage.html(mejs.i18n.t('Skip in') + ' ' + Math.round( t.options.adsPrerollAdSkipSeconds - t.media.currentTime ).toString() + ' ' + mejs.i18n.t('seconds') )
+					t.adsSkipMessage.html(mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round( t.options.adsPrerollAdSkipSeconds - t.media.currentTime ).toString()) )
 				}
 			
 			}

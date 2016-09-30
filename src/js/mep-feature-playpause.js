@@ -1,9 +1,10 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		playText: mejs.i18n.t('Play'),
-		pauseText: mejs.i18n.t('Pause')
+		playText: '',
+		pauseText: ''
 	});
+
 
 	// PLAY/pause BUTTON
 	$.extend(MediaElementPlayer.prototype, {
@@ -11,9 +12,11 @@
 			var 
 				t = this,
 				op = t.options,
-				play = 
+				playTitle = op.playText ? op.playText : mejs.i18n.t('mejs.play'),
+				pauseTitle = op.pauseText ? op.pauseText : mejs.i18n.t('mejs.pause'),
+				play =
 				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + op.playText + '" aria-label="' + op.playText + '"></button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
@@ -34,14 +37,14 @@
 				if ('play' === which) {
 					play.removeClass('mejs-play').addClass('mejs-pause');
 					play_btn.attr({
-						'title': op.pauseText,
-						'aria-label': op.pauseText
+						'title': pauseTitle,
+						'aria-label': pauseTitle
 					});
 				} else {
 					play.removeClass('mejs-pause').addClass('mejs-play');
 					play_btn.attr({
-						'title': op.playText,
-						'aria-label': op.playText
+						'title': playTitle,
+						'aria-label': playTitle
 					});
 				}
 			};

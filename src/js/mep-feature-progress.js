@@ -1,49 +1,59 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		progessHelpText: mejs.i18n.t(
-		'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.')
+		// Enable tooltip that shows time in progress bar
+		enableProgressTooltip: true,
+		progressHelpText: ''
 	});
 
 	// progress/loaded bar
 	$.extend(MediaElementPlayer.prototype, {
 		buildprogress: function(player, controls, layers, media) {
 
+			var
+				t = this,
+				mouseIsDown = false,
+				mouseIsOver = false,
+				lastKeyPressTime = 0,
+				startedPaused = false,
+				autoRewindInitial = player.options.autoRewind,
+				progressTitle = t.options.progressHelpText ? t.options.progressHelpText : mejs.i18n.t('mejs.time-help-text'),
+				tooltip = player.options.enableProgressTooltip ? '<span class="mejs-time-float">' +
+					'<span class="mejs-time-float-current">00:00</span>' +
+					'<span class="mejs-time-float-corner"></span>' +
+				'</span>' : "";
+
 			$('<div class="mejs-time-rail">' +
 				'<span  class="mejs-time-total mejs-time-slider">' +
-				//'<span class="mejs-offscreen">' + this.options.progessHelpText + '</span>' +
+				//'<span class="mejs-offscreen">' + progressTitle + '</span>' +
 					'<span class="mejs-time-buffering"></span>' +
 					'<span class="mejs-time-loaded"></span>' +
 					'<span class="mejs-time-current"></span>' +
 					'<span class="mejs-time-handle"></span>' +
-					'<span class="mejs-time-float">' +
-						'<span class="mejs-time-float-current">00:00</span>' +
-						'<span class="mejs-time-float-corner"></span>' +
-					'</span>' +
+					 tooltip +
 				'</span>' +
 			'</div>')
 				.appendTo(controls);
 			controls.find('.mejs-time-buffering').hide();
 
-			var 
-				t = this,
-				total = controls.find('.mejs-time-total'),
-				loaded  = controls.find('.mejs-time-loaded'),
-				current  = controls.find('.mejs-time-current'),
-				handle  = controls.find('.mejs-time-handle'),
-				timefloat  = controls.find('.mejs-time-float'),
-				timefloatcurrent  = controls.find('.mejs-time-float-current'),
-                slider = controls.find('.mejs-time-slider'),
-				handleMouseMove = function (e) {
-					
-                    var offset = total.offset(),
-						width = total.width(),
+			t.total = controls.find('.mejs-time-total');
+			t.loaded  = controls.find('.mejs-time-loaded');
+			t.current  = controls.find('.mejs-time-current');
+			t.handle  = controls.find('.mejs-time-handle');
+			t.timefloat  = controls.find('.mejs-time-float');
+			t.timefloatcurrent  = controls.find('.mejs-time-float-current');
+			t.slider = controls.find('.mejs-time-slider');
+
+			var handleMouseMove = function (e) {
+
+					var offset = t.total.offset(),
+						width = t.total.width(),
 						percentage = 0,
 						newTime = 0,
 						pos = 0,
-                        x;
-                    
-                    // mouse or touch position relative to the object
+						x;
+
+					// mouse or touch position relative to the object
 					if (e.originalEvent && e.originalEvent.changedTouches) {
 						x = e.originalEvent.changedTouches[0].pageX;
 					} else if (e.changedTouches) { // for Zepto
@@ -58,7 +68,7 @@
 						} else if (x > width + offset.left) {
 							x = width + offset.left;
 						}
-						
+
 						pos = x - offset.left;
 						percentage = (pos / width);
 						newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
@@ -70,53 +80,47 @@
 
 						// position floating time box
 						if (!mejs.MediaFeatures.hasTouch) {
-								timefloat.css('left', pos);
-								timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options) );
-								timefloat.show();
+							t.timefloat.css('left', pos);
+							t.timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options) );
+							t.timefloat.show();
 						}
 					}
 				},
-				mouseIsDown = false,
-				mouseIsOver = false,
-				lastKeyPressTime = 0,
-				startedPaused = false,
-				autoRewindInitial = player.options.autoRewind;
-            // Accessibility for slider
-            var updateSlider = function (e) {
+				// Accessibility for slider
+				updateSlider = function (e) {
 
-				var seconds = media.currentTime,
-					timeSliderText = mejs.i18n.t('Time Slider'),
-					time = mejs.Utility.secondsToTimeCode(seconds, player.options),
-					duration = media.duration;
+					var seconds = media.currentTime,
+						timeSliderText = mejs.i18n.t('mejs.time-slider'),
+						time = mejs.Utility.secondsToTimeCode(seconds, player.options),
+						duration = media.duration;
 
-				slider.attr({
-					'aria-label': timeSliderText,
-					'aria-valuemin': 0,
-					'aria-valuemax': duration,
-					'aria-valuenow': seconds,
-					'aria-valuetext': time,
-					'role': 'slider',
-					'tabindex': 0
-				});
+					t.slider.attr({
+						'aria-label': timeSliderText,
+						'aria-valuemin': 0,
+						'aria-valuemax': duration,
+						'aria-valuenow': seconds,
+						'aria-valuetext': time,
+						'role': 'slider',
+						'tabindex': 0
+					});
 
-			};
+				},
+				restartPlayer = function () {
+					var now = new Date();
+					if (now - lastKeyPressTime >= 1000) {
+						media.play();
+					}
+				};
 
-				var restartPlayer = function () {
-				var now = new Date();
-				if (now - lastKeyPressTime >= 1000) {
-					media.play();
-				}
-			};
-
-			slider.bind('focus', function (e) {
+			t.slider.bind('focus', function (e) {
 				player.options.autoRewind = false;
 			});
 
-			slider.bind('blur', function (e) {
+			t.slider.bind('blur', function (e) {
 				player.options.autoRewind = autoRewindInitial;
 			});
 
-			slider.bind('keydown', function (e) {
+			t.slider.bind('keydown', function (e) {
 
 				if ((new Date() - lastKeyPressTime) >= 1000) {
 					startedPaused = media.paused;
@@ -129,26 +133,26 @@
 					seekBackward = player.options.defaultSeekBackwardInterval(media);
 
 				switch (keyCode) {
-				case 37: // left
-				case 40: // Down
-					seekTime -= seekBackward;
-					break;
-				case 39: // Right
-				case 38: // Up
-					seekTime += seekForward;
-					break;
-				case 36: // Home
-					seekTime = 0;
-					break;
-				case 35: // end
-					seekTime = duration;
-					break;
-				case 32: // space
-				case 13: // enter
-					media.paused ? media.play() : media.pause();
-					return;
-				default:
-					return;
+					case 37: // left
+					case 40: // Down
+						seekTime -= seekBackward;
+						break;
+					case 39: // Right
+					case 38: // Up
+						seekTime += seekForward;
+						break;
+					case 36: // Home
+						seekTime = 0;
+						break;
+					case 35: // end
+						seekTime = duration;
+						break;
+					case 32: // space
+					case 13: // enter
+						media.paused ? media.play() : media.pause();
+						return;
+					default:
+						return;
 				}
 
 				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
@@ -171,7 +175,7 @@
 
 			// handle clicks
 			//controls.find('.mejs-time-rail').delegate('span', 'click', handleMouseMove);
-			total
+			t.total
 				.bind('mousedown touchstart', function (e) {
 					// only handle left clicks or touch
 					if (e.which === 1 || e.which === 0) {
@@ -182,7 +186,9 @@
 						});
 						t.globalBind('mouseup.dur touchend.dur', function (e) {
 							mouseIsDown = false;
-							timefloat.hide();
+							if (typeof t.timefloat !== 'undefined') {
+								t.timefloat.hide();
+							}
 							t.globalUnbind('.dur');
 						});
 					}
@@ -192,15 +198,17 @@
 					t.globalBind('mousemove.dur', function(e) {
 						handleMouseMove(e);
 					});
-					if (!mejs.MediaFeatures.hasTouch) {
-						timefloat.show();
+					if (typeof t.timefloat !== 'undefined' && !mejs.MediaFeatures.hasTouch) {
+						t.timefloat.show();
 					}
 				})
 				.bind('mouseleave',function(e) {
 					mouseIsOver = false;
 					if (!mouseIsDown) {
 						t.globalUnbind('.dur');
-						timefloat.hide();
+						if (typeof t.timefloat !== 'undefined') {
+							t.timefloat.hide();
+						}
 					}
 				});
 
@@ -216,17 +224,11 @@
 				player.setCurrentRail(e);
 				updateSlider(e);
 			}, false);
-			
-			t.container.on('controlsresize', function() {
-				player.setProgressRail();
-				player.setCurrentRail();
+
+			t.container.on('controlsresize', function(e) {
+				player.setProgressRail(e);
+				player.setCurrentRail(e);
 			});
-			
-			// store for later use
-			t.loaded = loaded;
-			t.total = total;
-			t.current = current;
-			t.handle = handle;
 		},
 		setProgressRail: function(e) {
 
