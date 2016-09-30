@@ -780,7 +780,11 @@
 
 						}
 					}
-					t.media.pause();
+					if (t.media.pluginType === 'youtube') {
+						t.media.stop();
+					} else {
+						t.media.pause();
+					}
 
 					if (t.setProgressRail) {
 						t.setProgressRail();
