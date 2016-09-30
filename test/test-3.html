@@ -37,7 +37,12 @@
 	<script src="../src/js/mediaelementplayer-feature-tracks.js"></script>
 	<script src="../src/js/mediaelementplayer-feature-volume.js"></script>
 	<script src="../src/js/mediaelementplayer-feature-stop.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-skipback.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-sourcechooser.js"></script>
 	<script src="../src/js/mediaelementplayer-feature-fullscreen.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-jumpforward.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-loop.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-markers.js"></script>
 
 	<link rel="stylesheet" href="../src/css/mediaelementplayer.css" />
 		
@@ -62,8 +67,10 @@
 
 			<div id="video-container">
 				<video width="640" height="360" id="player1" controls="controls" preload="none" poster="../media/echo-hereweare.jpg">
-					<source src="../media/echo-hereweare.mp4"  type="video/mp4" />
-					<track kind="subtitles" src="../media/mediaelement.srt" srclang="en" />
+					<source src="../media/echo-hereweare.mp4"  type="video/mp4">
+					<source src="../media/echo-hereweare.webm"  type="video/webm">
+					<source src="../media/echo-hereweare.ogv"  type="video/ogg">
+					<track kind="subtitles" src="../media/mediaelement.srt" srclang="en">
 				</video>
 			</div>
 
@@ -194,6 +201,8 @@
 
 		$('audio, video').mediaelementplayer({
 			pluginPath:'../build/',
+			markers: [2.5, 10, 35, 40.2],
+			features: ['playpause', 'current', 'progress','volume','speed', 'duration', 'fullscreen', 'tracks', 'skipback', 'jumpforward', 'loop', 'markers', 'stop', 'sourcechooser'],
 			success: function(me, node) {
 				// report type
 				var tagName = node.tagName.toLowerCase();
