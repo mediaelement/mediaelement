@@ -99,7 +99,7 @@
 						if (t.fullscreenMode === 'plugin-hover') {
 							if (hideTimeout !== null) {
 								clearTimeout(hideTimeout);
-								delete hideTimeout;
+								hideTimeout = null;
 							}
 
 							var buttonPos = fullscreenBtn.offset(),
@@ -114,7 +114,7 @@
 						if (t.fullscreenMode === 'plugin-hover') {
 							if (hideTimeout !== null) {
 								clearTimeout(hideTimeout);
-								delete hideTimeout;
+								hideTimeout = null;
 							}
 
 							hideTimeout = setTimeout(function () {

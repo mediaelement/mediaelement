@@ -93,14 +93,12 @@
 
 					// handle clicks to the source radio buttons
 					.delegate('input[type=radio]', 'click', function() {
-						console.log('click');
 						// set aria states
 						$(this).attr('aria-selected', true).attr('checked', 'checked');
 						$(this).closest('.mejs-sourcechooser-selector').find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
 
 						var src = this.value;
 
-						console.log(media.currentSrc);
 						if (media.currentSrc !== src) {
 							var currentTime = media.currentTime;
 							var paused = media.paused;
