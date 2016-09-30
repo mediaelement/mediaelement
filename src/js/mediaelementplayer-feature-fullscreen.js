@@ -80,7 +80,7 @@
 				fullscreenBtn =
 					$('<div class="mejs-button mejs-fullscreen-button">' +
 						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '"></button>' +
-					'</div>')
+						'</div>')
 					.appendTo(controls)
 					.on('click', function () {
 
@@ -114,7 +114,6 @@
 						if (t.fullscreenMode === 'plugin-hover') {
 							if (hideTimeout !== null) {
 								clearTimeout(hideTimeout);
-								hideTimeout = null;
 							}
 
 							hideTimeout = setTimeout(function () {
@@ -432,9 +431,9 @@
 
 			// make full size
 			t.container
-				.addClass('mejs-container-fullscreen')
-				.width('100%')
-				.height('100%');
+			.addClass('mejs-container-fullscreen')
+			.width('100%')
+			.height('100%');
 
 			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
 			// Actually, it seems to be needed for IE8, too
@@ -490,7 +489,7 @@
 			var
 				t = this,
 				isNative = t.media.id.match(/(native|html5)/)
-			;
+				;
 
 			// Prevent container from attempting to stretch a second time
 			clearTimeout(t.containerSizeTimeout);
@@ -504,9 +503,9 @@
 			$(document.documentElement).removeClass('mejs-fullscreen');
 
 			t.container
-				.removeClass('mejs-container-fullscreen')
-				.width(t.normalWidth)
-				.height(t.normalHeight);
+			.removeClass('mejs-container-fullscreen')
+			.width(t.normalWidth)
+			.height(t.normalHeight);
 
 			if (isNative) {
 				t.$media
@@ -521,12 +520,12 @@
 			}
 
 			t.layers.children('div')
-				.width(t.normalWidth)
-				.height(t.normalHeight);
+			.width(t.normalWidth)
+			.height(t.normalHeight);
 
 			t.fullscreenBtn
-				.removeClass('mejs-unfullscreen')
-				.addClass('mejs-fullscreen');
+			.removeClass('mejs-unfullscreen')
+			.addClass('mejs-fullscreen');
 
 			t.setControlsSize();
 			t.isFullScreen = false;
