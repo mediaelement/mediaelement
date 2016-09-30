@@ -30,7 +30,21 @@
 				t = this,
 				sourceTitle = t.options.sourcechooserText ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
 				hoverTimeout
-				;
+			;
+
+			// add to list
+			var sources = [];
+
+			for (var j in this.node.children) {
+				var s = this.node.children[j];
+				if (s.nodeName === 'SOURCE') {
+					sources.push(s);
+				}
+			}
+
+			if (sources.length <= 1) {
+				return;
+			}
 
 			player.sourcechooserButton =
 				$('<div class="mejs-button mejs-sourcechooser-button">' +
@@ -131,13 +145,13 @@
 					}
 				});
 
-			// add to list
-			for (var i in this.node.children) {
-				var src = this.node.children[i];
+			for (var i in sources) {
+				var src = sources[i];
 				if (typeof src.type !== 'undefined' && src.nodeName === 'SOURCE' && media.canPlayType !== null) {
 					player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
 				}
 			}
+
 		},
 
 		/**
