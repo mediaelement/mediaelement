@@ -5,13 +5,13 @@
  * @see https://developer.dailymotion.com/player
  *
  */
-(function(win, doc, mejs, undefined) {
+(function (win, doc, mejs, undefined) {
 
 	/**
 	 * Register DailyMotion type based on URL structure
 	 *
 	 */
-	mejs.Utils.typeChecks.push(function(url) {
+	mejs.Utils.typeChecks.push(function (url) {
 
 		url = url.toLowerCase();
 
@@ -41,7 +41,7 @@
 		 *
 		 * @param {Object} settings - an object with settings needed to create <iframe>
 		 */
-		enqueueIframe: function(settings) {
+		enqueueIframe: function (settings) {
 
 			if (this.isLoaded) {
 				this.createIframe(settings);
@@ -55,7 +55,7 @@
 		 * Load DailyMotion API's script on the header of the document
 		 *
 		 */
-		loadIframeApi: function() {
+		loadIframeApi: function () {
 			if (!this.isSDKStarted) {
 				var e = document.createElement('script');
 				e.async = true;
@@ -70,7 +70,7 @@
 		 * Process queue of DailyMotion <iframe> element creation
 		 *
 		 */
-		apiReady: function() {
+		apiReady: function () {
 
 			this.isLoaded = true;
 			this.isSDKLoaded = true;
@@ -86,7 +86,7 @@
 		 *
 		 * @param {Object} settings - an object with settings needed to create <iframe>
 		 */
-		createIframe: function(settings) {
+		createIframe: function (settings) {
 
 			console.log('creating iframe', settings);
 
@@ -106,7 +106,7 @@
 					origin: location.host
 				});
 
-			player.addEventListener('apiready', function() {
+			player.addEventListener('apiready', function () {
 				console.log('DM api ready');
 
 				win['__ready__' + settings.id](player, {paused: true, ended: false});
@@ -122,10 +122,10 @@
 		 * @param {String} url
 		 * @return {String}
 		 */
-		getDailyMotionId: function(url) {
+		getDailyMotionId: function (url) {
 			var
 				parts = url.split('/'),
-				last_part = parts[parts.length-1],
+				last_part = parts[parts.length - 1],
 				dash_parts = last_part.split('_')
 				;
 
@@ -137,7 +137,7 @@
 	 * Register DailyMotion event globally
 	 *
 	 */
-	win['dmAsyncInit'] = function() {
+	win['dmAsyncInit'] = function () {
 		console.log('dmAsyncInit');
 		DailyMotionApi.apiReady();
 	};
@@ -155,8 +155,8 @@
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: function(type) {
-			var mediaTypes = ['video/dailymotion','video/x-dailymotion'];
+		canPlayType: function (type) {
+			var mediaTypes = ['video/dailymotion', 'video/x-dailymotion'];
 
 			return mediaTypes.indexOf(type) > -1;
 		},
@@ -188,16 +188,16 @@
 
 			// wrappers for get/set
 			var props = mejs.html5media.properties;
-			for (i=0, il=props.length; i<il; i++) {
+			for (i = 0, il = props.length; i < il; i++) {
 
 				// wrap in function to retain scope
-				(function(propName) {
+				(function (propName) {
 
 					// add to flash state that we will store
 
-					var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
-					dm['get' + capName] = function() {
+					dm['get' + capName] = function () {
 						if (dmPlayer !== null) {
 							var value = null;
 
@@ -225,7 +225,7 @@
 									var percentLoaded = dmPlayer.bufferedTime,
 										duration = dmPlayer.duration;
 									return {
-										start: function() {
+										start: function () {
 											return 0;
 										},
 										end: function () {
@@ -243,7 +243,7 @@
 						}
 					};
 
-					dm['set' + capName] = function(value) {
+					dm['set' + capName] = function (value) {
 						//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
 
 						if (dmPlayer !== null) {
@@ -253,7 +253,7 @@
 								case 'src':
 									var url = typeof value === 'string' ? value : value[0].src;
 
-									dmPlayer.load( DailyMotionApi.getDailyMotionId(url) );
+									dmPlayer.load(DailyMotionApi.getDailyMotionId(url));
 									break;
 
 								case 'currentTime':
@@ -266,15 +266,15 @@
 									} else {
 										dmPlayer.setMuted(false);
 									}
-									setTimeout(function() {
-										mediaElement.dispatchEvent({type:'volumechange'});
+									setTimeout(function () {
+										mediaElement.dispatchEvent({type: 'volumechange'});
 									}, 50);
 									break;
 
 								case 'volume':
 									dmPlayer.setVolume(value);
-									setTimeout(function() {
-										mediaElement.dispatchEvent({type:'volumechange'});
+									setTimeout(function () {
+										mediaElement.dispatchEvent({type: 'volumechange'});
 									}, 50);
 									break;
 
@@ -293,11 +293,11 @@
 
 			// add wrappers for native methods
 			var methods = mejs.html5media.methods;
-			for (i=0, il=methods.length; i<il; i++) {
-				(function(methodName) {
+			for (i = 0, il = methods.length; i < il; i++) {
+				(function (methodName) {
 
 					// run the method on the native HTMLMediaElement
-					dm[methodName] = function() {
+					dm[methodName] = function () {
 						console.log('[' + options.prefix + ' ' + methodName + '()]');
 
 						if (dmPlayer !== null) {
@@ -322,7 +322,7 @@
 			}
 
 			// Initial method to register all DailyMotion events when initializing <iframe>
-			win['__ready__' + dm.id] = function(_dmPlayer) {
+			win['__ready__' + dm.id] = function (_dmPlayer) {
 
 				dmPlayerReady = true;
 				mediaElement.dmPlayer = dmPlayer = _dmPlayer;
@@ -330,7 +330,7 @@
 				console.log('dm ready', dmPlayer);
 
 				// do call stack
-				for (i=0, il=apiStack.length; i<il; i++) {
+				for (i = 0, il = apiStack.length; i < il; i++) {
 
 					var stackItem = apiStack[i];
 
@@ -338,7 +338,7 @@
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
-							capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 						dm['set' + capName](stackItem.value);
 					} else if (stackItem.type === 'call') {
@@ -349,10 +349,10 @@
 				dmIframe = doc.getElementById(dm.id);
 
 				// a few more events
-				events = ['mouseover','mouseout'];
+				events = ['mouseover', 'mouseout'];
 				for (var j in events) {
 					var eventName = events[j];
-					mejs.addEvent(dmIframe, eventName, function(e) {
+					mejs.addEvent(dmIframe, eventName, function (e) {
 						var event = mejs.Utils.createEvent(e.type, dm);
 
 						mediaElement.dispatchEvent(event);
@@ -361,10 +361,10 @@
 
 				// BUBBLE EVENTS up
 				events = mejs.html5media.events;
-				events = events.concat(['click','mouseover','mouseout']);
+				events = events.concat(['click', 'mouseover', 'mouseout']);
 
-				for (i=0, il=events.length; i<il; i++) {
-					(function(eventName) {
+				for (i = 0, il = events.length; i < il; i++) {
+					(function (eventName) {
 
 						// Deprecated event; not consider it
 						if (eventName !== 'ended') {
@@ -380,31 +380,31 @@
 				}
 
 				// Custom DailyMotion events
-				dmPlayer.addEventListener('video_start', function() {
+				dmPlayer.addEventListener('video_start', function () {
 					var event = mejs.Utils.createEvent('loadedmetadata', dmPlayer);
 					mediaElement.dispatchEvent(event);
 
 					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 					mediaElement.dispatchEvent(event);
 				});
-				dmPlayer.addEventListener('video_end', function() {
+				dmPlayer.addEventListener('video_end', function () {
 					var event = mejs.Utils.createEvent('ended', dmPlayer);
 					mediaElement.dispatchEvent(event);
 				});
-				dmPlayer.addEventListener('progress', function() {
+				dmPlayer.addEventListener('progress', function () {
 					var event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 					mediaElement.dispatchEvent(event);
 				});
-				dmPlayer.addEventListener('durationchange', function() {
+				dmPlayer.addEventListener('durationchange', function () {
 					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 					mediaElement.dispatchEvent(event);
 				});
 
 
 				// give initial events
-				var initEvents = ['rendererready','loadeddata','loadedmetadata','canplay'];
+				var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
-				for (var i=0, il=initEvents.length; i<il; i++) {
+				for (var i = 0, il = initEvents.length; i < il; i++) {
 					var event = mejs.Utils.createEvent(initEvents[i], dm);
 					mediaElement.dispatchEvent(event);
 				}
@@ -430,29 +430,32 @@
 
 			DailyMotionApi.enqueueIframe(dmSettings);
 
-			dm.hide = function() {
+			dm.hide = function () {
 				dm.stopInterval();
 				dm.pause();
 				if (dmIframe) {
 					dmIframe.style.display = 'none';
 				}
 			};
-			dm.show = function() {
+			dm.show = function () {
 				if (dmIframe) {
 					dmIframe.style.display = '';
 				}
 			};
-			dm.destroy = function() {
+			dm.destroy = function () {
 				dmPlayer.destroy();
 			};
 			dm.interval = null;
 
-			dm.startInterval = function() {
-				dm.interval = setInterval(function() {
-					DailyMotionApi.sendEvent(dm.id, dmPlayer, 'timeupdate', {paused: false, ended: false});
+			dm.startInterval = function () {
+				dm.interval = setInterval(function () {
+					DailyMotionApi.sendEvent(dm.id, dmPlayer, 'timeupdate', {
+						paused: false,
+						ended: false
+					});
 				}, 250);
 			};
-			dm.stopInterval = function() {
+			dm.stopInterval = function () {
 				if (dm.interval) {
 					clearInterval(dm.interval);
 				}
