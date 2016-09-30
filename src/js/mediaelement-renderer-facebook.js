@@ -4,13 +4,13 @@
  * It creates an <iframe> from a <div> with specific configuration.
  * @see https://developers.facebook.com/docs/plugins/embedded-video-player
  */
-(function(win, doc, mejs, undefined) {
+(function (win, doc, mejs, undefined) {
 
 	/**
 	 * Register Facebook type based on URL structure
 	 *
 	 */
-	mejs.Utils.typeChecks.push(function(url) {
+	mejs.Utils.typeChecks.push(function (url) {
 
 		url = url.toLowerCase();
 
@@ -39,8 +39,8 @@
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: function(type) {
-			var mediaTypes = ['video/facebook','video/x-facebook'];
+		canPlayType: function (type) {
+			var mediaTypes = ['video/facebook', 'video/x-facebook'];
 
 			return mediaTypes.indexOf(type) > -1;
 		},
@@ -74,14 +74,14 @@
 
 			// wrappers for get/set
 			var props = mejs.html5media.properties;
-			for (i=0, il=props.length; i<il; i++) {
+			for (i = 0, il = props.length; i < il; i++) {
 
 				// wrap in function to retain scope
-				(function(propName) {
+				(function (propName) {
 
-					var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
-					fbWrapper['get' + capName] = function() {
+					fbWrapper['get' + capName] = function () {
 
 						if (fbApi !== null) {
 							var value = null;
@@ -108,7 +108,7 @@
 
 								case 'buffered':
 									return {
-										start: function() {
+										start: function () {
 											return 0;
 										},
 										end: function () {
@@ -126,7 +126,7 @@
 						}
 					};
 
-					fbWrapper['set' + capName] = function(value) {
+					fbWrapper['set' + capName] = function (value) {
 
 						if (fbApi !== null) {
 
@@ -155,15 +155,15 @@
 									} else {
 										fbApi.unmute();
 									}
-									setTimeout(function() {
-										mediaElement.dispatchEvent({type:'volumechange'});
+									setTimeout(function () {
+										mediaElement.dispatchEvent({type: 'volumechange'});
 									}, 50);
 									break;
 
 								case 'volume':
 									fbApi.setVolume(value);
-									setTimeout(function() {
-										mediaElement.dispatchEvent({type:'volumechange'});
+									setTimeout(function () {
+										mediaElement.dispatchEvent({type: 'volumechange'});
 									}, 50);
 									break;
 
@@ -182,11 +182,11 @@
 
 			// add wrappers for native methods
 			var methods = mejs.html5media.methods;
-			for (i=0, il=methods.length; i<il; i++) {
-				(function(methodName) {
+			for (i = 0, il = methods.length; i < il; i++) {
+				(function (methodName) {
 
 					// run the method on the native HTMLMediaElement
-					fbWrapper[methodName] = function() {
+					fbWrapper[methodName] = function () {
 
 						if (fbApi !== null) {
 
@@ -217,7 +217,7 @@
 			 * @param {Array} events
 			 */
 			function sendEvents(events) {
-				for (var i=0, il=events.length; i<il; i++) {
+				for (var i = 0, il = events.length; i < il; i++) {
 					var event = mejs.Utils.createEvent(events[i], fbWrapper);
 					mediaElement.dispatchEvent(event);
 				}
@@ -231,7 +231,7 @@
 			 * @return {Boolean}
 			 */
 			function isEmpty(instance) {
-				for(var key in instance) {
+				for (var key in instance) {
 					if (instance.hasOwnProperty(key)) {
 						return false;
 					}
@@ -254,7 +254,7 @@
 
 				fbDiv = doc.createElement('div');
 				fbDiv.id = fbWrapper.id;
-				fbDiv.className = "fb-video" ;
+				fbDiv.className = "fb-video";
 				fbDiv.setAttribute("data-href", url);
 				fbDiv.setAttribute("data-width", mediaElement.originalNode.width);
 				fbDiv.setAttribute("data-allowfullscreen", "true");
@@ -262,15 +262,15 @@
 				mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
 				mediaElement.originalNode.style.display = 'none';
 
-                /*
-                 * Register Facebook API event globally
-                 *
-                 */
-				win['fbAsyncInit'] = function() {
+				/*
+				 * Register Facebook API event globally
+				 *
+				 */
+				win['fbAsyncInit'] = function () {
 
 					FB.init(config);
 
-					FB.Event.subscribe('xfbml.ready', function(msg) {
+					FB.Event.subscribe('xfbml.ready', function (msg) {
 
 						console.log("Facebook ready event", msg);
 
@@ -280,7 +280,7 @@
 
 							// remove previous listeners
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
-							for (i = 0, il = fbEvents.length; i<il; i++) {
+							for (i = 0, il = fbEvents.length; i < il; i++) {
 								var event = fbEvents[i], handler = eventHandler[event];
 								if (!isEmpty(handler) && typeof handler.removeListener === 'function') {
 									handler.removeListener(event);
@@ -288,7 +288,7 @@
 							}
 
 							// do call stack
-							for (var i=0, il=apiStack.length; i<il; i++) {
+							for (var i = 0, il = apiStack.length; i < il; i++) {
 
 								var stackItem = apiStack[i];
 
@@ -296,7 +296,7 @@
 
 								if (stackItem.type === 'set') {
 									var propName = stackItem.propName,
-										capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 									fbWrapper['set' + capName](stackItem.value);
 								} else if (stackItem.type === 'call') {
@@ -305,11 +305,11 @@
 							}
 
 							console.log('FB INIT');
-							sendEvents(['rendererready','ready','loadeddata','canplay']);
+							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay']);
 
 							// Custom Facebook events
-							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function() {
-								console.log('FB EVENT','startedPlaying');
+							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
+								console.log('FB EVENT', 'startedPlaying');
 								if (!hasStartedPlaying) {
 									sendEvents(['loadedmetadata', 'timeupdate']);
 									hasStartedPlaying = true;
@@ -318,31 +318,34 @@
 								ended = false;
 								sendEvents(['play', 'playing', 'timeupdate']);
 							});
-							eventHandler.paused = fbApi.subscribe('paused', function() {
-								console.log('FB EVENT','paused');
+							eventHandler.paused = fbApi.subscribe('paused', function () {
+								console.log('FB EVENT', 'paused');
 								paused = true;
 								ended = false;
 								sendEvents(['paused']);
 							});
-							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function() {
+							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
 								paused = false;
 								ended = true;
 								sendEvents(['ended']);
 							});
-							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function() {
+							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
 								sendEvents(['progress', 'timeupdate']);
 							});
-							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function() {
+							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
 								sendEvents(['progress', 'timeupdate']);
 							});
 						}
 					});
 				};
 
-				(function(d, s, id){
+				(function (d, s, id) {
 					var js, fjs = d.getElementsByTagName(s)[0];
-					if (d.getElementById(id)) {return;}
-					js = d.createElement(s); js.id = id;
+					if (d.getElementById(id)) {
+						return;
+					}
+					js = d.createElement(s);
+					js.id = id;
 					js.src = 'https://connect.facebook.net/en_US/sdk.js';
 					fjs.parentNode.insertBefore(js, fjs);
 				}(document, 'script', 'facebook-jssdk'));
@@ -352,31 +355,31 @@
 				createFacebookEmbed(mediaFiles[0].src, options.fbVars);
 			}
 
-			fbWrapper.hide = function() {
+			fbWrapper.hide = function () {
 				fbWrapper.stopInterval();
 				fbWrapper.pause();
 				if (fbDiv) {
 					fbDiv.style.display = 'none';
 				}
 			};
-			fbWrapper.show = function() {
+			fbWrapper.show = function () {
 				if (fbDiv) {
 					fbDiv.style.display = '';
 				}
 			};
-			fbWrapper.destroy = function() {
+			fbWrapper.destroy = function () {
 				//youTubeApi.destroy();
 			};
 			fbWrapper.interval = null;
 
-			fbWrapper.startInterval = function() {
+			fbWrapper.startInterval = function () {
 				// create timer
-				fbWrapper.interval = setInterval(function() {
+				fbWrapper.interval = setInterval(function () {
 					var event = mejs.Utils.createEvent('timeupdate', fbWrapper);
 					mediaElement.dispatchEvent(event);
 				}, 250);
 			};
-			fbWrapper.stopInterval = function() {
+			fbWrapper.stopInterval = function () {
 				if (fbWrapper.interval) {
 					clearInterval(fbWrapper.interval);
 				}
