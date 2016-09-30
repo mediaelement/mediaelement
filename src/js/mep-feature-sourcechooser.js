@@ -2,18 +2,21 @@
 (function($) {
 
 	$.extend(mejs.MepDefaults, {
-		sourcechooserText: mejs.i18n.t('mejs.source-chooser')
+		sourcechooserText: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildsourcechooser: function(player, controls, layers, media) {
 
-			var t = this;
-			var hoverTimeout;
+			var
+				t = this,
+				sourceTitle = t.options.sourcechooserText ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
+				hoverTimeout
+			;
 
 			player.sourcechooserButton =
 				$('<div class="mejs-button mejs-sourcechooser-button">'+
-						'<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + t.options.sourcechooserText + '" aria-label="' + t.options.sourcechooserText + '"></button>'+
+						'<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + sourceTitle + '" aria-label="' + sourceTitle + '"></button>'+
 						'<div class="mejs-sourcechooser-selector mejs-offscreen" role="menu" aria-expanded="false" aria-hidden="true">'+
 							'<ul>'+
 							'</ul>'+
