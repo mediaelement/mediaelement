@@ -24,9 +24,6 @@
 			// mep-feature-contextmenu
 			'mejs.fullscreen-off': 'Turn off Fullscreen',
 			'mejs.fullscreen-on': 'Go Fullscreen',
-			// Duplicated from mep-feature-volume
-			// 'mejs.unmute' : 'Unmute',
-			// 'mejs.mute' : 'Mute',
 			'mejs.download-video': 'Download Video',
 
 			// mep-feature-fullscreen
