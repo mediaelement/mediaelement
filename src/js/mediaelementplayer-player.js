@@ -756,14 +756,18 @@
 							//console.log('media clicked', t.media, t.media.paused);
 
 							if (t.options.clickToPlayPause) {
-								if (t.media.paused) {
+								var
+									button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
+									pressed = button.attr('aria-pressed')
+									;
+								if (t.media.paused && pressed) {
+									t.pause();
+								} else if (t.media.paused) {
 									t.play();
 								} else {
 									t.pause();
 								}
 
-								var button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
-									pressed = button.attr('aria-pressed');
 								button.attr('aria-pressed', !pressed);
 							}
 						};
@@ -830,16 +834,32 @@
 				t.media.addEventListener('play', function () {
 					var playerIndex;
 
+					t.hasFocus = true;
+
 					// go through all other players
 					for (playerIndex in mejs.players) {
 						var p = mejs.players[playerIndex];
-						if (p.id != t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
+						if (p.id !== t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
 							p.pause();
+							p.hasFocus = false;
 						}
-						p.hasFocus = false;
 					}
 
+				}, false);
+
+				t.media.addEventListener('pause', function () {
+					var playerIndex;
+
 					t.hasFocus = true;
+
+					for (playerIndex in mejs.players) {
+						var p = mejs.players[playerIndex];
+						if (p.id !== t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
+							p.hasFocus = false;
+						}
+					}
+
+					t.media.pause();
 				}, false);
 
 
@@ -1319,12 +1339,26 @@
 					.appendTo(layers)
 					.bind('click', function () {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 						if (t.options.clickToPlayPause) {
-							if (media.paused) {
+
+							var
+								button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
+								pressed = button.attr('aria-pressed')
+							;
+
+							if (media.paused && pressed) {
+								media.pause();
+							} else if (media.paused) {
 								media.play();
+							} else {
+								media.pause();
 							}
 
-							var button = $(this).find('.mejs-overlay-button'),
-								pressed = button.attr('aria-pressed');
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
+
 							button.attr('aria-pressed', !!pressed);
 						}
 					});
