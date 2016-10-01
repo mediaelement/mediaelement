@@ -3,7 +3,7 @@
  *
  * This feature creates a progress bar with a slider in the control bar, and updates it based on native events.
  */
-(function($) {
+(function ($) {
 
 	// Feature configuration
 	$.extend(mejs.MepDefaults, {
@@ -29,7 +29,7 @@
 		 * @param {$} layers
 		 * @param {HTMLElement} media
 		 */
-		buildprogress: function(player, controls, layers, media) {
+		buildprogress: function (player, controls, layers, media) {
 
 			var
 				t = this,
@@ -40,29 +40,29 @@
 				autoRewindInitial = player.options.autoRewind,
 				progressTitle = t.options.progressHelpText ? t.options.progressHelpText : mejs.i18n.t('mejs.time-help-text'),
 				tooltip = player.options.enableProgressTooltip ? '<span class="mejs-time-float">' +
-					'<span class="mejs-time-float-current">00:00</span>' +
-					'<span class="mejs-time-float-corner"></span>' +
+				'<span class="mejs-time-float-current">00:00</span>' +
+				'<span class="mejs-time-float-corner"></span>' +
 				'</span>' : "";
 
 			$('<div class="mejs-time-rail">' +
 				'<span  class="mejs-time-total mejs-time-slider">' +
 				//'<span class="mejs-offscreen">' + progressTitle + '</span>' +
-					'<span class="mejs-time-buffering"></span>' +
-					'<span class="mejs-time-loaded"></span>' +
-					'<span class="mejs-time-current"></span>' +
-					'<span class="mejs-time-handle"></span>' +
-					 tooltip +
+				'<span class="mejs-time-buffering"></span>' +
+				'<span class="mejs-time-loaded"></span>' +
+				'<span class="mejs-time-current"></span>' +
+				'<span class="mejs-time-handle"></span>' +
+				tooltip +
 				'</span>' +
-			'</div>')
-				.appendTo(controls);
+				'</div>')
+			.appendTo(controls);
 			controls.find('.mejs-time-buffering').hide();
 
 			t.total = controls.find('.mejs-time-total');
-			t.loaded  = controls.find('.mejs-time-loaded');
-			t.current  = controls.find('.mejs-time-current');
-			t.handle  = controls.find('.mejs-time-handle');
-			t.timefloat  = controls.find('.mejs-time-float');
-			t.timefloatcurrent  = controls.find('.mejs-time-float-current');
+			t.loaded = controls.find('.mejs-time-loaded');
+			t.current = controls.find('.mejs-time-current');
+			t.handle = controls.find('.mejs-time-handle');
+			t.timefloat = controls.find('.mejs-time-float');
+			t.timefloatcurrent = controls.find('.mejs-time-float-current');
 			t.slider = controls.find('.mejs-time-slider');
 
 			/**
@@ -107,13 +107,15 @@
 						// position floating time box
 						if (!mejs.MediaFeatures.hasTouch) {
 							t.timefloat.css('left', pos);
-							t.timefloatcurrent.html( mejs.Utility.secondsToTimeCode(newTime, player.options.alwaysShowHours));
+							t.timefloatcurrent.html(mejs.Utility.secondsToTimeCode(newTime, player.options.alwaysShowHours));
 							t.timefloat.show();
 						}
 					}
 				},
 				/**
-				 * Update elements in progress bar for accessibility purposes
+				 * Update elements in progress bar for accessibility purposes only when player is paused.
+				 *
+				 * This is to avoid attempts to repeat the time over and over again when media is playing.
 				 * @private
 				 */
 				updateSlider = function () {
@@ -124,15 +126,20 @@
 						duration = media.duration;
 
 					t.slider.attr({
-						'aria-label': timeSliderText,
-						'aria-valuemin': 0,
-						'aria-valuemax': duration,
-						'aria-valuenow': seconds,
-						'aria-valuetext': time,
 						'role': 'slider',
 						'tabindex': 0
 					});
-
+					if (media.paused) {
+						t.slider.attr({
+							'aria-label': timeSliderText,
+							'aria-valuemin': 0,
+							'aria-valuemax': duration,
+							'aria-valuenow': seconds,
+							'aria-valuetext': time
+						});
+					} else {
+						t.slider.removeAttr('aria-label aria-valuemin aria-valuemax aria-valuenow aria-valuetext');
+					}
 				},
 				/**
 				 *
@@ -163,7 +170,7 @@
 				var keyCode = e.keyCode,
 					duration = media.duration,
 					seekTime = media.currentTime,
-					seekForward  = player.options.defaultSeekForwardInterval(media),
+					seekForward = player.options.defaultSeekForwardInterval(media),
 					seekBackward = player.options.defaultSeekBackwardInterval(media);
 
 				switch (keyCode) {
@@ -213,41 +220,41 @@
 
 			// handle clicks
 			t.total
-				.bind('mousedown touchstart', function (e) {
-					// only handle left clicks or touch
-					if (e.which === 1 || e.which === 0) {
-						mouseIsDown = true;
-						handleMouseMove(e);
-						t.globalBind('mousemove.dur touchmove.dur', function(e) {
-							handleMouseMove(e);
-						});
-						t.globalBind('mouseup.dur touchend.dur', function (e) {
-							mouseIsDown = false;
-							if (typeof t.timefloat !== 'undefined') {
-								t.timefloat.hide();
-							}
-							t.globalUnbind('.dur');
-						});
-					}
-				})
-				.bind('mouseenter', function(e) {
-					mouseIsOver = true;
-					t.globalBind('mousemove.dur', function(e) {
+			.bind('mousedown touchstart', function (e) {
+				// only handle left clicks or touch
+				if (e.which === 1 || e.which === 0) {
+					mouseIsDown = true;
+					handleMouseMove(e);
+					t.globalBind('mousemove.dur touchmove.dur', function (e) {
 						handleMouseMove(e);
 					});
-					if (typeof t.timefloat !== 'undefined' && !mejs.MediaFeatures.hasTouch) {
-						t.timefloat.show();
-					}
-				})
-				.bind('mouseleave',function(e) {
-					mouseIsOver = false;
-					if (!mouseIsDown) {
-						t.globalUnbind('.dur');
+					t.globalBind('mouseup.dur touchend.dur', function (e) {
+						mouseIsDown = false;
 						if (typeof t.timefloat !== 'undefined') {
 							t.timefloat.hide();
 						}
-					}
+						t.globalUnbind('.dur');
+					});
+				}
+			})
+			.bind('mouseenter', function (e) {
+				mouseIsOver = true;
+				t.globalBind('mousemove.dur', function (e) {
+					handleMouseMove(e);
 				});
+				if (typeof t.timefloat !== 'undefined' && !mejs.MediaFeatures.hasTouch) {
+					t.timefloat.show();
+				}
+			})
+			.bind('mouseleave', function (e) {
+				mouseIsOver = false;
+				if (!mouseIsDown) {
+					t.globalUnbind('.dur');
+					if (typeof t.timefloat !== 'undefined') {
+						t.timefloat.hide();
+					}
+				}
+			});
 
 			// loading
 			media.addEventListener('progress', function (e) {
@@ -256,13 +263,13 @@
 			}, false);
 
 			// current time
-			media.addEventListener('timeupdate', function(e) {
+			media.addEventListener('timeupdate', function (e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
 				updateSlider(e);
 			}, false);
 
-			t.container.on('controlsresize', function(e) {
+			t.container.on('controlsresize', function (e) {
 				player.setProgressRail(e);
 				player.setCurrentRail(e);
 			});
@@ -273,7 +280,7 @@
 		 *
 		 * @param {Event} e
 		 */
-		setProgressRail: function(e) {
+		setProgressRail: function (e) {
 
 			var
 				t = this,
@@ -284,7 +291,7 @@
 			if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
 				// account for a real array with multiple values - always read the end of the last buffer
 				percent = target.buffered.end(target.buffered.length - 1) / target.duration;
-			} 
+			}
 			// Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
 			// to be anything other than 0. If the byte count is available we use this instead.
 			// Browsers that support the else if do not seem to have the bufferedBytes value and
@@ -310,15 +317,15 @@
 		 * Update the slider's width depending on the current time
 		 *
 		 */
-		setCurrentRail: function() {
+		setCurrentRail: function () {
 
 			var t = this;
-		
+
 			if (t.media.currentTime !== undefined && t.media.duration) {
 
 				// update bar and handle
 				if (t.total && t.handle) {
-					var 
+					var
 						newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
 						handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
 
