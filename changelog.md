@@ -1,5 +1,17 @@
 ### Version History
 
+*2.23.2 (2016/10/01)*
+
+* Added fix for time rail width described on #1356 @ron666
+* Integrated markers feature (https://github.com/johndyer/mediaelement/pull/1814) @hkasera
+* Added French translation for Source Chooser feature (https://github.com/johndyer/mediaelement/pull/1850) @OlivierJaquemet
+* Fixed German translation file (https://github.com/johndyer/mediaelement/pull/1852) @SoftCreatR
+* Add complete list of supported language in translation demo file (https://github.com/johndyer/mediaelement/pull/1853) @OlivierJaquemet
+* Fix for controls when no features are set in the configuration (https://github.com/johndyer/mediaelement/pull/1797) @ron666
+* Fixed issues with translatable elements in several features files that were not being translated properly and fixed typo in Spanish translation @ron666
+* Fixed YouTube loop issue according to @michaelbucklin recommendation @ron666
+* Fixed compilation error when using YUICompressor on i18n file (https://github.com/johndyer/mediaelement/pull/1861) @OlivierJaquemet
+
 *2.23.1 (2016/09/26)*
 
 * Fix documentation in regards of control icons with CSS in different path (https://github.com/johndyer/mediaelement/pull/1837) @jangrewe
