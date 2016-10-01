@@ -2055,8 +2055,8 @@ window.MediaElement = mejs.MediaElement;
         }
 
         // Fallback to default language if requested uid is not translated
-        if (!str && i18n.locale.strings && i18n.locale.strings[i18n.default]) {
-            str = i18n.locale.strings[i18n.default][uid];
+        if (!str && i18n.locale.strings && i18n.locale.strings[i18n["default"]]) {
+            str = i18n.locale.strings[i18n["default"]][uid];
         }
 
         // As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
