@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.23.1';
+mejs.version = '2.23.2';
 
 
 // player number (for missing, same id attr)
@@ -2979,7 +2979,11 @@ if (typeof jQuery != 'undefined') {
 
 						}
 					}
-					t.media.pause();
+					if (t.media.pluginType === 'youtube') {
+						t.media.stop();
+					} else {
+						t.media.pause();
+					}
 
 					if (t.setProgressRail) {
 						t.setProgressRail();
