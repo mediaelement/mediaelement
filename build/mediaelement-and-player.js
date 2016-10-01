@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.23.1';
+mejs.version = '2.23.2';
 
 
 // player number (for missing, same id attr)
@@ -2055,8 +2055,8 @@ window.MediaElement = mejs.MediaElement;
         }
 
         // Fallback to default language if requested uid is not translated
-        if (!str && i18n.locale.strings && i18n.locale.strings[i18n.default]) {
-            str = i18n.locale.strings[i18n.default][uid];
+        if (!str && i18n.locale.strings && i18n.locale.strings[i18n["default"]]) {
+            str = i18n.locale.strings[i18n["default"]][uid];
         }
 
         // As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
@@ -2979,7 +2979,11 @@ if (typeof jQuery != 'undefined') {
 
 						}
 					}
-					t.media.pause();
+					if (t.media.pluginType === 'youtube') {
+						t.media.stop();
+					} else {
+						t.media.pause();
+					}
 
 					if (t.setProgressRail) {
 						t.setProgressRail();

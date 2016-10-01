@@ -44,7 +44,8 @@
             'mejs.unmute' : "Activer le son",
             'mejs.video-player' : "Lecteur Vidéo",
             'mejs.volume-help-text' : "Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.",
-            'mejs.volume-slider' : "Volume"
+            'mejs.volume-slider' : "Volume",
+            'mejs.source-chooser': 'Sélecteur de média'
 
         };
     }
