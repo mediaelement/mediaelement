@@ -151,7 +151,7 @@
 				/**
 				 * @private
 				 */
-				handleVolumeMove = function () {
+				handleVolumeMove = function (e) {
 
 					var
 						volume = null,
@@ -236,10 +236,10 @@
 				.bind('mouseover', function () {
 					mouseIsOver = true;
 				})
-				.bind('mousedown', function () {
-					handleVolumeMove();
-					t.globalBind('mousemove.vol', function () {
-						handleVolumeMove();
+				.bind('mousedown', function (e) {
+					handleVolumeMove(e);
+					t.globalBind('mousemove.vol', function (e) {
+						handleVolumeMove(e);
 					});
 					t.globalBind('mouseup.vol', function () {
 						mouseIsDown = false;
