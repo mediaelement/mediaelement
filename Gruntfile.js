@@ -40,7 +40,9 @@ module.exports = function(grunt) {
 					'src/js/mediaelement-renderer-dailymotion-iframe.js',
 					'src/js/mediaelement-renderer-facebook.js',
 					'src/js/mediaelement-renderer-soundcloud.js',
-					'src/js/mediaelement-renderer-flash.js'
+					'src/js/mediaelement-renderer-flash.js',
+					'src/js/mediaelement-i18n.js',
+					'src/js/mediaelement-i18n-locale-en.js',
 				],
 				dest: 'build/mediaelement.js'
 			},
