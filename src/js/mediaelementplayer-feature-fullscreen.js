@@ -38,11 +38,11 @@
 		isPluginClickThroughCreated: false,
 		/**
 		 * Possible modes
-		 * (1) 'native-native' 	HTML5 video  + browser fullscreen (IE10+, etc.)
-		 * (2) 'plugin-native' 	plugin video + browser fullscreen (fails in some versions of Firefox)
-		 * (3) 'fullwindow' 	Full window (retains all UI)
-		 * (4) 'plugin-click' 	Flash 1 - click through with pointer events
-		 * (5) 'plugin-hover' 	Flash 2 - hover popup in flash (IE6-8)
+		 * (1) 'native-native'  HTML5 video  + browser fullscreen (IE10+, etc.)
+		 * (2) 'plugin-native'  plugin video + browser fullscreen (fails in some versions of Firefox)
+		 * (3) 'fullwindow'     Full window (retains all UI)
+		 * (4) 'plugin-click'   Flash 1 - click through with pointer events
+		 * (5) 'plugin-hover'   Flash 2 - hover popup in flash (IE6-8)
 		 *
 		 * @type {String}
 		 */
@@ -449,17 +449,12 @@
 				.width('100%')
 				.height('100%');
 			} else {
-				t.container.find('.mejs-shim')
+				t.container.find('iframe, embed, object')
 				.width('100%')
 				.height('100%');
 
-				setTimeout(function () {
-					var win = $(window),
-						winW = win.width(),
-						winH = win.height();
+				t.media.setSize(screen.width, screen.height);
 
-					t.media.setSize(winW, winH);
-				}, 500);
 			}
 
 			t.layers.children('div')
@@ -512,7 +507,7 @@
 				.width(t.normalWidth)
 				.height(t.normalHeight);
 			} else {
-				t.container.find('.mejs-shim')
+				t.container.find('iframe, embed, object')
 				.width(t.normalWidth)
 				.height(t.normalHeight);
 
