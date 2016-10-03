@@ -658,7 +658,8 @@
 				autoplayAttr = domNode.getAttribute('autoplay'),
 				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr == null || autoplayAttr === 'false'),
 				featureIndex,
-				feature
+				feature,
+				isNative = t.media.id.match(/(native|html5)/)
 				;
 
 			// make sure it can't create itself again if a plugin reloads
@@ -679,8 +680,6 @@
 				if (!t.isVideo && !t.options.features.length) {
 
 					// force autoplay for HTML5
-					var isNative = t.media.id.match(/(native|html5)/);
-
 					if (autoplay && isNative) {
 						t.play();
 					}
@@ -847,22 +846,6 @@
 
 				}, false);
 
-				t.media.addEventListener('pause', function () {
-					var playerIndex;
-
-					t.hasFocus = true;
-
-					for (playerIndex in mejs.players) {
-						var p = mejs.players[playerIndex];
-						if (p.id !== t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
-							p.hasFocus = false;
-						}
-					}
-
-					t.media.pause();
-				}, false);
-
-
 				// ended for all
 				t.media.addEventListener('ended', function (e) {
 					if (t.options.autoRewind) {
@@ -975,12 +958,9 @@
 			}
 
 			// force autoplay for HTML5
-			var isNative = t.media.id.match(/(native|html5)/);
-
 			if (autoplay && isNative) {
 				t.play();
 			}
-
 
 			if (t.options.success) {
 
@@ -1349,14 +1329,6 @@
 								button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
 								pressed = button.attr('aria-pressed')
 							;
-
-							if (media.paused && pressed) {
-								media.pause();
-							} else if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
 
 							if (media.paused) {
 								media.play();
