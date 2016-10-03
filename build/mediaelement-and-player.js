@@ -1732,7 +1732,7 @@ mejs.YouTubeApi = {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: mejs.$.extend({}, defaultVars, settings.variables),
+			playerVars: $.extend({}, defaultVars, settings.variables),
 			events: {
 				'onReady': function(e) {
 					
