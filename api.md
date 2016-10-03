@@ -32,12 +32,9 @@ fakeNodeName: 'mediaelementwrapper',
  * The path where Flash shims are located
  * @type {String}
  */
-pluginPath: 'build/'
-```
+pluginPath: 'build/',
 
-In addition to the elements above, each of of the renderers can have its own configuration.
- 
-```javascript
+// In addition to the elements above, each of of the renderers can have its own configuration.
 // Facebook API configuration
 facebook: {
     appId: '{your-app-id}',
@@ -85,10 +82,9 @@ hls: {
     abrEwmaDefaultEstimate: 500000,
     abrBandWidthFactor: 0.8,
     abrBandWidthUpFactor: 0.7
-},
-// Name of the current Flash shim swf movie; only accepts one name
-filename: ''
+}
 ```
+
 
 <a id="player"></a>
 ### MediaElementPlayer
