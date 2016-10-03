@@ -539,8 +539,6 @@ MediaElementPlayerSimple.prototype = {
 
 				if (container.requestFullscreen) {
 					container.requestFullscreen();
-				} else if (container.requestFullScreen) {
-					container.requestFullScreen();
 				} else if (container.webkitRequestFullScreen) {
 					container.webkitRequestFullScreen();
 				} else if (container.mozRequestFullScreen) {
