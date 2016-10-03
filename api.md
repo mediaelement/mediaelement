@@ -18,59 +18,76 @@
 As a standalone library, _MediaElement.js_ can be configured using the following settings.
 
 ```javascript
-// allows testing on HTML5, flash, silverlight
-// auto: attempts to detect what the browser can do
-// auto_plugin: prefer plugins and then attempt native HTML5
-// native: forces HTML5 playback
-// shim: disallows HTML5, will attempt either Flash or Silverlight
-// none: forces fallback view
-mode: 'auto',
-// remove or reorder to change plugin priority and availability
-plugins: ['flash','silverlight','youtube','vimeo'],
-// shows debug errors on screen
-enablePluginDebug: false,
-// use plugin for browsers that have trouble with Basic Authentication on HTTPS sites
-httpsBasicAuthSite: false,
-// overrides the type specified, useful for dynamic instantiation
-type: '',
-// path to Flash and Silverlight plugins
-pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
-// name of flash file
-flashName: 'flashmediaelement.swf',
-// streamer for RTMP streaming
-flashStreamer: '',
-// set to 'always' for CDN version
-flashScriptAccess: 'sameDomain',	
-// turns on the smoothing filter in Flash
-enablePluginSmoothing: false,
-// enabled pseudo-streaming (seek) on .mp4 files
-enablePseudoStreaming: false,
-// start query parameter sent to server for pseudo-streaming
-pseudoStreamingStartQueryParam: 'start',
-// name of silverlight file
-silverlightName: 'silverlightmediaelement.xap',
-// Extra configuration for YouTube <iframe>
-youtubeIframeVars: {},
-// default if the <video width> is not specified
-defaultVideoWidth: 480,
-// default if the <video height> is not specified
-defaultVideoHeight: 270,
-// overrides <video width>
-pluginWidth: -1,
-// overrides <video height>
-pluginHeight: -1,
-// additional plugin variables in 'key=value' form
-pluginVars: [],	
-// rate in milliseconds for Flash and Silverlight to fire the timeupdate event
-// larger number is less accurate, but less strain on plugin->JavaScript bridge
-timerRate: 250,
-// initial volume for player
-startVolume: 0.8,
-// custom error message in case media cannot be played; otherwise, Download File
-// link will be displayed
-customError: "",
-success: function (mediaElement, domObject) { },
-error: function () { }
+/**
+ * List of the renderers to use
+ * @type {String[]}
+ */
+renderers: [],
+/**
+ * Name of MediaElement container
+ * @type {String}
+ */
+fakeNodeName: 'mediaelementwrapper',
+/**
+ * The path where Flash shims are located
+ * @type {String}
+ */
+pluginPath: 'build/'
+```
+
+In addition to the elements above, each of of the renderers can have its own configuration.
+ 
+```javascript
+// Facebook API configuration
+facebook: {
+    appId: '{your-app-id}',
+    xfbml: true,
+    version: 'v2.6'
+},
+// Native HLS configuration before instantiating player
+hls: {
+    autoStartLoad: true,
+    startPosition: -1,
+    capLevelToPlayerSize: false,
+    debug: false,
+    maxBufferLength: 30,
+    maxMaxBufferLength: 600,
+    maxBufferSize: 60 * 1000 * 1000,
+    maxBufferHole: 0.5,
+    maxSeekHole: 2,
+    seekHoleNudgeDuration: 0.01,
+    maxFragLookUpTolerance: 0.2,
+    liveSyncDurationCount: 3,
+    liveMaxLatencyDurationCount: 10,
+    enableWorker: true,
+    enableSoftwareAES: true,
+    manifestLoadingTimeOut: 10000,
+    manifestLoadingMaxRetry: 6,
+    manifestLoadingRetryDelay: 500,
+    manifestLoadingMaxRetryTimeout: 64000,
+    levelLoadingTimeOut: 10000,
+    levelLoadingMaxRetry: 6,
+    levelLoadingRetryDelay: 500,
+    levelLoadingMaxRetryTimeout: 64000,
+    fragLoadingTimeOut: 20000,
+    fragLoadingMaxRetry: 6,
+    fragLoadingRetryDelay: 500,
+    fragLoadingMaxRetryTimeout: 64000,
+    startFragPrefech: false,
+    appendErrorMaxRetry: 3,
+    enableCEA708Captions: true,
+    stretchShortVideoTrack: true,
+    forceKeyFrameOnDiscontinuity: true,
+    abrEwmaFastLive: 5.0,
+    abrEwmaSlowLive: 9.0,
+    abrEwmaFastVoD: 4.0,
+    abrEwmaSlowVoD: 15.0,
+    abrEwmaDefaultEstimate: 500000,
+    abrBandWidthFactor: 0.8,
+    abrBandWidthUpFactor: 0.7
+},
+// Name of the current Flash shim swf movie; only accepts one name
+filename: ''
 ```
 
 <a id="player"></a>

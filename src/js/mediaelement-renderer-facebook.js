@@ -26,7 +26,7 @@
 
 		options: {
 			prefix: 'facebook',
-			fbVars: {
+			facebook: {
 				appId: '{your-app-id}',
 				xfbml: true,
 				version: 'v2.6'
@@ -138,7 +138,7 @@
 									// Only way is to destroy instance and all the events fired,
 									// and create new one
 									fbDiv.parentNode.removeChild(fbDiv);
-									createFacebookEmbed(url, options.fbVars);
+									createFacebookEmbed(url, options.facebook);
 
 									// This method reloads video on-demand
 									FB.XFBML.parse();
@@ -352,7 +352,7 @@
 			}
 
 			if (mediaFiles.length > 0) {
-				createFacebookEmbed(mediaFiles[0].src, options.fbVars);
+				createFacebookEmbed(mediaFiles[0].src, options.facebook);
 			}
 
 			fbWrapper.hide = function () {
