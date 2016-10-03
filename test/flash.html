@@ -36,6 +36,11 @@
 
     <h1>MediaElement.js</h1>
 
+    <h2>MP4/WebM using Flash</h2>
+    <video  width="640" height="360" preload="none" class="mejs-player" >
+        <source src="../media/big_buck_bunny.mp4" type="video/mp4" />
+    </video>
+
     <h2>RTMP Streaming</h2>
 
     <video  width="640" height="360" preload="none" class="mejs-player" >
@@ -45,6 +50,8 @@
 </div>
 
 <script>
+
+    mejs.Renderers.order = ['flash_video'];
 
     var elements = mejs.getElementsByClassName('mejs-player');
 
