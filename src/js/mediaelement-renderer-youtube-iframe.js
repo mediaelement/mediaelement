@@ -373,23 +373,22 @@
 				height = mediaElement.originalNode.height,
 				width = mediaElement.originalNode.width,
 				videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
-				defaultVars = {
-					controls: 0,
-					rel: 0,
-					disablekb: 1,
-					showinfo: 0,
-					modestbranding: 0,
-					html5: 1,
-					playsinline: 1
-				},
 				youtubeSettings = {
 					id: youtube.id,
 					containerId: youtubeContainer.id,
 					videoId: videoId,
 					height: height,
 					width: width,
-					playerVars: mejs.Utility.extend({}, defaultVars, youtube.options.youTubeVars),
-					origin: location.host,
+					playerVars: {
+						controls: 0,
+						rel: 0,
+						disablekb: 1,
+						showinfo: 0,
+						modestbranding: 0,
+						html5: 1,
+						playsinline: 1
+					},
+					origin: win.location.host,
 					events: {
 						onReady: function (e) {
 
