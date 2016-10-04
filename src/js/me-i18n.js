@@ -158,7 +158,7 @@
 	exports.i18n = i18n;
 
 	/**
-	 * Convert string using an algorithm to detect callbacks that will modify a string based on a number.
+	 * Convert string using an algorithm to detect callbacks that will modify a string based on filters.
 	 *
 	 * This method will change a string with format:
 	 *  - '{0} {0|plural:second:seconds} left to finish playing and {1} {1|plural:second:seconds} to go'.format(1, 10)
