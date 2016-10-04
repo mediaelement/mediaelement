@@ -47,15 +47,15 @@
 	<link rel="stylesheet" href="../src/css/mediaelementplayer.css" />
 	
 <style>
-#commands {
+.commands {
 	padding: 0 0 50px 0;
 }
-#commands .command {
+.commands > .command {
 	display: block;
 	margin: 2px;
 	cursor: pointer;
 }	
-#commands .command:hover {	
+.commands > .command:hover {
 	background-color: #eaedb8;
 }
 
@@ -88,7 +88,7 @@
 		
 		<div id="player1-renderename">Render info</div>
 		
-		<div id="commands">
+		<div class="commands">
 			<span class="command">
 				document.getElementById('player1').src = '../media/big_buck_bunny.mp4'; 
 			</span>
@@ -111,7 +111,7 @@
 				document.getElementById('player1').src = 'http://www.dailymotion.com/embed/video/x2lzodk';
 			</span>
 			<span class="command">
-				document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&byline=0&portrait=0&badge=0';
+				document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0';
 			</span>
 			<span class="command">
 				document.getElementById('player1').src = 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd';
@@ -169,15 +169,15 @@
 		
 		<div id="player2-renderename"></div>
 		
-		<div id="commands">
+		<div class="commands">
 			<span class="command">
-				document.getElementById('player2').src = '../media/audio.ogg'; document.getElementById('player2').load();
+				document.getElementById('player2').src = 'https://upload.wikimedia.org/wikipedia/en/4/45/ACDC_-_Back_In_Black-sample.ogg'; document.getElementById('player2').load();
 			</span>
 			<span class="command">
 				document.getElementById('player2').src = '../media/AirReview-Landmarks-02-ChasingCorporate.mp3'; document.getElementById('player2').load();
 			</span>
 			<span class="command">
-				document.getElementById('player2').src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true';
+				document.getElementById('player2').src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true';
 			</span>
 			<span class="command">
 				document.getElementById('player2').load();
@@ -251,7 +251,7 @@
 
 					mejs.addEvent(command, 'click', function() {
 
-						eval(command.innerHTML);
+						eval(command.innerHTML.replace('&amp;', '&'));
 
 						var parts = command.innerHTML.split('.src');
 						if (parts.length > 1) {

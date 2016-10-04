@@ -181,22 +181,18 @@
 					};
 
 					flash['set' + capName] = function(value) {
-						//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value);
+						console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value);
 
 						if (propName === 'src') {
 							value = mejs.Utils.absolutizeUrl(value);
 						}
 
 						// send value to Flash
-						if (flash.flashApi !== null && typeof flash.flashApi['set_' + propName] != 'undefined') {
+						if (flash.flashApi !== null && typeof flash.flashApi['set_' + propName] !== 'undefined') {
 							flash.flashApi['set_' + propName](value);
 						} else {
 							// store for after "READY" event fires
 							flash.flashApiStack.push({type: 'set', propName: propName, value: value});
-						}
-
-						if (propName === 'src') {
-						//	flash.load();
 						}
 					};
 
@@ -402,6 +398,8 @@
 				}
 			} else if (url.indexOf('.m3u8') > -1) {
 				return 'application/x-mpegURL';
+			} else if (url.indexOf('.ogg') > -1 || url.indexOf('.ogv') > -1) {
+				return 'audio/ogg';
 			}
 			//
 			// else if (url.indexOf('.mpd') > -1) {
@@ -551,7 +549,7 @@
 			 * @return {Boolean}
 			 */
 			canPlayType: function(type) {
-				var supportedMediaTypes = ['audio/ogg','audio/oga'];
+				var supportedMediaTypes = ['audio/ogg','audio/oga', 'audio/ogv'];
 
 				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 			},

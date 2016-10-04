@@ -308,7 +308,6 @@
 										youTubeApi.unMute(); // ?
 									}
 									setTimeout(function () {
-
 										var event = mejs.Utils.createEvent('volumechange', youtube);
 										mediaElement.dispatchEvent(event);
 									}, 50);
@@ -316,8 +315,10 @@
 
 								case 'volume':
 									youTubeApi.setVolume(value);
-									var event = mejs.Utils.createEvent('volumechange', youtube);
-									mediaElement.dispatchEvent(event);
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', youtube);
+										mediaElement.dispatchEvent(event);
+									}, 50);
 									break;
 
 								default:
