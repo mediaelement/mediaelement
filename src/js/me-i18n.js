@@ -4,7 +4,7 @@
  * Include translations from JS files and method to pluralize properly strings.
  *
  */
-(function (doc, win, exports, undefined) {
+(function (doc, win, mejs, undefined) {
 
 	var i18n = {
 		/**
@@ -16,8 +16,8 @@
 		 * @type {String[]}
 		 */
 		locale: {
-			language: (exports.i18n && exports.i18n.locale.language) || '',
-			strings: (exports.i18n && exports.i18n.locale.strings) || {}
+			language: (mejs.i18n && mejs.i18n.locale.language) || '',
+			strings: (mejs.i18n && mejs.i18n.locale.strings) || {}
 		},
 
 		/**
@@ -155,7 +155,7 @@
 	// }
 
 	// Register variable
-	exports.i18n = i18n;
+	mejs.i18n = i18n;
 
 	/**
 	 * Convert string using an algorithm to detect callbacks that will modify a string based on filters.
@@ -187,9 +187,9 @@
 			;
 
 			// Find current language's rules to filter; otherwise, use default
-			for (i = 0, total = exports.i18n.rules.length; i < total; i++) {
-				var rule = exports.i18n.rules[i];
-				if (rule.languages.indexOf(exports.i18n.getLanguage()) > -1) {
+			for (i = 0, total = mejs.i18n.rules.length; i < total; i++) {
+				var rule = mejs.i18n.rules[i];
+				if (rule.languages.indexOf(mejs.i18n.getLanguage()) > -1) {
 					for (var property in rule) {
 						if (rule.hasOwnProperty(property) && property !== 'languages') {
 							defaultFilters[property] = rule[property];
