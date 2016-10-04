@@ -1,169 +1,226 @@
-/*
- * Adds Internationalization and localization to mediaelement.
+/**
+ * Localize strings
  *
- * This file does not contain translations, you have to add them manually.
- * The schema is always the same: me-i18n-locale-[IETF-language-tag].js
- *
- * What is the concept beyond i18n?
- *   http://en.wikipedia.org/wiki/Internationalization_and_localization
- *
- * What langcode should i use?
- *   http://en.wikipedia.org/wiki/IETF_language_tag
- *   https://tools.ietf.org/html/rfc5646
- *
- *
- * License?
- *
- *   The i18n file uses methods from the Drupal project (drupal.js):
- *     - i18n.methods.t() (modified)
- *     - i18n.methods.checkPlain() (full copy)
- *
- *   The Drupal project is (like mediaelementjs) licensed under GPLv2.
- *    - http://drupal.org/licensing/faq/#q1
- *    - https://github.com/johndyer/mediaelement
- *    - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- *
- *
- * @author
- *   Tim Latz (latz.tim@gmail.com)
- *
- *
- * @params
- *  - context - document, iframe ..
- *  - exports - CommonJS, window ..
+ * Include translations from JS files and method to pluralize properly strings.
  *
  */
-;(function(context, exports, undefined) {
-    "use strict";
+(function (doc, win, exports, undefined) {
 
-    var i18n = {
-        "default": 'en',
-        "locale": {
-            // Ensure previous values aren't overwritten.
-            "language" : (exports.i18n && exports.i18n.locale.language) || '',
-            "strings" : (exports.i18n && exports.i18n.locale.strings) || {}
-        },
-        "ietf_lang_regex" : /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/,
-        "methods" : {}
-    };
-// start i18n
+	var i18n = {
+		/**
+		 * @type {String}
+		 */
+		default: 'en',
+
+		/**
+		 * @type {String[]}
+		 */
+		locale: {
+			language: (exports.i18n && exports.i18n.locale.language) || '',
+			strings: (exports.i18n && exports.i18n.locale.strings) || {}
+		},
+
+		/**
+		 * Filters for available languages
+		 *
+		 * @see https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
+		 * @type {Object[]}
+		 */
+		rules: [
+			{
+				languages: ['zh', 'zh-cn', 'ko', 'ja'],
+				plural: function (n, replacement) {
+					return replacement;
+				}
+			},
+			{
+				languages: ['ca', 'de', 'en', 'es', 'hu', 'it', 'nl', 'pt'],
+				plural: function (n, replacement1, replacement2) {
+					if (n === 1) {
+						return replacement1;
+					} else {
+						return replacement2;
+					}
+				}
+			},
+			{
+				languages: ['fr', 'pt-br'],
+				plural: function (n, replacement1, replacement2) {
+					if (n === 0 || n === 1) {
+						return replacement1;
+					} else {
+						return replacement2;
+					}
+				}
+			},
+			{
+				languages: ['ro'],
+				plural: function (n, replacement1, replacement2, replacement3) {
+					if (n === 1) {
+						return replacement1;
+					} else if (n === 0 || ([1, 2, 3, 4, 5, 6, 7, 8.9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].indexOf((n % 10)) > -1)) {
+						return replacement2;
+					} else {
+						return replacement3;
+					}
+				}
+			},
+			{
+				languages: ['ru'],
+				plural: function (n, replacement1, replacement2, replacement3) {
+					if (n !== 11 && n % 10 === 1) {
+						return replacement1;
+					} else if (n !== 12 && n !== 13 && n !== 14 && [2, 3, 4].indexOf((n % 10)) > -1) {
+						return replacement2;
+					} else {
+						return replacement3;
+					}
+				}
+			},
+			{
+				languages: ['cs', 'sk'],
+				plural: function (n, replacement1, replacement2, replacement3) {
+					if (n === 1) {
+						return replacement1;
+					} else if ([2, 3, 4].indexOf(n) > -1) {
+						return replacement2;
+					} else {
+						return replacement3;
+					}
+				}
+			},
+			{
+				languages: ['pl'],
+				plural: function (n, replacement1, replacement2, replacement3) {
+					if (n === 1) {
+						return replacement1;
+					} else if (n !== 12 && n !== 13 && n !== 14 && [2, 3, 4].indexOf((n % 10)) > -1) {
+						return replacement2;
+					} else {
+						return replacement3;
+					}
+				}
+			}
+		],
+		/**
+		 * Get specified language
+		 *
+		 */
+		getLanguage: function () {
+			var language = i18n.locale.language || i18n.default;
+			return /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/.exec(language) ? language : i18n.default;
+		},
+
+		/**
+		 * Translate a string to a specified language
+		 *
+		 * @param {String} input
+		 * @return {String}
+		 */
+		t: function (input) {
+
+			if (typeof input === 'string' && input.length) {
+
+				var
+					language = i18n.getLanguage(),
+					str
+				;
 
 
-    /**
-     * Get language, fallback to browser's language if empty
-     *
-     * IETF: RFC 5646, https://tools.ietf.org/html/rfc5646
-     * Examples: en, zh-CN, cmn-Hans-CN, sr-Latn-RS, es-419, x-private
-     */
-    i18n.getLanguage = function () {
-        var language = i18n.locale.language || window.navigator.userLanguage || window.navigator.language;
-        return i18n.ietf_lang_regex.exec(language) ? language : null;
+				// Fetch the localized version of the string
+				if (i18n.locale.strings && i18n.locale.strings[language]) {
+					str = i18n.locale.strings[language][input];
+				}
 
-        //(WAS: convert to iso 639-1 (2-letters, lower case))
-        //return language.substr(0, 2).toLowerCase();
-    };
+				// Fallback to default language if requested uid is not translated
+				if (!str && i18n.locale.strings && i18n.locale.strings[i18n['default']]) {
+					str = i18n.locale.strings[i18n['default']][input];
+				}
 
-    // i18n fixes for compatibility with WordPress
-    if ( typeof mejsL10n != 'undefined' ) {
-        i18n.locale.language = mejsL10n.language;
-    }
+				// As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
+				str = str || input;
 
+				return str;
 
+			}
 
-    /**
-     * Encode special characters in a plain-text string for display as HTML.
-     */
-    i18n.methods.checkPlain = function (str) {
-        var character, regex,
-        replace = {
-            '&': '&amp;',
-            '"': '&quot;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-        str = String(str);
-        for (character in replace) {
-            if (replace.hasOwnProperty(character)) {
-                regex = new RegExp(character, 'g');
-                str = str.replace(regex, replace[character]);
-            }
-        }
-        return str;
-    };
+			return input;
+		}
 
-    /**
-     * Translate strings to the page language or a given language.
-     *
-     *
-     * @param uid
-     *   A string containing a unique id of the translated text to retrieve.
-     *
-     * @param options
-     *   - 'context' (defaults to the default context): The context the source string
-     *     belongs to.
-     *
-     * @return
-     *   The translated string, escaped via i18n.methods.checkPlain()
-     */
-    i18n.methods.t = function (uid, options) {
-        var str;
+	};
 
-        // Fetch the localized version of the string.
-        if (i18n.locale.strings && i18n.locale.strings[options.context]) {
-            str = i18n.locale.strings[options.context][uid];
-        }
+	// i18n fixes for compatibility with WordPress
+	// if (typeof mejsL10n !== 'undefined') {
+	// 	i18n.locale.language = mejsL10n.language;
+	// }
 
-        // Fallback to default language if requested uid is not translated
-        if (!str && i18n.locale.strings && i18n.locale.strings[i18n["default"]]) {
-            str = i18n.locale.strings[i18n["default"]][uid];
-        }
+	// Register variable
+	exports.i18n = i18n;
 
-        // As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
-        str = str || uid;
+	/**
+	 * Convert string using an algorithm to detect callbacks that will modify a string based on a number.
+	 *
+	 * This method will change a string with format:
+	 *  - '{0} {0|plural:second:seconds} left to finish playing and {1} {1|plural:second:seconds} to go'.format(1, 10)
+	 * to:
+	 * - '1 second left to finish playing and 10 seconds to go'
+	 *
+	 * where:
+	 * - {[0,1,2...]}  is the number to be placed from the method's arguments in respective order
+	 * - {[0,1,2...]|[filterName]:[replacement1]:[replacement2]:...} is the string to be placed based on the specified filter
+	 *
+	 * @see http://stackoverflow.com/questions/1353408/messageformat-in-javascript-parameters-in-localized-ui-strings
+	 * @return {String}
+	 */
+	String.prototype.format = function () {
+		var args = arguments;
 
-        return i18n.methods.checkPlain(str);
-    };
+		return this.replace(/\{((\d+)((\|\w+(:\w+)*)*))\}/g, function() {
+			var arg = args[arguments[2]],
+				filters = arguments[3].split('|'),
+				i,
+				total,
+				curFilter,
+				curFilterArgs,
+				curFilterFunc,
+				defaultFilters = {}
+			;
 
+			// Find current language's rules to filter; otherwise, use default
+			for (i = 0, total = exports.i18n.rules.length; i < total; i++) {
+				var rule = exports.i18n.rules[i];
+				if (rule.languages.indexOf(exports.i18n.getLanguage()) > -1) {
+					for (var property in rule) {
+						if (rule.hasOwnProperty(property) && property !== 'languages') {
+							defaultFilters[property] = rule[property];
+						}
+					}
+					break;
+				}
+			}
 
-    /**
-     * Wrapper for i18n.methods.t()
-     *
-     * @see i18n.methods.t()
-     * @throws InvalidArgumentException
-     */
-    i18n.t = function(str, options) {
+			for(i = 0, total = filters.length; i < total; ++i) {
+				curFilterArgs = filters[i].split(':');
+				curFilter = curFilterArgs.shift();
+				curFilterFunc = defaultFilters[curFilter];
 
-        if (typeof str === 'string' && str.length > 0) {
+				if(typeof curFilterFunc === 'function') {
+					arg = curFilterFunc.apply(null, [ arg ].concat(curFilterArgs));
+				}
+			}
+			return arg;
+		});
+	}
 
-            // check every time due language can change for
-            // different reasons (translation, lang switcher ..)
-            var language = i18n.getLanguage();
-
-            options = options || {
-                "context" : language
-            };
-
-            return i18n.methods.t(str, options);
-        }
-        else {
-            throw {
-                "name" : 'InvalidArgumentException',
-                "message" : 'First argument is either not a string or empty.'
-            };
-        }
-    };
-
-// end i18n
-    exports.i18n = i18n;
-}(document, mejs));
+}(document, window, mejs));
 
 // i18n fixes for compatibility with WordPress
-;(function(exports, undefined) {
-
-    "use strict";
-
-    if ( typeof mejsL10n != 'undefined' ) {
-        exports[mejsL10n.language] = mejsL10n.strings;
-    }
-
-}(mejs.i18n.locale.strings));
+// ;(function (mejs, undefined) {
+//
+// 	"use strict";
+//
+// 	if (typeof mejsL10n !== 'undefined') {
+// 		mejs[mejsL10n.lang] = mejsL10n.strings;
+// 	}
+//
+// }(mejs.i18n.locale.strings));
