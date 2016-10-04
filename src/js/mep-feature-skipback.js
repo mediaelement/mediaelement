@@ -17,7 +17,7 @@
 				// create the loop button
 				loop =
 				$('<div class="mejs-button mejs-skip-back-button">' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + backText + '" aria-label="' + backText + '">' +  + '</button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + backText + '" aria-label="' + backText + '">' + t.options.skipBackInterval + '</button>' +
 				'</div>')
 				// append it to the toolbar
 				.appendTo(controls)
