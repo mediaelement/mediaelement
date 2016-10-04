@@ -11,13 +11,12 @@
 		buildskipback: function(player, controls, layers, media) {
 			var
 				t = this,
-				skipTitle = t.options.skipBackText ? t.options.skipBackText : mejs.i18n.t('mejs.time-skip-back'),
-				// Replace %1 with skip back interval
-				backText = skipTitle.replace('%1', t.options.skipBackInterval),
+				defaultTitle = mejs.i18n.t('mejs.time-skip-back').format(t.options.skipBackInterval),
+				skipTitle = t.options.skipBackText ? t.options.skipBackText : defaultTitle,
 				// create the loop button
 				loop =
 				$('<div class="mejs-button mejs-skip-back-button">' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + backText + '" aria-label="' + backText + '">' +  + '</button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + skipTitle + '" aria-label="' + skipTitle + '">' +  + '</button>' +
 				'</div>')
 				// append it to the toolbar
 				.appendTo(controls)
