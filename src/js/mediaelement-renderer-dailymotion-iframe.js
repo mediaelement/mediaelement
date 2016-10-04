@@ -267,14 +267,16 @@
 										dmPlayer.setMuted(false);
 									}
 									setTimeout(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										var event = mejs.Utils.createEvent('volumechange', dm);
+										mediaElement.dispatchEvent(event);
 									}, 50);
 									break;
 
 								case 'volume':
 									dmPlayer.setVolume(value);
 									setTimeout(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										var event = mejs.Utils.createEvent('volumechange', dm);
+										mediaElement.dispatchEvent(event);
 									}, 50);
 									break;
 
