@@ -244,14 +244,16 @@
 										scPlayer.setVolume(1); // ?
 									}
 									setTimeout(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										var event = mejs.Utils.createEvent('volumechange', sc);
+										mediaElement.dispatchEvent(event);
 									}, 50);
 									break;
 
 								case 'volume':
 									scPlayer.setVolume(value);
 									setTimeout(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										var event = mejs.Utils.createEvent('volumechange', sc);
+										mediaElement.dispatchEvent(event);
 									}, 50);
 									break;
 
