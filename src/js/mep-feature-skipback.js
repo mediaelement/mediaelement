@@ -11,7 +11,7 @@
 		buildskipback: function(player, controls, layers, media) {
 			var
 				t = this,
-				defaultTitle = mejs.i18n.t('mejs.time-skip-back').format(t.options.skipBackInterval),
+				defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
 				skipTitle = t.options.skipBackText ? t.options.skipBackText : defaultTitle,
 				// create the loop button
 				loop =
