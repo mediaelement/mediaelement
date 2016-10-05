@@ -112,33 +112,100 @@
 		},
 
 		/**
-		 * Translate a string to a specified language
+		 * Translate a string to a specified language, including optionally a number to pluralize translation
 		 *
 		 * @param {String} input
+		 * @param {Number} pluralReplacement
 		 * @return {String}
 		 */
-		t: function (input) {
+		t: function (input, pluralReplacement) {
 
 			if (typeof input === 'string' && input.length) {
 
 				var
 					language = i18n.getLanguage(),
-					str
+					str,
+
+					/**
+					 * Convert string using an algorithm to detect plural rules.
+					 *
+					 * This method will change a string with format '{0} {0|plural:second:seconds}' to '1 second'
+					 * @private
+					 * @see http://stackoverflow.com/questions/1353408/messageformat-in-javascript-parameters-in-localized-ui-strings
+					 * @param {String} text        - Input text
+					 * @param {Number} replacement - the number to determine the proper plural
+					 * @param {String} lang        - the language to match rules
+					 * @return {String}
+					 */
+					plural = function (text, replacement, lang) {
+
+						if (typeof text !== 'string' || typeof replacement !== 'number' ||
+							typeof lang !== 'string') {
+							return text;
+						}
+
+						return text.replace(/\{((\d+)((\|\w+(:\w+)*)*))\}/g, function () {
+							var arg = replacement,
+								filters = arguments[3].split('|'),
+								i,
+								total,
+								curFilter,
+								curFilterArgs,
+								curFilterFunc,
+								defaultFilters = {}
+								;
+
+							// Find current language's rules to filter; otherwise, use default
+							for (i = 0, total = i18n.rules.length; i < total; i++) {
+								var rule = i18n.rules[i];
+								if (rule.languages.indexOf(lang) > -1) {
+									for (var property in rule) {
+										if (rule.hasOwnProperty(property) && property !== 'languages') {
+											defaultFilters[property] = rule[property];
+										}
+									}
+									break;
+								}
+							}
+
+							for (i = 0, total = filters.length; i < total; ++i) {
+								curFilterArgs = filters[i].split(':');
+								curFilter = curFilterArgs.shift();
+								curFilterFunc = defaultFilters[curFilter];
+
+								if (typeof curFilterFunc === 'function') {
+									arg = curFilterFunc.apply(null, [arg].concat(curFilterArgs));
+								}
+							}
+							return arg;
+						});
+					}
 				;
 
 
 				// Fetch the localized version of the string
 				if (i18n.locale.strings && i18n.locale.strings[language]) {
 					str = i18n.locale.strings[language][input];
+					if (typeof pluralReplacement === 'number') {
+						str = plural.apply(null, [str, pluralReplacement, language]);
+					}
 				}
 
 				// Fallback to default language if requested uid is not translated
 				if (!str && i18n.locale.strings && i18n.locale.strings[i18n['default']]) {
 					str = i18n.locale.strings[i18n['default']][input];
+					if (typeof pluralReplacement === 'number') {
+						str = plural.apply(null, [str, pluralReplacement, i18n['default']]);
+
+					}
 				}
 
 				// As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
 				str = str || input;
+
+				if (typeof pluralReplacement === 'number') {
+					str = str.replace('%1', pluralReplacement);
+				}
 
 				return str;
 
@@ -149,78 +216,8 @@
 
 	};
 
-	// i18n fixes for compatibility with WordPress
-	// if (typeof mejsL10n !== 'undefined') {
-	// 	i18n.locale.language = mejsL10n.language;
-	// }
-
 	// Register variable
 	mejs.i18n = i18n;
 
-	/**
-	 * Convert string using an algorithm to detect callbacks that will modify a string based on filters.
-	 *
-	 * This method will change a string with format:
-	 *  - '{0} {0|plural:second:seconds} left to finish playing and {1} {1|plural:second:seconds} to go'.format(1, 10)
-	 * to:
-	 * - '1 second left to finish playing and 10 seconds to go'
-	 *
-	 * where:
-	 * - {[0,1,2...]}  is the number to be placed from the method's arguments in respective order
-	 * - {[0,1,2...]|[filterName]:[replacement1]:[replacement2]:...} is the string to be placed based on the specified filter
-	 *
-	 * @see http://stackoverflow.com/questions/1353408/messageformat-in-javascript-parameters-in-localized-ui-strings
-	 * @return {String}
-	 */
-	String.prototype.format = function () {
-		var args = arguments;
-
-		return this.replace(/\{((\d+)((\|\w+(:\w+)*)*))\}/g, function() {
-			var arg = args[arguments[2]],
-				filters = arguments[3].split('|'),
-				i,
-				total,
-				curFilter,
-				curFilterArgs,
-				curFilterFunc,
-				defaultFilters = {}
-			;
-
-			// Find current language's rules to filter; otherwise, use default
-			for (i = 0, total = mejs.i18n.rules.length; i < total; i++) {
-				var rule = mejs.i18n.rules[i];
-				if (rule.languages.indexOf(mejs.i18n.getLanguage()) > -1) {
-					for (var property in rule) {
-						if (rule.hasOwnProperty(property) && property !== 'languages') {
-							defaultFilters[property] = rule[property];
-						}
-					}
-					break;
-				}
-			}
-
-			for(i = 0, total = filters.length; i < total; ++i) {
-				curFilterArgs = filters[i].split(':');
-				curFilter = curFilterArgs.shift();
-				curFilterFunc = defaultFilters[curFilter];
-
-				if(typeof curFilterFunc === 'function') {
-					arg = curFilterFunc.apply(null, [ arg ].concat(curFilterArgs));
-				}
-			}
-			return arg;
-		});
-	}
 
 }(document, window, mejs));
-
-// i18n fixes for compatibility with WordPress
-// ;(function (mejs, undefined) {
-//
-// 	"use strict";
-//
-// 	if (typeof mejsL10n !== 'undefined') {
-// 		mejs[mejsL10n.lang] = mejsL10n.strings;
-// 	}
-//
-// }(mejs.i18n.locale.strings));
