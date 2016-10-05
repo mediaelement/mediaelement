@@ -17,74 +17,13 @@
 
 As a standalone library, _MediaElement.js_ can be configured using the following settings.
 
-```javascript
-/**
- * List of the renderers to use
- * @type {String[]}
- */
-renderers: [],
-/**
- * Name of MediaElement container
- * @type {String}
- */
-fakeNodeName: 'mediaelementwrapper',
-/**
- * The path where Flash shims are located
- * @type {String}
- */
-pluginPath: 'build/',
-
-// In addition to the elements above, each of of the renderers can have its own configuration.
-// Facebook API configuration
-facebook: {
-    appId: '{your-app-id}',
-    xfbml: true,
-    version: 'v2.6'
-},
-// Native HLS configuration before instantiating player
-hls: {
-    autoStartLoad: true,
-    startPosition: -1,
-    capLevelToPlayerSize: false,
-    debug: false,
-    maxBufferLength: 30,
-    maxMaxBufferLength: 600,
-    maxBufferSize: 60 * 1000 * 1000,
-    maxBufferHole: 0.5,
-    maxSeekHole: 2,
-    seekHoleNudgeDuration: 0.01,
-    maxFragLookUpTolerance: 0.2,
-    liveSyncDurationCount: 3,
-    liveMaxLatencyDurationCount: 10,
-    enableWorker: true,
-    enableSoftwareAES: true,
-    manifestLoadingTimeOut: 10000,
-    manifestLoadingMaxRetry: 6,
-    manifestLoadingRetryDelay: 500,
-    manifestLoadingMaxRetryTimeout: 64000,
-    levelLoadingTimeOut: 10000,
-    levelLoadingMaxRetry: 6,
-    levelLoadingRetryDelay: 500,
-    levelLoadingMaxRetryTimeout: 64000,
-    fragLoadingTimeOut: 20000,
-    fragLoadingMaxRetry: 6,
-    fragLoadingRetryDelay: 500,
-    fragLoadingMaxRetryTimeout: 64000,
-    startFragPrefech: false,
-    appendErrorMaxRetry: 3,
-    enableCEA708Captions: true,
-    stretchShortVideoTrack: true,
-    forceKeyFrameOnDiscontinuity: true,
-    abrEwmaFastLive: 5.0,
-    abrEwmaSlowLive: 9.0,
-    abrEwmaFastVoD: 4.0,
-    abrEwmaSlowVoD: 15.0,
-    abrEwmaDefaultEstimate: 500000,
-    abrBandWidthFactor: 0.8,
-    abrBandWidthUpFactor: 0.7
-}
-```
-
+Parameter | Type | Default | Description
+------ | --------- | ------- | --------
+renderers | array | `[]` | List of the renderers to use
+fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
+pluginPath | string | `build/` | Path where Flash shims are located
+facebook | object |  | Facebook API configuration; all elements listed at https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup are accepted
+hls | object |  | Native HLS player configuration; all elements listed at https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning (except amy callback elements) are accepted 
 
 <a id="player"></a>
 ### MediaElementPlayer
