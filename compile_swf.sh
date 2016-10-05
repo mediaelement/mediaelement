@@ -10,7 +10,7 @@
 #   https://helpx.adobe.com/flash-player/kb/archived-flash-player-versions.html
 #   The file must be placed in flex_sdk_4.6/frameworks/libs/player/10.1/playerglobal.swc
 
-flex_path="./src/flash/flex_sdk_4.6"
+flex_path="../flex_sdk_4.6"
 target_version="10.1"
 
 
