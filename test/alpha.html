@@ -38,15 +38,15 @@
 	<script src="../src/js/mediaelementplayer-simple.js"></script>
 	
 <style>
-#commands {
+.commands {
 	padding: 0 0 50px 0;
 }
-#commands .command {
+.commands > .command {
 	display: block;
 	margin: 2px;
 	cursor: pointer;
 }	
-#commands .command:hover {	
+.commands > .command:hover {
 	background-color: #eaedb8;
 }
 
@@ -86,23 +86,17 @@
 		</video>
 		
 		<div id="player1-renderename">Render info</div>
-		
-		<div id="commands">
+
+		<div class="commands">
 			<span class="command">
-				document.getElementById('player1').src = '../media/big_buck_bunny.mp4'; 
+				document.getElementById('player1').src = '../media/big_buck_bunny.mp4';
 			</span>
 			<span class="command">
 				document.getElementById('player1').src = '../media/echo-hereweare.mp4';
 			</span>
 			<span class="command">
-				document.getElementById('player1').src = '../media/big_buck_bunny.webm'; 
+				document.getElementById('player1').src = '../media/big_buck_bunny.webm';
 			</span>
-			<span class="command">
-				document.getElementById('player1').src = '../media/Low5MB.wmv';
-			</span>	
-			<span class="command">
-				document.getElementById('player1').src = '../media/we_stand_ready_320x180.flv'; 
-			</span>	
 			<span class="command">
 				document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8';
 			</span>
@@ -116,7 +110,7 @@
 				document.getElementById('player1').src = 'http://www.dailymotion.com/embed/video/x2lzodk';
 			</span>
 			<span class="command">
-				document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&byline=0&portrait=0&badge=0';
+				document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0';
 			</span>
 			<span class="command">
 				document.getElementById('player1').src = 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd';
@@ -138,25 +132,25 @@
 			</span>
 			<span class="command">
 				document.getElementById('player1').play();
-			</span>										
+			</span>
 			<span class="command">
 				document.getElementById('player1').pause();
-			</span>										
+			</span>
 			<span class="command">
 				document.getElementById('player1').muted = false;
 			</span>
 			<span class="command">
 				document.getElementById('player1').muted = true;
-			</span>											
+			</span>
 			<span class="command">
 				document.getElementById('player1').volume = 0.5;
-			</span>												
+			</span>
 			<span class="command">
 				document.getElementById('player1').volume = 1;
-			</span>	
+			</span>
 			<span class="command">
 				document.getElementById('player1').currentTime = 26;
-			</span>																								
+			</span>
 		</div>
 
 	</div><!-- /.player -->
@@ -174,9 +168,9 @@
 		
 		<div id="player2-renderename"></div>
 		
-		<div id="commands">
+		<div class="commands">
 			<span class="command">
-				document.getElementById('player2').src = '../media/audio.ogg'; document.getElementById('player2').load();
+				document.getElementById('player2').src = 'https://upload.wikimedia.org/wikipedia/en/4/45/ACDC_-_Back_In_Black-sample.ogg'; document.getElementById('player2').load();
 			</span>
 			<span class="command">
 				document.getElementById('player2').src = '../media/AirReview-Landmarks-02-ChasingCorporate.mp3'; document.getElementById('player2').load();
@@ -255,8 +249,8 @@ function createPlayer(id) {
 		
 			
 				mejs.addEvent(command, 'click', function() {
-					
-					eval(command.innerHTML);
+
+					eval(command.innerHTML.replace('&amp;', '&'));
 					
 					var parts = command.innerHTML.split('.src');
 					if (parts.length > 1) {
