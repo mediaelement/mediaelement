@@ -383,7 +383,7 @@
 
 				// Custom DailyMotion events
 				dmPlayer.addEventListener('video_start', function () {
-					var event = mejs.Utils.createEvent('loadedmetadata', dmPlayer);
+					var event = mejs.Utils.createEvent('play', dmPlayer);
 					mediaElement.dispatchEvent(event);
 
 					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
