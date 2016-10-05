@@ -265,10 +265,15 @@
 			flash.flashWrapper = document.createElement('div');
 
 			var
-				flashVars = ['uid=' + flash.id],
+				flashVars = ['uid=' + flash.id,],
 				isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 				flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
 				flashWidth = (isVideo) ? mediaElement.originalNode.width : 1;
+
+			if (flash.options.enablePseudoStreaming === true) {
+				flashVars.push('pseudostreamstart=' + flash.options.pseudoStreamingStartQueryParam);
+				flashVars.push('pseudostreamtype=' + flash.options.pseudoStreamingType);
+			}
 
 			mediaElement.appendChild(flash.flashWrapper);
 
@@ -398,6 +403,8 @@
 				}
 			} else if (url.indexOf('.m3u8') > -1) {
 				return 'application/x-mpegURL';
+			// } else if (url.indexOf('.wav') > -1) {
+			// 	return 'audio/wav';
 			} else if (url.indexOf('.ogg') > -1 || url.indexOf('.ogv') > -1) {
 				return 'audio/ogg';
 			}
@@ -417,7 +424,12 @@
 
 			options: {
 				prefix: 'flash_video',
-				filename: 'mediaelement-flash-video.swf'
+				filename: 'mediaelement-flash-video.swf',
+				enablePseudoStreaming: true,
+				// start query parameter sent to server for pseudo-streaming
+				pseudoStreamingStartQueryParam: 'start',
+				// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
+				pseudoStreamingType: 'byte'
 			},
 			/**
 			 * Determine if a specific element type can be played with this render
