@@ -19,6 +19,7 @@
     if (typeof exports.hu === 'undefined') {
         exports.hu = {
 
+            'mejs.plural-form': 1,
             'mejs.audio-player' : "Audiolejátszó",
             'mejs.captions-subtitles' : "Képaláírás/Feliratok",
             'mejs.close' : "Bezárás",

@@ -19,8 +19,9 @@
     if (typeof exports.es === 'undefined') {
         exports.es = {
 
+            'mejs.plural-form': 1,
             'mejs.ad-skip': "Saltar publicidad",
-            'mejs.ad-skip-info': "Saltar {0} {0|plural:segundo:segundos}",
+            'mejs.ad-skip-info': "Saltar 1 segundo;Saltar %1 segundos",
             'mejs.audio-player' : "Reproductor de audio",
             'mejs.captions-subtitles' : "Leyendas/Subtítulos",
             'mejs.close' : "Cerrar",
@@ -35,7 +36,7 @@
             'mejs.pause' : "Pausa",
             'mejs.play' : "Reproducción",
             'mejs.time-help-text' : "Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.",
-            'mejs.time-skip-back' : "Rebobinar {0} {0|plural:segundo:segundos}",
+            'mejs.time-skip-back' : "Rebobinar 1 segundo;Rebobinar %1 segundos",
             'mejs.time-slider' : "Control deslizante de tiempo",
             'mejs.unmute' : "Reactivar silencio",
             'mejs.video-player' : "Reproductor de video",

@@ -22,6 +22,7 @@
     if (typeof exports.fr === 'undefined') {
         exports.fr = {
 
+            'mejs.plural-form': 2,
             'mejs.ad-skip' : "Passer la publicité",
             'mejs.ad-skip-info' : "Passer la publicité dans %1 secondes",
             'mejs.audio-player' : "Lecteur Audio",

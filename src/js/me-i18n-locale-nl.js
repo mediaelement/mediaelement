@@ -18,6 +18,9 @@
 
     if (typeof exports.nl === 'undefined') {
         exports.nl = {
+
+            'mejs.plural-form': 1,
+
             // me-shim
             'mejs.download-file': 'Bestand downloaden',
 

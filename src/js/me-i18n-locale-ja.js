@@ -19,6 +19,7 @@
     if (typeof exports.ja === 'undefined') {
         exports.ja = {
 
+            'mejs.plural-form': 0,
             'mejs.audio-player' : "オーディオプレーヤー",
             'mejs.captions-subtitles' : "キャプション/字幕",
             'mejs.close' : "閉じる",
