@@ -19,7 +19,7 @@
 	"use strict";
 
 	if (typeof exports['pt-BR'] === 'undefined') {
-		exports.pt = {
+		exports['pt-BR'] = {
 			'mejs.none': "Sem legendas",
 			'mejs.unmute': "Tirar silêncio",
 			'mejs.fullscreen': "Tela inteira",
