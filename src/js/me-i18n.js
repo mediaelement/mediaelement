@@ -21,24 +21,35 @@
 		},
 
 		/**
-		 * Filters for available languages
+		 * Filters for available languages.
+		 *
+		 * This plural forms are grouped in family groups based on
+		 * https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
+		 * with some additions and corrections according to the Localization Guide list
+		 * (http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html)
 		 *
 		 * Arguments are dynamic following the structure:
 		 * - argument1 : Number to determine form
 		 * - argument2...argumentN: Possible matches
 		 *
-		 * @see https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
-		 * @see http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html#f1
 		 * @type {Function[]}
 		 */
 		pluralForms: [
-			// 0: Asian (Chinese, Japanese, Korean), Persian, Turkic/Altaic (Turkish), Thai, Lao
+			// 0: Chinese, Japanese, Korean, Persian, Turkish, Thai, Lao, Aymará,
+			// Tibetan, Chiga, Dzongkha, Indonesian, Lojban, Georgian, Kazakh, Khmer, Kyrgyz, Malay,
+			// Burmese, Yakut, Sundanese, Tatar, Uyghur, Vietnamese, Wolof
 			function () {
 				return arguments[1];
 			},
-			// 1: Germanic (Danish, Dutch, English, Faroese, Frisian, German, Norwegian, Swedish), Finno-Ugric
-			// (Estonian, Finnish, Hungarian), Language isolate (Basque), Latin/Greek (Greek), Semitic (Hebrew),
-			// Romanic (Italian, Portuguese, Spanish, Catalan), Vietnamese
+			// 1: Danish, Dutch, English, Faroese, Frisian, German, Norwegian, Swedish, Estonian, Finnish,
+			// Hungarian, Basque, Greek, Hebrew, Italian, Portuguese, Spanish, Catalan, Afrikaans,
+			// Angika, Assamese, Asturian, Azerbaijani, Bulgarian, Bengali, Bodo, Aragonese, Dogri,
+			// Esperanto, Argentinean Spanish, Fulah, Friulian, Galician, Gujarati, Hausa,
+			// Hindi, Chhattisgarhi, Armenian, Interlingua, Greenlandic, Kannada, Kurdish, Letzeburgesch,
+			// Maithili, Malayalam, Mongolian, Manipuri, Marathi, Nahuatl, Neapolitan, Norwegian Bokmal,
+			// Nepali, Norwegian Nynorsk, Norwegian (old code), Northern Sotho, Oriya, Punjabi, Papiamento,
+			// Piemontese, Pashto, Romansh, Kinyarwanda, Santali, Scots, Sindhi, Northern Sami, Sinhala,
+			// Somali, Songhay, Albanian, Swahili, Tamil, Telugu, Turkmen, Urdu, Yoruba
 			function () {
 				var args = arguments;
 				if (args[0] === 1) {
@@ -47,7 +58,8 @@
 					return args[2];
 				}
 			},
-			// 2: Romanic (French, Brazilian Portuguese)
+			// 2: French, Brazilian Portuguese, Acholi, Akan, Amharic, Mapudungun, Breton, Filipino,
+			// Gun, Lingala, Mauritian Creole, Malagasy, Maori, Occitan, Tajik, Tigrinya, Uzbek, Walloon
 			function () {
 				var args = arguments;
 				if ([0, 1].indexOf(args[0]) > -1) {
@@ -56,7 +68,7 @@
 					return args[2];
 				}
 			},
-			// 3: Baltic (Latvian)
+			// 3: Latvian
 			function () {
 				var args = arguments;
 				if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
@@ -67,7 +79,7 @@
 					return args[3];
 				}
 			},
-			// 4: Celtic (Scottish Gaelic)
+			// 4: Scottish Gaelic
 			function () {
 				var args = arguments;
 				if (args[0] === 1 || args[0] === 11) {
@@ -80,7 +92,7 @@
 					return args[4];
 				}
 			},
-			// 5:  Romanic (Romanian)
+			// 5:  Romanian
 			function () {
 				if (args[0] === 1) {
 					return args[1];
@@ -90,7 +102,7 @@
 					return args[3];
 				}
 			},
-			// 6: Baltic (Lithuanian)
+			// 6: Lithuanian
 			function () {
 				var args = arguments;
 				if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
@@ -101,7 +113,7 @@
 					return [3];
 				}
 			},
-			// 7: Slavic (Belarusian, Bosnian, Croatian, Serbian, Russian, Ukrainian)
+			// 7: Belarusian, Bosnian, Croatian, Serbian, Russian, Ukrainian
 			function () {
 				var args = arguments;
 				if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
@@ -112,7 +124,7 @@
 					return args[3];
 				}
 			},
-			// 8:  Slavic (Slovak, Czech)
+			// 8:  Slovak, Czech
 			function () {
 				var args = arguments;
 				if (args[0] === 1) {
@@ -123,7 +135,7 @@
 					return args[3];
 				}
 			},
-			// 9:  Slavic (Polish)
+			// 9: Polish
 			function () {
 				var args = arguments;
 				if (args[0] === 1) {
@@ -134,7 +146,7 @@
 					return args[3];
 				}
 			},
-			// 10: Slavic (Slovenian, Sorbian)
+			// 10: Slovenian
 			function () {
 				var args = arguments;
 				if (args[0] % 100 === 1) {
@@ -147,7 +159,7 @@
 					return args[1];
 				}
 			},
-			// 11: Celtic (Irish Gaelic)
+			// 11: Irish Gaelic
 			function () {
 				var args = arguments;
 				if (args[0] === 1) {
@@ -162,7 +174,7 @@
 					return args[5];
 				}
 			},
-			// 12: Semitic (Arabic)
+			// 12: Arabic
 			function () {
 				var args = arguments;
 				if (args[0] === 0) {
@@ -179,7 +191,7 @@
 					return args[6];
 				}
 			},
-			// 13: Semitic (Maltese)
+			// 13: Maltese
 			function () {
 				var args = arguments;
 				if (args[0] === 1) {
@@ -193,7 +205,7 @@
 				}
 
 			},
-			// 14: Slavic (Macedonian)
+			// 14: Macedonian
 			function () {
 				var args = arguments;
 				if (args[0] % 10 === 1) {
@@ -213,21 +225,65 @@
 					return args[2];
 				}
 			},
-			// 16: Celtic (Breton)
+			// New additions
+
+			// 16:  Kashubian
+			// Note: in https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
+			// Breton is listed as #16 but in the Localization Guide it belongs to the group 2
 			function () {
 				var args = arguments;
 				if (args[0] === 1) {
 					return args[1];
-				} else if ([1, 11, 71, 91].indexOf(args[0]) === -1 && args[0] % 10 === 1) {
+				} else if (args[0] % 10 >= 2 && args[0] % 10 <= 4 && (args[0] % 100 < 10 || args[0] % 100 >= 20)) {
 					return args[2];
-				} else if ([12, 72, 92].indexOf(args[0]) === -1 && args[0] % 10 === 2) {
+				} else {
 					return args[3];
-				} else if ([13, 14, 19, 73, 74, 79, 93, 94, 99].indexOf(args[0]) === -1 && [3, 4, 9].indexOf((args[0] % 10)) > -1) {
+				}
+			},
+			// 17:  Welsh
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] === 2) {
+					return args[2];
+				} else if (args[0] !== 8 && args[0] !== 11) {
+					return args[3];
+				} else {
 					return args[4];
-				} else if (args[0] % 1000000 === 0) {
-					return args[5];
-				} else if (args[0] === 0) {
-					return args[6];
+				}
+			},
+			// 18:  Javanese
+			function () {
+				var args = arguments;
+				if (args[0] === 0) {
+					return args[1];
+				} else {
+					return args[2];
+				}
+			},
+			// 19:  Cornish
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] === 2) {
+					return args[2];
+				} else if (args[0] === 3) {
+					return args[3];
+				} else {
+					return args[4];
+				}
+			},
+			// 20:  Mandinka
+			function () {
+				var args = arguments;
+				if (args[0] === 0) {
+					return args[1];
+				} else if (args[0] === 1) {
+					return args[2];
+				} else {
+					return args[3];
 				}
 			}
 		],
