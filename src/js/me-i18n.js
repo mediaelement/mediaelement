@@ -114,13 +114,13 @@
 		/**
 		 * Translate a string to a specified language, including optionally a number to pluralize translation
 		 *
-		 * @param {String} input
-		 * @param {Number} pluralReplacement
+		 * @param {String} message
+		 * @param {Number} pluralParam
 		 * @return {String}
 		 */
-		t: function (input, pluralReplacement) {
+		t: function (message, pluralParam) {
 
-			if (typeof input === 'string' && input.length) {
+			if (typeof message === 'string' && message.length) {
 
 				var
 					language = i18n.getLanguage(),
@@ -132,7 +132,7 @@
 					 * This method will change a string with format '{0} {0|plural:second:seconds}' to '1 second'
 					 * @private
 					 * @see http://stackoverflow.com/questions/1353408/messageformat-in-javascript-parameters-in-localized-ui-strings
-					 * @param {String} text        - Input text
+					 * @param {String} text        - string to be analyzed
 					 * @param {Number} replacement - the number to determine the proper plural
 					 * @param {String} lang        - the language to match rules
 					 * @return {String}
@@ -185,39 +185,55 @@
 
 				// Fetch the localized version of the string
 				if (i18n.locale.strings && i18n.locale.strings[language]) {
-					str = i18n.locale.strings[language][input];
-					if (typeof pluralReplacement === 'number') {
-						str = plural.apply(null, [str, pluralReplacement, language]);
+					str = i18n.locale.strings[language][message];
+					if (typeof pluralParam === 'number') {
+						str = plural.apply(null, [str, pluralParam, language]);
 					}
 				}
 
 				// Fallback to default language if requested uid is not translated
 				if (!str && i18n.locale.strings && i18n.locale.strings[i18n['default']]) {
-					str = i18n.locale.strings[i18n['default']][input];
-					if (typeof pluralReplacement === 'number') {
-						str = plural.apply(null, [str, pluralReplacement, i18n['default']]);
+					str = i18n.locale.strings[i18n['default']][message];
+					if (typeof pluralParam === 'number') {
+						str = plural.apply(null, [str, pluralParam, i18n['default']]);
 
 					}
 				}
 
 				// As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
-				str = str || input;
+				str = str || message;
 
-				if (typeof pluralReplacement === 'number') {
-					str = str.replace('%1', pluralReplacement);
+				if (typeof pluralParam === 'number') {
+					str = str.replace('%1', pluralParam);
 				}
 
 				return str;
 
 			}
 
-			return input;
+			return message;
 		}
 
 	};
+
+	// i18n fixes for compatibility with WordPress
+	if (typeof mejsL10n !== 'undefined') {
+		i18n.locale.language = mejsL10n.language;
+	}
 
 	// Register variable
 	mejs.i18n = i18n;
 
 
 }(document, window, mejs));
+
+// i18n fixes for compatibility with WordPress
+;(function (mejs, undefined) {
+
+	"use strict";
+
+	if (typeof mejsL10n !== 'undefined') {
+		mejs[mejsL10n.lang] = mejsL10n.strings;
+	}
+
+}(mejs.i18n.locale.strings));
