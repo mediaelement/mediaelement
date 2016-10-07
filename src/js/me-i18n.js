@@ -316,25 +316,25 @@
 					 *
 					 * @private
 					 * @see http://stackoverflow.com/questions/1353408/messageformat-in-javascript-parameters-in-localized-ui-strings
-					 * @param {String} text    - Semi-colon (;) separated string of words to pick the plural form
-					 * @param {Number} number  - Number to determine the proper plural form
-					 * @param {Number} form    - Number of language family to apply plural form
+					 * @param {String|String[]} input   - String or array of strings to pick the plural form
+					 * @param {Number} number           - Number to determine the proper plural form
+					 * @param {Number} form             - Number of language family to apply plural form
 					 * @return {String}
 					 */
-					plural = function (text, number, form) {
+					plural = function (input, number, form) {
 
-						if (typeof text !== 'string' || typeof number !== 'number' ||
-							typeof form !== 'number') {
-							return text;
+						if (typeof input !== 'object' || typeof number !== 'number' || typeof form !== 'number') {
+							return input;
 						}
 
-						var fragments = text.split(';');
+						if (typeof input === 'string') {
+							return input;
+						}
 
 						// Perform plural form or return original text
-						return i18n.pluralForms[form].apply(null, [number].concat(fragments)) || text;
+						return i18n.pluralForms[form].apply(null, [number].concat(input));
 					}
 				;
-
 
 				// Fetch the localized version of the string
 				if (i18n.locale.strings && i18n.locale.strings[language]) {
