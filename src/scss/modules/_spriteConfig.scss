@@ -1,0 +1,38 @@
+.mejs-controls {
+  .mejs-picturecontrols-button {
+    background-position: -96px 0;
+  }
+  .mejs-loop-off button {
+    background-position: -64px -16px;
+  }
+  .mejs-loop-on button {
+    background-position: -64px 0;
+  }
+  .mejs-backlight-off button {
+    background-position: -80px -16px;
+  }
+  .mejs-backlight-on button {
+    background-position: -80px 0;
+  }
+  .mejs-mute button {
+    background-position: -16px -16px;
+  }
+  .mejs-unmute button {
+    background-position: -16px 0;
+  }
+  .mejs-fullscreen-button button {
+    background-position: -32px 0;
+  }
+  .mejs-unfullscreen button {
+    background-position: -32px -16px;
+  }
+  .mejs-play button {
+    background-position: 0 0;
+  }
+  .mejs-pause button {
+    background-position: 0 -16px;
+  }
+  .mejs-stop button {
+    background-position: -112px 0;
+  }
+}

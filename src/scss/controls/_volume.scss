@@ -1,0 +1,92 @@
+.mejs-controls {
+  .mejs-volume-button {
+    position: relative;
+    .mejs-volume-slider {
+      position: absolute;
+      top: -115px;
+      left: 0;
+      z-index: 1;
+      display: none;
+      margin: 0;
+      width: 25px;
+      height: 115px;
+      border-radius: 0;
+      background: $background_url;
+      background: rgba(50, 50, 50, .7);
+      .mejs-volume-total {
+        position: absolute;
+        top: 8px;
+        left: 11px;
+        margin: 0;
+        width: 2px;
+        height: 100px;
+        background: $me-gray-4;
+        background: rgba(255, 255, 255, .5);
+      }
+      .mejs-volume-current {
+        position: absolute;
+        top: 8px;
+        left: 11px;
+        margin: 0;
+        width: 2px;
+        height: 100px;
+        background: $me-gray-4;
+        background: rgba(255, 255, 255, .9);
+      }
+      .mejs-volume-handle {
+        position: absolute;
+        top: -3px;
+        left: 4px;
+        margin: 0;
+        width: 16px;
+        height: 6px;
+        border-radius: 1px;
+        background: $me-gray-4;
+        background: rgba(255, 255, 255, .9);
+        cursor: N-resize;
+      }
+    }
+    &:hover {
+      border-radius: 0 0 4px 4px;
+    }
+  }
+  .mejs-horizontal-volume-slider {
+    position: relative;
+    display: block;
+    float: left;
+    width: 56px;
+    height: 26px;
+    vertical-align: middle;
+    .mejs-horizontal-volume-total {
+      position: absolute;
+      top: 11px;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      width: 50px;
+      height: 8px;
+      border-radius: 2px;
+      background: $me-gray-1;
+      background: rgba(50, 50, 50, .8);
+      background: linear-gradient(rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+      font-size: 1px;
+    }
+    .mejs-horizontal-volume-current {
+      position: absolute;
+      top: 11px;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      width: 50px;
+      height: 8px;
+      border-radius: 2px;
+      background: $me-white;
+      background: rgba(255, 255, 255, .8);
+      background: linear-gradient(rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+      font-size: 1px;
+    }
+    .mejs-horizontal-volume-handle {
+      display: none;
+    }
+  }
+}

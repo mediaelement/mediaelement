@@ -11,6 +11,7 @@
     "url": "https://github.com/johndyer/mediaelement.git"
   },
   "devDependencies": {
+    "autoprefixer": "^6.5.0",
     "babel-core": "^6.16.0",
     "babel-preset-es2015": "^6.16.0",
     "grunt": "^0.4.5",
@@ -23,6 +24,7 @@
     "grunt-shell": "~1.1.1",
     "grunt-text-replace": "~0.3.12",
     "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
     "gulp-sass": "^2.3.2",
     "stylelint": "^7.3.1",

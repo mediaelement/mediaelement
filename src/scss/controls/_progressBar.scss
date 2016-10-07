@@ -1,0 +1,143 @@
+.mejs-controls {
+  .mejs-time-rail {
+    span {
+      position: absolute;
+      display: block;
+      width: 180px;
+      height: 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    a {
+      position: absolute;
+      display: block;
+      width: 180px;
+      height: 10px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .mejs-time-total {
+      margin: 5px;
+      background: $me-gray-1;
+      background: rgba(50, 50, 50, .8);
+      background: linear-gradient(rgba(30, 30, 30, .8), rgba(60, 60, 60, .8));
+    }
+    .mejs-time-buffering {
+      width: 100%;
+      background-image: linear-gradient(-45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+      background-size: 15px 15px;
+      animation: buffering-stripes 2s linear infinite;
+    }
+    .mejs-time-loaded {
+      width: 0;
+      background: #3caac8;
+      background: rgba(60, 170, 200, .8);
+      background: linear-gradient(rgba(44, 124, 145, .8), rgba(78, 183, 212, .8));
+    }
+    .mejs-time-current {
+      width: 0;
+      background: $me-white;
+      background: rgba(255, 255, 255, .8);
+      background: linear-gradient(rgba(255, 255, 255, .9), rgba(200, 200, 200, .8));
+    }
+    .mejs-time-handle {
+      position: absolute;
+      top: -2px;
+      display: none;
+      margin: 0;
+      width: 10px;
+      border: solid 2px $me-gray-1;
+      border-radius: 5px;
+      background: $me-white;
+      text-align: center;
+      cursor: pointer;
+    }
+    .mejs-time-float {
+      position: absolute;
+      top: -26px;
+      display: none;
+      margin-left: -18px;
+      width: 36px;
+      height: 17px;
+      border: solid 1px $me-gray-1;
+      background: $me-gray-5;
+      color: $me-dark-gray-2;
+      text-align: center;
+    }
+    .mejs-time-float-current {
+      left: 0;
+      display: block;
+      margin: 2px;
+      width: 30px;
+      text-align: center;
+    }
+    .mejs-time-float-corner {
+      position: absolute;
+      top: 15px;
+      left: 13px;
+      display: block;
+      width: 0;
+      height: 0;
+      border: solid 5px $me-gray-5;
+      border-color: $me-gray-5 transparent transparent transparent;
+      border-radius: 0;
+      line-height: 0;
+    }
+  }
+  div.mejs-time-rail {
+    padding-top: 5px;
+    width: 200px;
+    direction: ltr;
+  }
+}
+@-webkit-keyframes buffering-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 30px 0;
+  }
+}
+@-moz-keyframes buffering-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 30px 0;
+  }
+}
+@-ms-keyframes buffering-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 30px 0;
+  }
+}
+@-o-keyframes buffering-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 30px 0;
+  }
+}
+@keyframes buffering-stripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 30px 0;
+  }
+}
+.mejs-long-video .mejs-controls .mejs-time-rail {
+  .mejs-time-float {
+    width: 48px;
+  }
+  .mejs-time-float-current {
+    width: 44px;
+  }
+  .mejs-time-float-corner {
+    left: 18px;
+  }
+}

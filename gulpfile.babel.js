@@ -1,8 +1,9 @@
 import gulp from 'gulp';
 import sass from 'gulp-sass';
 import babel from 'gulp-babel';
+import autoprefixer from 'gulp-autoprefixer';
 
-let dist_folder = './build';
+let output_folder = './build';
 
 let js_files = [
 	'src/js/test.es6.js'
@@ -11,7 +12,11 @@ let js_files = [
 gulp.task('sass', () => {
   return gulp.src('./src/scss/mediaelement.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest(dist_folder));
+		.pipe(autoprefixer({
+			browsers: ['last 2 versions'],
+			cascade: false
+		}))
+    .pipe(gulp.dest(output_folder));
 });
  
 gulp.task('sass:watch', () => {
@@ -21,7 +26,7 @@ gulp.task('sass:watch', () => {
 gulp.task('babel', () => {
 	return gulp.src(js_files)
         .pipe(babel())
-        .pipe(gulp.dest(dist_folder));
+        .pipe(gulp.dest(output_folder));
 
 });
 
