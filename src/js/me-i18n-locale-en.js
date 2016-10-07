@@ -37,7 +37,7 @@
             'mejs.fullscreen' : 'Fullscreen',
 
             // mep-feature-jumpforward
-            'mejs.time-jump-forward': 'Jump forward 1 second;Jump forward %1 seconds',
+            'mejs.time-jump-forward': ['Jump forward 1 second', 'Jump forward %1 seconds'],
 
             // mep-feature-playpause
             'mejs.play': 'Play',
@@ -51,7 +51,7 @@
             'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
 
             // mep-feature-skipback
-            'mejs.time-skip-back': 'Skip back 1 second;Skip back %1 seconds',
+            'mejs.time-skip-back': ['Skip back 1 second', 'Skip back %1 seconds'],
 
             // mep-feature-tracks
             'mejs.captions-subtitles' : 'Captions/Subtitles',
@@ -70,7 +70,7 @@
             	
             // mep-feature-ads
             'mejs.ad-skip': 'Skip ad',
-            'mejs.ad-skip-info': 'Skip in 1 second;Skip in %1 seconds',
+            'mejs.ad-skip-info': ['Skip in 1 second', 'Skip in %1 seconds'],
 
             'mejs.source-chooser': 'Source Chooser'
         };
