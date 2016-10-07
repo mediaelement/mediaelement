@@ -68,6 +68,45 @@ $(document).ready(function() {
 </script>
 ```
 
+If it is a translation that wants to be added, a couple of considerations need to be considered:
+
+* The current format is `'mejs.[ID of element]' : 'translation'` (i.e., `'mejs.play': 'Play'`).
+* The first element in the object **MUST** be `mejs.plural-form: [Number]`, where `[Number]` is the Family Group Number the language belongs (see `/src/js/me-18n.js` to determine which number is the appropriate one).
+* If you require to place a string with a plural, you must write the possible translations in the order specified in http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html as a semi-colon separated string, and the placeholder to replace the number would be `%1`. 
+* **Only one** plural can be in the string.
+* A code template to build a translation is presented below.
+```javascript
+/*!
+ * [Locale] translation ([lang])
+ *
+ * @see me-i18n.js
+ */
+;(function(exports, undefined) {
+
+    "use strict";
+
+    if (typeof exports.[lang] === 'undefined') {
+        exports.[lang] = {
+        
+            // Find the family group number; see `/src/js/me-18n.js`
+            'mejs.plural-form': 14,
+            
+            // Regular translations; to get the entire list of elements, always refer to `me-i18n-locale-en.js`
+            ... 
+            
+            // Example for pluralization following the form `nplurals=3; plural=(n%10==1 ? 0 : n%10==2 ? 1 : 2);`
+            // meaning that if the modulo between number indicated and 10 is 1, then the first string before the first 
+            // semi-colon will be used;
+            // if the modulo between number indicated and 10 is 2, it will use the second one; otherwise, it will use the third case
+            'mejs.time-skip-back' : "Назад на %1 секунд;Назад на %1 секунди;Назад на %1 секунда",
+
+        };
+    }
+
+}(mejs.i18n.locale.strings));
+```
+
+
 <a id="nodejs"></a>
 ## Node.js
 
