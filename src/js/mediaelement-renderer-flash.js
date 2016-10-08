@@ -212,7 +212,12 @@
 						if (flash.flashApi != null) {
 							// send call up to Flash ExternalInterface API
 							if (flash.flashApi['fire_' + methodName]) {
-								flash.flashApi['fire_' + methodName]();
+								try {
+									flash.flashApi['fire_' + methodName]();
+								} catch (e) {
+									console.log(e);
+								}
+
 							} else {
 								console.log('flash','missing method',methodName);
 							}
@@ -253,9 +258,10 @@
 				}
 			};
 
-			win['__event__' + flash.id] = function(eventName) {
+			win['__event__' + flash.id] = function(eventName, message) {
 
 				var event = mejs.Utils.createEvent(eventName, flash);
+				event.message = message;
 
 				// send event from Flash up to the mediaElement
 				flash.mediaElement.dispatchEvent(event);
@@ -403,15 +409,17 @@
 				}
 			} else if (url.indexOf('.m3u8') > -1) {
 				return 'application/x-mpegURL';
+			// } else if (url.indexOf('.oga') > -1) {
+			// 	return 'audio/oga';
+			// } else if (url.indexOf('.ogv') > -1) {
+			// 	return 'video/ogv';
+			}
 			// } else if (url.indexOf('.wav') > -1) {
 			// 	return 'audio/wav';
-			} else if (url.indexOf('.ogg') > -1 || url.indexOf('.ogv') > -1) {
-				return 'audio/ogg';
-			}
-			//
-			// else if (url.indexOf('.mpd') > -1) {
-			//	return 'application/dash+xml';
 			// }
+			else if (url.indexOf('.mpd') > -1) {
+				return 'application/dash+xml';
+			}
 			//
 			else {
 				return null;
@@ -473,30 +481,28 @@
 		mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
 
 		// M(PEG)-DASH
-		// For now only native
-		// @see http://www.streamingmedia.com/Articles/Editorial/Featured-Articles/The-State-of-MPEG-DASH-2016-110099.aspx
-		// var FlashMediaElementMdashVideoRenderer = {
-		// 	name: 'flash_mdash',
-		//
-		// 	options: {
-		// 		prefix: 'flash_mdash',
-		// 		filename: 'mediaelement-flash-video-mdash.swf'
-		// 	},
-		// 	/**
-		// 	 * Determine if a specific element type can be played with this render
-		// 	 *
-		// 	 * @param {String} type
-		// 	 * @return {Boolean}
-		// 	 */
-		// 	canPlayType: function(type) {
-		// 		var supportedMediaTypes = ['application/dash-xml'];
-		//
-		// 		return (supportedMediaTypes.indexOf(type) > -1);
-		// 	},
-		//
-		// 	create: FlashMediaElementRenderer.create
-		// };
-		// mejs.Renderers.add(FlashMediaElementMdashVideoRenderer);
+		var FlashMediaElementMdashVideoRenderer = {
+			name: 'flash_mdash',
+
+			options: {
+				prefix: 'flash_dash',
+				filename: 'mediaelement-flash-video-mdash.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {Boolean}
+			 */
+			canPlayType: function(type) {
+				var supportedMediaTypes = ['application/dash+xml'];
+
+				return (supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			create: FlashMediaElementRenderer.create
+		};
+		mejs.Renderers.add(FlashMediaElementMdashVideoRenderer);
 
 		// AUDIO
 		var FlashMediaElementAudioRenderer = {
