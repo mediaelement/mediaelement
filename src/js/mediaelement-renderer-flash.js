@@ -407,21 +407,18 @@
 				} else {
 					return 'video/rtmp';
 				}
-			} else if (url.indexOf('.m3u8') > -1) {
-				return 'application/x-mpegURL';
 			// } else if (url.indexOf('.oga') > -1) {
 			// 	return 'audio/oga';
 			// } else if (url.indexOf('.ogv') > -1) {
 			// 	return 'video/ogv';
-			}
 			// } else if (url.indexOf('.wav') > -1) {
 			// 	return 'audio/wav';
 			// }
-			else if (url.indexOf('.mpd') > -1) {
+			} else if (url.indexOf('.m3u8') > -1) {
+				return 'application/x-mpegURL';
+			} else if (url.indexOf('.mpd') > -1) {
 				return 'application/dash+xml';
-			}
-			//
-			else {
+			} else {
 				return null;
 			}
 		});
@@ -485,7 +482,7 @@
 			name: 'flash_mdash',
 
 			options: {
-				prefix: 'flash_dash',
+				prefix: 'flash_mdash',
 				filename: 'mediaelement-flash-video-mdash.swf'
 			},
 			/**
@@ -497,7 +494,7 @@
 			canPlayType: function(type) {
 				var supportedMediaTypes = ['application/dash+xml'];
 
-				return (supportedMediaTypes.indexOf(type) > -1);
+				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 			},
 
 			create: FlashMediaElementRenderer.create
