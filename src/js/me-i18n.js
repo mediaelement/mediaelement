@@ -333,6 +333,23 @@
 
 						// Perform plural form or return original text
 						return i18n.pluralForms[form].apply(null, [number].concat(input));
+					},
+					/**
+					 *
+					 * @param {String} input
+					 * @return {String}
+					 */
+					escapeHTML = function (input) {
+						var map = {
+							'&': '&amp;',
+							'<': '&lt;',
+							'>': '&gt;',
+							'"': '&quot;'
+						};
+
+						return input.replace(/[&<>"]/g, function(c) {
+							return map[c];
+						});
 					}
 				;
 
@@ -363,7 +380,7 @@
 					str = str.replace('%1', pluralParam);
 				}
 
-				return str;
+				return escapeHTML(str);
 
 			}
 
