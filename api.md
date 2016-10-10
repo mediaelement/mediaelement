@@ -32,7 +32,7 @@ Including the above, _MediaElementPlayer_ object allows the following extra conf
 
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
-poster | string | _(empty)_ | Poster URL that overrides `poster` attribute (to fix iOS 3.x)
+poster | string | _(empty)_ | Poster URL that overrides `poster` attribute
 showPosterWhenEnded | boolean | `false` | When the video is ended, show the poster
 defaultVideoWidth | number | `480` | Default width if the `<video>` width is not specified
 defaultVideoHeight | number | `270` | Default height if the `<video>` height is not specified
@@ -116,7 +116,7 @@ pause() | Halt (pauses) the currently playing audio or video
 stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is "pause"
 remove() | Destroy the video/audio player instance
 
-**Note:** ```canPlayType()``` method is used internally and accounts for other types of media to be played (such as HLS, RTMP, etc.); ```addTextTrack()``` is replaced also with more code to manage clsoed captioning and tracks. For that reason, they are not listed.
+**Note:** `canPlayType()` method is used internally and accounts for other types of media to be played (such as HLS, RTMP, etc.); ```addTextTrack()``` is replaced also with more code to manage clsoed captioning and tracks. For that reason, they are not listed.
 
 <a id="events"></a>
 ### Events
