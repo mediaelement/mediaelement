@@ -113,7 +113,7 @@ Method | Description
 load() | Reload the audio/video element; also, it is used to update the audio/video element after changing the source or other settings
 play() | Start playing the audio/video
 pause() | Halt (pauses) the currently playing audio or video
-stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is "pause"
+stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is `pause`
 remove() | Destroy the video/audio player instance
 
 **Note:** `canPlayType()` method is used internally and accounts for other types of media to be played (such as HLS, RTMP, etc.); ```addTextTrack()``` is replaced also with more code to manage clsoed captioning and tracks. For that reason, they are not listed.
@@ -135,6 +135,6 @@ pause | The media is paused either by the user or programmatically
 ended | The media has reach the end (a useful event for messages like "thanks for listening")
 volumechange | Volume is changed (including setting the volume to "mute")
 
-For a more comprehensive list of events and more deatiled information about them, please check the [Event summary](https://www.w3.org/TR/html5/embedded-content-0.html#mediaevents) page.
+For a more comprehensive list of events and more detailed information about them, please check the [Event summary](https://www.w3.org/TR/html5/embedded-content-0.html#mediaevents) page.
 ________
 [Back to Main](README.md)
