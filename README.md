@@ -35,7 +35,7 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
 
-* Ability to play Facebook, SoundCloud, M(PEG)-DASH using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support.
+* Ability to play Facebook, SoundCloud, M(PEG)-DASH using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback.
 
 * Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
 
@@ -49,8 +49,11 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Deprecated use of `pluginType` element
 
+
 <a id="browser-support"></a>
 ## Browser and Device support
+
+In general, `MediaElement` supports IE9+, MS Edge, Chrome, Firefox, Safari, iOS 8+ and Android 4.0+
 
 Format | MIME Type | Support
 ------ | --------- | -------

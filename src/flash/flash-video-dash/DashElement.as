@@ -129,10 +129,12 @@ package {
 			}
 		}
 
+		//
+		// Javascript bridged methods
+		//
 		public function fire_load():void {
 
 			sendEvent("loadedmetadata");
-			sendEvent("canplay");
 
 			if (_url) {
 
@@ -145,6 +147,7 @@ package {
 				}
 
 				_mediaContainer.addMediaElement(_contentMediaElement);
+				sendEvent("canplay");
 
 				_isLoaded = true;
 				_isPaused = false;
@@ -177,11 +180,13 @@ package {
 			_stageWidth = width;
 			_stageHeight = height;
 
-			_mediaPlayer.width = width;
-			_mediaPlayer.height = height;
+			_mediaContainer.width  = _stageWidth;
+			_mediaContainer.height = _stageHeight;
 		}
 
-
+		//
+		// Setters
+		//
 		private function set_src(value:String = ''):void {
 			_url = value;
 			_isConnected = false;
@@ -221,7 +226,9 @@ package {
 			_mediaPlayer.seek(pos);
 		}
 
-
+		//
+		// Getters
+		//
 		public function get_src():String {
 			return _url;
 		}
@@ -258,7 +265,7 @@ package {
 
 
 		//
-		// Event handlers
+		// Events
 		//
 		private function onTimeEvent(event:TimeEvent):void {
 			switch(event.type) {
@@ -299,7 +306,7 @@ package {
 		}
 
 		//
-		// Additional Event handlers
+		// Event handlers
 		//
 		private function stageClickHandler(e:MouseEvent):void {
 			sendEvent("click");
