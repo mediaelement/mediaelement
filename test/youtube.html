@@ -2,7 +2,7 @@
 <html debug="true">
 <head>
 	<title>MediaElement.js 3.0 - audio/video unification library</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 	<!--[if lte IE 8]>
 	<script src="../src/js/console.js"></script>
@@ -25,39 +25,36 @@
 	<script src="../src/js/mediaelement-i18n.js"></script>
 
 	<!-- Optional: Player -->
-	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet" />
+	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet">
 	<script src="../src/js/mediaelementplayer-simple.js"></script>
 
 </head>
 <body>
 
-<div id="container">
+	<div id="container">
 
-	<h1>MediaElement.js</h1>
+		<h1>MediaElement.js</h1>
 
-	<h2>Youtube as &lt;video&gt;</h2>
+		<h2>Youtube as &lt;video&gt;</h2>
 
-	<video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
-
-		<source src="https://www.youtube.com/embed/twYp6W6vt2U"  />
-
-	</video>
+		<video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
+			<source src="https://www.youtube.com/embed/twYp6W6vt2U" >
+		</video>
 
 
-	<h2>Youtube as &lt;iframe&gt;</h2>
+		<h2>Youtube as &lt;iframe&gt;</h2>
 
-	<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U" class="mejs-player" allowfullscreen frameborder="0"></iframe>
-</div>
+		<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U" class="mejs-player" allowfullscreen frameborder="0"></iframe>
+	</div>
 
-<script>
+	<script>
+		
+		var elements = mejs.getElementsByClassName('mejs-player');
 
-
-	var elements = mejs.getElementsByClassName('mejs-player');
-
-	for (var i=0, il=elements.length; i<il; i++) {
-		var player = new MediaElementPlayerSimple(elements[i]);
-	}
-</script>
+		for (var i=0, il=elements.length; i<il; i++) {
+			var player = new MediaElementPlayerSimple(elements[i]);
+		}
+	</script>
 
 </body>
 </html>
