@@ -2,7 +2,7 @@
 <html debug="true">
 <head>
 	<title>MediaElement.js 3.0 - audio/video unification library</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 	<!--[if lte IE 8]>
 	<script src="../src/js/console.js"></script>
@@ -26,96 +26,95 @@
 
 	<!-- Optional: Player -->
 	<script src="../src/js/mediaelementplayer-simple.js"></script>
-	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet" />
+	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet">
 	
-<style>
-h3 {
-	margin-top: 4em;
-}
-iframe {
-	background: #000;
-}
+	<style>
+	h3 {
+		margin-top: 4em;
+	}
+	iframe {
+		background: #000;
+	}
 
-</style>
+	</style>
 
 
 </head>
 <body>
 
-<div id="container">
-	
-	<h1>MediaElement.js</h1>
-	
-	<p>Testing embeds and native players</p>
+	<div id="container">
 
-	<h3>HTML5 MP4</h3>
+		<h1>MediaElement.js</h1>
 
-	<video width="640" height="360" preload="none" class="mejs-player" poster="../media/echo-hereweare.jpg" controls>
-		<source src="../media/echo-hereweare.mp4" type="video/mp4" />
-		<track src="../media/mediaelement.srt" type="subtitles" lang="en">
-	</video>
+		<p>Testing embeds and native players</p>
 
-	<h3>YouTube</h3>
+		<h3>HTML5 MP4</h3>
 
-	<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U" class="mejs-player" allowfullscreen frameborder="0">
-	</iframe>
+		<video width="640" height="360" preload="none" class="mejs-player" poster="../media/echo-hereweare.jpg" controls>
+			<source src="../media/echo-hereweare.mp4" type="video/mp4">
+			<track src="../media/mediaelement.srt" type="subtitles" lang="en">
+		</video>
 
-	<h3>Vimeo</h3>
+		<h3>YouTube</h3>
 
-	<iframe src="https://player.vimeo.com/video/59777392?title=false&byline=false&portrait=false" width="640" height="360" frameborder="0" mozallowfullscreen webkitallowfullscreen allowfullscreen class="mejs-player"></iframe>
+		<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U" class="mejs-player" allowfullscreen frameborder="0">
+		</iframe>
 
-	<h3>Dailymotion</h3>
+		<h3>Vimeo</h3>
 
-	<iframe src="http://www.dailymotion.com/embed/video/x2lzodk" width="640" height="360" frameborder="0" allowfullscreen class="mejs-player"></iframe>
+		<iframe src="https://player.vimeo.com/video/59777392?title=false&byline=false&portrait=false" width="640" height="360" frameborder="0" mozallowfullscreen webkitallowfullscreen allowfullscreen class="mejs-player"></iframe>
+
+		<h3>Dailymotion</h3>
+
+		<iframe src="http://www.dailymotion.com/embed/video/x2lzodk" width="640" height="360" frameborder="0" allowfullscreen class="mejs-player"></iframe>
 
 
-	<h3>RTMP Stream</h3>
+		<h3>RTMP Stream</h3>
 
-	<video  width="640" height="360" preload="none" class="mejs-player" >
-		<source src="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4" type="rtmp/mp4" />
-	</video>
+		<video  width="640" height="360" preload="none" class="mejs-player" >
+			<source src="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4" type="rtmp/mp4">
+		</video>
 
-	<h3>HLS Stream</h3>
+		<h3>HLS Stream</h3>
 
-	<video  width="640" height="360" preload="none" class="mejs-player" >
-		<source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
-	</video>
+		<video  width="640" height="360" preload="none" class="mejs-player" >
+			<source type="application/x-mpegURL" src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL">
+		</video>
 
-	<h3>M-DASH Stream</h3>
+		<h3>M-DASH Stream</h3>
 
-	<video  width="640" height="360" preload="none" class="mejs-player" >
-		<source type="application/dash+xml" src="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">
-	</video>
+		<video  width="640" height="360" preload="none" class="mejs-player" >
+			<source type="application/dash+xml" src="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">
+		</video>
 
-	<h3>HTML5 MP3</h3>
+		<h3>HTML5 MP3</h3>
 
-	<audio preload="none" controls class="mejs-player">
-		<source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3" />
-	</audio>
+		<audio preload="none" controls class="mejs-player">
+			<source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3">
+		</audio>
 
-	<h3>WAV</h3>
+		<h3>WAV</h3>
 
-	<audio preload="none" controls class="mejs-player">
-		<source src="../media/test.wav" type="audio/wav" />
-	</audio>
+		<audio preload="none" controls class="mejs-player">
+			<source src="../media/test.wav" type="audio/wav">
+		</audio>
 
-	<h3>Soundcloud</h3>
+		<h3>Soundcloud</h3>
 
-	<iframe  class="mejs-player" width="400" height="250" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
+		<iframe  class="mejs-player" width="400" height="250" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
 
-		
-</div>  <!-- /#container -->
+	</div>  <!-- /#container -->
 
-<script>
-	var elements = mejs.getElementsByClassName('mejs-player');
+	<script>
+		var elements = mejs.getElementsByClassName('mejs-player');
 
-	for (var i=0, il=elements.length; i<il; i++) {
-		var player = new MediaElementPlayerSimple(elements[i], {
-			pluginPath: '../build/'
-		});
-	}
+		for (var i=0, il=elements.length; i<il; i++) {
+			var player = new MediaElementPlayerSimple(elements[i], {
+				pluginPath: '../build/'
+			});
+		}
 
-</script>
+	</script>
 		   	
 </body>
 </html>
