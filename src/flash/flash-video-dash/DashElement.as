@@ -9,7 +9,6 @@ package {
 	import flash.external.*;
 
 	import flash.net.URLRequest;
-	import flash.utils.Timer;
 
 	import org.osmf.containers.MediaContainer;
 	import org.osmf.elements.VideoElement;
@@ -27,7 +26,8 @@ package {
 	import org.osmf.layout.ScaleMode;
 	import org.osmf.layout.VerticalAlign;
 
-	import org.osmf.events.*;
+	import org.osmf.events.TimeEvent;
+	import org.osmf.events.MediaPlayerStateChangeEvent;
 
 	import com.castlabs.dash.DashPluginInfo;
 
@@ -74,12 +74,17 @@ package {
 			// stage setup
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, stageClickHandler);
+			stage.addEventListener(MouseEvent.MOUSE_OVER , stageMouseOverHandler);
+			stage.addEventListener(Event.MOUSE_LEAVE, stageMouseLeaveHandler);
+
 			_stageWidth = stage.stageWidth;
 			_stageHeight = stage.stageHeight;
 
 			// Create a media container & add the MediaElement
 			_mediaFactory = new DefaultMediaFactory();
 			_mediaFactory.addItem(new DashPluginInfo().getMediaFactoryItemAt(0));
+
 
 			_mediaContainer = new MediaContainer();
 			_mediaContainer.mouseEnabled = true;
@@ -89,14 +94,9 @@ package {
 			addChild(_mediaContainer);
 
 			_mediaPlayer = new MediaPlayer();
-			_mediaPlayer.addEventListener(BufferEvent.BUFFER_TIME_CHANGE, onBufferEvent);
-			_mediaPlayer.addEventListener(BufferEvent.BUFFERING_CHANGE, onBufferEvent);
 			_mediaPlayer.addEventListener(TimeEvent.COMPLETE, onTimeEvent);
 			_mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onTimeEvent);
 			_mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChangeEvent);
-			_mediaPlayer.addEventListener(LoadEvent.BYTES_LOADED_CHANGE, onLoadEvent);
-			_mediaPlayer.addEventListener(LoadEvent.BYTES_TOTAL_CHANGE, onLoadEvent);
-			_mediaPlayer.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onLoadEvent);
 
 			if (ExternalInterface.available) {
 
@@ -107,7 +107,8 @@ package {
 				ExternalInterface.addCallback('get_muted', get_muted);
 				ExternalInterface.addCallback('get_duration', get_duration);
 				ExternalInterface.addCallback('get_paused', get_paused);
-				// ExternalInterface.addCallback('get_ended', get_ended);
+				ExternalInterface.addCallback('get_ended', get_ended);
+				ExternalInterface.addCallback('get_buffered', get_buffered);
 
 				// Setters
 				ExternalInterface.addCallback('set_src', set_src);
@@ -120,6 +121,7 @@ package {
 				ExternalInterface.addCallback('fire_load', fire_load);
 				ExternalInterface.addCallback('fire_play', fire_play);
 				ExternalInterface.addCallback('fire_pause', fire_pause);
+				ExternalInterface.addCallback('fire_setSize', fire_setSize);
 
 				ExternalInterface.call('__ready__' + _id);
 
@@ -130,19 +132,26 @@ package {
 		public function fire_load():void {
 
 			sendEvent("loadedmetadata");
+			sendEvent("canplay");
 
 			if (_url) {
-				sendEvent("loadstart");
 
 				_resource = new URLResource(_url);
 				_contentMediaElement = _mediaFactory.createMediaElement(_resource);
 				_contentMediaElement.smoothing = true;
 
+				if (_mediaPlayer.media != null) {
+					_mediaContainer.removeMediaElement(_mediaPlayer.media);
+				}
+
 				_mediaContainer.addMediaElement(_contentMediaElement);
+
 				_isLoaded = true;
 				_isPaused = false;
 
 				_mediaPlayer.media = _contentMediaElement;
+				_mediaPlayer.load();
+
 			}
 		}
 
@@ -155,20 +164,27 @@ package {
 			sendEvent("play");
 			sendEvent("playing");
 		}
-
 		public function fire_pause():void {
 			_isPaused = true;
 
 			_mediaPlayer.pause();
 
 			sendEvent("pause");
+			sendEvent("canplay");
+		}
+		private function fire_setSize(width:Number, height:Number):void {
+
+			_stageWidth = width;
+			_stageHeight = height;
+
+			_mediaPlayer.width = width;
+			_mediaPlayer.height = height;
 		}
 
 
 		private function set_src(value:String = ''):void {
 			_url = value;
 			_isConnected = false;
-			_hasStartedPlaying = false;
 			_isLoaded = false;
 
 			if (!_isLoaded) {
@@ -201,9 +217,6 @@ package {
 			sendEvent("volumechange");
 		}
 		public function set_currentTime(pos:Number):void{
-			// if(!_isManifestLoaded)
-			// 	return;
-
 			sendEvent("seeking");
 			_mediaPlayer.seek(pos);
 		}
@@ -215,10 +228,10 @@ package {
 		public function get_paused():Boolean {
 			return _isPaused;
 		}
-		// public function get_ended():Boolean {
-		// 	// return _isEnded;
-		// }
-		//
+		public function get_ended():Boolean {
+			return _isEnded;
+		}
+
 		public function get_duration():Number{
 			return _duration;
 		}
@@ -235,30 +248,22 @@ package {
 		public function get_currentTime():Number {
 			return _position;
 		}
+		public function get_buffered():Number {
+			var progress:Number = 0;
+			// if (_duration != 0) {
+			// 	progress = Math.round( (_bufferedTime / _duration) * 100 );
+			// }
+			return progress;
+		}
+
 
 		//
 		// Event handlers
 		//
-		// private function stageClickHandler(e:MouseEvent):void {
-		// 	sendEvent("click");
-		// }
-		// private function stageMouseOverHandler(e:MouseEvent):void {
-		// 	//ExternalInterface.call('console.log', 'flash mouseover');
-		// 	sendEvent("mouseover");
-		// }
-		// private function stageMouseLeaveHandler(e:Event):void {
-		// 	//ExternalInterface.call('console.log', 'flash mouseout');
-		// 	sendEvent("mouseout");
-		// 	sendEvent("mouseleave");
-		// }
-
-		private function onBufferEvent(event:BufferEvent):void {
-			log('onBufferEvent', event.toString());
-
-		}
 		private function onTimeEvent(event:TimeEvent):void {
 			switch(event.type) {
 				case TimeEvent.COMPLETE:
+					_isEnded = true;
 					sendEvent('ended');
 					break;
 
@@ -268,35 +273,43 @@ package {
 						_duration = _mediaPlayer.duration;
 					}
 
+					sendEvent('progress');
 					sendEvent('timeupdate');
 					break;
 
 			}
 		}
 		private function onMediaPlayerStateChangeEvent(event:MediaPlayerStateChangeEvent):void {
-			//log('onMediaPlayerStateChangeEvent', event.toString());
 			switch (event.state) {
 				case MediaPlayerState.PLAYING:
+					_isPaused = false;
+					_isEnded = false;
+					sendEvent("loadeddata");
+					sendEvent("play");
+					sendEvent("playing");
+					break;
+
 				case MediaPlayerState.PAUSED:
-				case MediaPlayerState.BUFFERING:
-				case MediaPlayerState.PLAYBACK_ERROR:
-				case MediaPlayerState.LOADING:
-				case MediaPlayerState.UNINITIALIZED:
-					sendEvent(event.state);
+					_isPaused = true;
+					_isEnded = false;
+					sendEvent("pause");
+					sendEvent("canplay");
 					break;
 			}
 		}
 
-		private function onLoadEvent(event:LoadEvent):void {
-			switch(event.type) {
-				case LoadEvent.LOAD_STATE_CHANGE:
-					if (_isPaused) {
-						//fire_load();
-						_mediaPlayer.play();
-					}
-
-					break;
-			}
+		//
+		// Additional Event handlers
+		//
+		private function stageClickHandler(e:MouseEvent):void {
+			sendEvent("click");
+		}
+		private function stageMouseOverHandler(e:MouseEvent):void {
+			sendEvent("mouseover");
+		}
+		private function stageMouseLeaveHandler(e:Event):void {
+			sendEvent("mouseout");
+			sendEvent("mouseleave");
 		}
 
 		//
