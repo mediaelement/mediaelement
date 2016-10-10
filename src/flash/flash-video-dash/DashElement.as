@@ -250,9 +250,9 @@ package {
 		}
 		public function get_buffered():Number {
 			var progress:Number = 0;
-			// if (_duration != 0) {
-			// 	progress = Math.round( (_bufferedTime / _duration) * 100 );
-			// }
+			if (_duration != 0) {
+				progress = Math.round((_mediaPlayer.currentTime / _duration) * 100);
+			}
 			return progress;
 		}
 
