@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html debug="true">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>MediaElement.js 3.0 - audio/video unification library</title>
 
 	<!--[if lte IE 8]>
@@ -44,230 +44,225 @@
 	<script src="../src/js/mediaelementplayer-feature-loop.js"></script>
 	<script src="../src/js/mediaelementplayer-feature-markers.js"></script>
 
-	<link rel="stylesheet" href="../src/css/mediaelementplayer.css" />
+	<link rel="stylesheet" href="../src/css/mediaelementplayer.css">
 	
-<style>
-.commands {
-	padding: 0 0 50px 0;
-}
-.commands > .command {
-	display: block;
-	margin: 2px;
-	cursor: pointer;
-}	
-.commands > .command:hover {
-	background-color: #eaedb8;
-}
+	<style>
+	.commands {
+		padding: 0 0 50px 0;
+	}
+	.commands > .command {
+		display: block;
+		margin: 2px;
+		cursor: pointer;
+	}
+	.commands > .command:hover {
+		background-color: #eaedb8;
+	}
 
-</style>
+	</style>
 
 
 </head>
 <body>
 
-<div id="container">
-	
-	<h1>MediaElement.js</h1>
-	
-	<h2>audio/video unification library</h2>
-	
-	<p><em>MediaElement</em> is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer that can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, JSMad, and other libraries.</p>
-	
-	<p><em>MediaElementPlayer</em> is built off of MediaElement and creates a fully featured player on top of the unified syntax from MediaElement.</p>
-	
-		
-	<div class="players" id="player1-container">
+	<div id="container">
 
-		<h3>Video Player</h3>
+		<h1>MediaElement.js</h1>
 
-		<video id="player1" width="640" height="360" preload="none" >
+		<h2>audio/video unification library</h2>
 
-			<source src="../media/big_buck_bunny.mp4" type="video/mp4" /> 
-			
-		</video>
-		
-		<div id="player1-renderename">Render info</div>
-		
-		<div class="commands">
-			<span class="command">
-				document.getElementById('player1').src = '../media/big_buck_bunny.mp4'; 
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = '../media/echo-hereweare.mp4';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = '../media/big_buck_bunny.webm'; 
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'http://www.dailymotion.com/embed/video/x2lzodk';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'https://s3.amazonaws.com/_bc_dml/example-content/sintel_dash/sintel_vod.mpd';
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'https://www.youtube.com/watch?v=twYp6W6vt2U'; 
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'https://www.youtube.com/watch?v=9bZkp7q19f0'; 
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'http://youtu.be/xmWuqd5y77M'; 
-			</span>
-			<span class="command">
-				document.getElementById('player1').src = 'https://www.facebook.com/johndyer/videos/10107816243681884/';
-			</span>
-			<span class="command">
-				document.getElementById('player1').play();
-			</span>										
-			<span class="command">
-				document.getElementById('player1').pause();
-			</span>										
-			<span class="command">
-				document.getElementById('player1').muted = false;
-			</span>
-			<span class="command">
-				document.getElementById('player1').muted = true;
-			</span>											
-			<span class="command">
-				document.getElementById('player1').volume = 0.5;
-			</span>												
-			<span class="command">
-				document.getElementById('player1').volume = 1;
-			</span>	
-			<span class="command">
-				document.getElementById('player1').currentTime = 26;
-			</span>																								
-		</div>
+		<p><em>MediaElement</em> is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer that can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, JSMad, and other libraries.</p>
 
-	</div><!-- /.player -->
-	
-	<div class="players" id="player2-container">
+		<p><em>MediaElementPlayer</em> is built off of MediaElement and creates a fully featured player on top of the unified syntax from MediaElement.</p>
 
 
-		<h3>Audio Player</h3>
+		<div class="players" id="player1-container">
 
-		<audio id="player2" preload="none" controls>
+			<h3>Video Player</h3>
 
-			<source src="../media/AirReview-Landmarks-02-ChasingCorporate.mp3" type="audio/mp3" />
-	
-		</audio>
-		
-		<div id="player2-renderename"></div>
-		
-		<div class="commands">
-			<span class="command">
-				document.getElementById('player2').src = 'https://upload.wikimedia.org/wikipedia/en/4/45/ACDC_-_Back_In_Black-sample.ogg'; document.getElementById('player2').load();
-			</span>
-			<span class="command">
-				document.getElementById('player2').src = '../media/AirReview-Landmarks-02-ChasingCorporate.mp3'; document.getElementById('player2').load();
-			</span>
-			<span class="command">
-				document.getElementById('player2').src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true';
-			</span>
-			<span class="command">
-				document.getElementById('player2').load();
-			</span>										
-			<span class="command">
-				document.getElementById('player2').play();
-			</span>										
-			<span class="command">
-				document.getElementById('player2').pause();
-			</span>										
-			<span class="command">
-				document.getElementById('player2').muted = false;
-			</span>
-			<span class="command">
-				document.getElementById('player2').muted = true;
-			</span>											
-			<span class="command">
-				document.getElementById('player2').volume = 0.5;
-			</span>												
-			<span class="command">
-				document.getElementById('player2').volume = 1;
-			</span>	
-			<span class="command">
-				document.getElementById('player2').currentTime = 26;
-			</span>																								
-		</div>
-	</div><!-- /.player -->	
-		
-</div>  <!-- /#container -->
-		   
-<script>
+			<video id="player1" width="640" height="360" preload="none" >
+				<source src="../media/big_buck_bunny.mp4" type="video/mp4">
+			</video>
 
-	$('video, audio').mediaelementplayer({
+			<div id="player1-renderename">Render info</div>
 
-		pluginPath:'../build/',
-		markers: [2.5, 10, 35, 40.2],
-		features: ['playpause', 'current', 'progress','volume','speed', 'duration', 'fullscreen', 'tracks', 'skipback', 'jumpforward', 'loop', 'markers', 'stop', 'sourcechooser'],
+			<div class="commands">
+				<span class="command">
+					document.getElementById('player1').src = '../media/big_buck_bunny.mp4';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = '../media/echo-hereweare.mp4';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = '../media/big_buck_bunny.webm';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://www.dailymotion.com/embed/video/x2lzodk';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://s3.amazonaws.com/_bc_dml/example-content/sintel_dash/sintel_vod.mpd';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://www.youtube.com/watch?v=twYp6W6vt2U';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://www.youtube.com/watch?v=9bZkp7q19f0';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://youtu.be/xmWuqd5y77M';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://www.facebook.com/johndyer/videos/10107816243681884/';
+				</span>
+				<span class="command">
+					document.getElementById('player1').play();
+				</span>
+				<span class="command">
+					document.getElementById('player1').pause();
+				</span>
+				<span class="command">
+					document.getElementById('player1').muted = false;
+				</span>
+				<span class="command">
+					document.getElementById('player1').muted = true;
+				</span>
+				<span class="command">
+					document.getElementById('player1').volume = 0.5;
+				</span>
+				<span class="command">
+					document.getElementById('player1').volume = 1;
+				</span>
+				<span class="command">
+					document.getElementById('player1').currentTime = 26;
+				</span>
+			</div>
 
-		success: function(mediaElement) {
+		</div><!-- /.player -->
 
-			var container = document.getElementById(mediaElement.id + '-container'),
-					uiRendererName = document.getElementById(mediaElement.id + '-renderename');
-			mediaElement.addEventListener('loadedmetadata', function(e) {
+		<div class="players" id="player2-container">
 
-				var src = mediaElement.src;
 
-				if (src != null) {
-					uiRendererName.innerHTML = src.substring(src.lastIndexOf('/')+1) + ' : rendered by ' + mediaElement.rendererName;
-				} else {
-					uiRendererName.innerHTML = 'Error finding src. Renderer: ' + mediaElement.rendererName;
+			<h3>Audio Player</h3>
+
+			<audio id="player2" preload="none" controls>
+				<source src="../media/AirReview-Landmarks-02-ChasingCorporate.mp3" type="audio/mp3">
+			</audio>
+
+			<div id="player2-renderename"></div>
+
+			<div class="commands">
+				<span class="command">
+					document.getElementById('player2').src = 'https://upload.wikimedia.org/wikipedia/en/4/45/ACDC_-_Back_In_Black-sample.ogg'; document.getElementById('player2').load();
+				</span>
+				<span class="command">
+					document.getElementById('player2').src = '../media/AirReview-Landmarks-02-ChasingCorporate.mp3'; document.getElementById('player2').load();
+				</span>
+				<span class="command">
+					document.getElementById('player2').src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true';
+				</span>
+				<span class="command">
+					document.getElementById('player2').load();
+				</span>
+				<span class="command">
+					document.getElementById('player2').play();
+				</span>
+				<span class="command">
+					document.getElementById('player2').pause();
+				</span>
+				<span class="command">
+					document.getElementById('player2').muted = false;
+				</span>
+				<span class="command">
+					document.getElementById('player2').muted = true;
+				</span>
+				<span class="command">
+					document.getElementById('player2').volume = 0.5;
+				</span>
+				<span class="command">
+					document.getElementById('player2').volume = 1;
+				</span>
+				<span class="command">
+					document.getElementById('player2').currentTime = 26;
+				</span>
+			</div>
+		</div><!-- /.player -->
+
+	</div>  <!-- /#container -->
+
+	<script>
+
+		$('video, audio').mediaelementplayer({
+
+			pluginPath:'../build/',
+			markers: [2.5, 10, 35, 40.2],
+			features: ['playpause', 'current', 'progress','volume','speed', 'duration', 'fullscreen', 'tracks', 'skipback', 'jumpforward', 'loop', 'markers', 'stop', 'sourcechooser'],
+
+			success: function(mediaElement) {
+
+				var container = document.getElementById(mediaElement.id + '-container'),
+						uiRendererName = document.getElementById(mediaElement.id + '-renderename');
+				mediaElement.addEventListener('loadedmetadata', function(e) {
+
+					var src = mediaElement.src;
+
+					if (src != null) {
+						uiRendererName.innerHTML = src.substring(src.lastIndexOf('/')+1) + ' : rendered by ' + mediaElement.rendererName;
+					} else {
+						uiRendererName.innerHTML = 'Error finding src. Renderer: ' + mediaElement.rendererName;
+					}
+
+				}, false);
+
+
+				mediaElement.addEventListener('error', function(e) {
+
+					uiRendererName.innerHTML = e.message;
+
+				}, false);
+
+
+				var commands = mejs.getElementsByClassName('command', container);
+
+				console.log('commands', commands.length);
+
+				for  (var i=0, il=commands.length; i<il; i++) {
+
+					(function(command) {
+
+
+						mejs.addEvent(command, 'click', function() {
+
+							eval(command.innerHTML.replace('&amp;', '&'));
+
+							var parts = command.innerHTML.split('.src');
+							if (parts.length > 1) {
+								eval(parts[0] + '.load();');
+							}
+						});
+
+
+					})(commands[i]);
+
 				}
-
-			}, false);
-
-
-			mediaElement.addEventListener('error', function(e) {
-
-				uiRendererName.innerHTML = e.message;
-
-			}, false);
-
-
-			var commands = mejs.getElementsByClassName('command', container);
-
-			console.log('commands', commands.length);
-
-			for  (var i=0, il=commands.length; i<il; i++) {
-
-				(function(command) {
-
-
-					mejs.addEvent(command, 'click', function() {
-
-						eval(command.innerHTML.replace('&amp;', '&'));
-
-						var parts = command.innerHTML.split('.src');
-						if (parts.length > 1) {
-							eval(parts[0] + '.load();');
-						}
-					});
-
-
-				})(commands[i]);
-
-
 			}
-		}
-	});
+		});
 
-</script>
+	</script>
 	
 </body>
 </html>
