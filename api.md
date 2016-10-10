@@ -22,155 +22,79 @@ Parameter | Type | Default | Description
 renderers | array | `[]` | List of the renderers to use
 fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
 pluginPath | string | `build/` | Path where Flash shims are located
-facebook | object |  | Facebook API configuration; all elements listed at https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup are accepted
-hls | object |  | Native HLS player configuration; all elements listed at https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning (except amy callback elements) are accepted 
+facebook | object | | Facebook API configuration; all elements listed at https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup are accepted
+hls | object | | Native HLS player configuration; all elements listed at https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning (except amy callback elements) are accepted 
 
 <a id="player"></a>
 ### MediaElementPlayer
 
-Including the above, `MediaElementPlayer` object allows the following extra configuration elements.
+Including the above, _MediaElementPlayer_ object allows the following extra configuration elements.
 
-```javascript
-// url to poster (to fix iOS 3.x)
-poster: '',
-// When the video is ended, we can show the poster.
-showPosterWhenEnded: false,
-// default if the <video width> is not specified
-defaultVideoWidth: 480,
-// default if the <video height> is not specified
-defaultVideoHeight: 270,
-// if set, overrides <video width>
-videoWidth: -1,
-// if set, overrides <video height>
-videoHeight: -1,
-// default if the user doesn't specify
-defaultAudioWidth: 400,
-// default if the user doesn't specify
-defaultAudioHeight: 30,
-// default amount to move back when back key is pressed
-defaultSeekBackwardInterval: function(media) {
-  return (media.duration * 0.05);
-},
-// default amount to move forward when forward key is pressed
-defaultSeekForwardInterval: function(media) {
-	return (media.duration * 0.05);
-},
-// set dimensions via JS instead of CSS
-setDimensions: true,
-// width of audio player
-audioWidth: -1,
-// height of audio player
-audioHeight: -1,
-// initial volume when the player starts (overrided by user cookie)
-startVolume: 0.8,
-// useful for <audio> player loops
-loop: false,
-// rewind to beginning when media ends
-autoRewind: true,
-// resize to media dimensions
-enableAutosize: true,
-/*
- * Time format to use. Default: 'mm:ss'
- * Supported units:
- *   h: hour
- *   m: minute
- *   s: second
- *   f: frame count
- * When using 'hh', 'mm', 'ss' or 'ff' we always display 2 digits.
- * If you use 'h', 'm', 's' or 'f' we display 1 digit if possible.
- *
- * Example to display 75 seconds:
- * Format 'mm:ss': 01:15
- * Format 'm:ss': 1:15
- * Format 'm:s': 1:15
- */
-timeFormat: '',
-// forces the hour marker (##:00:00)
-alwaysShowHours: false,
-// show framecount in timecode (##:00:00:00)
-showTimecodeFrameCount: false,
-// used when showTimecodeFrameCount is set to true
-framesPerSecond: 25,
-// automatically calculate the width of the progress bar based on the sizes of other elements
-autosizeProgress : true,
-// Hide controls when playing and mouse is not over the video
-alwaysShowControls: false,
-// Display the video control
-hideVideoControlsOnLoad: false,
-// Enable click video element to toggle play/pause
-clickToPlayPause: true,
-// force iPad's native controls
-iPadUseNativeControls: false,
-// force iPhone's native controls
-iPhoneUseNativeControls: false,
-// force Android's native controls
-AndroidUseNativeControls: false,
-// features to show
-features: ['playpause','current','progress','duration','tracks','volume','fullscreen'],
-// only for dynamic
-isVideo: true,
-// stretching modes (auto, fill, responsive, none)
-stretching: 'auto',
-// turns keyboard support on and off for this instance
-enableKeyboard: true,
-// whenthis player starts, it will pause other players
-pauseOtherPlayers: true,
-// array of keyboard actions such as play pause
-// Accepts array of objects in format: {keys: [1,2,3...], action: function(player, media) { ... }}
-keyActions: [...]
-// Start point to detect changes on media time duration
-duration: -1,
-// Separator between the current time and the total duration of media being played
-timeAndDurationSeparator: '<span> | </span>',
-// Touch devices (specially mobile devices) have different way to handle volume, 
-// so no need to display it
-hideVolumeOnTouchDevices: true,
-// Position of volume slider on audio element
-audioVolume: 'horizontal',
-// Position of volume slider on video element
-videoVolume: 'vertical',
-// Flag to activate detection of Pointer events when on fullscreen mode
-usePluginFullScreen: true,
-// Enable speeding media; accounts for strings or objects like
-// [{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]
-speeds: ['2.00', '1.50', '1.25', '1.00', '0.75'],
-// Initial speed of media
-defaultSpeed: '1.00',	
-// Character used to stop speeding media
-speedChar: 'x',
-// Automatically turn on a <track>
-startLanguage: '',
-// By default, no WAI-ARIA live region - don't make a
-// screen reader speak captions over an audio track.
-tracksAriaLive: false,
-// Option to remove the [cc] button when no <track kind="subtitles"> are present
-hideCaptionsButtonWhenEmpty: true,
-// If true and we only have one track, change captions to popup
-toggleCaptionsButtonWhenOnlyOne: false,
-// #id or .class
-slidesSelector: '',
-// Milliseconds to skip back media
-skipBackInterval: 30,
-// Enable tooltip that shows time in progress bar
-enableProgressTooltip: true,
-// Specify the color of marker
-markerColor: '#E9BC3D',
-// Specify marker times in seconds 
-markers: [],
-// Callback function invoked when a marker position is reached
-markerCallback: function(media, time) {}
-// Customizable text elements
-// NOTE: They won't be translated if set through here, unless the proper translation is added
-playText: '',
-pauseText: '',
-tracksText: '',
-postrollCloseText: '',
-muteText: '',
-allyVolumeControlText: '',
-fullscreenText: '',
-skipBackText: '',
-sourcechooserText: '',
-```
+Parameter | Type | Default | Description
+------ | --------- | ------- | --------
+poster | string | _(empty)_ | Poster URL that overrides `poster` attribute (to fix iOS 3.x)
+showPosterWhenEnded | boolean | `false` | When the video is ended, show the poster
+defaultVideoWidth | number | `480` | Default width if the `<video>` width is not specified
+defaultVideoHeight | number | `270` | Default height if the `<video>` height is not specified
+videoWidth | number | `-1` | If set, overrides `<video>` width
+videoHeight | number | `-1` | If set, overrides `<video>` height
+defaultAudioWidth | number | `400` | Default width for audio player if the user doesn't specify
+defaultAudioHeight | number | `30` | Default height for audio player if the user doesn't specify
+defaultSeekBackwardInterval | function |  | Default amount to move back when back key is pressed. Default callback is represented like: `function(media) {return (media.duration * 0.05);}`
+defaultSeekForwardInterval | function |  | Default amount to move forward when forward key is pressed. Default callback is represented like: `function(media) {return (media.duration * 0.05);}`
+setDimensions | boolean | `true` | Set dimensions via JS instead of CSS
+audioWidth | number | `-1` | Width of audio player
+audioHeight | number| `-1` | Height of audio player
+startVolume | number | `0.8` | Initial volume when the player starts (overrided by user cookie); represented with `float` values
+loop | boolean | `false` | Whether to loop or not media
+autoRewind | boolean | `true` | Rewind to beginning when media ends
+enableAutosize | boolean | `true` | Resize to media dimensions
+timeFormat | string | _(empty)_ | Time format to use. Default: `'mm:ss'`. Supported units: `h`: hour, `m`: minute, `s`: second and `f`: frame count. If use 2 letters, 2 digits will be displayed (`hh:mm:ss`)
+alwaysShowHours | boolean | `false` | Force the hour marker (`##:00:00`)
+showTimecodeFrameCount | boolean| `false` | Whether to show frame count in timecode (`##:00:00:00`)
+framesPerSecond | number | `25` | Used when `showTimecodeFrameCount` is set to `true`
+autosizeProgress | boolean | `true` | Automatically calculate the width of the progress bar based on the sizes of other elements
+alwaysShowControls | boolean | `false` | Hide controls when playing and mouse is not over the video
+hideVideoControlsOnLoad | boolean | `false` | Display the video control
+clickToPlayPause | boolean | `true` | Enable click video element to toggle play/pause
+iPadUseNativeControls | boolean | `false` | Force iPad's native controls
+iPhoneUseNativeControls | boolean | `false` | Force iPhone's native controls
+AndroidUseNativeControls | boolean | `false` | Force Android's native controls
+features | array | `[...]` | List of features to show in control bars. Supported features: `playpause`, `current`, `progress`, `fullscreen`, `tracks`, `jumpforward`, `skipback`, `loop`, `markers`, `postroll`, `sourcechooser`, `speed`, `stop`, `time`, `volume`
+isVideo | boolean | `true` | Only for dynamic purposes
+stretching | string | `auto` | Stretching modes for video player (`auto`, `fill`, `responsive`, `none`)
+enableKeyboard | boolean | `true` | Turns keyboard support on and off for this instance
+pauseOtherPlayers | boolean | `true` | When focused player starts, it will pause other players
+keyActions | array | `[...]` | Keyboard actions to trigger different actions. Accepts array of objects in format: `{keys: [1,2,3...], action: function(player, media) { ... }}`. To see the entire list, please check `/src/js/mediaelementplayer-player.js`
+duration | number | `-1` | Start point to detect changes on media time duration
+timeAndDurationSeparator | string | `<span> | </span>` | Separator between the current time and the total duration of media being played
+hideVolumeOnTouchDevices | boolean | `true` | Touch devices (specially mobile devices) have different way to handle volume, so no need to display it
+audioVolume | string | `horizontal` | Position of volume slider on audio element
+videoVolume | string | `vertical` | Position of volume slider on video element
+usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer events when on fullscreen mode 
+speeds | array | `['1.50', '1.25', '1.00', '0.75']` | Enable speeding media; accounts for strings or objects like `[{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]`
+defaultSpeed | number | `1.00` | Initial speed of media	
+speedChar | string | `x` | Character used to stop speeding media
+startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element
+tracksAriaLive | boolean | `false` | By default, no WAI-ARIA live region - don't make a screen reader speak captions over an audio track.
+hideCaptionsButtonWhenEmpty | boolean | `true` | Option to remove the `[cc]` button when no `<track kind="subtitles">` are present
+toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to popup
+slidesSelector | string | _(empty)_ | Selector for slides; could be an ID or class represented in jQuery notation (`#id` or `.class`)
+skipBackInterval | number | `30` | Milliseconds to skip back media
+enableProgressTooltip | boolean | `true` | Enable/disable tooltip that shows time popup in progress bar
+markerColor | string | `#E9BC3D` | Specify the color of marker
+markers | array | `[]` | List of numbers to specify marker times in seconds
+markerCallback | function | `function(media, time) {}` | Callback function invoked when a marker position is reached
+playText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is playing
+pauseText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is paused
+tracksText | string | _(empty)_ | Title for Closed Captioning button for WARIA purposes
+postrollCloseText | string | _(empty)_ | Title for button to Postroll layer for WARIA purposes
+muteText | string | _(empty)_ | Title for Mute button for WARIA purposes
+allyVolumeControlText | string | _(empty)_ | Title for Volume slider for WARIA purposes
+fullscreenText | string | _(empty)_ | Title for Fullscreen button for WARIA purposes
+skipBackText | string | _(empty)_ | Title for Skip Back button for WARIA purposes
+jumpForwardText | string | _(empty)_ | Title for Jump Forward button for WARIA purposes
+sourcechooserText | string | _(empty)_ | Title for Source Chooser button for WARIA purposes
 
 <a id="api"></a>
 ## API
