@@ -1,38 +1,61 @@
-
-// VAST ads plugin
-// Sponsored by Minoto Video
-
+/**
+ * VAST Ads Plugin
+ *
+ * Sponsored by Minoto Video
+ */
 (function($) {
-	
+
+	// Feature configuration
 	$.extend(mejs.MepDefaults, {
-		// URL to vast data: 'http://minotovideo.com/sites/minotovideo.com/files/upload/eday_vast_tag.xml'
+		/**
+		 * URL to vast data (http://minotovideo.com/sites/minotovideo.com/files/upload/eday_vast_tag.xml)
+		 * @type {String}
+		 */
 		vastAdTagUrl: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
+
+		/**
+		 * @type {Boolean}
+		 */
+		vastAdTagIsLoading: false,
+		/**
+		 * @type {Boolean}
+		 */
+		vastAdTagIsLoaded: false,
+		/**
+		 * @type {Boolean}
+		 */
+		vastStartedPlaying: false,
+		/**
+		 * @type {Array}
+		 */
+		vastAdTags: [],
+
+		/**
+		 * Feature constructor.
+		 *
+		 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 * @param {$} controls
+		 * @param {$} layers
+		 * @param {HTMLElement} media
+		 */
 		buildvast: function(player, controls, layers, media) {
 
 			var t = this;	
 			
 			// begin loading
-			if (t.options.vastAdTagUrl != '') {
+			if (t.options.vastAdTagUrl !== '') {
 				t.vastLoadAdTagInfo();
 			}
 		
 			// make sure the preroll ad system is ready (it will ensure it can't be called twice)
 			t.buildads(player, controls, layers, media);	
-			
-			
+
 			t.vastSetupEvents();					
 		},
-		
-		vastAdTagIsLoading: false,
-		
-		vastAdTagIsLoaded: false,
-		
-		vastStartedPlaying: false,
-		
-		vastAdTags: [],
 	
 		vastSetupEvents: function() {
 			var t = this;
@@ -40,9 +63,7 @@
 			
 			// START: preroll
 			t.container.on('mejsprerollstarted', function() {			
-				
-				console.log('VAST','mejsprerollstarted');
-				
+
 				if (t.vastAdTags.length > 0) {
 				
 					var adTag = t.vastAdTags[0];
@@ -79,6 +100,10 @@
 			
 		},
 
+		/**
+		 *
+		 * @param {String} url
+		 */
 		vastSetAdTagUrl: function(url) {
 		
 			var t = this;		
@@ -89,7 +114,10 @@
 			t.vastAdTagIsLoaded = false;
 			t.vastAdTags = [];
 		},
-		
+
+		/**
+		 *
+		 */
 		vastLoadAdTagInfo: function() {
 			console.log('loading vast ad data');
 			
@@ -101,12 +129,15 @@
 			
 			// try straight load first
 			t.loadAdTagInfoDirect();
-		}, 
-		
+		},
+
+		/**
+		 *
+		 */
 		loadAdTagInfoDirect: function() {
 			console.log('loading vast:direct');
 			
-			var t= this;
+			var t = this;
 			
 			$.ajax({
 				url: t.options.vastAdTagUrl,
@@ -124,14 +155,16 @@
 				}	
 			});
 		},
-		
+
+		/**
+		 *
+		 */
 		loadAdTagInfoProxy: function() {
 			console.log('loading vast:proxy:yahoo');
 			
 			var t = this,
 				protocol = location.protocol,
 				hostname = location.hostname,
-				exRegex = RegExp(protocol + '//' + hostname),
 				query = 'select * from xml where url="' + encodeURI(t.options.vastAdTagUrl) +'"',
 				yahooUrl = 'http' + (/^https/.test(protocol)?'s':'') + '://query.yahooapis.com/v1/public/yql?format=xml&q=' + query;
 
@@ -150,7 +183,11 @@
 				}	
 			});
 		},
-		
+
+		/**
+		 *
+		 * @param {jQuery} data
+		 */
 		vastParseVastData: function(data) {
 			
 			var t = this;
@@ -218,6 +255,9 @@
 			t.vastLoaded();
 		},
 
+		/**
+		 *
+		 */
 		vastLoaded: function() {
 			var t = this;
 			
@@ -227,7 +267,10 @@
 					
 			t.vastStartPreroll();
 		},
-		
+
+		/**
+		 *
+		 */
 		vastStartPreroll: function() {
 			console.log('vastStartPreroll');
 						
@@ -236,7 +279,7 @@
 			// if we have a media URL, then send it up to the ads plugin as a preroll
 			// load up the vast ads to be played before the selected media.
 			// Note: multiple preroll ads are supported.
-			i = 0;
+			var i = 0;
 			while (i < t.vastAdTags.length) {
 				t.options.adsPrerollMediaUrl[i] = t.vastAdTags[i].mediaFiles[0].url;
 				console.log(t.options.adsPrerollMediaUrl[i]);
