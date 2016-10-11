@@ -41,11 +41,7 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
 
-<!--* Integrated use of [JSMad](https://github.com/fasterthanlime/jsmad) (if indicated) to decode `mp3` audio.-->
-
 * Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
-
-<!--* Addition of error propagation from Flash to Javascript.-->
 
 * Deprecated use of `pluginType` element
 
