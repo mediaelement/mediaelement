@@ -333,7 +333,7 @@ Another things to consider when developing a new renderer:
 
 * Add the HTML needed to display new media in `/test/simpleplayer.html`.
 * Create a `/test/[renderer_name].html` to show the renderer in an isolated way.
-* Add an entry or two in `/test/alpha.html` to confirm that media for new renderer can be changed easily. Example:
+* Add an entry or two in `/test/alpha.html` and `/test/alpha-2.html` to confirm that media for new renderer can be changed easily. Example:
 
 ```html
  <span class="command">
