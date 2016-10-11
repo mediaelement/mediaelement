@@ -7,6 +7,7 @@ function isAfter(sourceNode, targetNode) {
 	return !!(
 		sourceNode &&
 		targetNode &&
+		typeof sourceNode.compareDocumentPosition === 'function' &&
 		sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
 	);
 }
