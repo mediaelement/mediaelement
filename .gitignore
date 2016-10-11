@@ -12,6 +12,6 @@ node_modules
 local-build
 # PhpStorm/WebStorm configuration
 .idea
-media
+media/*
 !media/README
 src/flash/flex_sdk_*
