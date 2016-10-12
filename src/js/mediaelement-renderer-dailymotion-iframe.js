@@ -288,7 +288,7 @@
 							// store for after "READY" event fires
 							apiStack.push({type: 'set', propName: propName, value: value});
 						}
-					}
+					};
 
 				})(props[i]);
 			}

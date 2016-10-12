@@ -27,13 +27,13 @@ function removeEvent( obj, type, fn ) {
 
 function getElementsByClassName(class_name, node, tag) {
 
-	if (node == null) {
+	if (node === null) {
 		node = document;
 	}
-	if (node.getElementsByClassName != null) {
+	if (node.getElementsByClassName !== null) {
 		return node.getElementsByClassName(class_name);
 	}
-	if (tag == null) {
+	if (tag === null) {
 		tag = '*';
 	}
 
@@ -80,7 +80,7 @@ function getNodePosition(obj) {
 		do {
 			curleft += obj.offsetLeft;
 			curtop += obj.offsetTop;
-		} while (obj = obj.offsetParent);
+		} while ((obj = obj.offsetParent));
 
 		return { x: curleft, y: curtop };
 	}
@@ -106,13 +106,13 @@ var fadeEffect = {
 		this.target = target ? target : flag ? 100 : 0;
 		this.flag = flag || -1;
 		this.alpha = this.elem.style.opacity ? parseFloat(this.elem.style.opacity) * 100 : 0;
-		this.elem.si = setInterval(function(){fadeEffect.tween()}, 5);
+		this.elem.si = setInterval(function(){fadeEffect.tween();}, 5);
 	},
 	tween:function(){
 		if (this.alpha == this.target) {
 			clearInterval(this.elem.si);
 		} else {
-			var value = Math.round(this.alpha + ((this.target - this.alpha) * .05)) + (1 * this.flag);
+			var value = Math.round(this.alpha + ((this.target - this.alpha) * 0.05)) + (1 * this.flag);
 			this.elem.style.opacity = value / 100;
 			this.elem.style.filter = 'alpha(opacity=' + value + ')';
 			this.alpha = value;
@@ -277,7 +277,7 @@ MediaElementPlayerSimple.prototype = {
 		}
 
 		function clearControlsTimeout() {
-			if (controlsTimeout != null) {
+			if (controlsTimeout !== null) {
 				clearTimeout(controlsTimeout);
 				controlsTimeout = null;
 			}
@@ -292,7 +292,7 @@ MediaElementPlayerSimple.prototype = {
 			fadeEffect.init(id + '_controls', 0);
 		}
 
-		addEvent(win, 'resize', function() { t.resizeControls() });
+		addEvent(win, 'resize', function() { t.resizeControls(); });
 
 	},
 

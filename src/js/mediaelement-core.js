@@ -14,13 +14,13 @@
 		 */
 		properties: [
 			// GET/SET
-			'volume', 'src', 'currentTime', 'muted'
+			'volume', 'src', 'currentTime', 'muted',
 
 			// GET only
-			, 'duration', 'paused', 'ended'
+			'duration', 'paused', 'ended',
 
 			// OTHERS
-			, 'error', 'currentSrc', 'networkState', 'preload', 'buffered', 'bufferedBytes', 'bufferedTime', 'readyState', 'seeking',
+			'error', 'currentSrc', 'networkState', 'preload', 'buffered', 'bufferedBytes', 'bufferedTime', 'readyState', 'seeking',
 			'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'seekable', 'autoplay', 'loop', 'controls'
 		],
 		/**
@@ -92,7 +92,7 @@
 						return {
 							rendererName: rendererName,
 							src: mediaFiles[j].src
-						}
+						};
 					}
 				}
 			}
@@ -186,7 +186,7 @@
 						getFn = function () {
 							//console.log('[wrapper get]: ' + propName);
 
-							if (mediaElement.renderer != null) {
+							if (mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
 								//return mediaElement.renderer[propName];
@@ -197,7 +197,7 @@
 						setFn = function (value) {
 							//console.log('[wrapper set]: ' + propName + ' = ' + value);
 
-							if (mediaElement.renderer != null) {
+							if (mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
 
 								//mediaElement.renderer[propName] = value;
@@ -216,7 +216,7 @@
 		// special .src property
 		var getSrc = function () {
 
-				if (mediaElement.renderer != null) {
+				if (mediaElement.renderer !== null) {
 					return mediaElement.renderer.getSrc();
 				} else {
 					return null;
@@ -241,7 +241,7 @@
 
 						mediaFiles.push({
 							src: src,
-							type: (type === '' || type == null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
+							type: (type === '' || type === null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
 						});
 
 					}
@@ -289,7 +289,7 @@
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					console.log('[wrapper ' + mediaElement.id + '.' + methodName + '()]', mediaElement.renderer);
-					if (mediaElement.renderer != null) {
+					if (mediaElement.renderer !== null) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -401,7 +401,7 @@
 			var newRenderer = mediaElement.renderers[rendererName],
 				newRendererType = null;
 
-			if (newRenderer != null) {
+			if (newRenderer !== null) {
 				console.log('restoring: ', newRenderer.name);
 
 				newRenderer.show();

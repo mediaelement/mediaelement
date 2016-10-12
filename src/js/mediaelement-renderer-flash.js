@@ -209,7 +209,7 @@
 					flash[methodName] = function() {
 						console.log('[' + options.prefix + ' ' + methodName + '()]');
 
-						if (flash.flashApi != null) {
+						if (flash.flashApi !== null) {
 							// send call up to Flash ExternalInterface API
 							if (flash.flashApi['fire_' + methodName]) {
 								try {

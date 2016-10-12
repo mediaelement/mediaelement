@@ -149,7 +149,7 @@
 			
 			t.media.addEventListener('loadedmetadata', 		t.adsPrerollMetaProxy );	
 			t.media.addEventListener('playing', 			t.adsPrerollStartedProxy );
-			t.media.addEventListener('ended', 				t.adsPrerollEndedProxy )
+			t.media.addEventListener('ended', 				t.adsPrerollEndedProxy );
 			t.media.addEventListener('timeupdate', 			t.adsPrerollUpdateProxy );
 			
 			// change URLs to the preroll ad. Only save the video to be shown on first
@@ -201,7 +201,7 @@
 			
 			// enable clicking through
 			t.adsLayer.show();
-			if (t.options.adsPrerollAdUrl[t.options.indexPreroll] != '') {			
+			if (t.options.adsPrerollAdUrl[t.options.indexPreroll] !== '') {
 				t.adsLayer.find('a').attr('href', t.options.adsPrerollAdUrl[t.options.indexPreroll]);
 			}
 			else {
@@ -240,7 +240,7 @@
 					t.adsSkipButton.show();
 					t.adsSkipMessage.hide();				
 				} else {
-					t.adsSkipMessage.html(mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round( t.options.adsPrerollAdSkipSeconds - t.media.currentTime ).toString()) )
+					t.adsSkipMessage.html(mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round( t.options.adsPrerollAdSkipSeconds - t.media.currentTime ).toString()) );
 				}
 			
 			}
@@ -334,11 +334,8 @@
 			img.src = url + ((url.indexOf('?') > 0) ? '&' : '?') + 'random' + rnd + '=' + rnd;
 			img.loaded = function() {
 				img = null;
-			}
+			};
 		}
-
-
-		
 	});
 
 })(mejs.$);

@@ -112,7 +112,7 @@
 
 						var value = null;
 
-						if (jsmad.jsMad != null) {
+						if (jsmad.jsMad !== null) {
 							switch (propName) {
 								case 'paused':
 									value = !jsmad.jsMad.playing;
@@ -166,7 +166,7 @@
 
 						console.log('[JSMAD ' + methodName + '()]', jsmad.jsMad);
 
-						if (jsmad.jsMad != null) {
+						if (jsmad.jsMad !== null) {
 
 							switch (methodName) {
 								case 'play':
