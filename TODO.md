@@ -5,7 +5,6 @@
 * deeper WebVTT support (alignment, color, etc.) - include captionator
 * Full support for Ender.js, including mediaelement-and-player-standalone which includes ender.
 * system-wide events
-* Ogg/Theora playback
 
 *More items listed in https://github.com/johndyer/mediaelement/labels/Feature*
 
