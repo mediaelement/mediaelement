@@ -360,7 +360,8 @@ mejs.version = '3.0-alpha';
 
 			for (; i < length; i++) {
 				// Only deal with non-null/undefined values
-				if ((options = arguments[i]) !== null) {
+				options = arguments[i];
+				if (options !== null && typeof options !== 'undefined') {
 					// Extend the base object
 					for (name in options) {
 						src = target[name];
@@ -804,7 +805,7 @@ mejs.version = '3.0-alpha';
 
 		id = id || 'mejs_' + Math.random().toString().slice(2);
 
-		if (mediaElement.originalNode !== null && mediaElement.appendChild) {
+		if (typeof mediaElement.originalNode !== 'undefined' && mediaElement.originalNode !== null && mediaElement.appendChild) {
 			// change id
 			mediaElement.originalNode.setAttribute('id', id + '_from_mejs');
 
@@ -841,7 +842,7 @@ mejs.version = '3.0-alpha';
 						getFn = function () {
 							//
 
-							if (mediaElement.renderer !== null) {
+							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
 								//return mediaElement.renderer[propName];
@@ -852,7 +853,7 @@ mejs.version = '3.0-alpha';
 						setFn = function (value) {
 							//
 
-							if (mediaElement.renderer !== null) {
+							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
 
 								//mediaElement.renderer[propName] = value;
@@ -871,7 +872,7 @@ mejs.version = '3.0-alpha';
 		// special .src property
 		var getSrc = function () {
 
-				if (mediaElement.renderer !== null) {
+				if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 					return mediaElement.renderer.getSrc();
 				} else {
 					return null;
@@ -922,7 +923,7 @@ mejs.version = '3.0-alpha';
 				// turn on the renderer (this checks for the existing renderer already)
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
-				if (mediaElement.renderer === null) {
+				if (typeof mediaElement.renderer === 'undefined' || mediaElement.renderer === null) {
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'Error creating renderer';
@@ -944,7 +945,7 @@ mejs.version = '3.0-alpha';
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					
-					if (mediaElement.renderer !== null) {
+					if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -1030,7 +1031,7 @@ mejs.version = '3.0-alpha';
 		mediaElement.changeRenderer = function (rendererName, mediaFiles) {
 
 			// check for a match on the current renderer
-			if (mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
+			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
 
 				
 
@@ -1041,7 +1042,7 @@ mejs.version = '3.0-alpha';
 			}
 
 			// if existing renderer is not the right one, then hide it
-			if (mediaElement.renderer !== null) {
+			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 
 				
 
@@ -1056,10 +1057,11 @@ mejs.version = '3.0-alpha';
 			var newRenderer = mediaElement.renderers[rendererName],
 				newRendererType = null;
 
-			if (newRenderer !== null) {
+			if (typeof newRenderer !== 'undefined' && newRenderer !== null) {
 				
 
 				newRenderer.show();
+
 				newRenderer.setSrc(mediaFiles[0].src);
 
 				mediaElement.renderer = newRenderer;
@@ -1104,7 +1106,7 @@ mejs.version = '3.0-alpha';
 		 * @param {number} height
 		 */
 		mediaElement.setSize = function (width, height) {
-			if (mediaElement.renderer !== null) {
+			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 				mediaElement.renderer.setSize(width, height);
 			}
 		};
@@ -2527,7 +2529,7 @@ mejs.version = '3.0-alpha';
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
 				
-				if (_youTubeState !== null) {
+				if (_youTubeState !== null && typeof _youTubeState !== 'undefined') {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}
 
@@ -5852,13 +5854,13 @@ if (typeof jQuery !== 'undefined') {
 	 */
 	mejs.getElementsByClassName = function getElementsByClassName(className, node, tag) {
 
-		if (node === null) {
+		if (typeof node === 'undefined' || node === null) {
 			node = document;
 		}
-		if (node.getElementsByClassName !== null) {
+		if (typeof node.getElementsByClassName !== 'undefined' && node.getElementsByClassName !== null) {
 			return node.getElementsByClassName(className);
 		}
-		if (tag === null) {
+		if (typeof tag === 'undefined' || tag === null) {
 			tag = '*';
 		}
 
@@ -10153,7 +10155,7 @@ $.extend(mejs.MepDefaults,
 			
 			//
 			
-			if (timer !== null) {
+			if (timer !== null && typeof timer !== 'undefined') {
 				clearTimeout(timer);
 				timer = null;
 			}
@@ -10179,7 +10181,7 @@ $.extend(mejs.MepDefaults,
 					var rendered = items[i].render(t);
 				
 					// render can return null if the item doesn't need to be used at the moment
-					if (rendered !== null) {
+					if (rendered !== null && typeof rendered !== 'undefined') {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}

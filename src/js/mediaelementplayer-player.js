@@ -252,13 +252,13 @@
 	 */
 	mejs.getElementsByClassName = function getElementsByClassName(className, node, tag) {
 
-		if (node === null) {
+		if (typeof node === 'undefined' || node === null) {
 			node = document;
 		}
-		if (node.getElementsByClassName !== null) {
+		if (typeof node.getElementsByClassName !== 'undefined' && node.getElementsByClassName !== null) {
 			return node.getElementsByClassName(className);
 		}
-		if (tag === null) {
+		if (typeof tag === 'undefined' || tag === null) {
 			tag = '*';
 		}
 
