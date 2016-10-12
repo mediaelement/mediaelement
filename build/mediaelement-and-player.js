@@ -49,7 +49,8 @@ mejs.version = '3.0-alpha';
 					return onGet.apply(obj, [oldValue]);
 				},
 				setFn = function (newValue) {
-					return oldValue = onSet.apply(obj, [newValue]);
+					oldValue = onSet.apply(obj, [newValue]);
+					return oldValue;
 				};
 
 			// Modern browsers, IE9+ (IE8 only works on DOM objects, not normal JS objects)
@@ -85,7 +86,7 @@ mejs.version = '3.0-alpha';
 						// restore the get function
 						obj[name] = getFn;
 						obj[name].toString = function () {
-							return getFn().toString()
+							return getFn().toString();
 						};
 
 						// restore the event
@@ -96,7 +97,7 @@ mejs.version = '3.0-alpha';
 				try {
 					obj[name] = getFn;
 					obj[name].toString = function () {
-						return getFn().toString()
+						return getFn().toString();
 					};
 				} catch (ex) {
 					
@@ -281,10 +282,10 @@ mejs.version = '3.0-alpha';
 				seconds = Math.floor(time % 60),
 				frames = Math.floor(((time % 1) * fps).toFixed(3)),
 				result =
-					( (forceHours || hours > 0) ? (hours < 10 ? '0' + hours : hours) + ':' : '')
-					+ (minutes < 10 ? '0' + minutes : minutes) + ':'
-					+ (seconds < 10 ? '0' + seconds : seconds)
-					+ ((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');
+					( (forceHours || hours > 0) ? (hours < 10 ? '0' + hours : hours) + ':' : '') +
+					(minutes < 10 ? '0' + minutes : minutes) + ':' +
+					(seconds < 10 ? '0' + seconds : seconds) +
+					((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');
 
 			return result;
 		},
@@ -359,7 +360,7 @@ mejs.version = '3.0-alpha';
 
 			for (; i < length; i++) {
 				// Only deal with non-null/undefined values
-				if ((options = arguments[i]) != null) {
+				if ((options = arguments[i]) !== null) {
 					// Extend the base object
 					for (name in options) {
 						src = target[name];
@@ -668,13 +669,13 @@ mejs.version = '3.0-alpha';
 		 */
 		properties: [
 			// GET/SET
-			'volume', 'src', 'currentTime', 'muted'
+			'volume', 'src', 'currentTime', 'muted',
 
 			// GET only
-			, 'duration', 'paused', 'ended'
+			'duration', 'paused', 'ended',
 
 			// OTHERS
-			, 'error', 'currentSrc', 'networkState', 'preload', 'buffered', 'bufferedBytes', 'bufferedTime', 'readyState', 'seeking',
+			'error', 'currentSrc', 'networkState', 'preload', 'buffered', 'bufferedBytes', 'bufferedTime', 'readyState', 'seeking',
 			'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'seekable', 'autoplay', 'loop', 'controls'
 		],
 		/**
@@ -746,7 +747,7 @@ mejs.version = '3.0-alpha';
 						return {
 							rendererName: rendererName,
 							src: mediaFiles[j].src
-						}
+						};
 					}
 				}
 			}
@@ -840,7 +841,7 @@ mejs.version = '3.0-alpha';
 						getFn = function () {
 							//
 
-							if (mediaElement.renderer != null) {
+							if (mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
 								//return mediaElement.renderer[propName];
@@ -851,7 +852,7 @@ mejs.version = '3.0-alpha';
 						setFn = function (value) {
 							//
 
-							if (mediaElement.renderer != null) {
+							if (mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
 
 								//mediaElement.renderer[propName] = value;
@@ -870,7 +871,7 @@ mejs.version = '3.0-alpha';
 		// special .src property
 		var getSrc = function () {
 
-				if (mediaElement.renderer != null) {
+				if (mediaElement.renderer !== null) {
 					return mediaElement.renderer.getSrc();
 				} else {
 					return null;
@@ -895,7 +896,7 @@ mejs.version = '3.0-alpha';
 
 						mediaFiles.push({
 							src: src,
-							type: (type === '' || type == null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
+							type: (type === '' || type === null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
 						});
 
 					}
@@ -943,7 +944,7 @@ mejs.version = '3.0-alpha';
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					
-					if (mediaElement.renderer != null) {
+					if (mediaElement.renderer !== null) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -1055,7 +1056,7 @@ mejs.version = '3.0-alpha';
 			var newRenderer = mediaElement.renderers[rendererName],
 				newRendererType = null;
 
-			if (newRenderer != null) {
+			if (newRenderer !== null) {
 				
 
 				newRenderer.show();
@@ -2170,7 +2171,7 @@ mejs.version = '3.0-alpha';
 		 */
 		getYouTubeIdFromUrl: function (url) {
 
-			if (url == undefined || url == null) {
+			if (typeof url === 'undefined' || url === null) {
 				return null;
 			}
 
@@ -2345,7 +2346,7 @@ mejs.version = '3.0-alpha';
 							// store for after "READY" event fires
 							apiStack.push({type: 'set', propName: propName, value: value});
 						}
-					}
+					};
 
 				})(props[i]);
 			}
@@ -2526,7 +2527,7 @@ mejs.version = '3.0-alpha';
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
 				
-				if (_youTubeState != null) {
+				if (_youTubeState !== null) {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}
 
@@ -2697,7 +2698,7 @@ mejs.version = '3.0-alpha';
 		 * @return {int}
 		 */
 		getVimeoId: function (url) {
-			if (url == undefined || url == null) {
+			if (typeof url === 'undefined' || url === null) {
 				return null;
 			}
 
@@ -2906,7 +2907,7 @@ mejs.version = '3.0-alpha';
 							// store for after "READY" event fires
 							apiStack.push({type: 'set', propName: propName, value: value});
 						}
-					}
+					};
 
 				})(props[i]);
 			}
@@ -3411,7 +3412,7 @@ mejs.version = '3.0-alpha';
 							// store for after "READY" event fires
 							apiStack.push({type: 'set', propName: propName, value: value});
 						}
-					}
+					};
 
 				})(props[i]);
 			}
@@ -3770,7 +3771,7 @@ mejs.version = '3.0-alpha';
 							// store for after "READY" event fires
 							apiStack.push({type: 'set', propName: propName, value: value});
 						}
-					}
+					};
 
 				})(props[i]);
 			}
@@ -4637,7 +4638,7 @@ mejs.version = '3.0-alpha';
 					flash[methodName] = function() {
 						
 
-						if (flash.flashApi != null) {
+						if (flash.flashApi !== null) {
 							// send call up to Flash ExternalInterface API
 							if (flash.flashApi['fire_' + methodName]) {
 								try {
@@ -5591,8 +5592,8 @@ if (typeof jQuery !== 'undefined') {
 			width += parseInt($(this).css('margin-right'), 10);
 			width += parseInt($(this).css('margin-left'), 10);
 		}
-		return width
-	}
+		return width;
+	};
 
 } else if (typeof ender !== 'undefined') {
 	mejs.$ = ender;
@@ -5851,13 +5852,13 @@ if (typeof jQuery !== 'undefined') {
 	 */
 	mejs.getElementsByClassName = function getElementsByClassName(className, node, tag) {
 
-		if (node == null) {
+		if (node === null) {
 			node = document;
 		}
-		if (node.getElementsByClassName != null) {
+		if (node.getElementsByClassName !== null) {
 			return node.getElementsByClassName(className);
 		}
-		if (tag == null) {
+		if (tag === null) {
 			tag = '*';
 		}
 
@@ -6255,7 +6256,7 @@ if (typeof jQuery !== 'undefined') {
 				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
-				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr == null || autoplayAttr === 'false'),
+				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature,
 				isNative = t.media.id.match(/(native|html5)/)
@@ -6757,7 +6758,7 @@ if (typeof jQuery !== 'undefined') {
 				scaleX2 = (initWidth * parentHeight) / initHeight,
 				scaleY2 = parentHeight,
 				// now figure out which one we should use
-				bScaleOnWidth = !(scaleX2 > parentWidth),
+				bScaleOnWidth = scaleX2 > parentWidth === false,
 				finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2),
 				finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2);
 
@@ -7035,8 +7036,8 @@ if (typeof jQuery !== 'undefined') {
 
 			// listen for key presses
 			t.globalBind('keydown', function (event) {
-				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0
-					&& $(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
+				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0 &&
+					$(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
 				return t.onkeydown(player, media, event);
 			});
 
@@ -7607,11 +7608,19 @@ if (typeof jQuery !== 'undefined') {
 							break;
 						case 32: // space
 							if (!mejs.Utility.isFirefox) {
-								media.paused ? media.play() : media.pause();
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}
 							}
 							return;
 						case 13: // enter
-							media.paused ? media.play() : media.pause();
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
 							return;
 						default:
 							return;
@@ -9953,7 +9962,7 @@ if (typeof jQuery !== 'undefined') {
 		 */
 		addSourceButton: function (src, label, type, isCurrent) {
 			var t = this;
-			if (label === '' || label == undefined) {
+			if (label === '' || typeof label === 'undefined') {
 				label = src;
 			}
 			type = type.split('/')[1];
@@ -10052,8 +10061,7 @@ $.extend(mejs.MepDefaults,
 					player.enterFullScreen();
 				}
 			}
-		}
-		,
+		},
 		// demo of a mute/unmute button
 		{ 
 			render: function(player) {
@@ -10074,8 +10082,7 @@ $.extend(mejs.MepDefaults,
 		// separator
 		{
 			isSeparator: true
-		}
-		,
+		},
 		// demo of simple download video
 		{ 
 			render: function(player) {
@@ -10146,9 +10153,8 @@ $.extend(mejs.MepDefaults,
 			
 			//
 			
-			if (timer != null) {				
+			if (timer !== null) {
 				clearTimeout(timer);
-				delete timer;
 				timer = null;
 			}
 		},		
@@ -10173,7 +10179,7 @@ $.extend(mejs.MepDefaults,
 					var rendered = items[i].render(t);
 				
 					// render can return null if the item doesn't need to be used at the moment
-					if (rendered != null) {
+					if (rendered !== null) {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}
