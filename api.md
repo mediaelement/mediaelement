@@ -62,7 +62,7 @@ iPhoneUseNativeControls | boolean | `false` | Force iPhone's native controls
 AndroidUseNativeControls | boolean | `false` | Force Android's native controls
 features | array | `[...]` | List of features to show in control bars. Supported features: `playpause`, `current`, `progress`, `fullscreen`, `tracks`, `jumpforward`, `skipback`, `loop`, `markers`, `postroll`, `sourcechooser`, `speed`, `stop`, `time`, `volume`
 isVideo | boolean | `true` | Only for dynamic purposes
-stretching | string | `auto` | Stretching modes for video player (`auto`, `fill`, `responsive`, `none`)
+stretching | string | `auto` | Stretching modes for video player. If `auto` is set, player will try to find the `max-width` and `max-height` CSS styles to turn it into `responsive` mode; otherwise, will set the dimensions specified in the tag (same as setting this option as `none`). The `fill` mode will try to use the available space to make the video fit and, when window is resized, it will crop the dimensions to center it according to the available space.
 enableKeyboard | boolean | `true` | Turns keyboard support on and off for this instance
 pauseOtherPlayers | boolean | `true` | When focused player starts, it will pause other players
 keyActions | array | `[...]` | Keyboard actions to trigger different actions. Accepts array of objects in format: `{keys: [1,2,3...], action: function(player, media) { ... }}`. To see the entire list, please check `/src/js/mediaelementplayer-player.js`
