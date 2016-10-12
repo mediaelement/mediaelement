@@ -6633,7 +6633,7 @@ if (typeof jQuery !== 'undefined') {
 			var t = this;
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-			return (t.height.toString().indexOf('%') > 0 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== 't.width') || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
+			return (t.height.toString().indexOf('%') > -1 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== t.width) || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
 		},
 
 		setResponsiveMode: function () {
@@ -6731,6 +6731,23 @@ if (typeof jQuery !== 'undefined') {
 		setFillMode: function () {
 			var t = this,
 				parent = t.outerContainer;
+
+			// Remove the responsive attributes in the event they are there
+			if (t.$node.css('height') !== 'none' && t.$node.css('height') !== t.height) {
+				t.$node.css('height', '');
+			}
+			if (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== t.width) {
+				t.$node.css('max-width', '');
+			}
+
+			if (t.$node[0].currentStyle) {
+				if (t.$node[0].currentStyle.height === '100%') {
+					t.$node[0].currentStyle.height = '';
+				}
+				if (t.$node[0].currentStyle.maxWidth === '100%') {
+					t.$node[0].currentStyle.maxWidth = '';
+				}
+			}
 
 			if (!parent.width()) {
 				parent.height(t.$media.width());
