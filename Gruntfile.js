@@ -60,9 +60,11 @@ module.exports = function(grunt) {
 					'src/js/mediaelementplayer-feature-fullscreen.js',
 					'src/js/mediaelementplayer-feature-speed.js',
 					'src/js/mediaelementplayer-feature-tracks.js',
+					'src/js/mediaelementplayer-feature-loop.js',
 					'src/js/mediaelementplayer-feature-sourcechooser.js',
 					'src/js/mediaelementplayer-feature-contextmenu.js',
 					'src/js/mediaelementplayer-feature-skipback.js',
+					'src/js/mediaelementplayer-feature-jumpforward.js',
 					'src/js/mediaelementplayer-feature-postroll.js',
 					'src/js/mediaelementplayer-feature-markers.js'
 					]),
