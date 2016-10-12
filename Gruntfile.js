@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
 
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-copy');
@@ -21,10 +22,13 @@ module.exports = function(grunt) {
 			if (grunt.file.isFile(path)) {
 				featureSources.push(path);
 			}
-		})
+		});
 	}
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		jshint: {
+			all: ['Gruntfile.js', 'src/js/**/*.js']
+		},
 		concat: {
 			me: {
 				src: [
@@ -209,10 +213,10 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy',
+	grunt.registerTask('default', ['jshint', 'concat', 'removelogging', 'uglify', 'cssmin', 'copy',
 		'shell:buildFlash', 'shell:buildFlashCDN', 'shell:buildFlashDebug', 'clean:temp']);
 
-    grunt.registerTask('html5only', ['concat', 'removelogging', 'uglify', 'cssmin', 'copy', 'clean:temp']);
-    grunt.registerTask('debug_html5', ['concat', 'uglify', 'cssmin', 'copy', 'clean:temp']);
+    grunt.registerTask('html5only', ['jshint', 'concat', 'removelogging', 'uglify', 'cssmin', 'copy', 'clean:temp']);
+    grunt.registerTask('debug_html5', ['jshint', 'concat', 'uglify', 'cssmin', 'copy', 'clean:temp']);
 
 };
