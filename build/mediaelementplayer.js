@@ -21,8 +21,8 @@ if (typeof jQuery !== 'undefined') {
 			width += parseInt($(this).css('margin-right'), 10);
 			width += parseInt($(this).css('margin-left'), 10);
 		}
-		return width
-	}
+		return width;
+	};
 
 } else if (typeof ender !== 'undefined') {
 	mejs.$ = ender;
@@ -281,13 +281,13 @@ if (typeof jQuery !== 'undefined') {
 	 */
 	mejs.getElementsByClassName = function getElementsByClassName(className, node, tag) {
 
-		if (node == null) {
+		if (node === null) {
 			node = document;
 		}
-		if (node.getElementsByClassName != null) {
+		if (node.getElementsByClassName !== null) {
 			return node.getElementsByClassName(className);
 		}
-		if (tag == null) {
+		if (tag === null) {
 			tag = '*';
 		}
 
@@ -685,7 +685,7 @@ if (typeof jQuery !== 'undefined') {
 				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
-				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr == null || autoplayAttr === 'false'),
+				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature,
 				isNative = t.media.id.match(/(native|html5)/)
@@ -1187,7 +1187,7 @@ if (typeof jQuery !== 'undefined') {
 				scaleX2 = (initWidth * parentHeight) / initHeight,
 				scaleY2 = parentHeight,
 				// now figure out which one we should use
-				bScaleOnWidth = !(scaleX2 > parentWidth),
+				bScaleOnWidth = scaleX2 > parentWidth === false,
 				finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2),
 				finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2);
 
@@ -1465,8 +1465,8 @@ if (typeof jQuery !== 'undefined') {
 
 			// listen for key presses
 			t.globalBind('keydown', function (event) {
-				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0
-					&& $(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
+				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0 &&
+					$(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
 				return t.onkeydown(player, media, event);
 			});
 
@@ -2037,11 +2037,19 @@ if (typeof jQuery !== 'undefined') {
 							break;
 						case 32: // space
 							if (!mejs.Utility.isFirefox) {
-								media.paused ? media.play() : media.pause();
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}
 							}
 							return;
 						case 13: // enter
-							media.paused ? media.play() : media.pause();
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
 							return;
 						default:
 							return;
@@ -4383,7 +4391,7 @@ if (typeof jQuery !== 'undefined') {
 		 */
 		addSourceButton: function (src, label, type, isCurrent) {
 			var t = this;
-			if (label === '' || label == undefined) {
+			if (label === '' || typeof label === 'undefined') {
 				label = src;
 			}
 			type = type.split('/')[1];
@@ -4482,8 +4490,7 @@ $.extend(mejs.MepDefaults,
 					player.enterFullScreen();
 				}
 			}
-		}
-		,
+		},
 		// demo of a mute/unmute button
 		{ 
 			render: function(player) {
@@ -4504,8 +4511,7 @@ $.extend(mejs.MepDefaults,
 		// separator
 		{
 			isSeparator: true
-		}
-		,
+		},
 		// demo of simple download video
 		{ 
 			render: function(player) {
@@ -4576,9 +4582,8 @@ $.extend(mejs.MepDefaults,
 			
 			//
 			
-			if (timer != null) {				
+			if (timer !== null) {
 				clearTimeout(timer);
-				delete timer;
 				timer = null;
 			}
 		},		
@@ -4603,7 +4608,7 @@ $.extend(mejs.MepDefaults,
 					var rendered = items[i].render(t);
 				
 					// render can return null if the item doesn't need to be used at the moment
-					if (rendered != null) {
+					if (rendered !== null) {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}
