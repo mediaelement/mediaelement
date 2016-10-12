@@ -78,11 +78,12 @@
     mejs.i18n.locale.language = lang;
 
     $('select').on('change', function() {
-        var separator = (window.location.href.indexOf("?")===-1)? "?" : "&";
-        window.location.href = window.location.href + separator + "lang=" + $(this).val();
+        var url = window.location.href.replace(/^(.*?)\?.*$/, "$1");
+        window.location.href = url + "?lang=" + $(this).val();
     }).val(lang);
 
     $('audio,video').mediaelementplayer({
+        features: ['playpause','progress','volume','speed','fullscreen', 'skipback'],
         success: function(player, node) {
 
             mejs.i18n.locale.language = mejs.i18n.getLanguage();
