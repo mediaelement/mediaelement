@@ -12,62 +12,59 @@
  * @params
  *  - exports - CommonJS, window ..
  */
-;(function (exports, undefined) {
-
+(function (exports) {
 	"use strict";
 
-	if (typeof exports.de === 'undefined') {
+	if (exports.de === undefined) {
 		exports.de = {
-
-			'mejs.plural-form': 1,
+			"mejs.plural-form": 1,
 
 			// me-shim
-			'mejs.download-file': 'Datei herunterladen',
+			"mejs.download-file": "Datei herunterladen",
 
 			// mep-feature-contextmenu
-			'mejs.fullscreen-off': 'Vollbildmodus beenden',
-			'mejs.fullscreen-on': 'Vollbild',
-			'mejs.download-video': 'Video herunterladen',
+			"mejs.fullscreen-off": "Vollbildmodus beenden",
+			"mejs.fullscreen-on": "Vollbild",
+			"mejs.download-video": "Video herunterladen",
 
 			// mep-feature-fullscreen
-			'mejs.fullscreen': 'Vollbild',
+			"mejs.fullscreen": "Vollbild",
 
 			// mep-feature-jumpforward
-			'mejs.time-jump-forward': '%1 Sekunde(n) vorspulen',
+			"mejs.time-jump-forward": ["1 Sekunde vorspulen", "%1 Sekunden vorspulen"],
 
 			// mep-feature-playpause
-			'mejs.play': 'Abspielen',
-			'mejs.pause': 'Pause',
+			"mejs.play": "Abspielen",
+			"mejs.pause": "Pause",
 
 			// mep-feature-postroll
-			'mejs.close': 'Schließen',
+			"mejs.close": "Schließen",
 
 			// mep-feature-progress
-			'mejs.time-slider': 'Zeitschieberegler',
-			'mejs.time-help-text': 'Verwende die Pfeiltaste nach links/rechts, um eine Sekunde zu spulen, hoch/runter um zehn Sekunden zu spulen.',
+			"mejs.time-slider": "Zeitschieberegler",
+			"mejs.time-help-text": "Verwende die Pfeiltaste nach links/rechts, um eine Sekunde zu spulen, hoch/runter um zehn Sekunden zu spulen.",
 
 			// mep-feature-skipback
-			'mejs.time-skip-back': '%1 Sekunde(n) zurückspulen',
+			"mejs.time-skip-back": ["1 Sekunde zurückspulen", "%1 Sekunden zurückspulen"],
 
 			// mep-feature-tracks
-			'mejs.captions-subtitles': 'Überschriften/Untertitel',
-			'mejs.none': 'Keine',
+			"mejs.captions-subtitles": "Überschriften/Untertitel",
+			"mejs.none": "Keine",
 
 			// mep-feature-volume
-			'mejs.mute-toggle': 'Stummschaltung umschalten',
-			'mejs.volume-help-text': 'Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.',
-			'mejs.unmute': 'Stummschaltung aufheben',
-			'mejs.mute': 'Stummschalten',
-			'mejs.volume-slider': 'Lautstärkeregler',
+			"mejs.mute-toggle": "Stummschaltung umschalten",
+			"mejs.volume-help-text": "Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.",
+			"mejs.unmute": "Stummschaltung aufheben",
+			"mejs.mute": "Stummschalten",
+			"mejs.volume-slider": "Lautstärkeregler",
 
 			// mep-player
-			'mejs.video-player': 'Video-Player',
-			'mejs.audio-player': 'Audio-Player',
+			"mejs.video-player": "Video-Player",
+			"mejs.audio-player": "Audio-Player",
 
 			// mep-feature-ads
-			'mejs.ad-skip': 'Werbung überspringen',
-			'mejs.ad-skip-info': 'Überspringen in %1 Sekunde(n)',
+			"mejs.ad-skip": "Werbung überspringen",
+			"mejs.ad-skip-info": ["Überspringen in 1 Sekunde", "Überspringen in %1 Sekunden"]
 		};
 	}
-
 }(mejs.i18n.locale.strings));
