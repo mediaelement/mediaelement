@@ -144,11 +144,9 @@
 			node = originalNode.cloneNode(true);
 
 			// WRAPPERS for PROPs
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 					node['get' + capName] = function () {
@@ -177,7 +175,10 @@
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// Initial method to register all M-Dash events
@@ -207,12 +208,9 @@
 				}
 
 				// BUBBLE EVENTS
-				var events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events;
-
-				events = events.concat(['click', 'mouseover', 'mouseout']);
-
-				for (i = 0, il = events.length; i < il; i++) {
-					(function (eventName) {
+				var
+					events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events,
+					assignEvents = function (eventName) {
 
 						if (eventName === 'loadedmetadata') {
 							dashPlayer.initialize(node, node.src, false);
@@ -229,7 +227,13 @@
 							mediaElement.dispatchEvent(event);
 						});
 
-					})(events[i]);
+					}
+				;
+
+				events = events.concat(['click', 'mouseover', 'mouseout']);
+
+				for (i = 0, il = events.length; i < il; i++) {
+					assignEvents(events[i]);
 				}
 
 				/**
@@ -239,17 +243,17 @@
 				 * not using dashjs.MediaPlayer.events object
 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 				 */
+				var assignMdashEvents = function (e, data) {
+					var event = mejs.Utils.createEvent(e, node);
+					mediaElement.dispatchEvent(event);
+
+					if (e === 'error') {
+						console.error(e, data);
+					}
+				};
 				for (var eventType in dashEvents) {
-
 					if (dashEvents.hasOwnProperty(eventType)) {
-						dashPlayer.on(dashEvents[eventType], function (e, data) {
-							var event = mejs.Utils.createEvent(e, node);
-							mediaElement.dispatchEvent(event);
-
-							if (e === 'error') {
-								console.error(e, data);
-							}
-						});
+						dashPlayer.on(dashEvents[eventType], assignMdashEvents);
 					}
 				}
 			};

@@ -58,11 +58,8 @@
 			var
 				props = mejs.html5media.properties,
 				i,
-				il;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+				il,
+				assignGettersSetters = function (propName) {
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 					node['get' + capName] = function () {
@@ -73,14 +70,15 @@
 						node[propName] = value;
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
-			var events = mejs.html5media.events;
-			events = events.concat(['click', 'mouseover', 'mouseout']);
-
-			for (i = 0, il = events.length; i < il; i++) {
-				(function (eventName) {
+			var
+				events = mejs.html5media.events,
+				assignEvents = function (eventName) {
 
 					node.addEventListener(eventName, function (e) {
 						// copy event
@@ -95,7 +93,12 @@
 						mediaElement.dispatchEvent(event);
 					});
 
-				})(events[i]);
+				}
+			;
+			events = events.concat(['click', 'mouseover', 'mouseout']);
+
+			for (i = 0, il = events.length; i < il; i++) {
+				assignEvents(events[i]);
 			}
 
 			// HELPER METHODS

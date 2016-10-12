@@ -172,12 +172,8 @@
 		var
 			props = mejs.html5media.properties,
 			i,
-			il;
-		for (i = 0, il = props.length; i < il; i++) {
-
-			// wrap in function to retain scope
-			(function (propName) {
-
+			il,
+			assignGettersSetters = function(propName) {
 				// src is a special one below
 				if (propName !== 'src') {
 
@@ -209,8 +205,9 @@
 					mediaElement['get' + capName] = getFn;
 					mediaElement['set' + capName] = setFn;
 				}
-
-			})(props[i]);
+			};
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
 		}
 
 		// special .src property
@@ -276,16 +273,13 @@
 			};
 
 		mejs.Utils.addProperty(mediaElement, 'src', getSrc, setSrc);
-		mediaElement['getSrc'] = getSrc;
-		mediaElement['setSrc'] = setSrc;
+		mediaElement.getSrc = getSrc;
+		mediaElement.setSrc = setSrc;
 
 		// add methods
-		var methods = mejs.html5media.methods;
-		for (i = 0, il = methods.length; i < il; i++) {
-
-			// wrap in function to retain scope
-			(function (methodName) {
-
+		var
+			methods = mejs.html5media.methods,
+			assignMethods = function (methodName) {
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					console.log('[wrapper ' + mediaElement.id + '.' + methodName + '()]', mediaElement.renderer);
@@ -296,7 +290,10 @@
 					}
 				};
 
-			})(methods[i]);
+			}
+		;
+		for (i = 0, il = methods.length; i < il; i++) {
+			assignMethods(methods[i]);
 		}
 
 		// IE && iOS
