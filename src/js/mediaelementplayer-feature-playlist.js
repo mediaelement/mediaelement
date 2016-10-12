@@ -8,5 +8,5 @@
 			// add speed controls
 		}
 	});
-	
+
 })(mejs.$);

@@ -362,7 +362,7 @@
 				if (!t.options.features.length) {
 					t.container.css('background', 'transparent').find('.mejs-controls').hide();
 				}
- 
+
 				if (t.isVideo && t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
 					// outer container
 					t.outerContainer = t.$media.parent();
@@ -575,7 +575,7 @@
 
 		// Sets up all controls and events
 		meReady: function(media, domNode) {
-			
+
 			var
 				t = this,
 				mf = mejs.MediaFeatures,
@@ -819,7 +819,7 @@
 					if (duration !== this.duration) {
 						duration = this.duration;
 						mejs.Utility.calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
-						
+
 						// make sure to fill in and resize the controls (e.g., 00:00 => 01:13:15
 						if (t.updateDuration) {
 							t.updateDuration();
@@ -828,7 +828,7 @@
 							t.updateCurrent();
 						}
 						t.setControlsSize();
-						
+
 					}
 				}, false);
 
@@ -915,7 +915,7 @@
 			if (typeof height != 'undefined') {
 				t.height = height;
 			}
- 
+
 			// check stretching modes
 			switch (t.options.stretching) {
 				case 'fill':
@@ -942,17 +942,17 @@
 					break;
 			}
 		},
- 
+
 		hasFluidMode: function() {
 			var t = this;
-	 
+
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
 			return (t.height.toString().indexOf('%') > 0 || (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== 't.width') || (t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%'));
 		},
- 
+
 		setResponsiveMode: function() {
 			var t = this;
-		
+
 			// do we have the native dimensions yet?
 			var nativeWidth = (function() {
 				if (t.isVideo) {
@@ -967,7 +967,7 @@
 					return t.options.defaultAudioWidth;
 				}
 			})();
-		
+
 			var nativeHeight = (function() {
 				if (t.isVideo) {
 					if (t.media.videoHeight && t.media.videoHeight > 0) {
@@ -1005,65 +1005,65 @@
 				parentWidth = t.container.parent().closest(':visible').width(),
 				parentHeight = t.container.parent().closest(':visible').height(),
 				newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * aspectRatio, 10) : nativeHeight;
-			
+
 			// If we were unable to compute newHeight, get the container height instead
 			if (isNaN(newHeight)) {
 				newHeight = parentHeight;
 			}
-		
+
 			if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
 				parentWidth = $(window).width();
 				newHeight = $(window).height();
 			}
-		
+
 			if ( newHeight && parentWidth ) {
-			
+
 				// set outer container size
 				t.container
 					.width(parentWidth)
 					.height(newHeight);
-				
+
 				// set native <video> or <audio> and shims
 				t.$media.add(t.container.find('.mejs-shim'))
 					.width('100%')
 					.height('100%');
-				
+
 				// if shim is ready, send the size to the embeded plugin
 				if (t.isVideo) {
 					if (t.media.setVideoSize) {
 						t.media.setVideoSize(parentWidth, newHeight);
 					}
 				}
-		
+
 				// set the layers
 				t.layers.children('.mejs-layer')
 					.width('100%')
 					.height('100%');
 			}
 		},
- 
+
 		setFillMode: function() {
 			var t = this,
 				parent = t.outerContainer;
- 
+
 			if (!parent.width()) {
 				parent.height(t.$media.width());
 			}
- 
+
 			if (!parent.height()) {
 				parent.height(t.$media.height());
 			}
- 
+
 			var parentWidth = parent.width(),
 				parentHeight = parent.height();
-			
+
 			t.setDimensions('100%', '100%');
-			
+
 			// This prevents an issue when displaying poster
 			t.container.find('.mejs-poster img').css('display', 'block');
-			
+
 			targetElement = t.container.find('object, embed, iframe, video');
-			
+
 			// calculate new width and height
 			var initHeight = t.height,
 				initWidth = t.width,
@@ -1077,7 +1077,7 @@
 				bScaleOnWidth = !(scaleX2 > parentWidth),
 				finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2),
 				finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2);
-			
+
 			if (bScaleOnWidth) {
 				targetElement.height(finalHeight).width(parentWidth);
 				if (t.media.setVideoSize) {
@@ -1089,20 +1089,20 @@
 					t.media.setVideoSize(finalWidth, parentHeight);
 				}
 			}
-			
+
 			targetElement.css({
 				'margin-left': Math.floor((parentWidth - finalWidth) / 2),
 				'margin-top': 0
 			});
 		},
-	 
+
 		setDimensions: function(width, height) {
 			var t = this;
-			
+
 			t.container
 				.width(width)
 				.height(height);
-			
+
 			t.layers.children('.mejs-layer')
 				.width(width)
 				.height(height);

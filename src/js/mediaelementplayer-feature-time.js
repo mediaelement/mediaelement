@@ -1,5 +1,5 @@
 (function($) {
-	
+
 	// options
 	$.extend(mejs.MepDefaults, {
 		duration: 0,
@@ -11,14 +11,14 @@
 	$.extend(MediaElementPlayer.prototype, {
 		buildcurrent: function(player, controls, layers, media) {
 			var t = this;
-			
+
 			$('<div class="mejs-time" role="timer" aria-live="off">' +
-					'<span class="mejs-currenttime">' + 
+					'<span class="mejs-currenttime">' +
 						mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours) +
-                    '</span>'+
+					'</span>'+
 				'</div>')
 			.appendTo(controls);
-			
+
 			t.currenttime = t.controls.find('.mejs-currenttime');
 
 			media.addEventListener('timeupdate',function() {
@@ -32,10 +32,10 @@
 
 		buildduration: function(player, controls, layers, media) {
 			var t = this;
-			
+
 			if (controls.children().last().find('.mejs-currenttime').length > 0) {
 				$(t.options.timeAndDurationSeparator +
-					'<span class="mejs-duration">' + 
+					'<span class="mejs-duration">' +
 						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>')
 					.appendTo(controls.find('.mejs-time'));
@@ -43,15 +43,15 @@
 
 				// add class to current time
 				controls.find('.mejs-currenttime').parent().addClass('mejs-currenttime-container');
-				
+
 				$('<div class="mejs-time mejs-duration-container">'+
-					'<span class="mejs-duration">' + 
+					'<span class="mejs-duration">' +
 						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>' +
 				'</div>')
 				.appendTo(controls);
 			}
-			
+
 			t.durationD = t.controls.find('.mejs-duration');
 
 			media.addEventListener('timeupdate',function() {
@@ -60,12 +60,12 @@
 				}
 			}, false);
 		},
-		
+
 		updateCurrent:  function() {
 			var t = this;
-			
+
 			var currentTime = t.media.currentTime;
-			
+
 			if (isNaN(currentTime)) {
 				currentTime = 0;
 			}
@@ -74,10 +74,10 @@
 				t.currenttime.html(mejs.Utility.secondsToTimeCode(currentTime, t.options.alwaysShowHours));
 			}
 		},
-		
+
 		updateDuration: function() {
 			var t = this;
-			
+
 			var duration = t.media.duration;
 
 			if (isNaN(duration) || duration == Infinity || duration < 0) {
@@ -90,10 +90,10 @@
 
 			//Toggle the long video class if the video is longer than an hour.
 			t.container.toggleClass("mejs-long-video", duration > 3600);
-			
+
 			if (t.durationD && duration > 0) {
 				t.durationD.html(mejs.Utility.secondsToTimeCode(duration, t.options.alwaysShowHours));
-			}		
+			}
 		}
 	});
 

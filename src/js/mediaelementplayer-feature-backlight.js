@@ -15,7 +15,7 @@
 
 			//http://www.splashnology.com/blog/html5/382.html
 
-			var 
+			var
 				mediaContainer = player.container.find('.mejs-mediaelement').parent(),
 				border = $('<div class="mejs-border"></div>')
 					.prependTo(mediaContainer)
@@ -62,43 +62,43 @@
 			// draw glow overlay
 			// top
 			gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, size, 0));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(size, size, width, -size); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(size, size, width, -size);
 
 			// tr
 			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, size, 0, width+size, size, size));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(width+size, size, size, -size); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(width+size, size, size, -size);
 
 			// right
 			gradient = addGlow(backgroundColor,glowContext.createLinearGradient(width+size, size, width+size+size, size));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(width+size, size, size, height); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(width+size, size, size, height);
 
 			// br
 			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(width+size, height+size, 0, width+size, height+size, size));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(width+size, height+size, size, size); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(width+size, height+size, size, size);
 
 			// bottom
 			var gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size+height, size, size+height+size));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(size, size+height, width, size); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(size, size+height, width, size);
 
 			// bl
 			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, height+size, 0, size, height+size, size));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(0, height+size, size, size); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(0, height+size, size, size);
 
 			// left
 			gradient = addGlow(backgroundColor,glowContext.createLinearGradient(size, size, 0, size));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(size, size, -size, height); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(size, size, -size, height);
 
 			// tl
 			gradient = addGlow(backgroundColor,glowContext.createRadialGradient(size, size, 0, size, size, size));
-			glowContext.fillStyle = gradient; 
-			glowContext.fillRect(0, 0, size, size); 
+			glowContext.fillStyle = gradient;
+			glowContext.fillRect(0, 0, size, size);
 
 			$(glowCanvas)
 				.css('position','absolute')
@@ -138,10 +138,10 @@
 				copyContext.drawImage(media, 0, 0, media.width, media.height);
 
 				// create the gradient lights
-				addLights(base, copyCanvas, copyContext, 
-					player.options.backlightVerticalLights, 
-					player.options.backlightHorizontalLights, 
-					player.options.backlightSize, 
+				addLights(base, copyCanvas, copyContext,
+					player.options.backlightVerticalLights,
+					player.options.backlightHorizontalLights,
+					player.options.backlightSize,
 					30);
 
 				if (keepUpdating && isActive) {
@@ -174,7 +174,7 @@
 	function addLights(base, canvas, context, vBlocks, hBlocks, size, depth) {
 		base.empty();
 
-		var 
+		var
 			lightsCanvas = document.createElement('canvas'),
 			lightsContext = lightsCanvas.getContext('2d'),
 			width = canvas.width,
@@ -291,7 +291,7 @@
 			for (i = 0; i < blocks; i++) {
 				try {
 					imgdata = context.getImageData(i*blockWidth, (side === 'top') ? 0 : height - blockHeight , blockWidth, blockHeight);
-					result.push( 
+					result.push(
 						calcMidColor(imgdata.data)
 					);
 				} catch (e) {
@@ -303,7 +303,7 @@
 			for (i = 0; i < blocks; i++) {
 				try {
 					imgdata = context.getImageData( (side === 'right') ? width - blockWidth : 0, i*blockHeight, blockWidth, blockHeight);
-					result.push( 
+					result.push(
 						calcMidColor(imgdata.data)
 					);
 				} catch (e) {
@@ -318,11 +318,11 @@
 	}
 
 	function averageColor(c1,c2) {
-		var result = 
-			[(c1[0] + c2[0]) / 2, 
-			 (c1[1] + c2[1]) / 2,  
+		var result =
+			[(c1[0] + c2[0]) / 2,
+			 (c1[1] + c2[1]) / 2,
 			 (c1[2] + c2[2]) / 2];
-			 
+
 		return result;
 	}
 

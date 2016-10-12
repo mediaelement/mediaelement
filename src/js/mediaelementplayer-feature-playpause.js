@@ -30,23 +30,23 @@
 		 * @public
 		 */
 		buildplaypause: function(player, controls, layers, media) {
-			var 
+			var
 				t = this,
 				op = t.options,
-				play = 
+				play =
 				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
 					'<button type="button" aria-controls="' + t.id + '" title="' + op.playText + '" aria-label="' + op.playText + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
 					e.preventDefault();
-				
+
 					if (media.paused) {
 						media.play();
 					} else {
 						media.pause();
 					}
-					
+
 					return false;
 				}),
 				play_btn = play.find('button');
@@ -90,5 +90,5 @@
 			}, false);
 		}
 	});
-	
+
 })(mejs.$);

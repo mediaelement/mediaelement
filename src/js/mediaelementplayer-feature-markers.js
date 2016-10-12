@@ -1,6 +1,6 @@
 /*
-MediaElement-Markers is a MediaElement.js plugin that lets you add Visual Cues in the progress time rail. 
-This plugin also lets you register a custom callback function that will be called everytime the play position reaches a marker. 
+MediaElement-Markers is a MediaElement.js plugin that lets you add Visual Cues in the progress time rail.
+This plugin also lets you register a custom callback function that will be called everytime the play position reaches a marker.
 Marker position and a reference to the MediaElement Player object is passed to the registered callback function for any post processing. Marker color is configurable.
 
 */
@@ -43,7 +43,7 @@ Marker position and a reference to the MediaElement Player object is passed to t
                 }
 
                 for (i = 0; i < player.options.markers.length; ++i) {
-                    currentMarker = Math.floor(player.options.markers[i]); 
+                    currentMarker = Math.floor(player.options.markers[i]);
                     if (currentPos === currentMarker && currentMarker !== lastMarkerCallBack) {
                         player.options.markerCallback(media, media.currentTime); //Fires the callback function
                         lastMarkerCallBack = currentMarker;

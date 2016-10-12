@@ -8,7 +8,7 @@
 		speeds: ['2.00', '1.50', '1.25', '1.00', '0.75'],
 
 		defaultSpeed: '1.00',
-		
+
 		speedChar: 'x'
 
 	});
@@ -19,7 +19,7 @@
 			var t = this;
 
 			if (t.media.pluginType === 'native') {
-				var 
+				var
 					speedButton = null,
 					speedSelector = null,
 					playbackSpeed = null,
@@ -72,8 +72,8 @@
 
 				for (i = 0, il = speeds.length; i<il; i++) {
 					inputId = t.id + '-speed-' + speeds[i].value;
-					html += '<li>' + 
-								'<input type="radio" name="speed" ' + 
+					html += '<li>' +
+								'<input type="radio" name="speed" ' +
 											'value="' + speeds[i].value + '" ' +
 											'id="' + inputId + '" ' +
 											(speeds[i].value === t.options.defaultSpeed ? ' checked' : '') +
