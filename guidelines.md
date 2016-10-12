@@ -1,6 +1,10 @@
 # Guidelines for Contributors
 
 * [Development](#development)
+    * [General Conventions](#development)
+    * [Features](#features)
+    * [Renderers](#renderers)
+    * [Translations](#translations)
 * [Node.js](#nodejs)
 * [Flex SDK](#flex)
 * [Building](#building)
@@ -15,6 +19,7 @@
 * Make sure you download the necessary media files from https://github.com/johndyer/mediaelement-files and place them inside the `/media/` directory.
 * Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product. 
 
+<a id="features"></a>
 ### Features
 
 The file name for them by default is: `mediaelementplayer-feature-[feature_name].js`. To keep consistency across the code, please follow the template above, including the long comments.
@@ -98,7 +103,8 @@ $(document).ready(function() {
 </script>
 ```
 
-### Renders
+<a id="renderers"></a>
+### Renderers
 
 The file name for them by default is: `mediaelement-renderer-[renderer_name].js`. To keep consistency across the code, please follow the template above, including the long comments.
 
@@ -340,6 +346,48 @@ Another things to consider when developing a new renderer:
     document.getElementById('playerId').src = '/path/to/new_media.extension'; 
 </span>
  ```
+
+<a id="translations"></a>
+### Translations
+
+If it is a translation that wants to be added, a couple of considerations need to be considered:
+
+* The current format is `'mejs.[ID of element]' : 'translation'` (i.e., `'mejs.play': 'Play'`).
+* The first element in the object **MUST** be `mejs.plural-form: [Number]`, where `[Number]` is the Family Group Number the language belongs (see `/src/js/mediaelement-18n.js` to determine which number is the appropriate one).
+* If you require to use plurals, you must write the possible translations in the order specified in http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html as an array, and the placeholder to replace the number would be `%1`. 
+* **Only one** plural can be in the strings.
+* A code template to build a translation is presented below.
+
+```javascript
+/*!
+ * [Locale] translation ([lang])
+ *
+ * @see me-i18n.js
+ */
+;(function(exports, undefined) {
+
+    "use strict";
+
+    if (typeof exports.[lang] === 'undefined') {
+        exports.[lang] = {
+        
+            // Find the family group number; see `/src/js/mediaelement-18n.js`
+            'mejs.plural-form': 14,
+            
+            // Regular translations; to get the entire list of elements, always refer to `me-i18n-locale-en.js`
+            ... 
+            
+            // Example for pluralization following the form `nplurals=3; plural=(n%10==1 ? 0 : n%10==2 ? 1 : 2);`
+            // meaning that if the modulo between number indicated and 10 is 1, then the first string will be used;
+            // if the modulo between number indicated and 10 is 2, it will use the second one; otherwise, it will use the third case
+            'mejs.time-skip-back' : ["Назад на %1 секунд", "Назад на %1 секунди", "Назад на %1 секунда"],
+
+        };
+    }
+
+}(mejs.i18n.locale.strings));
+```
+
 
 <a id="nodejs"></a>
 ## Node.js

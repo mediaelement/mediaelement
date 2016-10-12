@@ -18,7 +18,7 @@
 
 	if (typeof exports.ko === 'undefined') {
 		exports.ko = {
-
+			'mejs.plural-form': 0,
 			'mejs.audio-player': "오디오 플레이어",
 			'mejs.captions-subtitles': "캡션/자막",
 			'mejs.close': "종료",
