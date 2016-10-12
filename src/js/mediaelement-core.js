@@ -149,7 +149,7 @@
 
 		id = id || 'mejs_' + Math.random().toString().slice(2);
 
-		if (mediaElement.originalNode !== null && mediaElement.appendChild) {
+		if (typeof mediaElement.originalNode !== 'undefined' && mediaElement.originalNode !== null && mediaElement.appendChild) {
 			// change id
 			mediaElement.originalNode.setAttribute('id', id + '_from_mejs');
 
@@ -186,7 +186,7 @@
 						getFn = function () {
 							//console.log('[wrapper get]: ' + propName);
 
-							if (mediaElement.renderer !== null) {
+							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
 								//return mediaElement.renderer[propName];
@@ -197,7 +197,7 @@
 						setFn = function (value) {
 							//console.log('[wrapper set]: ' + propName + ' = ' + value);
 
-							if (mediaElement.renderer !== null) {
+							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
 
 								//mediaElement.renderer[propName] = value;
@@ -216,7 +216,7 @@
 		// special .src property
 		var getSrc = function () {
 
-				if (mediaElement.renderer !== null) {
+				if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 					return mediaElement.renderer.getSrc();
 				} else {
 					return null;
@@ -267,7 +267,7 @@
 				// turn on the renderer (this checks for the existing renderer already)
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
-				if (mediaElement.renderer === null) {
+				if (typeof mediaElement.renderer === 'undefined' || mediaElement.renderer === null) {
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'Error creating renderer';
@@ -289,7 +289,7 @@
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					console.log('[wrapper ' + mediaElement.id + '.' + methodName + '()]', mediaElement.renderer);
-					if (mediaElement.renderer !== null) {
+					if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -375,7 +375,7 @@
 		mediaElement.changeRenderer = function (rendererName, mediaFiles) {
 
 			// check for a match on the current renderer
-			if (mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
+			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
 
 				console.log('Already using: ' + rendererName);
 
@@ -386,7 +386,7 @@
 			}
 
 			// if existing renderer is not the right one, then hide it
-			if (mediaElement.renderer !== null) {
+			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 
 				console.log('Stopping and hiding: ', mediaElement.renderer);
 
@@ -401,10 +401,11 @@
 			var newRenderer = mediaElement.renderers[rendererName],
 				newRendererType = null;
 
-			if (newRenderer !== null) {
+			if (typeof newRenderer !== 'undefined' && newRenderer !== null) {
 				console.log('restoring: ', newRenderer.name);
 
 				newRenderer.show();
+
 				newRenderer.setSrc(mediaFiles[0].src);
 
 				mediaElement.renderer = newRenderer;
@@ -449,7 +450,7 @@
 		 * @param {number} height
 		 */
 		mediaElement.setSize = function (width, height) {
-			if (mediaElement.renderer !== null) {
+			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
 				mediaElement.renderer.setSize(width, height);
 			}
 		};

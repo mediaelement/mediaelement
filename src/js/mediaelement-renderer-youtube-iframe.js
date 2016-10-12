@@ -510,7 +510,7 @@
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
 				console.log('yt event', eventName);
-				if (_youTubeState !== null) {
+				if (_youTubeState !== null && typeof _youTubeState !== 'undefined') {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}
 
