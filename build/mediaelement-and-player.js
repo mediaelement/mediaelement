@@ -7336,54 +7336,57 @@ if (typeof jQuery !== 'undefined') {
 					startedPaused = media.paused;
 				}
 
-				var keyCode = e.keyCode,
-					duration = media.duration,
-					seekTime = media.currentTime,
-					seekForward = player.options.defaultSeekForwardInterval(media),
-					seekBackward = player.options.defaultSeekBackwardInterval(media);
+				if (t.options.keyActions.length) {
 
-				switch (keyCode) {
-					case 37: // left
-					case 40: // Down
-						seekTime -= seekBackward;
-						break;
-					case 39: // Right
-					case 38: // Up
-						seekTime += seekForward;
-						break;
-					case 36: // Home
-						seekTime = 0;
-						break;
-					case 35: // end
-						seekTime = duration;
-						break;
-					case 32: // space
-						if (!mejs.Utility.isFirefox) {
+					var keyCode = e.keyCode,
+						duration = media.duration,
+						seekTime = media.currentTime,
+						seekForward = player.options.defaultSeekForwardInterval(media),
+						seekBackward = player.options.defaultSeekBackwardInterval(media);
+
+					switch (keyCode) {
+						case 37: // left
+						case 40: // Down
+							seekTime -= seekBackward;
+							break;
+						case 39: // Right
+						case 38: // Up
+							seekTime += seekForward;
+							break;
+						case 36: // Home
+							seekTime = 0;
+							break;
+						case 35: // end
+							seekTime = duration;
+							break;
+						case 32: // space
+							if (!mejs.Utility.isFirefox) {
+								media.paused ? media.play() : media.pause();
+							}
+							return;
+						case 13: // enter
 							media.paused ? media.play() : media.pause();
-						}
-						return;
-					case 13: // enter
-						media.paused ? media.play() : media.pause();
-						return;
-					default:
-						return;
+							return;
+						default:
+							return;
+					}
+
+
+					seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
+					lastKeyPressTime = new Date();
+					if (!startedPaused) {
+						media.pause();
+					}
+
+					if (seekTime < media.duration && !startedPaused) {
+						setTimeout(restartPlayer, 1100);
+					}
+
+					media.setCurrentTime(seekTime);
+
+					e.preventDefault();
+					e.stopPropagation();
 				}
-
-				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
-				lastKeyPressTime = new Date();
-				if (!startedPaused) {
-					media.pause();
-				}
-
-				if (seekTime < media.duration && !startedPaused) {
-					setTimeout(restartPlayer, 1100);
-				}
-
-				media.setCurrentTime(seekTime);
-
-				e.preventDefault();
-				e.stopPropagation();
-				return false;
 			});
 
 
@@ -7901,25 +7904,28 @@ if (typeof jQuery !== 'undefined') {
 					return false;
 				})
 				.bind('keydown', function (e) {
-					var
-						keyCode = e.keyCode,
-						volume = media.volume
-					;
-					switch (keyCode) {
-						case 38: // Up
-							volume = Math.min(volume + 0.1, 1);
-							break;
-						case 40: // Down
-							volume = Math.max(0, volume - 0.1);
-							break;
-						default:
-							return true;
-					}
 
-					mouseIsDown = false;
-					positionVolumeHandle(volume);
-					media.setVolume(volume);
-					return false;
+					if (t.options.keyActions.length) {
+						var
+							keyCode = e.keyCode,
+							volume = media.volume
+							;
+						switch (keyCode) {
+							case 38: // Up
+								volume = Math.min(volume + 0.1, 1);
+								break;
+							case 40: // Down
+								volume = Math.max(0, volume - 0.1);
+								break;
+							default:
+								return true;
+						}
+
+						mouseIsDown = false;
+						positionVolumeHandle(volume);
+						media.setVolume(volume);
+						return false;
+					}
 				});
 
 			// MUTE button
