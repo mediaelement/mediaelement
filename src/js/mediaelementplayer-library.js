@@ -10,8 +10,8 @@ if (typeof jQuery !== 'undefined') {
 			width += parseInt($(this).css('margin-right'), 10);
 			width += parseInt($(this).css('margin-left'), 10);
 		}
-		return width
-	}
+		return width;
+	};
 
 } else if (typeof ender !== 'undefined') {
 	mejs.$ = ender;

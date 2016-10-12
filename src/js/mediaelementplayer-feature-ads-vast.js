@@ -145,7 +145,7 @@
 				success: function(data) {
 					console.log('vast:direct:success', data);
 					
-					t.vastParseVastData(data)				
+					t.vastParseVastData(data);
 				},
 				error: function(err) {
 					console.log('vast3:direct:error', err);
@@ -235,7 +235,7 @@
 					var mediaFile = $(node),
 						type = mediaFile.attr('type');
 						
-					if (t.media.canPlayType(type).toString().replace(/no/,'').replace(/false/,'') != '') {
+					if (t.media.canPlayType(type).toString().replace(/no/,'').replace(/false/,'') !== '') {
 					
 						adTag.mediaFiles.push({
 							id: mediaFile.attr('id'),

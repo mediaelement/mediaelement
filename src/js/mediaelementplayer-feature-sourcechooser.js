@@ -163,7 +163,7 @@
 		 */
 		addSourceButton: function (src, label, type, isCurrent) {
 			var t = this;
-			if (label === '' || label == undefined) {
+			if (label === '' || typeof label === 'undefined') {
 				label = src;
 			}
 			type = type.split('/')[1];

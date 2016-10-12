@@ -154,7 +154,7 @@
 		 */
 		getYouTubeIdFromUrl: function (url) {
 
-			if (url == undefined || url == null) {
+			if (typeof url === 'undefined' || url === null) {
 				return null;
 			}
 
@@ -329,7 +329,7 @@
 							// store for after "READY" event fires
 							apiStack.push({type: 'set', propName: propName, value: value});
 						}
-					}
+					};
 
 				})(props[i]);
 			}
@@ -510,7 +510,7 @@
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
 				console.log('yt event', eventName);
-				if (_youTubeState != null) {
+				if (_youTubeState !== null) {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}
 
