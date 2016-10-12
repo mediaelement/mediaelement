@@ -343,7 +343,8 @@
 
 			for (; i < length; i++) {
 				// Only deal with non-null/undefined values
-				if ((options = arguments[i]) !== null) {
+				options = arguments[i];
+				if (options !== null && typeof options !== 'undefined') {
 					// Extend the base object
 					for (name in options) {
 						src = target[name];
