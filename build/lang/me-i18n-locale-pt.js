@@ -18,7 +18,7 @@
 
 	if (typeof exports.pt === 'undefined') {
 		exports.pt = {
-
+			'mejs.plural-form': 1,
 			'mejs.audio-player': "Leitor de áudio",
 			'mejs.captions-subtitles': "Legendas",
 			'mejs.close': "Fechar",

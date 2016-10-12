@@ -19,6 +19,7 @@
 	if (typeof exports['zh-CN'] === 'undefined') {
 		exports['zh-CN'] = {
 
+			'mejs.plural-form': 0,
 			'mejs.audio-player': "音频播放器",
 			'mejs.captions-subtitles': "字幕/标题",
 			'mejs.close': "关闭",

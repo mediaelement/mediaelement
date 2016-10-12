@@ -4681,13 +4681,12 @@ $.extend(mejs.MepDefaults,
 		buildskipback: function(player, controls, layers, media) {
 			var
 				t = this,
-				skipTitle = t.options.skipBackText ? t.options.skipBackText : mejs.i18n.t('mejs.time-skip-back'),
-				// Replace %1 with skip back interval
-				backText = skipTitle.replace('%1', t.options.skipBackInterval),
+				defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
+				skipTitle = t.options.skipBackText ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
 				// create the loop button
 				loop =
 					$('<div class="mejs-button mejs-skip-back-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + backText + '" aria-label="' + backText + '">' + t.options.skipBackInterval + '</button>' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + skipTitle + '" aria-label="' + skipTitle + '">' + t.options.skipBackInterval + '</button>' +
 					'</div>')
 					// append it to the toolbar
 					.appendTo(controls)
@@ -4735,13 +4734,12 @@ $.extend(mejs.MepDefaults,
 		buildjumpforward: function (player, controls, layers, media) {
 			var
 				t = this,
-				forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText : mejs.i18n.t('mejs.time-jump-forward'),
-				// Replace %1 with skip back interval
-				forwardText = forwardTitle.replace('%1', forwardTitle),
+				defaultTitle = mejs.i18n.t('mejs.time-jump-forward', t.options.jumpForwardInterval),
+				forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle,
 				// create the loop button
 				loop =
 					$('<div class="mejs-button mejs-jump-forward-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + forwardText + '" aria-label="' + forwardText + '">' + t.options.jumpForwardInterval + '</button>' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" aria-label="' + forwardTitle + '">' + t.options.jumpForwardInterval + '</button>' +
 						'</div>')
 					// append it to the toolbar
 					.appendTo(controls)
