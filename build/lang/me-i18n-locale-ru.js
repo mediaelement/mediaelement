@@ -18,7 +18,7 @@
 
 	if (typeof exports.ru === 'undefined') {
 		exports.ru = {
-
+			'mejs.plural-form': 7,
 			'mejs.audio-player': "Аудиоплеер",
 			'mejs.captions-subtitles': "Титры/Субтитры",
 			'mejs.close': "Закрыть",
