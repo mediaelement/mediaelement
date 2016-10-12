@@ -495,6 +495,19 @@ mejs.version = '3.0-alpha';
 				timeout = setTimeout(later, wait);
 				if (callNow) func.apply(context, args);
 			};
+		},
+		/**
+		 * Returns true if targetNode appears after sourceNode in the dom.
+		 * @param {HTMLElement} sourceNode - the source node for comparison
+		 * @param {HTMLElement} targetNode - the node to compare against sourceNode
+		 */
+		isNodeAfter: function (sourceNode, targetNode) {
+			return !!(
+				sourceNode &&
+				targetNode &&
+				typeof sourceNode.compareDocumentPosition === 'function' &&
+				sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
+			);
 		}
 	};
 
@@ -6074,8 +6087,16 @@ if (typeof jQuery !== 'undefined') {
 							// if user clicks on the Play/Pause button in the control bar once it attempts
 							// to hide it
 							if (!t.hasMsNativeFullScreen) {
-								var playButton = t.container.find('.mejs-playpause-button > button');
-								playButton.focus();
+								// If e.relatedTarget appears before container, send focus to play button,
+								// else send focus to last control button.
+								var btnSelector = '.mejs-playpause-button > button';
+
+								if (mejs.Utility.isNodeAfter(e.relatedTarget, t.container[0])) {
+									btnSelector = '.mejs-controls .mejs-button:last-child > button';
+								}
+
+								var button = t.container.find(btnSelector);
+								button.focus();
 							}
 						}
 					});
