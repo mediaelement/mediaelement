@@ -495,6 +495,19 @@ mejs.version = '3.0-alpha';
 				timeout = setTimeout(later, wait);
 				if (callNow) func.apply(context, args);
 			};
+		},
+		/**
+		 * Returns true if targetNode appears after sourceNode in the dom.
+		 * @param {HTMLElement} sourceNode - the source node for comparison
+		 * @param {HTMLElement} targetNode - the node to compare against sourceNode
+		 */
+		isNodeAfter: function (sourceNode, targetNode) {
+			return !!(
+				sourceNode &&
+				targetNode &&
+				typeof sourceNode.compareDocumentPosition === 'function' &&
+				sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
+			);
 		}
 	};
 
