@@ -254,25 +254,28 @@
 					return false;
 				})
 				.bind('keydown', function (e) {
-					var
-						keyCode = e.keyCode,
-						volume = media.volume
-					;
-					switch (keyCode) {
-						case 38: // Up
-							volume = Math.min(volume + 0.1, 1);
-							break;
-						case 40: // Down
-							volume = Math.max(0, volume - 0.1);
-							break;
-						default:
-							return true;
-					}
 
-					mouseIsDown = false;
-					positionVolumeHandle(volume);
-					media.setVolume(volume);
-					return false;
+					if (t.options.keyActions.length) {
+						var
+							keyCode = e.keyCode,
+							volume = media.volume
+							;
+						switch (keyCode) {
+							case 38: // Up
+								volume = Math.min(volume + 0.1, 1);
+								break;
+							case 40: // Down
+								volume = Math.max(0, volume - 0.1);
+								break;
+							default:
+								return true;
+						}
+
+						mouseIsDown = false;
+						positionVolumeHandle(volume);
+						media.setVolume(volume);
+						return false;
+					}
 				});
 
 			// MUTE button
