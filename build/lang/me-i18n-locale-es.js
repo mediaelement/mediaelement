@@ -36,6 +36,7 @@
 			'mejs.play': "Reproducción",
 			'mejs.time-help-text': "Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.",
 			'mejs.time-skip-back' : ["Rebobinar %1 segundo", "Rebobinar %1 segundos"],
+			'mejs.time-jump-forward': ['Avanzar %1 segundo', 'Avanzar %1 segundos'],
 			'mejs.time-slider': "Control deslizante de tiempo",
 			'mejs.unmute': "Reactivar silencio",
 			'mejs.video-player': "Reproductor de video",
