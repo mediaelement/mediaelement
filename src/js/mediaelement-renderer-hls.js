@@ -193,11 +193,9 @@
 			options = mejs.Utils.extend(options, mediaElement.options);
 
 			// WRAPPERS for PROPs
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 					node['get' + capName] = function () {
@@ -227,7 +225,10 @@
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// Initial method to register all HLS events
@@ -253,12 +254,9 @@
 				}
 
 				// BUBBLE EVENTS
-				var events = mejs.html5media.events, hlsEvents = Hls.Events;
-
-				events = events.concat(['click', 'mouseover', 'mouseout']);
-
-				for (i = 0, il = events.length; i < il; i++) {
-					(function (eventName) {
+				var
+					events = mejs.html5media.events, hlsEvents = Hls.Events,
+					assignEvents = function (eventName) {
 
 						if (eventName === 'loadedmetadata') {
 
@@ -282,7 +280,13 @@
 							mediaElement.dispatchEvent(event);
 						});
 
-					})(events[i]);
+					}
+				;
+
+				events = events.concat(['click', 'mouseover', 'mouseout']);
+
+				for (i = 0, il = events.length; i < il; i++) {
+					assignEvents(events[i]);
 				}
 
 				/**
@@ -295,23 +299,24 @@
 				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
 				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
 				 */
+				var assignHlsEvents = function (e, data) {
+					var event = mejs.Utils.createEvent(e, node);
+					mediaElement.dispatchEvent(event);
+
+					if (e === 'ERROR') {
+
+						// Destroy instance of player if unknown error found
+						if (data.fatal && e === Hls.ErrorTypes.OTHER_ERROR) {
+							hlsPlayer.destroy();
+						}
+
+						console.error(e, data);
+					}
+				};
+
 				for (var eventType in hlsEvents) {
-
 					if (hlsEvents.hasOwnProperty(eventType)) {
-						hlsPlayer.on(hlsEvents[eventType], function (e, data) {
-							var event = mejs.Utils.createEvent(e, node);
-							mediaElement.dispatchEvent(event);
-
-							if (e === 'ERROR') {
-
-								// Destroy instance of player if unknown error found
-								if (data.fatal && e === Hls.ErrorTypes.OTHER_ERROR) {
-									hlsPlayer.destroy();
-								}
-
-								console.error(e, data);
-							}
-						});
+						hlsPlayer.on(hlsEvents[eventType], assignHlsEvents);
 					}
 				}
 			};

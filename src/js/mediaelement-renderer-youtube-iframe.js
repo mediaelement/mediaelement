@@ -170,7 +170,7 @@
 	 * Register YouTube API event globally
 	 *
 	 */
-	win['onYouTubePlayerAPIReady'] = function () {
+	win.onYouTubePlayerAPIReady = function () {
 		console.log('onYouTubePlayerAPIReady');
 		YouTubeApi.iFrameReady();
 	};
@@ -220,11 +220,9 @@
 				il;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					// add to flash state that we will store
 
@@ -331,13 +329,16 @@
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the native HTMLMediaElement
 					youtube[methodName] = function () {
@@ -361,7 +362,10 @@
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// CREATE YouTube
@@ -422,18 +426,21 @@
 
 							console.log('iframe', youTubeIframe);
 
-							var events = ['mouseover', 'mouseout'];
-
-							for (var j in events) {
-								var eventName = events[j];
-								mejs.addEvent(youTubeIframe, eventName, function (e) {
+							var
+								events = ['mouseover', 'mouseout'],
+								assignEvents = function (e) {
 
 									console.log('youtube iframe', e.type);
 
 									var event = mejs.Utils.createEvent(e.type, youtube);
 
 									mediaElement.dispatchEvent(event);
-								});
+								}
+							;
+
+							for (var j in events) {
+								var eventName = events[j];
+								mejs.addEvent(youTubeIframe, eventName, assignEvents);
 							}
 
 							// send init events

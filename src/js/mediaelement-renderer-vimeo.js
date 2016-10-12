@@ -174,7 +174,7 @@
 	 * Register Vimeo event globally
 	 *
 	 */
-	win['onVimeoPlayerAPIReady'] = function () {
+	win.onVimeoPlayerAPIReady = function () {
 		console.log('onVimeoPlayerAPIReady');
 		vimeoApi.iFrameReady();
 	};
@@ -228,11 +228,9 @@
 			vimeo.mediaElement = mediaElement;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
@@ -330,13 +328,16 @@
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the Soundcloud API
 					vimeo[methodName] = function () {
@@ -359,7 +360,10 @@
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// Initial method to register all Vimeo events when initializing <iframe>
@@ -389,12 +393,15 @@
 
 				// a few more events
 				events = ['mouseover', 'mouseout'];
+
+				var assignEvents = function (e) {
+					var event = mejs.Utils.createEvent(e.type, vimeo);
+					mediaElement.dispatchEvent(event);
+				};
+
 				for (var j in events) {
 					var eventName = events[j];
-					mejs.addEvent(vimeoIframe, eventName, function (e) {
-						var event = mejs.Utils.createEvent(e.type, vimeo);
-						mediaElement.dispatchEvent(event);
-					});
+					mejs.addEvent(vimeoIframe, eventName, assignEvents);
 				}
 
 				// Vimeo events
@@ -528,6 +535,10 @@
 				if (vimeoPlayer) {
 					vimeoContainer.style.display = 'none';
 				}
+			};
+			vimeo.setSize = function (width, height) {
+				vimeoContainer.setAttribute('width', width);
+				vimeoContainer.setAttribute('height', height);
 			};
 			vimeo.show = function () {
 				if (vimeoPlayer) {

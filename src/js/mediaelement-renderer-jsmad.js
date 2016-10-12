@@ -100,11 +100,9 @@
 			};
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i=0, il=props.length; i<il; i++) {
-
-				// wrap in function to retain scope
-				(function(propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function(propName) {
 
 					var capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
@@ -153,13 +151,16 @@
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i=0, il=props.length; i<il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i=0, il=methods.length; i<il; i++) {
-				(function(methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function(methodName) {
 
 					// run the method on the native HTMLMediaElement
 					jsmad[methodName] = function() {
@@ -190,7 +191,10 @@
 
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i=0, il=methods.length; i<il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			jsmad.show = function() {};

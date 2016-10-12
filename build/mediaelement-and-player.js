@@ -828,12 +828,8 @@ mejs.version = '3.0-alpha';
 		var
 			props = mejs.html5media.properties,
 			i,
-			il;
-		for (i = 0, il = props.length; i < il; i++) {
-
-			// wrap in function to retain scope
-			(function (propName) {
-
+			il,
+			assignGettersSetters = function(propName) {
 				// src is a special one below
 				if (propName !== 'src') {
 
@@ -865,8 +861,9 @@ mejs.version = '3.0-alpha';
 					mediaElement['get' + capName] = getFn;
 					mediaElement['set' + capName] = setFn;
 				}
-
-			})(props[i]);
+			};
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
 		}
 
 		// special .src property
@@ -932,16 +929,13 @@ mejs.version = '3.0-alpha';
 			};
 
 		mejs.Utils.addProperty(mediaElement, 'src', getSrc, setSrc);
-		mediaElement['getSrc'] = getSrc;
-		mediaElement['setSrc'] = setSrc;
+		mediaElement.getSrc = getSrc;
+		mediaElement.setSrc = setSrc;
 
 		// add methods
-		var methods = mejs.html5media.methods;
-		for (i = 0, il = methods.length; i < il; i++) {
-
-			// wrap in function to retain scope
-			(function (methodName) {
-
+		var
+			methods = mejs.html5media.methods,
+			assignMethods = function (methodName) {
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					
@@ -952,7 +946,10 @@ mejs.version = '3.0-alpha';
 					}
 				};
 
-			})(methods[i]);
+			}
+		;
+		for (i = 0, il = methods.length; i < il; i++) {
+			assignMethods(methods[i]);
 		}
 
 		// IE && iOS
@@ -1242,11 +1239,8 @@ mejs.version = '3.0-alpha';
 			var
 				props = mejs.html5media.properties,
 				i,
-				il;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+				il,
+				assignGettersSetters = function (propName) {
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 					node['get' + capName] = function () {
@@ -1257,14 +1251,15 @@ mejs.version = '3.0-alpha';
 						node[propName] = value;
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
-			var events = mejs.html5media.events;
-			events = events.concat(['click', 'mouseover', 'mouseout']);
-
-			for (i = 0, il = events.length; i < il; i++) {
-				(function (eventName) {
+			var
+				events = mejs.html5media.events,
+				assignEvents = function (eventName) {
 
 					node.addEventListener(eventName, function (e) {
 						// copy event
@@ -1279,7 +1274,12 @@ mejs.version = '3.0-alpha';
 						mediaElement.dispatchEvent(event);
 					});
 
-				})(events[i]);
+				}
+			;
+			events = events.concat(['click', 'mouseover', 'mouseout']);
+
+			for (i = 0, il = events.length; i < il; i++) {
+				assignEvents(events[i]);
 			}
 
 			// HELPER METHODS
@@ -1518,11 +1518,9 @@ mejs.version = '3.0-alpha';
 			options = mejs.Utils.extend(options, mediaElement.options);
 
 			// WRAPPERS for PROPs
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 					node['get' + capName] = function () {
@@ -1552,7 +1550,10 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// Initial method to register all HLS events
@@ -1578,12 +1579,9 @@ mejs.version = '3.0-alpha';
 				}
 
 				// BUBBLE EVENTS
-				var events = mejs.html5media.events, hlsEvents = Hls.Events;
-
-				events = events.concat(['click', 'mouseover', 'mouseout']);
-
-				for (i = 0, il = events.length; i < il; i++) {
-					(function (eventName) {
+				var
+					events = mejs.html5media.events, hlsEvents = Hls.Events,
+					assignEvents = function (eventName) {
 
 						if (eventName === 'loadedmetadata') {
 
@@ -1607,7 +1605,13 @@ mejs.version = '3.0-alpha';
 							mediaElement.dispatchEvent(event);
 						});
 
-					})(events[i]);
+					}
+				;
+
+				events = events.concat(['click', 'mouseover', 'mouseout']);
+
+				for (i = 0, il = events.length; i < il; i++) {
+					assignEvents(events[i]);
 				}
 
 				/**
@@ -1620,23 +1624,24 @@ mejs.version = '3.0-alpha';
 				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
 				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
 				 */
+				var assignHlsEvents = function (e, data) {
+					var event = mejs.Utils.createEvent(e, node);
+					mediaElement.dispatchEvent(event);
+
+					if (e === 'ERROR') {
+
+						// Destroy instance of player if unknown error found
+						if (data.fatal && e === Hls.ErrorTypes.OTHER_ERROR) {
+							hlsPlayer.destroy();
+						}
+
+						console.error(e, data);
+					}
+				};
+
 				for (var eventType in hlsEvents) {
-
 					if (hlsEvents.hasOwnProperty(eventType)) {
-						hlsPlayer.on(hlsEvents[eventType], function (e, data) {
-							var event = mejs.Utils.createEvent(e, node);
-							mediaElement.dispatchEvent(event);
-
-							if (e === 'ERROR') {
-
-								// Destroy instance of player if unknown error found
-								if (data.fatal && e === Hls.ErrorTypes.OTHER_ERROR) {
-									hlsPlayer.destroy();
-								}
-
-								console.error(e, data);
-							}
-						});
+						hlsPlayer.on(hlsEvents[eventType], assignHlsEvents);
 					}
 				}
 			};
@@ -1848,11 +1853,9 @@ mejs.version = '3.0-alpha';
 			node = originalNode.cloneNode(true);
 
 			// WRAPPERS for PROPs
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 					node['get' + capName] = function () {
@@ -1881,7 +1884,10 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// Initial method to register all M-Dash events
@@ -1911,12 +1917,9 @@ mejs.version = '3.0-alpha';
 				}
 
 				// BUBBLE EVENTS
-				var events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events;
-
-				events = events.concat(['click', 'mouseover', 'mouseout']);
-
-				for (i = 0, il = events.length; i < il; i++) {
-					(function (eventName) {
+				var
+					events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events,
+					assignEvents = function (eventName) {
 
 						if (eventName === 'loadedmetadata') {
 							dashPlayer.initialize(node, node.src, false);
@@ -1933,7 +1936,13 @@ mejs.version = '3.0-alpha';
 							mediaElement.dispatchEvent(event);
 						});
 
-					})(events[i]);
+					}
+				;
+
+				events = events.concat(['click', 'mouseover', 'mouseout']);
+
+				for (i = 0, il = events.length; i < il; i++) {
+					assignEvents(events[i]);
 				}
 
 				/**
@@ -1943,17 +1952,17 @@ mejs.version = '3.0-alpha';
 				 * not using dashjs.MediaPlayer.events object
 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 				 */
+				var assignMdashEvents = function (e, data) {
+					var event = mejs.Utils.createEvent(e, node);
+					mediaElement.dispatchEvent(event);
+
+					if (e === 'error') {
+						console.error(e, data);
+					}
+				};
 				for (var eventType in dashEvents) {
-
 					if (dashEvents.hasOwnProperty(eventType)) {
-						dashPlayer.on(dashEvents[eventType], function (e, data) {
-							var event = mejs.Utils.createEvent(e, node);
-							mediaElement.dispatchEvent(event);
-
-							if (e === 'error') {
-								console.error(e, data);
-							}
-						});
+						dashPlayer.on(dashEvents[eventType], assignMdashEvents);
 					}
 				}
 			};
@@ -2189,7 +2198,7 @@ mejs.version = '3.0-alpha';
 	 * Register YouTube API event globally
 	 *
 	 */
-	win['onYouTubePlayerAPIReady'] = function () {
+	win.onYouTubePlayerAPIReady = function () {
 		
 		YouTubeApi.iFrameReady();
 	};
@@ -2239,11 +2248,9 @@ mejs.version = '3.0-alpha';
 				il;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					// add to flash state that we will store
 
@@ -2350,13 +2357,16 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the native HTMLMediaElement
 					youtube[methodName] = function () {
@@ -2380,7 +2390,10 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// CREATE YouTube
@@ -2441,18 +2454,21 @@ mejs.version = '3.0-alpha';
 
 							
 
-							var events = ['mouseover', 'mouseout'];
-
-							for (var j in events) {
-								var eventName = events[j];
-								mejs.addEvent(youTubeIframe, eventName, function (e) {
+							var
+								events = ['mouseover', 'mouseout'],
+								assignEvents = function (e) {
 
 									
 
 									var event = mejs.Utils.createEvent(e.type, youtube);
 
 									mediaElement.dispatchEvent(event);
-								});
+								}
+							;
+
+							for (var j in events) {
+								var eventName = events[j];
+								mejs.addEvent(youTubeIframe, eventName, assignEvents);
 							}
 
 							// send init events
@@ -2755,7 +2771,7 @@ mejs.version = '3.0-alpha';
 	 * Register Vimeo event globally
 	 *
 	 */
-	win['onVimeoPlayerAPIReady'] = function () {
+	win.onVimeoPlayerAPIReady = function () {
 		
 		vimeoApi.iFrameReady();
 	};
@@ -2809,11 +2825,9 @@ mejs.version = '3.0-alpha';
 			vimeo.mediaElement = mediaElement;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
@@ -2911,13 +2925,16 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the Soundcloud API
 					vimeo[methodName] = function () {
@@ -2940,7 +2957,10 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// Initial method to register all Vimeo events when initializing <iframe>
@@ -2970,12 +2990,15 @@ mejs.version = '3.0-alpha';
 
 				// a few more events
 				events = ['mouseover', 'mouseout'];
+
+				var assignEvents = function (e) {
+					var event = mejs.Utils.createEvent(e.type, vimeo);
+					mediaElement.dispatchEvent(event);
+				};
+
 				for (var j in events) {
 					var eventName = events[j];
-					mejs.addEvent(vimeoIframe, eventName, function (e) {
-						var event = mejs.Utils.createEvent(e.type, vimeo);
-						mediaElement.dispatchEvent(event);
-					});
+					mejs.addEvent(vimeoIframe, eventName, assignEvents);
 				}
 
 				// Vimeo events
@@ -3109,6 +3132,10 @@ mejs.version = '3.0-alpha';
 				if (vimeoPlayer) {
 					vimeoContainer.style.display = 'none';
 				}
+			};
+			vimeo.setSize = function (width, height) {
+				vimeoContainer.setAttribute('width', width);
+				vimeoContainer.setAttribute('height', height);
 			};
 			vimeo.show = function () {
 				if (vimeoPlayer) {
@@ -3263,7 +3290,7 @@ mejs.version = '3.0-alpha';
 	 * Register DailyMotion event globally
 	 *
 	 */
-	win['dmAsyncInit'] = function () {
+	win.dmAsyncInit = function () {
 		
 		DailyMotionApi.apiReady();
 	};
@@ -3313,11 +3340,9 @@ mejs.version = '3.0-alpha';
 				;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					// add to flash state that we will store
 
@@ -3416,13 +3441,16 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the native HTMLMediaElement
 					dm[methodName] = function () {
@@ -3446,7 +3474,10 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// Initial method to register all DailyMotion events when initializing <iframe>
@@ -3478,33 +3509,35 @@ mejs.version = '3.0-alpha';
 
 				// a few more events
 				events = ['mouseover', 'mouseout'];
+				var assignEvent = function (e) {
+					var event = mejs.Utils.createEvent(e.type, dm);
+
+					mediaElement.dispatchEvent(event);
+				};
 				for (var j in events) {
 					var eventName = events[j];
-					mejs.addEvent(dmIframe, eventName, function (e) {
-						var event = mejs.Utils.createEvent(e.type, dm);
-
-						mediaElement.dispatchEvent(event);
-					});
+					mejs.addEvent(dmIframe, eventName, assignEvent);
 				}
 
 				// BUBBLE EVENTS up
 				events = mejs.html5media.events;
 				events = events.concat(['click', 'mouseover', 'mouseout']);
+				var assignNativeEvents = function (eventName) {
+
+					// Deprecated event; not consider it
+					if (eventName !== 'ended') {
+
+						dmPlayer.addEventListener(eventName, function (e) {
+							// copy event
+							var event = mejs.Utils.createEvent(e.type, dmPlayer);
+							mediaElement.dispatchEvent(event);
+						});
+					}
+
+				};
 
 				for (i = 0, il = events.length; i < il; i++) {
-					(function (eventName) {
-
-						// Deprecated event; not consider it
-						if (eventName !== 'ended') {
-
-							dmPlayer.addEventListener(eventName, function (e) {
-								// copy event
-								var event = mejs.Utils.createEvent(e.type, dmPlayer);
-								mediaElement.dispatchEvent(event);
-							});
-						}
-
-					})(events[i]);
+					assignNativeEvents(events[i]);
 				}
 
 				// Custom DailyMotion events
@@ -3671,11 +3704,9 @@ mejs.version = '3.0-alpha';
 			fbWrapper.mediaElement = mediaElement;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
@@ -3775,13 +3806,16 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the native HTMLMediaElement
 					fbWrapper[methodName] = function () {
@@ -3804,7 +3838,10 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 
@@ -3864,7 +3901,7 @@ mejs.version = '3.0-alpha';
 				 * Register Facebook API event globally
 				 *
 				 */
-				win['fbAsyncInit'] = function () {
+				win.fbAsyncInit = function () {
 
 					FB.init(config);
 
@@ -4157,11 +4194,9 @@ mejs.version = '3.0-alpha';
 				il;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					// add to flash state that we will store
 
@@ -4259,13 +4294,16 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the Soundcloud API
 					sc[methodName] = function () {
@@ -4289,7 +4327,10 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// add a ready method that SC can fire
@@ -4565,11 +4606,9 @@ mejs.version = '3.0-alpha';
 			flash.flashApiStack = [];
 
 			// mediaElements for get/set
-			var props = mejs.html5media.properties;
-			for (i=0, il=props.length; i<il; i++) {
-
-				// wrap in function to retain scope
-				(function(propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function(propName) {
 
 					// add to flash state that we will store
 					flash.flashState[propName] = null;
@@ -4627,14 +4666,16 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i=0, il=props.length; i<il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add mediaElements for native methods
-			var methods = mejs.html5media.methods;
-			methods.push('stop');
-			for (i=0, il=methods.length; i<il; i++) {
-				(function(methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function(methodName) {
 
 					// run the method on the native HTMLMediaElement
 					flash[methodName] = function() {
@@ -4659,7 +4700,11 @@ mejs.version = '3.0-alpha';
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			methods.push('stop');
+			for (i=0, il=methods.length; i<il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// add a ready method that Flash can call to
@@ -4800,7 +4845,7 @@ mejs.version = '3.0-alpha';
 				flash.flashNode.style.width = width + 'px';
 				flash.flashNode.style.height = height + 'px';
 
-				flash.flashApi['fire_setSize'](width, height);
+				flash.flashApi.fire_setSize(width, height);
 			};
 
 
@@ -5012,9 +5057,9 @@ mejs.version = '3.0-alpha';
 		// Possible errors:
 		// 1) Flash is not installed or disabled
 		// 2) Flash is not the version required
-		var error = (mejs.PluginDetector.plugins['flash'][0] === 0 &&
-			mejs.PluginDetector.plugins['flash'][1] === 0 &&
-			mejs.PluginDetector.plugins['flash'][2] === 0) ?
+		var error = (mejs.PluginDetector.plugins.flash[0] === 0 &&
+			mejs.PluginDetector.plugins.flash[1] === 0 &&
+			mejs.PluginDetector.plugins.flash[2] === 0) ?
 			'Make sure you have Flash enabled; otherwise, download the latest version from https://get.adobe.com/flashplayer/' :
 			'Current version of Flash is not up-to-date. Download the latest version from https://get.adobe.com/flashplayer/'
 		;
@@ -8517,18 +8562,18 @@ if (typeof jQuery !== 'undefined') {
 					}
 
 					// over video, but not controls
-					hoverDivs['top']
+					hoverDivs.top
 					.width(containerWidth)
 					.height(fullScreenBtnOffsetTop);
 
 					// over controls, but not the fullscreen button
-					hoverDivs['left']
+					hoverDivs.left
 					.width(fullScreenBtnOffsetLeft)
 					.height(fullScreenBtnHeight)
 					.css({top: fullScreenBtnOffsetTop});
 
 					// after the fullscreen button
-					hoverDivs['right']
+					hoverDivs.right
 					.width(containerWidth - fullScreenBtnOffsetLeft - fullScreenBtnWidth)
 					.height(fullScreenBtnHeight)
 					.css({
@@ -8537,7 +8582,7 @@ if (typeof jQuery !== 'undefined') {
 					});
 
 					// under the fullscreen button
-					hoverDivs['bottom']
+					hoverDivs.bottom
 					.width(containerWidth)
 					.height(containerHeight - fullScreenBtnHeight - fullScreenBtnOffsetTop)
 					.css({top: fullScreenBtnOffsetTop + fullScreenBtnHeight});

@@ -25,7 +25,7 @@ function removeEvent( obj, type, fn ) {
 	}
 }
 
-function getElementsByClassName(class_name, node, tag) {
+function getElementsByClassName(className, node, tag) {
 
 	if (typeof node === 'undefined' || node === null) {
 		node = document;
