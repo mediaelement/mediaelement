@@ -1,17 +1,3 @@
-/**
- * Returns true if targetNode appears after sourceNode in the dom.
- * @param {HTMLElement} sourceNode - the source node for comparison
- * @param {HTMLElement} targetNode - the node to compare against sourceNode
- */
-function isAfter(sourceNode, targetNode) {
-	return !!(
-		sourceNode &&
-		targetNode &&
-		typeof sourceNode.compareDocumentPosition === 'function' &&
-		sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
-	);
-}
-
 (function ($) {
 
 	// default player values
@@ -357,7 +343,7 @@ function isAfter(sourceNode, targetNode) {
 								// else send focus to last control button.
 								var btnSelector = '.mejs-playpause-button > button';
 
-								if (isAfter(e.relatedTarget, t.container[0])) {
+								if (mejs.Utility.isNodeAfter(e.relatedTarget, t.container[0])) {
 									btnSelector = '.mejs-controls .mejs-button:last-child > button';
 								}
 
