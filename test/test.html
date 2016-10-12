@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>HTML5 MediaElement</title>
+
+	<script src="../build/jquery.js"></script>
+	<script src="../demo/testforfiles.js"></script>
+	
+	<script>
+	if (typeof window.console == 'undefined') {
+		window.console = {log:function() {}};
+	}	
+	</script>
+	
+	<script src="../src/js/me-namespace.js" type="text/javascript"></script>
+	<script src="../src/js/me-utility.js" type="text/javascript"></script>
+	<script src="../src/js/me-i18n.js" type="text/javascript"></script>
+	<script src="../src/js/me-i18n-locale-en.js"></script>
+	<script src="../src/js/me-plugindetector.js" type="text/javascript"></script>
+	<script src="../src/js/me-featuredetection.js" type="text/javascript"></script>
+	<script src="../src/js/me-mediaelements.js" type="text/javascript"></script>
+	<script src="../src/js/me-shim.js" type="text/javascript"></script>
+	
+	<script src="../src/js/mep-library.js" type="text/javascript"></script>
+	<script src="../src/js/mep-player.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-playpause.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-progress.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-time.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-speed.js" type="text/javascript"></script>	
+	<script src="../src/js/mep-feature-tracks.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-volume.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-stop.js" type="text/javascript"></script>
+	<script src="../src/js/mep-feature-fullscreen.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="../src/css/mediaelementplayer.css" />
+	<link rel="stylesheet" href="../src/css/mejs-skins.css" />	
+		
+	<style>
+	#container{
+		width: 700px;
+		margin: 20px auto;
+	}
+	
+	#video-container {
+		-sdisplay: none;
+		
+	}
+	</style>
+</head>
+<body>
+
+<div id="container">
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Recommended Setup</p>
+
+<form>
+
+
+<h2>MP3 audio (as src)</h2>
+
+<audio id="player2" src="../media/AirReview-Landmarks-02-ChasingCorporate.mp3" preload="none" type="audio/mp3" controls="controls">
+	<p>Your browser leaves much to be desired.</p>			
+</audio>
+
+<span id="audio-mode"></span>
+
+<h2>MP4/WebM</h2>
+
+
+
+<div id="video-container">
+
+	<video width="640" height="360" id="player1" controls="controls" preload="none" poster="../media/echo-hereweare.jpg">
+	
+		<source src="../media/echo-hereweare.mp4"  type="video/mp4" /> 	
+			
+		<track kind="subtitles" src="../media/mediaelement.srt" srclang="en"  ></track>
+		
+	</video>
+
+</div>
+
+<input id="showit" type="button" value="show it"  /><br>
+
+<script>
+$('#showit').on('click', function() {
+	if ($('#video-container').is(':visible')) {
+		$('#video-container').hide();
+	} else {
+		$('#video-container').show();
+	}
+	
+	$('#player1')[0].player.setControlsSize();
+});
+</script>
+
+
+<span id="video-mode"></span>
+<div style="min-height: 400px">
+<div id="video-events"></div>
+<div id="video-props"></div>
+</div>
+
+<video width="640" height="360" id="player2" controls="controls"  preload="none" poster="../media/big_buck_bunny.jpg">
+	<!--
+	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
+	-->
+	
+	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
+</video>
+
+
+<br>
+
+<video width="640" height="360" id="player3" controls="controls" preload="none" poster="../media/big_buck_bunny.jpg">
+	<!--
+	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
+	-->
+	
+	<source src="../media/big_buck_bunny.mp4"   type="video/mp4" />
+</video>
+
+
+</form>
+
+</div>
+
+
+<script>
+function appendMediaEvents($node, media) {
+	var 
+		mediaEventNames = 'loadstart progress suspend abort error emptied stalled play pause loadedmetadata loadeddata waiting playing canplay canplaythrough seeking seeked timeupdate ended ratechange durationchange volumechange'.split(' ');
+		mediaEventTable = $('<table class="media-events"><caption>Media Events</caption><tbody></tbody></table>').appendTo($node).find('tbody'),
+		tr = null,
+		th = null,
+		td = null,
+		eventName = null,
+		il = 0,				
+		i=0;
+		
+	for (il = mediaEventNames.length;i<il;i++) {
+		eventName = mediaEventNames[i];
+		th = $('<th>' + eventName + '</th>');
+		td = $('<td id="e_' + media.id + '_' + eventName + '" class="not-fired">0</td>');
+					
+		if (tr == null) 
+			tr = $("<tr/>");
+			
+		tr.append(th);
+		tr.append(td);
+
+		if ((i+1) % 5 == 0) {
+			mediaEventTable.append(tr);
+			tr = null;
+		}		
+		
+		// listen for event
+		media.addEventListener(eventName, function(e) {
+			
+			var notice = $('#e_' + media.id + '_' + e.type),
+				number = parseInt(notice.html(), 10);
+			
+			notice
+				.html(number+1)
+				.attr('class','fired');
+		}, true);
+	}	
+	
+	mediaEventTable.append(tr);
+}
+
+function appendMediaProperties($node, media) {
+	var /* src currentSrc  */
+		mediaPropertyNames = 'error currentSrc networkState preload buffered bufferedBytes bufferedTime readyState seeking currentTime initialTime duration startOffsetTime paused defaultPlaybackRate playbackRate played seekable ended autoplay loop controls volume muted'.split(' '),
+		mediaPropertyTable = $('<table class="media-properties"><caption>Media Properties</caption><tbody></tbody></table>').appendTo($node).find('tbody'),
+		tr = null,
+		th = null,
+		td = null,
+		propName = null,	
+		il = 0,		
+		i=0;
+		
+	for (il = mediaPropertyNames.length; i<il; i++) {
+		propName = mediaPropertyNames[i];
+		th = $('<th>' + propName + '</th>');
+		td = $('<td id="p_' + media.id + '_' + propName + '" class=""></td>');
+					
+		if (tr == null) 
+			tr = $("<tr/>");
+			
+		tr.append(th);
+		tr.append(td);
+
+		if ((i+1) % 3 == 0) {
+			mediaPropertyTable.append(tr);
+			tr = null;
+		}
+	}	
+	
+	setInterval(function() {
+		var 
+			propName = '',
+			val = null,
+			td = null;
+		
+		for (i = 0, il = mediaPropertyNames.length; i<il; i++) {
+			propName = mediaPropertyNames[i];
+			td = $('#p_' + media.id + '_' + propName);
+			val = media[propName];
+			val = 
+				(typeof val == 'undefined') ? 
+				'undefined' : (val == null) ? 'null' : val.toString();
+			td.html(val);
+		}
+	}, 500);	
+	
+}
+
+</script>
+
+
+<script  type="text/javascript">
+$('audio, video').bind('error', function(e) {
+
+	//console.log('error',this, e, this.src, this.error.code);
+});
+
+jQuery(document).ready(function() {
+	$('audio, video').mediaelementplayer({
+		//mode: 'shim',
+		pluginPath:'../build/',
+		enablePluginSmoothing:true,
+		//duration: 489,
+		//startVolume: 0.4,
+		enablePluginDebug: true,
+		//iPadUseNativeControls: true,
+		//mode: 'shim',
+		//forcePluginFullScreen: true,
+		//usePluginFullScreen: true,
+		//mode: 'native',
+		//plugins: ['silverlight'],
+		//features: ['playpause','progress','volume','speed','fullscreen'],
+		success: function(me,node) {
+			// report type
+			var tagName = node.tagName.toLowerCase();
+			$('#' + tagName + '-mode').html( me.pluginType  + ': success' + ', touch: ' + mejs.MediaFeatures.hasTouch);
+
+			
+			if (tagName == 'audio') {
+
+				me.addEventListener('progress',function(e) {
+					//console.log(e);
+				}, false);
+			
+			}
+			
+			me.addEventListener('progress',function(e) {
+				//console.log(e);
+			}, false);
+	
+			
+			// add events
+			if (tagName == 'video' && node.id == 'player1') {
+				appendMediaProperties($('#' + tagName + '-props'), me);
+				appendMediaEvents($('#' + tagName + '-events'), me);
+				
+			}
+		}		
+	});
+	
+
+
+});
+
+</script>
+
+
+</body>
+</html>

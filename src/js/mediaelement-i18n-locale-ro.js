@@ -18,7 +18,7 @@
 
 	if (typeof exports.ro === 'undefined') {
 		exports.ro = {
-
+			'mejs.plural-form': 5,
 			'mejs.audio-player': "Player audio",
 			'mejs.captions-subtitles': "Legende/Subtitrări",
 			'mejs.close': "Închide",

@@ -18,7 +18,7 @@
 
 	if (typeof exports.cs === 'undefined') {
 		exports.cs = {
-
+			'mejs.plural-form': 8,
 			'mejs.audio-player': "Přehrávač hudby",
 			'mejs.captions-subtitles': "Titulky",
 			'mejs.close': "Zavřít",
