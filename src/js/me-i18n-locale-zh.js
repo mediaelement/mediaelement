@@ -19,6 +19,7 @@
     if (typeof exports.zh === 'undefined') {
         exports.zh = {
 
+            'mejs.plural-form': 0,
             'mejs.audio-player' : "音頻播放器",
             'mejs.captions-subtitles' : "字幕/標題",
             'mejs.close' : "關閉",

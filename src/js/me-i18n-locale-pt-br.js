@@ -20,6 +20,7 @@
 
     if (typeof exports['pt-BR'] === 'undefined') {
         exports['pt-BR'] = {
+            'mejs.plural-form': 2,
             'mejs.none' : "Sem legendas",
             'mejs.unmute' : "Tirar silêncio",
             'mejs.fullscreen' : "Tela inteira",
