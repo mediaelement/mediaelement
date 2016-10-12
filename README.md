@@ -44,8 +44,12 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 * Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
 
 * Deprecated use of `pluginType` element.
+ 
+* Removed support for Silverlight shim.
 
 * Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development.
+
+For more information, please consult [Change Log](changelog.md)
 
 
 <a id="browser-support"></a>
