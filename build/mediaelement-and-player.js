@@ -6740,12 +6740,19 @@ if (typeof jQuery !== 'undefined') {
 				t.$node.css('max-width', '');
 			}
 
+			if (t.$node.css('max-height') !== 'none' && t.$node.css('max-height') !== t.height) {
+				t.$node.css('max-height', '');
+			}
+
 			if (t.$node[0].currentStyle) {
 				if (t.$node[0].currentStyle.height === '100%') {
 					t.$node[0].currentStyle.height = '';
 				}
 				if (t.$node[0].currentStyle.maxWidth === '100%') {
 					t.$node[0].currentStyle.maxWidth = '';
+				}
+				if (t.$node[0].currentStyle.maxHeight === '100%') {
+					t.$node[0].currentStyle.maxHeight = '';
 				}
 			}
 
