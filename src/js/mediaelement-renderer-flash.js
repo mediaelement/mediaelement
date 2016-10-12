@@ -134,11 +134,9 @@
 			flash.flashApiStack = [];
 
 			// mediaElements for get/set
-			var props = mejs.html5media.properties;
-			for (i=0, il=props.length; i<il; i++) {
-
-				// wrap in function to retain scope
-				(function(propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function(propName) {
 
 					// add to flash state that we will store
 					flash.flashState[propName] = null;
@@ -196,14 +194,16 @@
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i=0, il=props.length; i<il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add mediaElements for native methods
-			var methods = mejs.html5media.methods;
-			methods.push('stop');
-			for (i=0, il=methods.length; i<il; i++) {
-				(function(methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function(methodName) {
 
 					// run the method on the native HTMLMediaElement
 					flash[methodName] = function() {
@@ -228,7 +228,11 @@
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			methods.push('stop');
+			for (i=0, il=methods.length; i<il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// add a ready method that Flash can call to
@@ -369,7 +373,7 @@
 				flash.flashNode.style.width = width + 'px';
 				flash.flashNode.style.height = height + 'px';
 
-				flash.flashApi['fire_setSize'](width, height);
+				flash.flashApi.fire_setSize(width, height);
 			};
 
 
@@ -581,9 +585,9 @@
 		// Possible errors:
 		// 1) Flash is not installed or disabled
 		// 2) Flash is not the version required
-		var error = (mejs.PluginDetector.plugins['flash'][0] === 0 &&
-			mejs.PluginDetector.plugins['flash'][1] === 0 &&
-			mejs.PluginDetector.plugins['flash'][2] === 0) ?
+		var error = (mejs.PluginDetector.plugins.flash[0] === 0 &&
+			mejs.PluginDetector.plugins.flash[1] === 0 &&
+			mejs.PluginDetector.plugins.flash[2] === 0) ?
 			'Make sure you have Flash enabled; otherwise, download the latest version from https://get.adobe.com/flashplayer/' :
 			'Current version of Flash is not up-to-date. Download the latest version from https://get.adobe.com/flashplayer/'
 		;

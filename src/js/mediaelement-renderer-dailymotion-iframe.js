@@ -137,7 +137,7 @@
 	 * Register DailyMotion event globally
 	 *
 	 */
-	win['dmAsyncInit'] = function () {
+	win.dmAsyncInit = function () {
 		console.log('dmAsyncInit');
 		DailyMotionApi.apiReady();
 	};
@@ -187,11 +187,9 @@
 				;
 
 			// wrappers for get/set
-			var props = mejs.html5media.properties;
-			for (i = 0, il = props.length; i < il; i++) {
-
-				// wrap in function to retain scope
-				(function (propName) {
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
 
 					// add to flash state that we will store
 
@@ -290,13 +288,16 @@
 						}
 					};
 
-				})(props[i]);
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
 			}
 
 			// add wrappers for native methods
-			var methods = mejs.html5media.methods;
-			for (i = 0, il = methods.length; i < il; i++) {
-				(function (methodName) {
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
 
 					// run the method on the native HTMLMediaElement
 					dm[methodName] = function () {
@@ -320,7 +321,10 @@
 						}
 					};
 
-				})(methods[i]);
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
 			}
 
 			// Initial method to register all DailyMotion events when initializing <iframe>
@@ -352,33 +356,35 @@
 
 				// a few more events
 				events = ['mouseover', 'mouseout'];
+				var assignEvent = function (e) {
+					var event = mejs.Utils.createEvent(e.type, dm);
+
+					mediaElement.dispatchEvent(event);
+				};
 				for (var j in events) {
 					var eventName = events[j];
-					mejs.addEvent(dmIframe, eventName, function (e) {
-						var event = mejs.Utils.createEvent(e.type, dm);
-
-						mediaElement.dispatchEvent(event);
-					});
+					mejs.addEvent(dmIframe, eventName, assignEvent);
 				}
 
 				// BUBBLE EVENTS up
 				events = mejs.html5media.events;
 				events = events.concat(['click', 'mouseover', 'mouseout']);
+				var assignNativeEvents = function (eventName) {
+
+					// Deprecated event; not consider it
+					if (eventName !== 'ended') {
+
+						dmPlayer.addEventListener(eventName, function (e) {
+							// copy event
+							var event = mejs.Utils.createEvent(e.type, dmPlayer);
+							mediaElement.dispatchEvent(event);
+						});
+					}
+
+				};
 
 				for (i = 0, il = events.length; i < il; i++) {
-					(function (eventName) {
-
-						// Deprecated event; not consider it
-						if (eventName !== 'ended') {
-
-							dmPlayer.addEventListener(eventName, function (e) {
-								// copy event
-								var event = mejs.Utils.createEvent(e.type, dmPlayer);
-								mediaElement.dispatchEvent(event);
-							});
-						}
-
-					})(events[i]);
+					assignNativeEvents(events[i]);
 				}
 
 				// Custom DailyMotion events

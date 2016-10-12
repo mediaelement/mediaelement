@@ -256,18 +256,18 @@
 					}
 
 					// over video, but not controls
-					hoverDivs['top']
+					hoverDivs.top
 					.width(containerWidth)
 					.height(fullScreenBtnOffsetTop);
 
 					// over controls, but not the fullscreen button
-					hoverDivs['left']
+					hoverDivs.left
 					.width(fullScreenBtnOffsetLeft)
 					.height(fullScreenBtnHeight)
 					.css({top: fullScreenBtnOffsetTop});
 
 					// after the fullscreen button
-					hoverDivs['right']
+					hoverDivs.right
 					.width(containerWidth - fullScreenBtnOffsetLeft - fullScreenBtnWidth)
 					.height(fullScreenBtnHeight)
 					.css({
@@ -276,7 +276,7 @@
 					});
 
 					// under the fullscreen button
-					hoverDivs['bottom']
+					hoverDivs.bottom
 					.width(containerWidth)
 					.height(containerHeight - fullScreenBtnHeight - fullScreenBtnOffsetTop)
 					.css({top: fullScreenBtnOffsetTop + fullScreenBtnHeight});
