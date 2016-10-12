@@ -18,7 +18,7 @@
 
 	if (typeof exports.sk === 'undefined') {
 		exports.sk = {
-
+			'mejs.plural-form': 8,
 			'mejs.audio-player': "Prehrávač zvuku",
 			'mejs.captions-subtitles': "Skryté titulky/Titulky",
 			'mejs.close': "Zavrieť",

@@ -18,7 +18,7 @@
 
 	if (typeof exports.pl === 'undefined') {
 		exports.pl = {
-
+			'mejs.plural-form': 9,
 			'mejs.audio-player': "Odtwarzacz audio",
 			'mejs.captions-subtitles': "Podpisy/napisy",
 			'mejs.close': "Zamknij",
