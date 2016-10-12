@@ -192,11 +192,19 @@
 							break;
 						case 32: // space
 							if (!mejs.Utility.isFirefox) {
-								media.paused ? media.play() : media.pause();
+								if (media.paused) {
+									media.play();
+								} else {
+									media.pause();
+								}
 							}
 							return;
 						case 13: // enter
-							media.paused ? media.play() : media.pause();
+							if (media.paused) {
+								media.play();
+							} else {
+								media.pause();
+							}
 							return;
 						default:
 							return;

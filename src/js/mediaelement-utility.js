@@ -32,7 +32,8 @@
 					return onGet.apply(obj, [oldValue]);
 				},
 				setFn = function (newValue) {
-					return oldValue = onSet.apply(obj, [newValue]);
+					oldValue = onSet.apply(obj, [newValue]);
+					return oldValue;
 				};
 
 			// Modern browsers, IE9+ (IE8 only works on DOM objects, not normal JS objects)
@@ -68,7 +69,7 @@
 						// restore the get function
 						obj[name] = getFn;
 						obj[name].toString = function () {
-							return getFn().toString()
+							return getFn().toString();
 						};
 
 						// restore the event
@@ -79,7 +80,7 @@
 				try {
 					obj[name] = getFn;
 					obj[name].toString = function () {
-						return getFn().toString()
+						return getFn().toString();
 					};
 				} catch (ex) {
 					console.log('ERROR adding', name);
@@ -264,10 +265,10 @@
 				seconds = Math.floor(time % 60),
 				frames = Math.floor(((time % 1) * fps).toFixed(3)),
 				result =
-					( (forceHours || hours > 0) ? (hours < 10 ? '0' + hours : hours) + ':' : '')
-					+ (minutes < 10 ? '0' + minutes : minutes) + ':'
-					+ (seconds < 10 ? '0' + seconds : seconds)
-					+ ((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');
+					( (forceHours || hours > 0) ? (hours < 10 ? '0' + hours : hours) + ':' : '') +
+					(minutes < 10 ? '0' + minutes : minutes) + ':' +
+					(seconds < 10 ? '0' + seconds : seconds) +
+					((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');
 
 			return result;
 		},
@@ -342,7 +343,7 @@
 
 			for (; i < length; i++) {
 				// Only deal with non-null/undefined values
-				if ((options = arguments[i]) != null) {
+				if ((options = arguments[i]) !== null) {
 					// Extend the base object
 					for (name in options) {
 						src = target[name];

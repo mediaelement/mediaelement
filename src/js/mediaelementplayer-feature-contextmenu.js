@@ -29,8 +29,7 @@ $.extend(mejs.MepDefaults,
 					player.enterFullScreen();
 				}
 			}
-		}
-		,
+		},
 		// demo of a mute/unmute button
 		{ 
 			render: function(player) {
@@ -51,8 +50,7 @@ $.extend(mejs.MepDefaults,
 		// separator
 		{
 			isSeparator: true
-		}
-		,
+		},
 		// demo of simple download video
 		{ 
 			render: function(player) {
@@ -123,9 +121,8 @@ $.extend(mejs.MepDefaults,
 			
 			//console.log('killContextMenuTimer', timer);
 			
-			if (timer != null) {				
+			if (timer !== null) {
 				clearTimeout(timer);
-				delete timer;
 				timer = null;
 			}
 		},		
@@ -150,7 +147,7 @@ $.extend(mejs.MepDefaults,
 					var rendered = items[i].render(t);
 				
 					// render can return null if the item doesn't need to be used at the moment
-					if (rendered != null) {
+					if (rendered !== null) {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}

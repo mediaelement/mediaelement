@@ -252,13 +252,13 @@
 	 */
 	mejs.getElementsByClassName = function getElementsByClassName(className, node, tag) {
 
-		if (node == null) {
+		if (node === null) {
 			node = document;
 		}
-		if (node.getElementsByClassName != null) {
+		if (node.getElementsByClassName !== null) {
 			return node.getElementsByClassName(className);
 		}
-		if (tag == null) {
+		if (tag === null) {
 			tag = '*';
 		}
 
@@ -656,7 +656,7 @@
 				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
-				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr == null || autoplayAttr === 'false'),
+				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature,
 				isNative = t.media.id.match(/(native|html5)/)
@@ -1158,7 +1158,7 @@
 				scaleX2 = (initWidth * parentHeight) / initHeight,
 				scaleY2 = parentHeight,
 				// now figure out which one we should use
-				bScaleOnWidth = !(scaleX2 > parentWidth),
+				bScaleOnWidth = scaleX2 > parentWidth === false,
 				finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2),
 				finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2);
 
@@ -1436,8 +1436,8 @@
 
 			// listen for key presses
 			t.globalBind('keydown', function (event) {
-				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0
-					&& $(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
+				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0 &&
+					$(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
 				return t.onkeydown(player, media, event);
 			});
 

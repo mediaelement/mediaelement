@@ -119,7 +119,7 @@
 		 * @return {int}
 		 */
 		getVimeoId: function (url) {
-			if (url == undefined || url == null) {
+			if (typeof url === 'undefined' || url === null) {
 				return null;
 			}
 
@@ -328,7 +328,7 @@
 							// store for after "READY" event fires
 							apiStack.push({type: 'set', propName: propName, value: value});
 						}
-					}
+					};
 
 				})(props[i]);
 			}
