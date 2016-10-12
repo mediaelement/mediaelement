@@ -10,6 +10,26 @@ Package.onUse(function(api) {
 
     api.use('jquery', 'client');
 
+    api.addFiles('build/me-i18n-locale-ca.js', 'client');
+    api.addFiles('build/me-i18n-locale-cs.js', 'client');
+    api.addFiles('build/me-i18n-locale-de.js', 'client');
+    api.addFiles('build/me-i18n-locale-en.js', 'client');
+    api.addFiles('build/me-i18n-locale-es.js', 'client');
+    api.addFiles('build/me-i18n-locale-fr.js', 'client');
+    api.addFiles('build/me-i18n-locale-hu.js', 'client');
+    api.addFiles('build/me-i18n-locale-it.js', 'client');
+    api.addFiles('build/me-i18n-locale-ja.js', 'client');
+    api.addFiles('build/me-i18n-locale-ko.js', 'client');
+    api.addFiles('build/me-i18n-locale-nl.js', 'client');
+    api.addFiles('build/me-i18n-locale-pl.js', 'client');
+    api.addFiles('build/me-i18n-locale-pt.js', 'client');
+    api.addFiles('build/me-i18n-locale-pt-br.js', 'client');
+    api.addFiles('build/me-i18n-locale-ro.js', 'client');
+    api.addFiles('build/me-i18n-locale-ru.js', 'client');
+    api.addFiles('build/me-i18n-locale-sk.js', 'client');
+    api.addFiles('build/me-i18n-locale-zh.js', 'client');
+    api.addFiles('build/me-i18n-locale-zh-cn.js', 'client');
+
     api.addFiles('build/background.png', 'client');
     api.addFiles('build/bigplay.fw.png', 'client');
     api.addFiles('build/bigplay.png', 'client');
