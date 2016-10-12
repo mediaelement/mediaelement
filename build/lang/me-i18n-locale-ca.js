@@ -18,6 +18,7 @@
 
 	if (typeof exports.ca === 'undefined') {
 		exports.ca = {
+			'mejs.plural-form': 1,
 			'mejs.ad-skip': "Salta publicitat",
 			'mejs.ad-skip-info': "Salta en %1 segons",
 			'mejs.audio-player': "Reproductor d'àudio",
