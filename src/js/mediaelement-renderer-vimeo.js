@@ -214,7 +214,8 @@
 				vimeo = {},
 				vimeoPlayer = null,
 				paused = true,
-				volume = 0,
+				volume = 1,
+				oldVolume = volume,
 				currentTime = 0,
 				bufferedTime = 0,
 				ended = false,
@@ -247,7 +248,8 @@
 
 								case 'volume':
 									return volume;
-
+								case 'muted':
+									return volume === 0;
 								case 'paused':
 									return paused;
 
@@ -299,7 +301,10 @@
 								case 'currentTime':
 									vimeoPlayer.setCurrentTime(value).then(function () {
 										currentTime = value;
-										mediaElement.dispatchEvent({type: 'timeupdate'});
+										setTimeout(function () {
+											var event = mejs.Utils.createEvent('timeupdate', vimeo);
+											mediaElement.dispatchEvent(event);
+										}, 50);
 									})['catch'](function (error) {
 										vimeoApi.errorHandler(error);
 									});
@@ -307,7 +312,12 @@
 
 								case 'volume':
 									vimeoPlayer.setVolume(value).then(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										volume = value;
+										oldVolume = volume;
+										setTimeout(function () {
+											var event = mejs.Utils.createEvent('volumechange', vimeo);
+											mediaElement.dispatchEvent(event);
+										}, 50);
 									})['catch'](function (error) {
 										vimeoApi.errorHandler(error);
 									});
@@ -318,8 +328,32 @@
 										vimeoApi.errorHandler(error);
 									});
 									break;
+								case 'muted':
+									console.log(value);
+									if (value) {
+										vimeoPlayer.setVolume(0).then(function () {
+											volume = 0;
+											setTimeout(function () {
+												var event = mejs.Utils.createEvent('volumechange', vimeo);
+												mediaElement.dispatchEvent(event);
+											}, 50);
+										})['catch'](function (error) {
+											vimeoApi.errorHandler(error);
+										});
+									} else {
+										vimeoPlayer.setVolume(oldVolume).then(function () {
+											volume = oldVolume;
+											setTimeout(function () {
+												var event = mejs.Utils.createEvent('volumechange', vimeo);
+												mediaElement.dispatchEvent(event);
+											}, 50);
+										})['catch'](function (error) {
+											vimeoApi.errorHandler(error);
+										});
+									}
+									break;
 								default:
-									console.log('vimeo ' + id, propName, 'UNSUPPORTED property');
+									console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
