@@ -4968,13 +4968,8 @@ mejs.version = '3.0-alpha';
 				} else {
 					return 'video/rtmp';
 				}
-			// } else if (url.indexOf('.oga') > -1) {
-			// 	return 'audio/oga';
-			// } else if (url.indexOf('.ogv') > -1) {
-			// 	return 'video/ogv';
-			// } else if (url.indexOf('.wav') > -1) {
-			// 	return 'audio/wav';
-			// }
+			} else if (url.indexOf('.oga') > -1 || url.indexOf('.ogg') > -1) {
+				return 'audio/ogg';
 			} else if (url.indexOf('.m3u8') > -1) {
 				return 'application/x-mpegURL';
 			} else if (url.indexOf('.mpd') > -1) {
