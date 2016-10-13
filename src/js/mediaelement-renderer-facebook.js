@@ -371,8 +371,10 @@
 					fbDiv.style.display = '';
 				}
 			};
+			fbWrapper.setSize = function(width, height) {
+				// Buggy and difficult to resize on-the-fly
+			};
 			fbWrapper.destroy = function () {
-				//youTubeApi.destroy();
 			};
 			fbWrapper.interval = null;
 

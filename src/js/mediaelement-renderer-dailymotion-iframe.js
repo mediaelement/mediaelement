@@ -279,7 +279,7 @@
 									break;
 
 								default:
-									console.log('dm ' + id, propName, 'UNSUPPORTED property');
+									console.log('dm ' + dm.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
@@ -449,6 +449,10 @@
 				if (dmIframe) {
 					dmIframe.style.display = '';
 				}
+			};
+			dm.setSize = function(width, height) {
+				dmIframe.width = width;
+				dmIframe.height = height;
 			};
 			dm.destroy = function () {
 				dmPlayer.destroy();
