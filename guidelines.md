@@ -347,6 +347,7 @@ The file name for them by default is: `mediaelement-renderer-[renderer_name].js`
 
 Another things to consider when developing a new renderer:
 
+* Update the list of [Renderers/IDs](usage.md#renderers-usage) documentation.
 * Add the HTML needed to display new media in `/test/simpleplayer.html`.
 * Create a `/test/[renderer_name].html` to show the renderer in an isolated way.
 * Add an entry or two in `/test/alpha.html` and `/test/alpha-2.html` to confirm that media for new renderer can be changed easily. Example:
