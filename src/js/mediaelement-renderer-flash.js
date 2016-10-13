@@ -529,30 +529,6 @@
 		};
 		mejs.Renderers.add(FlashMediaElementAudioRenderer);
 
-		// AUDIO - wav
-		// var FlashMediaElementAudioWavRenderer = {
-		// 	name: 'flash_audio_wav',
-		//
-		// 	options: {
-		// 		prefix: 'flash_audio_wav',
-		// 		filename: 'mediaelement-flash-audio-wav.swf'
-		// 	},
-		// 	/**
-		// 	 * Determine if a specific element type can be played with this render
-		// 	 *
-		// 	 * @param {String} type
-		// 	 * @return {Boolean}
-		// 	 */
-		// 	canPlayType: function(type) {
-		// 		var supportedMediaTypes = ['audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
-		//
-		// 		return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
-		// 	},
-		//
-		// 	create: FlashMediaElementRenderer.create
-		// };
-		// mejs.Renderers.add(FlashMediaElementAudioWavRenderer);
-
 		// AUDIO - ogg
 		var FlashMediaElementAudioOggRenderer = {
 			name: 'flash_audio_ogg',
