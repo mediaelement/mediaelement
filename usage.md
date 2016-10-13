@@ -3,6 +3,7 @@
 * [Automatic start](#automatic)
 * [Vanilla JavaScript](#vanilla)
 * [jQuery](#jquery)
+* [Use of Renderers](#renderers-usage)
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
@@ -43,5 +44,22 @@ player.webkitExitFullScreen();
  
 </script>
 ```
+
+<a id="renderers-usage"></a>
+## Use of Renderers
+
+By default, all the renderers will be called and the plugin will try to detect the best one for your needs. 
+
+However, if you want to use a specific render, or a subset, and also give them priority, you must indicate it **BEFORE** instantiating the player by using `mejs.Renderers.order` in the order you desire.
+
+```javascript
+
+// Use native renderer first, then Flash shim for M(PEG)-DASH
+mejs.Renderers.order = ['native_mdash', 'flash_mdash'];
+
+$('video, audio').mediaelementplayer();
+
+```
+
 ________
 [Back to Main](README.md)
