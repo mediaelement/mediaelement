@@ -2824,7 +2824,8 @@ mejs.version = '3.0-alpha';
 				vimeo = {},
 				vimeoPlayer = null,
 				paused = true,
-				volume = 0,
+				volume = 1,
+				oldVolume = volume,
 				currentTime = 0,
 				bufferedTime = 0,
 				ended = false,
@@ -2857,7 +2858,8 @@ mejs.version = '3.0-alpha';
 
 								case 'volume':
 									return volume;
-
+								case 'muted':
+									return volume === 0;
 								case 'paused':
 									return paused;
 
@@ -2909,7 +2911,10 @@ mejs.version = '3.0-alpha';
 								case 'currentTime':
 									vimeoPlayer.setCurrentTime(value).then(function () {
 										currentTime = value;
-										mediaElement.dispatchEvent({type: 'timeupdate'});
+										setTimeout(function () {
+											var event = mejs.Utils.createEvent('timeupdate', vimeo);
+											mediaElement.dispatchEvent(event);
+										}, 50);
 									})['catch'](function (error) {
 										vimeoApi.errorHandler(error);
 									});
@@ -2917,7 +2922,12 @@ mejs.version = '3.0-alpha';
 
 								case 'volume':
 									vimeoPlayer.setVolume(value).then(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										volume = value;
+										oldVolume = volume;
+										setTimeout(function () {
+											var event = mejs.Utils.createEvent('volumechange', vimeo);
+											mediaElement.dispatchEvent(event);
+										}, 50);
 									})['catch'](function (error) {
 										vimeoApi.errorHandler(error);
 									});
@@ -2927,6 +2937,30 @@ mejs.version = '3.0-alpha';
 									vimeoPlayer.setLoop(value)['catch'](function (error) {
 										vimeoApi.errorHandler(error);
 									});
+									break;
+								case 'muted':
+									
+									if (value) {
+										vimeoPlayer.setVolume(0).then(function () {
+											volume = 0;
+											setTimeout(function () {
+												var event = mejs.Utils.createEvent('volumechange', vimeo);
+												mediaElement.dispatchEvent(event);
+											}, 50);
+										})['catch'](function (error) {
+											vimeoApi.errorHandler(error);
+										});
+									} else {
+										vimeoPlayer.setVolume(oldVolume).then(function () {
+											volume = oldVolume;
+											setTimeout(function () {
+												var event = mejs.Utils.createEvent('volumechange', vimeo);
+												mediaElement.dispatchEvent(event);
+											}, 50);
+										})['catch'](function (error) {
+											vimeoApi.errorHandler(error);
+										});
+									}
 									break;
 								default:
 									
@@ -5093,7 +5127,7 @@ mejs.version = '3.0-alpha';
 		/**
 		 * @type {String}
 		 */
-		default: 'en',
+		'default': 'en',
 
 		/**
 		 * @type {String[]}
@@ -5375,8 +5409,8 @@ mejs.version = '3.0-alpha';
 		 *
 		 */
 		getLanguage: function () {
-			var language = i18n.locale.language || i18n.default;
-			return /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/.exec(language) ? language : i18n.default;
+			var language = i18n.locale.language || i18n['default'];
+			return /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/.exec(language) ? language : i18n['default'];
 		},
 
 		/**

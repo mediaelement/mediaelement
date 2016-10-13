@@ -10,7 +10,7 @@
 		/**
 		 * @type {String}
 		 */
-		default: 'en',
+		'default': 'en',
 
 		/**
 		 * @type {String[]}
@@ -292,8 +292,8 @@
 		 *
 		 */
 		getLanguage: function () {
-			var language = i18n.locale.language || i18n.default;
-			return /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/.exec(language) ? language : i18n.default;
+			var language = i18n.locale.language || i18n['default'];
+			return /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/.exec(language) ? language : i18n['default'];
 		},
 
 		/**
