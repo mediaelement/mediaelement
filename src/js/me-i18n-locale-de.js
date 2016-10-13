@@ -4,7 +4,8 @@
  * German
  *
  * @author
- *   Sascha "SoftCreatR" Greuel
+ *   Jalios (Twitter: @Jalios)
+ *   Sascha Greuel (Twitter: @SoftCreatR)
  *
  * @see
  *   me-i18n.js
@@ -64,7 +65,10 @@
 
             // mep-feature-ads
             "mejs.ad-skip": "Werbung überspringen",
-            "mejs.ad-skip-info": ["Überspringen in 1 Sekunde", "Überspringen in %1 Sekunden"]
+            "mejs.ad-skip-info": ["Überspringen in 1 Sekunde", "Überspringen in %1 Sekunden"],
+
+            // mep-feature-sourcechooser
+            "mejs.source-chooser": "Quellenauswahl"
         };
     }
 }(mejs.i18n.locale.strings));
