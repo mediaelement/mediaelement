@@ -33,7 +33,7 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 <a id="migration"></a>
 ## * What's New on `MediaElement.js` version 3.0
 
-* Introduction of `Renderers`, plugable code snippets that allow the introduction of new media formats in an easier way.
+* Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way.
 
 * Ability to play Facebook, SoundCloud, M(PEG)-DASH using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback.
 
