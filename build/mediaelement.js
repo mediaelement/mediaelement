@@ -3651,6 +3651,10 @@ mejs.version = '3.0-alpha';
 					dmIframe.style.display = '';
 				}
 			};
+			dm.setSize = function(width, height) {
+				dmIframe.width = width;
+				dmIframe.height = height;
+			};
 			dm.destroy = function () {
 				dmPlayer.destroy();
 			};
@@ -4050,8 +4054,10 @@ mejs.version = '3.0-alpha';
 					fbDiv.style.display = '';
 				}
 			};
+			fbWrapper.setSize = function(width, height) {
+				// Buggy and difficult to resize on-the-fly
+			};
 			fbWrapper.destroy = function () {
-				//youTubeApi.destroy();
 			};
 			fbWrapper.interval = null;
 
@@ -5048,30 +5054,6 @@ mejs.version = '3.0-alpha';
 			create: FlashMediaElementRenderer.create
 		};
 		mejs.Renderers.add(FlashMediaElementAudioRenderer);
-
-		// AUDIO - wav
-		// var FlashMediaElementAudioWavRenderer = {
-		// 	name: 'flash_audio_wav',
-		//
-		// 	options: {
-		// 		prefix: 'flash_audio_wav',
-		// 		filename: 'mediaelement-flash-audio-wav.swf'
-		// 	},
-		// 	/**
-		// 	 * Determine if a specific element type can be played with this render
-		// 	 *
-		// 	 * @param {String} type
-		// 	 * @return {Boolean}
-		// 	 */
-		// 	canPlayType: function(type) {
-		// 		var supportedMediaTypes = ['audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav'];
-		//
-		// 		return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
-		// 	},
-		//
-		// 	create: FlashMediaElementRenderer.create
-		// };
-		// mejs.Renderers.add(FlashMediaElementAudioWavRenderer);
 
 		// AUDIO - ogg
 		var FlashMediaElementAudioOggRenderer = {
