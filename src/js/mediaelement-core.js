@@ -75,24 +75,53 @@
 		/**
 		 * Loop through renderers available and determine the proper one to use
 		 *
-		 * The mechanism that will determine if the renderer is the correct one is the canPlay method
-		 * contained in the renderer.
+		 * The mechanism that will determine if the renderer is the correct one is the `canPlay` method
+		 * inside of each renderer file.
 		 * @param {Object[]} mediaFiles - A list of source and type obtained from video/audio/source tags: [{src:'',type:''}]
+		 * @param {?String[]} renderers - Optional list of pre-selected renderers
 		 * @return {?Object}
 		 */
-		selectRenderer: function (mediaFiles) {
-			var t = this;
+		selectRenderer: function (mediaFiles, renderers) {
 
-			for (var i = 0, il = t.order.length; i < il; i++) {
-				var rendererName = t.order[i],
+			var
+				t = this,
+				i,
+				il,
+				j,
+				jl,
+				rendererName,
+				renderer
+			;
+
+			// First attempt: check if there are matches with specified ones
+			if (typeof renderers !== 'undefined' && renderers !== null) {
+				for (i = 0, il = renderers.length; i < il; i++) {
+					rendererName = renderers[i];
 					renderer = t.renderers[rendererName];
 
-				for (var j = 0, jl = mediaFiles.length; j < jl; j++) {
-					if (renderer.canPlayType(mediaFiles[j].type)) {
-						return {
-							rendererName: rendererName,
-							src: mediaFiles[j].src
-						};
+					for (j = 0, jl = mediaFiles.length; j < jl; j++) {
+						if (renderer.canPlayType(mediaFiles[j].type)) {
+							return {
+								rendererName: rendererName,
+								src: mediaFiles[j].src
+							};
+						}
+					}
+				}
+			}
+			// Second attempt: check matches with all available renderers specified via `mejs.Renderers.order`
+			else {
+				for (i = 0, il = t.order.length; i < il; i++) {
+					rendererName = t.order[i];
+					renderer = t.renderers[rendererName];
+
+					for (j = 0, jl = mediaFiles.length; j < jl; j++) {
+						if (renderer.canPlayType(mediaFiles[j].type)) {
+							 return {
+								rendererName: rendererName,
+								src: mediaFiles[j].src
+							};
+						}
 					}
 				}
 			}
@@ -247,7 +276,8 @@
 				//console.log('SRC test', mediaFiles);
 
 				// find a renderer and URL match
-				renderInfo = mejs.Renderers.selectRenderer(mediaFiles);
+				renderInfo = mejs.Renderers.selectRenderer(mediaFiles,
+					(options.renderers.length ? options.renderers : null));
 
 				//console.log('SRC selection', renderInfo);
 				var event;
@@ -417,7 +447,8 @@
 				if (rendererArray[index] === rendererName) {
 
 					// create the renderer
-					newRendererType = mejs.Renderers.renderers[mejs.Renderers.order[index]];
+					newRendererType = mejs.Renderers.renderers[rendererArray[index]];
+
 					var renderOptions = mejs.Utils.extend({}, mediaElement.options, newRendererType.options);
 					newRenderer = new newRendererType.create(mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
