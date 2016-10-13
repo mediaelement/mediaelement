@@ -35,5 +35,3 @@ $flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/fl
 $flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/flash-audio/AudioElement.as -o build/mediaelement-flash-audio.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-audio -headless-server -static-link-runtime-shared-libraries
 
 $flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/flash-audio-ogg/OggMediaElement.as -o build/mediaelement-flash-audio-ogg.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-audio-ogg -headless-server -static-link-runtime-shared-libraries -include-libraries+=./src/flash/flash-audio-ogg/oggvorbis.swc
-#
-#$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/flash-audio-wav/WavMediaElement.as -o build/mediaelement-flash-audio-wav.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-audio-wav -headless-server -static-link-runtime-shared-libraries
