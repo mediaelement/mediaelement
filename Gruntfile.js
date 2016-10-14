@@ -136,10 +136,7 @@ module.exports = function(grunt) {
 				src     : ['mediaelement-i18n-locale-*.js'],
 				dest    : 'build/lang/',
 				flatten : true,
-				filter  : 'isFile',
-				rename: function(dest, src) {
-					return dest + src.replace('mediaelement', 'me');
-				}
+				filter  : 'isFile'
 			}
 		},
         clean: {
