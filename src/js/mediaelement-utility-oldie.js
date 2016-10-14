@@ -8,7 +8,7 @@ if (!Array.prototype.indexOf) {
 
 		// 1. Let O be the result of calling ToObject passing
 		//	   the this value as the argument.
-		if (typeof this === 'undefined' || this === null) {
+		if (this === undefined || this === null) {
 			throw new TypeError('"this" is null or not defined');
 		}
 
@@ -67,7 +67,7 @@ if (!Array.prototype.indexOf) {
 
 // document.createEvent for IE8 or other old browsers that do not implement it
 // Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
-if (typeof document.createEvent === 'undefined') {
+if (document.createEvent === undefined) {
 	document.createEvent = function (event) {
 
 		var e;

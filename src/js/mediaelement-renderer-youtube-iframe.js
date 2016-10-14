@@ -154,7 +154,7 @@
 		 */
 		getYouTubeIdFromUrl: function (url) {
 
-			if (typeof url === 'undefined' || url === null) {
+			if (url === undefined || url === null) {
 				return null;
 			}
 
@@ -517,7 +517,7 @@
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
 				console.log('yt event', eventName);
-				if (_youTubeState !== null && typeof _youTubeState !== 'undefined') {
+				if (_youTubeState !== null && _youTubeState !== undefined) {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}
 

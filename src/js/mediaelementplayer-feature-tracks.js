@@ -443,7 +443,7 @@
 		 */
 		displayCaptions: function() {
 
-			if (typeof this.tracks === 'undefined')
+			if (this.tracks === undefined)
 				return;
 
 			var
@@ -485,7 +485,7 @@
 		 * @param {Number} index
 		 */
 		showSlide: function(index) {
-			if (typeof this.tracks === 'undefined' || typeof this.slidesContainer === 'undefined') {
+			if (this.tracks === undefined || this.slidesContainer === undefined) {
 				return;
 			}
 
@@ -493,7 +493,7 @@
 				url = t.slides.entries.text[index],
 				img = t.slides.entries.imgs[index];
 
-			if (typeof img === 'undefined' || typeof img.fadeIn === 'undefined') {
+			if (img === undefined || img.fadeIn === undefined) {
 
 				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
 						.on('load', function() {
@@ -524,7 +524,7 @@
 		 */
 		displaySlides: function() {
 
-			if (typeof this.slides === 'undefined') {
+			if (this.slides === undefined) {
 				return;
 			}
 

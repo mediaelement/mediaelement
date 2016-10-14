@@ -9,9 +9,9 @@
  * License: MIT
  *
  */
-if (typeof jQuery !== 'undefined') {
+if (jQuery !== undefined) {
 	mejs.$ = jQuery;
-} else if (typeof Zepto !== 'undefined') {
+} else if (Zepto !== undefined) {
 	mejs.$ = Zepto;
 
 	// define `outerWidth` method which has not been realized in Zepto
@@ -24,7 +24,7 @@ if (typeof jQuery !== 'undefined') {
 		return width;
 	};
 
-} else if (typeof ender !== 'undefined') {
+} else if (ender !== undefined) {
 	mejs.$ = ender;
 }
 (function (mejs, $, win, doc, undefined) {
@@ -281,13 +281,13 @@ if (typeof jQuery !== 'undefined') {
 	 */
 	mejs.getElementsByClassName = function getElementsByClassName(className, node, tag) {
 
-		if (typeof node === 'undefined' || node === null) {
+		if (node === undefined || node === null) {
 			node = document;
 		}
-		if (typeof node.getElementsByClassName !== 'undefined' && node.getElementsByClassName !== null) {
+		if (node.getElementsByClassName !== undefined && node.getElementsByClassName !== null) {
 			return node.getElementsByClassName(className);
 		}
-		if (typeof tag === 'undefined' || tag === null) {
+		if (tag === undefined || tag === null) {
 			tag = '*';
 		}
 
@@ -340,7 +340,7 @@ if (typeof jQuery !== 'undefined') {
 
 
 		// try to get options from data-mejsoptions
-		if (typeof o === 'undefined') {
+		if (o === undefined) {
 			o = t.$node.data('mejsoptions');
 		}
 
@@ -560,7 +560,7 @@ if (typeof jQuery !== 'undefined') {
 		showControls: function (doAnimation) {
 			var t = this;
 
-			doAnimation = typeof doAnimation === 'undefined' || doAnimation;
+			doAnimation = doAnimation === undefined || doAnimation;
 
 			if (t.controlsAreVisible)
 				return;
@@ -601,7 +601,7 @@ if (typeof jQuery !== 'undefined') {
 		hideControls: function (doAnimation) {
 			var t = this;
 
-			doAnimation = typeof doAnimation === 'undefined' || doAnimation;
+			doAnimation = doAnimation === undefined || doAnimation;
 
 			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended)
 				return;
@@ -693,7 +693,7 @@ if (typeof jQuery !== 'undefined') {
 				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
-				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
+				autoplay = !(autoplayAttr === undefined || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature,
 				isNative = t.media.id.match(/(native|html5)/)
@@ -2118,7 +2118,7 @@ if (typeof jQuery !== 'undefined') {
 					});
 					t.globalBind('mouseup.dur touchend.dur', function (e) {
 						mouseIsDown = false;
-						if (typeof t.timefloat !== 'undefined') {
+						if (t.timefloat !== undefined) {
 							t.timefloat.hide();
 						}
 						t.globalUnbind('.dur');
@@ -2130,7 +2130,7 @@ if (typeof jQuery !== 'undefined') {
 				t.globalBind('mousemove.dur', function (e) {
 					handleMouseMove(e);
 				});
-				if (typeof t.timefloat !== 'undefined' && !mejs.MediaFeatures.hasTouch) {
+				if (t.timefloat !== undefined && !mejs.MediaFeatures.hasTouch) {
 					t.timefloat.show();
 				}
 			})
@@ -2138,7 +2138,7 @@ if (typeof jQuery !== 'undefined') {
 				mouseIsOver = false;
 				if (!mouseIsDown) {
 					t.globalUnbind('.dur');
-					if (typeof t.timefloat !== 'undefined') {
+					if (t.timefloat !== undefined) {
 						t.timefloat.hide();
 					}
 				}
@@ -2460,7 +2460,7 @@ if (typeof jQuery !== 'undefined') {
 				 */
 				positionVolumeHandle = function (volume, secondTry) {
 
-					if (!volumeSlider.is(':visible') && typeof secondTry === 'undefined') {
+					if (!volumeSlider.is(':visible') && secondTry === undefined) {
 						volumeSlider.show();
 						positionVolumeHandle(volume, true);
 						volumeSlider.hide();
@@ -3823,7 +3823,7 @@ if (typeof jQuery !== 'undefined') {
 		 */
 		displayCaptions: function() {
 
-			if (typeof this.tracks === 'undefined')
+			if (this.tracks === undefined)
 				return;
 
 			var
@@ -3865,7 +3865,7 @@ if (typeof jQuery !== 'undefined') {
 		 * @param {Number} index
 		 */
 		showSlide: function(index) {
-			if (typeof this.tracks === 'undefined' || typeof this.slidesContainer === 'undefined') {
+			if (this.tracks === undefined || this.slidesContainer === undefined) {
 				return;
 			}
 
@@ -3873,7 +3873,7 @@ if (typeof jQuery !== 'undefined') {
 				url = t.slides.entries.text[index],
 				img = t.slides.entries.imgs[index];
 
-			if (typeof img === 'undefined' || typeof img.fadeIn === 'undefined') {
+			if (img === undefined || img.fadeIn === undefined) {
 
 				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
 						.on('load', function() {
@@ -3904,7 +3904,7 @@ if (typeof jQuery !== 'undefined') {
 		 */
 		displaySlides: function() {
 
-			if (typeof this.slides === 'undefined') {
+			if (this.slides === undefined) {
 				return;
 			}
 
@@ -4407,7 +4407,7 @@ if (typeof jQuery !== 'undefined') {
 
 			for (var i in sources) {
 				var src = sources[i];
-				if (typeof src.type !== 'undefined' && src.nodeName === 'SOURCE' && media.canPlayType !== null) {
+				if (src.type !== undefined && src.nodeName === 'SOURCE' && media.canPlayType !== null) {
 					player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
 				}
 			}
@@ -4423,7 +4423,7 @@ if (typeof jQuery !== 'undefined') {
 		 */
 		addSourceButton: function (src, label, type, isCurrent) {
 			var t = this;
-			if (label === '' || typeof label === 'undefined') {
+			if (label === '' || label === undefined) {
 				label = src;
 			}
 			type = type.split('/')[1];
@@ -4457,7 +4457,7 @@ if (typeof jQuery !== 'undefined') {
 
 			var t = this;
 
-			if (typeof t.sourcechooserButton === 'undefined' || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
+			if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
 				return;
 			}
 
@@ -4476,7 +4476,7 @@ if (typeof jQuery !== 'undefined') {
 
 			var t = this;
 
-			if (typeof t.sourcechooserButton === 'undefined' || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
+			if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
 				return;
 			}
 
@@ -4506,7 +4506,7 @@ $.extend(mejs.MepDefaults,
 			render: function(player) {
 				
 				// check for fullscreen plugin
-				if (typeof player.enterFullScreen === 'undefined')
+				if (player.enterFullScreen === undefined)
 					return null;
 			
 				if (player.isFullScreen) {
@@ -4614,7 +4614,7 @@ $.extend(mejs.MepDefaults,
 			
 			//
 			
-			if (timer !== null && typeof timer !== 'undefined') {
+			if (timer !== null && timer !== undefined) {
 				clearTimeout(timer);
 				timer = null;
 			}
@@ -4640,7 +4640,7 @@ $.extend(mejs.MepDefaults,
 					var rendered = items[i].render(t);
 				
 					// render can return null if the item doesn't need to be used at the moment
-					if (rendered !== null && typeof rendered !== 'undefined') {
+					if (rendered !== null && rendered !== undefined) {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}
@@ -4826,7 +4826,7 @@ $.extend(mejs.MepDefaults,
 				postrollTitle = t.options.postrollCloseText ? t.options.postrollCloseText : mejs.i18n.t('mejs.close'),
 				postrollLink = t.container.find('link[rel="postroll"]').attr('href');
 
-			if (typeof postrollLink !== 'undefined') {
+			if (postrollLink !== undefined) {
 				player.postroll =
 					$('<div class="mejs-postroll-layer mejs-layer"><a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' + postrollTitle + '</a><div class="mejs-postroll-layer-content"></div></div>').prependTo(layers).hide();
 

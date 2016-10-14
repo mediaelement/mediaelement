@@ -94,7 +94,7 @@
 			;
 
 			// First attempt: check if there are matches with specified ones
-			if (typeof renderers !== 'undefined' && renderers !== null) {
+			if (renderers !== undefined && renderers !== null) {
 				for (i = 0, il = renderers.length; i < il; i++) {
 					rendererName = renderers[i];
 					renderer = t.renderers[rendererName];
@@ -178,7 +178,7 @@
 
 		id = id || 'mejs_' + Math.random().toString().slice(2);
 
-		if (typeof mediaElement.originalNode !== 'undefined' && mediaElement.originalNode !== null && mediaElement.appendChild) {
+		if (mediaElement.originalNode !== undefined && mediaElement.originalNode !== null && mediaElement.appendChild) {
 			// change id
 			mediaElement.originalNode.setAttribute('id', id + '_from_mejs');
 
@@ -211,7 +211,7 @@
 						getFn = function () {
 							//console.log('[wrapper get]: ' + propName);
 
-							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
 								//return mediaElement.renderer[propName];
@@ -222,7 +222,7 @@
 						setFn = function (value) {
 							//console.log('[wrapper set]: ' + propName + ' = ' + value);
 
-							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
 
 								//mediaElement.renderer[propName] = value;
@@ -242,7 +242,7 @@
 		// special .src property
 		var getSrc = function () {
 
-				if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+				if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 					return mediaElement.renderer.getSrc();
 				} else {
 					return null;
@@ -267,7 +267,7 @@
 
 						mediaFiles.push({
 							src: src,
-							type: (type === '' || type === null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
+							type: (type === '' || type === null || type === undefined) ? mejs.Utils.getTypeFromFile(src) : type
 						});
 
 					}
@@ -294,7 +294,7 @@
 				// turn on the renderer (this checks for the existing renderer already)
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
-				if (typeof mediaElement.renderer === 'undefined' || mediaElement.renderer === null) {
+				if (mediaElement.renderer === undefined || mediaElement.renderer === null) {
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'Error creating renderer';
@@ -313,7 +313,7 @@
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					console.log('[wrapper ' + mediaElement.id + '.' + methodName + '()]', mediaElement.renderer);
-					if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -402,7 +402,7 @@
 		mediaElement.changeRenderer = function (rendererName, mediaFiles) {
 
 			// check for a match on the current renderer
-			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
 
 				console.log('Already using: ' + rendererName);
 
@@ -413,7 +413,7 @@
 			}
 
 			// if existing renderer is not the right one, then hide it
-			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 
 				console.log('Stopping and hiding: ', mediaElement.renderer);
 
@@ -428,7 +428,7 @@
 			var newRenderer = mediaElement.renderers[rendererName],
 				newRendererType = null;
 
-			if (typeof newRenderer !== 'undefined' && newRenderer !== null) {
+			if (newRenderer !== undefined && newRenderer !== null) {
 				console.log('restoring: ', newRenderer.name);
 
 				newRenderer.show();
@@ -478,7 +478,7 @@
 		 * @param {number} height
 		 */
 		mediaElement.setSize = function (width, height) {
-			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 				mediaElement.renderer.setSize(width, height);
 			}
 		};

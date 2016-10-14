@@ -73,7 +73,7 @@
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || typeof this.readyState === 'undefined' ||
+					if (!done && (!this.readyState || this.readyState === undefined ||
 						this.readyState === "loaded" || this.readyState === "complete")) {
 						done = true;
 						vimeoApi.iFrameReady();
@@ -119,7 +119,7 @@
 		 * @return {int}
 		 */
 		getVimeoId: function (url) {
-			if (typeof url === 'undefined' || url === null) {
+			if (url === undefined || url === null) {
 				return null;
 			}
 
