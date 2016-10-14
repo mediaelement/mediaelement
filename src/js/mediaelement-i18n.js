@@ -390,7 +390,7 @@
 	};
 
 	// i18n fixes for compatibility with WordPress
-	if (mejsL10n !== undefined) {
+	if (typeof mejsL10n !== 'undefined') {
 		i18n.locale.language = mejsL10n.language;
 	}
 
@@ -405,7 +405,7 @@
 
 	"use strict";
 
-	if (mejsL10n !== undefined) {
+	if (typeof mejsL10n !== 'undefined') {
 		mejs[mejsL10n.lang] = mejsL10n.strings;
 	}
 
