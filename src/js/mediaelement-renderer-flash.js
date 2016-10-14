@@ -147,7 +147,7 @@
 
 						if (flash.flashApi !== null) {
 
-							if (typeof flash.flashApi['get_' + propName] !== 'undefined') {
+							if (flash.flashApi['get_' + propName] !== undefined) {
 								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
 
 								//console.log('[' + options.prefix + ' get]: ' + propName + ' = ' + value);
@@ -186,7 +186,7 @@
 						}
 
 						// send value to Flash
-						if (flash.flashApi !== null && typeof flash.flashApi['set_' + propName] !== 'undefined') {
+						if (flash.flashApi !== null && flash.flashApi['set_' + propName] !== undefined) {
 							flash.flashApi['set_' + propName](value);
 						} else {
 							// store for after "READY" event fires

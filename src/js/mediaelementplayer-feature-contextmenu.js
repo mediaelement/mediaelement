@@ -13,7 +13,7 @@ $.extend(mejs.MepDefaults,
 			render: function(player) {
 				
 				// check for fullscreen plugin
-				if (typeof player.enterFullScreen === 'undefined')
+				if (player.enterFullScreen === undefined)
 					return null;
 			
 				if (player.isFullScreen) {
@@ -121,7 +121,7 @@ $.extend(mejs.MepDefaults,
 			
 			//console.log('killContextMenuTimer', timer);
 			
-			if (timer !== null && typeof timer !== 'undefined') {
+			if (timer !== null && timer !== undefined) {
 				clearTimeout(timer);
 				timer = null;
 			}
@@ -147,7 +147,7 @@ $.extend(mejs.MepDefaults,
 					var rendered = items[i].render(t);
 				
 					// render can return null if the item doesn't need to be used at the moment
-					if (rendered !== null && typeof rendered !== 'undefined') {
+					if (rendered !== null && rendered !== undefined) {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}

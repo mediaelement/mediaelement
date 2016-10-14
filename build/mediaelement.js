@@ -271,9 +271,9 @@ mejs.version = '3.0-alpha';
 		 */
 		secondsToTimeCode: function (time, forceHours, showFrameCount, fps) {
 			//add framecount
-			if (typeof showFrameCount === 'undefined') {
+			if (showFrameCount === undefined) {
 				showFrameCount = false;
-			} else if (typeof fps === 'undefined') {
+			} else if (fps === undefined) {
 				fps = 25;
 			}
 
@@ -300,9 +300,9 @@ mejs.version = '3.0-alpha';
 		 * @return {number}
 		 */
 		timeCodeToSeconds: function (time, forceHours, showFrameCount, fps) {
-			if (typeof showFrameCount === 'undefined') {
+			if (showFrameCount === undefined) {
 				showFrameCount = false;
-			} else if (typeof fps === 'undefined') {
+			} else if (fps === undefined) {
 				fps = 25;
 			}
 
@@ -361,7 +361,7 @@ mejs.version = '3.0-alpha';
 			for (; i < length; i++) {
 				// Only deal with non-null/undefined values
 				options = arguments[i];
-				if (options !== null && typeof options !== 'undefined') {
+				if (options !== null && options !== undefined) {
 					// Extend the base object
 					for (name in options) {
 						src = target[name];
@@ -397,7 +397,7 @@ mejs.version = '3.0-alpha';
 				time = 0;
 			}
 
-			if (typeof fps === 'undefined') {
+			if (fps === undefined) {
 				fps = 25;
 			}
 
@@ -577,15 +577,15 @@ mejs.version = '3.0-alpha';
 		// Detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 
 		// iOS
-		features.hasiOSFullScreen = (typeof video.webkitEnterFullscreen !== 'undefined');
+		features.hasiOSFullScreen = (video.webkitEnterFullscreen !== undefined);
 
 		// W3C
-		features.hasNativeFullscreen = (typeof video.requestFullscreen !== 'undefined');
+		features.hasNativeFullscreen = (video.requestFullscreen !== undefined);
 
 		// webkit/firefox/IE11+
-		features.hasWebkitNativeFullScreen = (typeof video.webkitRequestFullScreen !== 'undefined');
-		features.hasMozNativeFullScreen = (typeof video.mozRequestFullScreen !== 'undefined');
-		features.hasMsNativeFullScreen = (typeof video.msRequestFullscreen !== 'undefined');
+		features.hasWebkitNativeFullScreen = (video.webkitRequestFullScreen !== undefined);
+		features.hasMozNativeFullScreen = (video.mozRequestFullScreen !== undefined);
+		features.hasMsNativeFullScreen = (video.msRequestFullscreen !== undefined);
 
 		features.hasTrueNativeFullScreen =
 			(features.hasWebkitNativeFullScreen || features.hasMozNativeFullScreen || features.hasMsNativeFullScreen);
@@ -661,7 +661,7 @@ mejs.version = '3.0-alpha';
 		// Test if Media Source Extensions are supported by browser
 		features.hasMse = ('MediaSource' in win);
 
-		features.supportsMediaTag = (typeof video.canPlayType !== 'undefined' || features.hasMse);
+		features.supportsMediaTag = (video.canPlayType !== undefined || features.hasMse);
 
 		return features;
 	})();
@@ -763,7 +763,7 @@ mejs.version = '3.0-alpha';
 			;
 
 			// First attempt: check if there are matches with specified ones
-			if (typeof renderers !== 'undefined' && renderers !== null) {
+			if (renderers !== undefined && renderers !== null) {
 				for (i = 0, il = renderers.length; i < il; i++) {
 					rendererName = renderers[i];
 					renderer = t.renderers[rendererName];
@@ -847,7 +847,7 @@ mejs.version = '3.0-alpha';
 
 		id = id || 'mejs_' + Math.random().toString().slice(2);
 
-		if (typeof mediaElement.originalNode !== 'undefined' && mediaElement.originalNode !== null && mediaElement.appendChild) {
+		if (mediaElement.originalNode !== undefined && mediaElement.originalNode !== null && mediaElement.appendChild) {
 			// change id
 			mediaElement.originalNode.setAttribute('id', id + '_from_mejs');
 
@@ -880,7 +880,7 @@ mejs.version = '3.0-alpha';
 						getFn = function () {
 							//
 
-							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
 								//return mediaElement.renderer[propName];
@@ -891,7 +891,7 @@ mejs.version = '3.0-alpha';
 						setFn = function (value) {
 							//
 
-							if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
 
 								//mediaElement.renderer[propName] = value;
@@ -911,7 +911,7 @@ mejs.version = '3.0-alpha';
 		// special .src property
 		var getSrc = function () {
 
-				if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+				if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 					return mediaElement.renderer.getSrc();
 				} else {
 					return null;
@@ -936,7 +936,7 @@ mejs.version = '3.0-alpha';
 
 						mediaFiles.push({
 							src: src,
-							type: (type === '' || type === null || typeof type === 'undefined') ? mejs.Utils.getTypeFromFile(src) : type
+							type: (type === '' || type === null || type === undefined) ? mejs.Utils.getTypeFromFile(src) : type
 						});
 
 					}
@@ -963,7 +963,7 @@ mejs.version = '3.0-alpha';
 				// turn on the renderer (this checks for the existing renderer already)
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
-				if (typeof mediaElement.renderer === 'undefined' || mediaElement.renderer === null) {
+				if (mediaElement.renderer === undefined || mediaElement.renderer === null) {
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'Error creating renderer';
@@ -982,7 +982,7 @@ mejs.version = '3.0-alpha';
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					
-					if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -1071,7 +1071,7 @@ mejs.version = '3.0-alpha';
 		mediaElement.changeRenderer = function (rendererName, mediaFiles) {
 
 			// check for a match on the current renderer
-			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
 
 				
 
@@ -1082,7 +1082,7 @@ mejs.version = '3.0-alpha';
 			}
 
 			// if existing renderer is not the right one, then hide it
-			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 
 				
 
@@ -1097,7 +1097,7 @@ mejs.version = '3.0-alpha';
 			var newRenderer = mediaElement.renderers[rendererName],
 				newRendererType = null;
 
-			if (typeof newRenderer !== 'undefined' && newRenderer !== null) {
+			if (newRenderer !== undefined && newRenderer !== null) {
 				
 
 				newRenderer.show();
@@ -1147,7 +1147,7 @@ mejs.version = '3.0-alpha';
 		 * @param {number} height
 		 */
 		mediaElement.setSize = function (width, height) {
-			if (typeof mediaElement.renderer !== 'undefined' && mediaElement.renderer !== null) {
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 				mediaElement.renderer.setSize(width, height);
 			}
 		};
@@ -1436,7 +1436,7 @@ mejs.version = '3.0-alpha';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || typeof this.readyState === 'undefined' ||
+					if (!done && (!this.readyState || this.readyState === undefined ||
 						this.readyState === 'loaded' || this.readyState === 'complete')) {
 						done = true;
 						NativeHls.mediaReady();
@@ -1817,7 +1817,7 @@ mejs.version = '3.0-alpha';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || typeof this.readyState === 'undefined' ||
+					if (!done && (!this.readyState || this.readyState === undefined ||
 						this.readyState === 'loaded' || this.readyState === 'complete')) {
 						done = true;
 						NativeDash.mediaReady();
@@ -2227,7 +2227,7 @@ mejs.version = '3.0-alpha';
 		 */
 		getYouTubeIdFromUrl: function (url) {
 
-			if (typeof url === 'undefined' || url === null) {
+			if (url === undefined || url === null) {
 				return null;
 			}
 
@@ -2590,7 +2590,7 @@ mejs.version = '3.0-alpha';
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
 				
-				if (_youTubeState !== null && typeof _youTubeState !== 'undefined') {
+				if (_youTubeState !== null && _youTubeState !== undefined) {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}
 
@@ -2715,7 +2715,7 @@ mejs.version = '3.0-alpha';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || typeof this.readyState === 'undefined' ||
+					if (!done && (!this.readyState || this.readyState === undefined ||
 						this.readyState === "loaded" || this.readyState === "complete")) {
 						done = true;
 						vimeoApi.iFrameReady();
@@ -2761,7 +2761,7 @@ mejs.version = '3.0-alpha';
 		 * @return {int}
 		 */
 		getVimeoId: function (url) {
-			if (typeof url === 'undefined' || url === null) {
+			if (url === undefined || url === null) {
 				return null;
 			}
 
@@ -4704,7 +4704,7 @@ mejs.version = '3.0-alpha';
 
 						if (flash.flashApi !== null) {
 
-							if (typeof flash.flashApi['get_' + propName] !== 'undefined') {
+							if (flash.flashApi['get_' + propName] !== undefined) {
 								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
 
 								//
@@ -4743,7 +4743,7 @@ mejs.version = '3.0-alpha';
 						}
 
 						// send value to Flash
-						if (flash.flashApi !== null && typeof flash.flashApi['set_' + propName] !== 'undefined') {
+						if (flash.flashApi !== null && flash.flashApi['set_' + propName] !== undefined) {
 							flash.flashApi['set_' + propName](value);
 						} else {
 							// store for after "READY" event fires
@@ -5516,7 +5516,7 @@ mejs.version = '3.0-alpha';
 	};
 
 	// i18n fixes for compatibility with WordPress
-	if (typeof mejsL10n !== 'undefined') {
+	if (mejsL10n !== undefined) {
 		i18n.locale.language = mejsL10n.language;
 	}
 
@@ -5531,7 +5531,7 @@ mejs.version = '3.0-alpha';
 
 	"use strict";
 
-	if (typeof mejsL10n !== 'undefined') {
+	if (mejsL10n !== undefined) {
 		mejs[mejsL10n.lang] = mejsL10n.strings;
 	}
 
@@ -5543,6 +5543,7 @@ mejs.version = '3.0-alpha';
  *
  * @author
  *   TBD
+ *   Sascha Greuel (Twitter: @SoftCreatR)
  *
  * @see
  *   me-i18n.js
@@ -5550,124 +5551,122 @@ mejs.version = '3.0-alpha';
  * @params
  *  - exports - CommonJS, window ..
  */
-;(function (exports, undefined) {
-
+(function (exports) {
 	"use strict";
 
-	if (typeof exports.en === 'undefined') {
+	if (exports.en === undefined) {
 		exports.en = {
-
-			'mejs.plural-form': 1,
+			"mejs.plural-form": 1,
 
 			// me-shim
-			'mejs.download-file': 'Download File',
+			"mejs.download-file": "Download File",
 
 			// mep-feature-contextmenu
-			'mejs.fullscreen-off': 'Turn off Fullscreen',
-			'mejs.fullscreen-on': 'Go Fullscreen',
-			'mejs.download-video': 'Download Video',
+			"mejs.fullscreen-off": "Turn off Fullscreen",
+			"mejs.fullscreen-on": "Go Fullscreen",
+			"mejs.download-video": "Download Video",
 
 			// mep-feature-fullscreen
-			'mejs.fullscreen': 'Fullscreen',
+			"mejs.fullscreen": "Fullscreen",
 
 			// mep-feature-jumpforward
-			'mejs.time-jump-forward': ['Jump forward %1 second', 'Jump forward %1 seconds'],
+			"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
 			// mep-feature-playpause
-			'mejs.play': 'Play',
-			'mejs.pause': 'Pause',
+			"mejs.play": "Play",
+			"mejs.pause": "Pause",
 
 			// mep-feature-postroll
-			'mejs.close': 'Close',
+			"mejs.close": "Close",
 
 			// mep-feature-progress
-			'mejs.time-slider': 'Time Slider',
-			'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
+			"mejs.time-slider": "Time Slider",
+			"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
 			// mep-feature-skipback
-			'mejs.time-skip-back': ['Skip back %1 second', 'Skip back %1 seconds'],
+			"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
 			// mep-feature-tracks
-			'mejs.captions-subtitles': 'Captions/Subtitles',
-			'mejs.none': 'None',
+			"mejs.captions-subtitles": "Captions/Subtitles",
+			"mejs.none": "None",
 
 			// mep-feature-volume
-			'mejs.mute-toggle': 'Mute Toggle',
-			'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
-			'mejs.unmute': 'Unmute',
-			'mejs.mute': 'Mute',
-			'mejs.volume-slider': 'Volume Slider',
-
-			// mep-feature-stop
-			'mejs.stop': 'Stop',
+			"mejs.mute-toggle": "Mute Toggle",
+			"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
+			"mejs.unmute": "Unmute",
+			"mejs.mute": "Mute",
+			"mejs.volume-slider": "Volume Slider",
 
 			// mep-player
-			'mejs.video-player': 'Video Player',
-			'mejs.audio-player': 'Audio Player',
+			"mejs.video-player": "Video Player",
+			"mejs.audio-player": "Audio Player",
 
 			// mep-feature-ads
-			'mejs.ad-skip': 'Skip ad',
-			'mejs.ad-skip-info': ['Skip in 1 second', 'Skip in %1 seconds'],
+			"mejs.ad-skip": "Skip ad",
+			"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
 
-			'mejs.source-chooser': 'Source Chooser',
+			// mep-feature-sourcechooser
+			"mejs.source-chooser": "Source Chooser",
+
+			// mep-feature-stop
+			"mejs.stop": "Stop",
 
 			// mep-tracks
-			'mejs.afrikaans': 'Afrikaans',
-			'mejs.albanian': 'Albanian',
-			'mejs.arabic': 'Arabic',
-			'mejs.belarusian': 'Belarusian',
-			'mejs.bulgarian': 'Bulgarian',
-			'mejs.catalan': 'Catalan',
-			'mejs.chinese': 'Chinese',
-			'mejs.chinese-simplified': 'Chinese (Simplified)',
-			'mejs.chinese-traditional': 'Chinese (Traditional)',
-			'mejs.croatian': 'Croatian',
-			'mejs.czech': 'Czech',
-			'mejs.danish': 'Danish',
-			'mejs.dutch': 'Dutch',
-			'mejs.english': 'English',
-			'mejs.estonian': 'Estonian',
-			'mejs.filipino': 'Filipino',
-			'mejs.finnish': 'Finnish',
-			'mejs.french': 'French',
-			'mejs.galician': 'Galician',
-			'mejs.german': 'German',
-			'mejs.greek': 'Greek',
-			'mejs.haitian-creole': 'Haitian Creole',
-			'mejs.hebrew': 'Hebrew',
-			'mejs.hindi': 'Hindi',
-			'mejs.hungarian': 'Hungarian',
-			'mejs.icelandic': 'Icelandic',
-			'mejs.indonesian': 'Indonesian',
-			'mejs.irish': 'Irish',
-			'mejs.italian': 'Italian',
-			'mejs.japanese': 'Japanese',
-			'mejs.korean': 'Korean',
-			'mejs.latvian': 'Latvian',
-			'mejs.lithuanian': 'Lithuanian',
-			'mejs.macedonian': 'Macedonian',
-			'mejs.malay': 'Malay',
-			'mejs.maltese': 'Maltese',
-			'mejs.norwegian': 'Norwegian',
-			'mejs.persian': 'Persian',
-			'mejs.polish': 'Polish',
-			'mejs.portuguese': 'Portuguese',
-			'mejs.romanian': 'Romanian',
-			'mejs.russian': 'Russian',
-			'mejs.serbian': 'Serbian',
-			'mejs.slovak': 'Slovak',
-			'mejs.slovenian': 'Slovenian',
-			'mejs.spanish': 'Spanish',
-			'mejs.swahili': 'Swahili',
-			'mejs.swedish': 'Swedish',
-			'mejs.tagalog': 'Tagalog',
-			'mejs.thai': 'Thai',
-			'mejs.turkish': 'Turkish',
-			'mejs.ukrainian': 'Ukrainian',
-			'mejs.vietnamese': 'Vietnamese',
-			'mejs.welsh': 'Welsh',
-			'mejs.yiddish': 'Yiddish'
+			"mejs.afrikaans": "Afrikaans",
+			"mejs.albanian": "Albanian",
+			"mejs.arabic": "Arabic",
+			"mejs.belarusian": "Belarusian",
+			"mejs.bulgarian": "Bulgarian",
+			"mejs.catalan": "Catalan",
+			"mejs.chinese": "Chinese",
+			"mejs.chinese-simplified": "Chinese (Simplified)",
+			"mejs.chinese-traditional": "Chinese (Traditional)",
+			"mejs.croatian": "Croatian",
+			"mejs.czech": "Czech",
+			"mejs.danish": "Danish",
+			"mejs.dutch": "Dutch",
+			"mejs.english": "English",
+			"mejs.estonian": "Estonian",
+			"mejs.filipino": "Filipino",
+			"mejs.finnish": "Finnish",
+			"mejs.french": "French",
+			"mejs.galician": "Galician",
+			"mejs.german": "German",
+			"mejs.greek": "Greek",
+			"mejs.haitian-creole": "Haitian Creole",
+			"mejs.hebrew": "Hebrew",
+			"mejs.hindi": "Hindi",
+			"mejs.hungarian": "Hungarian",
+			"mejs.icelandic": "Icelandic",
+			"mejs.indonesian": "Indonesian",
+			"mejs.irish": "Irish",
+			"mejs.italian": "Italian",
+			"mejs.japanese": "Japanese",
+			"mejs.korean": "Korean",
+			"mejs.latvian": "Latvian",
+			"mejs.lithuanian": "Lithuanian",
+			"mejs.macedonian": "Macedonian",
+			"mejs.malay": "Malay",
+			"mejs.maltese": "Maltese",
+			"mejs.norwegian": "Norwegian",
+			"mejs.persian": "Persian",
+			"mejs.polish": "Polish",
+			"mejs.portuguese": "Portuguese",
+			"mejs.romanian": "Romanian",
+			"mejs.russian": "Russian",
+			"mejs.serbian": "Serbian",
+			"mejs.slovak": "Slovak",
+			"mejs.slovenian": "Slovenian",
+			"mejs.spanish": "Spanish",
+			"mejs.swahili": "Swahili",
+			"mejs.swedish": "Swedish",
+			"mejs.tagalog": "Tagalog",
+			"mejs.thai": "Thai",
+			"mejs.turkish": "Turkish",
+			"mejs.ukrainian": "Ukrainian",
+			"mejs.vietnamese": "Vietnamese",
+			"mejs.welsh": "Welsh",
+			"mejs.yiddish": "Yiddish"
 		};
 	}
-
 }(mejs.i18n.locale.strings));

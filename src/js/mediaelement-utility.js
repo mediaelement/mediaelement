@@ -254,9 +254,9 @@
 		 */
 		secondsToTimeCode: function (time, forceHours, showFrameCount, fps) {
 			//add framecount
-			if (typeof showFrameCount === 'undefined') {
+			if (showFrameCount === undefined) {
 				showFrameCount = false;
-			} else if (typeof fps === 'undefined') {
+			} else if (fps === undefined) {
 				fps = 25;
 			}
 
@@ -283,9 +283,9 @@
 		 * @return {number}
 		 */
 		timeCodeToSeconds: function (time, forceHours, showFrameCount, fps) {
-			if (typeof showFrameCount === 'undefined') {
+			if (showFrameCount === undefined) {
 				showFrameCount = false;
-			} else if (typeof fps === 'undefined') {
+			} else if (fps === undefined) {
 				fps = 25;
 			}
 
@@ -344,7 +344,7 @@
 			for (; i < length; i++) {
 				// Only deal with non-null/undefined values
 				options = arguments[i];
-				if (options !== null && typeof options !== 'undefined') {
+				if (options !== null && options !== undefined) {
 					// Extend the base object
 					for (name in options) {
 						src = target[name];
@@ -380,7 +380,7 @@
 				time = 0;
 			}
 
-			if (typeof fps === 'undefined') {
+			if (fps === undefined) {
 				fps = 25;
 			}
 
@@ -560,15 +560,15 @@
 		// Detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 
 		// iOS
-		features.hasiOSFullScreen = (typeof video.webkitEnterFullscreen !== 'undefined');
+		features.hasiOSFullScreen = (video.webkitEnterFullscreen !== undefined);
 
 		// W3C
-		features.hasNativeFullscreen = (typeof video.requestFullscreen !== 'undefined');
+		features.hasNativeFullscreen = (video.requestFullscreen !== undefined);
 
 		// webkit/firefox/IE11+
-		features.hasWebkitNativeFullScreen = (typeof video.webkitRequestFullScreen !== 'undefined');
-		features.hasMozNativeFullScreen = (typeof video.mozRequestFullScreen !== 'undefined');
-		features.hasMsNativeFullScreen = (typeof video.msRequestFullscreen !== 'undefined');
+		features.hasWebkitNativeFullScreen = (video.webkitRequestFullScreen !== undefined);
+		features.hasMozNativeFullScreen = (video.mozRequestFullScreen !== undefined);
+		features.hasMsNativeFullScreen = (video.msRequestFullscreen !== undefined);
 
 		features.hasTrueNativeFullScreen =
 			(features.hasWebkitNativeFullScreen || features.hasMozNativeFullScreen || features.hasMsNativeFullScreen);
@@ -644,7 +644,7 @@
 		// Test if Media Source Extensions are supported by browser
 		features.hasMse = ('MediaSource' in win);
 
-		features.supportsMediaTag = (typeof video.canPlayType !== 'undefined' || features.hasMse);
+		features.supportsMediaTag = (video.canPlayType !== undefined || features.hasMse);
 
 		return features;
 	})();

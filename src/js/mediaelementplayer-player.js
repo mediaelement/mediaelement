@@ -252,13 +252,13 @@
 	 */
 	mejs.getElementsByClassName = function getElementsByClassName(className, node, tag) {
 
-		if (typeof node === 'undefined' || node === null) {
+		if (node === undefined || node === null) {
 			node = document;
 		}
-		if (typeof node.getElementsByClassName !== 'undefined' && node.getElementsByClassName !== null) {
+		if (node.getElementsByClassName !== undefined && node.getElementsByClassName !== null) {
 			return node.getElementsByClassName(className);
 		}
-		if (typeof tag === 'undefined' || tag === null) {
+		if (tag === undefined || tag === null) {
 			tag = '*';
 		}
 
@@ -311,7 +311,7 @@
 
 
 		// try to get options from data-mejsoptions
-		if (typeof o === 'undefined') {
+		if (o === undefined) {
 			o = t.$node.data('mejsoptions');
 		}
 
@@ -531,7 +531,7 @@
 		showControls: function (doAnimation) {
 			var t = this;
 
-			doAnimation = typeof doAnimation === 'undefined' || doAnimation;
+			doAnimation = doAnimation === undefined || doAnimation;
 
 			if (t.controlsAreVisible)
 				return;
@@ -572,7 +572,7 @@
 		hideControls: function (doAnimation) {
 			var t = this;
 
-			doAnimation = typeof doAnimation === 'undefined' || doAnimation;
+			doAnimation = doAnimation === undefined || doAnimation;
 
 			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended)
 				return;
@@ -664,7 +664,7 @@
 				t = this,
 				mf = mejs.MediaFeatures,
 				autoplayAttr = domNode.getAttribute('autoplay'),
-				autoplay = !(typeof autoplayAttr === 'undefined' || autoplayAttr === null || autoplayAttr === 'false'),
+				autoplay = !(autoplayAttr === undefined || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature,
 				isNative = t.media.id.match(/(native|html5)/)

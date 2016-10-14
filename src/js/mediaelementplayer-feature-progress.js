@@ -241,7 +241,7 @@
 					});
 					t.globalBind('mouseup.dur touchend.dur', function (e) {
 						mouseIsDown = false;
-						if (typeof t.timefloat !== 'undefined') {
+						if (t.timefloat !== undefined) {
 							t.timefloat.hide();
 						}
 						t.globalUnbind('.dur');
@@ -253,7 +253,7 @@
 				t.globalBind('mousemove.dur', function (e) {
 					handleMouseMove(e);
 				});
-				if (typeof t.timefloat !== 'undefined' && !mejs.MediaFeatures.hasTouch) {
+				if (t.timefloat !== undefined && !mejs.MediaFeatures.hasTouch) {
 					t.timefloat.show();
 				}
 			})
@@ -261,7 +261,7 @@
 				mouseIsOver = false;
 				if (!mouseIsDown) {
 					t.globalUnbind('.dur');
-					if (typeof t.timefloat !== 'undefined') {
+					if (t.timefloat !== undefined) {
 						t.timefloat.hide();
 					}
 				}
