@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.23.2';
+mejs.version = '2.23.3';
 
 
 // player number (for missing, same id attr)
@@ -316,6 +316,20 @@ mejs.Utility = {
 			timeout = setTimeout(later, wait);
 			if (callNow) func.apply(context, args);
 		};
+	},
+
+	/**
+	* Returns true if targetNode appears after sourceNode in the dom.
+	* @param {HTMLElement} sourceNode - the source node for comparison
+	* @param {HTMLElement} targetNode - the node to compare against sourceNode
+	*/
+	isNodeAfter: function(sourceNode, targetNode) {
+		return !!(
+			sourceNode &&
+			targetNode &&
+			typeof sourceNode.compareDocumentPosition === 'function' &&
+			sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
+		);
 	}
 };
 
@@ -1732,7 +1746,7 @@ mejs.YouTubeApi = {
 			height: settings.height,
 			width: settings.width,
 			videoId: settings.videoId,
-			playerVars: $.extend({}, defaultVars, settings.variables),
+			playerVars: mejs.$.extend({}, defaultVars, settings.variables),
 			events: {
 				'onReady': function(e) {
 					
@@ -1939,176 +1953,418 @@ window.onYouTubePlayerReady = function(id) {
 window.mejs = mejs;
 window.MediaElement = mejs.MediaElement;
 
-/*
- * Adds Internationalization and localization to mediaelement.
+/**
+ * Localize strings
  *
- * This file does not contain translations, you have to add them manually.
- * The schema is always the same: me-i18n-locale-[IETF-language-tag].js
- *
- * What is the concept beyond i18n?
- *   http://en.wikipedia.org/wiki/Internationalization_and_localization
- *
- * What langcode should i use?
- *   http://en.wikipedia.org/wiki/IETF_language_tag
- *   https://tools.ietf.org/html/rfc5646
- *
- *
- * License?
- *
- *   The i18n file uses methods from the Drupal project (drupal.js):
- *     - i18n.methods.t() (modified)
- *     - i18n.methods.checkPlain() (full copy)
- *
- *   The Drupal project is (like mediaelementjs) licensed under GPLv2.
- *    - http://drupal.org/licensing/faq/#q1
- *    - https://github.com/johndyer/mediaelement
- *    - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- *
- *
- * @author
- *   Tim Latz (latz.tim@gmail.com)
- *
- *
- * @params
- *  - context - document, iframe ..
- *  - exports - CommonJS, window ..
+ * Include translations from JS files and method to pluralize properly strings.
  *
  */
-;(function(context, exports, undefined) {
-    "use strict";
+(function (doc, win, mejs, undefined) {
 
-    var i18n = {
-        "default": 'en',
-        "locale": {
-            // Ensure previous values aren't overwritten.
-            "language" : (exports.i18n && exports.i18n.locale.language) || '',
-            "strings" : (exports.i18n && exports.i18n.locale.strings) || {}
-        },
-        "ietf_lang_regex" : /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/,
-        "methods" : {}
-    };
-// start i18n
+	var i18n = {
+		/**
+		 * @type {String}
+		 */
+		'default': 'en',
+
+		/**
+		 * @type {String[]}
+		 */
+		locale: {
+			language: (mejs.i18n && mejs.i18n.locale.language) || '',
+			strings: (mejs.i18n && mejs.i18n.locale.strings) || {}
+		},
+
+		/**
+		 * Filters for available languages.
+		 *
+		 * This plural forms are grouped in family groups based on
+		 * https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
+		 * with some additions and corrections according to the Localization Guide list
+		 * (http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html)
+		 *
+		 * Arguments are dynamic following the structure:
+		 * - argument1 : Number to determine form
+		 * - argument2...argumentN: Possible matches
+		 *
+		 * @type {Function[]}
+		 */
+		pluralForms: [
+			// 0: Chinese, Japanese, Korean, Persian, Turkish, Thai, Lao, Aymará,
+			// Tibetan, Chiga, Dzongkha, Indonesian, Lojban, Georgian, Kazakh, Khmer, Kyrgyz, Malay,
+			// Burmese, Yakut, Sundanese, Tatar, Uyghur, Vietnamese, Wolof
+			function () {
+				return arguments[1];
+			},
+			// 1: Danish, Dutch, English, Faroese, Frisian, German, Norwegian, Swedish, Estonian, Finnish,
+			// Hungarian, Basque, Greek, Hebrew, Italian, Portuguese, Spanish, Catalan, Afrikaans,
+			// Angika, Assamese, Asturian, Azerbaijani, Bulgarian, Bengali, Bodo, Aragonese, Dogri,
+			// Esperanto, Argentinean Spanish, Fulah, Friulian, Galician, Gujarati, Hausa,
+			// Hindi, Chhattisgarhi, Armenian, Interlingua, Greenlandic, Kannada, Kurdish, Letzeburgesch,
+			// Maithili, Malayalam, Mongolian, Manipuri, Marathi, Nahuatl, Neapolitan, Norwegian Bokmal,
+			// Nepali, Norwegian Nynorsk, Norwegian (old code), Northern Sotho, Oriya, Punjabi, Papiamento,
+			// Piemontese, Pashto, Romansh, Kinyarwanda, Santali, Scots, Sindhi, Northern Sami, Sinhala,
+			// Somali, Songhay, Albanian, Swahili, Tamil, Telugu, Turkmen, Urdu, Yoruba
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else {
+					return args[2];
+				}
+			},
+			// 2: French, Brazilian Portuguese, Acholi, Akan, Amharic, Mapudungun, Breton, Filipino,
+			// Gun, Lingala, Mauritian Creole, Malagasy, Maori, Occitan, Tajik, Tigrinya, Uzbek, Walloon
+			function () {
+				var args = arguments;
+				if ([0, 1].indexOf(args[0]) > -1) {
+					return args[1];
+				} else {
+					return args[2];
+				}
+			},
+			// 3: Latvian
+			function () {
+				var args = arguments;
+				if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
+					return args[1];
+				} else if (args[0] !== 0) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			},
+			// 4: Scottish Gaelic
+			function () {
+				var args = arguments;
+				if (args[0] === 1 || args[0] === 11) {
+					return args[1];
+				} else if (args[0] === 2 || args[0] === 12) {
+					return args[2];
+				} else if (args[0] > 2 && args[0] < 20) {
+					return args[3];
+				} else {
+					return args[4];
+				}
+			},
+			// 5:  Romanian
+			function () {
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] === 0 || (args[0] % 100 > 0 && args[0] % 100 < 20)) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			},
+			// 6: Lithuanian
+			function () {
+				var args = arguments;
+				if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
+					return args[1];
+				} else if (args[0] % 10 >= 2 && (args[0] % 100 < 10 || args[0] % 100 >= 20)) {
+					return args[2];
+				} else {
+					return [3];
+				}
+			},
+			// 7: Belarusian, Bosnian, Croatian, Serbian, Russian, Ukrainian
+			function () {
+				var args = arguments;
+				if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
+					return args[1];
+				} else if (args[0] % 10 >= 2 && args[0] % 10 <= 4 && (args[0] % 100 < 10 || args[0] % 100 >= 20)) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			},
+			// 8:  Slovak, Czech
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] >= 2 && args[0] <= 4) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			},
+			// 9: Polish
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] % 10 >= 2 && args[0] % 10 <= 4 && (args[0] % 100 < 10 || args[0] % 100 >= 20)) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			},
+			// 10: Slovenian
+			function () {
+				var args = arguments;
+				if (args[0] % 100 === 1) {
+					return args[2];
+				} else if (args[0] % 100 === 2) {
+					return args[3];
+				} else if (args[0] % 100 === 3 || args[0] % 100 === 4) {
+					return args[4];
+				} else {
+					return args[1];
+				}
+			},
+			// 11: Irish Gaelic
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] === 2) {
+					return args[2];
+				} else if (args[0] > 2 && args[0] < 7) {
+					return args[3];
+				} else if (args[0] > 6 && args[0] < 11) {
+					return args[4];
+				} else {
+					return args[5];
+				}
+			},
+			// 12: Arabic
+			function () {
+				var args = arguments;
+				if (args[0] === 0) {
+					return args[1];
+				} else if (args[0] === 1) {
+					return args[2];
+				} else if (args[0] === 2) {
+					return args[3];
+				} else if (args[0] % 100 >= 3 && args[0] % 100 <= 10) {
+					return args[4];
+				} else if (args[0] % 100 >= 11) {
+					return args[5];
+				} else {
+					return args[6];
+				}
+			},
+			// 13: Maltese
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] === 0 || (args[0] % 100 > 1 && args[0] % 100 < 11)) {
+					return args[2];
+				} else if (args[0] % 100 > 10 && args[0] % 100 < 20) {
+					return args[3];
+				} else {
+					return args[4];
+				}
+
+			},
+			// 14: Macedonian
+			function () {
+				var args = arguments;
+				if (args[0] % 10 === 1) {
+					return args[1];
+				} else if (args[0] % 10 === 2) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			},
+			// 15:  Icelandic
+			function () {
+				var args = arguments;
+				if (args[0] !== 11 && args[0] % 10 === 1) {
+					return args[1];
+				} else {
+					return args[2];
+				}
+			},
+			// New additions
+
+			// 16:  Kashubian
+			// Note: in https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of_Plural_Rules
+			// Breton is listed as #16 but in the Localization Guide it belongs to the group 2
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] % 10 >= 2 && args[0] % 10 <= 4 && (args[0] % 100 < 10 || args[0] % 100 >= 20)) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			},
+			// 17:  Welsh
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] === 2) {
+					return args[2];
+				} else if (args[0] !== 8 && args[0] !== 11) {
+					return args[3];
+				} else {
+					return args[4];
+				}
+			},
+			// 18:  Javanese
+			function () {
+				var args = arguments;
+				if (args[0] === 0) {
+					return args[1];
+				} else {
+					return args[2];
+				}
+			},
+			// 19:  Cornish
+			function () {
+				var args = arguments;
+				if (args[0] === 1) {
+					return args[1];
+				} else if (args[0] === 2) {
+					return args[2];
+				} else if (args[0] === 3) {
+					return args[3];
+				} else {
+					return args[4];
+				}
+			},
+			// 20:  Mandinka
+			function () {
+				var args = arguments;
+				if (args[0] === 0) {
+					return args[1];
+				} else if (args[0] === 1) {
+					return args[2];
+				} else {
+					return args[3];
+				}
+			}
+		],
+		/**
+		 * Get specified language
+		 *
+		 */
+		getLanguage: function () {
+			var language = i18n.locale.language || i18n['default'];
+			return /^(x\-)?[a-z]{2,}(\-\w{2,})?(\-\w{2,})?$/.exec(language) ? language : i18n['default'];
+		},
+
+		/**
+		 * Translate a string to a specified language, including optionally a number to pluralize translation
+		 *
+		 * @param {String} message
+		 * @param {Number} pluralParam
+		 * @return {String}
+		 */
+		t: function (message, pluralParam) {
+
+			if (typeof message === 'string' && message.length) {
+
+				var
+					language = i18n.getLanguage(),
+					str,
+					pluralForm,
+					/**
+					 * Modify string using algorithm to detect plural forms.
+					 *
+					 * @private
+					 * @see http://stackoverflow.com/questions/1353408/messageformat-in-javascript-parameters-in-localized-ui-strings
+					 * @param {String|String[]} input   - String or array of strings to pick the plural form
+					 * @param {Number} number           - Number to determine the proper plural form
+					 * @param {Number} form             - Number of language family to apply plural form
+					 * @return {String}
+					 */
+					plural = function (input, number, form) {
+
+						if (typeof input !== 'object' || typeof number !== 'number' || typeof form !== 'number') {
+							return input;
+						}
+
+						if (typeof input === 'string') {
+							return input;
+						}
+
+						// Perform plural form or return original text
+						return i18n.pluralForms[form].apply(null, [number].concat(input));
+					},
+					/**
+					 *
+					 * @param {String} input
+					 * @return {String}
+					 */
+					escapeHTML = function (input) {
+						var map = {
+							'&': '&amp;',
+							'<': '&lt;',
+							'>': '&gt;',
+							'"': '&quot;'
+						};
+
+						return input.replace(/[&<>"]/g, function(c) {
+							return map[c];
+						});
+					}
+				;
+
+				// Fetch the localized version of the string
+				if (i18n.locale.strings && i18n.locale.strings[language]) {
+					str = i18n.locale.strings[language][message];
+					if (typeof pluralParam === 'number') {
+						pluralForm = i18n.locale.strings[language]['mejs.plural-form'];
+						str = plural.apply(null, [str, pluralParam, pluralForm]);
+					}
+				}
+
+				// Fallback to default language if requested uid is not translated
+				if (!str && i18n.locale.strings && i18n.locale.strings[i18n['default']]) {
+					str = i18n.locale.strings[i18n['default']][message];
+					if (typeof pluralParam === 'number') {
+						pluralForm = i18n.locale.strings[i18n['default']]['mejs.plural-form'];
+						str = plural.apply(null, [str, pluralParam, pluralForm]);
+
+					}
+				}
+
+				// As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
+				str = str || message;
+
+				// Replace token
+				if (typeof pluralParam === 'number') {
+					str = str.replace('%1', pluralParam);
+				}
+
+				return escapeHTML(str);
+
+			}
+
+			return message;
+		}
+
+	};
+
+	// i18n fixes for compatibility with WordPress
+	if (typeof mejsL10n !== 'undefined') {
+		i18n.locale.language = mejsL10n.language;
+	}
+
+	// Register variable
+	mejs.i18n = i18n;
 
 
-    /**
-     * Get language, fallback to browser's language if empty
-     *
-     * IETF: RFC 5646, https://tools.ietf.org/html/rfc5646
-     * Examples: en, zh-CN, cmn-Hans-CN, sr-Latn-RS, es-419, x-private
-     */
-    i18n.getLanguage = function () {
-        var language = i18n.locale.language || window.navigator.userLanguage || window.navigator.language;
-        return i18n.ietf_lang_regex.exec(language) ? language : null;
-
-        //(WAS: convert to iso 639-1 (2-letters, lower case))
-        //return language.substr(0, 2).toLowerCase();
-    };
-
-    // i18n fixes for compatibility with WordPress
-    if ( typeof mejsL10n != 'undefined' ) {
-        i18n.locale.language = mejsL10n.language;
-    }
-
-
-
-    /**
-     * Encode special characters in a plain-text string for display as HTML.
-     */
-    i18n.methods.checkPlain = function (str) {
-        var character, regex,
-        replace = {
-            '&': '&amp;',
-            '"': '&quot;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-        str = String(str);
-        for (character in replace) {
-            if (replace.hasOwnProperty(character)) {
-                regex = new RegExp(character, 'g');
-                str = str.replace(regex, replace[character]);
-            }
-        }
-        return str;
-    };
-
-    /**
-     * Translate strings to the page language or a given language.
-     *
-     *
-     * @param uid
-     *   A string containing a unique id of the translated text to retrieve.
-     *
-     * @param options
-     *   - 'context' (defaults to the default context): The context the source string
-     *     belongs to.
-     *
-     * @return
-     *   The translated string, escaped via i18n.methods.checkPlain()
-     */
-    i18n.methods.t = function (uid, options) {
-        var str;
-
-        // Fetch the localized version of the string.
-        if (i18n.locale.strings && i18n.locale.strings[options.context]) {
-            str = i18n.locale.strings[options.context][uid];
-        }
-
-        // Fallback to default language if requested uid is not translated
-        if (!str && i18n.locale.strings && i18n.locale.strings[i18n["default"]]) {
-            str = i18n.locale.strings[i18n["default"]][uid];
-        }
-
-        // As a last resort, use the requested uid, to mimic original behavior of i18n utils (in which uid was the english text)
-        str = str || uid;
-
-        return i18n.methods.checkPlain(str);
-    };
-
-
-    /**
-     * Wrapper for i18n.methods.t()
-     *
-     * @see i18n.methods.t()
-     * @throws InvalidArgumentException
-     */
-    i18n.t = function(str, options) {
-
-        if (typeof str === 'string' && str.length > 0) {
-
-            // check every time due language can change for
-            // different reasons (translation, lang switcher ..)
-            var language = i18n.getLanguage();
-
-            options = options || {
-                "context" : language
-            };
-
-            return i18n.methods.t(str, options);
-        }
-        else {
-            throw {
-                "name" : 'InvalidArgumentException',
-                "message" : 'First argument is either not a string or empty.'
-            };
-        }
-    };
-
-// end i18n
-    exports.i18n = i18n;
-}(document, mejs));
+}(document, window, mejs));
 
 // i18n fixes for compatibility with WordPress
-;(function(exports, undefined) {
+;(function (mejs, undefined) {
 
-    "use strict";
+	"use strict";
 
-    if ( typeof mejsL10n != 'undefined' ) {
-        exports[mejsL10n.language] = mejsL10n.strings;
-    }
+	if (typeof mejsL10n !== 'undefined') {
+		mejs[mejsL10n.lang] = mejsL10n.strings;
+	}
 
 }(mejs.i18n.locale.strings));
-
 /*!
  * This is a i18n.locale language object.
  *
@@ -2116,6 +2372,7 @@ window.MediaElement = mejs.MediaElement;
  *
  * @author
  *   TBD
+ *   Sascha Greuel (Twitter: @SoftCreatR)
  *
  * @see
  *   me-i18n.js
@@ -2123,66 +2380,64 @@ window.MediaElement = mejs.MediaElement;
  * @params
  *  - exports - CommonJS, window ..
  */
-;(function(exports, undefined) {
-
+(function (exports) {
     "use strict";
 
-    if (typeof exports.en === 'undefined') {
+    if (exports.en === undefined) {
         exports.en = {
+            "mejs.plural-form": 1,
+
             // me-shim
-            'mejs.download-file': 'Download File',
+            "mejs.download-file": "Download File",
 
             // mep-feature-contextmenu
-            'mejs.fullscreen-off': 'Turn off Fullscreen',
-            'mejs.fullscreen-on' : 'Go Fullscreen',
-            // Duplicated from mep-feature-volume
-            // 'mejs.unmute' : 'Unmute',
-            // 'mejs.mute' : 'Mute',
-            'mejs.download-video' : 'Download Video',
+            "mejs.fullscreen-off": "Turn off Fullscreen",
+            "mejs.fullscreen-on": "Go Fullscreen",
+            "mejs.download-video": "Download Video",
 
             // mep-feature-fullscreen
-            'mejs.fullscreen' : 'Fullscreen',
+            "mejs.fullscreen": "Fullscreen",
 
             // mep-feature-jumpforward
-            'mejs.time-jump-forward': 'Jump forward %1 seconds',
+            "mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
             // mep-feature-playpause
-            'mejs.play': 'Play',
-            'mejs.pause': 'Pause',
+            "mejs.play": "Play",
+            "mejs.pause": "Pause",
 
             // mep-feature-postroll
-            'mejs.close' : 'Close',
+            "mejs.close": "Close",
 
             // mep-feature-progress
-            'mejs.time-slider': 'Time Slider',
-            'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
+            "mejs.time-slider": "Time Slider",
+            "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
             // mep-feature-skipback
-            'mejs.time-skip-back': 'Skip back %1 seconds',
+            "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
             // mep-feature-tracks
-            'mejs.captions-subtitles' : 'Captions/Subtitles',
-            'mejs.none' : 'None',
+            "mejs.captions-subtitles": "Captions/Subtitles",
+            "mejs.none": "None",
 
             // mep-feature-volume
-            'mejs.mute-toggle' : 'Mute Toggle',
-            'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
-            'mejs.unmute' : 'Unmute',
-            'mejs.mute' : 'Mute',
-            'mejs.volume-slider': 'Volume Slider',
+            "mejs.mute-toggle": "Mute Toggle",
+            "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
+            "mejs.unmute": "Unmute",
+            "mejs.mute": "Mute",
+            "mejs.volume-slider": "Volume Slider",
 
             // mep-player
-            'mejs.video-player': 'Video Player',
-            'mejs.audio-player': 'Audio Player',
-            	
-            // mep-feature-ads
-            'mejs.ad-skip': 'Skip ad',
-            'mejs.ad-skip-info': 'Skip in %1 seconds',
+            "mejs.video-player": "Video Player",
+            "mejs.audio-player": "Audio Player",
 
-            'mejs.source-chooser': 'Source Chooser'
+            // mep-feature-ads
+            "mejs.ad-skip": "Skip ad",
+            "mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
+
+            // mep-feature-sourcechooser
+            "mejs.source-chooser": "Source Chooser"
         };
     }
-
 }(mejs.i18n.locale.strings));
 
 /*!
@@ -2556,8 +2811,16 @@ if (typeof jQuery != 'undefined') {
 							// if user clicks on the Play/Pause button in the control bar once it attempts
 							// to hide it
 							if (!t.hasMsNativeFullScreen) {
-								var playButton = t.container.find('.mejs-playpause-button > button');
-								playButton.focus();
+								// If e.relatedTarget appears before container, send focus to play button,
+								// else send focus to last control button.
+								var btnSelector = '.mejs-playpause-button > button';
+
+								if (mejs.Utility.isNodeAfter(e.relatedTarget, t.container[0])) {
+									btnSelector = '.mejs-controls .mejs-button:last-child > button';
+								}
+
+								var button = t.container.find(btnSelector);
+								button.focus();
 							}
 						}
 					});
@@ -6256,13 +6519,12 @@ $.extend(mejs.MepDefaults,
 		buildskipback: function(player, controls, layers, media) {
 			var
 				t = this,
-				skipTitle = t.options.skipBackText ? t.options.skipBackText : mejs.i18n.t('mejs.time-skip-back'),
-				// Replace %1 with skip back interval
-				backText = skipTitle.replace('%1', t.options.skipBackInterval),
+				defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
+				skipTitle = t.options.skipBackText ? t.options.skipBackText : defaultTitle,
 				// create the loop button
 				loop =
 				$('<div class="mejs-button mejs-skip-back-button">' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + backText + '" aria-label="' + backText + '">' +  + '</button>' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + skipTitle + '" aria-label="' + skipTitle + '">' + t.options.skipBackInterval + '</button>' +
 				'</div>')
 				// append it to the toolbar
 				.appendTo(controls)
