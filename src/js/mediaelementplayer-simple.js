@@ -27,13 +27,13 @@ function removeEvent( obj, type, fn ) {
 
 function getElementsByClassName(className, node, tag) {
 
-	if (typeof node === 'undefined' || node === null) {
+	if (node === undefined || node === null) {
 		node = document;
 	}
-	if (typeof node.getElementsByClassName !== 'undefined' && node.getElementsByClassName !== null) {
+	if (node.getElementsByClassName !== undefined && node.getElementsByClassName !== null) {
 		return node.getElementsByClassName(className);
 	}
-	if (typeof tag === 'undefined' || tag === null) {
+	if (tag === undefined || tag === null) {
 		tag = '*';
 	}
 
@@ -137,7 +137,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 
 		id = original && original.id ? original.id : 'mejs_' + mejs.id++,
 
-		autoplay = original && typeof original.autoplay !== 'undefined' && original.autoplay === true,
+		autoplay = original && original.autoplay !== undefined && original.autoplay === true,
 
 		tagName = original.tagName.toLowerCase(),
 
