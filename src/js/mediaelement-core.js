@@ -450,7 +450,7 @@
 					newRendererType = mejs.Renderers.renderers[rendererArray[index]];
 
 					var renderOptions = mejs.Utils.extend({}, mediaElement.options, newRendererType.options);
-					newRenderer = new newRendererType.create(mediaElement, renderOptions, mediaFiles);
+					newRenderer = newRendererType.create(mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
 
 					//console.log('Switching to: ', newRendererType);
