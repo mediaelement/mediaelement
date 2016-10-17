@@ -3620,6 +3620,28 @@ mejs.version = '3.0-alpha';
 				}
 
 				// Custom DailyMotion events
+				dmPlayer.addEventListener('ad_start', function () {
+					var event = mejs.Utils.createEvent('play', dmPlayer);
+					mediaElement.dispatchEvent(event);
+
+					event = mejs.Utils.createEvent('progress', dmPlayer);
+					mediaElement.dispatchEvent(event);
+
+					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('ad_timeupdate', function () {
+					var event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('ad_pause', function () {
+					var event = mejs.Utils.createEvent('pause', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('ad_end', function () {
+					var event = mejs.Utils.createEvent('ended', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
 				dmPlayer.addEventListener('video_start', function () {
 					var event = mejs.Utils.createEvent('play', dmPlayer);
 					mediaElement.dispatchEvent(event);

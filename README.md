@@ -62,20 +62,20 @@ Format | MIME Type | Support
 mp4 | video/mp4, audio/mp4, audio/mpeg | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
 webm | video/webm | Please visit http://caniuse.com/#feat=webm for comprehensive information
 mp3 | audio/mp3 | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
-ogg/ogv<sup>1</sup> | audio/ogg, audio/oga, video/ogg | Please visit http://caniuse.com/#search=ogg for comprehensive information
+ogg/ogv | audio/ogg, audio/oga, video/ogg | Please visit http://caniuse.com/#search=ogg for comprehensive information
 wav | audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav | Please visit http://caniuse.com/#feat=wav for comprehensive information
 m3u8 | application/x-mpegURL, vnd.apple.mpegURL, audio/mpegURL, audio/hls, video/hls | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support Flash (version 10 or later)
 mpd | application/dash+xml | Browsers that support MSE through `dash.js` library; rest of the browsers that support Flash (version 10 or later)
 rtmp/flv | video/mp4, video/flv, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 | All browsers that support `Flash` (version 10 or later)
-youtube | video/youtube, video/x-youtube | All browsers since it uses `iframe` tag
-vimeo | video/vimeo, video/x-vimeo | All browsers since it uses `iframe` tag
-facebook | video/facebook, video/x-facebook | All browsers since it uses `iframe` tag
-dailymotion<sup>2</sup> | video/dailymotion, video/x-dailymotion | All browsers since it uses `iframe` tag
-soundcloud | video/soundcloud, video/x-soundcloud | All browsers since it uses `iframe` tag
+youtube | video/youtube, video/x-youtube | All browsers that support `window.postMessage`; Flash deprecated.
+vimeo | video/vimeo, video/x-vimeo | All browsers since it uses `iframe` tag and HTML5
+facebook | video/facebook, video/x-facebook | All browsers since it uses `iframe` tag and HTML5
+dailymotion | video/dailymotion, video/x-dailymotion | All browsers since it uses `iframe` tag and HTML5
+soundcloud | video/soundcloud, video/x-soundcloud | All browsers since it uses `iframe` tag and HTML5
 
-**Note:** Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
-<p><sup>1</sup>: `ogg` formats won’t play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.</p>
-<p><sup>2</sup>: Dailymotion's `iframe` in the current state won't update progress bar sometimes; this is because an advertisement will be played before the actual content.</p>
+**Notes** 
+* Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
+* `ogg` formats won’t play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
 
 <a id="installation"></a>
 ## Installation and Usage
