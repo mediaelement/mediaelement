@@ -1,5 +1,17 @@
 ### Version History
 
+*2.23.3 (2016/10/13)*
+
+* Added Dutch translation for MediaElement (https://github.com/johndyer/mediaelement/pull/1863) @leonardder
+* Added new translation to demo file @ron666
+* Integrated fix for Drupal 7 running with `jQuery.noConflict()` (https://github.com/johndyer/mediaelement/pull/1857) @CaineThanatos
+* Fixed minor issue with Skip Back button @ron666
+* Fixed declaration of Brazilian Portuguese translation file (https://github.com/johndyer/mediaelement/pull/1872) @OlivierJaquemet 
+* Refactored `mejs.i18n` and expanded to allow pluralization (https://github.com/johndyer/mediaelement/pull/1867) @ron666
+* Updated `me-i18n-locale-de.js` to accept plurals (https://github.com/johndyer/mediaelement/pull/1879) @SoftCreatR
+* Send focus to correct control based on location to improve Accessibility (https://github.com/johndyer/mediaelement/pull/1818) @astephenb
+* Standardized language files and cleaned with JSLint (https://github.com/johndyer/mediaelement/pull/1883) @SoftCreatR
+
 *2.23.2 (2016/10/01)*
 
 * Added fix for time rail width described on #1356 @ron666
