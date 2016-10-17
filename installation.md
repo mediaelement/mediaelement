@@ -171,6 +171,7 @@ Optionally, just can set the attribute `lang` in the `<html>` tag with the one y
 ```
 
 Available languages:
+* Catalan (ca)
 * Czech (cs)
 * German (de)
 * English (en)
@@ -180,6 +181,7 @@ Available languages:
 * Italian (it)
 * Japanese (ja)
 * Korean (ko)
+* Dutch (nl)
 * Polish (pl)
 * Portuguese (pt)
 * Brazilian Portuguese (pt-BR)
