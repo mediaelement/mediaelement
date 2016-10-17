@@ -8,7 +8,7 @@
  *   Sascha "SoftCreatR" Greuel
  *
  * @see
- *   me-i18n.js
+ *   mediaelement-i18n.js
  *
  * @params
  *  - exports - CommonJS, window ..
