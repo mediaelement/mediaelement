@@ -5546,7 +5546,7 @@ mejs.version = '3.0-alpha';
  *   Sascha Greuel (Twitter: @SoftCreatR)
  *
  * @see
- *   me-i18n.js
+ *   mediaelement-i18n.js
  *
  * @params
  *  - exports - CommonJS, window ..

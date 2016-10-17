@@ -6,9 +6,10 @@
  * @author
  *   Jalios (Twitter: @Jalios)
  *   Sascha Greuel (Twitter: @SoftCreatR)
+ *   Rafael Miranda (GitHub: @ron666)
  *
  * @see
- *   me-i18n.js
+ *   mediaelement-i18n.js
  *
  * @params
  *  - exports - CommonJS, window ..
