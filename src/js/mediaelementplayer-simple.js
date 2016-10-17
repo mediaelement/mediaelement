@@ -174,7 +174,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 	controls.style.opacity = 1.0;
 	container.appendChild(original);
 
-	mediaElement = new mejs.MediaElement(original, t.options);
+	mediaElement = mejs.MediaElement(original, t.options);
 	t.mediaElement = mediaElement;
 
 	mediaElement.addEventListener('click', function() {
