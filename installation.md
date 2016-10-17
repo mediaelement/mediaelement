@@ -14,10 +14,31 @@
 ## 0. Setup MIME-types (optional)
 On Linux/Apache servers, create a filed called .htaccess with the following text and upload it to the root of your website
 ```
+# Video support
 AddType video/ogg .ogv
 AddType video/mp4 .mp4
 AddType video/webm .webm
+AddType video/ogv .ogv
+
+# Audio support
+AddType audio/mp3 .mp3
+AddType audio/oga .oga
+AddType audio/ogg .ogg
+AddType audio/wav .wav
+
+# For HLS support
+AddType application/x-mpegURL .m3u8
+AddType vnd.apple.mpegURL .m3u8
+AddType video/MP2T .ts
+
+# For M(PEG)-DASH support
+AddType application/dash+xml .mpd
+
+# For subtitles support
+AddType text/vtt .vtt
+AddType text/srt .srt
 ```
+
 On Windows/IIS servers, please follow Microsoft's instructions on how to add/edit MIME types on [IIS6](http://www.microsoft.com/technet/prodtechnol/WindowsServer2003/Library/IIS/eb5556e2-f6e1-4871-b9ca-b8cf6f9c8134.mspx?mfr=true) and [IIS7](https://technet.microsoft.com/en-us/library/cc725608(v=ws.10).aspx).
 
 If you are working with local files and plan to test Flash playback, make sure you go to the [Flash Security Settings](http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html) page and add your working directory. Also, things tend to work best when you use absolute paths.

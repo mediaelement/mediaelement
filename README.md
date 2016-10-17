@@ -76,6 +76,7 @@ soundcloud | video/soundcloud, video/x-soundcloud | All browsers since it uses `
 **Notes** 
 * Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
 * `ogg` formats won’t play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
+* `wav` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
 
 <a id="installation"></a>
 ## Installation and Usage
