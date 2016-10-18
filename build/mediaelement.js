@@ -5084,7 +5084,7 @@ mejs.version = '3.0-alpha';
 			name: 'flash_audio',
 
 			options: {
-				prefix: 'flash_audio_ogg',
+				prefix: 'flash_audio',
 				filename: 'mediaelement-flash-audio.swf'
 			},
 			/**
