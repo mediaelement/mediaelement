@@ -85,7 +85,6 @@ package {
 			_mediaFactory = new DefaultMediaFactory();
 			_mediaFactory.addItem(new DashPluginInfo().getMediaFactoryItemAt(0));
 
-
 			_mediaContainer = new MediaContainer();
 			_mediaContainer.mouseEnabled = true;
 			_mediaContainer.clipChildren = true;
@@ -94,6 +93,7 @@ package {
 			addChild(_mediaContainer);
 
 			_mediaPlayer = new MediaPlayer();
+			_mediaPlayer.autoPlay = false;
 			_mediaPlayer.addEventListener(TimeEvent.COMPLETE, onTimeEvent);
 			_mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onTimeEvent);
 			_mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChangeEvent);
@@ -179,9 +179,7 @@ package {
 
 			_stageWidth = width;
 			_stageHeight = height;
-
-			_mediaContainer.width  = _stageWidth;
-			_mediaContainer.height = _stageHeight;
+			_mediaContainer.layout(_stageWidth, _stageHeight, true);
 		}
 
 		//
