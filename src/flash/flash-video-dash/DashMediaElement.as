@@ -16,7 +16,8 @@ package {
 	import org.osmf.media.DefaultMediaFactory;
 	import org.osmf.media.MediaElement;
 	import org.osmf.media.MediaPlayer;
-	import org.osmf.media.URLResource;
+import org.osmf.media.MediaPlayerState;
+import org.osmf.media.URLResource;
 	import org.osmf.media.MediaPlayerState;
 
 	import org.osmf.layout.LayoutMetadata;
@@ -31,7 +32,7 @@ package {
 
 	import com.castlabs.dash.DashPluginInfo;
 
-	public class DashElement extends Sprite {
+	public class DashMediaElement extends Sprite {
 
 		// Video components
 		private var _url:String = "";
@@ -61,7 +62,7 @@ package {
 		/**
 		 * @constructor
 		 */
-		public function DashElement ()
+		public function DashMediaElement ()
 		{
 
 			Security.allowDomain(['*']);
@@ -84,6 +85,7 @@ package {
 			// Create a media container & add the MediaElement
 			_mediaFactory = new DefaultMediaFactory();
 			_mediaFactory.addItem(new DashPluginInfo().getMediaFactoryItemAt(0));
+
 
 			_mediaContainer = new MediaContainer();
 			_mediaContainer.mouseEnabled = true;
@@ -150,7 +152,7 @@ package {
 				sendEvent("canplay");
 
 				_isLoaded = true;
-				_isPaused = false;
+				_isPaused = true;
 
 				_mediaPlayer.media = _contentMediaElement;
 				_mediaPlayer.load();
@@ -299,6 +301,11 @@ package {
 					_isEnded = false;
 					sendEvent("pause");
 					sendEvent("canplay");
+					break;
+				case MediaPlayerState.LOADING:
+					_isPaused = true;
+					_isEnded = false;
+					sendEvent("progress");
 					break;
 			}
 		}
