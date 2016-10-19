@@ -134,7 +134,7 @@ import org.osmf.media.URLResource;
 		//
 		// Javascript bridged methods
 		//
-		public function fire_load():void {
+		private function fire_load():void {
 
 			sendEvent("loadedmetadata");
 
@@ -159,8 +159,7 @@ import org.osmf.media.URLResource;
 
 			}
 		}
-
-		public function fire_play():void {
+		private function fire_play():void {
 
 			_isPaused = false;
 
@@ -169,7 +168,7 @@ import org.osmf.media.URLResource;
 			sendEvent("play");
 			sendEvent("playing");
 		}
-		public function fire_pause():void {
+		private function fire_pause():void {
 			_isPaused = true;
 
 			_mediaPlayer.pause();
@@ -196,17 +195,17 @@ import org.osmf.media.URLResource;
 				fire_load();
 			}
 		}
-		public function set_paused(paused:Boolean):void {
+		private function set_paused(paused:Boolean):void {
 			if (paused) {
 				fire_pause();
 			}
 		}
-		public function set_volume(vol:Number):void {
+		private function set_volume(vol:Number):void {
 			_isMuted = (vol == 0);
 			_mediaPlayer.volume = vol;
 			sendEvent("volumechange");
 		}
-		public function set_muted(muted:Boolean):void {
+		private function set_muted(muted:Boolean):void {
 
 			// ignore if no change
 			if (muted === _isMuted)
@@ -221,7 +220,7 @@ import org.osmf.media.URLResource;
 			}
 			sendEvent("volumechange");
 		}
-		public function set_currentTime(pos:Number):void{
+		private function set_currentTime(pos:Number):void{
 			sendEvent("seeking");
 			_mediaPlayer.seek(pos);
 		}
@@ -229,33 +228,33 @@ import org.osmf.media.URLResource;
 		//
 		// Getters
 		//
-		public function get_src():String {
+		private function get_src():String {
 			return _url;
 		}
-		public function get_paused():Boolean {
+		private function get_paused():Boolean {
 			return _isPaused;
 		}
-		public function get_ended():Boolean {
+		private function get_ended():Boolean {
 			return _isEnded;
 		}
 
-		public function get_duration():Number{
+		private function get_duration():Number{
 			return _duration;
 		}
-		public function get_muted():Boolean {
+		private function get_muted():Boolean {
 			return _isMuted;
 		}
-		public function get_volume():Number {
+		private function get_volume():Number {
 			if(_isMuted) {
 				return 0;
 			} else {
 				return _volume;
 			}
 		}
-		public function get_currentTime():Number {
+		private function get_currentTime():Number {
 			return _position;
 		}
-		public function get_buffered():Number {
+		private function get_buffered():Number {
 			var progress:Number = 0;
 			if (_duration != 0) {
 				progress = Math.round((_mediaPlayer.currentTime / _duration) * 100);
