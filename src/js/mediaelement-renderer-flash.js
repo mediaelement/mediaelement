@@ -479,7 +479,8 @@
 			 * @return {Boolean}
 			 */
 			canPlayType: function (type) {
-				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
+				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL',
+					'application/x-mpegurl', 'vnd.apple.mpegURL'];
 
 				return (supportedMediaTypes.indexOf(type.toLowerCase()) > -1);
 			},
