@@ -455,6 +455,13 @@
 
 				t.media.setSize(screen.width, screen.height);
 
+				// Fix for fill mode
+				if (t.options.stretching === 'fill') {
+					setTimeout(function() {
+						$(window).trigger('resize');
+					}, 0);
+				}
+
 			}
 
 			t.layers.children('div')
@@ -512,6 +519,12 @@
 				.height(t.normalHeight);
 
 				t.media.setSize(t.normalWidth, t.normalHeight);
+				// Fix for fill mode
+				if (t.options.stretching === 'fill') {
+					setTimeout(function() {
+						$(window).trigger('resize');
+					}, 0);
+				}
 			}
 
 			t.layers.children('div')
