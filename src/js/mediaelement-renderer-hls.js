@@ -166,8 +166,9 @@
 		 */
 		canPlayType: function (type) {
 
-			var mediaTypes = ['application/x-mpegURL', 'vnd.apple.mpegURL', 'audio/mpegURL', 'audio/hls', 'video/hls'];
-			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type.toLowerCase()) > -1;
+			var mediaTypes = ['application/x-mpegURL', 'application/x-mpegurl', 'vnd.apple.mpegURL',
+				'audio/mpegURL', 'audio/hls', 'video/hls'];
+			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type) > -1;
 		},
 		/**
 		 * Create the player instance and add all native events/methods/properties as possible
