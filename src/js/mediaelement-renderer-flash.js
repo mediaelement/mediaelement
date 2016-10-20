@@ -326,6 +326,8 @@
 					'<param name="wmode" value="transparent" />' +
 					'<param name="allowScriptAccess" value="always" />' +
 					'<param name="allowFullScreen" value="true" />' +
+					'<div>You are using a browser that does not have Flash player enabled or installed. ' +
+					'Please turn on your Flash player plugin or install it from https://get.adobe.com/flashplayer/.</div>' +
 					'</object>';
 
 			} else {
@@ -352,7 +354,10 @@
 				}
 
 				flash.flashWrapper.innerHTML =
-					'<embed ' + settings.join(' ') + '></embed>';
+					'<embed ' + settings.join(' ') + '>' +
+					'<div>You are using a browser that does not have Flash player enabled or installed. ' +
+					'Please turn on your Flash player plugin or install it from https://get.adobe.com/flashplayer/.</div>' +
+					'</embed>';
 			}
 
 			flash.flashNode = flash.flashWrapper.lastChild;
@@ -563,19 +568,6 @@
 		// Register Flash renderer if Flash was found
 		window.FlashMediaElementRenderer = mejs.FlashMediaElementRenderer = FlashMediaElementRenderer;
 
-	} else {
-
-		// Possible errors:
-		// 1) Flash is not installed or disabled
-		// 2) Flash is not the version required
-		var error = (mejs.PluginDetector.plugins.flash[0] === 0 &&
-			mejs.PluginDetector.plugins.flash[1] === 0 &&
-			mejs.PluginDetector.plugins.flash[2] === 0) ?
-				'Make sure you have Flash enabled; otherwise, download the latest version from https://get.adobe.com/flashplayer/' :
-				'Current version of Flash is not up-to-date. Download the latest version from https://get.adobe.com/flashplayer/'
-			;
-
-		console.error(error);
 	}
 
 })(window, document, window.mejs || {});
