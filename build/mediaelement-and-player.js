@@ -7066,13 +7066,9 @@ if (jQuery !== undefined) {
 						}
 					});
 
-			/*
-			 if (mejs.MediaFeatures.isiOS || mejs.MediaFeatures.isAndroid) {
-			 bigPlay.remove();
-			 loading.remove();
-			 }
-			 */
-
+			if (mejs.Features.isiPhone || t.media.id.match(/(youtube|facebook)/)) {
+				bigPlay.hide();
+			}
 
 			// show/hide big play button
 			media.addEventListener('play', function () {
