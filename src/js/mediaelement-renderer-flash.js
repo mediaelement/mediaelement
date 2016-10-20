@@ -481,7 +481,7 @@
 			canPlayType: function (type) {
 				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
 
-				return (supportedMediaTypes.indexOf(type) > -1);
+				return (supportedMediaTypes.indexOf(type.toLowerCase()) > -1);
 			},
 
 			create: FlashMediaElementRenderer.create
