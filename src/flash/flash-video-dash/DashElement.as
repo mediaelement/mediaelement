@@ -94,6 +94,7 @@ package {
 			addChild(_mediaContainer);
 
 			_mediaPlayer = new MediaPlayer();
+			_mediaPlayer.autoPlay = false;
 			_mediaPlayer.addEventListener(TimeEvent.COMPLETE, onTimeEvent);
 			_mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onTimeEvent);
 			_mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChangeEvent);
