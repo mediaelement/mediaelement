@@ -23,6 +23,7 @@
 
 			// me-shim
 			"mejs.download-file": "Descargar archivo",
+			"mejs.install-flash": "Esta usando un navegador que no tiene activado o instalado el reproductor de Flash. Por favor active el plugin del reproductor de Flash o descargue la versión más reciente en https://get.adobe.com/flashplayer/",
 
 			// mep-feature-contextmenu
 			"mejs.fullscreen-off": "Desconectar pantalla completa",

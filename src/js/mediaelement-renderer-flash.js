@@ -299,66 +299,30 @@
 				mediaElement.originalNode.style.display = 'none';
 			}
 
-			var settings = [];
+			var settings = [
+				'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
+				'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
+				'id="__' + flash.id + '"',
+				'width="' + flashWidth + '"',
+				'height="' + flashHeight + '"'
+			];
 
-			if (mejs.Features.isIE) {
-				var specialIEContainer = doc.createElement('div');
-				flash.flashWrapper.appendChild(specialIEContainer);
-
-				settings = [
-					'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
-					'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
-					'id="__' + flash.id + '"',
-					'width="' + flashWidth + '"',
-					'height="' + flashHeight + '"'
-				];
-
-				if (!isVideo) {
-					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
-				}
-
-				specialIEContainer.outerHTML =
-					'<object ' + settings.join(' ') + '>' +
-					'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date()) + '" />' +
-					'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
-					'<param name="quality" value="high" />' +
-					'<param name="bgcolor" value="#000000" />' +
-					'<param name="wmode" value="transparent" />' +
-					'<param name="allowScriptAccess" value="always" />' +
-					'<param name="allowFullScreen" value="true" />' +
-					'<div>You are using a browser that does not have Flash player enabled or installed. ' +
-					'Please turn on your Flash player plugin or install it from https://get.adobe.com/flashplayer/.</div>' +
-					'</object>';
-
-			} else {
-
-				settings = [
-					'id="__' + flash.id + '"',
-					'name="__' + flash.id + '"',
-					'play="true"',
-					'loop="false"',
-					'quality="high"',
-					'bgcolor="#000000"',
-					'wmode="transparent"',
-					'allowScriptAccess="always"',
-					'allowFullScreen="true"',
-					'type="application/x-shockwave-flash" pluginspage="//www.macromedia.com/go/getflashplayer"',
-					'src="' + flash.options.pluginPath + flash.options.filename + '"',
-					'flashvars="' + flashVars.join('&') + '"',
-					'width="' + flashWidth + '"',
-					'height="' + flashHeight + '"'
-				];
-
-				if (!isVideo) {
-					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
-				}
-
-				flash.flashWrapper.innerHTML =
-					'<embed ' + settings.join(' ') + '>' +
-					'<div>You are using a browser that does not have Flash player enabled or installed. ' +
-					'Please turn on your Flash player plugin or install it from https://get.adobe.com/flashplayer/.</div>' +
-					'</embed>';
+			if (!isVideo) {
+				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
 			}
+
+			flash.flashWrapper.innerHTML =
+				'<object ' + settings.join(' ') + '>' +
+				'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date()) + '" />' +
+				'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
+				'<param name="quality" value="high" />' +
+				'<param name="bgcolor" value="#000000" />' +
+				'<param name="wmode" value="transparent" />' +
+				'<param name="allowScriptAccess" value="always" />' +
+				'<param name="allowFullScreen" value="true" />' +
+				'<div>' + mejs.i18n.t('mejs.install-flash') + '</div>' +
+				'</object>'
+			;
 
 			flash.flashNode = flash.flashWrapper.lastChild;
 
@@ -484,7 +448,8 @@
 			 * @return {Boolean}
 			 */
 			canPlayType: function (type) {
-				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
+				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL',
+					'application/x-mpegurl', 'vnd.apple.mpegURL'];
 
 				return (supportedMediaTypes.indexOf(type) > -1);
 			},
