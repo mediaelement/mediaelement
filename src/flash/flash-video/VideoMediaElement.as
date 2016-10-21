@@ -18,15 +18,9 @@ package {
 	import org.osmf.media.MediaResourceBase;
 	import org.osmf.media.PluginInfoResource;
 
-	import org.osmf.layout.LayoutMetadata;
-	import org.osmf.layout.HorizontalAlign;
-	import org.osmf.layout.LayoutMetadata;
-	import org.osmf.layout.LayoutTargetEvent;
-	import org.osmf.layout.ScaleMode;
-	import org.osmf.layout.VerticalAlign;
-
 	import org.osmf.events.TimeEvent;
 	import org.osmf.events.MediaPlayerStateChangeEvent;
+	import org.osmf.events.MediaErrorEvent;
 
 	import org.osmf.net.StreamingURLResource;
 
@@ -103,6 +97,7 @@ package {
 			_mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onTimeEvent);
 			_mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChangeEvent);
 			// _mediaPlayer.addEventListener(MediaPlayerCapabilityChangeEvent.CAN_SEEK_CHANGE, onCanSeekChange);
+			_mediaPlayer.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
 
 			if (ExternalInterface.available) {
 
@@ -151,21 +146,26 @@ package {
 				// }
 
 				_contentMediaElement = _mediaFactory.createMediaElement(_resource);
-				_contentMediaElement.smoothing = true;
 
-				if (_mediaPlayer.media != null) {
-					_mediaContainer.removeMediaElement(_mediaPlayer.media);
+				if (_contentMediaElement) {
+					_contentMediaElement.smoothing = true;
+					_contentMediaElement.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
+
+					if (_mediaPlayer.media != null) {
+						_mediaContainer.removeMediaElement(_mediaPlayer.media);
+					}
+
+					_mediaContainer.addMediaElement(_contentMediaElement);
+					sendEvent("canplay");
+
+					_isLoaded = true;
+					_isPaused = true;
+
+					_mediaPlayer.media = _contentMediaElement;
+					_mediaPlayer.load();
+				} else {
+					sendEvent('error', 'Media could not be created');
 				}
-
-				_mediaContainer.addMediaElement(_contentMediaElement);
-				sendEvent("canplay");
-
-				_isLoaded = true;
-				_isPaused = true;
-
-				_mediaPlayer.media = _contentMediaElement;
-				_mediaPlayer.load();
-
 			}
 		}
 		private function fire_play(): void {
@@ -204,19 +204,16 @@ package {
 				fire_load();
 			}
 		}
-
 		private function set_paused(paused: Boolean): void {
 			if (paused) {
 				fire_pause();
 			}
 		}
-
 		private function set_volume(vol: Number): void {
 			_isMuted = (vol == 0);
 			_mediaPlayer.volume = vol;
 			sendEvent("volumechange");
 		}
-
 		private function set_muted(muted: Boolean): void {
 
 			// ignore if no change
@@ -232,7 +229,6 @@ package {
 			}
 			sendEvent("volumechange");
 		}
-
 		private function set_currentTime(pos: Number): void {
 			sendEvent("seeking");
 			_mediaPlayer.seek(pos);
@@ -244,23 +240,18 @@ package {
 		private function get_src(): String {
 			return _url;
 		}
-
 		private function get_paused(): Boolean {
 			return _isPaused;
 		}
-
 		private function get_ended(): Boolean {
 			return _isEnded;
 		}
-
 		private function get_duration(): Number {
 			return _duration;
 		}
-
 		private function get_muted(): Boolean {
 			return _isMuted;
 		}
-
 		private function get_volume(): Number {
 			if (_isMuted) {
 				return 0;
@@ -268,11 +259,9 @@ package {
 				return _volume;
 			}
 		}
-
 		private function get_currentTime(): Number {
 			return _position;
 		}
-
 		private function get_buffered(): Number {
 			var progress: Number = 0;
 			if (_duration != 0) {
@@ -303,7 +292,6 @@ package {
 
 			}
 		}
-
 		private function onMediaPlayerStateChangeEvent(event: MediaPlayerStateChangeEvent): void {
 			switch (event.state) {
 				case MediaPlayerState.PLAYING:
@@ -322,6 +310,10 @@ package {
 					break;
 			}
 		}
+		private function onMediaErrorEvent(event:MediaErrorEvent):void {
+			log('error', event.error.name, event.error.detail, event.error.errorID, event.error.message);
+			sendEvent("error", event.error.message);
+		}
 
 		//
 		// Event handlers
@@ -329,11 +321,9 @@ package {
 		private function stageClickHandler(e: MouseEvent): void {
 			sendEvent("click");
 		}
-
 		private function stageMouseOverHandler(e: MouseEvent): void {
 			sendEvent("mouseover");
 		}
-
 		private function stageMouseLeaveHandler(e: Event): void {
 			sendEvent("mouseout");
 			sendEvent("mouseleave");
@@ -342,10 +332,9 @@ package {
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName: String): void {
-			ExternalInterface.call('__event__' + _id, eventName);
+		private function sendEvent(eventName: String, eventMessage:String): void {
+			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
 		}
-
 		private function log(): void {
 			if (ExternalInterface.available) {
 				ExternalInterface.call('console.log', arguments);

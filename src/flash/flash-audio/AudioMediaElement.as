@@ -23,6 +23,7 @@ package {
 
 	import org.osmf.events.TimeEvent;
 	import org.osmf.events.MediaPlayerStateChangeEvent;
+	import org.osmf.events.MediaErrorEvent;
 
 
 	public class AudioMediaElement extends Sprite {
@@ -67,6 +68,7 @@ package {
 			_mediaPlayer.addEventListener(TimeEvent.COMPLETE, onTimeEvent);
 			_mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onTimeEvent);
 			_mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChangeEvent);
+			_mediaPlayer.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
 
 			if (ExternalInterface.available) {
 				ExternalInterface.addCallback('get_src', get_src);
@@ -110,11 +112,19 @@ package {
 				_resource.mediaType = MediaType.AUDIO;
 
 				_audioElement = _mediaFactory.createMediaElement(_resource);
-				_mediaPlayer.media = _audioElement;
 
-				// _isRTMP = !!_url.match(/^rtmp(s|t|e|te)?\:\/\//);
+				if (_audioElement) {
+					_audioElement.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
+					sendEvent("canplay");
 
-				_isLoaded = true;
+					// _isRTMP = !!_url.match(/^rtmp(s|t|e|te)?\:\/\//);
+
+					_isLoaded = true;
+					_isPaused = true;
+
+					_mediaPlayer.media = _audioElement;
+				}
+
 			}
 		}
 		private function fire_play(): void {
@@ -248,7 +258,6 @@ package {
 
 			}
 		}
-
 		private function onMediaPlayerStateChangeEvent(event: MediaPlayerStateChangeEvent): void {
 			switch (event.state) {
 				case MediaPlayerState.PLAYING:
@@ -267,14 +276,17 @@ package {
 					break;
 			}
 		}
+		private function onMediaErrorEvent(event:MediaErrorEvent):void {
+			log('error', event.error.name, event.error.detail, event.error.errorID, event.error.message);
+			sendEvent("error", event.error.message);
+		}
 
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName: String): void {
-			ExternalInterface.call('__event__' + _id, eventName);
+		private function sendEvent(eventName: String, eventMessage:String): void {
+			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
 		}
-
 		private function log(): void {
 			if (ExternalInterface.available) {
 				ExternalInterface.call('console.log', arguments);

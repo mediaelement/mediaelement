@@ -270,10 +270,10 @@
 				}
 			};
 
-			win['__event__' + flash.id] = function (eventName, message) {
+			win['__event__' + flash.id] = function (eventName, eventMessage) {
 
 				var event = mejs.Utils.createEvent(eventName, flash);
-				event.message = message;
+				event.message = eventMessage;
 
 				// send event from Flash up to the mediaElement
 				flash.mediaElement.dispatchEvent(event);
