@@ -4897,7 +4897,7 @@ mejs.version = '3.0';
 
 			flash.flashWrapper.innerHTML =
 				'<object ' + settings.join(' ') + '>' +
-				'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date()) + '" />' +
+				'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date().getTime()) + '" />' +
 				'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
 				'<param name="quality" value="high" />' +
 				'<param name="bgcolor" value="#000000" />' +
