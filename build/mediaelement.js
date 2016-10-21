@@ -508,7 +508,23 @@ mejs.version = '3.0';
 				typeof sourceNode.compareDocumentPosition === 'function' &&
 				sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
 			);
+		},
+		/**
+		 * Determine if an object contains any elements
+		 *
+		 * @see http://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+		 * @param {Object} instance
+		 * @return {Boolean}
+		 */
+		isObjectEmpty: function (instance) {
+		for (var key in instance) {
+			if (instance.hasOwnProperty(key)) {
+				return false;
+			}
 		}
+
+		return true;
+	}
 	};
 
 	/**
@@ -3964,23 +3980,6 @@ mejs.version = '3.0';
 			}
 
 			/**
-			 * Determine if an object contains any elements
-			 *
-			 * @see http://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
-			 * @param {Object} instance
-			 * @return {Boolean}
-			 */
-			function isEmpty(instance) {
-				for (var key in instance) {
-					if (instance.hasOwnProperty(key)) {
-						return false;
-					}
-				}
-
-				return true;
-			}
-
-			/**
 			 * Create a new Facebook player and attach all its events
 			 *
 			 * This method creates a <div> element that, once the API is available, will generate an <iframe>.
@@ -4022,7 +4021,7 @@ mejs.version = '3.0';
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
 							for (i = 0, il = fbEvents.length; i < il; i++) {
 								var event = fbEvents[i], handler = eventHandler[event];
-								if (!isEmpty(handler) && typeof handler.removeListener === 'function') {
+								if (!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
 									handler.removeListener(event);
 								}
 							}
