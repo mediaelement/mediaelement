@@ -273,7 +273,7 @@
 			win['__event__' + flash.id] = function (eventName, eventMessage) {
 
 				var event = mejs.Utils.createEvent(eventName, flash);
-				event.message = eventMessage;
+				event.message = eventMessage || '';
 
 				// send event from Flash up to the mediaElement
 				flash.mediaElement.dispatchEvent(event);
@@ -283,7 +283,7 @@
 			flash.flashWrapper = document.createElement('div');
 
 			var
-				flashVars = ['uid=' + flash.id,],
+				flashVars = ['uid=' + flash.id],
 				isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 				flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
 				flashWidth = (isVideo) ? mediaElement.originalNode.width : 1;
