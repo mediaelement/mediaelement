@@ -29,8 +29,6 @@
 	position: relative;
 	margin: 0 auto;
 	background: transparent;
-	-webkit-transform: scale(1) !important;
-	transform: scale(1) !important;
 }
 
 .mejs-container:focus {
