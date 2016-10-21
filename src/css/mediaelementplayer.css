@@ -235,18 +235,6 @@
 	-webkit-box-sizing: content-box;
 	box-sizing: content-box;
 }
-
-/* What does this next selector actually match?
-Can it be removed? */
-.mejs-time a {
-	color: #fff;
-	font-size: 11px;
-	line-height: 12px;
-	display: block;
-	float: left;
-	margin: 1px 2px 0 0;
-	width: auto;
-}
 /* End: Time (Current / Duration) */
 
 /* Start: Play/Pause/Stop */
