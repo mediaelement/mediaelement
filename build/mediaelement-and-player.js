@@ -13,7 +13,7 @@
 window.mejs = window.mejs || {};
 
 // version number
-mejs.version = '3.0-alpha';
+mejs.version = '3.0';
 
 /**
  * MediaElement utilities
@@ -4878,61 +4878,30 @@ mejs.version = '3.0-alpha';
 				mediaElement.originalNode.style.display = 'none';
 			}
 
-			var settings = [];
+			var settings = [
+				'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
+				'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
+				'id="__' + flash.id + '"',
+				'width="' + flashWidth + '"',
+				'height="' + flashHeight + '"'
+			];
 
-			if (mejs.Features.isIE) {
-				var specialIEContainer = doc.createElement('div');
-				flash.flashWrapper.appendChild(specialIEContainer);
-
-				settings = [
-					'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
-					'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
-					'id="__' + flash.id + '"',
-					'width="' + flashWidth + '"',
-					'height="' + flashHeight + '"'
-				];
-
-				if (!isVideo) {
-					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
-				}
-
-				specialIEContainer.outerHTML =
-					'<object ' + settings.join(' ') + '>' +
-					'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date()) + '" />' +
-					'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
-					'<param name="quality" value="high" />' +
-					'<param name="bgcolor" value="#000000" />' +
-					'<param name="wmode" value="transparent" />' +
-					'<param name="allowScriptAccess" value="always" />' +
-					'<param name="allowFullScreen" value="true" />' +
-					'</object>';
-
-			} else {
-
-				settings = [
-					'id="__' + flash.id + '"',
-					'name="__' + flash.id + '"',
-					'play="true"',
-					'loop="false"',
-					'quality="high"',
-					'bgcolor="#000000"',
-					'wmode="transparent"',
-					'allowScriptAccess="always"',
-					'allowFullScreen="true"',
-					'type="application/x-shockwave-flash" pluginspage="//www.macromedia.com/go/getflashplayer"',
-					'src="' + flash.options.pluginPath + flash.options.filename + '"',
-					'flashvars="' + flashVars.join('&') + '"',
-					'width="' + flashWidth + '"',
-					'height="' + flashHeight + '"'
-				];
-
-				if (!isVideo) {
-					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
-				}
-
-				flash.flashWrapper.innerHTML =
-					'<embed ' + settings.join(' ') + '></embed>';
+			if (!isVideo) {
+				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
 			}
+
+			flash.flashWrapper.innerHTML =
+				'<object ' + settings.join(' ') + '>' +
+				'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date()) + '" />' +
+				'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
+				'<param name="quality" value="high" />' +
+				'<param name="bgcolor" value="#000000" />' +
+				'<param name="wmode" value="transparent" />' +
+				'<param name="allowScriptAccess" value="always" />' +
+				'<param name="allowFullScreen" value="true" />' +
+				'<div>' + mejs.i18n.t('mejs.install-flash') + '</div>' +
+				'</object>'
+			;
 
 			flash.flashNode = flash.flashWrapper.lastChild;
 
@@ -5058,7 +5027,8 @@ mejs.version = '3.0-alpha';
 			 * @return {Boolean}
 			 */
 			canPlayType: function (type) {
-				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL', 'vnd.apple.mpegURL'];
+				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL',
+					'application/x-mpegurl', 'vnd.apple.mpegURL'];
 
 				return (supportedMediaTypes.indexOf(type) > -1);
 			},
@@ -5142,19 +5112,6 @@ mejs.version = '3.0-alpha';
 		// Register Flash renderer if Flash was found
 		window.FlashMediaElementRenderer = mejs.FlashMediaElementRenderer = FlashMediaElementRenderer;
 
-	} else {
-
-		// Possible errors:
-		// 1) Flash is not installed or disabled
-		// 2) Flash is not the version required
-		var error = (mejs.PluginDetector.plugins.flash[0] === 0 &&
-			mejs.PluginDetector.plugins.flash[1] === 0 &&
-			mejs.PluginDetector.plugins.flash[2] === 0) ?
-				'Make sure you have Flash enabled; otherwise, download the latest version from https://get.adobe.com/flashplayer/' :
-				'Current version of Flash is not up-to-date. Download the latest version from https://get.adobe.com/flashplayer/'
-			;
-
-		console.error(error);
 	}
 
 })(window, document, window.mejs || {});
@@ -5594,6 +5551,7 @@ mejs.version = '3.0-alpha';
 
 			// me-shim
 			"mejs.download-file": "Download File",
+			"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
 			// mep-feature-contextmenu
 			"mejs.fullscreen-off": "Turn off Fullscreen",
@@ -7108,13 +7066,9 @@ if (jQuery !== undefined) {
 						}
 					});
 
-			/*
-			 if (mejs.MediaFeatures.isiOS || mejs.MediaFeatures.isAndroid) {
-			 bigPlay.remove();
-			 loading.remove();
-			 }
-			 */
-
+			if (mejs.Features.isiPhone || t.media.id.match(/(youtube|facebook)/)) {
+				bigPlay.hide();
+			}
 
 			// show/hide big play button
 			media.addEventListener('play', function () {
@@ -8873,7 +8827,9 @@ if (jQuery !== undefined) {
 			t.setControlsSize();
 			t.isFullScreen = true;
 
-			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
+			var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height);
+			t.container.find('.mejs-captions-text').css('font-size', zoomFactor * 100 + '%');
+			t.container.find('.mejs-captions-text').css('line-height', 'normal');
 			t.container.find('.mejs-captions-position').css('bottom', '45px');
 
 			t.container.trigger('enteredfullscreen');
@@ -8928,7 +8884,8 @@ if (jQuery !== undefined) {
 			t.setControlsSize();
 			t.isFullScreen = false;
 
-			t.container.find('.mejs-captions-text').css('font-size', '');
+			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-text').css('line-height', '');
 			t.container.find('.mejs-captions-position').css('bottom', '');
 
 			t.container.trigger('exitedfullscreen');
@@ -9391,38 +9348,39 @@ if (jQuery !== undefined) {
 				}
 			;
 
-			// Load content of caption to mimic default native behavior
-			$.ajax({
-				url: track.src,
-				dataType: 'text',
-				success: function(d) {
+			if (track.src !== undefined || track.src !== "") {
+				$.ajax({
+					url: track.src,
+					dataType: "text",
+					success: function(d) {
 
-					// parse the loaded file
-					if (typeof d === "string" && (/<tt\s+xml/ig).exec(d)) {
-						track.entries = mejs.TrackFormatParser.dfxp.parse(d);
-					} else {
-						track.entries = mejs.TrackFormatParser.webvtt.parse(d);
+						// parse the loaded file
+						if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+							track.entries = mejs.TrackFormatParser.dfxp.parse(d);
+						} else {
+							track.entries = mejs.TrackFormatParser.webvtt.parse(d);
+						}
+
+						after();
+
+						if (track.kind == 'chapters') {
+							t.media.addEventListener('play', function() {
+								if (t.media.duration > 0) {
+									t.displayChapters(track);
+								}
+							}, false);
+						}
+
+						if (track.kind == 'slides') {
+							t.setupSlides(track);
+						}
+					},
+					error: function() {
+						t.removeTrackButton(track.srclang);
+						t.loadNextTrack();
 					}
-
-					after();
-
-					if (track.kind === 'chapters') {
-						t.media.addEventListener('play', function() {
-							if (t.media.duration > 0) {
-								t.displayChapters(track);
-							}
-						}, false);
-					}
-
-					if (track.kind === 'slides') {
-						t.setupSlides(track);
-					}
-				},
-				error: function() {
-					t.removeTrackButton(track.srclang);
-					t.loadNextTrack();
-				}
-			});
+				});
+			}
 		},
 
 		/**

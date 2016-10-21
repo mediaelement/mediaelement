@@ -20,6 +20,11 @@
 * Updates in documentation to reflect new features in 3.0 version @ron666
 * Introduced missing translation elements and translated them in Spanish @ron666
 
+*2.23.4 (2016/10/21)*
+
+* Adjusted captions in fullscreen mode (https://github.com/johndyer/mediaelement/pull/1885) @chdh
+* Validation to prevent AJAX call if `<track>` source does not exist (https://github.com/johndyer/mediaelement/pull/1886) @Mister-King
+
 *2.23.3 (2016/10/13)*
 
 * Added Dutch translation for MediaElement (https://github.com/johndyer/mediaelement/pull/1863) @leonardder
