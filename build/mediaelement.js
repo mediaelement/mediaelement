@@ -13,7 +13,7 @@
 window.mejs = window.mejs || {};
 
 // version number
-mejs.version = '3.0-alpha';
+mejs.version = '3.0';
 
 /**
  * MediaElement utilities
