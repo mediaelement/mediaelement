@@ -491,7 +491,23 @@
 				typeof sourceNode.compareDocumentPosition === 'function' &&
 				sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
 			);
+		},
+		/**
+		 * Determine if an object contains any elements
+		 *
+		 * @see http://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+		 * @param {Object} instance
+		 * @return {Boolean}
+		 */
+		isObjectEmpty: function (instance) {
+		for (var key in instance) {
+			if (instance.hasOwnProperty(key)) {
+				return false;
+			}
 		}
+
+		return true;
+	}
 	};
 
 	/**

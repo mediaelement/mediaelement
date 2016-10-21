@@ -300,12 +300,18 @@
 			}
 
 			var settings = [
-				'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
-				'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
 				'id="__' + flash.id + '"',
 				'width="' + flashWidth + '"',
-				'height="' + flashHeight + '"'
+				'height="' + flashHeight + '"',
+				'type="application/x-shockwave-flash"'
 			];
+
+			if (mejs.Features.isIE) {
+				settings.push(
+					'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
+					'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"'
+				);
+			}
 
 			if (!isVideo) {
 				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
