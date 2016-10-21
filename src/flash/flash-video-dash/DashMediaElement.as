@@ -4,7 +4,6 @@ package {
 	import flash.events.*;
 	import flash.media.*;
 	import flash.net.*;
-	import flash.text.*;
 	import flash.system.*;
 	import flash.external.*;
 
@@ -329,7 +328,7 @@ package {
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName: String, eventMessage:String): void {
+		private function sendEvent(eventName: String, eventMessage:String = ''): void {
 			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
 		}
 		private function log():void {

@@ -284,7 +284,7 @@ package {
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName: String, eventMessage:String): void {
+		private function sendEvent(eventName: String, eventMessage:String = ''): void {
 			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
 		}
 		private function log(): void {

@@ -13,6 +13,7 @@ package {
 	import org.osmf.media.DefaultMediaFactory;
 	import org.osmf.media.MediaElement;
 	import org.osmf.media.MediaPlayer;
+	import org.osmf.media.StreamingURLResource;
 	import org.osmf.media.URLResource;
 	import org.osmf.media.MediaPlayerState;
 	import org.osmf.media.PluginInfoResource;
@@ -21,6 +22,7 @@ package {
 	import org.osmf.events.MediaPlayerStateChangeEvent;
 	import org.osmf.events.MediaErrorEvent;
 
+	import org.osmf.net.StreamType;
 	import org.osmf.net.StreamingURLResource;
 
 	public class VideoMediaElement extends Sprite {
@@ -138,7 +140,7 @@ package {
 			if (_url) {
 
 				// if (!_pseudoStreamingEnabled) {
-				_resource = new URLResource(_url);
+				_resource = new StreamingURLResource(_url, StreamType.LIVE_OR_RECORDED);
 				// } else {
 				//     _resource = new StreamingURLResource(url);
 				//     _resource.addMetadataValue("pseudostreaming_query", "?start=" + getUrlPosition(0));
@@ -331,7 +333,7 @@ package {
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName: String, eventMessage:String): void {
+		private function sendEvent(eventName: String, eventMessage:String = ''): void {
 			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
 		}
 		private function log(): void {
