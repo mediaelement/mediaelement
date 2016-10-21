@@ -15,7 +15,6 @@ package {
 	import org.osmf.media.MediaPlayer;
 	import org.osmf.media.URLResource;
 	import org.osmf.media.MediaPlayerState;
-	import org.osmf.media.MediaResourceBase;
 	import org.osmf.media.PluginInfoResource;
 
 	import org.osmf.events.TimeEvent;
