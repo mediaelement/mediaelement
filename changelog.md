@@ -19,6 +19,8 @@
 * Removed support for Silverlight @johndyer
 * Updates in documentation to reflect new features in 3.0 version @ron666
 * Introduced missing translation elements and translated them in Spanish @ron666
+* Removed big Play button for iPhone and YouTube and Facebook renderers @ron666
+* CSS specificity reduction (https://github.com/johndyer/mediaelement/pull/1890) @albell
 
 *2.23.4 (2016/10/21)*
 
