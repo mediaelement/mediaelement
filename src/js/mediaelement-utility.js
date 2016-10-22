@@ -545,9 +545,6 @@
 
 		 */
 
-		// borrowed from Modernizr
-		features.hasTouch = ('ontouchstart' in win);
-		features.svg = !!doc.createElementNS && !!doc.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 
 		features.supportsPointerEvents = (function () {
 			var

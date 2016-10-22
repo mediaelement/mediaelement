@@ -562,9 +562,6 @@ mejs.version = '3.0';
 
 		 */
 
-		// borrowed from Modernizr
-		features.hasTouch = ('ontouchstart' in win);
-		features.svg = !!doc.createElementNS && !!doc.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 
 		features.supportsPointerEvents = (function () {
 			var
@@ -683,6 +680,7 @@ mejs.version = '3.0';
 	})();
 
 })(window, document, window.mejs || {});
+
 /**
  * MediaElement core
  *
@@ -6108,7 +6106,7 @@ if (jQuery !== undefined) {
 				$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container ' + (mejs.MediaFeatures.svg ? 'svg' : 'no-svg') +
+					$('<div id="' + t.id + '" class="mejs-container ' +
 						'" tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">' +
 						'<div class="mejs-inner">' +
 						'<div class="mejs-mediaelement"></div>' +
