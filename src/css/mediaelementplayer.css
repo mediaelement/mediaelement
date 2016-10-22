@@ -127,10 +127,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: url("bigplay.svg") no-repeat;
 }
 
-.no-svg .mejs-overlay-button {
-	background-image: url("bigplay.png");
-}
-
 .mejs-overlay:hover .mejs-overlay-button {
 	background-position: 0 -100px ;
 }
@@ -209,10 +205,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	width: 16px;
 	border: 0;
 	background: transparent url("controls.svg") no-repeat;
-}
-
-.no-svg .mejs-button > button {
-	background-image: url("controls.png");
 }
 
 /* :focus for accessibility */
@@ -731,9 +723,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Track (Captions and Chapters) */
 
 /* Start: Error */
-.me-cannotplay {
-}
-
 .me-cannotplay a {
 	color: #fff;
 	font-weight: bold;
