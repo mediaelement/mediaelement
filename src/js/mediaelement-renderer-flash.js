@@ -302,8 +302,7 @@
 			var settings = [
 				'id="__' + flash.id + '"',
 				'width="' + flashWidth + '"',
-				'height="' + flashHeight + '"',
-				'type="application/x-shockwave-flash"'
+				'height="' + flashHeight + '"'
 			];
 
 			if (mejs.Features.isIE) {
