@@ -514,6 +514,13 @@
 				.height(t.normalHeight);
 
 				t.media.setSize(t.normalWidth, t.normalHeight);
+
+				// Fix for fill mode
+				if (t.options.stretching === 'fill') {
+					setTimeout(function() {
+						t.setFillMode();
+					}, 0);
+				}
 			}
 
 			t.layers.children('div')

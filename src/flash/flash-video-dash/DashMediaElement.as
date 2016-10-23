@@ -4,11 +4,8 @@ package {
 	import flash.events.*;
 	import flash.media.*;
 	import flash.net.*;
-	import flash.text.*;
 	import flash.system.*;
 	import flash.external.*;
-
-	import flash.net.URLRequest;
 
 	import org.osmf.containers.MediaContainer;
 	import org.osmf.elements.VideoElement;
@@ -19,19 +16,13 @@ package {
 	import org.osmf.media.URLResource;
 	import org.osmf.media.MediaPlayerState;
 
-	import org.osmf.layout.LayoutMetadata;
-	import org.osmf.layout.HorizontalAlign;
-	import org.osmf.layout.LayoutMetadata;
-	import org.osmf.layout.LayoutTargetEvent;
-	import org.osmf.layout.ScaleMode;
-	import org.osmf.layout.VerticalAlign;
-
 	import org.osmf.events.TimeEvent;
 	import org.osmf.events.MediaPlayerStateChangeEvent;
+	import org.osmf.events.MediaErrorEvent;
 
 	import com.castlabs.dash.DashPluginInfo;
 
-	public class DashElement extends Sprite {
+	public class DashMediaElement extends Sprite {
 
 		// Video components
 		private var _url:String = "";
@@ -61,7 +52,7 @@ package {
 		/**
 		 * @constructor
 		 */
-		public function DashElement ()
+		public function DashMediaElement ()
 		{
 
 			Security.allowDomain(['*']);
@@ -98,6 +89,7 @@ package {
 			_mediaPlayer.addEventListener(TimeEvent.COMPLETE, onTimeEvent);
 			_mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onTimeEvent);
 			_mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChangeEvent);
+			_mediaPlayer.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
 
 			if (ExternalInterface.available) {
 
@@ -133,7 +125,7 @@ package {
 		//
 		// Javascript bridged methods
 		//
-		public function fire_load():void {
+		private function fire_load():void {
 
 			sendEvent("loadedmetadata");
 
@@ -141,25 +133,31 @@ package {
 
 				_resource = new URLResource(_url);
 				_contentMediaElement = _mediaFactory.createMediaElement(_resource);
-				_contentMediaElement.smoothing = true;
 
-				if (_mediaPlayer.media != null) {
-					_mediaContainer.removeMediaElement(_mediaPlayer.media);
+				if (_contentMediaElement) {
+					_contentMediaElement.smoothing = true;
+					_contentMediaElement.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
+
+					if (_mediaPlayer.media != null) {
+						_mediaContainer.removeMediaElement(_mediaPlayer.media);
+					}
+
+					_mediaContainer.addMediaElement(_contentMediaElement);
+					sendEvent("canplay");
+
+					_isLoaded = true;
+					_isPaused = true;
+
+					_mediaPlayer.media = _contentMediaElement;
+					_mediaPlayer.load();
+				} else {
+					sendEvent('error', 'Media could not be created');
 				}
 
-				_mediaContainer.addMediaElement(_contentMediaElement);
-				sendEvent("canplay");
-
-				_isLoaded = true;
-				_isPaused = false;
-
-				_mediaPlayer.media = _contentMediaElement;
-				_mediaPlayer.load();
 
 			}
 		}
-
-		public function fire_play():void {
+		private function fire_play():void {
 
 			_isPaused = false;
 
@@ -168,7 +166,7 @@ package {
 			sendEvent("play");
 			sendEvent("playing");
 		}
-		public function fire_pause():void {
+		private function fire_pause():void {
 			_isPaused = true;
 
 			_mediaPlayer.pause();
@@ -180,9 +178,7 @@ package {
 
 			_stageWidth = width;
 			_stageHeight = height;
-
-			_mediaContainer.width  = _stageWidth;
-			_mediaContainer.height = _stageHeight;
+			_mediaContainer.layout(_stageWidth, _stageHeight, true);
 		}
 
 		//
@@ -197,17 +193,17 @@ package {
 				fire_load();
 			}
 		}
-		public function set_paused(paused:Boolean):void {
+		private function set_paused(paused:Boolean):void {
 			if (paused) {
 				fire_pause();
 			}
 		}
-		public function set_volume(vol:Number):void {
+		private function set_volume(vol:Number):void {
 			_isMuted = (vol == 0);
 			_mediaPlayer.volume = vol;
 			sendEvent("volumechange");
 		}
-		public function set_muted(muted:Boolean):void {
+		private function set_muted(muted:Boolean):void {
 
 			// ignore if no change
 			if (muted === _isMuted)
@@ -222,7 +218,7 @@ package {
 			}
 			sendEvent("volumechange");
 		}
-		public function set_currentTime(pos:Number):void{
+		private function set_currentTime(pos:Number):void{
 			sendEvent("seeking");
 			_mediaPlayer.seek(pos);
 		}
@@ -230,33 +226,33 @@ package {
 		//
 		// Getters
 		//
-		public function get_src():String {
+		private function get_src():String {
 			return _url;
 		}
-		public function get_paused():Boolean {
+		private function get_paused():Boolean {
 			return _isPaused;
 		}
-		public function get_ended():Boolean {
+		private function get_ended():Boolean {
 			return _isEnded;
 		}
 
-		public function get_duration():Number{
+		private function get_duration():Number{
 			return _duration;
 		}
-		public function get_muted():Boolean {
+		private function get_muted():Boolean {
 			return _isMuted;
 		}
-		public function get_volume():Number {
+		private function get_volume():Number {
 			if(_isMuted) {
 				return 0;
 			} else {
 				return _volume;
 			}
 		}
-		public function get_currentTime():Number {
+		private function get_currentTime():Number {
 			return _position;
 		}
-		public function get_buffered():Number {
+		private function get_buffered():Number {
 			var progress:Number = 0;
 			if (_duration != 0) {
 				progress = Math.round((_mediaPlayer.currentTime / _duration) * 100);
@@ -303,7 +299,16 @@ package {
 					sendEvent("pause");
 					sendEvent("canplay");
 					break;
+				case MediaPlayerState.LOADING:
+					_isPaused = true;
+					_isEnded = false;
+					sendEvent("progress");
+					break;
 			}
+		}
+		private function onMediaErrorEvent(event:MediaErrorEvent):void {
+			log('error', event.error.name, event.error.detail, event.error.errorID, event.error.message);
+			sendEvent("error", event.error.message);
 		}
 
 		//
@@ -323,10 +328,9 @@ package {
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName:String):void {
-			ExternalInterface.call('__event__' + _id, eventName);
+		private function sendEvent(eventName: String, eventMessage:String = ''): void {
+			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
 		}
-
 		private function log():void {
 			if (ExternalInterface.available) {
 				ExternalInterface.call('console.log', arguments);

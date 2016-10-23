@@ -43,7 +43,13 @@
             <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
         </video>
 
-        <h2>RTMP Streaming</h2>
+        <h2>MP3 using Flash</h2>
+
+        <audio preload="none" controls class="mejs-player">
+            <source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3">
+        </audio>
+
+        <h2>RTMP Streaming (MP4)</h2>
 
         <video  width="640" height="360" preload="none" class="mejs-player" >
             <source src="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4" type="rtmp/mp4">
@@ -53,7 +59,7 @@
 
     <script>
 
-        mejs.Renderers.order = ['flash_video'];
+        mejs.Renderers.order = ['flash_video', 'flash_audio'];
 
         var elements = mejs.getElementsByClassName('mejs-player');
 

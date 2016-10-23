@@ -270,10 +270,10 @@
 				}
 			};
 
-			win['__event__' + flash.id] = function (eventName, message) {
+			win['__event__' + flash.id] = function (eventName, eventMessage) {
 
 				var event = mejs.Utils.createEvent(eventName, flash);
-				event.message = message;
+				event.message = eventMessage || '';
 
 				// send event from Flash up to the mediaElement
 				flash.mediaElement.dispatchEvent(event);
@@ -295,7 +295,7 @@
 
 			mediaElement.appendChild(flash.flashWrapper);
 
-			if (isVideo && mediaElement.originalNode !== null) {
+			if ((isVideo && mediaElement.originalNode !== null) || !isVideo) {
 				mediaElement.originalNode.style.display = 'none';
 			}
 
@@ -428,7 +428,7 @@
 			 * @return {Boolean}
 			 */
 			canPlayType: function (type) {
-				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'];
+				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'rtmp/mp4', 'audio/mp4',];
 
 				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 			},
@@ -502,7 +502,7 @@
 			 * @return {Boolean}
 			 */
 			canPlayType: function (type) {
-				var supportedMediaTypes = ['audio/mp3'];
+				var supportedMediaTypes = ['audio/mp3', 'audio/rtmp', 'rtmp/mp3'];
 
 				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
 			},
