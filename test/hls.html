@@ -59,12 +59,11 @@
                 success: function(media, node) {
 
                     media.addEventListener('hlsMediaAttached', function() {
-
                         console.log('Attached!');
                     });
 
                     media.addEventListener('hlsManifestParsed', function() {
-
+                        console.log('Manifest parsed!');
                         media.hlsPlayer.startLoad();
 
                     });
