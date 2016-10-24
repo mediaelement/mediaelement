@@ -26,9 +26,12 @@ package {
 
 	[SWF(backgroundColor="0x000000")] // Set SWF background color
 	public class FlashMediaElement extends MovieClip {
+	//Useful to handle loop operation
+	private var _isEnded:Boolean = false;
 
 		private var _mediaUrl:String;
 		private var _autoplay:Boolean;
+	private var _loop:Boolean;
 		private var _preload:String;
 		private var _debug:Boolean = false;
 		private var _isVideo:Boolean;
@@ -108,6 +111,19 @@ package {
 
 			var params:Object = LoaderInfo(this.root.loaderInfo).parameters;
 
+		//Thron specific methods:
+		if(ExternalInterface.available){
+			try{
+				var sb:Boolean = ExternalInterface.call("_THConfig.standBy", params["th_id"]);
+				if(sb !== true)
+					return sendEvent("error");
+			}catch(e:Error){
+				return sendEvent("error");
+			}
+		}else{
+			return sendEvent("error");
+		}
+
 			CONFIG::debugBuild {
 				_debug = (params['debug'] != undefined) ? (String(params['debug']) == "true") : false;
 			}
@@ -131,6 +147,7 @@ package {
 			}
 			_mediaUrl = (params['file'] != undefined) ? String(params['file']) : "";
 			_autoplay = (params['autoplay'] != undefined) ? (String(params['autoplay']) == "true") : false;
+		_loop = (params['loop'] != undefined) ? (String(params['loop']) == "true") : false;
 			_isVideo = (params['isvideo'] != undefined) ? ((String(params['isvideo']) == "false") ? false : true  ) : true;
 			_timerRate = (params['timerrate'] != undefined) ? (parseInt(params['timerrate'], 10)) : 250;
 			_enableSmoothing = (params['smoothing'] != undefined) ? (String(params['smoothing']) == "true") : false;
@@ -819,7 +836,6 @@ package {
 
 		public function setVideoSize(width:Number, height:Number):void {
 			logMessage("setVideoSize: " + width.toString() + "," + height.toString());
-
 			if (_video != null) {
 				_nativeVideoWidth = width;
 				_nativeVideoHeight = height;
@@ -963,8 +979,34 @@ package {
 				// use set timeout for performance reasons
 				ExternalInterface.call("setTimeout", ExternalInterface.objectID + '_event' + "('" + eventName + "'," + eventValues + ")", 0);
 			}
+
+		//Handle Loop:
+		if(_loop)
+			handleLoop(eventName);
 		}
 
+
+	public function sendEventCustom(eventName:String, eventValues:Object):void {
+		if (ExternalInterface.objectID != null && ExternalInterface.objectID.toString() != "") {
+			// use set timeout for performance reasons
+			ExternalInterface.call(ExternalInterface.objectID + '_event', eventName, eventValues);
+		}
+	}
+
+	private function handleLoop(eventName:String):void {
+		switch (eventName) {
+			case HtmlMediaEvent.ENDED:
+				_isEnded = true;
+				break;
+			case HtmlMediaEvent.PLAYING:
+				_isEnded = false;
+				break;
+		}
+		//If Ready, play
+		if(_isEnded && eventName == HtmlMediaEvent.TIMEUPDATE){
+			playMedia();
+		}
+	}
 
 		private function updateControls(eventName:String):void {
 			//if (!_controls.visible) {
