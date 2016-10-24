@@ -135,38 +135,12 @@
 		 *
 		 * @see https://github.com/vimeo/player.js#error
 		 * @param {Object} error
+		 * @param {Object} target
 		 */
-		errorHandler: function (error) {
-			switch (error.name) {
-				case 'TypeError':
-					// the id was not a number
-					break;
-
-				case 'PasswordError':
-					// the video is password-protected and the viewer needs to enter the
-					// password first
-					break;
-
-				case 'PrivacyError':
-					// the video is password-protected or private
-					break;
-
-				case 'RangeError':
-					// the time was less than 0 or greater than the video’s duration
-					break;
-
-				case 'InvalidTrackLanguageError':
-					// no track was available with the specified language
-					break;
-
-				case 'InvalidTrackError':
-					// no track was available with the specified language and kind
-					break;
-
-				default:
-					// some other error occurred
-					break;
-			}
+		errorHandler: function (error, target) {
+			var event = mejs.Utils.createEvent('error', target);
+			event.message = error.name + ': ' + error.message;
+			mediaElement.dispatchEvent(event);
 		}
 	};
 
@@ -294,7 +268,7 @@
 										}
 
 									})['catch'](function (error) {
-										vimeoApi.errorHandler(error);
+										vimeoApi.errorHandler(error, vimeo);
 									});
 									break;
 
@@ -306,7 +280,7 @@
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch'](function (error) {
-										vimeoApi.errorHandler(error);
+										vimeoApi.errorHandler(error, vimeo);
 									});
 									break;
 
@@ -319,13 +293,13 @@
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch'](function (error) {
-										vimeoApi.errorHandler(error);
+										vimeoApi.errorHandler(error, vimeo);
 									});
 									break;
 
 								case 'loop':
 									vimeoPlayer.setLoop(value)['catch'](function (error) {
-										vimeoApi.errorHandler(error);
+										vimeoApi.errorHandler(error, vimeo);
 									});
 									break;
 								case 'muted':
@@ -338,7 +312,7 @@
 												mediaElement.dispatchEvent(event);
 											}, 50);
 										})['catch'](function (error) {
-											vimeoApi.errorHandler(error);
+											vimeoApi.errorHandler(error, vimeo);
 										});
 									} else {
 										vimeoPlayer.setVolume(oldVolume).then(function () {
@@ -348,7 +322,7 @@
 												mediaElement.dispatchEvent(event);
 											}, 50);
 										})['catch'](function (error) {
-											vimeoApi.errorHandler(error);
+											vimeoApi.errorHandler(error, vimeo);
 										});
 									}
 									break;
@@ -451,7 +425,7 @@
 						mediaElement.dispatchEvent(event);
 
 					})['catch'](function (error) {
-						vimeoApi.errorHandler(error);
+						vimeoApi.errorHandler(error, vimeo);
 					});
 
 					vimeoPlayer.getDuration().then(function (seconds) {
@@ -461,7 +435,7 @@
 						var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
 						mediaElement.dispatchEvent(event);
 					})['catch'](function (error) {
-						vimeoApi.errorHandler(error);
+						vimeoApi.errorHandler(error, vimeo);
 					});
 
 					vimeoPlayer.getVideoUrl().then(function (_url) {
@@ -482,7 +456,7 @@
 						}
 
 					})['catch'](function (error) {
-						vimeoApi.errorHandler(error);
+						vimeoApi.errorHandler(error, vimeo);
 					});
 
 					var event = mejs.Utils.createEvent('timeupdate', vimeo);
@@ -506,7 +480,7 @@
 					ended = false;
 
 					vimeoPlayer.play()['catch'](function (error) {
-						vimeoApi.errorHandler(error);
+						vimeoApi.errorHandler(error, vimeo);
 					});
 
 					event = mejs.Utils.createEvent('play', vimeo);
@@ -517,7 +491,7 @@
 					ended = false;
 
 					vimeoPlayer.pause()['catch'](function (error) {
-						vimeoApi.errorHandler(error);
+						vimeoApi.errorHandler(error, vimeo);
 					});
 
 					event = mejs.Utils.createEvent('pause', vimeo);
