@@ -4,11 +4,8 @@ package {
 	import flash.events.*;
 	import flash.media.*;
 	import flash.net.*;
-	import flash.text.*;
 	import flash.system.*;
 	import flash.external.*;
-
-	import flash.net.URLRequest;
 
 	import org.osmf.containers.MediaContainer;
 	import org.osmf.elements.VideoElement;
@@ -28,9 +25,13 @@ package {
 
 	import org.osmf.events.TimeEvent;
 	import org.osmf.events.MediaPlayerStateChangeEvent;
+	import org.osmf.events.MediaErrorEvent;
 
 	import com.castlabs.dash.DashPluginInfo;
 
+	/**
+	 * @constructor
+	 */
 	public class DashElement extends Sprite {
 
 		// Video components
@@ -38,6 +39,7 @@ package {
 		private var _volume:Number = 1;
 		private var _position:Number = 0;
 		private var _duration:Number = 0;
+		private var _autoplay:Boolean = false;
 
 		// Video status
 		private var _isPaused:Boolean = true;
@@ -70,6 +72,7 @@ package {
 			var flashVars:Object = LoaderInfo(this.root.loaderInfo).parameters;
 
 			_id = flashVars.uid;
+			_autoplay = (flashVars.autoplay == true);
 
 			// stage setup
 			stage.align = StageAlign.TOP_LEFT;
@@ -98,6 +101,7 @@ package {
 			_mediaPlayer.addEventListener(TimeEvent.COMPLETE, onTimeEvent);
 			_mediaPlayer.addEventListener(TimeEvent.CURRENT_TIME_CHANGE, onTimeEvent);
 			_mediaPlayer.addEventListener(MediaPlayerStateChangeEvent.MEDIA_PLAYER_STATE_CHANGE, onMediaPlayerStateChangeEvent);
+			_mediaPlayer.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
 
 			if (ExternalInterface.available) {
 
@@ -125,8 +129,6 @@ package {
 				ExternalInterface.addCallback('fire_setSize', fire_setSize);
 
 				ExternalInterface.call('__ready__' + _id);
-
-				ExternalInterface.call('console.log', 'FLASH DASH ready', _id);
 			}
 		}
 
@@ -141,21 +143,30 @@ package {
 
 				_resource = new URLResource(_url);
 				_contentMediaElement = _mediaFactory.createMediaElement(_resource);
-				_contentMediaElement.smoothing = true;
 
-				if (_mediaPlayer.media != null) {
-					_mediaContainer.removeMediaElement(_mediaPlayer.media);
+				if (_contentMediaElement) {
+					_contentMediaElement.smoothing = true;
+					_contentMediaElement.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
+
+					if (_mediaPlayer.media != null) {
+						_mediaContainer.removeMediaElement(_mediaPlayer.media);
+					}
+
+					_mediaContainer.addMediaElement(_contentMediaElement);
+					sendEvent("canplay");
+
+					_isLoaded = true;
+					_isPaused = !_autoplay;
+
+					_mediaPlayer.media = _contentMediaElement;
+					_mediaPlayer.load();
+
+					if (_autoplay) {
+						fire_play();
+					}
+				} else {
+					sendEvent('error', 'Error creating media');
 				}
-
-				_mediaContainer.addMediaElement(_contentMediaElement);
-				sendEvent("canplay");
-
-				_isLoaded = true;
-				_isPaused = false;
-
-				_mediaPlayer.media = _contentMediaElement;
-				_mediaPlayer.load();
-
 			}
 		}
 
@@ -305,6 +316,9 @@ package {
 					break;
 			}
 		}
+		private function onMediaErrorEvent(event:MediaErrorEvent):void {
+			sendEvent('error', event.type + ': ' + event.message);
+		}
 
 		//
 		// Event handlers
@@ -323,8 +337,8 @@ package {
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName:String):void {
-			ExternalInterface.call('__event__' + _id, eventName);
+		private function sendEvent(eventName:String, eventMessage:String = ''):void {
+			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
 		}
 
 		private function log():void {
