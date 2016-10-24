@@ -4851,7 +4851,7 @@ mejs.version = '3.0';
 			win['__event__' + flash.id] = function (eventName, message) {
 
 				var event = mejs.Utils.createEvent(eventName, flash);
-				event.message = message;
+				event.message = message || '';
 
 				// send event from Flash up to the mediaElement
 				flash.mediaElement.dispatchEvent(event);
@@ -4861,7 +4861,8 @@ mejs.version = '3.0';
 			flash.flashWrapper = document.createElement('div');
 
 			var
-				flashVars = ['uid=' + flash.id],
+				autoplay = mediaElement.getAttribute('autoplay') ? true : false,
+				flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay],
 				isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 				flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
 				flashWidth = (isVideo) ? mediaElement.originalNode.width : 1;
@@ -4901,6 +4902,7 @@ mejs.version = '3.0';
 				'<param name="quality" value="high" />' +
 				'<param name="bgcolor" value="#000000" />' +
 				'<param name="wmode" value="transparent" />' +
+				'<param name="autoplay" value="' + autoplay + '" />' +
 				'<param name="allowScriptAccess" value="always" />' +
 				'<param name="allowFullScreen" value="true" />' +
 				'<div>' + mejs.i18n.t('mejs.install-flash') + '</div>' +
@@ -5071,7 +5073,12 @@ mejs.version = '3.0';
 
 			options: {
 				prefix: 'flash_audio',
-				filename: 'mediaelement-flash-audio.swf'
+				filename: 'mediaelement-flash-audio.swf',
+				enablePseudoStreaming: true,
+				// start query parameter sent to server for pseudo-streaming
+				pseudoStreamingStartQueryParam: 'start',
+				// pseudo streaming type: use `time` for time based seeking (MP3)
+				pseudoStreamingType: 'byte'
 			},
 			/**
 			 * Determine if a specific element type can be played with this render
