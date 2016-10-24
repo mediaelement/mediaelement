@@ -78,23 +78,53 @@ $('#video2').mediaelementplayer({
  });
 ```
 
+`MediaElement` can call methods from the current renderer's API (if any) by invoking its own API instance, a special object attached to the `MediaElement` instance. Keep in mind that some methods won't work if they are not bound to an event. An example using native HLS:
+```javascript
+$('video').mediaelementplayer({
+    pluginPath: '../build/',
+    hls: {
+        debug: true,
+        // HLS is not gonna start loading immediatly 
+        autoStartLoad: false
+    },
+    
+    // More configuration parameters
+    
+    success: function(media, node) {
+    
+        media.addEventListener('hlsMediaAttached', function() {
+        
+            console.log('Media attached!');
+        });
+        
+        // Manifest file was parsed, invoke loading method
+        media.addEventListener('hlsManifestParsed', function() {
+        
+            // hlsPlayer is the instance of HLS.js in MediaElement
+            media.hlsPlayer.startLoad();
+    
+        });
+    }
+});
+```
 
-Renderer | ID
----------|---------
-Native video/audio | `html5`
-HLS native | `native_hls`
-M(PEG)-DASH native | `native_mdash` 
-SoundCloud | `soundcloud_iframe`
-Facebook | `facebook`
-Vimeo | `vimeo_iframe`
-YouTube | `youtube_iframe`
-DailyMotion | `dailymotion_iframe`
-Video shim (MP4/RTMP) | `flash_video`
-Audio shim (MP3) | `flash_audio`
-Audio shim (OGG) | `flash_audio_ogg`
-HLS shim | `flash_hls`
-M(PEG)-DASH shim | `flash_mdash`
+Below are listed the renderers with their IDs and player instance to execute other methods from APIs.
 
+Renderer | ID | API instance | Reference
+-------- | --- | ------------ | ----------
+Native video/audio | `html5` | --- | ---
+HLS native | `native_hls` | `hlsPlayer` | https://github.com/dailymotion/hls.js
+M(PEG)-DASH native | `native_mdash` | `dashPlayer` | https://github.com/Dash-Industry-Forum/dash.js
+SoundCloud | `soundcloud_iframe` | `scPlayer` | https://developers.soundcloud.com/docs/api/html5-widget
+Facebook | `facebook` | --- | --- 
+Vimeo | `vimeo_iframe` | `vimeoPlayer` | https://github.com/vimeo/player.js
+YouTube | `youtube_iframe` | `youTubeApi` | https://developers.google.com/youtube/iframe_api_reference
+DailyMotion | `dailymotion_iframe` | `dmPlayer` | https://developer.dailymotion.com/player 
+Video shim (MP4/RTMP) | `flash_video` | --- | ---
+Audio shim (MP3) | `flash_audio` | --- | ---
+Audio shim (OGG) | `flash_audio_ogg` | --- | ---
+HLS shim | `flash_hls` | --- | ---
+M(PEG)-DASH shim | `flash_mdash` | --- | ---
 
 ________
 [Back to Main](README.md)
