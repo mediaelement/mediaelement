@@ -442,28 +442,28 @@
 
 			// restore scroll bars to document
             $(document.documentElement).removeClass('mejs-fullscreen');
-
-			t.container
-				.removeClass('mejs-container-fullscreen')
-				.width(t.normalWidth)
-				.height(t.normalHeight);
-
-			if (t.media.pluginType === 'native') {
-				t.$media
-					.width(t.normalWidth)
-					.height(t.normalHeight);
-			} else {
-				t.container.find('.mejs-shim')
+			t.container.removeClass('mejs-container-fullscreen');
+			if(t.options.setDimensions){
+				t.container
 					.width(t.normalWidth)
 					.height(t.normalHeight);
 
-				t.media.setVideoSize(t.normalWidth, t.normalHeight);
+				if (t.media.pluginType === 'native') {
+					t.$media
+						.width(t.normalWidth)
+						.height(t.normalHeight);
+				} else {
+					t.container.find('.mejs-shim')
+						.width(t.normalWidth)
+						.height(t.normalHeight);
+
+					t.media.setVideoSize(t.normalWidth, t.normalHeight);
+				}
+
+				t.layers.children('div')
+					.width(t.normalWidth)
+					.height(t.normalHeight);
 			}
-
-			t.layers.children('div')
-				.width(t.normalWidth)
-				.height(t.normalHeight);
-
 			t.fullscreenBtn
 				.removeClass('mejs-unfullscreen')
 				.addClass('mejs-fullscreen');
