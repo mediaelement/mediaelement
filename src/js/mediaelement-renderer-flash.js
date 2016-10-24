@@ -417,7 +417,7 @@
 			options: {
 				prefix: 'flash_video',
 				filename: 'mediaelement-flash-video.swf',
-				enablePseudoStreaming: true,
+				enablePseudoStreaming: false,
 				// start query parameter sent to server for pseudo-streaming
 				pseudoStreamingStartQueryParam: 'start',
 				// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
