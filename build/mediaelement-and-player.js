@@ -4969,7 +4969,7 @@ mejs.version = '3.0';
 			options: {
 				prefix: 'flash_video',
 				filename: 'mediaelement-flash-video.swf',
-				enablePseudoStreaming: true,
+				enablePseudoStreaming: false,
 				// start query parameter sent to server for pseudo-streaming
 				pseudoStreamingStartQueryParam: 'start',
 				// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
@@ -5047,12 +5047,7 @@ mejs.version = '3.0';
 
 			options: {
 				prefix: 'flash_audio',
-				filename: 'mediaelement-flash-audio.swf',
-				enablePseudoStreaming: true,
-				// start query parameter sent to server for pseudo-streaming
-				pseudoStreamingStartQueryParam: 'start',
-				// pseudo streaming type: use `time` for time based seeking (MP3)
-				pseudoStreamingType: 'byte'
+				filename: 'mediaelement-flash-audio.swf'
 			},
 			/**
 			 * Determine if a specific element type can be played with this render
