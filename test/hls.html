@@ -53,11 +53,20 @@
             var player = new MediaElementPlayerSimple(elements[i], {
                 pluginPath: '../build/',
                 hls: {
-                    debug: true
+                    debug: true,
+                    autoStartLoad: false
                 },
-                success: function(media) {
+                success: function(media, node) {
+
                     media.addEventListener('hlsMediaAttached', function() {
+
                         console.log('Attached!');
+                    });
+
+                    media.addEventListener('hlsManifestParsed', function() {
+
+                        media.hlsPlayer.startLoad();
+
                     });
                 }
             });

@@ -45,7 +45,7 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Deprecated use of `pluginType` element.
  
-* Removed support for Silverlight shim.
+* Removed Silverlight shim, as well as IE8 and older browsers support.
 
 * Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development.
 
@@ -64,14 +64,14 @@ webm | video/webm | Please visit http://caniuse.com/#feat=webm for comprehensive
 mp3 | audio/mp3 | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
 ogg/ogv | audio/ogg, audio/oga, video/ogg | Please visit http://caniuse.com/#search=ogg for comprehensive information
 wav | audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav | Please visit http://caniuse.com/#feat=wav for comprehensive information
-m3u8 | application/x-mpegURL, vnd.apple.mpegURL, audio/mpegURL, audio/hls, video/hls | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support Flash (version 10 or later)
-mpd | application/dash+xml | Browsers that support MSE through `dash.js` library; rest of the browsers that support Flash (version 10 or later)
+m3u8 | application/x-mpegURL, vnd.apple.mpegURL, audio/mpegURL, audio/hls, video/hls | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support `Flash` (version 10 or later)
+mpd | application/dash+xml | Browsers that support MSE through `dash.js` library; rest of the browsers that support `Flash` (version 10 or later)
 rtmp/flv | video/mp4, video/flv, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 | All browsers that support `Flash` (version 10 or later)
 youtube | video/youtube, video/x-youtube | All browsers that support `window.postMessage`; Flash deprecated.
-vimeo | video/vimeo, video/x-vimeo | All browsers since it uses `iframe` tag and HTML5
-facebook | video/facebook, video/x-facebook | All browsers since it uses `iframe` tag and HTML5
-dailymotion | video/dailymotion, video/x-dailymotion | All browsers since it uses `iframe` tag and HTML5
-soundcloud | video/soundcloud, video/x-soundcloud | All browsers since it uses `iframe` tag and HTML5
+vimeo | video/vimeo, video/x-vimeo | All browsers that support `iframe` tag and HTML5
+facebook | video/facebook, video/x-facebook | All browsers that support `iframe` tag and HTML5
+dailymotion | video/dailymotion, video/x-dailymotion | All browsers that support `iframe` tag and HTML5
+soundcloud | video/soundcloud, video/x-soundcloud | All browsers that support `iframe` tag and HTML5
 
 **Notes** 
 * Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
@@ -102,5 +102,7 @@ Changes available at [Change Log](changelog.md)
 
 <a id="todo"></a>
 ## TODO list
+
+**IMPORTANT:** Before posting an issue, it is strongly encouraged to read the whole documentation since it covers the majority of scenarios exposed in prior issues. 
 
 New features and pending bugs can be found at [TODO list](TODO.md).
