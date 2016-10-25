@@ -452,9 +452,9 @@
 				t.container.find('iframe, embed, object')
 				.width('100%')
 				.height('100%');
-
-				t.media.setSize(screen.width, screen.height);
-
+				if(t.options.setDimensions) {
+					t.media.setSize(screen.width, screen.height);
+				}
 			}
 
 			t.layers.children('div')
@@ -499,26 +499,25 @@
 			// restore scroll bars to document
 			$(document.documentElement).removeClass('mejs-fullscreen');
 
-			t.container
-			.removeClass('mejs-container-fullscreen')
-			.width(t.normalWidth)
-			.height(t.normalHeight);
+			t.container.removeClass('mejs-container-fullscreen');
+			if (t.options.setDimensions) {
+				t.container.width(t.normalWidth)
+					.height(t.normalHeight);
+				if (isNative) {
+					t.$media
+						.width(t.normalWidth)
+						.height(t.normalHeight);
+				} else {
+					t.container.find('iframe, embed, object')
+						.width(t.normalWidth)
+						.height(t.normalHeight);
 
-			if (isNative) {
-				t.$media
-				.width(t.normalWidth)
-				.height(t.normalHeight);
-			} else {
-				t.container.find('iframe, embed, object')
-				.width(t.normalWidth)
-				.height(t.normalHeight);
-
-				t.media.setSize(t.normalWidth, t.normalHeight);
+					t.media.setSize(t.normalWidth, t.normalHeight);
+				}
+				t.layers.children('div')
+					.width(t.normalWidth)
+					.height(t.normalHeight);
 			}
-
-			t.layers.children('div')
-			.width(t.normalWidth)
-			.height(t.normalHeight);
 
 			t.fullscreenBtn
 			.removeClass('mejs-unfullscreen')
