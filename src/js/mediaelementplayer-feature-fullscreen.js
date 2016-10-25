@@ -452,7 +452,8 @@
 				t.container.find('iframe, embed, object')
 				.width('100%')
 				.height('100%');
-				if(t.options.setDimensions) {
+
+				if (t.options.setDimensions) {
 					t.media.setSize(screen.width, screen.height);
 				}
 			}
@@ -500,6 +501,7 @@
 			$(document.documentElement).removeClass('mejs-fullscreen');
 
 			t.container.removeClass('mejs-container-fullscreen');
+
 			if (t.options.setDimensions) {
 				t.container.width(t.normalWidth)
 					.height(t.normalHeight);
