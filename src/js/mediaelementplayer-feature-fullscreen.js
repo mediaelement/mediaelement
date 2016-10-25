@@ -452,9 +452,9 @@
 				t.container.find('iframe, embed, object')
 				.width('100%')
 				.height('100%');
-
-				t.media.setSize(screen.width, screen.height);
-
+				if(t.options.setDimensions) {
+					t.media.setSize(screen.width, screen.height);
+				}
 			}
 
 			t.layers.children('div')
