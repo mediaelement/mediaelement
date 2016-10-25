@@ -500,7 +500,7 @@
 			$(document.documentElement).removeClass('mejs-fullscreen');
 
 			t.container.removeClass('mejs-container-fullscreen');
-			if(t.options.setDimensions) {
+			if (t.options.setDimensions) {
 				t.container.width(t.normalWidth)
 					.height(t.normalHeight);
 				if (isNative) {
