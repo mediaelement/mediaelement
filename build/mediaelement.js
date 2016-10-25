@@ -3971,6 +3971,7 @@ mejs.version = '3.0';
 				fbDiv.setAttribute("data-href", url);
 				fbDiv.setAttribute("data-width", mediaElement.originalNode.width);
 				fbDiv.setAttribute("data-allowfullscreen", "true");
+				fbDiv.setAttribute("data-controls", "false");
 
 				mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
 				mediaElement.originalNode.style.display = 'none';
