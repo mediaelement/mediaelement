@@ -36,7 +36,7 @@ public class DashPlugin extends Sprite {
     }
 
     public static function mediaElementCreationFunction():MediaElement {
-        return new VideoElement(null, DashContext.getInstance().dashNetLoader);
+        return new VideoMediaElement(null, DashContext.getInstance().dashNetLoader);
     }
 }
 }
