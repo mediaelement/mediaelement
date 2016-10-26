@@ -304,7 +304,7 @@
 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
 								console.log('FB EVENT', 'startedPlaying');
 								if (!hasStartedPlaying) {
-									sendEvents(['loadedmetadata', 'timeupdate']);
+									sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
 									hasStartedPlaying = true;
 								}
 								paused = false;
