@@ -4043,7 +4043,7 @@ mejs.version = '3.0';
 								sendEvents(['paused']);
 							});
 							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
-								paused = false;
+								paused = true;
 								ended = true;
 								sendEvents(['ended']);
 							});
