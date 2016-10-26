@@ -4030,7 +4030,7 @@ mejs.version = '3.0';
 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
 								
 								if (!hasStartedPlaying) {
-									sendEvents(['loadedmetadata', 'timeupdate']);
+									sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
 									hasStartedPlaying = true;
 								}
 								paused = false;
