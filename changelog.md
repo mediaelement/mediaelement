@@ -21,7 +21,8 @@
 * Introduced missing translation elements and translated them in Spanish @ron666
 * Removed big Play button for iPhone and YouTube and Facebook renderers @ron666
 * CSS specificity reduction (https://github.com/johndyer/mediaelement/pull/1890) @albell
-* Fix for fullscreen behavior when `setDimensions` attribute is false (https://github.com/johndyer/mediaelement/pull/1899) @ale-grosselle
+* Fix for fullscreen behavior when `setDimensions` attribute is `false` (https://github.com/johndyer/mediaelement/pull/1899) @ale-grosselle
+* Adding `blur` handler to hide the volumeSlider (https://github.com/johndyer/mediaelement/pull/1901) @peterh-capella
 
 *2.23.4 (2016/10/21)*
 
