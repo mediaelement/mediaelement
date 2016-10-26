@@ -32,7 +32,7 @@ package {
 	/**
 	 * @constructor
 	 */
-	public class DashElement extends Sprite {
+	public class DashMediaElement extends Sprite {
 
 		// Video components
 		private var _url:String = "";
@@ -63,7 +63,7 @@ package {
 		/**
 		 * @constructor
 		 */
-		public function DashElement ()
+		public function DashMediaElement ()
 		{
 
 			Security.allowDomain(['*']);

@@ -517,14 +517,14 @@ mejs.version = '3.0';
 		 * @return {Boolean}
 		 */
 		isObjectEmpty: function (instance) {
-		for (var key in instance) {
-			if (instance.hasOwnProperty(key)) {
-				return false;
+			for (var key in instance) {
+				if (instance.hasOwnProperty(key)) {
+					return false;
+				}
 			}
-		}
 
-		return true;
-	}
+			return true;
+		}
 	};
 
 	/**
@@ -4704,7 +4704,7 @@ mejs.version = '3.0';
 							if (flash.flashApi['get_' + propName] !== undefined) {
 								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
 
-								//
+								
 
 								// special case for buffered to conform to HTML5's newest
 								if (propName === 'buffered') {
@@ -4768,6 +4768,7 @@ mejs.version = '3.0';
 						
 
 						if (flash.flashApi !== null) {
+
 							// send call up to Flash ExternalInterface API
 							if (flash.flashApi['fire_' + methodName]) {
 								try {
@@ -4853,36 +4854,63 @@ mejs.version = '3.0';
 				mediaElement.originalNode.style.display = 'none';
 			}
 
-			var settings = [
-				'id="__' + flash.id + '"',
-				'width="' + flashWidth + '"',
-				'height="' + flashHeight + '"'
-			];
+			var settings = [];
 
 			if (mejs.Features.isIE) {
-				settings.push(
+				var specialIEContainer = doc.createElement('div');
+				flash.flashWrapper.appendChild(specialIEContainer);
+
+				settings = [
 					'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
-					'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"'
-				);
-			}
+					'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
+					'id="__' + flash.id + '"',
+					'width="' + flashWidth + '"',
+					'height="' + flashHeight + '"'
+				];
 
-			if (!isVideo) {
-				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
-			}
+				if (!isVideo) {
+					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+				}
 
-			flash.flashWrapper.innerHTML =
-				'<object ' + settings.join(' ') + '>' +
-				'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date().getTime()) + '" />' +
-				'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
-				'<param name="quality" value="high" />' +
-				'<param name="bgcolor" value="#000000" />' +
-				'<param name="wmode" value="transparent" />' +
-				'<param name="autoplay" value="' + autoplay + '" />' +
-				'<param name="allowScriptAccess" value="always" />' +
-				'<param name="allowFullScreen" value="true" />' +
-				'<div>' + mejs.i18n.t('mejs.install-flash') + '</div>' +
-				'</object>'
-			;
+				specialIEContainer.outerHTML =
+					'<object ' + settings.join(' ') + '>' +
+					'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date()) + '" />' +
+					'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
+					'<param name="quality" value="high" />' +
+					'<param name="bgcolor" value="#000000" />' +
+					'<param name="wmode" value="transparent" />' +
+					'<param name="allowScriptAccess" value="always" />' +
+					'<param name="allowFullScreen" value="true" />' +
+					'<div>' + mejs.i18n.t('mejs.install-flash') + '</div>' +
+					'</object>';
+
+			} else {
+
+				settings = [
+					'id="__' + flash.id + '"',
+					'name="__' + flash.id + '"',
+					'play="true"',
+					'loop="false"',
+					'quality="high"',
+					'bgcolor="#000000"',
+					'wmode="transparent"',
+					'allowScriptAccess="always"',
+					'allowFullScreen="true"',
+					'type="application/x-shockwave-flash"',
+					'pluginspage="//www.macromedia.com/go/getflashplayer"',
+					'src="' + flash.options.pluginPath + flash.options.filename + '"',
+					'flashvars="' + flashVars.join('&') + '"',
+					'width="' + flashWidth + '"',
+					'height="' + flashHeight + '"'
+				];
+
+				if (!isVideo) {
+					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+				}
+
+				flash.flashWrapper.innerHTML =
+					'<embed ' + settings.join(' ') + '>';
+			}
 
 			flash.flashNode = flash.flashWrapper.lastChild;
 
