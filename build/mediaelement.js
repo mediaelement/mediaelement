@@ -517,14 +517,14 @@ mejs.version = '3.0';
 		 * @return {Boolean}
 		 */
 		isObjectEmpty: function (instance) {
-			for (var key in instance) {
-				if (instance.hasOwnProperty(key)) {
-					return false;
-				}
+		for (var key in instance) {
+			if (instance.hasOwnProperty(key)) {
+				return false;
 			}
-
-			return true;
 		}
+
+		return true;
+	}
 	};
 
 	/**
