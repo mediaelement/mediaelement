@@ -667,7 +667,7 @@
 				autoplay = !(autoplayAttr === undefined || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature,
-				isNative = t.media.id.match(/(native|html5)/)
+				isNative = media.rendererName.match(/(native|html5)/)
 				;
 
 			// make sure it can't create itself again if a plugin reloads
@@ -959,7 +959,7 @@
 				// This is a work-around for a bug in the YouTube iFrame player, which means
 				//	we can't use the play() API for the initial playback on iOS or Android;
 				//	user has to start playback directly by tapping on the iFrame.
-				if (t.media.id.match(/youtube_iframe/) && ( mf.isiOS || mf.isAndroid )) {
+				if (t.media.rendererName.match(/youtube/) && ( mf.isiOS || mf.isAndroid )) {
 					t.container.find('.mejs-overlay-play').hide();
 					t.container.find('.mejs-poster').hide();
 				}
@@ -1372,7 +1372,7 @@
 						}
 					});
 
-			if (mejs.Features.isiPhone || t.media.id.match(/(youtube|facebook)/)) {
+			if (mejs.Features.isiPhone || t.media.rendererName.match(/(youtube|facebook)/)) {
 				bigPlay.hide();
 			}
 
@@ -1587,7 +1587,7 @@
 				t.$node.insertBefore(t.container);
 			}
 
-			var isNative = t.media.id.match(/(native|html5)/);
+			var isNative = t.media.rendererName.match(/(native|html5)/);
 
 			if (!isNative) {
 				t.media.remove();
