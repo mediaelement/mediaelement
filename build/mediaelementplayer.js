@@ -696,7 +696,7 @@ if (jQuery !== undefined) {
 				autoplay = !(autoplayAttr === undefined || autoplayAttr === null || autoplayAttr === 'false'),
 				featureIndex,
 				feature,
-				isNative = t.media.id.match(/(native|html5)/)
+				isNative = media.rendererName.match(/(native|html5)/)
 				;
 
 			// make sure it can't create itself again if a plugin reloads
@@ -988,7 +988,7 @@ if (jQuery !== undefined) {
 				// This is a work-around for a bug in the YouTube iFrame player, which means
 				//	we can't use the play() API for the initial playback on iOS or Android;
 				//	user has to start playback directly by tapping on the iFrame.
-				if (t.media.id.match(/youtube_iframe/) && ( mf.isiOS || mf.isAndroid )) {
+				if (t.media.rendererName.match(/youtube/) && ( mf.isiOS || mf.isAndroid )) {
 					t.container.find('.mejs-overlay-play').hide();
 					t.container.find('.mejs-poster').hide();
 				}
@@ -1401,7 +1401,7 @@ if (jQuery !== undefined) {
 						}
 					});
 
-			if (mejs.Features.isiPhone || t.media.id.match(/(youtube|facebook)/)) {
+			if (mejs.Features.isiPhone || t.media.rendererName.match(/(youtube|facebook)/)) {
 				bigPlay.hide();
 			}
 
@@ -1616,7 +1616,7 @@ if (jQuery !== undefined) {
 				t.$node.insertBefore(t.container);
 			}
 
-			var isNative = t.media.id.match(/(native|html5)/);
+			var isNative = t.media.rendererName.match(/(native|html5)/);
 
 			if (!isNative) {
 				t.media.remove();
@@ -2670,7 +2670,7 @@ if (jQuery !== undefined) {
 			}
 
 			// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
-			var isNative = t.media.id.match(/(native|html5)/);
+			var isNative = t.media.rendererName.match(/(native|html5)/);
 
 			if (isNative) {
 				media.setVolume(player.options.startVolume);
@@ -2868,7 +2868,7 @@ if (jQuery !== undefined) {
 				t = this,
 				mode = '',
 				features = mejs.MediaFeatures,
-				isNative = t.media.id.match(/(native|html5)/)
+				isNative = t.media.rendererName.match(/(native|html5)/)
 				;
 
 			if (features.hasTrueNativeFullScreen && isNative) {
@@ -3069,7 +3069,7 @@ if (jQuery !== undefined) {
 
 			var
 				t = this,
-				isNative = t.media.id.match(/html5/)
+				isNative = t.media.rendererName.match(/(html5|native)/)
 				;
 
 			if (mejs.MediaFeatures.isiOS && mejs.MediaFeatures.hasiOSFullScreen && typeof t.media.webkitEnterFullscreen === 'function') {
@@ -3178,7 +3178,7 @@ if (jQuery !== undefined) {
 
 			var
 				t = this,
-				isNative = t.media.id.match(/(native|html5)/)
+				isNative = t.media.rendererName.match(/(native|html5)/)
 				;
 
 			// Prevent container from attempting to stretch a second time
@@ -3272,7 +3272,7 @@ if (jQuery !== undefined) {
 		buildspeed: function(player, controls, layers, media) {
 			var
 				t = this,
-				isNative = t.media.id.match(/(native|html5)/)
+				isNative = t.media.rendererName.match(/(native|html5)/)
 			;
 
 			if (!isNative) {

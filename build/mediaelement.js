@@ -3880,14 +3880,17 @@ mejs.version = '3.0';
 										fbApi.unmute();
 									}
 									setTimeout(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										var event = mejs.Utils.createEvent('volumechange', fbWrapper);
+										mediaElement.dispatchEvent(event);
 									}, 50);
 									break;
 
 								case 'volume':
 									fbApi.setVolume(value);
+									
 									setTimeout(function () {
-										mediaElement.dispatchEvent({type: 'volumechange'});
+										var event = mejs.Utils.createEvent('volumechange', fbWrapper);
+										mediaElement.dispatchEvent(event);
 									}, 50);
 									break;
 
@@ -3969,7 +3972,6 @@ mejs.version = '3.0';
 				fbDiv.id = fbWrapper.id;
 				fbDiv.className = "fb-video";
 				fbDiv.setAttribute("data-href", url);
-				fbDiv.setAttribute("data-width", mediaElement.originalNode.width);
 				fbDiv.setAttribute("data-allowfullscreen", "true");
 				fbDiv.setAttribute("data-controls", "false");
 
@@ -3991,6 +3993,8 @@ mejs.version = '3.0';
 						if (msg.type === 'video') {
 
 							fbApi = msg.instance;
+
+							sendEvents(['mouseover', 'mouseout']);
 
 							// remove previous listeners
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
@@ -4019,7 +4023,7 @@ mejs.version = '3.0';
 							}
 
 							
-							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay']);
+							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
 
 							// Custom Facebook events
 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
