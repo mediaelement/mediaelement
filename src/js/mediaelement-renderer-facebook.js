@@ -161,7 +161,6 @@
 
 								case 'volume':
 									fbApi.setVolume(value);
-									console.log(value);
 									setTimeout(function () {
 										var event = mejs.Utils.createEvent('volumechange', fbWrapper);
 										mediaElement.dispatchEvent(event);
@@ -299,6 +298,8 @@
 							console.log('FB INIT');
 							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
 
+							var timer;
+
 							// Custom Facebook events
 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
 								console.log('FB EVENT', 'startedPlaying');
@@ -309,6 +310,12 @@
 								paused = false;
 								ended = false;
 								sendEvents(['play', 'playing', 'timeupdate']);
+
+								// Workaround to update progress bar
+								timer = setInterval(function() {
+									fbApi.getCurrentPosition();
+									sendEvents(['timeupdate']);
+								}, 250);
 							});
 							eventHandler.paused = fbApi.subscribe('paused', function () {
 								console.log('FB EVENT', 'paused');
@@ -319,7 +326,15 @@
 							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
 								paused = true;
 								ended = true;
-								sendEvents(['ended']);
+
+								// Workaround to update progress bar one last time and trigger ended event
+								timer = setInterval(function() {
+									fbApi.getCurrentPosition();
+									sendEvents(['timeupdate', 'ended']);
+								}, 250);
+
+								clearInterval(timer);
+								timer = null;
 							});
 							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
 								sendEvents(['progress', 'timeupdate']);
@@ -327,6 +342,8 @@
 							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
 								sendEvents(['progress', 'timeupdate']);
 							});
+
+
 						}
 					});
 				};
