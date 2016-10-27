@@ -413,7 +413,9 @@
 			t.setControlsSize();
 			t.isFullScreen = true;
 
-			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
+			var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height);
+			t.container.find('.mejs-captions-text').css('font-size', zoomFactor * 100 + '%');
+			t.container.find('.mejs-captions-text').css('line-height', 'normal');
 			t.container.find('.mejs-captions-position').css('bottom', '45px');
 
 			t.container.trigger('enteredfullscreen');
@@ -472,6 +474,7 @@
 			t.isFullScreen = false;
 
 			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-text').css('line-height', '');
 			t.container.find('.mejs-captions-position').css('bottom', '');
 
 			t.container.trigger('exitedfullscreen');
