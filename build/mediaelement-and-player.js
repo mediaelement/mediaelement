@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.23.3';
+mejs.version = '2.23.4';
 
 
 // player number (for missing, same id attr)
@@ -5244,7 +5244,9 @@ if (typeof jQuery != 'undefined') {
 			t.setControlsSize();
 			t.isFullScreen = true;
 
-			t.container.find('.mejs-captions-text').css('font-size', screen.width / t.width * 1.00 * 100 + '%');
+			var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height);
+			t.container.find('.mejs-captions-text').css('font-size', zoomFactor * 100 + '%');
+			t.container.find('.mejs-captions-text').css('line-height', 'normal');
 			t.container.find('.mejs-captions-position').css('bottom', '45px');
 
 			t.container.trigger('enteredfullscreen');
@@ -5303,6 +5305,7 @@ if (typeof jQuery != 'undefined') {
 			t.isFullScreen = false;
 
 			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-text').css('line-height', '');
 			t.container.find('.mejs-captions-position').css('bottom', '');
 
 			t.container.trigger('exitedfullscreen');
@@ -5673,37 +5676,39 @@ if (typeof jQuery != 'undefined') {
 				};
 
 
-			$.ajax({
-				url: track.src,
-				dataType: "text",
-				success: function(d) {
+			if (track.src !== undefined || track.src !== "") {
+				$.ajax({
+					url: track.src,
+					dataType: "text",
+					success: function(d) {
 
-					// parse the loaded file
-					if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
-						track.entries = mejs.TrackFormatParser.dfxp.parse(d);
-					} else {
-						track.entries = mejs.TrackFormatParser.webvtt.parse(d);
+						// parse the loaded file
+						if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+							track.entries = mejs.TrackFormatParser.dfxp.parse(d);
+						} else {
+							track.entries = mejs.TrackFormatParser.webvtt.parse(d);
+						}
+
+						after();
+
+						if (track.kind == 'chapters') {
+							t.media.addEventListener('play', function() {
+								if (t.media.duration > 0) {
+									t.displayChapters(track);
+								}
+							}, false);
+						}
+
+						if (track.kind == 'slides') {
+							t.setupSlides(track);
+						}
+					},
+					error: function() {
+						t.removeTrackButton(track.srclang);
+						t.loadNextTrack();
 					}
-
-					after();
-
-					if (track.kind == 'chapters') {
-						t.media.addEventListener('play', function() {
-							if (t.media.duration > 0) {
-								t.displayChapters(track);
-							}
-						}, false);
-					}
-
-					if (track.kind == 'slides') {
-						t.setupSlides(track);
-					}
-				},
-				error: function() {
-					t.removeTrackButton(track.srclang);
-					t.loadNextTrack();
-				}
-			});
+				});
+			}
 		},
 
 		enableTrackButton: function(lang, label) {
