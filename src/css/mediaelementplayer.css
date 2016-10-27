@@ -1,5 +1,6 @@
 .mejs-offscreen {
-/* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).  Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
+/* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).
+Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
 	clip: rect(1px 1px 1px 1px); /* IE6, IE7 - no likey commas */
 	clip: rect(1px, 1px, 1px, 1px); /* IE8-IE11 - we likey commas, no support for clip-path */
 	clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
@@ -126,10 +127,6 @@
 	background: url("bigplay.svg") no-repeat;
 }
 
-.no-svg .mejs-overlay-button {
-	background-image: url("bigplay.png");
-}
-
 .mejs-overlay:hover .mejs-overlay-button {
 	background-position: 0 -100px ;
 }
@@ -208,10 +205,6 @@
 	width: 16px;
 	border: 0;
 	background: transparent url("controls.svg") no-repeat;
-}
-
-.no-svg .mejs-button > button {
-	background-image: url("controls.png");
 }
 
 /* :focus for accessibility */
@@ -730,9 +723,6 @@
 /* End: Track (Captions and Chapters) */
 
 /* Start: Error */
-.me-cannotplay {
-}
-
 .me-cannotplay a {
 	color: #fff;
 	font-weight: bold;
@@ -753,7 +743,6 @@
 .mejs-loop-on > button {
 	background-position: -64px 0;
 }
-
 /* End: Loop */
 
 /* Start: backlight */
@@ -894,7 +883,6 @@
 }
 /* End: Postroll */
 
-
 /* Start: Speed */
 .mejs-speed-button {
 	width: 46px !important;
@@ -925,7 +913,6 @@
 	-moz-border-radius: 0;
 	border-radius: 0;
 }
-
 
 .mejs-speed-button:hover > .mejs-speed-selector {
 	display: block;
@@ -978,7 +965,6 @@
 /* End: Speed */
 
 /* Start: Jump Forward */
-
 .mejs-button.mejs-jump-forward-button {
 	background: transparent url("jumpforward.png") no-repeat 3px 3px;
 }
@@ -989,11 +975,9 @@
 	line-height: normal;
 	color: #ffffff;
 }
-
 /* End: Jump Forward */
 
 /* Start: Skip Back */
-
 .mejs-button.mejs-skip-back-button {
 	background: transparent url("skipback.png") no-repeat 3px 3px;
 }
@@ -1004,5 +988,4 @@
 	line-height: normal;
 	color: #ffffff;
 }
-
 /* End: Skip Back */
