@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+    <title>MediaElement.js 3.0 - audio/video unification library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <!--[if lte IE 8]>
+    <script src="../src/js/console.js"></script>
+    <![endif]-->
+
+    <!-- MediaElement Core renderers -->
+    <script src="../src/js/mediaelement-header.js"></script>
+    <script src="../src/js/mediaelement-namespace.js"></script>
+    <script src="../src/js/mediaelement-utility.js"></script>
+    <script src="../src/js/mediaelement-utility-oldie.js"></script>
+    <script src="../src/js/mediaelement-core.js"></script>
+    <script src="../src/js/mediaelement-renderer-html5.js"></script>
+    <script src="../src/js/mediaelement-renderer-hls.js"></script>
+    <script src="../src/js/mediaelement-renderer-mdash.js"></script>
+    <script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-vimeo.js"></script>
+    <script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
+    <script src="../src/js/mediaelement-renderer-flash.js"></script>
+    <script src="../src/js/mediaelement-i18n.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+
+
+    <!-- Optional: Player -->
+    <link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet">
+    <script src="../src/js/mediaelementplayer-simple.js"></script>
+
+</head>
+<body>
+
+    <div id="container">
+
+        <h1>MediaElement.js</h1>
+
+        <h2>MP4/WebM using Flash</h2>
+
+        <video  width="640" height="360" preload="none" class="mejs-player" >
+            <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+        </video>
+
+        <h2>RTMP Streaming (MP4)</h2>
+
+        <video  width="640" height="360" preload="none" class="mejs-player" >
+            <source src="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4" type="rtmp/mp4">
+        </video>
+
+        <h2>RTMP Streaming (MP3)</h2>
+
+        <audio preload="none" class="mejs-player" >
+            <source src="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr" type="audio/rtmp">
+        </audio>
+
+    </div>
+
+    <script>
+
+        mejs.Renderers.order = ['flash_video', 'flash_audio'];
+
+        var elements = mejs.getElementsByClassName('mejs-player');
+
+        for (var i=0, il=elements.length; i<il; i++) {
+            var player = new MediaElementPlayerSimple(elements[i], {
+                pluginPath: '../build/'
+            });
+        }
+    </script>
+
+</body>
+</html>
