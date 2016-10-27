@@ -320,7 +320,7 @@
 				percent = Math.min(1, Math.max(0, percent));
 				// update loaded bar
 				if (t.loaded && t.total) {
-					t.loaded.width(t.total.width() * percent);
+					t.loaded.width((percent * 100) + '%');
 				}
 			}
 		},
@@ -340,7 +340,8 @@
 						newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
 						handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
 
-					t.current.width(newWidth);
+					newWidth = (t.media.currentTime / t.media.duration) * 100;
+					t.current.width(newWidth + '%');
 					t.handle.css('left', handlePos);
 				}
 			}
