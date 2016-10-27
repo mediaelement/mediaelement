@@ -243,17 +243,18 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Play/Pause/Stop */
 
 /* Start: Progress Bar */
-.mejs-time-rail {
+.mejs-control > .mejs-time-rail {
 	direction: ltr;
 	width: 200px;
 	padding-top: 5px;
+	position: relative;
 }
 
 .mejs-time-rail span,
 .mejs-time-rail a {
 	display: block;
 	position: absolute;
-	width: 180px;
+	width: calc(100% - 10px);
 	height: 10px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
