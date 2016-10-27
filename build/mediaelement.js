@@ -4725,7 +4725,7 @@ mejs.version = '3.0';
 							if (flash.flashApi['get_' + propName] !== undefined) {
 								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
 
-								
+								//
 
 								// special case for buffered to conform to HTML5's newest
 								if (propName === 'buffered') {
