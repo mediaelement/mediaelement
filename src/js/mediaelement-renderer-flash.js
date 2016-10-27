@@ -151,7 +151,7 @@
 							if (flash.flashApi['get_' + propName] !== undefined) {
 								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
 
-								console.log('[' + options.prefix + ' get]: ' + propName + ' = ' + value);
+								//console.log('[' + options.prefix + ' get]: ' + propName + ' = ' + value);
 
 								// special case for buffered to conform to HTML5's newest
 								if (propName === 'buffered') {
