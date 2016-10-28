@@ -1254,15 +1254,9 @@ if (jQuery !== undefined) {
 		},
 
 		setControlsSize: function () {
-			var t = this,
-				usedWidth = 0,
-				railWidth = 0,
-				rail = t.controls.find('.mejs-time-rail'),
-				total = t.controls.find('.mejs-time-total'),
-				others = rail.siblings(),
-				lastControl = others.last(),
-				lastControlPosition = null,
-				avoidAutosizeProgress = t.options && !t.options.autosizeProgress
+			var
+				t = this,
+				rail = t.controls.find('.mejs-time-rail')
 			;
 
 			// skip calculation if hidden
@@ -1270,46 +1264,16 @@ if (jQuery !== undefined) {
 				return;
 			}
 
-			// allow the size to come from custom CSS
-			if (t.options && !t.options.autosizeProgress) {
-				// Also, frontends devs can be more flexible
-				// due the opportunity of absolute positioning.
-				railWidth = parseInt(rail.css('width'), 10);
-			}
+			var
+				controlElements = t.controls.children('div'),
+				margin = parseFloat(controlElements.children('.mejs-time-total').css('margin-left')),
+				// 1px on error margin
+				siblingsWidth =  parseFloat(rail.siblings().width()) + margin - 1,
+				siblings = ((rail.siblings().length) * siblingsWidth)
+			;
 
-			// attempt to autosize
-			if (railWidth === 0 || !railWidth) {
-
-				// find the size of all the other controls besides the rail
-				others.each(function () {
-					var $this = $(this);
-					if ($this.css('position') != 'absolute' && $this.is(':visible')) {
-						usedWidth += $(this).outerWidth(true);
-					}
-				});
-
-				// fit the rail into the remaining space
-				railWidth = t.controls.width() - usedWidth - (rail.outerWidth(true) - rail.width());
-			}
-
-			// resize the rail,
-			// but then check if the last control (say, the fullscreen button) got pushed down
-			// this often happens when zoomed
-			do {
-				// outer area
-				// we only want to set an inline style with the width of the rail
-				// if we're trying to autosize.
-				if (!avoidAutosizeProgress) {
-					rail.width(railWidth);
-				}
-				// dark space
-				total.width(railWidth - (total.outerWidth(true) - total.width()));
-
-				if (lastControl.css('position') != 'absolute') {
-					lastControlPosition = lastControl.length ? lastControl.position() : null;
-					railWidth--;
-				}
-			} while (lastControlPosition !== null && lastControlPosition.top.toFixed(2) > 0 && railWidth > 0);
+			// Get number of features siblings to obtain total width to be reduced from time rail
+			rail.width('100%').width('-=' + siblings);
 
 			t.container.trigger('controlsresize');
 		},
@@ -2193,7 +2157,7 @@ if (jQuery !== undefined) {
 				percent = Math.min(1, Math.max(0, percent));
 				// update loaded bar
 				if (t.loaded && t.total) {
-					t.loaded.width(t.total.width() * percent);
+					t.loaded.width((percent * 100) + '%');
 				}
 			}
 		},
@@ -2213,7 +2177,8 @@ if (jQuery !== undefined) {
 						newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
 						handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
 
-					t.current.width(newWidth);
+					newWidth = (t.media.currentTime / t.media.duration) * 100;
+					t.current.width(newWidth + '%');
 					t.handle.css('left', handlePos);
 				}
 			}
