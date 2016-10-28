@@ -98,13 +98,14 @@
 				for (i = 0, il = renderers.length; i < il; i++) {
 					rendererName = renderers[i];
 					renderer = t.renderers[rendererName];
-
-					for (j = 0, jl = mediaFiles.length; j < jl; j++) {
-						if (renderer.canPlayType(mediaFiles[j].type)) {
-							return {
-								rendererName: rendererName,
-								src: mediaFiles[j].src
-							};
+					if (renderer !== null && renderer !== undefined) {
+						for (j = 0, jl = mediaFiles.length; j < jl; j++) {
+							if (renderer.canPlayType(mediaFiles[j].type)) {
+								return {
+									rendererName: rendererName,
+									src: mediaFiles[j].src
+								};
+							}
 						}
 					}
 				}
@@ -115,12 +116,14 @@
 					rendererName = t.order[i];
 					renderer = t.renderers[rendererName];
 
-					for (j = 0, jl = mediaFiles.length; j < jl; j++) {
-						if (renderer.canPlayType(mediaFiles[j].type)) {
-							 return {
-								rendererName: rendererName,
-								src: mediaFiles[j].src
-							};
+					if (renderer !== null && renderer !== undefined) {
+						for (j = 0, jl = mediaFiles.length; j < jl; j++) {
+							if (renderer.canPlayType(mediaFiles[j].type)) {
+								return {
+									rendererName: rendererName,
+									src: mediaFiles[j].src
+								};
+							}
 						}
 					}
 				}
