@@ -40,7 +40,7 @@
 		buildspeed: function(player, controls, layers, media) {
 			var
 				t = this,
-				isNative = t.media.rendererName.match(/(native|html5)/)
+				isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/)
 			;
 
 			if (!isNative) {
