@@ -176,7 +176,7 @@
 				t = this,
 				mode = '',
 				features = mejs.MediaFeatures,
-				isNative = t.media.rendererName.match(/(native|html5)/)
+				isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/)
 				;
 
 			if (features.hasTrueNativeFullScreen && isNative) {
@@ -377,7 +377,7 @@
 
 			var
 				t = this,
-				isNative = t.media.rendererName.match(/(html5|native)/)
+				isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/)
 				;
 
 			if (mejs.MediaFeatures.isiOS && mejs.MediaFeatures.hasiOSFullScreen && typeof t.media.webkitEnterFullscreen === 'function') {
@@ -486,7 +486,7 @@
 
 			var
 				t = this,
-				isNative = t.media.rendererName.match(/(native|html5)/)
+				isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/)
 				;
 
 			// Prevent container from attempting to stretch a second time
