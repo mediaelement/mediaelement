@@ -10,7 +10,7 @@ One file. Any browser. Same UI.
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
 
 ----------------------------------------------------------------------------
-**IMPORTANT REQUEST**
+# **IMPORTANT REQUEST***
 
 _We are asking the great community of GitHub to help us testing `3.x-dev` 
 branch in order to cover most of the issues before officially releasing the 
