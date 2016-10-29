@@ -9,6 +9,21 @@ One file. Any browser. Same UI.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
 
+----------------------------------------------------------------------------
+**IMPORTANT REQUEST**
+
+_We are asking the great community of GitHub to help us testing `3.x-dev` 
+branch in order to cover most of the issues before officially releasing the 
+3.0 version._
+
+_We've done some testing of this new version, but we could definitely use 
+your help! If you find any bugs, please create an issue and we'll response
+as soon as possible._
+
+_Thanks in advance._
+
+----------------------------------------------------------------------------
+
 # Table of Contents
 
 * [Introduction](#intro)
