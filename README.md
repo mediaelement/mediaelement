@@ -12,7 +12,7 @@ One file. Any browser. Same UI.
 ----------------------------------------------------------------------------
 # **IMPORTANT REQUEST***
 
-_We are asking the great community of GitHub to help us testing `3.x-dev` 
+_We are asking the great community of GitHub to help us testing `3.x-dev`
 branch in order to cover most of the issues before officially releasing the 
 3.0 version._
 
@@ -20,7 +20,10 @@ _We've done some testing of this new version, but we could definitely use
 your help! If you find any bugs, please create an issue and we'll response
 as soon as possible._
 
-_Thanks in advance._
+_Visit [this page](https://github.com/johndyer/mediaelement/tree/3.x-dev) to get the updated documentation and
+download the repository and switch to `3.x-dev` branch to test._
+
+_Thanks in advance, and we appreciate your help._
 
 ----------------------------------------------------------------------------
 
