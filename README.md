@@ -1,14 +1,5 @@
 # `MediaElement.js`: `<video>` and `<audio>` made easy. 
 
-One file. Any browser. Same UI.
-
-* Author: John Dyer [http://j.hn/](http://j.hn/)
-* Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
-* License: [MIT](http://johndyer.mit-license.org/)
-* Meaning: Use everywhere, keep copyright, it'd be swell if you'd link back here.
-* Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
-
 ----------------------------------------------------------------------------
 # **IMPORTANT REQUEST***
 
@@ -26,6 +17,15 @@ download the repository and switch to `3.x-dev` branch to test._
 _Thanks in advance, and we appreciate your help._
 
 ----------------------------------------------------------------------------
+
+One file. Any browser. Same UI.
+
+* Author: John Dyer [http://j.hn/](http://j.hn/)
+* Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
+* License: [MIT](http://johndyer.mit-license.org/)
+* Meaning: Use everywhere, keep copyright, it'd be swell if you'd link back here.
+* Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
+* Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
 
 # Table of Contents
 
