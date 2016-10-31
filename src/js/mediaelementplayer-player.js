@@ -1302,8 +1302,10 @@
 			var
 				loading =
 					$('<div class="mejs-overlay mejs-layer">' +
-						'<div class="mejs-overlay-loading"><span></span></div>' +
-						'</div>')
+						'<div class="mejs-overlay-loading">' +
+							'<span class="mejs-overlay-loading-bg-img"></span>' +
+						'</div>' +
+					'</div>')
 					.hide() // start out hidden
 					.appendTo(layers),
 				error =

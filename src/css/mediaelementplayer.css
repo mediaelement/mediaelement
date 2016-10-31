@@ -148,7 +148,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: linear-gradient(rgba(50,50,50,0.9), rgba(0,0,0,0.9));
 }
 
-.mejs-overlay-loading span {
+.mejs-overlay-loading-bg-img {
 	display: block;
 	width: 80px;
 	height: 80px;
