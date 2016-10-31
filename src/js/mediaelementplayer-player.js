@@ -1480,13 +1480,15 @@
 			});
 		},
 		changeSkin: function (className) {
-			this.container[0].className = 'mejs-container ' + className;
-			this.setPlayerSize(this.width, this.height);
-			this.setControlsSize();
+			var t = this;
+
+			t.container[0].className = 'mejs-container ' + className;
+			t.setPlayerSize(t.width, t.height);
+			t.setControlsSize();
 		},
 		play: function () {
-			this.load();
-			this.media.play();
+			t.load();
+			t.media.play();
 		},
 		pause: function () {
 			try {
@@ -1495,11 +1497,13 @@
 			}
 		},
 		load: function () {
-			if (!this.isLoaded) {
-				this.media.load();
+			var t = this;
+
+			if (!t.isLoaded) {
+				t.media.load();
 			}
 
-			this.isLoaded = true;
+			t.isLoaded = true;
 		},
 		setMuted: function (muted) {
 			this.media.setMuted(muted);
