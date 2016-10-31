@@ -396,7 +396,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background-position: -32px 0;
 }
 
-.mejs-unfullscreen button {
+.mejs-unfullscreen > button {
 	background-position: -32px -16px;
 }
 /* End: Fullscreen */
