@@ -267,6 +267,15 @@
 
 							fbApi = msg.instance;
 
+							// Set proper size since player dimensions are unknown before this event
+							var
+								fbIframe = fbDiv.getElementsByTagName('iframe')[0],
+								width = parseInt(win.getComputedStyle(fbIframe, null).width),
+								height = parseInt(fbIframe.style.height)
+							;
+
+							fbWrapper.setSize(width, height);
+
 							sendEvents(['mouseover', 'mouseout']);
 
 							// remove previous listeners
@@ -377,7 +386,10 @@
 				}
 			};
 			fbWrapper.setSize = function(width, height) {
-				// Buggy and difficult to resize on-the-fly
+				if (fbApi !== null && !isNaN(width) && !isNaN(height)) {
+					fbDiv.setAttribute('width', width);
+					fbDiv.setAttribute('height', height);
+				}
 			};
 			fbWrapper.destroy = function () {
 			};

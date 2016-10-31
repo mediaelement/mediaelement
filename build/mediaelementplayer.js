@@ -534,7 +534,7 @@ if (jQuery !== undefined) {
 					t.height = t.options['default' + capsTagName + 'Height'];
 				}
 
-				t.initialAspectRatio = t.height / t.width;
+				t.initialAspectRatio = (t.height > t.width) ? t.width / t.height : t.height / t.width;
 
 				// set the size, while we wait for the plugins to load below
 				t.setPlayerSize(t.width, t.height);
@@ -1037,28 +1037,44 @@ if (jQuery !== undefined) {
 				t.height = height;
 			}
 
+			if (typeof FB !== 'undefined' && t.isVideo) {
+				FB.Event.subscribe('xfbml.ready', function () {
+					var target = $(t.media).children('.fb-video');
+
+					t.width = target.width();
+					t.height = target.height();
+
+					t.setDimensions(t.width, t.height);
+				});
+
+				var target = $(t.media).children('.fb-video');
+
+				t.width = target.width();
+				t.height = target.height();
+			}
+
 			// check stretching modes
 			switch (t.options.stretching) {
 				case 'fill':
 					// The 'fill' effect only makes sense on video; for audio we will set the dimensions
 					if (t.isVideo) {
-						this.setFillMode();
+						t.setFillMode();
 					} else {
-						this.setDimensions(t.width, t.height);
+						t.setDimensions(t.width, t.height);
 					}
 					break;
 				case 'responsive':
-					this.setResponsiveMode();
+					t.setResponsiveMode();
 					break;
 				case 'none':
-					this.setDimensions(t.width, t.height);
+					t.setDimensions(t.width, t.height);
 					break;
 				// This is the 'auto' mode
 				default:
-					if (this.hasFluidMode() === true) {
-						this.setResponsiveMode();
+					if (t.hasFluidMode() === true) {
+						t.setResponsiveMode();
 					} else {
-						this.setDimensions(t.width, t.height);
+						t.setDimensions(t.width, t.height);
 					}
 					break;
 			}
@@ -1133,8 +1149,8 @@ if (jQuery !== undefined) {
 			}
 
 			if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') { // && t.container.siblings().count == 0) {
-				parentWidth = $(window).width();
-				newHeight = $(window).height();
+				parentWidth = $(win).width();
+				newHeight = $(win).height();
 			}
 
 			if (newHeight && parentWidth) {
