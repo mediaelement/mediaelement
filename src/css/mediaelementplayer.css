@@ -186,7 +186,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	height: 26px;
 	font-size: 11px;
 	line-height: 11px;
-	font-family: "Helvetica", Arial, serif;
 	border: 0;
 }
 
@@ -601,7 +600,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: "Helvetica", Arial, serif;
 	font-size: 10px;
 }
 
@@ -782,7 +780,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-contextmenu-item {
-	font-family: "Helvetica", Arial, serif;
 	font-size: 12px;
 	padding: 4px 6px;
 	cursor: pointer;
@@ -847,7 +844,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: "Helvetica", Arial, serif;
 	font-size: 10px;
 }
 /* End: Source Chooser */
@@ -950,7 +946,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
-	font-family: "Helvetica", Arial, serif;
 	font-size: 11px;
 	color: white;
 	margin-left: 5px;
