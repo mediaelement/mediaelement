@@ -126,7 +126,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: url("bigplay.svg") no-repeat;
 }
 
-.mejs-overlay:hover .mejs-overlay-button {
+.mejs-overlay:hover > .mejs-overlay-button {
 	background-position: 0 -100px ;
 }
 
@@ -884,7 +884,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	position: relative;
 }
 
-.mejs-button.mejs-speed-button button {
+.mejs-speed-button > button {
 	background: transparent;
 	width: 36px;
 	font-size: 11px;
