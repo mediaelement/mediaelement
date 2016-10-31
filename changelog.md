@@ -24,6 +24,7 @@
 * Fix for fullscreen behavior when `setDimensions` attribute is `false` (https://github.com/johndyer/mediaelement/pull/1899) @ale-grosselle
 * Added `blur` handler to hide the volumeSlider (https://github.com/johndyer/mediaelement/pull/1901) @peterh-capella
 * CSS SVG cleanup (https://github.com/johndyer/mediaelement/pull/1906) @albell
+* Fixed issues with progress bar causing glitches during resizing/fullscreen events @ron666
 
 *2.23.4 (2016/10/21)*
 
