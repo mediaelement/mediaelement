@@ -95,20 +95,23 @@
 
 			var html = '<div class="mejs-button mejs-speed-button">' +
 						'<button type="button">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
-						'<div class="mejs-speed-selector">' +
-						'<ul>';
+							'<div class="mejs-speed-selector">' +
+								'<ul class="mejs-speed-selector-list">';
 
 			for (i = 0, il = speeds.length; i<il; i++) {
 				inputId = t.id + '-speed-' + speeds[i].value;
-				html += '<li>' +
-							'<input type="radio" name="speed" ' +
-										'value="' + speeds[i].value + '" ' +
-										'id="' + inputId + '" ' +
-										(speeds[i].value === t.options.defaultSpeed ? ' checked' : '') +
-										' />' +
-							'<label for="' + inputId + '" ' +
-										(speeds[i].value === t.options.defaultSpeed ? ' class="mejs-speed-selected"' : '') +
-										'>' + speeds[i].name + '</label>' +
+				html += '<li class="mejs-speed-selector-list-item">' +
+							'<input class="mejs-speed-selector-input" ' +
+								'type="radio" name="speed" ' +
+								'value="' + speeds[i].value + '" ' +
+								'id="' + inputId + '" ' +
+								(speeds[i].value === t.options.defaultSpeed ? ' checked' : '') +
+							' />' +
+							'<label class="mejs-speed-selector-label" ' +
+							 	'for="' + inputId + '" ' +
+								(speeds[i].value === t.options.defaultSpeed ? ' class="mejs-speed-selected"' : '') +
+								'>' + speeds[i].name +
+							'</label>' +
 						'</li>';
 			}
 			html += '</ul></div></div>';
