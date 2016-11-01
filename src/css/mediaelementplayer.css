@@ -457,7 +457,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	height: 6px;
 	background: #ddd;
 	background: rgba(255, 255, 255, 0.9);
-	cursor: N-resize;
+	cursor: ns-resize;
 	border-radius: 1px;
 	margin: 0;
 }
