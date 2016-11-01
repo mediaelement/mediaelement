@@ -62,8 +62,6 @@
 		showTimecodeFrameCount: false,
 		// used when showTimecodeFrameCount is set to true
 		framesPerSecond: 25,
-		// automatically calculate the width of the progress bar based on the sizes of other elements
-		autosizeProgress: true,
 		// Hide controls when playing and mouse is not over the video
 		alwaysShowControls: false,
 		// Display the video control
@@ -1099,7 +1097,9 @@
 					}
 
 					if (t.media.videoWidth && t.media.videoWidth > 0 && t.media.videoHeight && t.media.videoHeight > 0) {
-						ratio = t.media.videoHeight / t.media.videoWidth;
+						ratio = t.media.videoHeight >= t.media.videoWidth ||
+							(t.media.videoHeight === undefined && t.media.videoWidth === undefined) ?
+							t.media.videoWidth / t.media.videoHeight : t.media.videoHeight / t.media.videoWidth;
 					} else {
 						ratio = t.initialAspectRatio;
 					}
@@ -1112,7 +1112,17 @@
 				})(),
 				parentWidth = t.container.parent().closest(':visible').width(),
 				parentHeight = t.container.parent().closest(':visible').height(),
-				newHeight = t.isVideo || !t.options.autosizeProgress ? parseInt(parentWidth * aspectRatio, 10) : nativeHeight;
+				newHeight;
+
+			if (t.isVideo) {
+
+				newHeight = t.media.videoHeight >= t.media.videoWidth ||
+					(t.media.videoHeight === undefined && t.media.videoWidth === undefined) ?
+					parseInt(parentWidth / aspectRatio, 10) :
+					parseInt(parentWidth * aspectRatio, 10);
+			} else {
+				newHeight = nativeHeight;
+			}
 
 			// If we were unable to compute newHeight, get the container height instead
 			if (isNaN(newHeight)) {
@@ -1132,7 +1142,7 @@
 				.height(newHeight);
 
 				// set native <video> or <audio> and shims
-				t.$media.add(t.container.find('.mejs-shim'))
+				t.$media
 				.width('100%')
 				.height('100%');
 
