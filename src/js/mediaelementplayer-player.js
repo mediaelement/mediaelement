@@ -1097,9 +1097,7 @@
 					}
 
 					if (t.media.videoWidth && t.media.videoWidth > 0 && t.media.videoHeight && t.media.videoHeight > 0) {
-						ratio = t.media.videoHeight >= t.media.videoWidth ||
-							(t.media.videoHeight === undefined && t.media.videoWidth === undefined) ?
-							t.media.videoWidth / t.media.videoHeight : t.media.videoHeight / t.media.videoWidth;
+						ratio = t.media.videoHeight / t.media.videoWidth;
 					} else {
 						ratio = t.initialAspectRatio;
 					}
@@ -1112,17 +1110,7 @@
 				})(),
 				parentWidth = t.container.parent().closest(':visible').width(),
 				parentHeight = t.container.parent().closest(':visible').height(),
-				newHeight;
-
-			if (t.isVideo) {
-
-				newHeight = t.media.videoHeight >= t.media.videoWidth ||
-					(t.media.videoHeight === undefined && t.media.videoWidth === undefined) ?
-					parseInt(parentWidth / aspectRatio, 10) :
-					parseInt(parentWidth * aspectRatio, 10);
-			} else {
-				newHeight = nativeHeight;
-			}
+				newHeight = t.isVideo ? parseInt(parentWidth * aspectRatio, 10) : nativeHeight;
 
 			// If we were unable to compute newHeight, get the container height instead
 			if (isNaN(newHeight)) {
