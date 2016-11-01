@@ -259,8 +259,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	display: block;
 	position: absolute;
 	height: 10px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 }
 
@@ -332,8 +330,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	margin: 0;
 	width: 10px;
 	background: #fff;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
 	border-radius: 5px;
 	cursor: pointer;
 	border: solid 2px #333;
@@ -370,8 +366,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	line-height: 0;
 	border: solid 5px #eee;
 	border-color: #eee transparent transparent transparent;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
 	top: 15px;
 	left: 13px;
@@ -421,8 +415,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	width: 25px;
 	background: url("background.png");
 	background: rgba(50, 50, 50, 0.7);
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
 	top: -115px;
 	left: 0;
@@ -432,8 +424,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-volume-button:hover {
-	-webkit-border-radius: 0 0 4px 4px;
-	-moz-border-radius: 0 0 4px 4px;
 	border-radius: 0 0 4px 4px;
 }
 
@@ -468,8 +458,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: #ddd;
 	background: rgba(255, 255, 255, 0.9);
 	cursor: N-resize;
-	-webkit-border-radius: 1px;
-	-moz-border-radius: 1px;
 	border-radius: 1px;
 	margin: 0;
 }
@@ -493,8 +481,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	margin: 0;
 	padding: 0;
 	font-size: 1px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	background: #333;
 	background: rgba(50,50,50,0.8);
@@ -515,8 +501,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	margin: 0;
 	padding: 0;
 	font-size: 1px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	background: #fff;
 	background: rgba(255,255,255,0.8);
@@ -555,8 +539,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border: solid 1px transparent;
 	padding: 10px 10px 0 10px;
 	overflow: hidden;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
 }
 
@@ -803,8 +785,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border: solid 1px transparent;
 	padding: 10px;
 	overflow: hidden;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
 }
 
@@ -896,8 +876,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border: solid 1px transparent;
 	padding: 0;
 	overflow: hidden;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
 }
 
