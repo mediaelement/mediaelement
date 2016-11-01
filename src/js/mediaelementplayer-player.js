@@ -998,11 +998,11 @@
 				return false;
 			}
 
-			if (typeof width != 'undefined') {
+			if (typeof width !== 'undefined') {
 				t.width = width;
 			}
 
-			if (typeof height != 'undefined') {
+			if (typeof height !== 'undefined') {
 				t.height = height;
 			}
 
@@ -1012,14 +1012,16 @@
 
 					t.width = target.width();
 					t.height = target.height();
-
 					t.setDimensions(t.width, t.height);
+					return false;
 				});
 
 				var target = $(t.media).children('.fb-video');
 
-				t.width = target.width();
-				t.height = target.height();
+				if (target.length) {
+					t.width = target.width();
+					t.height = target.height();
+				}
 			}
 
 			// check stretching modes
@@ -1097,7 +1099,8 @@
 					}
 
 					if (t.media.videoWidth && t.media.videoWidth > 0 && t.media.videoHeight && t.media.videoHeight > 0) {
-						ratio = t.media.videoHeight / t.media.videoWidth;
+						ratio = t.height >= t.width ?
+							t.media.videoWidth / t.media.videoHeight : t.media.videoHeight / t.media.videoWidth;
 					} else {
 						ratio = t.initialAspectRatio;
 					}
@@ -1110,7 +1113,13 @@
 				})(),
 				parentWidth = t.container.parent().closest(':visible').width(),
 				parentHeight = t.container.parent().closest(':visible').height(),
-				newHeight = t.isVideo ? parseInt(parentWidth * aspectRatio, 10) : nativeHeight;
+				newHeight;
+
+			if (t.isVideo) {
+				newHeight = t.height >= t.width ? parseInt(parentWidth / aspectRatio, 10) : parseInt(parentWidth * aspectRatio, 10);
+			} else {
+				newHeight = nativeHeight;
+			}
 
 			// If we were unable to compute newHeight, get the container height instead
 			if (isNaN(newHeight)) {
