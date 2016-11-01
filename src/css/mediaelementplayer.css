@@ -1,6 +1,6 @@
-.mejs-offscreen {
 /* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).
 Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
+.mejs-offscreen {
 	clip: rect(1px, 1px, 1px, 1px); /* IE8-IE11 - no support for clip-path */
 	clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
 	position: absolute !important;
@@ -50,7 +50,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-fullscreen {
-	/* set it to not show scroll bars so 100% will work */
 	overflow: hidden !important;
 }
 
@@ -63,6 +62,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 	z-index: 1000;
 }
+
 .mejs-container-fullscreen .mejs-mediaelement,
 .mejs-container-fullscreen video {
 	width: 100%;
@@ -92,9 +92,9 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	position: absolute;
 	top: 0;
 	left: 0;
-	background-size: contain ;
-	background-position: 50% 50% ;
-	background-repeat: no-repeat ;
+	background-size: contain;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
 }
 
 :root .mejs-poster-img {
