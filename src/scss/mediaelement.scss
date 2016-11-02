@@ -1,0 +1,367 @@
+﻿@import "modules/variables";
+@import "modules/focus";
+@import "modules/config";
+
+.mejs-offscreen {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  /* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).  Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
+  /* @todo support for IE10+ and Edge if it really needs */
+  clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+}
+
+.mejs-container {
+  position: relative;
+  background: $me-black;
+  vertical-align: top;
+  text-align: left;
+  text-indent: 0;
+  font-family: "Helvetica", Arial, serif;
+}
+
+.mejs-fill-container,
+.mejs-fill-container .mejs-container {
+  width: 100%;
+  height: 100%;
+}
+
+.mejs-fill-container {
+  overflow: hidden;
+}
+
+.me-plugin {
+  position: absolute;
+}
+
+.mejs-embed,
+.mejs-embed body {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: $me-black;
+}
+
+.mejs-fullscreen {
+  /* set it to not show scroll bars so 100% will work */
+  overflow: hidden !important;
+}
+
+.mejs-container-fullscreen {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.mejs-container-fullscreen .mejs-mediaelement,
+.mejs-container-fullscreen video {
+  width: 100%;
+  height: 100%;
+}
+
+.mejs-clear {
+  clear: both;
+}
+
+/* Start: LAYERS */
+.mejs-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mejs-mediaelement {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.mejs-poster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-position: 50% 50%;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+:root .mejs-poster img {
+  display: none;
+}
+
+.mejs-poster img {
+  padding: 0;
+  border: 0;
+}
+
+.mejs-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mejs-overlay-play {
+  cursor: pointer;
+}
+
+.mejs-overlay-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -50px 0 0 -50px;
+  width: 100px;
+  height: 100px;
+  background: url("bigplay.svg") no-repeat;
+}
+
+.no-svg .mejs-overlay-button {
+  background-image: url("bigplay.png");
+}
+
+.mejs-overlay:hover .mejs-overlay-button {
+  background-position: 0 -100px;
+}
+
+.mejs-overlay-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -40px 0 0 -40px;
+  width: 80px;
+  height: 80px;
+  background: $me-gray-1;
+  background: url("background.png");
+  background: rgba(0, 0, 0, .9);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(50, 50, 50, .9)), to(rgba(0, 0, 0, .9)));
+  background: -webkit-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: -moz-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: -o-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: -ms-linear-gradient(top, rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+  background: linear-gradient(rgba(50, 50, 50, .9), rgba(0, 0, 0, .9));
+}
+
+.mejs-overlay-loading span {
+  display: block;
+  width: 80px;
+  height: 80px;
+  background: transparent url("loading.gif") 50% 50% no-repeat;
+}
+
+/* End: LAYERS */
+
+/* Start: CONTROL BAR */
+
+/* End: CONTROL BAR */
+
+/* Start: Time (Current / Duration) */
+.mejs-container .mejs-controls .mejs-time {
+  display: block;
+  overflow: hidden;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  padding: 10px 3px 0 3px;
+  width: auto;
+  height: 17px;
+  color: $me-white;
+  text-align: center;
+}
+
+.mejs-container .mejs-controls .mejs-time a {
+  display: block;
+  float: left;
+  margin: 1px 2px 0 0;
+  width: auto;
+  color: $me-white;
+  font-size: 11px;
+  line-height: 12px;
+}
+
+/* End: Time (Current / Duration) */
+@import "controls/progressBar";
+@import "controls/volume";
+@import "controls/track";
+
+/* Start: Error */
+.me-cannotplay {
+}
+
+.me-cannotplay a {
+  color: $me-white;
+  font-weight: bold;
+}
+
+.me-cannotplay span {
+  display: block;
+  padding: 15px;
+}
+
+/* End: Error */
+
+/* context menu */
+.mejs-contextmenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1001; /* make sure it shows on fullscreen */
+  padding: 10px;
+  width: 150px;
+  border: solid 1px $me-gray-2;
+  border-radius: 4px;
+  background: $me-white;
+}
+
+.mejs-contextmenu .mejs-contextmenu-separator {
+  margin: 5px 6px;
+  height: 1px;
+  background: $me-gray-1;
+  font-size: 0;
+}
+
+.mejs-contextmenu .mejs-contextmenu-item {
+  padding: 4px 6px;
+  color: $me-gray-1;
+  font-size: 12px;
+  font-family: "Helvetica", Arial, serif;
+  cursor: pointer;
+}
+
+.mejs-contextmenu .mejs-contextmenu-item:hover {
+  background: $me-blue-1;
+  color: $me-white;
+}
+
+@import "controls/postroll";
+
+.mejs-controls {
+  /* Source chooser */
+
+  .mejs-sourcechooser-button {
+    position: relative;
+    button {
+      background-position: -128px 0;
+    }
+    .mejs-sourcechooser-selector {
+      position: absolute;
+      right: -10px;
+      bottom: 26px;
+      overflow: hidden;
+      padding: 10px;
+      width: 130px;
+      height: 100px;
+      border: solid 1px transparent;
+      //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+      border-radius: 0;
+      background: $background_url;
+      background: rgba(50, 50, 50, .7);
+      ul {
+        display: block;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style-type: none !important;
+        li {
+          display: block;
+          overflow: hidden;
+          margin: 0 0 6px 0;
+          padding: 0;
+          color: $me-white;
+          list-style-type: none !important;
+          input {
+            float: left;
+            clear: both;
+            margin: 3px 3px 0 5px;
+          }
+          label {
+            float: left;
+            padding: 4px 0 0;
+            width: 100px;
+            font-size: 10px;
+            font-family: "Helvetica", "Arial", "serif";
+            line-height: 15px;
+          }
+        }
+      }
+    }
+  }
+  /* Speed control */
+  .mejs-speed-button {
+    position: relative;
+    width: 46px !important;
+    &.mejs-button button {
+      width: 36px;
+      background: transparent;
+      color: $me-white;
+      font-size: 11px;
+      line-height: normal;
+    }
+    .mejs-speed-selector {
+      position: absolute;
+      top: -100px;
+      left: -10px;
+      display: none;
+      overflow: hidden;
+      padding: 0;
+      width: 60px;
+      height: 100px;
+      border: solid 1px transparent;
+      //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+      border-radius: 0;
+      background: $background_url;
+      background: rgba(50, 50, 50, .7);
+      ul {
+        display: block;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        list-style-type: none !important;
+        li {
+          display: block;
+          overflow: hidden;
+          margin: 0 0 6px 0;
+          padding: 0 10px;
+          color: $me-white;
+          list-style-type: none !important;
+          label {
+            float: left;
+            margin-left: 5px;
+            padding: 4px 0 0;
+            width: 60px;
+            color: white;
+            font-size: 11px;
+            font-family: "Helvetica", "Arial", "serif";
+            line-height: 15px;
+            cursor: pointer;
+            &.mejs-speed-selected {
+              color: rgba(33, 248, 248, 1);
+            }
+          }
+          input {
+            display: none;
+            float: left;
+            clear: both;
+            margin: 3px 3px 0 5px;
+          }
+          &:hover {
+            background-color: rgb(200, 200, 200) !important;
+            background-color: rgba(255, 255, 255, .4) !important;
+          }
+        }
+      }
+    }
+    &:hover > .mejs-speed-selector {
+      display: block;
+    }
+  }
+}
+
+@import "modules/spriteConfig";

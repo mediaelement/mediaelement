@@ -1,0 +1,23 @@
+.mejs-controls {
+  /* Jump Forward */
+  .mejs-button.mejs-jump-forward-button {
+    background: transparent $jumpforward_image no-repeat 3px 3px;
+    button {
+      background: transparent;
+      color: $me-white;
+      font-size: 9px;
+      line-height: normal;
+    }
+  }
+
+  /* Skip button */
+  .mejs-button.mejs-skip-back-button {
+    background: transparent $skipback_image no-repeat 3px 3px;
+    button {
+      background: transparent;
+      color: $me-white;
+      font-size: 9px;
+      line-height: normal;
+    }
+  }
+}

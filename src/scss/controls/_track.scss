@@ -1,0 +1,142 @@
+/* Start: Track (Captions and Chapters) */
+.mejs-chapters {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 10000px;
+  border-right: solid 1px $me-white;
+  .mejs-chapter {
+    position: absolute;
+    float: left;
+    overflow: hidden;
+    border: 0;
+    background: $me-dark-gray-1;
+    background: rgba(0, 0, 0, .7);
+    background: linear-gradient(rgba(50, 50, 50, .7), rgba(0, 0, 0, .7));
+    .mejs-chapter-block {
+      display: block;
+      padding: 5px;
+      border-right: solid 1px $me-gray-1;
+      border-bottom: solid 1px $me-gray-1;
+      color: $me-white;
+      font-size: 11px;
+      cursor: pointer;
+      &:hover {
+        background: $me-gray-3;
+        background: rgba(102, 102, 102, .7);
+        background: linear-gradient(rgba(102, 102, 102, .7), rgba(50, 50, 50, .6));
+      }
+      .ch-title {
+        display: block;
+        margin: 0 0 3px 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 12px;
+      }
+      .ch-timespan {
+        display: block;
+        margin: 3px 0 4px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12px;
+        line-height: 12px;
+      }
+    }
+    .mejs-chapter-block-last {
+      border-right: none;
+    }
+  }
+}
+.mejs-captions-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: $me-white;
+  text-align: center;
+  font-size: 16px;
+  line-height: 20px;
+  a {
+    color: $me-white;
+    text-decoration: underline;
+  }
+}
+.mejs-captions-layer[lang=ar] {
+  font-weight: normal;
+  font-size: 20px;
+}
+.mejs-captions-position {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+}
+.mejs-captions-position-hover {
+  bottom: 35px;
+}
+.mejs-captions-text {
+  padding: 0;
+  background: $background_url;
+  background: rgba(20, 20, 20, .5);
+  //Instead of the line below you could use @include box-shadow($shadow-1, $shadow-2, $shadow-3, $shadow-4, $shadow-5, $shadow-6, $shadow-7, $shadow-8, $shadow-9, $shadow-10)
+  box-shadow: 5px 0 0 rgba(20, 20, 20, .5), -5px 0 0 rgba(20, 20, 20, .5);
+  white-space: pre-wrap;
+}
+.mejs-controls .mejs-captions-button {
+  position: relative;
+  button {
+    background-position: -48px 0;
+  }
+  .mejs-captions-selector {
+    position: absolute;
+    right: -51px;
+    bottom: 26px;
+    visibility: hidden;
+    overflow: hidden;
+    padding: 10px 10px 0 10px;
+    width: 85px;
+    height: 100px;
+    border: solid 1px transparent;
+    //Instead of the line below you could use @include border-radius($radius, $vertical-radius)
+    border-radius: 0;
+    background: $background_url;
+    background: rgba(50, 50, 50, .7);
+    ul {
+      display: block;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      list-style-type: none !important;
+      li {
+        display: block;
+        overflow: hidden;
+        margin: 0 0 6px 0;
+        padding: 0;
+        color: $me-white;
+        list-style-type: none !important;
+        input {
+          float: left;
+          clear: both;
+          margin: 3px 3px 0 5px;
+        }
+        label {
+          float: left;
+          padding: 4px 0 0;
+          width: 55px;
+          font-size: 10px;
+          font-family: "Helvetica", "Arial", "serif";
+          line-height: 15px;
+        }
+      }
+    }
+  }
+  .mejs-captions-translations {
+    margin: 0 0 5px 0;
+    font-size: 10px;
+  }
+  &:hover .mejs-captions-selector {
+    visibility: visible;
+  }
+}

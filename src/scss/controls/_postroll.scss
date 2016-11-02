@@ -1,0 +1,26 @@
+.mejs-postroll-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: $background_url;
+  background: rgba(50, 50, 50, .7);
+}
+.mejs-postroll-layer-content {
+  width: 100%;
+  height: 100%;
+}
+.mejs-postroll-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  padding: 4px;
+  background: $background_url;
+  background: rgba(50, 50, 50, .7);
+  color: $me-white;
+  cursor: pointer;
+}
