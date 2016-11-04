@@ -128,10 +128,6 @@ module.exports = function(grunt) {
 			main: {
 				src: 'src/css/mediaelementplayer.css',
 				dest: 'build/mediaelementplayer.min.css'
-			},
-			simple: {
-				src: 'src/css/mediaelementplayer-simple.css',
-				dest: 'build/mediaelementplayer-simple.min.css'
 			}
 		},
 		copy: {
