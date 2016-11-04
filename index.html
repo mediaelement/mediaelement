@@ -55,6 +55,7 @@
             <div>
                 <video id="player1" width="640" height="360" preload="none" style="max-width: 100%">
                     <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+                    <track src="dist/mediaelement.vtt" srclang="en" label="English" kind="subtitles" type="text/vtt">
                 </video>
             </div>
 
@@ -184,16 +185,16 @@
     <script>
         $('video, audio').mediaelementplayer({
             pluginPath: 'dist/',
-            features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen', 'tracks'],
-            success: function(mediaElement) {
+            features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen', 'tracks']
+        });
 
-                $('.command').click(function() {
-                    var _this = $(this);
+        $('.command').click(function() {
+            var
+                    _this = $(this),
+                    media = _this.closest('table').prevUntil('div').prev('div').find('.mejs-container').attr('id');
 
-                    mediaElement.setSrc(_this.text());
-                    mediaElement.load();
-                });
-            }
+            mejs.players[media].setSrc(_this.text());
+            mejs.players[media].load();
         });
 
     </script>
