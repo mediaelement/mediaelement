@@ -1518,6 +1518,8 @@
 			t.setControlsSize();
 		},
 		play: function () {
+			var t = this;
+
 			t.load();
 			t.media.play();
 		},
@@ -1552,7 +1554,7 @@
 			return this.media.volume;
 		},
 		setSrc: function (src) {
-			t.media.setSrc(src);
+			this.media.setSrc(src);
 		},
 		remove: function () {
 			var t = this, featureIndex, feature;
