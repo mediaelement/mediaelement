@@ -7100,6 +7100,12 @@ if (jQuery !== undefined) {
 				siblings = ((rail.siblings().length) * siblingsWidth)
 			;
 
+			// Consider space if volume is vertical
+			var horizontalVolume = t.controls.find('.mejs-horizontal-volume-slider');
+			if (horizontalVolume.length) {
+				siblings += parseFloat(horizontalVolume.width());
+			}
+
 			// Get number of features siblings to obtain total width to be reduced from time rail
 			rail.width('100%').width('-=' + siblings);
 
