@@ -35,7 +35,8 @@ $('#mediaplayer').mediaelementplayer({success: function(mediaElement, originalNo
 }});
 
 // To access player after its creation through jQuery use:
-var player = $('#mediaplayer')[0].player;
+var playerId = $('#mediaplayer').closest('.mejs-container').attr('id');
+var player = mejs.players[playerId];
 
 // With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
 // i.e., if you wanna exit fullscreen on iPhone using the player, use this:
