@@ -1299,8 +1299,9 @@ if (document.createEvent === undefined) {
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
+						var node = mediaElement.originalNode;
 						mediaFiles.push({
-							type: mejs.Utility.getTypeFromFile(nodeSource) || '',
+							type: mejs.Utils.formatType(nodeSource, node.getAttribute('type')),
 							src: nodeSource
 						});
 					}
@@ -1311,7 +1312,6 @@ if (document.createEvent === undefined) {
 						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
-
 							mediaFiles.push({type: type, src: src});
 						}
 					}
