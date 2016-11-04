@@ -1040,7 +1040,7 @@ if (document.createEvent === undefined) {
 				if (typeof value === 'string') {
 					mediaFiles.push({
 						src: value,
-						type: mejs.Utils.getTypeFromFile(value)
+						type: value ? mejs.Utils.getTypeFromFile(value) : ''
 					});
 				} else {
 					for (i = 0, il = value.length; i < il; i++) {
@@ -1050,7 +1050,7 @@ if (document.createEvent === undefined) {
 
 						mediaFiles.push({
 							src: src,
-							type: (type === '' || type === null || type === undefined) ? mejs.Utils.getTypeFromFile(src) : type
+							type: (type === '' || type === null || type === undefined) && src ? mejs.Utils.getTypeFromFile(src) : type
 						});
 
 					}
@@ -1067,6 +1067,11 @@ if (document.createEvent === undefined) {
 
 				// did we find a renderer?
 				if (renderInfo === null) {
+
+					if (!mediaFiles[0].src) {
+						mediaElement.originalNode.removeAttribute('src');
+					}
+
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'No renderer found';
@@ -1078,6 +1083,11 @@ if (document.createEvent === undefined) {
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 				if (mediaElement.renderer === undefined || mediaElement.renderer === null) {
+
+					if (!mediaFiles[0].src) {
+						mediaElement.originalNode.removeAttribute('src');
+					}
+
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'Error creating renderer';
