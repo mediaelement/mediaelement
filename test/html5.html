@@ -39,19 +39,19 @@
 
         <h2>HTML5 MP4</h2>
 
-        <video width="640" height="360" preload="none" class="mejs-player" controls>
+        <video width="640" height="360" preload="none" class="mejs__player" controls>
             <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
         </video>
 
         <h2>HTML5 playing audio with &lt;video&gt;</h2>
 
-        <video width="640" height="360" preload="none" class="mejs-player" controls>
+        <video width="640" height="360" preload="none" class="mejs__player" controls>
             <source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3">
         </video>
 
         <h2>HTML5 MP3</h2>
 
-        <audio preload="none" controls class="mejs-player">
+        <audio preload="none" controls class="mejs__player">
             <source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3">
         </audio>
 
@@ -59,7 +59,7 @@
 
     <script>
 
-        var elements = mejs.getElementsByClassName('mejs-player');
+        var elements = mejs.getElementsByClassName('mejs__player');
 
         for (var i=0, il=elements.length; i<il; i++) {
             var player = new MediaElementPlayerSimple(elements[i], {
