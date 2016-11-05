@@ -294,7 +294,7 @@
         success: function(mediaElement) {
 
             mejs.i18n.locale.language = mejs.i18n.getLanguage();
-            $(mediaElement).closest('.mejs-container').attr('lang', mejs.i18n.getLanguage());
+            $(mediaElement).closest('.mejs__container').attr('lang', mejs.i18n.getLanguage());
 
             var
                     container = document.getElementById(mediaElement.id + '-container'),

@@ -30,25 +30,25 @@
 		 * @public
 		 */
 		buildplaypause: function(player, controls, layers, media) {
-			var 
+			var
 				t = this,
 				op = t.options,
 				playTitle = op.playText ? op.playText : mejs.i18n.t('mejs.play'),
 				pauseTitle = op.pauseText ? op.pauseText : mejs.i18n.t('mejs.pause'),
 				play =
-				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
+				$('<div class="mejs__button mejs__playpause-button mejs__play" >' +
 					'<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function(e) {
 					e.preventDefault();
-				
+
 					if (media.paused) {
 						media.play();
 					} else {
 						media.pause();
 					}
-					
+
 					return false;
 				}),
 				play_btn = play.find('button');
@@ -60,13 +60,13 @@
 			 */
 			function togglePlayPause(which) {
 				if ('play' === which) {
-					play.removeClass('mejs-play').addClass('mejs-pause');
+					play.removeClass('mejs__play').addClass('mejs__pause');
 					play_btn.attr({
 						'title': pauseTitle,
 						'aria-label': pauseTitle
 					});
 				} else {
-					play.removeClass('mejs-pause').addClass('mejs-play');
+					play.removeClass('mejs__pause').addClass('mejs__play');
 					play_btn.attr({
 						'title': playTitle,
 						'aria-label': playTitle
@@ -92,5 +92,5 @@
 			}, false);
 		}
 	});
-	
+
 })(mejs.$);
