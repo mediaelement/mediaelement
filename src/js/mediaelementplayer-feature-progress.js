@@ -39,31 +39,31 @@
 				startedPaused = false,
 				autoRewindInitial = player.options.autoRewind,
 				progressTitle = t.options.progressHelpText ? t.options.progressHelpText : mejs.i18n.t('mejs.time-help-text'),
-				tooltip = player.options.enableProgressTooltip ? '<span class="mejs-time-float">' +
-				'<span class="mejs-time-float-current">00:00</span>' +
-				'<span class="mejs-time-float-corner"></span>' +
+				tooltip = player.options.enableProgressTooltip ? '<span class="mejs__time-float">' +
+				'<span class="mejs__time-float-current">00:00</span>' +
+				'<span class="mejs__time-float-corner"></span>' +
 				'</span>' : "";
 
-			$('<div class="mejs-time-rail">' +
-				'<span  class="mejs-time-total mejs-time-slider">' +
-				//'<span class="mejs-offscreen">' + progressTitle + '</span>' +
-				'<span class="mejs-time-buffering"></span>' +
-				'<span class="mejs-time-loaded"></span>' +
-				'<span class="mejs-time-current"></span>' +
-				'<span class="mejs-time-handle"></span>' +
+			$('<div class="mejs__time-rail">' +
+				'<span  class="mejs__time-total mejs__time-slider">' +
+				//'<span class="mejs__offscreen">' + progressTitle + '</span>' +
+				'<span class="mejs__time-buffering"></span>' +
+				'<span class="mejs__time-loaded"></span>' +
+				'<span class="mejs__time-current"></span>' +
+				'<span class="mejs__time-handle"></span>' +
 				tooltip +
 				'</span>' +
 				'</div>')
 			.appendTo(controls);
-			controls.find('.mejs-time-buffering').hide();
+			controls.find('.mejs__time-buffering').hide();
 
-			t.total = controls.find('.mejs-time-total');
-			t.loaded = controls.find('.mejs-time-loaded');
-			t.current = controls.find('.mejs-time-current');
-			t.handle = controls.find('.mejs-time-handle');
-			t.timefloat = controls.find('.mejs-time-float');
-			t.timefloatcurrent = controls.find('.mejs-time-float-current');
-			t.slider = controls.find('.mejs-time-slider');
+			t.total = controls.find('.mejs__time-total');
+			t.loaded = controls.find('.mejs__time-loaded');
+			t.current = controls.find('.mejs__time-current');
+			t.handle = controls.find('.mejs__time-handle');
+			t.timefloat = controls.find('.mejs__time-float');
+			t.timefloatcurrent = controls.find('.mejs__time-float-current');
+			t.slider = controls.find('.mejs__time-slider');
 
 			/**
 			 *
