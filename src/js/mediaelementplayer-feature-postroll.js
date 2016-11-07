@@ -34,7 +34,12 @@
 
 			if (postrollLink !== undefined) {
 				player.postroll =
-					$('<div class="mejs-postroll-layer mejs-layer"><a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' + postrollTitle + '</a><div class="mejs-postroll-layer-content"></div></div>').prependTo(layers).hide();
+					$('<div class="mejs-postroll-layer mejs-layer">' +
+						'<a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' +
+							postrollTitle +
+						'</a>' +
+					'<div class="mejs-postroll-layer-content"></div></div>')
+						.prependTo(layers).hide();
 
 				t.media.addEventListener('ended', function (e) {
 					$.ajax({

@@ -30,7 +30,7 @@
 		 * @public
 		 */
 		buildplaypause: function(player, controls, layers, media) {
-			var 
+			var
 				t = this,
 				op = t.options,
 				playTitle = op.playText ? op.playText : mejs.i18n.t('mejs.play'),
@@ -42,13 +42,13 @@
 				.appendTo(controls)
 				.click(function(e) {
 					e.preventDefault();
-				
+
 					if (media.paused) {
 						media.play();
 					} else {
 						media.pause();
 					}
-					
+
 					return false;
 				}),
 				play_btn = play.find('button');
@@ -92,5 +92,5 @@
 			}, false);
 		}
 	});
-	
+
 })(mejs.$);
