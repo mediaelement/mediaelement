@@ -164,7 +164,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 
 	// Container
 	container.id = id + '_container';
-	container.className = 'mejs-simple-container mejs-simple-' + original.tagName.toLowerCase();
+	container.className = 'mejs__simple-container mejs__simple-' + original.tagName.toLowerCase();
 	container.style.width = originalWidth + 'px';
 	container.style.height = originalHeight + 'px';
 
@@ -224,7 +224,7 @@ MediaElementPlayerSimple.prototype = {
 			//				350;
 
 		// CONTROLS
-		controls.className = 'mejs-simple-controls';
+		controls.className = 'mejs__simple-controls';
 		controls.id = id + '_controls';
 		container.appendChild(controls);
 

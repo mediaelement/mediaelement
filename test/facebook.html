@@ -3,11 +3,11 @@
 <head>
 	<title>MediaElement.js 3.0 - audio/video unification library</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	
+
 	<!--[if lte IE 8]>
 	<script src="../src/js/console.js"></script>
-	<![endif]-->	
-	
+	<![endif]-->
+
 	<!-- MediaElement Core renderers -->
 	<script src="../src/js/mediaelement-header.js"></script>
 	<script src="../src/js/mediaelement-namespace.js"></script>
@@ -26,7 +26,7 @@
 	<script src="../src/js/mediaelement-i18n.js"></script>
 	<script src="../src/js/mediaelement-i18n-locale-en.js"></script>
 
-	
+
 	<!-- Optional: Player -->
 	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet">
 	<script src="../src/js/mediaelementplayer-simple.js"></script>
@@ -40,25 +40,25 @@
 
 		<h2>Facebook as &lt;video&gt;</h2>
 
-		<video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
+		<video width="640" height="360" class="mejs__player" id="player1" preload="none" controls>
 			<source src="https://www.facebook.com/johndyer/videos/10107816243681884/" type="video/facebook">
 		</video>
 
 
 		<h2>Facebook as &lt;iframe&gt;</h2>
 
-		<iframe class="mejs-player-not" width="640" height="360" scrolling="no" frameborder="no" src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fjohndyer%2Fvideos%2F10107816243681884%2F&show_text=0&width=640"></iframe>
+		<iframe class="mejs__player-not" width="640" height="360" scrolling="no" frameborder="no" src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fjohndyer%2Fvideos%2F10107816243681884%2F&show_text=0&width=640"></iframe>
 
 	</div>
 
 	<script>
 
-		var elements = mejs.getElementsByClassName('mejs-player');
+		var elements = mejs.getElementsByClassName('mejs__player');
 
 		for (var i=0, il=elements.length; i<il; i++) {
 			var player = new MediaElementPlayerSimple(elements[i]);
 		}
 	</script>
-	
+
 </body>
 </html>

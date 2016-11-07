@@ -40,19 +40,19 @@
 
     <h2>DailyMotion as &lt;video&gt;</h2>
 
-    <video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
+    <video width="640" height="360" class="mejs__player" id="player1" preload="none" controls>
         <source src="http://www.dailymotion.com/embed/video/x2lzodk" type="video/dailymotion">
     </video>
 
 
     <h2>DailyMotion as &lt;iframe&gt;</h2>
 
-    <iframe class="mejs-player-not" src="http://www.dailymotion.com/embed/video/x2lzodk" width="640" height="360" frameborder="0" allowfullscreen class="mejs-player"></iframe>
+    <iframe class="mejs__player-not" src="http://www.dailymotion.com/embed/video/x2lzodk" width="640" height="360" frameborder="0" allowfullscreen class="mejs__player"></iframe>
 </div>
 
 <script>
 
-    var elements = mejs.getElementsByClassName('mejs-player');
+    var elements = mejs.getElementsByClassName('mejs__player');
 
     for (var i=0, il=elements.length; i<il; i++) {
         var player = new MediaElementPlayerSimple(elements[i]);
