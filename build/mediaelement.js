@@ -1056,6 +1056,13 @@ if (document.createEvent === undefined) {
 					}
 				}
 
+				// Ensure that the original gets the first source found
+				if (mediaFiles[0].src) {
+					mediaElement.originalNode.setAttribute('src', mediaFiles[0].src);
+				} else {
+					mediaElement.originalNode.setAttribute('src', '');
+				}
+
 				//
 
 				// find a renderer and URL match
@@ -1067,11 +1074,6 @@ if (document.createEvent === undefined) {
 
 				// did we find a renderer?
 				if (renderInfo === null) {
-
-					if (!mediaFiles[0].src) {
-						mediaElement.originalNode.removeAttribute('src');
-					}
-
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'No renderer found';
