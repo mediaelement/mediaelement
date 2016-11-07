@@ -1056,6 +1056,13 @@ if (document.createEvent === undefined) {
 					}
 				}
 
+				// Ensure that the original gets the first source found
+				if (mediaFiles[0].src) {
+					mediaElement.originalNode.setAttribute('src', mediaFiles[0].src);
+				} else {
+					mediaElement.originalNode.setAttribute('src', '');
+				}
+
 				//
 
 				// find a renderer and URL match
@@ -1074,11 +1081,6 @@ if (document.createEvent === undefined) {
 
 				// did we find a renderer?
 				if (renderInfo === null) {
-
-					if (!mediaFiles[0].src) {
-						mediaElement.originalNode.removeAttribute('src');
-					}
-
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'No renderer found';
@@ -1090,11 +1092,6 @@ if (document.createEvent === undefined) {
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 				if (mediaElement.renderer === undefined || mediaElement.renderer === null) {
-
-					if (!mediaFiles[0].src) {
-						mediaElement.originalNode.removeAttribute('src');
-					}
-
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'Error creating renderer';
@@ -1306,8 +1303,9 @@ if (document.createEvent === undefined) {
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
+						var node = mediaElement.originalNode;
 						mediaFiles.push({
-							type: mejs.Utility.getTypeFromFile(nodeSource) || '',
+							type: mejs.Utils.formatType(nodeSource, node.getAttribute('type')),
 							src: nodeSource
 						});
 					}
@@ -1318,7 +1316,6 @@ if (document.createEvent === undefined) {
 						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
-
 							mediaFiles.push({type: type, src: src});
 						}
 					}
