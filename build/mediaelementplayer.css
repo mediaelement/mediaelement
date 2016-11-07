@@ -580,7 +580,7 @@
 	border-radius: 0;
 }
 
-.mejs-controls .mejs-captions-button:hover  .mejs-captions-selector {
+.mejs-controls .mejs-captions-button  .mejs-captions-selector {
 	visibility: visible;
 }
 

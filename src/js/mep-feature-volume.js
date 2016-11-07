@@ -158,10 +158,11 @@
 			// SLIDER
 
 			mute
-			.hover(function () {
+			.on( 'mouseenter focusin', function() {
 				volumeSlider.show();
 				mouseIsOver = true;
-			}, function () {
+			})
+			.on( 'mouseleave focusout', function() {
 				mouseIsOver = false;
 
 				if (!mouseIsDown && mode == 'vertical') {
