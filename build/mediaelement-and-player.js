@@ -1299,8 +1299,9 @@ if (document.createEvent === undefined) {
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
+						var node = mediaElement.originalNode;
 						mediaFiles.push({
-							type: mejs.Utility.getTypeFromFile(nodeSource) || '',
+							type: mejs.Utils.formatType(nodeSource, node.getAttribute('type')),
 							src: nodeSource
 						});
 					}
@@ -1311,7 +1312,6 @@ if (document.createEvent === undefined) {
 						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
-
 							mediaFiles.push({type: type, src: src});
 						}
 					}
@@ -7103,21 +7103,19 @@ if (jQuery !== undefined) {
 			}
 
 			var
-				controlElements = t.controls.children('div'),
+				controlElements = t.controls.children(),
 				margin = parseFloat(controlElements.children('.mejs-time-total').css('margin-left')),
-				// 1px on error margin
-				siblingsWidth =  parseFloat(rail.siblings().width()) + margin - 1,
-				siblings = ((rail.siblings().length) * siblingsWidth)
+				siblingsWidth = 0
 			;
 
-			// Consider space if volume is vertical
-			var horizontalVolume = t.controls.find('.mejs-horizontal-volume-slider');
-			if (horizontalVolume.length) {
-				siblings += parseFloat(horizontalVolume.width());
-			}
+			rail.siblings().each(function () {
+				siblingsWidth += $(this).outerWidth(true);
+			});
 
-			// Get number of features siblings to obtain total width to be reduced from time rail
-			rail.width('100%').width('-=' + siblings);
+			siblingsWidth += (margin * 2);
+
+			// Substract the width of the feature siblings from time rail
+			rail.width('100%').width('-=' + siblingsWidth);
 
 			t.container.trigger('controlsresize');
 		},
@@ -7131,7 +7129,7 @@ if (jQuery !== undefined) {
 					.appendTo(layers),
 				posterUrl = player.$media.attr('poster');
 
-			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
+			// priority goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
 			if (player.options.poster !== '') {
 				posterUrl = player.options.poster;
 			}
