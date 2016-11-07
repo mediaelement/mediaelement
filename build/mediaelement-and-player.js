@@ -1065,6 +1065,13 @@ if (document.createEvent === undefined) {
 				//
 				var event;
 
+				// Ensure that the original gets the first source found
+				if (mediaFiles[0].src) {
+					mediaElement.originalNode.setAttribute('src', mediaFiles[0].src);
+				} else {
+					mediaElement.originalNode.setAttribute('src', '');
+				}
+
 				// did we find a renderer?
 				if (renderInfo === null) {
 
