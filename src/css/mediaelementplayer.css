@@ -628,22 +628,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 /* End: Loop */
 
-/* Start: backlight */
-.mejs__backlight-off > button {
-	background-position: -80px -16px;
-}
-
-.mejs__backlight-on >button {
-	background-position: -80px 0;
-}
-/* End: backlight */
-
-/* Start: Picture Controls */
-.mejs__picturecontrols-button {
-	background-position: -96px 0;
-}
-/* End: Picture Controls */
-
 
 /* context menu */
 .mejs__contextmenu {

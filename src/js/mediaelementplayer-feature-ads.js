@@ -55,7 +55,7 @@
 		adsPrerollAdSkipSeconds: -1,
 
 		// keep track of the index for the preroll ads to be able to show more than one preroll. Used for
-        // VAST3.0 Adpods
+		// VAST3.0 Adpods
 		indexPreroll: 0,
 
 	});
@@ -97,30 +97,26 @@
 							.insertBefore( layers.find('.mejs__overlay-play') )
 							.hide();
 
-			player.adsLayer.find('a')
-						.on('click', $.proxy(t.adsAdClick, t) );
+			player.adsLayer.find('a').on('click', $.proxy(t.adsAdClick, t) );
 
 			player.adsSkipBlock = player.adsLayer.find('.mejs__ads-skip-block').hide();
 			player.adsSkipMessage = player.adsLayer.find('.mejs__ads-skip-message').hide();
-
-			player.adsSkipButton = player.adsLayer.find('.mejs__ads-skip-button')
-														.on('click', $.proxy(t.adsSkipClick, t) );
-
+			player.adsSkipButton = player.adsLayer.find('.mejs__ads-skip-button').on('click', $.proxy(t.adsSkipClick, t));
 
 			// create proxies (only needed for events we want to remove later)
 			t.adsMediaTryingToStartProxy = 	$.proxy(t.adsMediaTryingToStart, t);
-			t.adsPrerollStartedProxy = 		$.proxy(t.adsPrerollStarted, t);
-			t.adsPrerollMetaProxy = 		$.proxy(t.adsPrerollMeta, t);
-			t.adsPrerollUpdateProxy = 		$.proxy(t.adsPrerollUpdate, t);
-			t.adsPrerollEndedProxy = 		$.proxy(t.adsPrerollEnded, t);
+			t.adsPrerollStartedProxy = $.proxy(t.adsPrerollStarted, t);
+			t.adsPrerollMetaProxy = $.proxy(t.adsPrerollMeta, t);
+			t.adsPrerollUpdateProxy = $.proxy(t.adsPrerollUpdate, t);
+			t.adsPrerollEndedProxy = $.proxy(t.adsPrerollEnded, t);
 
 			// check for start
-			t.media.addEventListener('play', 			t.adsMediaTryingToStartProxy );
-			t.media.addEventListener('playing', 		t.adsMediaTryingToStartProxy );
-			t.media.addEventListener('canplay', 		t.adsMediaTryingToStartProxy );
-			t.media.addEventListener('loadedmetadata', 	t.adsMediaTryingToStartProxy );
+			t.media.addEventListener('play', t.adsMediaTryingToStartProxy );
+			t.media.addEventListener('playing', t.adsMediaTryingToStartProxy );
+			t.media.addEventListener('canplay', t.adsMediaTryingToStartProxy );
+			t.media.addEventListener('loadedmetadata', t.adsMediaTryingToStartProxy );
 
-			console.log('setup ads', t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
+			//console.log('setup ads', t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
 
 			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 				t.adsStartPreroll();
@@ -144,13 +140,12 @@
 
 			var t = this;
 
-			console.log('adsStartPreroll', 'url', t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
+			//console.log('adsStartPreroll', 'url', t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
 
-
-			t.media.addEventListener('loadedmetadata', 		t.adsPrerollMetaProxy );
-			t.media.addEventListener('playing', 			t.adsPrerollStartedProxy );
-			t.media.addEventListener('ended', 				t.adsPrerollEndedProxy );
-			t.media.addEventListener('timeupdate', 			t.adsPrerollUpdateProxy );
+			t.media.addEventListener('loadedmetadata', t.adsPrerollMetaProxy );
+			t.media.addEventListener('playing', t.adsPrerollStartedProxy );
+			t.media.addEventListener('ended', t.adsPrerollEndedProxy );
+			t.media.addEventListener('timeupdate', t.adsPrerollUpdateProxy );
 
 			// change URLs to the preroll ad. Only save the video to be shown on first
 			// ad showing.
@@ -171,10 +166,12 @@
 
 		adsPrerollMeta: function() {
 
-			var t = this,
-				newDuration = 0;
+			var
+				t = this,
+				newDuration = 0
+			;
 
-			console.log('loadedmetadata', t.media.duration, t.adsCurrentMediaDuration);
+			//console.log('loadedmetadata', t.media.duration, t.adsCurrentMediaDuration);
 
 			// if duration has been set, show that
 			if (t.options.duration > 0) {
@@ -186,7 +183,7 @@
 			setTimeout(function() {
 				t.controls.find('.mejs__duration').html( 
 					mejs.Utility.secondsToTimeCode(newDuration, t.options.alwaysShowHours)
-					);
+				);
 			}, 250);
 		},
 
@@ -230,6 +227,7 @@
 		},
 
 		adsPrerollUpdate: function() {
+
 			//console.log('adsPrerollUpdate');
 
 			var t = this;
@@ -249,7 +247,8 @@
 		},
 
 		adsPrerollEnded: function() {
-			console.log('adsPrerollEnded');
+
+			//console.log('adsPrerollEnded');
 
 			var t = this;
 
@@ -264,7 +263,7 @@
 
 		adRestoreMainMedia: function() {
 
-			console.log('adRestoreMainMedia', this.adsCurrentMediaUrl);
+			//console.log('adRestoreMainMedia', this.adsCurrentMediaUrl);
 
 			var t = this;
 
@@ -278,9 +277,9 @@
 
 			t.adsLayer.hide();
 
-			t.media.removeEventListener('ended', 			t.adsPrerollEndedProxy);
-			t.media.removeEventListener('loadedmetadata', 	t.adsPrerollMetaProxy);
-			t.media.removeEventListener('timeupdate', 		t.adsPrerollUpdateProxy);
+			t.media.removeEventListener('ended', t.adsPrerollEndedProxy);
+			t.media.removeEventListener('loadedmetadata', t.adsPrerollMetaProxy);
+			t.media.removeEventListener('timeupdate', t.adsPrerollUpdateProxy);
 
 			t.container.trigger('mejsprerollmainstarted');
 
@@ -288,7 +287,8 @@
 		},
 
 		adsAdClick: function(e) {
-			console.log('adsAdClicked');
+
+			//console.log('adsAdClicked');
 
 			var t = this;
 
@@ -302,7 +302,8 @@
 		},
 
 		adsSkipClick: function() {
-			console.log('adsSkipClick');
+
+			//console.log('adsSkipClick');
 			var t = this;
 
 			t.container.trigger('mejsprerollskipclicked');
@@ -318,15 +319,13 @@
 		// tells calling function if ads have finished running
 		prerollAdsFinished: function() {
 			var t = this;
-			if ( t.options.indexPreroll === t.options.adsPrerollMediaUrl.length )
-				return true;
-			else
-				return false;
+			return t.options.indexPreroll === t.options.adsPrerollMediaUrl.length;
 	 	},
 
 		// fires off fake XHR requests
 		adsLoadUrl: function(url) {
-			console.log('adsLoadUrl', url);
+
+			//console.log('adsLoadUrl', url);
 
 			var img = new Image(),
 				rnd = Math.round(Math.random()*100000);
