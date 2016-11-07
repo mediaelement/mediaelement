@@ -44,7 +44,7 @@
         <p><strong>Note:</strong> Media between HLS and DASH are different for the purpose to show the dynamic nature of the player choosing the best option for each browser/device</p>
         <p><strong>Note:</strong> iOS will play natively HLS over DASH</p>
 
-        <video  width="640" height="360" preload="none" class="mejs-player" >
+        <video  width="640" height="360" preload="none" class="mejs__player" >
             <source src="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd" type="application/dash+xml" />
             <source src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
         </video>
@@ -52,7 +52,7 @@
     </div>
     <script>
 
-        var elements = mejs.getElementsByClassName('mejs-player');
+        var elements = mejs.getElementsByClassName('mejs__player');
 
         // Show the order of renderers to ensure support in different scenarios
         mejs.Renderers.order = ['native_mdash', 'flash_mdash', 'native_hls', 'flash_hls', 'flash_video'];
