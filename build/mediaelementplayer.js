@@ -1288,21 +1288,19 @@ if (jQuery !== undefined) {
 			}
 
 			var
-				controlElements = t.controls.children('div'),
+				controlElements = t.controls.children(),
 				margin = parseFloat(controlElements.children('.mejs-time-total').css('margin-left')),
-				// 1px on error margin
-				siblingsWidth =  parseFloat(rail.siblings().width()) + margin - 1,
-				siblings = ((rail.siblings().length) * siblingsWidth)
+				siblingsWidth = 0
 			;
 
-			// Consider space if volume is vertical
-			var horizontalVolume = t.controls.find('.mejs-horizontal-volume-slider');
-			if (horizontalVolume.length) {
-				siblings += parseFloat(horizontalVolume.width());
-			}
+			rail.siblings().each(function () {
+				siblingsWidth += $(this).outerWidth(true);
+			});
 
-			// Get number of features siblings to obtain total width to be reduced from time rail
-			rail.width('100%').width('-=' + siblings);
+			siblingsWidth += (margin * 2);
+
+			// Substract the width of the feature siblings from time rail
+			rail.width('100%').width('-=' + siblingsWidth);
 
 			t.container.trigger('controlsresize');
 		},
@@ -1316,7 +1314,7 @@ if (jQuery !== undefined) {
 					.appendTo(layers),
 				posterUrl = player.$media.attr('poster');
 
-			// prioriy goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
+			// priority goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
 			if (player.options.poster !== '') {
 				posterUrl = player.options.poster;
 			}
@@ -1752,7 +1750,7 @@ if (jQuery !== undefined) {
 		 * @public
 		 */
 		buildplaypause: function(player, controls, layers, media) {
-			var 
+			var
 				t = this,
 				op = t.options,
 				playTitle = op.playText ? op.playText : mejs.i18n.t('mejs.play'),
@@ -1764,13 +1762,13 @@ if (jQuery !== undefined) {
 				.appendTo(controls)
 				.click(function(e) {
 					e.preventDefault();
-				
+
 					if (media.paused) {
 						media.play();
 					} else {
 						media.pause();
 					}
-					
+
 					return false;
 				}),
 				play_btn = play.find('button');
@@ -1814,7 +1812,7 @@ if (jQuery !== undefined) {
 			}, false);
 		}
 	});
-	
+
 })(mejs.$);
 
 /**
@@ -2258,14 +2256,14 @@ if (jQuery !== undefined) {
 		 */
 		buildcurrent: function(player, controls, layers, media) {
 			var t = this;
-			
+
 			$('<div class="mejs-time" role="timer" aria-live="off">' +
-					'<span class="mejs-currenttime">' + 
+					'<span class="mejs-currenttime">' +
 						mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours) +
                     '</span>'+
 				'</div>')
 			.appendTo(controls);
-			
+
 			t.currenttime = t.controls.find('.mejs-currenttime');
 
 			media.addEventListener('timeupdate',function() {
@@ -2287,10 +2285,10 @@ if (jQuery !== undefined) {
 		 */
 		buildduration: function(player, controls, layers, media) {
 			var t = this;
-			
+
 			if (controls.children().last().find('.mejs-currenttime').length > 0) {
 				$(t.options.timeAndDurationSeparator +
-					'<span class="mejs-duration">' + 
+					'<span class="mejs-duration">' +
 						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>')
 					.appendTo(controls.find('.mejs-time'));
@@ -2298,15 +2296,15 @@ if (jQuery !== undefined) {
 
 				// add class to current time
 				controls.find('.mejs-currenttime').parent().addClass('mejs-currenttime-container');
-				
+
 				$('<div class="mejs-time mejs-duration-container">'+
-					'<span class="mejs-duration">' + 
+					'<span class="mejs-duration">' +
 						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>' +
 				'</div>')
 				.appendTo(controls);
 			}
-			
+
 			t.durationD = t.controls.find('.mejs-duration');
 
 			media.addEventListener('timeupdate',function() {
@@ -2322,9 +2320,9 @@ if (jQuery !== undefined) {
 		 */
 		updateCurrent:  function() {
 			var t = this;
-			
+
 			var currentTime = t.media.currentTime;
-			
+
 			if (isNaN(currentTime)) {
 				currentTime = 0;
 			}
@@ -2340,7 +2338,7 @@ if (jQuery !== undefined) {
 		 */
 		updateDuration: function() {
 			var t = this;
-			
+
 			var duration = t.media.duration;
 
 			if (isNaN(duration) || duration == Infinity || duration < 0) {
@@ -2353,10 +2351,10 @@ if (jQuery !== undefined) {
 
 			//Toggle the long video class if the video is longer than an hour.
 			t.container.toggleClass("mejs-long-video", duration > 3600);
-			
+
 			if (t.durationD && duration > 0) {
 				t.durationD.html(mejs.Utility.secondsToTimeCode(duration, t.options.alwaysShowHours));
-			}		
+			}
 		}
 	});
 
@@ -4243,10 +4241,10 @@ if (jQuery !== undefined) {
 		 * @param {HTMLElement} media
 		 */
 		buildloop: function(player, controls, layers, media) {
-			var 
+			var
 				t = this,
 				// create the loop button
-				loop = 
+				loop =
 				$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
 					'<button type="button" aria-controls="' + t.id + '" title="Toggle Loop" aria-label="Toggle Loop"></button>' +
 				'</div>')
@@ -4263,7 +4261,7 @@ if (jQuery !== undefined) {
 				});
 		}
 	});
-	
+
 })(mejs.$);
 
 /**
@@ -4501,7 +4499,7 @@ if (jQuery !== undefined) {
 
 /*
 * ContextMenu Plugin
-* 
+*
 *
 */
 
@@ -4510,13 +4508,13 @@ if (jQuery !== undefined) {
 $.extend(mejs.MepDefaults,
 	{ 'contextMenuItems': [
 		// demo of a fullscreen option
-		{ 
+		{
 			render: function(player) {
-				
+
 				// check for fullscreen plugin
 				if (player.enterFullScreen === undefined)
 					return null;
-			
+
 				if (player.isFullScreen) {
 					return mejs.i18n.t('mejs.fullscreen-off');
 				} else {
@@ -4532,7 +4530,7 @@ $.extend(mejs.MepDefaults,
 			}
 		},
 		// demo of a mute/unmute button
-		{ 
+		{
 			render: function(player) {
 				if (player.media.muted) {
 					return mejs.i18n.t('mejs.unmute');
@@ -4553,26 +4551,26 @@ $.extend(mejs.MepDefaults,
 			isSeparator: true
 		},
 		// demo of simple download video
-		{ 
+		{
 			render: function(player) {
 				return mejs.i18n.t('mejs.download-video');
 			},
 			click: function(player) {
 				window.location.href = player.media.currentSrc;
 			}
-		}	
+		}
 	]}
 );
 
 
 	$.extend(MediaElementPlayer.prototype, {
 		buildcontextmenu: function(player, controls, layers, media) {
-			
+
 			// create context menu
 			player.contextMenu = $('<div class="mejs-contextmenu"></div>')
 								.appendTo($('body'))
 								.hide();
-			
+
 			// create events for showing context menu
 			player.container.bind('contextmenu', function(e) {
 				if (player.isContextMenuEnabled) {
@@ -4583,19 +4581,19 @@ $.extend(mejs.MepDefaults,
 			});
 			player.container.bind('click', function() {
 				player.contextMenu.hide();
-			});	
+			});
 			player.contextMenu.bind('mouseleave', function() {
 
 				//
 				player.startContextMenuTimer();
-				
-			});		
+
+			});
 		},
 
 		cleancontextmenu: function(player) {
 			player.contextMenu.remove();
 		},
-		
+
 		isContextMenuEnabled: true,
 		enableContextMenu: function() {
 			this.isContextMenuEnabled = true;
@@ -4603,15 +4601,15 @@ $.extend(mejs.MepDefaults,
 		disableContextMenu: function() {
 			this.isContextMenuEnabled = false;
 		},
-		
+
 		contextMenuTimeout: null,
 		startContextMenuTimer: function() {
 			//
-			
+
 			var t = this;
-			
+
 			t.killContextMenuTimer();
-			
+
 			t.contextMenuTimer = setTimeout(function() {
 				t.hideContextMenu();
 				t.killContextMenuTimer();
@@ -4619,80 +4617,81 @@ $.extend(mejs.MepDefaults,
 		},
 		killContextMenuTimer: function() {
 			var timer = this.contextMenuTimer;
-			
+
 			//
-			
+
 			if (timer !== null && timer !== undefined) {
 				clearTimeout(timer);
 				timer = null;
 			}
-		},		
-		
+		},
+
 		hideContextMenu: function() {
 			this.contextMenu.hide();
 		},
-		
+
 		renderContextMenu: function(x,y) {
-			
+
 			// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
 			var t = this,
 				html = '',
 				items = t.options.contextMenuItems;
-			
+
 			for (var i=0, il=items.length; i<il; i++) {
-				
+
 				if (items[i].isSeparator) {
 					html += '<div class="mejs-contextmenu-separator"></div>';
 				} else {
-				
+
 					var rendered = items[i].render(t);
-				
+
 					// render can return null if the item doesn't need to be used at the moment
 					if (rendered !== null && rendered !== undefined) {
 						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}
 			}
-			
+
 			// position and show the context menu
 			t.contextMenu
 				.empty()
 				.append($(html))
 				.css({top:y, left:x})
 				.show();
-				
+
 			// bind events
 			t.contextMenu.find('.mejs-contextmenu-item').each(function() {
-							
+
 				// which one is this?
 				var $dom = $(this),
 					itemIndex = parseInt( $dom.data('itemindex'), 10 ),
 					item = t.options.contextMenuItems[itemIndex];
-				
+
 				// bind extra functionality?
 				if (typeof item.show != 'undefined')
 					item.show( $dom , t);
-				
+
 				// bind click action
-				$dom.click(function() {			
+				$dom.click(function() {
 					// perform click action
 					if (typeof item.click != 'undefined')
 						item.click(t);
-					
+
 					// close
-					t.contextMenu.hide();				
-				});				
-			});	
-			
+					t.contextMenu.hide();
+				});
+			});
+
 			// stop the controls from hiding
 			setTimeout(function() {
-				t.killControlsTimer('rev3');	
+				t.killControlsTimer('rev3');
 			}, 100);
-						
+
 		}
 	});
-	
+
 })(mejs.$);
+
 /**
  * Skip back button
  *
@@ -4836,7 +4835,12 @@ $.extend(mejs.MepDefaults,
 
 			if (postrollLink !== undefined) {
 				player.postroll =
-					$('<div class="mejs-postroll-layer mejs-layer"><a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' + postrollTitle + '</a><div class="mejs-postroll-layer-content"></div></div>').prependTo(layers).hide();
+					$('<div class="mejs-postroll-layer mejs-layer">' +
+						'<a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' +
+							postrollTitle +
+						'</a>' +
+					'<div class="mejs-postroll-layer-content"></div></div>')
+						.prependTo(layers).hide();
 
 				t.media.addEventListener('ended', function (e) {
 					$.ajax({
@@ -4853,6 +4857,7 @@ $.extend(mejs.MepDefaults,
 	});
 
 })(mejs.$);
+
 /**
  * Markers plugin
  *
