@@ -26,7 +26,6 @@
 * CSS SVG cleanup (https://github.com/johndyer/mediaelement/pull/1906) @albell
 * Fixed issues with progress bar causing glitches during resizing/fullscreen events @ron666
 * Fixed workflow to stop streaming on HTML5 @ron666
-* Use of BEM naming conventions for player classes (https://github.com/johndyer/mediaelement/pull/1917) @albell
 
 *2.23.4 (2016/10/21)*
 
