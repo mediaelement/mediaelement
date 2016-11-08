@@ -93,23 +93,23 @@
 				}
 			};
 
-			var html = '<div class="mejs__button mejs__speed-button">' +
+			var html = '<div class="mejs-button mejs-speed-button">' +
 						'<button type="button">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
-							'<div class="mejs__speed-selector">' +
-								'<ul class="mejs__speed-selector-list">';
+							'<div class="mejs-speed-selector">' +
+								'<ul class="mejs-speed-selector-list">';
 
 			for (i = 0, il = speeds.length; i<il; i++) {
 				inputId = t.id + '-speed-' + speeds[i].value;
-				html += '<li class="mejs__speed-selector-list-item">' +
-							'<input class="mejs__speed-selector-input" ' +
+				html += '<li class="mejs-speed-selector-list-item">' +
+							'<input class="mejs-speed-selector-input" ' +
 								'type="radio" name="speed" ' +
 								'value="' + speeds[i].value + '" ' +
 								'id="' + inputId + '" ' +
 								(speeds[i].value === t.options.defaultSpeed ? ' checked' : '') +
 							' />' +
-							'<label class="mejs__speed-selector-label" ' +
+							'<label class="mejs-speed-selector-label" ' +
 							 	'for="' + inputId + '" ' +
-								(speeds[i].value === t.options.defaultSpeed ? ' class="mejs__speed-selected"' : '') +
+								(speeds[i].value === t.options.defaultSpeed ? ' class="mejs-speed-selected"' : '') +
 								'>' + speeds[i].name +
 							'</label>' +
 						'</li>';
@@ -117,7 +117,7 @@
 			html += '</ul></div></div>';
 
 			speedButton = $(html).appendTo(controls);
-			speedSelector = speedButton.find('.mejs__speed-selector');
+			speedSelector = speedButton.find('.mejs-speed-selector');
 
 			playbackSpeed = t.options.defaultSpeed;
 
@@ -133,15 +133,15 @@
 					playbackSpeed = newSpeed;
 					media.playbackRate = parseFloat(newSpeed);
 					speedButton.find('button').html(getSpeedNameFromValue(newSpeed));
-					speedButton.find('.mejs__speed-selected').removeClass('mejs__speed-selected');
-					speedButton.find('input[type="radio"]:checked').next().addClass('mejs__speed-selected');
+					speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
+					speedButton.find('input[type="radio"]:checked').next().addClass('mejs-speed-selected');
 				});
 			speedButton
 				.one( 'mouseenter focusin', function() {
 					speedSelector
 						.height(
-							speedButton.find('.mejs__speed-selector ul').outerHeight(true) +
-							speedButton.find('.mejs__speed-translations').outerHeight(true))
+							speedButton.find('.mejs-speed-selector ul').outerHeight(true) +
+							speedButton.find('.mejs-speed-translations').outerHeight(true))
 						.css('top', (-1 * speedSelector.height()) + 'px');
 				});
 		}

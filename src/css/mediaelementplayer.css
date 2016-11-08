@@ -1,6 +1,6 @@
 /* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).
 Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
-.mejs__offscreen {
+.mejs-offscreen {
 	clip: rect(1px, 1px, 1px, 1px); /* IE8-IE11 - no support for clip-path */
 	clip-path: polygon(0px 0px, 0px 0px,0px 0px, 0px 0px);
 	position: absolute !important;
@@ -9,7 +9,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__container {
+.mejs-container {
 	position: relative;
 	background: #000;
 	font-family: "Helvetica", Arial, serif;
@@ -18,20 +18,20 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	text-indent: 0;
 }
 
-.mejs__fill-container,
-.mejs__fill-container .mejs__container {
+.mejs-fill-container,
+.mejs-fill-container .mejs-container {
 	width: 100%;
 	height: 100%;
 }
 
-.mejs__fill-container {
+.mejs-fill-container {
 	overflow: hidden;
 	position: relative;
 	margin: 0 auto;
 	background: transparent;
 }
 
-.mejs__container:focus {
+.mejs-container:focus {
 	outline: none;
 }
 
@@ -39,8 +39,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	position: absolute;
 }
 
-.mejs__embed,
-.mejs__embed body {
+.mejs-embed,
+.mejs-embed body {
 	width: 100%;
 	height: 100%;
 	margin: 0;
@@ -49,11 +49,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__fullscreen {
+.mejs-fullscreen {
 	overflow: hidden !important;
 }
 
-.mejs__container-fullscreen {
+.mejs-container-fullscreen {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -63,24 +63,24 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	z-index: 1000;
 }
 
-.mejs__container-fullscreen .mejs__mediaelement,
-.mejs__container-fullscreen video {
+.mejs-container-fullscreen .mejs-mediaelement,
+.mejs-container-fullscreen video {
 	width: 100%;
 	height: 100%;
 }
 
-.mejs__clear {
+.mejs-clear {
 	clear: both;
 }
 
 /* Start: LAYERS */
-.mejs__background {
+.mejs-background {
 	position: absolute;
 	top: 0;
 	left: 0;
 }
 
-.mejs__mediaelement {
+.mejs-mediaelement {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -88,7 +88,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	height: 100%;
 }
 
-.mejs__poster {
+.mejs-poster {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -97,26 +97,26 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background-repeat: no-repeat;
 }
 
-:root .mejs__poster-img {
+:root .mejs-poster-img {
 	display: none;
 }
 
-.mejs__poster-img {
+.mejs-poster-img {
 	border: 0;
 	padding: 0;
 }
 
-.mejs__overlay {
+.mejs-overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
 }
 
-.mejs__overlay-play {
+.mejs-overlay-play {
 	cursor: pointer;
 }
 
-.mejs__overlay-button {
+.mejs-overlay-button {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -126,11 +126,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: url("bigplay.svg") no-repeat;
 }
 
-.mejs__overlay:hover > .mejs__overlay-button {
+.mejs-overlay:hover > .mejs-overlay-button {
 	background-position: 0 -100px ;
 }
 
-.mejs__overlay-loading {
+.mejs-overlay-loading {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -140,7 +140,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: linear-gradient(rgba(50,50,50,0.9), rgba(0,0,0,0.9));
 }
 
-.mejs__overlay-loading-bg-img {
+.mejs-overlay-loading-bg-img {
 	display: block;
 	width: 80px;
 	height: 80px;
@@ -150,7 +150,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: LAYERS */
 
 /* Start: CONTROL BAR */
-.mejs__controls {
+.mejs-controls {
 	position: absolute;
 	list-style-type: none;
 	margin: 0;
@@ -162,9 +162,9 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	width: 100%;
 }
 
-.mejs__button,
-.mejs__time,
-.mejs__time-rail {
+.mejs-button,
+.mejs-time,
+.mejs-time-rail {
 	float: left;
 	margin: 0;
 	width: 26px;
@@ -173,7 +173,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	line-height: 11px;
 }
 
-.mejs__button > button {
+.mejs-button > button {
 	cursor: pointer;
 	display: block;
 	font-size: 0;
@@ -189,13 +189,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 /* :focus for accessibility */
-.mejs__button > button:focus {
+.mejs-button > button:focus {
 	outline: dotted 1px #999;
 }
 /* End: CONTROL BAR */
 
 /* Start: Time (Current / Duration) */
-.mejs__time {
+.mejs-time {
 	color: #fff;
 	display: block;
 	height: 17px;
@@ -208,36 +208,36 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Time (Current / Duration) */
 
 /* Start: Play/Pause/Stop */
-.mejs__play > button {
+.mejs-play > button {
 	background-position: 0 0;
 }
 
-.mejs__pause > button {
+.mejs-pause > button {
 	background-position: 0 -16px;
 }
 
-.mejs__stop > button {
+.mejs-stop > button {
 	background-position: -112px 0;
 }
 /* End: Play/Pause/Stop */
 
 /* Start: Progress Bar */
-.mejs__time-rail {
+.mejs-time-rail {
 	direction: ltr;
 	width: 200px;
 	padding-top: 5px;
 	position: relative;
 }
 
-.mejs__time-total,
-.mejs__time-buffering,
-.mejs__time-loaded,
-.mejs__time-current,
-.mejs__time-handle,
-.mejs__time-float,
-.mejs__time-float-current,
-.mejs__time-float-corner,
-.mejs__time-marker {
+.mejs-time-total,
+.mejs-time-buffering,
+.mejs-time-loaded,
+.mejs-time-current,
+.mejs-time-handle,
+.mejs-time-float,
+.mejs-time-float-current,
+.mejs-time-float-corner,
+.mejs-time-marker {
 	cursor: pointer;
 	display: block;
 	position: absolute;
@@ -245,13 +245,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border-radius: 2px;
 }
 
-.mejs__time-total {
+.mejs-time-total {
 	margin: 5px;
 	background: linear-gradient(rgba(30,30,30,0.8), rgba(60,60,60,0.8));
 	width: calc(100% - 10px);
 }
 
-.mejs__time-buffering {
+.mejs-time-buffering {
 	width: 100%;
 	background: linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 	background-size: 15px 15px;
@@ -260,17 +260,17 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 @keyframes buffering-stripes { from {background-position: 0 0;} to {background-position: 30px 0;} }
 
-.mejs__time-loaded {
+.mejs-time-loaded {
 	background: linear-gradient(rgba(44,124,145,0.8), rgba(78,183,212,0.8));
 	width: 0;
 }
 
-.mejs__time-current {
+.mejs-time-current {
 	background: linear-gradient(rgba(255,255,255,0.9), rgba(200,200,200,0.8));
 	width: 0;
 }
 
-.mejs__time-handle {
+.mejs-time-handle {
 	display: none;
 	position: absolute;
 	margin: 0;
@@ -283,7 +283,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	text-align: center;
 }
 
-.mejs__time-float {
+.mejs-time-float {
 	position: absolute;
 	display: none;
 	background: #eee;
@@ -296,7 +296,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	color: #111;
 }
 
-.mejs__time-float-current {
+.mejs-time-float-current {
 	margin: 2px;
 	width: 30px;
 	display: block;
@@ -304,7 +304,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	left: 0;
 }
 
-.mejs__time-float-corner {
+.mejs-time-float-corner {
 	position: absolute;
 	display: block;
 	width: 0;
@@ -317,45 +317,45 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	left: 13px;
 }
 
-.mejs__long-video .mejs__time-float {
+.mejs-long-video .mejs-time-float {
 	width: 48px;
 }
 
-.mejs__long-video .mejs__time-float-current {
+.mejs-long-video .mejs-time-float-current {
 	width: 44px;
 }
 
-.mejs__long-video .mejs__time-float-corner {
+.mejs-long-video .mejs-time-float-corner {
 	left: 18px;
 }
 
 /* End: Progress Bar */
 
 /* Start: Fullscreen */
-.mejs__fullscreen-button > button {
+.mejs-fullscreen-button > button {
 	background-position: -32px 0;
 }
 
-.mejs__unfullscreen > button {
+.mejs-unfullscreen > button {
 	background-position: -32px -16px;
 }
 /* End: Fullscreen */
 
 
 /* Start: Mute/Volume */
-.mejs__mute > button {
+.mejs-mute > button {
 	background-position: -16px -16px;
 }
 
-.mejs__unmute > button {
+.mejs-unmute > button {
 	background-position: -16px 0;
 }
 
-.mejs__volume-button {
+.mejs-volume-button {
 	position: relative;
 }
 
-.mejs__volume-button > .mejs__volume-slider {
+.mejs-volume-button > .mejs-volume-slider {
 	display: none;
 	height: 115px;
 	width: 25px;
@@ -368,11 +368,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	margin: 0;
 }
 
-.mejs__volume-button:hover {
+.mejs-volume-button:hover {
 	border-radius: 0 0 4px 4px;
 }
 
-.mejs__volume-total {
+.mejs-volume-total {
 	position: absolute;
 	left: 11px;
 	top: 8px;
@@ -383,7 +383,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	margin: 0;
 }
 
-.mejs__volume-current {
+.mejs-volume-current {
 	position: absolute;
 	left: 11px;
 	top: 8px;
@@ -394,7 +394,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	margin: 0;
 }
 
-.mejs__volume-handle {
+.mejs-volume-handle {
 	position: absolute;
 	left: 4px;
 	top: -3px;
@@ -408,7 +408,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 
-.mejs__horizontal-volume-slider {
+.mejs-horizontal-volume-slider {
 	height: 26px;
 	width: 56px;
 	position: relative;
@@ -417,7 +417,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     vertical-align: middle;
 }
 
-.mejs__horizontal-volume-total {
+.mejs-horizontal-volume-total {
 	position: absolute;
 	left: 0;
 	top: 11px;
@@ -430,7 +430,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: linear-gradient(rgba(30,30,30,0.8), rgba(60,60,60,0.8));
 }
 
-.mejs__horizontal-volume-current {
+.mejs-horizontal-volume-current {
 	position: absolute;
 	left: 0;
 	top: 11px;
@@ -443,22 +443,22 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background: linear-gradient(rgba(255,255,255,0.9), rgba(200,200,200,0.8));
 }
 
-.mejs__horizontal-volume-handle {
+.mejs-horizontal-volume-handle {
 	display: none;
 }
 
 /* End: Mute/Volume */
 
 /* Start: Track (Captions and Chapters) */
-.mejs__captions-button {
+.mejs-captions-button {
 	position: relative;
 }
 
-.mejs__captions-button button {
+.mejs-captions-button button {
 	background-position: -48px 0;
 }
 
-.mejs__captions-button .mejs__captions-selector {
+.mejs-captions-button .mejs-captions-selector {
 	visibility: hidden;
 	position: absolute;
 	bottom: 26px;
@@ -472,11 +472,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border-radius: 0;
 }
 
-.mejs__captions-button .mejs__captions-selector {
+
+.mejs-captions-button .mejs-captions-selector {
 	visibility: visible;
 }
 
-.mejs__captions-selector ul {
+.mejs-captions-selector ul {
 	margin: 0;
 	padding: 0;
 	display: block;
@@ -484,7 +485,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__captions-selector li {
+.mejs-captions-selector li {
 	margin: 0 0 6px 0;
 	padding: 0;
 	list-style-type: none !important;
@@ -493,13 +494,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__captions-selector input {
+.mejs-captions-selector input {
 	clear: both;
 	float: left;
 	margin: 3px 3px 0 5px;
 }
 
-.mejs__captions-selector label {
+.mejs-captions-selector label {
 	width: 55px;
 	float: left;
 	padding: 4px 0 0 0;
@@ -507,12 +508,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	font-size: 10px;
 }
 
-.mejs__captions-translations {
+.mejs-captions-translations {
 	font-size: 10px;
 	margin: 0 0 5px 0;
 }
 
-.mejs__chapters {
+.mejs-chapters {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -521,7 +522,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	z-index: 1;
 }
 
-.mejs__chapter {
+.mejs-chapter {
 	position: absolute;
 	float: left;
 	background: linear-gradient(rgba(50,50,50,0.7), rgba(0,0,0,0.7));
@@ -529,7 +530,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border: 0;
 }
 
-.mejs__chapter-block {
+.mejs-chapter-block {
 	font-size: 11px;
 	color: #fff;
 	padding: 5px;
@@ -539,15 +540,15 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	cursor: pointer;
 }
 
-.mejs__chapter-block-last {
+.mejs-chapter-block-last {
 	border-right: none;
 }
 
-.mejs__chapter-block:hover {
+.mejs-chapter-block:hover {
 	background: linear-gradient(rgba(102,102,102,0.7), rgba(50,50,50,0.6));
 }
 
-.mejs__chapter-block .ch-title {
+.mejs-chapter-block .ch-title {
 	font-size: 12px;
 	font-weight: bold;
 	display: block;
@@ -557,7 +558,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	line-height: 12px;
 }
 
-.mejs__chapter-block .ch-timespan {
+.mejs-chapter-block .ch-timespan {
 	font-size: 12px;
 	line-height: 12px;
 	margin: 3px 0 4px 0;
@@ -566,7 +567,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	text-overflow: ellipsis;
 }
 
-.mejs__captions-layer {
+.mejs-captions-layer {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -576,28 +577,28 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	color: #fff;
 }
 
-.mejs__captions-layer a {
+.mejs-captions-layer a {
 	color: #fff;
 	text-decoration: underline;
 }
 
-.mejs__captions-layer[lang=ar] {
+.mejs-captions-layer[lang=ar] {
 	font-size: 20px;
 	font-weight: normal;
 }
 
-.mejs__captions-position {
+.mejs-captions-position {
 	position: absolute;
 	width: 100%;
 	bottom: 15px;
 	left: 0;
 }
 
-.mejs__captions-position-hover {
+.mejs-captions-position-hover {
 	bottom: 35px;
 }
 
-.mejs__captions-text {
+.mejs-captions-text {
 	padding: 0;
 	background: rgba(20, 20, 20, 0.5);
 	white-space: pre-wrap;
@@ -619,18 +620,18 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 
 /* Start: Loop */
-.mejs__loop-off > button {
+.mejs-loop-off > button {
 	background-position: -64px -16px;
 }
 
-.mejs__loop-on > button {
+.mejs-loop-on > button {
 	background-position: -64px 0;
 }
 /* End: Loop */
 
 
 /* context menu */
-.mejs__contextmenu {
+.mejs-contextmenu {
 	position: absolute;
 	width: 150px;
 	padding: 10px;
@@ -642,35 +643,35 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	z-index: 1001; /* make sure it shows on fullscreen */
 }
 
-.mejs__contextmenu-separator {
+.mejs-contextmenu-separator {
 	height: 1px;
 	font-size: 0;
 	margin: 5px 6px;
 	background: #333;
 }
 
-.mejs__contextmenu-item {
+.mejs-contextmenu-item {
 	font-size: 12px;
 	padding: 4px 6px;
 	cursor: pointer;
 	color: #333;
 }
 
-.mejs__contextmenu-item:hover {
+.mejs-contextmenu-item:hover {
 	background: #2C7C91;
 	color: #fff;
 }
 
 /* Start: Source Chooser */
-.mejs__sourcechooser-button {
+.mejs-sourcechooser-button {
 	position: relative;
 }
 
-.mejs__sourcechooser-button > button {
+.mejs-sourcechooser-button > button {
 	background-position: -128px 0;
 }
 
-.mejs__sourcechooser-button .mejs__sourcechooser-selector {
+.mejs-sourcechooser-button .mejs-sourcechooser-selector {
 	position: absolute;
 	bottom: 26px;
 	right: -10px;
@@ -683,7 +684,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border-radius: 0;
 }
 
-.mejs__sourcechooser-selector ul {
+.mejs-sourcechooser-selector ul {
 	margin: 0;
 	padding: 0;
 	display: block;
@@ -691,7 +692,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__sourcechooser-selector li {
+.mejs-sourcechooser-selector li {
 	margin: 0 0 6px 0;
 	padding: 0;
 	list-style-type: none !important;
@@ -700,13 +701,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__sourcechooser-selector input {
+.mejs-sourcechooser-selector input {
 	clear: both;
 	float: left;
 	margin: 3px 3px 0 5px;
 }
 
-.mejs__sourcechooser-selector label {
+.mejs-sourcechooser-selector label {
 	width: 100px;
 	float: left;
 	padding: 4px 0 0 0;
@@ -716,7 +717,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Source Chooser */
 
 /* Start: Postroll */
-.mejs__postroll-layer {
+.mejs-postroll-layer {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -727,11 +728,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__postroll-layer-content {
+.mejs-postroll-layer-content {
 	width: 100%;
 	height: 100%;
 }
-.mejs__postroll-close {
+.mejs-postroll-close {
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -744,12 +745,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Postroll */
 
 /* Start: Speed */
-.mejs__speed-button {
+.mejs-speed-button {
 	width: 46px !important;
 	position: relative;
 }
 
-.mejs__speed-button > button {
+.mejs-speed-button > button {
 	background: transparent;
 	width: 36px;
 	font-size: 11px;
@@ -757,7 +758,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	color: #ffffff;
 }
 
-.mejs__speed-selector {
+.mejs-speed-selector {
 	display: none;
 	position: absolute;
 	top: -100px;
@@ -771,11 +772,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border-radius: 0;
 }
 
-.mejs__speed-button:hover > .mejs__speed-selector {
+.mejs-speed-button:hover > .mejs-speed-selector {
 	display: block;
 }
 
-.mejs__speed-selector-list {
+.mejs-speed-selector-list {
 	margin: 0;
 	padding: 0;
 	display: block;
@@ -783,7 +784,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__speed-selector-list-item {
+.mejs-speed-selector-list-item {
 	margin: 0 0 6px 0;
 	padding: 0 10px;
 	list-style-type: none !important;
@@ -792,19 +793,19 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs__speed-selector-list-item:hover {
+.mejs-speed-selector-list-item:hover {
 	background-color: rgb(200, 200, 200) !important;
 	background-color: rgba(255,255,255,.4) !important;
 }
 
-.mejs__speed-selector-input {
+.mejs-speed-selector-input {
 	clear: both;
 	float: left;
 	margin: 3px 3px 0 5px;
 	display: none;
 }
 
-.mejs__speed-selector-label {
+.mejs-speed-selector-label {
 	width: 60px;
 	float: left;
 	padding: 4px 0 0 0;
@@ -815,17 +816,17 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	cursor: pointer;
 }
 
-.mejs__speed-selected {
+.mejs-speed-selected {
 	color: rgba(33, 248, 248, 1);
 }
 /* End: Speed */
 
 /* Start: Jump Forward */
-.mejs__jump-forward-button {
+.mejs-jump-forward-button {
 	background: transparent url("jumpforward.png") no-repeat 3px 3px;
 }
 
-.mejs__jump-forward-button button {
+.mejs-jump-forward-button button {
 	background: transparent;
 	font-size: 9px;
 	line-height: normal;
@@ -834,11 +835,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Jump Forward */
 
 /* Start: Skip Back */
-.mejs__skip-back-button {
+.mejs-skip-back-button {
 	background: transparent url("skipback.png") no-repeat 3px 3px;
 }
 
-.mejs__skip-back-button > button {
+.mejs-skip-back-button > button {
 	background: transparent;
 	font-size: 9px;
 	line-height: normal;

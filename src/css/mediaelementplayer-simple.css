@@ -1,12 +1,12 @@
 
-.mejs__simple-container {
+.mejs-simple-container {
 	background: #000;
 	margin: 10px 0;
 	position: relative;
 	min-height: 45px;
 }
 
-.mejs__simple-controls {
+.mejs-simple-controls {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -17,11 +17,11 @@
 	border: none;
 }
 
-.mejs__simple-video .mejs__simple-controls {
+.mejs-simple-video .mejs-simple-controls {
 }
 
 
-.mejs__simple-controls .ui-button {
+.mejs-simple-controls .ui-button {
 	display: block;
 	cursor: pointer;
 	float: left;
@@ -35,36 +35,36 @@
 	padding: 0;
 }
 
-.mejs__simple-controls .ui-button-play {
+.mejs-simple-controls .ui-button-play {
 	background-position: 0 0;
 }
 
-.mejs__simple-controls .ui-button-pause {
+.mejs-simple-controls .ui-button-pause {
 	background-position: 0 -25px;
 }
 
-.mejs__simple-controls .ui-button-unmuted {
+.mejs-simple-controls .ui-button-unmuted {
 	background-position: -25px -25px;
 }
 
-.mejs__simple-controls .ui-button-muted {
+.mejs-simple-controls .ui-button-muted {
 	background-position: -25px 0;
 }
 
-.mejs__simple-controls .ui-button-fullscreen,
-.mejs__simple-controls .ui-button-eixtfullscreen {
+.mejs-simple-controls .ui-button-fullscreen,
+.mejs-simple-controls .ui-button-eixtfullscreen {
 	margin-right: 10px;
 }
 
-.mejs__simple-controls .ui-button-fullscreen {
+.mejs-simple-controls .ui-button-fullscreen {
 	background-position: -50px 0px;
 }
 
-.mejs__simple-controls .ui-button-exitfullscreen {
+.mejs-simple-controls .ui-button-exitfullscreen {
 	background-position: -50px -25px;
 }
 
-.mejs__simple-controls .ui-time {
+.mejs-simple-controls .ui-time {
 	width: 32px;
 	height: 20px;
 	display: block;
@@ -75,7 +75,7 @@
 	text-align: center;
 }
 
-.mejs__simple-controls .ui-time-total {
+.mejs-simple-controls .ui-time-total {
 	width: 330px;
 	height: 10px;
 	float: left;
@@ -84,7 +84,7 @@
 	position: relative;
 }
 
-.mejs__simple-controls .ui-time-loaded {
+.mejs-simple-controls .ui-time-loaded {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -93,7 +93,7 @@
 	background: #444444;
 }
 
-.mejs__simple-controls .ui-time-current {
+.mejs-simple-controls .ui-time-current {
 	position: absolute;
 	top: 0;
 	left: 0;

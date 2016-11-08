@@ -36,7 +36,7 @@
 				playTitle = op.playText ? op.playText : mejs.i18n.t('mejs.play'),
 				pauseTitle = op.pauseText ? op.pauseText : mejs.i18n.t('mejs.pause'),
 				play =
-				$('<div class="mejs__button mejs__playpause-button mejs__play" >' +
+				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
 					'<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '"></button>' +
 				'</div>')
 				.appendTo(controls)
@@ -60,13 +60,13 @@
 			 */
 			function togglePlayPause(which) {
 				if ('play' === which) {
-					play.removeClass('mejs__play').addClass('mejs__pause');
+					play.removeClass('mejs-play').addClass('mejs-pause');
 					play_btn.attr({
 						'title': pauseTitle,
 						'aria-label': pauseTitle
 					});
 				} else {
-					play.removeClass('mejs__pause').addClass('mejs__play');
+					play.removeClass('mejs-pause').addClass('mejs-play');
 					play_btn.attr({
 						'title': playTitle,
 						'aria-label': playTitle
