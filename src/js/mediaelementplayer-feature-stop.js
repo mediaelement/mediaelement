@@ -30,7 +30,7 @@
 				t = this,
 				stopTitle = t.options.stopText ? t.options.stopText : mejs.i18n.t('mejs.stop');
 
-			$('<div class="mejs__button mejs__stop-button mejs__stop">' +
+			$('<div class="mejs-button mejs-stop-button mejs-stop">' +
 				'<button type="button" aria-controls="' + t.id + '" title="' + stopTitle + '" aria-label="' + stopTitle + '"></button>' +
 				'</div>')
 			.appendTo(controls)
@@ -41,11 +41,11 @@
 				if (media.currentTime > 0) {
 					media.setCurrentTime(0);
 					media.pause();
-					controls.find('.mejs__time-current').width('0px');
-					controls.find('.mejs__time-handle').css('left', '0px');
-					controls.find('.mejs__time-float-current').html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
-					controls.find('.mejs__currenttime').html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
-					layers.find('.mejs__poster').show();
+					controls.find('.mejs-time-current').width('0px');
+					controls.find('.mejs-time-handle').css('left', '0px');
+					controls.find('.mejs-time-float-current').html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
+					controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
+					layers.find('.mejs-poster').show();
 				}
 			});
 		}

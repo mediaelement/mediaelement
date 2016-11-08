@@ -46,7 +46,7 @@
 				lastMarkerCallBack = -1; //Prevents successive firing of callbacks
 
 			for (i = 0; i < player.options.markers.length; ++i) {
-				controls.find('.mejs__time-total').append('<span class="mejs__time-marker"></span>');
+				controls.find('.mejs-time-total').append('<span class="mejs-time-marker"></span>');
 			}
 
 			media.addEventListener('durationchange', function (e) {
@@ -86,7 +86,7 @@
 			for (i = 0; i < t.options.markers.length; ++i) {
 				if (Math.floor(t.options.markers[i]) <= t.media.duration && Math.floor(t.options.markers[i]) >= 0) {
 					left = 100 * Math.floor(t.options.markers[i]) / t.media.duration;
-					$(controls.find('.mejs__time-marker')[i]).css({
+					$(controls.find('.mejs-time-marker')[i]).css({
 						"width": "1px",
 						"left": left + "%",
 						"background": t.options.markerColor

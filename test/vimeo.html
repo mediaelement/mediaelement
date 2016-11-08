@@ -39,7 +39,7 @@
 
         <h2>Vimeo as &lt;video&gt;</h2>
 
-        <video width="640" height="360" class="mejs__player" id="player1" preload="none" controls>
+        <video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
             <source src="https://player.vimeo.com/video/59777392?title=false&byline=false&portrait=false">
         </video>
 
@@ -52,7 +52,7 @@
     <script>
 
 
-        var elements = mejs.getElementsByClassName('mejs__player');
+        var elements = mejs.getElementsByClassName('mejs-player');
 
         for (var i=0, il=elements.length; i<il; i++) {
             var player = new MediaElementPlayerSimple(elements[i]);

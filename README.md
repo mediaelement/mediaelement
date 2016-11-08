@@ -43,8 +43,6 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
 
-* Use of BEM naming conventions for player classes.
-
 * Deprecated use of `pluginType` element.
  
 * Removed Silverlight shim, as well as IE8 and older browsers support.

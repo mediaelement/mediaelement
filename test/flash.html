@@ -39,19 +39,19 @@
 
         <h2>MP4/WebM using Flash</h2>
 
-        <video  width="640" height="360" preload="none" class="mejs__player" >
+        <video  width="640" height="360" preload="none" class="mejs-player" >
             <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
         </video>
 
         <h2>RTMP Streaming (MP4)</h2>
 
-        <video  width="640" height="360" preload="none" class="mejs__player" >
+        <video  width="640" height="360" preload="none" class="mejs-player" >
             <source src="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4" type="rtmp/mp4">
         </video>
 
         <h2>RTMP Streaming (MP3)</h2>
 
-        <audio preload="none" class="mejs__player" >
+        <audio preload="none" class="mejs-player" >
             <source src="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr" type="audio/rtmp">
         </audio>
 
@@ -61,7 +61,7 @@
 
         mejs.Renderers.order = ['flash_video', 'flash_audio'];
 
-        var elements = mejs.getElementsByClassName('mejs__player');
+        var elements = mejs.getElementsByClassName('mejs-player');
 
         for (var i=0, il=elements.length; i<il; i++) {
             var player = new MediaElementPlayerSimple(elements[i], {

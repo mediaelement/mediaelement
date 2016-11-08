@@ -35,7 +35,7 @@
 				skipTitle = t.options.skipBackText ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
 				// create the loop button
 				loop =
-					$('<div class="mejs__button mejs__skip-back-button">' +
+					$('<div class="mejs-button mejs-skip-back-button">' +
 						'<button type="button" aria-controls="' + t.id + '" title="' + skipTitle + '" aria-label="' + skipTitle + '">' + t.options.skipBackInterval + '</button>' +
 					'</div>')
 					// append it to the toolbar
