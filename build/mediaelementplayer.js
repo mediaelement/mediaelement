@@ -1547,7 +1547,10 @@ if (jQuery !== undefined) {
 		play: function () {
 			var t = this;
 
-			t.load();
+			// only load if the current time is 0 to ensure proper
+			if (t.media.getCurrentTime() <= 0) {
+				t.load();
+			}
 			t.media.play();
 		},
 		pause: function () {
