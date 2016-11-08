@@ -21,7 +21,7 @@
 				t = this,
 				// create the loop button
 				loop =
-				$('<div class="mejs__button mejs__loop-button ' + ((player.options.loop) ? 'mejs__loop-on' : 'mejs__loop-off') + '">' +
+				$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
 					'<button type="button" aria-controls="' + t.id + '" title="Toggle Loop" aria-label="Toggle Loop"></button>' +
 				'</div>')
 				// append it to the toolbar
@@ -30,9 +30,9 @@
 				.click(function() {
 					player.options.loop = !player.options.loop;
 					if (player.options.loop) {
-						loop.removeClass('mejs__loop-off').addClass('mejs__loop-on');
+						loop.removeClass('mejs-loop-off').addClass('mejs-loop-on');
 					} else {
-						loop.removeClass('mejs__loop-on').addClass('mejs__loop-off');
+						loop.removeClass('mejs-loop-on').addClass('mejs-loop-off');
 					}
 				});
 		}
