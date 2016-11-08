@@ -40,20 +40,20 @@
 
 		<h2>Facebook as &lt;video&gt;</h2>
 
-		<video width="640" height="360" class="mejs__player" id="player1" preload="none" controls>
+		<video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
 			<source src="https://www.facebook.com/johndyer/videos/10107816243681884/" type="video/facebook">
 		</video>
 
 
 		<h2>Facebook as &lt;iframe&gt;</h2>
 
-		<iframe class="mejs__player-not" width="640" height="360" scrolling="no" frameborder="no" src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fjohndyer%2Fvideos%2F10107816243681884%2F&show_text=0&width=640"></iframe>
+		<iframe class="mejs-player-not" width="640" height="360" scrolling="no" frameborder="no" src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fjohndyer%2Fvideos%2F10107816243681884%2F&show_text=0&width=640"></iframe>
 
 	</div>
 
 	<script>
 
-		var elements = mejs.getElementsByClassName('mejs__player');
+		var elements = mejs.getElementsByClassName('mejs-player');
 
 		for (var i=0, il=elements.length; i<il; i++) {
 			var player = new MediaElementPlayerSimple(elements[i]);

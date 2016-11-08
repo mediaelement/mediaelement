@@ -13,7 +13,7 @@
 
 	// on time insert into head
 	$('head').append($('<style>' +
-'.mejs__ads a {' +
+'.mejs-ads a {' +
 '	display: block; ' +
 '	position: absolute;' +
 '	right: 0;' +
@@ -22,7 +22,7 @@
 '	height: 100%; ' +
 '	display: block; ' +
 '}' +
-'.mejs__ads .mejs__ads-skip-block {' +
+'.mejs-ads .mejs-ads-skip-block {' +
 '	display: block; ' +
 '	position: absolute;' +
 '	right: 0;' +
@@ -32,10 +32,10 @@
 '	background: rgba(0,0,0,0.5); ' +
 '	color: #fff; ' +
 '}' +
-'.mejs__ads .mejs__ads-skip-button {' +
+'.mejs-ads .mejs-ads-skip-button {' +
 '	cursor: pointer; ' +
 '}' +
-'.mejs__ads .mejs__ads-skip-button:hover {' +
+'.mejs-ads .mejs-ads-skip-button:hover {' +
 '	text-decoration: underline; ' +
 '}' +
 	'</style>'));
@@ -87,21 +87,21 @@
 
 			// add layer for ad links and skipping
 			player.adsLayer =
-					$('<div class="mejs__layer mejs__overlay mejs__ads">' +
+					$('<div class="mejs-layer mejs-overlay mejs-ads">' +
 							'<a href="#" target="_blank">&nbsp;</a>' +
-							'<div class="mejs__ads-skip-block">' +
-								'<span class="mejs__ads-skip-message"></span>' +
-								'<span class="mejs__ads-skip-button">' + mejs.i18n.t('mejs.ad-skip') + '&raquo;</span>' +
+							'<div class="mejs-ads-skip-block">' +
+								'<span class="mejs-ads-skip-message"></span>' +
+								'<span class="mejs-ads-skip-button">' + mejs.i18n.t('mejs.ad-skip') + '&raquo;</span>' +
 							'</div>' +
 						'</div>')
-							.insertBefore( layers.find('.mejs__overlay-play') )
+							.insertBefore( layers.find('.mejs-overlay-play') )
 							.hide();
 
 			player.adsLayer.find('a').on('click', $.proxy(t.adsAdClick, t) );
 
-			player.adsSkipBlock = player.adsLayer.find('.mejs__ads-skip-block').hide();
-			player.adsSkipMessage = player.adsLayer.find('.mejs__ads-skip-message').hide();
-			player.adsSkipButton = player.adsLayer.find('.mejs__ads-skip-button').on('click', $.proxy(t.adsSkipClick, t));
+			player.adsSkipBlock = player.adsLayer.find('.mejs-ads-skip-block').hide();
+			player.adsSkipMessage = player.adsLayer.find('.mejs-ads-skip-message').hide();
+			player.adsSkipButton = player.adsLayer.find('.mejs-ads-skip-button').on('click', $.proxy(t.adsSkipClick, t));
 
 			// create proxies (only needed for events we want to remove later)
 			t.adsMediaTryingToStartProxy = 	$.proxy(t.adsMediaTryingToStart, t);
@@ -181,7 +181,7 @@
 			}
 
 			setTimeout(function() {
-				t.controls.find('.mejs__duration').html( 
+				t.controls.find('.mejs-duration').html(
 					mejs.Utility.secondsToTimeCode(newDuration, t.options.alwaysShowHours)
 				);
 			}, 250);

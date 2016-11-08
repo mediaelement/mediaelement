@@ -68,7 +68,7 @@ $.extend(mejs.MepDefaults,
 		buildcontextmenu: function(player, controls, layers, media) {
 
 			// create context menu
-			player.contextMenu = $('<div class="mejs__contextmenu"></div>')
+			player.contextMenu = $('<div class="mejs-contextmenu"></div>')
 								.appendTo($('body'))
 								.hide();
 
@@ -141,14 +141,14 @@ $.extend(mejs.MepDefaults,
 			for (var i=0, il=items.length; i<il; i++) {
 
 				if (items[i].isSeparator) {
-					html += '<div class="mejs__contextmenu-separator"></div>';
+					html += '<div class="mejs-contextmenu-separator"></div>';
 				} else {
 
 					var rendered = items[i].render(t);
 
 					// render can return null if the item doesn't need to be used at the moment
 					if (rendered !== null && rendered !== undefined) {
-						html += '<div class="mejs__contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
+						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}
 			}
@@ -161,7 +161,7 @@ $.extend(mejs.MepDefaults,
 				.show();
 
 			// bind events
-			t.contextMenu.find('.mejs__contextmenu-item').each(function() {
+			t.contextMenu.find('.mejs-contextmenu-item').each(function() {
 
 				// which one is this?
 				var $dom = $(this),
