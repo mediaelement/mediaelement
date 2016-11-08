@@ -1,1958 +1,5274 @@
 /*!
- *
  * MediaElement.js
- * HTML5 <video> and <audio> shim and player
- * http://mediaelementjs.com/
+ * http://www.mediaelement.com/
  *
- * Creates a JavaScript object that mimics HTML5 MediaElement API
- * for browsers that don't understand HTML5 or can't play the provided codec
- * Can play MP4 (H.264), Ogg, WebM, FLV, WMV, WMA, ACC, and MP3
+ * Wrapper that mimics native HTML5 MediaElement (audio and video)
+ * using a variety of technologies (pure JavaScript, Flash, iframe)
  *
- * Copyright 2010-2014, John Dyer (http://j.hn)
+ * Copyright 2010-2016, John Dyer (http://j.hn/)
  * License: MIT
  *
  */
 // Namespace
-var mejs = mejs || {};
+window.mejs = window.mejs || {};
 
 // version number
-mejs.version = '2.23.4';
+mejs.version = '3.0';
 
-
-// player number (for missing, same id attr)
-mejs.meIndex = 0;
-
-// media types accepted by plugins
-mejs.plugins = {
-	silverlight: [
-		{version: [3,0], types: ['video/mp4','video/m4v','video/mov','video/wmv','audio/wma','audio/m4a','audio/mp3','audio/wav','audio/mpeg']}
-	],
-	flash: [
-		{version: [9,0,124], types: ['video/mp4','video/m4v','video/mov','video/flv','video/rtmp','video/x-flv','audio/flv','audio/x-flv','audio/mp3','audio/m4a', 'audio/mp4', 'audio/mpeg', 'video/dailymotion', 'video/x-dailymotion', 'application/x-mpegURL', 'audio/ogg']}
-		// 'video/youtube', 'video/x-youtube', 
-		// ,{version: [12,0], types: ['video/webm']} // for future reference (hopefully!)
-	],
-	youtube: [
-		{version: null, types: ['video/youtube', 'video/x-youtube', 'audio/youtube', 'audio/x-youtube']}
-	],
-	vimeo: [
-		{version: null, types: ['video/vimeo', 'video/x-vimeo']}
-	]
-};
-
-/*
-Utility methods
-*/
-mejs.Utility = {
-	encodeUrl: function(url) {
-		return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
-	},
-	escapeHTML: function(s) {
-		return s.toString().split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
-	},
-	absolutizeUrl: function(url) {
-		var el = document.createElement('div');
-		el.innerHTML = '<a href="' + this.escapeHTML(url) + '">x</a>';
-		return el.firstChild.href;
-	},
-	getScriptPath: function(scriptNames) {
-		var
-			i = 0,
-			j,
-			codePath = '',
-			testname = '',
-			slashPos,
-			filenamePos,
-			scriptUrl,
-			scriptPath,			
-			scriptFilename,
-			scripts = document.getElementsByTagName('script'),
-			il = scripts.length,
-			jl = scriptNames.length;
-			
-		// go through all <script> tags
-		for (; i < il; i++) {
-			scriptUrl = scripts[i].src;
-			slashPos = scriptUrl.lastIndexOf('/');
-			if (slashPos > -1) {
-				scriptFilename = scriptUrl.substring(slashPos + 1);
-				scriptPath = scriptUrl.substring(0, slashPos + 1);
-			} else {
-				scriptFilename = scriptUrl;
-				scriptPath = '';			
-			}
-			
-			// see if any <script> tags have a file name that matches the 
-			for (j = 0; j < jl; j++) {
-				testname = scriptNames[j];
-				filenamePos = scriptFilename.indexOf(testname);
-				if (filenamePos > -1) {
-					codePath = scriptPath;
-					break;
-				}
-			}
-			
-			// if we found a path, then break and return it
-			if (codePath !== '') {
-				break;
-			}
-		}
-		
-		// send the best path back
-		return codePath;
-	},
-	/*
-	 * Calculate the time format to use. We have a default format set in the
-	 * options but it can be imcomplete. We ajust it according to the media
-	 * duration.
-	 *
-	 * We support format like 'hh:mm:ss:ff'.
-	 */
-	calculateTimeFormat: function(time, options, fps) {
-		if (time < 0) {
-			time = 0;
-		}
-
-		if(typeof fps == 'undefined') {
-		    fps = 25;
-		}
-
-		var format = options.timeFormat,
-			firstChar = format[0],
-			firstTwoPlaces = (format[1] == format[0]),
-			separatorIndex = firstTwoPlaces? 2: 1,
-			separator = ':',
-			hours = Math.floor(time / 3600) % 24,
-			minutes = Math.floor(time / 60) % 60,
-			seconds = Math.floor(time % 60),
-			frames = Math.floor(((time % 1)*fps).toFixed(3)),
-			lis = [
-				[frames, 'f'],
-				[seconds, 's'],
-				[minutes, 'm'],
-				[hours, 'h']
-			];
-
-		// Try to get the separator from the format
-		if (format.length < separatorIndex) {
-			separator = format[separatorIndex];
-		}
-
-		var required = false;
-
-		for (var i=0, len=lis.length; i < len; i++) {
-			if (format.indexOf(lis[i][1]) !== -1) {
-				required=true;
-			}
-			else if (required) {
-				var hasNextValue = false;
-				for (var j=i; j < len; j++) {
-					if (lis[j][0] > 0) {
-						hasNextValue = true;
-						break;
-					}
-				}
-
-				if (! hasNextValue) {
-					break;
-				}
-
-				if (!firstTwoPlaces) {
-					format = firstChar + format;
-				}
-				format = lis[i][1] + separator + format;
-				if (firstTwoPlaces) {
-					format = lis[i][1] + format;
-				}
-				firstChar = lis[i][1];
-			}
-		}
-		options.currentTimeFormat = format;
-	},
-	/*
-	 * Prefix the given number by zero if it is lower than 10.
-	 */
-	twoDigitsString: function(n) {
-		if (n < 10) {
-			return '0' + n;
-		}
-		return String(n);
-	},
-	secondsToTimeCode: function(time, options) {
-		if (time < 0) {
-			time = 0;
-		}
-
-		// Maintain backward compatibility with method signature before v2.18.
-		if (typeof options !== 'object') {
-			var format = 'm:ss';
-			format = arguments[1] ? 'hh:mm:ss' : format; // forceHours
-			format = arguments[2] ? format + ':ff' : format; // showFrameCount
-
-			options = {
-				currentTimeFormat: format,
-				framesPerSecond: arguments[3] || 25
-			};
-		}
-
-		var fps = options.framesPerSecond;
-		if(typeof fps === 'undefined') {
-			fps = 25;
-		}
-
-		var format = options.currentTimeFormat,
-			hours = Math.floor(time / 3600) % 24,
-			minutes = Math.floor(time / 60) % 60,
-			seconds = Math.floor(time % 60),
-			frames = Math.floor(((time % 1)*fps).toFixed(3));
-			lis = [
-				[frames, 'f'],
-				[seconds, 's'],
-				[minutes, 'm'],
-				[hours, 'h']
-			];
-
-		var res = format;
-		for (i=0,len=lis.length; i < len; i++) {
-			res = res.replace(lis[i][1]+lis[i][1], this.twoDigitsString(lis[i][0]));
-			res = res.replace(lis[i][1], lis[i][0]);
-		}
-		return res;
-	},
-	
-	timeCodeToSeconds: function(hh_mm_ss_ff, forceHours, showFrameCount, fps){
-		if (typeof showFrameCount == 'undefined') {
-		    showFrameCount=false;
-		} else if(typeof fps == 'undefined') {
-		    fps = 25;
-		}
-	
-		var tc_array = hh_mm_ss_ff.split(":"),
-			tc_hh = parseInt(tc_array[0], 10),
-			tc_mm = parseInt(tc_array[1], 10),
-			tc_ss = parseInt(tc_array[2], 10),
-			tc_ff = 0,
-			tc_in_seconds = 0;
-		
-		if (showFrameCount) {
-		    tc_ff = parseInt(tc_array[3])/fps;
-		}
-		
-		tc_in_seconds = ( tc_hh * 3600 ) + ( tc_mm * 60 ) + tc_ss + tc_ff;
-		
-		return tc_in_seconds;
-	},
-	
-
-	convertSMPTEtoSeconds: function (SMPTE) {
-		if (typeof SMPTE != 'string') 
-			return false;
-
-		SMPTE = SMPTE.replace(',', '.');
-		
-		var secs = 0,
-			decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
-			multiplier = 1;
-		
-		SMPTE = SMPTE.split(':').reverse();
-		
-		for (var i = 0; i < SMPTE.length; i++) {
-			multiplier = 1;
-			if (i > 0) {
-				multiplier = Math.pow(60, i); 
-			}
-			secs += Number(SMPTE[i]) * multiplier;
-		}
-		return Number(secs.toFixed(decimalLen));
-	},	
-	
-	/* borrowed from SWFObject: http://code.google.com/p/swfobject/source/browse/trunk/swfobject/src/swfobject.js#474 */
-	removeSwf: function(id) {
-		var obj = document.getElementById(id);
-		if (obj && /object|embed/i.test(obj.nodeName)) {
-			if (mejs.MediaFeatures.isIE) {
-				obj.style.display = "none";
-				(function(){
-					if (obj.readyState == 4) {
-						mejs.Utility.removeObjectInIE(id);
-					} else {
-						setTimeout(arguments.callee, 10);
-					}
-				})();
-			} else {
-				obj.parentNode.removeChild(obj);
-			}
-		}
-	},
-	removeObjectInIE: function(id) {
-		var obj = document.getElementById(id);
-		if (obj) {
-			for (var i in obj) {
-				if (typeof obj[i] == "function") {
-					obj[i] = null;
-				}
-			}
-			obj.parentNode.removeChild(obj);
-		}		
-	},
-    determineScheme: function(url) {
-        if (url && url.indexOf("://") != -1) {
-            return url.substr(0, url.indexOf("://")+3);
-        }
-        return "//"; // let user agent figure this out
-    },
-
-	// taken from underscore
-	debounce: function(func, wait, immediate) {
-		var timeout;
-		return function() {
-			var context = this, args = arguments;
-			var later = function() {
-				timeout = null;
-				if (!immediate) func.apply(context, args);
-			};
-			var callNow = immediate && !timeout;
-			clearTimeout(timeout);
-			timeout = setTimeout(later, wait);
-			if (callNow) func.apply(context, args);
-		};
-	},
+/**
+ * MediaElement utilities
+ *
+ * This file contains global functions and polyfills needed to support old browsers.
+ *
+ */
+(function (win, doc, mejs, undefined) {
 
 	/**
-	* Returns true if targetNode appears after sourceNode in the dom.
-	* @param {HTMLElement} sourceNode - the source node for comparison
-	* @param {HTMLElement} targetNode - the node to compare against sourceNode
-	*/
-	isNodeAfter: function(sourceNode, targetNode) {
-		return !!(
-			sourceNode &&
-			targetNode &&
-			typeof sourceNode.compareDocumentPosition === 'function' &&
-			sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
-		);
-	}
-};
+	 * @class {mejs.Utility}
+	 * @class {mejs.Utils}
+	 */
+	mejs.Utility = mejs.Utils = {
+		/**
+		 * @type {Function[]}
+		 */
+		typeChecks: [],
 
+		/**
+		 *
+		 * @param {Object} obj
+		 * @param {String} name
+		 * @param {Function} onGet
+		 * @param {Function} onSet
+		 */
+		addProperty: function (obj, name, onGet, onSet) {
 
-// Core detector, plugins are added below
-mejs.PluginDetector = {
+			// wrapper functions
+			var
+				oldValue = obj[name],
+				getFn = function () {
+					return onGet.apply(obj, [oldValue]);
+				},
+				setFn = function (newValue) {
+					oldValue = onSet.apply(obj, [newValue]);
+					return oldValue;
+				};
 
-	// main public function to test a plug version number PluginDetector.hasPluginVersion('flash',[9,0,125]);
-	hasPluginVersion: function(plugin, v) {
-		var pv = this.plugins[plugin];
-		v[1] = v[1] || 0;
-		v[2] = v[2] || 0;
-		return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2])) ? true : false;
-	},
+			// Modern browsers, IE9+ (IE8 only works on DOM objects, not normal JS objects)
+			if (Object.defineProperty) {
 
-	// cached values
-	nav: window.navigator,
-	ua: window.navigator.userAgent.toLowerCase(),
+				Object.defineProperty(obj, name, {
+					get: getFn,
+					set: setFn
+				});
 
-	// stored version numbers
-	plugins: [],
+				// Older Firefox
+			} else if (obj.__defineGetter__) {
 
-	// runs detectPlugin() and stores the version number
-	addPlugin: function(p, pluginName, mimeType, activeX, axDetect) {
-		this.plugins[p] = this.detectPlugin(pluginName, mimeType, activeX, axDetect);
-	},
+				obj.__defineGetter__(name, getFn);
+				obj.__defineSetter__(name, setFn);
 
-	// get the version number from the mimetype (all but IE) or ActiveX (IE)
-	detectPlugin: function(pluginName, mimeType, activeX, axDetect) {
+				// IE6-7
+				// must be a real DOM object (to have attachEvent) and must be attached to document (for onpropertychange to fire)
+			} else {
 
-		var version = [0,0,0],
-			description,
-			i,
-			ax;
+				var onPropertyChange = function (event) {
 
-		// Firefox, Webkit, Opera
-		if (typeof(this.nav.plugins) != 'undefined' && typeof this.nav.plugins[pluginName] == 'object') {
-			description = this.nav.plugins[pluginName].description;
-			if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
-				version = description.replace(pluginName, '').replace(/^\s+/,'').replace(/\sr/gi,'.').split('.');
-				for (i=0; i<version.length; i++) {
-					version[i] = parseInt(version[i].match(/\d+/), 10);
+					//
+
+					if (event.propertyName === name) {
+
+						// temporarily remove the event so it doesn't fire again and create a loop
+						obj.detachEvent('onpropertychange', onPropertyChange);
+
+						// get the changed value, run it through the set function
+						var newValue = setFn(obj[name]);
+
+						// restore the get function
+						obj[name] = getFn;
+						obj[name].toString = function () {
+							return getFn().toString();
+						};
+
+						// restore the event
+						obj.attachEvent('onpropertychange', onPropertyChange);
+					}
+				};
+
+				try {
+					obj[name] = getFn;
+					obj[name].toString = function () {
+						return getFn().toString();
+					};
+				} catch (ex) {
+					
+				}
+
+				// add the property event change only once
+				obj.attachEvent('onpropertychange', onPropertyChange);
+			}
+		},
+
+		/**
+		 *
+		 * @param {String} eventName
+		 * @param {HTMLElement} target
+		 * @return {Object}
+		 */
+		createEvent: function (eventName, target) {
+			var event = null;
+
+			if (doc.createEvent) {
+				event = doc.createEvent('Event');
+				event.initEvent(eventName, true, false);
+				event.target = target;
+				//} else if (doc.createEventObject) {
+				//	event = doc.createEventObject();
+			} else {
+				event = {};
+			}
+			event.type = eventName;
+			event.target = target;
+
+			return event;
+		},
+
+		/**
+		 * Return the mime part of the type in case the attribute contains the codec
+		 * (`video/mp4; codecs="avc1.42E01E, mp4a.40.2"` becomes `video/mp4`)
+		 *
+		 * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html#the-source-element
+		 * @param {String} type
+		 * @return {String}
+		 */
+		getMimeFromType: function (type) {
+			if (type && ~type.indexOf(';')) {
+				return type.substr(0, type.indexOf(';'));
+			} else {
+				return type;
+			}
+		},
+
+		/**
+		 * Get the format of a specific media, either based on URL or its mime type
+		 *
+		 * @param {String} url
+		 * @param {String} type
+		 * @return {String}
+		 */
+		formatType: function (url, type) {
+
+			// if no type is supplied, fake it with the extension
+			if (url && !type) {
+				return this.getTypeFromFile(url);
+			} else {
+				return this.getMimeFromType(type);
+			}
+		},
+
+		/**
+		 * Get the type of media based on URL structure
+		 *
+		 * @param {String} url
+		 * @return {String}
+		 */
+		getTypeFromFile: function (url) {
+
+			var type = null;
+
+			// do type checks first
+			for (var i = 0, il = this.typeChecks.length; i < il; i++) {
+				type = this.typeChecks[i](url);
+
+				if (type !== null) {
+					return type;
 				}
 			}
-		// Internet Explorer / ActiveX
-		} else if (typeof(window.ActiveXObject) != 'undefined') {
-			try {
-				ax = new ActiveXObject(activeX);
-				if (ax) {
-					version = axDetect(ax);
+
+			// the do standard extension check
+			var ext = this.getExtension(url),
+				normalizedExt = this.normalizeExtension(ext);
+
+			type = (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + normalizedExt;
+
+			return type;
+		},
+
+		/**
+		 * Get media file extension from URL
+		 *
+		 * @param {String} url
+		 * @return {String}
+		 */
+		getExtension: function (url) {
+			var withoutQuerystring = url.split('?')[0],
+				ext = ~withoutQuerystring.indexOf('.') ? withoutQuerystring.substring(withoutQuerystring.lastIndexOf('.') + 1) : '';
+
+			return ext;
+		},
+
+		/**
+		 * Get standard extension of a media file
+		 *
+		 * @param {String} extension
+		 * @return {String}
+		 */
+		normalizeExtension: function (extension) {
+
+			switch (extension) {
+				case 'mp4':
+				case 'm4v':
+					return 'mp4';
+				case 'webm':
+				case 'webma':
+				case 'webmv':
+					return 'webm';
+				case 'ogg':
+				case 'oga':
+				case 'ogv':
+					return 'ogg';
+				default:
+					return extension;
+			}
+		},
+
+		/**
+		 *
+		 * @param {String} url
+		 * @return {String}
+		 */
+		encodeUrl: function (url) {
+			return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
+		},
+
+		/**
+		 *
+		 * @param {String} output
+		 * @return {string}
+		 */
+		escapeHTML: function (output) {
+			return output.toString().split('&').join('&amp;').split('<').join('&lt;').split('"').join('&quot;');
+		},
+
+		/**
+		 *
+		 * @param {String} url
+		 * @return {String}
+		 */
+		absolutizeUrl: function (url) {
+			var el = doc.createElement('div');
+			el.innerHTML = '<a href="' + this.escapeHTML(url) + '">x</a>';
+			return el.firstChild.href;
+		},
+
+		/**
+		 * Format a numeric time in format '00:00:00'
+		 *
+		 * @param {number} time
+		 * @param {Boolean} forceHours
+		 * @param {Boolean} showFrameCount
+		 * @param {number} fps - Frames per second
+		 * @return {String}
+		 */
+		secondsToTimeCode: function (time, forceHours, showFrameCount, fps) {
+			//add framecount
+			if (showFrameCount === undefined) {
+				showFrameCount = false;
+			} else if (fps === undefined) {
+				fps = 25;
+			}
+
+			var hours = Math.floor(time / 3600) % 24,
+				minutes = Math.floor(time / 60) % 60,
+				seconds = Math.floor(time % 60),
+				frames = Math.floor(((time % 1) * fps).toFixed(3)),
+				result =
+					( (forceHours || hours > 0) ? (hours < 10 ? '0' + hours : hours) + ':' : '') +
+					(minutes < 10 ? '0' + minutes : minutes) + ':' +
+					(seconds < 10 ? '0' + seconds : seconds) +
+					((showFrameCount) ? ':' + (frames < 10 ? '0' + frames : frames) : '');
+
+			return result;
+		},
+
+		/**
+		 * Convert a '00:00:00' tiem string into seconds
+		 *
+		 * @param {String} time
+		 * @param {Boolean} forceHours
+		 * @param {Boolean} showFrameCount
+		 * @param {number} fps - Frames per second
+		 * @return {number}
+		 */
+		timeCodeToSeconds: function (time, forceHours, showFrameCount, fps) {
+			if (showFrameCount === undefined) {
+				showFrameCount = false;
+			} else if (fps === undefined) {
+				fps = 25;
+			}
+
+			// 00:00:00		HH:MM:SS
+			// 00:00 		MM:SS
+			// 00			SS
+
+			var parts = time.split(':'),
+				hours = 0,
+				minutes = 0,
+				frames = 0,
+				seconds = 0;
+
+			switch (parts.length) {
+				default:
+				case 1:
+					seconds = parseInt(parts[0], 10);
+					break;
+				case 2:
+					minutes = parseInt(parts[0], 10);
+					seconds = parseInt(parts[1], 10);
+
+					break;
+				case 3:
+				case 4:
+					hours = parseInt(parts[0], 10);
+					minutes = parseInt(parts[1], 10);
+					seconds = parseInt(parts[2], 10);
+					frames = showFrameCount ? parseInt(parts[3]) / fps : 0;
+					break;
+
+			}
+
+			seconds = ( hours * 3600 ) + ( minutes * 60 ) + seconds + frames;
+
+			return seconds;
+		},
+
+		/**
+		 * Merge the contents of two or more objects together into the first object
+		 *
+		 * @return {Object}
+		 */
+		extend: function () {
+			// borrowed from ender
+			var options, name, src, copy,
+				target = arguments[0] || {},
+				i = 1,
+				length = arguments.length;
+
+			// Handle case when target is a string or something (possible in deep copy)
+			if (typeof target !== "object" && typeof target !== "function") {
+				target = {};
+			}
+
+			for (; i < length; i++) {
+				// Only deal with non-null/undefined values
+				options = arguments[i];
+				if (options !== null && options !== undefined) {
+					// Extend the base object
+					for (name in options) {
+						src = target[name];
+						copy = options[name];
+
+						// Prevent never-ending loop
+						if (target === copy) {
+							continue;
+						}
+
+						if (copy !== undefined) {
+							target[name] = copy;
+						}
+					}
 				}
 			}
-			catch (e) { }
-		}
-		return version;
-	}
-};
 
-// Add Flash detection
-mejs.PluginDetector.addPlugin('flash','Shockwave Flash','application/x-shockwave-flash','ShockwaveFlash.ShockwaveFlash', function(ax) {
-	// adapted from SWFObject
-	var version = [],
-		d = ax.GetVariable("$version");
-	if (d) {
-		d = d.split(" ")[1].split(",");
-		version = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
-	}
-	return version;
-});
+			// Return the modified object
+			return target;
+		},
 
-// Add Silverlight detection
-mejs.PluginDetector.addPlugin('silverlight','Silverlight Plug-In','application/x-silverlight-2','AgControl.AgControl', function (ax) {
-	// Silverlight cannot report its version number to IE
-	// but it does have a isVersionSupported function, so we have to loop through it to get a version number.
-	// adapted from http://www.silverlightversion.com/
-	var v = [0,0,0,0],
-		loopMatch = function(ax, v, i, n) {
-			while(ax.isVersionSupported(v[0]+ "."+ v[1] + "." + v[2] + "." + v[3])){
-				v[i]+=n;
+		/**
+		 * Calculate the time format to use
+		 *
+		 * There is a default format set in the options but it can be incomplete, so it is adjusted according to the media
+		 * duration. Format: 'hh:mm:ss:ff'
+		 * @param {number} time
+		 * @param {Object} options
+		 * @param {number} fps - Frames per second
+		 */
+		calculateTimeFormat: function (time, options, fps) {
+			if (time < 0) {
+				time = 0;
 			}
-			v[i] -= n;
-		};
-	loopMatch(ax, v, 0, 1);
-	loopMatch(ax, v, 1, 1);
-	loopMatch(ax, v, 2, 10000); // the third place in the version number is usually 5 digits (4.0.xxxxx)
-	loopMatch(ax, v, 2, 1000);
-	loopMatch(ax, v, 2, 100);
-	loopMatch(ax, v, 2, 10);
-	loopMatch(ax, v, 2, 1);
-	loopMatch(ax, v, 3, 1);
 
-	return v;
-});
-// add adobe acrobat
-/*
-PluginDetector.addPlugin('acrobat','Adobe Acrobat','application/pdf','AcroPDF.PDF', function (ax) {
-	var version = [],
-		d = ax.GetVersions().split(',')[0].split('=')[1].split('.');
+			if (fps === undefined) {
+				fps = 25;
+			}
 
-	if (d) {
-		version = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
-	}
-	return version;
-});
-*/
-// necessary detection (fixes for <IE9)
-mejs.MediaFeatures = {
-	init: function() {
-		var
-			t = this,
-			d = document,
-			nav = mejs.PluginDetector.nav,
-			ua = mejs.PluginDetector.ua.toLowerCase(),
-			i,
-			v,
-			html5Elements = ['source','track','audio','video'];
+			var format = options.timeFormat,
+				firstChar = format[0],
+				firstTwoPlaces = (format[1] == format[0]),
+				separatorIndex = firstTwoPlaces ? 2 : 1,
+				separator = ':',
+				hours = Math.floor(time / 3600) % 24,
+				minutes = Math.floor(time / 60) % 60,
+				seconds = Math.floor(time % 60),
+				frames = Math.floor(((time % 1) * fps).toFixed(3)),
+				lis = [
+					[frames, 'f'],
+					[seconds, 's'],
+					[minutes, 'm'],
+					[hours, 'h']
+				];
 
-		// detect browsers (only the ones that have some kind of quirk we need to work around)
-		t.isiPad = (ua.match(/ipad/i) !== null);
-		t.isiPhone = (ua.match(/iphone/i) !== null);
-		t.isiOS = t.isiPhone || t.isiPad;
-		t.isAndroid = (ua.match(/android/i) !== null);
-		t.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
-		t.isBustedNativeHTTPS = (location.protocol === 'https:' && (ua.match(/android [12]\./) !== null || ua.match(/macintosh.* version.* safari/) !== null));
-		t.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
-		t.isChrome = (ua.match(/chrome/gi) !== null);
-		t.isChromium = (ua.match(/chromium/gi) !== null);
-		t.isFirefox = (ua.match(/firefox/gi) !== null);
-		t.isWebkit = (ua.match(/webkit/gi) !== null);
-		t.isGecko = (ua.match(/gecko/gi) !== null) && !t.isWebkit && !t.isIE;
-		t.isOpera = (ua.match(/opera/gi) !== null);
-		t.hasTouch = ('ontouchstart' in window); //  && window.ontouchstart != null); // this breaks iOS 7
+			// Try to get the separator from the format
+			if (format.length < separatorIndex) {
+				separator = format[separatorIndex];
+			}
 
-		// Borrowed from `Modernizr.svgasimg`, sources:
-		// - https://github.com/Modernizr/Modernizr/issues/687
-		// - https://github.com/Modernizr/Modernizr/pull/1209/files
-		t.svgAsImg = !!document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#Image', '1.1');
+			var required = false;
 
-		// create HTML5 media elements for IE before 9, get a <video> element for fullscreen detection
-		for (i=0; i<html5Elements.length; i++) {
-			v = document.createElement(html5Elements[i]);
-		}
+			for (var i = 0, len = lis.length; i < len; i++) {
+				if (format.indexOf(lis[i][1]) !== -1) {
+					required = true;
+				}
+				else if (required) {
+					var hasNextValue = false;
+					for (var j = i; j < len; j++) {
+						if (lis[j][0] > 0) {
+							hasNextValue = true;
+							break;
+						}
+					}
 
-		t.supportsMediaTag = (typeof v.canPlayType !== 'undefined' || t.isBustedAndroid);
+					if (!hasNextValue) {
+						break;
+					}
 
-		// Fix for IE9 on Windows 7N / Windows 7KN (Media Player not installer)
-		try{
-			v.canPlayType("video/mp4");
-		}catch(e){
-			t.supportsMediaTag = false;
-		}
+					if (!firstTwoPlaces) {
+						format = firstChar + format;
+					}
+					format = lis[i][1] + separator + format;
+					if (firstTwoPlaces) {
+						format = lis[i][1] + format;
+					}
+					firstChar = lis[i][1];
+				}
+			}
+			options.currentTimeFormat = format;
+		},
 
-		t.supportsPointerEvents = (function() {
-			// TAKEN FROM MODERNIZR
-			var element = document.createElement('x'),
-				documentElement = document.documentElement,
-				getComputedStyle = window.getComputedStyle,
-				supports;
-			if(!('pointerEvents' in element.style)){
+		/**
+		 * Convert Society of Motion Picture and Television Engineers (SMTPE) time code into seconds
+		 *
+		 * @param {String} SMPTE
+		 * @return {number}
+		 */
+		convertSMPTEtoSeconds: function (SMPTE) {
+			if (typeof SMPTE !== 'string')
+				return false;
+
+			SMPTE = SMPTE.replace(',', '.');
+
+			var secs = 0,
+				decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
+				multiplier = 1;
+
+			SMPTE = SMPTE.split(':').reverse();
+
+			for (var i = 0; i < SMPTE.length; i++) {
+				multiplier = 1;
+				if (i > 0) {
+					multiplier = Math.pow(60, i);
+				}
+				secs += Number(SMPTE[i]) * multiplier;
+			}
+			return Number(secs.toFixed(decimalLen));
+		},
+		// taken from underscore
+		debounce: function (func, wait, immediate) {
+			var timeout;
+			return function () {
+				var context = this, args = arguments;
+				var later = function () {
+					timeout = null;
+					if (!immediate) func.apply(context, args);
+				};
+				var callNow = immediate && !timeout;
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+				if (callNow) func.apply(context, args);
+			};
+		},
+		/**
+		 * Returns true if targetNode appears after sourceNode in the dom.
+		 * @param {HTMLElement} sourceNode - the source node for comparison
+		 * @param {HTMLElement} targetNode - the node to compare against sourceNode
+		 */
+		isNodeAfter: function (sourceNode, targetNode) {
+			return !!(
+				sourceNode &&
+				targetNode &&
+				typeof sourceNode.compareDocumentPosition === 'function' &&
+				sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
+			);
+		},
+		/**
+		 * Determine if an object contains any elements
+		 *
+		 * @see http://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+		 * @param {Object} instance
+		 * @return {Boolean}
+		 */
+		isObjectEmpty: function (instance) {
+		for (var key in instance) {
+			if (instance.hasOwnProperty(key)) {
 				return false;
 			}
+		}
+
+		return true;
+	}
+	};
+
+	/**
+	 * @class {mejs.MediaFeatures}
+	 * @class {mejs.Features}
+	 */
+	mejs.MediaFeatures = mejs.Features = (function () {
+
+		var features = {},
+			nav = win.navigator,
+			ua = nav.userAgent.toLowerCase(),
+			html5Elements = ['source', 'track', 'audio', 'video'],
+			video = null;
+
+		// for IE
+		for (var i = 0, il = html5Elements.length; i < il; i++) {
+			video = doc.createElement(html5Elements[i]);
+		}
+
+		features.isiPad = (ua.match(/ipad/i) !== null);
+		features.isiPhone = (ua.match(/iphone/i) !== null);
+		features.isiOS = features.isiPhone || features.isiPad;
+		features.isAndroid = (ua.match(/android/i) !== null);
+		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+		features.isChrome = (ua.match(/chrome/gi) !== null);
+		features.isFirefox = (ua.match(/firefox/gi) !== null);
+
+		/*
+		 Possibly add back in when needed
+		 features.isSafari = ua.match(/safari/gi) !== null && !features.isChrome;
+		 features.isOpera = (ua.match(/opera/gi) !== null);
+		 features.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
+		 features.isWebkit = (ua.match(/webkit/gi) !== null);
+		 features.isGecko = (ua.match(/gecko/gi) !== null) && !features.isWebkit;
+
+		 */
+
+		// borrowed from Modernizr
+		features.hasTouch = ('ontouchstart' in win);
+		features.svg = !!doc.createElementNS && !!doc.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+
+		features.supportsPointerEvents = (function () {
+			var
+				element = doc.createElement('x'),
+				documentElement = doc.documentElement,
+				getComputedStyle = win.getComputedStyle,
+				supports
+				;
+
+			if (!('pointerEvents' in element.style)) {
+				return false;
+			}
+
 			element.style.pointerEvents = 'auto';
 			element.style.pointerEvents = 'x';
 			documentElement.appendChild(element);
-			supports = getComputedStyle &&
-				getComputedStyle(element, '').pointerEvents === 'auto';
+			supports = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
 			documentElement.removeChild(element);
 			return !!supports;
 		})();
 
 
-		 // Older versions of Firefox can't move plugins around without it resetting,
-		t.hasFirefoxPluginMovingProblem = false;
+		// Older versions of Firefox can't move plugins around without it resetting,
+		features.hasFirefoxPluginMovingProblem = false;
 
-		// detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
+		// Detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 
 		// iOS
-		t.hasiOSFullScreen = (typeof v.webkitEnterFullscreen !== 'undefined');
+		features.hasiOSFullScreen = (video.webkitEnterFullscreen !== undefined);
 
 		// W3C
-		t.hasNativeFullscreen = (typeof v.requestFullscreen !== 'undefined');
+		features.hasNativeFullscreen = (video.requestFullscreen !== undefined);
 
 		// webkit/firefox/IE11+
-		t.hasWebkitNativeFullScreen = (typeof v.webkitRequestFullScreen !== 'undefined');
-		t.hasMozNativeFullScreen = (typeof v.mozRequestFullScreen !== 'undefined');
-		t.hasMsNativeFullScreen = (typeof v.msRequestFullscreen !== 'undefined');
+		features.hasWebkitNativeFullScreen = (video.webkitRequestFullScreen !== undefined);
+		features.hasMozNativeFullScreen = (video.mozRequestFullScreen !== undefined);
+		features.hasMsNativeFullScreen = (video.msRequestFullscreen !== undefined);
 
-		t.hasTrueNativeFullScreen = (t.hasWebkitNativeFullScreen || t.hasMozNativeFullScreen || t.hasMsNativeFullScreen);
-		t.nativeFullScreenEnabled = t.hasTrueNativeFullScreen;
+		features.hasTrueNativeFullScreen =
+			(features.hasWebkitNativeFullScreen || features.hasMozNativeFullScreen || features.hasMsNativeFullScreen);
+		features.nativeFullScreenEnabled = features.hasTrueNativeFullScreen;
 
 		// Enabled?
-		if (t.hasMozNativeFullScreen) {
-			t.nativeFullScreenEnabled = document.mozFullScreenEnabled;
-		} else if (t.hasMsNativeFullScreen) {
-			t.nativeFullScreenEnabled = document.msFullscreenEnabled;
+		if (features.hasMozNativeFullScreen) {
+			features.nativeFullScreenEnabled = doc.mozFullScreenEnabled;
+		} else if (features.hasMsNativeFullScreen) {
+			features.nativeFullScreenEnabled = doc.msFullscreenEnabled;
 		}
 
-		if (t.isChrome) {
-			t.hasiOSFullScreen = false;
+		if (features.isChrome) {
+			features.hasiOSFullScreen = false;
 		}
 
-		if (t.hasTrueNativeFullScreen) {
+		if (features.hasTrueNativeFullScreen) {
 
-			t.fullScreenEventName = '';
-			if (t.hasWebkitNativeFullScreen) {
-				t.fullScreenEventName = 'webkitfullscreenchange';
+			features.fullScreenEventName = '';
+			if (features.hasWebkitNativeFullScreen) {
+				features.fullScreenEventName = 'webkitfullscreenchange';
 
-			} else if (t.hasMozNativeFullScreen) {
-				t.fullScreenEventName = 'mozfullscreenchange';
+			} else if (features.hasMozNativeFullScreen) {
+				features.fullScreenEventName = 'mozfullscreenchange';
 
-			} else if (t.hasMsNativeFullScreen) {
-				t.fullScreenEventName = 'MSFullscreenChange';
+			} else if (features.hasMsNativeFullScreen) {
+				features.fullScreenEventName = 'MSFullscreenChange';
 			}
 
-			t.isFullScreen = function() {
-				if (t.hasMozNativeFullScreen) {
-					return d.mozFullScreen;
+			features.isFullScreen = function () {
+				if (features.hasMozNativeFullScreen) {
+					return doc.mozFullScreen;
 
-				} else if (t.hasWebkitNativeFullScreen) {
-					return d.webkitIsFullScreen;
+				} else if (features.hasWebkitNativeFullScreen) {
+					return doc.webkitIsFullScreen;
 
-				} else if (t.hasMsNativeFullScreen) {
-					return d.msFullscreenElement !== null;
+				} else if (features.hasMsNativeFullScreen) {
+					return doc.msFullscreenElement !== null;
 				}
-			}
+			};
 
-			t.requestFullScreen = function(el) {
+			features.requestFullScreen = function (el) {
 
-				if (t.hasWebkitNativeFullScreen) {
+				if (features.hasWebkitNativeFullScreen) {
 					el.webkitRequestFullScreen();
-
-				} else if (t.hasMozNativeFullScreen) {
+				} else if (features.hasMozNativeFullScreen) {
 					el.mozRequestFullScreen();
-
-				} else if (t.hasMsNativeFullScreen) {
+				} else if (features.hasMsNativeFullScreen) {
 					el.msRequestFullscreen();
+				}
+			};
+
+			features.cancelFullScreen = function () {
+				if (features.hasWebkitNativeFullScreen) {
+					doc.webkitCancelFullScreen();
+
+				} else if (features.hasMozNativeFullScreen) {
+					doc.mozCancelFullScreen();
+
+				} else if (features.hasMsNativeFullScreen) {
+					doc.msExitFullscreen();
 
 				}
-			}
-
-			t.cancelFullScreen = function() {
-				if (t.hasWebkitNativeFullScreen) {
-					document.webkitCancelFullScreen();
-
-				} else if (t.hasMozNativeFullScreen) {
-					document.mozCancelFullScreen();
-
-				} else if (t.hasMsNativeFullScreen) {
-					document.msExitFullscreen();
-
-				}
-			}
-
+			};
 		}
-
 
 		// OS X 10.5 can't do this even if it says it can :(
-		if (t.hasiOSFullScreen && ua.match(/mac os x 10_5/i)) {
-			t.hasNativeFullScreen = false;
-			t.hasiOSFullScreen = false;
+		if (features.hasiOSFullScreen && ua.match(/mac os x 10_5/i)) {
+			features.hasNativeFullScreen = false;
+			features.hasiOSFullScreen = false;
 		}
 
-	}
-};
-mejs.MediaFeatures.init();
+		// Test if Media Source Extensions are supported by browser
+		features.hasMse = ('MediaSource' in win);
 
-/*
-extension methods to <video> or <audio> object to bring it into parity with PluginMediaElement (see below)
-*/
-mejs.HtmlMediaElement = {
-	pluginType: 'native',
-	isFullScreen: false,
+		features.supportsMediaTag = (video.canPlayType !== undefined || features.hasMse);
 
-	setCurrentTime: function (time) {
-		this.currentTime = time;
-	},
+		return features;
+	})();
 
-	setMuted: function (muted) {
-		this.muted = muted;
-	},
+})(window, document, window.mejs || {});
+// IE6,7,8
+// Production steps of ECMA-262, Edition 5, 15.4.4.14
+// Reference: http://es5.github.io/#x15.4.4.14
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function (searchElement, fromIndex) {
 
-	setVolume: function (volume) {
-		this.volume = volume;
-	},
+		var k;
 
-	// for parity with the plugin versions
-	stop: function () {
-		this.pause();
-	},
-
-	// This can be a url string
-	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
-	setSrc: function (url) {
-		
-		// Fix for IE9 which can't set .src when there are <source> elements. Awesome, right?
-		var 
-			existingSources = this.getElementsByTagName('source');
-		while (existingSources.length > 0){
-			this.removeChild(existingSources[0]);
+		// 1. Let O be the result of calling ToObject passing
+		//	   the this value as the argument.
+		if (this === undefined || this === null) {
+			throw new TypeError('"this" is null or not defined');
 		}
-	
-		if (typeof url == 'string') {
-			this.src = url;
-		} else {
-			var i, media;
 
-			for (i=0; i<url.length; i++) {
-				media = url[i];
-				if (this.canPlayType(media.type)) {
-					this.src = media.src;
-					break;
-				}
+		var O = Object(this);
+
+		// 2. Let lenValue be the result of calling the Get
+		//	   internal method of O with the argument "length".
+		// 3. Let len be ToUint32(lenValue).
+		var len = O.length >>> 0;
+
+		// 4. If len is 0, return -1.
+		if (len === 0) {
+			return -1;
+		}
+
+		// 5. If argument fromIndex was passed let n be
+		//	   ToInteger(fromIndex); else let n be 0.
+		var n = +fromIndex || 0;
+
+		if (Math.abs(n) == Infinity) {
+			n = 0;
+		}
+
+		// 6. If n >= len, return -1.
+		if (n >= len) {
+			return -1;
+		}
+
+		// 7. If n >= 0, then Let k be n.
+		// 8. Else, n<0, Let k be len - abs(n).
+		//	   If k is less than 0, then let k be 0.
+		k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+		// 9. Repeat, while k < len
+		while (k < len) {
+			// a. Let Pk be ToString(k).
+			//   This is implicit for LHS operands of the in operator
+			// b. Let kPresent be the result of calling the
+			//	HasProperty internal method of O with argument Pk.
+			//   This step can be combined with c
+			// c. If kPresent is true, then
+			//	i.	Let elementK be the result of calling the Get
+			//		internal method of O with the argument ToString(k).
+			//   ii.	Let same be the result of applying the
+			//		Strict Equality Comparison Algorithm to
+			//		searchElement and elementK.
+			//  iii.	If same is true, return k.
+			if (k in O && O[k] === searchElement) {
+				return k;
 			}
+			k++;
 		}
-	},
+		return -1;
+	};
+}
 
-	setVideoSize: function (width, height) {
-		this.width = width;
-		this.height = height;
-	}
-};
+// document.createEvent for IE8 or other old browsers that do not implement it
+// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
+if (document.createEvent === undefined) {
+	document.createEvent = function (event) {
 
-/*
-Mimics the <video/audio> element by calling Flash's External Interface or Silverlights [ScriptableMember]
-*/
-mejs.PluginMediaElement = function (pluginid, pluginType, mediaUrl) {
-	this.id = pluginid;
-	this.pluginType = pluginType;
-	this.src = mediaUrl;
-	this.events = {};
-	this.attributes = {};
-};
+		var e;
 
-// JavaScript values and ExternalInterface methods that match HTML5 video properties methods
-// http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/fl/video/FLVPlayback.html
-// http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html
-mejs.PluginMediaElement.prototype = {
+		e = document.createEventObject();
+		e.timeStamp = (new Date()).getTime();
+		e.enumerable = true;
+		e.writable = true;
+		e.configurable = true;
 
-	// special
-	pluginElement: null,
-	pluginType: '',
-	isFullScreen: false,
-
-	// not implemented :(
-	playbackRate: -1,
-	defaultPlaybackRate: -1,
-	seekable: [],
-	played: [],
-
-	// HTML5 read-only properties
-	paused: true,
-	ended: false,
-	seeking: false,
-	duration: 0,
-	error: null,
-	tagName: '',
-
-	// HTML5 get/set properties, but only set (updated by event handlers)
-	muted: false,
-	volume: 1,
-	currentTime: 0,
-
-	// HTML5 methods
-	play: function () {
-		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
-				this.pluginApi.playVideo();
-			} else {
-				this.pluginApi.playMedia();
+		e.initEvent = function (type, bubbles, cancelable) {
+			this.type = type;
+			this.bubbles = !!bubbles;
+			this.cancelable = !!cancelable;
+			if (!this.bubbles) {
+				this.stopPropagation = function () {
+					this.stoppedPropagation = true;
+					this.cancelBubble = true;
+				};
 			}
-			this.paused = false;
-		}
-	},
-	load: function () {
-		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
-			} else {
-				this.pluginApi.loadMedia();
-			}
-			
-			this.paused = false;
-		}
-	},
-	pause: function () {
-		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
-		        if( this.pluginApi.getPlayerState() == 1 ) {
-				    this.pluginApi.pauseVideo();
-                }
-			} else {
-				this.pluginApi.pauseMedia();
-			}			
-			
-			
-			this.paused = true;
-		}
-	},
-	stop: function () {
-		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
-				this.pluginApi.stopVideo();
-			} else {
-				this.pluginApi.stopMedia();
-			}	
-			this.paused = true;
-		}
-	},
-	canPlayType: function(type) {
-		var i,
-			j,
-			pluginInfo,
-			pluginVersions = mejs.plugins[this.pluginType];
+		};
 
-		for (i=0; i<pluginVersions.length; i++) {
-			pluginInfo = pluginVersions[i];
+		return e;
+	};
+}
+/**
+ * MediaElement core
+ *
+ * This file is the foundation to create/render the media.
+ */
+(function (win, doc, mejs, undefined) {
 
-			// test if user has the correct plugin version
-			if (mejs.PluginDetector.hasPluginVersion(this.pluginType, pluginInfo.version)) {
+	"use strict";
 
-				// test for plugin playback types
-				for (j=0; j<pluginInfo.types.length; j++) {
-					// find plugin that can play the type
-					if (type == pluginInfo.types[j]) {
-						return 'probably';
+	// Basic HTML5 settings
+	mejs.html5media = {
+		/**
+		 * @type {String[]}
+		 */
+		properties: [
+			// GET/SET
+			'volume', 'src', 'currentTime', 'muted',
+
+			// GET only
+			'duration', 'paused', 'ended',
+
+			// OTHERS
+			'error', 'currentSrc', 'networkState', 'preload', 'buffered', 'bufferedBytes', 'bufferedTime', 'readyState', 'seeking',
+			'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'seekable', 'autoplay', 'loop', 'controls'
+		],
+		/**
+		 * @type {String[]}
+		 */
+		methods: [
+			'load', 'play', 'pause', 'canPlayType'
+		],
+		/**
+		 * @type {String[]}
+		 */
+		events: [
+			'loadstart', 'progress', 'suspend', 'abort', 'error', 'emptied', 'stalled', 'play', 'pause', 'loadedmetadata',
+			'loadeddata', 'waiting', 'playing', 'canplay', 'canplaythrough', 'seeking', 'seeked', 'timeupdate', 'ended',
+			'ratechange', 'durationchange', 'volumechange'
+		],
+		/**
+		 * @type {String[]}
+		 */
+		mediaTypes: [
+			'audio/mp3', 'audio/ogg', 'audio/oga', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav', 'audio/mpeg', 'audio/mp4',
+			'video/mp4', 'video/webm', 'video/ogg'
+		]
+	};
+
+
+	// List of possible renderers (HTML5, Flash, YouTube, Soundcloud, pure JS, etc.)
+	mejs.Renderers = {
+
+		/**
+		 * Store render(s) data
+		 * @type {Object[]}
+		 */
+		renderers: {},
+
+		/**
+		 * List the specific renders to be used; ordered as they are processed
+		 *
+		 * @type {String[]}
+		 */
+		order: [],
+
+		/**
+		 * Register a new renderer
+		 * @param {Object} renderer - An object with all the rendered information (name REQUIRED)
+		 */
+		add: function (renderer) {
+			this.renderers[renderer.name] = renderer;
+			this.order.push(renderer.name);
+		},
+
+		/**
+		 * Loop through renderers available and determine the proper one to use
+		 *
+		 * The mechanism that will determine if the renderer is the correct one is the `canPlay` method
+		 * inside of each renderer file.
+		 * @param {Object[]} mediaFiles - A list of source and type obtained from video/audio/source tags: [{src:'',type:''}]
+		 * @param {?String[]} renderers - Optional list of pre-selected renderers
+		 * @return {?Object}
+		 */
+		selectRenderer: function (mediaFiles, renderers) {
+
+			var
+				t = this,
+				i,
+				il,
+				j,
+				jl,
+				rendererName,
+				renderer
+			;
+
+			// First attempt: check if there are matches with specified ones
+			if (renderers !== undefined && renderers !== null) {
+				for (i = 0, il = renderers.length; i < il; i++) {
+					rendererName = renderers[i];
+					renderer = t.renderers[rendererName];
+					if (renderer !== null && renderer !== undefined) {
+						for (j = 0, jl = mediaFiles.length; j < jl; j++) {
+							if (renderer.canPlayType(mediaFiles[j].type)) {
+								return {
+									rendererName: rendererName,
+									src: mediaFiles[j].src
+								};
+							}
+						}
 					}
 				}
 			}
+			// Second attempt: check matches with all available renderers specified via `mejs.Renderers.order`
+			else {
+				for (i = 0, il = t.order.length; i < il; i++) {
+					rendererName = t.order[i];
+					renderer = t.renderers[rendererName];
+
+					if (renderer !== null && renderer !== undefined) {
+						for (j = 0, jl = mediaFiles.length; j < jl; j++) {
+							if (renderer.canPlayType(mediaFiles[j].type)) {
+								return {
+									rendererName: rendererName,
+									src: mediaFiles[j].src
+								};
+							}
+						}
+					}
+				}
+			}
+
+			return null;
 		}
+	};
 
-		return '';
-	},
-	
-	positionFullscreenButton: function(x,y,visibleAndAbove) {
-		if (this.pluginApi != null && this.pluginApi.positionFullscreenButton) {
-			this.pluginApi.positionFullscreenButton(Math.floor(x),Math.floor(y),visibleAndAbove);
-		}
-	},
-	
-	hideFullscreenButton: function() {
-		if (this.pluginApi != null && this.pluginApi.hideFullscreenButton) {
-			this.pluginApi.hideFullscreenButton();
-		}		
-	},	
-	
+	// Basic defaults for MediaElement
+	mejs.MediaElementOptionsDefaults = {
+		/**
+		 * List of the renderers to use
+		 * @type {String[]}
+		 */
+		renderers: [],
+		/**
+		 * Name of MediaElement container
+		 * @type {String}
+		 */
+		fakeNodeName: 'mediaelementwrapper',
+		/**
+		 * The path where shims are located
+		 * @type {String}
+		 */
+		pluginPath: 'build/'
+	};
 
-	// custom methods since not all JavaScript implementations support get/set
+	/**
+	 * Create a fake DOM element with properties that look like a real HTMLMediaElement
+	 * with all its methods/properties/events.
+	 *
+	 * @constructor
+	 * @param {{String|HTMLElement}} idOrNode
+	 * @param {Object} options
+	 * @return {HTMLElement}
+	 */
+	mejs.MediaElement = function (idOrNode, options) {
 
-	// This can be a url string
-	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
-	setSrc: function (url) {
-		if (typeof url == 'string') {
-			this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(url));
-			this.src = mejs.Utility.absolutizeUrl(url);
+		options = mejs.Utils.extend(mejs.MediaElementOptionsDefaults, options);
+
+		// create our node (note: older versions of iOS don't support Object.defineProperty on DOM nodes)
+		var mediaElement = doc.createElement(options.fakeNodeName);
+
+		mediaElement.options = options;
+
+		var id = idOrNode;
+
+		if (typeof idOrNode === 'string') {
+			mediaElement.originalNode = doc.getElementById(idOrNode);
 		} else {
-			var i, media;
+			mediaElement.originalNode = idOrNode;
+			id = idOrNode.id;
+		}
 
-			for (i=0; i<url.length; i++) {
-				media = url[i];
-				if (this.canPlayType(media.type)) {
-					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
-					this.src = mejs.Utility.absolutizeUrl(media.src);
-					break;
+		id = id || 'mejs_' + Math.random().toString().slice(2);
+
+		if (mediaElement.originalNode !== undefined && mediaElement.originalNode !== null && mediaElement.appendChild) {
+			// change id
+			mediaElement.originalNode.setAttribute('id', id + '_from_mejs');
+
+			// add next to this one
+			mediaElement.originalNode.parentNode.insertBefore(mediaElement, mediaElement.originalNode);
+
+			// insert this one inside
+			mediaElement.appendChild(mediaElement.originalNode);
+		} else {
+			// TODO: where to put the node?
+		}
+
+		mediaElement.id = id;
+
+		mediaElement.renderers = {};
+		mediaElement.renderer = null;
+		mediaElement.rendererName = null;
+
+		// add properties get/set
+		var
+			props = mejs.html5media.properties,
+			i,
+			il,
+			assignGettersSetters = function(propName) {
+				// src is a special one below
+				if (propName !== 'src') {
+
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1),
+
+						getFn = function () {
+							//
+
+							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+								return mediaElement.renderer['get' + capName]();
+
+								//return mediaElement.renderer[propName];
+							} else {
+								return null;
+							}
+						},
+						setFn = function (value) {
+							//
+
+							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+								mediaElement.renderer['set' + capName](value);
+
+								//mediaElement.renderer[propName] = value;
+							}
+						};
+
+					mejs.Utils.addProperty(mediaElement, propName, getFn, setFn);
+
+					mediaElement['get' + capName] = getFn;
+					mediaElement['set' + capName] = setFn;
 				}
-			}
+			};
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
 		}
 
-	},
-	setCurrentTime: function (time) {
-		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube' || this.pluginType == 'vimeo') {
-				this.pluginApi.seekTo(time);
-			} else {
-				this.pluginApi.setCurrentTime(time);
-			}				
-			
-			
-			
-			this.currentTime = time;
-		}
-	},
-	setVolume: function (volume) {
-		if (this.pluginApi != null) {
-			// same on YouTube and MEjs
-			if (this.pluginType == 'youtube') {
-				this.pluginApi.setVolume(volume * 100);
-			} else {
-				this.pluginApi.setVolume(volume);
-			}
-			this.volume = volume;
-		}
-	},
-	setMuted: function (muted) {
-		if (this.pluginApi != null) {
-			if (this.pluginType == 'youtube') {
-				if (muted) {
-					this.pluginApi.mute();
+		// special .src property
+		var getSrc = function () {
+
+				if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+					return mediaElement.renderer.getSrc();
 				} else {
-					this.pluginApi.unMute();
+					return null;
 				}
-				this.muted = muted;
-				this.dispatchEvent({type:'volumechange'});
-			} else {
-				this.pluginApi.setMuted(muted);
-			}
-			this.muted = muted;
-		}
-	},
+			},
+			setSrc = function (value) {
 
-	// additional non-HTML5 methods
-	setVideoSize: function (width, height) {
-		
-		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
-			if (this.pluginElement && this.pluginElement.style) {
-				this.pluginElement.style.width = width + 'px';
-				this.pluginElement.style.height = height + 'px';
-			}
-			if (this.pluginApi != null && this.pluginApi.setVideoSize) {
-				this.pluginApi.setVideoSize(width, height);
-			}
-		//}
-	},
+				var renderInfo,
+					mediaFiles = [];
 
-	setFullscreen: function (fullscreen) {
-		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
-			this.pluginApi.setFullscreen(fullscreen);
-		}
-	},
-	
-	enterFullScreen: function() {
-		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
-			this.setFullscreen(true);
-		}		
-		
-	},
-	
-	exitFullScreen: function() {
-		if (this.pluginApi != null && this.pluginApi.setFullscreen) {
-			this.setFullscreen(false);
-		}
-	},	
+				// clean up URLs
+				if (typeof value === 'string') {
+					mediaFiles.push({
+						src: value,
+						type: value ? mejs.Utils.getTypeFromFile(value) : ''
+					});
+				} else {
+					for (i = 0, il = value.length; i < il; i++) {
 
-	// start: fake events
-	addEventListener: function (eventName, callback, bubble) {
-		this.events[eventName] = this.events[eventName] || [];
-		this.events[eventName].push(callback);
-	},
-	removeEventListener: function (eventName, callback) {
-		if (!eventName) { this.events = {}; return true; }
-		var callbacks = this.events[eventName];
-		if (!callbacks) return true;
-		if (!callback) { this.events[eventName] = []; return true; }
-		for (var i = 0; i < callbacks.length; i++) {
-			if (callbacks[i] === callback) {
-				this.events[eventName].splice(i, 1);
+						var src = mejs.Utils.absolutizeUrl(value[i].src),
+							type = value[i].type;
+
+						mediaFiles.push({
+							src: src,
+							type: (type === '' || type === null || type === undefined) && src ? mejs.Utils.getTypeFromFile(src) : type
+						});
+
+					}
+				}
+
+				// Ensure that the original gets the first source found
+				if (mediaFiles[0].src) {
+					mediaElement.originalNode.setAttribute('src', mediaFiles[0].src);
+				} else {
+					mediaElement.originalNode.setAttribute('src', '');
+				}
+
+				//
+
+				// find a renderer and URL match
+				renderInfo = mejs.Renderers.selectRenderer(mediaFiles,
+					(options.renderers.length ? options.renderers : null));
+
+				//
+				var event;
+
+				// Ensure that the original gets the first source found
+				if (mediaFiles[0].src) {
+					mediaElement.originalNode.setAttribute('src', mediaFiles[0].src);
+				} else {
+					mediaElement.originalNode.setAttribute('src', '');
+				}
+
+				// did we find a renderer?
+				if (renderInfo === null) {
+					event = doc.createEvent("HTMLEvents");
+					event.initEvent('error', false, false);
+					event.message = 'No renderer found';
+					mediaElement.dispatchEvent(event);
+					return;
+				}
+
+				// turn on the renderer (this checks for the existing renderer already)
+				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
+
+				if (mediaElement.renderer === undefined || mediaElement.renderer === null) {
+					event = doc.createEvent("HTMLEvents");
+					event.initEvent('error', false, false);
+					event.message = 'Error creating renderer';
+					mediaElement.dispatchEvent(event);
+				}
+			};
+
+		mejs.Utils.addProperty(mediaElement, 'src', getSrc, setSrc);
+		mediaElement.getSrc = getSrc;
+		mediaElement.setSrc = setSrc;
+
+		// add methods
+		var
+			methods = mejs.html5media.methods,
+			assignMethods = function (methodName) {
+				// run the method on the current renderer
+				mediaElement[methodName] = function () {
+					
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+						return mediaElement.renderer[methodName](arguments);
+					} else {
+						return null;
+					}
+				};
+
+			}
+		;
+		for (i = 0, il = methods.length; i < il; i++) {
+			assignMethods(methods[i]);
+		}
+
+		// IE && iOS
+		if (!mediaElement.addEventListener) {
+
+			mediaElement.events = {};
+
+			// start: fake events
+			mediaElement.addEventListener = function (eventName, callback) {
+				// create or find the array of callbacks for this eventName
+				mediaElement.events[eventName] = mediaElement.events[eventName] || [];
+
+				// push the callback into the stack
+				mediaElement.events[eventName].push(callback);
+			};
+			mediaElement.removeEventListener = function (eventName, callback) {
+				// no eventName means remove all listeners
+				if (!eventName) {
+					mediaElement.events = {};
+					return true;
+				}
+
+				// see if we have any callbacks for this eventName
+				var callbacks = mediaElement.events[eventName];
+				if (!callbacks) {
+					return true;
+				}
+
+				// check for a specific callback
+				if (!callback) {
+					mediaElement.events[eventName] = [];
+					return true;
+				}
+
+				// remove the specific callback
+				for (var i = 0, il = callbacks.length; i < il; i++) {
+					if (callbacks[i] === callback) {
+						mediaElement.events[eventName].splice(i, 1);
+						return true;
+					}
+				}
+				return false;
+			};
+
+			/**
+			 *
+			 * @param {Event} event
+			 */
+			mediaElement.dispatchEvent = function (event) {
+
+				var i,
+					//args,
+					callbacks = mediaElement.events[event.type];
+
+				//
+
+				if (callbacks) {
+					//args = Array.prototype.slice.call(arguments, 1);
+					for (i = 0, il = callbacks.length; i < il; i++) {
+
+						//
+
+						callbacks[i].apply(null, [event]);
+					}
+				}
+			};
+		}
+
+		/**
+		 * Determine whether the renderer was found or not
+		 *
+		 * @param {String} rendererName
+		 * @param {Object[]} mediaFiles
+		 * @return {Boolean}
+		 */
+		mediaElement.changeRenderer = function (rendererName, mediaFiles) {
+
+			// check for a match on the current renderer
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
+
+				
+
+				mediaElement.renderer.show();
+				mediaElement.renderer.setSrc(mediaFiles[0].src);
+
 				return true;
 			}
-		}
-		return false;
-	},	
-	dispatchEvent: function (event) {
-		var i,
-			args,
-			callbacks = this.events[event.type];
 
-		if (callbacks) {
-			for (i = 0; i < callbacks.length; i++) {
-				callbacks[i].apply(this, [event]);
-			}
-		}
-	},
-	// end: fake events
-	
-	// fake DOM attribute methods
-	hasAttribute: function(name){
-		return (name in this.attributes);  
-	},
-	removeAttribute: function(name){
-		delete this.attributes[name];
-	},
-	getAttribute: function(name){
-		if (this.hasAttribute(name)) {
-			return this.attributes[name];
-		}
-		return null;
-	},
-	setAttribute: function(name, value){
-		this.attributes[name] = value;
-	},
+			// if existing renderer is not the right one, then hide it
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 
-	remove: function() {
-		mejs.Utility.removeSwf(this.pluginElement.id);
-	}
-};
-
-/*
-Default options
-*/
-mejs.MediaElementDefaults = {
-	// allows testing on HTML5, flash, silverlight
-	// auto: attempts to detect what the browser can do
-	// auto_plugin: prefer plugins and then attempt native HTML5
-	// native: forces HTML5 playback
-	// shim: disallows HTML5, will attempt either Flash or Silverlight
-	// none: forces fallback view
-	mode: 'auto',
-	// remove or reorder to change plugin priority and availability
-	plugins: ['flash','silverlight','youtube','vimeo'],
-	// shows debug errors on screen
-	enablePluginDebug: false,
-	// use plugin for browsers that have trouble with Basic Authentication on HTTPS sites
-	httpsBasicAuthSite: false,
-	// overrides the type specified, useful for dynamic instantiation
-	type: '',
-	// path to Flash and Silverlight plugins
-	pluginPath: mejs.Utility.getScriptPath(['mediaelement.js','mediaelement.min.js','mediaelement-and-player.js','mediaelement-and-player.min.js']),
-	// name of flash file
-	flashName: 'flashmediaelement.swf',
-	// streamer for RTMP streaming
-	flashStreamer: '',
-	// set to 'always' for CDN version
-	flashScriptAccess: 'sameDomain',	
-	// turns on the smoothing filter in Flash
-	enablePluginSmoothing: false,
-	// enabled pseudo-streaming (seek) on .mp4 files
-	enablePseudoStreaming: false,
-	// start query parameter sent to server for pseudo-streaming
-	pseudoStreamingStartQueryParam: 'start',
-	// name of silverlight file
-	silverlightName: 'silverlightmediaelement.xap',
-	// default if the <video width> is not specified
-	defaultVideoWidth: 480,
-	// default if the <video height> is not specified
-	defaultVideoHeight: 270,
-	// overrides <video width>
-	pluginWidth: -1,
-	// overrides <video height>
-	pluginHeight: -1,
-	// additional plugin variables in 'key=value' form
-	pluginVars: [],	
-	// rate in milliseconds for Flash and Silverlight to fire the timeupdate event
-	// larger number is less accurate, but less strain on plugin->JavaScript bridge
-	timerRate: 250,
-	// initial volume for player
-	startVolume: 0.8,
-	// custom error message in case media cannot be played; otherwise, Download File
-	// link will be displayed
-	customError: "",
-	success: function () { },
-	error: function () { }
-};
-
-/*
-Determines if a browser supports the <video> or <audio> element
-and returns either the native element or a Flash/Silverlight version that
-mimics HTML5 MediaElement
-*/
-mejs.MediaElement = function (el, o) {
-	return mejs.HtmlMediaElementShim.create(el,o);
-};
-
-mejs.HtmlMediaElementShim = {
-
-	create: function(el, o) {
-		var
-			options = {},
-			htmlMediaElement = (typeof(el) == 'string') ? document.getElementById(el) : el,
-			tagName = htmlMediaElement.tagName.toLowerCase(),
-			isMediaTag = (tagName === 'audio' || tagName === 'video'),
-			src = (isMediaTag) ? htmlMediaElement.getAttribute('src') : htmlMediaElement.getAttribute('href'),
-			poster = htmlMediaElement.getAttribute('poster'),
-			autoplay =  htmlMediaElement.getAttribute('autoplay'),
-			preload =  htmlMediaElement.getAttribute('preload'),
-			controls =  htmlMediaElement.getAttribute('controls'),
-			playback,
-			prop;
-
-		// extend options
-		for (prop in mejs.MediaElementDefaults) {
-			options[prop] = mejs.MediaElementDefaults[prop];
-		}
-		for (prop in o) {
-			options[prop] = o[prop];
-		}		
-		
-
-		// clean up attributes
-		src = 		(typeof src == 'undefined' 	|| src === null || src == '') ? null : src;		
-		poster =	(typeof poster == 'undefined' 	|| poster === null) ? '' : poster;
-		preload = 	(typeof preload == 'undefined' 	|| preload === null || preload === 'false') ? 'none' : preload;
-		autoplay = 	!(typeof autoplay == 'undefined' || autoplay === null || autoplay === 'false');
-		controls = 	!(typeof controls == 'undefined' || controls === null || controls === 'false');
-
-		// test for HTML5 and plugin capabilities
-		playback = this.determinePlayback(htmlMediaElement, options, mejs.MediaFeatures.supportsMediaTag, isMediaTag, src);
-		playback.url = (playback.url !== null) ? mejs.Utility.absolutizeUrl(playback.url) : '';
-        	playback.scheme = mejs.Utility.determineScheme(playback.url);
-
-		if (playback.method == 'native') {
-			// second fix for android
-			if (mejs.MediaFeatures.isBustedAndroid) {
-				htmlMediaElement.src = playback.url;
-				htmlMediaElement.addEventListener('click', function() {
-					htmlMediaElement.play();
-				}, false);
-			}
-		
-			// add methods to native HTMLMediaElement
-			return this.updateNative(playback, options, autoplay, preload);
-		} else if (playback.method !== '') {
-			// create plugin to mimic HTMLMediaElement
-			
-			return this.createPlugin( playback,  options, poster, autoplay, preload, controls);
-		} else {
-			// boo, no HTML5, no Flash, no Silverlight.
-			this.createErrorMessage( playback, options, poster );
-			
-			return this;
-		}
-	},
-	
-	determinePlayback: function(htmlMediaElement, options, supportsMediaTag, isMediaTag, src) {
-		var
-			mediaFiles = [],
-			i,
-			j,
-			k,
-			l,
-			n,
-			type,
-			result = { method: '', url: '', htmlMediaElement: htmlMediaElement, isVideo: (htmlMediaElement.tagName.toLowerCase() !== 'audio'), scheme: ''},
-			pluginName,
-			pluginVersions,
-			pluginInfo,
-			dummy,
-			media;
-			
-		// STEP 1: Get URL and type from <video src> or <source src>
-
-		// supplied type overrides <video type> and <source type>
-		if (typeof options.type != 'undefined' && options.type !== '') {
-			
-			// accept either string or array of types
-			if (typeof options.type == 'string') {
-				mediaFiles.push({type:options.type, url:src});
-			} else {
 				
-				for (i=0; i<options.type.length; i++) {
-					mediaFiles.push({type:options.type[i], url:src});
+
+				mediaElement.renderer.pause();
+				if (mediaElement.renderer.stop) {
+					mediaElement.renderer.stop();
+				}
+				mediaElement.renderer.hide();
+			}
+
+			// see if we have the renderer already created
+			var newRenderer = mediaElement.renderers[rendererName],
+				newRendererType = null;
+
+			if (newRenderer !== undefined && newRenderer !== null) {
+				
+
+				newRenderer.show();
+
+				newRenderer.setSrc(mediaFiles[0].src);
+
+				mediaElement.renderer = newRenderer;
+				return true;
+			}
+
+			var rendererArray = mediaElement.options.renderers.length > 0 ? mediaElement.options.renderers : mejs.Renderers.order;
+
+			// find the desired renderer in the array of possible ones
+			for (var index in rendererArray) {
+
+				if (rendererArray[index] === rendererName) {
+
+					// create the renderer
+					newRendererType = mejs.Renderers.renderers[rendererArray[index]];
+
+					var renderOptions = mejs.Utils.extend({}, mediaElement.options, newRendererType.options);
+					newRenderer = newRendererType.create(mediaElement, renderOptions, mediaFiles);
+					newRenderer.name = rendererName;
+
+					//
+
+					// store for later
+					mediaElement.renderers[newRendererType.name] = newRenderer;
+					mediaElement.renderer = newRenderer;
+					mediaElement.rendererName = rendererName;
+					newRenderer.show();
+
+
+					return true;
 				}
 			}
 
-		// test for src attribute first
-		} else if (src !== null) {
-			type = this.formatType(src, htmlMediaElement.getAttribute('type'));
-			mediaFiles.push({type:type, url:src});
+			
 
-		// then test for <source> elements
-		} else {
-			// test <source> types to see if they are usable
-			for (i = 0; i < htmlMediaElement.childNodes.length; i++) {
-				n = htmlMediaElement.childNodes[i];
-				if (n.nodeType == 1 && n.tagName.toLowerCase() == 'source') {
-					src = n.getAttribute('src');
-					type = this.formatType(src, n.getAttribute('type'));
-					media = n.getAttribute('media');
+			return false;
+		};
 
-					if (!media || !window.matchMedia || (window.matchMedia && window.matchMedia(media).matches)) {
-						mediaFiles.push({type:type, url:src});
+		/**
+		 * Set the element dimensions based on selected renderer's setSize method
+		 *
+		 * @param {number} width
+		 * @param {number} height
+		 */
+		mediaElement.setSize = function (width, height) {
+			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+				mediaElement.renderer.setSize(width, height);
+			}
+		};
+
+		// find <source> elements
+		if (mediaElement.originalNode !== null) {
+			var mediaFiles = [];
+
+			switch (mediaElement.originalNode.nodeName.toLowerCase()) {
+
+				case 'iframe':
+					mediaFiles.push({type: '', src: mediaElement.originalNode.getAttribute('src')});
+
+					break;
+
+				case 'audio':
+				case 'video':
+					var
+						n,
+						src,
+						type,
+						sources = mediaElement.originalNode.childNodes.length,
+						nodeSource = mediaElement.originalNode.getAttribute('src')
+						;
+
+					// Consider if node contains the `src` and `type` attributes
+					if (nodeSource) {
+						var node = mediaElement.originalNode;
+						mediaFiles.push({
+							type: mejs.Utils.formatType(nodeSource, node.getAttribute('type')),
+							src: nodeSource
+						});
+					}
+
+					// test <source> types to see if they are usable
+					for (i = 0; i < sources; i++) {
+						n = mediaElement.originalNode.childNodes[i];
+						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
+							src = n.getAttribute('src');
+							type = mejs.Utils.formatType(src, n.getAttribute('type'));
+							mediaFiles.push({type: type, src: src});
+						}
+					}
+					break;
+			}
+
+			if (mediaFiles.length > 0) {
+				
+
+				// set src
+				mediaElement.src = mediaFiles;
+			}
+		}
+
+		// TEMP
+		//mediaElement.load();
+
+		if (options.success) {
+			options.success(mediaElement, mediaElement.originalNode);
+		}
+
+		// if (options.error) {
+		// 	options.error(mediaElement, mediaElement.originalNode);
+		// }
+
+		return mediaElement;
+	};
+
+	/**
+	 * Export MediaElement variable globally
+	 * @type {MediaElement}
+	 */
+	window.MediaElement = mejs.MediaElement;
+
+})(window, document, window.mejs || {});
+/**
+ * Native HTML5 Renderer
+ *
+ * Wraps the native HTML5 <audio> or <video> tag and bubbles its properties, events, and methods up to the mediaElement.
+ */
+(function (win, doc, mejs, undefined) {
+
+	var HtmlMediaElement = {
+
+		name: 'html5',
+
+		options: {
+			prefix: 'html5'
+		},
+
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {String}
+		 */
+		canPlayType: function (type) {
+
+			var mediaElement = doc.createElement('video');
+
+			if (mediaElement.canPlayType) {
+				return mediaElement.canPlayType(type).replace(/no/, '');
+			} else {
+				return '';
+			}
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			var node = null,
+				id = mediaElement.id + '_html5';
+
+			// CREATE NODE
+			if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
+
+				node = document.createElement('audio');
+				mediaElement.appendChild(node);
+
+			} else {
+				node = mediaElement.originalNode;
+			}
+
+			node.setAttribute('id', id);
+
+			// WRAPPERS for PROPs
+			var
+				props = mejs.html5media.properties,
+				i,
+				il,
+				assignGettersSetters = function (propName) {
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					node['get' + capName] = function () {
+						return node[propName];
+					};
+
+					node['set' + capName] = function (value) {
+						node[propName] = value;
+					};
+
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			var
+				events = mejs.html5media.events,
+				assignEvents = function (eventName) {
+
+					node.addEventListener(eventName, function (e) {
+						// copy event
+
+						var event = doc.createEvent('HTMLEvents');
+						event.initEvent(e.type, e.bubbles, e.cancelable);
+						event.srcElement = e.srcElement;
+						event.target = e.srcElement;
+
+						//var ev = mejs.Utils.extend({}, e);
+
+						mediaElement.dispatchEvent(event);
+					});
+
+				}
+			;
+			events = events.concat(['click', 'mouseover', 'mouseout']);
+
+			for (i = 0, il = events.length; i < il; i++) {
+				assignEvents(events[i]);
+			}
+
+			// HELPER METHODS
+			node.setSize = function (width, height) {
+				node.style.width = width + 'px';
+				node.style.height = height + 'px';
+
+				return node;
+			};
+
+			node.hide = function () {
+				node.style.display = 'none';
+
+				return node;
+			};
+
+			node.show = function () {
+				node.style.display = '';
+
+				return node;
+			};
+
+			if (mediaFiles && mediaFiles.length > 0) {
+				for (i = 0, il = mediaFiles.length; i < il; i++) {
+					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+						node.src = mediaFiles[i].src;
+						break;
 					}
 				}
 			}
-		}
-		
-		// in the case of dynamicly created players
-		// check for audio types
-		if (!isMediaTag && mediaFiles.length > 0 && mediaFiles[0].url !== null && this.getTypeFromFile(mediaFiles[0].url).indexOf('audio') > -1) {
-			result.isVideo = false;
-		}
-		
 
-		// STEP 2: Test for playback method
-		
-		// special case for Android which sadly doesn't implement the canPlayType function (always returns '')
-		if (result.isVideo && mejs.MediaFeatures.isBustedAndroid) {
-			htmlMediaElement.canPlayType = function(type) {
-				return (type.match(/video\/(mp4|m4v)/gi) !== null) ? 'maybe' : '';
+			var event = mejs.Utils.createEvent('rendererready', node);
+			mediaElement.dispatchEvent(event);
+
+			return node;
+		}
+	};
+
+	mejs.Renderers.add(HtmlMediaElement);
+
+	window.HtmlMediaElement = mejs.HtmlMediaElement = HtmlMediaElement;
+
+})(window, document, window.mejs || {});
+/**
+ * Native HLS renderer
+ *
+ * Uses DailyMotion's hls.js, which is a JavaScript library which implements an HTTP Live Streaming client.
+ * It relies on HTML5 video and MediaSource Extensions for playback.
+ * This renderer integrates new events associated with m3u8 files the same way Flash version of Hls does.
+ * @see https://github.com/dailymotion/hls.js
+ *
+ */
+(function (win, doc, mejs, undefined) {
+
+	/**
+	 * Register Native HLS type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function (url) {
+
+		url = url.toLowerCase();
+
+		if (url.indexOf('m3u8') > -1) {
+			return 'application/x-mpegURL';
+		} else {
+			return null;
+		}
+	});
+
+	var NativeHls = {
+		/**
+		 * @type {Boolean}
+		 */
+		isMediaStarted: false,
+		/**
+		 * @type {Boolean}
+		 */
+		isMediaLoaded: false,
+		/**
+		 * @type {Array}
+		 */
+		creationQueue: [],
+
+		/**
+		 * Create a queue to prepare the loading of an HLS source
+		 * @param {Object} settings - an object with settings needed to load an HLS player instance
+		 */
+		prepareSettings: function (settings) {
+			if (this.isLoaded) {
+				this.createInstance(settings);
+			} else {
+				this.loadScript();
+				this.creationQueue.push(settings);
+			}
+		},
+
+		/**
+		 * Load hls.js script on the header of the document
+		 *
+		 */
+		loadScript: function () {
+			if (!this.isMediaStarted) {
+
+				var
+					script = doc.createElement('script'),
+					firstScriptTag = doc.getElementsByTagName('script')[0],
+					done = false;
+
+				script.src = 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+
+				// Attach handlers for all browsers
+				script.onload = script.onreadystatechange = function () {
+					if (!done && (!this.readyState || this.readyState === undefined ||
+						this.readyState === 'loaded' || this.readyState === 'complete')) {
+						done = true;
+						NativeHls.mediaReady();
+						script.onload = script.onreadystatechange = null;
+					}
+				};
+
+				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				this.isMediaStarted = true;
+			}
+		},
+
+		/**
+		 * Process queue of HLS player creation
+		 *
+		 */
+		mediaReady: function () {
+			this.isLoaded = true;
+			this.isMediaLoaded = true;
+
+			while (this.creationQueue.length > 0) {
+				var settings = this.creationQueue.pop();
+				this.createInstance(settings);
+			}
+		},
+
+		/**
+		 * Create a new instance of HLS player and trigger a custom event to initialize it
+		 *
+		 * @param {Object} settings - an object with settings needed to instantiate HLS object
+		 */
+		createInstance: function (settings) {
+			var player = new Hls(settings.options);
+			win['__ready__' + settings.id](player);
+		}
+	};
+
+	var HlsNativeRenderer = {
+		name: 'native_hls',
+
+		options: {
+			prefix: 'native_hls',
+			/**
+			 * Custom configuration for HLS player
+			 *
+			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
+			 * @type {Object}
+			 */
+			hls: {
+				autoStartLoad: true,
+				startPosition: -1,
+				capLevelToPlayerSize: false,
+				debug: false,
+				maxBufferLength: 30,
+				maxMaxBufferLength: 600,
+				maxBufferSize: 60 * 1000 * 1000,
+				maxBufferHole: 0.5,
+				maxSeekHole: 2,
+				seekHoleNudgeDuration: 0.01,
+				maxFragLookUpTolerance: 0.2,
+				liveSyncDurationCount: 3,
+				liveMaxLatencyDurationCount: 10,
+				enableWorker: true,
+				enableSoftwareAES: true,
+				manifestLoadingTimeOut: 10000,
+				manifestLoadingMaxRetry: 6,
+				manifestLoadingRetryDelay: 500,
+				manifestLoadingMaxRetryTimeout: 64000,
+				levelLoadingTimeOut: 10000,
+				levelLoadingMaxRetry: 6,
+				levelLoadingRetryDelay: 500,
+				levelLoadingMaxRetryTimeout: 64000,
+				fragLoadingTimeOut: 20000,
+				fragLoadingMaxRetry: 6,
+				fragLoadingRetryDelay: 500,
+				fragLoadingMaxRetryTimeout: 64000,
+				startFragPrefech: false,
+				appendErrorMaxRetry: 3,
+				enableCEA708Captions: true,
+				stretchShortVideoTrack: true,
+				forceKeyFrameOnDiscontinuity: true,
+				abrEwmaFastLive: 5.0,
+				abrEwmaSlowLive: 9.0,
+				abrEwmaFastVoD: 4.0,
+				abrEwmaSlowVoD: 15.0,
+				abrEwmaDefaultEstimate: 500000,
+				abrBandWidthFactor: 0.8,
+				abrBandWidthUpFactor: 0.7
+			}
+		},
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {Boolean}
+		 */
+		canPlayType: function (type) {
+
+			var mediaTypes = ['application/x-mpegURL', 'application/x-mpegurl', 'vnd.apple.mpegURL',
+				'audio/mpegURL', 'audio/hls', 'video/hls'];
+			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			var
+				node = null,
+				originalNode = mediaElement.originalNode,
+				i,
+				il,
+				id = mediaElement.id + '_' + options.prefix,
+				hlsPlayer,
+				stack = {}
+				;
+
+			node = originalNode.cloneNode(true);
+			options = mejs.Utils.extend(options, mediaElement.options);
+
+			// WRAPPERS for PROPs
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					node['get' + capName] = function () {
+						if (hlsPlayer !== null) {
+							return node[propName];
+						} else {
+							return null;
+						}
+					};
+
+					node['set' + capName] = function (value) {
+						if (hlsPlayer !== null) {
+							node[propName] = value;
+
+							if (propName === 'src') {
+
+								hlsPlayer.detachMedia();
+								hlsPlayer.attachMedia(node);
+
+								hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
+									hlsPlayer.loadSource(value);
+								});
+							}
+						} else {
+							// store for after "READY" event fires
+							stack.push({type: 'set', propName: propName, value: value});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// Initial method to register all HLS events
+			win['__ready__' + id] = function (_hlsPlayer) {
+
+				mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
+
+				
+
+				// do call stack
+				for (i = 0, il = stack.length; i < il; i++) {
+
+					var stackItem = stack[i];
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						node['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						node[stackItem.methodName]();
+					}
+				}
+
+				// BUBBLE EVENTS
+				var
+					events = mejs.html5media.events, hlsEvents = Hls.Events,
+					assignEvents = function (eventName) {
+
+						if (eventName === 'loadedmetadata') {
+
+							hlsPlayer.detachMedia();
+
+							var url = node.src;
+
+							hlsPlayer.attachMedia(node);
+							hlsPlayer.on(hlsEvents.MEDIA_ATTACHED, function () {
+								hlsPlayer.loadSource(url);
+							});
+						}
+
+						node.addEventListener(eventName, function (e) {
+							// copy event
+							var event = doc.createEvent('HTMLEvents');
+							event.initEvent(e.type, e.bubbles, e.cancelable);
+							event.srcElement = e.srcElement;
+							event.target = e.srcElement;
+
+							mediaElement.dispatchEvent(event);
+						});
+
+					}
+				;
+
+				events = events.concat(['click', 'mouseover', 'mouseout']);
+
+				for (i = 0, il = events.length; i < il; i++) {
+					assignEvents(events[i]);
+				}
+
+				/**
+				 * Custom HLS events
+				 *
+				 * These events can be attached to the original node using addEventListener and the name of the event,
+				 * not using Hls.Events object
+				 * @see https://github.com/dailymotion/hls.js/blob/master/src/events.js
+				 * @see https://github.com/dailymotion/hls.js/blob/master/src/errors.js
+				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
+				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
+				 */
+				var assignHlsEvents = function (e, data) {
+					var event = mejs.Utils.createEvent(e, node);
+					mediaElement.dispatchEvent(event);
+
+					if (e === 'ERROR') {
+
+						// Destroy instance of player if unknown error found
+						if (data.fatal && e === Hls.ErrorTypes.OTHER_ERROR) {
+							hlsPlayer.destroy();
+						}
+
+						console.error(e, data);
+					}
+				};
+
+				for (var eventType in hlsEvents) {
+					if (hlsEvents.hasOwnProperty(eventType)) {
+						hlsPlayer.on(hlsEvents[eventType], assignHlsEvents);
+					}
+				}
 			};
-		}		
-		
-		// special case for Chromium to specify natively supported video codecs (i.e. WebM and Theora) 
-		if (result.isVideo && mejs.MediaFeatures.isChromium) {
-			htmlMediaElement.canPlayType = function(type) { 
-				return (type.match(/video\/(webm|ogv|ogg)/gi) !== null) ? 'maybe' : '';
-			}; 
-		}
 
-		// test for native playback first
-		if (supportsMediaTag && (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'native')  && !(mejs.MediaFeatures.isBustedNativeHTTPS && options.httpsBasicAuthSite === true)) {
-						
-			if (!isMediaTag) {
-
-				// create a real HTML5 Media Element 
-				dummy = document.createElement( result.isVideo ? 'video' : 'audio');			
-				htmlMediaElement.parentNode.insertBefore(dummy, htmlMediaElement);
-				htmlMediaElement.style.display = 'none';
-				
-				// use this one from now on
-				result.htmlMediaElement = htmlMediaElement = dummy;
-			}
-				
-			for (i=0; i<mediaFiles.length; i++) {
-				// normal check
-				if (mediaFiles[i].type == "video/m3u8" || htmlMediaElement.canPlayType(mediaFiles[i].type).replace(/no/, '') !== ''
-					// special case for Mac/Safari 5.0.3 which answers '' to canPlayType('audio/mp3') but 'maybe' to canPlayType('audio/mpeg')
-					|| htmlMediaElement.canPlayType(mediaFiles[i].type.replace(/mp3/,'mpeg')).replace(/no/, '') !== ''
-					// special case for m4a supported by detecting mp4 support
-					|| htmlMediaElement.canPlayType(mediaFiles[i].type.replace(/m4a/,'mp4')).replace(/no/, '') !== '') {
-					result.method = 'native';
-					result.url = mediaFiles[i].url;
-					break;
-				}
-			}			
-			
-			if (result.method === 'native') {
-				if (result.url !== null) {
-					htmlMediaElement.src = result.url;
-				}
-			
-				// if `auto_plugin` mode, then cache the native result but try plugins.
-				if (options.mode !== 'auto_plugin') {
-					return result;
+			var filteredAttributes = ['id', 'src', 'style'];
+			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
+				var attribute = originalNode.attributes[j];
+				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
+					node.setAttribute(attribute.name, attribute.value);
 				}
 			}
+
+			node.setAttribute('id', id);
+			if (mediaFiles && mediaFiles.length > 0) {
+				for (i = 0, il = mediaFiles.length; i < il; i++) {
+					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+						node.setAttribute('src', mediaFiles[i].src);
+						break;
+					}
+				}
+			}
+			node.className = '';
+
+			originalNode.parentNode.insertBefore(node, originalNode);
+			originalNode.removeAttribute('autoplay');
+			originalNode.style.display = 'none';
+
+			NativeHls.prepareSettings({
+				options: options.hls,
+				id: id
+			});
+
+			// HELPER METHODS
+			node.setSize = function (width, height) {
+				node.style.width = width + 'px';
+				node.style.height = height + 'px';
+
+				return node;
+			};
+
+			node.hide = function () {
+				node.pause();
+				node.style.display = 'none';
+				return node;
+			};
+
+			node.show = function () {
+				node.style.display = '';
+				return node;
+			};
+
+			node.destroy = function () {
+				hlsPlayer.destroy();
+			};
+
+			var event = mejs.Utils.createEvent('rendererready', node);
+			mediaElement.dispatchEvent(event);
+
+			return node;
 		}
+	};
 
-		// if native playback didn't work, then test plugins
-		if (options.mode === 'auto' || options.mode === 'auto_plugin' || options.mode === 'shim') {
-			for (i=0; i<mediaFiles.length; i++) {
-				type = mediaFiles[i].type;
+	mejs.Renderers.add(HlsNativeRenderer);
 
-				// test all plugins in order of preference [silverlight, flash]
-				for (j=0; j<options.plugins.length; j++) {
+})(window, document, window.mejs || {});
+/**
+ * Native M-Dash renderer
+ *
+ * Uses dash.js, a reference client implementation for the playback of MPEG DASH via Javascript and compliant browsers.
+ * It relies on HTML5 video and MediaSource Extensions for playback.
+ * This renderer integrates new events associated with mpd files.
+ * @see https://github.com/Dash-Industry-Forum/dash.js
+ *
+ */
+(function (win, doc, mejs, undefined) {
 
-					pluginName = options.plugins[j];
-			
-					// test version of plugin (for future features)
-					pluginVersions = mejs.plugins[pluginName];				
-					
-					for (k=0; k<pluginVersions.length; k++) {
-						pluginInfo = pluginVersions[k];
-					
-						// test if user has the correct plugin version
-						
-						// for youtube/vimeo
-						if (pluginInfo.version == null || 
-							
-							mejs.PluginDetector.hasPluginVersion(pluginName, pluginInfo.version)) {
+	/**
+	 * Register Native M(PEG)-Dash type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function (url) {
 
-							// test for plugin playback types
-							for (l=0; l<pluginInfo.types.length; l++) {
-								// find plugin that can play the type
-								if (type.toLowerCase() == pluginInfo.types[l].toLowerCase()) {
-									result.method = pluginName;
-									result.url = mediaFiles[i].url;
-									return result;
+		url = url.toLowerCase();
+
+		if (url.indexOf('mpd') > -1) {
+			return 'application/dash+xml';
+		} else {
+			return null;
+		}
+	});
+
+	var NativeDash = {
+		/**
+		 * @type {Boolean}
+		 */
+		isMediaLoaded: false,
+		/**
+		 * @type {Array}
+		 */
+		creationQueue: [],
+
+		/**
+		 * Create a queue to prepare the loading of an HLS source
+		 * @param {Object} settings - an object with settings needed to load an HLS player instance
+		 */
+		prepareSettings: function (settings) {
+			if (this.isLoaded) {
+				this.createInstance(settings);
+			} else {
+				this.loadScript();
+				this.creationQueue.push(settings);
+			}
+		},
+
+		/**
+		 * Load dash.all.min.js script on the header of the document
+		 *
+		 */
+		loadScript: function () {
+			if (!this.isScriptLoaded) {
+
+				var
+					script = doc.createElement('script'),
+					firstScriptTag = doc.getElementsByTagName('script')[0],
+					done = false;
+
+				script.src = 'https://cdn.dashjs.org/latest/dash.all.min.js';
+
+				// Attach handlers for all browsers
+				script.onload = script.onreadystatechange = function () {
+					if (!done && (!this.readyState || this.readyState === undefined ||
+						this.readyState === 'loaded' || this.readyState === 'complete')) {
+						done = true;
+						NativeDash.mediaReady();
+						script.onload = script.onreadystatechange = null;
+					}
+				};
+
+				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				this.isScriptLoaded = true;
+			}
+		},
+
+		/**
+		 * Process queue of Dash player creation
+		 *
+		 */
+		mediaReady: function () {
+
+			this.isLoaded = true;
+			this.isScriptLoaded = true;
+
+			while (this.creationQueue.length > 0) {
+				var settings = this.creationQueue.pop();
+				this.createInstance(settings);
+			}
+		},
+
+		/**
+		 * Create a new instance of Dash player and trigger a custom event to initialize it
+		 *
+		 * @param {Object} settings - an object with settings needed to instantiate HLS object
+		 */
+		createInstance: function (settings) {
+
+			var player = dashjs.MediaPlayer().create();
+			win['__ready__' + settings.id](player);
+		}
+	};
+
+	var DashNativeRenderer = {
+		name: 'native_mdash',
+
+		options: {
+			prefix: 'native_mdash',
+			dash: {}
+		},
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {Boolean}
+		 */
+		canPlayType: function (type) {
+
+			var mediaTypes = ['application/dash+xml'];
+			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			var
+				node = null,
+				originalNode = mediaElement.originalNode,
+				i,
+				il,
+				id = mediaElement.id + '_' + options.prefix,
+				dashPlayer,
+				stack = {}
+				;
+
+			node = originalNode.cloneNode(true);
+
+			// WRAPPERS for PROPs
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					node['get' + capName] = function () {
+						if (dashPlayer !== null) {
+							return node[propName];
+						} else {
+							return null;
+						}
+					};
+
+					node['set' + capName] = function (value) {
+						if (dashPlayer !== null) {
+							if (propName === 'src') {
+
+								dashPlayer.attachSource(value);
+
+								if (node.getAttribute('autoplay')) {
+									node.play();
 								}
 							}
+
+							node[propName] = value;
+						} else {
+							// store for after "READY" event fires
+							stack.push({type: 'set', propName: propName, value: value});
 						}
+					};
+
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// Initial method to register all M-Dash events
+			win['__ready__' + id] = function (_dashPlayer) {
+
+				mediaElement.dashPlayer = dashPlayer = _dashPlayer;
+
+				// By default, console log is off
+				dashPlayer.getDebug().setLogToBrowserConsole(false);
+
+
+				
+
+				// do call stack
+				for (i = 0, il = stack.length; i < il; i++) {
+
+					var stackItem = stack[i];
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						node['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						node[stackItem.methodName]();
 					}
 				}
-			}
-		}
-		
-		// at this point, being in 'auto_plugin' mode implies that we tried plugins but failed.
-		// if we have native support then return that.
-		if (options.mode === 'auto_plugin' && result.method === 'native') {
-			return result;
-		}
 
-		// what if there's nothing to play? just grab the first available
-		if (result.method === '' && mediaFiles.length > 0) {
-			result.url = mediaFiles[0].url;
-		}
+				// BUBBLE EVENTS
+				var
+					events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events,
+					assignEvents = function (eventName) {
 
-		return result;
-	},
+						if (eventName === 'loadedmetadata') {
+							dashPlayer.initialize(node, node.src, false);
+						}
 
-	formatType: function(url, type) {
-		// if no type is supplied, fake it with the extension
-		if (url && !type) {		
-			return this.getTypeFromFile(url);
-		} else {
-			// only return the mime part of the type in case the attribute contains the codec
-			// see http://www.whatwg.org/specs/web-apps/current-work/multipage/video.html#the-source-element
-			// `video/mp4; codecs="avc1.42E01E, mp4a.40.2"` becomes `video/mp4`
-			
-			if (type && ~type.indexOf(';')) {
-				return type.substr(0, type.indexOf(';')); 
-			} else {
-				return type;
-			}
-		}
-	},
-	
-	getTypeFromFile: function(url) {
-		url = url.split('?')[0];
-		var
-			ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase(),
-			av = /(mp4|m4v|ogg|ogv|m3u8|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video/' : 'audio/';
-		return this.getTypeFromExtension(ext, av);
-	},
-	
-	getTypeFromExtension: function(ext, av) {
-		av = av || '';
-		
-		switch (ext) {
-			case 'mp4':
-			case 'm4v':
-			case 'm4a':
-			case 'f4v':
-			case 'f4a':
-				return av + 'mp4';
-			case 'flv':
-				return av + 'x-flv';
-			case 'webm':
-			case 'webma':
-			case 'webmv':	
-				return av + 'webm';
-			case 'ogg':
-			case 'oga':
-			case 'ogv':	
-				return av + 'ogg';
-			case 'm3u8':
-				return 'application/x-mpegurl';
-			case 'ts':
-				return av + 'mp2t';
-			default:
-				return av + ext;
-		}
-	},
+						node.addEventListener(eventName, function (e) {
+							// copy event
 
-	createErrorMessage: function(playback, options, poster) {
-		var 
-			htmlMediaElement = playback.htmlMediaElement,
-			errorContainer = document.createElement('div'),
-			errorContent = options.customError;
-			
-		errorContainer.className = 'me-cannotplay';
+							var event = doc.createEvent('HTMLEvents');
+							event.initEvent(e.type, e.bubbles, e.cancelable);
+							event.srcElement = e.srcElement;
+							event.target = e.srcElement;
 
-		try {
-			errorContainer.style.width = htmlMediaElement.width + 'px';
-			errorContainer.style.height = htmlMediaElement.height + 'px';
-		} catch (e) {}
+							mediaElement.dispatchEvent(event);
+						});
 
-		if (!errorContent) {
-			errorContent = '<a href="' + playback.url + '">';
-
-			if (poster !== '') {
-				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="" />';
-			}
-
-			errorContent += '<span>' + mejs.i18n.t('mejs.download-file') + '</span></a>';
-		}
-
-		errorContainer.innerHTML = errorContent;
-
-		htmlMediaElement.parentNode.insertBefore(errorContainer, htmlMediaElement);
-		htmlMediaElement.style.display = 'none';
-
-		options.error(htmlMediaElement);
-	},
-
-	createPlugin:function(playback, options, poster, autoplay, preload, controls) {
-		var 
-			htmlMediaElement = playback.htmlMediaElement,
-			width = 1,
-			height = 1,
-			pluginid = 'me_' + playback.method + '_' + (mejs.meIndex++),
-			pluginMediaElement = new mejs.PluginMediaElement(pluginid, playback.method, playback.url),
-			container = document.createElement('div'),
-			specialIEContainer,
-			node,
-			initVars;
-
-		// copy tagName from html media element
-		pluginMediaElement.tagName = htmlMediaElement.tagName;
-
-		// copy attributes from html media element to plugin media element
-		for (var i = 0; i < htmlMediaElement.attributes.length; i++) {
-			var attribute = htmlMediaElement.attributes[i];
-			if (attribute.specified) {
-				pluginMediaElement.setAttribute(attribute.name, attribute.value);
-			}
-		}
-
-		// check for placement inside a <p> tag (sometimes WYSIWYG editors do this)
-		node = htmlMediaElement.parentNode;
-
-		while (node !== null && node.tagName != null && node.tagName.toLowerCase() !== 'body' && 
-				node.parentNode != null && node.parentNode.tagName != null && node.parentNode.constructor != null && node.parentNode.constructor.name === "ShadowRoot") {
-			if (node.parentNode.tagName.toLowerCase() === 'p') {
-				node.parentNode.parentNode.insertBefore(node, node.parentNode);
-				break;
-			}
-			node = node.parentNode;
-		}
-
-		if (playback.isVideo) {
-			width = (options.pluginWidth > 0) ? options.pluginWidth : (options.videoWidth > 0) ? options.videoWidth : (htmlMediaElement.getAttribute('width') !== null) ? htmlMediaElement.getAttribute('width') : options.defaultVideoWidth;
-			height = (options.pluginHeight > 0) ? options.pluginHeight : (options.videoHeight > 0) ? options.videoHeight : (htmlMediaElement.getAttribute('height') !== null) ? htmlMediaElement.getAttribute('height') : options.defaultVideoHeight;
-		
-			// in case of '%' make sure it's encoded
-			width = mejs.Utility.encodeUrl(width);
-			height = mejs.Utility.encodeUrl(height);
-		
-		} else {
-			if (options.enablePluginDebug) {
-				width = 320;
-				height = 240;
-			}
-		}
-
-		// register plugin
-		pluginMediaElement.success = options.success;
-		
-		// add container (must be added to DOM before inserting HTML for IE)
-		container.className = 'me-plugin';
-		container.id = pluginid + '_container';
-		
-		if (playback.isVideo) {
-				htmlMediaElement.parentNode.insertBefore(container, htmlMediaElement);
-		} else {
-				document.body.insertBefore(container, document.body.childNodes[0]);
-		}
-		
-		if (playback.method === 'flash' || playback.method === 'silverlight') {
-
-			var canPlayVideo = htmlMediaElement.getAttribute('type') === 'audio/mp4',
-				childrenSources = htmlMediaElement.getElementsByTagName('source');
-
-			if (childrenSources && !canPlayVideo) {
-				for (var i = 0, total = childrenSources.length; i < total; i++) {
-					if (childrenSources[i].getAttribute('type') === 'audio/mp4') {
-						canPlayVideo = true;
 					}
-				}
-			}
+				;
 
-			// flash/silverlight vars
-			initVars = [
-				'id=' + pluginid,
-				'isvideo=' + ((playback.isVideo || canPlayVideo) ? "true" : "false"),
-				'autoplay=' + ((autoplay) ? "true" : "false"),
-				'preload=' + preload,
-				'width=' + width,
-				'startvolume=' + options.startVolume,
-				'timerrate=' + options.timerRate,
-				'flashstreamer=' + options.flashStreamer,
-				'height=' + height,
-				'pseudostreamstart=' + options.pseudoStreamingStartQueryParam];
-	
-			if (playback.url !== null) {
-				if (playback.method == 'flash') {
-					initVars.push('file=' + mejs.Utility.encodeUrl(playback.url));
-				} else {
-					initVars.push('file=' + playback.url);
+				events = events.concat(['click', 'mouseover', 'mouseout']);
+
+				for (i = 0, il = events.length; i < il; i++) {
+					assignEvents(events[i]);
 				}
-			}
-			if (options.enablePluginDebug) {
-				initVars.push('debug=true');
-			}
-			if (options.enablePluginSmoothing) {
-				initVars.push('smoothing=true');
-			}
-			if (options.enablePseudoStreaming) {
-				initVars.push('pseudostreaming=true');
-			}
-			if (controls) {
-				initVars.push('controls=true'); // shows controls in the plugin if desired
-			}
-			if (options.pluginVars) {
-				initVars = initVars.concat(options.pluginVars);
-			}		
-			
-			// call from plugin
-			window[pluginid + '_init'] = function() {
-				switch (pluginMediaElement.pluginType) {
-					case 'flash':
-						pluginMediaElement.pluginElement = pluginMediaElement.pluginApi = document.getElementById(pluginid);
-						break;
-					case 'silverlight':
-						pluginMediaElement.pluginElement = document.getElementById(pluginMediaElement.id);
-						pluginMediaElement.pluginApi = pluginMediaElement.pluginElement.Content.MediaElementJS;
-						break;
-				}
-	
-				if (pluginMediaElement.pluginApi != null && pluginMediaElement.success) {
-					pluginMediaElement.success(pluginMediaElement, htmlMediaElement);
+
+				/**
+				 * Custom M(PEG)-DASH events
+				 *
+				 * These events can be attached to the original node using addEventListener and the name of the event,
+				 * not using dashjs.MediaPlayer.events object
+				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
+				 */
+				var assignMdashEvents = function (e, data) {
+					var event = mejs.Utils.createEvent(e, node);
+					mediaElement.dispatchEvent(event);
+
+					if (e === 'error') {
+						console.error(e, data);
+					}
+				};
+				for (var eventType in dashEvents) {
+					if (dashEvents.hasOwnProperty(eventType)) {
+						dashPlayer.on(dashEvents[eventType], assignMdashEvents);
+					}
 				}
 			};
-			
-			// event call from plugin
-			window[pluginid + '_event'] = function(eventName, values) {
-		
-				var
-					e,
-					i,
-					bufferedTime;
-		        
-				// fake event object to mimic real HTML media event.
-				e = {
-					type: eventName,
-					target: pluginMediaElement
-				};
-		
-				// attach all values to element and event object
-				for (i in values) {
-					pluginMediaElement[i] = values[i];
-					e[i] = values[i];
+
+			var filteredAttributes = ['id', 'src', 'style'];
+			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
+				var attribute = originalNode.attributes[j];
+				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
+					node.setAttribute(attribute.name, attribute.value);
 				}
-		
-				// fake the newer W3C buffered TimeRange (loaded and total have been removed)
-				bufferedTime = values.bufferedTime || 0;
-		
-				e.target.buffered = e.buffered = {
-					start: function(index) {
-						return 0;
-					},
-					end: function (index) {
-						return bufferedTime;
-					},
-					length: 1
-				};
-		
-				pluginMediaElement.dispatchEvent(e);
-			}			
-			
-			
+			}
+
+			node.setAttribute('id', id);
+
+			if (mediaFiles && mediaFiles.length > 0) {
+				for (i = 0, il = mediaFiles.length; i < il; i++) {
+					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+						node.setAttribute('src', mediaFiles[i].src);
+						break;
+					}
+				}
+			}
+
+			node.className = '';
+
+			originalNode.parentNode.insertBefore(node, originalNode);
+			originalNode.removeAttribute('autoplay');
+			originalNode.style.display = 'none';
+
+			NativeDash.prepareSettings({
+				options: options.dash,
+				id: id
+			});
+
+			// HELPER METHODS
+			node.setSize = function (width, height) {
+				node.style.width = width + 'px';
+				node.style.height = height + 'px';
+
+				return node;
+			};
+
+			node.hide = function () {
+				node.pause();
+				node.style.display = 'none';
+				return node;
+			};
+
+			node.show = function () {
+				node.style.display = '';
+				return node;
+			};
+
+			var event = mejs.Utils.createEvent('rendererready', node);
+			mediaElement.dispatchEvent(event);
+
+			return node;
 		}
+	};
 
-		switch (playback.method) {
-			case 'silverlight':
-				container.innerHTML =
-'<object data="data:application/x-silverlight-2," type="application/x-silverlight-2" id="' + pluginid + '" name="' + pluginid + '" width="' + width + '" height="' + height + '" class="mejs-shim">' +
-'<param name="initParams" value="' + initVars.join(',') + '" />' +
-'<param name="windowless" value="true" />' +
-'<param name="background" value="black" />' +
-'<param name="minRuntimeVersion" value="3.0.0.0" />' +
-'<param name="autoUpgrade" value="true" />' +
-'<param name="source" value="' + options.pluginPath + options.silverlightName + '" />' +
-'</object>';
+	mejs.Renderers.add(DashNativeRenderer);
+
+})(window, document, window.mejs || {});
+/**
+ * YouTube renderer
+ *
+ * Uses <iframe> approach and uses YouTube API to manipulate it.
+ * Note: IE6-7 don't have postMessage so don't support <iframe> API, and IE8 doesn't fire the onReady event,
+ * so it doesn't work - not sure if Google problem or not.
+ * @see https://developers.google.com/youtube/iframe_api_reference
+ */
+(function (win, doc, mejs, undefined) {
+
+	/**
+	 * Register YouTube type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function (url) {
+
+		url = url.toLowerCase();
+
+		if (url.indexOf('youtube') > -1 || url.indexOf('youtu.be') > -1) {
+			return 'video/youtube';
+		} else {
+			return null;
+		}
+	});
+
+	var YouTubeApi = {
+		/**
+		 * @type {Boolean}
+		 */
+		isIframeStarted: false,
+		/**
+		 * @type {Boolean}
+		 */
+		isIframeLoaded: false,
+		/**
+		 * @type {Array}
+		 */
+		iframeQueue: [],
+
+		/**
+		 * Create a queue to prepare the creation of <iframe>
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		enqueueIframe: function (settings) {
+
+			if (this.isLoaded) {
+				this.createIframe(settings);
+			} else {
+				this.loadIframeApi();
+				this.iframeQueue.push(settings);
+			}
+		},
+
+		/**
+		 * Load YouTube API's script on the header of the document
+		 *
+		 */
+		loadIframeApi: function () {
+			if (!this.isIframeStarted) {
+				var tag = document.createElement('script');
+				tag.src = 'https://www.youtube.com/player_api';
+				var firstScriptTag = document.getElementsByTagName('script')[0];
+				firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+				this.isIframeStarted = true;
+			}
+		},
+
+		/**
+		 * Process queue of YouTube <iframe> element creation
+		 *
+		 */
+		iFrameReady: function () {
+
+			this.isLoaded = true;
+			this.isIframeLoaded = true;
+
+			while (this.iframeQueue.length > 0) {
+				var settings = this.iframeQueue.pop();
+				this.createIframe(settings);
+			}
+		},
+
+		/**
+		 * Create a new instance of YouTube API player and trigger a custom event to initialize it
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		createIframe: function (settings) {
+
+			
+
+			return new YT.Player(settings.containerId, settings);
+		},
+
+		/**
+		 * Extract ID from YouTube's URL to be loaded through API
+		 * Valid URL format(s):
+		 * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+		 * - http://www.youtube.com/v/VIDEO_ID?version=3
+		 * - http://youtu.be/Djd6tPrxc08
+		 *
+		 * @param {String} url
+		 * @return {string}
+		 */
+		getYouTubeId: function (url) {
+
+			var youTubeId = "";
+
+			if (url.indexOf('?') > 0) {
+				// assuming: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+				youTubeId = YouTubeApi.getYouTubeIdFromParam(url);
+
+				// if it's http://www.youtube.com/v/VIDEO_ID?version=3
+				if (youTubeId === '') {
+					youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
+				}
+			} else {
+				youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
+			}
+
+			return youTubeId;
+		},
+
+		/**
+		 * Get ID from URL with format: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+		 *
+		 * @param {String} url
+		 * @returns {string}
+		 */
+		getYouTubeIdFromParam: function (url) {
+
+			var youTubeId = '',
+				parts = url.split('?'),
+				parameters = parts[1].split('&');
+
+			for (var i = 0, il = parameters.length; i < il; i++) {
+				var paramParts = parameters[i].split('=');
+				if (paramParts[0] === 'v') {
+					youTubeId = paramParts[1];
 					break;
-
-			case 'flash':
-
-				if (mejs.MediaFeatures.isIE) {
-					specialIEContainer = document.createElement('div');
-					container.appendChild(specialIEContainer);
-					specialIEContainer.outerHTML =
-'<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
-'id="' + pluginid + '" width="' + width + '" height="' + height + '" class="mejs-shim">' +
-'<param name="movie" value="' + options.pluginPath + options.flashName + '?' + (new Date().getTime()) + '" />' +
-'<param name="flashvars" value="' + initVars.join('&amp;') + '" />' +
-'<param name="quality" value="high" />' +
-'<param name="bgcolor" value="#000000" />' +
-'<param name="wmode" value="transparent" />' +
-'<param name="allowScriptAccess" value="' + options.flashScriptAccess + '" />' +
-'<param name="allowFullScreen" value="true" />' +
-'<param name="scale" value="default" />' + 
-'</object>';
-
-				} else {
-
-					container.innerHTML =
-'<embed id="' + pluginid + '" name="' + pluginid + '" ' +
-'play="true" ' +
-'loop="false" ' +
-'quality="high" ' +
-'bgcolor="#000000" ' +
-'wmode="transparent" ' +
-'allowScriptAccess="' + options.flashScriptAccess + '" ' +
-'allowFullScreen="true" ' +
-'type="application/x-shockwave-flash" pluginspage="//www.macromedia.com/go/getflashplayer" ' +
-'src="' + options.pluginPath + options.flashName + '" ' +
-'flashvars="' + initVars.join('&') + '" ' +
-'width="' + width + '" ' +
-'height="' + height + '" ' +
-'scale="default"' + 
-'class="mejs-shim"></embed>';
 				}
-				break;
-			
-			case 'youtube':
-			
-				
-				var videoId;
-				// youtu.be url from share button
-				if (playback.url.lastIndexOf("youtu.be") != -1) {
-					videoId = playback.url.substr(playback.url.lastIndexOf('/')+1);
-					if (videoId.indexOf('?') != -1) {
-						videoId = videoId.substr(0, videoId.indexOf('?'));
-					}
-				}
-				else {
-					// https://www.youtube.com/watch?v=
-					var videoIdMatch = playback.url.match( /[?&]v=([^&#]+)|&|#|$/ );
-					if ( videoIdMatch ) {
-						videoId = videoIdMatch[1];
-					}
-				}
-				youtubeSettings = {
-						container: container,
-						containerId: container.id,
-						pluginMediaElement: pluginMediaElement,
-						pluginId: pluginid,
-						videoId: videoId,
-						height: height,
-						width: width,
-                        scheme: playback.scheme,
-						variables: options.youtubeIframeVars
-					};				
-				
-				// favor iframe version of YouTube
-				if (window.postMessage) {
-					mejs.YouTubeApi.enqueueIframe(youtubeSettings);		
-				} else if (mejs.PluginDetector.hasPluginVersion('flash', [10,0,0]) ) {
-					mejs.YouTubeApi.createFlash(youtubeSettings, options);
-				}
-				break;
-			
-			// DEMO Code. Does NOT work.
-			case 'vimeo':
-				var player_id = pluginid + "_player";
-				pluginMediaElement.vimeoid = playback.url.substr(playback.url.lastIndexOf('/')+1);
-				
-				container.innerHTML ='<iframe src="' + playback.scheme + 'player.vimeo.com/video/' + pluginMediaElement.vimeoid + '?api=1&portrait=0&byline=0&title=0&player_id=' + player_id + '" width="' + width +'" height="' + height +'" frameborder="0" class="mejs-shim" id="' + player_id + '" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-				if (typeof($f) == 'function') { // froogaloop available
-					var player = $f(container.childNodes[0]),
-						playerState = -1;
-					
-					player.addEvent('ready', function() {
+			}
+
+			return youTubeId;
+		},
+
+		/**
+		 * Get ID from URL with formats
+		 *  - http://www.youtube.com/v/VIDEO_ID?version=3
+		 *  - http://youtu.be/Djd6tPrxc08
+		 * @param {String} url
+		 * @return {?String}
+		 */
+		getYouTubeIdFromUrl: function (url) {
+
+			if (url === undefined || url === null) {
+				return null;
+			}
+
+			var parts = url.split('?');
+
+			url = parts[0];
+
+			return url.substring(url.lastIndexOf('/') + 1);
+		}
+	};
+
+	/*
+	 * Register YouTube API event globally
+	 *
+	 */
+	win.onYouTubePlayerAPIReady = function () {
 		
-						player.playVideo = function() {
-							player.api( 'play' );
-						};
-						player.stopVideo = function() {
-							player.api( 'unload' );
-						};
-						player.pauseVideo = function() {
-							player.api( 'pause' );
-						};
-						player.seekTo = function( seconds ) {
-							player.api( 'seekTo', seconds );
-						};
-						player.setVolume = function( volume ) {
-							player.api( 'setVolume', volume );
-						};
-						player.setMuted = function( muted ) {
-							if( muted ) {
-								player.lastVolume = player.api( 'getVolume' );
-								player.api( 'setVolume', 0 );
-							} else {
-								player.api( 'setVolume', player.lastVolume );
-								delete player.lastVolume;
-							}
-						};
-						// parity with YT player
-						player.getPlayerState = function() {
-							return playerState;
-						};
+		YouTubeApi.iFrameReady();
+	};
 
-						function createEvent(player, pluginMediaElement, eventName, e) {
-							var event = {
-								type: eventName,
-								target: pluginMediaElement
-							};
-							if (eventName == 'timeupdate') {
-								pluginMediaElement.currentTime = event.currentTime = e.seconds;
-								pluginMediaElement.duration = event.duration = e.duration;
+	var YouTubeIframeRenderer = {
+		name: 'youtube_iframe',
+
+		options: {
+			prefix: 'youtube_iframe'
+		},
+
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {Boolean}
+		 */
+		canPlayType: function (type) {
+			var mediaTypes = ['video/youtube', 'video/x-youtube'];
+
+			return mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			// exposed object
+			var youtube = {};
+			youtube.options = options;
+			youtube.id = mediaElement.id + '_' + options.prefix;
+			youtube.mediaElement = mediaElement;
+
+			// API objects
+			var apiStack = [],
+				youTubeApi = null,
+				youTubeApiReady = false,
+				paused = true,
+				ended = false,
+				youTubeIframe = null,
+				i,
+				il;
+
+			// wrappers for get/set
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+
+					// add to flash state that we will store
+
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					youtube['get' + capName] = function () {
+						if (youTubeApi !== null) {
+							var value = null;
+
+							// figure out how to get youtube dta here
+							switch (propName) {
+								case 'currentTime':
+									return youTubeApi.getCurrentTime();
+
+								case 'duration':
+									return youTubeApi.getDuration();
+
+								case 'volume':
+									return youTubeApi.getVolume();
+
+								case 'paused':
+									
+
+									return paused;
+
+								case 'ended':
+									return ended;
+
+								case 'muted':
+									return youTubeApi.isMuted(); // ?
+
+								case 'buffered':
+									var percentLoaded = youTubeApi.getVideoLoadedFraction(),
+										duration = youTubeApi.getDuration();
+									return {
+										start: function () {
+											return 0;
+										},
+										end: function () {
+											return percentLoaded * duration;
+										},
+										length: 1
+									};
+								case 'src':
+									return youTubeApi.getVideoUrl();
 							}
-							pluginMediaElement.dispatchEvent(event);
+
+							return value;
+						} else {
+							return null;
+						}
+					};
+
+					youtube['set' + capName] = function (value) {
+						//
+
+						if (youTubeApi !== null) {
+
+							// do something
+							switch (propName) {
+
+								case 'src':
+									var url = typeof value === 'string' ? value : value[0].src,
+										videoId = YouTubeApi.getYouTubeId(url);
+
+									if (mediaElement.getAttribute('autoplay')) {
+										youTubeApi.loadVideoById(videoId);
+									} else {
+										youTubeApi.cueVideoById(videoId);
+									}
+									break;
+
+								case 'currentTime':
+									youTubeApi.seekTo(value);
+									break;
+
+								case 'muted':
+									if (value) {
+										youTubeApi.mute(); // ?
+									} else {
+										youTubeApi.unMute(); // ?
+									}
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', youtube);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								case 'volume':
+									youTubeApi.setVolume(value);
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', youtube);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								default:
+									
+							}
+
+						} else {
+							// store for after "READY" event fires
+							apiStack.push({type: 'set', propName: propName, value: value});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// add wrappers for native methods
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
+
+					// run the method on the native HTMLMediaElement
+					youtube[methodName] = function () {
+						
+
+						if (youTubeApi !== null) {
+
+							// DO method
+							switch (methodName) {
+								case 'play':
+									return youTubeApi.playVideo();
+								case 'pause':
+									return youTubeApi.pauseVideo();
+								case 'load':
+									return null;
+
+							}
+
+						} else {
+							apiStack.push({type: 'call', methodName: methodName});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
+			}
+
+			// CREATE YouTube
+			var youtubeContainer = doc.createElement('div');
+			youtubeContainer.id = youtube.id;
+			mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
+			mediaElement.originalNode.style.display = 'none';
+
+			var
+				height = mediaElement.originalNode.height,
+				width = mediaElement.originalNode.width,
+				videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
+				youtubeSettings = {
+					id: youtube.id,
+					containerId: youtubeContainer.id,
+					videoId: videoId,
+					height: height,
+					width: width,
+					playerVars: {
+						controls: 0,
+						rel: 0,
+						disablekb: 1,
+						showinfo: 0,
+						modestbranding: 0,
+						html5: 1,
+						playsinline: 1
+					},
+					origin: win.location.host,
+					events: {
+						onReady: function (e) {
+
+							youTubeApiReady = true;
+							mediaElement.youTubeApi = youTubeApi = e.target;
+							mediaElement.youTubeState = youTubeState = {
+								paused: true,
+								ended: false
+							};
+
+							// do call stack
+							for (i = 0, il = apiStack.length; i < il; i++) {
+
+								var stackItem = apiStack[i];
+
+								
+
+								if (stackItem.type === 'set') {
+									var propName = stackItem.propName,
+										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+									youtube['set' + capName](stackItem.value);
+								} else if (stackItem.type === 'call') {
+									youtube[stackItem.methodName]();
+								}
+							}
+
+							// a few more events
+							youTubeIframe = youTubeApi.getIframe();
+
+							
+
+							var
+								events = ['mouseover', 'mouseout'],
+								assignEvents = function (e) {
+
+									
+
+									var event = mejs.Utils.createEvent(e.type, youtube);
+
+									mediaElement.dispatchEvent(event);
+								}
+							;
+
+							for (var j in events) {
+								var eventName = events[j];
+								mejs.addEvent(youTubeIframe, eventName, assignEvents);
+							}
+
+							// send init events
+							var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+
+							for (i = 0, il = initEvents.length; i < il; i++) {
+								var event = mejs.Utils.createEvent(initEvents[i], youtube);
+								mediaElement.dispatchEvent(event);
+							}
+						},
+						onStateChange: function (e) {
+
+							// translate events
+							var events = [];
+
+							switch (e.data) {
+								case -1: // not started
+									events = ['loadedmetadata'];
+									paused = true;
+									ended = false;
+									break;
+
+								case 0: // YT.PlayerState.ENDED
+									events = ['ended'];
+									paused = false;
+									ended = true;
+
+									youtube.stopInterval();
+									break;
+
+								case 1:	// YT.PlayerState.PLAYING
+									events = ['play', 'playing'];
+									paused = false;
+									ended = false;
+
+									youtube.startInterval();
+
+									break;
+
+								case 2: // YT.PlayerState.PAUSED
+									events = ['pause'];
+									paused = true;
+									ended = false;
+
+									youtube.stopInterval();
+									break;
+
+								case 3: // YT.PlayerState.BUFFERING
+									events = ['progress'];
+									paused = false;
+									ended = false;
+
+									break;
+								case 5: // YT.PlayerState.CUED
+									events = ['loadeddata', 'loadedmetadata', 'canplay'];
+									paused = true;
+									ended = false;
+
+									break;
+							}
+
+							// send events up
+							for (var i = 0, il = events.length; i < il; i++) {
+								var event = mejs.Utils.createEvent(events[i], youtube);
+								mediaElement.dispatchEvent(event);
+							}
+
+						}
+					}
+				};
+
+			// send it off for async loading and creation
+			YouTubeApi.enqueueIframe(youtubeSettings);
+
+			youtube.onEvent = function (eventName, player, _youTubeState) {
+				
+				if (_youTubeState !== null && _youTubeState !== undefined) {
+					mediaElement.youTubeState = youTubeState = _youTubeState;
+				}
+
+			};
+
+			youtube.setSize = function (width, height) {
+				youTubeApi.setSize(width, height);
+			};
+			youtube.hide = function () {
+				youtube.stopInterval();
+				youtube.pause();
+				if (youTubeIframe) {
+					youTubeIframe.style.display = 'none';
+				}
+			};
+			youtube.show = function () {
+				if (youTubeIframe) {
+					youTubeIframe.style.display = '';
+				}
+			};
+			youtube.destroy = function () {
+				youTubeApi.destroy();
+			};
+			youtube.interval = null;
+
+			youtube.startInterval = function () {
+				// create timer
+				youtube.interval = setInterval(function () {
+
+					var event = mejs.Utils.createEvent('timeupdate', youtube);
+					mediaElement.dispatchEvent(event);
+
+				}, 250);
+			};
+			youtube.stopInterval = function () {
+				if (youtube.interval) {
+					clearInterval(youtube.interval);
+				}
+			};
+
+			return youtube;
+		}
+	};
+
+	if (window.postMessage && typeof window.addEventListener) {
+		mejs.Renderers.add(YouTubeIframeRenderer);
+	}
+
+})(window, document, window.mejs || {});
+/**
+ * Vimeo renderer
+ *
+ * Uses <iframe> approach and uses Vimeo API to manipulate it.
+ * All Vimeo calls return a Promise so this renderer accounts for that
+ * to update all the necessary values to interact with MediaElement player.
+ * Note: IE8 implements ECMAScript 3 that does not allow bare keywords in dot notation;
+ * that's why instead of using .catch ['catch'] is being used.
+ * @see https://github.com/vimeo/player.js
+ *
+ */
+(function (win, doc, mejs, undefined) {
+
+	/**
+	 * Register Vimeo type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function (url) {
+
+		url = url.toLowerCase();
+
+		if (url.indexOf('vimeo') > -1) {
+			return 'video/vimeo';
+		} else {
+			return null;
+		}
+	});
+
+	var vimeoApi = {
+
+		/**
+		 * @type {Boolean}
+		 */
+		isIframeStarted: false,
+		/**
+		 * @type {Boolean}
+		 */
+		isIframeLoaded: false,
+		/**
+		 * @type {Array}
+		 */
+		iframeQueue: [],
+
+		/**
+		 * Create a queue to prepare the creation of <iframe>
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		enqueueIframe: function (settings) {
+
+			if (this.isLoaded) {
+				this.createIframe(settings);
+			} else {
+				this.loadIframeApi();
+				this.iframeQueue.push(settings);
+			}
+		},
+
+		/**
+		 * Load Vimeo API's script on the header of the document
+		 *
+		 */
+		loadIframeApi: function () {
+
+			if (!this.isIframeStarted) {
+
+				var
+					script = doc.createElement('script'),
+					firstScriptTag = doc.getElementsByTagName('script')[0],
+					done = false;
+
+				script.src = 'https://player.vimeo.com/api/player.js';
+
+				// Attach handlers for all browsers
+				script.onload = script.onreadystatechange = function () {
+					if (!done && (!this.readyState || this.readyState === undefined ||
+						this.readyState === "loaded" || this.readyState === "complete")) {
+						done = true;
+						vimeoApi.iFrameReady();
+						script.onload = script.onreadystatechange = null;
+					}
+				};
+				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				this.isIframeStarted = true;
+			}
+		},
+
+		/**
+		 * Process queue of Vimeo <iframe> element creation
+		 *
+		 */
+		iFrameReady: function () {
+
+			this.isLoaded = true;
+			this.isIframeLoaded = true;
+
+			while (this.iframeQueue.length > 0) {
+				var settings = this.iframeQueue.pop();
+				this.createIframe(settings);
+			}
+		},
+
+		/**
+		 * Create a new instance of Vimeo API player and trigger a custom event to initialize it
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		createIframe: function (settings) {
+			var player = new Vimeo.Player(settings.iframe);
+			win['__ready__' + settings.id](player);
+		},
+
+		/**
+		 * Extract numeric value from Vimeo to be loaded through API
+		 * Valid URL format(s):
+		 *  - https://player.vimeo.com/video/59777392
+		 *
+		 * @param {String} url - Vimeo full URL to grab the number Id of the source
+		 * @return {int}
+		 */
+		getVimeoId: function (url) {
+			if (url === undefined || url === null) {
+				return null;
+			}
+
+			var parts = url.split('?');
+
+			url = parts[0];
+
+			return parseInt(url.substring(url.lastIndexOf('/') + 1));
+		},
+
+		/**
+		 * Generate custom errors for Vimeo based on the API specifications
+		 *
+		 * @see https://github.com/vimeo/player.js#error
+		 * @param {Object} error
+		 * @param {Object} target
+		 */
+		errorHandler: function (error, target) {
+			var event = mejs.Utils.createEvent('error', target);
+			event.message = error.name + ': ' + error.message;
+			mediaElement.dispatchEvent(event);
+		}
+	};
+
+	/*
+	 * Register Vimeo event globally
+	 *
+	 */
+	win.onVimeoPlayerAPIReady = function () {
+		
+		vimeoApi.iFrameReady();
+	};
+
+	var vimeoIframeRenderer = {
+
+		name: 'vimeo_iframe',
+
+		options: {
+			prefix: 'vimeo_iframe'
+		},
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {Boolean}
+		 */
+		canPlayType: function (type) {
+			var mediaTypes = ['video/vimeo', 'video/x-vimeo'];
+
+			return mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			// exposed object
+			var
+				apiStack = [],
+				vimeoApiReady = false,
+				vimeo = {},
+				vimeoPlayer = null,
+				paused = true,
+				volume = 1,
+				oldVolume = volume,
+				currentTime = 0,
+				bufferedTime = 0,
+				ended = false,
+				duration = 0,
+				url = "",
+				i,
+				il;
+
+			vimeo.options = options;
+			vimeo.id = mediaElement.id + '_' + options.prefix;
+			vimeo.mediaElement = mediaElement;
+
+			// wrappers for get/set
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					vimeo['get' + capName] = function () {
+						if (vimeoPlayer !== null) {
+							var value = null;
+
+							switch (propName) {
+								case 'currentTime':
+									return currentTime;
+
+								case 'duration':
+									return duration;
+
+								case 'volume':
+									return volume;
+								case 'muted':
+									return volume === 0;
+								case 'paused':
+									return paused;
+
+								case 'ended':
+									return ended;
+
+								case 'src':
+									return url;
+
+								case 'buffered':
+									return {
+										start: function () {
+											return 0;
+										},
+										end: function () {
+											return bufferedTime * duration;
+										},
+										length: 1
+									};
+							}
+
+							return value;
+						} else {
+							return null;
+						}
+					};
+
+					vimeo['set' + capName] = function (value) {
+
+						if (vimeoPlayer !== null) {
+
+							// do something
+							switch (propName) {
+
+								case 'src':
+									var url = typeof value === 'string' ? value : value[0].src,
+										videoId = vimeoApi.getVimeoId(url);
+
+									vimeoPlayer.loadVideo(videoId).then(function () {
+										if (mediaElement.getAttribute('autoplay')) {
+											vimeoPlayer.play();
+										}
+
+									})['catch'](function (error) {
+										vimeoApi.errorHandler(error, vimeo);
+									});
+									break;
+
+								case 'currentTime':
+									vimeoPlayer.setCurrentTime(value).then(function () {
+										currentTime = value;
+										setTimeout(function () {
+											var event = mejs.Utils.createEvent('timeupdate', vimeo);
+											mediaElement.dispatchEvent(event);
+										}, 50);
+									})['catch'](function (error) {
+										vimeoApi.errorHandler(error, vimeo);
+									});
+									break;
+
+								case 'volume':
+									vimeoPlayer.setVolume(value).then(function () {
+										volume = value;
+										oldVolume = volume;
+										setTimeout(function () {
+											var event = mejs.Utils.createEvent('volumechange', vimeo);
+											mediaElement.dispatchEvent(event);
+										}, 50);
+									})['catch'](function (error) {
+										vimeoApi.errorHandler(error, vimeo);
+									});
+									break;
+
+								case 'loop':
+									vimeoPlayer.setLoop(value)['catch'](function (error) {
+										vimeoApi.errorHandler(error, vimeo);
+									});
+									break;
+								case 'muted':
+									
+									if (value) {
+										vimeoPlayer.setVolume(0).then(function () {
+											volume = 0;
+											setTimeout(function () {
+												var event = mejs.Utils.createEvent('volumechange', vimeo);
+												mediaElement.dispatchEvent(event);
+											}, 50);
+										})['catch'](function (error) {
+											vimeoApi.errorHandler(error, vimeo);
+										});
+									} else {
+										vimeoPlayer.setVolume(oldVolume).then(function () {
+											volume = oldVolume;
+											setTimeout(function () {
+												var event = mejs.Utils.createEvent('volumechange', vimeo);
+												mediaElement.dispatchEvent(event);
+											}, 50);
+										})['catch'](function (error) {
+											vimeoApi.errorHandler(error, vimeo);
+										});
+									}
+									break;
+								default:
+									
+							}
+
+						} else {
+							// store for after "READY" event fires
+							apiStack.push({type: 'set', propName: propName, value: value});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// add wrappers for native methods
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
+
+					// run the method on the Soundcloud API
+					vimeo[methodName] = function () {
+
+						if (vimeoPlayer !== null) {
+
+							// DO method
+							switch (methodName) {
+								case 'play':
+									return vimeoPlayer.play();
+								case 'pause':
+									return vimeoPlayer.pause();
+								case 'load':
+									return null;
+
+							}
+
+						} else {
+							apiStack.push({type: 'call', methodName: methodName});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
+			}
+
+			// Initial method to register all Vimeo events when initializing <iframe>
+			win['__ready__' + vimeo.id] = function (_vimeoPlayer) {
+
+				vimeoApiReady = true;
+				mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
+
+				
+
+				// do call stack
+				for (i = 0, il = apiStack.length; i < il; i++) {
+
+					var stackItem = apiStack[i];
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						vimeo['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						vimeo[stackItem.methodName]();
+					}
+				}
+
+				var vimeoIframe = doc.getElementById(vimeo.id), events;
+
+				// a few more events
+				events = ['mouseover', 'mouseout'];
+
+				var assignEvents = function (e) {
+					var event = mejs.Utils.createEvent(e.type, vimeo);
+					mediaElement.dispatchEvent(event);
+				};
+
+				for (var j in events) {
+					var eventName = events[j];
+					mejs.addEvent(vimeoIframe, eventName, assignEvents);
+				}
+
+				// Vimeo events
+				vimeoPlayer.on('loaded', function () {
+
+					vimeoPlayer.getDuration().then(function (loadProgress) {
+
+						if (duration > 0) {
+							bufferedTime = duration * loadProgress;
 						}
 
-						player.addEvent('play', function() {
-							playerState = 1;
-							createEvent(player, pluginMediaElement, 'play');
-							createEvent(player, pluginMediaElement, 'playing');
-						});
+						var event = mejs.Utils.createEvent('timeupdate', vimeo);
+						mediaElement.dispatchEvent(event);
 
-						player.addEvent('pause', function() {
-							playerState = 2;							
-							createEvent(player, pluginMediaElement, 'pause');
-						});
-
-						player.addEvent('finish', function() {
-							playerState = 0;							
-							createEvent(player, pluginMediaElement, 'ended');
-						});
-
-						player.addEvent('playProgress', function(e) {
-							createEvent(player, pluginMediaElement, 'timeupdate', e);
-						});
-						
-						player.addEvent('seek', function(e) {
-							playerState = 3;
-							createEvent(player, pluginMediaElement, 'seeked', e);
-						});	
-						
-						player.addEvent('loadProgress', function(e) {
-							playerState = 3;
-							createEvent(player, pluginMediaElement, 'progress', e);
-						});												
-
-						pluginMediaElement.pluginElement = container;
-						pluginMediaElement.pluginApi = player;
-
-						pluginMediaElement.success(pluginMediaElement, pluginMediaElement.pluginElement);						
+					})['catch'](function (error) {
+						vimeoApi.errorHandler(error, vimeo);
 					});
+
+					vimeoPlayer.getDuration().then(function (seconds) {
+
+						duration = seconds;
+
+						var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
+						mediaElement.dispatchEvent(event);
+					})['catch'](function (error) {
+						vimeoApi.errorHandler(error, vimeo);
+					});
+
+					vimeoPlayer.getVideoUrl().then(function (_url) {
+						url = _url;
+					});
+				});
+
+				vimeoPlayer.on('progress', function () {
+
+					paused = vimeo.mediaElement.getPaused();
+
+					vimeoPlayer.getDuration().then(function (loadProgress) {
+
+						duration = loadProgress;
+
+						if (duration > 0) {
+							bufferedTime = duration * loadProgress;
+						}
+
+					})['catch'](function (error) {
+						vimeoApi.errorHandler(error, vimeo);
+					});
+
+					var event = mejs.Utils.createEvent('timeupdate', vimeo);
+					mediaElement.dispatchEvent(event);
+				});
+				vimeoPlayer.on('timeupdate', function () {
+
+					paused = vimeo.mediaElement.getPaused();
+					ended = false;
+
+					vimeoPlayer.getCurrentTime().then(function (seconds) {
+						currentTime = seconds;
+					});
+
+					var event = mejs.Utils.createEvent('timeupdate', vimeo);
+					mediaElement.dispatchEvent(event);
+
+				});
+				vimeoPlayer.on('play', function () {
+					paused = false;
+					ended = false;
+
+					vimeoPlayer.play()['catch'](function (error) {
+						vimeoApi.errorHandler(error, vimeo);
+					});
+
+					event = mejs.Utils.createEvent('play', vimeo);
+					mediaElement.dispatchEvent(event);
+				});
+				vimeoPlayer.on('pause', function () {
+					paused = true;
+					ended = false;
+
+					vimeoPlayer.pause()['catch'](function (error) {
+						vimeoApi.errorHandler(error, vimeo);
+					});
+
+					event = mejs.Utils.createEvent('pause', vimeo);
+					mediaElement.dispatchEvent(event);
+				});
+				vimeoPlayer.on('ended', function () {
+					paused = false;
+					ended = true;
+
+					var event = mejs.Utils.createEvent('ended', vimeo);
+					mediaElement.dispatchEvent(event);
+				});
+
+				// give initial events
+				events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+
+				for (i = 0, il = events.length; i < il; i++) {
+					var event = mejs.Utils.createEvent(events[i], vimeo);
+					mediaElement.dispatchEvent(event);
 				}
-				else {
-					console.warn("You need to include froogaloop for vimeo to work");
+			};
+
+			var
+				height = mediaElement.originalNode.height,
+				width = mediaElement.originalNode.width,
+				vimeoContainer = doc.createElement('iframe')
+				;
+
+			// Create Vimeo <iframe> markup
+			vimeoContainer.setAttribute('id', vimeo.id);
+			vimeoContainer.setAttribute('width', width);
+			vimeoContainer.setAttribute('height', height);
+			vimeoContainer.setAttribute('frameBorder', '0');
+			vimeoContainer.setAttribute('src', mediaFiles[0].src);
+			vimeoContainer.setAttribute('webkitallowfullscreen', '');
+			vimeoContainer.setAttribute('mozallowfullscreen', '');
+			vimeoContainer.setAttribute('allowfullscreen', '');
+
+			mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
+			mediaElement.originalNode.style.display = 'none';
+
+			vimeoApi.enqueueIframe({
+				iframe: vimeoContainer,
+				id: vimeo.id
+			});
+
+			vimeo.hide = function () {
+				vimeo.pause();
+				if (vimeoPlayer) {
+					vimeoContainer.style.display = 'none';
 				}
-				break;			
-		}
-		// hide original element
-		htmlMediaElement.style.display = 'none';
-		// prevent browser from autoplaying when using a plugin
-		htmlMediaElement.removeAttribute('autoplay');
-		
-		return pluginMediaElement;
-	},
+			};
+			vimeo.setSize = function (width, height) {
+				vimeoContainer.setAttribute('width', width);
+				vimeoContainer.setAttribute('height', height);
+			};
+			vimeo.show = function () {
+				if (vimeoPlayer) {
+					vimeoContainer.style.display = '';
+				}
+			};
 
-	updateNative: function(playback, options, autoplay, preload) {
-		
-		var htmlMediaElement = playback.htmlMediaElement,
-			m;
-		
-		
-		// add methods to video object to bring it into parity with Flash Object
-		for (m in mejs.HtmlMediaElement) {
-			htmlMediaElement[m] = mejs.HtmlMediaElement[m];
+			return vimeo;
 		}
 
-		/*
-		Chrome now supports preload="none"
-		if (mejs.MediaFeatures.isChrome) {
-		
-			// special case to enforce preload attribute (Chrome doesn't respect this)
-			if (preload === 'none' && !autoplay) {
-			
-				// forces the browser to stop loading (note: fails in IE9)
-				htmlMediaElement.src = '';
-				htmlMediaElement.load();
-				htmlMediaElement.canceledPreload = true;
+	};
 
-				htmlMediaElement.addEventListener('play',function() {
-					if (htmlMediaElement.canceledPreload) {
-						htmlMediaElement.src = playback.url;
-						htmlMediaElement.load();
-						htmlMediaElement.play();
-						htmlMediaElement.canceledPreload = false;
-					}
-				}, false);
-			// for some reason Chrome forgets how to autoplay sometimes.
-			} else if (autoplay) {
-				htmlMediaElement.load();
-				htmlMediaElement.play();
-			}
-		}
-		*/
+	mejs.Renderers.add(vimeoIframeRenderer);
 
-		// fire success code
-		options.success(htmlMediaElement, htmlMediaElement);
-		
-		return htmlMediaElement;
-	}
-};
+})(window, document, window.mejs || {});
+/**
+ * DailyMotion renderer
+ *
+ * Uses <iframe> approach and uses DailyMotion API to manipulate it.
+ * @see https://developer.dailymotion.com/player
+ *
+ */
+(function (win, doc, mejs, undefined) {
 
-/*
- - test on IE (object vs. embed)
- - determine when to use iframe (Firefox, Safari, Mobile) vs. Flash (Chrome, IE)
- - fullscreen?
-*/
+	/**
+	 * Register DailyMotion type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function (url) {
 
-// YouTube Flash and Iframe API
-mejs.YouTubeApi = {
-	isIframeStarted: false,
-	isIframeLoaded: false,
-	loadIframeApi: function(yt) {
-		if (!this.isIframeStarted) {
-			var tag = document.createElement('script');
-			tag.src = yt.scheme + "www.youtube.com/player_api";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			this.isIframeStarted = true;
-		}
-	},
-	iframeQueue: [],
-	enqueueIframe: function(yt) {
-		
-		if (this.isLoaded) {
-			this.createIframe(yt);
+		url = url.toLowerCase();
+
+		if (url.indexOf('dailymotion.com') > -1 || url.indexOf('dai.ly') > -1) {
+			return 'video/dailymotion';
 		} else {
-			this.loadIframeApi(yt);
-			this.iframeQueue.push(yt);
+			return null;
 		}
-	},
-	createIframe: function(settings) {
+	});
 
-		var
-		pluginMediaElement = settings.pluginMediaElement,
-		defaultVars = {controls:0, wmode:'transparent'},
-		player = new YT.Player(settings.containerId, {
-			height: settings.height,
-			width: settings.width,
-			videoId: settings.videoId,
-			playerVars: mejs.$.extend({}, defaultVars, settings.variables),
-			events: {
-				'onReady': function(e) {
-					
-					// wrapper to match
-					player.setVideoSize = function(width, height) {
-						player.setSize(width, height);
+	var DailyMotionApi = {
+		/**
+		 * @type {Boolean}
+		 */
+		isSDKStarted: false,
+		/**
+		 * @type {Boolean}
+		 */
+		isSDKLoaded: false,
+		/**
+		 * @type {Array}
+		 */
+		iframeQueue: [],
+
+		/**
+		 * Create a queue to prepare the creation of <iframe>
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		enqueueIframe: function (settings) {
+
+			if (this.isLoaded) {
+				this.createIframe(settings);
+			} else {
+				this.loadIframeApi();
+				this.iframeQueue.push(settings);
+			}
+		},
+
+		/**
+		 * Load DailyMotion API's script on the header of the document
+		 *
+		 */
+		loadIframeApi: function () {
+			if (!this.isSDKStarted) {
+				var e = document.createElement('script');
+				e.async = true;
+				e.src = 'https://api.dmcdn.net/all.js';
+				var s = document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(e, s);
+				this.isSDKStarted = true;
+			}
+		},
+
+		/**
+		 * Process queue of DailyMotion <iframe> element creation
+		 *
+		 */
+		apiReady: function () {
+
+			this.isLoaded = true;
+			this.isSDKLoaded = true;
+
+			while (this.iframeQueue.length > 0) {
+				var settings = this.iframeQueue.pop();
+				this.createIframe(settings);
+			}
+		},
+
+		/**
+		 * Create a new instance of DailyMotion API player and trigger a custom event to initialize it
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		createIframe: function (settings) {
+
+			
+
+			var
+				//id = settings.id,
+				player = DM.player(settings.container, {
+					height: '100%', // settings.height,
+					width: '100%', //settings.width,
+					video: settings.videoId,
+					params: {
+						chromeless: 1,
+						api: 1,
+						info: 0,
+						logo: 0,
+						related: 0
+					},
+					origin: location.host
+				});
+
+			player.addEventListener('apiready', function () {
+				
+
+				win['__ready__' + settings.id](player, {paused: true, ended: false});
+			});
+		},
+
+		/**
+		 * Extract ID from DailyMotion's URL to be loaded through API
+		 * Valid URL format(s):
+		 * - http://www.dailymotion.com/embed/video/x35yawy
+		 * - http://dai.ly/x35yawy
+		 *
+		 * @param {String} url
+		 * @return {String}
+		 */
+		getDailyMotionId: function (url) {
+			var
+				parts = url.split('/'),
+				last_part = parts[parts.length - 1],
+				dash_parts = last_part.split('_')
+				;
+
+			return dash_parts[0];
+		}
+	};
+
+	/*
+	 * Register DailyMotion event globally
+	 *
+	 */
+	win.dmAsyncInit = function () {
+		
+		DailyMotionApi.apiReady();
+	};
+
+	var DailyMotionIframeRenderer = {
+		name: 'dailymotion_iframe',
+
+		options: {
+			prefix: 'dailymotion_iframe'
+		},
+
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {Boolean}
+		 */
+		canPlayType: function (type) {
+			var mediaTypes = ['video/dailymotion', 'video/x-dailymotion'];
+
+			return mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			var dm = {};
+
+			dm.options = options;
+			dm.id = mediaElement.id + '_' + options.prefix;
+			dm.mediaElement = mediaElement;
+
+			var
+				apiStack = [],
+				dmPlayerReady = false,
+				dmPlayer = null,
+				dmIframe = null,
+				i,
+				il,
+				events
+				;
+
+			// wrappers for get/set
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+
+					// add to flash state that we will store
+
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					dm['get' + capName] = function () {
+						if (dmPlayer !== null) {
+							var value = null;
+
+							// figure out how to get dm dta here
+							switch (propName) {
+								case 'currentTime':
+									return dmPlayer.currentTime;
+
+								case 'duration':
+									return isNaN(dmPlayer.duration) ? 0 : dmPlayer.duration;
+
+								case 'volume':
+									return dmPlayer.volume;
+
+								case 'paused':
+									return dmPlayer.paused;
+
+								case 'ended':
+									return dmPlayer.ended;
+
+								case 'muted':
+									return dmPlayer.muted;
+
+								case 'buffered':
+									var percentLoaded = dmPlayer.bufferedTime,
+										duration = dmPlayer.duration;
+									return {
+										start: function () {
+											return 0;
+										},
+										end: function () {
+											return percentLoaded / duration;
+										},
+										length: 1
+									};
+								case 'src':
+									return mediaElement.originalNode.getAttribute('src');
+							}
+
+							return value;
+						} else {
+							return null;
+						}
 					};
-					
-					// hook up iframe object to MEjs
-					settings.pluginMediaElement.pluginApi = player;
-					settings.pluginMediaElement.pluginElement = document.getElementById(settings.containerId);
-					
-					// init mejs
-					pluginMediaElement.success(pluginMediaElement, pluginMediaElement.pluginElement);
 
-					mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'canplay');
-					
-					// create timer
-					setInterval(function() {
-						mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
-					}, 250);
+					dm['set' + capName] = function (value) {
+						//
 
-					if (typeof pluginMediaElement.attributes.autoplay !== 'undefined') {
-						player.playVideo();
-					}
-				},
-				'onStateChange': function(e) {
-					
-					mejs.YouTubeApi.handleStateChange(e.data, player, pluginMediaElement);
-					
+						if (dmPlayer !== null) {
+
+							switch (propName) {
+
+								case 'src':
+									var url = typeof value === 'string' ? value : value[0].src;
+
+									dmPlayer.load(DailyMotionApi.getDailyMotionId(url));
+									break;
+
+								case 'currentTime':
+									dmPlayer.seek(value);
+									break;
+
+								case 'muted':
+									if (value) {
+										dmPlayer.setMuted(true);
+									} else {
+										dmPlayer.setMuted(false);
+									}
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', dm);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								case 'volume':
+									dmPlayer.setVolume(value);
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', dm);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								default:
+									
+							}
+
+						} else {
+							// store for after "READY" event fires
+							apiStack.push({type: 'set', propName: propName, value: value});
+						}
+					};
+
 				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// add wrappers for native methods
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
+
+					// run the method on the native HTMLMediaElement
+					dm[methodName] = function () {
+						
+
+						if (dmPlayer !== null) {
+
+							// DO method
+							switch (methodName) {
+								case 'play':
+									return dmPlayer.play();
+								case 'pause':
+									return dmPlayer.pause();
+								case 'load':
+									return null;
+
+							}
+
+						} else {
+							apiStack.push({type: 'call', methodName: methodName});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
+			}
+
+			// Initial method to register all DailyMotion events when initializing <iframe>
+			win['__ready__' + dm.id] = function (_dmPlayer) {
+
+				dmPlayerReady = true;
+				mediaElement.dmPlayer = dmPlayer = _dmPlayer;
+
+				
+
+				// do call stack
+				for (i = 0, il = apiStack.length; i < il; i++) {
+
+					var stackItem = apiStack[i];
+
+					
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						dm['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						dm[stackItem.methodName]();
+					}
+				}
+
+				dmIframe = doc.getElementById(dm.id);
+
+				// a few more events
+				events = ['mouseover', 'mouseout'];
+				var assignEvent = function (e) {
+					var event = mejs.Utils.createEvent(e.type, dm);
+
+					mediaElement.dispatchEvent(event);
+				};
+				for (var j in events) {
+					var eventName = events[j];
+					mejs.addEvent(dmIframe, eventName, assignEvent);
+				}
+
+				// BUBBLE EVENTS up
+				events = mejs.html5media.events;
+				events = events.concat(['click', 'mouseover', 'mouseout']);
+				var assignNativeEvents = function (eventName) {
+
+					// Deprecated event; not consider it
+					if (eventName !== 'ended') {
+
+						dmPlayer.addEventListener(eventName, function (e) {
+							// copy event
+							var event = mejs.Utils.createEvent(e.type, dmPlayer);
+							mediaElement.dispatchEvent(event);
+						});
+					}
+
+				};
+
+				for (i = 0, il = events.length; i < il; i++) {
+					assignNativeEvents(events[i]);
+				}
+
+				// Custom DailyMotion events
+				dmPlayer.addEventListener('ad_start', function () {
+					var event = mejs.Utils.createEvent('play', dmPlayer);
+					mediaElement.dispatchEvent(event);
+
+					event = mejs.Utils.createEvent('progress', dmPlayer);
+					mediaElement.dispatchEvent(event);
+
+					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('ad_timeupdate', function () {
+					var event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('ad_pause', function () {
+					var event = mejs.Utils.createEvent('pause', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('ad_end', function () {
+					var event = mejs.Utils.createEvent('ended', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('video_start', function () {
+					var event = mejs.Utils.createEvent('play', dmPlayer);
+					mediaElement.dispatchEvent(event);
+
+					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('video_end', function () {
+					var event = mejs.Utils.createEvent('ended', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('progress', function () {
+					var event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+				dmPlayer.addEventListener('durationchange', function () {
+					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+
+
+				// give initial events
+				var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+
+				for (var i = 0, il = initEvents.length; i < il; i++) {
+					var event = mejs.Utils.createEvent(initEvents[i], dm);
+					mediaElement.dispatchEvent(event);
+				}
+			};
+
+			var dmContainer = doc.createElement('div');
+			dmContainer.id = dm.id;
+			mediaElement.appendChild(dmContainer);
+			if (mediaElement.originalNode) {
+				dmContainer.style.width = mediaElement.originalNode.style.width;
+				dmContainer.style.height = mediaElement.originalNode.style.height;
+			}
+			//mediaElement.originalNode.parentNode.insertBefore(dmContainer, mediaElement.originalNode);
+			mediaElement.originalNode.style.display = 'none';
+
+			var
+				videoId = DailyMotionApi.getDailyMotionId(mediaFiles[0].src),
+				dmSettings = {
+					id: dm.id,
+					container: dmContainer,
+					videoId: videoId
+				};
+
+			DailyMotionApi.enqueueIframe(dmSettings);
+
+			dm.hide = function () {
+				dm.stopInterval();
+				dm.pause();
+				if (dmIframe) {
+					dmIframe.style.display = 'none';
+				}
+			};
+			dm.show = function () {
+				if (dmIframe) {
+					dmIframe.style.display = '';
+				}
+			};
+			dm.setSize = function(width, height) {
+				dmIframe.width = width;
+				dmIframe.height = height;
+			};
+			dm.destroy = function () {
+				dmPlayer.destroy();
+			};
+			dm.interval = null;
+
+			dm.startInterval = function () {
+				dm.interval = setInterval(function () {
+					DailyMotionApi.sendEvent(dm.id, dmPlayer, 'timeupdate', {
+						paused: false,
+						ended: false
+					});
+				}, 250);
+			};
+			dm.stopInterval = function () {
+				if (dm.interval) {
+					clearInterval(dm.interval);
+				}
+			};
+
+			return dm;
+		}
+	};
+
+	mejs.Renderers.add(DailyMotionIframeRenderer);
+
+})(window, document, window.mejs || {});
+/**
+ * Facebook renderer
+ *
+ * It creates an <iframe> from a <div> with specific configuration.
+ * @see https://developers.facebook.com/docs/plugins/embedded-video-player
+ */
+(function (win, doc, mejs, undefined) {
+
+	/**
+	 * Register Facebook type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function (url) {
+
+		url = url.toLowerCase();
+
+		if (url.indexOf('facebook') > -1) {
+			return 'video/facebook';
+		} else {
+			return null;
+		}
+	});
+
+	var FacebookRenderer = {
+		name: 'facebook',
+
+		options: {
+			prefix: 'facebook',
+			facebook: {
+				appId: '{your-app-id}',
+				xfbml: true,
+				version: 'v2.6'
+			}
+		},
+
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {Boolean}
+		 */
+		canPlayType: function (type) {
+			var mediaTypes = ['video/facebook', 'video/x-facebook'];
+
+			return mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			var
+				fbWrapper = {},
+				fbApi = null,
+				fbDiv = null,
+				apiStack = [],
+				paused = true,
+				ended = false,
+				hasStartedPlaying = false,
+				src = '',
+				eventHandler = {},
+				i,
+				il
+				;
+
+			fbWrapper.options = options;
+			fbWrapper.id = mediaElement.id + '_' + options.prefix;
+			fbWrapper.mediaElement = mediaElement;
+
+			// wrappers for get/set
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					fbWrapper['get' + capName] = function () {
+
+						if (fbApi !== null) {
+							var value = null;
+
+							// figure out how to get youtube dta here
+							switch (propName) {
+								case 'currentTime':
+									return fbApi.getCurrentPosition();
+
+								case 'duration':
+									return fbApi.getDuration();
+
+								case 'volume':
+									return fbApi.getVolume();
+
+								case 'paused':
+									return paused;
+
+								case 'ended':
+									return ended;
+
+								case 'muted':
+									return fbApi.isMuted();
+
+								case 'buffered':
+									return {
+										start: function () {
+											return 0;
+										},
+										end: function () {
+											return 0;
+										},
+										length: 1
+									};
+								case 'src':
+									return src;
+							}
+
+							return value;
+						} else {
+							return null;
+						}
+					};
+
+					fbWrapper['set' + capName] = function (value) {
+
+						if (fbApi !== null) {
+
+							switch (propName) {
+
+								case 'src':
+									var url = typeof value === 'string' ? value : value[0].src;
+
+									// Only way is to destroy instance and all the events fired,
+									// and create new one
+									fbDiv.parentNode.removeChild(fbDiv);
+									createFacebookEmbed(url, options.facebook);
+
+									// This method reloads video on-demand
+									FB.XFBML.parse();
+
+									break;
+
+								case 'currentTime':
+									fbApi.seek(value);
+									break;
+
+								case 'muted':
+									if (value) {
+										fbApi.mute();
+									} else {
+										fbApi.unmute();
+									}
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', fbWrapper);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								case 'volume':
+									fbApi.setVolume(value);
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', fbWrapper);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								default:
+									
+							}
+
+						} else {
+							// store for after "READY" event fires
+							apiStack.push({type: 'set', propName: propName, value: value});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// add wrappers for native methods
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
+
+					// run the method on the native HTMLMediaElement
+					fbWrapper[methodName] = function () {
+
+						if (fbApi !== null) {
+
+							// DO method
+							switch (methodName) {
+								case 'play':
+									return fbApi.play();
+								case 'pause':
+									return fbApi.pause();
+								case 'load':
+									return null;
+
+							}
+
+						} else {
+							apiStack.push({type: 'call', methodName: methodName});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
+			}
+
+
+			/**
+			 * Dispatch a list of events
+			 *
+			 * @private
+			 * @param {Array} events
+			 */
+			function sendEvents(events) {
+				for (var i = 0, il = events.length; i < il; i++) {
+					var event = mejs.Utils.createEvent(events[i], fbWrapper);
+					mediaElement.dispatchEvent(event);
+				}
+			}
+
+			/**
+			 * Create a new Facebook player and attach all its events
+			 *
+			 * This method creates a <div> element that, once the API is available, will generate an <iframe>.
+			 * Valid URL format(s):
+			 *  - https://www.facebook.com/johndyer/videos/10107816243681884/
+			 *
+			 * @param {String} url
+			 * @param {Object} config
+			 */
+			function createFacebookEmbed(url, config) {
+
+				fbDiv = doc.createElement('div');
+				fbDiv.id = fbWrapper.id;
+				fbDiv.className = "fb-video";
+				fbDiv.setAttribute("data-href", url);
+				fbDiv.setAttribute("data-allowfullscreen", "true");
+				fbDiv.setAttribute("data-controls", "false");
+
+				mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
+				mediaElement.originalNode.style.display = 'none';
+
+				/*
+				 * Register Facebook API event globally
+				 *
+				 */
+				win.fbAsyncInit = function () {
+
+					FB.init(config);
+
+					FB.Event.subscribe('xfbml.ready', function (msg) {
+
+						
+
+						if (msg.type === 'video') {
+
+							fbApi = msg.instance;
+
+							// Set proper size since player dimensions are unknown before this event
+							var
+								fbIframe = fbDiv.getElementsByTagName('iframe')[0],
+								width = parseInt(win.getComputedStyle(fbIframe, null).width),
+								height = parseInt(fbIframe.style.height)
+							;
+
+							fbWrapper.setSize(width, height);
+
+							sendEvents(['mouseover', 'mouseout']);
+
+							// remove previous listeners
+							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
+							for (i = 0, il = fbEvents.length; i < il; i++) {
+								var event = fbEvents[i], handler = eventHandler[event];
+								if (!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+									handler.removeListener(event);
+								}
+							}
+
+							// do call stack
+							for (var i = 0, il = apiStack.length; i < il; i++) {
+
+								var stackItem = apiStack[i];
+
+								
+
+								if (stackItem.type === 'set') {
+									var propName = stackItem.propName,
+										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+									fbWrapper['set' + capName](stackItem.value);
+								} else if (stackItem.type === 'call') {
+									fbWrapper[stackItem.methodName]();
+								}
+							}
+
+							
+							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
+
+							var timer;
+
+							// Custom Facebook events
+							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
+								
+								if (!hasStartedPlaying) {
+									sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
+									hasStartedPlaying = true;
+								}
+								paused = false;
+								ended = false;
+								sendEvents(['play', 'playing', 'timeupdate']);
+
+								// Workaround to update progress bar
+								timer = setInterval(function() {
+									fbApi.getCurrentPosition();
+									sendEvents(['timeupdate']);
+								}, 250);
+							});
+							eventHandler.paused = fbApi.subscribe('paused', function () {
+								
+								paused = true;
+								ended = false;
+								sendEvents(['paused']);
+							});
+							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
+								paused = true;
+								ended = true;
+
+								// Workaround to update progress bar one last time and trigger ended event
+								timer = setInterval(function() {
+									fbApi.getCurrentPosition();
+									sendEvents(['timeupdate', 'ended']);
+								}, 250);
+
+								clearInterval(timer);
+								timer = null;
+							});
+							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
+								sendEvents(['progress', 'timeupdate']);
+							});
+							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
+								sendEvents(['progress', 'timeupdate']);
+							});
+
+
+						}
+					});
+				};
+
+				(function (d, s, id) {
+					var js, fjs = d.getElementsByTagName(s)[0];
+					if (d.getElementById(id)) {
+						return;
+					}
+					js = d.createElement(s);
+					js.id = id;
+					js.src = 'https://connect.facebook.net/en_US/sdk.js';
+					fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));
+			}
+
+			if (mediaFiles.length > 0) {
+				createFacebookEmbed(mediaFiles[0].src, options.facebook);
+			}
+
+			fbWrapper.hide = function () {
+				fbWrapper.stopInterval();
+				fbWrapper.pause();
+				if (fbDiv) {
+					fbDiv.style.display = 'none';
+				}
+			};
+			fbWrapper.show = function () {
+				if (fbDiv) {
+					fbDiv.style.display = '';
+				}
+			};
+			fbWrapper.setSize = function(width, height) {
+				if (fbApi !== null && !isNaN(width) && !isNaN(height)) {
+					fbDiv.setAttribute('width', width);
+					fbDiv.setAttribute('height', height);
+				}
+			};
+			fbWrapper.destroy = function () {
+			};
+			fbWrapper.interval = null;
+
+			fbWrapper.startInterval = function () {
+				// create timer
+				fbWrapper.interval = setInterval(function () {
+					var event = mejs.Utils.createEvent('timeupdate', fbWrapper);
+					mediaElement.dispatchEvent(event);
+				}, 250);
+			};
+			fbWrapper.stopInterval = function () {
+				if (fbWrapper.interval) {
+					clearInterval(fbWrapper.interval);
+				}
+			};
+
+			return fbWrapper;
+		}
+	};
+
+	mejs.Renderers.add(FacebookRenderer);
+
+})(window, document, window.mejs || {});
+/**
+ * SoundCloud renderer
+ *
+ * Uses <iframe> approach and uses SoundCloud Widget API to manipulate it.
+ * @see https://developers.soundcloud.com/docs/api/html5-widget
+ */
+(function (win, doc, mejs, undefined) {
+
+	/**
+	 * Register SoundCloud type based on URL structure
+	 *
+	 */
+	mejs.Utils.typeChecks.push(function (url) {
+
+		url = url.toLowerCase();
+
+		if (url.indexOf('soundcloud.com') > -1) {
+			return 'video/soundcloud';
+		} else {
+			return null;
+		}
+	});
+
+	var SoundCloudApi = {
+		/**
+		 * @type {Boolean}
+		 */
+		isSDKStarted: false,
+		/**
+		 * @type {Boolean}
+		 */
+		isSDKLoaded: false,
+		/**
+		 * @type {Array}
+		 */
+		iframeQueue: [],
+
+		/**
+		 * Create a queue to prepare the creation of <iframe>
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		enqueueIframe: function (settings) {
+
+			if (this.isLoaded) {
+				this.createIframe(settings);
+			} else {
+				this.loadIframeApi();
+				this.iframeQueue.push(settings);
+			}
+		},
+
+		/**
+		 * Load SoundCloud API's script on the header of the document
+		 *
+		 */
+		loadIframeApi: function () {
+			if (!this.isSDKStarted) {
+				// https://developers.soundcloud.com/docs/api/html5-widget#methods
+				var head = doc.getElementsByTagName("head")[0] || document.documentElement,
+					script = doc.createElement("script"),
+					done = false;
+
+				script.src = 'https://w.soundcloud.com/player/api.js';
+
+				// Attach handlers for all browsers
+				script.onload = script.onreadystatechange = function () {
+					if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {
+						done = true;
+						SoundCloudApi.apiReady();
+
+						// Handle memory leak in IE
+						script.onload = script.onreadystatechange = null;
+						if (head && script.parentNode) {
+							head.removeChild(script);
+						}
+					}
+				};
+				head.appendChild(script);
+				this.isSDKStarted = true;
+			}
+		},
+
+		/**
+		 * Process queue of SoundCloud <iframe> element creation
+		 *
+		 */
+		apiReady: function () {
+
+			
+
+			this.isLoaded = true;
+			this.isSDKLoaded = true;
+
+			while (this.iframeQueue.length > 0) {
+				var settings = this.iframeQueue.pop();
+				this.createIframe(settings);
+			}
+		},
+
+		/**
+		 * Create a new instance of SoundCloud Widget player and trigger a custom event to initialize it
+		 *
+		 * @param {Object} settings - an object with settings needed to create <iframe>
+		 */
+		createIframe: function (settings) {
+
+			//
+
+			var player = SC.Widget(settings.iframe);
+			win['__ready__' + settings.id](player);
+		}
+	};
+
+	var SoundCloudIframeRenderer = {
+		name: 'soundcloud_iframe',
+
+		options: {
+			prefix: 'soundcloud_iframe'
+		},
+
+		/**
+		 * Determine if a specific element type can be played with this render
+		 *
+		 * @param {String} type
+		 * @return {Boolean}
+		 */
+		canPlayType: function (type) {
+			var mediaTypes = ['video/soundcloud', 'video/x-soundcloud'];
+
+			return mediaTypes.indexOf(type) > -1;
+		},
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			var sc = {};
+
+			// store main variable
+			sc.options = options;
+			sc.id = mediaElement.id + '_' + options.prefix;
+			sc.mediaElement = mediaElement;
+
+			// create our fake element that allows events and such to work
+			// insert data
+			var apiStack = [],
+				scPlayerReady = false,
+				scPlayer = null,
+				scIframe = null,
+
+				currentTime = 0,
+				duration = 0,
+				bufferedTime = 0,
+				paused = true,
+				volume = 0,
+				muted = false,
+				ended = false,
+				i,
+				il;
+
+			// wrappers for get/set
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+
+					// add to flash state that we will store
+
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					sc['get' + capName] = function () {
+						if (scPlayer !== null) {
+							var value = null;
+
+							// figure out how to get dm dta here
+							switch (propName) {
+								case 'currentTime':
+									return currentTime;
+
+								case 'duration':
+									return duration;
+
+								case 'volume':
+									return volume;
+
+								case 'paused':
+									return paused;
+
+								case 'ended':
+									return ended;
+
+								case 'muted':
+									return muted; // ?
+
+								case 'buffered':
+									return {
+										start: function () {
+											return 0;
+										},
+										end: function () {
+											return bufferedTime * duration;
+										},
+										length: 1
+									};
+								case 'src':
+									return (scIframe) ? scIframe.src : '';
+							}
+
+							return value;
+						} else {
+							return null;
+						}
+					};
+
+					sc['set' + capName] = function (value) {
+						//
+
+						if (scPlayer !== null) {
+
+							// do something
+							switch (propName) {
+
+								case 'src':
+									var url = typeof value === 'string' ? value : value[0].src;
+
+									scPlayer.load(url);
+									break;
+
+								case 'currentTime':
+									scPlayer.seekTo(value * 1000);
+									break;
+
+								case 'muted':
+									if (value) {
+										scPlayer.setVolume(0); // ?
+									} else {
+										scPlayer.setVolume(1); // ?
+									}
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', sc);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								case 'volume':
+									scPlayer.setVolume(value);
+									setTimeout(function () {
+										var event = mejs.Utils.createEvent('volumechange', sc);
+										mediaElement.dispatchEvent(event);
+									}, 50);
+									break;
+
+								default:
+									
+							}
+
+						} else {
+							// store for after "READY" event fires
+							apiStack.push({type: 'set', propName: propName, value: value});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// add wrappers for native methods
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
+
+					// run the method on the Soundcloud API
+					sc[methodName] = function () {
+						
+
+						if (scPlayer !== null) {
+
+							// DO method
+							switch (methodName) {
+								case 'play':
+									return scPlayer.play();
+								case 'pause':
+									return scPlayer.pause();
+								case 'load':
+									return null;
+
+							}
+
+						} else {
+							apiStack.push({type: 'call', methodName: methodName});
+						}
+					};
+
+				}
+			;
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
+			}
+
+			// add a ready method that SC can fire
+			win['__ready__' + sc.id] = function (_scPlayer) {
+
+				scPlayerReady = true;
+				mediaElement.scPlayer = scPlayer = _scPlayer;
+
+				
+
+				// do call stack
+				for (i = 0, il = apiStack.length; i < il; i++) {
+
+					var stackItem = apiStack[i];
+
+					
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						sc['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						sc[stackItem.methodName]();
+					}
+				}
+
+				// SoundCloud properties are async, so we don't fire the event until the property callback fires
+
+				scPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function () {
+					paused = false;
+					ended = false;
+
+					scPlayer.getPosition(function (_currentTime) {
+						currentTime = _currentTime / 1000;
+						var event = mejs.Utils.createEvent('timeupdate', sc);
+						mediaElement.dispatchEvent(event);
+					});
+				});
+
+				scPlayer.bind(SC.Widget.Events.PAUSE, function () {
+					paused = true;
+
+					var event = mejs.Utils.createEvent('pause', sc);
+					mediaElement.dispatchEvent(event);
+				});
+				scPlayer.bind(SC.Widget.Events.PLAY, function () {
+					paused = false;
+					ended = false;
+
+					var event = mejs.Utils.createEvent('play', sc);
+					mediaElement.dispatchEvent(event);
+				});
+				scPlayer.bind(SC.Widget.Events.FINISHED, function () {
+					paused = false;
+					ended = true;
+
+					var event = mejs.Utils.createEvent('ended', sc);
+					mediaElement.dispatchEvent(event);
+				});
+				scPlayer.bind(SC.Widget.Events.READY, function () {
+					scPlayer.getDuration(function (_duration) {
+						duration = _duration / 1000;
+
+						var event = mejs.Utils.createEvent('loadedmetadata', sc);
+						mediaElement.dispatchEvent(event);
+					});
+				});
+				scPlayer.bind(SC.Widget.Events.LOAD_PROGRESS, function () {
+					scPlayer.getDuration(function (loadProgress) {
+						if (duration > 0) {
+							bufferedTime = duration * loadProgress;
+
+							var event = mejs.Utils.createEvent('progress', sc);
+							mediaElement.dispatchEvent(event);
+						}
+					});
+					scPlayer.getDuration(function (_duration) {
+						duration = _duration;
+
+						var event = mejs.Utils.createEvent('loadedmetadata', sc);
+						mediaElement.dispatchEvent(event);
+					});
+				});
+
+				// give initial events
+				var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+
+				for (var i = 0, il = initEvents.length; i < il; i++) {
+					var event = mejs.Utils.createEvent(initEvents[i], sc);
+					mediaElement.dispatchEvent(event);
+				}
+			};
+
+			// container for API API
+			scIframe = doc.createElement('iframe');
+			scIframe.id = sc.id;
+			scIframe.width = 10;
+			scIframe.height = 10;
+			scIframe.frameBorder = 0;
+			scIframe.style.visibility = 'hidden';
+			scIframe.src = mediaFiles[0].src;
+			mediaElement.appendChild(scIframe);
+
+			mediaElement.originalNode.style.display = 'none';
+
+			var
+				scSettings = {
+					iframe: scIframe,
+					id: sc.id
+				};
+
+			SoundCloudApi.enqueueIframe(scSettings);
+
+			sc.setSize = function (width, height) {
+				// nothing here, audio only
+			};
+			sc.hide = function () {
+				sc.pause();
+				if (scIframe) {
+					scIframe.style.display = 'none';
+				}
+			};
+			sc.show = function () {
+				if (scIframe) {
+					scIframe.style.display = '';
+				}
+			};
+			sc.destroy = function () {
+				scPlayer.destroy();
+			};
+
+			return sc;
+		}
+	};
+
+	mejs.Renderers.add(SoundCloudIframeRenderer);
+
+})(window, document, window.mejs || {});
+/**
+ * Shim that falls back to Flash if a media type is not supported.
+ *
+ * Any format not supported natively, including, RTMP, FLV, HLS and M(PEG)-DASH (if browser does not support MSE),
+ * will play using Flash.
+ */
+(function (win, doc, mejs, undefined) {
+
+	/**
+	 * Core detector, plugins are added below
+	 *
+	 */
+	mejs.PluginDetector = {
+
+		/**
+		 * @type {String}
+		 */
+		nav: win.navigator,
+		/**
+		 * @type {String}
+		 */
+		ua: win.navigator.userAgent.toLowerCase(),
+		/**
+		 * Cached version numbers
+		 * @type {Array}
+		 */
+		plugins: [],
+
+		/**
+		 * Test a plugin version number
+		 * @param {String} plugin - In this scenario 'flash' will be tested
+		 * @param {Array} v - An array containing the version up to 3 numbers (major, minor, revision)
+		 * @return {Boolean}
+		 */
+		hasPluginVersion: function (plugin, v) {
+			var pv = this.plugins[plugin];
+			v[1] = v[1] || 0;
+			v[2] = v[2] || 0;
+			return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2]));
+		},
+
+		/**
+		 * Detect plugin and store its version number
+		 *
+		 * @see mejs.PluginDetector.detectPlugin
+		 * @param {String} p
+		 * @param {String} pluginName
+		 * @param {String} mimeType
+		 * @param {String} activeX
+		 * @param {Function} axDetect
+		 */
+		addPlugin: function (p, pluginName, mimeType, activeX, axDetect) {
+			this.plugins[p] = this.detectPlugin(pluginName, mimeType, activeX, axDetect);
+		},
+
+		/**
+		 * Obtain version number from the mime-type (all but IE) or ActiveX (IE)
+		 *
+		 * @param {String} pluginName
+		 * @param {String} mimeType
+		 * @param {String} activeX
+		 * @param {Function} axDetect
+		 * @return {int[]}
+		 */
+		detectPlugin: function (pluginName, mimeType, activeX, axDetect) {
+
+			var version = [0, 0, 0],
+				description,
+				i,
+				ax;
+
+			// Firefox, Webkit, Opera
+			if (typeof(this.nav.plugins) !== 'undefined' && typeof this.nav.plugins[pluginName] === 'object') {
+				description = this.nav.plugins[pluginName].description;
+				if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
+					version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
+					for (i = 0; i < version.length; i++) {
+						version[i] = parseInt(version[i].match(/\d+/), 10);
+					}
+				}
+				// Internet Explorer / ActiveX
+			} else if (typeof(window.ActiveXObject) !== 'undefined') {
+				try {
+					ax = new ActiveXObject(activeX);
+					if (ax) {
+						version = axDetect(ax);
+					}
+				}
+				catch (e) {
+				}
+			}
+			return version;
+		}
+	};
+
+	/**
+	 * Add Flash detection
+	 *
+	 */
+	mejs.PluginDetector.addPlugin('flash', 'Shockwave Flash', 'application/x-shockwave-flash', 'ShockwaveFlash.ShockwaveFlash', function (ax) {
+		// adapted from SWFObject
+		var version = [],
+			d = ax.GetVariable("$version");
+		if (d) {
+			d = d.split(" ")[1].split(",");
+			version = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
+		}
+		return version;
+	});
+
+	var FlashMediaElementRenderer = {
+
+		/**
+		 * Create the player instance and add all native events/methods/properties as possible
+		 *
+		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+		 * @param {Object} options All the player configuration options passed through constructor
+		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+		 * @return {Object}
+		 */
+		create: function (mediaElement, options, mediaFiles) {
+
+			var flash = {},
+				i,
+				il;
+
+			// store main variable
+			flash.options = options;
+			flash.id = mediaElement.id + '_' + flash.options.prefix;
+			flash.mediaElement = mediaElement;
+
+			// insert data
+			flash.flashState = {};
+			flash.flashApi = null;
+			flash.flashApiStack = [];
+
+			// mediaElements for get/set
+			var
+				props = mejs.html5media.properties,
+				assignGettersSetters = function (propName) {
+
+					// add to flash state that we will store
+					flash.flashState[propName] = null;
+
+					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+					flash['get' + capName] = function () {
+
+						if (flash.flashApi !== null) {
+
+							if (flash.flashApi['get_' + propName] !== undefined) {
+								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
+
+								//
+
+								// special case for buffered to conform to HTML5's newest
+								if (propName === 'buffered') {
+									//
+
+									return {
+										start: function () {
+											return 0;
+										},
+										end: function () {
+											return value;
+										},
+										length: 1
+									};
+								}
+
+								return value;
+							} else {
+								
+
+								return null;
+							}
+						} else {
+							return null;
+						}
+					};
+
+					flash['set' + capName] = function (value) {
+						
+
+						if (propName === 'src') {
+							value = mejs.Utils.absolutizeUrl(value);
+						}
+
+						// send value to Flash
+						if (flash.flashApi !== null && flash.flashApi['set_' + propName] !== undefined) {
+							flash.flashApi['set_' + propName](value);
+						} else {
+							// store for after "READY" event fires
+							flash.flashApiStack.push({
+								type: 'set',
+								propName: propName,
+								value: value
+							});
+						}
+					};
+
+				}
+				;
+			for (i = 0, il = props.length; i < il; i++) {
+				assignGettersSetters(props[i]);
+			}
+
+			// add mediaElements for native methods
+			var
+				methods = mejs.html5media.methods,
+				assignMethods = function (methodName) {
+
+					// run the method on the native HTMLMediaElement
+					flash[methodName] = function () {
+						
+
+						if (flash.flashApi !== null) {
+
+							// send call up to Flash ExternalInterface API
+							if (flash.flashApi['fire_' + methodName]) {
+								try {
+									flash.flashApi['fire_' + methodName]();
+								} catch (e) {
+									
+								}
+
+							} else {
+								
+							}
+						} else {
+							// store for after "READY" event fires
+							//
+							flash.flashApiStack.push({
+								type: 'call',
+								methodName: methodName
+							});
+						}
+					};
+
+				}
+				;
+			methods.push('stop');
+			for (i = 0, il = methods.length; i < il; i++) {
+				assignMethods(methods[i]);
+			}
+
+			// add a ready method that Flash can call to
+			win['__ready__' + flash.id] = function () {
+
+				flash.flashReady = true;
+				flash.flashApi = document.getElementById('__' + flash.id);
+
+				var event = mejs.Utils.createEvent('rendererready', flash);
+				mediaElement.dispatchEvent(event);
+
+				// do call stack
+				for (var i = 0, il = flash.flashApiStack.length; i < il; i++) {
+
+					var stackItem = flash.flashApiStack[i];
+
+					
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						flash['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						flash[stackItem.methodName]();
+					}
+				}
+			};
+
+			win['__event__' + flash.id] = function (eventName, message) {
+
+				var event = mejs.Utils.createEvent(eventName, flash);
+				event.message = message || '';
+
+				// send event from Flash up to the mediaElement
+				flash.mediaElement.dispatchEvent(event);
+			};
+
+			// insert Flash object
+			flash.flashWrapper = document.createElement('div');
+
+			var
+				autoplay = mediaElement.getAttribute('autoplay') ? true : false,
+				flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay],
+				isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
+				flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
+				flashWidth = (isVideo) ? mediaElement.originalNode.width : 1;
+
+			if (flash.options.enablePseudoStreaming === true) {
+				flashVars.push('pseudostreamstart=' + flash.options.pseudoStreamingStartQueryParam);
+				flashVars.push('pseudostreamtype=' + flash.options.pseudoStreamingType);
+			}
+
+			mediaElement.appendChild(flash.flashWrapper);
+
+			if (isVideo && mediaElement.originalNode !== null) {
+				mediaElement.originalNode.style.display = 'none';
+			}
+
+			var settings = [];
+
+			if (mejs.Features.isIE) {
+				var specialIEContainer = doc.createElement('div');
+				flash.flashWrapper.appendChild(specialIEContainer);
+
+				settings = [
+					'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
+					'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
+					'id="__' + flash.id + '"',
+					'width="' + flashWidth + '"',
+					'height="' + flashHeight + '"'
+				];
+
+				if (!isVideo) {
+					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+				}
+
+				specialIEContainer.outerHTML =
+					'<object ' + settings.join(' ') + '>' +
+					'<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + (new Date()) + '" />' +
+					'<param name="flashvars" value="' + flashVars.join('&amp;') + '" />' +
+					'<param name="quality" value="high" />' +
+					'<param name="bgcolor" value="#000000" />' +
+					'<param name="wmode" value="transparent" />' +
+					'<param name="allowScriptAccess" value="always" />' +
+					'<param name="allowFullScreen" value="true" />' +
+					'<div>' + mejs.i18n.t('mejs.install-flash') + '</div>' +
+					'</object>';
+
+			} else {
+
+				settings = [
+					'id="__' + flash.id + '"',
+					'name="__' + flash.id + '"',
+					'play="true"',
+					'loop="false"',
+					'quality="high"',
+					'bgcolor="#000000"',
+					'wmode="transparent"',
+					'allowScriptAccess="always"',
+					'allowFullScreen="true"',
+					'type="application/x-shockwave-flash"',
+					'pluginspage="//www.macromedia.com/go/getflashplayer"',
+					'src="' + flash.options.pluginPath + flash.options.filename + '"',
+					'flashvars="' + flashVars.join('&') + '"',
+					'width="' + flashWidth + '"',
+					'height="' + flashHeight + '"'
+				];
+
+				if (!isVideo) {
+					settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+				}
+
+				flash.flashWrapper.innerHTML =
+					'<embed ' + settings.join(' ') + '>';
+			}
+
+			flash.flashNode = flash.flashWrapper.lastChild;
+
+			flash.hide = function () {
+				if (isVideo) {
+					flash.flashNode.style.position = 'absolute';
+					flash.flashNode.style.width = '1px';
+					flash.flashNode.style.height = '1px';
+					try {
+						flash.flashNode.style.clip = 'rect(0 0 0 0);';
+					} catch (e) {
+					}
+				}
+			};
+			flash.show = function () {
+				if (isVideo) {
+					flash.flashNode.style.position = '';
+					flash.flashNode.style.width = '';
+					flash.flashNode.style.height = '';
+					try {
+						flash.flashNode.style.clip = '';
+					} catch (e) {
+					}
+				}
+			};
+			flash.setSize = function (width, height) {
+				flash.flashNode.style.width = width + 'px';
+				flash.flashNode.style.height = height + 'px';
+
+				if (flash.flashApi !== null) {
+					flash.flashApi.fire_setSize(width, height);
+				}
+			};
+
+
+			if (mediaFiles && mediaFiles.length > 0) {
+
+				for (i = 0, il = mediaFiles.length; i < il; i++) {
+					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+						
+						flash.setSrc(mediaFiles[i].src);
+						flash.load();
+						break;
+					}
+				}
+			}
+
+			return flash;
+		}
+	};
+
+	var hasFlash = mejs.PluginDetector.hasPluginVersion('flash', [10, 0, 0]);
+
+	if (hasFlash) {
+
+		/**
+		 * Register media type based on URL structure if Flash is detected
+		 *
+		 */
+		mejs.Utils.typeChecks.push(function (url) {
+
+			url = url.toLowerCase();
+
+			if (url.indexOf('rtmp') > -1) {
+				if (url.indexOf('.mp3') > -1) {
+					return 'audio/rtmp';
+				} else {
+					return 'video/rtmp';
+				}
+			} else if (url.indexOf('.oga') > -1 || url.indexOf('.ogg') > -1) {
+				return 'audio/ogg';
+			} else if (url.indexOf('.m3u8') > -1) {
+				return 'application/x-mpegURL';
+			} else if (url.indexOf('.mpd') > -1) {
+				return 'application/dash+xml';
+			} else {
+				return null;
 			}
 		});
-	},
-	
-	createEvent: function (player, pluginMediaElement, eventName) {
-		var event = {
-			type: eventName,
-			target: pluginMediaElement
+
+		// VIDEO
+		var FlashMediaElementVideoRenderer = {
+			name: 'flash_video',
+
+			options: {
+				prefix: 'flash_video',
+				filename: 'mediaelement-flash-video.swf',
+				enablePseudoStreaming: false,
+				// start query parameter sent to server for pseudo-streaming
+				pseudoStreamingStartQueryParam: 'start',
+				// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
+				pseudoStreamingType: 'byte'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {Boolean}
+			 */
+			canPlayType: function (type) {
+				var supportedMediaTypes = ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'];
+
+				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			create: FlashMediaElementRenderer.create
+
 		};
+		mejs.Renderers.add(FlashMediaElementVideoRenderer);
 
-		if (player && player.getDuration) {
-			
-			// time 
-			pluginMediaElement.currentTime = event.currentTime = player.getCurrentTime();
-			pluginMediaElement.duration = event.duration = player.getDuration();
-			
-			// state
-			event.paused = pluginMediaElement.paused;
-			event.ended = pluginMediaElement.ended;			
-			
-			// sound
-			event.muted = player.isMuted();
-			event.volume = player.getVolume() / 100;
-			
-			// progress
-			event.bytesTotal = player.getVideoBytesTotal();
-			event.bufferedBytes = player.getVideoBytesLoaded();
-			
-			// fake the W3C buffered TimeRange
-			var bufferedTime = event.bufferedBytes / event.bytesTotal * event.duration;
-			
-			event.target.buffered = event.buffered = {
-				start: function(index) {
-					return 0;
-				},
-				end: function (index) {
-					return bufferedTime;
-				},
-				length: 1
-			};
+		// HLS
+		var FlashMediaElementHlsVideoRenderer = {
+			name: 'flash_hls',
 
-		}
-		
-		// send event up the chain
-		pluginMediaElement.dispatchEvent(event);
-	},	
-	
-	iFrameReady: function() {
-		
-		this.isLoaded = true;
-		this.isIframeLoaded = true;
-		
-		while (this.iframeQueue.length > 0) {
-			var settings = this.iframeQueue.pop();
-			this.createIframe(settings);
-		}	
-	},
-	
-	// FLASH!
-	flashPlayers: {},
-	createFlash: function(settings) {
-		
-		this.flashPlayers[settings.pluginId] = settings;
-		
-		/*
-		settings.container.innerHTML =
-			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="' + settings.scheme + 'www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0" ' +
-				'width="' + settings.width + '" height="' + settings.height + '" style="visibility: visible; " class="mejs-shim">' +
-				'<param name="allowScriptAccess" value="sameDomain">' +
-				'<param name="wmode" value="transparent">' +
-			'</object>';
-		*/
+			options: {
+				prefix: 'flash_hls',
+				filename: 'mediaelement-flash-video-hls.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {Boolean}
+			 */
+			canPlayType: function (type) {
+				var supportedMediaTypes = ['audio/hls', 'video/hls', 'application/x-mpegURL',
+					'application/x-mpegurl', 'vnd.apple.mpegURL'];
 
-		var specialIEContainer,
-			youtubeUrl = settings.scheme + 'www.youtube.com/apiplayer?enablejsapi=1&amp;playerapiid=' + settings.pluginId  + '&amp;version=3&amp;autoplay=0&amp;controls=0&amp;modestbranding=1&loop=0';
-			
-		if (mejs.MediaFeatures.isIE) {
-			
-			specialIEContainer = document.createElement('div');
-			settings.container.appendChild(specialIEContainer);
-			specialIEContainer.outerHTML = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="' + settings.scheme + 'download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" ' +
-'id="' + settings.pluginId + '" width="' + settings.width + '" height="' + settings.height + '" class="mejs-shim">' +
-	'<param name="movie" value="' + youtubeUrl + '" />' +
-	'<param name="wmode" value="transparent" />' +
-	'<param name="allowScriptAccess" value="' + options.flashScriptAccess + '" />' +
-	'<param name="allowFullScreen" value="true" />' +
-'</object>';
-		} else {
-		settings.container.innerHTML =
-			'<object type="application/x-shockwave-flash" id="' + settings.pluginId + '" data="' + youtubeUrl + '" ' +
-				'width="' + settings.width + '" height="' + settings.height + '" style="visibility: visible; " class="mejs-shim">' +
-				'<param name="allowScriptAccess" value="' + options.flashScriptAccess + '">' +
-				'<param name="wmode" value="transparent">' +
-			'</object>';
-		}		
-		
-	},
-	
-	flashReady: function(id) {
-		var
-			settings = this.flashPlayers[id],
-			player = document.getElementById(id),
-			pluginMediaElement = settings.pluginMediaElement;
-		
-		// hook up and return to MediaELementPlayer.success	
-		pluginMediaElement.pluginApi = 
-		pluginMediaElement.pluginElement = player;
-		
-		settings.success(pluginMediaElement, pluginMediaElement.pluginElement);
-		
-		// load the youtube video
-		player.cueVideoById(settings.videoId);
-		
-		var callbackName = settings.containerId + '_callback';
-		
-		window[callbackName] = function(e) {
-			mejs.YouTubeApi.handleStateChange(e, player, pluginMediaElement);
+				return (supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			create: FlashMediaElementRenderer.create
 		};
-		
-		player.addEventListener('onStateChange', callbackName);
-		
-		setInterval(function() {
-			mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'timeupdate');
-		}, 250);
-		
-		mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'canplay');
-	},
-	
-	handleStateChange: function(youTubeState, player, pluginMediaElement) {
-		switch (youTubeState) {
-			case -1: // not started
-				pluginMediaElement.paused = true;
-				pluginMediaElement.ended = true;
-				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'loadedmetadata');
-				//createYouTubeEvent(player, pluginMediaElement, 'loadeddata');
-				break;
-			case 0:
-				pluginMediaElement.paused = false;
-				pluginMediaElement.ended = true;
-				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'ended');
-				break;
-			case 1:
-				pluginMediaElement.paused = false;
-				pluginMediaElement.ended = false;				
-				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'play');
-				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'playing');
-				break;
-			case 2:
-				pluginMediaElement.paused = true;
-				pluginMediaElement.ended = false;				
-				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'pause');
-				break;
-			case 3: // buffering
-				mejs.YouTubeApi.createEvent(player, pluginMediaElement, 'progress');
-				break;
-			case 5:
-				// cued?
-				break;						
-			
-		}			
-		
+		mejs.Renderers.add(FlashMediaElementHlsVideoRenderer);
+
+		// M(PEG)-DASH
+		var FlashMediaElementMdashVideoRenderer = {
+			name: 'flash_mdash',
+
+			options: {
+				prefix: 'flash_mdash',
+				filename: 'mediaelement-flash-video-mdash.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {Boolean}
+			 */
+			canPlayType: function (type) {
+				var supportedMediaTypes = ['application/dash+xml'];
+
+				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			create: FlashMediaElementRenderer.create
+		};
+		mejs.Renderers.add(FlashMediaElementMdashVideoRenderer);
+
+		// AUDIO
+		var FlashMediaElementAudioRenderer = {
+			name: 'flash_audio',
+
+			options: {
+				prefix: 'flash_audio',
+				filename: 'mediaelement-flash-audio.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {Boolean}
+			 */
+			canPlayType: function (type) {
+				var supportedMediaTypes = ['audio/mp3'];
+
+				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			create: FlashMediaElementRenderer.create
+		};
+		mejs.Renderers.add(FlashMediaElementAudioRenderer);
+
+		// AUDIO - ogg
+		var FlashMediaElementAudioOggRenderer = {
+			name: 'flash_audio_ogg',
+
+			options: {
+				prefix: 'flash_audio_ogg',
+				filename: 'mediaelement-flash-audio-ogg.swf'
+			},
+			/**
+			 * Determine if a specific element type can be played with this render
+			 *
+			 * @param {String} type
+			 * @return {Boolean}
+			 */
+			canPlayType: function (type) {
+				var supportedMediaTypes = ['audio/ogg', 'audio/oga', 'audio/ogv'];
+
+				return (hasFlash && supportedMediaTypes.indexOf(type) > -1);
+			},
+
+			create: FlashMediaElementRenderer.create
+		};
+		mejs.Renderers.add(FlashMediaElementAudioOggRenderer);
+
+		// Register Flash renderer if Flash was found
+		window.FlashMediaElementRenderer = mejs.FlashMediaElementRenderer = FlashMediaElementRenderer;
+
 	}
-}
-// IFRAME
-window.onYouTubePlayerAPIReady = function() {
-	mejs.YouTubeApi.iFrameReady();
-};
-// FLASH
-window.onYouTubePlayerReady = function(id) {
-	mejs.YouTubeApi.flashReady(id);
-};
 
-window.mejs = mejs;
-window.MediaElement = mejs.MediaElement;
-
+})(window, document, window.mejs || {});
 /**
  * Localize strings
  *
@@ -2306,7 +5622,7 @@ window.MediaElement = mejs.MediaElement;
 							return map[c];
 						});
 					}
-				;
+					;
 
 				// Fetch the localized version of the string
 				if (i18n.locale.strings && i18n.locale.strings[language]) {
@@ -2375,67 +5691,128 @@ window.MediaElement = mejs.MediaElement;
  *   Sascha Greuel (Twitter: @SoftCreatR)
  *
  * @see
- *   me-i18n.js
+ *   mediaelement-i18n.js
  *
  * @params
  *  - exports - CommonJS, window ..
  */
 (function (exports) {
-    "use strict";
+	"use strict";
 
-    if (exports.en === undefined) {
-        exports.en = {
-            "mejs.plural-form": 1,
+	if (exports.en === undefined) {
+		exports.en = {
+			"mejs.plural-form": 1,
 
-            // me-shim
-            "mejs.download-file": "Download File",
+			// me-shim
+			"mejs.download-file": "Download File",
+			"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-            // mep-feature-contextmenu
-            "mejs.fullscreen-off": "Turn off Fullscreen",
-            "mejs.fullscreen-on": "Go Fullscreen",
-            "mejs.download-video": "Download Video",
+			// mep-feature-contextmenu
+			"mejs.fullscreen-off": "Turn off Fullscreen",
+			"mejs.fullscreen-on": "Go Fullscreen",
+			"mejs.download-video": "Download Video",
 
-            // mep-feature-fullscreen
-            "mejs.fullscreen": "Fullscreen",
+			// mep-feature-fullscreen
+			"mejs.fullscreen": "Fullscreen",
 
-            // mep-feature-jumpforward
-            "mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
+			// mep-feature-jumpforward
+			"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
-            // mep-feature-playpause
-            "mejs.play": "Play",
-            "mejs.pause": "Pause",
+			// mep-feature-playpause
+			"mejs.play": "Play",
+			"mejs.pause": "Pause",
 
-            // mep-feature-postroll
-            "mejs.close": "Close",
+			// mep-feature-postroll
+			"mejs.close": "Close",
 
-            // mep-feature-progress
-            "mejs.time-slider": "Time Slider",
-            "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
+			// mep-feature-progress
+			"mejs.time-slider": "Time Slider",
+			"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-            // mep-feature-skipback
-            "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
+			// mep-feature-skipback
+			"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
-            // mep-feature-tracks
-            "mejs.captions-subtitles": "Captions/Subtitles",
-            "mejs.none": "None",
+			// mep-feature-tracks
+			"mejs.captions-subtitles": "Captions/Subtitles",
+			"mejs.none": "None",
 
-            // mep-feature-volume
-            "mejs.mute-toggle": "Mute Toggle",
-            "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
-            "mejs.unmute": "Unmute",
-            "mejs.mute": "Mute",
-            "mejs.volume-slider": "Volume Slider",
+			// mep-feature-volume
+			"mejs.mute-toggle": "Mute Toggle",
+			"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
+			"mejs.unmute": "Unmute",
+			"mejs.mute": "Mute",
+			"mejs.volume-slider": "Volume Slider",
 
-            // mep-player
-            "mejs.video-player": "Video Player",
-            "mejs.audio-player": "Audio Player",
+			// mep-player
+			"mejs.video-player": "Video Player",
+			"mejs.audio-player": "Audio Player",
 
-            // mep-feature-ads
-            "mejs.ad-skip": "Skip ad",
-            "mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
+			// mep-feature-ads
+			"mejs.ad-skip": "Skip ad",
+			"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
 
-            // mep-feature-sourcechooser
-            "mejs.source-chooser": "Source Chooser"
-        };
-    }
+			// mep-feature-sourcechooser
+			"mejs.source-chooser": "Source Chooser",
+
+			// mep-feature-stop
+			"mejs.stop": "Stop",
+
+			// mep-tracks
+			"mejs.afrikaans": "Afrikaans",
+			"mejs.albanian": "Albanian",
+			"mejs.arabic": "Arabic",
+			"mejs.belarusian": "Belarusian",
+			"mejs.bulgarian": "Bulgarian",
+			"mejs.catalan": "Catalan",
+			"mejs.chinese": "Chinese",
+			"mejs.chinese-simplified": "Chinese (Simplified)",
+			"mejs.chinese-traditional": "Chinese (Traditional)",
+			"mejs.croatian": "Croatian",
+			"mejs.czech": "Czech",
+			"mejs.danish": "Danish",
+			"mejs.dutch": "Dutch",
+			"mejs.english": "English",
+			"mejs.estonian": "Estonian",
+			"mejs.filipino": "Filipino",
+			"mejs.finnish": "Finnish",
+			"mejs.french": "French",
+			"mejs.galician": "Galician",
+			"mejs.german": "German",
+			"mejs.greek": "Greek",
+			"mejs.haitian-creole": "Haitian Creole",
+			"mejs.hebrew": "Hebrew",
+			"mejs.hindi": "Hindi",
+			"mejs.hungarian": "Hungarian",
+			"mejs.icelandic": "Icelandic",
+			"mejs.indonesian": "Indonesian",
+			"mejs.irish": "Irish",
+			"mejs.italian": "Italian",
+			"mejs.japanese": "Japanese",
+			"mejs.korean": "Korean",
+			"mejs.latvian": "Latvian",
+			"mejs.lithuanian": "Lithuanian",
+			"mejs.macedonian": "Macedonian",
+			"mejs.malay": "Malay",
+			"mejs.maltese": "Maltese",
+			"mejs.norwegian": "Norwegian",
+			"mejs.persian": "Persian",
+			"mejs.polish": "Polish",
+			"mejs.portuguese": "Portuguese",
+			"mejs.romanian": "Romanian",
+			"mejs.russian": "Russian",
+			"mejs.serbian": "Serbian",
+			"mejs.slovak": "Slovak",
+			"mejs.slovenian": "Slovenian",
+			"mejs.spanish": "Spanish",
+			"mejs.swahili": "Swahili",
+			"mejs.swedish": "Swedish",
+			"mejs.tagalog": "Tagalog",
+			"mejs.thai": "Thai",
+			"mejs.turkish": "Turkish",
+			"mejs.ukrainian": "Ukrainian",
+			"mejs.vietnamese": "Vietnamese",
+			"mejs.welsh": "Welsh",
+			"mejs.yiddish": "Yiddish"
+		};
+	}
 }(mejs.i18n.locale.strings));

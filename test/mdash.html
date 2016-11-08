@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+    <title>MediaElement.js 3.0 - audio/video unification library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!--[if lte IE 8]>
+    <script src="../src/js/console.js"></script>
+    <![endif]-->
+
+    <!-- MediaElement Core renderers -->
+    <script src="../src/js/mediaelement-header.js"></script>
+    <script src="../src/js/mediaelement-namespace.js"></script>
+    <script src="../src/js/mediaelement-utility.js"></script>
+    <script src="../src/js/mediaelement-utility-oldie.js"></script>
+    <script src="../src/js/mediaelement-core.js"></script>
+    <script src="../src/js/mediaelement-renderer-html5.js"></script>
+    <script src="../src/js/mediaelement-renderer-hls.js"></script>
+    <script src="../src/js/mediaelement-renderer-mdash.js"></script>
+    <script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-vimeo.js"></script>
+    <script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
+    <script src="../src/js/mediaelement-renderer-flash.js"></script>
+    <script src="../src/js/mediaelement-i18n.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+
+
+    <!-- Optional: Player -->
+    <link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet" />
+    <script src="../src/js/mediaelementplayer-simple.js"></script>
+
+</head>
+<body>
+
+    <div id="container">
+
+        <h1>MediaElement.js</h1>
+
+        <h2>M(PEG)-DASH Stream</h2>
+
+        <p>This test demonstrates the combination of 2 streaming files (DASH + HLS) as the best approach to
+            support most devices</p>
+        <p><strong>Note:</strong> Media between HLS and DASH are different for the purpose to show the dynamic nature of the player choosing the best option for each browser/device</p>
+        <p><strong>Note:</strong> iOS will play natively HLS over DASH</p>
+
+        <video  width="640" height="360" preload="none" class="mejs-player" >
+            <source src="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd" type="application/dash+xml" />
+            <source src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
+        </video>
+
+    </div>
+    <script>
+
+        var elements = mejs.getElementsByClassName('mejs-player');
+
+        // Show the order of renderers to ensure support in different scenarios
+        mejs.Renderers.order = ['native_mdash', 'flash_mdash', 'native_hls', 'flash_hls', 'flash_video'];
+
+        for (var i=0, il=elements.length; i<il; i++) {
+            var player = new MediaElementPlayerSimple(elements[i], {
+                pluginPath: '../build/'
+            });
+        }
+
+    </script>
+
+</body>
+</html>

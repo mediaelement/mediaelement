@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html debug="true">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>MediaElement.js 3.0 - audio/video unification library</title>
+
+	<!--[if lte IE 8]>
+	<script src="../src/js/console.js"></script>
+	<![endif]-->
+
+	<script src="../build/jquery.js"></script>
+
+	<script src="../src/js/mediaelement-header.js"></script>
+	<script src="../src/js/mediaelement-namespace.js"></script>
+	<script src="../src/js/mediaelement-utility.js"></script>
+	<script src="../src/js/mediaelement-utility-oldie.js"></script>
+	<script src="../src/js/mediaelement-core.js"></script>
+	<script src="../src/js/mediaelement-renderer-html5.js"></script>
+	<script src="../src/js/mediaelement-renderer-mdash.js"></script>
+	<script src="../src/js/mediaelement-renderer-hls.js"></script>
+	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+	<script src="../src/js/mediaelement-renderer-vimeo.js"></script>
+	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+	<script src="../src/js/mediaelement-renderer-facebook.js"></script>
+	<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
+	<script src="../src/js/mediaelement-renderer-flash.js"></script>
+
+	<script src="../src/js/mediaelementplayer-library.js"></script>
+	<script src="../src/js/mediaelement-i18n.js"></script>
+	<script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+	<script src="../src/js/mediaelementplayer-player.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-playpause.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-progress.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-time.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-speed.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-tracks.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-volume.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-stop.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-skipback.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-sourcechooser.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-fullscreen.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-jumpforward.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-loop.js"></script>
+	<script src="../src/js/mediaelementplayer-feature-markers.js"></script>
+
+	<link rel="stylesheet" href="../src/css/mediaelementplayer.css">
+	
+	<style>
+	.commands {
+		padding: 0 0 50px 0;
+	}
+	.commands > .command {
+		display: block;
+		margin: 2px;
+		cursor: pointer;
+	}
+	.commands > .command:hover {
+		background-color: #eaedb8;
+	}
+
+	</style>
+
+
+</head>
+<body>
+
+	<div id="container">
+
+		<h1>MediaElement.js</h1>
+
+		<h2>audio/video unification library</h2>
+
+		<p><em>MediaElement</em> is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer that can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, JSMad, and other libraries.</p>
+
+		<p><em>MediaElementPlayer</em> is built off of MediaElement and creates a fully featured player on top of the unified syntax from MediaElement.</p>
+
+
+		<div class="players" id="player1-container">
+
+			<h3>Video Player</h3>
+
+			<video id="player1" width="640" height="360" style="max-width:100%; max-height:100%;" preload="none" >
+				<source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+				<track srclang="en" kind="subtitles" type="text/vtt" src="files/mediaelement.vtt">
+			</video>
+
+			<div id="player1-renderename">Render info</div>
+
+			<div class="commands">
+				<span class="command">
+					document.getElementById('player1').src = 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://www.dailymotion.com/embed/video/x2lzodk';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://www.youtube.com/watch?v=twYp6W6vt2U';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://www.youtube.com/watch?v=9bZkp7q19f0';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'http://youtu.be/xmWuqd5y77M';
+				</span>
+				<span class="command">
+					document.getElementById('player1').src = 'https://www.facebook.com/johndyer/videos/10107816243681884/';
+				</span>
+				<span class="command">
+					document.getElementById('player1').play();
+				</span>
+				<span class="command">
+					document.getElementById('player1').pause();
+				</span>
+				<span class="command">
+					document.getElementById('player1').muted = false;
+				</span>
+				<span class="command">
+					document.getElementById('player1').muted = true;
+				</span>
+				<span class="command">
+					document.getElementById('player1').volume = 0.5;
+				</span>
+				<span class="command">
+					document.getElementById('player1').volume = 1;
+				</span>
+				<span class="command">
+					document.getElementById('player1').currentTime = 26;
+				</span>
+			</div>
+
+		</div><!-- /.player -->
+
+		<div class="players" id="player2-container">
+
+
+			<h3>Audio Player</h3>
+
+			<audio id="player2" preload="none" controls>
+				<source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3">
+			</audio>
+
+			<div id="player2-renderename"></div>
+
+			<div class="commands">
+				<span class="command">
+					document.getElementById('player2').src = 'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3'; document.getElementById('player2').load();
+				</span>
+				<span class="command">
+					document.getElementById('player2').src = 'http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg'; document.getElementById('player2').load();
+				</span>
+				<span class="command">
+					document.getElementById('player2').src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/207370321&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true';
+				</span>
+				<span class="command">
+					document.getElementById('player2').src = 'rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr';
+				</span>
+				<span class="command">
+					document.getElementById('player2').load();
+				</span>
+				<span class="command">
+					document.getElementById('player2').play();
+				</span>
+				<span class="command">
+					document.getElementById('player2').pause();
+				</span>
+				<span class="command">
+					document.getElementById('player2').muted = false;
+				</span>
+				<span class="command">
+					document.getElementById('player2').muted = true;
+				</span>
+				<span class="command">
+					document.getElementById('player2').volume = 0.5;
+				</span>
+				<span class="command">
+					document.getElementById('player2').volume = 1;
+				</span>
+				<span class="command">
+					document.getElementById('player2').currentTime = 26;
+				</span>
+			</div>
+		</div><!-- /.player -->
+
+	</div>  <!-- /#container -->
+
+	<script>
+
+		$('video, audio').mediaelementplayer({
+
+			pluginPath:'../build/',
+			markers: [2.5, 10, 35, 40.2],
+			features: ['playpause', 'current', 'progress','volume','speed', 'duration', 'fullscreen', 'tracks', 'skipback', 'jumpforward', 'loop', 'markers', 'stop', 'sourcechooser'],
+
+			success: function(mediaElement) {
+
+				var container = document.getElementById(mediaElement.id + '-container'),
+						uiRendererName = document.getElementById(mediaElement.id + '-renderename');
+				mediaElement.addEventListener('loadedmetadata', function(e) {
+
+					var src = mediaElement.src;
+
+					if (src != null) {
+						uiRendererName.innerHTML = src.substring(src.lastIndexOf('/')+1) + ' : rendered by ' + mediaElement.rendererName;
+					} else {
+						uiRendererName.innerHTML = 'Error finding src. Renderer: ' + mediaElement.rendererName;
+					}
+
+				}, false);
+
+
+				mediaElement.addEventListener('error', function(e) {
+
+					uiRendererName.innerHTML = e.message;
+
+				}, false);
+
+
+				var commands = mejs.getElementsByClassName('command', container);
+
+				console.log('commands', commands.length);
+
+				for  (var i=0, il=commands.length; i<il; i++) {
+
+					(function(command) {
+
+
+						mejs.addEvent(command, 'click', function() {
+
+							eval(command.innerHTML.replace('&amp;', '&'));
+
+							var parts = command.innerHTML.split('.src');
+							if (parts.length > 1) {
+								eval(parts[0] + '.load();');
+							}
+						});
+
+
+					})(commands[i]);
+
+				}
+			}
+		});
+
+	</script>
+	
+</body>
+</html>
