@@ -66,7 +66,7 @@ ogg/ogv | audio/ogg, audio/oga, video/ogg | Please visit http://caniuse.com/#sea
 wav | audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav | Please visit http://caniuse.com/#feat=wav for comprehensive information
 m3u8 | application/x-mpegURL, vnd.apple.mpegURL, audio/mpegURL, audio/hls, video/hls | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support `Flash` (version 10 or later)
 mpd | application/dash+xml | Browsers that support MSE through `dash.js` library; rest of the browsers that support `Flash` (version 10 or later)
-rtmp/flv | video/mp4, video/flv, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 | All browsers that support `Flash` (version 10 or later)
+rtmp/flv | video/mp4, video/flv, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 | All browsers that support `Flash` (version 10 or later) and native on MediaSource supported Browsers http://caniuse.com/#feat=mediasource
 youtube | video/youtube, video/x-youtube | All browsers that support `window.postMessage`; Flash deprecated.
 vimeo | video/vimeo, video/x-vimeo | All browsers that support `iframe` tag and HTML5
 facebook | video/facebook, video/x-facebook | All browsers that support `iframe` tag and HTML5
