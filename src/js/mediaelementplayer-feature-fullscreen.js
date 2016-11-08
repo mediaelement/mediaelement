@@ -78,7 +78,7 @@
 				hideTimeout = null,
 				fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : mejs.i18n.t('mejs.fullscreen'),
 				fullscreenBtn =
-					$('<div class="mejs__button mejs__fullscreen-button">' +
+					$('<div class="mejs-button mejs-fullscreen-button">' +
 						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '"></button>' +
 						'</div>')
 					.appendTo(controls)
@@ -287,7 +287,7 @@
 			});
 
 			for (i = 0, len = hoverDivNames.length; i < len; i++) {
-				hoverDivs[hoverDivNames[i]] = $('<div class="mejs__fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls).hide();
+				hoverDivs[hoverDivNames[i]] = $('<div class="mejs-fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls).hide();
 			}
 
 			// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
@@ -386,7 +386,7 @@
 			}
 
 			// set it to not show scroll bars so 100% will work
-			$(document.documentElement).addClass('mejs__fullscreen');
+			$(document.documentElement).addClass('mejs-fullscreen');
 
 			// store sizing
 			t.normalHeight = t.container.height();
@@ -431,7 +431,7 @@
 
 			// make full size
 			t.container
-			.addClass('mejs__container-fullscreen')
+			.addClass('mejs-container-fullscreen')
 			.width('100%')
 			.height('100%');
 
@@ -464,17 +464,17 @@
 
 			if (t.fullscreenBtn) {
 				t.fullscreenBtn
-				.removeClass('mejs__fullscreen')
-				.addClass('mejs__unfullscreen');
+				.removeClass('mejs-fullscreen')
+				.addClass('mejs-unfullscreen');
 			}
 
 			t.setControlsSize();
 			t.isFullScreen = true;
 
 			var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height);
-			t.container.find('.mejs__captions-text').css('font-size', zoomFactor * 100 + '%');
-			t.container.find('.mejs__captions-text').css('line-height', 'normal');
-			t.container.find('.mejs__captions-position').css('bottom', '45px');
+			t.container.find('.mejs-captions-text').css('font-size', zoomFactor * 100 + '%');
+			t.container.find('.mejs-captions-text').css('line-height', 'normal');
+			t.container.find('.mejs-captions-position').css('bottom', '45px');
 
 			t.container.trigger('enteredfullscreen');
 		},
@@ -498,9 +498,9 @@
 			}
 
 			// restore scroll bars to document
-			$(document.documentElement).removeClass('mejs__fullscreen');
+			$(document.documentElement).removeClass('mejs-fullscreen');
 
-			t.container.removeClass('mejs__container-fullscreen');
+			t.container.removeClass('mejs-container-fullscreen');
 
 			if (t.options.setDimensions) {
 				t.container.width(t.normalWidth)
@@ -522,15 +522,15 @@
 			}
 
 			t.fullscreenBtn
-			.removeClass('mejs__unfullscreen')
-			.addClass('mejs__fullscreen');
+			.removeClass('mejs-unfullscreen')
+			.addClass('mejs-fullscreen');
 
 			t.setControlsSize();
 			t.isFullScreen = false;
 
-			t.container.find('.mejs__captions-text').css('font-size','');
-			t.container.find('.mejs__captions-text').css('line-height', '');
-			t.container.find('.mejs__captions-position').css('bottom', '');
+			t.container.find('.mejs-captions-text').css('font-size','');
+			t.container.find('.mejs-captions-text').css('line-height', '');
+			t.container.find('.mejs-captions-position').css('bottom', '');
 
 			t.container.trigger('exitedfullscreen');
 		}

@@ -39,7 +39,7 @@
 
         <h2>Native HLS Stream</h2>
 
-        <video  width="640" height="360" preload="none" class="mejs__player" >
+        <video  width="640" height="360" preload="none" class="mejs-player" >
             <source src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL" />
         </video>
 
@@ -47,7 +47,7 @@
     <script>
 
 
-        var elements = mejs.getElementsByClassName('mejs__player');
+        var elements = mejs.getElementsByClassName('mejs-player');
 
         for (var i=0, il=elements.length; i<il; i++) {
             var player = new MediaElementPlayerSimple(elements[i], {

@@ -1072,6 +1072,13 @@ if (document.createEvent === undefined) {
 				//
 				var event;
 
+				// Ensure that the original gets the first source found
+				if (mediaFiles[0].src) {
+					mediaElement.originalNode.setAttribute('src', mediaFiles[0].src);
+				} else {
+					mediaElement.originalNode.setAttribute('src', '');
+				}
+
 				// did we find a renderer?
 				if (renderInfo === null) {
 					event = doc.createEvent("HTMLEvents");
@@ -1085,11 +1092,6 @@ if (document.createEvent === undefined) {
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 				if (mediaElement.renderer === undefined || mediaElement.renderer === null) {
-
-					if (!mediaFiles[0].src) {
-						mediaElement.originalNode.removeAttribute('src');
-					}
-
 					event = doc.createEvent("HTMLEvents");
 					event.initEvent('error', false, false);
 					event.message = 'Error creating renderer';
