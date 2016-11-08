@@ -3,6 +3,8 @@
  *
  * Uses flv.js, which is a JavaScript library which implements mechanisms to play flv files inspired by flv.js.
  * It relies on HTML5 video and MediaSource Extensions for playback.
+ * Currently, it can only play files with the same origin.
+ *
  * @see https://github.com/Bilibili/flv.js
  *
  */
@@ -142,6 +144,7 @@
 		canPlayType: function (type) {
 
 			var mediaTypes = ['video/x-flv', 'video/flv'];
+
 			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type) > -1;
 		},
 		/**
@@ -162,7 +165,7 @@
 				id = mediaElement.id + '_' + options.prefix,
 				flvPlayer,
 				stack = {}
-				;
+			;
 
 			node = originalNode.cloneNode(true);
 			options = mejs.Utils.extend(options, mediaElement.options);
@@ -273,6 +276,7 @@
 					}
 				}
 			}
+
 			node.className = '';
 
 			originalNode.parentNode.insertBefore(node, originalNode);
