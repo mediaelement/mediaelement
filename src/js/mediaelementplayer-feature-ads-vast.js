@@ -92,7 +92,7 @@
 				console.log('VAST','mejsprerollended');
 				
 				if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && 
-                    t.vastAdTags[t.options.indexPreroll].trackingEvents.complete) {
+                    			t.vastAdTags[t.options.indexPreroll].trackingEvents.complete) {
 					t.adsLoadUrl(t.vastAdTags[t.options.indexPreroll].trackingEvents.complete);
 				}
 				
