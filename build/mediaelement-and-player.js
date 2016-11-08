@@ -7366,7 +7366,7 @@ if (jQuery !== undefined) {
 		play: function () {
 			var t = this;
 
-			// only load if the current time is 0 to ensure proper
+			// only load if the current time is 0 to ensure proper playing
 			if (t.media.getCurrentTime() <= 0) {
 				t.load();
 			}
