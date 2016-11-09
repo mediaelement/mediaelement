@@ -482,7 +482,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border-radius: 0;
 }
 
-.mejs-captions-button:hover .mejs-captions-selector {
+
+.mejs-captions-button .mejs-captions-selector {
 	visibility: visible;
 }
 
