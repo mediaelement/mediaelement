@@ -6230,10 +6230,6 @@ if (jQuery !== undefined) {
 				// add controls and stop
 				t.$media.attr('controls', 'controls');
 
-				// attempt to fix iOS 3 bug
-				//t.$media.removeAttr('poster');
-				// no Issue found on iOS3 -ttroxell
-
 				// override Apple's autoplay override for iPads
 				if (mf.isiPad && t.media.getAttribute('autoplay') !== null) {
 					t.play();
@@ -6368,7 +6364,7 @@ if (jQuery !== undefined) {
 			// create MediaElement shim
 			mejs.MediaElement(t.$media[0], meOptions);
 
-			if (typeof(t.container) !== 'undefined' && t.options.features.length && t.controlsAreVisible) {
+			if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
 				// controls are shown when loaded
 				t.container.trigger('controlsshown');
 			}
@@ -6420,8 +6416,12 @@ if (jQuery !== undefined) {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended)
+			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
+				(t.media.paused && t.media.readyState === 4) ||
+				(t.isVideo && !t.options.hideVideoControlsOnLoad) ||
+				t.media.ended) {
 				return;
+			}
 
 			if (doAnimation) {
 				// fade out main controls

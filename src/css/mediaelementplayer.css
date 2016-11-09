@@ -137,6 +137,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	width: 80px;
 	height: 80px;
 	margin: -40px 0 0 -40px;
+	background: rgba(0, 0, 0, 0.9);
 	background: linear-gradient(rgba(50,50,50,0.9), rgba(0,0,0,0.9));
 }
 
@@ -157,9 +158,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	padding: 0;
 	bottom: 0;
 	left: 0;
-	background: linear-gradient(rgba(50,50,50,0.7), rgba(0,0,0,0.7));
 	height: 30px;
 	width: 100%;
+}
+
+.mejs-controls:not([style*="display: none"]) {
+	background: rgba(0, 0, 0, 0.7);
+	background: linear-gradient(rgba(50,50,50,0.7), rgba(0,0,0,0.7));
 }
 
 .mejs-button,
@@ -247,6 +252,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-time-total {
 	margin: 5px;
+	background: rgba(50,50,50,0.8);
 	background: linear-gradient(rgba(30,30,30,0.8), rgba(60,60,60,0.8));
 	width: calc(100% - 10px);
 }
@@ -261,11 +267,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 @keyframes buffering-stripes { from {background-position: 0 0;} to {background-position: 30px 0;} }
 
 .mejs-time-loaded {
+	background: rgba(60,170,200,0.8);
 	background: linear-gradient(rgba(44,124,145,0.8), rgba(78,183,212,0.8));
 	width: 0;
 }
 
 .mejs-time-current {
+	background: rgba(255,255,255,0.8);
 	background: linear-gradient(rgba(255,255,255,0.9), rgba(200,200,200,0.8));
 	width: 0;
 }
@@ -427,6 +435,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	padding: 0;
 	font-size: 1px;
 	border-radius: 2px;
+	background: rgba(50,50,50,0.8);
 	background: linear-gradient(rgba(30,30,30,0.8), rgba(60,60,60,0.8));
 }
 
@@ -440,6 +449,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	padding: 0;
 	font-size: 1px;
 	border-radius: 2px;
+	background: rgba(255,255,255,0.8);
 	background: linear-gradient(rgba(255,255,255,0.9), rgba(200,200,200,0.8));
 }
 
@@ -524,6 +534,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-chapter {
 	position: absolute;
 	float: left;
+	background: rgba(0, 0, 0, 0.7);
 	background: linear-gradient(rgba(50,50,50,0.7), rgba(0,0,0,0.7));
 	overflow: hidden;
 	border: 0;
@@ -544,6 +555,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-chapter-block:hover {
+	background: rgba(102,102,102, 0.7);
 	background: linear-gradient(rgba(102,102,102,0.7), rgba(50,50,50,0.6));
 }
 
