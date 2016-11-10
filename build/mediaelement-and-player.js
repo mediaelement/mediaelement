@@ -1110,7 +1110,7 @@ if (document.createEvent === undefined) {
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					
-					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer[methodName]) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -8968,10 +8968,10 @@ if (jQuery !== undefined) {
 				t.container.find('iframe, embed, object')
 				.width('100%')
 				.height('100%');
+			}
 
-				if (t.options.setDimensions) {
-					t.media.setSize(screen.width, screen.height);
-				}
+			if (t.options.setDimensions) {
+				t.media.setSize(screen.width, screen.height);
 			}
 
 			t.layers.children('div')
@@ -9029,9 +9029,10 @@ if (jQuery !== undefined) {
 					t.container.find('iframe, embed, object')
 						.width(t.normalWidth)
 						.height(t.normalHeight);
-
-					t.media.setSize(t.normalWidth, t.normalHeight);
 				}
+
+				t.media.setSize(t.normalWidth, t.normalHeight);
+
 				t.layers.children('div')
 					.width(t.normalWidth)
 					.height(t.normalHeight);
