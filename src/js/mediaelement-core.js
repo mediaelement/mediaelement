@@ -330,7 +330,7 @@
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					console.log('[wrapper ' + mediaElement.id + '.' + methodName + '()]', mediaElement.renderer);
-					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer[methodName]) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
