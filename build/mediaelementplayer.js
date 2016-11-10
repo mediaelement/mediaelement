@@ -3149,10 +3149,10 @@ if (jQuery !== undefined) {
 				t.container.find('iframe, embed, object')
 				.width('100%')
 				.height('100%');
+			}
 
-				if (t.options.setDimensions) {
-					t.media.setSize(screen.width, screen.height);
-				}
+			if (t.options.setDimensions) {
+				t.media.setSize(screen.width, screen.height);
 			}
 
 			t.layers.children('div')
@@ -3210,9 +3210,10 @@ if (jQuery !== undefined) {
 					t.container.find('iframe, embed, object')
 						.width(t.normalWidth)
 						.height(t.normalHeight);
-
-					t.media.setSize(t.normalWidth, t.normalHeight);
 				}
+
+				t.media.setSize(t.normalWidth, t.normalHeight);
+
 				t.layers.children('div')
 					.width(t.normalWidth)
 					.height(t.normalHeight);
