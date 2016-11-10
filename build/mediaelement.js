@@ -1110,7 +1110,7 @@ if (document.createEvent === undefined) {
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
 					
-					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer[methodName]) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
