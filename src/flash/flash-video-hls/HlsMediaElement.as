@@ -190,7 +190,6 @@
 					_video.width = _videoWidth * contHeight / _videoHeight;
 					_video.height =  contHeight;
 					_video.x = contWidth/2 - _video.width/2;
-					log("ALEG" + contWidth);
 				} else if (stageRatio == nativeRatio) {
 					_video.width = contWidth;
 					_video.height = contHeight;
