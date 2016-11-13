@@ -297,6 +297,8 @@
 
 			sendEvent("loadedmetadata");
 			sendEvent("canplay");
+			//Set Size on loaded metadata
+			fire_setSize();
 
 			if (_playqueued) {
 				_playqueued = false;
@@ -364,7 +366,6 @@
 		//
 		private function sendEvent(eventName: String, eventMessage: String = ''): void {
 			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
-      			fire_setSize();
 		}
 		private function log(): void {
 			if (ExternalInterface.available) {
