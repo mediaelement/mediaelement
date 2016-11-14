@@ -55,11 +55,10 @@
         var elements = mejs.getElementsByClassName('mejs-player');
 
         // Show the order of renderers to ensure support in different scenarios
-        mejs.Renderers.order = ['native_mdash', 'flash_mdash', 'native_hls', 'flash_hls', 'flash_video'];
-
         for (var i=0, il=elements.length; i<il; i++) {
             var player = new MediaElementPlayerSimple(elements[i], {
-                pluginPath: '../build/'
+                pluginPath: '../build/',
+                renderers: ['native_mdash', 'flash_mdash', 'native_hls', 'flash_hls']
             });
         }
 
