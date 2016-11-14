@@ -320,7 +320,7 @@
 									break;
 
 								default:
-									console.log('youtube ' + id, propName, 'UNSUPPORTED property');
+									console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {

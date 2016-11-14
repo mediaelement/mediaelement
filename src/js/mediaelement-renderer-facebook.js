@@ -168,7 +168,7 @@
 									break;
 
 								default:
-									console.log('facebook ' + id, propName, 'UNSUPPORTED property');
+									console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
