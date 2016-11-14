@@ -149,7 +149,6 @@
 	 *
 	 */
 	win.onVimeoPlayerAPIReady = function () {
-		console.log('onVimeoPlayerAPIReady');
 		vimeoApi.iFrameReady();
 	};
 

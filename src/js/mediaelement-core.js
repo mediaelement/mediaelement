@@ -212,8 +212,6 @@
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1),
 
 						getFn = function () {
-							//console.log('[wrapper get]: ' + propName);
-
 							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
@@ -223,12 +221,8 @@
 							}
 						},
 						setFn = function (value) {
-							//console.log('[wrapper set]: ' + propName + ' = ' + value);
-
 							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
-
-								//mediaElement.renderer[propName] = value;
 							}
 						};
 
@@ -283,13 +277,10 @@
 					mediaElement.originalNode.setAttribute('src', '');
 				}
 
-				//console.log('SRC test', mediaFiles);
-
 				// find a renderer and URL match
 				renderInfo = mejs.Renderers.selectRenderer(mediaFiles,
 					(options.renderers.length ? options.renderers : null));
 
-				//console.log('SRC selection', renderInfo);
 				var event;
 
 				// Ensure that the original gets the first source found
@@ -329,8 +320,8 @@
 			assignMethods = function (methodName) {
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
-					console.log('[wrapper ' + mediaElement.id + '.' + methodName + '()]', mediaElement.renderer);
-					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer[methodName]) {
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null &&
+						mediaElement.renderer[methodName]) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -391,18 +382,14 @@
 			 */
 			mediaElement.dispatchEvent = function (event) {
 
-				var i,
-					//args,
-					callbacks = mediaElement.events[event.type];
-
-				//console.log('mejs event', event, mediaElement.events);
+				var
+					i,
+					callbacks = mediaElement.events[event.type]
+				;
 
 				if (callbacks) {
 					//args = Array.prototype.slice.call(arguments, 1);
 					for (i = 0, il = callbacks.length; i < il; i++) {
-
-						//console.log('--event', event.type, callbacks[i]);
-
 						callbacks[i].apply(null, [event]);
 					}
 				}
@@ -420,20 +407,13 @@
 
 			// check for a match on the current renderer
 			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
-
-				console.log('Already using: ' + rendererName);
-
 				mediaElement.renderer.show();
 				mediaElement.renderer.setSrc(mediaFiles[0].src);
-
 				return true;
 			}
 
 			// if existing renderer is not the right one, then hide it
 			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
-
-				console.log('Stopping and hiding: ', mediaElement.renderer);
-
 				mediaElement.renderer.pause();
 				if (mediaElement.renderer.stop) {
 					mediaElement.renderer.stop();
@@ -446,12 +426,8 @@
 				newRendererType = null;
 
 			if (newRenderer !== undefined && newRenderer !== null) {
-				console.log('restoring: ', newRenderer.name);
-
 				newRenderer.show();
-
 				newRenderer.setSrc(mediaFiles[0].src);
-
 				mediaElement.renderer = newRenderer;
 				return true;
 			}
@@ -470,8 +446,6 @@
 					newRenderer = newRendererType.create(mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
 
-					//console.log('Switching to: ', newRendererType);
-
 					// store for later
 					mediaElement.renderers[newRendererType.name] = newRenderer;
 					mediaElement.renderer = newRenderer;
@@ -482,8 +456,6 @@
 					return true;
 				}
 			}
-
-			console.log('-- ERROR finding: ' + rendererName);
 
 			return false;
 		};
@@ -543,20 +515,15 @@
 			}
 
 			if (mediaFiles.length > 0) {
-				console.log('initializing src', mediaFiles[0].src);
-
-				// set src
 				mediaElement.src = mediaFiles;
 			}
 		}
-
-		// TEMP
-		//mediaElement.load();
 
 		if (options.success) {
 			options.success(mediaElement, mediaElement.originalNode);
 		}
 
+		// @todo: Verify if this is needed
 		// if (options.error) {
 		// 	options.error(mediaElement, mediaElement.originalNode);
 		// }

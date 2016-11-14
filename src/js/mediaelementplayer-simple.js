@@ -211,26 +211,20 @@ MediaElementPlayerSimple.prototype = {
 
 	createUI: function() {
 
-		var t = this,
+		var
+			t = this,
 			id = this.id,
 			controls = t.controls,
 			container = t.container,
 			mediaElement = t.mediaElement,
 			isVideo = t.isVideo,
-			isPlaying = false;
-			// original = t.original,
-			// originalWidth = isVideo ?
-			// 				original.offsetWidth > 0 ? original.offsetWidth : parseInt(original.width) :
-			//				350;
+			isPlaying = false
+		;
 
 		// CONTROLS
 		controls.className = 'mejs-simple-controls';
 		controls.id = id + '_controls';
 		container.appendChild(controls);
-
-		if (isVideo) {
-			//controls.style.width = (originalWidth - 20) + 'px';
-		}
 
 		addEvent(controls, 'mouseover', function() {
 			clearControlsTimeout();
@@ -284,11 +278,9 @@ MediaElementPlayerSimple.prototype = {
 		}
 
 		function showControls() {
-			//controls.style.display = '';
 			fadeEffect.init(id + '_controls', 1);
 		}
 		function hideControls() {
-			//controls.style.display = 'none';
 			fadeEffect.init(id + '_controls', 0);
 		}
 
@@ -312,16 +304,16 @@ MediaElementPlayerSimple.prototype = {
 				progress = control;
 
 				horizontalSize =
-									parseInt(getStyle(control, 'margin-left'),10) +
-									parseInt(getStyle(control, 'margin-right'),10) ;
+						parseInt(getStyle(control, 'margin-left'),10) +
+						parseInt(getStyle(control, 'margin-right'),10) ;
 
 				combinedControlsWidth += horizontalSize;
 
 			} else {
 				horizontalSize =
-									parseInt(getStyle(control, 'width'),10) +
-									parseInt(getStyle(control, 'margin-left'),10) +
-									parseInt(getStyle(control, 'margin-right'),10) ;
+						parseInt(getStyle(control, 'width'),10) +
+						parseInt(getStyle(control, 'margin-left'),10) +
+						parseInt(getStyle(control, 'margin-right'),10) ;
 
 				combinedControlsWidth += horizontalSize;
 			}
@@ -333,12 +325,13 @@ MediaElementPlayerSimple.prototype = {
 	},
 
 	createPlayPause: function(mediaElement, controls) {
-		var t = this,
+		var
+			t = this,
 			uiPlayBtn = doc.createElement('input'),
-			options = t.options;
+			options = t.options
+		;
 
 		uiPlayBtn.className = 'ui-button ui-button-play';
-		//uiPlayBtn.disabled = true;
 		uiPlayBtn.type = 'button';
 
 		uiPlayBtn.title = options.playText;
@@ -378,17 +371,11 @@ MediaElementPlayerSimple.prototype = {
 		var uiMuteBtn = doc.createElement('input');
 
 		uiMuteBtn.className = 'ui-button ui-button-unmuted';
-		//uiMuteBtn.disabled = true;
 		uiMuteBtn.type = 'button';
 		controls.appendChild(uiMuteBtn);
 
 		addEvent(uiMuteBtn, 'click', function() {
-
-			console.log('mute clicked');
-			console.log('--', mediaElement.muted);
-
 			mediaElement.muted = !mediaElement.muted;
-
 		});
 
 		mediaElement.addEventListener('volumechange', function() {
@@ -515,8 +502,6 @@ MediaElementPlayerSimple.prototype = {
 
 		addEvent(uiFullscreenBtn, 'click', function() {
 
-			console.log('fullscreen btn', isFullscreen);
-
 			if (isFullscreen) {
 
 				if (doc.exitFullscreen) {
@@ -552,14 +537,12 @@ MediaElementPlayerSimple.prototype = {
 		// EVENTS
 		if (doc.webkitCancelFullScreen) {
 			doc.addEventListener('webkitfullscreenchange', function(e) {
-				console.log('fullscreen event', doc.webkitIsFullScreen, e);
 				isFullscreen = doc.webkitIsFullScreen;
 				adjustForFullscreen();
 
 			});
 		} else if (doc.mozCancelFullScreen) {
 			doc.addEventListener('mozfullscreenchange', function(e) {
-				console.log('fullscreen event', doc.mozFullScreen, e);
 				isFullscreen = doc.mozFullScreen;
 				adjustForFullscreen();
 			});

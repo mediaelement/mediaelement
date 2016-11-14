@@ -620,7 +620,6 @@
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function () {
-				//console.log('timer fired');
 				t.hideControls();
 				t.killControlsTimer('hide');
 			}, timeout);
@@ -719,7 +718,6 @@
 							t['build' + feature](t, t.controls, t.layers, t.media);
 						} catch (e) {
 							// TODO: report control error
-							//throw e;
 							console.log('error building ' + feature);
 							console.log(e);
 						}
@@ -758,7 +756,6 @@
 						// create callback here since it needs access to current
 						// MediaElement object
 						t.clickToPlayPauseCallback = function () {
-							//console.log('media clicked', t.media, t.media.paused);
 
 							if (t.options.clickToPlayPause) {
 								var
@@ -1570,9 +1567,8 @@
 						t['clean' + feature](t);
 					} catch (e) {
 						// TODO: report control error
-						//throw e;
-						//console.log('error building ' + feature);
-						//console.log(e);
+						console.log('error cleaning ' + feature);
+						console.log(e);
 					}
 				}
 			}
@@ -1613,7 +1609,6 @@
 			var t = this;
 			// webkit has trouble doing this without a delay
 			setTimeout(function () {
-				//console.log("resetSize");
 				t.setPlayerSize(t.width, t.height);
 				t.setControlsSize();
 			}, 50);
