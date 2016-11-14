@@ -228,10 +228,6 @@ package {
 			// 		_mediaContainer.height =  _videoHeight * contWidth / _videoWidth;
 			// 		_mediaContainer.y = contHeight/2 - _mediaContainer.height/2;
 			// 	} else if (stageRatio > nativeRatio) {
-			//
-			// 		log('WIDTH: ' + _videoWidth * contHeight / _videoHeight);
-			// 		log('HEIGHT: ' + contHeight);
-			//
 			// 		_mediaContainer.width = _videoWidth * contHeight / _videoHeight;
 			// 		_mediaContainer.height =  contHeight;
 			// 		_mediaContainer.x = contWidth/2 - _mediaContainer.width/2;
