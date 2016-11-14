@@ -80,6 +80,7 @@ package {
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, stageClickHandler);
 			stage.addEventListener(MouseEvent.MOUSE_OVER , stageMouseOverHandler);
 			stage.addEventListener(Event.MOUSE_LEAVE, stageMouseLeaveHandler);
+			stage.addEventListener(Event.RESIZE, fire_setSize);
 
 			_stageWidth = stage.stageWidth;
 			_stageHeight = stage.stageHeight;
@@ -187,13 +188,49 @@ package {
 			sendEvent("pause");
 			sendEvent("canplay");
 		}
-		private function fire_setSize(width:Number, height:Number):void {
+		private function fire_setSize(width: Number=-1, height: Number=-1): void {
+			var fill:Boolean = false;
+			var contWidth:Number;
+			var contHeight:Number;
+			var stageRatio:Number;
+			var nativeRatio:Number;
 
-			_stageWidth = width;
-			_stageHeight = height;
+			_video.x = 0;
+			_video.y = 0;
+			contWidth = stage.stageWidth;
+			contHeight = stage.stageHeight;
 
-			_mediaContainer.width  = _stageWidth;
-			_mediaContainer.height = _stageHeight;
+			if(width == -1){
+				width = _video.width;
+			}
+			if(height == -1){
+				height = _video.height;
+			}
+
+			if (width <= 0 || height <= 0) {
+				fill = true;
+			}
+
+			if (fill) {
+				_video.width = width;
+				_video.height = height;
+			} else {
+				stageRatio = contWidth/contHeight;
+				nativeRatio = _videoWidth/_videoHeight;
+				// adjust size and position
+				if (nativeRatio > stageRatio) {
+					_video.width = contWidth;
+					_video.height =  _videoHeight * contWidth / _videoWidth;
+					_video.y = contHeight/2 - _video.height/2;
+				} else if (stageRatio > nativeRatio) {
+					_video.width = _videoWidth * contHeight / _videoHeight;
+					_video.height =  contHeight;
+					_video.x = contWidth/2 - _video.width/2;
+				} else if (stageRatio == nativeRatio) {
+					_video.width = contWidth;
+					_video.height = contHeight;
+				}
+			}
 		}
 
 		//
