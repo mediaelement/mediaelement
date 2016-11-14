@@ -188,49 +188,58 @@ package {
 			sendEvent("pause");
 			sendEvent("canplay");
 		}
-		private function fire_setSize(width: Number=-1, height: Number=-1): void {
-			var fill:Boolean = false;
-			var contWidth:Number;
-			var contHeight:Number;
-			var stageRatio:Number;
-			var nativeRatio:Number;
+		// private function fire_setSize(width: Number=-1, height: Number=-1): void {
+		// 	var fill:Boolean = false;
+		// 	var contWidth:Number;
+		// 	var contHeight:Number;
+		// 	var stageRatio:Number;
+		// 	var nativeRatio:Number;
+		//
+		// 	_mediaContainer.x = 0;
+		// 	_mediaContainer.y = 0;
+		// 	contWidth = stage.stageWidth;
+		// 	contHeight = stage.stageHeight;
+		//
+		// 	if(width == -1){
+		// 		width = _mediaContainer.width;
+		// 	}
+		// 	if(height == -1){
+		// 		height = _mediaContainer.height;
+		// 	}
+		//
+		// 	if (width <= 0 || height <= 0) {
+		// 		fill = true;
+		// 	}
+		//
+		// 	if (fill) {
+		// 		_mediaContainer.width = width;
+		// 		_mediaContainer.height = height;
+		// 	} else {
+		// 		stageRatio = contWidth/contHeight;
+		// 		nativeRatio = _videoWidth/_videoHeight;
+		// 		// adjust size and position
+		// 		if (nativeRatio > stageRatio) {
+		// 			_mediaContainer.width = contWidth;
+		// 			_mediaContainer.height =  _videoHeight * contWidth / _videoWidth;
+		// 			_mediaContainer.y = contHeight/2 - _mediaContainer.height/2;
+		// 		} else if (stageRatio > nativeRatio) {
+		// 			_mediaContainer.width = _videoWidth * contHeight / _videoHeight;
+		// 			_mediaContainer.height =  contHeight;
+		// 			_mediaContainer.x = contWidth/2 - _mediaContainer.width/2;
+		// 		} else if (stageRatio == nativeRatio) {
+		// 			_mediaContainer.width = contWidth;
+		// 			_mediaContainer.height = contHeight;
+		// 		}
+		// 	}
+		// }
 
-			_video.x = 0;
-			_video.y = 0;
-			contWidth = stage.stageWidth;
-			contHeight = stage.stageHeight;
+		private function fire_setSize(width:Number, height:Number):void {
 
-			if(width == -1){
-				width = _video.width;
-			}
-			if(height == -1){
-				height = _video.height;
-			}
+			_stageWidth = width;
+			_stageHeight = height;
 
-			if (width <= 0 || height <= 0) {
-				fill = true;
-			}
-
-			if (fill) {
-				_video.width = width;
-				_video.height = height;
-			} else {
-				stageRatio = contWidth/contHeight;
-				nativeRatio = _videoWidth/_videoHeight;
-				// adjust size and position
-				if (nativeRatio > stageRatio) {
-					_video.width = contWidth;
-					_video.height =  _videoHeight * contWidth / _videoWidth;
-					_video.y = contHeight/2 - _video.height/2;
-				} else if (stageRatio > nativeRatio) {
-					_video.width = _videoWidth * contHeight / _videoHeight;
-					_video.height =  contHeight;
-					_video.x = contWidth/2 - _video.width/2;
-				} else if (stageRatio == nativeRatio) {
-					_video.width = contWidth;
-					_video.height = contHeight;
-				}
-			}
+			_mediaContainer.width  = _stageWidth;
+			_mediaContainer.height = _stageHeight;
 		}
 
 		//
