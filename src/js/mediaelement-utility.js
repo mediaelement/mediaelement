@@ -52,42 +52,6 @@
 
 				// IE6-7
 				// must be a real DOM object (to have attachEvent) and must be attached to document (for onpropertychange to fire)
-			} else {
-
-				var onPropertyChange = function (event) {
-
-					//console.log('onPropertyChange', event.propertyName);
-
-					if (event.propertyName === name) {
-
-						// temporarily remove the event so it doesn't fire again and create a loop
-						obj.detachEvent('onpropertychange', onPropertyChange);
-
-						// get the changed value, run it through the set function
-						var newValue = setFn(obj[name]);
-
-						// restore the get function
-						obj[name] = getFn;
-						obj[name].toString = function () {
-							return getFn().toString();
-						};
-
-						// restore the event
-						obj.attachEvent('onpropertychange', onPropertyChange);
-					}
-				};
-
-				try {
-					obj[name] = getFn;
-					obj[name].toString = function () {
-						return getFn().toString();
-					};
-				} catch (ex) {
-					console.log('ERROR adding', name);
-				}
-
-				// add the property event change only once
-				obj.attachEvent('onpropertychange', onPropertyChange);
 			}
 		},
 
@@ -104,8 +68,6 @@
 				event = doc.createEvent('Event');
 				event.initEvent(eventName, true, false);
 				event.target = target;
-				//} else if (doc.createEventObject) {
-				//	event = doc.createEventObject();
 			} else {
 				event = {};
 			}
@@ -220,7 +182,7 @@
 		 * @return {String}
 		 */
 		encodeUrl: function (url) {
-			return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
+			return encodeURIComponent(url);
 		},
 
 		/**
@@ -534,16 +496,6 @@
 		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
-
-		/*
-		 Possibly add back in when needed
-		 features.isSafari = ua.match(/safari/gi) !== null && !features.isChrome;
-		 features.isOpera = (ua.match(/opera/gi) !== null);
-		 features.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
-		 features.isWebkit = (ua.match(/webkit/gi) !== null);
-		 features.isGecko = (ua.match(/gecko/gi) !== null) && !features.isWebkit;
-
-		 */
 
 		// borrowed from Modernizr
 		features.hasTouch = ('ontouchstart' in win);

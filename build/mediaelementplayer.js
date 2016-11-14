@@ -649,7 +649,6 @@ if (jQuery !== undefined) {
 			t.killControlsTimer('start');
 
 			t.controlsTimer = setTimeout(function () {
-				//
 				t.hideControls();
 				t.killControlsTimer('hide');
 			}, timeout);
@@ -748,7 +747,6 @@ if (jQuery !== undefined) {
 							t['build' + feature](t, t.controls, t.layers, t.media);
 						} catch (e) {
 							// TODO: report control error
-							//throw e;
 							
 							
 						}
@@ -787,7 +785,6 @@ if (jQuery !== undefined) {
 						// create callback here since it needs access to current
 						// MediaElement object
 						t.clickToPlayPauseCallback = function () {
-							//
 
 							if (t.options.clickToPlayPause) {
 								var
@@ -1599,9 +1596,8 @@ if (jQuery !== undefined) {
 						t['clean' + feature](t);
 					} catch (e) {
 						// TODO: report control error
-						//throw e;
-						//
-						//
+						
+						
 					}
 				}
 			}
@@ -1642,7 +1638,6 @@ if (jQuery !== undefined) {
 			var t = this;
 			// webkit has trouble doing this without a delay
 			setTimeout(function () {
-				//
 				t.setPlayerSize(t.width, t.height);
 				t.setControlsSize();
 			}, 50);

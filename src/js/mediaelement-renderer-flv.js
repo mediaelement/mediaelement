@@ -210,8 +210,6 @@
 
 				mediaElement.flvPlayer = flvPlayer = _flvPlayer;
 
-				console.log('Native FLV ready', flvPlayer);
-
 				// do call stack
 				for (i = 0, il = stack.length; i < il; i++) {
 

@@ -87,9 +87,6 @@
 						event.initEvent(e.type, e.bubbles, e.cancelable);
 						event.srcElement = e.srcElement;
 						event.target = e.srcElement;
-
-						//var ev = mejs.Utils.extend({}, e);
-
 						mediaElement.dispatchEvent(event);
 					});
 
