@@ -26,7 +26,7 @@ target_version="10.1"
 # VIDEO
 $flex_path/bin/mxmlc -strict=false -compiler.debug=true -warnings=true ./src/flash/flash-video/VideoMediaElement.as -o build/mediaelement-flash-video.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-video -headless-server -static-link-runtime-shared-libraries
 
-$flex_path/bin/mxmlc -strict=false -compiler.debug=true -warnings=true ./src/flash/flash-video-hls/HlsMediaElement.as -o build/mediaelement-flash-video-hls.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-video -headless-server -static-link-runtime-shared-libraries -include-libraries+=./src/flash/flash-video-hls/flashls.swc
+$flex_path/bin/mxmlc -strict=false -compiler.debug=true -warnings=true ./src/flash/flash-video-hls/HlsMediaElement.as -o build/mediaelement-flash-video-hls.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-video-hls -headless-server -static-link-runtime-shared-libraries -include-libraries+=./src/flash/flash-video-hls/flashls.swc
 
 $flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/flash-video-dash/DashMediaElement.as -o build/mediaelement-flash-video-mdash.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-video-dash -headless-server -static-link-runtime-shared-libraries -include-libraries+=./src/flash/flash-video-dash/OSMF.swc
 
