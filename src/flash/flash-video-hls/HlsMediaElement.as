@@ -29,6 +29,7 @@
 		private var _isEnded: Boolean = false;
 		private var _volume: Number = 1;
 		private var _isMuted: Boolean = false;
+		private var _readyState:Number = 0;
 
 		private var _bufferedTime: Number = 0;
 		private var _videoWidth: Number = -1;
@@ -96,6 +97,7 @@
 				ExternalInterface.addCallback('get_duration', get_duration);
 				ExternalInterface.addCallback('get_paused', get_paused);
 				ExternalInterface.addCallback('get_ended', get_ended);
+				ExternalInterface.addCallback('get_readyState', get_readyState);
 
 				ExternalInterface.addCallback('set_src', set_src);
 				ExternalInterface.addCallback('set_volume', set_volume);
@@ -275,6 +277,9 @@
 			}
 			return progress;
 		}
+		private function get_readyState():Number {
+			return _readyState;
+		}
 
 		//
 		// Events
@@ -297,6 +302,7 @@
 
 			sendEvent("loadedmetadata");
 			sendEvent("canplay");
+			_readyState = 4;
 			//Set Size on loaded metadata
 			fire_setSize();
 

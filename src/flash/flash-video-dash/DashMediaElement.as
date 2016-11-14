@@ -19,7 +19,6 @@ package {
 	import org.osmf.traits.DisplayObjectTrait;
 	import org.osmf.traits.MediaTraitType;
 	import org.osmf.traits.TimeTrait;
-	import org.osmf.utils.TimeUtil;
 
 	import org.osmf.events.TimeEvent;
 	import org.osmf.events.MediaPlayerStateChangeEvent;
@@ -39,6 +38,7 @@ package {
 		private var _position: Number = 0;
 		private var _duration: Number = 0;
 		private var _autoplay: Boolean = false;
+		private var _readyState:Number = 0;
 
 		// Video status
 		private var _isPaused: Boolean = true;
@@ -115,6 +115,7 @@ package {
 				ExternalInterface.addCallback('get_paused', get_paused);
 				ExternalInterface.addCallback('get_ended', get_ended);
 				ExternalInterface.addCallback('get_buffered', get_buffered);
+				ExternalInterface.addCallback('get_readyState', get_readyState);
 
 				// Setters
 				ExternalInterface.addCallback('set_src', set_src);
@@ -136,7 +137,7 @@ package {
 		//
 		// Javascript bridged methods
 		//
-		public function fire_load(): void {
+		private function fire_load(): void {
 
 			if (_url) {
 
@@ -146,9 +147,7 @@ package {
 				if (_contentMediaElement) {
 					_contentMediaElement.smoothing = true;
 					_contentMediaElement.addEventListener(MediaElementEvent.TRAIT_ADD, onMediaElementEvent);
-					_contentMediaElement.addEventListener(MediaElementEvent.TRAIT_REMOVE, onMediaElementEvent);
 					_contentMediaElement.addEventListener(MediaElementEvent.METADATA_ADD, onMediaElementEvent);
-					_contentMediaElement.addEventListener(MediaElementEvent.METADATA_REMOVE, onMediaElementEvent);
 					_contentMediaElement.addEventListener(MediaErrorEvent.MEDIA_ERROR, onMediaErrorEvent);
 
 					if (_mediaPlayer.media != null) {
@@ -172,8 +171,7 @@ package {
 				}
 			}
 		}
-
-		public function fire_play(): void {
+		private function fire_play(): void {
 
 			_isPaused = false;
 
@@ -182,8 +180,7 @@ package {
 			sendEvent("play");
 			sendEvent("playing");
 		}
-
-		public function fire_pause(): void {
+		private function fire_pause(): void {
 			_isPaused = true;
 
 			_mediaPlayer.pause();
@@ -191,13 +188,12 @@ package {
 			sendEvent("pause");
 			sendEvent("canplay");
 		}
-
 		private function fire_setSize(width: Number=-1, height: Number=-1): void {
-			var fill:Boolean = false;
+			// var fill:Boolean = false;
 			var contWidth:Number;
 			var contHeight:Number;
-			var stageRatio:Number;
-			var nativeRatio:Number;
+			// var stageRatio:Number;
+			// var nativeRatio:Number;
 
 			_mediaContainer.x = 0;
 			_mediaContainer.y = 0;
@@ -205,36 +201,45 @@ package {
 			contHeight = stage.stageHeight;
 
 			if(width == -1){
-				width = _mediaContainer.width;
-			}
-			if(height == -1){
-				height = _mediaContainer.height;
+				width = contWidth;
 			}
 
-			if (width <= 0 || height <= 0) {
-				fill = true;
+			if(height == -1) {
+				height = contHeight;
 			}
 
-			if (fill) {
-				_mediaContainer.width = width;
-				_mediaContainer.height = height;
-			} else {
-				stageRatio = contWidth/contHeight;
-				nativeRatio = _videoWidth/_videoHeight;
-				// adjust size and position
-				if (nativeRatio > stageRatio) {
-					_mediaContainer.width = contWidth;
-					_mediaContainer.height =  _videoHeight * contWidth / _videoWidth;
-					_mediaContainer.y = contHeight/2 - _mediaContainer.height/2;
-				} else if (stageRatio > nativeRatio) {
-					_mediaContainer.width = _videoWidth * contHeight / _videoHeight;
-					_mediaContainer.height =  contHeight;
-					_mediaContainer.x = contWidth/2 - _mediaContainer.width/2;
-				} else if (stageRatio == nativeRatio) {
-					_mediaContainer.width = contWidth;
-					_mediaContainer.height = contHeight;
-				}
-			}
+			// if (width <= 0 || height <= 0) {
+			// 	fill = true;
+			// }
+
+			_mediaContainer.width = width;
+			_mediaContainer.height = height;
+
+			// if (fill) {
+			// 	_mediaContainer.width = width;
+			// 	_mediaContainer.height = height;
+			// } else {
+			// 	stageRatio = contWidth/contHeight;
+			// 	nativeRatio = _videoWidth/_videoHeight;
+			//
+			// 	// adjust size and position
+			// 	if (nativeRatio > stageRatio) {
+			// 		_mediaContainer.width = contWidth;
+			// 		_mediaContainer.height =  _videoHeight * contWidth / _videoWidth;
+			// 		_mediaContainer.y = contHeight/2 - _mediaContainer.height/2;
+			// 	} else if (stageRatio > nativeRatio) {
+			//
+			// 		log('WIDTH: ' + _videoWidth * contHeight / _videoHeight);
+			// 		log('HEIGHT: ' + contHeight);
+			//
+			// 		_mediaContainer.width = _videoWidth * contHeight / _videoHeight;
+			// 		_mediaContainer.height =  contHeight;
+			// 		_mediaContainer.x = contWidth/2 - _mediaContainer.width/2;
+			// 	} else if (stageRatio == nativeRatio) {
+			// 		_mediaContainer.width = contWidth;
+			// 		_mediaContainer.height = contHeight;
+			// 	}
+			// }
 		}
 
 		//
@@ -249,20 +254,17 @@ package {
 				fire_load();
 			}
 		}
-
-		public function set_paused(paused: Boolean): void {
+		private function set_paused(paused: Boolean): void {
 			if (paused) {
 				fire_pause();
 			}
 		}
-
-		public function set_volume(vol: Number): void {
+		private function set_volume(vol: Number): void {
 			_isMuted = (vol == 0);
 			_mediaPlayer.volume = vol;
 			sendEvent("volumechange");
 		}
-
-		public function set_muted(muted: Boolean): void {
+		private function set_muted(muted: Boolean): void {
 
 			// ignore if no change
 			if (muted === _isMuted)
@@ -277,8 +279,7 @@ package {
 			}
 			sendEvent("volumechange");
 		}
-
-		public function set_currentTime(pos: Number): void {
+		private function set_currentTime(pos: Number): void {
 			sendEvent("seeking");
 			_mediaPlayer.seek(pos);
 		}
@@ -286,46 +287,41 @@ package {
 		//
 		// Getters
 		//
-		public function get_src(): String {
+		private function get_src(): String {
 			return _url;
 		}
-
-		public function get_paused(): Boolean {
+		private function get_paused(): Boolean {
 			return _isPaused;
 		}
-
-		public function get_ended(): Boolean {
+		private function get_ended(): Boolean {
 			return _isEnded;
 		}
-
-		public function get_duration(): Number {
+		private function get_duration(): Number {
 			return _duration;
 		}
-
-		public function get_muted(): Boolean {
+		private function get_muted(): Boolean {
 			return _isMuted;
 		}
-
-		public function get_volume(): Number {
+		private function get_volume(): Number {
 			if (_isMuted) {
 				return 0;
 			} else {
 				return _volume;
 			}
 		}
-
-		public function get_currentTime(): Number {
+		private function get_currentTime(): Number {
 			return _position;
 		}
-
-		public function get_buffered(): Number {
+		private function get_buffered(): Number {
 			var progress: Number = 0;
 			if (_duration != 0) {
 				progress = Math.round((_mediaPlayer.currentTime / _duration) * 100);
 			}
 			return progress;
 		}
-
+		private function get_readyState():Number {
+			return _readyState;
+		}
 
 		//
 		// Events
@@ -349,7 +345,6 @@ package {
 
 			}
 		}
-
 		private function onMediaPlayerStateChangeEvent(event: MediaPlayerStateChangeEvent): void {
 			switch (event.state) {
 				case MediaPlayerState.PLAYING:
@@ -372,22 +367,39 @@ package {
 			switch (event.type) {
 				case MediaElementEvent.METADATA_ADD:
 					sendEvent('loadedmetadata');
+					_readyState = 4;
 					break;
 
 				case MediaElementEvent.TRAIT_ADD:
 					switch (event.traitType) {
+
+						case MediaTraitType.TIME:
+							if (_mediaPlayer.media.getTrait(MediaTraitType.TIME) != null) {
+								var tt:TimeTrait = _mediaPlayer.media.getTrait(MediaTraitType.TIME) as TimeTrait;
+								_duration = tt.duration;
+								_position = tt.currentTime;
+								sendEvent('progress');
+								sendEvent('timeupdate');
+							}
+							break;
+
 						case MediaTraitType.DISPLAY_OBJECT:
 							if (_mediaPlayer.media.getTrait(MediaTraitType.DISPLAY_OBJECT) != null) {
 								var dt: DisplayObjectTrait = _mediaPlayer.media.getTrait(MediaTraitType.DISPLAY_OBJECT) as DisplayObjectTrait;
-								_videoWidth = dt.mediaWidth;
-								_videoHeight = dt.mediaHeight;
+								if (dt.mediaWidth != -1 && !isNaN(dt.mediaWidth)) {
+									_videoWidth = dt.mediaWidth;
+								}
+								if (dt.mediaHeight != -1 && !isNaN(dt.mediaHeight)) {
+									_videoHeight = dt.mediaHeight;
+								}
+
+								fire_setSize();
 							}
 							break;
 					}
 					break;
 			}
 		}
-
 		private function onMediaErrorEvent(event: MediaErrorEvent): void {
 			sendEvent('error', event.type + ': ' + event.message);
 		}
@@ -398,11 +410,9 @@ package {
 		private function stageClickHandler(e: MouseEvent): void {
 			sendEvent("click");
 		}
-
 		private function stageMouseOverHandler(e: MouseEvent): void {
 			sendEvent("mouseover");
 		}
-
 		private function stageMouseLeaveHandler(e: Event): void {
 			sendEvent("mouseout");
 			sendEvent("mouseleave");
@@ -414,7 +424,6 @@ package {
 		private function sendEvent(eventName: String): void {
 			ExternalInterface.call('__event__' + _id, eventName);
 		}
-
 		private function log(): void {
 			if (ExternalInterface.available) {
 				ExternalInterface.call('console.log', arguments);
