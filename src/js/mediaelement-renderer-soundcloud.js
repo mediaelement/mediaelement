@@ -256,7 +256,7 @@
 									break;
 
 								default:
-									console.log('dm ' + id, propName, 'UNSUPPORTED property');
+									console.log('dm ' + sc.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
@@ -404,6 +404,7 @@
 			scIframe.frameBorder = 0;
 			scIframe.style.visibility = 'hidden';
 			scIframe.src = mediaFiles[0].src;
+			scIframe.scrolling = 'no';
 			mediaElement.appendChild(scIframe);
 
 			mediaElement.originalNode.style.display = 'none';
