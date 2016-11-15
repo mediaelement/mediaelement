@@ -28,6 +28,7 @@
 * Fixed workflow to stop streaming on HTML5 (#613 and #1914) @ron666
 * Fixed issue when setting current time and then playing media (#1924) @ron666
 * Fixed issues with dimensions and resizing on Flash shims (https://github.com/johndyer/mediaelement/pull/1934) @ale-grosselle and @ron666
+* Fixed issues with accessibility related to Closed Captioning (#438) (https://github.com/johndyer/mediaelement/pull/1921) @marmite22
 
 *2.23.4 (2016/10/21)*
 
