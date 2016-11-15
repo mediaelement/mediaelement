@@ -237,8 +237,6 @@
 
 				mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
 
-				console.log('Native HLS ready', hlsPlayer);
-
 				// do call stack
 				for (i = 0, il = stack.length; i < il; i++) {
 

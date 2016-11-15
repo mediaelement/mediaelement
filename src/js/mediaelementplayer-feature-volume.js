@@ -288,8 +288,6 @@
 			//Keyboard input
 			mute.find('button').on('focus', function () {
 				volumeSlider.show();
-			}).on('blur', function () {
-				volumeSlider.hide();
 			});
 
 			// listen for volume change events from other sources

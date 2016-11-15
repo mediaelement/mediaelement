@@ -149,14 +149,10 @@
 						if (flash.flashApi !== null) {
 
 							if (flash.flashApi['get_' + propName] !== undefined) {
-								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
-
-								//console.log('[' + options.prefix + ' get]: ' + propName + ' = ' + value);
+								var value = flash.flashApi['get_' + propName]();
 
 								// special case for buffered to conform to HTML5's newest
 								if (propName === 'buffered') {
-									//console.log('buffered', value);
-
 									return {
 										start: function () {
 											return 0;
@@ -170,18 +166,15 @@
 
 								return value;
 							} else {
-								console.log('[' + options.prefix + ' MISSING]: ' + propName);
-
 								return null;
 							}
+
 						} else {
 							return null;
 						}
 					};
 
 					flash['set' + capName] = function (value) {
-						console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value);
-
 						if (propName === 'src') {
 							value = mejs.Utils.absolutizeUrl(value);
 						}
@@ -212,7 +205,6 @@
 
 					// run the method on the native HTMLMediaElement
 					flash[methodName] = function () {
-						console.log('[' + options.prefix + ' ' + methodName + '()]');
 
 						if (flash.flashApi !== null) {
 
@@ -229,7 +221,6 @@
 							}
 						} else {
 							// store for after "READY" event fires
-							//console.log('-- stacking');
 							flash.flashApiStack.push({
 								type: 'call',
 								methodName: methodName
@@ -257,8 +248,6 @@
 				for (var i = 0, il = flash.flashApiStack.length; i < il; i++) {
 
 					var stackItem = flash.flashApiStack[i];
-
-					console.log('- stack', stackItem.type, stackItem);
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -397,7 +386,6 @@
 
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-						console.log('FLASH', 'init, set src', mediaFiles[i].src);
 						flash.setSrc(mediaFiles[i].src);
 						flash.load();
 						break;

@@ -14,7 +14,6 @@ window.mejs = window.mejs || {};
 
 // version number
 mejs.version = '3.0';
-
 /**
  * MediaElement utilities
  *
@@ -69,42 +68,6 @@ mejs.version = '3.0';
 
 				// IE6-7
 				// must be a real DOM object (to have attachEvent) and must be attached to document (for onpropertychange to fire)
-			} else {
-
-				var onPropertyChange = function (event) {
-
-					//
-
-					if (event.propertyName === name) {
-
-						// temporarily remove the event so it doesn't fire again and create a loop
-						obj.detachEvent('onpropertychange', onPropertyChange);
-
-						// get the changed value, run it through the set function
-						var newValue = setFn(obj[name]);
-
-						// restore the get function
-						obj[name] = getFn;
-						obj[name].toString = function () {
-							return getFn().toString();
-						};
-
-						// restore the event
-						obj.attachEvent('onpropertychange', onPropertyChange);
-					}
-				};
-
-				try {
-					obj[name] = getFn;
-					obj[name].toString = function () {
-						return getFn().toString();
-					};
-				} catch (ex) {
-					
-				}
-
-				// add the property event change only once
-				obj.attachEvent('onpropertychange', onPropertyChange);
 			}
 		},
 
@@ -121,8 +84,6 @@ mejs.version = '3.0';
 				event = doc.createEvent('Event');
 				event.initEvent(eventName, true, false);
 				event.target = target;
-				//} else if (doc.createEventObject) {
-				//	event = doc.createEventObject();
 			} else {
 				event = {};
 			}
@@ -237,7 +198,7 @@ mejs.version = '3.0';
 		 * @return {String}
 		 */
 		encodeUrl: function (url) {
-			return encodeURIComponent(url); //.replace(/\?/gi,'%3F').replace(/=/gi,'%3D').replace(/&/gi,'%26');
+			return encodeURIComponent(url);
 		},
 
 		/**
@@ -552,16 +513,6 @@ mejs.version = '3.0';
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
 
-		/*
-		 Possibly add back in when needed
-		 features.isSafari = ua.match(/safari/gi) !== null && !features.isChrome;
-		 features.isOpera = (ua.match(/opera/gi) !== null);
-		 features.isBustedAndroid = (ua.match(/android 2\.[12]/) !== null);
-		 features.isWebkit = (ua.match(/webkit/gi) !== null);
-		 features.isGecko = (ua.match(/gecko/gi) !== null) && !features.isWebkit;
-
-		 */
-
 		// borrowed from Modernizr
 		features.hasTouch = ('ontouchstart' in win);
 		features.svg = !!doc.createElementNS && !!doc.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
@@ -683,101 +634,6 @@ mejs.version = '3.0';
 	})();
 
 })(window, document, window.mejs || {});
-// IE6,7,8
-// Production steps of ECMA-262, Edition 5, 15.4.4.14
-// Reference: http://es5.github.io/#x15.4.4.14
-if (!Array.prototype.indexOf) {
-	Array.prototype.indexOf = function (searchElement, fromIndex) {
-
-		var k;
-
-		// 1. Let O be the result of calling ToObject passing
-		//	   the this value as the argument.
-		if (this === undefined || this === null) {
-			throw new TypeError('"this" is null or not defined');
-		}
-
-		var O = Object(this);
-
-		// 2. Let lenValue be the result of calling the Get
-		//	   internal method of O with the argument "length".
-		// 3. Let len be ToUint32(lenValue).
-		var len = O.length >>> 0;
-
-		// 4. If len is 0, return -1.
-		if (len === 0) {
-			return -1;
-		}
-
-		// 5. If argument fromIndex was passed let n be
-		//	   ToInteger(fromIndex); else let n be 0.
-		var n = +fromIndex || 0;
-
-		if (Math.abs(n) == Infinity) {
-			n = 0;
-		}
-
-		// 6. If n >= len, return -1.
-		if (n >= len) {
-			return -1;
-		}
-
-		// 7. If n >= 0, then Let k be n.
-		// 8. Else, n<0, Let k be len - abs(n).
-		//	   If k is less than 0, then let k be 0.
-		k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-		// 9. Repeat, while k < len
-		while (k < len) {
-			// a. Let Pk be ToString(k).
-			//   This is implicit for LHS operands of the in operator
-			// b. Let kPresent be the result of calling the
-			//	HasProperty internal method of O with argument Pk.
-			//   This step can be combined with c
-			// c. If kPresent is true, then
-			//	i.	Let elementK be the result of calling the Get
-			//		internal method of O with the argument ToString(k).
-			//   ii.	Let same be the result of applying the
-			//		Strict Equality Comparison Algorithm to
-			//		searchElement and elementK.
-			//  iii.	If same is true, return k.
-			if (k in O && O[k] === searchElement) {
-				return k;
-			}
-			k++;
-		}
-		return -1;
-	};
-}
-
-// document.createEvent for IE8 or other old browsers that do not implement it
-// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
-if (document.createEvent === undefined) {
-	document.createEvent = function (event) {
-
-		var e;
-
-		e = document.createEventObject();
-		e.timeStamp = (new Date()).getTime();
-		e.enumerable = true;
-		e.writable = true;
-		e.configurable = true;
-
-		e.initEvent = function (type, bubbles, cancelable) {
-			this.type = type;
-			this.bubbles = !!bubbles;
-			this.cancelable = !!cancelable;
-			if (!this.bubbles) {
-				this.stopPropagation = function () {
-					this.stoppedPropagation = true;
-					this.cancelBubble = true;
-				};
-			}
-		};
-
-		return e;
-	};
-}
 /**
  * MediaElement core
  *
@@ -992,8 +848,6 @@ if (document.createEvent === undefined) {
 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1),
 
 						getFn = function () {
-							//
-
 							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								return mediaElement.renderer['get' + capName]();
 
@@ -1003,12 +857,8 @@ if (document.createEvent === undefined) {
 							}
 						},
 						setFn = function (value) {
-							//
-
 							if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
 								mediaElement.renderer['set' + capName](value);
-
-								//mediaElement.renderer[propName] = value;
 							}
 						};
 
@@ -1063,13 +913,10 @@ if (document.createEvent === undefined) {
 					mediaElement.originalNode.setAttribute('src', '');
 				}
 
-				//
-
 				// find a renderer and URL match
 				renderInfo = mejs.Renderers.selectRenderer(mediaFiles,
 					(options.renderers.length ? options.renderers : null));
 
-				//
 				var event;
 
 				// Ensure that the original gets the first source found
@@ -1109,8 +956,8 @@ if (document.createEvent === undefined) {
 			assignMethods = function (methodName) {
 				// run the method on the current renderer
 				mediaElement[methodName] = function () {
-					
-					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer[methodName]) {
+					if (mediaElement.renderer !== undefined && mediaElement.renderer !== null &&
+						mediaElement.renderer[methodName]) {
 						return mediaElement.renderer[methodName](arguments);
 					} else {
 						return null;
@@ -1171,18 +1018,14 @@ if (document.createEvent === undefined) {
 			 */
 			mediaElement.dispatchEvent = function (event) {
 
-				var i,
-					//args,
-					callbacks = mediaElement.events[event.type];
-
-				//
+				var
+					i,
+					callbacks = mediaElement.events[event.type]
+				;
 
 				if (callbacks) {
 					//args = Array.prototype.slice.call(arguments, 1);
 					for (i = 0, il = callbacks.length; i < il; i++) {
-
-						//
-
 						callbacks[i].apply(null, [event]);
 					}
 				}
@@ -1200,20 +1043,13 @@ if (document.createEvent === undefined) {
 
 			// check for a match on the current renderer
 			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
-
-				
-
 				mediaElement.renderer.show();
 				mediaElement.renderer.setSrc(mediaFiles[0].src);
-
 				return true;
 			}
 
 			// if existing renderer is not the right one, then hide it
 			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null) {
-
-				
-
 				mediaElement.renderer.pause();
 				if (mediaElement.renderer.stop) {
 					mediaElement.renderer.stop();
@@ -1226,12 +1062,8 @@ if (document.createEvent === undefined) {
 				newRendererType = null;
 
 			if (newRenderer !== undefined && newRenderer !== null) {
-				
-
 				newRenderer.show();
-
 				newRenderer.setSrc(mediaFiles[0].src);
-
 				mediaElement.renderer = newRenderer;
 				return true;
 			}
@@ -1250,8 +1082,6 @@ if (document.createEvent === undefined) {
 					newRenderer = newRendererType.create(mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
 
-					//
-
 					// store for later
 					mediaElement.renderers[newRendererType.name] = newRenderer;
 					mediaElement.renderer = newRenderer;
@@ -1262,8 +1092,6 @@ if (document.createEvent === undefined) {
 					return true;
 				}
 			}
-
-			
 
 			return false;
 		};
@@ -1323,20 +1151,15 @@ if (document.createEvent === undefined) {
 			}
 
 			if (mediaFiles.length > 0) {
-				
-
-				// set src
 				mediaElement.src = mediaFiles;
 			}
 		}
-
-		// TEMP
-		//mediaElement.load();
 
 		if (options.success) {
 			options.success(mediaElement, mediaElement.originalNode);
 		}
 
+		// @todo: Verify if this is needed
 		// if (options.error) {
 		// 	options.error(mediaElement, mediaElement.originalNode);
 		// }
@@ -1440,9 +1263,6 @@ if (document.createEvent === undefined) {
 						event.initEvent(e.type, e.bubbles, e.cancelable);
 						event.srcElement = e.srcElement;
 						event.target = e.srcElement;
-
-						//var ev = mejs.Utils.extend({}, e);
-
 						mediaElement.dispatchEvent(event);
 					});
 
@@ -1733,8 +1553,6 @@ if (document.createEvent === undefined) {
 			win['__ready__' + id] = function (_hlsPlayer) {
 
 				mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
-
-				
 
 				// do call stack
 				for (i = 0, il = stack.length; i < il; i++) {
@@ -2071,9 +1889,6 @@ if (document.createEvent === undefined) {
 				// By default, console log is off
 				dashPlayer.getDebug().setLogToBrowserConsole(false);
 
-
-				
-
 				// do call stack
 				for (i = 0, il = stack.length; i < il; i++) {
 
@@ -2288,9 +2103,6 @@ if (document.createEvent === undefined) {
 		 * @param {Object} settings - an object with settings needed to create <iframe>
 		 */
 		createIframe: function (settings) {
-
-			
-
 			return new YT.Player(settings.containerId, settings);
 		},
 
@@ -2372,7 +2184,6 @@ if (document.createEvent === undefined) {
 	 *
 	 */
 	win.onYouTubePlayerAPIReady = function () {
-		
 		YouTubeApi.iFrameReady();
 	};
 
@@ -2445,8 +2256,6 @@ if (document.createEvent === undefined) {
 									return youTubeApi.getVolume();
 
 								case 'paused':
-									
-
 									return paused;
 
 								case 'ended':
@@ -2478,7 +2287,6 @@ if (document.createEvent === undefined) {
 					};
 
 					youtube['set' + capName] = function (value) {
-						//
 
 						if (youTubeApi !== null) {
 
@@ -2543,7 +2351,6 @@ if (document.createEvent === undefined) {
 
 					// run the method on the native HTMLMediaElement
 					youtube[methodName] = function () {
-						
 
 						if (youTubeApi !== null) {
 
@@ -2610,8 +2417,6 @@ if (document.createEvent === undefined) {
 
 								var stackItem = apiStack[i];
 
-								
-
 								if (stackItem.type === 'set') {
 									var propName = stackItem.propName,
 										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
@@ -2625,17 +2430,12 @@ if (document.createEvent === undefined) {
 							// a few more events
 							youTubeIframe = youTubeApi.getIframe();
 
-							
-
 							var
 								events = ['mouseover', 'mouseout'],
 								assignEvents = function (e) {
 
-									
-
-									var event = mejs.Utils.createEvent(e.type, youtube);
-
-									mediaElement.dispatchEvent(event);
+									var newEvent = mejs.Utils.createEvent(e.type, youtube);
+									mediaElement.dispatchEvent(newEvent);
 								}
 							;
 
@@ -2717,7 +2517,6 @@ if (document.createEvent === undefined) {
 			YouTubeApi.enqueueIframe(youtubeSettings);
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
-				
 				if (_youTubeState !== null && _youTubeState !== undefined) {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}
@@ -2919,7 +2718,6 @@ if (document.createEvent === undefined) {
 	 *
 	 */
 	win.onVimeoPlayerAPIReady = function () {
-		
 		vimeoApi.iFrameReady();
 	};
 
@@ -3422,15 +3220,13 @@ if (document.createEvent === undefined) {
 		 */
 		createIframe: function (settings) {
 
-			
-
 			var
-				//id = settings.id,
 				player = DM.player(settings.container, {
 					height: '100%', // settings.height,
 					width: '100%', //settings.width,
 					video: settings.videoId,
 					params: {
+						autoplay: settings.autoplay,
 						chromeless: 1,
 						api: 1,
 						info: 0,
@@ -3441,8 +3237,6 @@ if (document.createEvent === undefined) {
 				});
 
 			player.addEventListener('apiready', function () {
-				
-
 				win['__ready__' + settings.id](player, {paused: true, ended: false});
 			});
 		},
@@ -3472,7 +3266,6 @@ if (document.createEvent === undefined) {
 	 *
 	 */
 	win.dmAsyncInit = function () {
-		
 		DailyMotionApi.apiReady();
 	};
 
@@ -3576,8 +3369,6 @@ if (document.createEvent === undefined) {
 					};
 
 					dm['set' + capName] = function (value) {
-						//
-
 						if (dmPlayer !== null) {
 
 							switch (propName) {
@@ -3635,8 +3426,6 @@ if (document.createEvent === undefined) {
 
 					// run the method on the native HTMLMediaElement
 					dm[methodName] = function () {
-						
-
 						if (dmPlayer !== null) {
 
 							// DO method
@@ -3667,14 +3456,10 @@ if (document.createEvent === undefined) {
 				dmPlayerReady = true;
 				mediaElement.dmPlayer = dmPlayer = _dmPlayer;
 
-				
-
 				// do call stack
 				for (i = 0, il = apiStack.length; i < il; i++) {
 
 					var stackItem = apiStack[i];
-
-					
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -3781,7 +3566,6 @@ if (document.createEvent === undefined) {
 				dmContainer.style.width = mediaElement.originalNode.style.width;
 				dmContainer.style.height = mediaElement.originalNode.style.height;
 			}
-			//mediaElement.originalNode.parentNode.insertBefore(dmContainer, mediaElement.originalNode);
 			mediaElement.originalNode.style.display = 'none';
 
 			var
@@ -3789,7 +3573,8 @@ if (document.createEvent === undefined) {
 				dmSettings = {
 					id: dm.id,
 					container: dmContainer,
-					videoId: videoId
+					videoId: videoId,
+					autoplay: mediaElement.originalNode.getAttribute('autoplay') ? true : false
 				};
 
 			DailyMotionApi.enqueueIframe(dmSettings);
@@ -4099,8 +3884,6 @@ if (document.createEvent === undefined) {
 
 					FB.Event.subscribe('xfbml.ready', function (msg) {
 
-						
-
 						if (msg.type === 'video') {
 
 							fbApi = msg.instance;
@@ -4130,8 +3913,6 @@ if (document.createEvent === undefined) {
 
 								var stackItem = apiStack[i];
 
-								
-
 								if (stackItem.type === 'set') {
 									var propName = stackItem.propName,
 										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
@@ -4142,14 +3923,12 @@ if (document.createEvent === undefined) {
 								}
 							}
 
-							
 							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
 
 							var timer;
 
 							// Custom Facebook events
 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
-								
 								if (!hasStartedPlaying) {
 									sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
 									hasStartedPlaying = true;
@@ -4165,7 +3944,6 @@ if (document.createEvent === undefined) {
 								}, 250);
 							});
 							eventHandler.paused = fbApi.subscribe('paused', function () {
-								
 								paused = true;
 								ended = false;
 								sendEvents(['paused']);
@@ -4311,7 +4089,7 @@ if (document.createEvent === undefined) {
 		 */
 		loadIframeApi: function () {
 			if (!this.isSDKStarted) {
-				// https://developers.soundcloud.com/docs/api/html5-widget#methods
+
 				var head = doc.getElementsByTagName("head")[0] || document.documentElement,
 					script = doc.createElement("script"),
 					done = false;
@@ -4341,9 +4119,6 @@ if (document.createEvent === undefined) {
 		 *
 		 */
 		apiReady: function () {
-
-			
-
 			this.isLoaded = true;
 			this.isSDKLoaded = true;
 
@@ -4359,9 +4134,6 @@ if (document.createEvent === undefined) {
 		 * @param {Object} settings - an object with settings needed to create <iframe>
 		 */
 		createIframe: function (settings) {
-
-			//
-
 			var player = SC.Widget(settings.iframe);
 			win['__ready__' + settings.id](player);
 		}
@@ -4403,7 +4175,6 @@ if (document.createEvent === undefined) {
 			sc.mediaElement = mediaElement;
 
 			// create our fake element that allows events and such to work
-			// insert data
 			var apiStack = [],
 				scPlayerReady = false,
 				scPlayer = null,
@@ -4473,7 +4244,6 @@ if (document.createEvent === undefined) {
 					};
 
 					sc['set' + capName] = function (value) {
-						//
 
 						if (scPlayer !== null) {
 
@@ -4533,7 +4303,6 @@ if (document.createEvent === undefined) {
 
 					// run the method on the Soundcloud API
 					sc[methodName] = function () {
-						
 
 						if (scPlayer !== null) {
 
@@ -4565,14 +4334,10 @@ if (document.createEvent === undefined) {
 				scPlayerReady = true;
 				mediaElement.scPlayer = scPlayer = _scPlayer;
 
-				
-
 				// do call stack
 				for (i = 0, il = apiStack.length; i < il; i++) {
 
 					var stackItem = apiStack[i];
-
-					
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -4585,7 +4350,6 @@ if (document.createEvent === undefined) {
 				}
 
 				// SoundCloud properties are async, so we don't fire the event until the property callback fires
-
 				scPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function () {
 					paused = false;
 					ended = false;
@@ -4659,6 +4423,7 @@ if (document.createEvent === undefined) {
 			scIframe.frameBorder = 0;
 			scIframe.style.visibility = 'hidden';
 			scIframe.src = mediaFiles[0].src;
+			scIframe.scrolling = 'no';
 			mediaElement.appendChild(scIframe);
 
 			mediaElement.originalNode.style.display = 'none';
@@ -4847,14 +4612,10 @@ if (document.createEvent === undefined) {
 						if (flash.flashApi !== null) {
 
 							if (flash.flashApi['get_' + propName] !== undefined) {
-								var value = flash.flashApi['get_' + propName](); //t.flashState['_' + propName];
-
-								//
+								var value = flash.flashApi['get_' + propName]();
 
 								// special case for buffered to conform to HTML5's newest
 								if (propName === 'buffered') {
-									//
-
 									return {
 										start: function () {
 											return 0;
@@ -4868,18 +4629,15 @@ if (document.createEvent === undefined) {
 
 								return value;
 							} else {
-								
-
 								return null;
 							}
+
 						} else {
 							return null;
 						}
 					};
 
 					flash['set' + capName] = function (value) {
-						
-
 						if (propName === 'src') {
 							value = mejs.Utils.absolutizeUrl(value);
 						}
@@ -4910,7 +4668,6 @@ if (document.createEvent === undefined) {
 
 					// run the method on the native HTMLMediaElement
 					flash[methodName] = function () {
-						
 
 						if (flash.flashApi !== null) {
 
@@ -4927,7 +4684,6 @@ if (document.createEvent === undefined) {
 							}
 						} else {
 							// store for after "READY" event fires
-							//
 							flash.flashApiStack.push({
 								type: 'call',
 								methodName: methodName
@@ -4955,8 +4711,6 @@ if (document.createEvent === undefined) {
 				for (var i = 0, il = flash.flashApiStack.length; i < il; i++) {
 
 					var stackItem = flash.flashApiStack[i];
-
-					
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -5095,7 +4849,6 @@ if (document.createEvent === undefined) {
 
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-						
 						flash.setSrc(mediaFiles[i].src);
 						flash.load();
 						break;

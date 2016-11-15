@@ -55,12 +55,7 @@
 
 			jsmad.loadSrc = function(filename) {
 
-				console.log('create JSMAD', filename);
-
 				new Mad.Player.fromURL( filename, function( player ) {
-						//self.usePlayer( player );
-
-					console.log('JS MAD', 'loaded player', player);
 
 					jsmad.jsMad = player;
 
@@ -70,8 +65,7 @@
 					jsmad.jsMad.onPause = function() {
 						mediaElement.dispatchEvent('pause');
 					};
-					jsmad.jsMad.onProgress = function( current, total, preload ) {
-						//t.wrapper.dispatchEvent('progress');
+					jsmad.jsMad.onProgress = function(current, total) {
 						mediaElement.dispatchEvent('timeupdate');
 
 						jsmad.jsMad.currentTime = current;
@@ -79,15 +73,12 @@
 					};
 
 					jsmad.jsMad.createDevice();
-
 					mediaElement.dispatchEvent('ready');
 
 					// do call stack
 					for (var i=0, il=t.apiStack.length; i<il; i++) {
 
 						var stackItem = t.apiStack[i];
-
-						console.log('stack', stackItem.type);
 
 						if (stackItem.type === 'set') {
 							jsmad[stackItem.propName] = stackItem.value;
@@ -127,14 +118,10 @@
 
 						}
 
-						console.log('[JSMAD get]: ' + propName, jsmad.jsMad, value);
-
 						return value;
 					};
 
 					jsmad['set' + capName] = function(value) {
-
-						console.log('[JSMAD set]: ' + propName + ' = ' + value);
 
 						if (propName === 'src') {
 
@@ -165,14 +152,10 @@
 					// run the method on the native HTMLMediaElement
 					jsmad[methodName] = function() {
 
-						console.log('[JSMAD ' + methodName + '()]', jsmad.jsMad);
-
 						if (jsmad.jsMad !== null) {
 
 							switch (methodName) {
 								case 'play':
-									console.log('[JSMAD setPlaying(true)', jsmad.jsMad);
-
 									jsmad.jsMad.setPlaying(true);
 									break;
 								case 'pause':

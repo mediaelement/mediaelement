@@ -189,9 +189,6 @@
 				// By default, console log is off
 				dashPlayer.getDebug().setLogToBrowserConsole(false);
 
-
-				console.log('Native M-Dash ready', dashPlayer);
-
 				// do call stack
 				for (i = 0, il = stack.length; i < il; i++) {
 
