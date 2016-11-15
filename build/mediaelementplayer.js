@@ -2561,16 +2561,18 @@ if (jQuery !== undefined) {
 				mouseIsOver = false;
 
 			// SLIDER
-			mute.hover(function () {
-				volumeSlider.show();
-				mouseIsOver = true;
-			}, function () {
-				mouseIsOver = false;
+			mute
+				.on('mouseenter focusin', function() {
+					volumeSlider.show();
+					mouseIsOver = true;
+				})
+				.on('mouseleave focusout', function() {
+					mouseIsOver = false;
 
-				if (!mouseIsDown && mode === 'vertical') {
-					volumeSlider.hide();
-				}
-			});
+					if (!mouseIsDown && mode === 'vertical') {
+						volumeSlider.hide();
+					}
+				});
 
 			/**
 			 * @private
@@ -2586,7 +2588,7 @@ if (jQuery !== undefined) {
 					'aria-valuenow': volume,
 					'aria-valuetext': volume + '%',
 					'role': 'slider',
-					'tabindex': 0
+					'tabindex': -1
 				});
 
 			};
@@ -2646,8 +2648,6 @@ if (jQuery !== undefined) {
 			//Keyboard input
 			mute.find('button').on('focus', function () {
 				volumeSlider.show();
-			}).on('blur', function () {
-				volumeSlider.hide();
 			});
 
 			// listen for volume change events from other sources
@@ -3472,7 +3472,7 @@ if (jQuery !== undefined) {
 			player.captionsButton =
 					$('<div class="mejs-button mejs-captions-button">'+
 						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>'+
-						'<div class="mejs-captions-selector">'+
+						'<div class="mejs-captions-selector mejs-offscreen">'+
 							'<ul>'+
 								'<li>'+
 									'<input type="radio" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
@@ -3505,20 +3505,22 @@ if (jQuery !== undefined) {
 				});
 			} else {
 				// hover or keyboard focus
-				player.captionsButton.on( 'mouseenter focusin', function() {
-					$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
-				})
-
-				// handle clicks to the language radio buttons
-				.on('click','input[type=radio]',function() {
-					lang = this.value;
-					player.setTrack(lang);
-				});
-
-				player.captionsButton.on( 'mouseleave focusout', function() {
-					$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
-				});
-
+				player.captionsButton
+					.on('mouseenter focusin', function() {
+						$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
+					})
+					.on('mouseleave focusout', function() {
+						$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
+					})
+					// handle clicks to the language radio buttons
+					.on('click','input[type=radio]',function() {
+						lang = this.value;
+						player.setTrack(lang);
+					})
+					//Allow up/down arrow to change the selected radio without changing the volume.
+					.on('keyup keydown keypress', function(e) {
+						e.stopPropagation();
+					});
 			}
 
 			if (!player.options.alwaysShowControls) {
