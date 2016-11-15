@@ -202,11 +202,11 @@
 
 			// SLIDER
 			mute
-				.on( 'mouseenter focusin', function() {
+				.on('mouseenter focusin', function() {
 					volumeSlider.show();
 					mouseIsOver = true;
 				})
-				.on( 'mouseleave focusout', function() {
+				.on('mouseleave focusout', function() {
 					mouseIsOver = false;
 
 					if (!mouseIsDown && mode === 'vertical') {
@@ -228,7 +228,7 @@
 					'aria-valuenow': volume,
 					'aria-valuetext': volume + '%',
 					'role': 'slider',
-					'tabindex': 0
+					'tabindex': -1
 				});
 
 			};
