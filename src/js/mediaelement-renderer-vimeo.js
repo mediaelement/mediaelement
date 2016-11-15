@@ -19,7 +19,7 @@
 
 		url = url.toLowerCase();
 
-		if (url.indexOf('vimeo') > -1) {
+		if (url.indexOf('player.vimeo') > -1) {
 			return 'video/vimeo';
 		} else {
 			return null;

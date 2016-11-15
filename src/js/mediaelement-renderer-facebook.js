@@ -14,7 +14,7 @@
 
 		url = url.toLowerCase();
 
-		if (url.indexOf('facebook') > -1) {
+		if (url.indexOf('www.facebook') > -1) {
 			return 'video/facebook';
 		} else {
 			return null;

@@ -2032,7 +2032,7 @@ mejs.version = '3.0';
 
 		url = url.toLowerCase();
 
-		if (url.indexOf('youtube') > -1 || url.indexOf('youtu.be') > -1) {
+		if (url.indexOf('www.youtube') > -1 || url.indexOf('//youtu.be') > -1) {
 			return 'video/youtube';
 		} else {
 			return null;
@@ -2588,7 +2588,7 @@ mejs.version = '3.0';
 
 		url = url.toLowerCase();
 
-		if (url.indexOf('vimeo') > -1) {
+		if (url.indexOf('player.vimeo') > -1) {
 			return 'video/vimeo';
 		} else {
 			return null;
@@ -3637,7 +3637,7 @@ mejs.version = '3.0';
 
 		url = url.toLowerCase();
 
-		if (url.indexOf('facebook') > -1) {
+		if (url.indexOf('www.facebook') > -1) {
 			return 'video/facebook';
 		} else {
 			return null;
