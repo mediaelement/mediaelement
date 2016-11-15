@@ -168,7 +168,7 @@
 									break;
 
 								default:
-									console.log('facebook ' + id, propName, 'UNSUPPORTED property');
+									console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
@@ -261,8 +261,6 @@
 
 					FB.Event.subscribe('xfbml.ready', function (msg) {
 
-						console.log("Facebook ready event", msg);
-
 						if (msg.type === 'video') {
 
 							fbApi = msg.instance;
@@ -292,8 +290,6 @@
 
 								var stackItem = apiStack[i];
 
-								console.log('stack', stackItem.type);
-
 								if (stackItem.type === 'set') {
 									var propName = stackItem.propName,
 										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
@@ -304,14 +300,12 @@
 								}
 							}
 
-							console.log('FB INIT');
 							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
 
 							var timer;
 
 							// Custom Facebook events
 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
-								console.log('FB EVENT', 'startedPlaying');
 								if (!hasStartedPlaying) {
 									sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
 									hasStartedPlaying = true;
@@ -327,7 +321,6 @@
 								}, 250);
 							});
 							eventHandler.paused = fbApi.subscribe('paused', function () {
-								console.log('FB EVENT', 'paused');
 								paused = true;
 								ended = false;
 								sendEvents(['paused']);

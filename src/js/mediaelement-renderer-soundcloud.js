@@ -56,7 +56,7 @@
 		 */
 		loadIframeApi: function () {
 			if (!this.isSDKStarted) {
-				// https://developers.soundcloud.com/docs/api/html5-widget#methods
+
 				var head = doc.getElementsByTagName("head")[0] || document.documentElement,
 					script = doc.createElement("script"),
 					done = false;
@@ -86,9 +86,6 @@
 		 *
 		 */
 		apiReady: function () {
-
-			console.log('Soundcloud API Loaded');
-
 			this.isLoaded = true;
 			this.isSDKLoaded = true;
 
@@ -104,9 +101,6 @@
 		 * @param {Object} settings - an object with settings needed to create <iframe>
 		 */
 		createIframe: function (settings) {
-
-			//console.log('creating iframe', settings);
-
 			var player = SC.Widget(settings.iframe);
 			win['__ready__' + settings.id](player);
 		}
@@ -148,7 +142,6 @@
 			sc.mediaElement = mediaElement;
 
 			// create our fake element that allows events and such to work
-			// insert data
 			var apiStack = [],
 				scPlayerReady = false,
 				scPlayer = null,
@@ -218,7 +211,6 @@
 					};
 
 					sc['set' + capName] = function (value) {
-						//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
 
 						if (scPlayer !== null) {
 
@@ -256,7 +248,7 @@
 									break;
 
 								default:
-									console.log('dm ' + id, propName, 'UNSUPPORTED property');
+									console.log('dm ' + sc.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
@@ -278,7 +270,6 @@
 
 					// run the method on the Soundcloud API
 					sc[methodName] = function () {
-						console.log('[' + options.prefix + ' ' + methodName + '()]');
 
 						if (scPlayer !== null) {
 
@@ -310,14 +301,10 @@
 				scPlayerReady = true;
 				mediaElement.scPlayer = scPlayer = _scPlayer;
 
-				console.log('Soundcloud ready', sc.id, scPlayer);
-
 				// do call stack
 				for (i = 0, il = apiStack.length; i < il; i++) {
 
 					var stackItem = apiStack[i];
-
-					console.log('stack', stackItem.type);
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -330,7 +317,6 @@
 				}
 
 				// SoundCloud properties are async, so we don't fire the event until the property callback fires
-
 				scPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function () {
 					paused = false;
 					ended = false;
@@ -404,6 +390,7 @@
 			scIframe.frameBorder = 0;
 			scIframe.style.visibility = 'hidden';
 			scIframe.src = mediaFiles[0].src;
+			scIframe.scrolling = 'no';
 			mediaElement.appendChild(scIframe);
 
 			mediaElement.originalNode.style.display = 'none';

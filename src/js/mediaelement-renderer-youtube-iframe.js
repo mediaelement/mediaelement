@@ -87,9 +87,6 @@
 		 * @param {Object} settings - an object with settings needed to create <iframe>
 		 */
 		createIframe: function (settings) {
-
-			console.log('creating iframe', settings);
-
 			return new YT.Player(settings.containerId, settings);
 		},
 
@@ -171,7 +168,6 @@
 	 *
 	 */
 	win.onYouTubePlayerAPIReady = function () {
-		console.log('onYouTubePlayerAPIReady');
 		YouTubeApi.iFrameReady();
 	};
 
@@ -244,8 +240,6 @@
 									return youTubeApi.getVolume();
 
 								case 'paused':
-									console.log('YT paused', youTubeState);
-
 									return paused;
 
 								case 'ended':
@@ -277,7 +271,6 @@
 					};
 
 					youtube['set' + capName] = function (value) {
-						//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
 
 						if (youTubeApi !== null) {
 
@@ -320,7 +313,7 @@
 									break;
 
 								default:
-									console.log('youtube ' + id, propName, 'UNSUPPORTED property');
+									console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
@@ -342,7 +335,6 @@
 
 					// run the method on the native HTMLMediaElement
 					youtube[methodName] = function () {
-						console.log('[' + options.prefix + ' ' + methodName + '()]');
 
 						if (youTubeApi !== null) {
 
@@ -409,8 +401,6 @@
 
 								var stackItem = apiStack[i];
 
-								console.log('stack', stackItem.type);
-
 								if (stackItem.type === 'set') {
 									var propName = stackItem.propName,
 										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
@@ -424,17 +414,12 @@
 							// a few more events
 							youTubeIframe = youTubeApi.getIframe();
 
-							console.log('iframe', youTubeIframe);
-
 							var
 								events = ['mouseover', 'mouseout'],
 								assignEvents = function (e) {
 
-									console.log('youtube iframe', e.type);
-
-									var event = mejs.Utils.createEvent(e.type, youtube);
-
-									mediaElement.dispatchEvent(event);
+									var newEvent = mejs.Utils.createEvent(e.type, youtube);
+									mediaElement.dispatchEvent(newEvent);
 								}
 							;
 
@@ -516,7 +501,6 @@
 			YouTubeApi.enqueueIframe(youtubeSettings);
 
 			youtube.onEvent = function (eventName, player, _youTubeState) {
-				console.log('yt event', eventName);
 				if (_youTubeState !== null && _youTubeState !== undefined) {
 					mediaElement.youTubeState = youTubeState = _youTubeState;
 				}

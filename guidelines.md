@@ -424,17 +424,9 @@ One of the subtasks involved during the compiling of `MediaElement.js` is the co
 
 To compile ALL the files, in your Terminal window just type `grunt` in the root of the project. 
 
-If during the development wasn't necessary to do any changes to the Flash files, type `grunt html5only`. That way, the Flash files will remain intact. You can also type `grunt debug_html5` to avoid removing the console messages.
+If during the development wasn't necessary to do any changes to the Flash files, type `grunt html5only`. That way, the Flash files will remain intact. You can also type `grunt html5debug` to avoid removing the console messages.
 
 If, on the other hand, only the ActionScript files were affected, type `sh compile_swf.sh` and it will build the compiled files in `/local-build/` directory. Then just copy the files and put them inside `/build/` directory.
-
-Finally, if changes were done to the `FlashMediaElement.fla` file:
-
-1. Open it in the Flash Professional IDE. 
-2. Go to the menu item `File->Publish Settings`
-3. Click the `Flash` tab
-4. Make sure the box `Export SWC` is checked
-5. Click `Publish`
 
 ________
 [Back to Main](README.md)

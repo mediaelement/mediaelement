@@ -35,7 +35,6 @@ module.exports = function(grunt) {
 					'src/js/mediaelement-header.js',
 					'src/js/mediaelement-namespace.js',
 					'src/js/mediaelement-utility.js',
-					'src/js/mediaelement-utility-oldie.js',
 					'src/js/mediaelement-core.js',
 					'src/js/mediaelement-renderer-html5.js',
 					'src/js/mediaelement-renderer-hls.js',
@@ -147,12 +146,12 @@ module.exports = function(grunt) {
 				filter  : 'isFile'
 			}
 		},
-        clean: {
-          build: ['build'],
-          temp:  ['tmp']
-        },
+		clean: {
+			build: ['build'],
+			temp:  ['tmp']
+		},
 
-		// Task that compiles flashmediaelement.swf using the free Flex SDK on Linux/Mac.
+		// Task that compiles all SWF files using the free Flex SDK on Linux/Mac.
 		// There are a few prerequisite steps involved in running this task.
 		//
 		// 1) Install the Flex SDK version 4.6 (only needs to be done once)
@@ -163,68 +162,70 @@ module.exports = function(grunt) {
 		//
 		// 2) Update the `flexPath` variable below to reflect the name of the symlink you created
 		//
-		// 3) Build the SWC file (only needs to be done if you have changed something in the FLA file)
-		//	 Open the FlashMediaElement.fla file in the Flash Professional IDE.
-		//	 Goto the menu item 'File->Publish Settings'
-		//	 Click the 'Flash' tab
-		//	 Make sure the box 'Export SWC' is checked
-		//	 Click 'Publish'
-		//	 Quit out of the Flash IDE
+		// 3) Run this task from the command line: `grunt shell:buildFlash`
 		//
-		// 4) Run this task from the command line: `grunt shell:buildFlash`
-		//
-		// Note: There doesn't seem to be an available SWC library that defines the YouTube player API.
-		//		 Remove the -strict compiler option to see warnings coming from YouTube API calls.
-		//
-		flexPath: '../flex_sdk_4.6',
+		flexPath: './src/flash/flex_sdk_4.6',
+		flexVersion: '10.1',
 		buildFlashCommand: [
 			'<%= flexPath %>/bin/mxmlc -strict=false -compiler.debug -warnings=true',
-			'src/flash/FlashMediaElement.as -o <%= flashOut %>',
-			'-define+=CONFIG::cdnBuild,<%= cdnBuild %>',
-			'-define+=CONFIG::debugBuild,<%= debugBuild %>',
+			'<%= sourceFile %> -o <%= flashOut %>',
 			'-library-path+="<%= flexPath %>/lib"',
-			'-include-libraries+=src/flash/flashmediaelement.swc',
-			'-include-libraries+=src/flash/flashls.swc -use-network=true',
-			'-source-path src/flash',
-			'-target-player 10.0',
-			'-headless-server -static-link-runtime-shared-libraries'
+			'-use-network=true -target-player <%= flexVersion %> -source-path <%= sourcePath %>',
+			'-headless-server -static-link-runtime-shared-libraries',
+			'<%= externalLibraries %>'
 		].join(" "),
 
 		shell: {
-			buildFlash: {
+			buildFlashVideo: {
 				command: function() {
-					grunt.config.set("cdnBuild", 'false');
-					grunt.config.set("debugBuild", 'false');
-					grunt.config.set("flashOut", 'build/flashmediaelement.swf');
+					grunt.config.set("sourceFile", 'src/flash/flash-video/VideoMediaElement.as');
+					grunt.config.set("sourcePath", 'src/flash/flash-video');
+					grunt.config.set("flashOut", 'build/mediaelement-flash-video.swf');
+					grunt.config.set("externalLibraries", '');
 					return grunt.config.get("buildFlashCommand");
 				}
 			},
-			buildFlashCDN: {
+			buildFlashVideoHls: {
 				command: function() {
-					grunt.config.set("cdnBuild", 'true');
-					grunt.config.set("debugBuild", 'false');
-					grunt.config.set("flashOut", 'build/flashmediaelement-cdn.swf');
+					grunt.config.set("sourceFile", 'src/flash/flash-video-hls/HlsMediaElement.as');
+					grunt.config.set("sourcePath", 'src/flash/flash-video-hls');
+					grunt.config.set("flashOut", 'build/mediaelement-flash-video-hls.swf');
+					grunt.config.set("externalLibraries", '-include-libraries+=src/flash/flash-video-hls/flashls.swc');
 					return grunt.config.get("buildFlashCommand");
 				}
 			},
-			buildFlashDebug: {
+			buildFlashVideoMDash: {
 				command: function() {
-					grunt.config.set("cdnBuild", 'true');
-					grunt.config.set("debugBuild", 'true');
-					grunt.config.set("flashOut", 'build/flashmediaelement-debug.swf');
+					grunt.config.set("sourceFile", 'src/flash/flash-video-dash/DashMediaElement.as');
+					grunt.config.set("sourcePath", 'src/flash/flash-video-dash');
+					grunt.config.set("flashOut", 'build/mediaelement-flash-video-mdash.swf');
+					grunt.config.set("externalLibraries", '-include-libraries+=src/flash/flash-video-dash/OSMF.swc');
+					return grunt.config.get("buildFlashCommand");
+				}
+			},
+			buildFlashAudio: {
+				command: function() {
+					grunt.config.set("sourceFile", 'src/flash/flash-audio/AudioMediaElement.as');
+					grunt.config.set("sourcePath", 'src/flash/flash-audio');
+					grunt.config.set("flashOut", 'build/mediaelement-flash-audio.swf');
+					grunt.config.set("externalLibraries", '');
+					return grunt.config.get("buildFlashCommand");
+				}
+			},
+			buildFlashAudioOgg: {
+				command: function() {
+					grunt.config.set("sourceFile", 'src/flash/flash-audio-ogg/OggMediaElement.as');
+					grunt.config.set("sourcePath", 'src/flash/flash-audio-ogg');
+					grunt.config.set("flashOut", 'build/mediaelement-flash-audio-ogg.swf');
+					grunt.config.set("externalLibraries", '-include-libraries+=src/flash/flash-audio-ogg/oggvorbis.swc');
 					return grunt.config.get("buildFlashCommand");
 				}
 			}
 		}
 	});
 
-	grunt.registerTask('default', ['jshint', 'concat', 'removelogging', 'uglify',
-		'postcss', 'copy', 'shell:buildFlash', 'shell:buildFlashCDN',
-		'shell:buildFlashDebug', 'clean:temp']);
-
-    grunt.registerTask('html5only', ['jshint', 'concat', 'removelogging',
-		'uglify', 'postcss', 'copy', 'clean:temp']);
-    grunt.registerTask('debug_html5', ['jshint', 'concat', 'uglify', 'postcss',
-		'copy', 'clean:temp']);
+	grunt.registerTask('default', ['jshint', 'concat', 'removelogging', 'uglify', 'postcss', 'shell', 'copy', 'clean:temp']);
+	grunt.registerTask('html5only', ['jshint', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('html5debug', ['jshint', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
 
 };

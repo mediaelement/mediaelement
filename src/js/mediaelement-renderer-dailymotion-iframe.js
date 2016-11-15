@@ -88,15 +88,13 @@
 		 */
 		createIframe: function (settings) {
 
-			console.log('creating iframe', settings);
-
 			var
-				//id = settings.id,
 				player = DM.player(settings.container, {
 					height: '100%', // settings.height,
 					width: '100%', //settings.width,
 					video: settings.videoId,
 					params: {
+						autoplay: settings.autoplay,
 						chromeless: 1,
 						api: 1,
 						info: 0,
@@ -107,8 +105,6 @@
 				});
 
 			player.addEventListener('apiready', function () {
-				console.log('DM api ready');
-
 				win['__ready__' + settings.id](player, {paused: true, ended: false});
 			});
 		},
@@ -138,7 +134,6 @@
 	 *
 	 */
 	win.dmAsyncInit = function () {
-		console.log('dmAsyncInit');
 		DailyMotionApi.apiReady();
 	};
 
@@ -242,8 +237,6 @@
 					};
 
 					dm['set' + capName] = function (value) {
-						//console.log('[' + options.prefix + ' set]: ' + propName + ' = ' + value, t.flashApi);
-
 						if (dmPlayer !== null) {
 
 							switch (propName) {
@@ -301,8 +294,6 @@
 
 					// run the method on the native HTMLMediaElement
 					dm[methodName] = function () {
-						console.log('[' + options.prefix + ' ' + methodName + '()]');
-
 						if (dmPlayer !== null) {
 
 							// DO method
@@ -333,14 +324,10 @@
 				dmPlayerReady = true;
 				mediaElement.dmPlayer = dmPlayer = _dmPlayer;
 
-				console.log('dm ready', dmPlayer);
-
 				// do call stack
 				for (i = 0, il = apiStack.length; i < il; i++) {
 
 					var stackItem = apiStack[i];
-
-					console.log('stack', stackItem.type);
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -447,7 +434,6 @@
 				dmContainer.style.width = mediaElement.originalNode.style.width;
 				dmContainer.style.height = mediaElement.originalNode.style.height;
 			}
-			//mediaElement.originalNode.parentNode.insertBefore(dmContainer, mediaElement.originalNode);
 			mediaElement.originalNode.style.display = 'none';
 
 			var
@@ -455,7 +441,8 @@
 				dmSettings = {
 					id: dm.id,
 					container: dmContainer,
-					videoId: videoId
+					videoId: videoId,
+					autoplay: mediaElement.originalNode.getAttribute('autoplay') ? true : false
 				};
 
 			DailyMotionApi.enqueueIframe(dmSettings);
