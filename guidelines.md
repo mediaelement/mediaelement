@@ -103,6 +103,8 @@ $(document).ready(function() {
 </script>
 ```
 
+As a final note, try to be aware of building it thinking on Accessibility. Take a look into [`mediaelementplayer-feature-tracks.js`](src/js/mediaelementplayer-feature-tracks.js) for more reference about best practices. 
+
 <a id="renderers"></a>
 ### Renderers
 
