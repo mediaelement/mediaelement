@@ -201,16 +201,18 @@
 				mouseIsOver = false;
 
 			// SLIDER
-			mute.hover(function () {
-				volumeSlider.show();
-				mouseIsOver = true;
-			}, function () {
-				mouseIsOver = false;
+			mute
+				.on('mouseenter focusin', function() {
+					volumeSlider.show();
+					mouseIsOver = true;
+				})
+				.on('mouseleave focusout', function() {
+					mouseIsOver = false;
 
-				if (!mouseIsDown && mode === 'vertical') {
-					volumeSlider.hide();
-				}
-			});
+					if (!mouseIsDown && mode === 'vertical') {
+						volumeSlider.hide();
+					}
+				});
 
 			/**
 			 * @private
@@ -226,7 +228,7 @@
 					'aria-valuenow': volume,
 					'aria-valuetext': volume + '%',
 					'role': 'slider',
-					'tabindex': 0
+					'tabindex': -1
 				});
 
 			};
