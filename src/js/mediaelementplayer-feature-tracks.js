@@ -122,10 +122,10 @@
 			} else {
 				// hover or keyboard focus
 				player.captionsButton
-					.on( 'mouseenter focusin', function() {
+					.on('mouseenter focusin', function() {
 						$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
 					})
-					.on( 'mouseleave focusout', function() {
+					.on('mouseleave focusout', function() {
 						$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
 					})
 					// handle clicks to the language radio buttons
