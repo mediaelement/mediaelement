@@ -9162,7 +9162,7 @@ if (jQuery !== undefined) {
 						player.setTrack(lang);
 					})
 					.on('click','.mejs-captions-selector-label',function() {
-						$(this).sliblings('input[type="radio"]').trigger('click');
+						$(this).siblings('input[type="radio"]').trigger('click');
 					})
 					//Allow up/down arrow to change the selected radio without changing the volume.
 					.on('keydown', function(e) {
