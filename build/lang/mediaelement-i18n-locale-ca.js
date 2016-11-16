@@ -23,36 +23,36 @@
 			"mejs.download-file": "Descarregar arxiu",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Desconnectar pantalla completaa",
 			"mejs.fullscreen-on": "Anar a pantalla completa",
 			"mejs.download-video": "Descarregar vídeo",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Pantalla completa",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			// "mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Reproducció",
 			"mejs.pause": "Pausa",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Tancar",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			// "mejs.time-slider": "Time Slider",
 			// "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			// "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Llegendes/Subtítols",
 			"mejs.none": "Ningú",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Alternar silenci",
 			// "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 			"mejs.unmute": "Reactivar silenci",
@@ -63,15 +63,18 @@
 			"mejs.video-player": "Reproductor de vídeo",
 			"mejs.audio-player": "Reproductor d'àudio",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			"mejs.ad-skip": "Salta publicitat",
 			"mejs.ad-skip-info": ["Salta en 1 segon", "Salta en %1 segons"],
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			// "mejs.source-chooser": "Source Chooser",
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			"mejs.stop": "Aturar"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

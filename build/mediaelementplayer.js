@@ -140,7 +140,11 @@ if (jQuery !== undefined) {
 			{
 				keys: [38], // UP
 				action: function (player, media, key, event) {
-					player.container.find('.mejs-volume-slider').css('display', 'block');
+
+					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
+						player.container.find('.mejs-volume-slider').is(':focus')) {
+						player.container.find('.mejs-volume-slider').css('display', 'block');
+					}
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
@@ -148,12 +152,20 @@ if (jQuery !== undefined) {
 
 					var newVolume = Math.min(media.volume + 0.1, 1);
 					media.setVolume(newVolume);
+					if (newVolume > 0) {
+						media.setMuted(false);
+					}
+
 				}
 			},
 			{
 				keys: [40], // DOWN
 				action: function (player, media, key, event) {
-					player.container.find('.mejs-volume-slider').css('display', 'block');
+					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
+						player.container.find('.mejs-volume-slider').is(':focus')) {
+						player.container.find('.mejs-volume-slider').css('display', 'block');
+					}
+
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
@@ -161,6 +173,11 @@ if (jQuery !== undefined) {
 
 					var newVolume = Math.max(media.volume - 0.1, 0);
 					media.setVolume(newVolume);
+
+					if (newVolume <= 0.1) {
+						media.setMuted(true);
+					}
+
 				}
 			},
 			{
@@ -768,7 +785,7 @@ if (jQuery !== undefined) {
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
 
-						t.$media.bind('touchstart', function () {
+						t.$media.on('touchstart', function () {
 
 							// toggle controls
 							if (t.controlsAreVisible) {
@@ -808,7 +825,7 @@ if (jQuery !== undefined) {
 
 						// show/hide controls
 						t.container
-						.bind('mouseenter', function () {
+						.on('mouseenter', function () {
 							if (t.controlsEnabled) {
 								if (!t.options.alwaysShowControls) {
 									t.killControlsTimer('enter');
@@ -817,7 +834,7 @@ if (jQuery !== undefined) {
 								}
 							}
 						})
-						.bind('mousemove', function () {
+						.on('mousemove', function () {
 							if (t.controlsEnabled) {
 								if (!t.controlsAreVisible) {
 									t.showControls();
@@ -827,7 +844,7 @@ if (jQuery !== undefined) {
 								}
 							}
 						})
-						.bind('mouseleave', function () {
+						.on('mouseleave', function () {
 							if (t.controlsEnabled) {
 								if (!t.media.paused && !t.options.alwaysShowControls) {
 									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
@@ -1377,7 +1394,7 @@ if (jQuery !== undefined) {
 						'<div class="mejs-overlay-button" role="button" aria-label="' + mejs.i18n.t('mejs.play') + '" aria-pressed="false"></div>' +
 						'</div>')
 					.appendTo(layers)
-					.bind('click', function () {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
+					.on('click', function () {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 						if (t.options.clickToPlayPause) {
 
 							var
@@ -1673,8 +1690,8 @@ if (jQuery !== undefined) {
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).bind(events.d, data, callback);
-			if (events.w) $(window).bind(events.w, data, callback);
+			if (events.d) $(doc).on(events.d, data, callback);
+			if (events.w) $(window).on(events.w, data, callback);
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function (events, callback) {
@@ -2026,15 +2043,15 @@ if (jQuery !== undefined) {
 				};
 
 			// Events
-			t.slider.bind('focus', function (e) {
+			t.slider.on('focus', function (e) {
 				player.options.autoRewind = false;
 			});
 
-			t.slider.bind('blur', function (e) {
+			t.slider.on('blur', function (e) {
 				player.options.autoRewind = autoRewindInitial;
 			});
 
-			t.slider.bind('keydown', function (e) {
+			t.slider.on('keydown', function (e) {
 
 				if ((new Date() - lastKeyPressTime) >= 1000) {
 					startedPaused = media.paused;
@@ -2104,7 +2121,7 @@ if (jQuery !== undefined) {
 
 			// handle clicks
 			t.total
-			.bind('mousedown touchstart', function (e) {
+			.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
 					mouseIsDown = true;
@@ -2121,7 +2138,7 @@ if (jQuery !== undefined) {
 					});
 				}
 			})
-			.bind('mouseenter', function (e) {
+			.on('mouseenter', function (e) {
 				mouseIsOver = true;
 				t.globalBind('mousemove.dur', function (e) {
 					handleMouseMove(e);
@@ -2130,7 +2147,7 @@ if (jQuery !== undefined) {
 					t.timefloat.show();
 				}
 			})
-			.bind('mouseleave', function (e) {
+			.on('mouseleave', function (e) {
 				mouseIsOver = false;
 				if (!mouseIsDown) {
 					t.globalUnbind('.dur');
@@ -2598,10 +2615,10 @@ if (jQuery !== undefined) {
 
 			// Events
 			volumeSlider
-				.bind('mouseover', function () {
+				.on('mouseover', function () {
 					mouseIsOver = true;
 				})
-				.bind('mousedown', function (e) {
+				.on('mousedown', function (e) {
 					handleVolumeMove(e);
 					t.globalBind('mousemove.vol', function (e) {
 						handleVolumeMove(e);
@@ -2618,7 +2635,7 @@ if (jQuery !== undefined) {
 
 					return false;
 				})
-				.bind('keydown', function (e) {
+				.on('keydown', function (e) {
 
 					if (t.options.keyActions.length) {
 						var
@@ -3258,8 +3275,11 @@ if (jQuery !== undefined) {
 		/**
 		 * @type {String}
 		 */
-		speedChar: 'x'
-
+		speedChar: 'x',
+		/**
+		 * @type {String}
+		 */
+		speedText: ''
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -3284,13 +3304,20 @@ if (jQuery !== undefined) {
 			}
 
 			var
-				speedButton = null,
-				speedSelector = null,
-				playbackSpeed = null,
-				inputId = null;
+				playbackSpeed,
+				inputId,
+				speedTitle = t.options.speedText ? t.options.speedText : mejs.i18n.t('mejs.speed-rate'),
+				speeds = [],
+				defaultInArray = false,
+				getSpeedNameFromValue = function(value) {
+					for(i=0,len=speeds.length; i <len; i++) {
+						if (speeds[i].value === value) {
+							return speeds[i].name;
+						}
+					}
+				}
+			;
 
-			var speeds = [];
-			var defaultInArray = false;
 			for (var i=0, len=t.options.speeds.length; i < len; i++) {
 				var s = t.options.speeds[i];
 				if (typeof(s) === 'string'){
@@ -3321,65 +3348,104 @@ if (jQuery !== undefined) {
 				return parseFloat(b.value) - parseFloat(a.value);
 			});
 
-			var getSpeedNameFromValue = function(value) {
-				for(i=0,len=speeds.length; i <len; i++) {
-					if (speeds[i].value === value) {
-						return speeds[i].name;
-					}
-				}
-			};
+			t.clearspeed(player);
 
-			var html = '<div class="mejs-button mejs-speed-button">' +
-						'<button type="button">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
-							'<div class="mejs-speed-selector">' +
-								'<ul class="mejs-speed-selector-list">';
+			player.speedButton = $('<div class="mejs-button mejs-speed-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" aria-label="' + speedTitle + '">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
+						'<div class="mejs-speed-selector mejs-offscreen">' +
+							'<ul class="mejs-speed-selector-list"></ul>' +
+						'</div>' +
+					'</div>')
+						.appendTo(controls);
 
 			for (i = 0, il = speeds.length; i<il; i++) {
-				inputId = t.id + '-speed-' + speeds[i].value;
-				html += '<li class="mejs-speed-selector-list-item">' +
-							'<input class="mejs-speed-selector-input" ' +
-								'type="radio" name="speed" ' +
-								'value="' + speeds[i].value + '" ' +
-								'id="' + inputId + '" ' +
-								(speeds[i].value === t.options.defaultSpeed ? ' checked' : '') +
-							' />' +
-							'<label class="mejs-speed-selector-label" ' +
-							 	'for="' + inputId + '" ' +
-								(speeds[i].value === t.options.defaultSpeed ? ' class="mejs-speed-selected"' : '') +
-								'>' + speeds[i].name +
-							'</label>' +
-						'</li>';
-			}
-			html += '</ul></div></div>';
 
-			speedButton = $(html).appendTo(controls);
-			speedSelector = speedButton.find('.mejs-speed-selector');
+				inputId = t.id + '-speed-' + speeds[i].value;
+
+				player.speedButton.find('ul').append(
+					$('<li class="mejs-speed-selector-list-item">' +
+						'<input class="mejs-speed-selector-input" ' +
+							'type="radio" name="' + t.id + '_speed" disabled="disabled"' +
+							'value="' + speeds[i].value + '" ' +
+							'id="' + inputId + '" ' +
+							(speeds[i].value === t.options.defaultSpeed ? ' checked="checked"' : '') +
+						' />' +
+						'<label class="mejs-speed-selector-label' +
+						(speeds[i].value === t.options.defaultSpeed ? ' mejs-speed-selected' : '') +
+						'">' + speeds[i].name + '</label>' +
+					'</li>')
+				);
+			}
 
 			playbackSpeed = t.options.defaultSpeed;
+
+			// Enable inputs after they have been appended to controls to avoid tab and up/down arrow focus issues
+			$.each(player.speedButton.find('input[type="radio"]'), function() {
+				$(this).prop('disabled', false);
+			});
+
+			player.speedSelector = player.speedButton.find('.mejs-speed-selector');
+
+			// hover or keyboard focus
+			player.speedButton
+				.on('mouseenter focusin', function(e) {
+					player.speedSelector.removeClass('mejs-offscreen')
+						.height(player.speedSelector.find('ul').outerHeight(true))
+						.css('top', (-1 * player.speedSelector.height()) + 'px')
+					;
+				})
+				.on('mouseleave focusout', function(e) {
+					player.speedSelector.addClass("mejs-offscreen");
+				})
+				// handle clicks to the language radio buttons
+				.on('click','input[type=radio]',function() {
+					var
+						self = $(this),
+						newSpeed = self.val()
+					;
+
+					playbackSpeed = newSpeed;
+					media.playbackRate = parseFloat(newSpeed);
+					player.speedButton
+						.find('button').html(getSpeedNameFromValue(newSpeed))
+						.end()
+						.find('.mejs-speed-selected').removeClass('mejs-speed-selected')
+						.end()
+						.find('input[type="radio"]')
+					;
+
+					self.prop('checked', true)
+						.siblings('.mejs-speed-selector-label').addClass('mejs-speed-selected');
+				})
+				.on('click','.mejs-speed-selector-label',function() {
+					$(this).siblings('input[type="radio"]').trigger('click');
+				})
+				//Allow up/down arrow to change the selected radio without changing the volume.
+				.on('keydown', function(e) {
+					e.stopPropagation();
+				});
 
 			media.addEventListener('loadedmetadata', function(e) {
 				if (playbackSpeed) {
 					media.playbackRate = parseFloat(playbackSpeed);
 				}
 			}, true);
-
-			speedSelector
-				.on('click', 'input[type="radio"]', function() {
-					var newSpeed = $(this).attr('value');
-					playbackSpeed = newSpeed;
-					media.playbackRate = parseFloat(newSpeed);
-					speedButton.find('button').html(getSpeedNameFromValue(newSpeed));
-					speedButton.find('.mejs-speed-selected').removeClass('mejs-speed-selected');
-					speedButton.find('input[type="radio"]:checked').next().addClass('mejs-speed-selected');
-				});
-			speedButton
-				.one( 'mouseenter focusin', function() {
-					speedSelector
-						.height(
-							speedButton.find('.mejs-speed-selector ul').outerHeight(true) +
-							speedButton.find('.mejs-speed-translations').outerHeight(true))
-						.css('top', (-1 * speedSelector.height()) + 'px');
-				});
+		},
+		/**
+		 * Feature destructor.
+		 *
+		 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
+		 * @param {MediaElementPlayer} player
+		 */
+		clearspeed: function(player){
+			if (player) {
+				if (player.speedButton) {
+					player.speedButton.remove();
+				}
+				if (player.speedSelector) {
+					player.speedSelector.remove();
+				}
+			}
 		}
 	});
 
@@ -3473,16 +3539,16 @@ if (jQuery !== undefined) {
 						.prependTo(layers).hide();
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton =
-					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>'+
-						'<div class="mejs-captions-selector mejs-offscreen">'+
-							'<ul>'+
-								'<li>'+
-									'<input type="radio" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') +'</label>'+
+					$('<div class="mejs-button mejs-captions-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>' +
+						'<div class="mejs-captions-selector mejs-offscreen">' +
+							'<ul class="mejs-captions-selector-list">'+
+								'<li class="mejs-captions-selector-list-item">'+
+									'<input type="radio" class="mejs-captions-selector-input" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
+									'<label class="mejs-captions-selector-label mejs-captions-selected" for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') + '</label>' +
 								'</li>'	+
-							'</ul>'+
-						'</div>'+
+							'</ul>' +
+						'</div>' +
 					'</div>')
 						.appendTo(controls);
 
@@ -3520,8 +3586,11 @@ if (jQuery !== undefined) {
 						lang = this.value;
 						player.setTrack(lang);
 					})
+					.on('click','.mejs-captions-selector-label',function() {
+						$(this).sliblings('input[type="radio"]').trigger('click');
+					})
 					//Allow up/down arrow to change the selected radio without changing the volume.
-					.on('keyup keydown keypress', function(e) {
+					.on('keydown', function(e) {
 						e.stopPropagation();
 					});
 			}
@@ -3529,12 +3598,12 @@ if (jQuery !== undefined) {
 			if (!player.options.alwaysShowControls) {
 				// move with controls
 				player.container
-					.bind('controlsshown', function () {
+					.on('controlsshown', function () {
 						// push captions above controls
 						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
 					})
-					.bind('controlshidden', function () {
+					.on('controlshidden', function () {
 						if (!media.paused) {
 							// move back to normal place
 							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
@@ -3639,6 +3708,15 @@ if (jQuery !== undefined) {
 				i
 			;
 
+			t.captionsButton
+				.find('input[type="radio"]').prop('checked', false)
+				.end()
+				.find('.mejs-captions-selected').removeClass('mejs-captions-selected')
+				.end()
+				.find('input[value="' + lang + '"]').prop('checked', true)
+				.siblings('.mejs-captions-selector-label').addClass('mejs-captions-selected')
+			;
+
 			if (lang === 'none') {
 				t.selectedTrack = null;
 				t.captionsButton.removeClass('mejs-captions-enabled');
@@ -3741,10 +3819,8 @@ if (jQuery !== undefined) {
 			}
 
 			t.captionsButton
-				.find('input[value=' + lang + ']')
-					.prop('disabled',false)
-				.siblings('label')
-					.html(label);
+				.find('input[value=' + lang + ']').prop('disabled',false)
+				.siblings('.mejs-captions-selector-label').html(label);
 
 			// auto select
 			if (t.options.startLanguage === lang) {
@@ -3778,9 +3854,9 @@ if (jQuery !== undefined) {
 			}
 
 			t.captionsButton.find('ul').append(
-				$('<li>'+
-					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + label + ' (loading)' + '</label>'+
+				$('<li class="mejs-captions-selector-list-item">'+
+					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
+					'<label class="mejs-captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
 
@@ -3797,7 +3873,7 @@ if (jQuery !== undefined) {
 			var t = this;
 			// adjust the size of the outer box
 			t.captionsButton.find('.mejs-captions-selector').height(
-				t.captionsButton.find('.mejs-captions-selector ul').outerHeight(true) +
+				t.captionsButton.find('.mejs-captions-selector-list').outerHeight(true) +
 				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
 			);
 		},
@@ -4334,7 +4410,7 @@ if (jQuery !== undefined) {
 				}, 100))
 
 				// handle clicks to the source radio buttons
-				.delegate('input[type=radio]', 'click', function () {
+				.on('click', 'input[type=radio]', function () {
 					// set aria states
 					$(this).attr('aria-selected', true).attr('checked', 'checked');
 					$(this).closest('.mejs-sourcechooser-selector').find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
@@ -4364,7 +4440,7 @@ if (jQuery !== undefined) {
 				})
 
 				// Handle click so that screen readers can toggle the menu
-				.delegate('button', 'click', function (e) {
+				.on('click', 'button', function (e) {
 					if ($(this).siblings('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
 						player.showSourcechooserSelector();
 						$(this).siblings('.mejs-sourcechooser-selector').find('input[type=radio]:checked').first().focus();
@@ -4534,17 +4610,17 @@ $.extend(mejs.MepDefaults,
 								.hide();
 
 			// create events for showing context menu
-			player.container.bind('contextmenu', function(e) {
+			player.container.on('contextmenu', function(e) {
 				if (player.isContextMenuEnabled) {
 					e.preventDefault();
 					player.renderContextMenu(e.clientX-1, e.clientY-1);
 					return false;
 				}
 			});
-			player.container.bind('click', function() {
+			player.container.on('click', function() {
 				player.contextMenu.hide();
 			});
-			player.contextMenu.bind('mouseleave', function() {
+			player.contextMenu.on('mouseleave', function() {
 
 				//
 				player.startContextMenuTimer();

@@ -25,36 +25,36 @@
 			"mejs.download-file": "Descargar archivo",
 			"mejs.install-flash": "Esta usando un navegador que no tiene activado o instalado el reproductor de Flash. Por favor active el plugin del reproductor de Flash o descargue la versión más reciente en https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Desconectar pantalla completa",
 			"mejs.fullscreen-on": "Ir a pantalla completa",
 			"mejs.download-video": "Descargar vídeo",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Pantalla completa",
 
-			// mep-feature-jumpforward
-			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
+			// mediaelementplayer-feature-jumpforward
+			"mejs.time-jump-forward": ["Adelantar 1 segundo", "Adelantar %1 segundos"],
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Reproducción",
 			"mejs.pause": "Pausa",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Cerrar",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "Control deslizante de tiempo",
 			"mejs.time-help-text": "Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": ["Rebobinar 1 segundo", "Rebobinar %1 segundos"],
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Leyendas/Subtítulos",
 			"mejs.none": "Ninguno",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Alternar silencio",
 			"mejs.volume-help-text": "Use las flechas Arriba/Abajo para subir o bajar el volumen.",
 			"mejs.unmute": "Reactivar silencio",
@@ -65,15 +65,18 @@
 			"mejs.video-player": "Reproductor de video",
 			"mejs.audio-player": "Reproductor de audio",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			"mejs.ad-skip": "Saltar publicidad",
 			"mejs.ad-skip-info": ["Saltar 1 segundo", "Saltar %1 segundos"],
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			"mejs.source-chooser": "Selector de media",
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			"mejs.stop": "Parar",
+
+			//mediaelementplayer-feature-speed
+			"mejs.speed-rate" : "Tasa de velocidad",
 
 			// mep-tracks
 			"mejs.afrikaans": "Afrikaans",

@@ -86,16 +86,16 @@
 						.prependTo(layers).hide();
 			player.captionsText = player.captions.find('.mejs-captions-text');
 			player.captionsButton =
-					$('<div class="mejs-button mejs-captions-button">'+
-						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>'+
-						'<div class="mejs-captions-selector mejs-offscreen">'+
-							'<ul>'+
-								'<li>'+
-									'<input type="radio" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') +'</label>'+
+					$('<div class="mejs-button mejs-captions-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>' +
+						'<div class="mejs-captions-selector mejs-offscreen">' +
+							'<ul class="mejs-captions-selector-list">'+
+								'<li class="mejs-captions-selector-list-item">'+
+									'<input type="radio" class="mejs-captions-selector-input" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
+									'<label class="mejs-captions-selector-label mejs-captions-selected" for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') + '</label>' +
 								'</li>'	+
-							'</ul>'+
-						'</div>'+
+							'</ul>' +
+						'</div>' +
 					'</div>')
 						.appendTo(controls);
 
@@ -133,8 +133,11 @@
 						lang = this.value;
 						player.setTrack(lang);
 					})
+					.on('click','.mejs-captions-selector-label',function() {
+						$(this).sliblings('input[type="radio"]').trigger('click');
+					})
 					//Allow up/down arrow to change the selected radio without changing the volume.
-					.on('keyup keydown keypress', function(e) {
+					.on('keydown', function(e) {
 						e.stopPropagation();
 					});
 			}
@@ -252,6 +255,15 @@
 				i
 			;
 
+			t.captionsButton
+				.find('input[type="radio"]').prop('checked', false)
+				.end()
+				.find('.mejs-captions-selected').removeClass('mejs-captions-selected')
+				.end()
+				.find('input[value="' + lang + '"]').prop('checked', true)
+				.siblings('.mejs-captions-selector-label').addClass('mejs-captions-selected')
+			;
+
 			if (lang === 'none') {
 				t.selectedTrack = null;
 				t.captionsButton.removeClass('mejs-captions-enabled');
@@ -354,10 +366,8 @@
 			}
 
 			t.captionsButton
-				.find('input[value=' + lang + ']')
-					.prop('disabled',false)
-				.siblings('label')
-					.html(label);
+				.find('input[value=' + lang + ']').prop('disabled',false)
+				.siblings('.mejs-captions-selector-label').html(label);
 
 			// auto select
 			if (t.options.startLanguage === lang) {
@@ -391,9 +401,9 @@
 			}
 
 			t.captionsButton.find('ul').append(
-				$('<li>'+
-					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + label + ' (loading)' + '</label>'+
+				$('<li class="mejs-captions-selector-list-item">'+
+					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
+					'<label class="mejs-captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
 
@@ -410,7 +420,7 @@
 			var t = this;
 			// adjust the size of the outer box
 			t.captionsButton.find('.mejs-captions-selector').height(
-				t.captionsButton.find('.mejs-captions-selector ul').outerHeight(true) +
+				t.captionsButton.find('.mejs-captions-selector-list').outerHeight(true) +
 				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
 			);
 		},
