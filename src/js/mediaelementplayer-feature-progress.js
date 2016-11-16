@@ -153,15 +153,15 @@
 				};
 
 			// Events
-			t.slider.bind('focus', function (e) {
+			t.slider.on('focus', function (e) {
 				player.options.autoRewind = false;
 			});
 
-			t.slider.bind('blur', function (e) {
+			t.slider.on('blur', function (e) {
 				player.options.autoRewind = autoRewindInitial;
 			});
 
-			t.slider.bind('keydown', function (e) {
+			t.slider.on('keydown', function (e) {
 
 				if ((new Date() - lastKeyPressTime) >= 1000) {
 					startedPaused = media.paused;
@@ -231,7 +231,7 @@
 
 			// handle clicks
 			t.total
-			.bind('mousedown touchstart', function (e) {
+			.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
 					mouseIsDown = true;
@@ -248,7 +248,7 @@
 					});
 				}
 			})
-			.bind('mouseenter', function (e) {
+			.on('mouseenter', function (e) {
 				mouseIsOver = true;
 				t.globalBind('mousemove.dur', function (e) {
 					handleMouseMove(e);
@@ -257,7 +257,7 @@
 					t.timefloat.show();
 				}
 			})
-			.bind('mouseleave', function (e) {
+			.on('mouseleave', function (e) {
 				mouseIsOver = false;
 				if (!mouseIsDown) {
 					t.globalUnbind('.dur');
