@@ -6712,8 +6712,6 @@ if (jQuery !== undefined) {
 				parentHeight = t.container.parent().closest(':visible').height(),
 				newHeight;
 
-			
-
 			if (t.isVideo) {
 				// Responsive video is based on width: 100% and height: 100%
 				if (t.height === '100%') {
