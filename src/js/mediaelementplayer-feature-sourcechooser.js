@@ -106,7 +106,7 @@
 				}, 100))
 
 				// handle clicks to the source radio buttons
-				.delegate('input[type=radio]', 'click', function () {
+				.on('click', 'input[type=radio]', function () {
 					// set aria states
 					$(this).attr('aria-selected', true).attr('checked', 'checked');
 					$(this).closest('.mejs-sourcechooser-selector').find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
@@ -136,7 +136,7 @@
 				})
 
 				// Handle click so that screen readers can toggle the menu
-				.delegate('button', 'click', function (e) {
+				.on('click', 'button', function (e) {
 					if ($(this).siblings('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
 						player.showSourcechooserSelector();
 						$(this).siblings('.mejs-sourcechooser-selector').find('input[type=radio]:checked').first().focus();

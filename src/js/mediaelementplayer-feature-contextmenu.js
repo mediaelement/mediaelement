@@ -73,17 +73,17 @@ $.extend(mejs.MepDefaults,
 								.hide();
 
 			// create events for showing context menu
-			player.container.bind('contextmenu', function(e) {
+			player.container.on('contextmenu', function(e) {
 				if (player.isContextMenuEnabled) {
 					e.preventDefault();
 					player.renderContextMenu(e.clientX-1, e.clientY-1);
 					return false;
 				}
 			});
-			player.container.bind('click', function() {
+			player.container.on('click', function() {
 				player.contextMenu.hide();
 			});
-			player.contextMenu.bind('mouseleave', function() {
+			player.contextMenu.on('mouseleave', function() {
 
 				//console.log('context hover out');
 				player.startContextMenuTimer();

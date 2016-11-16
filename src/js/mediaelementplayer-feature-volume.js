@@ -235,10 +235,10 @@
 
 			// Events
 			volumeSlider
-				.bind('mouseover', function () {
+				.on('mouseover', function () {
 					mouseIsOver = true;
 				})
-				.bind('mousedown', function (e) {
+				.on('mousedown', function (e) {
 					handleVolumeMove(e);
 					t.globalBind('mousemove.vol', function (e) {
 						handleVolumeMove(e);
@@ -255,7 +255,7 @@
 
 					return false;
 				})
-				.bind('keydown', function (e) {
+				.on('keydown', function (e) {
 
 					if (t.options.keyActions.length) {
 						var

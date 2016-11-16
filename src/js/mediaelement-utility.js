@@ -451,7 +451,7 @@
 				sourceNode &&
 				targetNode &&
 				typeof sourceNode.compareDocumentPosition === 'function' &&
-				sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
+				sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING
 			);
 		},
 		/**

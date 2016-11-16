@@ -111,7 +111,11 @@
 			{
 				keys: [38], // UP
 				action: function (player, media, key, event) {
-					player.container.find('.mejs-volume-slider').css('display', 'block');
+
+					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
+						player.container.find('.mejs-volume-slider').is(':focus')) {
+						player.container.find('.mejs-volume-slider').css('display', 'block');
+					}
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
@@ -119,12 +123,20 @@
 
 					var newVolume = Math.min(media.volume + 0.1, 1);
 					media.setVolume(newVolume);
+					if (newVolume > 0) {
+						media.setMuted(false);
+					}
+
 				}
 			},
 			{
 				keys: [40], // DOWN
 				action: function (player, media, key, event) {
-					player.container.find('.mejs-volume-slider').css('display', 'block');
+					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
+						player.container.find('.mejs-volume-slider').is(':focus')) {
+						player.container.find('.mejs-volume-slider').css('display', 'block');
+					}
+
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
@@ -132,6 +144,11 @@
 
 					var newVolume = Math.max(media.volume - 0.1, 0);
 					media.setVolume(newVolume);
+
+					if (newVolume <= 0.1) {
+						media.setMuted(true);
+					}
+
 				}
 			},
 			{
@@ -739,7 +756,7 @@
 						// for touch devices (iOS, Android)
 						// show/hide without animation on touch
 
-						t.$media.bind('touchstart', function () {
+						t.$media.on('touchstart', function () {
 
 							// toggle controls
 							if (t.controlsAreVisible) {
@@ -779,7 +796,7 @@
 
 						// show/hide controls
 						t.container
-						.bind('mouseenter', function () {
+						.on('mouseenter', function () {
 							if (t.controlsEnabled) {
 								if (!t.options.alwaysShowControls) {
 									t.killControlsTimer('enter');
@@ -788,7 +805,7 @@
 								}
 							}
 						})
-						.bind('mousemove', function () {
+						.on('mousemove', function () {
 							if (t.controlsEnabled) {
 								if (!t.controlsAreVisible) {
 									t.showControls();
@@ -798,7 +815,7 @@
 								}
 							}
 						})
-						.bind('mouseleave', function () {
+						.on('mouseleave', function () {
 							if (t.controlsEnabled) {
 								if (!t.media.paused && !t.options.alwaysShowControls) {
 									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
@@ -1348,7 +1365,7 @@
 						'<div class="mejs-overlay-button" role="button" aria-label="' + mejs.i18n.t('mejs.play') + '" aria-pressed="false"></div>' +
 						'</div>')
 					.appendTo(layers)
-					.bind('click', function () {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
+					.on('click', function () {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 						if (t.options.clickToPlayPause) {
 
 							var
@@ -1644,8 +1661,8 @@
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).bind(events.d, data, callback);
-			if (events.w) $(window).bind(events.w, data, callback);
+			if (events.d) $(doc).on(events.d, data, callback);
+			if (events.w) $(window).on(events.w, data, callback);
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function (events, callback) {
