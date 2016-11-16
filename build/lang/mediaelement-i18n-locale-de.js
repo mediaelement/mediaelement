@@ -24,36 +24,36 @@
 			"mejs.download-file": "Datei herunterladen",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Vollbildmodus beenden",
 			"mejs.fullscreen-on": "Vollbild",
 			"mejs.download-video": "Video herunterladen",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Vollbild",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": ["1 Sekunde vorspulen", "%1 Sekunden vorspulen"],
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Abspielen",
 			"mejs.pause": "Pause",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Schließen",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "Zeitschieberegler",
 			"mejs.time-help-text": "Verwende die Pfeiltaste nach links/rechts, um eine Sekunde zu spulen, hoch/runter um zehn Sekunden zu spulen.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": ["1 Sekunde zurückspulen", "%1 Sekunden zurückspulen"],
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Überschriften/Untertitel",
 			"mejs.none": "Keine",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Stummschaltung umschalten",
 			"mejs.volume-help-text": "Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.",
 			"mejs.unmute": "Stummschaltung aufheben",
@@ -64,15 +64,18 @@
 			"mejs.video-player": "Video-Player",
 			"mejs.audio-player": "Audio-Player",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			"mejs.ad-skip": "Werbung überspringen",
 			"mejs.ad-skip-info": ["Überspringen in 1 Sekunde", "Überspringen in %1 Sekunden"],
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			"mejs.source-chooser": "Quellenauswahl"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

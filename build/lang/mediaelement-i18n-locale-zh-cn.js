@@ -24,36 +24,36 @@
 			"mejs.download-file": "下载文件",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "关闭全屏",
 			"mejs.fullscreen-on": "转向全屏",
 			"mejs.download-video": "下载视频",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "全屏",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "播放",
 			"mejs.pause": "暂停",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "关闭",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "时间滑动棒",
 			"mejs.time-help-text": "使用作/右箭头快进1秒，使用上/下箭头快进10秒。",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": "后退%1秒",
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "字幕/标题",
 			"mejs.none": "无",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "静音切换",
 			"mejs.volume-help-text": "使用上/下箭头提高或降低音量。",
 			"mejs.unmute": "取消静音",
@@ -64,15 +64,18 @@
 			"mejs.video-player": "视频播放器",
 			"mejs.audio-player": "音频播放器",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
 			//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			//"mejs.source-chooser": "Source Chooser"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

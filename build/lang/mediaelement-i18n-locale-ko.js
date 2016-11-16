@@ -24,36 +24,36 @@
 			"mejs.download-file": "파일 다운로드",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "전체화면 해제",
 			"mejs.fullscreen-on": "전체화면 가기",
 			"mejs.download-video": "비디오 다운로드",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "전체화면",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "작동",
 			"mejs.pause": "정지",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "종료",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "시간 슬라이더",
 			"mejs.time-help-text": "1초 전진하려면 좌/우측 화살표를 사용하시고 10초 전진하려면 위/아래 화살표를 사용하세요.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": "1초 % 를 뒤로 건너뛰세요",
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "캡션/자막",
 			"mejs.none": "없음",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "음소거 전환",
 			"mejs.volume-help-text": "볼륨을 높이거나 낮추려면 위/아래 화살표를 이용하세요.",
 			"mejs.unmute": "음소거 해제",
@@ -64,15 +64,18 @@
 			"mejs.video-player": "비디오 플레이어",
 			"mejs.audio-player": "오디오 플레이어",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
 			//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			//"mejs.source-chooser": "Source Chooser"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

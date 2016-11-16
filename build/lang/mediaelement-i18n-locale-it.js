@@ -24,36 +24,36 @@
 			"mejs.download-file": "Scaricare il file",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Disattivare lo schermo intero",
 			"mejs.fullscreen-on": "Attivare lo schermo intero",
 			"mejs.download-video": "Scaricare il video",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Schermo intero",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Eseguire",
 			"mejs.pause": "Pausa",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Chiudere",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "Barra di scorrimento",
 			"mejs.time-help-text": "Utilizzare i tasti Freccia sinistra/Freccia destra per avanzare di un secondo, Freccia Su/Giù per avanzare dieci secondi.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": "Riavvolgere %1 secondi",
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Acquisizioni/sottotitoli",
 			"mejs.none": "Nessuno",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Toggle muto",
 			"mejs.volume-help-text": "Utilizzare i tasti Freccia Su/Giù per aumentare o diminuire il volume.",
 			"mejs.unmute": "Disattivare muto",
@@ -64,15 +64,18 @@
 			"mejs.video-player": "Lettore Video",
 			"mejs.audio-player": "Lettore Audio",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
 			//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			//"mejs.source-chooser": "Source Chooser"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

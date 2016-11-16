@@ -25,36 +25,36 @@
 			"mejs.download-file": "Bestand downloaden",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Volledig scherm uitschakelen",
 			"mejs.fullscreen-on": "Volledig scherm",
 			"mejs.download-video": "Video downloaden",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Volledig scherm",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": "%1 seconden vooruit springen",
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Afspelen",
 			"mejs.pause": "Pauzeren",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Sluiten",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "Tijd schuifbalk",
 			"mejs.time-help-text": "Gebruik pijl naar links/rechts om per seconde te springen, pijl omhoog/omlaag om per tien seconden te springen.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": "%1 seconden terug springen",
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Bijschriften/ondertiteling",
 			"mejs.none": "Geen",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Dempen schakelen",
 			"mejs.volume-help-text": "Gebruik pijl omhoog/omlaag om het volume te verhogen/verlagen.",
 			"mejs.unmute": "Dempen opheffen",
@@ -65,15 +65,18 @@
 			"mejs.video-player": "Videospeler",
 			"mejs.audio-player": "Audiospeler",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			"mejs.ad-skip": "Ad overslaan",
 			"mejs.ad-skip-info": "Overslaan in %1 seconden",
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			"mejs.source-chooser": "Bronkeuze"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

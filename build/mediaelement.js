@@ -467,7 +467,7 @@ mejs.version = '3.0';
 				sourceNode &&
 				targetNode &&
 				typeof sourceNode.compareDocumentPosition === 'function' &&
-				sourceNode.compareDocumentPosition(targetNode) & Node.DOCUMENT_POSITION_PRECEDING
+				sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING
 			);
 		},
 		/**
@@ -5460,36 +5460,36 @@ mejs.version = '3.0';
 			"mejs.download-file": "Download File",
 			"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Turn off Fullscreen",
 			"mejs.fullscreen-on": "Go Fullscreen",
 			"mejs.download-video": "Download Video",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Fullscreen",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Play",
 			"mejs.pause": "Pause",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Close",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "Time Slider",
 			"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Captions/Subtitles",
 			"mejs.none": "None",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Mute Toggle",
 			"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 			"mejs.unmute": "Unmute",
@@ -5500,15 +5500,18 @@ mejs.version = '3.0';
 			"mejs.video-player": "Video Player",
 			"mejs.audio-player": "Audio Player",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			"mejs.ad-skip": "Skip ad",
 			"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			"mejs.source-chooser": "Source Chooser",
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			"mejs.stop": "Stop",
+
+			//mediaelementplayer-feature-speed
+			"mejs.speed-rate" : "Speed Rate",
 
 			// mep-tracks
 			"mejs.afrikaans": "Afrikaans",

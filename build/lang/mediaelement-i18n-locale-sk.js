@@ -24,36 +24,36 @@
 			"mejs.download-file": "Prevziať súbor",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Vypnúť celú obrazovku",
 			"mejs.fullscreen-on": "Prejsť na celú obrazovku",
 			"mejs.download-video": "Prevziať video",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Celá obrazovka",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Prehrať",
 			"mejs.pause": "Pozastaviť",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Zavrieť",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "Posúvač času",
 			"mejs.time-help-text": "Klávesmi so šípkou doľava/doprava posuniete o jednu sekundu, šípkami nahor/ nadol posuniete o desať sekúnd.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": "Preskočiť dozadu o %1 s.",
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Skryté titulky/Titulky",
 			"mejs.none": "Žiadne",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Prepínač stlmenia",
 			"mejs.volume-help-text": "Klávesmi so šípkou nahor/nadol zvýšite alebo znížite hlasitosť.",
 			"mejs.unmute": "Zrušiť stlmenie",
@@ -64,15 +64,18 @@
 			"mejs.video-player": "Prehrávač videa",
 			"mejs.audio-player": "Prehrávač zvuku",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
 			//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			//"mejs.source-chooser": "Source Chooser"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

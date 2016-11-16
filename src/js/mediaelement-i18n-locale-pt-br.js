@@ -24,36 +24,36 @@
 			"mejs.download-file": "Baixar arquivo",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Sair da tela inteira",
 			"mejs.fullscreen-on": "Ir para tela inteira",
 			"mejs.download-video": "Baixar vídeo",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Tela inteira",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			//"mejs.play": "Play",
 			//"mejs.pause": "Pause",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Fechar",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			//"mejs.time-slider": "Time Slider",
 			//"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			//"mejs.time-skip-back": "Skip back %1 second(s)",
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Legendas",
 			"mejs.none": "Sem legendas",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Alternar silêncio",
 			//"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 			"mejs.unmute": "Tirar silêncio",
@@ -64,15 +64,18 @@
 			//"mejs.video-player": "Video Player",
 			//"mejs.audio-player": "Audio Player",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
 			//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			//"mejs.source-chooser": "Source Chooser"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

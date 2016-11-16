@@ -464,11 +464,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	position: relative;
 }
 
-.mejs-captions-button button {
+.mejs-captions-button > button {
 	background-position: -48px 0;
 }
 
-.mejs-captions-button .mejs-captions-selector {
+.mejs-captions-button > .mejs-captions-selector {
 	visibility: hidden;
 	position: absolute;
 	bottom: 26px;
@@ -477,17 +477,16 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	height: 100px;
 	background: rgba(50,50,50,0.7);
 	border: solid 1px transparent;
-	padding: 10px 10px 0 10px;
+	padding: 0;
 	overflow: hidden;
 	border-radius: 0;
 }
 
-
-.mejs-captions-button .mejs-captions-selector {
+.mejs-captions-button > .mejs-captions-selector {
 	visibility: visible;
 }
 
-.mejs-captions-selector ul {
+.mejs-captions-selector-list {
 	margin: 0;
 	padding: 0;
 	display: block;
@@ -495,27 +494,37 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	overflow: hidden;
 }
 
-.mejs-captions-selector li {
+.mejs-captions-selector-list-item {
 	margin: 0 0 6px 0;
-	padding: 0;
+	padding: 0 10px;
 	list-style-type: none !important;
 	display: block;
 	color: #fff;
 	overflow: hidden;
 }
+.mejs-captions-selector-list-item:hover {
+	background-color: rgb(200, 200, 200) !important;
+	background-color: rgba(255, 255, 255, 0.4) !important;
+}
 
-.mejs-captions-selector input {
+.mejs-captions-selector-input {
 	clear: both;
 	float: left;
 	margin: 3px 3px 0 5px;
+	position: absolute;
+	left: -1000px;
 }
 
-.mejs-captions-selector label {
+.mejs-captions-selector-label {
 	width: 55px;
 	float: left;
 	padding: 4px 0 0 0;
 	line-height: 15px;
 	font-size: 10px;
+}
+
+.mejs-captions-selected {
+	color: rgba(33, 248, 248, 1);
 }
 
 .mejs-captions-translations {
@@ -771,7 +780,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-speed-selector {
-	display: none;
+	visibility: hidden;
 	position: absolute;
 	top: -100px;
 	left: -10px;
@@ -784,8 +793,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	border-radius: 0;
 }
 
-.mejs-speed-button:hover > .mejs-speed-selector {
-	display: block;
+.mejs-speed-selector {
+	visibility: visible;
 }
 
 .mejs-speed-selector-list {
@@ -807,14 +816,15 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-speed-selector-list-item:hover {
 	background-color: rgb(200, 200, 200) !important;
-	background-color: rgba(255,255,255,.4) !important;
+	background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 .mejs-speed-selector-input {
 	clear: both;
 	float: left;
 	margin: 3px 3px 0 5px;
-	display: none;
+	position: absolute;
+	left: -1000px;
 }
 
 .mejs-speed-selector-label {

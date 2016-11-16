@@ -25,36 +25,36 @@
 			"mejs.download-file": "Télécharger le fichier",
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// mep-feature-contextmenu
+			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Quitter le mode plein écran",
 			"mejs.fullscreen-on": "Afficher en plein écran",
 			"mejs.download-video": "Télécharger la vidéo",
 
-			// mep-feature-fullscreen
+			// mediaelementplayer-feature-fullscreen
 			"mejs.fullscreen": "Plein écran",
 
-			// mep-feature-jumpforward
+			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": "Avancer de %1 secondes",
 
-			// mep-feature-playpause
+			// mediaelementplayer-feature-playpause
 			"mejs.play": "Lecture",
 			"mejs.pause": "Pause",
 
-			// mep-feature-postroll
+			// mediaelementplayer-feature-postroll
 			"mejs.close": "Fermer",
 
-			// mep-feature-progress
+			// mediaelementplayer-feature-progress
 			"mejs.time-slider": "Curseur temporel",
 			"mejs.time-help-text": "Utilisez les flèches Gauche/Droite du clavier pour avancer d'une seconde, les flèches Haut/Bas pour avancer de 10 secondes.",
 
-			// mep-feature-skipback
+			// mediaelementplayer-feature-skipback
 			"mejs.time-skip-back": "Reculer de %1 secondes",
 
-			// mep-feature-tracks
+			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Sous-titres",
 			"mejs.none": "Aucun",
 
-			// mep-feature-volume
+			// mediaelementplayer-feature-volume
 			"mejs.mute-toggle": "Activer/désactiver le son",
 			"mejs.volume-help-text": "Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.",
 			"mejs.unmute": "Activer le son",
@@ -65,15 +65,18 @@
 			"mejs.video-player": "Lecteur Vidéo",
 			"mejs.audio-player": "Lecteur Audio",
 
-			// mep-feature-ads
+			// mediaelementplayer-feature-ads
 			"mejs.ad-skip": "Passer la publicité",
 			"mejs.ad-skip-info": "Passer la publicité dans %1 secondes",
 
-			// mep-feature-sourcechooser
+			// mediaelementplayer-feature-sourcechooser
 			"mejs.source-chooser": "Sélecteur de média"
 
-			// mep-feature-stop
+			// mediaelementplayer-feature-stop
 			//"mejs.stop": "Stop"
+
+			//mediaelementplayer-feature-speed
+			//"mejs.speed-rate" : "Speed Rate"
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",
