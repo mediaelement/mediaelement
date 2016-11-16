@@ -499,7 +499,7 @@
 					t.height = t.options['default' + capsTagName + 'Height'];
 				}
 
-				t.initialAspectRatio = (t.height > t.width) ? t.width / t.height : t.height / t.width;
+				t.initialAspectRatio = (t.height >= t.width) ? t.width / t.height : t.height / t.width;
 
 				// set the size, while we wait for the plugins to load below
 				t.setPlayerSize(t.width, t.height);
@@ -1096,8 +1096,7 @@
 					}
 
 					if (t.media.videoWidth && t.media.videoWidth > 0 && t.media.videoHeight && t.media.videoHeight > 0) {
-						ratio = t.height >= t.width ?
-							t.media.videoWidth / t.media.videoHeight : t.media.videoHeight / t.media.videoWidth;
+						ratio = (t.height >= t.width) ? t.media.videoWidth / t.media.videoHeight : t.media.videoHeight / t.media.videoWidth;
 					} else {
 						ratio = t.initialAspectRatio;
 					}
@@ -1112,8 +1111,15 @@
 				parentHeight = t.container.parent().closest(':visible').height(),
 				newHeight;
 
+			console.log(ratio);
+
 			if (t.isVideo) {
-				newHeight = t.height >= t.width ? parseInt(parentWidth / aspectRatio, 10) : parseInt(parentWidth * aspectRatio, 10);
+				// Responsive video is based on width: 100% and height: 100%
+				if (t.height === '100%') {
+					newHeight = parseInt(parentWidth * nativeHeight/nativeWidth, 10);
+				} else {
+					newHeight = t.height >= t.width ? parseInt(parentWidth / aspectRatio, 10) : parseInt(parentWidth * aspectRatio, 10);
+				}
 			} else {
 				newHeight = nativeHeight;
 			}
