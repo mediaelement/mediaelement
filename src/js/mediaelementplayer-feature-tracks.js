@@ -142,12 +142,12 @@
 			if (!player.options.alwaysShowControls) {
 				// move with controls
 				player.container
-					.bind('controlsshown', function () {
+					.on('controlsshown', function () {
 						// push captions above controls
 						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
 
 					})
-					.bind('controlshidden', function () {
+					.on('controlshidden', function () {
 						if (!media.paused) {
 							// move back to normal place
 							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
