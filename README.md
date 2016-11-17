@@ -9,6 +9,8 @@ One file. Any browser. Same UI.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
 
+[![GitHub version](https://badge.fury.io/gh/johndyer%2Fmediaelement.svg)](https://badge.fury.io/gh/johndyer%2Fmediaelement)
+
 # Table of Contents
 
 * [Introduction](#intro)
