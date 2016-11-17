@@ -287,7 +287,13 @@
 
 			//Keyboard input
 			mute.find('button').on('focus', function () {
-				volumeSlider.show();
+				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+					volumeSlider.show();
+				}
+			}).on('blur', function () {
+				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+					volumeSlider.hide();
+				}
 			});
 
 			// listen for volume change events from other sources

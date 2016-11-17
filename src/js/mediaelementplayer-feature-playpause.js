@@ -40,16 +40,12 @@
 					'<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '"></button>' +
 				'</div>')
 				.appendTo(controls)
-				.click(function(e) {
-					e.preventDefault();
-
+				.click(function() {
 					if (media.paused) {
 						media.play();
 					} else {
 						media.pause();
 					}
-
-					return false;
 				}),
 				play_btn = play.find('button');
 

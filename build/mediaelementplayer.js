@@ -449,7 +449,7 @@ if (jQuery !== undefined) {
 				$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container" ' +
+					$('<div id="' + t.id + '" class="mejs-container mejs-keyboard-inactive" ' +
 						'tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">' +
 						'<div class="mejs-inner">' +
 						'<div class="mejs-mediaelement"></div>' +
@@ -995,6 +995,24 @@ if (jQuery !== undefined) {
 
 					// always adjust controls
 					t.setControlsSize();
+				});
+
+				// Disable focus outline to improve look-and-feel for regular users
+				t.globalBind('click', function(e) {
+					if ($(e.target).is('.mejs-container')) {
+						$(e.target).addClass('mejs-keyboard-inactive');
+					} else if ($(e.target).closest('.mejs-container').length) {
+						$(e.target).closest('.mejs-container').addClass('mejs-keyboard-inactive');
+					}
+				});
+
+				// Enable focus outline for Accessibility purposes
+				t.globalBind('keydown', function(e) {
+					if ($(e.target).is('.mejs-container')) {
+						$(e.target).removeClass('mejs-keyboard-inactive');
+					} else if ($(e.target).closest('.mejs-container').length) {
+						$(e.target).closest('.mejs-container').removeClass('mejs-keyboard-inactive');
+					}
 				});
 
 				// This is a work-around for a bug in the YouTube iFrame player, which means
@@ -1778,16 +1796,12 @@ if (jQuery !== undefined) {
 					'<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '"></button>' +
 				'</div>')
 				.appendTo(controls)
-				.click(function(e) {
-					e.preventDefault();
-
+				.click(function() {
 					if (media.paused) {
 						media.play();
 					} else {
 						media.pause();
 					}
-
-					return false;
 				}),
 				play_btn = play.find('button');
 
@@ -2667,7 +2681,13 @@ if (jQuery !== undefined) {
 
 			//Keyboard input
 			mute.find('button').on('focus', function () {
-				volumeSlider.show();
+				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+					volumeSlider.show();
+				}
+			}).on('blur', function () {
+				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+					volumeSlider.hide();
+				}
 			});
 
 			// listen for volume change events from other sources
