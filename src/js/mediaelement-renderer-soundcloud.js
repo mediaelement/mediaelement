@@ -248,7 +248,7 @@
 									break;
 
 								default:
-									console.log('dm ' + sc.id, propName, 'UNSUPPORTED property');
+									console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
 							}
 
 						} else {
