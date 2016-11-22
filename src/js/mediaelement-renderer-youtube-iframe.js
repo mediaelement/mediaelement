@@ -17,7 +17,7 @@
 		url = url.toLowerCase();
 
 		if (url.indexOf('www.youtube') > -1 || url.indexOf('//youtu.be') > -1) {
-			return 'video/youtube';
+			return 'video/x-youtube';
 		} else {
 			return null;
 		}
