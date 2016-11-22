@@ -18,10 +18,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	text-indent: 0;
 }
 
-.mejs-container.mejs-keyboard-inactive a:focus,
-.mejs-container.mejs-keyboard-inactive button:focus,
-.mejs-container.mejs-keyboard-inactive [role=slider]:focus {
-	outline: none;
+.mejs-container.mejs__container--keyboard-inactive a,
+.mejs-container.mejs__container--keyboard-inactive a:focus,
+.mejs-container.mejs__container--keyboard-inactive button,
+.mejs-container.mejs__container--keyboard-inactive button:focus,
+.mejs-container.mejs__container--keyboard-inactive [role=slider],
+.mejs-container.mejs__container--keyboard-inactive [role=slider]:focus {
+	outline: 0;
 }
 
 .mejs-fill-container,
