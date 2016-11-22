@@ -15,7 +15,7 @@
 		url = url.toLowerCase();
 
 		if (url.indexOf('soundcloud.com') > -1) {
-			return 'video/soundcloud';
+			return 'video/x-soundcloud';
 		} else {
 			return null;
 		}

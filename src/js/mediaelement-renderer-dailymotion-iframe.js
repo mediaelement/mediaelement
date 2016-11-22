@@ -16,7 +16,7 @@
 		url = url.toLowerCase();
 
 		if (url.indexOf('dailymotion.com') > -1 || url.indexOf('dai.ly') > -1) {
-			return 'video/dailymotion';
+			return 'video/x-dailymotion';
 		} else {
 			return null;
 		}
