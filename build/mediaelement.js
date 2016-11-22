@@ -2871,7 +2871,6 @@ mejs.version = '3.0';
 									});
 									break;
 								case 'muted':
-									
 									if (value) {
 										vimeoPlayer.setVolume(0).then(function () {
 											volume = 0;
@@ -2947,8 +2946,6 @@ mejs.version = '3.0';
 
 				vimeoApiReady = true;
 				mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
-
-				
 
 				// do call stack
 				for (i = 0, il = apiStack.length; i < il; i++) {

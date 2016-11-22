@@ -302,7 +302,6 @@
 									});
 									break;
 								case 'muted':
-									console.log(value);
 									if (value) {
 										vimeoPlayer.setVolume(0).then(function () {
 											volume = 0;
@@ -378,8 +377,6 @@
 
 				vimeoApiReady = true;
 				mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
-
-				console.log('vimeo ready', vimeoPlayer);
 
 				// do call stack
 				for (i = 0, il = apiStack.length; i < il; i++) {
