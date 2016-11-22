@@ -31,6 +31,7 @@ One file. Any browser. Same UI.
 
 * [Introduction](#intro)
 * [Browser and Device support](#browser-support)
+* [What's New on `MediaElement.js` version 3.0](#migration)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
 * [Guidelines for Contributors](#guidelines)
@@ -47,18 +48,53 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
 
+<a id="migration"></a>
+## * What's New on `MediaElement.js` version 3.0
+
+* Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way.
+
+* Ability to play Facebook, SoundCloud, M(PEG)-DASH using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback.
+
+* Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
+
+* Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
+
+* Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js).
+
+* Deprecated use of `pluginType` element.
+ 
+* Removed Silverlight shim, as well as IE8 and older browsers support.
+
+* Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development.
+
+For more information, please consult [Change Log](changelog.md)
+
+
 <a id="browser-support"></a>
 ## Browser and Device support
 
-Format | Support
------- | -------
-**mp4** | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
-**webm** | Please visit http://caniuse.com/#feat=webm for comprehensive information
-**mp3** | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
-**m3u8** | Safari and iOS (native); all browsers that support **Flash** (version 10 or later)
-**rtmp/flv** | All browsers that support **Flash** (version 10 or later)
-**wmv/wma** | All browsers that support **Silverlight**
-**YouTube** | All browsers since it uses `iframe` tag
+In general, `MediaElement` supports IE9+, MS Edge, Chrome, Firefox, Safari, iOS 8+ and Android 4.0+
+
+Format | MIME Type | Support
+------ | --------- | -------
+mp4 | video/mp4, audio/mp4, audio/mpeg | Please visit http://caniuse.com/#feat=mpeg4 for comprehensive information
+webm | video/webm | Please visit http://caniuse.com/#feat=webm for comprehensive information
+mp3 | audio/mp3 | Please visit http://caniuse.com/#feat=mp3 for comprehensive information
+ogg/ogv | audio/ogg, audio/oga, video/ogg | Please visit http://caniuse.com/#search=ogg for comprehensive information
+wav | audio/wav, audio/x-wav, audio/wave, audio/x-pn-wav | Please visit http://caniuse.com/#feat=wav for comprehensive information
+m3u8 | application/x-mpegURL, vnd.apple.mpegURL, audio/mpegURL, audio/hls, video/hls | Safari and iOS (native); browsers that support MSE through `hls.js` library; rest of the browsers that support `Flash` (version 10 or later)
+mpd | application/dash+xml | Browsers that support MSE through `dash.js` library; rest of the browsers that support `Flash` (version 10 or later)
+rtmp/flv | video/mp4, video/flv, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 | All browsers that support `Flash` (version 10 or later)
+youtube | video/youtube, video/x-youtube | All browsers that support `window.postMessage`; Flash deprecated.
+vimeo | video/vimeo, video/x-vimeo | All browsers that support `iframe` tag and HTML5
+facebook | video/facebook, video/x-facebook | All browsers that support `iframe` tag and HTML5
+dailymotion | video/dailymotion, video/x-dailymotion | All browsers that support `iframe` tag and HTML5
+soundcloud | video/soundcloud, video/x-soundcloud | All browsers that support `iframe` tag and HTML5
+
+**Notes** 
+* Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
+* `ogg` formats won’t play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
+* `wav` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
 
 <a id="installation"></a>
 ## Installation and Usage
@@ -84,5 +120,7 @@ Changes available at [Change Log](changelog.md)
 
 <a id="todo"></a>
 ## TODO list
+
+**IMPORTANT:** Before posting an issue, it is strongly encouraged to read the whole documentation since it covers the majority of scenarios exposed in prior issues. 
 
 New features and pending bugs can be found at [TODO list](TODO.md).

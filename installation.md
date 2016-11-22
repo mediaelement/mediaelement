@@ -3,6 +3,7 @@
 * [0. Setup MIME-types](#mime-types)
 * [1. Add Script and Stylesheet](#script-and-stylesheet)
 * [2. Add `<video>` or `<audio>` tags](#tags)
+    * [Default setup](#default-setup)
     * [Multiple codecs (Optional)](#multi-codecs)
     * [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
     * [Use of Closed Captioning (Optional)](#closed-captioning)
@@ -13,13 +14,36 @@
 ## 0. Setup MIME-types (optional)
 On Linux/Apache servers, create a filed called .htaccess with the following text and upload it to the root of your website
 ```
+# Video support
 AddType video/ogg .ogv
 AddType video/mp4 .mp4
 AddType video/webm .webm
+AddType video/ogv .ogv
+
+# Audio support
+AddType audio/mp3 .mp3
+AddType audio/oga .oga
+AddType audio/ogg .ogg
+AddType audio/wav .wav
+
+# For HLS support
+AddType application/x-mpegURL .m3u8
+AddType vnd.apple.mpegURL .m3u8
+AddType video/MP2T .ts
+
+# For M(PEG)-DASH support
+AddType application/dash+xml .mpd
+
+# For subtitles support
+AddType text/vtt .vtt
+AddType text/srt .srt
 ```
+
 On Windows/IIS servers, please follow Microsoft's instructions on how to add/edit MIME types on [IIS6](http://www.microsoft.com/technet/prodtechnol/WindowsServer2003/Library/IIS/eb5556e2-f6e1-4871-b9ca-b8cf6f9c8134.mspx?mfr=true) and [IIS7](https://technet.microsoft.com/en-us/library/cc725608(v=ws.10).aspx).
 
 If you are working with local files and plan to test Flash playback, make sure you go to the [Flash Security Settings](http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html) page and add your working directory. Also, things tend to work best when you use absolute paths.
+
+If you want to make your media to play in `Chromium` browser, please read [this document](https://www.chromium.org/audio-video)
 
 For more information about how to set up a server to serve media properly and other general and useful topics about dealing with HTML5 video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
 
@@ -77,14 +101,22 @@ Also, update ```pluginPath``` within the configuration options (visit [Usage and
 
 <a id="tags"></a>
 ## 2. Add `<video>` or `<audio>` tags
-If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single MP4 or MP3 file.
+
+<a id="default-setup"></a>
+### Default setup
+If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single file.
 
 ```html	
-<video src="myvideo.mp4" width="320" height="240"></video>
+<video src="myvideo.mp4" width="320" height="240" type="video/mp4"></video>
+
 ```
+or
 ```html	
-<audio src="myaudio.mp3"></audio>
+<video width="320" height="240">
+    <source type="video/mp4" src="myvideo.mp4" />
+</video>
 ```
+All the formats listed in [Browser and Device support](README.md#browser-support) can be instantiated using this setup. It is important to include their MIME type so the plugin renders the media accurately. 
 
 <a id="multi-codecs"></a>
 ### Multiple codecs (Optional)
@@ -119,8 +151,8 @@ In very rare cases, you might have a non-HTML5 browser with Flash turned on and 
 
 The way to setup closed captioning is by using the `track` tag as follows:
 ```html
-<video ...>
-    <source ...>
+<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
+    <source type="video/mp4" src="myvideo.mp4" />
     ... 
     <track src="subtitles_en.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="en" label="English">
     <track src="subtitles_es.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="es" label="Spanish">
@@ -132,7 +164,7 @@ This works perfectly on any browser that supports HTML5 natively; however, to ma
 
 That's why is important to put the caption files **in the same domain as the player is**. Otherwise, the request of the file will be denied.
 
-As a final note, to display closed captioning in iOS, they will need to be transcoded it in the video. To learn more about this topic, please read [The Zencoder guide to closed captioning for web, mobile, and connected TV](http://blog.zencoder.com/2012/07/13/closed-captioning-for-web-mobile-and-tv/) 
+As a final note, to display closed captioning in iOS, they will need to be transcoded it in the video. To learn more about this topic, please read [The Zencoder guide to closed captioning for web, mobile, and connected TV](http://blog.zencoder.com/2012/07/13/closed-captioning-for-web-mobile-and-tv/).
 
 <a id="language"></a>
 ## 3. Set default language (Optional)
@@ -160,6 +192,7 @@ Optionally, just can set the attribute `lang` in the `<html>` tag with the one y
 ```
 
 Available languages:
+* Catalan (ca)
 * Czech (cs)
 * German (de)
 * English (en)
@@ -169,6 +202,7 @@ Available languages:
 * Italian (it)
 * Japanese (ja)
 * Korean (ko)
+* Dutch (nl)
 * Polish (pl)
 * Portuguese (pt)
 * Brazilian Portuguese (pt-BR)
@@ -179,4 +213,5 @@ Available languages:
 * Traditional Chinese (zh-TW)
 
 ________
+
 [Back to Main](README.md)

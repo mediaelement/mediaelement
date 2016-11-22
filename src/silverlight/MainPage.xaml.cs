@@ -96,7 +96,7 @@ namespace SilverlightMediaElement
 			if (initParams.ContainsKey("timerate"))
 				Int32.TryParse(initParams["timerrate"], out _timerRate);
 			if (initParams.ContainsKey("startvolume"))
-				Double.TryParse(initParams["startvolume"], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out _volume);
+				Double.TryParse(initParams["startvolume"], out _volume);
 
 			if (_timerRate == 0)
 				_timerRate = 250;
@@ -128,7 +128,7 @@ namespace SilverlightMediaElement
 			if (!String.IsNullOrEmpty(_mediaUrl)) {
 				setSrc(_mediaUrl);
 				if (_autoplay || _preload != "none")
-					loadMedia();
+					fire_load();
 			}
 
 			media.MouseLeftButtonUp += new MouseButtonEventHandler(media_MouseLeftButtonUp);
@@ -142,7 +142,7 @@ namespace SilverlightMediaElement
 			//HtmlPage.Window.Invoke("html5_MediaPluginBridge_initPlugin", new object[] {_htmlid});
 			try
 			{
-                HtmlPage.Window.Eval(_htmlid + "_init();");
+				HtmlPage.Window.Eval("mejs.MediaPluginBridge.initPlugin('" + _htmlid + "');");
 			}
 			catch { }
 		}
@@ -152,17 +152,17 @@ namespace SilverlightMediaElement
             switch (media.CurrentState)
             {
                 case MediaElementState.Playing:
-                    pauseMedia();
+                    fire_pause();
                     break;
 
                 case MediaElementState.Paused:
-                    playMedia();
+                    fire_play();
                     break;
                 case MediaElementState.Stopped:
                     
                     break;
                 case MediaElementState.Buffering:
-                    pauseMedia();
+                    fire_pause();
                     break;
             }
         }
@@ -240,7 +240,7 @@ namespace SilverlightMediaElement
 					_isLoading = false;
 					WriteDebug("paused event, " + _isAttemptingToPlay);
 					if (_isAttemptingToPlay) {
-						this.playMedia();
+						this.fire_play();
 					}
 
 					StopTimer();
@@ -320,7 +320,7 @@ namespace SilverlightMediaElement
 			try {
 				CultureInfo invCulture = CultureInfo.InvariantCulture;
 
-				HtmlPage.Window.Invoke("setTimeout", _htmlid + "_event('" + name + "'," +
+				HtmlPage.Window.Invoke("setTimeout", "mejs.MediaPluginBridge.fireEvent('" + _htmlid + "','" + name + "'," +
 				@"{" +
 						@"""name"": """ + name + @"""" +
 						@", ""currentTime"":" + (media.Position.TotalSeconds).ToString(invCulture) + @"" +
@@ -340,13 +340,13 @@ namespace SilverlightMediaElement
 
 		/* HTML5 wrapper methods */
 		[ScriptableMember]
-		public void playMedia() {
+		public void fire_play() {
 			WriteDebug("method:play " + media.CurrentState);
 
 			// sometimes people forget to call load() first
 			if (_mediaUrl != "" && media.Source == null) {
 				_isAttemptingToPlay = true;
-				loadMedia();
+				fire_load();
 			}
 
 			// store and trigger with the state change above
@@ -365,7 +365,7 @@ namespace SilverlightMediaElement
 		}
 
 		[ScriptableMember]
-		public void pauseMedia() {
+		public void fire_pause() {
 			WriteDebug("method:pause " + media.CurrentState);
 
 			_isEnded = false;
@@ -377,7 +377,7 @@ namespace SilverlightMediaElement
 		}
 
 		[ScriptableMember]
-		public void loadMedia() {
+		public void fire_load() {
 			_isLoading = true;
 			_firedCanPlay = false;
 
@@ -390,7 +390,7 @@ namespace SilverlightMediaElement
 		}
 
 		[ScriptableMember]
-		public void stopMedia() {
+		public void fire_stop() {
 			WriteDebug("method:stop " + media.CurrentState);
 
 			_isEnded = true;
@@ -402,7 +402,7 @@ namespace SilverlightMediaElement
 		}
 
 		[ScriptableMember]
-		public void setVolume(Double volume) {
+		public void set_volume(Double volume) {
 			WriteDebug("method:setvolume: " + volume.ToString());
 
 			media.Volume = volume;
@@ -411,18 +411,31 @@ namespace SilverlightMediaElement
 		}
 
 		[ScriptableMember]
-		public void setMuted(bool isMuted) {
+		public Double get_volume() {
+			WriteDebug("get:getvolume");
+
+			return media.Volume;
+		}
+
+		[ScriptableMember]
+		public void set_muted(bool isMuted) {
 			WriteDebug("method:setmuted: " + isMuted.ToString());
 
 			media.IsMuted = isMuted;
             muteButton.IsChecked = isMuted;
 			SendEvent("volumechange");
-
 		}
 
 		[ScriptableMember]
-		public void setCurrentTime(Double position) {
-			WriteDebug("method:setCurrentTime: " + position.ToString());
+		public bool get_muted() {
+			WriteDebug("get:muted");
+
+			return media.IsMuted;
+		}
+
+		[ScriptableMember]
+		public void set_currentTime(Double position) {
+			WriteDebug("method:set_currenttime: " + position.ToString());
 
 			int milliseconds = Convert.ToInt32(position * 1000);
 
@@ -432,8 +445,20 @@ namespace SilverlightMediaElement
 		}
 
 		[ScriptableMember]
+		public Double get_currentTime() {
+			WriteDebug("get:currentTime");
+
+			return media.Position.TotalSeconds;
+		}
+
+		[ScriptableMember]
 		public void setSrc(string url) {
 			_mediaUrl = url;
+		}
+
+		[ScriptableMember]
+		public string get_src() {
+			return _mediaUrl;
 		}
 
 		[ScriptableMember]
@@ -443,7 +468,7 @@ namespace SilverlightMediaElement
 		}
 
 		[ScriptableMember]
-		public void setVideoSize(int width, int height) {
+		public void fire_setSize(int width, int height) {
 			this.Width = media.Width = width;
 			this.Height = media.Height = height;
 		}
@@ -472,9 +497,6 @@ namespace SilverlightMediaElement
             UpdateVideoSize();
 		}
 
-
-
-
         #region play button
 
         private void BigPlayButton_Click(object sender, RoutedEventArgs e)
@@ -489,9 +511,9 @@ namespace SilverlightMediaElement
 
             // this will be the toggle button state after the click has been processed
             if (playPauseButton.IsChecked == true)
-                playMedia();
+                fire_play();
             else
-                pauseMedia();
+                fire_pause();
         }
 
        
@@ -596,7 +618,7 @@ namespace SilverlightMediaElement
         private void MuteButton_Click(object sender, RoutedEventArgs e)
         {
             //media.IsMuted = (bool)muteButton.IsChecked;
-            setMuted((bool)muteButton.IsChecked);
+            set_muted((bool)muteButton.IsChecked);
         }
 
         #region fullscreen mode

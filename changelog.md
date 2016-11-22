@@ -1,5 +1,30 @@
 ### Version History
 
+*3.0 (2016/??/??)*
+
+* Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way @johndyer
+* Ability to play Facebook, SoundCloud and YouTube @johndyer
+* Ability to play M(PEG)-DASH formats using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback @ron666
+* Increased test suite by adding a file per renderer @johndyer and @ron666
+* Code completely documented using [JSDoc](http://usejsdoc.org/) notation @ron666
+* Renamed `src` files to increase readability @johndyer and @ron666
+* Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library @ron666
+* Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js) @ron666
+* Addition of Catalan translation @ron666
+* Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development @ron666
+* Lighter repository @ron666
+* Removal of themes and introduction of simple player for testing @johndyer
+* Addition in `Gruntfile` of `jumpforward` and `loop` features @ron666
+* Introduction of new demo and cleaned `demo` folder @ron666
+* Removed support for Silverlight @johndyer
+* Updates in documentation to reflect new features in 3.0 version @ron666
+* Introduced missing translation elements and translated them in Spanish @ron666
+* Removed big Play button for iPhone and YouTube and Facebook renderers @ron666
+* CSS specificity reduction (https://github.com/johndyer/mediaelement/pull/1890) @albell
+* Fix for fullscreen behavior when `setDimensions` attribute is `false` (https://github.com/johndyer/mediaelement/pull/1899) @ale-grosselle
+* Added `blur` handler to hide the volumeSlider (https://github.com/johndyer/mediaelement/pull/1901) @peterh-capella
+* CSS SVG cleanup (https://github.com/johndyer/mediaelement/pull/1906) @albell
+
 *2.23.4 (2016/10/21)*
 
 * Adjusted captions in fullscreen mode (https://github.com/johndyer/mediaelement/pull/1885) @chdh
