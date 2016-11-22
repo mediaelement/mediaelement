@@ -89,9 +89,7 @@
 			// END: preroll
 			t.container.on('mejsprerollended', function() {			
 
-				console.log('VAST','mejsprerollended');
-				
-				if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && 
+				if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length &&
                     			t.vastAdTags[t.options.indexPreroll].trackingEvents.complete) {
 					t.adsLoadUrl(t.vastAdTags[t.options.indexPreroll].trackingEvents.complete);
 				}
@@ -119,8 +117,6 @@
 		 *
 		 */
 		vastLoadAdTagInfo: function() {
-			console.log('loading vast ad data');
-			
 			var t = this;
 			
 			// set this to stop playback
@@ -135,21 +131,17 @@
 		 *
 		 */
 		loadAdTagInfoDirect: function() {
-			console.log('loading vast:direct');
-			
 			var t = this;
 			
 			$.ajax({
 				url: t.options.vastAdTagUrl,
 				crossDomain: true,
 				success: function(data) {
-					console.log('vast:direct:success', data);
-					
 					t.vastParseVastData(data);
 				},
 				error: function(err) {
 					console.log('vast3:direct:error', err);
-					
+
 					// fallback to Yahoo proxy
 					t.loadAdTagInfoProxy();
 				}	
@@ -160,8 +152,6 @@
 		 *
 		 */
 		loadAdTagInfoProxy: function() {
-			console.log('loading vast:proxy:yahoo');
-			
 			var t = this,
 				protocol = location.protocol,
 				hostname = location.hostname,
@@ -174,9 +164,7 @@
 				url: yahooUrl,
 				crossDomain: true,
 				success: function(data) {
-					console.log('vast:proxy:yahoo:success', data);	
-					
-					t.vastParseVastData(data);			
+					t.vastParseVastData(data);
 				},
 				error: function(err) {
 					console.log('vast:proxy:yahoo:error', err);
@@ -272,8 +260,6 @@
 		 *
 		 */
 		vastStartPreroll: function() {
-			console.log('vastStartPreroll');
-						
 			var t = this;
 				
 			// if we have a media URL, then send it up to the ads plugin as a preroll
@@ -282,7 +268,6 @@
 			var i = 0;
 			while (i < t.vastAdTags.length) {
 				t.options.adsPrerollMediaUrl[i] = t.vastAdTags[i].mediaFiles[0].url;
-				console.log(t.options.adsPrerollMediaUrl[i]);
 				t.options.adsPrerollAdUrl[i] = t.vastAdTags[i].clickThrough;
 				i++;
 			}

@@ -116,8 +116,6 @@
 			t.media.addEventListener('canplay', t.adsMediaTryingToStartProxy );
 			t.media.addEventListener('loadedmetadata', t.adsMediaTryingToStartProxy );
 
-			//console.log('setup ads', t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
-
 			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 				t.adsStartPreroll();
 			}
@@ -139,8 +137,6 @@
 		adsStartPreroll: function() {
 
 			var t = this;
-
-			//console.log('adsStartPreroll', 'url', t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
 
 			t.media.addEventListener('loadedmetadata', t.adsPrerollMetaProxy );
 			t.media.addEventListener('playing', t.adsPrerollStartedProxy );
@@ -171,8 +167,6 @@
 				newDuration = 0
 			;
 
-			//console.log('loadedmetadata', t.media.duration, t.adsCurrentMediaDuration);
-
 			// if duration has been set, show that
 			if (t.options.duration > 0) {
 				newDuration = t.options.duration;
@@ -188,8 +182,6 @@
 		},
 
 		adsPrerollStarted: function() {
-			console.log('adsPrerollStarted');
-
 			var t = this;
 			t.media.removeEventListener('playing', t.adsPrerollStartedProxy);
 
@@ -227,9 +219,6 @@
 		},
 
 		adsPrerollUpdate: function() {
-
-			//console.log('adsPrerollUpdate');
-
 			var t = this;
 
 			if (t.options.adsPrerollAdEnableSkip && t.options.adsPrerollAdSkipSeconds > 0) {
@@ -247,9 +236,6 @@
 		},
 
 		adsPrerollEnded: function() {
-
-			//console.log('adsPrerollEnded');
-
 			var t = this;
 
 			t.container.trigger('mejsprerollended');
@@ -262,9 +248,6 @@
 		},
 
 		adRestoreMainMedia: function() {
-
-			//console.log('adRestoreMainMedia', this.adsCurrentMediaUrl);
-
 			var t = this;
 
 			t.media.setSrc(t.adsCurrentMediaUrl);
@@ -287,9 +270,6 @@
 		},
 
 		adsAdClick: function(e) {
-
-			//console.log('adsAdClicked');
-
 			var t = this;
 
 			if (t.media.paused) {
@@ -302,8 +282,6 @@
 		},
 
 		adsSkipClick: function() {
-
-			//console.log('adsSkipClick');
 			var t = this;
 
 			t.container.trigger('mejsprerollskipclicked');
@@ -324,9 +302,6 @@
 
 		// fires off fake XHR requests
 		adsLoadUrl: function(url) {
-
-			//console.log('adsLoadUrl', url);
-
 			var img = new Image(),
 				rnd = Math.round(Math.random()*100000);
 
