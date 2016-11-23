@@ -13,14 +13,14 @@ You can avoid running any startup scripts by added `class="mejs-player"` to the 
 ```html	
 <video src="myvideo.mp4" width="320" height="240" 
 		class="mejs-player" 
-		data-mejsoptions='{"alwaysShowControls": true}'></video>
+		data-mejsoptions='{"pluginPath": "/path/to/shims/", "alwaysShowControls": "true"}'></video>
 ```
 
 <a id="vanilla"></a>
 ## Vanilla JavaScript
 ```html
 <script>
-var player = new MediaElementPlayer('#player', {success: function(mediaElement, originalNode) {
+var player = new MediaElementPlayer('#player', {pluginPath: "/path/to/shims/", success: function(mediaElement, originalNode) {
 	// do things
 }});
 </script>	
@@ -30,7 +30,7 @@ var player = new MediaElementPlayer('#player', {success: function(mediaElement, 
 ## jQuery
 ```html
 <script>
-$('#mediaplayer').mediaelementplayer({success: function(mediaElement, originalNode) {
+$('#mediaplayer').mediaelementplayer({pluginPath: "/path/to/shims/", success: function(mediaElement, originalNode) {
 	// do things
 }});
 
@@ -45,6 +45,8 @@ player.webkitExitFullScreen();
  
 </script>
 ```
+
+**IMPORTANT NOTE:** To keep Flash shims working you MUST setup the path where the shims are via `pluginPath`, and do not forget to add a slash at the end of the string. Please refer to the examples above.
 
 <a id="renderers-usage"></a>
 ## Use of Renderers
