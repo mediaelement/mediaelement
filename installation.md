@@ -57,7 +57,7 @@ For more information about how to set up a server to serve media properly and ot
 
 Note: to support IE6-8, this code must appear in the `<head>` tag. If you cannot place the MediaElement.js code in the `<head>` you need to install something like [html5shiv](https://github.com/afarkas/html5shiv).
 
-If you wish to install the sources in different directories (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash/Silverlight files in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
+If you wish to install the sources in different directories (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash shims in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
 ```html
 <link rel="stylesheet" href="/path/to/mediaelementplayer.css" />
 
@@ -97,7 +97,7 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 </style>
 ```
 
-Also, update ```pluginPath``` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash/Silverlight files to make _shim_ mode to work. Also, update ```flashName``` and ```silverlightName``` configuration options **only if those files were renamed**.
+Also, update ```pluginPath``` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
 
 <a id="tags"></a>
 ## 2. Add `<video>` or `<audio>` tags
@@ -132,19 +132,20 @@ This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and 
 
 <a id="disabled-javascript"></a>
 ### Browsers with JavaScript disabled (Optional)
-In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code.
+In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code. For more information abput this approach, please read [Video for Everybody!](http://camendesign.com/code/video_for_everybody) documentation.
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
 	<source type="video/mp4" src="myvideo.mp4" />
 	<source type="video/webm" src="myvideo.webm" />
 	<source type="video/ogg" src="myvideo.ogv" />
-	<object width="320" height="240" type="application/x-shockwave-flash" data="flashmediaelement.swf">
-		<param name="movie" value="flashmediaelement.swf" /> 
+	<object width="320" height="240" type="application/x-shockwave-flash" data="/path/to/mediaelement-flash-video.swf">
+		<param name="movie" value="/path/to/mediaelement-flash-video.swf" /> 
 		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
 		<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
 	</object>
 </video>
 ```
+If you plan to use this approach, just remember that it will only work for native media types, and you can use `mediaelement-flash-audio.swf` (MP3), `mediaelement-flash-audio-ogg.swf` (OGA) or `mediaelement-flash-video.swf` (MP4, FLV, RTMP, M4V, etc.) shims for it.
 
 <a id="closed-captioning"></a>
 ### Use of Closed Captioning (Optional)
