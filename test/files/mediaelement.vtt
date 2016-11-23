@@ -30,7 +30,7 @@ that looks and works the same in every browser (even iPhone and Android).
 
 7
 00:00:21 --> 00:00:24
-For older browsers, it has custom Flash and Silverlight plugins 
+For older browsers, it has custom Flash plugins
 
 8
 00:00:24 --> 00:00:27
@@ -54,7 +54,7 @@ The subtitles can even be translated into any language using Google's Translatio
 
 13
 00:00:39 --> 00:00:42
-As a bonus, the Flash and Silverlight fallbacks allow you to use FLV and WMV files.
+As a bonus, the Flash fallbacks allow you to use FLV and RTMP files.
 
 14
 00:00:42 --> 00:00:45
