@@ -64,7 +64,7 @@
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.0.0/flv.min.js';
+				script.src = 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
