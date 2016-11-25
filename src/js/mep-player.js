@@ -269,6 +269,8 @@
 
 		controlsAreVisible: true,
 
+		controlsForceHidden: false,
+
 		init: function() {
 
 			var
@@ -444,7 +446,7 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (t.controlsAreVisible)
+			if (t.controlsAreVisible || t.controlsForceHidden)
 				return;
 
 			if (doAnimation) {
@@ -483,7 +485,7 @@
 
 			doAnimation = typeof doAnimation == 'undefined' || doAnimation;
 
-			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended)
+			if (!t.controlsForceHidden && (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused || t.media.ended))
 				return;
 
 			if (doAnimation) {
@@ -716,7 +718,13 @@
 					}
 
 					if(t.options.hideVideoControlsOnLoad) {
+						var onPlayDisableForce = function() {
+							this.controlsForceHidden = false;
+							this.media.removeEventListener('playing', onPlayDisableForce, false);
+						}.bind(t);
+						t.controlsForceHidden = true;
 						t.hideControls(false);
+						t.media.addEventListener('playing', onPlayDisableForce, false);
 					}
 
 					// check for autoplay
