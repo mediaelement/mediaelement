@@ -1430,7 +1430,7 @@ if (jQuery !== undefined) {
 						}
 					});
 
-			if (mejs.Features.isiPhone || (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/))) {
+			if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/)) {
 				bigPlay.hide();
 			}
 
@@ -1460,9 +1460,7 @@ if (jQuery !== undefined) {
 			}, false);
 
 			media.addEventListener('pause', function () {
-				if (!mejs.MediaFeatures.isiPhone) {
-					bigPlay.show();
-				}
+				bigPlay.show();
 			}, false);
 
 			media.addEventListener('waiting', function () {

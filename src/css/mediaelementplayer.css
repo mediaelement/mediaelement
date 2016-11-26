@@ -27,6 +27,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	outline: 0;
 }
 
+.mejs-container video::-webkit-media-controls-start-playback-button {
+	display: none!important;
+	-webkit-appearance: none;
+}
+
 .mejs-fill-container,
 .mejs-fill-container .mejs-container {
 	width: 100%;
