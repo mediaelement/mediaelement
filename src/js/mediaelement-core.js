@@ -90,40 +90,22 @@
 				j,
 				jl,
 				rendererName,
-				renderer
+				renderer,
+				rendererList = renderers !== undefined && renderers !== null && renderers.length ? renderers : t.order
 			;
 
-			// First attempt: check if there are matches with specified ones
-			if (renderers !== undefined && renderers !== null) {
-				for (i = 0, il = renderers.length; i < il; i++) {
-					rendererName = renderers[i];
-					renderer = t.renderers[rendererName];
-					if (renderer !== null && renderer !== undefined) {
-						for (j = 0, jl = mediaFiles.length; j < jl; j++) {
-							if (renderer.canPlayType(mediaFiles[j].type)) {
-								return {
-									rendererName: rendererName,
-									src: mediaFiles[j].src
-								};
-							}
-						}
-					}
-				}
-			}
-			// Second attempt: check matches with all available renderers specified via `mejs.Renderers.order`
-			else {
-				for (i = 0, il = t.order.length; i < il; i++) {
-					rendererName = t.order[i];
-					renderer = t.renderers[rendererName];
+			for (i = 0, il = rendererList.length; i < il; i++) {
+				rendererName = rendererList[i];
+				renderer = t.renderers[rendererName];
 
-					if (renderer !== null && renderer !== undefined) {
-						for (j = 0, jl = mediaFiles.length; j < jl; j++) {
-							if (renderer.canPlayType(mediaFiles[j].type)) {
-								return {
-									rendererName: rendererName,
-									src: mediaFiles[j].src
-								};
-							}
+				if (renderer !== null && renderer !== undefined) {
+					for (j = 0, jl = mediaFiles.length; j < jl; j++) {
+						if (typeof renderer.canPlayType === 'function' && typeof mediaFiles[j].type === 'string' &&
+							renderer.canPlayType(mediaFiles[j].type)) {
+							return {
+								rendererName: rendererName,
+								src: mediaFiles[j].src
+							};
 						}
 					}
 				}
