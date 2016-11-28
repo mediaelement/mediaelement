@@ -1,62 +1,57 @@
 <!DOCTYPE html>
-<html debug="true">
-<head>
-	<title>MediaElement.js 3.0 - audio/video unification library</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>MediaElement.js 3.0 - audio/video unification library</title>
 
-	<!--[if lte IE 8]>
-	<script src="../src/js/console.js"></script>
-	<![endif]-->
+		<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet">
 
-	<!-- MediaElement Core renderers -->
-	<script src="../src/js/mediaelement-header.js"></script>
-	<script src="../src/js/mediaelement-namespace.js"></script>
-	<script src="../src/js/mediaelement-utility.js"></script>
-	<script src="../src/js/mediaelement-utility-oldie.js"></script>
-	<script src="../src/js/mediaelement-core.js"></script>
-	<script src="../src/js/mediaelement-renderer-html5.js"></script>
-	<script src="../src/js/mediaelement-renderer-hls.js"></script>
-	<script src="../src/js/mediaelement-renderer-mdash.js"></script>
-	<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
-	<script src="../src/js/mediaelement-renderer-vimeo.js"></script>
-	<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
-	<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
-	<script src="../src/js/mediaelement-renderer-flash.js"></script>
-	<script src="../src/js/mediaelement-i18n.js"></script>
-	<script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+	</head>
+	<body>
 
-	<!-- Optional: Player -->
-	<link href="../src/css/mediaelementplayer-simple.css" rel="stylesheet">
-	<script src="../src/js/mediaelementplayer-simple.js"></script>
+		<div id="container">
 
-</head>
-<body>
+			<h1>MediaElement.js</h1>
 
-	<div id="container">
+			<h2>Youtube as &lt;video&gt;</h2>
 
-		<h1>MediaElement.js</h1>
-
-		<h2>Youtube as &lt;video&gt;</h2>
-
-		<video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
-			<source src="https://www.youtube.com/embed/twYp6W6vt2U" >
-		</video>
+			<video width="640" height="360" class="mejs-player" id="player1" preload="none" controls>
+				<source src="https://www.youtube.com/embed/twYp6W6vt2U" >
+			</video>
 
 
-		<h2>Youtube as &lt;iframe&gt;</h2>
+			<h2>Youtube as &lt;iframe&gt;</h2>
 
-		<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U"
-			class="mejs-player" allowfullscreen frameborder="0"></iframe>
-	</div>
+			<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U"
+				class="mejs-player" allowfullscreen frameborder="0"></iframe>
+		</div>
 
-	<script>
+		<script src="../src/js/mediaelement-header.js"></script>
+		<script src="../src/js/mediaelement-namespace.js"></script>
+		<script src="../src/js/mediaelement-utility.js"></script>
+		<script src="../src/js/mediaelement-utility-oldie.js"></script>
+		<script src="../src/js/mediaelement-core.js"></script>
+		<script src="../src/js/mediaelement-renderer-html5.js"></script>
+		<script src="../src/js/mediaelement-renderer-mdash.js"></script>
+		<script src="../src/js/mediaelement-renderer-hls.js"></script>
+		<script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+		<script src="../src/js/mediaelement-renderer-vimeo.js"></script>
+		<script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+		<script src="../src/js/mediaelement-renderer-facebook.js"></script>
+		<script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
+		<script src="../src/js/mediaelement-renderer-flash.js"></script>
+		<script src="../src/js/mediaelement-i18n.js"></script>
+		<script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+		<script src="../src/js/mediaelementplayer-simple.js"></script>
+		<script>
 
-		var elements = mejs.getElementsByClassName('mejs-player');
+			var elements = mejs.getElementsByClassName('mejs-player');
 
-		for (var i=0, il=elements.length; i<il; i++) {
-			var player = new MediaElementPlayerSimple(elements[i]);
-		}
-	</script>
+			for (var i=0, il=elements.length; i<il; i++) {
+				var player = new MediaElementPlayerSimple(elements[i]);
+			}
+		</script>
 
-</body>
+	</body>
 </html>
