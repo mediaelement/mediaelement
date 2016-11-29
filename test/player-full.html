@@ -6,7 +6,7 @@
     <title>MediaElement.js 3.0 - audio/video unification library</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" href="../build/mediaelementplayer.min.css">
+    <link rel="stylesheet" href="../src/css/mediaelementplayer.css">
 
     <style>
 
@@ -75,12 +75,12 @@
         <br>
         <div class="players" id="player1-container">
 
-            <h3>Video Player</h3>
+            <h3>Video Player (Full)</h3>
 
             <div class="media-wrapper">
                 <video id="player1" width="640" height="360" style="max-width:100%;" preload="none">
                     <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
-                    <track srclang="en" kind="subtitles" type="text/vtt" src="mediaelement.vtt">
+                    <track srclang="en" kind="subtitles" type="text/vtt" src="files/mediaelement.vtt">
                 </video>
             </div>
             <br>
@@ -115,9 +115,9 @@
 
         <div class="players" id="player2-container">
 
-            <h3>Audio Player</h3>
+            <h3>Audio Player (Full)</h3>
 
-            <audio id="player2" preload="none" controls>
+            <audio id="player2" preload="none" controls style="max-width:100%;">
                 <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
             </audio>
             <br>
@@ -145,25 +145,58 @@
 
     <script src="../build/jquery.js"></script>
 
-    <script src="../build/mediaelement-and-player.min.js"></script>
-    <script src="../build/lang/cs.js"></script>
-    <script src="../build/lang/de.js"></script>
-    <script src="../build/lang/en.js"></script>
-    <script src="../build/lang/es.js"></script>
-    <script src="../build/lang/fr.js"></script>
-    <script src="../build/lang/hu.js"></script>
-    <script src="../build/lang/it.js"></script>
-    <script src="../build/lang/ja.js"></script>
-    <script src="../build/lang/ko.js"></script>
-    <script src="../build/lang/nl.js"></script>
-    <script src="../build/lang/pl.js"></script>
-    <script src="../build/lang/pt.js"></script>
-    <script src="../build/lang/pt-br.js"></script>
-    <script src="../build/lang/ro.js"></script>
-    <script src="../build/lang/ru.js"></script>
-    <script src="../build/lang/sk.js"></script>
-    <script src="../build/lang/zh-cn.js"></script>
-    <script src="../build/lang/zh.js"></script>
+    <script src="../src/js/mediaelement-header.js"></script>
+    <script src="../src/js/mediaelement-namespace.js"></script>
+    <script src="../src/js/mediaelement-utility.js"></script>
+    <script src="../src/js/mediaelement-utility-oldie.js"></script>
+    <script src="../src/js/mediaelement-core.js"></script>
+    <script src="../src/js/mediaelement-renderer-html5.js"></script>
+    <script src="../src/js/mediaelement-renderer-mdash.js"></script>
+    <script src="../src/js/mediaelement-renderer-hls.js"></script>
+    <script src="../src/js/mediaelement-renderer-flv.js"></script>
+    <script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-vimeo.js"></script>
+    <script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-facebook.js"></script>
+    <script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
+    <script src="../src/js/mediaelement-renderer-flash.js"></script>
+
+    <script src="../src/js/mediaelementplayer-library.js"></script>
+    <script src="../src/js/mediaelement-i18n.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+    <script src="../src/js/mediaelementplayer-player.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-playpause.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-progress.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-time.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-speed.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-tracks.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-volume.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-stop.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-skipback.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-sourcechooser.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-fullscreen.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-jumpforward.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-loop.js"></script>
+    <script src="../src/js/mediaelementplayer-feature-markers.js"></script>
+        
+    <script src="../src/js/mediaelement-i18n-locale-cs.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-de.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-es.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-fr.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-hu.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-it.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-ja.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-ko.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-nl.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-pl.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-pt.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-pt-br.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-ro.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-ru.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-sk.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-zh-cn.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-zh.js"></script>
     <script>
 
         function getQueryStringValue (key) {
