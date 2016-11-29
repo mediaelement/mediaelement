@@ -70,65 +70,20 @@
                 </video>
             </div>
 
-            <p class="note">Click on each one of the links to play different types of media with the same player.</p>
+            <p class="note">Select one of types of media you can reproduce with the same player.</p>
             <br>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Format</th>
-                        <th>Support</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>MP4</td>
-                        <td>Native (<a href="http://caniuse.com/#feat=mpeg4">http://caniuse.com/#feat=mpeg4</a>) and Flash fallback</td>
-                        <td><span class="command">https://media.w3.org/2010/05/sintel/trailer.mp4</span></td>
-                    </tr>
-                    <tr>
-                        <td>WebM</td>
-                        <td>Native (http://caniuse.com/#feat=webm)</td>
-                        <td><span class="command">https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm</span></td>
-                    </tr>
-                    <tr>
-                        <td>RTMP (MP4)</td>
-                        <td>Flash only</td>
-                        <td><span class="command">rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4</span></td>
-                    </tr>
-                    <tr>
-                        <td>HLS</td>
-                        <td>Native (browsers that support MSE) and Flash fallback</td>
-                        <td><span class="command">http://www.streambox.fr/playlists/test_001/stream.m3u8</span></td>
-                    </tr>
-                    <tr>
-                        <td>DailyMotion</td>
-                        <td>All browsers that support &lt;iframe&gt; tag and HTML5</td>
-                        <td><span class="command">http://www.dailymotion.com/embed/video/x2lzodk</span></td>
-                    </tr>
-                    <tr>
-                        <td>Vimeo</td>
-                        <td>All browsers that support &lt;iframe&gt; tag and HTML5</td>
-                        <td><span class="command">https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0</span></td>
-                    </tr>
-                    <tr>
-                        <td>M(PEG)-DASH</td>
-                        <td>Native (browsers that support MSE) and Flash fallback</td>
-                        <td><span class="command">http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd</span></td>
-                    </tr>
-                    <tr>
-                        <td>YouTube</td>
-                        <td>All browsers that support <em>window.postMessage</em></td>
-                        <td><span class="command">https://www.youtube.com/watch?v=twYp6W6vt2U</span></td>
-                    </tr>
-                    <tr>
-                        <td>Facebook</td>
-                        <td>All browsers that support &lt;iframe&gt; tag and HTML5</td>
-                        <td><span class="command">https://www.facebook.com/johndyer/videos/10107816243681884/</span></td>
-                    </tr>
 
-                </tbody>
-            </table>
+            <select name="player1-sources">
+                <option value="https://media.w3.org/2010/05/sintel/trailer.mp4">MP4</option>
+                <option value="https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm">WebM</option>
+                <option value="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4">RTMP (MP4)</option>
+                <option value="http://www.streambox.fr/playlists/test_001/stream.m3u8">HLS</option>
+                <option value="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">M(PEG)-DASH</option>
+                <option value="http://www.dailymotion.com/embed/video/x2lzodk">DailyMotion</option>
+                <option value="https://www.youtube.com/watch?v=twYp6W6vt2U">YouTube</option>
+                <option value="https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0">Vimeo</option>
+                <option value="https://www.facebook.com/johndyer/videos/10107816243681884/">Facebook</option>
+            </select>
 
             <h4><a id="audio-player" class="anchor" href="#audio-player" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Audio Player</h4>
 
@@ -137,40 +92,15 @@
                     <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
                 </audio>
             </div>
-            <p class="note">Click on each one of the links to play different types of media with the same player.</p>
+            <p class="note">Select one of types of media you can reproduce with the same player.</p>
             <br>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Format</th>
-                        <th>Support</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>MP3</td>
-                        <td>Native (http://caniuse.com/#feat=mp3) and Flash fallback</td>
-                        <td><span class="command">http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3</span></td>
-                    </tr>
-                    <tr>
-                        <td>OGG</td>
-                        <td>Native (http://caniuse.com/#search=ogg) and Flash fallback</td>
-                        <td><span class="command">http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg</span></td>
-                    </tr>
-                    <tr>
-                        <td>RTMP (MP3)</td>
-                        <td>Flash only</td>
-                        <td><span class="command">rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr</span></td>
-                    </tr>
-                    <tr>
-                        <td>Soundcloud</td>
-                        <td>All browsers that support &lt;iframe&gt; tag and HTML5</td>
-                        <td><span class="command">https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <select name="player2-sources">
+                <option value="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3">MP3</option>
+                <option value="http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg">OGG</option>
+                <option value="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr">RTMP (MP3)</option>
+                <option value="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">SoundCloud</option>
+            </select>
 
             <h3><a id="whats-new" class="anchor" href="#whats-new" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What's New on 3.0 version</h3>
 
@@ -233,12 +163,12 @@
             features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen', 'tracks']
         });
 
-        $('.command').click(function() {
+        $('select').change(function() {
             var
                     _this = $(this),
-                    media = _this.closest('table').prevUntil('div').prev('div').find('.mejs-container').attr('id');
+                    media = _this.prevUntil('div').prev('div').find('.mejs-container').attr('id');
 
-            mejs.players[media].setSrc(_this.text());
+            mejs.players[media].setSrc(_this.val());
             mejs.players[media].load();
         });
 
