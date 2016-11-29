@@ -204,12 +204,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	outline: dotted 1px #999;
 }
 
-.mejs__container--keyboard-inactive a,
-.mejs__container--keyboard-inactive a:focus,
-.mejs__container--keyboard-inactive button,
-.mejs__container--keyboard-inactive button:focus,
-.mejs__container--keyboard-inactive [role=slider],
-.mejs__container--keyboard-inactive [role=slider]:focus {
+.mejs-container-keyboard-inactive a,
+.mejs-container-keyboard-inactive a:focus,
+.mejs-container-keyboard-inactive button,
+.mejs-container-keyboard-inactive button:focus,
+.mejs-container-keyboard-inactive [role=slider],
+.mejs-container-keyboard-inactive [role=slider]:focus {
 	outline: 0;
 }
 /* End: CONTROL BAR */
