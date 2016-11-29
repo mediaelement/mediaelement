@@ -8,20 +8,9 @@
 
     <style>
 
-        .commands {
-            padding: 0 0 50px 0;
+        #container {
+            padding: 0 20px 50px;
         }
-
-        .commands > .command {
-            display: block;
-            margin: 2px;
-            cursor: pointer;
-        }
-
-        .commands > .command:hover {
-            background-color: #eaedb8;
-        }
-
     </style>
 </head>
 
@@ -40,6 +29,39 @@
             unified syntax from MediaElement.</p>
 
 
+        <div>
+            <form action="#" method="get">
+                <label>Language <select name="lang">
+                    <option value="cs">Čeština / Czech (cs)</option>
+                    <option value="de">Deutsch / German (de)</option>
+                    <option value="en" selected>English (en)</option>
+                    <option value="es">Español / Spanish; Castilian (es)</option>
+                    <option value="fr">Français / French (fr)</option>
+                    <option value="hu">Magyar / Hungarian (hu)</option>
+                    <option value="it">Italiano / Italian (it)</option>
+                    <option value="ja">日本語 / Japanese (ja)</option>
+                    <option value="ko">한국어 / Korean (ko)</option>
+                    <option value="nl">Nederlands / Dutch (nl)</option>
+                    <option value="pl">Polski / Polish (pl)</option>
+                    <option value="pt">Português / Portuguese (pt)</option>
+                    <option value="pt-BR">Português / Portuguese (BR) (pt-BR)</option>
+                    <option value="ro">Română / Romanian (ro)</option>
+                    <option value="ru">Русский / Russian (ru)</option>
+                    <option value="sk">Slovensko / Slovak (sk)</option>
+                    <option value="zh-cn">简体中文 / Simplified Chinese (zh-CN)</option>
+                    <option value="zh">繁体中文 / Traditional Chinese (zh-TW)</option>
+                </select>
+                </label>
+                <label>Stretching (Video Only)<select name="stretching">
+                    <option value="auto" selected>Auto (default)</option>
+                    <option value="responsive">Responsive</option>
+                    <option value="fill" selected>Fill</option>
+                    <option value="none" selected>None (original dimensions)</option>
+                </select>
+                </label>
+            </form>
+        </div>
+        <br>
         <div class="players" id="player1-container">
 
             <h3>Video Player</h3>
@@ -47,162 +69,57 @@
             <div class="media-wrapper">
                 <video id="player1" width="640" height="360" style="max-width:100%; max-height:100%;" preload="none">
                     <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
+                    <track srclang="en" kind="subtitles" type="text/vtt" src="mediaelement.vtt">
                 </video>
             </div>
             <br>
-
             <div>
-                <form action="#" method="get">
-                    <label>Language <select name="lang">
-                        <option value="cs">Čeština / Czech (cs)</option>
-                        <option value="de">Deutsch / German (de)</option>
-                        <option value="en" selected>English (en)</option>
-                        <option value="es">Español / Spanish; Castilian (es)</option>
-                        <option value="fr">Français / French (fr)</option>
-                        <option value="hu">Magyar / Hungarian (hu)</option>
-                        <option value="it">Italiano / Italian (it)</option>
-                        <option value="ja">日本語 / Japanese (ja)</option>
-                        <option value="ko">한국어 / Korean (ko)</option>
-                        <option value="nl">Nederlands / Dutch (nl)</option>
-                        <option value="pl">Polski / Polish (pl)</option>
-                        <option value="pt">Português / Portuguese (pt)</option>
-                        <option value="pt-BR">Português / Brazilian Portuguese (pt-BR)</option>
-                        <option value="ro">Română / Romanian (ro)</option>
-                        <option value="ru">Русский / Russian (ru)</option>
-                        <option value="sk">Slovensko / Slovak (sk)</option>
-                        <option value="zh-cn">简体中文 / Simplified Chinese (zh-CN)</option>
-                        <option value="zh">繁体中文 / Traditional Chinese (zh-TW)</option>
-                    </select>
-                    </label>
-
-                    <label>Stretching <select name="stretching">
-                        <option value="auto" selected>Auto (default)</option>
-                        <option value="responsive">Responsive</option>
-                        <option value="fill" selected>Fill</option>
-                        <option value="none" selected>None (original dimensions)</option>
-                    </select>
-                    </label>
-                </form>
+                <label>Sources <select name="sources">
+                    <option value="https://media.w3.org/2010/05/sintel/trailer.mp4">MP4</option>
+                    <option value="https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm">WebM</option>
+                    <option value="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4">RTMP (MP4)</option>
+                    <option value="http://www.streambox.fr/playlists/test_001/stream.m3u8">HLS</option>
+                    <option value="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">M(PEG)-DASH</option>
+                    <option value="http://220.243.230.204/ws.acgvideo.com/1/f6/10188762-1.flv?wsTime=1480440171&wsSecret2=5aaa03315faf7259fd00909cc284adb3&oi=1286998248&rate=2500&wshc_tag=0&wsts_tag=583d812d&wsid_tag=4cb608e8&wsiphost=ipdbm">FLV</option>
+                    <option value="http://www.dailymotion.com/embed/video/x2lzodk">DailyMotion</option>
+                    <option value="https://www.youtube.com/watch?v=twYp6W6vt2U">YouTube</option>
+                    <option value="https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0">Vimeo</option>
+                    <option value="https://www.facebook.com/johndyer/videos/10107816243681884/">Facebook</option>
+                </select>
+                </label>
             </div>
-
             <br>
-
-            <div id="player1-renderename"><strong>Render info</strong></div>
-
-            <div class="commands">
-                <span class="command">
-                    document.getElementById('player1').src = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'http://www.streambox.fr/playlists/test_001/stream.m3u8';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'http://www.dailymotion.com/embed/video/x2lzodk';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'https://www.youtube.com/watch?v=twYp6W6vt2U';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'https://www.youtube.com/watch?v=9bZkp7q19f0';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'http://youtu.be/xmWuqd5y77M';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').src = 'https://www.facebook.com/johndyer/videos/10107816243681884/';
-                </span>
-                <span class="command">
-                    document.getElementById('player1').play();
-                </span>
-                <span class="command">
-                    document.getElementById('player1').pause();
-                </span>
-                <span class="command">
-                    document.getElementById('player1').muted = false;
-                </span>
-                <span class="command">
-                    document.getElementById('player1').muted = true;
-                </span>
-                <span class="command">
-                    document.getElementById('player1').volume = 0.5;
-                </span>
-                <span class="command">
-                    document.getElementById('player1').volume = 1;
-                </span>
-                <span class="command">
-                    document.getElementById('player1').currentTime = 26;
-                </span>
+            <div class="player-info">
+                <p><strong>Player information</strong></p>
+                <div id="player1-rendername">https://media.w3.org/2010/05/sintel/trailer.mp4 renderer by: <strong>html5</strong></div>
             </div>
-
-        </div><!-- /.player -->
+        </div>
 
         <div class="players" id="player2-container">
-
 
             <h3>Audio Player</h3>
 
             <audio id="player2" preload="none" controls>
                 <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
             </audio>
-
-            <div id="player2-renderename"><strong>Render info</strong></div>
-
-            <div class="commands">
-                <span class="command">
-                    document.getElementById('player2').src = 'http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3'; document.getElementById('player2').load();
-                </span>
-                <span class="command">
-                    document.getElementById('player2').src = 'http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg'; document.getElementById('player2').load();
-                </span>
-                <span class="command">
-                    document.getElementById('player2').src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true';
-                </span>
-                <span class="command">
-                    document.getElementById('player2').src = 'rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr';
-                </span>
-                <span class="command">
-                    document.getElementById('player2').load();
-                </span>
-                <span class="command">
-                    document.getElementById('player2').play();
-                </span>
-                <span class="command">
-                    document.getElementById('player2').pause();
-                </span>
-                <span class="command">
-                    document.getElementById('player2').muted = false;
-                </span>
-                <span class="command">
-                    document.getElementById('player2').muted = true;
-                </span>
-                <span class="command">
-                    document.getElementById('player2').volume = 0.5;
-                </span>
-                <span class="command">
-                    document.getElementById('player2').volume = 1;
-                </span>
-                <span class="command">
-                    document.getElementById('player2').currentTime = 26;
-                </span>
+            <br>
+            <div>
+                <label>Sources <select name="sources">
+                    <option value="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3">MP3</option>
+                    <option value="http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg">OGG</option>
+                    <option value="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr">RTMP (MP3)</option>
+                    <option value="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">SoundCloud</option>
+                </select>
+                </label>
             </div>
-        </div><!-- /.player -->
+            <br>
+            <div class="player-info">
+                <p><strong>Player information</strong></p>
+                <div id="player2-rendername">http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3 renderer by: <strong>html5</strong></div>
+            </div>
 
-    </div>  <!-- /#container -->
+        </div>
+    </div>
 
     <script src="../build/jquery.js"></script>
 
@@ -294,54 +211,32 @@
                 mejs.i18n.locale.language = mejs.i18n.getLanguage();
                 $(mediaElement).closest('.mejs-container').attr('lang', mejs.i18n.getLanguage());
 
-                var
-                    container = document.getElementById(mediaElement.id + '-container'),
-                    uiRendererName = document.getElementById(mediaElement.id + '-renderename')
-                    ;
+                var renderer = $('#' + mediaElement.id + '-rendername');
 
-                mediaElement.addEventListener('loadedmetadata', function (e) {
-
-                    var src = mediaElement.src;
-
-                    if (src != null) {
-                        uiRendererName.innerHTML = '<strong>Render info:</strong> ' + src.substring(src.lastIndexOf('/') + 1) + ' : rendered by ' + mediaElement.rendererName;
-                    } else {
-                        uiRendererName.innerHTML = 'Error finding src. Renderer: ' + mediaElement.rendererName;
+		        mediaElement.addEventListener('loadedmetadata', function (e) {
+                    var src = mediaElement.getSrc().replace('&amp;', '&');
+                    if (src !== null && src !== undefined) {
+                        renderer.html(src + ' renderer by: <strong>' + mediaElement.rendererName + '</strong>');
                     }
-
                 }, false);
 
-
-                mediaElement.addEventListener('error', function (e) {
-
-                    uiRendererName.innerHTML = e.message;
-
+		        mediaElement.addEventListener('error', function (e) {
+                    renderer.html('<strong>Error</strong>: ' + e.message);
                 }, false);
 
+                $('select[name=sources]').on('change', function() {
+                    var
+                        _this = $(this),
+                        media = _this.closest('.players').find('.mejs-container').attr('id'),
+                        player = mejs.players[media];
 
-                var commands = mejs.getElementsByClassName('command', container);
+                    player.setSrc(_this.val().replace('&amp;', '&'));
+                    player.load();
 
-                console.log('commands', commands.length);
+                    var renderer = $('#' + player.media.id + '-rendername');
+                    renderer.html(_this.val() + ' renderer by: <strong>' + player.media.rendererName + '</strong>');
 
-                for (var i = 0, il = commands.length; i < il; i++) {
-
-                    (function (command) {
-
-
-                        mejs.addEvent(command, 'click', function () {
-
-                            eval(command.innerHTML.replace('&amp;', '&'));
-
-                            var parts = command.innerHTML.split('.src');
-                            if (parts.length > 1) {
-                                eval(parts[0] + '.load();');
-                            }
-                        });
-
-
-                    })(commands[i]);
-
-                }
+                });
             }
         });
 

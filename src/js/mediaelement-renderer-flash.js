@@ -373,8 +373,8 @@
 				}
 			};
 			flash.setSize = function (width, height) {
-				flash.flashNode.style.width = width + 'px';
-				flash.flashNode.style.height = height + 'px';
+				flash.flashNode.style.width = width;
+				flash.flashNode.style.height = height;
 
 				if (flash.flashApi !== null) {
 					flash.flashApi.fire_setSize(width, height);

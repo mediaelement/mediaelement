@@ -389,6 +389,7 @@
 
 			// check for a match on the current renderer
 			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
+				mediaElement.renderer.pause();
 				mediaElement.renderer.show();
 				mediaElement.renderer.setSrc(mediaFiles[0].src);
 				return true;
@@ -411,6 +412,7 @@
 				newRenderer.show();
 				newRenderer.setSrc(mediaFiles[0].src);
 				mediaElement.renderer = newRenderer;
+				mediaElement.rendererName = rendererName;
 				return true;
 			}
 

@@ -241,6 +241,8 @@
 			 */
 			function createFacebookEmbed(url, config) {
 
+				src = url;
+
 				fbDiv = doc.createElement('div');
 				fbDiv.id = fbWrapper.id;
 				fbDiv.className = "fb-video";
@@ -301,13 +303,13 @@
 							}
 
 							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
+							sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
 
 							var timer;
 
 							// Custom Facebook events
 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
 								if (!hasStartedPlaying) {
-									sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
 									hasStartedPlaying = true;
 								}
 								paused = false;
