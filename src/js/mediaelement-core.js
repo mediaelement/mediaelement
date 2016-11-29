@@ -390,6 +390,9 @@
 			// check for a match on the current renderer
 			if (mediaElement.renderer !== undefined && mediaElement.renderer !== null && mediaElement.renderer.name === rendererName) {
 				mediaElement.renderer.pause();
+				if (mediaElement.renderer.stop) {
+					mediaElement.renderer.stop();
+				}
 				mediaElement.renderer.show();
 				mediaElement.renderer.setSrc(mediaFiles[0].src);
 				return true;
