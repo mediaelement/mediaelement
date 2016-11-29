@@ -231,8 +231,11 @@
 									return ended;
 
 								case 'src':
-									return url;
+									vimeoPlayer.getVideoUrl().then(function (_url) {
+										url = _url;
+									});
 
+									return url;
 								case 'buffered':
 									return {
 										start: function () {
@@ -414,29 +417,17 @@
 
 					vimeoPlayer.getDuration().then(function (loadProgress) {
 
+						duration = loadProgress;
+
 						if (duration > 0) {
 							bufferedTime = duration * loadProgress;
 						}
 
-						var event = mejs.Utils.createEvent('timeupdate', vimeo);
-						mediaElement.dispatchEvent(event);
-
-					})['catch'](function (error) {
-						vimeoApi.errorHandler(error, vimeo);
-					});
-
-					vimeoPlayer.getDuration().then(function (seconds) {
-
-						duration = seconds;
-
 						var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
 						mediaElement.dispatchEvent(event);
+
 					})['catch'](function (error) {
 						vimeoApi.errorHandler(error, vimeo);
-					});
-
-					vimeoPlayer.getVideoUrl().then(function (_url) {
-						url = _url;
 					});
 				});
 
@@ -452,12 +443,12 @@
 							bufferedTime = duration * loadProgress;
 						}
 
+						var event = mejs.Utils.createEvent('progress', vimeo);
+						mediaElement.dispatchEvent(event);
+
 					})['catch'](function (error) {
 						vimeoApi.errorHandler(error, vimeo);
 					});
-
-					var event = mejs.Utils.createEvent('timeupdate', vimeo);
-					mediaElement.dispatchEvent(event);
 				});
 				vimeoPlayer.on('timeupdate', function () {
 

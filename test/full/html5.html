@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>MediaElement.js 3.0 - audio/video unification library</title>
+
+        <link href="../../src/css/mediaelementplayer.css" rel="stylesheet">
+
+    </head>
+    <body>
+
+        <div id="container">
+
+            <h1>MediaElement.js</h1>
+
+            <h2>HTML5 MP4</h2>
+
+            <video width="640" height="360" preload="none" controls>
+                <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
+            </video>
+
+            <h2>HTML5 playing audio with &lt;video&gt;</h2>
+
+            <video width="640" height="360" preload="none" controls>
+                <source src="http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2010.mp3" type="audio/mp3">
+            </video>
+
+            <h2>HTML5 MP3</h2>
+
+            <audio preload="none" controls>
+                <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+            </audio>
+
+        </div>
+
+        <script src="../../build/jquery.js"></script>
+
+        <script src="../../src/js/mediaelement-header.js"></script>
+        <script src="../../src/js/mediaelement-namespace.js"></script>
+        <script src="../../src/js/mediaelement-utility.js"></script>
+        <script src="../../src/js/mediaelement-utility-oldie.js"></script>
+        <script src="../../src/js/mediaelement-core.js"></script>
+        <script src="../../src/js/mediaelement-renderer-html5.js"></script>
+        <script src="../../src/js/mediaelement-renderer-mdash.js"></script>
+        <script src="../../src/js/mediaelement-renderer-hls.js"></script>
+        <script src="../../src/js/mediaelement-renderer-flv.js"></script>
+        <script src="../../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+        <script src="../../src/js/mediaelement-renderer-vimeo.js"></script>
+        <script src="../../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+        <script src="../../src/js/mediaelement-renderer-facebook.js"></script>
+        <script src="../../src/js/mediaelement-renderer-soundcloud.js"></script>
+        <script src="../../src/js/mediaelement-renderer-flash.js"></script>
+
+        <script src="../../src/js/mediaelementplayer-library.js"></script>
+        <script src="../../src/js/mediaelement-i18n.js"></script>
+        <script src="../../src/js/mediaelement-i18n-locale-en.js"></script>
+        <script src="../../src/js/mediaelementplayer-player.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-playpause.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-progress.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-time.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-speed.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-tracks.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-volume.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-stop.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-skipback.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-sourcechooser.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-fullscreen.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-jumpforward.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-loop.js"></script>
+        <script src="../../src/js/mediaelementplayer-feature-markers.js"></script>
+        <script>
+
+            $('video, audio').mediaelementplayer({
+
+                pluginPath: '../../build/',
+                markers: [2.5, 10, 35, 40.2],
+                features: ['playpause', 'current', 'progress','duration', 'volume', 'fullscreen']
+            });
+
+        </script>
+
+    </body>
+</html>

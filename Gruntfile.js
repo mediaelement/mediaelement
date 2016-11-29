@@ -39,6 +39,7 @@ module.exports = function(grunt) {
 					'src/js/mediaelement-renderer-html5.js',
 					'src/js/mediaelement-renderer-hls.js',
 					'src/js/mediaelement-renderer-mdash.js',
+					'src/js/mediaelement-renderer-flv.js',
 					'src/js/mediaelement-renderer-youtube-iframe.js',
 					'src/js/mediaelement-renderer-vimeo.js',
 					'src/js/mediaelement-renderer-dailymotion-iframe.js',
