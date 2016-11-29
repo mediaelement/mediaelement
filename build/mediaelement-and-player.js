@@ -2795,7 +2795,7 @@ mejs.version = '3.0';
 									break;
 
 								case 2: // YT.PlayerState.PAUSED
-									events = ['pause'];
+									events = ['paused'];
 									paused = true;
 									ended = false;
 
@@ -7937,13 +7937,9 @@ if (jQuery !== undefined) {
 			// Events
 			t.slider.on('focus', function (e) {
 				player.options.autoRewind = false;
-			});
-
-			t.slider.on('blur', function (e) {
+			}).on('blur', function (e) {
 				player.options.autoRewind = autoRewindInitial;
-			});
-
-			t.slider.on('keydown', function (e) {
+			}).on('keydown', function (e) {
 
 				if ((new Date() - lastKeyPressTime) >= 1000) {
 					startedPaused = media.paused;
@@ -8008,12 +8004,27 @@ if (jQuery !== undefined) {
 					e.preventDefault();
 					e.stopPropagation();
 				}
+			}).on('click', function(e) {
+
+				var paused = media.paused;
+
+				if (!paused) {
+					media.pause();
+				}
+
+				handleMouseMove(e);
+
+				if (!paused) {
+					media.play();
+				}
+
+				e.preventDefault();
+				e.stopPropagation();
 			});
 
 
 			// handle clicks
-			t.total
-			.on('mousedown touchstart', function (e) {
+			t.total.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
 					mouseIsDown = true;
@@ -8029,8 +8040,7 @@ if (jQuery !== undefined) {
 						t.globalUnbind('.dur');
 					});
 				}
-			})
-			.on('mouseenter', function (e) {
+			}).on('mouseenter', function (e) {
 				mouseIsOver = true;
 				t.globalBind('mousemove.dur', function (e) {
 					handleMouseMove(e);
@@ -8038,8 +8048,7 @@ if (jQuery !== undefined) {
 				if (t.timefloat !== undefined && !mejs.MediaFeatures.hasTouch) {
 					t.timefloat.show();
 				}
-			})
-			.on('mouseleave', function (e) {
+			}).on('mouseleave', function (e) {
 				mouseIsOver = false;
 				if (!mouseIsDown) {
 					t.globalUnbind('.dur');

@@ -466,7 +466,7 @@
 									break;
 
 								case 2: // YT.PlayerState.PAUSED
-									events = ['pause'];
+									events = ['paused'];
 									paused = true;
 									ended = false;
 

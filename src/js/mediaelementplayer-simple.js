@@ -454,14 +454,27 @@ MediaElementPlayerSimple.prototype = {
 		});
 
 		addEvent(uiTimeBarTotal, 'click', function(e) {
-			var mousePos = getMousePosition(e),
+
+			var
+				paused = mediaElement.paused,
+				mousePos = getMousePosition(e),
 				barPos = getNodePosition(uiTimeBarTotal),
 				clickWidth = mousePos.x - barPos.x,
 				width = uiTimeBarTotal.offsetWidth,
 				percentage = clickWidth / width,
-				newTime = percentage * mediaElement.duration;
+				newTime = percentage * mediaElement.duration
+			;
+
+			if (!paused) {
+				mediaElement.pause();
+			}
 
 			mediaElement.currentTime = newTime;
+
+			if (!paused) {
+				mediaElement.play();
+			}
+
 		});
 	},
 
