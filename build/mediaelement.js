@@ -2795,7 +2795,7 @@ mejs.version = '3.0';
 									break;
 
 								case 2: // YT.PlayerState.PAUSED
-									events = ['pause'];
+									events = ['paused'];
 									paused = true;
 									ended = false;
 
