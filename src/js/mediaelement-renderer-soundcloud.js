@@ -151,7 +151,7 @@
 				duration = 0,
 				bufferedTime = 0,
 				paused = true,
-				volume = 0,
+				volume = 1,
 				muted = false,
 				ended = false,
 				i,
