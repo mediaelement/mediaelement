@@ -18,6 +18,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	text-indent: 0;
 }
 
+/* Hide native play button from iOS to favor plugin button */
 .mejs-container video::-webkit-media-controls-start-playback-button {
 	display: none!important;
 	-webkit-appearance: none;
