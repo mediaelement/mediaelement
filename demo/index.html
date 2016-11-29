@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>MediaElement.js 3.0 - audio/video unification library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel="stylesheet" href="../build/mediaelementplayer.min.css">
 
     <style>
@@ -67,7 +69,7 @@
             <h3>Video Player</h3>
 
             <div class="media-wrapper">
-                <video id="player1" width="640" height="360" style="max-width:100%; max-height:100%;" preload="none">
+                <video id="player1" width="640" height="360" style="max-width:100%;" preload="none">
                     <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
                     <track srclang="en" kind="subtitles" type="text/vtt" src="mediaelement.vtt">
                 </video>
@@ -99,7 +101,7 @@
 
             <h3>Audio Player</h3>
 
-            <audio id="player2" preload="none" controls>
+            <audio id="player2" preload="none" controls style="max-width:100%;">
                 <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
             </audio>
             <br>
@@ -200,43 +202,42 @@
 
         }).val(stretching);
 
+        $('select[name=sources]').on('change', function() {
+            var
+                _this = $(this),
+                media = _this.closest('.players').find('.mejs-container').attr('id'),
+                player = mejs.players[media];
+
+            player.setSrc(_this.val().replace('&amp;', '&'));
+            player.load();
+
+            var renderer = $('#' + player.media.id + '-rendername');
+            renderer.html(_this.val() + ' renderer by: <strong>' + player.media.rendererName + '</strong>');
+
+        });
+
         $('video, audio').mediaelementplayer({
             stretching: stretching,
             pluginPath: '../build/',
             markers: [2.5, 10, 35, 40.2],
             features: ['playpause', 'current', 'progress', 'volume', 'speed', 'duration', 'fullscreen', 'tracks', 'skipback', 'jumpforward', 'loop', 'markers', 'stop'],
-
-            success: function (mediaElement) {
+            success: function (media) {
 
                 mejs.i18n.locale.language = mejs.i18n.getLanguage();
-                $(mediaElement).closest('.mejs-container').attr('lang', mejs.i18n.getLanguage());
+                $(media).closest('.mejs-container').attr('lang', mejs.i18n.getLanguage());
 
-                var renderer = $('#' + mediaElement.id + '-rendername');
+                var renderer = $('#' + media.id + '-rendername');
 
-		        mediaElement.addEventListener('loadedmetadata', function (e) {
-                    var src = mediaElement.getSrc().replace('&amp;', '&');
+                media.addEventListener('loadedmetadata', function (e) {
+                    var src = media.getSrc().replace('&amp;', '&');
                     if (src !== null && src !== undefined) {
-                        renderer.html(src + ' renderer by: <strong>' + mediaElement.rendererName + '</strong>');
+                        renderer.html(src + ' renderer by: <strong>' + media.rendererName + '</strong>');
                     }
                 }, false);
 
-		        mediaElement.addEventListener('error', function (e) {
+                media.addEventListener('error', function (e) {
                     renderer.html('<strong>Error</strong>: ' + e.message);
                 }, false);
-
-                $('select[name=sources]').on('change', function() {
-                    var
-                        _this = $(this),
-                        media = _this.closest('.players').find('.mejs-container').attr('id'),
-                        player = mejs.players[media];
-
-                    player.setSrc(_this.val().replace('&amp;', '&'));
-                    player.load();
-
-                    var renderer = $('#' + player.media.id + '-rendername');
-                    renderer.html(_this.val() + ' renderer by: <strong>' + player.media.rendererName + '</strong>');
-
-                });
             }
         });
 

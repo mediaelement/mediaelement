@@ -273,7 +273,7 @@
 			flash.flashWrapper = document.createElement('div');
 
 			var
-				autoplay = mediaElement.getAttribute('autoplay') ? true : false,
+				autoplay = !!mediaElement.getAttribute('autoplay'),
 				flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay],
 				isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 				flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
@@ -373,8 +373,8 @@
 				}
 			};
 			flash.setSize = function (width, height) {
-				flash.flashNode.style.width = width;
-				flash.flashNode.style.height = height;
+				flash.flashNode.style.width = width + 'px';
+				flash.flashNode.style.height = height + 'px';
 
 				if (flash.flashApi !== null) {
 					flash.flashApi.fire_setSize(width, height);
