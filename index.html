@@ -138,6 +138,7 @@
         if (mejs.MediaFeatures.isiOS) {
             $('select').find('option[value^="rtmp"]').prop('disabled', true);
             $('select').find('option[value$=".mpd"]').prop('disabled', true);
+            $('select').find('option[value$=".ogg"]').prop('disabled', true);
         }
 
         $('video, audio').mediaelementplayer({
