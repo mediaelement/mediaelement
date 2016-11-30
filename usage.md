@@ -118,6 +118,7 @@ Renderer | ID | API instance | Reference
 Native video/audio | `html5` | --- | ---
 HLS native | `native_hls` | `hlsPlayer` | https://github.com/dailymotion/hls.js
 M(PEG)-DASH native | `native_mdash` | `dashPlayer` | https://github.com/Dash-Industry-Forum/dash.js
+FLV native | `native_flv` | `flvPlayer` | https://github.com/Bilibili/flv.js
 SoundCloud | `soundcloud_iframe` | `scPlayer` | https://developers.soundcloud.com/docs/api/html5-widget
 Facebook | `facebook` | --- | --- 
 Vimeo | `vimeo_iframe` | `vimeoPlayer` | https://github.com/vimeo/player.js
