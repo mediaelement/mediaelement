@@ -78,6 +78,7 @@
                 <option value="https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm">WebM</option>
                 <option value="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4">RTMP (MP4)</option>
                 <option value="http://www.streambox.fr/playlists/test_001/stream.m3u8">HLS</option>
+                <option value="http://220.243.230.204/ws.acgvideo.com/1/f6/10188762-1.flv?wsTime=1480440171&wsSecret2=5aaa03315faf7259fd00909cc284adb3&oi=1286998248&rate=2500&wshc_tag=0&wsts_tag=583d812d&wsid_tag=4cb608e8&wsiphost=ipdbm">FLV</option>
                 <option value="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">M(PEG)-DASH</option>
                 <option value="http://www.dailymotion.com/embed/video/x2lzodk">DailyMotion</option>
                 <option value="https://www.youtube.com/watch?v=twYp6W6vt2U">YouTube</option>
@@ -152,6 +153,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://rawgit.com/johndyer/mediaelement/3.x-dev/build/mediaelement-and-player.min.js"></script>
     <script>
+
+        if (mejs.MediaFeatures.isiOS) {
+            $('select').find('option[value^="rtmp"]').prop('disabled', true);
+            $('select').find('option[value$=".mpd"]').prop('disabled', true);
+        }
+
         $('video, audio').mediaelementplayer({
             pluginPath: 'dist/',
             features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen', 'tracks']
