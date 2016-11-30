@@ -32,6 +32,8 @@
 * Fixed removal of MediaElement when native controls are used (https://github.com/johndyer/mediaelement/pull/1937) @lucash
 * Refactored Speed feature to make it accessible and fixed minor issue with Closed Captioning using mouse @ron666
 * Added better handle of focus outline per @albell suggestions in #1911 @ron666
+* Added missing workflow to pause/play media when clicking on progress bar indicated in #1947 @ron666
+* Integrated native FLV support using [flv.js](https://github.com/Bilibili/flv.js) library @ron666
 
 *2.23.4 (2016/10/21)*
 
