@@ -8342,9 +8342,10 @@ if (jQuery !== undefined) {
 						'</div>' +
 						'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
 						'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
-						'<div class="mejs-horizontal-volume-total"></div>' + // line background
-						'<div class="mejs-horizontal-volume-current"></div>' + // current volume
-						'<div class="mejs-horizontal-volume-handle"></div>' + // handle
+						'<div class="mejs-horizontal-volume-total">' + // line background
+							'<div class="mejs-horizontal-volume-current"></div>' + // current volume
+							'<div class="mejs-horizontal-volume-handle"></div>' + // handle
+						'</div>' +
 						'</a>'
 					)
 					.appendTo(controls) :
@@ -8357,9 +8358,10 @@ if (jQuery !== undefined) {
 						'"></button>' +
 						'<a href="javascript:void(0);" class="mejs-volume-slider">' + // outer background
 						'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
-						'<div class="mejs-volume-total"></div>' + // line background
-						'<div class="mejs-volume-current"></div>' + // current volume
-						'<div class="mejs-volume-handle"></div>' + // handle
+						'<div class="mejs-volume-total">' + // line background
+							'<div class="mejs-volume-current"></div>' + // current volume
+							'<div class="mejs-volume-handle"></div>' + // handle
+						'</div>' +
 						'</a>' +
 						'</div>')
 					.appendTo(controls),
@@ -8395,38 +8397,27 @@ if (jQuery !== undefined) {
 						mute.children('button').attr('title', mejs.i18n.t('mejs.mute')).attr('aria-label', mejs.i18n.t('mejs.mute'));
 					}
 
-					// top/left of full size volume slider background
-					var totalPosition = volumeTotal.position();
+					var volumePercentage = volume * 100 + '%';
 
 					// position slider
 					if (mode === 'vertical') {
-						var
-							// height of the full size volume slider background
-							totalHeight = volumeTotal.height(),
-
-							// the new top position based on the current volume
-							// 70% volume on 100px height == top:30px
-							newTop = totalHeight - (totalHeight * volume);
-
-						// handle
-						volumeHandle.css('top', Math.round(totalPosition.top + newTop - (volumeHandle.height() / 2)));
-
-						// show the current visibility
-						volumeCurrent.height(totalHeight - newTop);
-						volumeCurrent.css('top', totalPosition.top + newTop);
+						volumeCurrent.css({
+							bottom: '0',
+							height: volumePercentage
+						});
+						volumeHandle.css({
+							bottom: volumePercentage,
+							marginBottom: - volumeHandle.height() / 2 + 'px'
+						});
 					} else {
-						var
-							// height of the full size volume slider background
-							totalWidth = volumeTotal.width(),
-
-							// the new left position based on the current volume
-							newLeft = totalWidth * volume;
-
-						// handle
-						volumeHandle.css('left', Math.round(totalPosition.left + newLeft - (volumeHandle.width() / 2)));
-
-						// resize the current part of the volume bar
-						volumeCurrent.width(Math.round(newLeft));
+						volumeCurrent.css({
+							left: '0',
+							width: volumePercentage
+						});
+						volumeHandle.css({
+							left: volumePercentage,
+							marginLeft: - volumeHandle.width() / 2 + 'px'
+						});
 					}
 				},
 				/**
