@@ -274,8 +274,8 @@
 
 		enableTrackButton: function(track) {
 			var t = this, 
-					lang = track.lang, 
-					label = track.label;
+				lang = track.lang, 
+				label = track.label;
 
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
