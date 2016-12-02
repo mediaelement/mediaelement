@@ -59,7 +59,8 @@
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://cdn.dashjs.org/latest/dash.all.min.js';
+				// script.src = 'https://cdn.dashjs.org/latest/dash.all.min.js';
+				script.src = 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
