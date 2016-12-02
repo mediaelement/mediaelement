@@ -86,11 +86,11 @@
 				// click
 				player.captionsButton.on('click',function() {
 					if (player.selectedTrack === null) {
-						lang = player.tracks[0].srclang;
+						var trackId = player.tracks[0].trackId;
 					} else {
-						lang = 'none';
+						var trackId  = 'none';
 					}
-					player.setTrack(lang);
+					player.setTrack(trackId);
 				});
 			} else {
 				// hover or keyboard focus
@@ -100,8 +100,8 @@
 
 				// handle clicks to the language radio buttons
 				.on('click','input[type=radio]',function() {
-					lang = this.value;
-					player.setTrack(lang);
+					var trackId = this.id;
+					player.setTrack(trackId);
 				});
 
 				player.captionsButton.on( 'mouseleave focusout', function() {
@@ -136,7 +136,7 @@
 			for (i=0; i<player.tracks.length; i++) {
 				kind = player.tracks[i].kind;
 				if (kind === 'subtitles' || kind === 'captions') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
+					player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
 
@@ -187,25 +187,23 @@
 			}
 		},
 
-		setTrack: function(lang){
+		setTrack: function(trackId){
 
 			var t = this,
 				i;
-
-			if (lang == 'none') {
-				t.selectedTrack = null;
-				t.captionsButton.removeClass('mejs-captions-enabled');
-			} else {
-				for (i=0; i<t.tracks.length; i++) {
-					if (t.tracks[i].srclang == lang) {
-						if (t.selectedTrack === null)
-							t.captionsButton.addClass('mejs-captions-enabled');
-						t.selectedTrack = t.tracks[i];
-						t.captions.attr('lang', t.selectedTrack.srclang);
-						t.displayCaptions();
-						break;
-					}
+		
+			for (i=0; i<t.tracks.length; i++) {
+				if (t.tracks[i].trackId == trackId) {
+					if (t.selectedTrack === null)
+						t.captionsButton.addClass('mejs-captions-enabled');
+					t.selectedTrack = t.tracks[i];
+					t.captions.attr('lang', t.selectedTrack.srclang);
+					t.displayCaptions();
+					break;
 				}
+			}
+			if (t.selectedTrack === null) {
+				t.captionsButton.removeClass('mejs-captions-enabled');
 			}
 		},
 
@@ -232,7 +230,7 @@
 
 					track.isLoaded = true;
 
-					t.enableTrackButton(track.srclang, track.label);
+					t.enableTrackButton(track);
 
 					t.loadNextTrack();
 
@@ -274,22 +272,22 @@
 			}
 		},
 
-		enableTrackButton: function(lang, label) {
-			var t = this;
+		enableTrackButton: function(track) {
+			var t = this, 
+					lang = track.lang, 
+					label = track.label;
 
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
 			}
 
-			t.captionsButton
-				.find('input[value=' + lang + ']')
-					.prop('disabled',false)
-				.siblings('label')
-					.html( label );
+			$("#" + track.trackId).prop('disabled', false)
+					.siblings('label')
+					.html(label);
 
 			// auto select
 			if (t.options.startLanguage == lang) {
-				$('#' + t.id + '_captions_' + lang).prop('checked', true).trigger('click');
+				$("#" + track.trackId).prop('checked', true).trigger('click');
 			}
 
 			t.adjustLanguageBox();
@@ -303,7 +301,7 @@
 			t.adjustLanguageBox();
 		},
 
-		addTrackButton: function(lang, label) {
+		addTrackButton: function(trackId, lang, label) {
 			var t = this;
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
@@ -311,8 +309,8 @@
 
 			t.captionsButton.find('ul').append(
 				$('<li>'+
-					'<input type="radio" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label for="' + t.id + '_captions_' + lang + '">' + label + ' (loading)' + '</label>'+
+					'<input type="radio" name="' + t.id + '_captions" id="' + trackId + '" value="' + lang + '" disabled="disabled" />' +
+					'<label for="' + trackId + '">' + label + ' (loading)' + '</label>'+
 				'</li>')
 			);
 
