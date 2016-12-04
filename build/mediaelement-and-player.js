@@ -8374,16 +8374,8 @@ if (jQuery !== undefined) {
 				/**
 				 * @private
 				 * @param {Number} volume
-				 * @param {Boolean} secondTry
 				 */
-				positionVolumeHandle = function (volume, secondTry) {
-
-					if (!volumeSlider.is(':visible') && secondTry === undefined) {
-						volumeSlider.show();
-						positionVolumeHandle(volume, true);
-						volumeSlider.hide();
-						return;
-					}
+				positionVolumeHandle = function (volume) {
 
 					// correct to 0-1
 					volume = Math.max(0, volume);
