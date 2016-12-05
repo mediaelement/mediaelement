@@ -10,6 +10,7 @@
 	$.extend(mejs.MepDefaults, {
 		/**
 		 * Default language to start media using ISO 639-2 Language Code List (en, es, it, etc.)
+		 * If there are multiple tracks for one language, the last track node found is activated
 		 * @see https://www.loc.gov/standards/iso639-2/php/code_list.php
 		 * @type {String}
 		 */
@@ -112,10 +113,9 @@
 			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1){
 				// click
 				player.captionsButton.on('click',function() {
+					var trackId = "none";
 					if (player.selectedTrack === null) {
-						var trackId = player.tracks[0].trackId;
-					} else {
-						var trackId  = 'none';
+						trackId = player.tracks[0].trackId;
 					}
 					player.setTrack(trackId);
 				});
@@ -130,8 +130,10 @@
 					})
 					// handle clicks to the language radio buttons
 					.on('click','input[type=radio]',function() {
-						var trackId = this.id;
-						player.setTrack(trackId);
+						// value is trackId, same as the acutal id, and we're using it here
+						// because the "none" checkbox *doesn't* have an trackId
+						// to use, but we want to know when "none" is clicked
+						player.setTrack(this.value); 
 					})
 					.on('click','.mejs-captions-selector-label',function() {
 						$(this).siblings('input[type="radio"]').trigger('click');
@@ -245,16 +247,26 @@
 		},
 
 		/**
-		 *
-		 * @param {String} lang
+		 * 
+		 * @param {String} trackId, or "none" to disable captions
 		 */
-		setTrack: function(lang){
-			var t = this,
-				i;
-		
+		setTrack: function(trackId){
+			var
+				t = this,
+				i
+			;
+
+
+			if (trackId === 'none') {
+				t.captionsButton.removeClass('mejs-captions-enabled');
+				t.selectedTrack = null;
+				t.captionsButton.find('.mejs-captions-selected').removeClass('mejs-captions-selected');
+				return;
+			}
+
 			for (i=0; i<t.tracks.length; i++) {
 				if (t.tracks[i].trackId == trackId) {
-					if (t.selectedTrack === null)
+					if (t.selectedTrack === null) 
 						t.captionsButton.addClass('mejs-captions-enabled');
 					t.selectedTrack = t.tracks[i];
 					t.captions.attr('lang', t.selectedTrack.srclang);
@@ -262,10 +274,7 @@
 					break;
 				}
 			}
-			if (t.selectedTrack === null) {
-				t.captionsButton.removeClass('mejs-captions-enabled');
-			} else{
-				var trackId = t.selectedTrack.trackId;
+			if (t.selectedTrack !== null) {
 				t.captionsButton
 					.find('input[type="radio"]').prop('checked', false)
 					.end()
@@ -341,7 +350,7 @@
 						}
 					},
 					error: function() {
-						t.removeTrackButton(track.srclang);
+						t.removeTrackButton(track.trackId);
 						t.loadNextTrack();
 					}
 				});
@@ -349,25 +358,25 @@
 		},
 
 		/**
-		 * @todo fix this
+		 *
 		 * @param {String} lang - The language code
 		 * @param {String} label
 		 */
 		enableTrackButton: function(track) {
 			var t = this, 
-					lang = track.lang, 
-					label = track.label;
+					lang = track.srclang, 
+					label = track.label
+				;
 
 			if (label === '') {
 				label = mejs.language.codes[lang] || lang;
 			}
 
 			$("#" + track.trackId).prop('disabled', false)
-					.siblings('label')
-					.html(label);
+				.siblings('.mejs-captions-selector-label').html(label);
 
 			// auto select
-			if (t.options.startLanguage == lang) {
+			if (t.options.startLanguage === lang) {
 				$("#" + track.trackId).prop('checked', true).trigger('click');
 			}
 
@@ -378,17 +387,16 @@
 		 *
 		 * @param {String} lang
 		 */
-		removeTrackButton: function(lang) {
+		removeTrackButton: function(trackId) {
 			var t = this;
 
-			t.captionsButton.find('input[value=' + lang + ']').closest('li').remove();
+			t.captionsButton.find('input[id=' + trackId + ']').closest('li').remove();
 
 			t.adjustLanguageBox();
 		},
 
 		/**
 		 *
-		 * @todo fix this
 		 * @param {String} lang - The language code
 		 * @param {String} label
 		 */
@@ -398,9 +406,12 @@
 				label = mejs.language.codes[lang] || lang;
 			}
 
+			// trackId is used in the value, too, because the "none" 
+			// caption option doesn't have a trackId but we need to be able
+			// to set it, too
 			t.captionsButton.find('ul').append(
 				$('<li class="mejs-captions-selector-list-item">'+
-					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + trackId + '" value="' + lang + '" disabled="disabled" />' +
+					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled="disabled" />' +
 					'<label class="mejs-captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
