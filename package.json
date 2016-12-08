@@ -1,19 +1,22 @@
 {
   "name": "mediaelement",
   "license": "MIT",
-  "version": "2.23.4",
+  "version": "3.0",
   "main": "build/mediaelement.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/johndyer/mediaelement.git"
   },
   "devDependencies": {
+    "autoprefixer": "^6.5.1",
+    "cssnano": "^3.8.0",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-cssmin": "~0.6.1",
+    "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "~0.2.2",
+    "grunt-postcss": "^0.8.0",
     "grunt-remove-logging": "~0.2.0",
     "grunt-shell": "~1.1.1",
     "grunt-text-replace": "~0.3.12"

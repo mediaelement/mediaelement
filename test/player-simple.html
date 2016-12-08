@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - audio/video unification library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="../src/css/mediaelementplayer-simple.css">
+
+    <style>
+
+        #container {
+            padding: 0 20px 50px;
+        }
+        .error {
+            color: red;
+        }
+        a {
+            word-wrap: break-word;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <section>
+        <h1>MediaElement.js</h1>
+
+        <h2><em>audio/video</em> unification library</h2>
+
+        <p><em>MediaElement</em> is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer that
+            can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, Facebook, and other libraries.</p>
+
+        <p><em>MediaElementPlayer</em> is built off of MediaElement and creates a fully featured player on top of the
+            unified syntax from MediaElement.</p>
+        </section>
+
+        <div class="players" id="player1-container">
+
+            <h3>Video Player (Simple)</h3>
+
+            <div class="media-wrapper">
+                <video id="player1" width="640" height="360" style="max-width:100%;" preload="none" class="mejs-player">
+                    <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4">
+                    <track srclang="en" kind="subtitles" type="text/vtt" src="mediaelement.vtt">
+                </video>
+            </div>
+            <br>
+            <div>
+                <label>Sources <select name="sources">
+                    <option value="https://media.w3.org/2010/05/sintel/trailer.mp4">MP4</option>
+                    <option value="https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm">WebM</option>
+                    <option value="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4">RTMP (MP4)</option>
+                    <option value="http://www.streambox.fr/playlists/test_001/stream.m3u8">HLS</option>
+                    <option value="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">M(PEG)-DASH</option>
+                    <option value="http://220.243.230.204/ws.acgvideo.com/1/f6/10188762-1.flv?wsTime=1480485416&wsSecret2=44ad693c7089a8a0226bfd818c76bc29&oi=1286998248&rate=2500&wshc_tag=0&wsts_tag=583e31e9&wsid_tag=4cb608e8&wsiphost=ipdbm">FLV</option>
+                    <option value="http://www.dailymotion.com/embed/video/x2lzodk">DailyMotion</option>
+                    <option value="https://www.youtube.com/watch?v=twYp6W6vt2U">YouTube</option>
+                    <option value="https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0">Vimeo</option>
+                    <option value="https://www.facebook.com/johndyer/videos/10107816243681884/">Facebook</option>
+                </select>
+                </label>
+            </div>
+            <br>
+            <div class="player-info">
+                <h4>Player information</h4>
+                <div id="player1-rendername">
+                    <p><strong>Source</strong>: <span class="src"><a href="https://media.w3.org/2010/05/sintel/trailer.mp4" target="_blank">https://media.w3.org/2010/05/sintel/trailer.mp4</a></span></p>
+                    <p><strong>Renderer</strong>: <span class="renderer">html5</span></p>
+                    <p class="error"></p>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <hr>
+
+        <div class="players" id="player2-container">
+
+            <h3>Audio Player (Simple)</h3>
+
+            <audio id="player2" preload="none" controls class="mejs-player">
+                <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+            </audio>
+            <br>
+            <div>
+                <label>Sources <select name="sources">
+                    <option value="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3">MP3</option>
+                    <option value="http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg">OGG</option>
+                    <option value="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr">RTMP (MP3)</option>
+                    <option value="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">SoundCloud</option>
+                </select>
+                </label>
+            </div>
+            <br>
+            <div class="player-info">
+                <h4>Player information</h4>
+                <div id="player2-rendername">
+                    <p><strong>Source</strong>: <span class="src"><a href="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" target="_blank">http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3</a></span></p>
+                    <p><strong>Renderer</strong>: <span class="renderer">html5</span></p>
+                    <p class="error"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="../src/js/mediaelement-header.js"></script>
+    <script src="../src/js/mediaelement-namespace.js"></script>
+    <script src="../src/js/mediaelement-utility.js"></script>
+    <script src="../src/js/mediaelement-core.js"></script>
+    <script src="../src/js/mediaelement-renderer-html5.js"></script>
+    <script src="../src/js/mediaelement-renderer-mdash.js"></script>
+    <script src="../src/js/mediaelement-renderer-hls.js"></script>
+    <script src="../src/js/mediaelement-renderer-flv.js"></script>
+    <script src="../src/js/mediaelement-renderer-youtube-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-vimeo.js"></script>
+    <script src="../src/js/mediaelement-renderer-dailymotion-iframe.js"></script>
+    <script src="../src/js/mediaelement-renderer-facebook.js"></script>
+    <script src="../src/js/mediaelement-renderer-soundcloud.js"></script>
+    <script src="../src/js/mediaelement-renderer-flash.js"></script>
+    <script src="../src/js/mediaelement-i18n.js"></script>
+    <script src="../src/js/mediaelement-i18n-locale-en.js"></script>
+    <script src="../src/js/mediaelementplayer-simple.js"></script>
+
+    <script>
+
+	    var elements = mejs.getElementsByClassName('mejs-player');
+
+        /**
+         * Get the closest matching element up the DOM tree.
+         * @param  {Element} elem     Starting element
+         * @param  {String}  selector Selector to match against (class, ID, data attribute, or tag)
+         * @return {Boolean|Element}  Returns null if not match found
+         */
+        var getClosest = function ( elem, selector ) {
+
+            // Variables
+            var firstChar = selector.charAt(0);
+            var supports = 'classList' in document.documentElement;
+            var attribute, value;
+
+            // If selector is a data attribute, split attribute from value
+            if ( firstChar === '[' ) {
+                selector = selector.substr( 1, selector.length - 2 );
+                attribute = selector.split( '=' );
+
+                if ( attribute.length > 1 ) {
+                    value = true;
+                    attribute[1] = attribute[1].replace( /"/g, '' ).replace( /'/g, '' );
+                }
+            }
+
+            // Get closest match
+            for ( ; elem && elem !== document && elem.nodeType === 1; elem = elem.parentNode ) {
+
+                // If selector is a class
+                if ( firstChar === '.' ) {
+                    if ( supports ) {
+                        if ( elem.classList.contains( selector.substr(1) ) ) {
+                            return elem;
+                        }
+                    } else {
+                        if ( new RegExp('(^|\\s)' + selector.substr(1) + '(\\s|$)').test( elem.className ) ) {
+                            return elem;
+                        }
+                    }
+                }
+
+                // If selector is an ID
+                if ( firstChar === '#' ) {
+                    if ( elem.id === selector.substr(1) ) {
+                        return elem;
+                    }
+                }
+
+                // If selector is a data attribute
+                if ( firstChar === '[' ) {
+                    if ( elem.hasAttribute( attribute[0] ) ) {
+                        if ( value ) {
+                            if ( elem.getAttribute( attribute[0] ) === attribute[1] ) {
+                                return elem;
+                            }
+                        } else {
+                            return elem;
+                        }
+                    }
+                }
+
+                // If selector is a tag
+                if ( elem.tagName.toLowerCase() === selector ) {
+                    return elem;
+                }
+
+            }
+
+            return null;
+
+        };
+
+	    var selectBoxes = document.querySelectorAll('[name="sources"]');
+
+	    for (var i = 0, total = selectBoxes.length; i < total; i++) {
+	    	selectBoxes[i].addEventListener('change', function(e) {
+                    var media = getClosest(e.target, '.players').querySelector('.mejs-simple-container').id.replace('_container', '');
+                    player = document.getElementById(media);
+
+                    player.setSrc(this.value.replace('&amp;', '&'));
+                    player.load();
+
+        		    var renderer = document.getElementById(media + '-rendername');
+                    renderer.querySelector('.src').innerHTML = '<a href="' + this.value +'" target="_blank">' + this.value + '</a>';
+                    renderer.querySelector('.renderer').innerHTML = player.rendererName;
+                    renderer.querySelector('.error').innerHTML = '';
+
+            }, false);
+        }
+
+	    for (var i=0, il=elements.length; i<il; i++) {
+		    var player = new MediaElementPlayerSimple(elements[i], {
+		        pluginPath: '../build/',
+                success: function (media) {
+
+                    var renderer = document.getElementById(media.id + '-rendername');
+
+                    media.addEventListener('loadedmetadata', function (e) {
+                        var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
+                        if (src !== null && src !== undefined) {
+
+                            renderer.querySelector('.src').innerHTML = '<a href="' + src +'" target="_blank">' + src + '</a>';
+                            renderer.querySelector('.renderer').innerHTML = media.rendererName;
+                            renderer.querySelector('.error').innerHTML = '';
+                        }
+                    }, false);
+
+                    media.addEventListener('error', function (e) {
+			            renderer.querySelector('.error').innerHTML = '<strong>Error</strong>: ' + e.message;
+                    }, false);
+                }
+            });
+	    }
+
+    </script>
+</body>
+</html>
