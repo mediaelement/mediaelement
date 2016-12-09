@@ -130,8 +130,8 @@
 					})
 					// handle clicks to the language radio buttons
 					.on('click','input[type=radio]',function() {
-						// value is trackId, same as the acutal id, and we're using it here
-						// because the "none" checkbox *doesn't* have a trackId
+						// value is trackId, same as the actual id, and we're using it here
+						// because the "none" checkbox doesn't have a trackId
 						// to use, but we want to know when "none" is clicked
 						player.setTrack(this.value); 
 					})
