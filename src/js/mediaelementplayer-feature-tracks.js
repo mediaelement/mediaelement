@@ -78,21 +78,34 @@
 
 			t.cleartracks(player);
 			player.chapters =
-					$('<div class="mejs-chapters mejs-layer"></div>')
+					$('<div class="' + t.options.classPrefix + 'chapters ' +
+					                   t.options.classPrefix + 'layer"></div>')
 						.prependTo(layers).hide();
 			player.captions =
-					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover" ' +
-					attr + '><span class="mejs-captions-text"></span></div></div>')
+					$('<div class="' + t.options.classPrefix + 'captions-layer ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<div class="' + t.options.classPrefix + 'captions-position ' +
+						                 t.options.classPrefix + 'captions-position-hover" ' +
+							attr + '>' +
+								'<span class="' + t.options.classPrefix + 'captions-text"></span></div></div>')
 						.prependTo(layers).hide();
-			player.captionsText = player.captions.find('.mejs-captions-text');
+			player.captionsText = player.captions.find('.' + t.options.classPrefix + 'captions-text');
 			player.captionsButton =
-					$('<div class="mejs-button mejs-captions-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>' +
-						'<div class="mejs-captions-selector mejs-offscreen">' +
-							'<ul class="mejs-captions-selector-list">'+
-								'<li class="mejs-captions-selector-list-item">'+
-									'<input type="radio" class="mejs-captions-selector-input" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label class="mejs-captions-selector-label mejs-captions-selected" for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') + '</label>' +
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'captions-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" ' +
+							'aria-label="' + tracksTitle + '"></button>' +
+						'<div class="' + t.options.classPrefix + 'captions-selector ' +
+						                 t.options.classPrefix + 'offscreen">' +
+							'<ul class="' + t.options.classPrefix + 'captions-selector-list">'+
+								'<li class="' + t.options.classPrefix + 'captions-selector-list-item">'+
+									'<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ' +
+										'name="' + player.id + '_captions" id="' + player.id + '_captions_none" ' +
+										'value="none" checked="checked" />' +
+									'<label class="' + t.options.classPrefix + 'captions-selector-label ' +
+									                   t.options.classPrefix + 'captions-selected" ' +
+										'for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') +
+									'</label>' +
 								'</li>'	+
 							'</ul>' +
 						'</div>' +
@@ -123,17 +136,19 @@
 				// hover or keyboard focus
 				player.captionsButton
 					.on('mouseenter focusin', function() {
-						$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
+						$(this).find('.' + t.options.classPrefix + 'captions-selector')
+							.removeClass(t.options.classPrefix + 'offscreen');
 					})
 					.on('mouseleave focusout', function() {
-						$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
+						$(this).find('.' + t.options.classPrefix + 'captions-selector')
+							.addClass(t.options.classPrefix + 'offscreen');
 					})
 					// handle clicks to the language radio buttons
 					.on('click','input[type=radio]',function() {
 						lang = this.value;
 						player.setTrack(lang);
 					})
-					.on('click','.mejs-captions-selector-label',function() {
+					.on('click', '.' + t.options.classPrefix + 'captions-selector-label', function() {
 						$(this).siblings('input[type="radio"]').trigger('click');
 					})
 					//Allow up/down arrow to change the selected radio without changing the volume.
@@ -147,17 +162,20 @@
 				player.container
 					.on('controlsshown', function () {
 						// push captions above controls
-						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+						player.container.find('.' + t.options.classPrefix + 'captions-position')
+							.addClass(t.options.classPrefix + 'captions-position-hover');
 
 					})
 					.on('controlshidden', function () {
 						if (!media.paused) {
 							// move back to normal place
-							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
+							player.container.find('.' + t.options.classPrefix + 'captions-position')
+								.removeClass(t.options.classPrefix + 'captions-position-hover');
 						}
 					});
 			} else {
-				player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+				player.container.find('.' + t.options.classPrefix + 'captions-position')
+					.addClass(t.options.classPrefix + 'captions-position-hover');
 			}
 
 			player.trackToLoad = -1;
@@ -198,14 +216,15 @@
 				function () {
 					// chapters
 					if (player.hasChapters) {
-						player.chapters.removeClass('mejs-offscreen');
-						player.chapters.fadeIn(200).height(player.chapters.find('.mejs-chapter').outerHeight());
+						player.chapters.removeClass(t.options.classPrefix + 'offscreen');
+						player.chapters.fadeIn(200)
+							.height(player.chapters.find('.' + t.options.classPrefix + 'chapter').outerHeight());
 					}
 				},
 				function () {
 					if (player.hasChapters && !media.paused) {
 						player.chapters.fadeOut(200, function() {
-							$(this).addClass('mejs-offscreen');
+							$(this).addClass(t.options.classPrefix + 'offscreen');
 							$(this).css('display','block');
 						});
 					}
@@ -217,7 +236,7 @@
 
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
-				player.chapters.addClass('mejs-offscreen');
+				player.chapters.addClass(t.options.classPrefix + 'offscreen');
 			}
 		},
 
@@ -258,20 +277,22 @@
 			t.captionsButton
 				.find('input[type="radio"]').prop('checked', false)
 				.end()
-				.find('.mejs-captions-selected').removeClass('mejs-captions-selected')
+				.find('.' + t.options.classPrefix + 'captions-selected')
+				.removeClass(t.options.classPrefix + 'captions-selected')
 				.end()
 				.find('input[value="' + lang + '"]').prop('checked', true)
-				.siblings('.mejs-captions-selector-label').addClass('mejs-captions-selected')
+				.siblings('.' + t.options.classPrefix + 'captions-selector-label')
+				.addClass(t.options.classPrefix + 'captions-selected')
 			;
 
 			if (lang === 'none') {
 				t.selectedTrack = null;
-				t.captionsButton.removeClass('mejs-captions-enabled');
+				t.captionsButton.removeClass(t.options.classPrefix + 'captions-enabled');
 			} else {
 				for (i=0; i<t.tracks.length; i++) {
 					if (t.tracks[i].srclang === lang) {
 						if (t.selectedTrack === null)
-							t.captionsButton.addClass('mejs-captions-enabled');
+							t.captionsButton.addClass(t.options.classPrefix + 'captions-enabled');
 						t.selectedTrack = t.tracks[i];
 						t.captions.attr('lang', t.selectedTrack.srclang);
 						t.displayCaptions();
@@ -367,7 +388,7 @@
 
 			t.captionsButton
 				.find('input[value=' + lang + ']').prop('disabled',false)
-				.siblings('.mejs-captions-selector-label').html(label);
+				.siblings('.' + t.options.classPrefix + 'captions-selector-label').html(label);
 
 			// auto select
 			if (t.options.startLanguage === lang) {
@@ -401,16 +422,18 @@
 			}
 
 			t.captionsButton.find('ul').append(
-				$('<li class="mejs-captions-selector-list-item">'+
-					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label class="mejs-captions-selector-label">' + label + ' (loading)' + '</label>' +
+				$('<li class="' + t.options.classPrefix + 'captions-selector-list-item">' +
+					'<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ' +
+						'name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" ' +
+						'value="' + lang + '" disabled="disabled" />' +
+					'<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
 
 			t.adjustLanguageBox();
 
 			// remove this from the dropdownlist (if it exists)
-			t.container.find('.mejs-captions-translations option[value=' + lang + ']').remove();
+			t.container.find('.' + t.options.classPrefix + 'captions-translations option[value=' + lang + ']').remove();
 		},
 
 		/**
@@ -419,9 +442,9 @@
 		adjustLanguageBox:function() {
 			var t = this;
 			// adjust the size of the outer box
-			t.captionsButton.find('.mejs-captions-selector').height(
-				t.captionsButton.find('.mejs-captions-selector-list').outerHeight(true) +
-				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
+			t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector').height(
+				t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector-list').outerHeight(true) +
+				t.captionsButton.find('.' + t.options.classPrefix + 'captions-translations').outerHeight(true)
 			);
 		},
 
@@ -469,7 +492,8 @@
 				for (i=0; i<track.entries.times.length; i++) {
 					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop) {
 						// Set the line before the timecode as a class so the cue can be targeted if needed
-						t.captionsText.html(track.entries.text[i]).attr('class', 'mejs-captions-text ' + (track.entries.times[i].identifier || ''));
+						t.captionsText.html(track.entries.text[i])
+							.attr('class', t.options.classPrefix + 'captions-text ' + (track.entries.times[i].identifier || ''));
 						t.captions.show().height(0);
 						return; // exit out if one is visible;
 					}
@@ -602,16 +626,23 @@
 				//}
 
 				t.chapters.append( $(
-					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + usedPercent.toString() + '%;width: ' + percent.toString() + '%;">' +
-						'<div class="mejs-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mejs-chapter-block-last' : '') + '">' +
+					'<div class="' +  t.options.classPrefix + 'chapter" ' +
+						'rel="' + chapters.entries.times[i].start + '" ' +
+						'style="left: ' + usedPercent.toString() + '%; width: ' + percent.toString() + '%;">' +
+						'<div class="' +  t.options.classPrefix + 'chapter-block' +
+							((i === chapters.entries.times.length - 1) ? ' ' +  t.options.classPrefix + 'chapter-block-last' : '') + '">' +
 							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' +
-							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start, t.options.alwaysShowHours) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop, t.options.alwaysShowHours) + '</span>' +
+							'<span class="ch-time">' +
+								mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start, t.options.alwaysShowHours) +
+								'&ndash;' +
+								mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop, t.options.alwaysShowHours) +
+							'</span>' +
 						'</div>' +
 					'</div>'));
 				usedPercent += percent;
 			}
 
-			t.chapters.find('div.mejs-chapter').click(function() {
+			t.chapters.find('.' +  t.options.classPrefix + 'chapter').click(function() {
 				t.media.setCurrentTime( parseFloat( $(this).attr('rel') ) );
 				if (t.media.paused) {
 					t.media.play();
