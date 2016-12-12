@@ -97,10 +97,13 @@
 
 			t.clearspeed(player);
 
-			player.speedButton = $('<div class="mejs-button mejs-speed-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" aria-label="' + speedTitle + '">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
-						'<div class="mejs-speed-selector mejs-offscreen">' +
-							'<ul class="mejs-speed-selector-list"></ul>' +
+			player.speedButton = $('<div class="' + t.options.classPrefix + 'button ' +
+			                                        t.options.classPrefix + 'speed-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" ' +
+							'aria-label="' + speedTitle + '">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
+						'<div class="' + t.options.classPrefix + 'speed-selector ' +
+						                 t.options.classPrefix + 'offscreen">' +
+							'<ul class="' + t.options.classPrefix + 'speed-selector-list"></ul>' +
 						'</div>' +
 					'</div>')
 						.appendTo(controls);
@@ -110,15 +113,15 @@
 				inputId = t.id + '-speed-' + speeds[i].value;
 
 				player.speedButton.find('ul').append(
-					$('<li class="mejs-speed-selector-list-item">' +
-						'<input class="mejs-speed-selector-input" ' +
+					$('<li class="' + t.options.classPrefix + 'speed-selector-list-item">' +
+						'<input class="' + t.options.classPrefix + 'speed-selector-input" ' +
 							'type="radio" name="' + t.id + '_speed" disabled="disabled"' +
 							'value="' + speeds[i].value + '" ' +
 							'id="' + inputId + '" ' +
 							(speeds[i].value === t.options.defaultSpeed ? ' checked="checked"' : '') +
 						' />' +
-						'<label class="mejs-speed-selector-label' +
-						(speeds[i].value === t.options.defaultSpeed ? ' mejs-speed-selected' : '') +
+						'<label class="' + t.options.classPrefix + 'speed-selector-label' +
+						(speeds[i].value === t.options.defaultSpeed ? ' ' + t.options.classPrefix + 'speed-selected' : '') +
 						'">' + speeds[i].name + '</label>' +
 					'</li>')
 				);
@@ -131,18 +134,18 @@
 				$(this).prop('disabled', false);
 			});
 
-			player.speedSelector = player.speedButton.find('.mejs-speed-selector');
+			player.speedSelector = player.speedButton.find('.' + t.options.classPrefix + 'speed-selector');
 
 			// hover or keyboard focus
 			player.speedButton
 				.on('mouseenter focusin', function(e) {
-					player.speedSelector.removeClass('mejs-offscreen')
+					player.speedSelector.removeClass(t.options.classPrefix + 'offscreen')
 						.height(player.speedSelector.find('ul').outerHeight(true))
 						.css('top', (-1 * player.speedSelector.height()) + 'px')
 					;
 				})
 				.on('mouseleave focusout', function(e) {
-					player.speedSelector.addClass("mejs-offscreen");
+					player.speedSelector.addClass(t.options.classPrefix + "offscreen");
 				})
 				// handle clicks to the language radio buttons
 				.on('click','input[type=radio]',function() {
@@ -156,15 +159,17 @@
 					player.speedButton
 						.find('button').html(getSpeedNameFromValue(newSpeed))
 						.end()
-						.find('.mejs-speed-selected').removeClass('mejs-speed-selected')
+						.find('.' + t.options.classPrefix + 'speed-selected')
+						.removeClass(t.options.classPrefix + 'speed-selected')
 						.end()
 						.find('input[type="radio"]')
 					;
 
 					self.prop('checked', true)
-						.siblings('.mejs-speed-selector-label').addClass('mejs-speed-selected');
+						.siblings('.' + t.options.classPrefix + 'speed-selector-label')
+						.addClass(t.options.classPrefix + 'speed-selected');
 				})
-				.on('click','.mejs-speed-selector-label',function() {
+				.on('click', '.' + t.options.classPrefix + 'speed-selector-label',function() {
 					$(this).siblings('input[type="radio"]').trigger('click');
 				})
 				//Allow up/down arrow to change the selected radio without changing the volume.

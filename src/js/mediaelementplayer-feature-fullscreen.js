@@ -78,8 +78,10 @@
 				hideTimeout = null,
 				fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : mejs.i18n.t('mejs.fullscreen'),
 				fullscreenBtn =
-					$('<div class="mejs-button mejs-fullscreen-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '"></button>' +
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'fullscreen-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle +
+							'" aria-label="' + fullscreenTitle + '"></button>' +
 						'</div>')
 					.appendTo(controls)
 					.on('click', function () {
@@ -287,7 +289,8 @@
 			});
 
 			for (i = 0, len = hoverDivNames.length; i < len; i++) {
-				hoverDivs[hoverDivNames[i]] = $('<div class="mejs-fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls).hide();
+				hoverDivs[hoverDivNames[i]] = $('<div class="' + t.options.classPrefix + 'fullscreen-hover" />')
+					.appendTo(t.container).mouseover(restoreControls).hide();
 			}
 
 			// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
@@ -386,7 +389,7 @@
 			}
 
 			// set it to not show scroll bars so 100% will work
-			$(document.documentElement).addClass('mejs-fullscreen');
+			$(document.documentElement).addClass(t.options.classPrefix + 'fullscreen');
 
 			// store sizing
 			t.normalHeight = t.container.height();
@@ -431,7 +434,7 @@
 
 			// make full size
 			t.container
-			.addClass('mejs-container-fullscreen')
+			.addClass(t.options.classPrefix + 'container-fullscreen')
 			.width('100%')
 			.height('100%');
 
@@ -464,17 +467,20 @@
 
 			if (t.fullscreenBtn) {
 				t.fullscreenBtn
-				.removeClass('mejs-fullscreen')
-				.addClass('mejs-unfullscreen');
+				.removeClass(t.options.classPrefix + 'fullscreen')
+				.addClass(t.options.classPrefix + 'unfullscreen');
 			}
 
 			t.setControlsSize();
 			t.isFullScreen = true;
 
 			var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height);
-			t.container.find('.mejs-captions-text').css('font-size', zoomFactor * 100 + '%');
-			t.container.find('.mejs-captions-text').css('line-height', 'normal');
-			t.container.find('.mejs-captions-position').css('bottom', '45px');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('font-size', zoomFactor * 100 + '%');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('line-height', 'normal');
+			t.container.find('.' + t.options.classPrefix + 'captions-position')
+				.css('bottom', '45px');
 
 			t.container.trigger('enteredfullscreen');
 		},
@@ -498,9 +504,9 @@
 			}
 
 			// restore scroll bars to document
-			$(document.documentElement).removeClass('mejs-fullscreen');
+			$(document.documentElement).removeClass(t.options.classPrefix + 'fullscreen');
 
-			t.container.removeClass('mejs-container-fullscreen');
+			t.container.removeClass(t.options.classPrefix + 'container-fullscreen');
 
 			if (t.options.setDimensions) {
 				t.container.width(t.normalWidth)
@@ -523,15 +529,18 @@
 			}
 
 			t.fullscreenBtn
-			.removeClass('mejs-unfullscreen')
-			.addClass('mejs-fullscreen');
+			.removeClass(t.options.classPrefix + 'unfullscreen')
+			.addClass(t.options.classPrefix + 'fullscreen');
 
 			t.setControlsSize();
 			t.isFullScreen = false;
 
-			t.container.find('.mejs-captions-text').css('font-size','');
-			t.container.find('.mejs-captions-text').css('line-height', '');
-			t.container.find('.mejs-captions-position').css('bottom', '');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('font-size','');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('line-height', '');
+			t.container.find('.' + t.options.classPrefix + 'captions-position')
+				.css('bottom', '');
 
 			t.container.trigger('exitedfullscreen');
 		}

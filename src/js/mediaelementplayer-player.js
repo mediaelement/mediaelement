@@ -86,6 +86,8 @@
 		isVideo: true,
 		// stretching modes (auto, fill, responsive, none)
 		stretching: 'auto',
+		// prefix class names on elements
+		classPrefix: 'mejs__',
 		// turns keyboard support on and off for this instance
 		enableKeyboard: true,
 		// when this player starts, it will pause other players
@@ -112,9 +114,9 @@
 				keys: [38], // UP
 				action: function (player, media, key, event) {
 
-					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
-						player.container.find('.mejs-volume-slider').is(':focus')) {
-						player.container.find('.mejs-volume-slider').css('display', 'block');
+					if (player.container.find('.' + t.options.classPrefix + 'volume-button>button').is(':focus') ||
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').is(':focus')) {
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').css('display', 'block');
 					}
 					if (player.isVideo) {
 						player.showControls();
@@ -132,9 +134,9 @@
 			{
 				keys: [40], // DOWN
 				action: function (player, media, key, event) {
-					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
-						player.container.find('.mejs-volume-slider').is(':focus')) {
-						player.container.find('.mejs-volume-slider').css('display', 'block');
+					if (player.container.find('.' + t.options.classPrefix + 'volume-button>button').is(':focus') ||
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').is(':focus')) {
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').css('display', 'block');
 					}
 
 					if (player.isVideo) {
@@ -204,7 +206,7 @@
 			{
 				keys: [77], // M
 				action: function (player, media, key, event) {
-					player.container.find('.mejs-volume-slider').css('display', 'block');
+					player.container.find('.' + t.options.classPrefix + 'volume-slider').css('display', 'block');
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
@@ -417,16 +419,19 @@
 				var videoPlayerTitle = t.isVideo ?
 					mejs.i18n.t('mejs.video-player') : mejs.i18n.t('mejs.audio-player');
 				// insert description for screen readers
-				$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
+				$('<span class="' + t.options.classPrefix + 'offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container mejs-container-keyboard-inactive" ' +
-						'tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">' +
-						'<div class="mejs-inner">' +
-						'<div class="mejs-mediaelement"></div>' +
-						'<div class="mejs-layers"></div>' +
-						'<div class="mejs-controls"></div>' +
-						'<div class="mejs-clear"></div>' +
+					$('<div id="' + t.id + '"' +
+							'class="' + t.options.classPrefix + 'container ' +
+						            	t.options.classPrefix + 'container-keyboard-inactive" ' +
+							'tabindex="0" role="application" ' +
+							'aria-label="' + videoPlayerTitle + '">' +
+						'<div class="' + t.options.classPrefix + 'inner">' +
+						'<div class="' + t.options.classPrefix + 'mediaelement"></div>' +
+						'<div class="' + t.options.classPrefix + 'layers"></div>' +
+						'<div class="' + t.options.classPrefix + 'controls"></div>' +
+						'<div class="' + t.options.classPrefix + 'clear"></div>' +
 						'</div>' +
 						'</div>')
 					.addClass(t.$media[0].className)
@@ -440,10 +445,11 @@
 							if (!t.hasMsNativeFullScreen) {
 								// If e.relatedTarget appears before container, send focus to play button,
 								// else send focus to last control button.
-								var btnSelector = '.mejs-playpause-button > button';
+								var btnSelector = '.' + t.options.classPrefix + 'playpause-button > button';
 
 								if (mejs.Utility.isNodeAfter(e.relatedTarget, t.container[0])) {
-									btnSelector = '.mejs-controls .mejs-button:last-child > button';
+									btnSelector = '.' + t.options.classPrefix + 'controls ' +
+										'.' + t.options.classPrefix + 'button:last-child > button';
 								}
 
 								var button = t.container.find(btnSelector);
@@ -454,34 +460,37 @@
 
 				// When no elements in controls, hide bar completely
 				if (!t.options.features.length) {
-					t.container.css('background', 'transparent').find('.mejs-controls').hide();
+					t.container.css('background', 'transparent')
+						.find('.' + t.options.classPrefix + 'controls')
+						.hide();
 				}
 
-				if (t.isVideo && t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
+				if (t.isVideo && t.options.stretching === 'fill' &&
+					!t.container.parent('.' + t.options.classPrefix + 'fill-container').length) {
 					// outer container
 					t.outerContainer = t.$media.parent();
-					t.container.wrap('<div class="mejs-fill-container"/>');
+					t.container.wrap('<div class="' + t.options.classPrefix + 'fill-container"/>');
 				}
 
 				// add classes for user and content
 				t.container.addClass(
-					(mf.isAndroid ? 'mejs-android ' : '') +
-					(mf.isiOS ? 'mejs-ios ' : '') +
-					(mf.isiPad ? 'mejs-ipad ' : '') +
-					(mf.isiPhone ? 'mejs-iphone ' : '') +
-					(t.isVideo ? 'mejs-video ' : 'mejs-audio ')
+					(mf.isAndroid ? t.options.classPrefix + 'android ' : '') +
+					(mf.isiOS ? t.options.classPrefix + '-ios ' : '') +
+					(mf.isiPad ? t.options.classPrefix + '-ipad ' : '') +
+					(mf.isiPhone ? t.options.classPrefix + '-iphone ' : '') +
+					(t.isVideo ? t.options.classPrefix + '-video ' : t.options.classPrefix + 'audio ')
 				);
 
 
 				// move the <video/video> tag into the right spot
-				t.container.find('.mejs-mediaelement').append(t.$media);
+				t.container.find('.' + t.options.classPrefix + 'mediaelement').append(t.$media);
 
 				// needs to be assigned here, after iOS remap
 				t.node.player = t;
 
 				// find parts
-				t.controls = t.container.find('.mejs-controls');
-				t.layers = t.container.find('.mejs-layers');
+				t.controls = t.container.find('.' + t.options.classPrefix + 'controls');
+				t.layers = t.container.find('.' + t.options.classPrefix + 'layers');
 
 				// determine the size
 
@@ -549,27 +558,27 @@
 
 			if (doAnimation) {
 				t.controls
-				.removeClass('mejs-offscreen')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.stop(true, true).fadeIn(200, function () {
 					t.controlsAreVisible = true;
 					t.container.trigger('controlsshown');
 				});
 
 				// any additional controls people might add and want to hide
-				t.container.find('.mejs-control')
-				.removeClass('mejs-offscreen')
+				t.container.find('.' + t.options.classPrefix + 'control')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.stop(true, true).fadeIn(200, function () {
 					t.controlsAreVisible = true;
 				});
 
 			} else {
 				t.controls
-				.removeClass('mejs-offscreen')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				// any additional controls people might add and want to hide
-				t.container.find('.mejs-control')
-				.removeClass('mejs-offscreen')
+				t.container.find('.' + t.options.classPrefix + 'control')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				t.controlsAreVisible = true;
@@ -596,7 +605,7 @@
 				// fade out main controls
 				t.controls.stop(true, true).fadeOut(200, function () {
 					$(this)
-					.addClass('mejs-offscreen')
+					.addClass(t.options.classPrefix + 'offscreen')
 					.css('display', 'block');
 
 					t.controlsAreVisible = false;
@@ -604,21 +613,21 @@
 				});
 
 				// any additional controls people might add and want to hide
-				t.container.find('.mejs-control').stop(true, true).fadeOut(200, function () {
-					$(this)
-					.addClass('mejs-offscreen')
-					.css('display', 'block');
-				});
+				t.container.find('.' + t.options.classPrefix + 'control')
+					.stop(true, true).fadeOut(200, function () {
+						$(this).addClass(t.options.classPrefix + 'offscreen')
+						.css('display', 'block');
+					});
 			} else {
 
 				// hide main controls
 				t.controls
-				.addClass('mejs-offscreen')
+				.addClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				// hide others
-				t.container.find('.mejs-control')
-				.addClass('mejs-offscreen')
+				t.container.find('.' + t.options.classPrefix + 'control')
+				.addClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				t.controlsAreVisible = false;
@@ -776,7 +785,8 @@
 
 							if (t.options.clickToPlayPause) {
 								var
-									button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
+									button = t.$media.closest('.' + t.options.classPrefix + 'container')
+										.find('.' + t.options.classPrefix + 'overlay-button'),
 									pressed = button.attr('aria-pressed')
 									;
 								if (t.media.paused && pressed) {
@@ -873,7 +883,9 @@
 							t.media.setCurrentTime(0);
 							// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after ending the video and jumping to the beginning
 							window.setTimeout(function () {
-								$(t.container).find('.mejs-overlay-loading').parent().hide();
+								$(t.container)
+									.find('.' + t.options.classPrefix + 'overlay-loading')
+									.parent().hide();
 							}, 20);
 						} catch (exp) {
 
@@ -940,7 +952,7 @@
 				t.container.focusout(function (e) {
 					if (e.relatedTarget) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
 						var $target = $(e.relatedTarget);
-						if (t.keyboardAction && $target.parents('.mejs-container').length === 0) {
+						if (t.keyboardAction && $target.parents('.' + t.options.classPrefix + 'container').length === 0) {
 							t.keyboardAction = false;
 							if (t.isVideo && !t.options.alwaysShowControls) {
 								t.hideControls(true);
@@ -970,19 +982,21 @@
 
 				// Disable focus outline to improve look-and-feel for regular users
 				t.globalBind('click', function(e) {
-					if ($(e.target).is('.mejs-container')) {
-						$(e.target).addClass('mejs-container-keyboard-inactive');
-					} else if ($(e.target).closest('.mejs-container').length) {
-						$(e.target).closest('.mejs-container').addClass('mejs-container-keyboard-inactive');
+					if ($(e.target).is('.' + t.options.classPrefix + 'container')) {
+						$(e.target).addClass(t.options.classPrefix + 'container-keyboard-inactive');
+					} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
+						$(e.target).closest('.' + t.options.classPrefix + '-container')
+							.addClass(t.options.classPrefix + 'container-keyboard-inactive');
 					}
 				});
 
 				// Enable focus outline for Accessibility purposes
 				t.globalBind('keydown', function(e) {
-					if ($(e.target).is('.mejs-container')) {
-						$(e.target).removeClass('mejs-container-keyboard-inactive');
-					} else if ($(e.target).closest('.mejs-container').length) {
-						$(e.target).closest('.mejs-container').removeClass('mejs-container-keyboard-inactive');
+					if ($(e.target).is('.' + t.options.classPrefix + '-container')) {
+						$(e.target).removeClass(t.options.classPrefix + 'container-keyboard-inactive');
+					} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
+						$(e.target).closest('.' + t.options.classPrefix + 'container')
+							.removeClass(t.options.classPrefix + 'container-keyboard-inactive');
 					}
 				});
 
@@ -990,8 +1004,8 @@
 				//	we can't use the play() API for the initial playback on iOS or Android;
 				//	user has to start playback directly by tapping on the iFrame.
 				if (t.media.rendererName !== null && t.media.rendererName.match(/youtube/) && (mf.isiOS || mf.isAndroid)) {
-					t.container.find('.mejs-overlay-play').hide();
-					t.container.find('.mejs-poster').hide();
+					t.container.find('.' + t.options.classPrefix + 'overlay-play').hide();
+					t.container.find('.' + t.options.classPrefix + 'poster').hide();
 				}
 			}
 
@@ -1187,7 +1201,7 @@
 				}
 
 				// set the layers
-				t.layers.children('.mejs-layer')
+				t.layers.children('.' + t.options.classPrefix + 'layer')
 				.width('100%')
 				.height('100%');
 			}
@@ -1235,7 +1249,7 @@
 			t.setDimensions('100%', '100%');
 
 			// This prevents an issue when displaying poster
-			t.container.find('.mejs-poster img').css('display', 'block');
+			t.container.find('.' + t.options.classPrefix + 'poster img').css('display', 'block');
 
 			targetElement = t.container.find('object, embed, iframe, video');
 
@@ -1278,7 +1292,7 @@
 			.width(width)
 			.height(height);
 
-			t.layers.children('.mejs-layer')
+			t.layers.children('.' + t.options.classPrefix + 'layer')
 			.width(width)
 			.height(height);
 		},
@@ -1286,7 +1300,7 @@
 		setControlsSize: function () {
 			var
 				t = this,
-				rail = t.controls.find('.mejs-time-rail')
+				rail = t.controls.find('.' + t.options.classPrefix + 'time-rail')
 			;
 
 			// skip calculation if hidden
@@ -1296,7 +1310,7 @@
 
 			var
 				controlElements = t.controls.children(),
-				margin = parseFloat(controlElements.children('.mejs-time-total').css('margin-left')),
+				margin = parseFloat(controlElements.children('.' + t.options.classPrefix + 'time-total').css('margin-left')),
 				siblingsWidth = 0
 			;
 
@@ -1316,7 +1330,8 @@
 		buildposter: function (player, controls, layers, media) {
 			var t = this,
 				poster =
-					$('<div class="mejs-poster mejs-layer">' +
+					$('<div class="' + t.options.classPrefix + 'poster ' +
+					                   t.options.classPrefix + 'layer">' +
 						'</div>')
 					.appendTo(layers),
 				posterUrl = player.$media.attr('poster');
@@ -1346,11 +1361,12 @@
 
 		setPoster: function (url) {
 			var t = this,
-				posterDiv = t.container.find('.mejs-poster'),
+				posterDiv = t.container.find('.' + t.options.classPrefix + 'poster'),
 				posterImg = posterDiv.find('img');
 
 			if (posterImg.length === 0) {
-				posterImg = $('<img class="mejs-poster-img" width="100%" height="100%" alt="" />').appendTo(posterDiv);
+				posterImg = $('<img class="' + t.options.classPrefix + 'poster-img" width="100%" height="100%" alt="" />')
+					.appendTo(posterDiv);
 			}
 
 			posterImg.attr('src', url);
@@ -1364,30 +1380,37 @@
 
 			var
 				loading =
-					$('<div class="mejs-overlay mejs-layer">' +
-						'<div class="mejs-overlay-loading">' +
-							'<span class="mejs-overlay-loading-bg-img"></span>' +
+					$('<div class="' + t.options.classPrefix + 'overlay ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<div class="' + t.options.classPrefix + 'overlay-loading">' +
+							'<span class="' + t.options.classPrefix + 'overlay-loading-bg-img"></span>' +
 						'</div>' +
 					'</div>')
 					.hide() // start out hidden
 					.appendTo(layers),
 				error =
-					$('<div class="mejs-overlay mejs-layer">' +
-						'<div class="mejs-overlay-error"></div>' +
+					$('<div class="' + t.options.classPrefix + 'overlay ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<div class="' + t.options.classPrefix + 'overlay-error"></div>' +
 						'</div>')
 					.hide() // start out hidden
 					.appendTo(layers),
 				// this needs to come last so it's on top
 				bigPlay =
-					$('<div class="mejs-overlay mejs-layer mejs-overlay-play">' +
-						'<div class="mejs-overlay-button" role="button" aria-label="' + mejs.i18n.t('mejs.play') + '" aria-pressed="false"></div>' +
+					$('<div class="' + t.options.classPrefix + 'overlay ' +
+					                   t.options.classPrefix + 'layer ' +
+									   t.options.classPrefix + 'overlay-play">' +
+						'<div class="' + t.options.classPrefix + 'overlay-button" ' +
+							'role="button" aria-label="' + mejs.i18n.t('mejs.play') +
+							'" aria-pressed="false"></div>' +
 						'</div>')
 					.appendTo(layers)
 					.on('click', function () {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 						if (t.options.clickToPlayPause) {
 
 							var
-								button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
+								button = t.$media.closest('.' + t.options.classPrefix + 'container')
+									.find('.' + t.options.classPrefix + 'overlay-button'),
 								pressed = button.attr('aria-pressed')
 							;
 
@@ -1409,25 +1432,25 @@
 			media.addEventListener('play', function () {
 				bigPlay.hide();
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 				error.hide();
 			}, false);
 
 			media.addEventListener('playing', function () {
 				bigPlay.hide();
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 				error.hide();
 			}, false);
 
 			media.addEventListener('seeking', function () {
 				loading.show();
-				controls.find('.mejs-time-buffering').show();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
 			}, false);
 
 			media.addEventListener('seeked', function () {
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 			}, false);
 
 			media.addEventListener('pause', function () {
@@ -1436,7 +1459,7 @@
 
 			media.addEventListener('waiting', function () {
 				loading.show();
-				controls.find('.mejs-time-buffering').show();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
 			}, false);
 
 
@@ -1447,8 +1470,9 @@
 				//	return;
 
 				loading.show();
-				controls.find('.mejs-time-buffering').show();
-				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices (https://github.com/johndyer/mediaelement/issues/1305)
+				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
+				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
+				// (https://github.com/johndyer/mediaelement/issues/1305)
 				if (mejs.MediaFeatures.isAndroid) {
 					media.canplayTimeout = window.setTimeout(
 						function () {
@@ -1463,8 +1487,9 @@
 			}, false);
 			media.addEventListener('canplay', function () {
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
-				clearTimeout(media.canplayTimeout); // Clear timeout inside 'loadeddata' to prevent 'canplay' to fire twice
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
+				// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
+				clearTimeout(media.canplayTimeout);
 			}, false);
 
 			// error handling
@@ -1473,7 +1498,8 @@
 				loading.hide();
 				bigPlay.hide();
 				error.show();
-				error.find('.mejs-overlay-error').html("Error loading this resource");
+				error.find('.' + t.options.classPrefix + 'overlay-error')
+					.html("Error loading this resource");
 			}, false);
 
 			media.addEventListener('keydown', function (e) {
@@ -1491,15 +1517,16 @@
 
 			// listen for key presses
 			t.globalBind('keydown', function (event) {
-				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0 &&
-					$(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
+				var $container = $(event.target).closest('.' + t.options.classPrefix + 'container');
+				player.hasFocus = $container.length !== 0 &&
+					$container.attr('id') === player.$media.closest('.' + t.options.classPrefix + 'container').attr('id');
 				return t.onkeydown(player, media, event);
 			});
 
 
 			// check if someone clicked outside a player region, then kill its focus
 			t.globalBind('click', function (event) {
-				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0;
+				player.hasFocus = $(event.target).closest('.' + t.options.classPrefix + 'container').length !== 0;
 			});
 
 		},
@@ -1545,7 +1572,7 @@
 		changeSkin: function (className) {
 			var t = this;
 
-			t.container[0].className = 'mejs-container ' + className;
+			t.container[0].className = t.options.classPrefix + 'container ' + className;
 			t.setPlayerSize(t.width, t.height);
 			t.setControlsSize();
 		},
@@ -1630,7 +1657,7 @@
 			delete mejs.players[t.id];
 
 			if (typeof t.container === 'object') {
-				t.container.prev('.mejs-offscreen').remove();
+				t.container.prev('.' + t.options.classPrefix + 'offscreen').remove();
 				t.container.remove();
 			}
 			t.globalUnbind();
@@ -1712,9 +1739,10 @@
 		};
 
 
+		// Auto-init using the configured default settings & JSON attribute
 		$(document).ready(function () {
 			// auto enable using JSON attribute
-			$('.mejs-player').mediaelementplayer();
+			$('.' + mejs.MepDefaults.classPrefix + 'player').mediaelementplayer();
 		});
 	}
 
