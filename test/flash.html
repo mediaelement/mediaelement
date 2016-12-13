@@ -66,13 +66,12 @@
         <script src="../src/js/mediaelementplayer-simple.js"></script>
         <script>
 
-            mejs.Renderers.order = ['flash_video', 'flash_audio'];
-
             var elements = mejs.getElementsByClassName('mejs-player');
 
             for (var i=0, il=elements.length; i<il; i++) {
                 var player = new MediaElementPlayerSimple(elements[i], {
-                    pluginPath: '../build/'
+                    pluginPath: '../build/',
+			        renderers: ['flash_video', 'flash_audio']
                 });
             }
         </script>

@@ -13,7 +13,7 @@
 
 	// on time insert into head
 	$('head').append($('<style>' +
-'.mejs__ads a {' +
+'.' + t.options.classPrefix + 'ads a {' +
 '	display: block; ' +
 '	position: absolute;' +
 '	right: 0;' +
@@ -22,7 +22,7 @@
 '	height: 100%; ' +
 '	display: block; ' +
 '}' +
-'.mejs__ads .mejs__ads-skip-block {' +
+'.' + t.options.classPrefix + 'ads .' + t.options.classPrefix + 'ads-skip-block {' +
 '	display: block; ' +
 '	position: absolute;' +
 '	right: 0;' +
@@ -32,10 +32,10 @@
 '	background: rgba(0,0,0,0.5); ' +
 '	color: #fff; ' +
 '}' +
-'.mejs__ads .mejs__ads-skip-button {' +
+'.' + t.options.classPrefix + 'ads .' + t.options.classPrefix + 'ads-skip-button {' +
 '	cursor: pointer; ' +
 '}' +
-'.mejs__ads .mejs__ads-skip-button:hover {' +
+'.' + t.options.classPrefix + 'ads .' + t.options.classPrefix + 'ads-skip-button:hover {' +
 '	text-decoration: underline; ' +
 '}' +
 	'</style>'));
@@ -104,11 +104,11 @@
 			player.adsLayer.find('a')
 				.on('click', $.proxy(t.adsAdClick, t) );
 
-			player.adsSkipBlock = player.adsLayer.find('.' + t.options.classPrefix + 'mejs__ads-skip-block')
+			player.adsSkipBlock = player.adsLayer.find('.' + t.options.classPrefix + 'ads-skip-block')
 				.hide();
-			player.adsSkipMessage = player.adsLayer.find('.' + t.options.classPrefix + 'mejs__ads-skip-message')
+			player.adsSkipMessage = player.adsLayer.find('.' + t.options.classPrefix + 'ads-skip-message')
 				.hide();
-			player.adsSkipButton = player.adsLayer.find('.' + t.options.classPrefix + 'mejs__ads-skip-button')
+			player.adsSkipButton = player.adsLayer.find('.' + t.options.classPrefix + 'ads-skip-button')
 				.on('click', $.proxy(t.adsSkipClick, t));
 
 			// create proxies (only needed for events we want to remove later)
@@ -183,7 +183,7 @@
 			}
 
 			setTimeout(function() {
-				t.controls.find('.mejs__duration').html(
+				t.controls.find('.' + t.options.classPrefix + 'duration').html(
 					mejs.Utility.secondsToTimeCode(newDuration, t.options.alwaysShowHours)
 				);
 			}, 250);
