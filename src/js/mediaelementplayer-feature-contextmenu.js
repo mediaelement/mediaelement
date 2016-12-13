@@ -142,7 +142,7 @@ $.extend(mejs.MepDefaults,
 
 					// render can return null if the item doesn't need to be used at the moment
 					if (rendered !== null && rendered !== undefined) {
-						html += '<div class="' + t.options.classPrefix + 'contextmenu-item"' +
+						html += '<div class="' + t.options.classPrefix + 'contextmenu-item" ' +
 							'data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}

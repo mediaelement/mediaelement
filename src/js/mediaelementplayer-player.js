@@ -475,10 +475,10 @@
 				// add classes for user and content
 				t.container.addClass(
 					(mf.isAndroid ? t.options.classPrefix + 'android ' : '') +
-					(mf.isiOS ? t.options.classPrefix + '-ios ' : '') +
-					(mf.isiPad ? t.options.classPrefix + '-ipad ' : '') +
-					(mf.isiPhone ? t.options.classPrefix + '-iphone ' : '') +
-					(t.isVideo ? t.options.classPrefix + '-video ' : t.options.classPrefix + 'audio ')
+					(mf.isiOS ? t.options.classPrefix + 'ios ' : '') +
+					(mf.isiPad ? t.options.classPrefix + 'ipad ' : '') +
+					(mf.isiPhone ? t.options.classPrefix + 'iphone ' : '') +
+					(t.isVideo ? t.options.classPrefix + 'video ' : t.options.classPrefix + 'audio ')
 				);
 
 
@@ -985,14 +985,14 @@
 					if ($(e.target).is('.' + t.options.classPrefix + 'container')) {
 						$(e.target).addClass(t.options.classPrefix + 'container-keyboard-inactive');
 					} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
-						$(e.target).closest('.' + t.options.classPrefix + '-container')
+						$(e.target).closest('.' + t.options.classPrefix + 'container')
 							.addClass(t.options.classPrefix + 'container-keyboard-inactive');
 					}
 				});
 
 				// Enable focus outline for Accessibility purposes
 				t.globalBind('keydown', function(e) {
-					if ($(e.target).is('.' + t.options.classPrefix + '-container')) {
+					if ($(e.target).is('.' + t.options.classPrefix + 'container')) {
 						$(e.target).removeClass(t.options.classPrefix + 'container-keyboard-inactive');
 					} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
 						$(e.target).closest('.' + t.options.classPrefix + 'container')

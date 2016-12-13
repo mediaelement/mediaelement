@@ -6,6 +6,14 @@
  */
 (function($) {
 
+	// Feature configuration
+	$.extend(mejs.MepDefaults, {
+		/**
+		 * @type {String}
+		 */
+		loopText: ''
+	});
+
 	$.extend(MediaElementPlayer.prototype, {
 		/**
 		 * Feature constructor.
@@ -19,6 +27,7 @@
 		buildloop: function(player, controls, layers, media) {
 			var
 				t = this,
+				loopTitle = t.options.loopText ? t.options.loopText : mejs.i18n.t('mejs.loop'),
 				// create the loop button
 				loop =
 				$('<div class="' + t.options.classPrefix + 'button ' +
@@ -26,7 +35,7 @@
 					((player.options.loop) ? t.options.classPrefix + 'loop-on' :
 					                         t.options.classPrefix + 'loop-off') + '">' +
 					'<button type="button" aria-controls="' + t.id + '" ' +
-						'title="Toggle Loop" aria-label="Toggle Loop"></button>' +
+						'title="' + loopTitle + '" aria-label="' + loopTitle + '"></button>' +
 				'</div>')
 				// append it to the toolbar
 				.appendTo(controls)
