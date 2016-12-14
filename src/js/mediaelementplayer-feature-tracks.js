@@ -492,20 +492,20 @@
 
 			var
 				t = this,
-				i,
-				track = t.selectedTrack
+				track = t.selectedTrack,
+				i
 			;
 
 			if (track !== null && track.isLoaded) {
-				for (i=0; i<track.entries.times.length; i++) {
-					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop) {
-						// Set the line before the timecode as a class so the cue can be targeted if needed
-						t.captionsText.html(track.entries.text[i])
-							.attr('class', t.options.classPrefix + 'captions-text ' + (track.entries.times[i].identifier || ''));
-						t.captions.show().height(0);
-						return; // exit out if one is visible;
-					}
+				i = t.searchTrackPosition(track.entries, t.media.currentTime);
+				if (i > -1) {
+					// Set the line before the timecode as a class so the cue can be targeted if needed
+					t.captionsText.html(track.entries[i].text)
+						.attr('class', t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || ''));
+					t.captions.show().height(0);
+					return; // exit out if one is visible;
 				}
+
 				t.captions.hide();
 			} else {
 				t.captions.hide();
@@ -520,7 +520,7 @@
 			var t = this;
 
 			t.slides = track;
-			t.slides.entries.imgs = [t.slides.entries.text.length];
+			t.slides.entries.imgs = [t.slides.entries.length];
 			t.showSlide(0);
 
 		},
@@ -535,12 +535,12 @@
 			}
 
 			var t = this,
-				url = t.slides.entries.text[index],
-				img = t.slides.entries.imgs[index];
+				url = t.slides.entries[index].text,
+				img = t.slides.entries[index].imgs;
 
 			if (img === undefined || img.fadeIn === undefined) {
 
-				t.slides.entries.imgs[index] = img = $('<img src="' + url + '">')
+				t.slides.entries[index].imgs = img = $('<img src="' + url + '">')
 						.on('load', function() {
 							img.appendTo(t.slidesContainer)
 								.hide()
@@ -573,16 +573,12 @@
 			var
 				t = this,
 				slides = t.slides,
-				i
+				i = t.searchTrackPosition(slides.entries, t.media.currentTime)
 			;
 
-			for (i=0; i<slides.entries.times.length; i++) {
-				if (t.media.currentTime >= slides.entries.times[i].start && t.media.currentTime <= slides.entries.times[i].stop){
-
-					t.showSlide(i);
-
-					return; // exit out if one is visible;
-				}
+			if (i > -1) {
+				t.showSlide(i);
+				return; // exit out if one is visible;
 			}
 		},
 
@@ -614,36 +610,31 @@
 				dur,
 				percent = 0,
 				usedPercent = 0,
-				total = chapters.entries.times.length
+				total = chapters.entries.length
 			;
 
 			t.chapters.empty();
 
 			for (i = 0; i<total; i++) {
-				dur = chapters.entries.times[i].stop - chapters.entries.times[i].start;
+				dur = chapters.entries[i].stop - chapters.entries[i].start;
 				percent = Math.floor(dur / t.media.duration * 100);
 				if (percent + usedPercent > 100 || // too large
-					i === chapters.entries.times.length-1 && percent + usedPercent < 100) // not going to fill it in
+					i === chapters.entries.length-1 && percent + usedPercent < 100) // not going to fill it in
 					{
 					percent = 100 - usedPercent;
 				}
-				//width = Math.floor(t.width * dur / t.media.duration);
-				//left = Math.floor(t.width * chapters.entries.times[i].start / t.media.duration);
-				//if (left + width > t.width) {
-				//	width = t.width - left;
-				//}
 
 				t.chapters.append( $(
 					'<div class="' +  t.options.classPrefix + 'chapter" ' +
 						'rel="' + chapters.entries.times[i].start + '" ' +
 						'style="left: ' + usedPercent.toString() + '%; width: ' + percent.toString() + '%;">' +
 						'<div class="' +  t.options.classPrefix + 'chapter-block' +
-							((i === chapters.entries.times.length - 1) ? ' ' +  t.options.classPrefix + 'chapter-block-last' : '') + '">' +
-							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' +
+							((i === chapters.entries.length - 1) ? ' ' +  t.options.classPrefix + 'chapter-block-last' : '') + '">' +
+							'<span class="ch-title">' + chapters.entries[i].text + '</span>' +
 							'<span class="ch-time">' +
-								mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start, t.options.alwaysShowHours) +
+								mejs.Utility.secondsToTimeCode(chapters.entries[i].start, t.options.alwaysShowHours) +
 								'&ndash;' +
-								mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop, t.options.alwaysShowHours) +
+								mejs.Utility.secondsToTimeCode(chapters.entries[i].stop, t.options.alwaysShowHours) +
 							'</span>' +
 						'</div>' +
 					'</div>'));
@@ -658,6 +649,38 @@
 			});
 
 			t.chapters.show();
+		},
+		/**
+		 * Perform binary search to look for proper track index
+		 *
+		 * @param {Object[]} tracks
+		 * @param {Number} currentTime
+		 * @return {Number}
+		 */
+		searchTrackPosition: function(tracks, currentTime) {
+			var
+				lo = 0,
+				hi = tracks.length - 1,
+				mid,
+				start,
+				stop
+			;
+
+			while (lo <= hi) {
+				mid = ((lo + hi) >> 1);
+				start = tracks[mid].start;
+				stop = tracks[mid].stop;
+
+				if (currentTime >= start && currentTime < stop) {
+					return mid;
+				} else if (start < currentTime) {
+					lo = mid + 1;
+				} else if (start > currentTime) {
+					hi = mid - 1;
+				}
+			}
+
+			return -1;
 		}
 	});
 
@@ -759,7 +782,7 @@
 				var
 					i = 0,
 					lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
-					entries = {text:[], times:[]},
+					entries = [],
 					timecode,
 					text,
 					identifier;
@@ -779,13 +802,11 @@
 							i++;
 						}
 						text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-						// Text is in a different array so I can use .join
-						entries.text.push(text);
-						entries.times.push(
-						{
+						entries.push({
 							identifier: identifier,
 							start: (mejs.Utility.convertSMPTEtoSeconds(timecode[1]) === 0) ? 0.200 : mejs.Utility.convertSMPTEtoSeconds(timecode[1]),
 							stop: mejs.Utility.convertSMPTEtoSeconds(timecode[3]),
+							text: text,
 							settings: timecode[5]
 						});
 					}
@@ -809,8 +830,8 @@
 					lines = container.find("p"),
 					styleNode = trackText.find("#" + container.attr("style")),
 					styles,
-					text,
-					entries = {text:[], times:[]};
+					entries = []
+				;
 
 
 				if (styleNode.length) {
@@ -826,26 +847,29 @@
 				for(i = 0; i<lines.length; i++) {
 					var
 						style,
-						 _temp_times = {
+						_temp = {
 							start: null,
 							stop: null,
-							style: null
-						};
-					if (lines.eq(i).attr("begin")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
-					if (!_temp_times.start && lines.eq(i-1).attr("end")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
-					if (lines.eq(i).attr("end")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
-					if (!_temp_times.stop && lines.eq(i+1).attr("begin")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+							style: null,
+							text: null
+						}
+					;
+
+					if (lines.eq(i).attr("begin")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					if (!_temp.start && lines.eq(i-1).attr("end")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					if (lines.eq(i).attr("end")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					if (!_temp.stop && lines.eq(i+1).attr("begin")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+
 					if (styles) {
 						style = "";
 						for (var _style in styles) {
 							style += _style + ":" + styles[_style] + ";";
 						}
 					}
-					if (style) _temp_times.style = style;
-					if (_temp_times.start === 0) _temp_times.start = 0.200;
-					entries.times.push(_temp_times);
-					text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-					entries.text.push(text);
+					if (style) _temp.style = style;
+					if (_temp.start === 0) _temp.start = 0.200;
+					_temp.text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+					entries.push(_temp);
 				}
 				return entries;
 			}
