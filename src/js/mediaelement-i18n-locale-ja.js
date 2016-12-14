@@ -35,6 +35,9 @@
 			// mediaelementplayer-feature-jumpforward
 			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
+			// mediaelementplayer-feature-loop
+			//"mejs.loop": "Toggle Loop",
+
 			// mediaelementplayer-feature-playpause
 			"mejs.play": "再生",
 			"mejs.pause": "一時停止",

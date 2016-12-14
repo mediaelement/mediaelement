@@ -34,11 +34,13 @@
 
 			if (postrollLink !== undefined) {
 				player.postroll =
-					$('<div class="mejs-postroll-layer mejs-layer">' +
-						'<a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' +
+					$('<div class="' + t.options.classPrefix + 'postroll-layer ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<a class="' + t.options.classPrefix + 'postroll-close" ' +
+							'onclick="$(this).parent().hide();return false;">' +
 							postrollTitle +
 						'</a>' +
-					'<div class="mejs-postroll-layer-content"></div></div>')
+					'<div class="' + t.options.classPrefix + 'postroll-layer-content"></div></div>')
 						.prependTo(layers).hide();
 
 				t.media.addEventListener('ended', function (e) {
@@ -46,7 +48,7 @@
 						dataType: 'html',
 						url: postrollLink,
 						success: function (data, textStatus) {
-							layers.find('.mejs-postroll-layer-content').html(data);
+							layers.find('.' + t.options.classPrefix + 'postroll-layer-content').html(data);
 						}
 					});
 					player.postroll.show();
