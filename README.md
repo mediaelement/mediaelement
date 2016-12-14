@@ -16,7 +16,7 @@ One file. Any browser. Same UI.
 * [Introduction](#intro)
 * [Browser and Device support](#browser-support)
 * [What's New on `MediaElement.js` version 3.0](#new-features)
-* [Migration from 2.x to 3.x](#migration)
+* [Migrating from `2.x` to `3.x` version](#migration)
 * [Browser and Device support](#browser-support)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
@@ -58,16 +58,14 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 For more information, please consult [Change Log](changelog.md)
 
 <a id="migration"></a>
-## * IMPORTANT: Migration from 2.x to 3.x
+## * IMPORTANT: Migrating from `2.x` to `3.x` version
 In order to successfully install `3.x` in an existing setup, you must consider the following guidelines:
 
 1. If your installation relies on the legacy player classes (i.e., `mejs-player`, `mejs-container`, etc.), you **must** set up the proper namespace. In `2.x`, the default namespace is `mejs-` but now is `mejs__`. In order to set up a new namespace (or the legacy one), use the `classPrefix` configuration, and make sure you use the `mediaelementplayer-legacy` stylesheet provided in the `/build/` folder.
 
-2. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. Use `pluginPath` configuration for this. Check the [Browsers with JavaScript disabled](installation.md#disabled-javascript) section for more details.
-
-3. If you set up markup to consider browsers with Javascript disabled (see [here](installation.md#disabled-javascript)), you need to reference the correct Flash shims, since in 2.x there was only a single Flash shim and now it was split. Check the [Browsers with JavaScript disabled](installation.md#disabled-javascript) section for more details.
+2. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with Javascript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](installation.md#disabled-javascript) section for more details.
  
-4. If you need to force the Flash shim, the proper way to do it in `3.x` is to use the `renderers` configuration and list them as an array. Please check the [Flash test](test/flash.html) file to see how that is done.
+3. If you need to force the Flash shim, the way to do it in `3.x` is to use the `renderers` configuration and list them in an array. Please check the [Flash test](test/flash.html) file to see how that is done.
 
 <a id="browser-support"></a>
 ## Browser and Device support
