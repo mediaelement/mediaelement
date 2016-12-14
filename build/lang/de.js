@@ -35,6 +35,9 @@
 			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": ["1 Sekunde vorspulen", "%1 Sekunden vorspulen"],
 
+			// mediaelementplayer-feature-loop
+			//"mejs.loop": "Toggle Loop",
+
 			// mediaelementplayer-feature-playpause
 			"mejs.play": "Abspielen",
 			"mejs.pause": "Pause",
