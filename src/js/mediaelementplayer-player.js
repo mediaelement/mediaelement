@@ -1559,8 +1559,11 @@
 
 				track = $(track);
 
+				var srclang = (track.attr('srclang')) ? track.attr('srclang').toLowerCase() : '';
+				var trackId = t.id + '_track_' + index + '_' + track.attr('kind') + '_' + srclang;
 				t.tracks.push({
-					srclang: (track.attr('srclang')) ? track.attr('srclang').toLowerCase() : '',
+					trackId:  trackId,
+					srclang: srclang,
 					src: track.attr('src'),
 					kind: track.attr('kind'),
 					label: track.attr('label') || '',
