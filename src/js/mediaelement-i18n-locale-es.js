@@ -37,7 +37,7 @@
 			"mejs.time-jump-forward": ["Adelantar 1 segundo", "Adelantar %1 segundos"],
 
 			// mediaelementplayer-feature-loop
-			//"mejs.loop": "Toggle Loop",
+			"mejs.loop": "Alternar Repetición",
 
 			// mediaelementplayer-feature-playpause
 			"mejs.play": "Reproducción",
