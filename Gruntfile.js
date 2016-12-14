@@ -35,6 +35,7 @@ module.exports = function(grunt) {
 					'src/js/mediaelement-header.js',
 					'src/js/mediaelement-namespace.js',
 					'src/js/mediaelement-utility.js',
+					'src/js/mediaelement-utility-oldie.js',
 					'src/js/mediaelement-core.js',
 					'src/js/mediaelement-renderer-html5.js',
 					'src/js/mediaelement-renderer-hls.js',

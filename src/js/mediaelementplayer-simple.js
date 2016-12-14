@@ -159,7 +159,7 @@ function MediaElementPlayerSimple(idOrObj, options) {
 		t = this;
 
 	t.id = id;
-	t.options = options;
+	t.options = mejs.Utils.extend(mejs.MediaElementPlayerSimpleDefaults, options);
 	t.original = original;
 	t.isVideo = isVideo;
 
@@ -189,7 +189,6 @@ function MediaElementPlayerSimple(idOrObj, options) {
 
 	t.container = container;
 	t.controls = controls;
-	t.options = mejs.Utils.extend(mejs.MediaElementPlayerSimpleDefaults, t.options);
 
 	t.createUI();
 
