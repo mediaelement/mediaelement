@@ -53,41 +53,53 @@
 				mute = (mode === 'horizontal') ?
 
 					// horizontal version
-					$('<div class="mejs-button mejs-volume-button mejs-mute">' +
-						'<button type="button" aria-controls="' + t.id +
-						'" title="' + t.options.muteText +
-						'" aria-label="' + t.options.muteText +
+					$('<div class="' +  t.options.classPrefix + 'button ' +
+					                    t.options.classPrefix + 'volume-button' +
+					                    t.options.classPrefix + 'mute">' +
+						'<button type="button" aria-controls="' + t.id + '" ' +
+							'title="' + t.options.muteText + '" ' +
+							'aria-label="' + t.options.muteText +
 						'"></button>' +
 						'</div>' +
-						'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-						'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
-						'<div class="mejs-horizontal-volume-total">' + // line background
-							'<div class="mejs-horizontal-volume-current"></div>' + // current volume
-							'<div class="mejs-horizontal-volume-handle"></div>' + // handle
-						'</div>' +
+						'<a href="javascript:void(0);" class="' +  t.options.classPrefix + 'horizontal-volume-slider">' + // outer background
+							'<span class="' +  t.options.classPrefix + 'offscreen">' +
+								t.options.allyVolumeControlText +
+							'</span>' +
+							'<div class="' +  t.options.classPrefix + 'horizontal-volume-total">' + // line background
+								'<div class="' +  t.options.classPrefix + 'horizontal-volume-current"></div>' + // current volume
+								'<div class="' +  t.options.classPrefix + 'horizontal-volume-handle"></div>' + // handle
+							'</div>' +
 						'</a>'
 					)
 					.appendTo(controls) :
 
 					// vertical version
-					$('<div class="mejs-button mejs-volume-button mejs-mute">' +
+					$('<div class="' +  t.options.classPrefix + 'button ' +
+					                    t.options.classPrefix + 'volume-button ' +
+					                    t.options.classPrefix + 'mute">' +
 						'<button type="button" aria-controls="' + t.id +
 						'" title="' + t.options.muteText +
 						'" aria-label="' + t.options.muteText +
 						'"></button>' +
-						'<a href="javascript:void(0);" class="mejs-volume-slider">' + // outer background
-						'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
-						'<div class="mejs-volume-total">' + // line background
-							'<div class="mejs-volume-current"></div>' + // current volume
-							'<div class="mejs-volume-handle"></div>' + // handle
-						'</div>' +
+						'<a href="javascript:void(0);" class="' +  t.options.classPrefix + 'volume-slider">' + // outer background
+							'<span class="' +  t.options.classPrefix + 'offscreen">' +
+								t.options.allyVolumeControlText +
+							'</span>' +
+							'<div class="' +  t.options.classPrefix + 'volume-total">' + // line background
+								'<div class="' +  t.options.classPrefix + 'volume-current"></div>' + // current volume
+								'<div class="' +  t.options.classPrefix + 'volume-handle"></div>' + // handle
+							'</div>' +
 						'</a>' +
 						'</div>')
 					.appendTo(controls),
-				volumeSlider = t.container.find('.mejs-volume-slider, .mejs-horizontal-volume-slider'),
-				volumeTotal = t.container.find('.mejs-volume-total, .mejs-horizontal-volume-total'),
-				volumeCurrent = t.container.find('.mejs-volume-current, .mejs-horizontal-volume-current'),
-				volumeHandle = t.container.find('.mejs-volume-handle, .mejs-horizontal-volume-handle'),
+				volumeSlider = t.container.find('.' +  t.options.classPrefix + 'volume-slider, ' +
+				                                '.' +  t.options.classPrefix + 'horizontal-volume-slider'),
+				volumeTotal = t.container.find('.' + t.options.classPrefix + 'volume-total, ' +
+				                               '.' + t.options.classPrefix + 'horizontal-volume-total'),
+				volumeCurrent = t.container.find('.' +  t.options.classPrefix + 'volume-current, ' +
+				                                 '.' +  t.options.classPrefix + 'horizontal-volume-current'),
+				volumeHandle = t.container.find('.' +  t.options.classPrefix + 'volume-handle, ' +
+				                                '.' +  t.options.classPrefix + 'horizontal-volume-handle'),
 
 				/**
 				 * @private
@@ -101,11 +113,17 @@
 
 					// adjust mute button style
 					if (volume === 0) {
-						mute.removeClass('mejs-mute').addClass('mejs-unmute');
-						mute.children('button').attr('title', mejs.i18n.t('mejs.unmute')).attr('aria-label', mejs.i18n.t('mejs.unmute'));
+						mute.removeClass(t.options.classPrefix + 'mute')
+							.addClass(t.options.classPrefix + 'unmute');
+						mute.children('button')
+							.attr('title', mejs.i18n.t('mejs.unmute'))
+							.attr('aria-label', mejs.i18n.t('mejs.unmute'));
 					} else {
-						mute.removeClass('mejs-unmute').addClass('mejs-mute');
-						mute.children('button').attr('title', mejs.i18n.t('mejs.mute')).attr('aria-label', mejs.i18n.t('mejs.mute'));
+						mute.removeClass( t.options.classPrefix + 'unmute')
+							.addClass( t.options.classPrefix + 'mute');
+						mute.children('button')
+							.attr('title', mejs.i18n.t('mejs.mute'))
+							.attr('aria-label', mejs.i18n.t('mejs.mute'));
 					}
 
 					var volumePercentage = volume * 100 + '%';
@@ -270,11 +288,11 @@
 
 			//Keyboard input
 			mute.find('button').on('focus', function () {
-				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+				if (!volumeSlider.hasClass(t.options.classPrefix + 'horizontal-volume-slider')) {
 					volumeSlider.show();
 				}
 			}).on('blur', function () {
-				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+				if (!volumeSlider.hasClass(t.options.classPrefix + 'horizontal-volume-slider')) {
 					volumeSlider.hide();
 				}
 			});
@@ -284,10 +302,12 @@
 				if (!mouseIsDown) {
 					if (media.muted) {
 						positionVolumeHandle(0);
-						mute.removeClass('mejs-mute').addClass('mejs-unmute');
+						mute.removeClass(t.options.classPrefix + 'mute')
+							.addClass(t.options.classPrefix + 'unmute');
 					} else {
 						positionVolumeHandle(media.volume);
-						mute.removeClass('mejs-unmute').addClass('mejs-mute');
+						mute.removeClass(t.options.classPrefix + 'unmute')
+							.addClass(t.options.classPrefix + 'mute');
 					}
 				}
 				updateVolumeSlider(e);
@@ -308,10 +328,12 @@
 			t.container.on('controlsresize', function () {
 				if (media.muted) {
 					positionVolumeHandle(0);
-					mute.removeClass('mejs-mute').addClass('mejs-unmute');
+					mute.removeClass(t.options.classPrefix + 'mute')
+						.addClass(t.options.classPrefix + 'unmute');
 				} else {
 					positionVolumeHandle(media.volume);
-					mute.removeClass('mejs-unmute').addClass('mejs-mute');
+					mute.removeClass(t.options.classPrefix + 'unmute')
+						.addClass(t.options.classPrefix + 'mute');
 				}
 			});
 		}

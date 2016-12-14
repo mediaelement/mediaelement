@@ -47,9 +47,15 @@
 			}
 
 			player.sourcechooserButton =
-				$('<div class="mejs-button mejs-sourcechooser-button">' +
-					'<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + sourceTitle + '" aria-label="' + sourceTitle + '"></button>' +
-					'<div class="mejs-sourcechooser-selector mejs-offscreen" role="menu" aria-expanded="false" aria-hidden="true">' +
+				$('<div class="' + t.options.classPrefix + 'button ' +
+				                   t.options.classPrefix + 'sourcechooser-button">' +
+					'<button type="button" role="button" aria-haspopup="true" ' +
+						'aria-owns="' + t.id + '" title="' + sourceTitle + '" ' +
+						'aria-label="' + sourceTitle +
+					'"></button>' +
+					'<div class="' + t.options.classPrefix + 'sourcechooser-selector ' +
+					                 t.options.classPrefix + 'offscreen" role="menu" ' +
+						'aria-expanded="false" aria-hidden="true">' +
 					'<ul>' +
 					'</ul>' +
 					'</div>' +
@@ -75,12 +81,12 @@
 							if (!mejs.MediaFeatures.isFirefox) { // space sends the click event in Firefox
 								player.showSourcechooserSelector();
 							}
-							$(this).find('.mejs-sourcechooser-selector')
+							$(this).find('.' + t.options.classPrefix + 'sourcechooser-selector')
 							.find('input[type=radio]:checked').first().focus();
 							break;
 						case 13: // enter
 							player.showSourcechooserSelector();
-							$(this).find('.mejs-sourcechooser-selector')
+							$(this).find('.' + t.options.classPrefix + 'sourcechooser-selector')
 							.find('input[type=radio]:checked').first().focus();
 							break;
 						case 27: // esc
@@ -97,7 +103,7 @@
 					// Firefox does NOT support e.relatedTarget to see which element
 					// just lost focus, so wait to find the next focused element
 					setTimeout(function () {
-						var parent = $(document.activeElement).closest('.mejs-sourcechooser-selector');
+						var parent = $(document.activeElement).closest('.' + t.options.classPrefix + 'sourcechooser-selector');
 						if (!parent.length) {
 							// focus is outside the control; close menu
 							player.hideSourcechooserSelector();
@@ -109,7 +115,11 @@
 				.on('click', 'input[type=radio]', function () {
 					// set aria states
 					$(this).attr('aria-selected', true).attr('checked', 'checked');
-					$(this).closest('.mejs-sourcechooser-selector').find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
+					$(this).closest('.' + t.options.classPrefix + 'sourcechooser-selector')
+						.find('input[type=radio]')
+						.not(this)
+						.attr('aria-selected', 'false')
+						.removeAttr('checked');
 
 					var src = this.value;
 
@@ -137,9 +147,10 @@
 
 				// Handle click so that screen readers can toggle the menu
 				.on('click', 'button', function (e) {
-					if ($(this).siblings('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
+					if ($(this).siblings('.' + t.options.classPrefix + 'sourcechooser-selector').hasClass(t.options.classPrefix + 'offscreen')) {
 						player.showSourcechooserSelector();
-						$(this).siblings('.mejs-sourcechooser-selector').find('input[type=radio]:checked').first().focus();
+						$(this).siblings('.' + t.options.classPrefix + 'sourcechooser-selector')
+							.find('input[type=radio]:checked').first().focus();
 					} else {
 						player.hideSourcechooserSelector();
 					}
@@ -170,9 +181,13 @@
 
 			t.sourcechooserButton.find('ul').append(
 				$('<li>' +
-					'<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + 'aria-selected="' + isCurrent + '"' + ' />' +
-					'<label for="' + t.id + '_sourcechooser_' + label + type + '" aria-hidden="true">' + label + ' (' + type + ')</label>' +
-					'</li>')
+					'<input type="radio" name="' + t.id + '_sourcechooser" ' +
+						'id="' + t.id + '_sourcechooser_' + label + type + '" ' +
+						'role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') +
+						'aria-selected="' + isCurrent + '"' + ' />' +
+					'<label for="' + t.id + '_sourcechooser_' + label + type + '" ' +
+						'aria-hidden="true">' + label + ' (' + type + ')</label>' +
+				'</li>')
 			);
 
 			t.adjustSourcechooserBox();
@@ -185,8 +200,8 @@
 		adjustSourcechooserBox: function () {
 			var t = this;
 			// adjust the size of the outer box
-			t.sourcechooserButton.find('.mejs-sourcechooser-selector').height(
-				t.sourcechooserButton.find('.mejs-sourcechooser-selector ul').outerHeight(true)
+			t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').height(
+				t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector ul').outerHeight(true)
 			);
 		},
 
@@ -197,12 +212,13 @@
 
 			var t = this;
 
-			if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
+			if (t.sourcechooserButton === undefined ||
+				!t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]').length) {
 				return;
 			}
 
-			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
-			.addClass('mejs-offscreen')
+			this.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector')
+			.addClass(t.options.classPrefix + 'offscreen')
 			.attr('aria-expanded', 'false')
 			.attr('aria-hidden', 'true')
 			.find('input[type=radio]') // make radios not focusable
@@ -216,12 +232,13 @@
 
 			var t = this;
 
-			if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
+			if (t.sourcechooserButton === undefined ||
+				!t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]').length) {
 				return;
 			}
 
-			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
-			.removeClass('mejs-offscreen')
+			this.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector')
+			.removeClass(t.options.classPrefix + 'offscreen')
 			.attr('aria-expanded', 'true')
 			.attr('aria-hidden', 'false')
 			.find('input[type=radio]')
