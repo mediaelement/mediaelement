@@ -5777,6 +5777,9 @@ mejs.version = '3.0';
 			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
+			// mediaelementplayer-feature-loop
+			"mejs.loop": "Toggle Loop",
+
 			// mediaelementplayer-feature-playpause
 			"mejs.play": "Play",
 			"mejs.pause": "Pause",
@@ -5996,6 +5999,8 @@ if (jQuery !== undefined) {
 		isVideo: true,
 		// stretching modes (auto, fill, responsive, none)
 		stretching: 'auto',
+		// prefix class names on elements
+		classPrefix: 'mejs__',
 		// turns keyboard support on and off for this instance
 		enableKeyboard: true,
 		// when this player starts, it will pause other players
@@ -6022,9 +6027,9 @@ if (jQuery !== undefined) {
 				keys: [38], // UP
 				action: function (player, media, key, event) {
 
-					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
-						player.container.find('.mejs-volume-slider').is(':focus')) {
-						player.container.find('.mejs-volume-slider').css('display', 'block');
+					if (player.container.find('.' + t.options.classPrefix + 'volume-button>button').is(':focus') ||
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').is(':focus')) {
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').css('display', 'block');
 					}
 					if (player.isVideo) {
 						player.showControls();
@@ -6042,9 +6047,9 @@ if (jQuery !== undefined) {
 			{
 				keys: [40], // DOWN
 				action: function (player, media, key, event) {
-					if (player.container.find('.mejs-volume-button>button').is(':focus') ||
-						player.container.find('.mejs-volume-slider').is(':focus')) {
-						player.container.find('.mejs-volume-slider').css('display', 'block');
+					if (player.container.find('.' + t.options.classPrefix + 'volume-button>button').is(':focus') ||
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').is(':focus')) {
+						player.container.find('.' + t.options.classPrefix + 'volume-slider').css('display', 'block');
 					}
 
 					if (player.isVideo) {
@@ -6114,7 +6119,7 @@ if (jQuery !== undefined) {
 			{
 				keys: [77], // M
 				action: function (player, media, key, event) {
-					player.container.find('.mejs-volume-slider').css('display', 'block');
+					player.container.find('.' + t.options.classPrefix + 'volume-slider').css('display', 'block');
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
@@ -6327,16 +6332,19 @@ if (jQuery !== undefined) {
 				var videoPlayerTitle = t.isVideo ?
 					mejs.i18n.t('mejs.video-player') : mejs.i18n.t('mejs.audio-player');
 				// insert description for screen readers
-				$('<span class="mejs-offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
+				$('<span class="' + t.options.classPrefix + 'offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
 				// build container
 				t.container =
-					$('<div id="' + t.id + '" class="mejs-container mejs-container-keyboard-inactive" ' +
-						'tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">' +
-						'<div class="mejs-inner">' +
-						'<div class="mejs-mediaelement"></div>' +
-						'<div class="mejs-layers"></div>' +
-						'<div class="mejs-controls"></div>' +
-						'<div class="mejs-clear"></div>' +
+					$('<div id="' + t.id + '"' +
+							'class="' + t.options.classPrefix + 'container ' +
+						            	t.options.classPrefix + 'container-keyboard-inactive" ' +
+							'tabindex="0" role="application" ' +
+							'aria-label="' + videoPlayerTitle + '">' +
+						'<div class="' + t.options.classPrefix + 'inner">' +
+						'<div class="' + t.options.classPrefix + 'mediaelement"></div>' +
+						'<div class="' + t.options.classPrefix + 'layers"></div>' +
+						'<div class="' + t.options.classPrefix + 'controls"></div>' +
+						'<div class="' + t.options.classPrefix + 'clear"></div>' +
 						'</div>' +
 						'</div>')
 					.addClass(t.$media[0].className)
@@ -6350,10 +6358,11 @@ if (jQuery !== undefined) {
 							if (!t.hasMsNativeFullScreen) {
 								// If e.relatedTarget appears before container, send focus to play button,
 								// else send focus to last control button.
-								var btnSelector = '.mejs-playpause-button > button';
+								var btnSelector = '.' + t.options.classPrefix + 'playpause-button > button';
 
 								if (mejs.Utility.isNodeAfter(e.relatedTarget, t.container[0])) {
-									btnSelector = '.mejs-controls .mejs-button:last-child > button';
+									btnSelector = '.' + t.options.classPrefix + 'controls ' +
+										'.' + t.options.classPrefix + 'button:last-child > button';
 								}
 
 								var button = t.container.find(btnSelector);
@@ -6364,34 +6373,37 @@ if (jQuery !== undefined) {
 
 				// When no elements in controls, hide bar completely
 				if (!t.options.features.length) {
-					t.container.css('background', 'transparent').find('.mejs-controls').hide();
+					t.container.css('background', 'transparent')
+						.find('.' + t.options.classPrefix + 'controls')
+						.hide();
 				}
 
-				if (t.isVideo && t.options.stretching === 'fill' && !t.container.parent('mejs-fill-container').length) {
+				if (t.isVideo && t.options.stretching === 'fill' &&
+					!t.container.parent('.' + t.options.classPrefix + 'fill-container').length) {
 					// outer container
 					t.outerContainer = t.$media.parent();
-					t.container.wrap('<div class="mejs-fill-container"/>');
+					t.container.wrap('<div class="' + t.options.classPrefix + 'fill-container"/>');
 				}
 
 				// add classes for user and content
 				t.container.addClass(
-					(mf.isAndroid ? 'mejs-android ' : '') +
-					(mf.isiOS ? 'mejs-ios ' : '') +
-					(mf.isiPad ? 'mejs-ipad ' : '') +
-					(mf.isiPhone ? 'mejs-iphone ' : '') +
-					(t.isVideo ? 'mejs-video ' : 'mejs-audio ')
+					(mf.isAndroid ? t.options.classPrefix + 'android ' : '') +
+					(mf.isiOS ? t.options.classPrefix + 'ios ' : '') +
+					(mf.isiPad ? t.options.classPrefix + 'ipad ' : '') +
+					(mf.isiPhone ? t.options.classPrefix + 'iphone ' : '') +
+					(t.isVideo ? t.options.classPrefix + 'video ' : t.options.classPrefix + 'audio ')
 				);
 
 
 				// move the <video/video> tag into the right spot
-				t.container.find('.mejs-mediaelement').append(t.$media);
+				t.container.find('.' + t.options.classPrefix + 'mediaelement').append(t.$media);
 
 				// needs to be assigned here, after iOS remap
 				t.node.player = t;
 
 				// find parts
-				t.controls = t.container.find('.mejs-controls');
-				t.layers = t.container.find('.mejs-layers');
+				t.controls = t.container.find('.' + t.options.classPrefix + 'controls');
+				t.layers = t.container.find('.' + t.options.classPrefix + 'layers');
 
 				// determine the size
 
@@ -6459,27 +6471,27 @@ if (jQuery !== undefined) {
 
 			if (doAnimation) {
 				t.controls
-				.removeClass('mejs-offscreen')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.stop(true, true).fadeIn(200, function () {
 					t.controlsAreVisible = true;
 					t.container.trigger('controlsshown');
 				});
 
 				// any additional controls people might add and want to hide
-				t.container.find('.mejs-control')
-				.removeClass('mejs-offscreen')
+				t.container.find('.' + t.options.classPrefix + 'control')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.stop(true, true).fadeIn(200, function () {
 					t.controlsAreVisible = true;
 				});
 
 			} else {
 				t.controls
-				.removeClass('mejs-offscreen')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				// any additional controls people might add and want to hide
-				t.container.find('.mejs-control')
-				.removeClass('mejs-offscreen')
+				t.container.find('.' + t.options.classPrefix + 'control')
+				.removeClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				t.controlsAreVisible = true;
@@ -6506,7 +6518,7 @@ if (jQuery !== undefined) {
 				// fade out main controls
 				t.controls.stop(true, true).fadeOut(200, function () {
 					$(this)
-					.addClass('mejs-offscreen')
+					.addClass(t.options.classPrefix + 'offscreen')
 					.css('display', 'block');
 
 					t.controlsAreVisible = false;
@@ -6514,21 +6526,21 @@ if (jQuery !== undefined) {
 				});
 
 				// any additional controls people might add and want to hide
-				t.container.find('.mejs-control').stop(true, true).fadeOut(200, function () {
-					$(this)
-					.addClass('mejs-offscreen')
-					.css('display', 'block');
-				});
+				t.container.find('.' + t.options.classPrefix + 'control')
+					.stop(true, true).fadeOut(200, function () {
+						$(this).addClass(t.options.classPrefix + 'offscreen')
+						.css('display', 'block');
+					});
 			} else {
 
 				// hide main controls
 				t.controls
-				.addClass('mejs-offscreen')
+				.addClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				// hide others
-				t.container.find('.mejs-control')
-				.addClass('mejs-offscreen')
+				t.container.find('.' + t.options.classPrefix + 'control')
+				.addClass(t.options.classPrefix + 'offscreen')
 				.css('display', 'block');
 
 				t.controlsAreVisible = false;
@@ -6686,7 +6698,8 @@ if (jQuery !== undefined) {
 
 							if (t.options.clickToPlayPause) {
 								var
-									button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
+									button = t.$media.closest('.' + t.options.classPrefix + 'container')
+										.find('.' + t.options.classPrefix + 'overlay-button'),
 									pressed = button.attr('aria-pressed')
 									;
 								if (t.media.paused && pressed) {
@@ -6783,7 +6796,9 @@ if (jQuery !== undefined) {
 							t.media.setCurrentTime(0);
 							// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after ending the video and jumping to the beginning
 							window.setTimeout(function () {
-								$(t.container).find('.mejs-overlay-loading').parent().hide();
+								$(t.container)
+									.find('.' + t.options.classPrefix + 'overlay-loading')
+									.parent().hide();
 							}, 20);
 						} catch (exp) {
 
@@ -6850,7 +6865,7 @@ if (jQuery !== undefined) {
 				t.container.focusout(function (e) {
 					if (e.relatedTarget) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
 						var $target = $(e.relatedTarget);
-						if (t.keyboardAction && $target.parents('.mejs-container').length === 0) {
+						if (t.keyboardAction && $target.parents('.' + t.options.classPrefix + 'container').length === 0) {
 							t.keyboardAction = false;
 							if (t.isVideo && !t.options.alwaysShowControls) {
 								t.hideControls(true);
@@ -6880,19 +6895,21 @@ if (jQuery !== undefined) {
 
 				// Disable focus outline to improve look-and-feel for regular users
 				t.globalBind('click', function(e) {
-					if ($(e.target).is('.mejs-container')) {
-						$(e.target).addClass('mejs-container-keyboard-inactive');
-					} else if ($(e.target).closest('.mejs-container').length) {
-						$(e.target).closest('.mejs-container').addClass('mejs-container-keyboard-inactive');
+					if ($(e.target).is('.' + t.options.classPrefix + 'container')) {
+						$(e.target).addClass(t.options.classPrefix + 'container-keyboard-inactive');
+					} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
+						$(e.target).closest('.' + t.options.classPrefix + 'container')
+							.addClass(t.options.classPrefix + 'container-keyboard-inactive');
 					}
 				});
 
 				// Enable focus outline for Accessibility purposes
 				t.globalBind('keydown', function(e) {
-					if ($(e.target).is('.mejs-container')) {
-						$(e.target).removeClass('mejs-container-keyboard-inactive');
-					} else if ($(e.target).closest('.mejs-container').length) {
-						$(e.target).closest('.mejs-container').removeClass('mejs-container-keyboard-inactive');
+					if ($(e.target).is('.' + t.options.classPrefix + 'container')) {
+						$(e.target).removeClass(t.options.classPrefix + 'container-keyboard-inactive');
+					} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
+						$(e.target).closest('.' + t.options.classPrefix + 'container')
+							.removeClass(t.options.classPrefix + 'container-keyboard-inactive');
 					}
 				});
 
@@ -6900,8 +6917,8 @@ if (jQuery !== undefined) {
 				//	we can't use the play() API for the initial playback on iOS or Android;
 				//	user has to start playback directly by tapping on the iFrame.
 				if (t.media.rendererName !== null && t.media.rendererName.match(/youtube/) && (mf.isiOS || mf.isAndroid)) {
-					t.container.find('.mejs-overlay-play').hide();
-					t.container.find('.mejs-poster').hide();
+					t.container.find('.' + t.options.classPrefix + 'overlay-play').hide();
+					t.container.find('.' + t.options.classPrefix + 'poster').hide();
 				}
 			}
 
@@ -7097,7 +7114,7 @@ if (jQuery !== undefined) {
 				}
 
 				// set the layers
-				t.layers.children('.mejs-layer')
+				t.layers.children('.' + t.options.classPrefix + 'layer')
 				.width('100%')
 				.height('100%');
 			}
@@ -7145,7 +7162,7 @@ if (jQuery !== undefined) {
 			t.setDimensions('100%', '100%');
 
 			// This prevents an issue when displaying poster
-			t.container.find('.mejs-poster img').css('display', 'block');
+			t.container.find('.' + t.options.classPrefix + 'poster img').css('display', 'block');
 
 			targetElement = t.container.find('object, embed, iframe, video');
 
@@ -7188,7 +7205,7 @@ if (jQuery !== undefined) {
 			.width(width)
 			.height(height);
 
-			t.layers.children('.mejs-layer')
+			t.layers.children('.' + t.options.classPrefix + 'layer')
 			.width(width)
 			.height(height);
 		},
@@ -7196,7 +7213,7 @@ if (jQuery !== undefined) {
 		setControlsSize: function () {
 			var
 				t = this,
-				rail = t.controls.find('.mejs-time-rail')
+				rail = t.controls.find('.' + t.options.classPrefix + 'time-rail')
 			;
 
 			// skip calculation if hidden
@@ -7206,7 +7223,7 @@ if (jQuery !== undefined) {
 
 			var
 				controlElements = t.controls.children(),
-				margin = parseFloat(controlElements.children('.mejs-time-total').css('margin-left')),
+				margin = parseFloat(controlElements.children('.' + t.options.classPrefix + 'time-total').css('margin-left')),
 				siblingsWidth = 0
 			;
 
@@ -7226,7 +7243,8 @@ if (jQuery !== undefined) {
 		buildposter: function (player, controls, layers, media) {
 			var t = this,
 				poster =
-					$('<div class="mejs-poster mejs-layer">' +
+					$('<div class="' + t.options.classPrefix + 'poster ' +
+					                   t.options.classPrefix + 'layer">' +
 						'</div>')
 					.appendTo(layers),
 				posterUrl = player.$media.attr('poster');
@@ -7256,11 +7274,12 @@ if (jQuery !== undefined) {
 
 		setPoster: function (url) {
 			var t = this,
-				posterDiv = t.container.find('.mejs-poster'),
+				posterDiv = t.container.find('.' + t.options.classPrefix + 'poster'),
 				posterImg = posterDiv.find('img');
 
 			if (posterImg.length === 0) {
-				posterImg = $('<img class="mejs-poster-img" width="100%" height="100%" alt="" />').appendTo(posterDiv);
+				posterImg = $('<img class="' + t.options.classPrefix + 'poster-img" width="100%" height="100%" alt="" />')
+					.appendTo(posterDiv);
 			}
 
 			posterImg.attr('src', url);
@@ -7274,30 +7293,37 @@ if (jQuery !== undefined) {
 
 			var
 				loading =
-					$('<div class="mejs-overlay mejs-layer">' +
-						'<div class="mejs-overlay-loading">' +
-							'<span class="mejs-overlay-loading-bg-img"></span>' +
+					$('<div class="' + t.options.classPrefix + 'overlay ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<div class="' + t.options.classPrefix + 'overlay-loading">' +
+							'<span class="' + t.options.classPrefix + 'overlay-loading-bg-img"></span>' +
 						'</div>' +
 					'</div>')
 					.hide() // start out hidden
 					.appendTo(layers),
 				error =
-					$('<div class="mejs-overlay mejs-layer">' +
-						'<div class="mejs-overlay-error"></div>' +
+					$('<div class="' + t.options.classPrefix + 'overlay ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<div class="' + t.options.classPrefix + 'overlay-error"></div>' +
 						'</div>')
 					.hide() // start out hidden
 					.appendTo(layers),
 				// this needs to come last so it's on top
 				bigPlay =
-					$('<div class="mejs-overlay mejs-layer mejs-overlay-play">' +
-						'<div class="mejs-overlay-button" role="button" aria-label="' + mejs.i18n.t('mejs.play') + '" aria-pressed="false"></div>' +
+					$('<div class="' + t.options.classPrefix + 'overlay ' +
+					                   t.options.classPrefix + 'layer ' +
+									   t.options.classPrefix + 'overlay-play">' +
+						'<div class="' + t.options.classPrefix + 'overlay-button" ' +
+							'role="button" aria-label="' + mejs.i18n.t('mejs.play') +
+							'" aria-pressed="false"></div>' +
 						'</div>')
 					.appendTo(layers)
 					.on('click', function () {	 // Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay started and immediately stopped the video
 						if (t.options.clickToPlayPause) {
 
 							var
-								button = t.$media.closest('.mejs-container').find('.mejs-overlay-button'),
+								button = t.$media.closest('.' + t.options.classPrefix + 'container')
+									.find('.' + t.options.classPrefix + 'overlay-button'),
 								pressed = button.attr('aria-pressed')
 							;
 
@@ -7319,25 +7345,25 @@ if (jQuery !== undefined) {
 			media.addEventListener('play', function () {
 				bigPlay.hide();
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 				error.hide();
 			}, false);
 
 			media.addEventListener('playing', function () {
 				bigPlay.hide();
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 				error.hide();
 			}, false);
 
 			media.addEventListener('seeking', function () {
 				loading.show();
-				controls.find('.mejs-time-buffering').show();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
 			}, false);
 
 			media.addEventListener('seeked', function () {
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 			}, false);
 
 			media.addEventListener('pause', function () {
@@ -7346,7 +7372,7 @@ if (jQuery !== undefined) {
 
 			media.addEventListener('waiting', function () {
 				loading.show();
-				controls.find('.mejs-time-buffering').show();
+				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
 			}, false);
 
 
@@ -7357,8 +7383,9 @@ if (jQuery !== undefined) {
 				//	return;
 
 				loading.show();
-				controls.find('.mejs-time-buffering').show();
-				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices (https://github.com/johndyer/mediaelement/issues/1305)
+				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
+				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
+				// (https://github.com/johndyer/mediaelement/issues/1305)
 				if (mejs.MediaFeatures.isAndroid) {
 					media.canplayTimeout = window.setTimeout(
 						function () {
@@ -7373,8 +7400,9 @@ if (jQuery !== undefined) {
 			}, false);
 			media.addEventListener('canplay', function () {
 				loading.hide();
-				controls.find('.mejs-time-buffering').hide();
-				clearTimeout(media.canplayTimeout); // Clear timeout inside 'loadeddata' to prevent 'canplay' to fire twice
+				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
+				// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
+				clearTimeout(media.canplayTimeout);
 			}, false);
 
 			// error handling
@@ -7383,7 +7411,8 @@ if (jQuery !== undefined) {
 				loading.hide();
 				bigPlay.hide();
 				error.show();
-				error.find('.mejs-overlay-error').html("Error loading this resource");
+				error.find('.' + t.options.classPrefix + 'overlay-error')
+					.html("Error loading this resource");
 			}, false);
 
 			media.addEventListener('keydown', function (e) {
@@ -7401,15 +7430,16 @@ if (jQuery !== undefined) {
 
 			// listen for key presses
 			t.globalBind('keydown', function (event) {
-				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0 &&
-					$(event.target).closest('.mejs-container').attr('id') === player.$media.closest('.mejs-container').attr('id');
+				var $container = $(event.target).closest('.' + t.options.classPrefix + 'container');
+				player.hasFocus = $container.length !== 0 &&
+					$container.attr('id') === player.$media.closest('.' + t.options.classPrefix + 'container').attr('id');
 				return t.onkeydown(player, media, event);
 			});
 
 
 			// check if someone clicked outside a player region, then kill its focus
 			t.globalBind('click', function (event) {
-				player.hasFocus = $(event.target).closest('.mejs-container').length !== 0;
+				player.hasFocus = $(event.target).closest('.' + t.options.classPrefix + 'container').length !== 0;
 			});
 
 		},
@@ -7455,7 +7485,7 @@ if (jQuery !== undefined) {
 		changeSkin: function (className) {
 			var t = this;
 
-			t.container[0].className = 'mejs-container ' + className;
+			t.container[0].className = t.options.classPrefix + 'container ' + className;
 			t.setPlayerSize(t.width, t.height);
 			t.setControlsSize();
 		},
@@ -7540,7 +7570,7 @@ if (jQuery !== undefined) {
 			delete mejs.players[t.id];
 
 			if (typeof t.container === 'object') {
-				t.container.prev('.mejs-offscreen').remove();
+				t.container.prev('.' + t.options.classPrefix + 'offscreen').remove();
 				t.container.remove();
 			}
 			t.globalUnbind();
@@ -7622,9 +7652,10 @@ if (jQuery !== undefined) {
 		};
 
 
+		// Auto-init using the configured default settings & JSON attribute
 		$(document).ready(function () {
 			// auto enable using JSON attribute
-			$('.mejs-player').mediaelementplayer();
+			$('.' + mejs.MepDefaults.classPrefix + 'player').mediaelementplayer();
 		});
 	}
 
@@ -7671,8 +7702,11 @@ if (jQuery !== undefined) {
 				playTitle = op.playText ? op.playText : mejs.i18n.t('mejs.play'),
 				pauseTitle = op.pauseText ? op.pauseText : mejs.i18n.t('mejs.pause'),
 				play =
-				$('<div class="mejs-button mejs-playpause-button mejs-play" >' +
-					'<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '"></button>' +
+				$('<div class="' + t.options.classPrefix + 'button ' +
+				                   t.options.classPrefix + 'playpause-button ' +
+								   t.options.classPrefix + 'play" >' +
+					'<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" ' +
+						'aria-label="' + pauseTitle + '"></button>' +
 				'</div>')
 				.appendTo(controls)
 				.click(function() {
@@ -7691,13 +7725,15 @@ if (jQuery !== undefined) {
 			 */
 			function togglePlayPause(which) {
 				if ('play' === which) {
-					play.removeClass('mejs-play').addClass('mejs-pause');
+					play.removeClass(t.options.classPrefix + 'play')
+						.addClass(t.options.classPrefix + 'pause');
 					play_btn.attr({
 						'title': pauseTitle,
 						'aria-label': pauseTitle
 					});
 				} else {
-					play.removeClass('mejs-pause').addClass('mejs-play');
+					play.removeClass(t.options.classPrefix + 'pause')
+						.addClass(t.options.classPrefix + 'play');
 					play_btn.attr({
 						'title': playTitle,
 						'aria-label': playTitle
@@ -7758,8 +7794,12 @@ if (jQuery !== undefined) {
 				t = this,
 				stopTitle = t.options.stopText ? t.options.stopText : mejs.i18n.t('mejs.stop');
 
-			$('<div class="mejs-button mejs-stop-button mejs-stop">' +
-				'<button type="button" aria-controls="' + t.id + '" title="' + stopTitle + '" aria-label="' + stopTitle + '"></button>' +
+			$('<div class="' +  t.options.classPrefix + 'button ' +
+			                    t.options.classPrefix + 'stop-button ' +
+			                    t.options.classPrefix + 'stop">' +
+					'<button type="button" aria-controls="' + t.id + '" ' +
+						'title="' + stopTitle + '" aria-label="' + stopTitle + '">' +
+					'</button>' +
 				'</div>')
 			.appendTo(controls)
 			.click(function () {
@@ -7769,11 +7809,16 @@ if (jQuery !== undefined) {
 				if (media.currentTime > 0) {
 					media.setCurrentTime(0);
 					media.pause();
-					controls.find('.mejs-time-current').width('0px');
-					controls.find('.mejs-time-handle').css('left', '0px');
-					controls.find('.mejs-time-float-current').html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
-					controls.find('.mejs-currenttime').html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
-					layers.find('.mejs-poster').show();
+					controls.find('.' +  t.options.classPrefix + 'time-current')
+						.width('0px');
+					controls.find('.' +  t.options.classPrefix + 'time-handle')
+						.css('left', '0px');
+					controls.find('.' +  t.options.classPrefix + 'time-float-current')
+						.html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
+					controls.find('.' +  t.options.classPrefix + 'currenttime')
+						.html(mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours));
+					layers.find('.' +  t.options.classPrefix + 'poster')
+						.show();
 				}
 			});
 		}
@@ -7794,11 +7839,7 @@ if (jQuery !== undefined) {
 		 * Enable tooltip that shows time in progress bar
 		 * @type {Boolean}
 		 */
-		enableProgressTooltip: true,
-		/**
-		 * @type {String}
-		 */
-		progressHelpText: ''
+		enableProgressTooltip: true
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -7821,32 +7862,31 @@ if (jQuery !== undefined) {
 				lastKeyPressTime = 0,
 				startedPaused = false,
 				autoRewindInitial = player.options.autoRewind,
-				progressTitle = t.options.progressHelpText ? t.options.progressHelpText : mejs.i18n.t('mejs.time-help-text'),
-				tooltip = player.options.enableProgressTooltip ? '<span class="mejs-time-float">' +
-				'<span class="mejs-time-float-current">00:00</span>' +
-				'<span class="mejs-time-float-corner"></span>' +
+				tooltip = player.options.enableProgressTooltip ? '<span class="' + t.options.classPrefix + 'time-float">' +
+				'<span class="' + t.options.classPrefix + 'time-float-current">00:00</span>' +
+				'<span class="' + t.options.classPrefix + 'time-float-corner"></span>' +
 				'</span>' : "";
 
-			$('<div class="mejs-time-rail">' +
-				'<span  class="mejs-time-total mejs-time-slider">' +
-				//'<span class="mejs-offscreen">' + progressTitle + '</span>' +
-				'<span class="mejs-time-buffering"></span>' +
-				'<span class="mejs-time-loaded"></span>' +
-				'<span class="mejs-time-current"></span>' +
-				'<span class="mejs-time-handle"></span>' +
+			$('<div class="' + t.options.classPrefix + 'time-rail">' +
+				'<span class="' + t.options.classPrefix + 'time-total ' +
+				                  t.options.classPrefix + 'time-slider">' +
+				'<span class="' + t.options.classPrefix + 'time-buffering"></span>' +
+				'<span class="' + t.options.classPrefix + 'time-loaded"></span>' +
+				'<span class="' + t.options.classPrefix + 'time-current"></span>' +
+				'<span class="' + t.options.classPrefix + 'time-handle"></span>' +
 				tooltip +
 				'</span>' +
 				'</div>')
 			.appendTo(controls);
-			controls.find('.mejs-time-buffering').hide();
+			controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 
-			t.total = controls.find('.mejs-time-total');
-			t.loaded = controls.find('.mejs-time-loaded');
-			t.current = controls.find('.mejs-time-current');
-			t.handle = controls.find('.mejs-time-handle');
-			t.timefloat = controls.find('.mejs-time-float');
-			t.timefloatcurrent = controls.find('.mejs-time-float-current');
-			t.slider = controls.find('.mejs-time-slider');
+			t.total = controls.find('.' + t.options.classPrefix + 'time-total');
+			t.loaded = controls.find('.' + t.options.classPrefix + 'time-loaded');
+			t.current = controls.find('.' + t.options.classPrefix + 'time-current');
+			t.handle = controls.find('.' + t.options.classPrefix + 'time-handle');
+			t.timefloat = controls.find('.' + t.options.classPrefix + 'time-float');
+			t.timefloatcurrent = controls.find('.' + t.options.classPrefix + 'time-float-current');
+			t.slider = controls.find('.' + t.options.classPrefix + 'time-slider');
 
 			/**
 			 *
@@ -8177,14 +8217,14 @@ if (jQuery !== undefined) {
 		buildcurrent: function(player, controls, layers, media) {
 			var t = this;
 
-			$('<div class="mejs-time" role="timer" aria-live="off">' +
-					'<span class="mejs-currenttime">' +
+			$('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' +
+					'<span class="' + t.options.classPrefix + 'currenttime">' +
 						mejs.Utility.secondsToTimeCode(0, player.options.alwaysShowHours) +
                     '</span>'+
 				'</div>')
 			.appendTo(controls);
 
-			t.currenttime = t.controls.find('.mejs-currenttime');
+			t.currenttime = t.controls.find('.' + t.options.classPrefix + 'currenttime');
 
 			media.addEventListener('timeupdate',function() {
 				if (t.controlsAreVisible) {
@@ -8206,26 +8246,28 @@ if (jQuery !== undefined) {
 		buildduration: function(player, controls, layers, media) {
 			var t = this;
 
-			if (controls.children().last().find('.mejs-currenttime').length > 0) {
+			if (controls.children().last().find('.' + t.options.classPrefix + 'currenttime').length > 0) {
 				$(t.options.timeAndDurationSeparator +
-					'<span class="mejs-duration">' +
+					'<span class="' + t.options.classPrefix + 'duration">' +
 						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>')
-					.appendTo(controls.find('.mejs-time'));
+					.appendTo(controls.find('.' + t.options.classPrefix + 'time'));
 			} else {
 
 				// add class to current time
-				controls.find('.mejs-currenttime').parent().addClass('mejs-currenttime-container');
+				controls.find('.' + t.options.classPrefix + 'currenttime').parent()
+					.addClass(t.options.classPrefix + 'currenttime-container');
 
-				$('<div class="mejs-time mejs-duration-container">'+
-					'<span class="mejs-duration">' +
+				$('<div class="' + t.options.classPrefix + 'time ' +
+				                   t.options.classPrefix + 'duration-container">'+
+					'<span class="' + t.options.classPrefix + 'duration">' +
 						mejs.Utility.secondsToTimeCode(t.options.duration, t.options.alwaysShowHours) +
 					'</span>' +
 				'</div>')
 				.appendTo(controls);
 			}
 
-			t.durationD = t.controls.find('.mejs-duration');
+			t.durationD = t.controls.find('.' + t.options.classPrefix + 'duration');
 
 			media.addEventListener('timeupdate',function() {
 				if (t.controlsAreVisible) {
@@ -8270,7 +8312,7 @@ if (jQuery !== undefined) {
 			}
 
 			//Toggle the long video class if the video is longer than an hour.
-			t.container.toggleClass("mejs-long-video", duration > 3600);
+			t.container.toggleClass(t.options.classPrefix + "long-video", duration > 3600);
 
 			if (t.durationD && duration > 0) {
 				t.durationD.html(mejs.Utility.secondsToTimeCode(duration, t.options.alwaysShowHours));
@@ -8335,41 +8377,53 @@ if (jQuery !== undefined) {
 				mute = (mode === 'horizontal') ?
 
 					// horizontal version
-					$('<div class="mejs-button mejs-volume-button mejs-mute">' +
-						'<button type="button" aria-controls="' + t.id +
-						'" title="' + t.options.muteText +
-						'" aria-label="' + t.options.muteText +
+					$('<div class="' +  t.options.classPrefix + 'button ' +
+					                    t.options.classPrefix + 'volume-button' +
+					                    t.options.classPrefix + 'mute">' +
+						'<button type="button" aria-controls="' + t.id + '" ' +
+							'title="' + t.options.muteText + '" ' +
+							'aria-label="' + t.options.muteText +
 						'"></button>' +
 						'</div>' +
-						'<a href="javascript:void(0);" class="mejs-horizontal-volume-slider">' + // outer background
-						'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
-						'<div class="mejs-horizontal-volume-total">' + // line background
-							'<div class="mejs-horizontal-volume-current"></div>' + // current volume
-							'<div class="mejs-horizontal-volume-handle"></div>' + // handle
-						'</div>' +
+						'<a href="javascript:void(0);" class="' +  t.options.classPrefix + 'horizontal-volume-slider">' + // outer background
+							'<span class="' +  t.options.classPrefix + 'offscreen">' +
+								t.options.allyVolumeControlText +
+							'</span>' +
+							'<div class="' +  t.options.classPrefix + 'horizontal-volume-total">' + // line background
+								'<div class="' +  t.options.classPrefix + 'horizontal-volume-current"></div>' + // current volume
+								'<div class="' +  t.options.classPrefix + 'horizontal-volume-handle"></div>' + // handle
+							'</div>' +
 						'</a>'
 					)
 					.appendTo(controls) :
 
 					// vertical version
-					$('<div class="mejs-button mejs-volume-button mejs-mute">' +
+					$('<div class="' +  t.options.classPrefix + 'button ' +
+					                    t.options.classPrefix + 'volume-button ' +
+					                    t.options.classPrefix + 'mute">' +
 						'<button type="button" aria-controls="' + t.id +
 						'" title="' + t.options.muteText +
 						'" aria-label="' + t.options.muteText +
 						'"></button>' +
-						'<a href="javascript:void(0);" class="mejs-volume-slider">' + // outer background
-						'<span class="mejs-offscreen">' + t.options.allyVolumeControlText + '</span>' +
-						'<div class="mejs-volume-total">' + // line background
-							'<div class="mejs-volume-current"></div>' + // current volume
-							'<div class="mejs-volume-handle"></div>' + // handle
-						'</div>' +
+						'<a href="javascript:void(0);" class="' +  t.options.classPrefix + 'volume-slider">' + // outer background
+							'<span class="' +  t.options.classPrefix + 'offscreen">' +
+								t.options.allyVolumeControlText +
+							'</span>' +
+							'<div class="' +  t.options.classPrefix + 'volume-total">' + // line background
+								'<div class="' +  t.options.classPrefix + 'volume-current"></div>' + // current volume
+								'<div class="' +  t.options.classPrefix + 'volume-handle"></div>' + // handle
+							'</div>' +
 						'</a>' +
 						'</div>')
 					.appendTo(controls),
-				volumeSlider = t.container.find('.mejs-volume-slider, .mejs-horizontal-volume-slider'),
-				volumeTotal = t.container.find('.mejs-volume-total, .mejs-horizontal-volume-total'),
-				volumeCurrent = t.container.find('.mejs-volume-current, .mejs-horizontal-volume-current'),
-				volumeHandle = t.container.find('.mejs-volume-handle, .mejs-horizontal-volume-handle'),
+				volumeSlider = t.container.find('.' +  t.options.classPrefix + 'volume-slider, ' +
+				                                '.' +  t.options.classPrefix + 'horizontal-volume-slider'),
+				volumeTotal = t.container.find('.' + t.options.classPrefix + 'volume-total, ' +
+				                               '.' + t.options.classPrefix + 'horizontal-volume-total'),
+				volumeCurrent = t.container.find('.' +  t.options.classPrefix + 'volume-current, ' +
+				                                 '.' +  t.options.classPrefix + 'horizontal-volume-current'),
+				volumeHandle = t.container.find('.' +  t.options.classPrefix + 'volume-handle, ' +
+				                                '.' +  t.options.classPrefix + 'horizontal-volume-handle'),
 
 				/**
 				 * @private
@@ -8383,11 +8437,17 @@ if (jQuery !== undefined) {
 
 					// adjust mute button style
 					if (volume === 0) {
-						mute.removeClass('mejs-mute').addClass('mejs-unmute');
-						mute.children('button').attr('title', mejs.i18n.t('mejs.unmute')).attr('aria-label', mejs.i18n.t('mejs.unmute'));
+						mute.removeClass(t.options.classPrefix + 'mute')
+							.addClass(t.options.classPrefix + 'unmute');
+						mute.children('button')
+							.attr('title', mejs.i18n.t('mejs.unmute'))
+							.attr('aria-label', mejs.i18n.t('mejs.unmute'));
 					} else {
-						mute.removeClass('mejs-unmute').addClass('mejs-mute');
-						mute.children('button').attr('title', mejs.i18n.t('mejs.mute')).attr('aria-label', mejs.i18n.t('mejs.mute'));
+						mute.removeClass( t.options.classPrefix + 'unmute')
+							.addClass( t.options.classPrefix + 'mute');
+						mute.children('button')
+							.attr('title', mejs.i18n.t('mejs.mute'))
+							.attr('aria-label', mejs.i18n.t('mejs.mute'));
 					}
 
 					var volumePercentage = volume * 100 + '%';
@@ -8552,11 +8612,11 @@ if (jQuery !== undefined) {
 
 			//Keyboard input
 			mute.find('button').on('focus', function () {
-				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+				if (!volumeSlider.hasClass(t.options.classPrefix + 'horizontal-volume-slider')) {
 					volumeSlider.show();
 				}
 			}).on('blur', function () {
-				if (!volumeSlider.hasClass('mejs-horizontal-volume-slider')) {
+				if (!volumeSlider.hasClass(t.options.classPrefix + 'horizontal-volume-slider')) {
 					volumeSlider.hide();
 				}
 			});
@@ -8566,10 +8626,12 @@ if (jQuery !== undefined) {
 				if (!mouseIsDown) {
 					if (media.muted) {
 						positionVolumeHandle(0);
-						mute.removeClass('mejs-mute').addClass('mejs-unmute');
+						mute.removeClass(t.options.classPrefix + 'mute')
+							.addClass(t.options.classPrefix + 'unmute');
 					} else {
 						positionVolumeHandle(media.volume);
-						mute.removeClass('mejs-unmute').addClass('mejs-mute');
+						mute.removeClass(t.options.classPrefix + 'unmute')
+							.addClass(t.options.classPrefix + 'mute');
 					}
 				}
 				updateVolumeSlider(e);
@@ -8590,10 +8652,12 @@ if (jQuery !== undefined) {
 			t.container.on('controlsresize', function () {
 				if (media.muted) {
 					positionVolumeHandle(0);
-					mute.removeClass('mejs-mute').addClass('mejs-unmute');
+					mute.removeClass(t.options.classPrefix + 'mute')
+						.addClass(t.options.classPrefix + 'unmute');
 				} else {
 					positionVolumeHandle(media.volume);
-					mute.removeClass('mejs-unmute').addClass('mejs-mute');
+					mute.removeClass(t.options.classPrefix + 'unmute')
+						.addClass(t.options.classPrefix + 'mute');
 				}
 			});
 		}
@@ -8681,8 +8745,10 @@ if (jQuery !== undefined) {
 				hideTimeout = null,
 				fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : mejs.i18n.t('mejs.fullscreen'),
 				fullscreenBtn =
-					$('<div class="mejs-button mejs-fullscreen-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '"></button>' +
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'fullscreen-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle +
+							'" aria-label="' + fullscreenTitle + '"></button>' +
 						'</div>')
 					.appendTo(controls)
 					.on('click', function () {
@@ -8890,7 +8956,8 @@ if (jQuery !== undefined) {
 			});
 
 			for (i = 0, len = hoverDivNames.length; i < len; i++) {
-				hoverDivs[hoverDivNames[i]] = $('<div class="mejs-fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls).hide();
+				hoverDivs[hoverDivNames[i]] = $('<div class="' + t.options.classPrefix + 'fullscreen-hover" />')
+					.appendTo(t.container).mouseover(restoreControls).hide();
 			}
 
 			// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
@@ -8989,7 +9056,7 @@ if (jQuery !== undefined) {
 			}
 
 			// set it to not show scroll bars so 100% will work
-			$(document.documentElement).addClass('mejs-fullscreen');
+			$(document.documentElement).addClass(t.options.classPrefix + 'fullscreen');
 
 			// store sizing
 			t.normalHeight = t.container.height();
@@ -9034,7 +9101,7 @@ if (jQuery !== undefined) {
 
 			// make full size
 			t.container
-			.addClass('mejs-container-fullscreen')
+			.addClass(t.options.classPrefix + 'container-fullscreen')
 			.width('100%')
 			.height('100%');
 
@@ -9067,17 +9134,20 @@ if (jQuery !== undefined) {
 
 			if (t.fullscreenBtn) {
 				t.fullscreenBtn
-				.removeClass('mejs-fullscreen')
-				.addClass('mejs-unfullscreen');
+				.removeClass(t.options.classPrefix + 'fullscreen')
+				.addClass(t.options.classPrefix + 'unfullscreen');
 			}
 
 			t.setControlsSize();
 			t.isFullScreen = true;
 
 			var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height);
-			t.container.find('.mejs-captions-text').css('font-size', zoomFactor * 100 + '%');
-			t.container.find('.mejs-captions-text').css('line-height', 'normal');
-			t.container.find('.mejs-captions-position').css('bottom', '45px');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('font-size', zoomFactor * 100 + '%');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('line-height', 'normal');
+			t.container.find('.' + t.options.classPrefix + 'captions-position')
+				.css('bottom', '45px');
 
 			t.container.trigger('enteredfullscreen');
 		},
@@ -9101,9 +9171,9 @@ if (jQuery !== undefined) {
 			}
 
 			// restore scroll bars to document
-			$(document.documentElement).removeClass('mejs-fullscreen');
+			$(document.documentElement).removeClass(t.options.classPrefix + 'fullscreen');
 
-			t.container.removeClass('mejs-container-fullscreen');
+			t.container.removeClass(t.options.classPrefix + 'container-fullscreen');
 
 			if (t.options.setDimensions) {
 				t.container.width(t.normalWidth)
@@ -9126,15 +9196,18 @@ if (jQuery !== undefined) {
 			}
 
 			t.fullscreenBtn
-			.removeClass('mejs-unfullscreen')
-			.addClass('mejs-fullscreen');
+			.removeClass(t.options.classPrefix + 'unfullscreen')
+			.addClass(t.options.classPrefix + 'fullscreen');
 
 			t.setControlsSize();
 			t.isFullScreen = false;
 
-			t.container.find('.mejs-captions-text').css('font-size','');
-			t.container.find('.mejs-captions-text').css('line-height', '');
-			t.container.find('.mejs-captions-position').css('bottom', '');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('font-size','');
+			t.container.find('.' + t.options.classPrefix + 'captions-text')
+				.css('line-height', '');
+			t.container.find('.' + t.options.classPrefix + 'captions-position')
+				.css('bottom', '');
 
 			t.container.trigger('exitedfullscreen');
 		}
@@ -9241,10 +9314,13 @@ if (jQuery !== undefined) {
 
 			t.clearspeed(player);
 
-			player.speedButton = $('<div class="mejs-button mejs-speed-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" aria-label="' + speedTitle + '">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
-						'<div class="mejs-speed-selector mejs-offscreen">' +
-							'<ul class="mejs-speed-selector-list"></ul>' +
+			player.speedButton = $('<div class="' + t.options.classPrefix + 'button ' +
+			                                        t.options.classPrefix + 'speed-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" ' +
+							'aria-label="' + speedTitle + '">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>' +
+						'<div class="' + t.options.classPrefix + 'speed-selector ' +
+						                 t.options.classPrefix + 'offscreen">' +
+							'<ul class="' + t.options.classPrefix + 'speed-selector-list"></ul>' +
 						'</div>' +
 					'</div>')
 						.appendTo(controls);
@@ -9254,15 +9330,15 @@ if (jQuery !== undefined) {
 				inputId = t.id + '-speed-' + speeds[i].value;
 
 				player.speedButton.find('ul').append(
-					$('<li class="mejs-speed-selector-list-item">' +
-						'<input class="mejs-speed-selector-input" ' +
+					$('<li class="' + t.options.classPrefix + 'speed-selector-list-item">' +
+						'<input class="' + t.options.classPrefix + 'speed-selector-input" ' +
 							'type="radio" name="' + t.id + '_speed" disabled="disabled"' +
 							'value="' + speeds[i].value + '" ' +
 							'id="' + inputId + '" ' +
 							(speeds[i].value === t.options.defaultSpeed ? ' checked="checked"' : '') +
 						' />' +
-						'<label class="mejs-speed-selector-label' +
-						(speeds[i].value === t.options.defaultSpeed ? ' mejs-speed-selected' : '') +
+						'<label class="' + t.options.classPrefix + 'speed-selector-label' +
+						(speeds[i].value === t.options.defaultSpeed ? ' ' + t.options.classPrefix + 'speed-selected' : '') +
 						'">' + speeds[i].name + '</label>' +
 					'</li>')
 				);
@@ -9275,18 +9351,18 @@ if (jQuery !== undefined) {
 				$(this).prop('disabled', false);
 			});
 
-			player.speedSelector = player.speedButton.find('.mejs-speed-selector');
+			player.speedSelector = player.speedButton.find('.' + t.options.classPrefix + 'speed-selector');
 
 			// hover or keyboard focus
 			player.speedButton
 				.on('mouseenter focusin', function(e) {
-					player.speedSelector.removeClass('mejs-offscreen')
+					player.speedSelector.removeClass(t.options.classPrefix + 'offscreen')
 						.height(player.speedSelector.find('ul').outerHeight(true))
 						.css('top', (-1 * player.speedSelector.height()) + 'px')
 					;
 				})
 				.on('mouseleave focusout', function(e) {
-					player.speedSelector.addClass("mejs-offscreen");
+					player.speedSelector.addClass(t.options.classPrefix + "offscreen");
 				})
 				// handle clicks to the language radio buttons
 				.on('click','input[type=radio]',function() {
@@ -9300,15 +9376,17 @@ if (jQuery !== undefined) {
 					player.speedButton
 						.find('button').html(getSpeedNameFromValue(newSpeed))
 						.end()
-						.find('.mejs-speed-selected').removeClass('mejs-speed-selected')
+						.find('.' + t.options.classPrefix + 'speed-selected')
+						.removeClass(t.options.classPrefix + 'speed-selected')
 						.end()
 						.find('input[type="radio"]')
 					;
 
 					self.prop('checked', true)
-						.siblings('.mejs-speed-selector-label').addClass('mejs-speed-selected');
+						.siblings('.' + t.options.classPrefix + 'speed-selector-label')
+						.addClass(t.options.classPrefix + 'speed-selected');
 				})
-				.on('click','.mejs-speed-selector-label',function() {
+				.on('click', '.' + t.options.classPrefix + 'speed-selector-label',function() {
 					$(this).siblings('input[type="radio"]').trigger('click');
 				})
 				//Allow up/down arrow to change the selected radio without changing the volume.
@@ -9422,21 +9500,34 @@ if (jQuery !== undefined) {
 
 			t.cleartracks(player);
 			player.chapters =
-					$('<div class="mejs-chapters mejs-layer"></div>')
+					$('<div class="' + t.options.classPrefix + 'chapters ' +
+					                   t.options.classPrefix + 'layer"></div>')
 						.prependTo(layers).hide();
 			player.captions =
-					$('<div class="mejs-captions-layer mejs-layer"><div class="mejs-captions-position mejs-captions-position-hover" ' +
-					attr + '><span class="mejs-captions-text"></span></div></div>')
+					$('<div class="' + t.options.classPrefix + 'captions-layer ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<div class="' + t.options.classPrefix + 'captions-position ' +
+						                 t.options.classPrefix + 'captions-position-hover" ' +
+							attr + '>' +
+								'<span class="' + t.options.classPrefix + 'captions-text"></span></div></div>')
 						.prependTo(layers).hide();
-			player.captionsText = player.captions.find('.mejs-captions-text');
+			player.captionsText = player.captions.find('.' + t.options.classPrefix + 'captions-text');
 			player.captionsButton =
-					$('<div class="mejs-button mejs-captions-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>' +
-						'<div class="mejs-captions-selector mejs-offscreen">' +
-							'<ul class="mejs-captions-selector-list">'+
-								'<li class="mejs-captions-selector-list-item">'+
-									'<input type="radio" class="mejs-captions-selector-input" name="' + player.id + '_captions" id="' + player.id + '_captions_none" value="none" checked="checked" />' +
-									'<label class="mejs-captions-selector-label mejs-captions-selected" for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') + '</label>' +
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'captions-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" ' +
+							'aria-label="' + tracksTitle + '"></button>' +
+						'<div class="' + t.options.classPrefix + 'captions-selector ' +
+						                 t.options.classPrefix + 'offscreen">' +
+							'<ul class="' + t.options.classPrefix + 'captions-selector-list">'+
+								'<li class="' + t.options.classPrefix + 'captions-selector-list-item">'+
+									'<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ' +
+										'name="' + player.id + '_captions" id="' + player.id + '_captions_none" ' +
+										'value="none" checked="checked" />' +
+									'<label class="' + t.options.classPrefix + 'captions-selector-label ' +
+									                   t.options.classPrefix + 'captions-selected" ' +
+										'for="' + player.id + '_captions_none">' + mejs.i18n.t('mejs.none') +
+									'</label>' +
 								'</li>'	+
 							'</ul>' +
 						'</div>' +
@@ -9467,17 +9558,19 @@ if (jQuery !== undefined) {
 				// hover or keyboard focus
 				player.captionsButton
 					.on('mouseenter focusin', function() {
-						$(this).find('.mejs-captions-selector').removeClass('mejs-offscreen');
+						$(this).find('.' + t.options.classPrefix + 'captions-selector')
+							.removeClass(t.options.classPrefix + 'offscreen');
 					})
 					.on('mouseleave focusout', function() {
-						$(this).find(".mejs-captions-selector").addClass("mejs-offscreen");
+						$(this).find('.' + t.options.classPrefix + 'captions-selector')
+							.addClass(t.options.classPrefix + 'offscreen');
 					})
 					// handle clicks to the language radio buttons
 					.on('click','input[type=radio]',function() {
 						lang = this.value;
 						player.setTrack(lang);
 					})
-					.on('click','.mejs-captions-selector-label',function() {
+					.on('click', '.' + t.options.classPrefix + 'captions-selector-label', function() {
 						$(this).siblings('input[type="radio"]').trigger('click');
 					})
 					//Allow up/down arrow to change the selected radio without changing the volume.
@@ -9491,17 +9584,20 @@ if (jQuery !== undefined) {
 				player.container
 					.on('controlsshown', function () {
 						// push captions above controls
-						player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+						player.container.find('.' + t.options.classPrefix + 'captions-position')
+							.addClass(t.options.classPrefix + 'captions-position-hover');
 
 					})
 					.on('controlshidden', function () {
 						if (!media.paused) {
 							// move back to normal place
-							player.container.find('.mejs-captions-position').removeClass('mejs-captions-position-hover');
+							player.container.find('.' + t.options.classPrefix + 'captions-position')
+								.removeClass(t.options.classPrefix + 'captions-position-hover');
 						}
 					});
 			} else {
-				player.container.find('.mejs-captions-position').addClass('mejs-captions-position-hover');
+				player.container.find('.' + t.options.classPrefix + 'captions-position')
+					.addClass(t.options.classPrefix + 'captions-position-hover');
 			}
 
 			player.trackToLoad = -1;
@@ -9542,14 +9638,15 @@ if (jQuery !== undefined) {
 				function () {
 					// chapters
 					if (player.hasChapters) {
-						player.chapters.removeClass('mejs-offscreen');
-						player.chapters.fadeIn(200).height(player.chapters.find('.mejs-chapter').outerHeight());
+						player.chapters.removeClass(t.options.classPrefix + 'offscreen');
+						player.chapters.fadeIn(200)
+							.height(player.chapters.find('.' + t.options.classPrefix + 'chapter').outerHeight());
 					}
 				},
 				function () {
 					if (player.hasChapters && !media.paused) {
 						player.chapters.fadeOut(200, function() {
-							$(this).addClass('mejs-offscreen');
+							$(this).addClass(t.options.classPrefix + 'offscreen');
 							$(this).css('display','block');
 						});
 					}
@@ -9561,7 +9658,7 @@ if (jQuery !== undefined) {
 
 			// check for autoplay
 			if (player.node.getAttribute('autoplay') !== null) {
-				player.chapters.addClass('mejs-offscreen');
+				player.chapters.addClass(t.options.classPrefix + 'offscreen');
 			}
 		},
 
@@ -9602,20 +9699,22 @@ if (jQuery !== undefined) {
 			t.captionsButton
 				.find('input[type="radio"]').prop('checked', false)
 				.end()
-				.find('.mejs-captions-selected').removeClass('mejs-captions-selected')
+				.find('.' + t.options.classPrefix + 'captions-selected')
+				.removeClass(t.options.classPrefix + 'captions-selected')
 				.end()
 				.find('input[value="' + lang + '"]').prop('checked', true)
-				.siblings('.mejs-captions-selector-label').addClass('mejs-captions-selected')
+				.siblings('.' + t.options.classPrefix + 'captions-selector-label')
+				.addClass(t.options.classPrefix + 'captions-selected')
 			;
 
 			if (lang === 'none') {
 				t.selectedTrack = null;
-				t.captionsButton.removeClass('mejs-captions-enabled');
+				t.captionsButton.removeClass(t.options.classPrefix + 'captions-enabled');
 			} else {
 				for (i=0; i<t.tracks.length; i++) {
 					if (t.tracks[i].srclang === lang) {
 						if (t.selectedTrack === null)
-							t.captionsButton.addClass('mejs-captions-enabled');
+							t.captionsButton.addClass(t.options.classPrefix + 'captions-enabled');
 						t.selectedTrack = t.tracks[i];
 						t.captions.attr('lang', t.selectedTrack.srclang);
 						t.displayCaptions();
@@ -9711,7 +9810,7 @@ if (jQuery !== undefined) {
 
 			t.captionsButton
 				.find('input[value=' + lang + ']').prop('disabled',false)
-				.siblings('.mejs-captions-selector-label').html(label);
+				.siblings('.' + t.options.classPrefix + 'captions-selector-label').html(label);
 
 			// auto select
 			if (t.options.startLanguage === lang) {
@@ -9745,16 +9844,18 @@ if (jQuery !== undefined) {
 			}
 
 			t.captionsButton.find('ul').append(
-				$('<li class="mejs-captions-selector-list-item">'+
-					'<input type="radio" class="mejs-captions-selector-input" name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" value="' + lang + '" disabled="disabled" />' +
-					'<label class="mejs-captions-selector-label">' + label + ' (loading)' + '</label>' +
+				$('<li class="' + t.options.classPrefix + 'captions-selector-list-item">' +
+					'<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ' +
+						'name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" ' +
+						'value="' + lang + '" disabled="disabled" />' +
+					'<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
 
 			t.adjustLanguageBox();
 
 			// remove this from the dropdownlist (if it exists)
-			t.container.find('.mejs-captions-translations option[value=' + lang + ']').remove();
+			t.container.find('.' + t.options.classPrefix + 'captions-translations option[value=' + lang + ']').remove();
 		},
 
 		/**
@@ -9763,9 +9864,9 @@ if (jQuery !== undefined) {
 		adjustLanguageBox:function() {
 			var t = this;
 			// adjust the size of the outer box
-			t.captionsButton.find('.mejs-captions-selector').height(
-				t.captionsButton.find('.mejs-captions-selector-list').outerHeight(true) +
-				t.captionsButton.find('.mejs-captions-translations').outerHeight(true)
+			t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector').height(
+				t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector-list').outerHeight(true) +
+				t.captionsButton.find('.' + t.options.classPrefix + 'captions-translations').outerHeight(true)
 			);
 		},
 
@@ -9813,7 +9914,8 @@ if (jQuery !== undefined) {
 				for (i=0; i<track.entries.times.length; i++) {
 					if (t.media.currentTime >= track.entries.times[i].start && t.media.currentTime <= track.entries.times[i].stop) {
 						// Set the line before the timecode as a class so the cue can be targeted if needed
-						t.captionsText.html(track.entries.text[i]).attr('class', 'mejs-captions-text ' + (track.entries.times[i].identifier || ''));
+						t.captionsText.html(track.entries.text[i])
+							.attr('class', t.options.classPrefix + 'captions-text ' + (track.entries.times[i].identifier || ''));
 						t.captions.show().height(0);
 						return; // exit out if one is visible;
 					}
@@ -9946,16 +10048,23 @@ if (jQuery !== undefined) {
 				//}
 
 				t.chapters.append( $(
-					'<div class="mejs-chapter" rel="' + chapters.entries.times[i].start + '" style="left: ' + usedPercent.toString() + '%;width: ' + percent.toString() + '%;">' +
-						'<div class="mejs-chapter-block' + ((i==chapters.entries.times.length-1) ? ' mejs-chapter-block-last' : '') + '">' +
+					'<div class="' +  t.options.classPrefix + 'chapter" ' +
+						'rel="' + chapters.entries.times[i].start + '" ' +
+						'style="left: ' + usedPercent.toString() + '%; width: ' + percent.toString() + '%;">' +
+						'<div class="' +  t.options.classPrefix + 'chapter-block' +
+							((i === chapters.entries.times.length - 1) ? ' ' +  t.options.classPrefix + 'chapter-block-last' : '') + '">' +
 							'<span class="ch-title">' + chapters.entries.text[i] + '</span>' +
-							'<span class="ch-time">' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start, t.options.alwaysShowHours) + '&ndash;' + mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop, t.options.alwaysShowHours) + '</span>' +
+							'<span class="ch-time">' +
+								mejs.Utility.secondsToTimeCode(chapters.entries.times[i].start, t.options.alwaysShowHours) +
+								'&ndash;' +
+								mejs.Utility.secondsToTimeCode(chapters.entries.times[i].stop, t.options.alwaysShowHours) +
+							'</span>' +
 						'</div>' +
 					'</div>'));
 				usedPercent += percent;
 			}
 
-			t.chapters.find('div.mejs-chapter').click(function() {
+			t.chapters.find('.' +  t.options.classPrefix + 'chapter').click(function() {
 				t.media.setCurrentTime( parseFloat( $(this).attr('rel') ) );
 				if (t.media.paused) {
 					t.media.play();
@@ -10239,9 +10348,15 @@ if (jQuery !== undefined) {
 			}
 
 			player.sourcechooserButton =
-				$('<div class="mejs-button mejs-sourcechooser-button">' +
-					'<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + sourceTitle + '" aria-label="' + sourceTitle + '"></button>' +
-					'<div class="mejs-sourcechooser-selector mejs-offscreen" role="menu" aria-expanded="false" aria-hidden="true">' +
+				$('<div class="' + t.options.classPrefix + 'button ' +
+				                   t.options.classPrefix + 'sourcechooser-button">' +
+					'<button type="button" role="button" aria-haspopup="true" ' +
+						'aria-owns="' + t.id + '" title="' + sourceTitle + '" ' +
+						'aria-label="' + sourceTitle +
+					'"></button>' +
+					'<div class="' + t.options.classPrefix + 'sourcechooser-selector ' +
+					                 t.options.classPrefix + 'offscreen" role="menu" ' +
+						'aria-expanded="false" aria-hidden="true">' +
 					'<ul>' +
 					'</ul>' +
 					'</div>' +
@@ -10267,12 +10382,12 @@ if (jQuery !== undefined) {
 							if (!mejs.MediaFeatures.isFirefox) { // space sends the click event in Firefox
 								player.showSourcechooserSelector();
 							}
-							$(this).find('.mejs-sourcechooser-selector')
+							$(this).find('.' + t.options.classPrefix + 'sourcechooser-selector')
 							.find('input[type=radio]:checked').first().focus();
 							break;
 						case 13: // enter
 							player.showSourcechooserSelector();
-							$(this).find('.mejs-sourcechooser-selector')
+							$(this).find('.' + t.options.classPrefix + 'sourcechooser-selector')
 							.find('input[type=radio]:checked').first().focus();
 							break;
 						case 27: // esc
@@ -10289,7 +10404,7 @@ if (jQuery !== undefined) {
 					// Firefox does NOT support e.relatedTarget to see which element
 					// just lost focus, so wait to find the next focused element
 					setTimeout(function () {
-						var parent = $(document.activeElement).closest('.mejs-sourcechooser-selector');
+						var parent = $(document.activeElement).closest('.' + t.options.classPrefix + 'sourcechooser-selector');
 						if (!parent.length) {
 							// focus is outside the control; close menu
 							player.hideSourcechooserSelector();
@@ -10301,7 +10416,11 @@ if (jQuery !== undefined) {
 				.on('click', 'input[type=radio]', function () {
 					// set aria states
 					$(this).attr('aria-selected', true).attr('checked', 'checked');
-					$(this).closest('.mejs-sourcechooser-selector').find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
+					$(this).closest('.' + t.options.classPrefix + 'sourcechooser-selector')
+						.find('input[type=radio]')
+						.not(this)
+						.attr('aria-selected', 'false')
+						.removeAttr('checked');
 
 					var src = this.value;
 
@@ -10329,9 +10448,10 @@ if (jQuery !== undefined) {
 
 				// Handle click so that screen readers can toggle the menu
 				.on('click', 'button', function (e) {
-					if ($(this).siblings('.mejs-sourcechooser-selector').hasClass('mejs-offscreen')) {
+					if ($(this).siblings('.' + t.options.classPrefix + 'sourcechooser-selector').hasClass(t.options.classPrefix + 'offscreen')) {
 						player.showSourcechooserSelector();
-						$(this).siblings('.mejs-sourcechooser-selector').find('input[type=radio]:checked').first().focus();
+						$(this).siblings('.' + t.options.classPrefix + 'sourcechooser-selector')
+							.find('input[type=radio]:checked').first().focus();
 					} else {
 						player.hideSourcechooserSelector();
 					}
@@ -10362,9 +10482,13 @@ if (jQuery !== undefined) {
 
 			t.sourcechooserButton.find('ul').append(
 				$('<li>' +
-					'<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + 'aria-selected="' + isCurrent + '"' + ' />' +
-					'<label for="' + t.id + '_sourcechooser_' + label + type + '" aria-hidden="true">' + label + ' (' + type + ')</label>' +
-					'</li>')
+					'<input type="radio" name="' + t.id + '_sourcechooser" ' +
+						'id="' + t.id + '_sourcechooser_' + label + type + '" ' +
+						'role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') +
+						'aria-selected="' + isCurrent + '"' + ' />' +
+					'<label for="' + t.id + '_sourcechooser_' + label + type + '" ' +
+						'aria-hidden="true">' + label + ' (' + type + ')</label>' +
+				'</li>')
 			);
 
 			t.adjustSourcechooserBox();
@@ -10377,8 +10501,8 @@ if (jQuery !== undefined) {
 		adjustSourcechooserBox: function () {
 			var t = this;
 			// adjust the size of the outer box
-			t.sourcechooserButton.find('.mejs-sourcechooser-selector').height(
-				t.sourcechooserButton.find('.mejs-sourcechooser-selector ul').outerHeight(true)
+			t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').height(
+				t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector ul').outerHeight(true)
 			);
 		},
 
@@ -10389,12 +10513,13 @@ if (jQuery !== undefined) {
 
 			var t = this;
 
-			if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
+			if (t.sourcechooserButton === undefined ||
+				!t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]').length) {
 				return;
 			}
 
-			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
-			.addClass('mejs-offscreen')
+			this.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector')
+			.addClass(t.options.classPrefix + 'offscreen')
 			.attr('aria-expanded', 'false')
 			.attr('aria-hidden', 'true')
 			.find('input[type=radio]') // make radios not focusable
@@ -10408,12 +10533,13 @@ if (jQuery !== undefined) {
 
 			var t = this;
 
-			if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.mejs-sourcechooser-selector').find('input[type=radio]').length) {
+			if (t.sourcechooserButton === undefined ||
+				!t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]').length) {
 				return;
 			}
 
-			this.sourcechooserButton.find('.mejs-sourcechooser-selector')
-			.removeClass('mejs-offscreen')
+			this.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector')
+			.removeClass(t.options.classPrefix + 'offscreen')
 			.attr('aria-expanded', 'true')
 			.attr('aria-hidden', 'false')
 			.find('input[type=radio]')
@@ -10493,7 +10619,7 @@ $.extend(mejs.MepDefaults,
 		buildcontextmenu: function(player, controls, layers, media) {
 
 			// create context menu
-			player.contextMenu = $('<div class="mejs-contextmenu"></div>')
+			player.contextMenu = $('<div class="' + t.options.classPrefix + 'contextmenu"></div>')
 								.appendTo($('body'))
 								.hide();
 
@@ -10560,14 +10686,15 @@ $.extend(mejs.MepDefaults,
 			for (var i=0, il=items.length; i<il; i++) {
 
 				if (items[i].isSeparator) {
-					html += '<div class="mejs-contextmenu-separator"></div>';
+					html += '<div class="' + t.options.classPrefix + 'contextmenu-separator"></div>';
 				} else {
 
 					var rendered = items[i].render(t);
 
 					// render can return null if the item doesn't need to be used at the moment
 					if (rendered !== null && rendered !== undefined) {
-						html += '<div class="mejs-contextmenu-item" data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
+						html += '<div class="' + t.options.classPrefix + 'contextmenu-item" ' +
+							'data-itemindex="' + i + '" id="element-' + (Math.random()*1000000) + '">' + rendered + '</div>';
 					}
 				}
 			}
@@ -10580,7 +10707,7 @@ $.extend(mejs.MepDefaults,
 				.show();
 
 			// bind events
-			t.contextMenu.find('.mejs-contextmenu-item').each(function() {
+			t.contextMenu.find('.' + t.options.classPrefix + 'contextmenu-item').each(function() {
 
 				// which one is this?
 				var $dom = $(this),
@@ -10649,8 +10776,12 @@ $.extend(mejs.MepDefaults,
 				skipTitle = t.options.skipBackText ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
 				// create the loop button
 				loop =
-					$('<div class="mejs-button mejs-skip-back-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + skipTitle + '" aria-label="' + skipTitle + '">' + t.options.skipBackInterval + '</button>' +
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'skip-back-button">' +
+						'<button type="button" aria-controls="' + t.id + '" ' +
+							'title="' + skipTitle + '" aria-label="' + skipTitle + '">' +
+							t.options.skipBackInterval +
+						'</button>' +
 					'</div>')
 					// append it to the toolbar
 					.appendTo(controls)
@@ -10702,9 +10833,13 @@ $.extend(mejs.MepDefaults,
 				forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle,
 				// create the loop button
 				loop =
-					$('<div class="mejs-button mejs-jump-forward-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" aria-label="' + forwardTitle + '">' + t.options.jumpForwardInterval + '</button>' +
-						'</div>')
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'jump-forward-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" ' +
+							'aria-label="' + forwardTitle + '">' +
+							t.options.jumpForwardInterval +
+						'</button>' +
+					'</div>')
 					// append it to the toolbar
 					.appendTo(controls)
 					// add a click toggle event
@@ -10755,11 +10890,13 @@ $.extend(mejs.MepDefaults,
 
 			if (postrollLink !== undefined) {
 				player.postroll =
-					$('<div class="mejs-postroll-layer mejs-layer">' +
-						'<a class="mejs-postroll-close" onclick="$(this).parent().hide();return false;">' +
+					$('<div class="' + t.options.classPrefix + 'postroll-layer ' +
+					                   t.options.classPrefix + 'layer">' +
+						'<a class="' + t.options.classPrefix + 'postroll-close" ' +
+							'onclick="$(this).parent().hide();return false;">' +
 							postrollTitle +
 						'</a>' +
-					'<div class="mejs-postroll-layer-content"></div></div>')
+					'<div class="' + t.options.classPrefix + 'postroll-layer-content"></div></div>')
 						.prependTo(layers).hide();
 
 				t.media.addEventListener('ended', function (e) {
@@ -10767,7 +10904,7 @@ $.extend(mejs.MepDefaults,
 						dataType: 'html',
 						url: postrollLink,
 						success: function (data, textStatus) {
-							layers.find('.mejs-postroll-layer-content').html(data);
+							layers.find('.' + t.options.classPrefix + 'postroll-layer-content').html(data);
 						}
 					});
 					player.postroll.show();
@@ -10826,7 +10963,8 @@ $.extend(mejs.MepDefaults,
 				lastMarkerCallBack = -1; //Prevents successive firing of callbacks
 
 			for (i = 0; i < player.options.markers.length; ++i) {
-				controls.find('.mejs-time-total').append('<span class="mejs-time-marker"></span>');
+				controls.find('.' + t.options.classPrefix + 'time-total')
+					.append('<span class="' + t.options.classPrefix + 'time-marker"></span>');
 			}
 
 			media.addEventListener('durationchange', function (e) {
@@ -10866,7 +11004,7 @@ $.extend(mejs.MepDefaults,
 			for (i = 0; i < t.options.markers.length; ++i) {
 				if (Math.floor(t.options.markers[i]) <= t.media.duration && Math.floor(t.options.markers[i]) >= 0) {
 					left = 100 * Math.floor(t.options.markers[i]) / t.media.duration;
-					$(controls.find('.mejs-time-marker')[i]).css({
+					$(controls.find('.' + t.options.classPrefix + 'time-marker')[i]).css({
 						"width": "1px",
 						"left": left + "%",
 						"background": t.options.markerColor

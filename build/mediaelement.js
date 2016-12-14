@@ -5777,6 +5777,9 @@ mejs.version = '3.0';
 			// mediaelementplayer-feature-jumpforward
 			"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
+			// mediaelementplayer-feature-loop
+			"mejs.loop": "Toggle Loop",
+
 			// mediaelementplayer-feature-playpause
 			"mejs.play": "Play",
 			"mejs.pause": "Pause",

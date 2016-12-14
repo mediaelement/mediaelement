@@ -39,6 +39,9 @@
 			"mejs.play": "Lejátszás",
 			"mejs.pause": "Szünet",
 
+			// mediaelementplayer-feature-loop
+			//"mejs.loop": "Toggle Loop",
+
 			// mediaelementplayer-feature-postroll
 			"mejs.close": "Bezárás",
 
