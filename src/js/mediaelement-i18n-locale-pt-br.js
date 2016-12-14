@@ -60,7 +60,7 @@
 			"mejs.mute-toggle": "Alternar silêncio",
 			//"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 			"mejs.unmute": "Tirar silêncio",
-			"mejs.mute": "Silenciar",
+			"mejs.mute": "Silenciar"
 			//"mejs.volume-slider": "Volume Slider",
 
 			// mep-player

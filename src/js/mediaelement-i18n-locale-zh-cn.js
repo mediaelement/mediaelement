@@ -65,7 +65,7 @@
 
 			// mep-player
 			"mejs.video-player": "视频播放器",
-			"mejs.audio-player": "音频播放器",
+			"mejs.audio-player": "音频播放器"
 
 			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
