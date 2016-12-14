@@ -165,8 +165,8 @@ function MediaElementPlayerSimple(idOrObj, options) {
 
 	// Container
 	container.id = id + '_container';
-	container.className = mejs.MediaElementPlayerSimpleDefaults.classPrefix + 'simple-container ' +
-	                      mejs.MediaElementPlayerSimpleDefaults.classPrefix + 'simple-' + original.tagName.toLowerCase();
+	container.className = t.options.classPrefix + 'simple-container ' +
+	                      t.options.classPrefix + 'simple-' + original.tagName.toLowerCase();
 	container.style.width = originalWidth + 'px';
 	container.style.height = originalHeight + 'px';
 
@@ -224,7 +224,7 @@ MediaElementPlayerSimple.prototype = {
 		;
 
 		// CONTROLS
-		controls.className = mejs.MediaElementPlayerSimpleDefaults.classPrefix + 'simple-controls';
+		controls.className = t.options.classPrefix + 'simple-controls';
 		controls.id = id + '_controls';
 		container.appendChild(controls);
 
