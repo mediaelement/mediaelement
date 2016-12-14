@@ -65,7 +65,7 @@
 
 			// mep-player
 			"mejs.video-player": "Videolejátszó",
-			"mejs.audio-player": "Audiolejátszó",
+			"mejs.audio-player": "Audiolejátszó"
 
 			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
