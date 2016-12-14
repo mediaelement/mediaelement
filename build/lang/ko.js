@@ -65,7 +65,7 @@
 
 			// mep-player
 			"mejs.video-player": "비디오 플레이어",
-			"mejs.audio-player": "오디오 플레이어",
+			"mejs.audio-player": "오디오 플레이어"
 
 			// mediaelementplayer-feature-ads
 			//"mejs.ad-skip": "Skip ad",
