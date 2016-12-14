@@ -32,6 +32,7 @@ Including the above, _MediaElementPlayer_ object allows the following extra conf
 
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
+classPrefix | string | `mejs__` | Class prefix for player elements
 poster | string | _(empty)_ | Poster URL that overrides `poster` attribute
 showPosterWhenEnded | boolean | `false` | When the video is ended, show the poster
 defaultVideoWidth | number | `480` | Default width if the `<video>` width is not specified
@@ -87,6 +88,7 @@ markers | array | `[]` | List of numbers to specify marker times in seconds
 markerCallback | function | `function(media, time) {}` | Callback function invoked when a marker position is reached
 playText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is playing
 pauseText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is paused
+loopText | string | _(empty)_ | Title for Loop button for WARIA purposes when loop feature is activated
 tracksText | string | _(empty)_ | Title for Closed Captioning button for WARIA purposes
 postrollCloseText | string | _(empty)_ | Title for button to Postroll layer for WARIA purposes
 muteText | string | _(empty)_ | Title for Mute button for WARIA purposes

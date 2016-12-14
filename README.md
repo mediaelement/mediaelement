@@ -15,7 +15,9 @@ One file. Any browser. Same UI.
 
 * [Introduction](#intro)
 * [Browser and Device support](#browser-support)
-* [What's New on `MediaElement.js` version 3.0](#migration)
+* [What's New on `MediaElement.js` version 3.0](#new-features)
+* [Migrating from `2.x` to `3.x` version](#migration)
+* [Browser and Device support](#browser-support)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
 * [Guidelines for Contributors](#guidelines)
@@ -32,7 +34,7 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 `MediaElement.js` is a set of custom Flash plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) on all browsers.
 
-<a id="migration"></a>
+<a id="new-features"></a>
 ## * What's New on `MediaElement.js` version 3.0
 
 * Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way.
@@ -40,6 +42,8 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 * Ability to play Facebook, SoundCloud, M(PEG)-DASH using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback.
 
 * Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
+
+* Introduction of BEM naming convention for player classes, and backward compatibility with "legacy" stylesheet.
 
 * Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.
 
@@ -53,6 +57,15 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 For more information, please consult [Change Log](changelog.md)
 
+<a id="migration"></a>
+## * IMPORTANT: Migrating from `2.x` to `3.x` version
+In order to successfully install `3.x` in an existing setup, you must consider the following guidelines:
+
+1. If your installation relies on the legacy player classes (i.e., `mejs-player`, `mejs-container`, etc.), you **must** set up the proper namespace. In `2.x`, the default namespace is `mejs-` but now is `mejs__`. In order to set up a new namespace (or the legacy one), use the `classPrefix` configuration, and make sure you use the `mediaelementplayer-legacy` stylesheet provided in the `/build/` folder.
+
+2. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with Javascript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](installation.md#disabled-javascript) section for more details.
+ 
+3. If you need to force the Flash shim, the way to do it in `3.x` is to use the `renderers` configuration and list them in an array. Please check the [Flash test](test/flash.html) file to see how that is done.
 
 <a id="browser-support"></a>
 ## Browser and Device support
@@ -80,6 +93,7 @@ soundcloud | video/soundcloud, video/x-soundcloud | All browsers that support `i
 * Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
 * `ogg` formats won’t play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
 * `wav` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
+
 
 <a id="installation"></a>
 ## Installation and Usage

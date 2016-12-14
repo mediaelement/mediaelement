@@ -6,6 +6,14 @@
  */
 (function($) {
 
+	// Feature configuration
+	$.extend(mejs.MepDefaults, {
+		/**
+		 * @type {String}
+		 */
+		loopText: ''
+	});
+
 	$.extend(MediaElementPlayer.prototype, {
 		/**
 		 * Feature constructor.
@@ -19,10 +27,15 @@
 		buildloop: function(player, controls, layers, media) {
 			var
 				t = this,
+				loopTitle = t.options.loopText ? t.options.loopText : mejs.i18n.t('mejs.loop'),
 				// create the loop button
 				loop =
-				$('<div class="mejs-button mejs-loop-button ' + ((player.options.loop) ? 'mejs-loop-on' : 'mejs-loop-off') + '">' +
-					'<button type="button" aria-controls="' + t.id + '" title="Toggle Loop" aria-label="Toggle Loop"></button>' +
+				$('<div class="' + t.options.classPrefix + 'button ' +
+				                   t.options.classPrefix + 'loop-button ' +
+					((player.options.loop) ? t.options.classPrefix + 'loop-on' :
+					                         t.options.classPrefix + 'loop-off') + '">' +
+					'<button type="button" aria-controls="' + t.id + '" ' +
+						'title="' + loopTitle + '" aria-label="' + loopTitle + '"></button>' +
 				'</div>')
 				// append it to the toolbar
 				.appendTo(controls)
@@ -30,9 +43,11 @@
 				.click(function() {
 					player.options.loop = !player.options.loop;
 					if (player.options.loop) {
-						loop.removeClass('mejs-loop-off').addClass('mejs-loop-on');
+						loop.removeClass(t.options.classPrefix + 'loop-off')
+							.addClass(t.options.classPrefix + 'loop-on');
 					} else {
-						loop.removeClass('mejs-loop-on').addClass('mejs-loop-off');
+						loop.removeClass(t.options.classPrefix + 'loop-on')
+							.addClass(t.options.classPrefix + 'loop-off');
 					}
 				});
 		}
