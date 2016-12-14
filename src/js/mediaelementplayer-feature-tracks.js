@@ -148,7 +148,7 @@
 						// value is trackId, same as the actual id, and we're using it here
 						// because the "none" checkbox doesn't have a trackId
 						// to use, but we want to know when "none" is clicked
-						player.setTrack(this.value); 
+						player.setTrack(this.value);
 					})
 					.on('click', '.' + t.options.classPrefix + 'captions-selector-label', function() {
 						$(this).siblings('input[type="radio"]').trigger('click');
@@ -275,10 +275,20 @@
 				i
 			;
 
+			t.captionsButton
+				.find('input[type="radio"]').prop('checked', false)
+				.end()
+				.find('.' + t.options.classPrefix + 'captions-selected')
+				.removeClass(t.options.classPrefix + 'captions-selected')
+				.end()
+				.find('input[value="' + trackId + '"]').prop('checked', true)
+				.siblings('.' + t.options.classPrefix + 'captions-selector-label')
+				.addClass(t.options.classPrefix + 'captions-selected')
+			;
+
 			if (trackId === 'none') {
-				t.captionsButton.removeClass(t.options.classPrefix + 'captions-enabled');
 				t.selectedTrack = null;
-				t.captionsButton.find('.' + t.options.classPrefix + 'captions-selected').removeClass('.' + t.options.classPrefix + 'captions-selected');
+				t.captionsButton.removeClass(t.options.classPrefix + 'captions-enabled');
 				return;
 			}
 
@@ -292,17 +302,6 @@
 					t.displayCaptions();
 					break;
 				}
-			}
-			if (t.selectedTrack !== null) {
-				t.captionsButton
-					.find('input[type="radio"]').prop('checked', false)
-					.end()
-					.find('.' + t.options.classPrefix + 'captions-selected')
-					.removeClass(t.options.classPrefix + 'captions-selected')
-					.end()
-					.find('input[id="' + trackId + '"]').prop('checked', true)
-					.siblings('.' + t.options.classPrefix + 'captions-selector-label')
-					.addClass(t.options.classPrefix + 'captions-selected');
 			}
 		},
 
