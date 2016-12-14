@@ -36,6 +36,7 @@
 * Integrated native FLV support using [flv.js](https://github.com/Bilibili/flv.js) library @ron666
 * Simplified volume control position calculation (https://github.com/johndyer/mediaelement/pull/1952) @marjune163
 * Integrated BEM naming convention and backward compatibility (https://github.com/johndyer/mediaelement/pull/1961) @albell and @ron666
+* Integrated support for multiple tracks with same language code and fixed issues with translations for `<track>` labels (https://github.com/johndyer/mediaelement/pull/1957) @laupow and @ron666
 
 *2.23.4 (2016/10/21)*
 
