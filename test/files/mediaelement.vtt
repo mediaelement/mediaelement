@@ -50,7 +50,7 @@ like the &lt;track&gt; element that enables the subtitles you're reading right n
 
 12
 00:00:36 --> 00:00:39
-The subtitles can even be translated into any language using Google's Translation API.
+Also, new media formats like M(PEG)-DASH and HLS can be played with MediaElement.
 
 13
 00:00:39 --> 00:00:42
