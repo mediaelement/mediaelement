@@ -11,11 +11,7 @@
 		 * Enable tooltip that shows time in progress bar
 		 * @type {Boolean}
 		 */
-		enableProgressTooltip: true,
-		/**
-		 * @type {String}
-		 */
-		progressHelpText: ''
+		enableProgressTooltip: true
 	});
 
 	$.extend(MediaElementPlayer.prototype, {
@@ -38,7 +34,6 @@
 				lastKeyPressTime = 0,
 				startedPaused = false,
 				autoRewindInitial = player.options.autoRewind,
-				progressTitle = t.options.progressHelpText ? t.options.progressHelpText : mejs.i18n.t('mejs.time-help-text'),
 				tooltip = player.options.enableProgressTooltip ? '<span class="' + t.options.classPrefix + 'time-float">' +
 				'<span class="' + t.options.classPrefix + 'time-float-current">00:00</span>' +
 				'<span class="' + t.options.classPrefix + 'time-float-corner"></span>' +
@@ -47,7 +42,6 @@
 			$('<div class="' + t.options.classPrefix + 'time-rail">' +
 				'<span class="' + t.options.classPrefix + 'time-total ' +
 				                  t.options.classPrefix + 'time-slider">' +
-				//'<span class="' + t.options.classPrefix + 'mejs__offscreen">' + progressTitle + '</span>' +
 				'<span class="' + t.options.classPrefix + 'time-buffering"></span>' +
 				'<span class="' + t.options.classPrefix + 'time-loaded"></span>' +
 				'<span class="' + t.options.classPrefix + 'time-current"></span>' +
