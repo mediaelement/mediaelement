@@ -34,9 +34,13 @@
 				forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle,
 				// create the loop button
 				loop =
-					$('<div class="mejs-button mejs-jump-forward-button">' +
-						'<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" aria-label="' + forwardTitle + '">' + t.options.jumpForwardInterval + '</button>' +
-						'</div>')
+					$('<div class="' + t.options.classPrefix + 'button ' +
+					                   t.options.classPrefix + 'jump-forward-button">' +
+						'<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" ' +
+							'aria-label="' + forwardTitle + '">' +
+							t.options.jumpForwardInterval +
+						'</button>' +
+					'</div>')
 					// append it to the toolbar
 					.appendTo(controls)
 					// add a click toggle event

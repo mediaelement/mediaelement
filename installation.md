@@ -62,36 +62,10 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 <link rel="stylesheet" href="/path/to/mediaelementplayer.css" />
 
 <style>
-.mejs-overlay-loading, .mejs-container .mejs-controls, 
-.mejs-controls .mejs-volume-button .mejs-volume-slider,
-.mejs-controls .mejs-captions-button .mejs-captions-selector,
-.mejs-captions-text, .mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector,
-.mejs-postroll-layer, .mejs-postroll-close,
-.mejs-controls .mejs-speed-button .mejs-speed-selector {
-    background: url("/path/to/background.png");
-}
-
-.no-svg .mejs-overlay-button {
-    background-image: url("/path/to/bigplay.png");
-}
-
-.no-svg .mejs-controls .mejs-button button {
-	background-image: url("/path/to/controls.png");
-}
-
-.mejs-controls .mejs-button.mejs-jump-forward-button {
-    background: transparent url("/path/to/jumpforward.png") no-repeat 3px 3px;
-}
-
-.mejs-controls .mejs-button.mejs-skip-back-button {
-    background: transparent url("/path/to/skipback.png") no-repeat 3px 3px;
-}
-
-.mejs-overlay-button {
+.mejs__overlay-button {
     background: url("/path/to/bigplay.svg") no-repeat;
 }
-
-.mejs-controls .mejs-button button {
+.mejs__button > button {
     background-image: url("/path/to/controls.svg");
 }
 </style>
@@ -182,7 +156,7 @@ Optionally, just can set the attribute `lang` in the `<html>` tag with the one y
     $('audio,video').mediaelementplayer({
         success: function(player, node) {
         
-            $(player).closest('.mejs-container').attr('lang', mejs.i18n.getLanguage());
+            $(player).closest('.mejs__container').attr('lang', mejs.i18n.getLanguage());
             
             $('html').attr('lang', mejs.i18n.getLanguage());
             
