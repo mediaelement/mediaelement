@@ -7472,8 +7472,11 @@ if (jQuery !== undefined) {
 
 				track = $(track);
 
+				var srclang = (track.attr('srclang')) ? track.attr('srclang').toLowerCase() : '';
+				var trackId = t.id + '_track_' + index + '_' + track.attr('kind') + '_' + srclang;
 				t.tracks.push({
-					srclang: (track.attr('srclang')) ? track.attr('srclang').toLowerCase() : '',
+					trackId:  trackId,
+					srclang: srclang,
 					src: track.attr('src'),
 					kind: track.attr('kind'),
 					label: track.attr('label') || '',
@@ -9432,6 +9435,7 @@ if (jQuery !== undefined) {
 	$.extend(mejs.MepDefaults, {
 		/**
 		 * Default language to start media using ISO 639-2 Language Code List (en, es, it, etc.)
+		 * If there are multiple tracks for one language, the last track node found is activated
 		 * @see https://www.loc.gov/standards/iso639-2/php/code_list.php
 		 * @type {String}
 		 */
@@ -9494,7 +9498,7 @@ if (jQuery !== undefined) {
 			// If browser will do native captions, prefer mejs captions, loop through tracks and hide
 			if (t.domNode.textTracks) {
 				for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
-					t.domNode.textTracks[i].mode = "hidden";
+					t.domNode.textTracks[i].mode = 'hidden';
 				}
 			}
 
@@ -9547,12 +9551,11 @@ if (jQuery !== undefined) {
 			if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1){
 				// click
 				player.captionsButton.on('click',function() {
+					var trackId = 'none';
 					if (player.selectedTrack === null) {
-						lang = player.tracks[0].srclang;
-					} else {
-						lang = 'none';
+						trackId = player.tracks[0].trackId;
 					}
-					player.setTrack(lang);
+					player.setTrack(trackId);
 				});
 			} else {
 				// hover or keyboard focus
@@ -9567,8 +9570,10 @@ if (jQuery !== undefined) {
 					})
 					// handle clicks to the language radio buttons
 					.on('click','input[type=radio]',function() {
-						lang = this.value;
-						player.setTrack(lang);
+						// value is trackId, same as the actual id, and we're using it here
+						// because the "none" checkbox doesn't have a trackId
+						// to use, but we want to know when "none" is clicked
+						player.setTrack(this.value);
 					})
 					.on('click', '.' + t.options.classPrefix + 'captions-selector-label', function() {
 						$(this).siblings('input[type="radio"]').trigger('click');
@@ -9610,7 +9615,7 @@ if (jQuery !== undefined) {
 			for (i = 0; i < total; i++) {
 				kind = player.tracks[i].kind;
 				if (kind === 'subtitles' || kind === 'captions') {
-					player.addTrackButton(player.tracks[i].srclang, player.tracks[i].label);
+					player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
 				}
 			}
 
@@ -9686,11 +9691,10 @@ if (jQuery !== undefined) {
 		},
 
 		/**
-		 *
-		 * @param {String} lang
+		 * 
+		 * @param {String} trackId, or "none" to disable captions
 		 */
-		setTrack: function(lang){
-
+		setTrack: function(trackId){
 			var
 				t = this,
 				i
@@ -9702,24 +9706,26 @@ if (jQuery !== undefined) {
 				.find('.' + t.options.classPrefix + 'captions-selected')
 				.removeClass(t.options.classPrefix + 'captions-selected')
 				.end()
-				.find('input[value="' + lang + '"]').prop('checked', true)
+				.find('input[value="' + trackId + '"]').prop('checked', true)
 				.siblings('.' + t.options.classPrefix + 'captions-selector-label')
 				.addClass(t.options.classPrefix + 'captions-selected')
 			;
 
-			if (lang === 'none') {
+			if (trackId === 'none') {
 				t.selectedTrack = null;
 				t.captionsButton.removeClass(t.options.classPrefix + 'captions-enabled');
-			} else {
-				for (i=0; i<t.tracks.length; i++) {
-					if (t.tracks[i].srclang === lang) {
-						if (t.selectedTrack === null)
-							t.captionsButton.addClass(t.options.classPrefix + 'captions-enabled');
-						t.selectedTrack = t.tracks[i];
-						t.captions.attr('lang', t.selectedTrack.srclang);
-						t.displayCaptions();
-						break;
+				return;
+			}
+
+			for (i = 0; i<t.tracks.length; i++) {
+				if (t.tracks[i].trackId === trackId) {
+					if (t.selectedTrack === null) {
+						t.captionsButton.addClass(t.options.classPrefix + 'captions-enabled');
 					}
+					t.selectedTrack = t.tracks[i];
+					t.captions.attr('lang', t.selectedTrack.srclang);
+					t.displayCaptions();
+					break;
 				}
 			}
 		},
@@ -9754,7 +9760,7 @@ if (jQuery !== undefined) {
 
 					track.isLoaded = true;
 
-					t.enableTrackButton(track.srclang, track.label);
+					t.enableTrackButton(track);
 
 					t.loadNextTrack();
 
@@ -9789,7 +9795,7 @@ if (jQuery !== undefined) {
 						}
 					},
 					error: function() {
-						t.removeTrackButton(track.srclang);
+						t.removeTrackButton(track.trackId);
 						t.loadNextTrack();
 					}
 				});
@@ -9801,20 +9807,22 @@ if (jQuery !== undefined) {
 		 * @param {String} lang - The language code
 		 * @param {String} label
 		 */
-		enableTrackButton: function(lang, label) {
-			var t = this;
+		enableTrackButton: function(track) {
+			var t = this, 
+					lang = track.srclang, 
+					label = track.label
+				;
 
 			if (label === '') {
-				label = mejs.language.codes[lang] || lang;
+				label = mejs.i18n.t(mejs.language.codes[lang]) || lang;
 			}
 
-			t.captionsButton
-				.find('input[value=' + lang + ']').prop('disabled',false)
+			$("#" + track.trackId).prop('disabled', false)
 				.siblings('.' + t.options.classPrefix + 'captions-selector-label').html(label);
 
 			// auto select
 			if (t.options.startLanguage === lang) {
-				$('#' + t.id + '_captions_' + lang).prop('checked', true).trigger('click');
+				$("#" + track.trackId).prop('checked', true).trigger('click');
 			}
 
 			t.adjustLanguageBox();
@@ -9822,32 +9830,35 @@ if (jQuery !== undefined) {
 
 		/**
 		 *
-		 * @param {String} lang
+		 * @param {String} trackId
 		 */
-		removeTrackButton: function(lang) {
+		removeTrackButton: function(trackId) {
 			var t = this;
 
-			t.captionsButton.find('input[value=' + lang + ']').closest('li').remove();
+			t.captionsButton.find('input[id=' + trackId + ']').closest('li').remove();
 
 			t.adjustLanguageBox();
 		},
 
 		/**
 		 *
+		 * @param {String} trackId
 		 * @param {String} lang - The language code
 		 * @param {String} label
 		 */
-		addTrackButton: function(lang, label) {
+		addTrackButton: function(trackId, lang, label) {
 			var t = this;
 			if (label === '') {
-				label = mejs.language.codes[lang] || lang;
+				label = mejs.i18n.t(mejs.language.codes[lang]) || lang;
 			}
 
+			// trackId is used in the value, too, because the "none" 
+			// caption option doesn't have a trackId but we need to be able
+			// to set it, too
 			t.captionsButton.find('ul').append(
 				$('<li class="' + t.options.classPrefix + 'captions-selector-list-item">' +
 					'<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ' +
-						'name="' + t.id + '_captions" id="' + t.id + '_captions_' + lang + '" ' +
-						'value="' + lang + '" disabled="disabled" />' +
+						'name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled="disabled" />' +
 					'<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)' + '</label>' +
 				'</li>')
 			);
@@ -10082,61 +10093,61 @@ if (jQuery !== undefined) {
 	 */
 	mejs.language = {
 		codes:  {
-			af: mejs.i18n.t('mejs.afrikaans'),
-			sq: mejs.i18n.t('mejs.albanian'),
-			ar: mejs.i18n.t('mejs.arabic'),
-			be: mejs.i18n.t('mejs.belarusian'),
-			bg: mejs.i18n.t('mejs.bulgarian'),
-			ca: mejs.i18n.t('mejs.catalan'),
-			zh: mejs.i18n.t('mejs.chinese'),
-			'zh-cn': mejs.i18n.t('mejs.chinese-simplified'),
-			'zh-tw': mejs.i18n.t('mejs.chines-traditional'),
-			hr: mejs.i18n.t('mejs.croatian'),
-			cs: mejs.i18n.t('mejs.czech'),
-			da: mejs.i18n.t('mejs.danish'),
-			nl: mejs.i18n.t('mejs.dutch'),
-			en: mejs.i18n.t('mejs.english'),
-			et: mejs.i18n.t('mejs.estonian'),
-			fl: mejs.i18n.t('mejs.filipino'),
-			fi: mejs.i18n.t('mejs.finnish'),
-			fr: mejs.i18n.t('mejs.french'),
-			gl: mejs.i18n.t('mejs.galician'),
-			de: mejs.i18n.t('mejs.german'),
-			el: mejs.i18n.t('mejs.greek'),
-			ht: mejs.i18n.t('mejs.haitian-creole'),
-			iw: mejs.i18n.t('mejs.hebrew'),
-			hi: mejs.i18n.t('mejs.hindi'),
-			hu: mejs.i18n.t('mejs.hungarian'),
-			is: mejs.i18n.t('mejs.icelandic'),
-			id: mejs.i18n.t('mejs.indonesian'),
-			ga: mejs.i18n.t('mejs.irish'),
-			it: mejs.i18n.t('mejs.italian'),
-			ja: mejs.i18n.t('mejs.japanese'),
-			ko: mejs.i18n.t('mejs.korean'),
-			lv: mejs.i18n.t('mejs.latvian'),
-			lt: mejs.i18n.t('mejs.lithuanian'),
-			mk: mejs.i18n.t('mejs.macedonian'),
-			ms: mejs.i18n.t('mejs.malay'),
-			mt: mejs.i18n.t('mejs.maltese'),
-			no: mejs.i18n.t('mejs.norwegian'),
-			fa: mejs.i18n.t('mejs.persian'),
-			pl: mejs.i18n.t('mejs.polish'),
-			pt: mejs.i18n.t('mejs.portuguese'),
-			ro: mejs.i18n.t('mejs.romanian'),
-			ru: mejs.i18n.t('mejs.russian'),
-			sr: mejs.i18n.t('mejs.serbian'),
-			sk: mejs.i18n.t('mejs.slovak'),
-			sl: mejs.i18n.t('mejs.slovenian'),
-			es: mejs.i18n.t('mejs.spanish'),
-			sw: mejs.i18n.t('mejs.swahili'),
-			sv: mejs.i18n.t('mejs.swedish'),
-			tl: mejs.i18n.t('mejs.tagalog'),
-			th: mejs.i18n.t('mejs.thai'),
-			tr: mejs.i18n.t('mejs.turkish'),
-			uk: mejs.i18n.t('mejs.ukrainian'),
-			vi: mejs.i18n.t('mejs.vietnamese'),
-			cy: mejs.i18n.t('mejs.welsh'),
-			yi: mejs.i18n.t('mejs.yiddish')
+			af: 'mejs.afrikaans',
+			sq: 'mejs.albanian',
+			ar: 'mejs.arabic',
+			be: 'mejs.belarusian',
+			bg: 'mejs.bulgarian',
+			ca: 'mejs.catalan',
+			zh: 'mejs.chinese',
+			'zh-cn': 'mejs.chinese-simplified',
+			'zh-tw': 'mejs.chines-traditional',
+			hr: 'mejs.croatian',
+			cs: 'mejs.czech',
+			da: 'mejs.danish',
+			nl: 'mejs.dutch',
+			en: 'mejs.english',
+			et: 'mejs.estonian',
+			fl: 'mejs.filipino',
+			fi: 'mejs.finnish',
+			fr: 'mejs.french',
+			gl: 'mejs.galician',
+			de: 'mejs.german',
+			el: 'mejs.greek',
+			ht: 'mejs.haitian-creole',
+			iw: 'mejs.hebrew',
+			hi: 'mejs.hindi',
+			hu: 'mejs.hungarian',
+			is: 'mejs.icelandic',
+			id: 'mejs.indonesian',
+			ga: 'mejs.irish',
+			it: 'mejs.italian',
+			ja: 'mejs.japanese',
+			ko: 'mejs.korean',
+			lv: 'mejs.latvian',
+			lt: 'mejs.lithuanian',
+			mk: 'mejs.macedonian',
+			ms: 'mejs.malay',
+			mt: 'mejs.maltese',
+			no: 'mejs.norwegian',
+			fa: 'mejs.persian',
+			pl: 'mejs.polish',
+			pt: 'mejs.portuguese',
+			ro: 'mejs.romanian',
+			ru: 'mejs.russian',
+			sr: 'mejs.serbian',
+			sk: 'mejs.slovak',
+			sl: 'mejs.slovenian',
+			es: 'mejs.spanish',
+			sw: 'mejs.swahili',
+			sv: 'mejs.swedish',
+			tl: 'mejs.tagalog',
+			th: 'mejs.thai',
+			tr: 'mejs.turkish',
+			uk: 'mejs.ukrainian',
+			vi: 'mejs.vietnamese',
+			cy: 'mejs.welsh',
+			yi: 'mejs.yiddish'
 		}
 	};
 
@@ -10238,12 +10249,13 @@ if (jQuery !== undefined) {
 				}
 
 				for(i = 0; i<lines.length; i++) {
-					var style;
-					var _temp_times = {
-						start: null,
-						stop: null,
-						style: null
-					};
+					var
+						style,
+						 _temp_times = {
+							start: null,
+							stop: null,
+							style: null
+						};
 					if (lines.eq(i).attr("begin")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
 					if (!_temp_times.start && lines.eq(i-1).attr("end")) _temp_times.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
 					if (lines.eq(i).attr("end")) _temp_times.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
