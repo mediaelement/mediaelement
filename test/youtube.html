@@ -30,7 +30,7 @@
 
 			<h2>Youtube as &lt;iframe&gt;</h2>
 
-			<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U" class="mejs-player" allowfullscreen frameborder="0"></iframe>
+			<iframe width="640" height="360" src="https://www.youtube.com/embed/twYp6W6vt2U" allowfullscreen frameborder="0"></iframe>
 		</div>
 
 		<script src="../src/js/mediaelement-header.js"></script>
@@ -56,7 +56,12 @@
 			var elements = mejs.getElementsByClassName('mejs-player');
 
 			for (var i=0, il=elements.length; i<il; i++) {
-				var player = new MediaElementPlayerSimple(elements[i]);
+				var player = new MediaElementPlayerSimple(elements[i], {
+			success: function(media, node, player) {
+                        media.setCurrentTime(60);
+                        //media.pause();
+                    }
+				});
 			}
 		</script>
 
