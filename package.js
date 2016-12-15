@@ -30,13 +30,8 @@ Package.onUse(function(api) {
     api.addFiles('build/lang/zh.js', 'client');
     api.addFiles('build/lang/zh-cn.js', 'client');
 
-    api.addFiles('build/bigplay.svg', 'client');
     api.addFiles('build/mejs-controls.svg', 'client');
     api.addFiles('build/mejs-controls.png', 'client');
-    api.addFiles('build/controls.svg', 'client');
-    api.addFiles('build/jumpforward.png', 'client');
-    api.addFiles('build/loading.gif', 'client');
-    api.addFiles('build/skipback.png', 'client');
 
     api.addFiles('build/mediaelement-flash-audio.swf', 'client');
     api.addFiles('build/mediaelement-flash-audio-ogg.swf', 'client');
