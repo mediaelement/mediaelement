@@ -239,6 +239,9 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__stop > button {
 	background-position: -112px 0;
 }
+.mejs__replay > button {
+	background-position: -94px -16px;
+}
 /* End: Play/Pause/Stop */
 
 /* Start: Progress Bar */
