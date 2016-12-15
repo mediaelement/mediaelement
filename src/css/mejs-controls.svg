@@ -1,219 +1,144 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="300px" height="120px"
 	 viewBox="0 0 300 120" style="enable-background:new 0 0 300 120;" xml:space="preserve">
-<g id="controls">
-	<g id="play_x2F_pause_6_">
-		<g>
-			<g id="play_11_">
-				<g id="Polygon_14_">
-					<path style="fill:#FFFFFF;" d="M16.313,9.478c0.469,0.287,0.469,0.756,0,1.043L4.936,17.478C4.467,17.765,4.083,17.55,4.083,17
-						V3c0-0.55,0.384-0.765,0.853-0.478L16.313,9.478z"/>
-				</g>
-			</g>
-		</g>
-	</g>
-	<g id="pause_2_">
-		<g>
-			<g>
-				<path style="fill:#FFFFFF;" d="M22.833,3c0-0.55,0.45-1,1-1h2.2c0.55,0,1,0.45,1,1v14c0,0.55-0.45,1-1,1h-2.2
-					c-0.55,0-1-0.45-1-1V3z"/>
-			</g>
-			<g>
-				<path style="fill:#FFFFFF;" d="M32.633,3c0-0.55,0.45-1,1-1h2.2c0.55,0,1,0.45,1,1v14c0,0.55-0.45,1-1,1h-2.2
-					c-0.55,0-1-0.45-1-1V3z"/>
-			</g>
-		</g>
-	</g>
-	<g id="fullscreen_2_">
-		<g>
-			<g id="enter_8_">
-				<g>
-					<path style="fill:#FFFFFF;" d="M80.833,2.375c0-0.55,0.45-1,1-1h5.413c0.55,0,0.682,0.318,0.293,0.707L81.54,8.081
-						c-0.389,0.389-0.707,0.257-0.707-0.293V2.375z"/>
-				</g>
-				<g>
-					<path style="fill:#FFFFFF;" d="M80.833,18.167c0,0.55,0.45,1,1,1h5.413c0.55,0,0.682-0.318,0.293-0.707l-5.999-5.999
-						c-0.389-0.389-0.707-0.257-0.707,0.293V18.167z"/>
-				</g>
-				<g>
-					<path style="fill:#FFFFFF;" d="M98.625,2.375c0-0.55-0.45-1-1-1h-5.413c-0.55,0-0.682,0.318-0.293,0.707l5.999,5.999
-						c0.389,0.389,0.707,0.257,0.707-0.293V2.375z"/>
-				</g>
-				<g>
-					<path style="fill:#FFFFFF;" d="M98.625,18.167c0,0.55-0.45,1-1,1h-5.413c-0.55,0-0.682-0.318-0.293-0.707l5.999-5.999
-						c0.389-0.389,0.707-0.257,0.707,0.293V18.167z"/>
-				</g>
-			</g>
-		</g>
-	</g>
-	<g id="exit_2_">
-		<g>
-			<g>
-				<path style="fill:#FFFFFF;" d="M112.528,5.972c0,0.55,0.45,1,1,1h4.097c0.55,0,0.682-0.318,0.293-0.707l-4.683-4.683
-					c-0.389-0.389-0.707-0.257-0.707,0.293V5.972z"/>
-			</g>
-			<g>
-				<path style="fill:#FFFFFF;" d="M105.431,6.972c0.55,0,1-0.45,1-1V1.875c0-0.55-0.318-0.682-0.707-0.293l-4.683,4.683
-					c-0.389,0.389-0.257,0.707,0.293,0.707H105.431z"/>
-			</g>
-			<g>
-				<path style="fill:#FFFFFF;" d="M106.431,14.069c0-0.55-0.45-1-1-1h-4.097c-0.55,0-0.682,0.318-0.293,0.707l4.683,4.683
-					c0.389,0.389,0.707,0.257,0.707-0.293V14.069z"/>
-			</g>
-			<g>
-				<path style="fill:#FFFFFF;" d="M113.528,13.069c-0.55,0-1,0.45-1,1v4.097c0,0.55,0.318,0.682,0.707,0.293l4.683-4.683
-					c0.389-0.389,0.257-0.707-0.293-0.707H113.528z"/>
-			</g>
-		</g>
-	</g>
-	<g id="volume">
-		<g>
-			<path style="fill:#FFFFFF;" d="M66.8,6.77c-0.44,0.33-1.25,0.6-1.8,0.6h-3.154c-0.55,0-1,0.45-1,1v5.73c0,0.55,0.45,1,1,1H65
-				c0.55,0,1,0.018,1,0.04c0,0.022,0.363,0.307,0.806,0.632l3.542,2.601c0.443,0.326,0.806,0.142,0.806-0.408V4.505
-				c0-0.55-0.36-0.73-0.8-0.4L66.8,6.77z"/>
-		</g>
-		<g id="volume_1_">
-			<g id="soundbars_1_">
-				<path style="fill:none;stroke:#FFFFFF;stroke-width:1.5;stroke-linecap:round;" d="M73.717,3.505c0,0,3.946-0.805,3.865,7.73
-					c-0.081,8.536-3.865,7.73-3.865,7.73"/>
-				<path style="fill:none;stroke:#FFFFFF;stroke-width:1.5;stroke-linecap:round;" d="M72.428,7.38c0,0,2.63-0.402,2.576,3.855
-					c-0.054,4.257-2.576,3.855-2.576,3.855"/>
-			</g>
-		</g>
-	</g>
-	<g id="closed_captions">
-		<path style="fill:none;stroke:#FFFFFF;" d="M128.525,9.579c-6.172-4.21-6.457,7.77,0,3.924"/>
-		<path style="fill:none;stroke:#FFFFFF;" d="M135.065,9.579c-6.172-4.21-6.457,7.77,0,3.924"/>
-		<path style="fill:#FFFFFF;" d="M121.986,4.347h15.695v13.079h-15.695V4.347z M120.678,3.039v15.695h18.311V3.039H120.678z"/>
-	</g>
-	<g id="muted">
-		<g>
-			<path style="fill:#FFFFFF;" d="M46.8,6.77c-0.44,0.33-1.25,0.6-1.8,0.6h-3.154c-0.55,0-1,0.45-1,1v5.73c0,0.55,0.45,1,1,1H45
-				c0.55,0,1,0.018,1,0.04s0.363,0.307,0.806,0.632l3.542,2.601c0.443,0.326,0.806,0.142,0.806-0.408V4.505
-				c0-0.55-0.36-0.73-0.8-0.4L46.8,6.77z"/>
-		</g>
-		<line style="fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;" x1="52.667" y1="7.972" x2="58.049" y2="13.354"/>
-		<line style="fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;" x1="52.667" y1="13.354" x2="58.049" y2="7.972"/>
-	</g>
-	<g id="skip_forward">
-		<g id="play_x2F_pause_11_">
-			<g id="play_10_">
-				<path id="Polygon_12_" style="fill:#FFFFFF;" d="M191.998,3.155l-4.327,2.164V0.992L191.998,3.155z"/>
-			</g>
-		</g>
-		<g id="play_x2F_pause_10_">
-			<g id="play_9_">
-				<path id="Polygon_11_" style="fill:#FFFFFF;" d="M194.726,3.155l-4.327,2.164V0.992L194.726,3.155z"/>
-			</g>
-		</g>
-		<path style="fill:none;stroke:#FFFFFF;stroke-width:2;" d="M189.834,3.155c-4.509,0-8.158,3.649-8.158,8.158"/>
-		<path style="fill:none;stroke:#FFFFFF;stroke-width:2;" d="M181.676,10.834c0,4.509,3.649,8.158,8.158,8.158"/>
-		<path style="fill:none;stroke:#FFFFFF;stroke-width:2;" d="M189.458,18.992c4.509,0,8.158-3.649,8.158-8.158"/>
-	</g>
-	<g id="skipback">
-		<path style="fill:none;stroke:#FFFFFF;stroke-width:2;" d="M162.522,10.646c0,4.509,3.649,8.158,8.158,8.158"/>
-		<path style="fill:none;stroke:#FFFFFF;stroke-width:2;" d="M170.2,18.804c4.509,0,8.158-3.649,8.158-8.158"/>
-		<path style="fill:none;stroke:#FFFFFF;stroke-width:2;" d="M178.358,11.022c0-4.509-3.649-8.158-8.158-8.158"/>
-		<g id="play_x2F_pause_9_">
-			<g id="play_8_">
-				<path id="Polygon_10_" style="fill:#FFFFFF;" d="M166.42,3.155l4.317,2.164V0.992L166.42,3.155z"/>
-			</g>
-		</g>
-		<g id="play_x2F_pause_7_">
-			<g id="play_7_">
-				<path id="Polygon_8_" style="fill:#FFFFFF;" d="M163.698,3.155l4.317,2.164V0.992L163.698,3.155z"/>
-			</g>
-		</g>
-	</g>
-	<g id="close_captions">
-		<g>
-			<path style="fill:#FFFFFF;" d="M159,16c0,1.1-0.9,2-2,2h-14c-1.1,0-2-0.9-2-2V6c0-1.1,0.9-2,2-2h14c1.1,0,2,0.9,2,2V16z"/>
-		</g>
-		<path d="M146.186,14.777c-1.154,0-1.833-0.62-2.139-0.997c-1.066-1.312-1.01-3.543,0.122-4.773
-			c0.511-0.556,1.984-1.653,4.639,0.158l-0.563,0.826c-1.435-0.979-2.62-1.089-3.339-0.307c-0.791,0.859-0.83,2.543-0.081,3.465
-			c0.696,0.858,1.921,0.831,3.446-0.078l0.512,0.859C147.733,14.557,146.875,14.777,146.186,14.777z"/>
-		<path d="M153.725,14.777c-1.154,0-1.833-0.62-2.139-0.997c-1.066-1.312-1.01-3.543,0.122-4.773
-			c0.51-0.556,1.985-1.653,4.639,0.158l-0.563,0.826c-1.435-0.979-2.62-1.089-3.339-0.307c-0.791,0.859-0.83,2.543-0.081,3.465
-			c0.696,0.858,1.921,0.831,3.446-0.078l0.512,0.859C155.272,14.557,154.414,14.777,153.725,14.777z"/>
-	</g>
-	<g id="options">
-		<path style="fill:#FFFFFF;" d="M218.458,10.375c0-0.55-0.437-1.109-0.97-1.243l-1.855-0.464c-0.534-0.133-0.739-0.628-0.456-1.1
-			l0.984-1.64c0.283-0.472,0.196-1.176-0.193-1.565v0c-0.389-0.389-1.093-0.476-1.565-0.193l-1.64,0.984
-			c-0.472,0.283-0.967,0.078-1.1-0.456l-0.464-1.855c-0.133-0.534-0.693-0.97-1.243-0.97l0,0c-0.55,0-1.109,0.437-1.243,0.97
-			L208.252,4.7c-0.133,0.534-0.628,0.739-1.1,0.456l-1.64-0.984c-0.472-0.283-1.176-0.196-1.565,0.193l0,0
-			c-0.389,0.389-0.476,1.093-0.193,1.565l0.984,1.64c0.283,0.472,0.078,0.967-0.456,1.1l-1.855,0.464
-			c-0.534,0.133-0.97,0.693-0.97,1.243l0,0c0,0.55,0.437,1.109,0.97,1.243l1.855,0.464c0.534,0.133,0.739,0.628,0.456,1.1
-			l-0.984,1.64c-0.283,0.472-0.196,1.176,0.193,1.565l0,0c0.389,0.389,1.093,0.476,1.565,0.193l1.64-0.984
-			c0.472-0.283,0.967-0.078,1.1,0.456l0.464,1.855c0.133,0.534,0.693,0.97,1.243,0.97l0,0c0.55,0,1.109-0.437,1.243-0.97
-			l0.464-1.855c0.133-0.534,0.628-0.739,1.1-0.456l1.639,0.984c0.472,0.283,1.176,0.196,1.565-0.193l0,0
-			c0.389-0.389,0.476-1.093,0.193-1.565l-0.984-1.64c-0.283-0.472-0.078-0.967,0.456-1.1l1.855-0.464
-			C218.022,11.484,218.458,10.925,218.458,10.375L218.458,10.375z M212.778,10.359c0,1.557-1.262,2.82-2.82,2.82
-			s-2.82-1.262-2.82-2.82c0-1.557,1.262-2.82,2.82-2.82S212.778,8.802,212.778,10.359z"/>
-	</g>
-	<g id="stop">
-		<path style="fill:#FFFFFF;" d="M236.833,15.834c0,1.1-0.9,2-2,2h-10c-1.1,0-2-0.9-2-2v-10c0-1.1,0.9-2,2-2h10c1.1,0,2,0.9,2,2
-			V15.834z"/>
-	</g>
-	<g id="loop">
-		<path style="fill:#FFFFFF;" d="M254.051,7.516c0.778,0.977,1.247,2.21,1.247,3.553c0,3.151-2.563,5.714-5.714,5.714
-			s-5.714-2.563-5.714-5.714c0-1.47,0.563-2.808,1.479-3.822l-1.615-1.615c-1.329,1.429-2.149,3.337-2.149,5.437
-			c0,4.411,3.589,8,8,8s8-3.589,8-8c0-1.973-0.722-3.779-1.911-5.176L254.051,7.516z"/>
-		<g id="play_x2F_pause_1_">
-			<g>
-				<g id="play_13_">
-					<g id="Polygon_17_">
-						<path style="fill:#FFFFFF;" d="M251.132,4.36c-0.076-0.545,0.308-0.929,0.853-0.853l5.519,0.767
-							c0.545,0.076,0.672,0.456,0.283,0.845l-5.044,5.044c-0.389,0.389-0.769,0.261-0.845-0.283L251.132,4.36z"/>
-					</g>
-				</g>
-			</g>
-		</g>
-	</g>
-	<g id="loop_off" style="opacity:0.5;">
-		<path style="fill:#FFFFFF;" d="M274.212,7.769c0.778,0.977,1.247,2.21,1.247,3.553c0,3.151-2.563,5.714-5.714,5.714
-			s-5.714-2.563-5.714-5.714c0-1.47,0.563-2.808,1.479-3.822l-1.615-1.615c-1.329,1.429-2.149,3.337-2.149,5.437
-			c0,4.411,3.589,8,8,8s8-3.589,8-8c0-1.973-0.722-3.779-1.911-5.176L274.212,7.769z"/>
-		<g id="play_x2F_pause_3_">
-			<g>
-				<g id="play_15_">
-					<g id="Polygon_20_">
-						<path style="fill:#FFFFFF;" d="M271.293,4.613c-0.076-0.545,0.308-0.929,0.853-0.853l5.519,0.767
-							c0.545,0.076,0.672,0.456,0.283,0.845l-5.044,5.044c-0.389,0.389-0.769,0.261-0.845-0.283L271.293,4.613z"/>
-					</g>
-				</g>
-			</g>
-		</g>
-	</g>
-</g>
-<g id="big_play">
-	<g id="big_play_-_light">
-		<g id="Polygon_1_" style="opacity:0.75;enable-background:new    ;">
-			<path style="fill:#FFFFFF;" d="M60.101,78c0.953,0.55,0.953,1.45,0,2L29.815,97.486c-0.953,0.55-1.732,0.1-1.732-1V61.514
-				c0-1.1,0.779-1.55,1.732-1L60.101,78z"/>
-		</g>
-		<path id="Ellipse" style="opacity:0.75;fill:none;stroke:#FFFFFF;stroke-width:5;enable-background:new    ;" d="M2.333,80
-			c0-20.711,16.789-37.5,37.5-37.5s37.5,16.789,37.5,37.5s-16.789,37.5-37.5,37.5S2.333,100.711,2.333,80z"/>
-	</g>
-	<g id="big_play_hover">
-		<g id="Polygon2">
-			<path style="fill:#FFFFFF;" d="M140.101,78c0.953,0.55,0.953,1.45,0,2l-30.286,17.486c-0.953,0.55-1.732,0.1-1.732-1V61.514
-				c0-1.1,0.779-1.55,1.732-1L140.101,78z"/>
-		</g>
-		<path id="Ellipse2" style="fill:none;stroke:#FFFFFF;stroke-width:5;" d="M82.333,80c0-20.711,16.789-37.5,37.5-37.5
-			s37.5,16.789,37.5,37.5c0,20.711-16.789,37.5-37.5,37.5S82.333,100.711,82.333,80z"/>
-	</g>
-	<g id="Loading">
-		<circle style="fill:#FFFFFF;" cx="201.708" cy="48.125" r="8.125"/>
-		<circle style="opacity:0.4;fill:#FFFFFF;" cx="233.708" cy="80" r="5"/>
-		<circle style="opacity:0.6;fill:#FFFFFF;" cx="201.708" cy="111.875" r="6"/>
-		<circle style="opacity:0.8;fill:#FFFFFF;" cx="169.958" cy="80" r="7"/>
-		<circle style="opacity:0.9;fill:#FFFFFF;" cx="178.083" cy="57.333" r="7.5"/>
-		<circle style="opacity:0.3;fill:#FFFFFF;" cx="226.167" cy="57.083" r="4.5"/>
-		<circle style="opacity:0.5;fill:#FFFFFF;" cx="225.583" cy="103.75" r="5.5"/>
-		<circle style="opacity:0.7;fill:#FFFFFF;" cx="178.083" cy="103.75" r="6.5"/>
-	</g>
-</g>
-<g id="Guides">
-</g>
+  <g id="controls">
+    <g id="play_pause" data-name="play/pause">
+      <g id="play">
+        <g id="Polygon">
+          <path d="M16.31,9.48a.56.56,0,0,1,0,1l-11.38,7c-.47.29-.85.07-.85-.48V3c0-.55.38-.77.85-.48Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        </g>
+      </g>
+    </g>
+    <g id="pause">
+      <g>
+        <rect x="23" y="1.01" width="4.2" height="16" rx="1" ry="1" style="fill: #fff"/>
+        <rect x="32.8" y="1.01" width="4.2" height="16" rx="1" ry="1" style="fill: #fff"/>
+      </g>
+    </g>
+    <g id="fullscreen">
+      <g id="enter">
+        <path d="M80.83,2.38a1,1,0,0,1,1-1h5.41c.55,0,.68.32.29.71l-6,6c-.39.39-.71.26-.71-.29Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        <path d="M80.83,18.17a1,1,0,0,0,1,1h5.41c.55,0,.68-.32.29-.71l-6-6c-.39-.39-.71-.26-.71.29Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        <path d="M98.63,2.38a1,1,0,0,0-1-1H92.21c-.55,0-.68.32-.29.71l6,6c.39.39.71.26.71-.29Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        <path d="M98.63,18.17a1,1,0,0,1-1,1H92.21c-.55,0-.68-.32-.29-.71l6-6c.39-.39.71-.26.71.29Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      </g>
+    </g>
+    <g id="exit">
+      <g>
+        <path d="M112.53,6a1,1,0,0,0,1,1h4.1c.55,0,.68-.32.29-.71l-4.68-4.68c-.39-.39-.71-.26-.71.29Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        <path d="M105.43,7a1,1,0,0,0,1-1V1.88c0-.55-.32-.68-.71-.29L101,6.27c-.39.39-.26.71.29.71Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        <path d="M106.43,14.07a1,1,0,0,0-1-1h-4.1c-.55,0-.68.32-.29.71l4.68,4.68c.39.39.71.26.71-.29Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        <path d="M113.53,13.07a1,1,0,0,0-1,1v4.1c0,.55.32.68.71.29l4.68-4.68c.39-.39.26-.71-.29-.71Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      </g>
+    </g>
+    <g id="volume">
+      <path d="M66.8,6.77a3.51,3.51,0,0,1-1.8.6H61.85a1,1,0,0,0-1,1V14.1a1,1,0,0,0,1,1H65a6.28,6.28,0,0,1,1,0,8.5,8.5,0,0,0,.81.63l3.54,2.6c.44.33.81.14.81-.41V4.5c0-.55-.36-.73-.8-.4Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      <g id="volume-2" data-name="volume">
+        <g id="soundbars">
+          <path d="M73.72,3.5s3.95-.81,3.87,7.73S73.72,19,73.72,19" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-linecap: round;stroke-width: 1.5px"/>
+          <path d="M72.43,7.38S75.06,7,75,11.23s-2.58,3.86-2.58,3.86" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-linecap: round;stroke-width: 1.5px"/>
+        </g>
+      </g>
+    </g>
+    <g id="closed_captions" data-name="closed captions">
+      <path d="M128.53,9.58c-6.17-4.21-6.46,7.77,0,3.92" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff"/>
+      <path d="M135.06,9.58c-6.17-4.21-6.46,7.77,0,3.92" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff"/>
+      <path d="M122,4.35h15.69V17.43H122ZM120.68,3V18.73H139V3Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+    </g>
+    <g id="muted">
+      <path d="M46.8,6.77a3.51,3.51,0,0,1-1.8.6H41.85a1,1,0,0,0-1,1V14.1a1,1,0,0,0,1,1H45a6.28,6.28,0,0,1,1,0,8.5,8.5,0,0,0,.81.63l3.54,2.6c.44.33.81.14.81-.41V4.5c0-.55-.36-.73-.8-.4Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      <line x1="52.83" y1="6.98" x2="58.22" y2="12.36" style="fill: none;stroke: #fff;stroke-linecap: round;stroke-width: 2px"/>
+      <line x1="52.83" y1="12.36" x2="58.22" y2="6.98" style="fill: none;stroke: #fff;stroke-linecap: round;stroke-width: 2px"/>
+    </g>
+    <g id="skip_forward" data-name="skip forward">
+      <g id="play_pause-2" data-name="play/pause">
+        <g id="play-2" data-name="play">
+          <path id="Polygon-2" data-name="Polygon" d="M192,3.16l-4.33,2.16V1Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        </g>
+      </g>
+      <g id="play_pause-3" data-name="play/pause">
+        <g id="play-3" data-name="play">
+          <path id="Polygon-3" data-name="Polygon" d="M194.73,3.16,190.4,5.32V1Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        </g>
+      </g>
+      <path d="M189.83,3.16a8.15,8.15,0,0,0-8.16,8.16" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 2px"/>
+      <path d="M181.68,10.83A8.15,8.15,0,0,0,189.83,19" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 2px"/>
+      <path d="M189.46,19a8.15,8.15,0,0,0,8.16-8.16" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 2px"/>
+    </g>
+    <g id="skipback">
+      <path d="M162.52,10.65a8.15,8.15,0,0,0,8.16,8.16" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 2px"/>
+      <path d="M170.2,18.8a8.15,8.15,0,0,0,8.16-8.16" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 2px"/>
+      <path d="M178.36,11a8.15,8.15,0,0,0-8.16-8.16" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 2px"/>
+      <g id="play_pause-4" data-name="play/pause">
+        <g id="play-4" data-name="play">
+          <path id="Polygon-4" data-name="Polygon" d="M166.42,3.16l4.32,2.16V1Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        </g>
+      </g>
+      <g id="play_pause-5" data-name="play/pause">
+        <g id="play-5" data-name="play">
+          <path id="Polygon-5" data-name="Polygon" d="M163.7,3.16,168,5.32V1Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        </g>
+      </g>
+    </g>
+    <g id="close_captions" data-name="close captions">
+      <rect x="141.17" y="3.01" width="18" height="14" rx="2" ry="2" style="fill: #fff"/>
+      <path d="M146.19,14.78a2.69,2.69,0,0,1-2.14-1A3.87,3.87,0,0,1,144.17,9c.51-.56,2-1.65,4.64.16l-.56.83c-1.43-1-2.62-1.09-3.34-.31a2.89,2.89,0,0,0-.08,3.47c.7.86,1.92.83,3.45-.08l.51.86A5.13,5.13,0,0,1,146.19,14.78Z" transform="translate(0.17 -0.99)" style="fill: #231f20"/>
+      <path d="M153.73,14.78a2.69,2.69,0,0,1-2.14-1A3.87,3.87,0,0,1,151.71,9c.51-.56,2-1.65,4.64.16l-.56.83c-1.43-1-2.62-1.09-3.34-.31a2.89,2.89,0,0,0-.08,3.47c.7.86,1.92.83,3.45-.08l.51.86A5.13,5.13,0,0,1,153.73,14.78Z" transform="translate(0.17 -0.99)" style="fill: #231f20"/>
+    </g>
+    <path d="M218.46,10.38a1.35,1.35,0,0,0-1-1.24l-1.85-.46a.7.7,0,0,1-.46-1.1l1-1.64A1.35,1.35,0,0,0,216,4.36h0a1.35,1.35,0,0,0-1.56-.19l-1.64,1a.7.7,0,0,1-1.1-.46l-.46-1.85a1.35,1.35,0,0,0-1.24-1h0a1.35,1.35,0,0,0-1.24,1l-.46,1.85a.7.7,0,0,1-1.1.46l-1.64-1a1.35,1.35,0,0,0-1.56.19h0a1.35,1.35,0,0,0-.19,1.56l1,1.64a.7.7,0,0,1-.46,1.1l-1.85.46a1.35,1.35,0,0,0-1,1.24h0a1.35,1.35,0,0,0,1,1.24l1.85.46a.7.7,0,0,1,.46,1.1l-1,1.64a1.35,1.35,0,0,0,.19,1.56h0a1.35,1.35,0,0,0,1.56.19l1.64-1a.7.7,0,0,1,1.1.46l.46,1.85a1.35,1.35,0,0,0,1.24,1h0a1.35,1.35,0,0,0,1.24-1l.46-1.85a.7.7,0,0,1,1.1-.46l1.64,1a1.35,1.35,0,0,0,1.56-.19h0a1.35,1.35,0,0,0,.19-1.56l-1-1.64a.7.7,0,0,1,.46-1.1l1.85-.46a1.35,1.35,0,0,0,1-1.24Zm-5.68,0A2.82,2.82,0,1,1,210,7.54,2.82,2.82,0,0,1,212.78,10.36Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+    <rect x="223" y="2.84" width="14" height="14" rx="2" ry="2" style="fill: #fff"/>
+    <g id="loop">
+      <path d="M254.05,7.52a5.72,5.72,0,1,1-8.7-.27l-1.62-1.62a8,8,0,1,0,11.94.26Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      <g id="play_pause-6" data-name="play/pause">
+        <g id="play-6" data-name="play">
+          <g id="Polygon-6" data-name="Polygon">
+            <path d="M251.13,4.36a.72.72,0,0,1,.85-.85l5.52.77c.54.08.67.46.28.84l-5,5c-.39.39-.77.26-.84-.28Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="loop_off" data-name="loop off" style="opacity: 0.5">
+      <path d="M274.21,7.77a5.72,5.72,0,1,1-8.7-.27l-1.62-1.62a8,8,0,1,0,11.94.26Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      <g id="play_pause-7" data-name="play/pause">
+        <g id="play-7" data-name="play">
+          <g id="Polygon-7" data-name="Polygon">
+            <path d="M271.29,4.61a.72.72,0,0,1,.85-.85l5.52.77c.54.08.67.46.28.84l-5,5c-.39.39-.77.26-.84-.28Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g id="big_play" data-name="big play">
+    <g id="big_play_-_light" data-name="big play - light">
+      <g id="Polygon-8" data-name="Polygon" style="opacity: 0.75;isolation: isolate">
+        <path d="M60.1,78a1.06,1.06,0,0,1,0,2L29.82,97.49c-1,.55-1.73.1-1.73-1v-35c0-1.1.78-1.55,1.73-1Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      </g>
+      <path id="Ellipse" d="M2.33,80a37.5,37.5,0,1,1,37.5,37.5A37.5,37.5,0,0,1,2.33,80Z" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 5px;opacity: 0.75;isolation: isolate"/>
+    </g>
+    <g id="big_play_hover" data-name="big play hover">
+      <g id="Polygon2">
+        <path d="M140.1,78a1.06,1.06,0,0,1,0,2L109.82,97.49c-1,.55-1.73.1-1.73-1v-35c0-1.1.78-1.55,1.73-1Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+      </g>
+      <path id="Ellipse2" d="M82.33,80a37.5,37.5,0,1,1,37.5,37.5A37.5,37.5,0,0,1,82.33,80Z" transform="translate(0.17 -0.99)" style="fill: none;stroke: #fff;stroke-width: 5px"/>
+    </g>
+    <g id="Loading">
+      <circle cx="201.88" cy="47.13" r="8.13" style="fill: #fff"/>
+      <circle cx="233.88" cy="79.01" r="5" style="fill: #fff;opacity: 0.4"/>
+      <circle cx="201.88" cy="110.88" r="6" style="fill: #fff;opacity: 0.6000000000000001"/>
+      <circle cx="170.13" cy="79.01" r="7" style="fill: #fff;opacity: 0.8"/>
+      <circle cx="178.25" cy="56.34" r="7.5" style="fill: #fff;opacity: 0.9"/>
+      <circle cx="226.33" cy="56.09" r="4.5" style="fill: #fff;opacity: 0.30000000000000004"/>
+      <circle cx="225.75" cy="102.76" r="5.5" style="fill: #fff;opacity: 0.5"/>
+      <circle cx="178.25" cy="102.76" r="6.5" style="fill: #fff;opacity: 0.7000000000000001"/>
+    </g>
+  </g>
+  <g id="Guides">
+    <g id="play_pause-8" data-name="play/pause">
+      <g id="play-8" data-name="play">
+        <g id="Polygon-9" data-name="Polygon">
+          <path d="M298.64,10.54a.79.79,0,0,1-1.1.64l-4.86-1.82c-.51-.19-.55-.58-.07-.85l6.18-3.57c.48-.27.79-.06.7.49Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+        </g>
+      </g>
+    </g>
+    <path id="replay" d="M290,17.08a6.22,6.22,0,0,1-2.9-.71,5.94,5.94,0,0,1-3.2-5.24,6.11,6.11,0,0,1,11.87-1.89l.1-.15L298,10.15a8.1,8.1,0,0,0-16.12,1,7.93,7.93,0,0,0,4.26,7,8.22,8.22,0,0,0,3.83.95,8.13,8.13,0,0,0,6.57-3.32l-1.8-.93A6.14,6.14,0,0,1,290,17.08Z" transform="translate(0.17 -0.99)" style="fill: #fff"/>
+  </g>
 </svg>
