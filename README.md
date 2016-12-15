@@ -43,6 +43,8 @@ Instead of using Flash as a _fallback_, Flash is used to make the browser seem H
 
 * Code completely documented using [JSDoc](http://usejsdoc.org/) notation.
 
+* Updated styles for control bar.
+
 * Introduction of BEM naming convention for player classes, and backward compatibility with "legacy" stylesheet.
 
 * Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library.

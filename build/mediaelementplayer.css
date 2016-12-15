@@ -879,7 +879,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__jump-forward-button button {
 	font-size: 8px;
-	padding-top: 2px;
 	line-height: normal;
 	color: #ffffff;
 	background-position: -180px 0;
@@ -893,7 +892,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__skip-back-button > button {
 	font-size: 8px;
-	padding-top: 2px;
 	line-height: normal;
 	color: #ffffff;
 	background-position: -160px 0;
