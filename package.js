@@ -31,6 +31,8 @@ Package.onUse(function(api) {
     api.addFiles('build/lang/zh-cn.js', 'client');
 
     api.addFiles('build/bigplay.svg', 'client');
+    api.addFiles('build/mejs-controls.svg', 'client');
+    api.addFiles('build/mejs-controls.png', 'client');
     api.addFiles('build/controls.svg', 'client');
     api.addFiles('build/jumpforward.png', 'client');
     api.addFiles('build/loading.gif', 'client');
