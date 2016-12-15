@@ -18,6 +18,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	text-indent: 0;
 	box-sizing: border-box;
 }
+
 .mejs__container * {
 	box-sizing: border-box;
 }
@@ -251,7 +252,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background-position: -220px 0;
 }
 .mejs__replay > button {
-	background-position: -94px -16px;
+	background-position: -280px 0;
 }
 /* End: Play/Pause/Stop */
 
@@ -373,7 +374,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__unfullscreen > button {
-	background-position: -100px;
+	background-position: -100px 0;
 }
 /* End: Fullscreen */
 
