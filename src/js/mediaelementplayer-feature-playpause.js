@@ -60,6 +60,7 @@
 			function togglePlayPause(which) {
 				if ('play' === which) {
 					play.removeClass(t.options.classPrefix + 'play')
+						.removeClass(t.options.classPrefix + 'replay')
 						.addClass(t.options.classPrefix + 'pause');
 					play_btn.attr({
 						'title': pauseTitle,
@@ -67,6 +68,7 @@
 					});
 				} else {
 					play.removeClass(t.options.classPrefix + 'pause')
+						.removeClass(t.options.classPrefix + 'replay')
 						.addClass(t.options.classPrefix + 'play');
 					play_btn.attr({
 						'title': playTitle,
@@ -90,6 +92,16 @@
 			}, false);
 			media.addEventListener('paused',function() {
 				togglePlayPause('pse');
+			}, false);
+
+			media.addEventListener('ended',function() {
+
+				if (!player.options.loop) {
+					play.removeClass(t.options.classPrefix + 'pause')
+						.removeClass(t.options.classPrefix + 'play')
+						.addClass(t.options.classPrefix + 'replay');
+				}
+
 			}, false);
 		}
 	});
