@@ -206,7 +206,7 @@
 
 	    for (var i = 0, total = selectBoxes.length; i < total; i++) {
 	    	selectBoxes[i].addEventListener('change', function(e) {
-                    var media = getClosest(e.target, '.players').querySelector('.mejs-simple-container').id.replace('_container', '');
+                    var media = getClosest(e.target, '.players').querySelector('.mejs__simple-container').id.replace('_container', '');
                     player = document.getElementById(media);
 
                     player.setSrc(this.value.replace('&amp;', '&'));

@@ -258,7 +258,7 @@
         $('select[name=sources]').on('change', function() {
             var
                 _this = $(this),
-                media = _this.closest('.players').find('.mejs-container').attr('id'),
+                media = _this.closest('.players').find('.media-wrapper').children('div:first').attr('id'),
                 player = mejs.players[media];
 
             player.setSrc(_this.val().replace('&amp;', '&'));
