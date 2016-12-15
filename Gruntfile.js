@@ -128,6 +128,10 @@ module.exports = function(grunt) {
 			main: {
 				src: 'src/css/mediaelementplayer.css',
 				dest: 'build/mediaelementplayer.min.css'
+			},
+			legacy: {
+				src: 'src/css/mediaelementplayer-legacy.css',
+				dest: 'build/mediaelementplayer-legacy.min.css'
 			}
 		},
 		copy: {
