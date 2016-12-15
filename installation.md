@@ -52,21 +52,24 @@ For more information about how to set up a server to serve media properly and ot
 ```html
 <script src="jquery.js"></script>
 <script src="mediaelement-and-player.min.js"></script>
-<link rel="stylesheet" href="mediaelementplayer.css" />
+<link rel="stylesheet" href="mediaelementplayer.min.css" />
 ```
 
 Note: to support IE6-8, this code must appear in the `<head>` tag. If you cannot place the MediaElement.js code in the `<head>` you need to install something like [html5shiv](https://github.com/afarkas/html5shiv).
 
 If you wish to install the sources in different directories (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash shims in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
 ```html
-<link rel="stylesheet" href="/path/to/mediaelementplayer.css" />
+<link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
 
 <style>
 .mejs__overlay-button {
-    background: url("/path/to/bigplay.svg") no-repeat;
+    background: url("/path/to/mejs-controls.svg") no-repeat;
+}
+.mejs__overlay-loading-bg-img {
+    background: transparent url("/path/to/mejs-controls.svg") -160px -40px no-repeat;
 }
 .mejs__button > button {
-    background-image: url("/path/to/controls.svg");
+    background: transparent url("/path/to/mejs-controls.svg") no-repeat;
 }
 </style>
 ```
