@@ -17,7 +17,7 @@
 		// default if the user doesn't specify
 		defaultAudioWidth: 400,
 		// default if the user doesn't specify
-		defaultAudioHeight: 30,
+		defaultAudioHeight: 40,
 		// default amount to move back when back key is pressed
 		defaultSeekBackwardInterval: function (media) {
 			return (media.duration * 0.05);
@@ -1299,29 +1299,29 @@
 
 		setControlsSize: function () {
 			var
-				t = this,
-				rail = t.controls.find('.' + t.options.classPrefix + 'time-rail')
+				t = this
 			;
-
+				
 			// skip calculation if hidden
-			if (!t.container.is(':visible') || !rail.length || !rail.is(':visible')) {
+			if (!t.container.is(':visible') || !t.rail || !t.rail.length || !t.rail.is(':visible')) {
 				return;
 			}
 
 			var
+				railMargin = parseFloat(t.rail.css('margin-left')) + parseFloat(t.rail.css('margin-right')),
+				totalMargin = parseFloat( t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')),
 				controlElements = t.controls.children(),
-				margin = parseFloat(controlElements.children('.' + t.options.classPrefix + 'time-total').css('margin-left')),
 				siblingsWidth = 0
 			;
 
-			rail.siblings().each(function () {
-				siblingsWidth += $(this).outerWidth(true);
+			t.rail.siblings().each(function () {
+				siblingsWidth += parseFloat( $(this).outerWidth(true) );
 			});
 
-			siblingsWidth += (margin * 2);
+			siblingsWidth += totalMargin + railMargin + 1;
 
 			// Substract the width of the feature siblings from time rail
-			rail.width('100%').width('-=' + siblingsWidth);
+			t.rail.width( t.controls.width() - siblingsWidth );
 
 			t.container.trigger('controlsresize');
 		},

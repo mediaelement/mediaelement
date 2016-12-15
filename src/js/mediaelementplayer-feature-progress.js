@@ -52,6 +52,7 @@
 			.appendTo(controls);
 			controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 
+			t.rail = controls.find('.' + t.options.classPrefix + 'time-rail');
 			t.total = controls.find('.' + t.options.classPrefix + 'time-total');
 			t.loaded = controls.find('.' + t.options.classPrefix + 'time-loaded');
 			t.current = controls.find('.' + t.options.classPrefix + 'time-current');
@@ -237,7 +238,7 @@
 
 
 			// handle clicks
-			t.total.on('mousedown touchstart', function (e) {
+			t.rail.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
 					mouseIsDown = true;
