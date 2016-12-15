@@ -37,6 +37,8 @@
 * Simplified volume control position calculation (https://github.com/johndyer/mediaelement/pull/1952) @marjune163
 * Integrated BEM naming convention and backward compatibility (https://github.com/johndyer/mediaelement/pull/1961) @albell and @ron666
 * Integrated support for multiple tracks with same language code and fixed issues with translations for `<track>` labels (https://github.com/johndyer/mediaelement/pull/1957) @laupow and @ron666
+* Updated control bar styles (https://github.com/johndyer/mediaelement/pull/1965) @johndyer
+* Added replay button once video finishes and does not loop to solve #1067 @ron666
 
 *2.23.4 (2016/10/21)*
 
