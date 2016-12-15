@@ -143,6 +143,7 @@
 
         if (mejs.MediaFeatures.isiOS) {
             $('select').find('option[value^="rtmp"]').prop('disabled', true);
+            $('select').find('option[value$="webm"]').prop('disabled', true);
             $('select').find('option[value$=".mpd"]').prop('disabled', true);
             $('select').find('option[value$=".ogg"]').prop('disabled', true);
             $('select').find('option[value*=".flv"]').prop('disabled', true);
@@ -159,7 +160,7 @@
         $('select').change(function() {
             var
                     _this = $(this),
-                    media = _this.prevUntil('div').prev('div').find('.mejs-container').attr('id');
+                    media = _this.prevUntil('div').prev('div').children('div:first').attr('id');
 
             mejs.players[media].setSrc(_this.val());
             mejs.players[media].load();
