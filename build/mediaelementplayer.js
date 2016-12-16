@@ -625,7 +625,7 @@ if (jQuery !== undefined) {
 
 			if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
 				(t.media.paused && t.media.readyState === 4) ||
-				(t.isVideo && !t.options.hideVideoControlsOnLoad) ||
+				(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState) ||
 				t.media.ended) {
 				return;
 			}
