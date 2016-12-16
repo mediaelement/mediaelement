@@ -56,11 +56,7 @@
 			var elements = mejs.getElementsByClassName('mejs-player');
 
 			for (var i=0, il=elements.length; i<il; i++) {
-				var player = new MediaElementPlayerSimple(elements[i], {
-					youtube: {
-						start: 60
-					}
-				});
+				var player = new MediaElementPlayerSimple(elements[i]);
 			}
 		</script>
 
