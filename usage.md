@@ -110,7 +110,7 @@ $('video').mediaelementplayer({
     }
 });
 ```
-
+<a id="renderers-list"></a>
 Below are listed the renderers with their IDs and player instance to execute other methods from APIs.
 
 Renderer | ID | API instance | Reference
