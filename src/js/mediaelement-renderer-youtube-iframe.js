@@ -96,6 +96,7 @@
 		 * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 * - http://www.youtube.com/v/VIDEO_ID?version=3
 		 * - http://youtu.be/Djd6tPrxc08
+		 * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
 		 *
 		 * @param {String} url
 		 * @return {string}
@@ -175,7 +176,24 @@
 		name: 'youtube_iframe',
 
 		options: {
-			prefix: 'youtube_iframe'
+			prefix: 'youtube_iframe',
+			/**
+			 * Custom configuration for YouTube player
+			 *
+			 * @see https://developers.google.com/youtube/player_parameters#Parameters
+			 * @type {Object}
+			 */
+			youtube: {
+				autoplay: 0,
+				disablekb: 1,
+				end: 0,
+				loop: 0,
+				modestbranding: 0,
+				playsinline: 0,
+				rel: 0,
+				showinfo: 0,
+				start: 0
+			}
 		},
 
 		/**
@@ -376,15 +394,16 @@
 					videoId: videoId,
 					height: height,
 					width: width,
-					playerVars: {
+					playerVars: mejs.Utils.extend({
 						controls: 0,
 						rel: 0,
 						disablekb: 1,
 						showinfo: 0,
 						modestbranding: 0,
 						html5: 1,
-						playsinline: 1
-					},
+						playsinline: 1,
+						start: 0,
+						end: 0}, youtube.options.youtube),
 					origin: win.location.host,
 					events: {
 						onReady: function (e) {
