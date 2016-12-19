@@ -425,7 +425,7 @@
 						showinfo: 0,
 						modestbranding: 0,
 						html5: 1,
-						playsinline: 1,
+						playsinline: 0,
 						start: 0,
 						end: 0}, youtube.options.youtube),
 					origin: win.location.host,
