@@ -450,13 +450,11 @@
 			if (isNative) {
 				t.$media
 				.width('100%')
-				.height('100%')
-				.css('min-width','100%').css('min-height','100%');
+				.height('100%');
 			} else {
 				t.container.find('iframe, embed, object, video')
 				.width('100%')
-				.height('100%')
-				.css('min-width','100%').css('min-height','100%');
+				.height('100%');
 			}
 
 			if (t.options.setDimensions) {
@@ -516,13 +514,11 @@
 				if (isNative) {
 					t.$media
 						.width(t.normalWidth)
-						.height(t.normalHeight)
-						.css('min-width','initial').css('min-height','initial');
+						.height(t.normalHeight);
 				} else {
 					t.container.find('iframe, embed, object, video')
 						.width(t.normalWidth)
-						.height(t.normalHeight)
-						.css('min-width','initial').css('min-height','initial');
+						.height(t.normalHeight);
 				}
 
 				t.media.setSize(t.normalWidth, t.normalHeight);
