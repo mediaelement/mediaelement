@@ -76,8 +76,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__container-fullscreen .mejs__mediaelement,
 .mejs__container-fullscreen video {
-	width: 100% !important;
-	height: 100% !important;
+	width: 100%;
+	height: 100%;
 }
 
 .mejs__clear {
