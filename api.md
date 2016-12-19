@@ -24,7 +24,7 @@ fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
 pluginPath | string | `build/` | Path where Flash shims are located
 facebook | object | | Facebook API configuration; all elements listed at https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup are accepted
 hls | object | | Native HLS player configuration; all elements listed at https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning (except amy callback elements) are accepted
-youtube | object | | YouTube iframe player parameters; all elements listed at https://developers.google.com/youtube/player_parameters#Parameters
+youtube | object | | YouTube iframe player parameters; all elements listed at https://developers.google.com/youtube/player_parameters#Parameters (and a custom `nocookie` parameter to switch to YouTube's no-cookie URL)
 
 <a id="player"></a>
 ### MediaElementPlayer
