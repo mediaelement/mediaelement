@@ -161,6 +161,22 @@
 			url = parts[0];
 
 			return url.substring(url.lastIndexOf('/') + 1);
+		},
+
+		/**
+		 * Inject `no-cookie` element to URL. Only works with format: http://www.youtube.com/v/VIDEO_ID?version=3
+		 * @param {String} url
+		 * @return {?String}
+		 */
+		getYouTubeNoCookieUrl: function(url) {
+			if (url === undefined || url === null || url.indexOf('www.youtube') === -1) {
+				return url;
+			}
+
+			var parts = url.split('/');
+			parts[2] = parts[2].replace('.com', '-nocookie.com');
+			console.log(parts.join('/'));
+			return parts.join('/');
 		}
 	};
 
@@ -192,7 +208,9 @@
 				playsinline: 0,
 				rel: 0,
 				showinfo: 0,
-				start: 0
+				start: 0,
+				// custom to inject `-nocookie` element in URL
+				nocookie: true
 			}
 		},
 
@@ -381,6 +399,12 @@
 			// CREATE YouTube
 			var youtubeContainer = doc.createElement('div');
 			youtubeContainer.id = youtube.id;
+
+			// If `nocookie` feature was enabled, modify original URL
+			if (youtube.options.youtube.nocookie) {
+				mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
+			}
+
 			mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
 			mediaElement.originalNode.style.display = 'none';
 
