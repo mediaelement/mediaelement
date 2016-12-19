@@ -9270,15 +9270,12 @@ if (jQuery !== undefined) {
 
 			if (isNative) {
 				t.$media
-				.width(screen.width)
-				.height(screen.height);
-				t.container.find('video')
-					.width('100%')
-					.height('100%').css('min-width','100%').css('min-height','100%');
-				// .css({
-				// 	'min-width': '100%',
-				// 	'min-height': '100%'
-				// });
+				.width('100%')
+				.height('100%')
+				.css({
+					'min-width': '100%',
+					'min-height': '100%'
+				});
 			} else {
 				t.container.find('iframe, embed, object, video')
 				.width('100%')
@@ -9288,12 +9285,6 @@ if (jQuery !== undefined) {
 					'min-height': '100%'
 				});
 			}
-
-			setTimeout(function(){
-				t.container.find('video')
-				.width('100%')
-				.height('100%').css('min-width','100%').css('min-height','100%');
-			}, 100);
 
 			if (t.options.setDimensions) {
 				t.media.setSize(screen.width, screen.height);
