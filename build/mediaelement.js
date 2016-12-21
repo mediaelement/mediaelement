@@ -78,7 +78,7 @@ mejs.version = '3.0';
 		 * @return {Object}
 		 */
 		createEvent: function (eventName, target) {
-			var event = null;
+			var event;
 
 			if (doc.createEvent) {
 				event = doc.createEvent('Event');
@@ -86,9 +86,9 @@ mejs.version = '3.0';
 				event.target = target;
 			} else {
 				event = {};
+				event.type = eventName;
+				event.target = target;
 			}
-			event.type = eventName;
-			event.target = target;
 
 			return event;
 		},
@@ -2030,7 +2030,7 @@ if (document.createEvent === undefined) {
 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 				 */
 				var assignMdashEvents = function (e, data) {
-					var event = mejs.Utils.createEvent(e, node);
+					var event = mejs.Utils.createEvent(e.type, node);
 					mediaElement.dispatchEvent(event);
 
 					if (e === 'error') {
@@ -2606,7 +2606,6 @@ if (document.createEvent === undefined) {
 
 			var parts = url.split('/');
 			parts[2] = parts[2].replace('.com', '-nocookie.com');
-			
 			return parts.join('/');
 		}
 	};
@@ -4353,7 +4352,8 @@ if (document.createEvent === undefined) {
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
 							for (i = 0, il = fbEvents.length; i < il; i++) {
 								var event = fbEvents[i], handler = eventHandler[event];
-								if (!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+								if (handler !== undefined && handler !== null &&
+									!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
 									handler.removeListener(event);
 								}
 							}

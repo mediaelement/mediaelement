@@ -282,7 +282,8 @@
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
 							for (i = 0, il = fbEvents.length; i < il; i++) {
 								var event = fbEvents[i], handler = eventHandler[event];
-								if (!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+								if (handler !== undefined && handler !== null &&
+									!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
 									handler.removeListener(event);
 								}
 							}

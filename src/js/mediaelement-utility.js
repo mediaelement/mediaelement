@@ -62,7 +62,7 @@
 		 * @return {Object}
 		 */
 		createEvent: function (eventName, target) {
-			var event = null;
+			var event;
 
 			if (doc.createEvent) {
 				event = doc.createEvent('Event');
@@ -70,9 +70,9 @@
 				event.target = target;
 			} else {
 				event = {};
+				event.type = eventName;
+				event.target = target;
 			}
-			event.type = eventName;
-			event.target = target;
 
 			return event;
 		},
