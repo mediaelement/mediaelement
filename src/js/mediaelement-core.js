@@ -492,7 +492,7 @@
 					// test <source> types to see if they are usable
 					for (i = 0; i < sources; i++) {
 						n = mediaElement.originalNode.childNodes[i];
-						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
+						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
 							mediaFiles.push({type: type, src: src});

@@ -63,10 +63,11 @@
 		 */
 		buildfullscreen: function (player, controls, layers, media) {
 
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
-			player.isInIframe = (window.location != window.parent.location);
+			player.isInIframe = (window.location !== window.parent.location);
 
 			// detect on start
 			media.addEventListener('loadstart', function () {

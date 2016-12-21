@@ -54,7 +54,7 @@
 		buildgoogleanalytics: function (player, controls, layers, media) {
 
 			media.addEventListener('play', function () {
-				if (typeof ga != 'undefined') {
+				if (typeof ga !== 'undefined') {
 					ga('send', 'event',
 						player.options.googleAnalyticsCategory,
 						player.options.googleAnalyticsEventPlay,
@@ -64,7 +64,7 @@
 			}, false);
 
 			media.addEventListener('pause', function () {
-				if (typeof ga != 'undefined') {
+				if (typeof ga !== 'undefined') {
 					ga('send', 'event',
 						player.options.googleAnalyticsCategory,
 						player.options.googleAnalyticsEventPause,
@@ -74,7 +74,7 @@
 			}, false);
 
 			media.addEventListener('ended', function () {
-				if (typeof ga != 'undefined') {
+				if (typeof ga !== 'undefined') {
 					ga('send', 'event',
 						player.options.googleAnalyticsCategory,
 						player.options.googleAnalyticsEventEnded,
@@ -82,20 +82,6 @@
 					);
 				}
 			}, false);
-
-			/*
-			 media.addEventListener('timeupdate', function() {
-			 if (typeof ga != 'undefined') {
-			 ga('send', 'event',
-			 player.options.googleAnalyticsCategory,
-			 player.options.googleAnalyticsEventEnded,
-			 player.options.googleAnalyticsTime,
-			 (player.options.googleAnalyticsTitle === '') ? player.media.currentSrc : player.options.googleAnalyticsTitle,
-			 player.currentTime
-			 );
-			 }
-			 }, true);
-			 */
 		}
 	});
 

@@ -348,7 +348,7 @@
 
 			var format = options.timeFormat,
 				firstChar = format[0],
-				firstTwoPlaces = (format[1] == format[0]),
+				firstTwoPlaces = (format[1] === format[0]),
 				separatorIndex = firstTwoPlaces ? 2 : 1,
 				separator = ':',
 				hours = Math.floor(time / 3600) % 24,
@@ -406,13 +406,15 @@
 		 * @return {number}
 		 */
 		convertSMPTEtoSeconds: function (SMPTE) {
-			if (typeof SMPTE !== 'string')
+
+			if (typeof SMPTE !== 'string') {
 				return false;
+			}
 
 			SMPTE = SMPTE.replace(',', '.');
 
 			var secs = 0,
-				decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
+				decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0,
 				multiplier = 1;
 
 			SMPTE = SMPTE.split(':').reverse();
@@ -433,12 +435,16 @@
 				var context = this, args = arguments;
 				var later = function () {
 					timeout = null;
-					if (!immediate) func.apply(context, args);
+					if (!immediate) {
+						func.apply(context, args);
+					}
 				};
 				var callNow = immediate && !timeout;
 				clearTimeout(timeout);
 				timeout = setTimeout(later, wait);
-				if (callNow) func.apply(context, args);
+				if (callNow) {
+					func.apply(context, args);
+				}
 			};
 		},
 		/**
@@ -493,7 +499,7 @@
 		features.isiPhone = (ua.match(/iphone/i) !== null);
 		features.isiOS = features.isiPhone || features.isiPad;
 		features.isAndroid = (ua.match(/android/i) !== null);
-		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") > -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
 

@@ -28,7 +28,7 @@ if (!Array.prototype.indexOf) {
 		//	   ToInteger(fromIndex); else let n be 0.
 		var n = +fromIndex || 0;
 
-		if (Math.abs(n) == Infinity) {
+		if (Math.abs(n) === Infinity) {
 			n = 0;
 		}
 

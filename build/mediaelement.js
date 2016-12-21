@@ -364,7 +364,7 @@ mejs.version = '3.0';
 
 			var format = options.timeFormat,
 				firstChar = format[0],
-				firstTwoPlaces = (format[1] == format[0]),
+				firstTwoPlaces = (format[1] === format[0]),
 				separatorIndex = firstTwoPlaces ? 2 : 1,
 				separator = ':',
 				hours = Math.floor(time / 3600) % 24,
@@ -422,13 +422,15 @@ mejs.version = '3.0';
 		 * @return {number}
 		 */
 		convertSMPTEtoSeconds: function (SMPTE) {
-			if (typeof SMPTE !== 'string')
+
+			if (typeof SMPTE !== 'string') {
 				return false;
+			}
 
 			SMPTE = SMPTE.replace(',', '.');
 
 			var secs = 0,
-				decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
+				decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0,
 				multiplier = 1;
 
 			SMPTE = SMPTE.split(':').reverse();
@@ -449,12 +451,16 @@ mejs.version = '3.0';
 				var context = this, args = arguments;
 				var later = function () {
 					timeout = null;
-					if (!immediate) func.apply(context, args);
+					if (!immediate) {
+						func.apply(context, args);
+					}
 				};
 				var callNow = immediate && !timeout;
 				clearTimeout(timeout);
 				timeout = setTimeout(later, wait);
-				if (callNow) func.apply(context, args);
+				if (callNow) {
+					func.apply(context, args);
+				}
 			};
 		},
 		/**
@@ -509,7 +515,7 @@ mejs.version = '3.0';
 		features.isiPhone = (ua.match(/iphone/i) !== null);
 		features.isiOS = features.isiPhone || features.isiPad;
 		features.isAndroid = (ua.match(/android/i) !== null);
-		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") > -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
 
@@ -664,7 +670,7 @@ if (!Array.prototype.indexOf) {
 		//	   ToInteger(fromIndex); else let n be 0.
 		var n = +fromIndex || 0;
 
-		if (Math.abs(n) == Infinity) {
+		if (Math.abs(n) === Infinity) {
 			n = 0;
 		}
 
@@ -1223,7 +1229,7 @@ if (document.createEvent === undefined) {
 					// test <source> types to see if they are usable
 					for (i = 0; i < sources; i++) {
 						n = mediaElement.originalNode.childNodes[i];
-						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
+						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
 							mediaFiles.push({type: type, src: src});
@@ -4943,7 +4949,7 @@ if (document.createEvent === undefined) {
 			var pv = this.plugins[plugin];
 			v[1] = v[1] || 0;
 			v[2] = v[2] || 0;
-			return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2]));
+			return (pv[0] > v[0] || (pv[0] === v[0] && pv[1] > v[1]) || (pv[0] === v[0] && pv[1] === v[1] && pv[2] >= v[2]));
 		},
 
 		/**
@@ -4979,7 +4985,7 @@ if (document.createEvent === undefined) {
 			// Firefox, Webkit, Opera
 			if (typeof(this.nav.plugins) !== 'undefined' && typeof this.nav.plugins[pluginName] === 'object') {
 				description = this.nav.plugins[pluginName].description;
-				if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
+				if (description && !(typeof this.nav.mimeTypes !== 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
 					version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
 					for (i = 0; i < version.length; i++) {
 						version[i] = parseInt(version[i].match(/\d+/), 10);

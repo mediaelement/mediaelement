@@ -349,7 +349,7 @@
 					success: function(d) {
 
 						// parse the loaded file
-						if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+						if (typeof d === "string" && (/<tt\s+xml/ig).exec(d)) {
 							track.entries = mejs.TrackFormatParser.dfxp.parse(d);
 						} else {
 							track.entries = mejs.TrackFormatParser.webvtt.parse(d);
@@ -357,7 +357,7 @@
 
 						after();
 
-						if (track.kind == 'chapters') {
+						if (track.kind === 'chapters') {
 							t.media.addEventListener('play', function() {
 								if (t.media.duration > 0) {
 									t.displayChapters(track);
@@ -365,7 +365,7 @@
 							}, false);
 						}
 
-						if (track.kind == 'slides') {
+						if (track.kind === 'slides') {
 							t.setupSlides(track);
 						}
 					},
@@ -487,8 +487,9 @@
 		 */
 		displayCaptions: function() {
 
-			if (this.tracks === undefined)
+			if (this.tracks === undefined) {
 				return;
+			}
 
 			var
 				t = this,
@@ -855,10 +856,18 @@
 						}
 					;
 
-					if (lines.eq(i).attr("begin")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
-					if (!_temp.start && lines.eq(i-1).attr("end")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
-					if (lines.eq(i).attr("end")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
-					if (!_temp.stop && lines.eq(i+1).attr("begin")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					if (lines.eq(i).attr("begin")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					}
+					if (!_temp.start && lines.eq(i-1).attr("end")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					}
+					if (lines.eq(i).attr("end")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					}
+					if (!_temp.stop && lines.eq(i+1).attr("begin")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					}
 
 					if (styles) {
 						style = "";
@@ -866,8 +875,12 @@
 							style += _style + ":" + styles[_style] + ";";
 						}
 					}
-					if (style) _temp.style = style;
-					if (_temp.start === 0) _temp.start = 0.200;
+					if (style) {
+						_temp.style = style;
+					}
+					if (_temp.start === 0) {
+						_temp.start = 0.200;
+					}
 					_temp.text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 					entries.push(_temp);
 				}
@@ -888,7 +901,7 @@
 	};
 
 	// test for browsers with bad String.split method.
-	if ('x\n\ny'.split(/\n/gi).length != 3) {
+	if ('x\n\ny'.split(/\n/gi).length !== 3) {
 		// add super slow IE8 and below version
 		mejs.TrackFormatParser.split2 = function(text, regex) {
 			var
