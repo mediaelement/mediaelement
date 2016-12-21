@@ -364,7 +364,7 @@ mejs.version = '3.0';
 
 			var format = options.timeFormat,
 				firstChar = format[0],
-				firstTwoPlaces = (format[1] == format[0]),
+				firstTwoPlaces = (format[1] === format[0]),
 				separatorIndex = firstTwoPlaces ? 2 : 1,
 				separator = ':',
 				hours = Math.floor(time / 3600) % 24,
@@ -422,13 +422,15 @@ mejs.version = '3.0';
 		 * @return {number}
 		 */
 		convertSMPTEtoSeconds: function (SMPTE) {
-			if (typeof SMPTE !== 'string')
+
+			if (typeof SMPTE !== 'string') {
 				return false;
+			}
 
 			SMPTE = SMPTE.replace(',', '.');
 
 			var secs = 0,
-				decimalLen = (SMPTE.indexOf('.') != -1) ? SMPTE.split('.')[1].length : 0,
+				decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0,
 				multiplier = 1;
 
 			SMPTE = SMPTE.split(':').reverse();
@@ -449,12 +451,16 @@ mejs.version = '3.0';
 				var context = this, args = arguments;
 				var later = function () {
 					timeout = null;
-					if (!immediate) func.apply(context, args);
+					if (!immediate) {
+						func.apply(context, args);
+					}
 				};
 				var callNow = immediate && !timeout;
 				clearTimeout(timeout);
 				timeout = setTimeout(later, wait);
-				if (callNow) func.apply(context, args);
+				if (callNow) {
+					func.apply(context, args);
+				}
 			};
 		},
 		/**
@@ -509,7 +515,7 @@ mejs.version = '3.0';
 		features.isiPhone = (ua.match(/iphone/i) !== null);
 		features.isiOS = features.isiPhone || features.isiPad;
 		features.isAndroid = (ua.match(/android/i) !== null);
-		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") != -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") > -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
 
@@ -664,7 +670,7 @@ if (!Array.prototype.indexOf) {
 		//	   ToInteger(fromIndex); else let n be 0.
 		var n = +fromIndex || 0;
 
-		if (Math.abs(n) == Infinity) {
+		if (Math.abs(n) === Infinity) {
 			n = 0;
 		}
 
@@ -1223,7 +1229,7 @@ if (document.createEvent === undefined) {
 					// test <source> types to see if they are usable
 					for (i = 0; i < sources; i++) {
 						n = mediaElement.originalNode.childNodes[i];
-						if (n.nodeType == 1 && n.tagName.toLowerCase() === 'source') {
+						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
 							type = mejs.Utils.formatType(src, n.getAttribute('type'));
 							mediaFiles.push({type: type, src: src});
@@ -4943,7 +4949,7 @@ if (document.createEvent === undefined) {
 			var pv = this.plugins[plugin];
 			v[1] = v[1] || 0;
 			v[2] = v[2] || 0;
-			return (pv[0] > v[0] || (pv[0] == v[0] && pv[1] > v[1]) || (pv[0] == v[0] && pv[1] == v[1] && pv[2] >= v[2]));
+			return (pv[0] > v[0] || (pv[0] === v[0] && pv[1] > v[1]) || (pv[0] === v[0] && pv[1] === v[1] && pv[2] >= v[2]));
 		},
 
 		/**
@@ -4979,7 +4985,7 @@ if (document.createEvent === undefined) {
 			// Firefox, Webkit, Opera
 			if (typeof(this.nav.plugins) !== 'undefined' && typeof this.nav.plugins[pluginName] === 'object') {
 				description = this.nav.plugins[pluginName].description;
-				if (description && !(typeof this.nav.mimeTypes != 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
+				if (description && !(typeof this.nav.mimeTypes !== 'undefined' && this.nav.mimeTypes[mimeType] && !this.nav.mimeTypes[mimeType].enabledPlugin)) {
 					version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
 					for (i = 0; i < version.length; i++) {
 						version[i] = parseInt(version[i].match(/\d+/), 10);
@@ -6244,7 +6250,7 @@ if (jQuery !== undefined) {
 				keys: [70], // F
 				action: function (player, media, key, event) {
 					if (!event.ctrlKey) {
-						if (typeof player.enterFullScreen != 'undefined') {
+						if (typeof player.enterFullScreen !== 'undefined') {
 							if (player.isFullScreen) {
 								player.exitFullScreen();
 							} else {
@@ -6336,9 +6342,9 @@ if (jQuery !== undefined) {
 		var elsLen = els.length;
 
 		for (i = 0; i < elsLen; i++) {
-			if (els[i].className.indexOf(className) != -1) {
+			if (els[i].className.indexOf(className) > -1) {
 				teststr = "," + els[i].className.split(" ").join(",") + ",";
-				if (teststr.indexOf("," + className + ",") != -1) {
+				if (teststr.indexOf("," + className + ",") > -1) {
 					classElements[j] = els[i];
 					j++;
 				}
@@ -6373,7 +6379,7 @@ if (jQuery !== undefined) {
 		}
 
 		// check for existing player
-		if (typeof t.node.player != 'undefined') {
+		if (typeof t.node.player !== 'undefined') {
 			return t.node.player;
 		}
 
@@ -6604,8 +6610,9 @@ if (jQuery !== undefined) {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (t.controlsAreVisible)
+			if (t.controlsAreVisible) {
 				return;
+			}
 
 			if (doAnimation) {
 				t.controls
@@ -6692,7 +6699,7 @@ if (jQuery !== undefined) {
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
+			timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -7426,8 +7433,9 @@ if (jQuery !== undefined) {
 
 		buildoverlays: function (player, controls, layers, media) {
 			var t = this;
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
 			var
 				loading =
@@ -7589,7 +7597,9 @@ if (jQuery !== undefined) {
 
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode === keyAction.keys[j]) {
-							if (typeof(e.preventDefault) === "function") e.preventDefault();
+							if (typeof(e.preventDefault) === "function") {
+								e.preventDefault();
+							}
 							keyAction.action(player, media, e.keyCode, e);
 							return false;
 						}
@@ -7758,8 +7768,12 @@ if (jQuery !== undefined) {
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).on(events.d, data, callback);
-			if (events.w) $(window).on(events.w, data, callback);
+			if (events.d) {
+				$(doc).on(events.d, data, callback);
+			}
+			if (events.w) {
+				$(window).on(events.w, data, callback);
+			}
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function (events, callback) {
@@ -7767,13 +7781,17 @@ if (jQuery !== undefined) {
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).unbind(events.d, callback);
-			if (events.w) $(window).unbind(events.w, callback);
+			if (events.d) {
+				$(doc).unbind(events.d, callback);
+			}
+			if (events.w) {
+				$(window).unbind(events.w, callback);
+			}
 		};
 	})();
 
 	// turn into jQuery plugin
-	if (typeof $ != 'undefined') {
+	if (typeof $ !== 'undefined') {
 		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
@@ -8457,7 +8475,7 @@ if (jQuery !== undefined) {
 
 			var duration = t.media.duration;
 
-			if (isNaN(duration) || duration == Infinity || duration < 0) {
+			if (isNaN(duration) || duration === Infinity || duration < 0) {
 				t.media.duration = t.options.duration = duration = 0;
 			}
 
@@ -8523,8 +8541,9 @@ if (jQuery !== undefined) {
 		buildvolume: function (player, controls, layers, media) {
 
 			// Android and iOS don't support volume controls
-			if ((mejs.MediaFeatures.isAndroid || mejs.MediaFeatures.isiOS) && this.options.hideVolumeOnTouchDevices)
+			if ((mejs.MediaFeatures.isAndroid || mejs.MediaFeatures.isiOS) && this.options.hideVolumeOnTouchDevices) {
 				return;
+			}
 
 			var t = this,
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
@@ -8884,10 +8903,11 @@ if (jQuery !== undefined) {
 		 */
 		buildfullscreen: function (player, controls, layers, media) {
 
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
-			player.isInIframe = (window.location != window.parent.location);
+			player.isInIframe = (window.location !== window.parent.location);
 
 			// detect on start
 			media.addEventListener('loadstart', function () {
@@ -9925,7 +9945,7 @@ if (jQuery !== undefined) {
 					success: function(d) {
 
 						// parse the loaded file
-						if (typeof d == "string" && (/<tt\s+xml/ig).exec(d)) {
+						if (typeof d === "string" && (/<tt\s+xml/ig).exec(d)) {
 							track.entries = mejs.TrackFormatParser.dfxp.parse(d);
 						} else {
 							track.entries = mejs.TrackFormatParser.webvtt.parse(d);
@@ -9933,7 +9953,7 @@ if (jQuery !== undefined) {
 
 						after();
 
-						if (track.kind == 'chapters') {
+						if (track.kind === 'chapters') {
 							t.media.addEventListener('play', function() {
 								if (t.media.duration > 0) {
 									t.displayChapters(track);
@@ -9941,7 +9961,7 @@ if (jQuery !== undefined) {
 							}, false);
 						}
 
-						if (track.kind == 'slides') {
+						if (track.kind === 'slides') {
 							t.setupSlides(track);
 						}
 					},
@@ -10063,8 +10083,9 @@ if (jQuery !== undefined) {
 		 */
 		displayCaptions: function() {
 
-			if (this.tracks === undefined)
+			if (this.tracks === undefined) {
 				return;
+			}
 
 			var
 				t = this,
@@ -10431,10 +10452,18 @@ if (jQuery !== undefined) {
 						}
 					;
 
-					if (lines.eq(i).attr("begin")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
-					if (!_temp.start && lines.eq(i-1).attr("end")) _temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
-					if (lines.eq(i).attr("end")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
-					if (!_temp.stop && lines.eq(i+1).attr("begin")) _temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					if (lines.eq(i).attr("begin")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("begin"));
+					}
+					if (!_temp.start && lines.eq(i-1).attr("end")) {
+						_temp.start = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i-1).attr("end"));
+					}
+					if (lines.eq(i).attr("end")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i).attr("end"));
+					}
+					if (!_temp.stop && lines.eq(i+1).attr("begin")) {
+						_temp.stop = mejs.Utility.convertSMPTEtoSeconds(lines.eq(i+1).attr("begin"));
+					}
 
 					if (styles) {
 						style = "";
@@ -10442,8 +10471,12 @@ if (jQuery !== undefined) {
 							style += _style + ":" + styles[_style] + ";";
 						}
 					}
-					if (style) _temp.style = style;
-					if (_temp.start === 0) _temp.start = 0.200;
+					if (style) {
+						_temp.style = style;
+					}
+					if (_temp.start === 0) {
+						_temp.start = 0.200;
+					}
 					_temp.text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 					entries.push(_temp);
 				}
@@ -10464,7 +10497,7 @@ if (jQuery !== undefined) {
 	};
 
 	// test for browsers with bad String.split method.
-	if ('x\n\ny'.split(/\n/gi).length != 3) {
+	if ('x\n\ny'.split(/\n/gi).length !== 3) {
 		// add super slow IE8 and below version
 		mejs.TrackFormatParser.split2 = function(text, regex) {
 			var
@@ -10751,8 +10784,9 @@ $.extend(mejs.MepDefaults,
 			render: function(player) {
 
 				// check for fullscreen plugin
-				if (player.enterFullScreen === undefined)
+				if (player.enterFullScreen === undefined) {
 					return null;
+				}
 
 				if (player.isFullScreen) {
 					return mejs.i18n.t('mejs.fullscreen-off');
@@ -10902,14 +10936,16 @@ $.extend(mejs.MepDefaults,
 					item = t.options.contextMenuItems[itemIndex];
 
 				// bind extra functionality?
-				if (typeof item.show != 'undefined')
+				if (typeof item.show !== 'undefined') {
 					item.show( $dom , t);
+				}
 
 				// bind click action
 				$dom.click(function() {
 					// perform click action
-					if (typeof item.click != 'undefined')
+					if (typeof item.click !== 'undefined') {
 						item.click(t);
+					}
 
 					// close
 					t.contextMenu.hide();

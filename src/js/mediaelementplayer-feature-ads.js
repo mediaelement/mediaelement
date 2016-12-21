@@ -249,10 +249,11 @@
 			t.container.trigger('mejsprerollended');
 
 			t.options.indexPreroll++;
-			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length)
+			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 				t.adsStartPreroll();
-			else
+			} else {
 				t.adRestoreMainMedia();
+			}
 		},
 
 		adRestoreMainMedia: function() {
@@ -296,10 +297,11 @@
 			t.container.trigger('mejsprerollended');
 
 			t.options.indexPreroll++;
-			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length)
+			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 				t.adsStartPreroll();
-			else
+			} else {
 				t.adRestoreMainMedia();
+			}
 		},
 
 		// tells calling function if ads have finished running

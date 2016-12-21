@@ -193,7 +193,7 @@
 				keys: [70], // F
 				action: function (player, media, key, event) {
 					if (!event.ctrlKey) {
-						if (typeof player.enterFullScreen != 'undefined') {
+						if (typeof player.enterFullScreen !== 'undefined') {
 							if (player.isFullScreen) {
 								player.exitFullScreen();
 							} else {
@@ -285,9 +285,9 @@
 		var elsLen = els.length;
 
 		for (i = 0; i < elsLen; i++) {
-			if (els[i].className.indexOf(className) != -1) {
+			if (els[i].className.indexOf(className) > -1) {
 				teststr = "," + els[i].className.split(" ").join(",") + ",";
-				if (teststr.indexOf("," + className + ",") != -1) {
+				if (teststr.indexOf("," + className + ",") > -1) {
 					classElements[j] = els[i];
 					j++;
 				}
@@ -322,7 +322,7 @@
 		}
 
 		// check for existing player
-		if (typeof t.node.player != 'undefined') {
+		if (typeof t.node.player !== 'undefined') {
 			return t.node.player;
 		}
 
@@ -553,8 +553,9 @@
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (t.controlsAreVisible)
+			if (t.controlsAreVisible) {
 				return;
+			}
 
 			if (doAnimation) {
 				t.controls
@@ -641,7 +642,7 @@
 
 			var t = this;
 
-			timeout = typeof timeout != 'undefined' ? timeout : t.options.controlsTimeoutDefault;
+			timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
 
 			t.killControlsTimer('start');
 
@@ -1375,8 +1376,9 @@
 
 		buildoverlays: function (player, controls, layers, media) {
 			var t = this;
-			if (!player.isVideo)
+			if (!player.isVideo) {
 				return;
+			}
 
 			var
 				loading =
@@ -1538,7 +1540,9 @@
 
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode === keyAction.keys[j]) {
-							if (typeof(e.preventDefault) === "function") e.preventDefault();
+							if (typeof(e.preventDefault) === "function") {
+								e.preventDefault();
+							}
 							keyAction.action(player, media, e.keyCode, e);
 							return false;
 						}
@@ -1707,8 +1711,12 @@
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).on(events.d, data, callback);
-			if (events.w) $(window).on(events.w, data, callback);
+			if (events.d) {
+				$(doc).on(events.d, data, callback);
+			}
+			if (events.w) {
+				$(window).on(events.w, data, callback);
+			}
 		};
 
 		mejs.MediaElementPlayer.prototype.globalUnbind = function (events, callback) {
@@ -1716,13 +1724,17 @@
 			var doc = t.node ? t.node.ownerDocument : document;
 
 			events = splitEvents(events, t.id);
-			if (events.d) $(doc).unbind(events.d, callback);
-			if (events.w) $(window).unbind(events.w, callback);
+			if (events.d) {
+				$(doc).unbind(events.d, callback);
+			}
+			if (events.w) {
+				$(window).unbind(events.w, callback);
+			}
 		};
 	})();
 
 	// turn into jQuery plugin
-	if (typeof $ != 'undefined') {
+	if (typeof $ !== 'undefined') {
 		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {

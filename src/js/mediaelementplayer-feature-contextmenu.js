@@ -13,8 +13,9 @@ $.extend(mejs.MepDefaults,
 			render: function(player) {
 
 				// check for fullscreen plugin
-				if (player.enterFullScreen === undefined)
+				if (player.enterFullScreen === undefined) {
 					return null;
+				}
 
 				if (player.isFullScreen) {
 					return mejs.i18n.t('mejs.fullscreen-off');
@@ -164,14 +165,16 @@ $.extend(mejs.MepDefaults,
 					item = t.options.contextMenuItems[itemIndex];
 
 				// bind extra functionality?
-				if (typeof item.show != 'undefined')
+				if (typeof item.show !== 'undefined') {
 					item.show( $dom , t);
+				}
 
 				// bind click action
 				$dom.click(function() {
 					// perform click action
-					if (typeof item.click != 'undefined')
+					if (typeof item.click !== 'undefined') {
 						item.click(t);
+					}
 
 					// close
 					t.contextMenu.hide();
