@@ -276,6 +276,9 @@
 			}
 
 			node.className = '';
+			if (!node.paused) {
+				node.pause();
+			}
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');
