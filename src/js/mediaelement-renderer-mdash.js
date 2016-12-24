@@ -276,8 +276,8 @@
 			}
 
 			node.className = '';
-			if (!node.paused) {
-				node.pause();
+			if (!originalNode.paused) {
+				originalNode.pause();
 			}
 
 			originalNode.parentNode.insertBefore(node, originalNode);
