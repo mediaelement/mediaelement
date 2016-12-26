@@ -11,11 +11,11 @@
 		/**
 		 * @type {String}
 		 */
-		muteText: mejs.i18n.t('mejs.mute-toggle'),
+		muteText: '',
 		/**
 		 * @type {String}
 		 */
-		allyVolumeControlText: mejs.i18n.t('mejs.volume-help-text'),
+		allyVolumeControlText: '',
 		/**
 		 * @type {Boolean}
 		 */
@@ -51,6 +51,8 @@
 
 			var t = this,
 				mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
+				muteText = t.options.muteText ? t.options.muteText : mejs.i18n.t('mejs.mute-toggle'),
+				volumeControlText = t.options.allyVolumeControlText ? t.options.allyVolumeControlText : mejs.i18n.t('mejs.volume-help-text'),
 				mute = (mode === 'horizontal') ?
 
 					// horizontal version
@@ -58,13 +60,13 @@
 					                    t.options.classPrefix + 'volume-button' +
 					                    t.options.classPrefix + 'mute">' +
 						'<button type="button" aria-controls="' + t.id + '" ' +
-							'title="' + t.options.muteText + '" ' +
-							'aria-label="' + t.options.muteText +
+							'title="' + muteText + '" ' +
+							'aria-label="' + muteText +
 						'"></button>' +
 						'</div>' +
 						'<a href="javascript:void(0);" class="' +  t.options.classPrefix + 'horizontal-volume-slider">' + // outer background
 							'<span class="' +  t.options.classPrefix + 'offscreen">' +
-								t.options.allyVolumeControlText +
+								volumeControlText +
 							'</span>' +
 							'<div class="' +  t.options.classPrefix + 'horizontal-volume-total">' + // line background
 								'<div class="' +  t.options.classPrefix + 'horizontal-volume-current"></div>' + // current volume
@@ -79,12 +81,12 @@
 					                    t.options.classPrefix + 'volume-button ' +
 					                    t.options.classPrefix + 'mute">' +
 						'<button type="button" aria-controls="' + t.id +
-						'" title="' + t.options.muteText +
-						'" aria-label="' + t.options.muteText +
+						'" title="' + muteText +
+						'" aria-label="' + muteText +
 						'"></button>' +
 						'<a href="javascript:void(0);" class="' +  t.options.classPrefix + 'volume-slider">' + // outer background
 							'<span class="' +  t.options.classPrefix + 'offscreen">' +
-								t.options.allyVolumeControlText +
+								volumeControlText +
 							'</span>' +
 							'<div class="' +  t.options.classPrefix + 'volume-total">' + // line background
 								'<div class="' +  t.options.classPrefix + 'volume-current"></div>' + // current volume
