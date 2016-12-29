@@ -20,6 +20,20 @@
             word-wrap: break-word;
         }
 
+        #player2-container .mejs__time-handle {
+            left: -10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            top: -5px;
+            cursor: pointer;
+            display: block;
+            position: absolute;
+            z-index: 1;
+            border: none;
+        }
+
     </style>
 </head>
 
@@ -116,6 +130,24 @@
         <div class="players" id="player2-container">
 
             <h3>Audio Player</h3>
+
+            <p>By default, time handle element is hidden, but in this demo the following styles were added to display it:</p>
+
+            <pre><code>
+            #player2-container .mejs__time-handle {
+                left: -10px;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: #ffffff;
+                top: -5px;
+                cursor: pointer;
+                display: block;
+                position: absolute;
+                z-index: 1;
+                border: none;
+            }
+            </code></pre>
 
             <audio id="player2" preload="none" controls>
                 <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
