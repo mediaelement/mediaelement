@@ -20,10 +20,18 @@
             word-wrap: break-word;
         }
 
+        #player2-container .mejs__time-buffering, #player2-container .mejs__time-current, #player2-container .mejs__time-handle,
+        #player2-container .mejs__time-loaded, #player2-container .mejs__time-marker, #player2-container .mejs__time-total {
+            height: 2px;
+        }
+
+        #player2-container .mejs__time-total {
+            margin-top: 9px;
+        }
         #player2-container .mejs__time-handle {
             left: -10px;
-            width: 20px;
-            height: 20px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background: #ffffff;
             top: -5px;
@@ -131,22 +139,31 @@
 
             <h3>Audio Player</h3>
 
-            <p>By default, time handle element is hidden, but in this demo the following styles were added to display it:</p>
+            <p>By default, time handle element is hidden, but in this demo the following styles were added to display it just for audio:</p>
 
             <pre><code>
-            #player2-container .mejs__time-handle {
-                left: -10px;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background: #ffffff;
-                top: -5px;
-                cursor: pointer;
-                display: block;
-                position: absolute;
-                z-index: 1;
-                border: none;
-            }
+        #player2-container .mejs__time-buffering, #player2-container .mejs__time-current,
+        #player2-container .mejs__time-handle, #player2-container .mejs__time-loaded,
+        #player2-container .mejs__time-marker, #player2-container .mejs__time-total {
+            height: 2px;
+        }
+
+        #player2-container .mejs__time-total {
+            margin-top: 9px;
+        }
+        #player2-container .mejs__time-handle {
+            left: -10px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ffffff;
+            top: -5px;
+            cursor: pointer;
+            display: block;
+            position: absolute;
+            z-index: 1;
+            border: none;
+        }
             </code></pre>
 
             <audio id="player2" preload="none" controls>
