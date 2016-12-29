@@ -52,14 +52,14 @@
 		},
 
 		/**
-		 * Load DailyMotion API's script on the header of the document
+		 * Load DailyMotion API script on the header of the document
 		 *
 		 */
 		loadIframeApi: function () {
 			if (!this.isSDKStarted) {
 				var e = document.createElement('script');
 				e.async = true;
-				e.src = 'https://api.dmcdn.net/all.js';
+				e.src = '//api.dmcdn.net/all.js';
 				var s = document.getElementsByTagName('script')[0];
 				s.parentNode.insertBefore(e, s);
 				this.isSDKStarted = true;
@@ -442,7 +442,7 @@
 					id: dm.id,
 					container: dmContainer,
 					videoId: videoId,
-					autoplay: mediaElement.originalNode.getAttribute('autoplay') ? true : false
+					autoplay: mediaElement.originalNode.getAttribute('autoplay')
 				};
 
 			DailyMotionApi.enqueueIframe(dmSettings);

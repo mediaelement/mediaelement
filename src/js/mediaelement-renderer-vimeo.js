@@ -57,7 +57,7 @@
 		},
 
 		/**
-		 * Load Vimeo API's script on the header of the document
+		 * Load Vimeo API script on the header of the document
 		 *
 		 */
 		loadIframeApi: function () {
@@ -69,7 +69,7 @@
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://player.vimeo.com/api/player.js';
+				script.src = '//player.vimeo.com/api/player.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
@@ -506,7 +506,7 @@
 				height = mediaElement.originalNode.height,
 				width = mediaElement.originalNode.width,
 				vimeoContainer = doc.createElement('iframe'),
-				standardUrl = 'https://player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src)
+				standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src)
 			;
 
 			// Create Vimeo <iframe> markup
