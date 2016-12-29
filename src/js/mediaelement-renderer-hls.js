@@ -40,13 +40,14 @@
 
 		/**
 		 * Create a queue to prepare the loading of an HLS source
+		 *
 		 * @param {Object} settings - an object with settings needed to load an HLS player instance
 		 */
 		prepareSettings: function (settings) {
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript();
+				this.loadScript(settings.options.path);
 				this.creationQueue.push(settings);
 			}
 		},
@@ -54,8 +55,9 @@
 		/**
 		 * Load hls.js script on the header of the document
 		 *
+		 * @param {String} path - The local path or URL of the library
 		 */
-		loadScript: function () {
+		loadScript: function (path) {
 			if (!this.isMediaStarted) {
 
 				var
@@ -63,7 +65,7 @@
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+				script.src = path || '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
@@ -117,6 +119,8 @@
 			 * @type {Object}
 			 */
 			hls: {
+				// Special config: used to set the local path/URL of hls.js library
+				path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
 				autoStartLoad: true,
 				startPosition: -1,
 				capLevelToPlayerSize: false,

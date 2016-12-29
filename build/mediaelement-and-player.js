@@ -1445,13 +1445,14 @@ if (document.createEvent === undefined) {
 
 		/**
 		 * Create a queue to prepare the loading of an HLS source
+		 *
 		 * @param {Object} settings - an object with settings needed to load an HLS player instance
 		 */
 		prepareSettings: function (settings) {
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript();
+				this.loadScript(settings.options.path);
 				this.creationQueue.push(settings);
 			}
 		},
@@ -1459,8 +1460,9 @@ if (document.createEvent === undefined) {
 		/**
 		 * Load hls.js script on the header of the document
 		 *
+		 * @param {String} path - The local path or URL of the library
 		 */
-		loadScript: function () {
+		loadScript: function (path) {
 			if (!this.isMediaStarted) {
 
 				var
@@ -1468,7 +1470,7 @@ if (document.createEvent === undefined) {
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+				script.src = path || '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
@@ -1522,6 +1524,8 @@ if (document.createEvent === undefined) {
 			 * @type {Object}
 			 */
 			hls: {
+				// Special config: used to set the local path/URL of hls.js library
+				path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
 				autoStartLoad: true,
 				startPosition: -1,
 				capLevelToPlayerSize: false,
@@ -1833,16 +1837,17 @@ if (document.createEvent === undefined) {
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript();
+				this.loadScript(settings.options.path);
 				this.creationQueue.push(settings);
 			}
 		},
 
 		/**
-		 * Load dash.all.min.js script on the header of the document
+		 * Load dash.mediaplayer.js script on the header of the document
 		 *
+		 * @param {String} path - The local path or URL of the library
 		 */
-		loadScript: function () {
+		loadScript: function (path) {
 			if (!this.isScriptLoaded) {
 
 				var
@@ -1850,8 +1855,7 @@ if (document.createEvent === undefined) {
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				// script.src = 'https://cdn.dashjs.org/latest/dash.all.min.js';
-				script.src = 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				script.src = path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
@@ -1900,7 +1904,11 @@ if (document.createEvent === undefined) {
 
 		options: {
 			prefix: 'native_mdash',
-			dash: {}
+			dash: {
+				// Special config: used to set the local path/URL of dash.js mediaplayer library
+				path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
+				debug: false
+			}
 		},
 		/**
 		 * Determine if a specific element type can be played with this render
@@ -1934,6 +1942,7 @@ if (document.createEvent === undefined) {
 				;
 
 			node = originalNode.cloneNode(true);
+			options = mejs.Utils.extend(options, mediaElement.options);
 
 			// WRAPPERS for PROPs
 			var
@@ -1977,9 +1986,7 @@ if (document.createEvent === undefined) {
 			win['__ready__' + id] = function (_dashPlayer) {
 
 				mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-
-				// By default, console log is off
-				dashPlayer.getDebug().setLogToBrowserConsole(false);
+				dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
 
 				// do call stack
 				for (i = 0, il = stack.length; i < il; i++) {
@@ -2152,13 +2159,14 @@ if (document.createEvent === undefined) {
 
 		/**
 		 * Create a queue to prepare the loading of an FLV source
+		 *
 		 * @param {Object} settings - an object with settings needed to load an FLV player instance
 		 */
 		prepareSettings: function (settings) {
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript();
+				this.loadScript(settings.options.path);
 				this.creationQueue.push(settings);
 			}
 		},
@@ -2166,8 +2174,9 @@ if (document.createEvent === undefined) {
 		/**
 		 * Load flv.js script on the header of the document
 		 *
+		 * @param {String} path - The local path or URL of the library
 		 */
-		loadScript: function () {
+		loadScript: function (path) {
 			if (!this.isMediaStarted) {
 
 				var
@@ -2175,7 +2184,7 @@ if (document.createEvent === undefined) {
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
+				script.src = path || '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
@@ -2229,6 +2238,8 @@ if (document.createEvent === undefined) {
 			 * @type {Object}
 			 */
 			flv: {
+				// Special config: used to set the local path/URL of flv.js library
+				path: '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js',
 				cors: true,
 				enableWorker: false,
 				enableStashBuffer: true,
@@ -2490,13 +2501,13 @@ if (document.createEvent === undefined) {
 		},
 
 		/**
-		 * Load YouTube API's script on the header of the document
+		 * Load YouTube API script on the header of the document
 		 *
 		 */
 		loadIframeApi: function () {
 			if (!this.isIframeStarted) {
 				var tag = document.createElement('script');
-				tag.src = 'https://www.youtube.com/player_api';
+				tag.src = '//www.youtube.com/player_api';
 				var firstScriptTag = document.getElementsByTagName('script')[0];
 				firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 				this.isIframeStarted = true;
@@ -3089,7 +3100,7 @@ if (document.createEvent === undefined) {
 		},
 
 		/**
-		 * Load Vimeo API's script on the header of the document
+		 * Load Vimeo API script on the header of the document
 		 *
 		 */
 		loadIframeApi: function () {
@@ -3101,7 +3112,7 @@ if (document.createEvent === undefined) {
 					firstScriptTag = doc.getElementsByTagName('script')[0],
 					done = false;
 
-				script.src = 'https://player.vimeo.com/api/player.js';
+				script.src = '//player.vimeo.com/api/player.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
@@ -3538,7 +3549,7 @@ if (document.createEvent === undefined) {
 				height = mediaElement.originalNode.height,
 				width = mediaElement.originalNode.width,
 				vimeoContainer = doc.createElement('iframe'),
-				standardUrl = 'https://player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src)
+				standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src)
 			;
 
 			// Create Vimeo <iframe> markup
@@ -3637,14 +3648,14 @@ if (document.createEvent === undefined) {
 		},
 
 		/**
-		 * Load DailyMotion API's script on the header of the document
+		 * Load DailyMotion API script on the header of the document
 		 *
 		 */
 		loadIframeApi: function () {
 			if (!this.isSDKStarted) {
 				var e = document.createElement('script');
 				e.async = true;
-				e.src = 'https://api.dmcdn.net/all.js';
+				e.src = '//api.dmcdn.net/all.js';
 				var s = document.getElementsByTagName('script')[0];
 				s.parentNode.insertBefore(e, s);
 				this.isSDKStarted = true;
@@ -4027,7 +4038,7 @@ if (document.createEvent === undefined) {
 					id: dm.id,
 					container: dmContainer,
 					videoId: videoId,
-					autoplay: mediaElement.originalNode.getAttribute('autoplay') ? true : false
+					autoplay: mediaElement.originalNode.getAttribute('autoplay')
 				};
 
 			DailyMotionApi.enqueueIframe(dmSettings);
@@ -4436,7 +4447,7 @@ if (document.createEvent === undefined) {
 					}
 					js = d.createElement(s);
 					js.id = id;
-					js.src = 'https://connect.facebook.net/en_US/sdk.js';
+					js.src = '//connect.facebook.net/en_US/sdk.js';
 					fjs.parentNode.insertBefore(js, fjs);
 				}(document, 'script', 'facebook-jssdk'));
 			}
@@ -4540,7 +4551,7 @@ if (document.createEvent === undefined) {
 		},
 
 		/**
-		 * Load SoundCloud API's script on the header of the document
+		 * Load SoundCloud API script on the header of the document
 		 *
 		 */
 		loadIframeApi: function () {
@@ -4550,7 +4561,7 @@ if (document.createEvent === undefined) {
 					script = doc.createElement("script"),
 					done = false;
 
-				script.src = 'https://w.soundcloud.com/player/api.js';
+				script.src = '//w.soundcloud.com/player/api.js';
 
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function () {
