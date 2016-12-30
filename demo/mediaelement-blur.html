@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML5 MediaElement</title>
+
+
+	<script src="../build/jquery.js"></script>
+	<script src="../build/mediaelement-and-player.js"></script>
+	<script src="mep-feature-time-rail-thumbnails.js"></script>
+	<script src="../src/js/mep-blur-bg.js"></script> 
+	<link rel="stylesheet" href="../build/mediaelementplayer.min.css" />
+</head>
+<body>
+
+<h1>MediaElementPlayer.js</h1>
+
+<p>Recommended Setup</p>
+
+
+<h2>MP4/WebM video</h2>
+<div class="canvas-video-container">
+<canvas class="canvas-video"></canvas>
+<video width="854" height="480" id="player2" controls="controls"> 
+	<source src="../media/kittenleak.mp4" type="video/mp4" title="mp4"> 
+</video>
+</div> 
+
+<script> 
+	  
+$('audio,video').mediaelementplayer({
+	features: ['playpause','volume','current','duration','progress','blurbg'], //Adding the feature 'blurbg' enables this plugin
+	blurbgRadius: 20 // values - 0-50 
+}); 
+</script>
+<style>   
+ .canvas-video {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+.mejs-container{
+	background:none;
+}
+.canvas-video-container{
+	position: relative;
+	display: table;
+}
+</style>
+
+</body>
+</html>
