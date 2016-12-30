@@ -29,6 +29,11 @@ A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuer
 `MediaElement.js` is a set of custom Flash and Silverlight plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) and even WMV (via Silverlight) on all browsers.
 
+## Blur Bg Feature
+demo available at demo/mediaelement-blur.html
+use `blurbg` as feature vertical video gets blurred
+
+
 <a id="browser-support"></a>
 ## Browser and Device support
 
