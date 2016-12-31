@@ -499,9 +499,11 @@
 		features.isiPhone = (ua.match(/iphone/i) !== null);
 		features.isiOS = features.isiPhone || features.isiPad;
 		features.isAndroid = (ua.match(/android/i) !== null);
-		features.isIE = (nav.appName.toLowerCase().indexOf("microsoft") > -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
+		features.isIE = (nav.appName.toLowerCase().indexOf('microsoft') > -1 || nav.appName.toLowerCase().match(/trident/gi) !== null);
 		features.isChrome = (ua.match(/chrome/gi) !== null);
 		features.isFirefox = (ua.match(/firefox/gi) !== null);
+		features.isSafari = ua.match(/safari/gi) !== null && !features.isChrome;
+		features.isStockAndroid = ua.match(/^mozilla\/\d+\.\d+\s\(linux;\su;/gi);
 
 		// borrowed from Modernizr
 		features.hasTouch = ('ontouchstart' in win);
@@ -619,6 +621,8 @@
 		features.hasMse = ('MediaSource' in win);
 
 		features.supportsMediaTag = (video.canPlayType !== undefined || features.hasMse);
+		features.supportsNativeHLS = (features.isSafari || (features.isAndroid &&
+			(features.isChrome || features.isStockAndroid)) || (features.isIE && ua.match(/edge/gi) !== null));
 
 		return features;
 	})();
