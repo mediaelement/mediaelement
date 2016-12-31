@@ -23,7 +23,11 @@
 
 			var mediaElement = doc.createElement('video');
 
-			if (mediaElement.canPlayType) {
+			// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
+			if ((mejs.MediaFeatures.isAndroid && type.match(/\/mp(3|4)$/gi) !== null) ||
+				mejs.MediaFeatures.supportsNativeHLS) {
+				return 'yes';
+			} else if (mediaElement.canPlayType) {
 				return mediaElement.canPlayType(type).replace(/no/, '');
 			} else {
 				return '';
