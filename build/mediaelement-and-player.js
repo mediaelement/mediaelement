@@ -1755,9 +1755,6 @@ if (document.createEvent === undefined) {
 				}
 			}
 			node.className = '';
-			if (!originalNode.paused) {
-				originalNode.pause();
-			}
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');
@@ -2082,9 +2079,6 @@ if (document.createEvent === undefined) {
 			}
 
 			node.className = '';
-			if (!originalNode.paused) {
-				originalNode.pause();
-			}
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');
