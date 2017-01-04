@@ -57,7 +57,7 @@
 
 					// horizontal version
 					$('<div class="' +  t.options.classPrefix + 'button ' +
-					                    t.options.classPrefix + 'volume-button' +
+					                    t.options.classPrefix + 'volume-button ' +
 					                    t.options.classPrefix + 'mute">' +
 						'<button type="button" aria-controls="' + t.id + '" ' +
 							'title="' + muteText + '" ' +
