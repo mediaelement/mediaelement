@@ -42,7 +42,7 @@
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript(settings.options.path);
+				this.loadScript(settings);
 				this.creationQueue.push(settings);
 			}
 		},
@@ -50,29 +50,35 @@
 		/**
 		 * Load dash.mediaplayer.js script on the header of the document
 		 *
-		 * @param {String} path - The local path or URL of the library
+		 * @param {Object} settings - an object with settings needed to load an HLS player instance
 		 */
-		loadScript: function (path) {
+		loadScript: function (settings) {
 			if (!this.isScriptLoaded) {
 
-				var
-					script = doc.createElement('script'),
-					firstScriptTag = doc.getElementsByTagName('script')[0],
-					done = false;
+				settings.options.path = settings.options.path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-				script.src = path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+					this.createInstance(settings);
+				} else {
+					var
+						script = doc.createElement('script'),
+						firstScriptTag = doc.getElementsByTagName('script')[0],
+						done = false;
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || this.readyState === undefined ||
-						this.readyState === 'loaded' || this.readyState === 'complete')) {
-						done = true;
-						NativeDash.mediaReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
+					script.src = settings.options.path;
 
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+					// Attach handlers for all browsers
+					script.onload = script.onreadystatechange = function () {
+						if (!done && (!this.readyState || this.readyState === undefined ||
+							this.readyState === 'loaded' || this.readyState === 'complete')) {
+							done = true;
+							NativeDash.mediaReady();
+							script.onload = script.onreadystatechange = null;
+						}
+					};
+
+					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				}
 				this.isScriptLoaded = true;
 			}
 		},
