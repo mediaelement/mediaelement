@@ -484,14 +484,31 @@ mejs.version = '3.0';
 		 * @return {Boolean}
 		 */
 		isObjectEmpty: function (instance) {
-		for (var key in instance) {
-			if (instance.hasOwnProperty(key)) {
-				return false;
+			for (var key in instance) {
+				if (instance.hasOwnProperty(key)) {
+					return false;
+				}
 			}
-		}
 
-		return true;
-	}
+			return true;
+		},
+		/**
+		 * Check if script is already loaded on the page to avoid duplicity of scripts
+		 *
+		 * It accepts the full URL/path or part of it.
+		 * @see http://stackoverflow.com/questions/9659265/check-if-javascript-script-exists-on-page
+		 * @param {String} url
+		 * @returns {Boolean}
+		 */
+		isScriptLoaded: function (url) {
+			var scripts = doc.getElementsByTagName('script');
+			for (var i = scripts.length; i--;) {
+				if (scripts[i].src.indexOf(url) > -1) {
+					return true;
+				}
+			}
+			return false;
+		}
 	};
 
 	/**
@@ -1460,7 +1477,7 @@ if (document.createEvent === undefined) {
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript(settings.options.path);
+				this.loadScript(settings);
 				this.creationQueue.push(settings);
 			}
 		},
@@ -1468,29 +1485,35 @@ if (document.createEvent === undefined) {
 		/**
 		 * Load hls.js script on the header of the document
 		 *
-		 * @param {String} path - The local path or URL of the library
+		 * @param {Object} settings - an object with settings needed to load an HLS player instance
 		 */
-		loadScript: function (path) {
+		loadScript: function (settings) {
 			if (!this.isMediaStarted) {
 
-				var
-					script = doc.createElement('script'),
-					firstScriptTag = doc.getElementsByTagName('script')[0],
-					done = false;
+				settings.options.path = settings.options.path || '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
-				script.src = path || '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+					this.createInstance(settings);
+				} else {
+					var
+						script = doc.createElement('script'),
+						firstScriptTag = doc.getElementsByTagName('script')[0],
+						done = false;
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || this.readyState === undefined ||
-						this.readyState === 'loaded' || this.readyState === 'complete')) {
-						done = true;
-						NativeHls.mediaReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
+					script.src = settings.options.path;
 
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+					// Attach handlers for all browsers
+					script.onload = script.onreadystatechange = function () {
+						if (!done && (!this.readyState || this.readyState === undefined ||
+							this.readyState === 'loaded' || this.readyState === 'complete')) {
+							done = true;
+							NativeHls.mediaReady();
+							script.onload = script.onreadystatechange = null;
+						}
+					};
+
+					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				}
 				this.isMediaStarted = true;
 			}
 		},
@@ -1842,7 +1865,7 @@ if (document.createEvent === undefined) {
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript(settings.options.path);
+				this.loadScript(settings);
 				this.creationQueue.push(settings);
 			}
 		},
@@ -1850,29 +1873,35 @@ if (document.createEvent === undefined) {
 		/**
 		 * Load dash.mediaplayer.js script on the header of the document
 		 *
-		 * @param {String} path - The local path or URL of the library
+		 * @param {Object} settings - an object with settings needed to load an HLS player instance
 		 */
-		loadScript: function (path) {
+		loadScript: function (settings) {
 			if (!this.isScriptLoaded) {
 
-				var
-					script = doc.createElement('script'),
-					firstScriptTag = doc.getElementsByTagName('script')[0],
-					done = false;
+				settings.options.path = settings.options.path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-				script.src = path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+					this.createInstance(settings);
+				} else {
+					var
+						script = doc.createElement('script'),
+						firstScriptTag = doc.getElementsByTagName('script')[0],
+						done = false;
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || this.readyState === undefined ||
-						this.readyState === 'loaded' || this.readyState === 'complete')) {
-						done = true;
-						NativeDash.mediaReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
+					script.src = settings.options.path;
 
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+					// Attach handlers for all browsers
+					script.onload = script.onreadystatechange = function () {
+						if (!done && (!this.readyState || this.readyState === undefined ||
+							this.readyState === 'loaded' || this.readyState === 'complete')) {
+							done = true;
+							NativeDash.mediaReady();
+							script.onload = script.onreadystatechange = null;
+						}
+					};
+
+					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				}
 				this.isScriptLoaded = true;
 			}
 		},
@@ -2168,7 +2197,7 @@ if (document.createEvent === undefined) {
 			if (this.isLoaded) {
 				this.createInstance(settings);
 			} else {
-				this.loadScript(settings.options.path);
+				this.loadScript(settings);
 				this.creationQueue.push(settings);
 			}
 		},
@@ -2176,29 +2205,35 @@ if (document.createEvent === undefined) {
 		/**
 		 * Load flv.js script on the header of the document
 		 *
-		 * @param {String} path - The local path or URL of the library
+		 * @param {Object} settings - an object with settings needed to load an FLV player instance
 		 */
-		loadScript: function (path) {
+		loadScript: function (settings) {
 			if (!this.isMediaStarted) {
 
-				var
-					script = doc.createElement('script'),
-					firstScriptTag = doc.getElementsByTagName('script')[0],
-					done = false;
+				settings.options.path = settings.options.path || '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
-				script.src = path || '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
+				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+					this.createInstance(settings);
+				} else {
+					var
+						script = doc.createElement('script'),
+						firstScriptTag = doc.getElementsByTagName('script')[0],
+						done = false;
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!this.readyState || this.readyState === undefined ||
-						this.readyState === 'loaded' || this.readyState === 'complete')) {
-						done = true;
-						NativeFlv.mediaReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
+					script.src = settings.options.path;
 
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+					// Attach handlers for all browsers
+					script.onload = script.onreadystatechange = function () {
+						if (!done && (!this.readyState || this.readyState === undefined ||
+							this.readyState === 'loaded' || this.readyState === 'complete')) {
+							done = true;
+							NativeFlv.mediaReady();
+							script.onload = script.onreadystatechange = null;
+						}
+					};
+
+					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				}
 				this.isMediaStarted = true;
 			}
 		},
@@ -5899,7 +5934,7 @@ if (document.createEvent === undefined) {
 	"use strict";
 
 	if (typeof mejsL10n !== 'undefined') {
-		mejs[mejsL10n.lang] = mejsL10n.strings;
+		mejs[mejsL10n.language] = mejsL10n.strings;
 	}
 
 }(mejs.i18n.locale.strings));
