@@ -55,7 +55,8 @@
 		loadScript: function (settings) {
 			if (!this.isScriptLoaded) {
 
-				settings.options.path = settings.options.path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				settings.options.path = settings.options.path !== undefined || settings.options.path !== null ?
+					settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 				if (typeof dashjs !== 'undefined') {
 					this.createInstance(settings);
