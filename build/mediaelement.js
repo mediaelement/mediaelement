@@ -1473,7 +1473,7 @@ if (document.createEvent === undefined) {
 		loadScript: function (settings) {
 			if (!this.isMediaStarted) {
 
-				settings.options.path = settings.options.path !== undefined || settings.options.path !== null ?
+				settings.options.path = typeof settings.options.path === 'string' ?
 					settings.options.path : '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
 				if (typeof Hls !== 'undefined') {
@@ -1862,7 +1862,7 @@ if (document.createEvent === undefined) {
 		loadScript: function (settings) {
 			if (!this.isScriptLoaded) {
 
-				settings.options.path = settings.options.path !== undefined || settings.options.path !== null ?
+				settings.options.path = typeof settings.options.path === 'string' ?
 					settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 				if (typeof dashjs !== 'undefined') {
@@ -2195,7 +2195,7 @@ if (document.createEvent === undefined) {
 		loadScript: function (settings) {
 			if (!this.isMediaStarted) {
 
-				settings.options.path = settings.options.path !== undefined || settings.options.path !== null ?
+				settings.options.path = typeof settings.options.path === 'string' ?
 					settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
 				if (typeof flvjs !== 'undefined') {

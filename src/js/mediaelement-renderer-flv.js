@@ -61,7 +61,7 @@
 		loadScript: function (settings) {
 			if (!this.isMediaStarted) {
 
-				settings.options.path = settings.options.path !== undefined || settings.options.path !== null ?
+				settings.options.path = typeof settings.options.path === 'string' ?
 					settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
 				if (typeof flvjs !== 'undefined') {
