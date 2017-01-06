@@ -63,7 +63,7 @@
 
 				settings.options.path = settings.options.path || '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
-				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+				if (typeof flvjs !== 'undefined') {
 					this.createInstance(settings);
 				} else {
 					var

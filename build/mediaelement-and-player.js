@@ -491,23 +491,6 @@ mejs.version = '3.0.0';
 			}
 
 			return true;
-		},
-		/**
-		 * Check if script is already loaded on the page to avoid duplicity of scripts
-		 *
-		 * It accepts the full URL/path or part of it.
-		 * @see http://stackoverflow.com/questions/9659265/check-if-javascript-script-exists-on-page
-		 * @param {String} url
-		 * @returns {Boolean}
-		 */
-		isScriptLoaded: function (url) {
-			var scripts = doc.getElementsByTagName('script');
-			for (var i = scripts.length; i--;) {
-				if (scripts[i].src.indexOf(url) > -1) {
-					return true;
-				}
-			}
-			return false;
 		}
 	};
 
@@ -1492,7 +1475,7 @@ if (document.createEvent === undefined) {
 
 				settings.options.path = settings.options.path || '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
-				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+				if (typeof Hls !== 'undefined') {
 					this.createInstance(settings);
 				} else {
 					var
@@ -1880,7 +1863,7 @@ if (document.createEvent === undefined) {
 
 				settings.options.path = settings.options.path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+				if (typeof dashjs !== 'undefined') {
 					this.createInstance(settings);
 				} else {
 					var
@@ -2212,7 +2195,7 @@ if (document.createEvent === undefined) {
 
 				settings.options.path = settings.options.path || '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
-				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+				if (typeof flvjs !== 'undefined') {
 					this.createInstance(settings);
 				} else {
 					var

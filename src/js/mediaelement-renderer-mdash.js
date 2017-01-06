@@ -57,7 +57,7 @@
 
 				settings.options.path = settings.options.path || '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+				if (typeof dashjs !== 'undefined') {
 					this.createInstance(settings);
 				} else {
 					var
