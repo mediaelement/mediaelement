@@ -60,7 +60,7 @@
 		loadScript: function (settings) {
 			if (!this.isMediaStarted) {
 
-				settings.options.path = settings.options.path !== undefined || settings.options.path !== null ?
+				settings.options.path = typeof settings.options.path === 'string' ?
 					settings.options.path : '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
 				if (typeof Hls !== 'undefined') {
