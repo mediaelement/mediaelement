@@ -342,7 +342,7 @@
 				}
 			;
 
-			if (track.src !== undefined || track.src !== "") {
+			if (track !== undefined && (track.src !== undefined || track.src !== "")) {
 				$.ajax({
 					url: track.src,
 					dataType: "text",
