@@ -406,7 +406,7 @@
 	"use strict";
 
 	if (typeof mejsL10n !== 'undefined') {
-		mejs[mejsL10n.lang] = mejsL10n.strings;
+		mejs[mejsL10n.language] = mejsL10n.strings;
 	}
 
 }(mejs.i18n.locale.strings));
