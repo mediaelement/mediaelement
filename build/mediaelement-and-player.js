@@ -16,7 +16,7 @@
 var mejs = mejs || {};
 
 // version number
-mejs.version = '2.23.4';
+mejs.version = '2.23.5';
 
 
 // player number (for missing, same id attr)
@@ -2361,7 +2361,7 @@ window.MediaElement = mejs.MediaElement;
 	"use strict";
 
 	if (typeof mejsL10n !== 'undefined') {
-		mejs[mejsL10n.lang] = mejsL10n.strings;
+		mejs[mejsL10n.language] = mejsL10n.strings;
 	}
 
 }(mejs.i18n.locale.strings));

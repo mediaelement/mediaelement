@@ -1,5 +1,9 @@
 ### Version History
 
+*2.23.5 (2017/01/06)*
+
+* Fixed typo that caused Wordpress support for translations to be broken (#1984) @ron666
+
 *2.23.4 (2016/10/21)*
 
 * Adjusted captions in fullscreen mode (https://github.com/johndyer/mediaelement/pull/1885) @chdh
