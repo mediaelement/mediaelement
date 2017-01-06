@@ -1,6 +1,6 @@
 ### Version History
 
-*3.0 (2016/??/??)*
+*3.0 (2017/??/??)*
 
 * Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way @johndyer
 * Ability to play Facebook, SoundCloud and YouTube @johndyer
@@ -39,6 +39,10 @@
 * Integrated support for multiple tracks with same language code and fixed issues with translations for `<track>` labels (https://github.com/johndyer/mediaelement/pull/1957) @laupow and @ron666
 * Updated control bar styles (https://github.com/johndyer/mediaelement/pull/1965) @johndyer
 * Added replay button once video finishes and does not loop to solve #1067 @ron666
+
+*2.23.5 (2017/01/06)*
+
+* Fixed typo that caused Wordpress support for translations to be broken (#1984) @ron666
 
 *2.23.4 (2016/10/21)*
 

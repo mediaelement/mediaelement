@@ -2,4 +2,4 @@
 window.mejs = window.mejs || {};
 
 // version number
-mejs.version = '3.0';
+mejs.version = '3.0.0';
