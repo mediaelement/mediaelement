@@ -475,23 +475,6 @@
 			}
 
 			return true;
-		},
-		/**
-		 * Check if script is already loaded on the page to avoid duplicity of scripts
-		 *
-		 * It accepts the full URL/path or part of it.
-		 * @see http://stackoverflow.com/questions/9659265/check-if-javascript-script-exists-on-page
-		 * @param {String} url
-		 * @returns {Boolean}
-		 */
-		isScriptLoaded: function (url) {
-			var scripts = doc.getElementsByTagName('script');
-			for (var i = scripts.length; i--;) {
-				if (scripts[i].src.indexOf(url) > -1) {
-					return true;
-				}
-			}
-			return false;
 		}
 	};
 

@@ -62,7 +62,7 @@
 
 				settings.options.path = settings.options.path || '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
-				if (mejs.Utils.isScriptLoaded(settings.options.path)) {
+				if (typeof Hls !== 'undefined') {
 					this.createInstance(settings);
 				} else {
 					var
