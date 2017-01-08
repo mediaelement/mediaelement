@@ -39,6 +39,7 @@
 * Integrated support for multiple tracks with same language code and fixed issues with translations for `<track>` labels (https://github.com/johndyer/mediaelement/pull/1957) @laupow and @ron666
 * Updated control bar styles (https://github.com/johndyer/mediaelement/pull/1965) @johndyer
 * Added replay button once video finishes and does not loop to solve #1067 @ron666
+* Added Croatian translation (https://github.com/johndyer/mediaelement/pull/1986) @hrvoj3e
 
 *2.23.5 (2017/01/06)*
 
