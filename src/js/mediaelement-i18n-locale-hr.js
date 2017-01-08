@@ -10,8 +10,8 @@
 (function (exports) {
 	"use strict";
 
-	if (exports.en === undefined) {
-		exports.en = {
+	if (exports.hr === undefined) {
+		exports.hr = {
 			"mejs.plural-form": 7,
 
 			// me-shim
