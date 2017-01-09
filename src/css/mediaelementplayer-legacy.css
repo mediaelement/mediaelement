@@ -366,6 +366,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	left: 18px;
 }
 
+.mejs-broadcast {
+	color: #fff;
+	position: absolute;
+	width: 100%;
+	height: 10px;
+	top: 15px;
+}
 /* End: Progress Bar */
 
 /* Start: Fullscreen */

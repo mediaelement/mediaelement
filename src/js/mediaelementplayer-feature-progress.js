@@ -170,11 +170,15 @@
 					switch (keyCode) {
 						case 37: // left
 						case 40: // Down
-							seekTime -= seekBackward;
+							if (media.duration !== Infinity && !isNaN(media.duration)) {
+								seekTime -= seekBackward;
+							}
 							break;
 						case 39: // Right
 						case 38: // Up
-							seekTime += seekForward;
+							if (media.duration !== Infinity && !isNaN(media.duration)) {
+								seekTime += seekForward;
+							}
 							break;
 						case 36: // Home
 							seekTime = 0;
@@ -220,16 +224,19 @@
 				}
 			}).on('click', function(e) {
 
-				var paused = media.paused;
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
 
-				if (!paused) {
-					media.pause();
-				}
+					var paused = media.paused;
 
-				handleMouseMove(e);
+					if (!paused) {
+						media.pause();
+					}
 
-				if (!paused) {
-					media.play();
+					handleMouseMove(e);
+
+					if (!paused) {
+						media.play();
+					}
 				}
 
 				e.preventDefault();
@@ -240,54 +247,75 @@
 			// handle clicks
 			t.rail.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
-				if (e.which === 1 || e.which === 0) {
-					mouseIsDown = true;
-					handleMouseMove(e);
-					t.globalBind('mousemove.dur touchmove.dur', function (e) {
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					if (e.which === 1 || e.which === 0) {
+						mouseIsDown = true;
+						handleMouseMove(e);
+						t.globalBind('mousemove.dur touchmove.dur', function (e) {
+							handleMouseMove(e);
+						});
+						t.globalBind('mouseup.dur touchend.dur', function (e) {
+							mouseIsDown = false;
+							if (t.timefloat !== undefined) {
+								t.timefloat.hide();
+							}
+							t.globalUnbind('.dur');
+						});
+					}
+				}
+			}).on('mouseenter', function (e) {
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					mouseIsOver = true;
+					t.globalBind('mousemove.dur', function (e) {
 						handleMouseMove(e);
 					});
-					t.globalBind('mouseup.dur touchend.dur', function (e) {
-						mouseIsDown = false;
+					if (t.timefloat !== undefined && !mejs.MediaFeatures.hasTouch) {
+						t.timefloat.show();
+					}
+				}
+			}).on('mouseleave', function (e) {
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					mouseIsOver = false;
+					if (!mouseIsDown) {
+						t.globalUnbind('.dur');
 						if (t.timefloat !== undefined) {
 							t.timefloat.hide();
 						}
-						t.globalUnbind('.dur');
-					});
-				}
-			}).on('mouseenter', function (e) {
-				mouseIsOver = true;
-				t.globalBind('mousemove.dur', function (e) {
-					handleMouseMove(e);
-				});
-				if (t.timefloat !== undefined && !mejs.MediaFeatures.hasTouch) {
-					t.timefloat.show();
-				}
-			}).on('mouseleave', function (e) {
-				mouseIsOver = false;
-				if (!mouseIsDown) {
-					t.globalUnbind('.dur');
-					if (t.timefloat !== undefined) {
-						t.timefloat.hide();
 					}
 				}
 			});
 
 			// loading
 			media.addEventListener('progress', function (e) {
-				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					player.setProgressRail(e);
+					player.setCurrentRail(e);
+				}
 			}, false);
 
 			// current time
 			media.addEventListener('timeupdate', function (e) {
-				player.setProgressRail(e);
-				player.setCurrentRail(e);
-				updateSlider(e);
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					player.setProgressRail(e);
+					player.setCurrentRail(e);
+					updateSlider(e);
+				}
+			}, false);
+
+			// If media is does not have a finite duration, remove progress bar interaction
+			// and indicate that is a live broadcast
+			media.addEventListener('loadedmetadata', function (e) {
+				if (media.duration === Infinity) {
+					controls.find('.' + t.options.classPrefix + 'time-rail').empty()
+						.html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
+				}
 			}, false);
 
 			t.container.on('controlsresize', function (e) {
-				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					player.setProgressRail(e);
+					player.setCurrentRail(e);
+				}
 			});
 		},
 

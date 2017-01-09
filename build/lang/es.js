@@ -81,6 +81,9 @@
 			//mediaelementplayer-feature-speed
 			"mejs.speed-rate" : "Tasa de velocidad",
 
+			//mediaelementplayer-feature-progress
+			"mejs.live-broadcast" : "Transmisión en Vivo",
+
 			// mep-tracks
 			"mejs.afrikaans": "Afrikaans",
 			"mejs.albanian": "Albano",

@@ -1331,7 +1331,7 @@ if (jQuery !== undefined) {
 			var
 				t = this
 			;
-				
+
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !t.rail || !t.rail.length || !t.rail.is(':visible')) {
 				return;
@@ -1339,8 +1339,7 @@ if (jQuery !== undefined) {
 
 			var
 				railMargin = parseFloat(t.rail.css('margin-left')) + parseFloat(t.rail.css('margin-right')),
-				totalMargin = parseFloat( t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')),
-				controlElements = t.controls.children(),
+				totalMargin = parseFloat(t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')) || 0,
 				siblingsWidth = 0
 			;
 
@@ -1351,7 +1350,7 @@ if (jQuery !== undefined) {
 			siblingsWidth += totalMargin + railMargin + 1;
 
 			// Substract the width of the feature siblings from time rail
-			t.rail.width( t.controls.width() - siblingsWidth );
+			t.rail.width(t.controls.width() - siblingsWidth);
 
 			t.container.trigger('controlsresize');
 		},
@@ -2141,11 +2140,15 @@ if (jQuery !== undefined) {
 					switch (keyCode) {
 						case 37: // left
 						case 40: // Down
-							seekTime -= seekBackward;
+							if (media.duration !== Infinity && !isNaN(media.duration)) {
+								seekTime -= seekBackward;
+							}
 							break;
 						case 39: // Right
 						case 38: // Up
-							seekTime += seekForward;
+							if (media.duration !== Infinity && !isNaN(media.duration)) {
+								seekTime += seekForward;
+							}
 							break;
 						case 36: // Home
 							seekTime = 0;
@@ -2191,16 +2194,19 @@ if (jQuery !== undefined) {
 				}
 			}).on('click', function(e) {
 
-				var paused = media.paused;
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
 
-				if (!paused) {
-					media.pause();
-				}
+					var paused = media.paused;
 
-				handleMouseMove(e);
+					if (!paused) {
+						media.pause();
+					}
 
-				if (!paused) {
-					media.play();
+					handleMouseMove(e);
+
+					if (!paused) {
+						media.play();
+					}
 				}
 
 				e.preventDefault();
@@ -2211,54 +2217,75 @@ if (jQuery !== undefined) {
 			// handle clicks
 			t.rail.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
-				if (e.which === 1 || e.which === 0) {
-					mouseIsDown = true;
-					handleMouseMove(e);
-					t.globalBind('mousemove.dur touchmove.dur', function (e) {
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					if (e.which === 1 || e.which === 0) {
+						mouseIsDown = true;
+						handleMouseMove(e);
+						t.globalBind('mousemove.dur touchmove.dur', function (e) {
+							handleMouseMove(e);
+						});
+						t.globalBind('mouseup.dur touchend.dur', function (e) {
+							mouseIsDown = false;
+							if (t.timefloat !== undefined) {
+								t.timefloat.hide();
+							}
+							t.globalUnbind('.dur');
+						});
+					}
+				}
+			}).on('mouseenter', function (e) {
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					mouseIsOver = true;
+					t.globalBind('mousemove.dur', function (e) {
 						handleMouseMove(e);
 					});
-					t.globalBind('mouseup.dur touchend.dur', function (e) {
-						mouseIsDown = false;
+					if (t.timefloat !== undefined && !mejs.MediaFeatures.hasTouch) {
+						t.timefloat.show();
+					}
+				}
+			}).on('mouseleave', function (e) {
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					mouseIsOver = false;
+					if (!mouseIsDown) {
+						t.globalUnbind('.dur');
 						if (t.timefloat !== undefined) {
 							t.timefloat.hide();
 						}
-						t.globalUnbind('.dur');
-					});
-				}
-			}).on('mouseenter', function (e) {
-				mouseIsOver = true;
-				t.globalBind('mousemove.dur', function (e) {
-					handleMouseMove(e);
-				});
-				if (t.timefloat !== undefined && !mejs.MediaFeatures.hasTouch) {
-					t.timefloat.show();
-				}
-			}).on('mouseleave', function (e) {
-				mouseIsOver = false;
-				if (!mouseIsDown) {
-					t.globalUnbind('.dur');
-					if (t.timefloat !== undefined) {
-						t.timefloat.hide();
 					}
 				}
 			});
 
 			// loading
 			media.addEventListener('progress', function (e) {
-				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					player.setProgressRail(e);
+					player.setCurrentRail(e);
+				}
 			}, false);
 
 			// current time
 			media.addEventListener('timeupdate', function (e) {
-				player.setProgressRail(e);
-				player.setCurrentRail(e);
-				updateSlider(e);
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					player.setProgressRail(e);
+					player.setCurrentRail(e);
+					updateSlider(e);
+				}
+			}, false);
+
+			// If media is does not have a finite duration, remove progress bar interaction
+			// and indicate that is a live broadcast
+			media.addEventListener('loadedmetadata', function (e) {
+				if (media.duration === Infinity) {
+					controls.find('.' + t.options.classPrefix + 'time-rail').empty()
+						.html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
+				}
 			}, false);
 
 			t.container.on('controlsresize', function (e) {
-				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if (media.duration !== Infinity && !isNaN(media.duration)) {
+					player.setProgressRail(e);
+					player.setCurrentRail(e);
+				}
 			});
 		},
 

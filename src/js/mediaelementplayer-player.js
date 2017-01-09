@@ -1302,7 +1302,7 @@
 			var
 				t = this
 			;
-				
+
 			// skip calculation if hidden
 			if (!t.container.is(':visible') || !t.rail || !t.rail.length || !t.rail.is(':visible')) {
 				return;
@@ -1310,8 +1310,7 @@
 
 			var
 				railMargin = parseFloat(t.rail.css('margin-left')) + parseFloat(t.rail.css('margin-right')),
-				totalMargin = parseFloat( t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')),
-				controlElements = t.controls.children(),
+				totalMargin = parseFloat(t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')) || 0,
 				siblingsWidth = 0
 			;
 
@@ -1322,7 +1321,7 @@
 			siblingsWidth += totalMargin + railMargin + 1;
 
 			// Substract the width of the feature siblings from time rail
-			t.rail.width( t.controls.width() - siblingsWidth );
+			t.rail.width(t.controls.width() - siblingsWidth);
 
 			t.container.trigger('controlsresize');
 		},

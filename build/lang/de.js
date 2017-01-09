@@ -75,10 +75,13 @@
 			"mejs.source-chooser": "Quellenauswahl"
 
 			// mediaelementplayer-feature-stop
-			//"mejs.stop": "Stop"
+			//"mejs.stop": "Stop",
 
 			//mediaelementplayer-feature-speed
-			//"mejs.speed-rate" : "Speed Rate"
+			//"mejs.speed-rate" : "Speed Rate",
+
+			//mediaelementplayer-feature-progress
+			//"mejs.live-broadcast" : "Live Broadcast",
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",

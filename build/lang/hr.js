@@ -74,6 +74,9 @@
 			//mediaelementplayer-feature-speed
 			"mejs.speed-rate" : "Brzina reprodukcije",
 
+			//mediaelementplayer-feature-progress
+			//"mejs.live-broadcast" : "Live Broadcast",
+
 			// mep-tracks
 			"mejs.afrikaans": "Afrički",
 			"mejs.albanian": "Albanski",
