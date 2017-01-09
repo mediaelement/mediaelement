@@ -1724,16 +1724,27 @@ if (document.createEvent === undefined) {
 				 */
 				var assignHlsEvents = function (e, data) {
 					var event = mejs.Utils.createEvent(e, node);
+					event.data = data;
 					mediaElement.dispatchEvent(event);
 
-					if (e === 'ERROR') {
-
-						// Destroy instance of player if unknown error found
-						if (data.fatal && e === Hls.ErrorTypes.OTHER_ERROR) {
-							hlsPlayer.destroy();
-						}
-
+					if (e === 'hlsError') {
 						console.error(e, data);
+
+						// borrowed from http://dailymotion.github.io/hls.js/demo/
+						if (data.fatal) {
+							hlsPlayer.destroy();
+						} else {
+							switch (data.type) {
+								case 'mediaError':
+									hlsPlayer.recoverMediaError();
+									break;
+
+								case 'networkError':
+									hlsPlayer.startLoad();
+									break;
+
+							}
+						}
 					}
 				};
 
@@ -1743,14 +1754,6 @@ if (document.createEvent === undefined) {
 					}
 				}
 			};
-
-			var filteredAttributes = ['id', 'src', 'style'];
-			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
-				var attribute = originalNode.attributes[j];
-				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
-					node.setAttribute(attribute.name, attribute.value);
-				}
-			}
 
 			node.setAttribute('id', id);
 			if (mediaFiles && mediaFiles.length > 0) {
@@ -2058,12 +2061,14 @@ if (document.createEvent === undefined) {
 				 * not using dashjs.MediaPlayer.events object
 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 				 */
-				var assignMdashEvents = function (e, data) {
+				var assignMdashEvents = function (e) {
 					var event = mejs.Utils.createEvent(e.type, node);
+					event.data = e;
+					
 					mediaElement.dispatchEvent(event);
 
-					if (e === 'error') {
-						console.error(e, data);
+					if (e.type.toLowerCase() === 'error') {
+						console.error(e);
 					}
 				};
 				for (var eventType in dashEvents) {
@@ -2072,14 +2077,6 @@ if (document.createEvent === undefined) {
 					}
 				}
 			};
-
-			var filteredAttributes = ['id', 'src', 'style'];
-			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
-				var attribute = originalNode.attributes[j];
-				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
-					node.setAttribute(attribute.name, attribute.value);
-				}
-			}
 
 			node.setAttribute('id', id);
 
@@ -2401,14 +2398,6 @@ if (document.createEvent === undefined) {
 					assignEvents(events[i]);
 				}
 			};
-
-			var filteredAttributes = ['id', 'src', 'style'];
-			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
-				var attribute = originalNode.attributes[j];
-				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
-					node.setAttribute(attribute.name, attribute.value);
-				}
-			}
 
 			node.setAttribute('id', id);
 			if (mediaFiles && mediaFiles.length > 0) {

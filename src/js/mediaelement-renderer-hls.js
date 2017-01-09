@@ -311,16 +311,27 @@
 				 */
 				var assignHlsEvents = function (e, data) {
 					var event = mejs.Utils.createEvent(e, node);
+					event.data = data;
 					mediaElement.dispatchEvent(event);
 
-					if (e === 'ERROR') {
-
-						// Destroy instance of player if unknown error found
-						if (data.fatal && e === Hls.ErrorTypes.OTHER_ERROR) {
-							hlsPlayer.destroy();
-						}
-
+					if (e === 'hlsError') {
 						console.error(e, data);
+
+						// borrowed from http://dailymotion.github.io/hls.js/demo/
+						if (data.fatal) {
+							hlsPlayer.destroy();
+						} else {
+							switch (data.type) {
+								case 'mediaError':
+									hlsPlayer.recoverMediaError();
+									break;
+
+								case 'networkError':
+									hlsPlayer.startLoad();
+									break;
+
+							}
+						}
 					}
 				};
 
@@ -330,14 +341,6 @@
 					}
 				}
 			};
-
-			var filteredAttributes = ['id', 'src', 'style'];
-			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
-				var attribute = originalNode.attributes[j];
-				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
-					node.setAttribute(attribute.name, attribute.value);
-				}
-			}
 
 			node.setAttribute('id', id);
 			if (mediaFiles && mediaFiles.length > 0) {

@@ -268,14 +268,6 @@
 				}
 			};
 
-			var filteredAttributes = ['id', 'src', 'style'];
-			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
-				var attribute = originalNode.attributes[j];
-				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
-					node.setAttribute(attribute.name, attribute.value);
-				}
-			}
-
 			node.setAttribute('id', id);
 			if (mediaFiles && mediaFiles.length > 0) {
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
