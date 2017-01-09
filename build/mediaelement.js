@@ -6006,6 +6006,9 @@ if (document.createEvent === undefined) {
 			//mediaelementplayer-feature-speed
 			"mejs.speed-rate" : "Speed Rate",
 
+			//mediaelementplayer-feature-progress
+			"mejs.live-broadcast" : "Live Broadcast",
+
 			// mep-tracks
 			"mejs.afrikaans": "Afrikaans",
 			"mejs.albanian": "Albanian",

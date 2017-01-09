@@ -72,13 +72,16 @@
 			//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
 			// mediaelementplayer-feature-sourcechooser
-			//"mejs.source-chooser": "Source Chooser"
+			//"mejs.source-chooser": "Source Chooser",
 
 			// mediaelementplayer-feature-stop
-			//"mejs.stop": "Stop"
+			//"mejs.stop": "Stop",
 
 			//mediaelementplayer-feature-speed
-			//"mejs.speed-rate" : "Speed Rate"
+			//"mejs.speed-rate" : "Speed Rate",
+
+			//mediaelementplayer-feature-progress
+			//"mejs.live-broadcast" : "Live Broadcast",
 
 			// mep-tracks
 			// "mejs.afrikaans": "Afrikaans",
