@@ -251,12 +251,14 @@
 				 * not using dashjs.MediaPlayer.events object
 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 				 */
-				var assignMdashEvents = function (e, data) {
+				var assignMdashEvents = function (e) {
 					var event = mejs.Utils.createEvent(e.type, node);
+					event.data = e;
+					console.log(event);
 					mediaElement.dispatchEvent(event);
 
-					if (e === 'error') {
-						console.error(e, data);
+					if (e.type.toLowerCase() === 'error') {
+						console.error(e);
 					}
 				};
 				for (var eventType in dashEvents) {
@@ -265,14 +267,6 @@
 					}
 				}
 			};
-
-			var filteredAttributes = ['id', 'src', 'style'];
-			for (var j = 0, total = originalNode.attributes.length; j < total; j++) {
-				var attribute = originalNode.attributes[j];
-				if (attribute.specified && filteredAttributes.indexOf(attribute.name) === -1) {
-					node.setAttribute(attribute.name, attribute.value);
-				}
-			}
 
 			node.setAttribute('id', id);
 
