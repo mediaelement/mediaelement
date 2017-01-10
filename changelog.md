@@ -40,6 +40,8 @@
 * Updated control bar styles (https://github.com/johndyer/mediaelement/pull/1965) @johndyer
 * Added replay button once video finishes and does not loop to solve #1067 @ron666
 * Added Croatian translation (https://github.com/johndyer/mediaelement/pull/1986) @hrvoj3e
+* Added workflow to indicate 'Live Broadcast' if duration of media is infinite @ron666
+* Updated Polish translation (https://github.com/johndyer/mediaelement/pull/1989) @greg-dev
 
 *2.23.5 (2017/01/06)*
 
