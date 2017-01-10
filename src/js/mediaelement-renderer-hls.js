@@ -342,7 +342,6 @@
 				}
 			};
 
-			node.setAttribute('id', id);
 			if (mediaFiles && mediaFiles.length > 0) {
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
@@ -351,7 +350,8 @@
 					}
 				}
 			}
-			node.className = '';
+
+			node.setAttribute('id', id);
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');

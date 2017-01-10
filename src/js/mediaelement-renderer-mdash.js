@@ -254,7 +254,6 @@
 				var assignMdashEvents = function (e) {
 					var event = mejs.Utils.createEvent(e.type, node);
 					event.data = e;
-					console.log(event);
 					mediaElement.dispatchEvent(event);
 
 					if (e.type.toLowerCase() === 'error') {
@@ -268,8 +267,6 @@
 				}
 			};
 
-			node.setAttribute('id', id);
-
 			if (mediaFiles && mediaFiles.length > 0) {
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
@@ -279,7 +276,7 @@
 				}
 			}
 
-			node.className = '';
+			node.setAttribute('id', id);
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');
