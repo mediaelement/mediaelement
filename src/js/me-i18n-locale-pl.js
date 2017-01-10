@@ -32,7 +32,7 @@
             "mejs.fullscreen": "Pełny ekran",
 
             // mep-feature-jumpforward
-            //"mejs.time-jump-forward": "Jump forward %1 second(s)",
+            "mejs.time-jump-forward": "Przewiń do przodu o %1 sek.",
 
             // mep-feature-playpause
             "mejs.play": "Odtwarzaj",
@@ -64,11 +64,11 @@
             "mejs.audio-player": "Odtwarzacz audio",
 
             // mep-feature-ads
-            //"mejs.ad-skip": "Skip ad",
-            //"mejs.ad-skip-info": "Skip in %1 second(s)",
+            "mejs.ad-skip": "Pomiń reklamę",
+            "mejs.ad-skip-info": "Pomiń za %1 sek.",
 
             // mep-feature-sourcechooser
-            //"mejs.source-chooser": "Source Chooser"
+            "mejs.source-chooser": "Wybór źródła"
         };
     }
 }(mejs.i18n.locale.strings));
