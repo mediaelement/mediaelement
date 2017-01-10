@@ -1520,10 +1520,12 @@ if (document.createEvent === undefined) {
 		 * Create a new instance of HLS player and trigger a custom event to initialize it
 		 *
 		 * @param {Object} settings - an object with settings needed to instantiate HLS object
+		 * @return {Hls}
 		 */
 		createInstance: function (settings) {
 			var player = new Hls(settings.options);
 			win['__ready__' + settings.id](player);
+			return player;
 		}
 	};
 
@@ -1612,7 +1614,7 @@ if (document.createEvent === undefined) {
 				id = mediaElement.id + '_' + options.prefix,
 				hlsPlayer,
 				stack = {}
-				;
+			;
 
 			node = originalNode.cloneNode(true);
 			options = mejs.Utils.extend(options, mediaElement.options);
@@ -1637,7 +1639,12 @@ if (document.createEvent === undefined) {
 
 							if (propName === 'src') {
 
-								hlsPlayer.detachMedia();
+								hlsPlayer.destroy();
+								hlsPlayer = null;
+								hlsPlayer = NativeHls.createInstance({
+									options: options.hls,
+									id: id
+								});
 								hlsPlayer.attachMedia(node);
 
 								hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
