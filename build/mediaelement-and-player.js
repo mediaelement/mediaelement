@@ -1755,7 +1755,6 @@ if (document.createEvent === undefined) {
 				}
 			};
 
-			node.setAttribute('id', id);
 			if (mediaFiles && mediaFiles.length > 0) {
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
@@ -1764,7 +1763,8 @@ if (document.createEvent === undefined) {
 					}
 				}
 			}
-			node.className = '';
+
+			node.setAttribute('id', id);
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');
@@ -2064,7 +2064,6 @@ if (document.createEvent === undefined) {
 				var assignMdashEvents = function (e) {
 					var event = mejs.Utils.createEvent(e.type, node);
 					event.data = e;
-					
 					mediaElement.dispatchEvent(event);
 
 					if (e.type.toLowerCase() === 'error') {
@@ -2078,8 +2077,6 @@ if (document.createEvent === undefined) {
 				}
 			};
 
-			node.setAttribute('id', id);
-
 			if (mediaFiles && mediaFiles.length > 0) {
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
@@ -2089,7 +2086,7 @@ if (document.createEvent === undefined) {
 				}
 			}
 
-			node.className = '';
+			node.setAttribute('id', id);
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');
@@ -2399,7 +2396,6 @@ if (document.createEvent === undefined) {
 				}
 			};
 
-			node.setAttribute('id', id);
 			if (mediaFiles && mediaFiles.length > 0) {
 				for (i = 0, il = mediaFiles.length; i < il; i++) {
 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
@@ -2409,7 +2405,7 @@ if (document.createEvent === undefined) {
 				}
 			}
 
-			node.className = '';
+			node.setAttribute('id', id);
 
 			originalNode.parentNode.insertBefore(node, originalNode);
 			originalNode.removeAttribute('autoplay');
