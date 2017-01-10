@@ -33,7 +33,7 @@
 			"mejs.fullscreen": "Pełny ekran",
 
 			// mediaelementplayer-feature-jumpforward
-			"mejs.time-jump-forward": "Przewiń do przodu o %1 sek.",
+			"mejs.time-jump-forward": ["Przewiń do przodu o sekundę", "Przewiń do przodu o %1 sekundy", "Przewiń do przodu o %1 sekund"],
 
 			// mediaelementplayer-feature-loop
 			"mejs.loop": "Zapętl",
@@ -50,7 +50,7 @@
 			"mejs.time-help-text": "Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.",
 
 			// mediaelementplayer-feature-skipback
-			"mejs.time-skip-back": "Cofnij o %1 sek.",
+			"mejs.time-skip-back": ["Cofnij o sekundę", "Cofnij o %1 sekundy", "Cofnij o %1 sekund"],
 
 			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Podpisy/napisy",
@@ -69,7 +69,7 @@
 
 			// mediaelementplayer-feature-ads
 			"mejs.ad-skip": "Pomiń reklamę",
-			"mejs.ad-skip-info": "Pomiń za %1 sek.",
+			"mejs.ad-skip-info": ["Pomiń za sekundę", "Pomiń za %1 sekundy", "Pomiń za %1 sekund"],
 
 			// mediaelementplayer-feature-sourcechooser
 			"mejs.source-chooser": "Wybór źródła",
