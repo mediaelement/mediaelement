@@ -2140,13 +2140,13 @@ if (jQuery !== undefined) {
 					switch (keyCode) {
 						case 37: // left
 						case 40: // Down
-							if (media.duration !== Infinity && !isNaN(media.duration)) {
+							if (media.duration !== Infinity) {
 								seekTime -= seekBackward;
 							}
 							break;
 						case 39: // Right
 						case 38: // Up
-							if (media.duration !== Infinity && !isNaN(media.duration)) {
+							if (media.duration !== Infinity) {
 								seekTime += seekForward;
 							}
 							break;
@@ -2194,7 +2194,7 @@ if (jQuery !== undefined) {
 				}
 			}).on('click', function(e) {
 
-				if (media.duration !== Infinity && !isNaN(media.duration)) {
+				if (media.duration !== Infinity) {
 
 					var paused = media.paused;
 
@@ -2217,7 +2217,7 @@ if (jQuery !== undefined) {
 			// handle clicks
 			t.rail.on('mousedown touchstart', function (e) {
 				// only handle left clicks or touch
-				if (media.duration !== Infinity && !isNaN(media.duration)) {
+				if (media.duration !== Infinity) {
 					if (e.which === 1 || e.which === 0) {
 						mouseIsDown = true;
 						handleMouseMove(e);
@@ -2234,7 +2234,7 @@ if (jQuery !== undefined) {
 					}
 				}
 			}).on('mouseenter', function (e) {
-				if (media.duration !== Infinity && !isNaN(media.duration)) {
+				if (media.duration !== Infinity) {
 					mouseIsOver = true;
 					t.globalBind('mousemove.dur', function (e) {
 						handleMouseMove(e);
@@ -2244,7 +2244,7 @@ if (jQuery !== undefined) {
 					}
 				}
 			}).on('mouseleave', function (e) {
-				if (media.duration !== Infinity && !isNaN(media.duration)) {
+				if (media.duration !== Infinity) {
 					mouseIsOver = false;
 					if (!mouseIsDown) {
 						t.globalUnbind('.dur');
@@ -2259,7 +2259,7 @@ if (jQuery !== undefined) {
 			// If media is does not have a finite duration, remove progress bar interaction
 			// and indicate that is a live broadcast
 			media.addEventListener('progress', function (e) {
-				if (media.duration !== Infinity && !isNaN(media.duration)) {
+				if (media.duration !== Infinity) {
 					player.setProgressRail(e);
 					player.setCurrentRail(e);
 				} else {
@@ -2272,7 +2272,7 @@ if (jQuery !== undefined) {
 
 			// current time
 			media.addEventListener('timeupdate', function (e) {
-				if (media.duration !== Infinity && !isNaN(media.duration)) {
+				if (media.duration !== Infinity) {
 					player.setProgressRail(e);
 					player.setCurrentRail(e);
 					updateSlider(e);
@@ -2285,7 +2285,7 @@ if (jQuery !== undefined) {
 			}, false);
 
 			t.container.on('controlsresize', function (e) {
-				if (media.duration !== Infinity && !isNaN(media.duration)) {
+				if (media.duration !== Infinity) {
 					player.setProgressRail(e);
 					player.setCurrentRail(e);
 				}
