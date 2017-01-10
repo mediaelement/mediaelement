@@ -8326,8 +8326,10 @@ if (jQuery !== undefined) {
 					player.setProgressRail(e);
 					player.setCurrentRail(e);
 				} else {
-					controls.find('.' + t.options.classPrefix + 'time-rail').empty()
+					if (!controls.find('.' + t.options.classPrefix + 'broadcast').length) {
+						controls.find('.' + t.options.classPrefix + 'time-rail').empty()
 						.html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
+					}
 				}
 			}, false);
 
@@ -8337,6 +8339,11 @@ if (jQuery !== undefined) {
 					player.setProgressRail(e);
 					player.setCurrentRail(e);
 					updateSlider(e);
+				} else {
+					if (!controls.find('.' + t.options.classPrefix + 'broadcast').length) {
+						controls.find('.' + t.options.classPrefix + 'time-rail').empty()
+							.html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
+					}
 				}
 			}, false);
 
