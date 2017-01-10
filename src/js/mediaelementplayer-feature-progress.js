@@ -286,10 +286,15 @@
 			});
 
 			// loading
+			// If media is does not have a finite duration, remove progress bar interaction
+			// and indicate that is a live broadcast
 			media.addEventListener('progress', function (e) {
 				if (media.duration !== Infinity && !isNaN(media.duration)) {
 					player.setProgressRail(e);
 					player.setCurrentRail(e);
+				} else {
+					controls.find('.' + t.options.classPrefix + 'time-rail').empty()
+						.html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
 				}
 			}, false);
 
@@ -299,15 +304,6 @@
 					player.setProgressRail(e);
 					player.setCurrentRail(e);
 					updateSlider(e);
-				}
-			}, false);
-
-			// If media is does not have a finite duration, remove progress bar interaction
-			// and indicate that is a live broadcast
-			media.addEventListener('canplay', function (e) {
-				if (media.duration === Infinity) {
-					controls.find('.' + t.options.classPrefix + 'time-rail').empty()
-					.html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
 				}
 			}, false);
 
