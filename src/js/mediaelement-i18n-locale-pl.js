@@ -22,7 +22,7 @@
 
 			// me-shim
 			"mejs.download-file": "Pobierz plik",
-			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
+			"mejs.install-flash": "Twoja przeglądarka nie ma włączonej lub zainstalowanej wtyczki Flash Player. Prosimy ją włączyć lub pobrać najnowszą wersję ze strony https://get.adobe.com/flashplayer/",
 
 			// mediaelementplayer-feature-contextmenu
 			"mejs.fullscreen-off": "Wyłącz pełny ekran",
@@ -33,10 +33,10 @@
 			"mejs.fullscreen": "Pełny ekran",
 
 			// mediaelementplayer-feature-jumpforward
-			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
+			"mejs.time-jump-forward": ["Przewiń do przodu o sekundę", "Przewiń do przodu o %1 sekundy", "Przewiń do przodu o %1 sekund"],
 
 			// mediaelementplayer-feature-loop
-			//"mejs.loop": "Toggle Loop",
+			"mejs.loop": "Zapętl",
 
 			// mediaelementplayer-feature-playpause
 			"mejs.play": "Odtwarzaj",
@@ -50,7 +50,7 @@
 			"mejs.time-help-text": "Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.",
 
 			// mediaelementplayer-feature-skipback
-			"mejs.time-skip-back": "Cofnij o %1 sek.",
+			"mejs.time-skip-back": ["Cofnij o sekundę", "Cofnij o %1 sekundy", "Cofnij o %1 sekund"],
 
 			// mediaelementplayer-feature-tracks
 			"mejs.captions-subtitles": "Podpisy/napisy",
@@ -65,80 +65,80 @@
 
 			// mep-player
 			"mejs.video-player": "Odtwarzacz wideo",
-			"mejs.audio-player": "Odtwarzacz audio"
+			"mejs.audio-player": "Odtwarzacz audio",
 
 			// mediaelementplayer-feature-ads
-			//"mejs.ad-skip": "Skip ad",
-			//"mejs.ad-skip-info": "Skip in %1 second(s)",
+			"mejs.ad-skip": "Pomiń reklamę",
+			"mejs.ad-skip-info": ["Pomiń za sekundę", "Pomiń za %1 sekundy", "Pomiń za %1 sekund"],
 
 			// mediaelementplayer-feature-sourcechooser
-			//"mejs.source-chooser": "Source Chooser",
+			"mejs.source-chooser": "Wybór źródła",
 
 			// mediaelementplayer-feature-stop
-			//"mejs.stop": "Stop",
+			"mejs.stop": "Zatrzymaj",
 
 			//mediaelementplayer-feature-speed
-			//"mejs.speed-rate" : "Speed Rate",
+			"mejs.speed-rate" : "Prędkość",
 
 			//mediaelementplayer-feature-progress
-			//"mejs.live-broadcast" : "Live Broadcast",
+			"mejs.live-broadcast" : "Transmisja na żywo",
 
 			// mep-tracks
-			// "mejs.afrikaans": "Afrikaans",
-			// "mejs.albanian": "Albanian",
-			// "mejs.arabic": "Arabic",
-			// "mejs.belarusian": "Belarusian",
-			// "mejs.bulgarian": "Bulgarian",
-			// "mejs.catalan": "Catalan",
-			// "mejs.chinese": "Chinese",
-			// "mejs.chinese-simplified": "Chinese (Simplified)",
-			// "mejs.chinese-traditional": "Chinese (Traditional)",
-			// "mejs.croatian": "Croatian",
-			// "mejs.czech": "Czech",
-			// "mejs.danish": "Danish",
-			// "mejs.dutch": "Dutch",
-			// "mejs.english": "English",
-			// "mejs.estonian": "Estonian",
-			// "mejs.filipino": "Filipino",
-			// "mejs.finnish": "Finnish",
-			// "mejs.french": "French",
-			// "mejs.galician": "Galician",
-			// "mejs.german": "German",
-			// "mejs.greek": "Greek",
-			// "mejs.haitian-creole": "Haitian Creole",
-			// "mejs.hebrew": "Hebrew",
-			// "mejs.hindi": "Hindi",
-			// "mejs.hungarian": "Hungarian",
-			// "mejs.icelandic": "Icelandic",
-			// "mejs.indonesian": "Indonesian",
-			// "mejs.irish": "Irish",
-			// "mejs.italian": "Italian",
-			// "mejs.japanese": "Japanese",
-			// "mejs.korean": "Korean",
-			// "mejs.latvian": "Latvian",
-			// "mejs.lithuanian": "Lithuanian",
-			// "mejs.macedonian": "Macedonian",
-			// "mejs.malay": "Malay",
-			// "mejs.maltese": "Maltese",
-			// "mejs.norwegian": "Norwegian",
-			// "mejs.persian": "Persian",
-			// "mejs.polish": "Polish",
-			// "mejs.portuguese": "Portuguese",
-			// "mejs.romanian": "Romanian",
-			// "mejs.russian": "Russian",
-			// "mejs.serbian": "Serbian",
-			// "mejs.slovak": "Slovak",
-			// "mejs.slovenian": "Slovenian",
-			// "mejs.spanish": "Spanish",
-			// "mejs.swahili": "Swahili",
-			// "mejs.swedish": "Swedish",
-			// "mejs.tagalog": "Tagalog",
-			// "mejs.thai": "Thai",
-			// "mejs.turkish": "Turkish",
-			// "mejs.ukrainian": "Ukrainian",
-			// "mejs.vietnamese": "Vietnamese",
-			// "mejs.welsh": "Welsh",
-			// "mejs.yiddish": "Yiddish"
+			"mejs.afrikaans": "Afrykański",
+			"mejs.albanian": "Albański",
+			"mejs.arabic": "Arabski",
+			"mejs.belarusian": "Białoruski",
+			"mejs.bulgarian": "Bułgarski",
+			"mejs.catalan": "Kataloński",
+			"mejs.chinese": "Chiński",
+			"mejs.chinese-simplified": "Chiński (uproszczony)",
+			"mejs.chinese-traditional": "Chiński (tradycyjny)",
+			"mejs.croatian": "Chorwacki",
+			"mejs.czech": "Czeski",
+			"mejs.danish": "Duński",
+			"mejs.dutch": "Holenderski",
+			"mejs.english": "Angielski",
+			"mejs.estonian": "Estoński",
+			"mejs.filipino": "Filipiński",
+			"mejs.finnish": "Fiński",
+			"mejs.french": "Francuski",
+			"mejs.galician": "Galicyjski",
+			"mejs.german": "Niemiecki",
+			"mejs.greek": "Grecki",
+			"mejs.haitian-creole": "Haitański",
+			"mejs.hebrew": "Hebrajski",
+			"mejs.hindi": "Hinduski",
+			"mejs.hungarian": "Węgierski",
+			"mejs.icelandic": "Islandzki",
+			"mejs.indonesian": "Indonezyjski",
+			"mejs.irish": "Irlandzki",
+			"mejs.italian": "Włoski",
+			"mejs.japanese": "Japoński",
+			"mejs.korean": "Koreański",
+			"mejs.latvian": "Łotewski",
+			"mejs.lithuanian": "Litewski",
+			"mejs.macedonian": "Macedoński",
+			"mejs.malay": "Malajski",
+			"mejs.maltese": "Maltański",
+			"mejs.norwegian": "Norweski",
+			"mejs.persian": "Perski",
+			"mejs.polish": "Polski",
+			"mejs.portuguese": "Portugalski",
+			"mejs.romanian": "Rumuński",
+			"mejs.russian": "Rosyjski",
+			"mejs.serbian": "Serbski",
+			"mejs.slovak": "Słowacki",
+			"mejs.slovenian": "Słoweński",
+			"mejs.spanish": "Hiszpański",
+			"mejs.swahili": "Suahili",
+			"mejs.swedish": "Szwedzki",
+			"mejs.tagalog": "Tagalski",
+			"mejs.thai": "Tajski",
+			"mejs.turkish": "Turecki",
+			"mejs.ukrainian": "Ukraiński",
+			"mejs.vietnamese": "Wietnamski",
+			"mejs.welsh": "Walijski",
+			"mejs.yiddish": "Jidysz"
 		};
 	}
 }(mejs.i18n.locale.strings));
