@@ -59,6 +59,9 @@ autosizeProgress | boolean | `true` | Automatically calculate the width of the p
 alwaysShowControls | boolean | `false` | Hide controls when playing and mouse is not over the video
 hideVideoControlsOnLoad | boolean | `false` | Display the video control
 clickToPlayPause | boolean | `true` | Enable click video element to toggle play/pause
+controlsTimeoutDefault | number | `1500` | Time in ms to hide controls
+controlsTimeoutMouseEnter | number | `2500` | Time in ms to trigger the timer when mouse moves
+controlsTimeoutMouseLeave | number | `1000` | Time in ms to trigger the timer when mouse leaves
 iPadUseNativeControls | boolean | `false` | Force iPad's native controls
 iPhoneUseNativeControls | boolean | `false` | Force iPhone's native controls
 AndroidUseNativeControls | boolean | `false` | Force Android's native controls

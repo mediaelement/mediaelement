@@ -111,7 +111,7 @@
 				ExternalInterface.addCallback('fire_setSize', fire_setSize);
 				ExternalInterface.addCallback('fire_stop', fire_stop);
 
-				ExternalInterface.call('__ready__' + _id);
+				ExternalInterface.call('(function(){window["__ready__' + _id + '"]()})()', null);
 			}
 		}
 
@@ -287,7 +287,6 @@
 		private function _completeHandler(event: HLSEvent): void {
 			_isEnded = true;
 			_isPaused = true;
-			sendEvent('pause');
 			sendEvent('ended');
 		}
 		private function _errorHandler(event: HLSEvent): void {
@@ -339,7 +338,6 @@
 					_isPaused = false;
 					_isEnded = false;
 					_video.visible = true;
-					sendEvent("loadeddata");
 					sendEvent("play");
 					sendEvent("playing");
 					break;
@@ -348,7 +346,6 @@
 					_isPaused = true;
 					_isEnded = false;
 					sendEvent("pause");
-					sendEvent("canplay");
 					break;
 			}
 		}
@@ -371,7 +368,7 @@
 		// Utilities
 		//
 		private function sendEvent(eventName: String, eventMessage: String = ''): void {
-			ExternalInterface.call('__event__' + _id, eventName, eventMessage);
+			ExternalInterface.call('(function(){window["__event__' +  _id + '"]("' + eventName + '", "' + eventMessage + '")})()', null);
 		}
 		private function log(): void {
 			if (ExternalInterface.available) {

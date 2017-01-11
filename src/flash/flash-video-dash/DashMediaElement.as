@@ -130,7 +130,7 @@ package {
 				ExternalInterface.addCallback('fire_pause', fire_pause);
 				ExternalInterface.addCallback('fire_setSize', fire_setSize);
 
-				ExternalInterface.call('__ready__' + _id);
+				ExternalInterface.call('(function(){window["__ready__' + _id + '"]()})()', null);
 			}
 		}
 
@@ -174,19 +174,14 @@ package {
 		private function fire_play(): void {
 
 			_isPaused = false;
-
 			_mediaPlayer.play();
-
 			sendEvent("play");
 			sendEvent("playing");
 		}
 		private function fire_pause(): void {
 			_isPaused = true;
-
 			_mediaPlayer.pause();
-
 			sendEvent("pause");
-			sendEvent("canplay");
 		}
 		private function fire_setSize(width: Number=-1, height: Number=-1): void {
 			// var fill:Boolean = false;
@@ -346,7 +341,6 @@ package {
 				case MediaPlayerState.PLAYING:
 					_isPaused = false;
 					_isEnded = false;
-					sendEvent("loadeddata");
 					sendEvent("play");
 					sendEvent("playing");
 					break;
@@ -355,7 +349,6 @@ package {
 					_isPaused = true;
 					_isEnded = false;
 					sendEvent("pause");
-					sendEvent("canplay");
 					break;
 			}
 		}
