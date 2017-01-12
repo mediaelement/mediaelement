@@ -2668,6 +2668,7 @@ if (document.createEvent === undefined) {
 			 */
 			youtube: {
 				autoplay: 0,
+				controls: 0,
 				disablekb: 1,
 				end: 0,
 				loop: 0,
@@ -3018,7 +3019,9 @@ if (document.createEvent === undefined) {
 			};
 
 			youtube.setSize = function (width, height) {
-				youTubeApi.setSize(width, height);
+				if (youTubeApi !== null) {
+					youTubeApi.setSize(width, height);
+				}
 			};
 			youtube.hide = function () {
 				youtube.stopInterval();
