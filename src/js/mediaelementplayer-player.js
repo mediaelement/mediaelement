@@ -745,8 +745,7 @@
 							t['build' + feature](t, t.controls, t.layers, t.media);
 						} catch (e) {
 							// TODO: report control error
-							console.log('error building ' + feature);
-							console.log(e);
+							console.error('error building ' + feature, e);
 						}
 					}
 				}
@@ -1625,7 +1624,7 @@
 			this.media.setSrc(src);
 		},
 		remove: function () {
-			var t = this, featureIndex, feature;
+			var t = this, rendererName = t.media.rendererName, featureIndex, feature;
 
 			// invoke features cleanup
 			for (featureIndex in t.options.features) {
@@ -1635,11 +1634,16 @@
 						t['clean' + feature](t);
 					} catch (e) {
 						// TODO: report control error
-						console.log('error cleaning ' + feature);
-						console.log(e);
+						console.error('error cleaning ' + feature, e);
 					}
 				}
 			}
+
+			// reset dimensions
+			t.$node.css({
+				width: t.$node.attr('width') || 'auto',
+				height: t.$node.attr('height') || 'auto'
+			});
 
 			// grab video and put it back in place
 			if (!t.isDynamic) {
@@ -1648,18 +1652,16 @@
 				// TODO: detach event listeners better than this;
 				//		 also detach ONLY the events attached by this plugin!
 				t.$node.clone().insertBefore(t.container).show();
+				t.$node.attr('id', t.$node.attr('id').replace('_' + rendererName, ''));
 				t.$node.remove();
 			} else {
 				t.$node.insertBefore(t.container);
 			}
 
-			var isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/);
+			t.media.remove();
 
-			if (!isNative) {
-				t.media.remove();
-			}
-
-			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to pause a non existent Flash API.
+			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to
+			// pause a non existent Flash API.
 			delete mejs.players[t.id];
 
 			if (typeof t.container === 'object') {
