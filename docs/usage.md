@@ -53,32 +53,18 @@ player.webkitExitFullScreen();
 
 By default, all the renderers will be called by their IDs and the plugin will try to detect the best one. 
 
-However, if you need to use **globally** just a subset of renderers in a specific order, you must list their IDs **BEFORE** instantiating the player by using `mejs.Renderers.order` in the order you desire.
+However, if you need to use just a subset of renderers in a specific order, you must list their IDs using `renderers` option when configuring your player.
 
 ```javascript
 
 // Use globally native M(PEG)-DASH renderer first, then Flash shim 
 mejs.Renderers.order = ['native_mdash', 'flash_mdash'];
 
-$('video, audio').mediaelementplayer({...});
-
-```
-
-Also, if you need to indicate specific renders **per player instance**, use the `renderers` option when configuring player.
-
-```javascript
-
-// Use ONLY in video player 1 native M(PEG)-DASH renderer first, then Flash shim if firts one not found
-$('#video1').mediaelementplayer({
+$('video, audio').mediaelementplayer({
+    // Use only M(PEG)DASH renderers
     renderers: ['native_mdash', 'flash_mdash'],
     ...
 });
-
-// Use ONLY in video player 2 native HTML5 renderer first, then Flash shim if firts one not found
-$('#video2').mediaelementplayer({
-     renderers: ['html5', 'flash_video'],
-     ...
- });
 ```
 
 `MediaElement` can call methods from the current renderer's API (if any) by invoking its own API instance, a special object attached to the `MediaElement` instance. Keep in mind that some methods won't work if they are not bound to an event. An example using native HLS:
@@ -131,4 +117,4 @@ HLS shim | `flash_hls` | --- | ---
 M(PEG)-DASH shim | `flash_mdash` | --- | ---
 
 ________
-[Back to Main](README.md)
+[Back to Main](../README.md)

@@ -93,7 +93,7 @@ or
     <source type="video/mp4" src="myvideo.mp4" />
 </video>
 ```
-All the formats listed in [Browser and Device support](README.md#browser-support) can be instantiated using this setup. It is important to include their MIME type so the plugin renders the media accurately. 
+All the formats listed in [Browser and Device support](../README.md#browser-support) can be instantiated using this setup. It is important to include their MIME type so the plugin renders the media accurately. 
 
 <a id="multi-codecs"></a>
 ### Multiple codecs (Optional)
@@ -192,4 +192,4 @@ Available languages:
 
 ________
 
-[Back to Main](README.md)
+[Back to Main](../README.md)

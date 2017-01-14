@@ -431,4 +431,4 @@ If during the development wasn't necessary to do any changes to the Flash files,
 If, on the other hand, only the ActionScript files were affected, type `sh compile_swf.sh` and it will build the compiled files in `/local-build/` directory. Then just copy the files and put them inside `/build/` directory.
 
 ________
-[Back to Main](README.md)
+[Back to Main](../README.md)
