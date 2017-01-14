@@ -429,7 +429,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"../languages/en":13,"../utils/general":28,"./mejs":6}],5:[function(require,module,exports){
+},{"../languages/en":14,"../utils/general":29,"./mejs":6}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -859,7 +859,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"../utils/media":29,"./mejs":6,"./renderer":7,"global/document":2,"global/window":3}],6:[function(require,module,exports){
+},{"../utils/media":30,"./mejs":6,"./renderer":7,"global/document":2,"global/window":3}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1542,7 +1542,7 @@ $.extend(_player2.default.prototype, {
 	}
 });
 
-},{"../core/i18n":4,"../core/mejs":6,"../player":15,"../utils/constants":26,"global/document":2,"global/window":3}],9:[function(require,module,exports){
+},{"../core/i18n":4,"../core/mejs":6,"../player":16,"../utils/constants":27,"global/document":2,"global/window":3}],9:[function(require,module,exports){
 'use strict';
 
 var _player = require('../player');
@@ -1644,7 +1644,7 @@ $.extend(_player2.default.prototype, {
 	}
 });
 
-},{"../core/i18n":4,"../player":15}],10:[function(require,module,exports){
+},{"../core/i18n":4,"../player":16}],10:[function(require,module,exports){
 'use strict';
 
 var _player = require('../player');
@@ -2030,7 +2030,137 @@ $.extend(_player2.default.prototype, {
 	}
 });
 
-},{"../core/i18n":4,"../player":15,"../utils/constants":26,"../utils/time":31}],11:[function(require,module,exports){
+},{"../core/i18n":4,"../player":16,"../utils/constants":27,"../utils/time":32}],11:[function(require,module,exports){
+'use strict';
+
+var _player = require('../player');
+
+var _player2 = _interopRequireDefault(_player);
+
+var _time = require('../utils/time');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Current/duration times
+ *
+ * This feature creates/updates the duration and progress times in the control bar, based on native events.
+ */
+
+// Feature configuration
+Object.assign(_player.config, {
+	/**
+  * The initial duration
+  * @type {Number}
+  */
+	duration: 0,
+	/**
+  * @type {String}
+  */
+	timeAndDurationSeparator: '<span> | </span>'
+});
+
+$.extend(_player2.default.prototype, {
+
+	/**
+  * Current time constructor.
+  *
+  * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+  * @param {MediaElementPlayer} player
+  * @param {$} controls
+  * @param {$} layers
+  * @param {HTMLElement} media
+  */
+	buildcurrent: function buildcurrent(player, controls, layers, media) {
+		var t = this;
+
+		$('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' + ('<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours) + '</span>') + '</div>').appendTo(controls);
+
+		t.currenttime = t.controls.find('.' + t.options.classPrefix + 'currenttime');
+
+		media.addEventListener('timeupdate', function () {
+			if (t.controlsAreVisible) {
+				player.updateCurrent();
+			}
+		}, false);
+	},
+
+	/**
+  * Duration time constructor.
+  *
+  * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+  * @param {MediaElementPlayer} player
+  * @param {$} controls
+  * @param {$} layers
+  * @param {HTMLElement} media
+  */
+	buildduration: function buildduration(player, controls, layers, media) {
+		var t = this;
+
+		if (controls.children().last().find('.' + t.options.classPrefix + 'currenttime').length > 0) {
+			$(t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours) + '</span>')).appendTo(controls.find('.' + t.options.classPrefix + 'time'));
+		} else {
+
+			// add class to current time
+			controls.find('.' + t.options.classPrefix + 'currenttime').parent().addClass(t.options.classPrefix + 'currenttime-container');
+
+			$('<div class="' + t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container">' + ('<span class="' + t.options.classPrefix + 'duration">') + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours) + '</span>') + '</div>').appendTo(controls);
+		}
+
+		t.durationD = t.controls.find('.' + t.options.classPrefix + 'duration');
+
+		media.addEventListener('timeupdate', function () {
+			if (t.controlsAreVisible) {
+				player.updateDuration();
+			}
+		}, false);
+	},
+
+	/**
+  * Update the current time and output it in format 00:00
+  *
+  */
+	updateCurrent: function updateCurrent() {
+		var t = this;
+
+		var currentTime = t.media.currentTime;
+
+		if (isNaN(currentTime)) {
+			currentTime = 0;
+		}
+
+		if (t.currenttime) {
+			t.currenttime.html((0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours));
+		}
+	},
+
+	/**
+  * Update the duration time and output it in format 00:00
+  *
+  */
+	updateDuration: function updateDuration() {
+		var t = this;
+
+		var duration = t.media.duration;
+
+		if (isNaN(duration) || duration === Infinity || duration < 0) {
+			t.media.duration = t.options.duration = duration = 0;
+		}
+
+		if (t.options.duration > 0) {
+			duration = t.options.duration;
+		}
+
+		//Toggle the long video class if the video is longer than an hour.
+		t.container.toggleClass(t.options.classPrefix + 'long-video', duration > 3600);
+
+		if (t.durationD && duration > 0) {
+			t.durationD.html((0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours));
+		}
+	}
+});
+
+},{"../player":16,"../utils/time":32}],12:[function(require,module,exports){
 'use strict';
 
 var _mejs = require('../core/mejs');
@@ -2885,7 +3015,7 @@ if ('x\n\ny'.split(/\n/gi).length !== 3) {
 	};
 }
 
-},{"../core/i18n":4,"../core/mejs":6,"../player":15,"../utils/time":31}],12:[function(require,module,exports){
+},{"../core/i18n":4,"../core/mejs":6,"../player":16,"../utils/time":32}],13:[function(require,module,exports){
 'use strict';
 
 var _player = require('../player');
@@ -3189,7 +3319,7 @@ $.extend(_player2.default.prototype, {
 	}
 });
 
-},{"../core/i18n":4,"../player":15,"../utils/constants":26}],13:[function(require,module,exports){
+},{"../core/i18n":4,"../player":16,"../utils/constants":27}],14:[function(require,module,exports){
 'use strict';
 
 /*!
@@ -3331,7 +3461,7 @@ var EN = exports.EN = {
 	"mejs.yiddish": "Yiddish"
 };
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var _mejs = require('./core/mejs');
@@ -3358,7 +3488,7 @@ if (typeof jQuery !== 'undefined') {
 	_mejs2.default.$ = ender;
 }
 
-},{"./core/mejs":6}],15:[function(require,module,exports){
+},{"./core/mejs":6}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4970,7 +5100,7 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"./core/i18n":4,"./core/mediaelement":5,"./core/mejs":6,"./utils/constants":26,"./utils/dom":27,"./utils/general":28,"./utils/time":31,"global/document":2,"global/window":3}],16:[function(require,module,exports){
+},{"./core/i18n":4,"./core/mediaelement":5,"./core/mejs":6,"./utils/constants":27,"./utils/dom":28,"./utils/general":29,"./utils/time":32,"global/document":2,"global/window":3}],17:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -5975,7 +6105,7 @@ _window2.default.dmAsyncInit = function () {
 
 _renderer.renderer.add(DailyMotionIframeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],17:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],18:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -6809,7 +6939,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FacebookRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":27,"../utils/general":28,"../utils/media":29,"global/document":2,"global/window":3}],18:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":28,"../utils/general":29,"../utils/media":30,"global/document":2,"global/window":3}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7341,7 +7471,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"../core/i18n":4,"../core/mejs":6,"../core/renderer":7,"../utils/constants":26,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],19:[function(require,module,exports){
+},{"../core/i18n":4,"../core/mejs":6,"../core/renderer":7,"../utils/constants":27,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],20:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -7997,7 +8127,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":26,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],20:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":27,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],21:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -8814,7 +8944,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":26,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],21:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":27,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],22:[function(require,module,exports){
 'use strict';
 
 var _window = require('global/window');
@@ -8970,7 +9100,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":26,"../utils/dom":27,"global/document":2,"global/window":3}],22:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":27,"../utils/dom":28,"global/document":2,"global/window":3}],23:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -9617,7 +9747,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":26,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],23:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":27,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],24:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -10487,7 +10617,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(SoundCloudIframeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],24:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],25:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -11589,7 +11719,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(vimeoIframeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],25:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],26:[function(require,module,exports){
 'use strict';
 
 // /**
@@ -12812,7 +12942,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	_renderer.renderer.add(YouTubeIframeRenderer);
 }
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":27,"../utils/media":29,"global/document":2,"global/window":3}],26:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":28,"../utils/media":30,"global/document":2,"global/window":3}],27:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13003,7 +13133,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"../core/mejs":6,"global/document":2,"global/window":3}],27:[function(require,module,exports){
+},{"../core/mejs":6,"global/document":2,"global/window":3}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13100,7 +13230,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.removeEvent = removeEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 
-},{"../core/mejs":6,"global/document":2}],28:[function(require,module,exports){
+},{"../core/mejs":6,"global/document":2}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13257,7 +13387,7 @@ _mejs2.default.Utils.isObjectEmpty = isObjectEmpty;
 _mejs2.default.Utils.splitEvents = splitEvents;
 _mejs2.default.Utils.getElementsByClassName = getElementsByClassName;
 
-},{"../core/mejs":6,"global/document":2}],29:[function(require,module,exports){
+},{"../core/mejs":6,"global/document":2}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13427,7 +13557,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"../core/mejs":6,"./general":28}],30:[function(require,module,exports){
+},{"../core/mejs":6,"./general":29}],31:[function(require,module,exports){
 'use strict';
 
 var _document = require('global/document');
@@ -13636,7 +13766,7 @@ if (!String.prototype.startsWith) {
 	};
 }
 
-},{"global/document":2}],31:[function(require,module,exports){
+},{"global/document":2}],32:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -13831,4 +13961,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"../core/mejs":6}]},{},[30,5,21,18,20,22,19,25,24,16,17,23,4,13,14,15,9,10,12,8,11]);
+},{"../core/mejs":6}]},{},[31,5,22,19,21,23,20,26,25,17,18,24,4,14,15,16,9,10,11,13,8,12]);

@@ -50,7 +50,7 @@
 				len
 			;
 
-			if (!isNative || !media.playbackRate) {
+			if (!isNative) {
 				return;
 			}
 

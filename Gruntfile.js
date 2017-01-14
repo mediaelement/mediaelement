@@ -73,6 +73,7 @@ module.exports = function(grunt) {
 						'src/js/player.js',
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
+						'src/js/features/time.js',
 						'src/js/features/volume.js',
 						'src/js/features/fullscreen.js',
 						'src/js/features/tracks.js'
@@ -97,6 +98,7 @@ module.exports = function(grunt) {
 						'src/js/player.js',
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
+						'src/js/features/time.js',
 						'src/js/features/volume.js',
 						'src/js/features/fullscreen.js',
 						'src/js/features/tracks.js',
@@ -218,7 +220,7 @@ module.exports = function(grunt) {
 			plugins: {
 				expand  : true,
 				cwd     : 'src/js/features/',
-				src     : ['*.js', '!fullscreen.js', '!playpause.js', '!progress.js', '!tracks.js', '!vr.js'],
+				src     : ['*.js', '!fullscreen.js', '!playpause.js', '!progress.js', '!time.js', '!tracks.js', '!vr.js'],
 				dest    : 'build/plugins/',
 				flatten : true,
 				filter  : 'isFile'
