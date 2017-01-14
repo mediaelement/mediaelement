@@ -43,7 +43,7 @@ var
 	stretching = getQueryStringValue('stretching') || 'auto'
 ;
 
-mejs.i18n.locale.language = lang;
+mejs.i18n.language(lang);
 
 $('select[name=lang]').on('change', function () {
 	window.location.href = updateUrlParameter(window.location.href, 'lang', $(this).val());
@@ -79,9 +79,7 @@ $('video, audio').mediaelementplayer({
 	markers: [2.5, 10, 35, 40.2],
 	features: ['playpause', 'current', 'progress', 'duration', 'volume', 'speed', 'tracks', 'skipback', 'jumpforward', 'markers', 'fullscreen'],
 	success: function (media) {
-
-		mejs.i18n.locale.language = mejs.i18n.getLanguage();
-		$(media).closest('.media-wrapper').children('div:first').attr('lang', mejs.i18n.getLanguage());
+		$(media).closest('.media-wrapper').children('div:first').attr('lang', mejs.i18n.language());
 
 		var renderer = $('#' + media.id + '-rendername');
 

@@ -904,3 +904,30 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	background-position: -160px 0;
 }
 /* End: Skip Back */
+
+/* Start: Ads */
+.mejs-ads>a {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+.mejs-ads-skip-block {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 10px;
+	background: #000;
+	background: rgba(0,0,0,0.5);
+	color: #fff;
+}
+.mejs-ads-skip-button {
+	cursor: pointer;
+}
+.mejs-ads-skip-button:hover {
+	text-decoration: underline;
+}
+/* End: Ads */

@@ -9,6 +9,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-text-replace');
 	grunt.loadNpmTasks("grunt-remove-logging");
+	grunt.loadNpmTasks('grunt-browserify');
 
 	var featureSources;
 
@@ -18,7 +19,7 @@ module.exports = function(grunt) {
 		featureList = featureList.split(',');
 		featureSources = [];
 		featureList.forEach(function(feature) {
-			var path = 'src/js/mediaelementplayer-feature-' + feature + '.js';
+			var path = 'src/js/features/' + feature + '.js';
 			if (grunt.file.isFile(path)) {
 				featureSources.push(path);
 			}
@@ -33,60 +34,106 @@ module.exports = function(grunt) {
 			files: {
 				src: [
 					'Gruntfile.js',
-					'src/js/*.js',
+					'src/js/core/*.js',
+					'src/js/utils/*.js',
+					'src/js/languages/*.js',
+					'src/js/renderers/*.js',
+					'src/js/features/*.js',
+					'src/js/library.js',
+					'src/js/player.js',
+					'src/js/simple.js',
+					'test/core/*.js'
+
 				]
+			}
+		},
+		browserify: {
+			dist: {
+				files: {
+					// core element
+					'build/mediaelement.js': [
+						'src/js/utils/polyfill.js',
+						'src/js/core/mediaelement.js',
+						'src/js/renderers/html5.js',
+						'src/js/renderers/flash.js',
+						'src/js/renderers/hls.js',
+						'src/js/renderers/mdash.js',
+						'src/js/renderers/flv.js',
+						'src/js/renderers/youtube.js',
+						'src/js/renderers/vimeo.js',
+						'src/js/renderers/dailymotion.js',
+						'src/js/renderers/facebook.js',
+						'src/js/renderers/soundcloud.js',
+						'src/js/core/i18n.js',
+						'src/js/languages/en.js'
+					],
+					// just player
+					'build/mediaelementplayer.js': [
+						'src/js/library.js',
+						'src/js/player.js',
+						'src/js/features/playpause.js',
+						'src/js/features/progress.js',
+						'src/js/features/volume.js',
+						'src/js/features/fullscreen.js',
+						'src/js/features/tracks.js'
+					],
+					// all bundle
+					'build/mediaelement-and-player.js': [
+						'src/js/utils/polyfill.js',
+						'src/js/core/mediaelement.js',
+						'src/js/renderers/html5.js',
+						'src/js/renderers/flash.js',
+						'src/js/renderers/hls.js',
+						'src/js/renderers/mdash.js',
+						'src/js/renderers/flv.js',
+						'src/js/renderers/youtube.js',
+						'src/js/renderers/vimeo.js',
+						'src/js/renderers/dailymotion.js',
+						'src/js/renderers/facebook.js',
+						'src/js/renderers/soundcloud.js',
+						'src/js/core/i18n.js',
+						'src/js/languages/en.js',
+						'src/js/library.js',
+						'src/js/player.js',
+						'src/js/features/playpause.js',
+						'src/js/features/progress.js',
+						'src/js/features/volume.js',
+						'src/js/features/fullscreen.js',
+						'src/js/features/tracks.js',
+					]
+				},
+				options: {
+					debug: true,
+					transform: [
+
+						["babelify", {
+							presets: 'es2015',
+							sourceMapsAbsolute: true
+						}]
+					],
+					extensions: ['.js']
+				}
 			}
 		},
 		concat: {
 			me: {
 				src: [
-					'src/js/mediaelement-header.js',
-					'src/js/mediaelement-namespace.js',
-					'src/js/mediaelement-utility.js',
-					'src/js/mediaelement-utility-oldie.js',
-					'src/js/mediaelement-core.js',
-					'src/js/mediaelement-renderer-html5.js',
-					'src/js/mediaelement-renderer-hls.js',
-					'src/js/mediaelement-renderer-mdash.js',
-					'src/js/mediaelement-renderer-flv.js',
-					'src/js/mediaelement-renderer-youtube-iframe.js',
-					'src/js/mediaelement-renderer-vimeo.js',
-					'src/js/mediaelement-renderer-dailymotion-iframe.js',
-					'src/js/mediaelement-renderer-facebook.js',
-					'src/js/mediaelement-renderer-soundcloud.js',
-					'src/js/mediaelement-renderer-flash.js',
-					'src/js/mediaelement-i18n.js',
-					'src/js/mediaelement-i18n-locale-en.js',
+					'src/js/header.js',
+					'build/mediaelement.js'
 				],
 				dest: 'build/mediaelement.js'
 			},
 			mep: {
 				src: [
-					'src/js/mediaelement-header.js',
-					'src/js/mediaelementplayer-library.js',
-					'src/js/mediaelementplayer-player.js'
-				].concat(featureSources || [
-					'src/js/mediaelementplayer-feature-playpause.js',
-					'src/js/mediaelementplayer-feature-stop.js',
-					'src/js/mediaelementplayer-feature-progress.js',
-					'src/js/mediaelementplayer-feature-time.js',
-					'src/js/mediaelementplayer-feature-volume.js',
-					'src/js/mediaelementplayer-feature-fullscreen.js',
-					'src/js/mediaelementplayer-feature-speed.js',
-					'src/js/mediaelementplayer-feature-tracks.js',
-					'src/js/mediaelementplayer-feature-sourcechooser.js',
-					'src/js/mediaelementplayer-feature-contextmenu.js',
-					'src/js/mediaelementplayer-feature-skipback.js',
-					'src/js/mediaelementplayer-feature-jumpforward.js',
-					'src/js/mediaelementplayer-feature-postroll.js',
-					'src/js/mediaelementplayer-feature-markers.js'
-					]),
+					'src/js/header.js',
+					'build/mediaelementplayer.js'
+				],
 				dest: 'build/mediaelementplayer.js'
 			},
 			bundle: {
 				src: [
-					'build/mediaelement.js',
-					'build/mediaelementplayer.js'
+					'src/js/header.js',
+					'build/mediaelement-and-player.js'
 				],
 				dest: 'build/mediaelement-and-player.js'
 			}
@@ -108,16 +155,17 @@ module.exports = function(grunt) {
 			me: {
 				src	   : ['build/mediaelement.js'],
 				dest   : 'build/mediaelement.min.js',
-				banner : 'src/js/mediaelement-header.js'
+				banner : 'src/js/header.js'
 			},
 			mep: {
 				src	   : ['build/mediaelementplayer.js'],
 				dest   : 'build/mediaelementplayer.min.js',
-				banner : 'src/js/mediaelement-header.js'
+				banner : 'src/js/header.js'
 			},
 			bundle: {
 				src	 : ['build/mediaelement-and-player.js'],
-				dest : 'build/mediaelement-and-player.min.js'
+				dest : 'build/mediaelement-and-player.min.js',
+				banner : 'src/js/header.js'
 			},
 			options: {
 				// Preserve comments that start with a bang (like the file header)
@@ -146,21 +194,34 @@ module.exports = function(grunt) {
 			build: {
 				expand  : true,
 				cwd     : 'src/css/',
-				src     : ['*.png', '*.svg', '*.gif', '*.css', '!*-simple*'],
+				src     : ['*.png', '*.svg', '*.gif', '*.css'],
 				dest    : 'build/',
 				flatten : true,
 				filter  : 'isFile'
 			},
 			translation: {
 				expand  : true,
-				cwd     : 'src/js/',
-				src     : ['mediaelement-i18n-locale-*.js'],
+				cwd     : 'src/js/languages/',
+				src     : ['*.js'],
 				dest    : 'build/lang/',
 				flatten : true,
-				filter  : 'isFile',
-				rename: function(dest, src) {
-					return dest + src.replace('mediaelement-i18n-locale-', '');
-				}
+				filter  : 'isFile'
+			},
+			renderers: {
+				expand  : true,
+				cwd     : 'src/js/renderers/',
+				src     : ['*.js', '!html5.js', '!flash.js', '!vr.js'],
+				dest    : 'build/renderers/',
+				flatten : true,
+				filter  : 'isFile'
+			},
+			plugins: {
+				expand  : true,
+				cwd     : 'src/js/features/',
+				src     : ['*.js', '!fullscreen.js', '!playpause.js', '!progress.js', '!tracks.js', '!vr.js'],
+				dest    : 'build/plugins/',
+				flatten : true,
+				filter  : 'isFile'
 			}
 		},
 		clean: {
@@ -241,8 +302,7 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['jshint', 'concat', 'removelogging', 'uglify', 'postcss', 'shell', 'copy', 'clean:temp']);
-	grunt.registerTask('html5only', ['jshint', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
-	grunt.registerTask('html5debug', ['jshint', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
-
+	grunt.registerTask('default', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'shell', 'copy:build', 'copy:translation', 'copy:plugins', 'clean:temp']);
+	grunt.registerTask('html5only', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy:build', 'copy:translation', 'copy:plugins', 'clean:temp']);
+	grunt.registerTask('html5debug', ['jshint', 'browserify', 'concat', 'uglify', 'postcss', 'copy:build', 'copy:translation', 'copy:plugins', 'clean:temp']);
 };

@@ -3,6 +3,8 @@
 *3.0 (2017/??/??)*
 
 * Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way @johndyer
+* Code refactor in `ECMAScript® 2015` language specification (`ES6`) @ron666
+* Integration of unit tests and browser test with [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), and enhancements to [Travis CI](https://travis-ci.org/) and [Coveralls](https://coveralls.io/) platforms @ron666
 * Ability to play Facebook, SoundCloud and YouTube @johndyer
 * Ability to play M(PEG)-DASH formats using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback @ron666
 * Increased test suite by adding a file per renderer @johndyer and @ron666
@@ -12,9 +14,9 @@
 * Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js) @ron666
 * Addition of Catalan translation @ron666
 * Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development @ron666
-* Lighter repository @ron666
+* Reduced size of repository as a whole @ron666
 * Removal of themes and introduction of simple player for testing @johndyer
-* Addition in `Gruntfile` of `jumpforward` and `loop` features @ron666
+* Modifications in `Gruntfile` @ron666
 * Introduction of new demo and cleaned `demo` folder @ron666
 * Removed support for Silverlight @johndyer
 * Updates in documentation to reflect new features in 3.0 version @ron666
