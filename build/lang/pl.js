@@ -1,5 +1,5 @@
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Polish
  *
@@ -11,72 +11,35 @@
  */
 if (mejs.i18n.pl === undefined) {
 	mejs.i18n.pl = {
-		"mejs.plural-form": 9,
-
-		// me-shim
-		"mejs.download-file": "Pobierz plik",
-		"mejs.install-flash": "Twoja przeglądarka nie ma włączonej lub zainstalowanej wtyczki Flash Player. Prosimy ją włączyć lub pobrać najnowszą wersję ze strony https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 9,		
+		"mejs.install-flash": "Twoja przeglądarka nie ma włączonej lub zainstalowanej wtyczki Flash Player. Prosimy ją włączyć lub pobrać najnowszą wersję ze strony https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Wyłącz pełny ekran",
 		"mejs.fullscreen-on": "Przejdź na pełny ekran",
-		"mejs.download-video": "Pobierz wideo",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Pełny ekran",
-
-		// mediaelementplayer-feature-jumpforward
-		"mejs.time-jump-forward": ["Przewiń do przodu o sekundę", "Przewiń do przodu o %1 sekundy", "Przewiń do przodu o %1 sekund"],
-
-		// mediaelementplayer-feature-loop
-		"mejs.loop": "Zapętl",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Pobierz wideo",		
+		"mejs.fullscreen": "Pełny ekran",		
+		"mejs.time-jump-forward": ["Przewiń do przodu o sekundę", "Przewiń do przodu o %1 sekundy", "Przewiń do przodu o %1 sekund"],		
+		"mejs.loop": "Zapętl",		
 		"mejs.play": "Odtwarzaj",
-		"mejs.pause": "Wstrzymaj",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Zamknij",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Wstrzymaj",		
+		"mejs.close": "Zamknij",		
 		"mejs.time-slider": "Suwak czasu",
-		"mejs.time-help-text": "Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": ["Cofnij o sekundę", "Cofnij o %1 sekundy", "Cofnij o %1 sekund"],
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.",		
+		"mejs.time-skip-back": ["Cofnij o sekundę", "Cofnij o %1 sekundy", "Cofnij o %1 sekund"],		
 		"mejs.captions-subtitles": "Podpisy/napisy",
-		"mejs.none": "Brak",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Brak",		
 		"mejs.mute-toggle": "Przełączanie wyciszania",
 		"mejs.volume-help-text": "Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.",
 		"mejs.unmute": "Wyłącz wyciszenie",
 		"mejs.mute": "Wycisz",
-		"mejs.volume-slider": "Suwak głośności",
-
-		// mep-player
+		"mejs.volume-slider": "Suwak głośności",		
 		"mejs.video-player": "Odtwarzacz wideo",
-		"mejs.audio-player": "Odtwarzacz audio",
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Odtwarzacz audio",		
 		"mejs.ad-skip": "Pomiń reklamę",
-		"mejs.ad-skip-info": ["Pomiń za sekundę", "Pomiń za %1 sekundy", "Pomiń za %1 sekund"],
-
-		// mediaelementplayer-feature-sourcechooser
-		"mejs.source-chooser": "Wybór źródła",
-
-		// mediaelementplayer-feature-stop
-		"mejs.stop": "Zatrzymaj",
-
-		//mediaelementplayer-feature-speed
-		"mejs.speed-rate": "Prędkość",
-
-		//mediaelementplayer-feature-progress
-		"mejs.live-broadcast": "Transmisja na żywo",
-
-		// mep-tracks
+		"mejs.ad-skip-info": ["Pomiń za sekundę", "Pomiń za %1 sekundy", "Pomiń za %1 sekund"],		
+		"mejs.source-chooser": "Wybór źródła",		
+		"mejs.stop": "Zatrzymaj",		
+		"mejs.speed-rate": "Prędkość",		
+		"mejs.live-broadcast": "Transmisja na żywo",		
 		"mejs.afrikaans": "Afrykański",
 		"mejs.albanian": "Albański",
 		"mejs.arabic": "Arabski",

@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Russian
  *
@@ -13,72 +11,35 @@
  */
 if (mejs.i18n.ru === undefined) {
 	mejs.i18n.ru = {
-		"mejs.plural-form": 7,
-
-		// me-shim
-		"mejs.download-file": "Скачать файл",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 7,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Выключить широкий экран",
 		"mejs.fullscreen-on": "Перейти к широкому экрану",
-		"mejs.download-video": "Скачать видео",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Широкий экран",
-
-		// mediaelementplayer-feature-jumpforward
-		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Скачать видео",		
+		"mejs.fullscreen": "Широкий экран",		
+		//"mejs.time-jump-forward": "Jump forward %1 second(s)",		
+		//"mejs.loop": "Toggle Loop",		
 		"mejs.play": "Воспроизвести",
-		"mejs.pause": "Пауза",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Закрыть",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Пауза",		
+		"mejs.close": "Закрыть",		
 		"mejs.time-slider": "Слайдер времени",
-		"mejs.time-help-text": "Используйте Левую/Правую клавиши со стрелками, чтобы продвинуться на одну секунду, клавиши со стрелками Вверх/Вниз, чтобы продвинуться на десять секунд.",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": "Пропустить назад %1 секунд",
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "Используйте Левую/Правую клавиши со стрелками, чтобы продвинуться на одну секунду, клавиши со стрелками Вверх/Вниз, чтобы продвинуться на десять секунд.",		
+		"mejs.time-skip-back": "Пропустить назад %1 секунд",		
 		"mejs.captions-subtitles": "Титры/Субтитры",
-		"mejs.none": "Нет",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Нет",		
 		"mejs.mute-toggle": "Без звука",
 		"mejs.volume-help-text": "Используйте клавиши со стрелками Вверх/Вниз, чтобы увеличить или уменьшить громкость.",
 		"mejs.unmute": "Отменить выключение звука",
 		"mejs.mute": "Отключить звук",
-		"mejs.volume-slider": "Слайдер громкости",
-
-		// mep-player
+		"mejs.volume-slider": "Слайдер громкости",		
 		"mejs.video-player": "Видеоплеер",
-		"mejs.audio-player": "Аудиоплеер"
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Аудиоплеер"		
 		//"mejs.ad-skip": "Skip ad",
-		//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-		// mediaelementplayer-feature-sourcechooser
-		//"mejs.source-chooser": "Source Chooser",
-
-		// mediaelementplayer-feature-stop
-		//"mejs.stop": "Stop",
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		//"mejs.ad-skip-info": "Skip in %1 second(s)",		
+		//"mejs.source-chooser": "Source Chooser",		
+		//"mejs.stop": "Stop",		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

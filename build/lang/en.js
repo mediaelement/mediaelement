@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * English; This can serve as a template for other languages to translate
  *
@@ -12,72 +10,35 @@
  * @see core/i18n.js
  */
 export const EN = {
-	"mejs.plural-form": 1,
-
-	// me-shim
-	"mejs.download-file": "Download File",
-	"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-	// mediaelementplayer-feature-contextmenu
+	"mejs.plural-form": 1,	
+	"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",	
 	"mejs.fullscreen-off": "Turn off Fullscreen",
 	"mejs.fullscreen-on": "Go Fullscreen",
-	"mejs.download-video": "Download Video",
-
-	// mediaelementplayer-feature-fullscreen
-	"mejs.fullscreen": "Fullscreen",
-
-	// mediaelementplayer-feature-jumpforward
-	"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
-
-	// mediaelementplayer-feature-loop
-	"mejs.loop": "Toggle Loop",
-
-	// mediaelementplayer-feature-playpause
+	"mejs.download-video": "Download Video",	
+	"mejs.fullscreen": "Fullscreen",	
+	"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],	
+	"mejs.loop": "Toggle Loop",	
 	"mejs.play": "Play",
-	"mejs.pause": "Pause",
-
-	// mediaelementplayer-feature-postroll
-	"mejs.close": "Close",
-
-	// mediaelementplayer-feature-progress
+	"mejs.pause": "Pause",	
+	"mejs.close": "Close",	
 	"mejs.time-slider": "Time Slider",
-	"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
-
-	// mediaelementplayer-feature-skipback
-	"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
-
-	// mediaelementplayer-feature-tracks
+	"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",	
+	"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],	
 	"mejs.captions-subtitles": "Captions/Subtitles",
-	"mejs.none": "None",
-
-	// mediaelementplayer-feature-volume
+	"mejs.none": "None",	
 	"mejs.mute-toggle": "Mute Toggle",
 	"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 	"mejs.unmute": "Unmute",
 	"mejs.mute": "Mute",
-	"mejs.volume-slider": "Volume Slider",
-
-	// mep-player
+	"mejs.volume-slider": "Volume Slider",	
 	"mejs.video-player": "Video Player",
-	"mejs.audio-player": "Audio Player",
-
-	// mediaelementplayer-feature-ads
+	"mejs.audio-player": "Audio Player",	
 	"mejs.ad-skip": "Skip ad",
-	"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
-
-	// mediaelementplayer-feature-sourcechooser
-	"mejs.source-chooser": "Source Chooser",
-
-	// mediaelementplayer-feature-stop
-	"mejs.stop": "Stop",
-
-	//mediaelementplayer-feature-speed
-	"mejs.speed-rate" : "Speed Rate",
-
-	//mediaelementplayer-feature-progress
-	"mejs.live-broadcast" : "Live Broadcast",
-
-	// mep-tracks
+	"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],	
+	"mejs.source-chooser": "Source Chooser",	
+	"mejs.stop": "Stop",	
+	"mejs.speed-rate" : "Speed Rate",	
+	"mejs.live-broadcast" : "Live Broadcast",	
 	"mejs.afrikaans": "Afrikaans",
 	"mejs.albanian": "Albanian",
 	"mejs.arabic": "Arabic",

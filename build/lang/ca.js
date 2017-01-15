@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Catalan
  *
@@ -12,72 +10,35 @@
  */
 if (mejs.i18n.ca === undefined) {
 	mejs.i18n.ca = {
-		"mejs.plural-form": 1,
-
-		// me-shim
-		"mejs.download-file": "Descarregar arxiu",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 1,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Desconnectar pantalla completaa",
 		"mejs.fullscreen-on": "Anar a pantalla completa",
-		"mejs.download-video": "Descarregar vídeo",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Pantalla completa",
-
-		// mediaelementplayer-feature-jumpforward
-		// "mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Descarregar vídeo",		
+		"mejs.fullscreen": "Pantalla completa",		
+		// "mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],		
+		//"mejs.loop": "Toggle Loop",		
 		"mejs.play": "Reproducció",
-		"mejs.pause": "Pausa",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Tancar",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Pausa",		
+		"mejs.close": "Tancar",		
 		// "mejs.time-slider": "Time Slider",
-		// "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
-
-		// mediaelementplayer-feature-skipback
-		// "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
-
-		// mediaelementplayer-feature-tracks
+		// "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",		
+		// "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],		
 		"mejs.captions-subtitles": "Llegendes/Subtítols",
-		"mejs.none": "Ningú",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Ningú",		
 		"mejs.mute-toggle": "Alternar silenci",
 		// "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 		"mejs.unmute": "Reactivar silenci",
 		"mejs.mute": "Silenci",
-		// "mejs.volume-slider": "Volume Slider",
-
-		// mep-player
+		// "mejs.volume-slider": "Volume Slider",		
 		"mejs.video-player": "Reproductor de vídeo",
-		"mejs.audio-player": "Reproductor d'àudio",
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Reproductor d'àudio",		
 		"mejs.ad-skip": "Salta publicitat",
-		"mejs.ad-skip-info": ["Salta en 1 segon", "Salta en %1 segons"],
-
-		// mediaelementplayer-feature-sourcechooser
-		// "mejs.source-chooser": "Source Chooser",
-
-		// mediaelementplayer-feature-stop
-		"mejs.stop": "Aturar"
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		"mejs.ad-skip-info": ["Salta en 1 segon", "Salta en %1 segons"],		
+		// "mejs.source-chooser": "Source Chooser",		
+		"mejs.stop": "Aturar"		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",
@@ -135,4 +96,3 @@ if (mejs.i18n.ca === undefined) {
 		// "mejs.yiddish": "Yiddish"
 	};
 }
-

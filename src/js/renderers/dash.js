@@ -9,9 +9,9 @@ import {typeChecks} from '../utils/media';
 import {HAS_MSE} from '../utils/constants';
 
 /**
- * Native M-Dash renderer
+ * Native M(PEG)-Dash renderer
  *
- * Uses dash.js, a reference client implementation for the playback of MPEG DASH via Javascript and compliant browsers.
+ * Uses dash.js, a reference client implementation for the playback of M(PEG)-DASH via Javascript and compliant browsers.
  * It relies on HTML5 video and MediaSource Extensions for playback.
  * This renderer integrates new events associated with mpd files.
  * @see https://github.com/Dash-Industry-Forum/dash.js

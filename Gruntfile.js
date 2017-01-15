@@ -11,9 +11,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-remove-logging");
 	grunt.loadNpmTasks('grunt-browserify');
 
-	var featureSources;
+	var featureSources, rendererSources;
 
-	// if commandline list of features, (e.g. --features=playpause,stop,...) build only these included
+	// if commandline list of features, (e.g. --features=playpause,stop,...) build only these
 	var featureList = grunt.option('features');
 	if (featureList) {
 		featureList = featureList.split(',');
@@ -25,6 +25,20 @@ module.exports = function(grunt) {
 			}
 		});
 	}
+
+	// if commandline list of renderers, (e.g. --renderers=hls,dash,...) build only these
+	var rendererList = grunt.option('features');
+	if (rendererList) {
+		rendererList = rendererList.split(',');
+		rendererSources = [];
+		rendererList.forEach(function(renderer) {
+			var path = 'src/js/renderers/' + renderer + '.js';
+			if (grunt.file.isFile(path)) {
+				rendererSources.push(path);
+			}
+		});
+	}
+
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		jshint: {
@@ -35,15 +49,13 @@ module.exports = function(grunt) {
 				src: [
 					'Gruntfile.js',
 					'src/js/core/*.js',
-					'src/js/utils/*.js',
+					'src/js/features/*.js',
 					'src/js/languages/*.js',
 					'src/js/renderers/*.js',
-					'src/js/features/*.js',
+					'src/js/utils/*.js',
 					'src/js/library.js',
 					'src/js/player.js',
-					'src/js/simple.js',
 					'test/core/*.js'
-
 				]
 			}
 		},
@@ -54,55 +66,60 @@ module.exports = function(grunt) {
 					'build/mediaelement.js': [
 						'src/js/utils/polyfill.js',
 						'src/js/core/mediaelement.js',
-						'src/js/renderers/html5.js',
-						'src/js/renderers/flash.js',
-						'src/js/renderers/hls.js',
-						'src/js/renderers/mdash.js',
-						'src/js/renderers/flv.js',
-						'src/js/renderers/youtube.js',
-						'src/js/renderers/vimeo.js',
-						'src/js/renderers/dailymotion.js',
-						'src/js/renderers/facebook.js',
-						'src/js/renderers/soundcloud.js',
 						'src/js/core/i18n.js',
-						'src/js/languages/en.js'
-					],
+						'src/js/languages/en.js',
+						'src/js/renderers/html5.js',
+						'src/js/renderers/flash.js'
+					].concat(rendererSources || [
+						'src/js/renderers/dailymotion.js',
+						'src/js/renderers/dash.js',
+						'src/js/renderers/facebook.js',
+						'src/js/renderers/flv.js',
+						'src/js/renderers/hls.js',
+						'src/js/renderers/soundcloud.js',
+						'src/js/renderers/vimeo.js',
+						'src/js/renderers/youtube.js',
+					]),
 					// just player
 					'build/mediaelementplayer.js': [
 						'src/js/library.js',
-						'src/js/player.js',
+						'src/js/player.js'
+					].concat(featureSources || [
+						'src/js/features/fullscreen.js',
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
 						'src/js/features/time.js',
-						'src/js/features/volume.js',
-						'src/js/features/fullscreen.js',
-						'src/js/features/tracks.js'
-					],
+						'src/js/features/tracks.js',
+						'src/js/features/volume.js'
+					]),
 					// all bundle
 					'build/mediaelement-and-player.js': [
 						'src/js/utils/polyfill.js',
 						'src/js/core/mediaelement.js',
-						'src/js/renderers/html5.js',
-						'src/js/renderers/flash.js',
-						'src/js/renderers/hls.js',
-						'src/js/renderers/mdash.js',
-						'src/js/renderers/flv.js',
-						'src/js/renderers/youtube.js',
-						'src/js/renderers/vimeo.js',
-						'src/js/renderers/dailymotion.js',
-						'src/js/renderers/facebook.js',
-						'src/js/renderers/soundcloud.js',
 						'src/js/core/i18n.js',
 						'src/js/languages/en.js',
+						'src/js/renderers/html5.js',
+						'src/js/renderers/flash.js'
+					].concat(rendererSources || [
+						'src/js/renderers/dailymotion.js',
+						'src/js/renderers/dash.js',
+						'src/js/renderers/facebook.js',
+						'src/js/renderers/flv.js',
+						'src/js/renderers/hls.js',
+						'src/js/renderers/soundcloud.js',
+						'src/js/renderers/vimeo.js',
+						'src/js/renderers/youtube.js',
+					]).concat([
 						'src/js/library.js',
-						'src/js/player.js',
+						'src/js/player.js'
+					]).concat(featureSources || [
+						'src/js/features/fullscreen.js',
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
 						'src/js/features/time.js',
-						'src/js/features/volume.js',
-						'src/js/features/fullscreen.js',
 						'src/js/features/tracks.js',
-					]
+						'src/js/features/volume.js'
+					])
 				},
 				options: {
 					debug: true,
@@ -207,23 +224,13 @@ module.exports = function(grunt) {
 				src     : ['*.js'],
 				dest    : 'build/lang/',
 				flatten : true,
-				filter  : 'isFile'
-			},
-			renderers: {
-				expand  : true,
-				cwd     : 'src/js/renderers/',
-				src     : ['*.js', '!html5.js', '!flash.js', '!vr.js'],
-				dest    : 'build/renderers/',
-				flatten : true,
-				filter  : 'isFile'
-			},
-			plugins: {
-				expand  : true,
-				cwd     : 'src/js/features/',
-				src     : ['*.js', '!fullscreen.js', '!playpause.js', '!progress.js', '!time.js', '!tracks.js', '!vr.js'],
-				dest    : 'build/plugins/',
-				flatten : true,
-				filter  : 'isFile'
+				filter  : 'isFile',
+				options: {
+					processContent: function (content) {
+						content = content.replace(/\/\/.*?\.js/gm, '');
+						return content.replace(/\n{2,}/gm, '');
+					},
+				},
 			}
 		},
 		clean: {
@@ -304,7 +311,7 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'shell', 'copy:build', 'copy:translation', 'copy:plugins', 'clean:temp']);
-	grunt.registerTask('html5only', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy:build', 'copy:translation', 'copy:plugins', 'clean:temp']);
-	grunt.registerTask('html5debug', ['jshint', 'browserify', 'concat', 'uglify', 'postcss', 'copy:build', 'copy:translation', 'copy:plugins', 'clean:temp']);
+	grunt.registerTask('default', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'shell', 'copy', 'clean:temp']);
+	grunt.registerTask('html5only', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('html5debug', ['jshint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
 };

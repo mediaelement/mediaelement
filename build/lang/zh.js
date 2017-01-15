@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Chinese (Traditional)
  *
@@ -13,72 +11,35 @@
  */
 if (mejs.i18n.zh === undefined) {
 	mejs.i18n.zh = {
-		"mejs.plural-form": 0,
-
-		// me-shim
-		"mejs.download-file": "下載文件",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 0,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "關閉全屏",
 		"mejs.fullscreen-on": "轉向全屏",
-		"mejs.download-video": "下載視頻",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "全屏",
-
-		// mediaelementplayer-feature-jumpforward
-		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "下載視頻",		
+		"mejs.fullscreen": "全屏",		
+		//"mejs.time-jump-forward": "Jump forward %1 second(s)",		
+		//"mejs.loop": "Toggle Loop",		
 		"mejs.play": "播放",
-		"mejs.pause": "暫停",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "關閉",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "暫停",		
+		"mejs.close": "關閉",		
 		"mejs.time-slider": "時間滑動棒",
-		"mejs.time-help-text": "使用左/右箭頭快進1秒，上/下箭頭快進10秒。",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": "跳躍式迴繞%1秒",
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "使用左/右箭頭快進1秒，上/下箭頭快進10秒。",		
+		"mejs.time-skip-back": "跳躍式迴繞%1秒",		
 		"mejs.captions-subtitles": "字幕/標題",
-		"mejs.none": "沒有",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "沒有",		
 		"mejs.mute-toggle": "靜音切換",
 		"mejs.volume-help-text": "使用上/下箭頭提高或降低音量。",
 		"mejs.unmute": "取消靜音",
 		"mejs.mute": "靜音",
-		"mejs.volume-slider": "音量控制鍵",
-
-		// mep-player
+		"mejs.volume-slider": "音量控制鍵",		
 		"mejs.video-player": "視頻播放器",
-		"mejs.audio-player": "音頻播放器"
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "音頻播放器"		
 		//"mejs.ad-skip": "Skip ad",
-		//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-		// mediaelementplayer-feature-sourcechooser
-		//"mejs.source-chooser": "Source Chooser",
-
-		// mediaelementplayer-feature-stop
-		//"mejs.stop": "Stop",
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		//"mejs.ad-skip-info": "Skip in %1 second(s)",		
+		//"mejs.source-chooser": "Source Chooser",		
+		//"mejs.stop": "Stop",		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

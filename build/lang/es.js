@@ -1,5 +1,5 @@
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Spanish
  *
@@ -12,72 +12,35 @@
  */
 if (mejs.i18n.es === undefined) {
 	mejs.i18n.es = {
-		"mejs.plural-form": 1,
-
-		// me-shim
-		"mejs.download-file": "Descargar archivo",
-		"mejs.install-flash": "Esta usando un navegador que no tiene activado o instalado el reproductor de Flash. Por favor active el plugin del reproductor de Flash o descargue la versión más reciente en https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 1,		
+		"mejs.install-flash": "Esta usando un navegador que no tiene activado o instalado el reproductor de Flash. Por favor active el plugin del reproductor de Flash o descargue la versión más reciente en https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Desconectar pantalla completa",
 		"mejs.fullscreen-on": "Ir a pantalla completa",
-		"mejs.download-video": "Descargar vídeo",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Pantalla completa",
-
-		// mediaelementplayer-feature-jumpforward
-		"mejs.time-jump-forward": ["Adelantar 1 segundo", "Adelantar %1 segundos"],
-
-		// mediaelementplayer-feature-loop
-		"mejs.loop": "Alternar Repetición",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Descargar vídeo",		
+		"mejs.fullscreen": "Pantalla completa",		
+		"mejs.time-jump-forward": ["Adelantar 1 segundo", "Adelantar %1 segundos"],		
+		"mejs.loop": "Alternar Repetición",		
 		"mejs.play": "Reproducción",
-		"mejs.pause": "Pausa",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Cerrar",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Pausa",		
+		"mejs.close": "Cerrar",		
 		"mejs.time-slider": "Control deslizante de tiempo",
-		"mejs.time-help-text": "Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": ["Rebobinar 1 segundo", "Rebobinar %1 segundos"],
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.",		
+		"mejs.time-skip-back": ["Rebobinar 1 segundo", "Rebobinar %1 segundos"],		
 		"mejs.captions-subtitles": "Leyendas/Subtítulos",
-		"mejs.none": "Ninguno",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Ninguno",		
 		"mejs.mute-toggle": "Alternar silencio",
 		"mejs.volume-help-text": "Use las flechas Arriba/Abajo para subir o bajar el volumen.",
 		"mejs.unmute": "Reactivar silencio",
 		"mejs.mute": "Silencio",
-		"mejs.volume-slider": "Control deslizante de volumen",
-
-		// mep-player
+		"mejs.volume-slider": "Control deslizante de volumen",		
 		"mejs.video-player": "Reproductor de video",
-		"mejs.audio-player": "Reproductor de audio",
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Reproductor de audio",		
 		"mejs.ad-skip": "Saltar publicidad",
-		"mejs.ad-skip-info": ["Saltar 1 segundo", "Saltar %1 segundos"],
-
-		// mediaelementplayer-feature-sourcechooser
-		"mejs.source-chooser": "Selector de media",
-
-		// mediaelementplayer-feature-stop
-		"mejs.stop": "Parar",
-
-		//mediaelementplayer-feature-speed
-		"mejs.speed-rate": "Tasa de velocidad",
-
-		//mediaelementplayer-feature-progress
-		"mejs.live-broadcast": "Transmisión en Vivo",
-
-		// mep-tracks
+		"mejs.ad-skip-info": ["Saltar 1 segundo", "Saltar %1 segundos"],		
+		"mejs.source-chooser": "Selector de media",		
+		"mejs.stop": "Parar",		
+		"mejs.speed-rate": "Tasa de velocidad",		
+		"mejs.live-broadcast": "Transmisión en Vivo",		
 		"mejs.afrikaans": "Afrikaans",
 		"mejs.albanian": "Albano",
 		"mejs.arabic": "Árabe",

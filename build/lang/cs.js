@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Czech
  *
@@ -13,72 +11,35 @@
  */
 if (mejs.i18n.cs === undefined) {
 	mejs.i18n.cs = {
-		"mejs.plural-form": 8,
-
-		// me-shim
-		"mejs.download-file": "Stáhnout soubor",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 8,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Vypnout režim celá obrazovka",
 		"mejs.fullscreen-on": "Na celou obrazovku",
-		"mejs.download-video": "Stáhnout video",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Celá obrazovka",
-
-		// mediaelementplayer-feature-jumpforward
-		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Stáhnout video",		
+		"mejs.fullscreen": "Celá obrazovka",		
+		//"mejs.time-jump-forward": "Jump forward %1 second(s)",		
+		//"mejs.loop": "Toggle Loop",		
 		"mejs.play": "Přehrát",
-		"mejs.pause": "Pozastavit",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Zavřít",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Pozastavit",		
+		"mejs.close": "Zavřít",		
 		"mejs.time-slider": "Posuvný běžec nastavení času",
-		"mejs.time-help-text": "Použijte tlačítka se šipkami doleva / doprava pro posun o jednu vteřinu, tlačítka se šipkami nahoru / dolů pro posun o deset vteřin.",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": "Zpět o %1 vteřin",
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "Použijte tlačítka se šipkami doleva / doprava pro posun o jednu vteřinu, tlačítka se šipkami nahoru / dolů pro posun o deset vteřin.",		
+		"mejs.time-skip-back": "Zpět o %1 vteřin",		
 		"mejs.captions-subtitles": "Titulky",
-		"mejs.none": "Žádný",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Žádný",		
 		"mejs.mute-toggle": "Vypnout/zapnout zvuk",
 		"mejs.volume-help-text": "Použijte tlačítka se šipkami nahoru / dolů pro zesílení nebo zeslabení hlasitosti.",
 		"mejs.unmute": "Zapnout zvuk",
 		"mejs.mute": "Vypnout zvuk",
-		"mejs.volume-slider": "Posuvný běžec nastavení hlasitosti",
-
-		// mep-player
+		"mejs.volume-slider": "Posuvný běžec nastavení hlasitosti",		
 		"mejs.video-player": "Přehrávač videa",
-		"mejs.audio-player": "Přehrávač hudby"
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Přehrávač hudby"		
 		//"mejs.ad-skip": "Skip ad",
-		//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-		// mediaelementplayer-feature-sourcechooser
-		//"mejs.source-chooser": "Source Chooser",
-
-		// mediaelementplayer-feature-stop
-		//"mejs.stop": "Stop",
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		//"mejs.ad-skip-info": "Skip in %1 second(s)",		
+		//"mejs.source-chooser": "Source Chooser",		
+		//"mejs.stop": "Stop",		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

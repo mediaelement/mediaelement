@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Japanese
  *
@@ -13,72 +11,35 @@
  */
 if (mejs.i18n.ja === undefined) {
 	mejs.i18n.ja = {
-		"mejs.plural-form": 0,
-
-		// me-shim
-		"mejs.download-file": "ファイルをダウンロードする",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 0,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "全画面をオフにする",
 		"mejs.fullscreen-on": "全画面にする",
-		"mejs.download-video": "動画をダウンロードする",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "全画面",
-
-		// mediaelementplayer-feature-jumpforward
-		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "動画をダウンロードする",		
+		"mejs.fullscreen": "全画面",		
+		//"mejs.time-jump-forward": "Jump forward %1 second(s)",		
+		//"mejs.loop": "Toggle Loop",		
 		"mejs.play": "再生",
-		"mejs.pause": "一時停止",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "閉じる",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "一時停止",		
+		"mejs.close": "閉じる",		
 		"mejs.time-slider": "タイムスライダー",
-		"mejs.time-help-text": "1秒進めるには左/右矢印をキーを、10秒進めるには上/下矢印を使います。",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": "%1秒スキップバックする",
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "1秒進めるには左/右矢印をキーを、10秒進めるには上/下矢印を使います。",		
+		"mejs.time-skip-back": "%1秒スキップバックする",		
 		"mejs.captions-subtitles": "キャプション/字幕",
-		"mejs.none": "なし",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "なし",		
 		"mejs.mute-toggle": "ミュートトグル",
 		"mejs.volume-help-text": "音量を上げたり下げたりするには、上/下矢印を使います。",
 		"mejs.unmute": "ミュートを解除",
 		"mejs.mute": "ミュート",
-		"mejs.volume-slider": "音量スライダー",
-
-		// mep-player
+		"mejs.volume-slider": "音量スライダー",		
 		"mejs.video-player": "ビデオプレーヤー",
-		"mejs.audio-player": "オーディオプレーヤー"
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "オーディオプレーヤー"		
 		//"mejs.ad-skip": "Skip ad",
-		//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-		// mediaelementplayer-feature-sourcechooser
-		//"mejs.source-chooser": "Source Chooser",
-
-		// mediaelementplayer-feature-stop
-		//"mejs.stop": "Stop",
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		//"mejs.ad-skip-info": "Skip in %1 second(s)",		
+		//"mejs.source-chooser": "Source Chooser",		
+		//"mejs.stop": "Stop",		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

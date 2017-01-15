@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Dutch
  *
@@ -14,72 +12,35 @@
  */
 if (mejs.i18n.nl === undefined) {
 	mejs.i18n.nl = {
-		"mejs.plural-form": 1,
-
-		// me-shim
-		"mejs.download-file": "Bestand downloaden",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 1,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Volledig scherm uitschakelen",
 		"mejs.fullscreen-on": "Volledig scherm",
-		"mejs.download-video": "Video downloaden",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Volledig scherm",
-
-		// mediaelementplayer-feature-jumpforward
-		"mejs.time-jump-forward": "%1 seconden vooruit springen",
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Video downloaden",		
+		"mejs.fullscreen": "Volledig scherm",		
+		"mejs.time-jump-forward": "%1 seconden vooruit springen",		
+		//"mejs.loop": "Toggle Loop",		
 		"mejs.play": "Afspelen",
-		"mejs.pause": "Pauzeren",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Sluiten",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Pauzeren",		
+		"mejs.close": "Sluiten",		
 		"mejs.time-slider": "Tijd schuifbalk",
-		"mejs.time-help-text": "Gebruik pijl naar links/rechts om per seconde te springen, pijl omhoog/omlaag om per tien seconden te springen.",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": "%1 seconden terug springen",
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "Gebruik pijl naar links/rechts om per seconde te springen, pijl omhoog/omlaag om per tien seconden te springen.",		
+		"mejs.time-skip-back": "%1 seconden terug springen",		
 		"mejs.captions-subtitles": "Bijschriften/ondertiteling",
-		"mejs.none": "Geen",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Geen",		
 		"mejs.mute-toggle": "Dempen schakelen",
 		"mejs.volume-help-text": "Gebruik pijl omhoog/omlaag om het volume te verhogen/verlagen.",
 		"mejs.unmute": "Dempen opheffen",
 		"mejs.mute": "Dempen",
-		"mejs.volume-slider": "Volume schuifbalk",
-
-		// mep-player
+		"mejs.volume-slider": "Volume schuifbalk",		
 		"mejs.video-player": "Videospeler",
-		"mejs.audio-player": "Audiospeler",
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Audiospeler",		
 		"mejs.ad-skip": "Ad overslaan",
-		"mejs.ad-skip-info": "Overslaan in %1 seconden",
-
-		// mediaelementplayer-feature-sourcechooser
-		"mejs.source-chooser": "Bronkeuze"
-
-		// mediaelementplayer-feature-stop
-		//"mejs.stop": "Stop",
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		"mejs.ad-skip-info": "Overslaan in %1 seconden",		
+		"mejs.source-chooser": "Bronkeuze"		
+		//"mejs.stop": "Stop",		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

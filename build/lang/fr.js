@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * French
  *
@@ -14,72 +12,35 @@
  */
 if (mejs.i18n.fr === undefined) {
 	mejs.i18n.fr = {
-		"mejs.plural-form": 2,
-
-		// me-shim
-		"mejs.download-file": "Télécharger le fichier",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 2,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Quitter le mode plein écran",
 		"mejs.fullscreen-on": "Afficher en plein écran",
-		"mejs.download-video": "Télécharger la vidéo",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Plein écran",
-
-		// mediaelementplayer-feature-jumpforward
-		"mejs.time-jump-forward": "Avancer de %1 secondes",
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Télécharger la vidéo",		
+		"mejs.fullscreen": "Plein écran",		
+		"mejs.time-jump-forward": "Avancer de %1 secondes",		
+		//"mejs.loop": "Toggle Loop",		
 		"mejs.play": "Lecture",
-		"mejs.pause": "Pause",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Fermer",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Pause",		
+		"mejs.close": "Fermer",		
 		"mejs.time-slider": "Curseur temporel",
-		"mejs.time-help-text": "Utilisez les flèches Gauche/Droite du clavier pour avancer d'une seconde, les flèches Haut/Bas pour avancer de 10 secondes.",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": "Reculer de %1 secondes",
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "Utilisez les flèches Gauche/Droite du clavier pour avancer d'une seconde, les flèches Haut/Bas pour avancer de 10 secondes.",		
+		"mejs.time-skip-back": "Reculer de %1 secondes",		
 		"mejs.captions-subtitles": "Sous-titres",
-		"mejs.none": "Aucun",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Aucun",		
 		"mejs.mute-toggle": "Activer/désactiver le son",
 		"mejs.volume-help-text": "Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.",
 		"mejs.unmute": "Activer le son",
 		"mejs.mute": "Désactiver le son",
-		"mejs.volume-slider": "Volume",
-
-		// mep-player
+		"mejs.volume-slider": "Volume",		
 		"mejs.video-player": "Lecteur Vidéo",
-		"mejs.audio-player": "Lecteur Audio",
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Lecteur Audio",		
 		"mejs.ad-skip": "Passer la publicité",
-		"mejs.ad-skip-info": "Passer la publicité dans %1 secondes",
-
-		// mediaelementplayer-feature-sourcechooser
-		"mejs.source-chooser": "Sélecteur de média"
-
-		// mediaelementplayer-feature-stop
-		//"mejs.stop": "Stop",
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		"mejs.ad-skip-info": "Passer la publicité dans %1 secondes",		
+		"mejs.source-chooser": "Sélecteur de média"		
+		//"mejs.stop": "Stop",		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

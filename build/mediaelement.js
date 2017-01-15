@@ -1040,7 +1040,7 @@ _mejs2.default.Renderers = renderer;
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * English; This can serve as a template for other languages to translate
  *
@@ -1057,70 +1057,69 @@ Object.defineProperty(exports, "__esModule", {
 var EN = exports.EN = {
 	"mejs.plural-form": 1,
 
-	// me-shim
-	"mejs.download-file": "Download File",
+	// renderers/flash.js
 	"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-	// mediaelementplayer-feature-contextmenu
+	// features/contextmenu.js
 	"mejs.fullscreen-off": "Turn off Fullscreen",
 	"mejs.fullscreen-on": "Go Fullscreen",
 	"mejs.download-video": "Download Video",
 
-	// mediaelementplayer-feature-fullscreen
+	// features/fullscreen.js
 	"mejs.fullscreen": "Fullscreen",
 
-	// mediaelementplayer-feature-jumpforward
+	// features/jumpforward.js
 	"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
-	// mediaelementplayer-feature-loop
+	// features/loop.js
 	"mejs.loop": "Toggle Loop",
 
-	// mediaelementplayer-feature-playpause
+	// features/playpause.js
 	"mejs.play": "Play",
 	"mejs.pause": "Pause",
 
-	// mediaelementplayer-feature-postroll
+	// features/postroll.js
 	"mejs.close": "Close",
 
-	// mediaelementplayer-feature-progress
+	// features/progress.js
 	"mejs.time-slider": "Time Slider",
 	"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-	// mediaelementplayer-feature-skipback
+	// features/skipback.js
 	"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
-	// mediaelementplayer-feature-tracks
+	// features/tracks.js
 	"mejs.captions-subtitles": "Captions/Subtitles",
 	"mejs.none": "None",
 
-	// mediaelementplayer-feature-volume
+	// features/volume.js
 	"mejs.mute-toggle": "Mute Toggle",
 	"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 	"mejs.unmute": "Unmute",
 	"mejs.mute": "Mute",
 	"mejs.volume-slider": "Volume Slider",
 
-	// mep-player
+	// core/player.js
 	"mejs.video-player": "Video Player",
 	"mejs.audio-player": "Audio Player",
 
-	// mediaelementplayer-feature-ads
+	// features/ads.js
 	"mejs.ad-skip": "Skip ad",
 	"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
 
-	// mediaelementplayer-feature-sourcechooser
+	// features/sourcechooser.js
 	"mejs.source-chooser": "Source Chooser",
 
-	// mediaelementplayer-feature-stop
+	// features/stop.js
 	"mejs.stop": "Stop",
 
-	//mediaelementplayer-feature-speed
+	//features/speed.js
 	"mejs.speed-rate": "Speed Rate",
 
-	//mediaelementplayer-feature-progress
+	//features/progress.js
 	"mejs.live-broadcast": "Live Broadcast",
 
-	// mep-tracks
+	// features/tracks.js
 	"mejs.afrikaans": "Afrikaans",
 	"mejs.albanian": "Albanian",
 	"mejs.arabic": "Arabic",
@@ -1180,498 +1179,6 @@ var EN = exports.EN = {
 
 },{}],9:[function(require,module,exports){
 'use strict';
-
-// /**
-//  * DailyMotion renderer
-//  *
-//  * Uses <iframe> approach and uses DailyMotion API to manipulate it.
-//  * @see https://developer.dailymotion.com/player
-//  *
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register DailyMotion type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('dailymotion.com') > -1 || url.indexOf('dai.ly') > -1) {
-// 			return 'video/x-dailymotion';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var DailyMotionApi = {
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isSDKStarted: false,
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isSDKLoaded: false,
-// 		/**
-// 		 * @type {Array}
-// 		 */
-// 		iframeQueue: [],
-//
-// 		/**
-// 		 * Create a queue to prepare the creation of <iframe>
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		enqueueIframe: function (settings) {
-//
-// 			if (this.isLoaded) {
-// 				this.createIframe(settings);
-// 			} else {
-// 				this.loadIframeApi();
-// 				this.iframeQueue.push(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Load DailyMotion API script on the header of the document
-// 		 *
-// 		 */
-// 		loadIframeApi: function () {
-// 			if (!this.isSDKStarted) {
-// 				var e = document.createElement('script');
-// 				e.async = true;
-// 				e.src = '//api.dmcdn.net/all.js';
-// 				var s = document.getElementsByTagName('script')[0];
-// 				s.parentNode.insertBefore(e, s);
-// 				this.isSDKStarted = true;
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Process queue of DailyMotion <iframe> element creation
-// 		 *
-// 		 */
-// 		apiReady: function () {
-//
-// 			this.isLoaded = true;
-// 			this.isSDKLoaded = true;
-//
-// 			while (this.iframeQueue.length > 0) {
-// 				var settings = this.iframeQueue.pop();
-// 				this.createIframe(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Create a new instance of DailyMotion API player and trigger a custom event to initialize it
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		createIframe: function (settings) {
-//
-// 			var
-// 				player = DM.player(settings.container, {
-// 					height: '100%', // settings.height,
-// 					width: '100%', //settings.width,
-// 					video: settings.videoId,
-// 					params: {
-// 						autoplay: settings.autoplay,
-// 						chromeless: 1,
-// 						api: 1,
-// 						info: 0,
-// 						logo: 0,
-// 						related: 0
-// 					},
-// 					origin: location.host
-// 				});
-//
-// 			player.addEventListener('apiready', function () {
-// 				win['__ready__' + settings.id](player, {paused: true, ended: false});
-// 			});
-// 		},
-//
-// 		/**
-// 		 * Extract ID from DailyMotion's URL to be loaded through API
-// 		 * Valid URL format(s):
-// 		 * - http://www.dailymotion.com/embed/video/x35yawy
-// 		 * - http://dai.ly/x35yawy
-// 		 *
-// 		 * @param {String} url
-// 		 * @return {String}
-// 		 */
-// 		getDailyMotionId: function (url) {
-// 			var
-// 				parts = url.split('/'),
-// 				last_part = parts[parts.length - 1],
-// 				dash_parts = last_part.split('_')
-// 				;
-//
-// 			return dash_parts[0];
-// 		}
-// 	};
-//
-// 	/*
-// 	 * Register DailyMotion event globally
-// 	 *
-// 	 */
-// 	win.dmAsyncInit = function () {
-// 		DailyMotionApi.apiReady();
-// 	};
-//
-// 	var DailyMotionIframeRenderer = {
-// 		name: 'dailymotion_iframe',
-//
-// 		options: {
-// 			prefix: 'dailymotion_iframe'
-// 		},
-//
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-// 			var mediaTypes = ['video/dailymotion', 'video/x-dailymotion'];
-//
-// 			return mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			var dm = {};
-//
-// 			dm.options = options;
-// 			dm.id = mediaElement.id + '_' + options.prefix;
-// 			dm.mediaElement = mediaElement;
-//
-// 			var
-// 				apiStack = [],
-// 				dmPlayerReady = false,
-// 				dmPlayer = null,
-// 				dmIframe = null,
-// 				i,
-// 				il,
-// 				events
-// 				;
-//
-// 			// wrappers for get/set
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-//
-// 					// add to flash state that we will store
-//
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					dm['get' + capName] = function () {
-// 						if (dmPlayer !== null) {
-// 							var value = null;
-//
-// 							// figure out how to get dm dta here
-// 							switch (propName) {
-// 								case 'currentTime':
-// 									return dmPlayer.currentTime;
-//
-// 								case 'duration':
-// 									return isNaN(dmPlayer.duration) ? 0 : dmPlayer.duration;
-//
-// 								case 'volume':
-// 									return dmPlayer.volume;
-//
-// 								case 'paused':
-// 									return dmPlayer.paused;
-//
-// 								case 'ended':
-// 									return dmPlayer.ended;
-//
-// 								case 'muted':
-// 									return dmPlayer.muted;
-//
-// 								case 'buffered':
-// 									var percentLoaded = dmPlayer.bufferedTime,
-// 										duration = dmPlayer.duration;
-// 									return {
-// 										start: function () {
-// 											return 0;
-// 										},
-// 										end: function () {
-// 											return percentLoaded / duration;
-// 										},
-// 										length: 1
-// 									};
-// 								case 'src':
-// 									return mediaElement.originalNode.getAttribute('src');
-// 							}
-//
-// 							return value;
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					dm['set' + capName] = function (value) {
-// 						if (dmPlayer !== null) {
-//
-// 							switch (propName) {
-//
-// 								case 'src':
-// 									var url = typeof value === 'string' ? value : value[0].src;
-//
-// 									dmPlayer.load(DailyMotionApi.getDailyMotionId(url));
-// 									break;
-//
-// 								case 'currentTime':
-// 									dmPlayer.seek(value);
-// 									break;
-//
-// 								case 'muted':
-// 									if (value) {
-// 										dmPlayer.setMuted(true);
-// 									} else {
-// 										dmPlayer.setMuted(false);
-// 									}
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', dm);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								case 'volume':
-// 									dmPlayer.setVolume(value);
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', dm);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								default:
-// 									
-// 							}
-//
-// 						} else {
-// 							// store for after "READY" event fires
-// 							apiStack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// add wrappers for native methods
-// 			var
-// 				methods = mejs.html5media.methods,
-// 				assignMethods = function (methodName) {
-//
-// 					// run the method on the native HTMLMediaElement
-// 					dm[methodName] = function () {
-// 						if (dmPlayer !== null) {
-//
-// 							// DO method
-// 							switch (methodName) {
-// 								case 'play':
-// 									return dmPlayer.play();
-// 								case 'pause':
-// 									return dmPlayer.pause();
-// 								case 'load':
-// 									return null;
-//
-// 							}
-//
-// 						} else {
-// 							apiStack.push({type: 'call', methodName: methodName});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = methods.length; i < il; i++) {
-// 				assignMethods(methods[i]);
-// 			}
-//
-// 			// Initial method to register all DailyMotion events when initializing <iframe>
-// 			win['__ready__' + dm.id] = function (_dmPlayer) {
-//
-// 				dmPlayerReady = true;
-// 				mediaElement.dmPlayer = dmPlayer = _dmPlayer;
-//
-// 				// do call stack
-// 				for (i = 0, il = apiStack.length; i < il; i++) {
-//
-// 					var stackItem = apiStack[i];
-//
-// 					if (stackItem.type === 'set') {
-// 						var propName = stackItem.propName,
-// 							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 						dm['set' + capName](stackItem.value);
-// 					} else if (stackItem.type === 'call') {
-// 						dm[stackItem.methodName]();
-// 					}
-// 				}
-//
-// 				dmIframe = doc.getElementById(dm.id);
-//
-// 				// a few more events
-// 				events = ['mouseover', 'mouseout'];
-// 				var assignEvent = function (e) {
-// 					var event = mejs.Utils.createEvent(e.type, dm);
-//
-// 					mediaElement.dispatchEvent(event);
-// 				};
-// 				for (var j in events) {
-// 					var eventName = events[j];
-// 					mejs.addEvent(dmIframe, eventName, assignEvent);
-// 				}
-//
-// 				// BUBBLE EVENTS up
-// 				events = mejs.html5media.events;
-// 				events = events.concat(['click', 'mouseover', 'mouseout']);
-// 				var assignNativeEvents = function (eventName) {
-//
-// 					// Deprecated event; not consider it
-// 					if (eventName !== 'ended') {
-//
-// 						dmPlayer.addEventListener(eventName, function (e) {
-// 							// copy event
-// 							var event = mejs.Utils.createEvent(e.type, dmPlayer);
-// 							mediaElement.dispatchEvent(event);
-// 						});
-// 					}
-//
-// 				};
-//
-// 				for (i = 0, il = events.length; i < il; i++) {
-// 					assignNativeEvents(events[i]);
-// 				}
-//
-// 				// Custom DailyMotion events
-// 				dmPlayer.addEventListener('ad_start', function () {
-// 					var event = mejs.Utils.createEvent('play', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-//
-// 					event = mejs.Utils.createEvent('progress', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-//
-// 					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				dmPlayer.addEventListener('ad_timeupdate', function () {
-// 					var event = mejs.Utils.createEvent('timeupdate', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				dmPlayer.addEventListener('ad_pause', function () {
-// 					var event = mejs.Utils.createEvent('pause', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				dmPlayer.addEventListener('ad_end', function () {
-// 					var event = mejs.Utils.createEvent('ended', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				dmPlayer.addEventListener('video_start', function () {
-// 					var event = mejs.Utils.createEvent('play', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-//
-// 					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				dmPlayer.addEventListener('video_end', function () {
-// 					var event = mejs.Utils.createEvent('ended', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				dmPlayer.addEventListener('progress', function () {
-// 					var event = mejs.Utils.createEvent('timeupdate', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				dmPlayer.addEventListener('durationchange', function () {
-// 					event = mejs.Utils.createEvent('timeupdate', dmPlayer);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-//
-//
-// 				// give initial events
-// 				var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-//
-// 				for (var i = 0, il = initEvents.length; i < il; i++) {
-// 					var event = mejs.Utils.createEvent(initEvents[i], dm);
-// 					mediaElement.dispatchEvent(event);
-// 				}
-// 			};
-//
-// 			var dmContainer = doc.createElement('div');
-// 			dmContainer.id = dm.id;
-// 			mediaElement.appendChild(dmContainer);
-// 			if (mediaElement.originalNode) {
-// 				dmContainer.style.width = mediaElement.originalNode.style.width;
-// 				dmContainer.style.height = mediaElement.originalNode.style.height;
-// 			}
-// 			mediaElement.originalNode.style.display = 'none';
-//
-// 			var
-// 				videoId = DailyMotionApi.getDailyMotionId(mediaFiles[0].src),
-// 				dmSettings = {
-// 					id: dm.id,
-// 					container: dmContainer,
-// 					videoId: videoId,
-// 					autoplay: mediaElement.originalNode.getAttribute('autoplay')
-// 				};
-//
-// 			DailyMotionApi.enqueueIframe(dmSettings);
-//
-// 			dm.hide = function () {
-// 				dm.stopInterval();
-// 				dm.pause();
-// 				if (dmIframe) {
-// 					dmIframe.style.display = 'none';
-// 				}
-// 			};
-// 			dm.show = function () {
-// 				if (dmIframe) {
-// 					dmIframe.style.display = '';
-// 				}
-// 			};
-// 			dm.setSize = function(width, height) {
-// 				dmIframe.width = width;
-// 				dmIframe.height = height;
-// 			};
-// 			dm.destroy = function () {
-// 				dmPlayer.destroy();
-// 			};
-// 			dm.interval = null;
-//
-// 			dm.startInterval = function () {
-// 				dm.interval = setInterval(function () {
-// 					DailyMotionApi.sendEvent(dm.id, dmPlayer, 'timeupdate', {
-// 						paused: false,
-// 						ended: false
-// 					});
-// 				}, 250);
-// 			};
-// 			dm.stopInterval = function () {
-// 				if (dm.interval) {
-// 					clearInterval(dm.interval);
-// 				}
-// 			};
-//
-// 			return dm;
-// 		}
-// 	};
-//
-// 	mejs.Renderers.add(DailyMotionIframeRenderer);
-//
-// })(window, document, window.mejs || {});
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -2186,419 +1693,333 @@ _renderer.renderer.add(DailyMotionIframeRenderer);
 },{"../core/mejs":6,"../core/renderer":7,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],10:[function(require,module,exports){
 'use strict';
 
-// /**
-//  * Facebook renderer
-//  *
-//  * It creates an <iframe> from a <div> with specific configuration.
-//  * @see https://developers.facebook.com/docs/plugins/embedded-video-player
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register Facebook type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('www.facebook') > -1) {
-// 			return 'video/x-facebook';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var FacebookRenderer = {
-// 		name: 'facebook',
-//
-// 		options: {
-// 			prefix: 'facebook',
-// 			facebook: {
-// 				appId: '{your-app-id}',
-// 				xfbml: true,
-// 				version: 'v2.6'
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-// 			var mediaTypes = ['video/facebook', 'video/x-facebook'];
-//
-// 			return mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			var
-// 				fbWrapper = {},
-// 				fbApi = null,
-// 				fbDiv = null,
-// 				apiStack = [],
-// 				paused = true,
-// 				ended = false,
-// 				hasStartedPlaying = false,
-// 				src = '',
-// 				eventHandler = {},
-// 				i,
-// 				il
-// 				;
-//
-// 			fbWrapper.options = options;
-// 			fbWrapper.id = mediaElement.id + '_' + options.prefix;
-// 			fbWrapper.mediaElement = mediaElement;
-//
-// 			// wrappers for get/set
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-//
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					fbWrapper['get' + capName] = function () {
-//
-// 						if (fbApi !== null) {
-// 							var value = null;
-//
-// 							// figure out how to get youtube dta here
-// 							switch (propName) {
-// 								case 'currentTime':
-// 									return fbApi.getCurrentPosition();
-//
-// 								case 'duration':
-// 									return fbApi.getDuration();
-//
-// 								case 'volume':
-// 									return fbApi.getVolume();
-//
-// 								case 'paused':
-// 									return paused;
-//
-// 								case 'ended':
-// 									return ended;
-//
-// 								case 'muted':
-// 									return fbApi.isMuted();
-//
-// 								case 'buffered':
-// 									return {
-// 										start: function () {
-// 											return 0;
-// 										},
-// 										end: function () {
-// 											return 0;
-// 										},
-// 										length: 1
-// 									};
-// 								case 'src':
-// 									return src;
-// 							}
-//
-// 							return value;
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					fbWrapper['set' + capName] = function (value) {
-//
-// 						if (fbApi !== null) {
-//
-// 							switch (propName) {
-//
-// 								case 'src':
-// 									var url = typeof value === 'string' ? value : value[0].src;
-//
-// 									// Only way is to destroy instance and all the events fired,
-// 									// and create new one
-// 									fbDiv.parentNode.removeChild(fbDiv);
-// 									createFacebookEmbed(url, options.facebook);
-//
-// 									// This method reloads video on-demand
-// 									FB.XFBML.parse();
-//
-// 									break;
-//
-// 								case 'currentTime':
-// 									fbApi.seek(value);
-// 									break;
-//
-// 								case 'muted':
-// 									if (value) {
-// 										fbApi.mute();
-// 									} else {
-// 										fbApi.unmute();
-// 									}
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', fbWrapper);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								case 'volume':
-// 									fbApi.setVolume(value);
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', fbWrapper);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								default:
-// 									
-// 							}
-//
-// 						} else {
-// 							// store for after "READY" event fires
-// 							apiStack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// add wrappers for native methods
-// 			var
-// 				methods = mejs.html5media.methods,
-// 				assignMethods = function (methodName) {
-//
-// 					// run the method on the native HTMLMediaElement
-// 					fbWrapper[methodName] = function () {
-//
-// 						if (fbApi !== null) {
-//
-// 							// DO method
-// 							switch (methodName) {
-// 								case 'play':
-// 									return fbApi.play();
-// 								case 'pause':
-// 									return fbApi.pause();
-// 								case 'load':
-// 									return null;
-//
-// 							}
-//
-// 						} else {
-// 							apiStack.push({type: 'call', methodName: methodName});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = methods.length; i < il; i++) {
-// 				assignMethods(methods[i]);
-// 			}
-//
-//
-// 			/**
-// 			 * Dispatch a list of events
-// 			 *
-// 			 * @private
-// 			 * @param {Array} events
-// 			 */
-// 			function sendEvents(events) {
-// 				for (var i = 0, il = events.length; i < il; i++) {
-// 					var event = mejs.Utils.createEvent(events[i], fbWrapper);
-// 					mediaElement.dispatchEvent(event);
-// 				}
-// 			}
-//
-// 			/**
-// 			 * Create a new Facebook player and attach all its events
-// 			 *
-// 			 * This method creates a <div> element that, once the API is available, will generate an <iframe>.
-// 			 * Valid URL format(s):
-// 			 *  - https://www.facebook.com/johndyer/videos/10107816243681884/
-// 			 *
-// 			 * @param {String} url
-// 			 * @param {Object} config
-// 			 */
-// 			function createFacebookEmbed(url, config) {
-//
-// 				src = url;
-//
-// 				fbDiv = doc.createElement('div');
-// 				fbDiv.id = fbWrapper.id;
-// 				fbDiv.className = "fb-video";
-// 				fbDiv.setAttribute("data-href", url);
-// 				fbDiv.setAttribute("data-allowfullscreen", "true");
-// 				fbDiv.setAttribute("data-controls", "false");
-//
-// 				mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
-// 				mediaElement.originalNode.style.display = 'none';
-//
-// 				/*
-// 				 * Register Facebook API event globally
-// 				 *
-// 				 */
-// 				win.fbAsyncInit = function () {
-//
-// 					FB.init(config);
-//
-// 					FB.Event.subscribe('xfbml.ready', function (msg) {
-//
-// 						if (msg.type === 'video') {
-//
-// 							fbApi = msg.instance;
-//
-// 							// Set proper size since player dimensions are unknown before this event
-// 							var
-// 								fbIframe = fbDiv.getElementsByTagName('iframe')[0],
-// 								width = parseInt(win.getComputedStyle(fbIframe, null).width),
-// 								height = parseInt(fbIframe.style.height)
-// 								;
-//
-// 							fbWrapper.setSize(width, height);
-//
-// 							sendEvents(['mouseover', 'mouseout']);
-//
-// 							// remove previous listeners
-// 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
-// 							for (i = 0, il = fbEvents.length; i < il; i++) {
-// 								var event = fbEvents[i], handler = eventHandler[event];
-// 								if (handler !== undefined && handler !== null &&
-// 									!mejs.Utility.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
-// 									handler.removeListener(event);
-// 								}
-// 							}
-//
-// 							// do call stack
-// 							for (var i = 0, il = apiStack.length; i < il; i++) {
-//
-// 								var stackItem = apiStack[i];
-//
-// 								if (stackItem.type === 'set') {
-// 									var propName = stackItem.propName,
-// 										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 									fbWrapper['set' + capName](stackItem.value);
-// 								} else if (stackItem.type === 'call') {
-// 									fbWrapper[stackItem.methodName]();
-// 								}
-// 							}
-//
-// 							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
-// 							sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
-//
-// 							var timer;
-//
-// 							// Custom Facebook events
-// 							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
-// 								if (!hasStartedPlaying) {
-// 									hasStartedPlaying = true;
-// 								}
-// 								paused = false;
-// 								ended = false;
-// 								sendEvents(['play', 'playing', 'timeupdate']);
-//
-// 								// Workaround to update progress bar
-// 								timer = setInterval(function() {
-// 									fbApi.getCurrentPosition();
-// 									sendEvents(['timeupdate']);
-// 								}, 250);
-// 							});
-// 							eventHandler.paused = fbApi.subscribe('paused', function () {
-// 								paused = true;
-// 								ended = false;
-// 								sendEvents(['paused']);
-// 							});
-// 							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
-// 								paused = true;
-// 								ended = true;
-//
-// 								// Workaround to update progress bar one last time and trigger ended event
-// 								timer = setInterval(function() {
-// 									fbApi.getCurrentPosition();
-// 									sendEvents(['timeupdate', 'ended']);
-// 								}, 250);
-//
-// 								clearInterval(timer);
-// 								timer = null;
-// 							});
-// 							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
-// 								sendEvents(['progress', 'timeupdate']);
-// 							});
-// 							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
-// 								sendEvents(['progress', 'timeupdate']);
-// 							});
-//
-//
-// 						}
-// 					});
-// 				};
-//
-// 				(function (d, s, id) {
-// 					var js, fjs = d.getElementsByTagName(s)[0];
-// 					if (d.getElementById(id)) {
-// 						return;
-// 					}
-// 					js = d.createElement(s);
-// 					js.id = id;
-// 					js.src = '//connect.facebook.net/en_US/sdk.js';
-// 					fjs.parentNode.insertBefore(js, fjs);
-// 				}(document, 'script', 'facebook-jssdk'));
-// 			}
-//
-// 			if (mediaFiles.length > 0) {
-// 				createFacebookEmbed(mediaFiles[0].src, options.facebook);
-// 			}
-//
-// 			fbWrapper.hide = function () {
-// 				fbWrapper.stopInterval();
-// 				fbWrapper.pause();
-// 				if (fbDiv) {
-// 					fbDiv.style.display = 'none';
-// 				}
-// 			};
-// 			fbWrapper.show = function () {
-// 				if (fbDiv) {
-// 					fbDiv.style.display = '';
-// 				}
-// 			};
-// 			fbWrapper.setSize = function(width, height) {
-// 				if (fbApi !== null && !isNaN(width) && !isNaN(height)) {
-// 					fbDiv.setAttribute('width', width);
-// 					fbDiv.setAttribute('height', height);
-// 				}
-// 			};
-// 			fbWrapper.destroy = function () {
-// 			};
-// 			fbWrapper.interval = null;
-//
-// 			fbWrapper.startInterval = function () {
-// 				// create timer
-// 				fbWrapper.interval = setInterval(function () {
-// 					var event = mejs.Utils.createEvent('timeupdate', fbWrapper);
-// 					mediaElement.dispatchEvent(event);
-// 				}, 250);
-// 			};
-// 			fbWrapper.stopInterval = function () {
-// 				if (fbWrapper.interval) {
-// 					clearInterval(fbWrapper.interval);
-// 				}
-// 			};
-//
-// 			return fbWrapper;
-// 		}
-// 	};
-//
-// 	mejs.Renderers.add(FacebookRenderer);
-//
-// })(window, document, window.mejs || {});
+var _window = require('global/window');
+
+var _window2 = _interopRequireDefault(_window);
+
+var _document = require('global/document');
+
+var _document2 = _interopRequireDefault(_document);
+
+var _mejs = require('../core/mejs');
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+var _renderer = require('../core/renderer');
+
+var _dom = require('../utils/dom');
+
+var _media = require('../utils/media');
+
+var _constants = require('../utils/constants');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Native M(PEG)-Dash renderer
+ *
+ * Uses dash.js, a reference client implementation for the playback of M(PEG)-DASH via Javascript and compliant browsers.
+ * It relies on HTML5 video and MediaSource Extensions for playback.
+ * This renderer integrates new events associated with mpd files.
+ * @see https://github.com/Dash-Industry-Forum/dash.js
+ *
+ */
+var NativeDash = {
+	/**
+  * @type {Boolean}
+  */
+	isMediaLoaded: false,
+	/**
+  * @type {Array}
+  */
+	creationQueue: [],
+
+	/**
+  * Create a queue to prepare the loading of an DASH source
+  *
+  * @param {Object} settings - an object with settings needed to load an DASH player instance
+  */
+	prepareSettings: function prepareSettings(settings) {
+		if (NativeDash.isLoaded) {
+			NativeDash.createInstance(settings);
+		} else {
+			NativeDash.loadScript(settings);
+			NativeDash.creationQueue.push(settings);
+		}
+	},
+
+	/**
+  * Load dash.mediaplayer.js script on the header of the document
+  *
+  * @param {Object} settings - an object with settings needed to load an DASH player instance
+  */
+	loadScript: function loadScript(settings) {
+		if (!NativeDash.isScriptLoaded) {
+
+			if (typeof dashjs !== 'undefined') {
+				NativeDash.createInstance(settings);
+			} else {
+				(function () {
+
+					settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+
+					var script = _document2.default.createElement('script'),
+					    firstScriptTag = _document2.default.getElementsByTagName('script')[0],
+					    done = false;
+
+					script.src = settings.options.path;
+
+					// Attach handlers for all browsers
+					script.onload = script.onreadystatechange = function () {
+						if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
+							done = true;
+							NativeDash.mediaReady();
+							script.onload = script.onreadystatechange = null;
+						}
+					};
+
+					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+				})();
+			}
+			NativeDash.isScriptLoaded = true;
+		}
+	},
+
+	/**
+  * Process queue of DASH player creation
+  *
+  */
+	mediaReady: function mediaReady() {
+
+		NativeDash.isLoaded = true;
+		NativeDash.isScriptLoaded = true;
+
+		while (NativeDash.creationQueue.length > 0) {
+			var settings = NativeDash.creationQueue.pop();
+			NativeDash.createInstance(settings);
+		}
+	},
+
+	/**
+  * Create a new instance of DASH player and trigger a custom event to initialize it
+  *
+  * @param {Object} settings - an object with settings needed to instantiate DASH object
+  */
+	createInstance: function createInstance(settings) {
+
+		var player = dashjs.MediaPlayer().create();
+		_window2.default['__ready__' + settings.id](player);
+	}
+};
+
+var DashNativeRenderer = {
+	name: 'native_mdash',
+
+	options: {
+		prefix: 'native_mdash',
+		dash: {
+			// Special config: used to set the local path/URL of dash.js mediaplayer library
+			path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
+			debug: false
+		}
+	},
+	/**
+  * Determine if a specific element type can be played with this render
+  *
+  * @param {String} type
+  * @return {Boolean}
+  */
+	canPlayType: function canPlayType(type) {
+		return _constants.HAS_MSE && ['application/dash+xml'].includes(type);
+	},
+
+	/**
+  * Create the player instance and add all native events/methods/properties as possible
+  *
+  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+  * @param {Object} options All the player configuration options passed through constructor
+  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+  * @return {Object}
+  */
+	create: function create(mediaElement, options, mediaFiles) {
+
+		var node = null,
+		    originalNode = mediaElement.originalNode,
+		    id = mediaElement.id + '_' + options.prefix,
+		    dashPlayer = void 0,
+		    stack = {},
+		    i = void 0,
+		    il = void 0;
+
+		node = originalNode.cloneNode(true);
+		options = Object.assign(options, mediaElement.options);
+
+		// WRAPPERS for PROPs
+		var props = _mejs2.default.html5media.properties,
+		    assignGettersSetters = function assignGettersSetters(propName) {
+			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+			node['get' + capName] = function () {
+				return dashPlayer !== null ? node[propName] : null;
+			};
+
+			node['set' + capName] = function (value) {
+				if (dashPlayer !== null) {
+					if (propName === 'src') {
+
+						dashPlayer.attachSource(value);
+
+						if (node.getAttribute('autoplay')) {
+							node.play();
+						}
+					}
+
+					node[propName] = value;
+				} else {
+					// store for after "READY" event fires
+					stack.push({ type: 'set', propName: propName, value: value });
+				}
+			};
+		};
+
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
+		}
+
+		// Initial method to register all M-Dash events
+		_window2.default['__ready__' + id] = function (_dashPlayer) {
+
+			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
+
+			// By default, console log is off
+			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
+
+			// do call stack
+			if (stack.length) {
+				for (i = 0, il = stack.length; i < il; i++) {
+
+					var stackItem = stack[i];
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						node['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						node[stackItem.methodName]();
+					}
+				}
+			}
+
+			// BUBBLE EVENTS
+			var events = _mejs2.default.html5media.events,
+			    dashEvents = dashjs.MediaPlayer.events,
+			    assignEvents = function assignEvents(eventName) {
+
+				if (eventName === 'loadedmetadata') {
+					dashPlayer.initialize(node, node.src, false);
+				}
+
+				node.addEventListener(eventName, function (e) {
+					var event = _document2.default.createEvent('HTMLEvents');
+					event.initEvent(e.type, e.bubbles, e.cancelable);
+					// @todo Check this
+					// event.srcElement = e.srcElement;
+					// event.target = e.srcElement;
+
+					mediaElement.dispatchEvent(event);
+				});
+			};
+
+			events = events.concat(['click', 'mouseover', 'mouseout']);
+
+			for (i = 0, il = events.length; i < il; i++) {
+				assignEvents(events[i]);
+			}
+
+			/**
+    * Custom M(PEG)-DASH events
+    *
+    * These events can be attached to the original node using addEventListener and the name of the event,
+    * not using dashjs.MediaPlayer.events object
+    * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
+    */
+			var assignMdashEvents = function assignMdashEvents(e) {
+				var event = (0, _dom.createEvent)(e.type, node);
+				event.data = e;
+				mediaElement.dispatchEvent(event);
+
+				if (e.type.toLowerCase() === 'error') {
+					console.error(e);
+				}
+			};
+
+			for (var eventType in dashEvents) {
+				if (dashEvents.hasOwnProperty(eventType)) {
+					dashPlayer.on(dashEvents[eventType], assignMdashEvents);
+				}
+			}
+		};
+
+		if (mediaFiles && mediaFiles.length > 0) {
+			for (i = 0, il = mediaFiles.length; i < il; i++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+					node.setAttribute('src', mediaFiles[i].src);
+					break;
+				}
+			}
+		}
+
+		node.setAttribute('id', id);
+
+		originalNode.parentNode.insertBefore(node, originalNode);
+		originalNode.removeAttribute('autoplay');
+		originalNode.style.display = 'none';
+
+		NativeDash.prepareSettings({
+			options: options.dash,
+			id: id
+		});
+
+		// HELPER METHODS
+		node.setSize = function (width, height) {
+			node.style.width = width + 'px';
+			node.style.height = height + 'px';
+
+			return node;
+		};
+
+		node.hide = function () {
+			node.pause();
+			node.style.display = 'none';
+			return node;
+		};
+
+		node.show = function () {
+			node.style.display = '';
+			return node;
+		};
+
+		var event = (0, _dom.createEvent)('rendererready', node);
+		mediaElement.dispatchEvent(event);
+
+		return node;
+	}
+};
+
+/**
+ * Register Native M(PEG)-Dash type based on URL structure
+ *
+ */
+_media.typeChecks.push(function (url) {
+	url = url.toLowerCase();
+	return url.includes('.mpd') ? 'application/dash+xml' : null;
+});
+
+_renderer.renderer.add(DashNativeRenderer);
+
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],11:[function(require,module,exports){
+'use strict';
 
 var _window = require('global/window');
 
@@ -3017,7 +2438,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FacebookRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":20,"../utils/general":21,"../utils/media":22,"global/document":2,"global/window":3}],11:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/dom":20,"../utils/general":21,"../utils/media":22,"global/document":2,"global/window":3}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3549,336 +2970,8 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"../core/i18n":4,"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],12:[function(require,module,exports){
+},{"../core/i18n":4,"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],13:[function(require,module,exports){
 'use strict';
-
-// /**
-//  * Native FLV renderer
-//  *
-//  * Uses flv.js, which is a JavaScript library which implements mechanisms to play flv files inspired by flv.js.
-//  * It relies on HTML5 video and MediaSource Extensions for playback.
-//  * Currently, it can only play files with the same origin.
-//  *
-//  * @see https://github.com/Bilibili/flv.js
-//  *
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register Native FLV type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('flv') > -1) {
-// 			return 'video/flv';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var NativeFlv = {
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isMediaStarted: false,
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isMediaLoaded: false,
-// 		/**
-// 		 * @type {Array}
-// 		 */
-// 		creationQueue: [],
-//
-// 		/**
-// 		 * Create a queue to prepare the loading of an FLV source
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to load an FLV player instance
-// 		 */
-// 		prepareSettings: function (settings) {
-// 			if (this.isLoaded) {
-// 				this.createInstance(settings);
-// 			} else {
-// 				this.loadScript(settings);
-// 				this.creationQueue.push(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Load flv.js script on the header of the document
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to load an FLV player instance
-// 		 */
-// 		loadScript: function (settings) {
-// 			if (!this.isMediaStarted) {
-//
-// 				settings.options.path = typeof settings.options.path === 'string' ?
-// 					settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
-//
-// 				if (typeof flvjs !== 'undefined') {
-// 					this.createInstance(settings);
-// 				} else {
-// 					var
-// 						script = doc.createElement('script'),
-// 						firstScriptTag = doc.getElementsByTagName('script')[0],
-// 						done = false;
-//
-// 					script.src = settings.options.path;
-//
-// 					// Attach handlers for all browsers
-// 					script.onload = script.onreadystatechange = function () {
-// 						if (!done && (!this.readyState || this.readyState === undefined ||
-// 							this.readyState === 'loaded' || this.readyState === 'complete')) {
-// 							done = true;
-// 							NativeFlv.mediaReady();
-// 							script.onload = script.onreadystatechange = null;
-// 						}
-// 					};
-//
-// 					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-// 				}
-// 				this.isMediaStarted = true;
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Process queue of FLV player creation
-// 		 *
-// 		 */
-// 		mediaReady: function () {
-// 			this.isLoaded = true;
-// 			this.isMediaLoaded = true;
-//
-// 			while (this.creationQueue.length > 0) {
-// 				var settings = this.creationQueue.pop();
-// 				this.createInstance(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Create a new instance of FLV player and trigger a custom event to initialize it
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to instantiate FLV object
-// 		 */
-// 		createInstance: function (settings) {
-// 			var player = flvjs.createPlayer(settings.options);
-// 			win['__ready__' + settings.id](player);
-// 		}
-// 	};
-//
-// 	var FlvNativeRenderer = {
-// 		name: 'native_flv',
-//
-// 		options: {
-// 			prefix: 'native_flv',
-// 			/**
-// 			 * Custom configuration for FLV player
-// 			 *
-// 			 * @see https://github.com/Bilibili/flv.js/blob/master/docs/api.md#config
-// 			 * @type {Object}
-// 			 */
-// 			flv: {
-// 				// Special config: used to set the local path/URL of flv.js library
-// 				path: '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js',
-// 				cors: true,
-// 				enableWorker: false,
-// 				enableStashBuffer: true,
-// 				stashInitialSize: undefined,
-// 				isLive: false,
-// 				lazyLoad: true,
-// 				lazyLoadMaxDuration: 3 * 60,
-// 				deferLoadAfterSourceOpen: true,
-// 				statisticsInfoReportInterval: 600,
-// 				accurateSeek: false,
-// 				seekType: 'range',  // [range, param, custom]
-// 				seekParamStart: 'bstart',
-// 				seekParamEnd: 'bend',
-// 				rangeLoadZeroStart: false,
-// 				customSeekHandler: undefined
-// 			}
-// 		},
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-//
-// 			var mediaTypes = ['video/x-flv', 'video/flv'];
-//
-// 			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			var
-// 				node = null,
-// 				originalNode = mediaElement.originalNode,
-// 				i,
-// 				il,
-// 				id = mediaElement.id + '_' + options.prefix,
-// 				flvPlayer,
-// 				stack = {}
-// 				;
-//
-// 			node = originalNode.cloneNode(true);
-// 			options = mejs.Utils.extend(options, mediaElement.options);
-//
-// 			// WRAPPERS for PROPs
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					node['get' + capName] = function () {
-// 						if (flvPlayer !== null) {
-// 							return node[propName];
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					node['set' + capName] = function (value) {
-// 						if (flvPlayer !== null) {
-// 							node[propName] = value;
-//
-// 							if (propName === 'src') {
-// 								flvPlayer.detachMediaElement();
-// 								flvPlayer.attachMediaElement(node);
-// 								flvPlayer.load();
-// 							}
-// 						} else {
-// 							// store for after "READY" event fires
-// 							stack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// Initial method to register all FLV events
-// 			win['__ready__' + id] = function (_flvPlayer) {
-//
-// 				mediaElement.flvPlayer = flvPlayer = _flvPlayer;
-//
-// 				// do call stack
-// 				for (i = 0, il = stack.length; i < il; i++) {
-//
-// 					var stackItem = stack[i];
-//
-// 					if (stackItem.type === 'set') {
-// 						var propName = stackItem.propName,
-// 							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 						node['set' + capName](stackItem.value);
-// 					} else if (stackItem.type === 'call') {
-// 						node[stackItem.methodName]();
-// 					}
-// 				}
-//
-// 				// BUBBLE EVENTS
-// 				var
-// 					events = mejs.html5media.events,
-// 					assignEvents = function (eventName) {
-//
-// 						if (eventName === 'loadedmetadata') {
-//
-// 							flvPlayer.detachMediaElement();
-// 							flvPlayer.attachMediaElement(node);
-// 							flvPlayer.load();
-// 						}
-//
-// 						node.addEventListener(eventName, function (e) {
-// 							// copy event
-// 							var event = doc.createEvent('HTMLEvents');
-// 							event.initEvent(e.type, e.bubbles, e.cancelable);
-// 							event.srcElement = e.srcElement;
-// 							event.target = e.srcElement;
-//
-// 							mediaElement.dispatchEvent(event);
-// 						});
-//
-// 					}
-// 					;
-//
-// 				events = events.concat(['click', 'mouseover', 'mouseout']);
-//
-// 				for (i = 0, il = events.length; i < il; i++) {
-// 					assignEvents(events[i]);
-// 				}
-// 			};
-//
-// 			if (mediaFiles && mediaFiles.length > 0) {
-// 				for (i = 0, il = mediaFiles.length; i < il; i++) {
-// 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-// 						node.setAttribute('src', mediaFiles[i].src);
-// 						break;
-// 					}
-// 				}
-// 			}
-//
-// 			node.setAttribute('id', id);
-//
-// 			originalNode.parentNode.insertBefore(node, originalNode);
-// 			originalNode.removeAttribute('autoplay');
-// 			originalNode.style.display = 'none';
-//
-// 			// Options that cannot be overridden
-// 			options.flv.type = 'flv';
-// 			options.flv.url = node.getAttribute('src');
-//
-// 			NativeFlv.prepareSettings({
-// 				options: options.flv,
-// 				id: id
-// 			});
-//
-// 			// HELPER METHODS
-// 			node.setSize = function (width, height) {
-// 				node.style.width = width + 'px';
-// 				node.style.height = height + 'px';
-//
-// 				return node;
-// 			};
-//
-// 			node.hide = function () {
-// 				node.pause();
-// 				node.style.display = 'none';
-// 				return node;
-// 			};
-//
-// 			node.show = function () {
-// 				node.style.display = '';
-// 				return node;
-// 			};
-//
-// 			node.destroy = function () {
-// 				flvPlayer.destroy();
-// 			};
-//
-// 			var event = mejs.Utils.createEvent('rendererready', node);
-// 			mediaElement.dispatchEvent(event);
-//
-// 			return node;
-// 		}
-// 	};
-//
-// 	mejs.Renderers.add(FlvNativeRenderer);
-//
-// })(window, document, window.mejs || {});
 
 var _window = require('global/window');
 
@@ -4205,413 +3298,8 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],13:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],14:[function(require,module,exports){
 'use strict';
-
-// /**
-//  * Native HLS renderer
-//  *
-//  * Uses DailyMotion's hls.js, which is a JavaScript library which implements an HTTP Live Streaming client.
-//  * It relies on HTML5 video and MediaSource Extensions for playback.
-//  * This renderer integrates new events associated with m3u8 files the same way Flash version of Hls does.
-//  * @see https://github.com/dailymotion/hls.js
-//  *
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register Native HLS type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('m3u8') > -1) {
-// 			return 'application/x-mpegURL';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var NativeHls = {
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isMediaStarted: false,
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isMediaLoaded: false,
-// 		/**
-// 		 * @type {Array}
-// 		 */
-// 		creationQueue: [],
-//
-// 		/**
-// 		 * Create a queue to prepare the loading of an HLS source
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to load an HLS player instance
-// 		 */
-// 		prepareSettings: function (settings) {
-// 			if (this.isLoaded) {
-// 				this.createInstance(settings);
-// 			} else {
-// 				this.loadScript(settings);
-// 				this.creationQueue.push(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Load hls.js script on the header of the document
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to load an HLS player instance
-// 		 */
-// 		loadScript: function (settings) {
-// 			if (!this.isMediaStarted) {
-//
-// 				settings.options.path = typeof settings.options.path === 'string' ?
-// 					settings.options.path : '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
-//
-// 				if (typeof Hls !== 'undefined') {
-// 					this.createInstance(settings);
-// 				} else {
-// 					var
-// 						script = doc.createElement('script'),
-// 						firstScriptTag = doc.getElementsByTagName('script')[0],
-// 						done = false;
-//
-// 					script.src = settings.options.path;
-//
-// 					// Attach handlers for all browsers
-// 					script.onload = script.onreadystatechange = function () {
-// 						if (!done && (!this.readyState || this.readyState === undefined ||
-// 							this.readyState === 'loaded' || this.readyState === 'complete')) {
-// 							done = true;
-// 							NativeHls.mediaReady();
-// 							script.onload = script.onreadystatechange = null;
-// 						}
-// 					};
-//
-// 					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-// 				}
-// 				this.isMediaStarted = true;
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Process queue of HLS player creation
-// 		 *
-// 		 */
-// 		mediaReady: function () {
-// 			this.isLoaded = true;
-// 			this.isMediaLoaded = true;
-//
-// 			while (this.creationQueue.length > 0) {
-// 				var settings = this.creationQueue.pop();
-// 				this.createInstance(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Create a new instance of HLS player and trigger a custom event to initialize it
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to instantiate HLS object
-// 		 * @return {Hls}
-// 		 */
-// 		createInstance: function (settings) {
-// 			var player = new Hls(settings.options);
-// 			win['__ready__' + settings.id](player);
-// 			return player;
-// 		}
-// 	};
-//
-// 	var HlsNativeRenderer = {
-// 		name: 'native_hls',
-//
-// 		options: {
-// 			prefix: 'native_hls',
-// 			/**
-// 			 * Custom configuration for HLS player
-// 			 *
-// 			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
-// 			 * @type {Object}
-// 			 */
-// 			hls: {
-// 				// Special config: used to set the local path/URL of hls.js library
-// 				path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
-// 				autoStartLoad: true,
-// 				startPosition: -1,
-// 				capLevelToPlayerSize: false,
-// 				debug: false,
-// 				maxBufferLength: 30,
-// 				maxMaxBufferLength: 600,
-// 				maxBufferSize: 60 * 1000 * 1000,
-// 				maxBufferHole: 0.5,
-// 				maxSeekHole: 2,
-// 				seekHoleNudgeDuration: 0.01,
-// 				maxFragLookUpTolerance: 0.2,
-// 				liveSyncDurationCount: 3,
-// 				liveMaxLatencyDurationCount: 10,
-// 				enableWorker: true,
-// 				enableSoftwareAES: true,
-// 				manifestLoadingTimeOut: 10000,
-// 				manifestLoadingMaxRetry: 6,
-// 				manifestLoadingRetryDelay: 500,
-// 				manifestLoadingMaxRetryTimeout: 64000,
-// 				levelLoadingTimeOut: 10000,
-// 				levelLoadingMaxRetry: 6,
-// 				levelLoadingRetryDelay: 500,
-// 				levelLoadingMaxRetryTimeout: 64000,
-// 				fragLoadingTimeOut: 20000,
-// 				fragLoadingMaxRetry: 6,
-// 				fragLoadingRetryDelay: 500,
-// 				fragLoadingMaxRetryTimeout: 64000,
-// 				startFragPrefech: false,
-// 				appendErrorMaxRetry: 3,
-// 				enableCEA708Captions: true,
-// 				stretchShortVideoTrack: true,
-// 				forceKeyFrameOnDiscontinuity: true,
-// 				abrEwmaFastLive: 5.0,
-// 				abrEwmaSlowLive: 9.0,
-// 				abrEwmaFastVoD: 4.0,
-// 				abrEwmaSlowVoD: 15.0,
-// 				abrEwmaDefaultEstimate: 500000,
-// 				abrBandWidthFactor: 0.8,
-// 				abrBandWidthUpFactor: 0.7
-// 			}
-// 		},
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-//
-// 			var mediaTypes = ['application/x-mpegURL', 'application/x-mpegurl', 'vnd.apple.mpegURL',
-// 				'audio/mpegURL', 'audio/hls', 'video/hls'];
-// 			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			var
-// 				node = null,
-// 				originalNode = mediaElement.originalNode,
-// 				i,
-// 				il,
-// 				id = mediaElement.id + '_' + options.prefix,
-// 				hlsPlayer,
-// 				stack = {}
-// 				;
-//
-// 			node = originalNode.cloneNode(true);
-// 			options = mejs.Utils.extend(options, mediaElement.options);
-//
-// 			// WRAPPERS for PROPs
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					node['get' + capName] = function () {
-// 						if (hlsPlayer !== null) {
-// 							return node[propName];
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					node['set' + capName] = function (value) {
-// 						if (hlsPlayer !== null) {
-// 							node[propName] = value;
-//
-// 							if (propName === 'src') {
-//
-// 								hlsPlayer.destroy();
-// 								hlsPlayer = null;
-// 								hlsPlayer = NativeHls.createInstance({
-// 									options: options.hls,
-// 									id: id
-// 								});
-// 								hlsPlayer.attachMedia(node);
-//
-// 								hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
-// 									hlsPlayer.loadSource(value);
-// 								});
-// 							}
-// 						} else {
-// 							// store for after "READY" event fires
-// 							stack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// Initial method to register all HLS events
-// 			win['__ready__' + id] = function (_hlsPlayer) {
-//
-// 				mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
-//
-// 				// do call stack
-// 				for (i = 0, il = stack.length; i < il; i++) {
-//
-// 					var stackItem = stack[i];
-//
-// 					if (stackItem.type === 'set') {
-// 						var propName = stackItem.propName,
-// 							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 						node['set' + capName](stackItem.value);
-// 					} else if (stackItem.type === 'call') {
-// 						node[stackItem.methodName]();
-// 					}
-// 				}
-//
-// 				// BUBBLE EVENTS
-// 				var
-// 					events = mejs.html5media.events, hlsEvents = Hls.Events,
-// 					assignEvents = function (eventName) {
-//
-// 						if (eventName === 'loadedmetadata') {
-//
-// 							hlsPlayer.detachMedia();
-//
-// 							var url = node.src;
-//
-// 							hlsPlayer.attachMedia(node);
-// 							hlsPlayer.on(hlsEvents.MEDIA_ATTACHED, function () {
-// 								hlsPlayer.loadSource(url);
-// 							});
-// 						}
-//
-// 						node.addEventListener(eventName, function (e) {
-// 							// copy event
-// 							var event = doc.createEvent('HTMLEvents');
-// 							event.initEvent(e.type, e.bubbles, e.cancelable);
-// 							event.srcElement = e.srcElement;
-// 							event.target = e.srcElement;
-//
-// 							mediaElement.dispatchEvent(event);
-// 						});
-//
-// 					}
-// 					;
-//
-// 				events = events.concat(['click', 'mouseover', 'mouseout']);
-//
-// 				for (i = 0, il = events.length; i < il; i++) {
-// 					assignEvents(events[i]);
-// 				}
-//
-// 				/**
-// 				 * Custom HLS events
-// 				 *
-// 				 * These events can be attached to the original node using addEventListener and the name of the event,
-// 				 * not using Hls.Events object
-// 				 * @see https://github.com/dailymotion/hls.js/blob/master/src/events.js
-// 				 * @see https://github.com/dailymotion/hls.js/blob/master/src/errors.js
-// 				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
-// 				 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
-// 				 */
-// 				var assignHlsEvents = function (e, data) {
-// 					var event = mejs.Utils.createEvent(e, node);
-// 					event.data = data;
-// 					mediaElement.dispatchEvent(event);
-//
-// 					if (e === 'hlsError') {
-// 						console.error(e, data);
-//
-// 						// borrowed from http://dailymotion.github.io/hls.js/demo/
-// 						if (data.fatal) {
-// 							hlsPlayer.destroy();
-// 						} else {
-// 							switch (data.type) {
-// 								case 'mediaError':
-// 									hlsPlayer.recoverMediaError();
-// 									break;
-//
-// 								case 'networkError':
-// 									hlsPlayer.startLoad();
-// 									break;
-//
-// 							}
-// 						}
-// 					}
-// 				};
-//
-// 				for (var eventType in hlsEvents) {
-// 					if (hlsEvents.hasOwnProperty(eventType)) {
-// 						hlsPlayer.on(hlsEvents[eventType], assignHlsEvents);
-// 					}
-// 				}
-// 			};
-//
-// 			if (mediaFiles && mediaFiles.length > 0) {
-// 				for (i = 0, il = mediaFiles.length; i < il; i++) {
-// 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-// 						node.setAttribute('src', mediaFiles[i].src);
-// 						break;
-// 					}
-// 				}
-// 			}
-//
-// 			node.setAttribute('id', id);
-//
-// 			originalNode.parentNode.insertBefore(node, originalNode);
-// 			originalNode.removeAttribute('autoplay');
-// 			originalNode.style.display = 'none';
-//
-// 			NativeHls.prepareSettings({
-// 				options: options.hls,
-// 				id: id
-// 			});
-//
-// 			// HELPER METHODS
-// 			node.setSize = function (width, height) {
-// 				node.style.width = width + 'px';
-// 				node.style.height = height + 'px';
-//
-// 				return node;
-// 			};
-//
-// 			node.hide = function () {
-// 				node.pause();
-// 				node.style.display = 'none';
-// 				return node;
-// 			};
-//
-// 			node.show = function () {
-// 				node.style.display = '';
-// 				return node;
-// 			};
-//
-// 			node.destroy = function () {
-// 				hlsPlayer.destroy();
-// 			};
-//
-// 			var event = mejs.Utils.createEvent('rendererready', node);
-// 			mediaElement.dispatchEvent(event);
-//
-// 			return node;
-// 		}
-// 	};
-//
-// 	mejs.Renderers.add(HlsNativeRenderer);
-//
-// })(window, document, window.mejs || {});
 
 var _window = require('global/window');
 
@@ -5022,7 +3710,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],14:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],15:[function(require,module,exports){
 'use strict';
 
 var _window = require('global/window');
@@ -5178,1086 +3866,8 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"global/document":2,"global/window":3}],15:[function(require,module,exports){
+},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"global/document":2,"global/window":3}],16:[function(require,module,exports){
 'use strict';
-
-// /**
-//  * Native M-Dash renderer
-//  *
-//  * Uses dash.js, a reference client implementation for the playback of MPEG DASH via Javascript and compliant browsers.
-//  * It relies on HTML5 video and MediaSource Extensions for playback.
-//  * This renderer integrates new events associated with mpd files.
-//  * @see https://github.com/Dash-Industry-Forum/dash.js
-//  *
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register Native M(PEG)-Dash type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('mpd') > -1) {
-// 			return 'application/dash+xml';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var NativeDash = {
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isMediaLoaded: false,
-// 		/**
-// 		 * @type {Array}
-// 		 */
-// 		creationQueue: [],
-//
-// 		/**
-// 		 * Create a queue to prepare the loading of an HLS source
-// 		 * @param {Object} settings - an object with settings needed to load an HLS player instance
-// 		 */
-// 		prepareSettings: function (settings) {
-// 			if (this.isLoaded) {
-// 				this.createInstance(settings);
-// 			} else {
-// 				this.loadScript(settings);
-// 				this.creationQueue.push(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Load dash.mediaplayer.js script on the header of the document
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to load an HLS player instance
-// 		 */
-// 		loadScript: function (settings) {
-// 			if (!this.isScriptLoaded) {
-//
-// 				settings.options.path = typeof settings.options.path === 'string' ?
-// 					settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
-//
-// 				if (typeof dashjs !== 'undefined') {
-// 					this.createInstance(settings);
-// 				} else {
-// 					var
-// 						script = doc.createElement('script'),
-// 						firstScriptTag = doc.getElementsByTagName('script')[0],
-// 						done = false;
-//
-// 					script.src = settings.options.path;
-//
-// 					// Attach handlers for all browsers
-// 					script.onload = script.onreadystatechange = function () {
-// 						if (!done && (!this.readyState || this.readyState === undefined ||
-// 							this.readyState === 'loaded' || this.readyState === 'complete')) {
-// 							done = true;
-// 							NativeDash.mediaReady();
-// 							script.onload = script.onreadystatechange = null;
-// 						}
-// 					};
-//
-// 					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-// 				}
-// 				this.isScriptLoaded = true;
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Process queue of Dash player creation
-// 		 *
-// 		 */
-// 		mediaReady: function () {
-//
-// 			this.isLoaded = true;
-// 			this.isScriptLoaded = true;
-//
-// 			while (this.creationQueue.length > 0) {
-// 				var settings = this.creationQueue.pop();
-// 				this.createInstance(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Create a new instance of Dash player and trigger a custom event to initialize it
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to instantiate HLS object
-// 		 */
-// 		createInstance: function (settings) {
-//
-// 			var player = dashjs.MediaPlayer().create();
-// 			win['__ready__' + settings.id](player);
-// 		}
-// 	};
-//
-// 	var DashNativeRenderer = {
-// 		name: 'native_mdash',
-//
-// 		options: {
-// 			prefix: 'native_mdash',
-// 			dash: {
-// 				// Special config: used to set the local path/URL of dash.js mediaplayer library
-// 				path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
-// 				debug: false
-// 			}
-// 		},
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-//
-// 			var mediaTypes = ['application/dash+xml'];
-// 			return mejs.MediaFeatures.hasMse && mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			var
-// 				node = null,
-// 				originalNode = mediaElement.originalNode,
-// 				i,
-// 				il,
-// 				id = mediaElement.id + '_' + options.prefix,
-// 				dashPlayer,
-// 				stack = {}
-// 				;
-//
-// 			node = originalNode.cloneNode(true);
-// 			options = mejs.Utils.extend(options, mediaElement.options);
-//
-// 			// WRAPPERS for PROPs
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					node['get' + capName] = function () {
-// 						if (dashPlayer !== null) {
-// 							return node[propName];
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					node['set' + capName] = function (value) {
-// 						if (dashPlayer !== null) {
-// 							if (propName === 'src') {
-//
-// 								dashPlayer.attachSource(value);
-//
-// 								if (node.getAttribute('autoplay')) {
-// 									node.play();
-// 								}
-// 							}
-//
-// 							node[propName] = value;
-// 						} else {
-// 							// store for after "READY" event fires
-// 							stack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// Initial method to register all M-Dash events
-// 			win['__ready__' + id] = function (_dashPlayer) {
-//
-// 				mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-// 				dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-//
-// 				// do call stack
-// 				for (i = 0, il = stack.length; i < il; i++) {
-//
-// 					var stackItem = stack[i];
-//
-// 					if (stackItem.type === 'set') {
-// 						var propName = stackItem.propName,
-// 							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 						node['set' + capName](stackItem.value);
-// 					} else if (stackItem.type === 'call') {
-// 						node[stackItem.methodName]();
-// 					}
-// 				}
-//
-// 				// BUBBLE EVENTS
-// 				var
-// 					events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events,
-// 					assignEvents = function (eventName) {
-//
-// 						if (eventName === 'loadedmetadata') {
-// 							dashPlayer.initialize(node, node.src, false);
-// 						}
-//
-// 						node.addEventListener(eventName, function (e) {
-// 							// copy event
-//
-// 							var event = doc.createEvent('HTMLEvents');
-// 							event.initEvent(e.type, e.bubbles, e.cancelable);
-// 							event.srcElement = e.srcElement;
-// 							event.target = e.srcElement;
-//
-// 							mediaElement.dispatchEvent(event);
-// 						});
-//
-// 					}
-// 					;
-//
-// 				events = events.concat(['click', 'mouseover', 'mouseout']);
-//
-// 				for (i = 0, il = events.length; i < il; i++) {
-// 					assignEvents(events[i]);
-// 				}
-//
-// 				/**
-// 				 * Custom M(PEG)-DASH events
-// 				 *
-// 				 * These events can be attached to the original node using addEventListener and the name of the event,
-// 				 * not using dashjs.MediaPlayer.events object
-// 				 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
-// 				 */
-// 				var assignMdashEvents = function (e) {
-// 					var event = mejs.Utils.createEvent(e.type, node);
-// 					event.data = e;
-// 					mediaElement.dispatchEvent(event);
-//
-// 					if (e.type.toLowerCase() === 'error') {
-// 						console.error(e);
-// 					}
-// 				};
-// 				for (var eventType in dashEvents) {
-// 					if (dashEvents.hasOwnProperty(eventType)) {
-// 						dashPlayer.on(dashEvents[eventType], assignMdashEvents);
-// 					}
-// 				}
-// 			};
-//
-// 			if (mediaFiles && mediaFiles.length > 0) {
-// 				for (i = 0, il = mediaFiles.length; i < il; i++) {
-// 					if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-// 						node.setAttribute('src', mediaFiles[i].src);
-// 						break;
-// 					}
-// 				}
-// 			}
-//
-// 			node.setAttribute('id', id);
-//
-// 			originalNode.parentNode.insertBefore(node, originalNode);
-// 			originalNode.removeAttribute('autoplay');
-// 			originalNode.style.display = 'none';
-//
-// 			NativeDash.prepareSettings({
-// 				options: options.dash,
-// 				id: id
-// 			});
-//
-// 			// HELPER METHODS
-// 			node.setSize = function (width, height) {
-// 				node.style.width = width + 'px';
-// 				node.style.height = height + 'px';
-//
-// 				return node;
-// 			};
-//
-// 			node.hide = function () {
-// 				node.pause();
-// 				node.style.display = 'none';
-// 				return node;
-// 			};
-//
-// 			node.show = function () {
-// 				node.style.display = '';
-// 				return node;
-// 			};
-//
-// 			var event = mejs.Utils.createEvent('rendererready', node);
-// 			mediaElement.dispatchEvent(event);
-//
-// 			return node;
-// 		}
-// 	};
-//
-// 	mejs.Renderers.add(DashNativeRenderer);
-//
-// })(window, document, window.mejs || {});
-
-var _window = require('global/window');
-
-var _window2 = _interopRequireDefault(_window);
-
-var _document = require('global/document');
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = require('../core/mejs');
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-var _renderer = require('../core/renderer');
-
-var _dom = require('../utils/dom');
-
-var _media = require('../utils/media');
-
-var _constants = require('../utils/constants');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Native M-Dash renderer
- *
- * Uses dash.js, a reference client implementation for the playback of MPEG DASH via Javascript and compliant browsers.
- * It relies on HTML5 video and MediaSource Extensions for playback.
- * This renderer integrates new events associated with mpd files.
- * @see https://github.com/Dash-Industry-Forum/dash.js
- *
- */
-var NativeDash = {
-	/**
-  * @type {Boolean}
-  */
-	isMediaLoaded: false,
-	/**
-  * @type {Array}
-  */
-	creationQueue: [],
-
-	/**
-  * Create a queue to prepare the loading of an HLS source
-  *
-  * @param {Object} settings - an object with settings needed to load an HLS player instance
-  */
-	prepareSettings: function prepareSettings(settings) {
-		if (NativeDash.isLoaded) {
-			NativeDash.createInstance(settings);
-		} else {
-			NativeDash.loadScript(settings);
-			NativeDash.creationQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load dash.mediaplayer.js script on the header of the document
-  *
-  * @param {Object} settings - an object with settings needed to load an HLS player instance
-  */
-	loadScript: function loadScript(settings) {
-		if (!NativeDash.isScriptLoaded) {
-
-			if (typeof dashjs !== 'undefined') {
-				NativeDash.createInstance(settings);
-			} else {
-				(function () {
-
-					settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
-
-					var script = _document2.default.createElement('script'),
-					    firstScriptTag = _document2.default.getElementsByTagName('script')[0],
-					    done = false;
-
-					script.src = settings.options.path;
-
-					// Attach handlers for all browsers
-					script.onload = script.onreadystatechange = function () {
-						if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
-							done = true;
-							NativeDash.mediaReady();
-							script.onload = script.onreadystatechange = null;
-						}
-					};
-
-					firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-				})();
-			}
-			NativeDash.isScriptLoaded = true;
-		}
-	},
-
-	/**
-  * Process queue of Dash player creation
-  *
-  */
-	mediaReady: function mediaReady() {
-
-		NativeDash.isLoaded = true;
-		NativeDash.isScriptLoaded = true;
-
-		while (NativeDash.creationQueue.length > 0) {
-			var settings = NativeDash.creationQueue.pop();
-			NativeDash.createInstance(settings);
-		}
-	},
-
-	/**
-  * Create a new instance of Dash player and trigger a custom event to initialize it
-  *
-  * @param {Object} settings - an object with settings needed to instantiate HLS object
-  */
-	createInstance: function createInstance(settings) {
-
-		var player = dashjs.MediaPlayer().create();
-		_window2.default['__ready__' + settings.id](player);
-	}
-};
-
-var DashNativeRenderer = {
-	name: 'native_mdash',
-
-	options: {
-		prefix: 'native_mdash',
-		dash: {
-			// Special config: used to set the local path/URL of dash.js mediaplayer library
-			path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
-			debug: false
-		}
-	},
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
-	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ['application/dash+xml'].includes(type);
-	},
-
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
-	create: function create(mediaElement, options, mediaFiles) {
-
-		var node = null,
-		    originalNode = mediaElement.originalNode,
-		    id = mediaElement.id + '_' + options.prefix,
-		    dashPlayer = void 0,
-		    stack = {},
-		    i = void 0,
-		    il = void 0;
-
-		node = originalNode.cloneNode(true);
-		options = Object.assign(options, mediaElement.options);
-
-		// WRAPPERS for PROPs
-		var props = _mejs2.default.html5media.properties,
-		    assignGettersSetters = function assignGettersSetters(propName) {
-			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-			node['get' + capName] = function () {
-				return dashPlayer !== null ? node[propName] : null;
-			};
-
-			node['set' + capName] = function (value) {
-				if (dashPlayer !== null) {
-					if (propName === 'src') {
-
-						dashPlayer.attachSource(value);
-
-						if (node.getAttribute('autoplay')) {
-							node.play();
-						}
-					}
-
-					node[propName] = value;
-				} else {
-					// store for after "READY" event fires
-					stack.push({ type: 'set', propName: propName, value: value });
-				}
-			};
-		};
-
-		for (i = 0, il = props.length; i < il; i++) {
-			assignGettersSetters(props[i]);
-		}
-
-		// Initial method to register all M-Dash events
-		_window2.default['__ready__' + id] = function (_dashPlayer) {
-
-			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-
-			// By default, console log is off
-			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-
-			// do call stack
-			if (stack.length) {
-				for (i = 0, il = stack.length; i < il; i++) {
-
-					var stackItem = stack[i];
-
-					if (stackItem.type === 'set') {
-						var propName = stackItem.propName,
-						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-						node['set' + capName](stackItem.value);
-					} else if (stackItem.type === 'call') {
-						node[stackItem.methodName]();
-					}
-				}
-			}
-
-			// BUBBLE EVENTS
-			var events = _mejs2.default.html5media.events,
-			    dashEvents = dashjs.MediaPlayer.events,
-			    assignEvents = function assignEvents(eventName) {
-
-				if (eventName === 'loadedmetadata') {
-					dashPlayer.initialize(node, node.src, false);
-				}
-
-				node.addEventListener(eventName, function (e) {
-					var event = _document2.default.createEvent('HTMLEvents');
-					event.initEvent(e.type, e.bubbles, e.cancelable);
-					// @todo Check this
-					// event.srcElement = e.srcElement;
-					// event.target = e.srcElement;
-
-					mediaElement.dispatchEvent(event);
-				});
-			};
-
-			events = events.concat(['click', 'mouseover', 'mouseout']);
-
-			for (i = 0, il = events.length; i < il; i++) {
-				assignEvents(events[i]);
-			}
-
-			/**
-    * Custom M(PEG)-DASH events
-    *
-    * These events can be attached to the original node using addEventListener and the name of the event,
-    * not using dashjs.MediaPlayer.events object
-    * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
-    */
-			var assignMdashEvents = function assignMdashEvents(e) {
-				var event = (0, _dom.createEvent)(e.type, node);
-				event.data = e;
-				mediaElement.dispatchEvent(event);
-
-				if (e.type.toLowerCase() === 'error') {
-					console.error(e);
-				}
-			};
-
-			for (var eventType in dashEvents) {
-				if (dashEvents.hasOwnProperty(eventType)) {
-					dashPlayer.on(dashEvents[eventType], assignMdashEvents);
-				}
-			}
-		};
-
-		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					node.setAttribute('src', mediaFiles[i].src);
-					break;
-				}
-			}
-		}
-
-		node.setAttribute('id', id);
-
-		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
-		originalNode.style.display = 'none';
-
-		NativeDash.prepareSettings({
-			options: options.dash,
-			id: id
-		});
-
-		// HELPER METHODS
-		node.setSize = function (width, height) {
-			node.style.width = width + 'px';
-			node.style.height = height + 'px';
-
-			return node;
-		};
-
-		node.hide = function () {
-			node.pause();
-			node.style.display = 'none';
-			return node;
-		};
-
-		node.show = function () {
-			node.style.display = '';
-			return node;
-		};
-
-		var event = (0, _dom.createEvent)('rendererready', node);
-		mediaElement.dispatchEvent(event);
-
-		return node;
-	}
-};
-
-/**
- * Register Native M(PEG)-Dash type based on URL structure
- *
- */
-_media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('.mpd') ? 'application/dash+xml' : null;
-});
-
-_renderer.renderer.add(DashNativeRenderer);
-
-},{"../core/mejs":6,"../core/renderer":7,"../utils/constants":19,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],16:[function(require,module,exports){
-'use strict';
-
-// /**
-//  * SoundCloud renderer
-//  *
-//  * Uses <iframe> approach and uses SoundCloud Widget API to manipulate it.
-//  * @see https://developers.soundcloud.com/docs/api/html5-widget
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register SoundCloud type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('soundcloud.com') > -1) {
-// 			return 'video/x-soundcloud';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var SoundCloudApi = {
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isSDKStarted: false,
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isSDKLoaded: false,
-// 		/**
-// 		 * @type {Array}
-// 		 */
-// 		iframeQueue: [],
-//
-// 		/**
-// 		 * Create a queue to prepare the creation of <iframe>
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		enqueueIframe: function (settings) {
-//
-// 			if (this.isLoaded) {
-// 				this.createIframe(settings);
-// 			} else {
-// 				this.loadIframeApi();
-// 				this.iframeQueue.push(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Load SoundCloud API script on the header of the document
-// 		 *
-// 		 */
-// 		loadIframeApi: function () {
-// 			if (!this.isSDKStarted) {
-//
-// 				var head = doc.getElementsByTagName("head")[0] || document.documentElement,
-// 					script = doc.createElement("script"),
-// 					done = false;
-//
-// 				script.src = '//w.soundcloud.com/player/api.js';
-//
-// 				// Attach handlers for all browsers
-// 				script.onload = script.onreadystatechange = function () {
-// 					if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {
-// 						done = true;
-// 						SoundCloudApi.apiReady();
-//
-// 						// Handle memory leak in IE
-// 						script.onload = script.onreadystatechange = null;
-// 						if (head && script.parentNode) {
-// 							head.removeChild(script);
-// 						}
-// 					}
-// 				};
-// 				head.appendChild(script);
-// 				this.isSDKStarted = true;
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Process queue of SoundCloud <iframe> element creation
-// 		 *
-// 		 */
-// 		apiReady: function () {
-// 			this.isLoaded = true;
-// 			this.isSDKLoaded = true;
-//
-// 			while (this.iframeQueue.length > 0) {
-// 				var settings = this.iframeQueue.pop();
-// 				this.createIframe(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Create a new instance of SoundCloud Widget player and trigger a custom event to initialize it
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		createIframe: function (settings) {
-// 			var player = SC.Widget(settings.iframe);
-// 			win['__ready__' + settings.id](player);
-// 		}
-// 	};
-//
-// 	var SoundCloudIframeRenderer = {
-// 		name: 'soundcloud_iframe',
-//
-// 		options: {
-// 			prefix: 'soundcloud_iframe'
-// 		},
-//
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-// 			var mediaTypes = ['video/soundcloud', 'video/x-soundcloud'];
-//
-// 			return mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			var sc = {};
-//
-// 			// store main variable
-// 			sc.options = options;
-// 			sc.id = mediaElement.id + '_' + options.prefix;
-// 			sc.mediaElement = mediaElement;
-//
-// 			// create our fake element that allows events and such to work
-// 			var apiStack = [],
-// 				scPlayerReady = false,
-// 				scPlayer = null,
-// 				scIframe = null,
-//
-// 				currentTime = 0,
-// 				duration = 0,
-// 				bufferedTime = 0,
-// 				paused = true,
-// 				volume = 1,
-// 				muted = false,
-// 				ended = false,
-// 				i,
-// 				il;
-//
-// 			// wrappers for get/set
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-//
-// 					// add to flash state that we will store
-//
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					sc['get' + capName] = function () {
-// 						if (scPlayer !== null) {
-// 							var value = null;
-//
-// 							// figure out how to get dm dta here
-// 							switch (propName) {
-// 								case 'currentTime':
-// 									return currentTime;
-//
-// 								case 'duration':
-// 									return duration;
-//
-// 								case 'volume':
-// 									return volume;
-//
-// 								case 'paused':
-// 									return paused;
-//
-// 								case 'ended':
-// 									return ended;
-//
-// 								case 'muted':
-// 									return muted; // ?
-//
-// 								case 'buffered':
-// 									return {
-// 										start: function () {
-// 											return 0;
-// 										},
-// 										end: function () {
-// 											return bufferedTime * duration;
-// 										},
-// 										length: 1
-// 									};
-// 								case 'src':
-// 									return (scIframe) ? scIframe.src : '';
-// 							}
-//
-// 							return value;
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					sc['set' + capName] = function (value) {
-//
-// 						if (scPlayer !== null) {
-//
-// 							// do something
-// 							switch (propName) {
-//
-// 								case 'src':
-// 									var url = typeof value === 'string' ? value : value[0].src;
-//
-// 									scPlayer.load(url);
-// 									break;
-//
-// 								case 'currentTime':
-// 									scPlayer.seekTo(value * 1000);
-// 									break;
-//
-// 								case 'muted':
-// 									if (value) {
-// 										scPlayer.setVolume(0); // ?
-// 									} else {
-// 										scPlayer.setVolume(1); // ?
-// 									}
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', sc);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								case 'volume':
-// 									scPlayer.setVolume(value);
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', sc);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								default:
-// 									
-// 							}
-//
-// 						} else {
-// 							// store for after "READY" event fires
-// 							apiStack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// add wrappers for native methods
-// 			var
-// 				methods = mejs.html5media.methods,
-// 				assignMethods = function (methodName) {
-//
-// 					// run the method on the Soundcloud API
-// 					sc[methodName] = function () {
-//
-// 						if (scPlayer !== null) {
-//
-// 							// DO method
-// 							switch (methodName) {
-// 								case 'play':
-// 									return scPlayer.play();
-// 								case 'pause':
-// 									return scPlayer.pause();
-// 								case 'load':
-// 									return null;
-//
-// 							}
-//
-// 						} else {
-// 							apiStack.push({type: 'call', methodName: methodName});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = methods.length; i < il; i++) {
-// 				assignMethods(methods[i]);
-// 			}
-//
-// 			// add a ready method that SC can fire
-// 			win['__ready__' + sc.id] = function (_scPlayer) {
-//
-// 				scPlayerReady = true;
-// 				mediaElement.scPlayer = scPlayer = _scPlayer;
-//
-// 				// do call stack
-// 				for (i = 0, il = apiStack.length; i < il; i++) {
-//
-// 					var stackItem = apiStack[i];
-//
-// 					if (stackItem.type === 'set') {
-// 						var propName = stackItem.propName,
-// 							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 						sc['set' + capName](stackItem.value);
-// 					} else if (stackItem.type === 'call') {
-// 						sc[stackItem.methodName]();
-// 					}
-// 				}
-//
-// 				// SoundCloud properties are async, so we don't fire the event until the property callback fires
-// 				scPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function () {
-// 					paused = false;
-// 					ended = false;
-//
-// 					scPlayer.getPosition(function (_currentTime) {
-// 						currentTime = _currentTime / 1000;
-// 						var event = mejs.Utils.createEvent('timeupdate', sc);
-// 						mediaElement.dispatchEvent(event);
-// 					});
-// 				});
-//
-// 				scPlayer.bind(SC.Widget.Events.PAUSE, function () {
-// 					paused = true;
-//
-// 					var event = mejs.Utils.createEvent('pause', sc);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				scPlayer.bind(SC.Widget.Events.PLAY, function () {
-// 					paused = false;
-// 					ended = false;
-//
-// 					var event = mejs.Utils.createEvent('play', sc);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				scPlayer.bind(SC.Widget.Events.FINISHED, function () {
-// 					paused = false;
-// 					ended = true;
-//
-// 					var event = mejs.Utils.createEvent('ended', sc);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				scPlayer.bind(SC.Widget.Events.READY, function () {
-// 					scPlayer.getDuration(function (_duration) {
-// 						duration = _duration / 1000;
-//
-// 						var event = mejs.Utils.createEvent('loadedmetadata', sc);
-// 						mediaElement.dispatchEvent(event);
-// 					});
-// 				});
-// 				scPlayer.bind(SC.Widget.Events.LOAD_PROGRESS, function () {
-// 					scPlayer.getDuration(function (loadProgress) {
-// 						if (duration > 0) {
-// 							bufferedTime = duration * loadProgress;
-//
-// 							var event = mejs.Utils.createEvent('progress', sc);
-// 							mediaElement.dispatchEvent(event);
-// 						}
-// 					});
-// 					scPlayer.getDuration(function (_duration) {
-// 						duration = _duration;
-//
-// 						var event = mejs.Utils.createEvent('loadedmetadata', sc);
-// 						mediaElement.dispatchEvent(event);
-// 					});
-// 				});
-//
-// 				// give initial events
-// 				var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-//
-// 				for (var i = 0, il = initEvents.length; i < il; i++) {
-// 					var event = mejs.Utils.createEvent(initEvents[i], sc);
-// 					mediaElement.dispatchEvent(event);
-// 				}
-// 			};
-//
-// 			// container for API API
-// 			scIframe = doc.createElement('iframe');
-// 			scIframe.id = sc.id;
-// 			scIframe.width = 10;
-// 			scIframe.height = 10;
-// 			scIframe.frameBorder = 0;
-// 			scIframe.style.visibility = 'hidden';
-// 			scIframe.src = mediaFiles[0].src;
-// 			scIframe.scrolling = 'no';
-// 			mediaElement.appendChild(scIframe);
-//
-// 			mediaElement.originalNode.style.display = 'none';
-//
-// 			var
-// 				scSettings = {
-// 					iframe: scIframe,
-// 					id: sc.id
-// 				};
-//
-// 			SoundCloudApi.enqueueIframe(scSettings);
-//
-// 			sc.setSize = function (width, height) {
-// 				// nothing here, audio only
-// 			};
-// 			sc.hide = function () {
-// 				sc.pause();
-// 				if (scIframe) {
-// 					scIframe.style.display = 'none';
-// 				}
-// 			};
-// 			sc.show = function () {
-// 				if (scIframe) {
-// 					scIframe.style.display = '';
-// 				}
-// 			};
-// 			sc.destroy = function () {
-// 				scPlayer.destroy();
-// 			};
-//
-// 			return sc;
-// 		}
-// 	};
-//
-// 	mejs.Renderers.add(SoundCloudIframeRenderer);
-//
-// })(window, document, window.mejs || {});
 
 var _window = require('global/window');
 
@@ -6697,560 +4307,6 @@ _renderer.renderer.add(SoundCloudIframeRenderer);
 
 },{"../core/mejs":6,"../core/renderer":7,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],17:[function(require,module,exports){
 'use strict';
-
-// /**
-//  * Vimeo renderer
-//  *
-//  * Uses <iframe> approach and uses Vimeo API to manipulate it.
-//  * All Vimeo calls return a Promise so this renderer accounts for that
-//  * to update all the necessary values to interact with MediaElement player.
-//  * Note: IE8 implements ECMAScript 3 that does not allow bare keywords in dot notation;
-//  * that's why instead of using .catch ['catch'] is being used.
-//  * @see https://github.com/vimeo/player.js
-//  *
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register Vimeo type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('player.vimeo') > -1 || url.indexOf('vimeo.com') > -1) {
-// 			return 'video/x-vimeo';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var vimeoApi = {
-//
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isIframeStarted: false,
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isIframeLoaded: false,
-// 		/**
-// 		 * @type {Array}
-// 		 */
-// 		iframeQueue: [],
-//
-// 		/**
-// 		 * Create a queue to prepare the creation of <iframe>
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		enqueueIframe: function (settings) {
-//
-// 			if (this.isLoaded) {
-// 				this.createIframe(settings);
-// 			} else {
-// 				this.loadIframeApi();
-// 				this.iframeQueue.push(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Load Vimeo API script on the header of the document
-// 		 *
-// 		 */
-// 		loadIframeApi: function () {
-//
-// 			if (!this.isIframeStarted) {
-//
-// 				var
-// 					script = doc.createElement('script'),
-// 					firstScriptTag = doc.getElementsByTagName('script')[0],
-// 					done = false;
-//
-// 				script.src = '//player.vimeo.com/api/player.js';
-//
-// 				// Attach handlers for all browsers
-// 				script.onload = script.onreadystatechange = function () {
-// 					if (!done && (!this.readyState || this.readyState === undefined ||
-// 						this.readyState === "loaded" || this.readyState === "complete")) {
-// 						done = true;
-// 						vimeoApi.iFrameReady();
-// 						script.onload = script.onreadystatechange = null;
-// 					}
-// 				};
-// 				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-// 				this.isIframeStarted = true;
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Process queue of Vimeo <iframe> element creation
-// 		 *
-// 		 */
-// 		iFrameReady: function () {
-//
-// 			this.isLoaded = true;
-// 			this.isIframeLoaded = true;
-//
-// 			while (this.iframeQueue.length > 0) {
-// 				var settings = this.iframeQueue.pop();
-// 				this.createIframe(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Create a new instance of Vimeo API player and trigger a custom event to initialize it
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		createIframe: function (settings) {
-// 			var player = new Vimeo.Player(settings.iframe);
-// 			win['__ready__' + settings.id](player);
-// 		},
-//
-// 		/**
-// 		 * Extract numeric value from Vimeo to be loaded through API
-// 		 * Valid URL format(s):
-// 		 *  - https://player.vimeo.com/video/59777392
-// 		 *  - https://vimeo.com/59777392
-// 		 *
-// 		 * @param {String} url - Vimeo full URL to grab the number Id of the source
-// 		 * @return {int}
-// 		 */
-// 		getVimeoId: function (url) {
-// 			if (url === undefined || url === null) {
-// 				return null;
-// 			}
-//
-// 			var parts = url.split('?');
-//
-// 			url = parts[0];
-//
-// 			return parseInt(url.substring(url.lastIndexOf('/') + 1));
-// 		},
-//
-// 		/**
-// 		 * Generate custom errors for Vimeo based on the API specifications
-// 		 *
-// 		 * @see https://github.com/vimeo/player.js#error
-// 		 * @param {Object} error
-// 		 * @param {Object} target
-// 		 */
-// 		errorHandler: function (error, target) {
-// 			var event = mejs.Utils.createEvent('error', target);
-// 			event.message = error.name + ': ' + error.message;
-// 			mediaElement.dispatchEvent(event);
-// 		}
-// 	};
-//
-// 	/*
-// 	 * Register Vimeo event globally
-// 	 *
-// 	 */
-// 	win.onVimeoPlayerAPIReady = function () {
-// 		vimeoApi.iFrameReady();
-// 	};
-//
-// 	var vimeoIframeRenderer = {
-//
-// 		name: 'vimeo_iframe',
-//
-// 		options: {
-// 			prefix: 'vimeo_iframe'
-// 		},
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-// 			var mediaTypes = ['video/vimeo', 'video/x-vimeo'];
-//
-// 			return mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			// exposed object
-// 			var
-// 				apiStack = [],
-// 				vimeoApiReady = false,
-// 				vimeo = {},
-// 				vimeoPlayer = null,
-// 				paused = true,
-// 				volume = 1,
-// 				oldVolume = volume,
-// 				currentTime = 0,
-// 				bufferedTime = 0,
-// 				ended = false,
-// 				duration = 0,
-// 				url = "",
-// 				i,
-// 				il;
-//
-// 			vimeo.options = options;
-// 			vimeo.id = mediaElement.id + '_' + options.prefix;
-// 			vimeo.mediaElement = mediaElement;
-//
-// 			// wrappers for get/set
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-//
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					vimeo['get' + capName] = function () {
-// 						if (vimeoPlayer !== null) {
-// 							var value = null;
-//
-// 							switch (propName) {
-// 								case 'currentTime':
-// 									return currentTime;
-//
-// 								case 'duration':
-// 									return duration;
-//
-// 								case 'volume':
-// 									return volume;
-// 								case 'muted':
-// 									return volume === 0;
-// 								case 'paused':
-// 									return paused;
-//
-// 								case 'ended':
-// 									return ended;
-//
-// 								case 'src':
-// 									vimeoPlayer.getVideoUrl().then(function (_url) {
-// 										url = _url;
-// 									});
-//
-// 									return url;
-// 								case 'buffered':
-// 									return {
-// 										start: function () {
-// 											return 0;
-// 										},
-// 										end: function () {
-// 											return bufferedTime * duration;
-// 										},
-// 										length: 1
-// 									};
-// 							}
-//
-// 							return value;
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					vimeo['set' + capName] = function (value) {
-//
-// 						if (vimeoPlayer !== null) {
-//
-// 							// do something
-// 							switch (propName) {
-//
-// 								case 'src':
-// 									var url = typeof value === 'string' ? value : value[0].src,
-// 										videoId = vimeoApi.getVimeoId(url);
-//
-// 									vimeoPlayer.loadVideo(videoId).then(function () {
-// 										if (mediaElement.getAttribute('autoplay')) {
-// 											vimeoPlayer.play();
-// 										}
-//
-// 									})['catch'](function (error) {
-// 										vimeoApi.errorHandler(error, vimeo);
-// 									});
-// 									break;
-//
-// 								case 'currentTime':
-// 									vimeoPlayer.setCurrentTime(value).then(function () {
-// 										currentTime = value;
-// 										setTimeout(function () {
-// 											var event = mejs.Utils.createEvent('timeupdate', vimeo);
-// 											mediaElement.dispatchEvent(event);
-// 										}, 50);
-// 									})['catch'](function (error) {
-// 										vimeoApi.errorHandler(error, vimeo);
-// 									});
-// 									break;
-//
-// 								case 'volume':
-// 									vimeoPlayer.setVolume(value).then(function () {
-// 										volume = value;
-// 										oldVolume = volume;
-// 										setTimeout(function () {
-// 											var event = mejs.Utils.createEvent('volumechange', vimeo);
-// 											mediaElement.dispatchEvent(event);
-// 										}, 50);
-// 									})['catch'](function (error) {
-// 										vimeoApi.errorHandler(error, vimeo);
-// 									});
-// 									break;
-//
-// 								case 'loop':
-// 									vimeoPlayer.setLoop(value)['catch'](function (error) {
-// 										vimeoApi.errorHandler(error, vimeo);
-// 									});
-// 									break;
-// 								case 'muted':
-// 									if (value) {
-// 										vimeoPlayer.setVolume(0).then(function () {
-// 											volume = 0;
-// 											setTimeout(function () {
-// 												var event = mejs.Utils.createEvent('volumechange', vimeo);
-// 												mediaElement.dispatchEvent(event);
-// 											}, 50);
-// 										})['catch'](function (error) {
-// 											vimeoApi.errorHandler(error, vimeo);
-// 										});
-// 									} else {
-// 										vimeoPlayer.setVolume(oldVolume).then(function () {
-// 											volume = oldVolume;
-// 											setTimeout(function () {
-// 												var event = mejs.Utils.createEvent('volumechange', vimeo);
-// 												mediaElement.dispatchEvent(event);
-// 											}, 50);
-// 										})['catch'](function (error) {
-// 											vimeoApi.errorHandler(error, vimeo);
-// 										});
-// 									}
-// 									break;
-// 								default:
-// 									
-// 							}
-//
-// 						} else {
-// 							// store for after "READY" event fires
-// 							apiStack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// add wrappers for native methods
-// 			var
-// 				methods = mejs.html5media.methods,
-// 				assignMethods = function (methodName) {
-//
-// 					// run the method on the Soundcloud API
-// 					vimeo[methodName] = function () {
-//
-// 						if (vimeoPlayer !== null) {
-//
-// 							// DO method
-// 							switch (methodName) {
-// 								case 'play':
-// 									return vimeoPlayer.play();
-// 								case 'pause':
-// 									return vimeoPlayer.pause();
-// 								case 'load':
-// 									return null;
-//
-// 							}
-//
-// 						} else {
-// 							apiStack.push({type: 'call', methodName: methodName});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = methods.length; i < il; i++) {
-// 				assignMethods(methods[i]);
-// 			}
-//
-// 			// Initial method to register all Vimeo events when initializing <iframe>
-// 			win['__ready__' + vimeo.id] = function (_vimeoPlayer) {
-//
-// 				vimeoApiReady = true;
-// 				mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
-//
-// 				// do call stack
-// 				for (i = 0, il = apiStack.length; i < il; i++) {
-//
-// 					var stackItem = apiStack[i];
-//
-// 					if (stackItem.type === 'set') {
-// 						var propName = stackItem.propName,
-// 							capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 						vimeo['set' + capName](stackItem.value);
-// 					} else if (stackItem.type === 'call') {
-// 						vimeo[stackItem.methodName]();
-// 					}
-// 				}
-//
-// 				var vimeoIframe = doc.getElementById(vimeo.id), events;
-//
-// 				// a few more events
-// 				events = ['mouseover', 'mouseout'];
-//
-// 				var assignEvents = function (e) {
-// 					var event = mejs.Utils.createEvent(e.type, vimeo);
-// 					mediaElement.dispatchEvent(event);
-// 				};
-//
-// 				for (var j in events) {
-// 					var eventName = events[j];
-// 					mejs.addEvent(vimeoIframe, eventName, assignEvents);
-// 				}
-//
-// 				// Vimeo events
-// 				vimeoPlayer.on('loaded', function () {
-//
-// 					vimeoPlayer.getDuration().then(function (loadProgress) {
-//
-// 						duration = loadProgress;
-//
-// 						if (duration > 0) {
-// 							bufferedTime = duration * loadProgress;
-// 						}
-//
-// 						var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
-// 						mediaElement.dispatchEvent(event);
-//
-// 					})['catch'](function (error) {
-// 						vimeoApi.errorHandler(error, vimeo);
-// 					});
-// 				});
-//
-// 				vimeoPlayer.on('progress', function () {
-//
-// 					paused = vimeo.mediaElement.getPaused();
-//
-// 					vimeoPlayer.getDuration().then(function (loadProgress) {
-//
-// 						duration = loadProgress;
-//
-// 						if (duration > 0) {
-// 							bufferedTime = duration * loadProgress;
-// 						}
-//
-// 						var event = mejs.Utils.createEvent('progress', vimeo);
-// 						mediaElement.dispatchEvent(event);
-//
-// 					})['catch'](function (error) {
-// 						vimeoApi.errorHandler(error, vimeo);
-// 					});
-// 				});
-// 				vimeoPlayer.on('timeupdate', function () {
-//
-// 					paused = vimeo.mediaElement.getPaused();
-// 					ended = false;
-//
-// 					vimeoPlayer.getCurrentTime().then(function (seconds) {
-// 						currentTime = seconds;
-// 					});
-//
-// 					var event = mejs.Utils.createEvent('timeupdate', vimeo);
-// 					mediaElement.dispatchEvent(event);
-//
-// 				});
-// 				vimeoPlayer.on('play', function () {
-// 					paused = false;
-// 					ended = false;
-//
-// 					vimeoPlayer.play()['catch'](function (error) {
-// 						vimeoApi.errorHandler(error, vimeo);
-// 					});
-//
-// 					event = mejs.Utils.createEvent('play', vimeo);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				vimeoPlayer.on('pause', function () {
-// 					paused = true;
-// 					ended = false;
-//
-// 					vimeoPlayer.pause()['catch'](function (error) {
-// 						vimeoApi.errorHandler(error, vimeo);
-// 					});
-//
-// 					event = mejs.Utils.createEvent('pause', vimeo);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-// 				vimeoPlayer.on('ended', function () {
-// 					paused = false;
-// 					ended = true;
-//
-// 					var event = mejs.Utils.createEvent('ended', vimeo);
-// 					mediaElement.dispatchEvent(event);
-// 				});
-//
-// 				// give initial events
-// 				events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-//
-// 				for (i = 0, il = events.length; i < il; i++) {
-// 					var event = mejs.Utils.createEvent(events[i], vimeo);
-// 					mediaElement.dispatchEvent(event);
-// 				}
-// 			};
-//
-// 			var
-// 				height = mediaElement.originalNode.height,
-// 				width = mediaElement.originalNode.width,
-// 				vimeoContainer = doc.createElement('iframe'),
-// 				standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src)
-// 				;
-//
-// 			// Create Vimeo <iframe> markup
-// 			vimeoContainer.setAttribute('id', vimeo.id);
-// 			vimeoContainer.setAttribute('width', width);
-// 			vimeoContainer.setAttribute('height', height);
-// 			vimeoContainer.setAttribute('frameBorder', '0');
-// 			vimeoContainer.setAttribute('src', standardUrl);
-// 			vimeoContainer.setAttribute('webkitallowfullscreen', '');
-// 			vimeoContainer.setAttribute('mozallowfullscreen', '');
-// 			vimeoContainer.setAttribute('allowfullscreen', '');
-//
-// 			mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
-// 			mediaElement.originalNode.style.display = 'none';
-//
-// 			vimeoApi.enqueueIframe({
-// 				iframe: vimeoContainer,
-// 				id: vimeo.id
-// 			});
-//
-// 			vimeo.hide = function () {
-// 				vimeo.pause();
-// 				if (vimeoPlayer) {
-// 					vimeoContainer.style.display = 'none';
-// 				}
-// 			};
-// 			vimeo.setSize = function (width, height) {
-// 				vimeoContainer.setAttribute('width', width);
-// 				vimeoContainer.setAttribute('height', height);
-// 			};
-// 			vimeo.show = function () {
-// 				if (vimeoPlayer) {
-// 					vimeoContainer.style.display = '';
-// 				}
-// 			};
-//
-// 			return vimeo;
-// 		}
-//
-// 	};
-//
-// 	mejs.Renderers.add(vimeoIframeRenderer);
-//
-// })(window, document, window.mejs || {});
 
 var _window = require('global/window');
 
@@ -7799,605 +4855,6 @@ _renderer.renderer.add(vimeoIframeRenderer);
 
 },{"../core/mejs":6,"../core/renderer":7,"../utils/dom":20,"../utils/media":22,"global/document":2,"global/window":3}],18:[function(require,module,exports){
 'use strict';
-
-// /**
-//  * YouTube renderer
-//  *
-//  * Uses <iframe> approach and uses YouTube API to manipulate it.
-//  * Note: IE6-7 don't have postMessage so don't support <iframe> API, and IE8 doesn't fire the onReady event,
-//  * so it doesn't work - not sure if Google problem or not.
-//  * @see https://developers.google.com/youtube/iframe_api_reference
-//  */
-// (function (win, doc, mejs, undefined) {
-//
-// 	/**
-// 	 * Register YouTube type based on URL structure
-// 	 *
-// 	 */
-// 	mejs.Utils.typeChecks.push(function (url) {
-//
-// 		url = url.toLowerCase();
-//
-// 		if (url.indexOf('www.youtube') > -1 || url.indexOf('//youtu.be') > -1) {
-// 			return 'video/x-youtube';
-// 		} else {
-// 			return null;
-// 		}
-// 	});
-//
-// 	var YouTubeApi = {
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isIframeStarted: false,
-// 		/**
-// 		 * @type {Boolean}
-// 		 */
-// 		isIframeLoaded: false,
-// 		/**
-// 		 * @type {Array}
-// 		 */
-// 		iframeQueue: [],
-//
-// 		/**
-// 		 * Create a queue to prepare the creation of <iframe>
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		enqueueIframe: function (settings) {
-//
-// 			if (this.isLoaded) {
-// 				this.createIframe(settings);
-// 			} else {
-// 				this.loadIframeApi();
-// 				this.iframeQueue.push(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Load YouTube API script on the header of the document
-// 		 *
-// 		 */
-// 		loadIframeApi: function () {
-// 			if (!this.isIframeStarted) {
-// 				var tag = document.createElement('script');
-// 				tag.src = '//www.youtube.com/player_api';
-// 				var firstScriptTag = document.getElementsByTagName('script')[0];
-// 				firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-// 				this.isIframeStarted = true;
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Process queue of YouTube <iframe> element creation
-// 		 *
-// 		 */
-// 		iFrameReady: function () {
-//
-// 			this.isLoaded = true;
-// 			this.isIframeLoaded = true;
-//
-// 			while (this.iframeQueue.length > 0) {
-// 				var settings = this.iframeQueue.pop();
-// 				this.createIframe(settings);
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Create a new instance of YouTube API player and trigger a custom event to initialize it
-// 		 *
-// 		 * @param {Object} settings - an object with settings needed to create <iframe>
-// 		 */
-// 		createIframe: function (settings) {
-// 			return new YT.Player(settings.containerId, settings);
-// 		},
-//
-// 		/**
-// 		 * Extract ID from YouTube's URL to be loaded through API
-// 		 * Valid URL format(s):
-// 		 * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-// 		 * - http://www.youtube.com/v/VIDEO_ID?version=3
-// 		 * - http://youtu.be/Djd6tPrxc08
-// 		 * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-// 		 *
-// 		 * @param {String} url
-// 		 * @return {string}
-// 		 */
-// 		getYouTubeId: function (url) {
-//
-// 			var youTubeId = "";
-//
-// 			if (url.indexOf('?') > 0) {
-// 				// assuming: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-// 				youTubeId = YouTubeApi.getYouTubeIdFromParam(url);
-//
-// 				// if it's http://www.youtube.com/v/VIDEO_ID?version=3
-// 				if (youTubeId === '') {
-// 					youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
-// 				}
-// 			} else {
-// 				youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
-// 			}
-//
-// 			return youTubeId;
-// 		},
-//
-// 		/**
-// 		 * Get ID from URL with format: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-// 		 *
-// 		 * @param {String} url
-// 		 * @returns {string}
-// 		 */
-// 		getYouTubeIdFromParam: function (url) {
-//
-// 			var youTubeId = '',
-// 				parts = url.split('?'),
-// 				parameters = parts[1].split('&');
-//
-// 			for (var i = 0, il = parameters.length; i < il; i++) {
-// 				var paramParts = parameters[i].split('=');
-// 				if (paramParts[0] === 'v') {
-// 					youTubeId = paramParts[1];
-// 					break;
-// 				}
-// 			}
-//
-// 			return youTubeId;
-// 		},
-//
-// 		/**
-// 		 * Get ID from URL with formats
-// 		 *  - http://www.youtube.com/v/VIDEO_ID?version=3
-// 		 *  - http://youtu.be/Djd6tPrxc08
-// 		 * @param {String} url
-// 		 * @return {?String}
-// 		 */
-// 		getYouTubeIdFromUrl: function (url) {
-//
-// 			if (url === undefined || url === null) {
-// 				return null;
-// 			}
-//
-// 			var parts = url.split('?');
-//
-// 			url = parts[0];
-//
-// 			return url.substring(url.lastIndexOf('/') + 1);
-// 		},
-//
-// 		/**
-// 		 * Inject `no-cookie` element to URL. Only works with format: http://www.youtube.com/v/VIDEO_ID?version=3
-// 		 * @param {String} url
-// 		 * @return {?String}
-// 		 */
-// 		getYouTubeNoCookieUrl: function(url) {
-// 			if (url === undefined || url === null || url.indexOf('www.youtube') === -1) {
-// 				return url;
-// 			}
-//
-// 			var parts = url.split('/');
-// 			parts[2] = parts[2].replace('.com', '-nocookie.com');
-// 			return parts.join('/');
-// 		}
-// 	};
-//
-// 	/*
-// 	 * Register YouTube API event globally
-// 	 *
-// 	 */
-// 	win.onYouTubePlayerAPIReady = function () {
-// 		YouTubeApi.iFrameReady();
-// 	};
-//
-// 	var YouTubeIframeRenderer = {
-// 		name: 'youtube_iframe',
-//
-// 		options: {
-// 			prefix: 'youtube_iframe',
-// 			/**
-// 			 * Custom configuration for YouTube player
-// 			 *
-// 			 * @see https://developers.google.com/youtube/player_parameters#Parameters
-// 			 * @type {Object}
-// 			 */
-// 			youtube: {
-// 				autoplay: 0,
-// 				controls: 0,
-// 				disablekb: 1,
-// 				end: 0,
-// 				loop: 0,
-// 				modestbranding: 0,
-// 				playsinline: 0,
-// 				rel: 0,
-// 				showinfo: 0,
-// 				start: 0,
-// 				// custom to inject `-nocookie` element in URL
-// 				nocookie: true
-// 			}
-// 		},
-//
-// 		/**
-// 		 * Determine if a specific element type can be played with this render
-// 		 *
-// 		 * @param {String} type
-// 		 * @return {Boolean}
-// 		 */
-// 		canPlayType: function (type) {
-// 			var mediaTypes = ['video/youtube', 'video/x-youtube'];
-//
-// 			return mediaTypes.indexOf(type) > -1;
-// 		},
-// 		/**
-// 		 * Create the player instance and add all native events/methods/properties as possible
-// 		 *
-// 		 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-// 		 * @param {Object} options All the player configuration options passed through constructor
-// 		 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-// 		 * @return {Object}
-// 		 */
-// 		create: function (mediaElement, options, mediaFiles) {
-//
-// 			// exposed object
-// 			var youtube = {};
-// 			youtube.options = options;
-// 			youtube.id = mediaElement.id + '_' + options.prefix;
-// 			youtube.mediaElement = mediaElement;
-//
-// 			// API objects
-// 			var apiStack = [],
-// 				youTubeApi = null,
-// 				youTubeApiReady = false,
-// 				paused = true,
-// 				ended = false,
-// 				youTubeIframe = null,
-// 				i,
-// 				il;
-//
-// 			// wrappers for get/set
-// 			var
-// 				props = mejs.html5media.properties,
-// 				assignGettersSetters = function (propName) {
-//
-// 					// add to flash state that we will store
-//
-// 					var capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 					youtube['get' + capName] = function () {
-// 						if (youTubeApi !== null) {
-// 							var value = null;
-//
-// 							// figure out how to get youtube dta here
-// 							switch (propName) {
-// 								case 'currentTime':
-// 									return youTubeApi.getCurrentTime();
-//
-// 								case 'duration':
-// 									return youTubeApi.getDuration();
-//
-// 								case 'volume':
-// 									return youTubeApi.getVolume();
-//
-// 								case 'paused':
-// 									return paused;
-//
-// 								case 'ended':
-// 									return ended;
-//
-// 								case 'muted':
-// 									return youTubeApi.isMuted(); // ?
-//
-// 								case 'buffered':
-// 									var percentLoaded = youTubeApi.getVideoLoadedFraction(),
-// 										duration = youTubeApi.getDuration();
-// 									return {
-// 										start: function () {
-// 											return 0;
-// 										},
-// 										end: function () {
-// 											return percentLoaded * duration;
-// 										},
-// 										length: 1
-// 									};
-// 								case 'src':
-// 									return youTubeApi.getVideoUrl();
-// 							}
-//
-// 							return value;
-// 						} else {
-// 							return null;
-// 						}
-// 					};
-//
-// 					youtube['set' + capName] = function (value) {
-//
-// 						if (youTubeApi !== null) {
-//
-// 							// do something
-// 							switch (propName) {
-//
-// 								case 'src':
-// 									var url = typeof value === 'string' ? value : value[0].src,
-// 										videoId = YouTubeApi.getYouTubeId(url);
-//
-// 									if (mediaElement.getAttribute('autoplay')) {
-// 										youTubeApi.loadVideoById(videoId);
-// 									} else {
-// 										youTubeApi.cueVideoById(videoId);
-// 									}
-// 									break;
-//
-// 								case 'currentTime':
-// 									youTubeApi.seekTo(value);
-// 									break;
-//
-// 								case 'muted':
-// 									if (value) {
-// 										youTubeApi.mute(); // ?
-// 									} else {
-// 										youTubeApi.unMute(); // ?
-// 									}
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', youtube);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								case 'volume':
-// 									youTubeApi.setVolume(value);
-// 									setTimeout(function () {
-// 										var event = mejs.Utils.createEvent('volumechange', youtube);
-// 										mediaElement.dispatchEvent(event);
-// 									}, 50);
-// 									break;
-//
-// 								default:
-// 									
-// 							}
-//
-// 						} else {
-// 							// store for after "READY" event fires
-// 							apiStack.push({type: 'set', propName: propName, value: value});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = props.length; i < il; i++) {
-// 				assignGettersSetters(props[i]);
-// 			}
-//
-// 			// add wrappers for native methods
-// 			var
-// 				methods = mejs.html5media.methods,
-// 				assignMethods = function (methodName) {
-//
-// 					// run the method on the native HTMLMediaElement
-// 					youtube[methodName] = function () {
-//
-// 						if (youTubeApi !== null) {
-//
-// 							// DO method
-// 							switch (methodName) {
-// 								case 'play':
-// 									return youTubeApi.playVideo();
-// 								case 'pause':
-// 									return youTubeApi.pauseVideo();
-// 								case 'load':
-// 									return null;
-//
-// 							}
-//
-// 						} else {
-// 							apiStack.push({type: 'call', methodName: methodName});
-// 						}
-// 					};
-//
-// 				}
-// 				;
-// 			for (i = 0, il = methods.length; i < il; i++) {
-// 				assignMethods(methods[i]);
-// 			}
-//
-// 			// CREATE YouTube
-// 			var youtubeContainer = doc.createElement('div');
-// 			youtubeContainer.id = youtube.id;
-//
-// 			// If `nocookie` feature was enabled, modify original URL
-// 			if (youtube.options.youtube.nocookie) {
-// 				mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
-// 			}
-//
-// 			mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
-// 			mediaElement.originalNode.style.display = 'none';
-//
-// 			var
-// 				height = mediaElement.originalNode.height,
-// 				width = mediaElement.originalNode.width,
-// 				videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
-// 				youtubeSettings = {
-// 					id: youtube.id,
-// 					containerId: youtubeContainer.id,
-// 					videoId: videoId,
-// 					height: height,
-// 					width: width,
-// 					playerVars: mejs.Utils.extend({
-// 						controls: 0,
-// 						rel: 0,
-// 						disablekb: 1,
-// 						showinfo: 0,
-// 						modestbranding: 0,
-// 						html5: 1,
-// 						playsinline: 0,
-// 						start: 0,
-// 						end: 0}, youtube.options.youtube),
-// 					origin: win.location.host,
-// 					events: {
-// 						onReady: function (e) {
-//
-// 							youTubeApiReady = true;
-// 							mediaElement.youTubeApi = youTubeApi = e.target;
-// 							mediaElement.youTubeState = {
-// 								paused: true,
-// 								ended: false
-// 							};
-//
-// 							// do call stack
-// 							for (i = 0, il = apiStack.length; i < il; i++) {
-//
-// 								var stackItem = apiStack[i];
-//
-// 								if (stackItem.type === 'set') {
-// 									var propName = stackItem.propName,
-// 										capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
-//
-// 									youtube['set' + capName](stackItem.value);
-// 								} else if (stackItem.type === 'call') {
-// 									youtube[stackItem.methodName]();
-// 								}
-// 							}
-//
-// 							// a few more events
-// 							youTubeIframe = youTubeApi.getIframe();
-//
-// 							var
-// 								events = ['mouseover', 'mouseout'],
-// 								assignEvents = function (e) {
-//
-// 									var newEvent = mejs.Utils.createEvent(e.type, youtube);
-// 									mediaElement.dispatchEvent(newEvent);
-// 								}
-// 								;
-//
-// 							for (var j in events) {
-// 								var eventName = events[j];
-// 								mejs.addEvent(youTubeIframe, eventName, assignEvents);
-// 							}
-//
-// 							// send init events
-// 							var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-//
-// 							for (i = 0, il = initEvents.length; i < il; i++) {
-// 								var event = mejs.Utils.createEvent(initEvents[i], youtube);
-// 								mediaElement.dispatchEvent(event);
-// 							}
-// 						},
-// 						onStateChange: function (e) {
-//
-// 							// translate events
-// 							var events = [];
-//
-// 							switch (e.data) {
-// 								case -1: // not started
-// 									events = ['loadedmetadata'];
-// 									paused = true;
-// 									ended = false;
-// 									break;
-//
-// 								case 0: // YT.PlayerState.ENDED
-// 									events = ['ended'];
-// 									paused = false;
-// 									ended = true;
-//
-// 									youtube.stopInterval();
-// 									break;
-//
-// 								case 1:	// YT.PlayerState.PLAYING
-// 									events = ['play', 'playing'];
-// 									paused = false;
-// 									ended = false;
-//
-// 									youtube.startInterval();
-//
-// 									break;
-//
-// 								case 2: // YT.PlayerState.PAUSED
-// 									events = ['paused'];
-// 									paused = true;
-// 									ended = false;
-//
-// 									youtube.stopInterval();
-// 									break;
-//
-// 								case 3: // YT.PlayerState.BUFFERING
-// 									events = ['progress'];
-// 									paused = false;
-// 									ended = false;
-//
-// 									break;
-// 								case 5: // YT.PlayerState.CUED
-// 									events = ['loadeddata', 'loadedmetadata', 'canplay'];
-// 									paused = true;
-// 									ended = false;
-//
-// 									break;
-// 							}
-//
-// 							// send events up
-// 							for (var i = 0, il = events.length; i < il; i++) {
-// 								var event = mejs.Utils.createEvent(events[i], youtube);
-// 								mediaElement.dispatchEvent(event);
-// 							}
-//
-// 						}
-// 					}
-// 				};
-//
-// 			// send it off for async loading and creation
-// 			YouTubeApi.enqueueIframe(youtubeSettings);
-//
-// 			youtube.onEvent = function (eventName, player, _youTubeState) {
-// 				if (_youTubeState !== null && _youTubeState !== undefined) {
-// 					mediaElement.youTubeState = _youTubeState;
-// 				}
-//
-// 			};
-//
-// 			youtube.setSize = function (width, height) {
-// 				if (youTubeApi !== null) {
-// 					youTubeApi.setSize(width, height);
-// 				}
-// 			};
-// 			youtube.hide = function () {
-// 				youtube.stopInterval();
-// 				youtube.pause();
-// 				if (youTubeIframe) {
-// 					youTubeIframe.style.display = 'none';
-// 				}
-// 			};
-// 			youtube.show = function () {
-// 				if (youTubeIframe) {
-// 					youTubeIframe.style.display = '';
-// 				}
-// 			};
-// 			youtube.destroy = function () {
-// 				youTubeApi.destroy();
-// 			};
-// 			youtube.interval = null;
-//
-// 			youtube.startInterval = function () {
-// 				// create timer
-// 				youtube.interval = setInterval(function () {
-//
-// 					var event = mejs.Utils.createEvent('timeupdate', youtube);
-// 					mediaElement.dispatchEvent(event);
-//
-// 				}, 250);
-// 			};
-// 			youtube.stopInterval = function () {
-// 				if (youtube.interval) {
-// 					clearInterval(youtube.interval);
-// 				}
-// 			};
-//
-// 			return youtube;
-// 		}
-// 	};
-//
-// 	if (window.postMessage && typeof window.addEventListener) {
-// 		mejs.Renderers.add(YouTubeIframeRenderer);
-// 	}
-//
-// })(window, document, window.mejs || {});
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -9844,4 +6301,4 @@ if (!String.prototype.startsWith) {
 	};
 }
 
-},{"global/document":2}]},{},[23,5,14,11,13,15,12,18,17,9,10,16,4,8]);
+},{"global/document":2}]},{},[23,5,4,8,15,12,9,10,11,13,14,16,17,18]);

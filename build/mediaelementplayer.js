@@ -1086,7 +1086,7 @@ Object.assign(_player.config, {
 	fullscreenText: ''
 });
 
-$.extend(_player2.default.prototype, {
+Object.assign(_player2.default.prototype, {
 
 	/**
   * @type {Boolean}
@@ -1574,7 +1574,7 @@ Object.assign(_player.config, {
 	pauseText: ''
 });
 
-$.extend(_player2.default.prototype, {
+Object.assign(_player2.default.prototype, {
 	/**
   * Feature constructor.
   *
@@ -1676,7 +1676,7 @@ Object.assign(_player.config, {
 	enableProgressTooltip: true
 });
 
-$.extend(_player2.default.prototype, {
+Object.assign(_player2.default.prototype, {
 
 	/**
   * Feature constructor.
@@ -2060,7 +2060,7 @@ Object.assign(_player.config, {
 	timeAndDurationSeparator: '<span> | </span>'
 });
 
-$.extend(_player2.default.prototype, {
+Object.assign(_player2.default.prototype, {
 
 	/**
   * Current time constructor.
@@ -2221,7 +2221,7 @@ Object.assign(_player.config, {
 	slidesSelector: ''
 });
 
-$.extend(_player2.default.prototype, {
+Object.assign(_player2.default.prototype, {
 
 	/**
   * @type {Boolean}
@@ -3061,7 +3061,7 @@ Object.assign(_player.config, {
 	videoVolume: 'vertical'
 });
 
-$.extend(_player2.default.prototype, {
+Object.assign(_player2.default.prototype, {
 
 	/**
   * Feature constructor.
@@ -3323,7 +3323,7 @@ $.extend(_player2.default.prototype, {
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * English; This can serve as a template for other languages to translate
  *
@@ -3340,70 +3340,69 @@ Object.defineProperty(exports, "__esModule", {
 var EN = exports.EN = {
 	"mejs.plural-form": 1,
 
-	// me-shim
-	"mejs.download-file": "Download File",
+	// renderers/flash.js
 	"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-	// mediaelementplayer-feature-contextmenu
+	// features/contextmenu.js
 	"mejs.fullscreen-off": "Turn off Fullscreen",
 	"mejs.fullscreen-on": "Go Fullscreen",
 	"mejs.download-video": "Download Video",
 
-	// mediaelementplayer-feature-fullscreen
+	// features/fullscreen.js
 	"mejs.fullscreen": "Fullscreen",
 
-	// mediaelementplayer-feature-jumpforward
+	// features/jumpforward.js
 	"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
-	// mediaelementplayer-feature-loop
+	// features/loop.js
 	"mejs.loop": "Toggle Loop",
 
-	// mediaelementplayer-feature-playpause
+	// features/playpause.js
 	"mejs.play": "Play",
 	"mejs.pause": "Pause",
 
-	// mediaelementplayer-feature-postroll
+	// features/postroll.js
 	"mejs.close": "Close",
 
-	// mediaelementplayer-feature-progress
+	// features/progress.js
 	"mejs.time-slider": "Time Slider",
 	"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-	// mediaelementplayer-feature-skipback
+	// features/skipback.js
 	"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
-	// mediaelementplayer-feature-tracks
+	// features/tracks.js
 	"mejs.captions-subtitles": "Captions/Subtitles",
 	"mejs.none": "None",
 
-	// mediaelementplayer-feature-volume
+	// features/volume.js
 	"mejs.mute-toggle": "Mute Toggle",
 	"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 	"mejs.unmute": "Unmute",
 	"mejs.mute": "Mute",
 	"mejs.volume-slider": "Volume Slider",
 
-	// mep-player
+	// core/player.js
 	"mejs.video-player": "Video Player",
 	"mejs.audio-player": "Audio Player",
 
-	// mediaelementplayer-feature-ads
+	// features/ads.js
 	"mejs.ad-skip": "Skip ad",
 	"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
 
-	// mediaelementplayer-feature-sourcechooser
+	// features/sourcechooser.js
 	"mejs.source-chooser": "Source Chooser",
 
-	// mediaelementplayer-feature-stop
+	// features/stop.js
 	"mejs.stop": "Stop",
 
-	//mediaelementplayer-feature-speed
+	//features/speed.js
 	"mejs.speed-rate": "Speed Rate",
 
-	//mediaelementplayer-feature-progress
+	//features/progress.js
 	"mejs.live-broadcast": "Live Broadcast",
 
-	// mep-tracks
+	// features/tracks.js
 	"mejs.afrikaans": "Afrikaans",
 	"mejs.albanian": "Albanian",
 	"mejs.arabic": "Arabic",
@@ -4832,7 +4831,8 @@ var MediaElementPlayer = function () {
 				}
 			});
 
-			if (t.options.supportVR || t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/)) {
+			// if (t.options.supportVR || (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/))) {
+			if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/)) {
 				bigPlay.hide();
 			}
 
@@ -5910,4 +5910,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"../core/mejs":6}]},{},[15,16,9,10,11,13,8,12]);
+},{"../core/mejs":6}]},{},[15,16,8,9,10,11,12,13]);

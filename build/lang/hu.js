@@ -1,7 +1,5 @@
-'use strict';
-
-/*!
- * This is a i18n.locale language object.
+'use strict';/*!
+ * This is a `i18n` language object.
  *
  * Hungarian
  *
@@ -13,72 +11,35 @@
  */
 if (mejs.i18n.hu === undefined) {
 	mejs.i18n.hu = {
-		"mejs.plural-form": 1,
-
-		// me-shim
-		"mejs.download-file": "Fájl letöltése",
-		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
-
-		// mediaelementplayer-feature-contextmenu
+		"mejs.plural-form": 1,		
+		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",		
 		"mejs.fullscreen-off": "Teljes képernyő kikapcsolása",
 		"mejs.fullscreen-on": "Átlépés teljes képernyős módra",
-		"mejs.download-video": "Videó letöltése",
-
-		// mediaelementplayer-feature-fullscreen
-		"mejs.fullscreen": "Teljes képernyő",
-
-		// mediaelementplayer-feature-jumpforward
-		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-		// mediaelementplayer-feature-playpause
+		"mejs.download-video": "Videó letöltése",		
+		"mejs.fullscreen": "Teljes képernyő",		
+		//"mejs.time-jump-forward": "Jump forward %1 second(s)",		
 		"mejs.play": "Lejátszás",
-		"mejs.pause": "Szünet",
-
-		// mediaelementplayer-feature-loop
-		//"mejs.loop": "Toggle Loop",
-
-		// mediaelementplayer-feature-postroll
-		"mejs.close": "Bezárás",
-
-		// mediaelementplayer-feature-progress
+		"mejs.pause": "Szünet",		
+		//"mejs.loop": "Toggle Loop",		
+		"mejs.close": "Bezárás",		
 		"mejs.time-slider": "Idő csúszka",
-		"mejs.time-help-text": "Használja a Bal/Jobb nyíl gombokat az egy másodperces léptetéshez, a Fel/Le nyíl gombokat a tíz másodperces léptetéshez.",
-
-		// mediaelementplayer-feature-skipback
-		"mejs.time-skip-back": "Ugrás vissza %1 másodperccel",
-
-		// mediaelementplayer-feature-tracks
+		"mejs.time-help-text": "Használja a Bal/Jobb nyíl gombokat az egy másodperces léptetéshez, a Fel/Le nyíl gombokat a tíz másodperces léptetéshez.",		
+		"mejs.time-skip-back": "Ugrás vissza %1 másodperccel",		
 		"mejs.captions-subtitles": "Képaláírás/Feliratok",
-		"mejs.none": "Nincs",
-
-		// mediaelementplayer-feature-volume
+		"mejs.none": "Nincs",		
 		"mejs.mute-toggle": "Némítás kapcsolója",
 		"mejs.volume-help-text": "Használja a Fel/Le nyíl gombokat a hangerő növeléséhez vagy csökkentéséhez.",
 		"mejs.unmute": "Némítás feloldása",
 		"mejs.mute": "Némítás",
-		"mejs.volume-slider": "Hangerőcsúszka",
-
-		// mep-player
+		"mejs.volume-slider": "Hangerőcsúszka",		
 		"mejs.video-player": "Videolejátszó",
-		"mejs.audio-player": "Audiolejátszó"
-
-		// mediaelementplayer-feature-ads
+		"mejs.audio-player": "Audiolejátszó"		
 		//"mejs.ad-skip": "Skip ad",
-		//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-		// mediaelementplayer-feature-sourcechooser
-		//"mejs.source-chooser": "Source Chooser",
-
-		// mediaelementplayer-feature-stop
-		//"mejs.stop": "Stop",
-
-		//mediaelementplayer-feature-speed
-		//"mejs.speed-rate" : "Speed Rate",
-
-		//mediaelementplayer-feature-progress
-		//"mejs.live-broadcast" : "Live Broadcast",
-
-		// mep-tracks
+		//"mejs.ad-skip-info": "Skip in %1 second(s)",		
+		//"mejs.source-chooser": "Source Chooser",		
+		//"mejs.stop": "Stop",		
+		//"mejs.speed-rate" : "Speed Rate",		
+		//"mejs.live-broadcast" : "Live Broadcast",		
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",
