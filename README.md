@@ -8,10 +8,12 @@ One file. Any browser. Same UI.
 * Meaning: Use everywhere, keep copyright, it'd be swell if you'd link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
+* Currently maintained by Rafael Miranda (@ron666)
 
-[![GitHub version](https://badge.fury.io/gh/johndyer%2Fmediaelement.svg)](https://badge.fury.io/gh/johndyer%2Fmediaelement)
-[![Build Status](https://travis-ci.org/johndyer/mediaelement.svg?branch=mejs-es6)](https://travis-ci.org/johndyer/mediaelement)
-[![Coverage Status](https://coveralls.io/repos/github/johndyer/mediaelement/badge.svg?branch=mejs-es6)](https://coveralls.io/github/johndyer/mediaelement?branch=mejs-es6)
+[![GitHub Version](https://img.shields.io/npm/v/mediaelement.svg)](https://github.com/johndyer/mediaelement)
+[![Build Status](https://img.shields.io/travis/johndyer/mediaelement.svg)](https://travis-ci.org/johndyer/mediaelement)
+[![Coverage Status](https://img.shields.io/coveralls/johndyer/mediaelement.svg)](https://coveralls.io/github/johndyer/mediaelement)
+[![MIT License](https://img.shields.io/npm/l/mediaelement.svg)](https://johndyer.mit-license.org/)
 
 # Table of Contents
 
@@ -70,7 +72,7 @@ In order to successfully install `3.x` in an existing setup, you must consider t
 
 2. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with Javascript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](docs/installation.md#disabled-javascript) section for more details.
  
-3. If you need to force the Flash shim, the way to do it in `3.x` is to use the `renderers` configuration and list them in an array. Please check the [Flash test](test/flash.html) file to see how that is done.
+3. If you need to force the Flash shim, the way to do it in `3.x` version is to use the `renderers` configuration and list them in an array.
 
 4. `pluginType` was removed to favor `rendererName`. If you rely on that element, just create conditionals based on the renderer ID (all listed [here](docs/usage.md#renderers-list)). For example:
 
@@ -87,10 +89,12 @@ $('video, audio').mediaelementplayer({
 });
 ```
 
+**It is strongly recommended to read the documentation to get the most out of this package**. Visit [here](docs) to start.
+
 <a id="browser-support"></a>
 ## Browser and Device support
 
-In general, `MediaElement` supports IE9+, MS Edge, Chrome, Firefox, Safari, iOS 8+ and Android 4.0+
+In general, `MediaElement` supports **IE9+, MS Edge, Chrome, Firefox, Safari, iOS 8+** and **Android 4.0+**.
 
 Format | MIME Type | Support
 ------ | --------- | -------
