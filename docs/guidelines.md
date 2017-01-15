@@ -5,9 +5,10 @@
     * [Features](#features)
     * [Renderers](#renderers)
     * [Translations](#translations)
+    * [A word on `ES6` for Features and Renderers](#es6)
 * [Node.js](#nodejs)
 * [Flex SDK](#flex)
-* [Building](#building)
+* [Building with Grunt](#building)
 
 <a id="development"></a>
 ## Development
@@ -366,41 +367,159 @@ Another things to consider when developing a new renderer:
 If it is a translation that wants to be added, a couple of considerations need to be considered:
 
 * The current format is `'mejs.[ID of element]' : 'translation'` (i.e., `'mejs.play': 'Play'`).
-* The first element in the object **MUST** be `mejs.plural-form: [Number]`, where `[Number]` is the Family Group Number the language belongs (see `/src/js/mediaelement-18n.js` to determine which number is the appropriate one).
+* The first element in the object **MUST** be `mejs.plural-form: [Number]`, where `[Number]` is the Family Group Number the language belongs (see `/src/js/core/i18n.js` to determine which number is the appropriate one).
 * If you require to use plurals, you must write the possible translations in the order specified in http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html as an array, and the placeholder to replace the number would be `%1`. 
-* **Only one** plural can be in the strings.
 * A code template to build a translation is presented below.
 
 ```javascript
+'use strict';
+
 /*!
- * [Locale] translation ([lang])
+ * This is a `i18n` language object.
  *
- * @see me-i18n.js
+ * [Locale]
+ *
+ * @author
+ *   John Dyer
+ *
+ * @see core/i18n.js
  */
-;(function(exports, undefined) {
+if (mejs.i18n.[lang] === undefined) {
+	mejs.i18n.[lang] = {
+		"mejs.plural-form": [Number],
 
-    "use strict";
+		// renderers/flash.js
+		"mejs.install-flash": "",
 
-    if (typeof exports.[lang] === 'undefined') {
-        exports.[lang] = {
-        
-            // Find the family group number; see `/src/js/mediaelement-18n.js`
-            'mejs.plural-form': 14,
-            
-            // Regular translations; to get the entire list of elements, always refer to `me-i18n-locale-en.js`
-            ... 
-            
-            // Example for pluralization following the form `nplurals=3; plural=(n%10==1 ? 0 : n%10==2 ? 1 : 2);`
-            // meaning that if the modulo between number indicated and 10 is 1, then the first string will be used;
-            // if the modulo between number indicated and 10 is 2, it will use the second one; otherwise, it will 
-            // use the third case
-            'mejs.time-skip-back' : ["Назад на %1 секунд", "Назад на %1 секунди", "Назад на %1 секунда"],
+		// features/contextmenu.js
+		"mejs.fullscreen-off": "",
+		"mejs.fullscreen-on": "",
+		"mejs.download-video": "",
 
-        };
-    }
+		// features/fullscreen.js
+		"mejs.fullscreen": "",
 
-}(mejs.i18n.locale.strings));
+		// features/jumpforward.js
+		"mejs.time-jump-forward": "",
+
+		// features/loop.js
+		"mejs.loop": "",
+
+		// features/playpause.js
+		"mejs.play": "",
+		"mejs.pause": "",
+
+		// features/postroll.js
+		"mejs.close": "",
+
+		// features/progress.js
+		"mejs.time-slider": "",
+		"mejs.time-help-text": "",
+
+		// features/skipback.js
+		"mejs.time-skip-back": "",
+
+		// features/tracks.js
+		"mejs.captions-subtitles": "",
+		"mejs.none": "",
+
+		// features/volume.js
+		"mejs.mute-toggle": "",
+		"mejs.volume-help-text": "",
+		"mejs.unmute": "",
+		"mejs.mute": ""
+		"mejs.volume-slider": "",
+
+		// core/player.js
+		"mejs.video-player": "",
+		"mejs.audio-player": "",
+
+		// features/ads.js
+		"mejs.ad-skip": "",
+		"mejs.ad-skip-info": "",
+
+		// features/sourcechooser.js
+		"mejs.source-chooser": "",
+
+		// features/stop.js
+		"mejs.stop": "",
+
+		//features/speed.js
+		"mejs.speed-rate" : "",
+
+		//features/progress.js
+		"mejs.live-broadcast" : "",
+
+		// features/tracks.js
+		"mejs.afrikaans": "",
+		"mejs.albanian": "",
+		"mejs.arabic": "",
+		"mejs.belarusian": "",
+		"mejs.bulgarian": "",
+		"mejs.catalan": "",
+		"mejs.chinese": "",
+		"mejs.chinese-simplified": "",
+		"mejs.chinese-traditional": "",
+		"mejs.croatian": "",
+		"mejs.czech": "",
+		"mejs.danish": "",
+		"mejs.dutch": "",
+		"mejs.english": "",
+		"mejs.estonian": "",
+		"mejs.filipino": "",
+		"mejs.finnish": "",
+		"mejs.french": "",
+		"mejs.galician": "",
+		"mejs.german": "",
+		"mejs.greek": "",
+		"mejs.haitian-creole": "",
+		"mejs.hebrew": "",
+		"mejs.hindi": "",
+		"mejs.hungarian": "",
+		"mejs.icelandic": "",
+		"mejs.indonesian": "",
+		"mejs.irish": "",
+		"mejs.italian": "",
+		"mejs.japanese": "",
+		"mejs.korean": "",
+		"mejs.latvian": "",
+		"mejs.lithuanian": "",
+		"mejs.macedonian": "",
+		"mejs.malay": "",
+		"mejs.maltese": "",
+		"mejs.norwegian": "",
+		"mejs.persian": "",
+		"mejs.polish": "",
+		"mejs.portuguese": "",
+		"mejs.romanian": "",
+		"mejs.russian": "",
+		"mejs.serbian": "",
+		"mejs.slovak": "",
+		"mejs.slovenian": "",
+		"mejs.spanish": "",
+		"mejs.swahili": "",
+		"mejs.swedish": "",
+		"mejs.tagalog": "",
+		"mejs.thai": "",
+		"mejs.turkish": "",
+		"mejs.ukrainian": "",
+		"mejs.vietnamese": "",
+		"mejs.welsh": "",
+		"mejs.yiddish": ""
+	};
+}
 ```
+
+<a id="es6"></a>
+### A word on `ES6` for Features and Renderers
+
+All the features and renderers are written using `Ecmascript 2015` specifications. 
+
+See the `src/js/features` and `src/js/renderers` directories, and check how the files were written to ensure compatibility.
+
+**Note**: the `for...of` loop could have been used, but in order to bundle them and reduce the size of the bundled files, it is **strongly recommended to avoid*** its use.
+
+If you plan to use your own feature/renderer and you don't want to bundle them using `grunt` (see [above](#building)), you ***MUST*** regular Javascript (like indicated in the templates above) to ensure compatibility.
 
 
 <a id="nodejs"></a>
@@ -421,14 +540,32 @@ One of the subtasks involved during the compiling of `MediaElement.js` is the co
 3. Create a symlink from the install location to this directory (eg: ```ln -s /usr/local/flex_sdk_4.6 /path/to/mediaelement/src/flash```)
 4. If you do not have the required player global swc file (version **10.1**), download it from https://helpx.adobe.com/flash-player/kb/archived-flash-player-versions.html and place it inside ```/path/to/flex_sdk_4.6/frameworks/libs/player/10.1/playerglobal.swc```
 
+If, during development, only the ActionScript files were affected, type `sh compile_swf.sh` and it will build the compiled files in `/local-build/` directory. Then just copy the files and put them inside `/build/` directory.
+
 <a id="building"></a>
-## Building
+## Building with Grunt
 
 To compile ALL the files, in your Terminal window just type `grunt` in the root of the project. 
 
-If during the development wasn't necessary to do any changes to the Flash files, type `grunt html5only`. That way, the Flash files will remain intact. You can also type `grunt html5debug` to avoid removing the console messages.
+If during the development was not necessary to do any changes to the Flash files, type `grunt html5only`. That way, the Flash files will remain intact. You can also type `grunt html5debug` to avoid removing the console messages.
 
-If, on the other hand, only the ActionScript files were affected, type `sh compile_swf.sh` and it will build the compiled files in `/local-build/` directory. Then just copy the files and put them inside `/build/` directory.
+Additionally, `grunt` can accept 2 extra options to create custom bundles: one for more player features and another one to integrate renderers.
 
+The way to use them is to append the keyword `--features` and/or `--renderers`, followed by the comma-separated list of elements. 
+
+The list must match the name of the files, meaning that if you wanna include the `x` feature and/or the `y` renderer, it must exist a `src/js/features/x.js` and/or `src/js/renderers/y.js` file(s). 
+
+For example:
+
+```
+# This will build a bundle with `Play/Pause`, `Stop` and `Fullscreen` features ONLY, plus all the default renderers
+grunt html5only --features=playpause,stop,fullscreen
+
+# This will build a bundle with `HLS` and `DASH` renderers ONLY, plus all the default player features
+grunt html5only --renderers=hls,dash
+
+# This will build a bundle with `Play/Pause`, `Stop` and `Fullscreen` features ONLY and `HLS` and `DASH` renderers ONLY
+grunt html5only --features=playpause,stop,fullscreen --renderers=hls,dash
+```
 ________
 [Back to Main](../README.md)

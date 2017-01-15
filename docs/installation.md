@@ -1,13 +1,14 @@
 # Installation
 
 * [0. Setup MIME-types](#mime-types)
-* [1. Add Script and Stylesheet](#script-and-stylesheet)
-* [2. Add `<video>` or `<audio>` tags](#tags)
+* [1. Install `MediaElementJS`](#install)
+* [2. Add Script and Stylesheet](#script-and-stylesheet)
+* [3. Add `<video>` or `<audio>` tags](#tags)
     * [Default setup](#default-setup)
     * [Multiple codecs (Optional)](#multi-codecs)
     * [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
     * [Use of Closed Captioning (Optional)](#closed-captioning)
-* [3. Set default language (Optional)](#language)
+* [4. Set default language (Optional)](#language)
     
 
 <a id="mime-types"></a>
@@ -47,15 +48,26 @@ If you want to make your media to play in `Chromium` browser, please read [this 
 
 For more information about how to set up a server to serve media properly and other general and useful topics about dealing with HTML5 video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
 
-<a id="script-and-stylesheet"></a>
-## 1. Add Script and Stylesheet
-```html
-<script src="jquery.js"></script>
-<script src="mediaelement-and-player.min.js"></script>
-<link rel="stylesheet" href="mediaelementplayer.min.css" />
+<a id="install"></a>
+## 1. Install `MediaElementJS`
+ 
+To get the default installation, just either download the zip file from https://github.com/johndyer/mediaelement or through GIT using: 
+```
+git clone https://github.com/johndyer/mediaelement.git
 ```
 
-Note: to support IE6-8, this code must appear in the `<head>` tag. If you cannot place the MediaElement.js code in the `<head>` you need to install something like [html5shiv](https://github.com/afarkas/html5shiv).
+However, `MediaElementJS` has additional features for the player, such as `VAST`, `Google Analytics`, etc.
+
+If you want to install them, use the Grunt file to create a new set of bundle files. More information about how to use Grunt [here](guidelines.md#building).
+ 
+
+<a id="script-and-stylesheet"></a>
+## 2. Add Script and Stylesheet
+```html
+<script src="/path/to/jquery.js"></script>
+<script src="/path/to/mediaelement-and-player.min.js"></script>
+<link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
+```
 
 If you wish to install the sources in different directories (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash shims in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
 ```html
@@ -77,7 +89,7 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 Also, update ```pluginPath``` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
 
 <a id="tags"></a>
-## 2. Add `<video>` or `<audio>` tags
+## 3. Add `<video>` or `<audio>` tags
 
 <a id="default-setup"></a>
 ### Default setup
@@ -145,7 +157,7 @@ That's why is important to put the caption files **in the same domain as the pla
 As a final note, to display closed captioning in iOS, they will need to be transcoded it in the video. To learn more about this topic, please read [The Zencoder guide to closed captioning for web, mobile, and connected TV](http://blog.zencoder.com/2012/07/13/closed-captioning-for-web-mobile-and-tv/).
 
 <a id="language"></a>
-## 3. Set default language (Optional)
+## 4. Set default language (Optional)
 
 By default, all the strings in `MediaElementJS` are in English. If you wanna set a different language for them, you need to set the language code via `mejs.i18n.locale.language` before the player instantiation, and specify the language in the media container in the `success` callback.
 
