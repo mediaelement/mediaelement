@@ -12,10 +12,26 @@
 
 flex_path="./src/flash/flex_sdk_4.6"
 target_version="10.1"
-builds[0]="-define+=CONFIG::cdnBuild,true -define+=CONFIG::debugBuild,true -o local-build/flashmediaelement-debug.swf"
-builds[1]="-define+=CONFIG::cdnBuild,true -define+=CONFIG::debugBuild,false -o local-build/flashmediaelement-cdn.swf"
-builds[2]="-define+=CONFIG::cdnBuild,false -define+=CONFIG::debugBuild,false -o local-build/flashmediaelement.swf"
 
-for i in 0 1 2; do
-	$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true src/flash/FlashMediaElement.as ${builds[i]} -library-path+=$flex_path/lib -include-libraries+=src/flash/flashmediaelement.swc -include-libraries+=src/flash/flashls.swc -use-network=true -source-path src/flash -target-player $target_version -headless-server -static-link-runtime-shared-libraries
-done
+
+
+#in_file="flash-video/VideoElement.as"
+#out_file="build/mediaelement-flash-video.swf"
+#source_path="./src/flash/flash-video"
+#libraries=""
+#
+# $flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/$in_file -o $out_file -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path $source_path -headless-server -static-link-runtime-shared-libraries
+
+
+# VIDEO
+$flex_path/bin/mxmlc -strict=false -compiler.debug=true -warnings=true ./src/flash/flash-video/VideoMediaElement.as -o build/mediaelement-flash-video.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-video -headless-server -static-link-runtime-shared-libraries
+
+$flex_path/bin/mxmlc -strict=false -compiler.debug=true -warnings=true ./src/flash/flash-video-hls/HlsMediaElement.as -o build/mediaelement-flash-video-hls.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-video-hls -headless-server -static-link-runtime-shared-libraries -include-libraries+=./src/flash/flash-video-hls/flashls.swc
+
+$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/flash-video-dash/DashMediaElement.as -o build/mediaelement-flash-video-mdash.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-video-dash -headless-server -static-link-runtime-shared-libraries -include-libraries+=./src/flash/flash-video-dash/OSMF.swc
+
+
+# AUDIO
+$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/flash-audio/AudioMediaElement.as -o build/mediaelement-flash-audio.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-audio -headless-server -static-link-runtime-shared-libraries
+
+$flex_path/bin/mxmlc -strict=false -compiler.debug -warnings=true ./src/flash/flash-audio-ogg/OggMediaElement.as -o build/mediaelement-flash-audio-ogg.swf -library-path+=$flex_path/lib $libraries -use-network=true -target-player $target_version -source-path ./src/flash/flash-audio-ogg -headless-server -static-link-runtime-shared-libraries -include-libraries+=./src/flash/flash-audio-ogg/oggvorbis.swc
