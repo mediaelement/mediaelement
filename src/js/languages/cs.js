@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Czech
  *
@@ -15,70 +15,69 @@ if (mejs.i18n.cs === undefined) {
 	mejs.i18n.cs = {
 		"mejs.plural-form": 8,
 
-		// me-shim
-		"mejs.download-file": "Stáhnout soubor",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Vypnout režim celá obrazovka",
 		"mejs.fullscreen-on": "Na celou obrazovku",
 		"mejs.download-video": "Stáhnout video",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Celá obrazovka",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Přehrát",
 		"mejs.pause": "Pozastavit",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Zavřít",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "Posuvný běžec nastavení času",
 		"mejs.time-help-text": "Použijte tlačítka se šipkami doleva / doprava pro posun o jednu vteřinu, tlačítka se šipkami nahoru / dolů pro posun o deset vteřin.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": "Zpět o %1 vteřin",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Titulky",
 		"mejs.none": "Žádný",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Vypnout/zapnout zvuk",
 		"mejs.volume-help-text": "Použijte tlačítka se šipkami nahoru / dolů pro zesílení nebo zeslabení hlasitosti.",
 		"mejs.unmute": "Zapnout zvuk",
 		"mejs.mute": "Vypnout zvuk",
 		"mejs.volume-slider": "Posuvný běžec nastavení hlasitosti",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Přehrávač videa",
 		"mejs.audio-player": "Přehrávač hudby"
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		//"mejs.ad-skip": "Skip ad",
 		//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		//"mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

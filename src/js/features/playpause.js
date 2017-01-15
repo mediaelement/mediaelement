@@ -24,7 +24,7 @@ Object.assign(config, {
 	pauseText: ''
 });
 
-$.extend(MediaElementPlayer.prototype, {
+Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 * Feature constructor.
 	 *

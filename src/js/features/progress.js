@@ -22,7 +22,7 @@ Object.assign(config, {
 	enableProgressTooltip: true
 });
 
-$.extend(MediaElementPlayer.prototype, {
+Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Feature constructor.

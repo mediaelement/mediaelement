@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Catalan
  *
@@ -14,70 +14,69 @@ if (mejs.i18n.ca === undefined) {
 	mejs.i18n.ca = {
 		"mejs.plural-form": 1,
 
-		// me-shim
-		"mejs.download-file": "Descarregar arxiu",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Desconnectar pantalla completaa",
 		"mejs.fullscreen-on": "Anar a pantalla completa",
 		"mejs.download-video": "Descarregar vídeo",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Pantalla completa",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		// "mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Reproducció",
 		"mejs.pause": "Pausa",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Tancar",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		// "mejs.time-slider": "Time Slider",
 		// "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		// "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Llegendes/Subtítols",
 		"mejs.none": "Ningú",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Alternar silenci",
 		// "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 		"mejs.unmute": "Reactivar silenci",
 		"mejs.mute": "Silenci",
 		// "mejs.volume-slider": "Volume Slider",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Reproductor de vídeo",
 		"mejs.audio-player": "Reproductor d'àudio",
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		"mejs.ad-skip": "Salta publicitat",
 		"mejs.ad-skip-info": ["Salta en 1 segon", "Salta en %1 segons"],
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		// "mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		"mejs.stop": "Aturar"
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",
@@ -135,4 +134,3 @@ if (mejs.i18n.ca === undefined) {
 		// "mejs.yiddish": "Yiddish"
 	};
 }
-

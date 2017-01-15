@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * French
  *
@@ -16,70 +16,69 @@ if (mejs.i18n.fr === undefined) {
 	mejs.i18n.fr = {
 		"mejs.plural-form": 2,
 
-		// me-shim
-		"mejs.download-file": "Télécharger le fichier",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Quitter le mode plein écran",
 		"mejs.fullscreen-on": "Afficher en plein écran",
 		"mejs.download-video": "Télécharger la vidéo",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Plein écran",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		"mejs.time-jump-forward": "Avancer de %1 secondes",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Lecture",
 		"mejs.pause": "Pause",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Fermer",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "Curseur temporel",
 		"mejs.time-help-text": "Utilisez les flèches Gauche/Droite du clavier pour avancer d'une seconde, les flèches Haut/Bas pour avancer de 10 secondes.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": "Reculer de %1 secondes",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Sous-titres",
 		"mejs.none": "Aucun",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Activer/désactiver le son",
 		"mejs.volume-help-text": "Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.",
 		"mejs.unmute": "Activer le son",
 		"mejs.mute": "Désactiver le son",
 		"mejs.volume-slider": "Volume",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Lecteur Vidéo",
 		"mejs.audio-player": "Lecteur Audio",
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		"mejs.ad-skip": "Passer la publicité",
 		"mejs.ad-skip-info": "Passer la publicité dans %1 secondes",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		"mejs.source-chooser": "Sélecteur de média"
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Croatian
  *
@@ -14,70 +14,69 @@ if (mejs.i18n.hr === undefined) {
 	mejs.i18n.hr = {
 		"mejs.plural-form": 7,
 
-		// me-shim
-		"mejs.download-file": "Preuzmi datoteku",
+		// renderers/flash.js
 		"mejs.install-flash": "Koristite preglednik koji nema omogućen ili instaliran Flash preglednik. Molimo Vas uključite Flash dodatak ili preuzmite najnoviju verziju s https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Isključi puni zaslon",
 		"mejs.fullscreen-on": "Uključi puni zaslon",
 		"mejs.download-video": "Preuzmi video",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Puni zaslon",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		"mejs.time-jump-forward": ["Skoči naprijed 1 sekundu", "Skoči naprijed %1 sekunde", "Skoči naprijed %1 sekundi"],
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		"mejs.loop": "Uključi/isključi ponavljanje",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Pokreni",
 		"mejs.pause": "Zaustavi",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Zatvori",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "Vremenska traka",
 		"mejs.time-help-text": "Koristi strelice lijevo/desno za pomak naprijed za 1 sekundu te gore/dolje za pomak od 10 sekundi.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": ["Skoči natrag 1 sekundu", "Skoči natrag %1 sekunde", "Skoči natrag %1 sekundi"],
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Opisi/Prijevodi",
 		"mejs.none": "Ništa",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Uključi/isključi zvuk",
 		"mejs.volume-help-text": "Koristi strelice gore/dolje za pojačavanje ili stišavanje.",
 		"mejs.unmute": "Uključi zvuk",
 		"mejs.mute": "Isključi zvuk",
 		"mejs.volume-slider": "Pokazivač razine zvuka",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Video preglednik",
 		"mejs.audio-player": "Audio preglednik",
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		"mejs.ad-skip": "Preskoči oglas",
 		"mejs.ad-skip-info": ["Preskoči za 1 sekundu", "Preskoči za %1 sekunde", "Preskoči za %1 sekundi"],
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		"mejs.source-chooser": "Obabir izvora",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		"mejs.stop": "Zaustavi",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		"mejs.speed-rate": "Brzina reprodukcije",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		"mejs.afrikaans": "Afrički",
 		"mejs.albanian": "Albanski",
 		"mejs.arabic": "Arapski",

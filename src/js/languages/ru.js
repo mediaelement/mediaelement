@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Russian
  *
@@ -15,70 +15,69 @@ if (mejs.i18n.ru === undefined) {
 	mejs.i18n.ru = {
 		"mejs.plural-form": 7,
 
-		// me-shim
-		"mejs.download-file": "Скачать файл",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Выключить широкий экран",
 		"mejs.fullscreen-on": "Перейти к широкому экрану",
 		"mejs.download-video": "Скачать видео",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Широкий экран",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Воспроизвести",
 		"mejs.pause": "Пауза",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Закрыть",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "Слайдер времени",
 		"mejs.time-help-text": "Используйте Левую/Правую клавиши со стрелками, чтобы продвинуться на одну секунду, клавиши со стрелками Вверх/Вниз, чтобы продвинуться на десять секунд.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": "Пропустить назад %1 секунд",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Титры/Субтитры",
 		"mejs.none": "Нет",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Без звука",
 		"mejs.volume-help-text": "Используйте клавиши со стрелками Вверх/Вниз, чтобы увеличить или уменьшить громкость.",
 		"mejs.unmute": "Отменить выключение звука",
 		"mejs.mute": "Отключить звук",
 		"mejs.volume-slider": "Слайдер громкости",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Видеоплеер",
 		"mejs.audio-player": "Аудиоплеер"
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		//"mejs.ad-skip": "Skip ad",
 		//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		//"mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

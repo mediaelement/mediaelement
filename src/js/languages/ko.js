@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Korean
  *
@@ -15,70 +15,69 @@ if (mejs.i18n.ko === undefined) {
 	mejs.i18n.ko = {
 		"mejs.plural-form": 0,
 
-		// me-shim
-		"mejs.download-file": "파일 다운로드",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "전체화면 해제",
 		"mejs.fullscreen-on": "전체화면 가기",
 		"mejs.download-video": "비디오 다운로드",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "전체화면",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "작동",
 		"mejs.pause": "정지",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "종료",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "시간 슬라이더",
 		"mejs.time-help-text": "1초 전진하려면 좌/우측 화살표를 사용하시고 10초 전진하려면 위/아래 화살표를 사용하세요.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": "%1초 를 뒤로 건너뛰세요",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "캡션/자막",
 		"mejs.none": "없음",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "음소거 전환",
 		"mejs.volume-help-text": "볼륨을 높이거나 낮추려면 위/아래 화살표를 이용하세요.",
 		"mejs.unmute": "음소거 해제",
 		"mejs.mute": "말 없는",
 		"mejs.volume-slider": "볼륨 슬라이더",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "비디오 플레이어",
 		"mejs.audio-player": "오디오 플레이어"
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		//"mejs.ad-skip": "Skip ad",
 		//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		//"mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

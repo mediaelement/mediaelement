@@ -1,5 +1,7 @@
+'use strict';
+
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Polish
  *
@@ -13,70 +15,69 @@ if (mejs.i18n.pl === undefined) {
 	mejs.i18n.pl = {
 		"mejs.plural-form": 9,
 
-		// me-shim
-		"mejs.download-file": "Pobierz plik",
+		// renderers/flash.js
 		"mejs.install-flash": "Twoja przeglądarka nie ma włączonej lub zainstalowanej wtyczki Flash Player. Prosimy ją włączyć lub pobrać najnowszą wersję ze strony https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Wyłącz pełny ekran",
 		"mejs.fullscreen-on": "Przejdź na pełny ekran",
 		"mejs.download-video": "Pobierz wideo",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Pełny ekran",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		"mejs.time-jump-forward": ["Przewiń do przodu o sekundę", "Przewiń do przodu o %1 sekundy", "Przewiń do przodu o %1 sekund"],
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		"mejs.loop": "Zapętl",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Odtwarzaj",
 		"mejs.pause": "Wstrzymaj",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Zamknij",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "Suwak czasu",
 		"mejs.time-help-text": "Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": ["Cofnij o sekundę", "Cofnij o %1 sekundy", "Cofnij o %1 sekund"],
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Podpisy/napisy",
 		"mejs.none": "Brak",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Przełączanie wyciszania",
 		"mejs.volume-help-text": "Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.",
 		"mejs.unmute": "Wyłącz wyciszenie",
 		"mejs.mute": "Wycisz",
 		"mejs.volume-slider": "Suwak głośności",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Odtwarzacz wideo",
 		"mejs.audio-player": "Odtwarzacz audio",
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		"mejs.ad-skip": "Pomiń reklamę",
 		"mejs.ad-skip-info": ["Pomiń za sekundę", "Pomiń za %1 sekundy", "Pomiń za %1 sekund"],
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		"mejs.source-chooser": "Wybór źródła",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		"mejs.stop": "Zatrzymaj",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		"mejs.speed-rate": "Prędkość",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		"mejs.live-broadcast": "Transmisja na żywo",
 
-		// mep-tracks
+		// features/tracks.js
 		"mejs.afrikaans": "Afrykański",
 		"mejs.albanian": "Albański",
 		"mejs.arabic": "Arabski",

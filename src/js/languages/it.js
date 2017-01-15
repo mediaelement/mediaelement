@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Italian
  *
@@ -15,70 +15,69 @@ if (mejs.i18n.it === undefined) {
 	mejs.i18n.it = {
 		"mejs.plural-form": 1,
 
-		// me-shim
-		"mejs.download-file": "Scaricare il file",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Disattivare lo schermo intero",
 		"mejs.fullscreen-on": "Attivare lo schermo intero",
 		"mejs.download-video": "Scaricare il video",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Schermo intero",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Eseguire",
 		"mejs.pause": "Pausa",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Chiudere",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "Barra di scorrimento",
 		"mejs.time-help-text": "Utilizzare i tasti Freccia sinistra/Freccia destra per avanzare di un secondo, Freccia Su/Giù per avanzare dieci secondi.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": "Riavvolgere %1 secondi",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Acquisizioni/sottotitoli",
 		"mejs.none": "Nessuno",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Toggle muto",
 		"mejs.volume-help-text": "Utilizzare i tasti Freccia Su/Giù per aumentare o diminuire il volume.",
 		"mejs.unmute": "Disattivare muto",
 		"mejs.mute": "Muto",
 		"mejs.volume-slider": "Barra del volume",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Lettore Video",
 		"mejs.audio-player": "Lettore Audio"
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		//"mejs.ad-skip": "Skip ad",
 		//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		//"mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

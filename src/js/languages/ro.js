@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Romanian
  *
@@ -15,70 +15,69 @@ if (mejs.i18n.ro === undefined) {
 	mejs.i18n.ro = {
 		"mejs.plural-form": 5,
 
-		// me-shim
-		"mejs.download-file": "Descarcă fişierul",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Opreşte ecranul complet",
 		"mejs.fullscreen-on": "Treci la ecran complet",
 		"mejs.download-video": "Descarcă fişierul video",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Ecran complet",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "Redare",
 		"mejs.pause": "Pauză",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Închide",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "Cursor timp",
 		"mejs.time-help-text": "Utilizează tastele săgeată Stânga/Dreapta pentru a avansa o secundă şi săgeţile Sus/Jos pentru a avansa zece secunde.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": "Sari înapoi %1 secunde",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Legende/Subtitrări",
 		"mejs.none": "Niciunul",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Comutare dezactivare sunet",
 		"mejs.volume-help-text": "Utilizează tastele de săgeată Sus/Jos pentru a creşte/micşora volumul",
 		"mejs.unmute": "Cu sunet",
 		"mejs.mute": "Fără sunet",
 		"mejs.volume-slider": "Cursor volum",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "Player video",
 		"mejs.audio-player": "Player audio"
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		//"mejs.ad-skip": "Skip ad",
 		//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		//"mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

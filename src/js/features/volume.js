@@ -37,7 +37,7 @@ Object.assign(config, {
 	videoVolume: 'vertical'
 });
 
-$.extend(MediaElementPlayer.prototype, {
+Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Feature constructor.

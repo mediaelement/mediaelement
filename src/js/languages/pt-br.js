@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Brazilian (Portuguese)
  *
@@ -15,70 +15,69 @@ if (mejs.i18n['pt-BR'] === undefined) {
 	mejs.i18n['pt-BR'] = {
 		"mejs.plural-form": 2,
 
-		// me-shim
-		"mejs.download-file": "Baixar arquivo",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "Sair da tela inteira",
 		"mejs.fullscreen-on": "Ir para tela inteira",
 		"mejs.download-video": "Baixar vídeo",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "Tela inteira",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		//"mejs.play": "Play",
 		//"mejs.pause": "Pause",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "Fechar",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		//"mejs.time-slider": "Time Slider",
 		//"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		//"mejs.time-skip-back": "Skip back %1 second(s)",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "Legendas",
 		"mejs.none": "Sem legendas",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "Alternar silêncio",
 		//"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 		"mejs.unmute": "Tirar silêncio",
 		"mejs.mute": "Silenciar"
 		//"mejs.volume-slider": "Volume Slider",
 
-		// mep-player
+		// core/player.js
 		//"mejs.video-player": "Video Player",
 		//"mejs.audio-player": "Audio Player",
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		//"mejs.ad-skip": "Skip ad",
 		//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		//"mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

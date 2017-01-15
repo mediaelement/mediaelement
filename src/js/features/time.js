@@ -25,7 +25,7 @@ Object.assign(config, {
 });
 
 
-$.extend(MediaElementPlayer.prototype, {
+Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Current time constructor.

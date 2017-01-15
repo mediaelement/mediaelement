@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
- * This is a i18n.locale language object.
+ * This is a `i18n` language object.
  *
  * Japanese
  *
@@ -15,70 +15,69 @@ if (mejs.i18n.ja === undefined) {
 	mejs.i18n.ja = {
 		"mejs.plural-form": 0,
 
-		// me-shim
-		"mejs.download-file": "ファイルをダウンロードする",
+		// renderers/flash.js
 		// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-		// mediaelementplayer-feature-contextmenu
+		// features/contextmenu.js
 		"mejs.fullscreen-off": "全画面をオフにする",
 		"mejs.fullscreen-on": "全画面にする",
 		"mejs.download-video": "動画をダウンロードする",
 
-		// mediaelementplayer-feature-fullscreen
+		// features/fullscreen.js
 		"mejs.fullscreen": "全画面",
 
-		// mediaelementplayer-feature-jumpforward
+		// features/jumpforward.js
 		//"mejs.time-jump-forward": "Jump forward %1 second(s)",
 
-		// mediaelementplayer-feature-loop
+		// features/loop.js
 		//"mejs.loop": "Toggle Loop",
 
-		// mediaelementplayer-feature-playpause
+		// features/playpause.js
 		"mejs.play": "再生",
 		"mejs.pause": "一時停止",
 
-		// mediaelementplayer-feature-postroll
+		// features/postroll.js
 		"mejs.close": "閉じる",
 
-		// mediaelementplayer-feature-progress
+		// features/progress.js
 		"mejs.time-slider": "タイムスライダー",
 		"mejs.time-help-text": "1秒進めるには左/右矢印をキーを、10秒進めるには上/下矢印を使います。",
 
-		// mediaelementplayer-feature-skipback
+		// features/skipback.js
 		"mejs.time-skip-back": "%1秒スキップバックする",
 
-		// mediaelementplayer-feature-tracks
+		// features/tracks.js
 		"mejs.captions-subtitles": "キャプション/字幕",
 		"mejs.none": "なし",
 
-		// mediaelementplayer-feature-volume
+		// features/volume.js
 		"mejs.mute-toggle": "ミュートトグル",
 		"mejs.volume-help-text": "音量を上げたり下げたりするには、上/下矢印を使います。",
 		"mejs.unmute": "ミュートを解除",
 		"mejs.mute": "ミュート",
 		"mejs.volume-slider": "音量スライダー",
 
-		// mep-player
+		// core/player.js
 		"mejs.video-player": "ビデオプレーヤー",
 		"mejs.audio-player": "オーディオプレーヤー"
 
-		// mediaelementplayer-feature-ads
+		// features/ads.js
 		//"mejs.ad-skip": "Skip ad",
 		//"mejs.ad-skip-info": "Skip in %1 second(s)",
 
-		// mediaelementplayer-feature-sourcechooser
+		// features/sourcechooser.js
 		//"mejs.source-chooser": "Source Chooser",
 
-		// mediaelementplayer-feature-stop
+		// features/stop.js
 		//"mejs.stop": "Stop",
 
-		//mediaelementplayer-feature-speed
+		//features/speed.js
 		//"mejs.speed-rate" : "Speed Rate",
 
-		//mediaelementplayer-feature-progress
+		//features/progress.js
 		//"mejs.live-broadcast" : "Live Broadcast",
 
-		// mep-tracks
+		// features/tracks.js
 		// "mejs.afrikaans": "Afrikaans",
 		// "mejs.albanian": "Albanian",
 		// "mejs.arabic": "Arabic",

@@ -49,7 +49,7 @@ Object.assign(config, {
 	slidesSelector: ''
 });
 
-$.extend(MediaElementPlayer.prototype, {
+Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * @type {Boolean}

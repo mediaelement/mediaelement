@@ -28,7 +28,7 @@ Object.assign(config, {
 	fullscreenText: ''
 });
 
-$.extend(MediaElementPlayer.prototype, {
+Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * @type {Boolean}
