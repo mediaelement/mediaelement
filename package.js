@@ -1,6 +1,6 @@
 Package.describe({
     name: 'johndyer:mediaelement',
-    summary: 'HTML5 <audio> or <video> player with shims that mimic the HTML5 MediaElement API, enabling a consistent UI in all browsers.',
+    summary: 'MediaElement.js: <video> and <audio> made easy. One file. Any browser. Same UI.',
     version: '3.0.0',
     git: 'https://github.com/johndyer/mediaelement'
 });
