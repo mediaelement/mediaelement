@@ -1,6 +1,6 @@
 Package.describe({
     name: 'johndyer:mediaelement',
-    summary: 'MediaElement.js: <video> and <audio> made easy. One file. Any browser. Same UI.',
+    summary: '*Official* MediaElement.js: <video> and <audio> made easy. One file. Any browser. Same UI.',
     version: '3.0.0',
     git: 'https://github.com/johndyer/mediaelement'
 });
