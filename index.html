@@ -141,7 +141,7 @@
     <script src="https://rawgit.com/johndyer/mediaelement/master/build/mediaelement-and-player.min.js"></script>
     <script>
 
-        if (mejs.MediaFeatures.isiOS) {
+        if (mejs.Features.isiOS) {
             $('select').find('option[value^="rtmp"]').prop('disabled', true)
                 .end()
                 .find('option[value$="webm"]').prop('disabled', true)
