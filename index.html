@@ -9,7 +9,7 @@
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
         <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-        <link rel="stylesheet" type="text/css" href="https://rawgit.com/johndyer/mediaelement/3.x-dev/build/mediaelementplayer.min.css">
+        <link rel="stylesheet" type="text/css" href="https://rawgit.com/johndyer/mediaelement/master/build/mediaelementplayer.min.css">
         <style>
             body, section {
                 overflow-x: hidden;
@@ -140,20 +140,23 @@
     <script src="https://buttons.github.io/buttons.js"></script>
     <script src="http://platform.twitter.com/widgets.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://rawgit.com/johndyer/mediaelement/3.x-dev/build/mediaelement-and-player.min.js"></script>
+    <script src="https://rawgit.com/johndyer/mediaelement/master/build/mediaelement-and-player.min.js"></script>
     <script>
 
         if (mejs.MediaFeatures.isiOS) {
-            $('select').find('option[value^="rtmp"]').prop('disabled', true);
-            $('select').find('option[value$="webm"]').prop('disabled', true);
-            $('select').find('option[value$=".mpd"]').prop('disabled', true);
-            $('select').find('option[value$=".ogg"]').prop('disabled', true);
-            $('select').find('option[value*=".flv"]').prop('disabled', true);
+            $('select').find('option[value^="rtmp"]').prop('disabled', true)
+                .end()
+                .find('option[value$="webm"]').prop('disabled', true)
+                .end()
+                .find('option[value$=".mpd"]').prop('disabled', true)
+                .end()
+                .find('option[value$=".ogg"]').prop('disabled', true)
+                .end()
+                .find('option[value*=".flv"]').prop('disabled', true);
         }
 
         $('video, audio').mediaelementplayer({
             pluginPath: 'dist/',
-            features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen', 'tracks'],
             success: function() {
             	$('.player').css('visibility', 'visible');
             }
