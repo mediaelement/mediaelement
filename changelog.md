@@ -1,6 +1,6 @@
 ### Version History
 
-*3.0 (2017/01/16)*
+*3.0.0 (2017/01/16)*
 
 * Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way @johndyer
 * Code refactor in `ECMAScript® 2015` language specification (`ES6`) @ron666
