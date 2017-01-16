@@ -1,5 +1,5 @@
 Package.describe({
-    name: 'johndyer:mediaelementjs',
+    name: 'johndyer:mediaelement',
     summary: 'HTML5 <audio> or <video> player with shims that mimic the HTML5 MediaElement API, enabling a consistent UI in all browsers.',
     version: '3.0.0',
     git: 'https://github.com/johndyer/mediaelement'
@@ -13,7 +13,6 @@ Package.onUse(function(api) {
     api.addFiles('build/lang/ca.js', 'client');
     api.addFiles('build/lang/cs.js', 'client');
     api.addFiles('build/lang/de.js', 'client');
-    api.addFiles('build/lang/en.js', 'client');
     api.addFiles('build/lang/es.js', 'client');
     api.addFiles('build/lang/fr.js', 'client');
     api.addFiles('build/lang/hu.js', 'client');
