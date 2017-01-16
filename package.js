@@ -29,14 +29,14 @@ Package.onUse(function(api) {
     api.addFiles('build/lang/zh.js', 'client');
     api.addFiles('build/lang/zh-cn.js', 'client');
 
-    api.addFiles('build/mejs-controls.svg', 'client');
-    api.addFiles('build/mejs-controls.png', 'client');
+    api.addAssets('build/mejs-controls.svg', 'client');
+    api.addAssets('build/mejs-controls.png', 'client');
 
-    api.addFiles('build/mediaelement-flash-audio.swf', 'client');
-    api.addFiles('build/mediaelement-flash-audio-ogg.swf', 'client');
-    api.addFiles('build/mediaelement-flash-video.swf', 'client');
-    api.addFiles('build/mediaelement-flash-video-hls.swf', 'client');
-    api.addFiles('build/mediaelement-flash-video-mdash.swf', 'client');
+    api.addAssets('build/mediaelement-flash-audio.swf', 'client');
+    api.addAssets('build/mediaelement-flash-audio-ogg.swf', 'client');
+    api.addAssets('build/mediaelement-flash-video.swf', 'client');
+    api.addAssets('build/mediaelement-flash-video-hls.swf', 'client');
+    api.addAssets('build/mediaelement-flash-video-mdash.swf', 'client');
 
     api.addFiles('build/mediaelement.js', 'client');
     api.addFiles('build/mediaelement-and-player.js', 'client');
