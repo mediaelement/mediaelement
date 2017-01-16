@@ -13,6 +13,7 @@
 * Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library @ron666
 * Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js) @ron666
 * Addition of Catalan translation @ron666
+* Added support for Meteor @ron666
 * Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development @ron666
 * Reduced size of repository as a whole @ron666
 * Removal of themes and introduction of simple player for testing @johndyer
