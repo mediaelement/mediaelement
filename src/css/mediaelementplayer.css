@@ -135,7 +135,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 	height: 80px;
 	margin: -40px 0 0 -40px;
 	background: url("mejs-controls.svg") no-repeat;
-	background-position: 0 -40px;
+	background-position: 0 -39px;
 	overflow: hidden;
 }
 
@@ -147,7 +147,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__overlay:hover > .mejs__overlay-button {
-	background-position: -80px -40px ;
+	background-position: -80px -39px ;
 }
 
 .mejs__overlay-loading {
