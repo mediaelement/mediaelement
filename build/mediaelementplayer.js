@@ -646,10 +646,12 @@ var MediaElement = function MediaElement(idOrNode, options) {
 
 				var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1),
 				    getFn = function getFn() {
-					return t.mediaElement.renderer['get' + capName]();
+					return t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null ? t.mediaElement.renderer['get' + capName]() : null;
 				},
 				    setFn = function setFn(value) {
-					t.mediaElement.renderer['set' + capName](value);
+					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
+						t.mediaElement.renderer['set' + capName](value);
+					}
 				};
 
 				addProperty(t.mediaElement, propName, getFn, setFn);
@@ -662,7 +664,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 	// `src` is a property separated from the others since it carries the logic to set the proper renderer
 	// based on the media files detected
 	getSrc = function getSrc() {
-		return t.mediaElement.renderer.getSrc();
+		return t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null ? t.mediaElement.renderer.getSrc() : null;
 	},
 	    setSrc = function setSrc(value) {
 
@@ -720,7 +722,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 				args[_key] = arguments[_key];
 			}
 
-			return typeof t.mediaElement.renderer[methodName] === 'function' ? t.mediaElement.renderer[methodName](args) : null;
+			return t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function' ? t.mediaElement.renderer[methodName](args) : null;
 		};
 	};
 

@@ -199,9 +199,11 @@ class MediaElement {
 
 					const
 						capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`,
-						getFn = () => t.mediaElement.renderer[`get${capName}`](),
+						getFn = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer[`get${capName}`]() : null,
 						setFn = (value) => {
-							t.mediaElement.renderer[`set${capName}`](value);
+							if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
+								t.mediaElement.renderer[`set${capName}`](value);
+							}
 						};
 
 					addProperty(t.mediaElement, propName, getFn, setFn);
@@ -211,7 +213,7 @@ class MediaElement {
 			},
 			// `src` is a property separated from the others since it carries the logic to set the proper renderer
 			// based on the media files detected
-			getSrc = () => t.mediaElement.renderer.getSrc(),
+			getSrc = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer.getSrc() : null,
 			setSrc = (value) => {
 
 				let mediaFiles = [];
@@ -271,7 +273,8 @@ class MediaElement {
 			assignMethods = (methodName) => {
 				// run the method on the current renderer
 				t.mediaElement[methodName] = (...args) => {
-					return (typeof t.mediaElement.renderer[methodName] === 'function') ?
+					return (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
+						typeof t.mediaElement.renderer[methodName] === 'function') ?
 						t.mediaElement.renderer[methodName](args) : null;
 				};
 
