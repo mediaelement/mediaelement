@@ -19,7 +19,6 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "cssnano": "^3.8.0",
-    "global": "^4.3.1",
     "grunt": "^0.4.5",
     "grunt-babel": "^6.0.0",
     "grunt-browserify": "^5.0.0",
@@ -39,8 +38,23 @@
     "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0"
   },
+  "dependencies": {
+    "global": "^4.3.1"
+  },
   "scripts": {
     "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register --require babel-polyfill --recursive test/unit",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+  },
+  "browserify": {
+    "extensions": [".js"],
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": "es2015",
+          "sourceMapsAbsolute": true
+        }
+      ]
+    ]
   }
 }
