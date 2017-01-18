@@ -1,0 +1,311 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/* MEJS site */
+body {
+	font-family: Lato, Arial, Helvetica;
+	font-size: 16px;
+}
+h1, h2, h3, h4, {
+	font-family: Montserrat, Arial, Helvetica;
+}
+h2 {
+	font-family: Montserrat;
+	text-transform: uppercase;
+	font-size: 2em;
+	text-align: center;
+	margin: 1em 0;
+}
+
+code {
+	font-family: monospace;
+	border: solid 1px #ddd;
+	padding: 3px;
+	background: #eee;
+	display: inline-block;
+}
+pre {
+	font-family: monospace;
+	border: solid 1px #ddd;
+	padding: 3px;
+	background: #eee;
+	display: inline-block;	
+	width: 100%;
+	overflow: auto;
+}
+p, ul, table, pre {
+	margin: 0 0 1em;
+}
+li {
+	list-style: disc;
+}
+p, li {
+	line-height: 1.4;
+}
+
+
+
+/* menu */
+header {
+	padding: 1.5em;	
+	background: #fff;
+	color: #ed6034;
+	overflow: hidden;
+}
+header .container {
+	max-width: 960px;
+}
+	.logo {
+		position: absolute;
+	    left: 50%;
+	    margin-left: -25px !important;	
+	    width: 50px;
+	    top: 1em;
+	}
+	.brand {
+		float: left;
+		font-size: 1.5em;
+	}
+	
+	.menu {
+		float: right;
+	}
+	.menu ul {
+		list-style: none;
+		margin:0;
+		padding: 0;
+	}
+	.menu li {
+		list-style: none;
+		margin: 0 0 0 0.5em;
+		padding: 0;
+		display: inline-block;
+	}	
+	.menu a {
+		padding: 0.5em 0.75em;
+		text-decoration: none;
+		color: #ed6034;
+	}	
+	
+	.menu a.download {
+		color: #fff;
+		background: #ed6034;
+		border-radius: 4px;
+	}			
+
+
+.container {
+	max-width: 760px;
+	margin: 0 auto;
+}
+@media (max-width: 600px) {
+	.container {
+		margin: 0 1em;
+	}
+	header {
+		padding: 0;
+	}
+	.logo {
+		position: relative;	
+		margin: 0.5em auto;
+	}
+	
+	.brand {
+		text-align: center;
+		float: none;
+		margin: 1em 0 ;
+	}
+	
+	.menu {
+		clear: both;
+		float: none;
+		text-align: center;
+	}
+
+	
+	.menu li {
+		display: block;
+		padding: 1em;
+		border-bottom: 1px solid #ccc;
+		text-transform: uppercase;		
+	}
+	
+}
+
+/* first section */
+.overview {
+	background: #286E98;
+	padding: 2em;
+	color: #fff;
+}
+
+.overview p {
+	line-height: 1.5;
+	max-width: 650px;
+	margin: 1em auto;
+	text-align: center;
+}
+
+.overview-links {
+	text-align: center;
+}
+
+
+/* audio and video  */
+.players {
+	background: #333;
+	padding: 3em 0;
+}
+
+	.players .container {
+		max-width: 750px;
+	}
+	
+	.players h4 {
+		color: #fff;
+		font-size: 1.5em;
+		margin: 1em 0;
+		text-align: center;
+	}
+
+
+	.player-selector {
+		max-width: 600px;
+		text-align: center;
+		margin: 1em auto;
+		color: #fff;	
+	}
+	.player-selector select {
+		display: block;
+		margin: 0.25em auto;
+	}
+
+/* list of logos  */
+.sitesusing {
+	padding: 3em 0;
+}
+
+.site-logos {
+	overflow: auto;
+	margin: 0 0 2em;
+	text-align: center;
+}
+
+.site-logos .site-logo {
+	width: 18%;
+	padding: 0.5em;
+	display: inline-block;
+	box-sizing: border-box;
+}
+
+.site-logos img {
+	width: 100%;
+}
+
+/* what's new  */
+.features {
+	padding: 3em 0;	
+	background: #4B9303;
+	color: #fff;
+}
+.features .container {
+	
+}
+.features a {
+	color: #084468;
+}
+
+
+/* getting started */
+.get-started {
+	padding: 3em 0;
+}
+
+
+.get-started h2 {
+	color: #ed6034;
+}
+
+.get-started .button {
+	background: #ed6034;
+	color: #fff;
+	text-align: center;
+	padding: 0.5em 0.75em;;
+	display: block;
+	text-decoration: none;
+	margin: 0.5em auto;
+	width: 10em;
+}
+
+.get-started .container {
+
+}
+
+
+.get-started h3 {
+	font-weight: bold;
+	font-size: 1.5em;
+	margin: 1.5em 0 0.5em;
+	
+}
+
+
+/* bottom  */
+footer {
+	background: #333;
+	color: #fff;
+	padding: 2em 0;
+	text-align: center;
+	
+}
+footer a {
+	color: #fff;
+	font-weight: bold;
+}
