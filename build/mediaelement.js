@@ -3759,7 +3759,7 @@ var HtmlMediaElement = {
 		var mediaElement = _document2.default.createElement('video');
 
 		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
-		if (_constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || _constants.SUPPORTS_NATIVE_HLS) {
+		if (_constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');
@@ -5069,7 +5069,7 @@ var YouTubeIframeRenderer = {
 			showinfo: 0,
 			start: 0,
 			// custom to inject `-nocookie` element in URL
-			nocookie: true
+			nocookie: false
 		}
 	},
 

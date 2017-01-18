@@ -198,7 +198,7 @@ const YouTubeIframeRenderer = {
 			showinfo: 0,
 			start: 0,
 			// custom to inject `-nocookie` element in URL
-			nocookie: true
+			nocookie: false
 		}
 	},
 

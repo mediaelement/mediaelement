@@ -31,7 +31,9 @@ const HtmlMediaElement = {
 		let mediaElement = document.createElement('video');
 
 		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
-		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) || SUPPORTS_NATIVE_HLS) {
+		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
+			(['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+				'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');

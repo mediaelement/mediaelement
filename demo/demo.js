@@ -75,7 +75,6 @@ $('select[name=sources]').on('change', function() {
 
 $('video, audio').mediaelementplayer({
 	stretching: stretching,
-	hideVideoControlsOnLoad: true,
 	pluginPath: '../build/',
 	success: function (media) {
 		$(media).closest('.media-wrapper').children('div:first').attr('lang', mejs.i18n.language());
