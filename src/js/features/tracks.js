@@ -218,21 +218,27 @@ Object.assign(MediaElementPlayer.prototype, {
 		}, false);
 
 		player.container.hover(
-			() => {
+			function() {
 				// chapters
 				if (player.hasChapters) {
 					player.chapters.removeClass(`${t.options.classPrefix}offscreen`);
-					player.chapters.fadeIn(200)
-					.height(player.chapters.find(`.${t.options.classPrefix}chapter`).outerHeight());
-				}
-			},
-			() => {
-				if (player.hasChapters && !media.paused) {
-					player.chapters.fadeOut(200, function() {
-						$(this).addClass(`${t.options.classPrefix}offscreen`);
-						$(this).css('display', 'block');
+					player.chapters.fadeIn(200, function() {
+						let self = $(this);
+						self.height(self.find(`.${t.options.classPrefix}chapter`).outerHeight());
 					});
 				}
+			},
+			function() {
+				if (player.hasChapters) {
+					if (media.paused) {
+						player.chapters.fadeOut(200, function() {
+							$(this).addClass(`${t.options.classPrefix}offscreen`);
+						});
+					} else {
+						player.chapters.show();
+					}
+				}
+
 			});
 
 		t.container.on('controlsresize', () => {
@@ -396,7 +402,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (track.kind === 'chapters') {
 						t.media.addEventListener('play', () => {
 							if (t.media.duration > 0) {
-								t.displayChapters(track);
+								t.displayChapters();
 							}
 						}, false);
 					}

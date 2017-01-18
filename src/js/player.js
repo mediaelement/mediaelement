@@ -1123,7 +1123,7 @@ class MediaElementPlayer {
 			.width('100%')
 			.height('100%');
 
-			// if shim is ready, send the size to the embeded plugin
+			// if shim is ready, send the size to the embedded plugin
 			if (t.isVideo) {
 				if (t.media.setSize) {
 					t.media.setSize(parentWidth, newHeight);
@@ -1634,8 +1634,8 @@ export default MediaElementPlayer;
 // turn into plugin
 (($) => {
 
-	if (typeof mejs.$ !== 'undefined') {
-		mejs.$.fn.mediaelementplayer = function (options) {
+	if (typeof $ !== 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
 					let player = $(this).data('mediaelementplayer');

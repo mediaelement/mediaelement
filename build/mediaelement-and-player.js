@@ -2353,14 +2353,20 @@ Object.assign(_player2.default.prototype, {
 			// chapters
 			if (player.hasChapters) {
 				player.chapters.removeClass(t.options.classPrefix + 'offscreen');
-				player.chapters.fadeIn(200).height(player.chapters.find('.' + t.options.classPrefix + 'chapter').outerHeight());
+				player.chapters.fadeIn(200, function () {
+					var self = $(this);
+					self.height(self.find('.' + t.options.classPrefix + 'chapter').outerHeight());
+				});
 			}
 		}, function () {
-			if (player.hasChapters && !media.paused) {
-				player.chapters.fadeOut(200, function () {
-					$(this).addClass(t.options.classPrefix + 'offscreen');
-					$(this).css('display', 'block');
-				});
+			if (player.hasChapters) {
+				if (media.paused) {
+					player.chapters.fadeOut(200, function () {
+						$(this).addClass(t.options.classPrefix + 'offscreen');
+					});
+				} else {
+					player.chapters.show();
+				}
 			}
 		});
 
@@ -2509,7 +2515,7 @@ Object.assign(_player2.default.prototype, {
 					if (track.kind === 'chapters') {
 						t.media.addEventListener('play', function () {
 							if (t.media.duration > 0) {
-								t.displayChapters(track);
+								t.displayChapters();
 							}
 						}, false);
 					}
@@ -4580,7 +4586,7 @@ var MediaElementPlayer = function () {
 				// set native <video> or <audio> and shims
 				t.$media.width('100%').height('100%');
 
-				// if shim is ready, send the size to the embeded plugin
+				// if shim is ready, send the size to the embedded plugin
 				if (t.isVideo) {
 					if (t.media.setSize) {
 						t.media.setSize(parentWidth, newHeight);
@@ -5075,8 +5081,8 @@ exports.default = MediaElementPlayer;
 
 (function ($) {
 
-	if (typeof _mejs2.default.$ !== 'undefined') {
-		_mejs2.default.$.fn.mediaelementplayer = function (options) {
+	if (typeof $ !== 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
 				this.each(function () {
 					var player = $(this).data('mediaelementplayer');
