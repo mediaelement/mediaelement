@@ -1,4 +1,4 @@
-# `MediaElement.js`: `<video>` and `<audio>` made easy. 
+# <img width="100%" alt="MediaElementJS" src="https://cloud.githubusercontent.com/assets/910829/22048731/f3627e1e-dcfc-11e6-956d-372f134f25de.png">
 
 One file. Any browser. Same UI.
 
