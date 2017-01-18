@@ -122,15 +122,7 @@ module.exports = function(grunt) {
 					])
 				},
 				options: {
-					debug: true,
-					transform: [
-
-						["babelify", {
-							presets: 'es2015',
-							sourceMapsAbsolute: true
-						}]
-					],
-					extensions: ['.js']
+					debug: true
 				}
 			}
 		},
