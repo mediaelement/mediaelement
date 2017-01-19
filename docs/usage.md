@@ -60,7 +60,6 @@ import '/path/to/mediaelement/player';
 // To import all the plugin (you will have access to the MediaElement, MediaElementPlayer and $.fn.mediaelement objects)
 import '/path/to/mediaelement/all';
 ```
-**IMPORTANT**: The `pluginPath` path is `mediaelement/build`.
 
 <a id="requirejs"></a>
 ## RequireJS
