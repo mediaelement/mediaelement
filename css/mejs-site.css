@@ -50,17 +50,17 @@ table {
 
 /* MEJS site */
 body {
-	font-family: Lato, Arial, Helvetica;
+	font-family: "Lato", Arial, Helvetica, sans-serif;
 	font-size: 16px;
 }
 body, section {
 	overflow-x: hidden;
 }
 h1, h2, h3, h4, {
-	font-family: Montserrat, Arial, Helvetica;
+	font-family: "Montserrat", Arial, Helvetica, sans-serif;
 }
 h2 {
-	font-family: Montserrat;
+	font-family: "Montserrat", Arial, Helvetica, sans-serif;
 	text-transform: uppercase;
 	font-size: 2em;
 	text-align: center;
