@@ -3,6 +3,8 @@
 * [Automatic start](#automatic)
 * [Vanilla JavaScript](#vanilla)
 * [jQuery](#jquery)
+* [NPM/Meteor](#npm-meteor)
+* [RequireJS](#requirejs)
 * [Use of Renderers](#renderers-usage)
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
@@ -46,6 +48,52 @@ player.webkitExitFullScreen();
 </script>
 ```
 
+<a id="npm-meteor"></a>
+## NPM/Meteor
+```javascript
+// To import only MediaElement class
+import '/path/to/mediaelement/standalone';
+
+// To import only MediaElementPlayer class
+import '/path/to/mediaelement/player';
+
+// To import all the plugin (you will have access to the MediaElement, MediaElementPlayer and $.fn.mediaelement objects)
+import '/path/to/mediaelement/all';
+```
+**IMPORTANT**: The `pluginPath` path is `mediaelement/build`.
+
+<a id="requirejs"></a>
+## RequireJS
+With RequireJS, there must exist a workaround if you are planning to use HLS, DASH or FLV, given the way the packages are bundled.
+
+To make it work, install via NPM any of the external libraries you will need (i.e., HLS.js).
+```javascript
+npm install hls.js
+```
+In your code, include a `shim` for the external library and then assign the exported variable to the global scope.
+```javascript
+requirejs.config({
+    // Other configuration
+    shim: {
+    	// Other shims
+        'path/to/hls': {deps: ['require'], exports: "Hls"},
+    }
+});
+
+// Later on the code...
+require(['path/to/hls'], function (Hls) {
+        window.Hls = Hls;
+
+        require(['path/to/mediaelement-and-player'], function (MediaElementPlayer) {
+
+            var player = new MediaElementPlayer('media-id', {
+            	// Player configuration
+            });
+        });
+    });
+
+```
+
 **IMPORTANT NOTE:** To keep Flash shims working you MUST setup the path where the shims are via `pluginPath`, and do not forget to add a slash at the end of the string. Please refer to the examples above.
 
 <a id="renderers-usage"></a>
@@ -58,11 +106,11 @@ However, if you need to use just a subset of renderers in a specific order, you 
 ```javascript
 
 // Use globally native M(PEG)-DASH renderer first, then Flash shim 
-mejs.Renderers.order = ['native_mdash', 'flash_mdash'];
+mejs.Renderers.order = ['native_dash', 'flash_dash'];
 
 $('video, audio').mediaelementplayer({
     // Use only M(PEG)DASH renderers
-    renderers: ['native_mdash', 'flash_mdash'],
+    renderers: ['native_dash', 'flash_dash'],
     ...
 });
 ```
@@ -103,7 +151,7 @@ Renderer | ID | API instance | Reference
 -------- | --- | ------------ | ----------
 Native video/audio | `html5` | --- | ---
 HLS native | `native_hls` | `hlsPlayer` | https://github.com/dailymotion/hls.js
-M(PEG)-DASH native | `native_mdash` | `dashPlayer` | https://github.com/Dash-Industry-Forum/dash.js
+M(PEG)-DASH native | `native_dash` | `dashPlayer` | https://github.com/Dash-Industry-Forum/dash.js
 FLV native | `native_flv` | `flvPlayer` | https://github.com/Bilibili/flv.js
 SoundCloud | `soundcloud_iframe` | `scPlayer` | https://developers.soundcloud.com/docs/api/html5-widget
 Facebook | `facebook` | --- | --- 
@@ -114,12 +162,7 @@ Video shim (MP4/RTMP) | `flash_video` | --- | ---
 Audio shim (MP3) | `flash_audio` | --- | ---
 Audio shim (OGG) | `flash_audio_ogg` | --- | ---
 HLS shim | `flash_hls` | --- | ---
-M(PEG)-DASH shim | `flash_mdash` | --- | ---
-
-
-<a id="require"></a>
-## MediaElementJS and RequireJS
-
+M(PEG)-DASH shim | `flash_dash` | --- | ---
 
 
 ________

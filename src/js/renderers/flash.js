@@ -6,7 +6,7 @@ import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/dom';
-import {NAV, IS_IE} from '../utils/constants';
+import {NAV, IS_IE, HAS_MSE, SUPPORTS_NATIVE_HLS} from '../utils/constants';
 import {typeChecks, absolutizeUrl} from '../utils/media';
 
 /**
@@ -424,9 +424,9 @@ if (hasFlash) {
 			}
 		} else if (url.includes('.oga') || url.includes('.ogg')) {
 			return 'audio/ogg';
-		} else if (url.includes('.m3u8')) {
+		} else if (!HAS_MSE && !SUPPORTS_NATIVE_HLS && url.includes('.m3u8')) {
 			return 'application/x-mpegURL';
-		} else if (url.includes('.mpd')) {
+		} else if (!HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
 		} else {
 			return null;
@@ -473,7 +473,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => hasFlash && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+		canPlayType: (type) => !HAS_MSE && hasFlash && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
 			'video/hls'].includes(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
@@ -482,10 +482,10 @@ if (hasFlash) {
 
 	// M(PEG)-DASH
 	const FlashMediaElementMdashVideoRenderer = {
-		name: 'flash_mdash',
+		name: 'flash_dash',
 
 		options: {
-			prefix: 'flash_mdash',
+			prefix: 'flash_dash',
 			filename: 'mediaelement-flash-video-mdash.swf'
 		},
 		/**
@@ -494,7 +494,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => hasFlash && ['application/dash+xml'].includes(type),
+		canPlayType: (type) => !HAS_MSE && hasFlash && ['application/dash+xml'].includes(type),
 
 		create: FlashMediaElementRenderer.create
 	};

@@ -2,11 +2,15 @@
   "name": "mediaelement",
   "license": "MIT",
   "version": "3.0.0",
-  "main": "build/mediaelement.js",
+  "main": "all.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/johndyer/mediaelement.git"
   },
+  "bugs": {
+    "url": "https://github.com/johndyer/mediaelement/issues?q=is%3Aissue+is%3Aopen+label%3ABug"
+  },
+  "private": false,
   "devDependencies": {
     "autoprefixer": "^6.5.1",
     "babel-cli": "^6.18.0",
@@ -15,12 +19,15 @@
     "babel-register": "^6.18.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
+    "browserify-derequire": "^0.9.4",
+    "bundle-collapser": "^1.2.1",
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "cssnano": "^3.8.0",
     "grunt": "^0.4.5",
     "grunt-babel": "^6.0.0",
     "grunt-browserify": "^5.0.0",
+    "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
@@ -32,7 +39,8 @@
     "grunt-text-replace": "~0.3.12",
     "istanbul": "^1.0.0-alpha.2",
     "jshint": "^2.9.4",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "uglify-js": "^2.4.21"
   },
   "dependencies": {
     "global": "^4.3.1"

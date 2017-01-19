@@ -107,10 +107,10 @@ const NativeDash = {
 };
 
 let DashNativeRenderer = {
-	name: 'native_mdash',
+	name: 'native_dash',
 
 	options: {
-		prefix: 'native_mdash',
+		prefix: 'native_dash',
 		dash: {
 			// Special config: used to set the local path/URL of dash.js mediaplayer library
 			path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',

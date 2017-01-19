@@ -542,12 +542,14 @@ One of the subtasks involved during the compiling of `MediaElement.js` is the co
 
 If, during development, only the ActionScript files were affected, type `sh compile_swf.sh` and it will build the compiled files in `/local-build/` directory. Then just copy the files and put them inside `/build/` directory.
 
+Or, simply, type in Terminal `grunt shell` to create all the SWF files in the right place.
+
 <a id="building"></a>
 ## Building with Grunt
 
 To compile ALL the files, in your Terminal window just type `grunt` in the root of the project. 
 
-If during the development was not necessary to do any changes to the Flash files, type `grunt html5only`. That way, the Flash files will remain intact. You can also type `grunt html5debug` to avoid removing the console messages.
+You can also type `grunt debug` to avoid removing the console messages.
 
 Additionally, `grunt` can accept 2 extra options to create custom bundles: one for more player features and another one to integrate renderers.
 
@@ -559,13 +561,13 @@ For example:
 
 ```
 # This will build a bundle with `Play/Pause`, `Stop` and `Fullscreen` features ONLY, plus all the default renderers
-grunt html5only --features=playpause,stop,fullscreen
+grunt --features=playpause,stop,fullscreen
 
 # This will build a bundle with `HLS` and `DASH` renderers ONLY, plus all the default player features
-grunt html5only --renderers=hls,dash
+grunt --renderers=hls,dash
 
 # This will build a bundle with `Play/Pause`, `Stop` and `Fullscreen` features ONLY and `HLS` and `DASH` renderers ONLY
-grunt html5only --features=playpause,stop,fullscreen --renderers=hls,dash
+grunt --features=playpause,stop,fullscreen --renderers=hls,dash
 ```
 ________
 [Back to Main](../README.md)

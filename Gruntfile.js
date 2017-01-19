@@ -55,6 +55,7 @@ module.exports = function(grunt) {
 					'src/js/utils/*.js',
 					'src/js/library.js',
 					'src/js/player.js',
+					'src/js/index.js',
 					'test/core/*.js'
 				]
 			}
@@ -122,7 +123,12 @@ module.exports = function(grunt) {
 					])
 				},
 				options: {
-					debug: true
+					browserifyOptions: {
+						debug: true
+					},
+					plugin: [
+						"browserify-derequire", "bundle-collapser/plugin"
+					]
 				}
 			}
 		},
@@ -164,19 +170,19 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			me: {
-				src	   : ['build/mediaelement.js'],
-				dest   : 'build/mediaelement.min.js',
-				banner : 'src/js/header.js'
+				src: ['build/mediaelement.js'],
+				dest: 'build/mediaelement.min.js',
+				banner: 'src/js/header.js'
 			},
 			mep: {
-				src	   : ['build/mediaelementplayer.js'],
-				dest   : 'build/mediaelementplayer.min.js',
-				banner : 'src/js/header.js'
+				src: ['build/mediaelementplayer.js'],
+				dest: 'build/mediaelementplayer.min.js',
+				banner: 'src/js/header.js'
 			},
 			bundle: {
-				src	 : ['build/mediaelement-and-player.js'],
-				dest : 'build/mediaelement-and-player.min.js',
-				banner : 'src/js/header.js'
+				src: ['build/mediaelement-and-player.js'],
+				dest: 'build/mediaelement-and-player.min.js',
+				banner: 'src/js/header.js'
 			},
 			options: {
 				// Preserve comments that start with a bang (like the file header)
@@ -221,8 +227,8 @@ module.exports = function(grunt) {
 					processContent: function (content) {
 						content = content.replace(/\/\/.*?\.js/gm, '');
 						return content.replace(/\n{2,}/gm, '');
-					},
-				},
+					}
+				}
 			}
 		},
 		clean: {
@@ -303,7 +309,7 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'shell', 'copy', 'clean:temp']);
-	grunt.registerTask('html5only', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
-	grunt.registerTask('html5debug', ['jshint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('default', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('debug', ['jshint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('flash', ['shell']);
 };

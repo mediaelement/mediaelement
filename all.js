@@ -1,0 +1,1 @@
+module.export = require('./build/mediaelement-and-player.js');
