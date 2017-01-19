@@ -52,21 +52,22 @@ player.webkitExitFullScreen();
 ## NPM/Meteor
 ```javascript
 // To import only MediaElement class
-import '/path/to/mediaelement/standalone';
+import 'mediaelement/standalone';
 
 // To import only MediaElementPlayer class
-import '/path/to/mediaelement/player';
+import 'mediaelement/player';
 
-// To import all the plugin (you will have access to the MediaElement, MediaElementPlayer and $.fn.mediaelement objects)
-import '/path/to/mediaelement/all';
+// To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes
+// and $.fn.mediaelementplayer plugin)
+import 'mediaelement/all';
 ```
 
 <a id="requirejs"></a>
 ## RequireJS
-With RequireJS, there must exist a workaround if you are planning to use HLS, DASH or FLV, given the way the packages are bundled.
+With RequireJS, you will need the following setup if you are planning to use HLS, M(PEG)-DASH or FLV, given the way the packages are bundled.
 
 To make it work, install via NPM any of the external libraries you will need (i.e., HLS.js).
-```javascript
+```
 npm install hls.js
 ```
 In your code, include a `shim` for the external library and then assign the exported variable to the global scope.
