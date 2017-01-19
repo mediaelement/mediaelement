@@ -53,6 +53,9 @@ body {
 	font-family: Lato, Arial, Helvetica;
 	font-size: 16px;
 }
+body, section {
+	overflow-x: hidden;
+}
 h1, h2, h3, h4, {
 	font-family: Montserrat, Arial, Helvetica;
 }
@@ -102,44 +105,47 @@ header {
 header .container {
 	max-width: 960px;
 }
-	.logo {
-		position: absolute;
-	    left: 50%;
-	    margin-left: -25px !important;	
-	    width: 50px;
-	    top: 1em;
-	}
-	.brand {
-		float: left;
-		font-size: 1.5em;
-	}
-	
-	.menu {
-		float: right;
-	}
-	.menu ul {
-		list-style: none;
-		margin:0;
-		padding: 0;
-	}
-	.menu li {
-		list-style: none;
-		margin: 0 0 0 0.5em;
-		padding: 0;
-		display: inline-block;
-	}	
-	.menu a {
-		padding: 0.5em 0.75em;
-		text-decoration: none;
-		color: #ed6034;
-	}	
-	
-	.menu a.download {
-		color: #fff;
-		background: #ed6034;
-		border-radius: 4px;
-	}			
 
+.logo {
+	position: absolute;
+	left: 50%;
+	margin-left: -25px !important;
+	width: 50px;
+	top: 1em;
+}
+
+.brand {
+	float: left;
+	font-size: 1.5em;
+}
+
+.menu {
+	float: right;
+}
+
+.menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.menu li {
+	list-style: none;
+	margin: 0 0 0 0.5em;
+	padding: 0;
+	display: inline-block;
+}
+.menu a {
+	padding: 0.5em 0.75em;
+	text-decoration: none;
+	color: #ed6034;
+}
+
+.menu a.download {
+	color: #fff;
+	background: #ed6034;
+	border-radius: 4px;
+}
 
 .container {
 	max-width: 760px;
@@ -204,28 +210,32 @@ header .container {
 	padding: 3em 0;
 }
 
-	.players .container {
-		max-width: 750px;
-	}
-	
-	.players h4 {
-		color: #fff;
-		font-size: 1.5em;
-		margin: 1em 0;
-		text-align: center;
-	}
+.players .container {
+	max-width: 750px;
+}
+
+.players h4 {
+	color: #fff;
+	font-size: 1.5em;
+	margin: 1em 0;
+	text-align: center;
+}
 
 
-	.player-selector {
-		max-width: 600px;
-		text-align: center;
-		margin: 1em auto;
-		color: #fff;	
-	}
-	.player-selector select {
-		display: block;
-		margin: 0.25em auto;
-	}
+.player-selector {
+	max-width: 600px;
+	text-align: center;
+	margin: 1em auto;
+	color: #fff;
+}
+.player-selector select {
+	display: block;
+	margin: 0.25em auto;
+}
+
+.player {
+	visibility: hidden;
+}
 
 /* list of logos  */
 .sitesusing {
@@ -284,16 +294,10 @@ header .container {
 	width: 10em;
 }
 
-.get-started .container {
-
-}
-
-
 .get-started h3 {
 	font-weight: bold;
 	font-size: 1.5em;
 	margin: 1.5em 0 0.5em;
-	
 }
 
 
@@ -303,8 +307,8 @@ footer {
 	color: #fff;
 	padding: 2em 0;
 	text-align: center;
-	
 }
+
 footer a {
 	color: #fff;
 	font-weight: bold;
