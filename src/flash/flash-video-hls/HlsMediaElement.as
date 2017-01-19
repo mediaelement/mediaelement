@@ -66,6 +66,7 @@
 			addChild(_display);
 
 			_video = new Video();
+			(_video as Video).smoothing = true;
 			_display.addChild(_video);
 			_display.addEventListener(MouseEvent.MOUSE_OVER, stageMouseOverHandler);
 
