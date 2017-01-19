@@ -7,41 +7,48 @@ Package.describe({
 
 Package.onUse(function(api) {
     api.versionsFrom('1.0');
-
     api.use('jquery', 'client');
 
-    api.addFiles('build/lang/ca.js', 'client');
-    api.addFiles('build/lang/cs.js', 'client');
-    api.addFiles('build/lang/de.js', 'client');
-    api.addFiles('build/lang/es.js', 'client');
-    api.addFiles('build/lang/fr.js', 'client');
-    api.addFiles('build/lang/hu.js', 'client');
-    api.addFiles('build/lang/it.js', 'client');
-    api.addFiles('build/lang/ja.js', 'client');
-    api.addFiles('build/lang/ko.js', 'client');
-    api.addFiles('build/lang/nl.js', 'client');
-    api.addFiles('build/lang/pl.js', 'client');
-    api.addFiles('build/lang/pt.js', 'client');
-    api.addFiles('build/lang/pt-br.js', 'client');
-    api.addFiles('build/lang/ro.js', 'client');
-    api.addFiles('build/lang/ru.js', 'client');
-    api.addFiles('build/lang/sk.js', 'client');
-    api.addFiles('build/lang/zh.js', 'client');
-    api.addFiles('build/lang/zh-cn.js', 'client');
+    var assets = [
+        'build/lang/ca.js',
+        'build/lang/cs.js',
+        'build/lang/de.js',
+        'build/lang/es.js',
+        'build/lang/fr.js',
+        'build/lang/hu.js',
+        'build/lang/it.js',
+        'build/lang/ja.js',
+        'build/lang/ko.js',
+        'build/lang/nl.js',
+        'build/lang/pl.js',
+        'build/lang/pt.js',
+        'build/lang/pt-br.js',
+        'build/lang/ro.js',
+        'build/lang/ru.js',
+        'build/lang/sk.js',
+        'build/lang/zh.js',
+        'build/lang/zh-cn.js',
+        'build/mejs-controls.svg',
+        'build/mejs-controls.png',
+        'build/mediaelement-flash-audio.swf',
+        'build/mediaelement-flash-audio-ogg.swf',
+        'build/mediaelement-flash-video.swf',
+        'build/mediaelement-flash-video-hls.swf',
+        'build/mediaelement-flash-video-mdash.swf',
+    ];
 
-    api.addAssets('build/mejs-controls.svg', 'client');
-    api.addAssets('build/mejs-controls.png', 'client');
+    if (api.addAssets) {
+        api.addAssets(assets, 'client');
+    } else {
+        api.addFiles(assets, 'client', { isAsset: true });
+    }
 
-    api.addAssets('build/mediaelement-flash-audio.swf', 'client');
-    api.addAssets('build/mediaelement-flash-audio-ogg.swf', 'client');
-    api.addAssets('build/mediaelement-flash-video.swf', 'client');
-    api.addAssets('build/mediaelement-flash-video-hls.swf', 'client');
-    api.addAssets('build/mediaelement-flash-video-mdash.swf', 'client');
-
-    api.addFiles('build/mediaelement.js', 'client');
-    api.addFiles('build/mediaelement-and-player.js', 'client');
-    api.addFiles('build/mediaelementplayer.js', 'client');
-    api.addFiles('build/mediaelementplayer.css', 'client');
-    api.addFiles('build/mediaelementplayer-legacy.css', 'client');
+    api.addFiles([
+        'build/mediaelement.js',
+        'build/mediaelement-and-player.js',
+        'build/mediaelementplayer.js',
+        'build/mediaelementplayer.css',
+        'build/mediaelementplayer-legacy.css'
+    ], 'client');
 
 });
