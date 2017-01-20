@@ -123,9 +123,6 @@ module.exports = function(grunt) {
 					])
 				},
 				options: {
-					browserifyOptions: {
-						debug: true
-					},
 					plugin: [
 						"browserify-derequire", "bundle-collapser/plugin"
 					]

@@ -12,6 +12,7 @@
 * Updated RTMP sources since prior one expired @ron666
 * Fixed issue with controls not hiding on `mouseleave` when video is not playing (#1995) @ron666
 * Added missing reference to FLV in main website (https://github.com/johndyer/mediaelement/pull/2006) @isantolin
+* Removed Browserify option to reduce size of unminified bundles @ron666
 
 *3.0.0 (2017/01/16)*
 
