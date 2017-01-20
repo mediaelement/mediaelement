@@ -51,10 +51,18 @@ For more information about how to set up a server to serve media properly and ot
 <a id="install"></a>
 ## 1. Install `MediaElementJS`
  
-To get the default installation, just either download the zip file from https://github.com/johndyer/mediaelement or through GIT using: 
-```
-git clone https://github.com/johndyer/mediaelement.git
-```
+To get the default installation there are several different ways.
+ 
+1. Download the package from https://github.com/johndyer/mediaelement 
+
+2. Use a CDN reference; the most popular ones are [jsDelivr](http://www.jsdelivr.com/projects/mediaelement) and [cdnjs](https://cdnjs.com/libraries/mediaelement). 
+
+3. Through GIT: `git clone https://github.com/johndyer/mediaelement.git`
+
+4. Through NPM: `npm install mediaelement`
+
+5. If you are using Meteor: `meteor add johndyer:mediaelement` or `meteor npm install mediaelement`
+
 
 However, `MediaElementJS` has additional features for the player, such as `VAST`, `Google Analytics`, etc.
 

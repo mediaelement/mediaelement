@@ -54,12 +54,30 @@ player.webkitExitFullScreen();
 // To import only MediaElement class
 import 'mediaelement/standalone';
 
-// To import only MediaElementPlayer class
+// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin
 import 'mediaelement/player';
 
 // To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes
 // and $.fn.mediaelementplayer plugin)
 import 'mediaelement/all';
+```
+
+**IMPORTANT**: In order to use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
+
+1. Create a `jquery-global.js` file that contains:
+```javascript
+'use strict';
+
+import jquery from 'jquery';
+window.jQuery = jquery;
+window.$ = jquery;
+```
+2. Import the `jquery-global.js` along with the desired package
+```javascript
+'use strict';
+
+import '/path/to/jquery-global';
+import 'mediaelement/all'; // or import `mediaelement/player`;
 ```
 
 <a id="requirejs"></a>
