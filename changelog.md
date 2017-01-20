@@ -1,5 +1,18 @@
 ### Version History
 
+*3.0.1 (2017/01/20)*
+
+* Fixed several issues in terms of using Meteor/NPM package and added new files to link `build/mediaelement.js` and `build/mediaelement-and-player.js` for NPM @ron666
+* Added image to README file, as well as `favicon` for demo and test files @ron666
+* Enabled external builds using Browserify (https://github.com/johndyer/mediaelement/pull/2000) @neonaut
+* Added missing conditionals to avoid issues with non-existing renderers bundle @ron666
+* Fixed conditional to target browsers/devices that support HLS natively and caused issues with other media types @ron666
+* New logo and layout for http://mediaelementjs.com website @johndyer
+* Added missing documentation about importing MEJS and using RequireJS @ron666
+* Updated RTMP sources since prior one expired @ron666
+* Fixed issue with controls not hiding on `mouseleave` when video is not playing (#1995) @ron666
+* Added missing reference to FLV in main website (https://github.com/johndyer/mediaelement/pull/2006) @isantolin
+
 *3.0.0 (2017/01/16)*
 
 * Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way @johndyer
