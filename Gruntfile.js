@@ -11,20 +11,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-remove-logging");
 	grunt.loadNpmTasks('grunt-browserify');
 
-	var featureSources, rendererSources;
-
-	// if commandline list of features, (e.g. --features=playpause,stop,...) build only these
-	var featureList = grunt.option('features');
-	if (featureList) {
-		featureList = featureList.split(',');
-		featureSources = [];
-		featureList.forEach(function(feature) {
-			var path = 'src/js/features/' + feature + '.js';
-			if (grunt.file.isFile(path)) {
-				featureSources.push(path);
-			}
-		});
-	}
+	var rendererSources;
 
 	// if commandline list of renderers, (e.g. --renderers=hls,dash,...) build only these
 	var rendererList = grunt.option('features');
@@ -84,15 +71,14 @@ module.exports = function(grunt) {
 					// just player
 					'build/mediaelementplayer.js': [
 						'src/js/library.js',
-						'src/js/player.js'
-					].concat(featureSources || [
+						'src/js/player.js',
 						'src/js/features/fullscreen.js',
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
 						'src/js/features/time.js',
 						'src/js/features/tracks.js',
 						'src/js/features/volume.js'
-					]),
+					],
 					// all bundle
 					'build/mediaelement-and-player.js': [
 						'src/js/utils/polyfill.js',
@@ -112,8 +98,7 @@ module.exports = function(grunt) {
 						'src/js/renderers/youtube.js',
 					]).concat([
 						'src/js/library.js',
-						'src/js/player.js'
-					]).concat(featureSources || [
+						'src/js/player.js',
 						'src/js/features/fullscreen.js',
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
