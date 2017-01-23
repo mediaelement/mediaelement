@@ -1,10 +1,12 @@
 ### Version History
 
-*3.0.2 (2017/01/23)*
+*3.0.2 (2017/01/??)*
 
 * Fixed issues related to volume in YouTube renderer @ron666
 * Removed must of features and moved them to new repository (https://github.com/johndyer/mediaelement-plugins) and updated/cleaned documentation @ron666
 * Cleaned up CSS stylesheets @ron666
+* Removed `—features` option from Grunt file @ron666
+* Fixed issue with Vimeo renderer when playing/pausing video causing unexpected behavior @ron666
 
 *3.0.1 (2017/01/20)*
 
