@@ -9147,7 +9147,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						case 'volume':
-							youTubeApi.setVolume(value);
+							youTubeApi.setVolume(value * 100);
 							setTimeout(function () {
 								var event = (0, _dom.createEvent)('volumechange', youtube);
 								mediaElement.dispatchEvent(event);
