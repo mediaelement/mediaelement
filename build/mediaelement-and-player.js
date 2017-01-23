@@ -5400,7 +5400,7 @@ var DailyMotionIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('dm ' + dm.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -6124,7 +6124,7 @@ var FacebookRenderer = {
 							break;
 
 						default:
-							
+							console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -6611,10 +6611,10 @@ var FlashMediaElementRenderer = {
 						try {
 							flash.flashApi['fire_' + methodName]();
 						} catch (e) {
-							
+							console.log(e);
 						}
 					} else {
-						
+						console.log('flash', 'missing method', methodName);
 					}
 				} else {
 					// store for after "READY" event fires
@@ -8052,7 +8052,7 @@ var SoundCloudIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -8561,7 +8561,7 @@ var vimeoIframeRenderer = {
 							}
 							break;
 						default:
-							
+							console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -9035,6 +9035,7 @@ var YouTubeIframeRenderer = {
 		    paused = true,
 		    ended = false,
 		    youTubeIframe = null,
+		    volume = 1,
 		    i = void 0,
 		    il = void 0;
 
@@ -9065,8 +9066,9 @@ var YouTubeIframeRenderer = {
 								};
 
 							case 'volume':
+								volume = youTubeApi.getVolume() / 100;
 								return {
-									v: youTubeApi.getVolume()
+									v: volume
 								};
 
 							case 'paused':
@@ -9082,7 +9084,7 @@ var YouTubeIframeRenderer = {
 							case 'muted':
 								return {
 									v: youTubeApi.isMuted()
-								}; // ?
+								};
 
 							case 'buffered':
 								var percentLoaded = youTubeApi.getVideoLoadedFraction(),
@@ -9136,9 +9138,9 @@ var YouTubeIframeRenderer = {
 
 						case 'muted':
 							if (value) {
-								youTubeApi.mute(); // ?
+								youTubeApi.mute();
 							} else {
-								youTubeApi.unMute(); // ?
+								youTubeApi.unMute();
 							}
 							setTimeout(function () {
 								var event = (0, _dom.createEvent)('volumechange', youtube);
@@ -9147,6 +9149,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						case 'volume':
+							volume = value;
 							youTubeApi.setVolume(value * 100);
 							setTimeout(function () {
 								var event = (0, _dom.createEvent)('volumechange', youtube);
@@ -9155,7 +9158,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires

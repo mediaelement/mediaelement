@@ -234,6 +234,7 @@ const YouTubeIframeRenderer = {
 			paused = true,
 			ended = false,
 			youTubeIframe = null,
+			volume = 1,
 			i,
 			il
 		;
@@ -260,7 +261,8 @@ const YouTubeIframeRenderer = {
 								return youTubeApi.getDuration();
 
 							case 'volume':
-								return youTubeApi.getVolume();
+								volume = youTubeApi.getVolume() / 100;
+								return volume;
 
 							case 'paused':
 								return paused;
@@ -269,7 +271,7 @@ const YouTubeIframeRenderer = {
 								return ended;
 
 							case 'muted':
-								return youTubeApi.isMuted(); // ?
+								return youTubeApi.isMuted();
 
 							case 'buffered':
 								let percentLoaded = youTubeApi.getVideoLoadedFraction(),
@@ -317,9 +319,9 @@ const YouTubeIframeRenderer = {
 
 							case 'muted':
 								if (value) {
-									youTubeApi.mute(); // ?
+									youTubeApi.mute();
 								} else {
-									youTubeApi.unMute(); // ?
+									youTubeApi.unMute();
 								}
 								setTimeout(() => {
 									let event = createEvent('volumechange', youtube);
@@ -328,6 +330,7 @@ const YouTubeIframeRenderer = {
 								break;
 
 							case 'volume':
+								volume = value;
 								youTubeApi.setVolume(value * 100);
 								setTimeout(() => {
 									let event = createEvent('volumechange', youtube);
