@@ -66,7 +66,7 @@ To get the default installation there are several different ways.
 
 However, `MediaElementJS` has additional features for the player, such as `VAST`, `Google Analytics`, etc.
 
-If you want to install them, use the Grunt file to create a new set of bundle files. More information about how to use Grunt [here](guidelines.md#building).
+If you want to install any of them, refer to the new plugins repository clicking [here](https://github.com/johndyer/mediaelement-plugins) for more information.
  
 
 <a id="script-and-stylesheet"></a>

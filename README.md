@@ -74,7 +74,9 @@ In order to successfully install `3.x` in an existing setup, you must consider t
  
 3. If you need to force the Flash shim, the way to do it in `3.x` version is to use the `renderers` configuration and list them in an array.
 
-4. `pluginType` was removed to favor `rendererName`. If you rely on that element, just create conditionals based on the renderer ID (all listed [here](docs/usage.md#renderers-list)). For example:
+4.  
+
+5. `pluginType` was removed to favor `rendererName`. If you rely on that element, just create conditionals based on the renderer ID (all listed [here](docs/usage.md#renderers-list)). For example:
 
 ```javascript
 $('video, audio').mediaelementplayer({
