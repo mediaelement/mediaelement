@@ -74,33 +74,22 @@ keyActions | array | `[...]` | Keyboard actions to trigger different actions. Ac
 duration | number | `-1` | Start point to detect changes on media time duration
 timeAndDurationSeparator | string | `<span> | </span>` | Separator between the current time and the total duration of media being played
 hideVolumeOnTouchDevices | boolean | `true` | Touch devices (specially mobile devices) have different way to handle volume, so no need to display it
+enableProgressTooltip | boolean | `true` | Enable/disable tooltip that shows time popup in progress bar
 audioVolume | string | `horizontal` | Position of volume slider on audio element
 videoVolume | string | `vertical` | Position of volume slider on video element
 usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer events when on fullscreen mode 
-speeds | array | `['1.50', '1.25', '1.00', '0.75']` | Enable speeding media; accounts for strings or objects like `[{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]`
-defaultSpeed | number | `1.00` | Initial speed of media	
-speedChar | string | `x` | Character used to stop speeding media
-startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element
 tracksAriaLive | boolean | `false` | By default, no WAI-ARIA live region - don't make a screen reader speak captions over an audio track.
 hideCaptionsButtonWhenEmpty | boolean | `true` | Option to remove the `[cc]` button when no `<track kind="subtitles">` are present
 toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to popup
+startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element
 slidesSelector | string | _(empty)_ | Selector for slides; could be an ID or class represented in jQuery notation (`#id` or `.class`)
-skipBackInterval | number | `30` | Milliseconds to skip back media
-enableProgressTooltip | boolean | `true` | Enable/disable tooltip that shows time popup in progress bar
-markerColor | string | `#E9BC3D` | Specify the color of marker
-markers | array | `[]` | List of numbers to specify marker times in seconds
-markerCallback | function | `function(media, time) {}` | Callback function invoked when a marker position is reached
-playText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is playing
-pauseText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is paused
-loopText | string | _(empty)_ | Title for Loop button for WARIA purposes when loop feature is activated
 tracksText | string | _(empty)_ | Title for Closed Captioning button for WARIA purposes
-postrollCloseText | string | _(empty)_ | Title for button to Postroll layer for WARIA purposes
 muteText | string | _(empty)_ | Title for Mute button for WARIA purposes
 allyVolumeControlText | string | _(empty)_ | Title for Volume slider for WARIA purposes
 fullscreenText | string | _(empty)_ | Title for Fullscreen button for WARIA purposes
-skipBackText | string | _(empty)_ | Title for Skip Back button for WARIA purposes
-jumpForwardText | string | _(empty)_ | Title for Jump Forward button for WARIA purposes
-sourcechooserText | string | _(empty)_ | Title for Source Chooser button for WARIA purposes
+playText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is playing
+pauseText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is paused
+
 
 <a id="api"></a>
 ## API
