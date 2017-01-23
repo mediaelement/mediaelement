@@ -5400,7 +5400,7 @@ var DailyMotionIframeRenderer = {
 							break;
 
 						default:
-							console.log('dm ' + dm.id, propName, 'UNSUPPORTED property');
+							
 					}
 				} else {
 					// store for after "READY" event fires
@@ -6124,7 +6124,7 @@ var FacebookRenderer = {
 							break;
 
 						default:
-							console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
+							
 					}
 				} else {
 					// store for after "READY" event fires
@@ -6611,10 +6611,10 @@ var FlashMediaElementRenderer = {
 						try {
 							flash.flashApi['fire_' + methodName]();
 						} catch (e) {
-							console.log(e);
+							
 						}
 					} else {
-						console.log('flash', 'missing method', methodName);
+						
 					}
 				} else {
 					// store for after "READY" event fires
@@ -8052,7 +8052,7 @@ var SoundCloudIframeRenderer = {
 							break;
 
 						default:
-							console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
+							
 					}
 				} else {
 					// store for after "READY" event fires
@@ -8458,8 +8458,8 @@ var vimeoIframeRenderer = {
 						case 'muted':
 							return volume === 0;
 						case 'paused':
+							
 							return paused;
-
 						case 'ended':
 							return ended;
 
@@ -8561,7 +8561,7 @@ var vimeoIframeRenderer = {
 							}
 							break;
 						default:
-							console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
+							
 					}
 				} else {
 					// store for after "READY" event fires
@@ -8577,8 +8577,6 @@ var vimeoIframeRenderer = {
 		// add wrappers for native methods
 		var methods = _mejs2.default.html5media.methods,
 		    assignMethods = function assignMethods(methodName) {
-
-			// run the method on the Soundcloud API
 			vimeo[methodName] = function () {
 
 				if (vimeoPlayer !== null) {
@@ -8586,8 +8584,10 @@ var vimeoIframeRenderer = {
 					// DO method
 					switch (methodName) {
 						case 'play':
+							paused = false;
 							return vimeoPlayer.play();
 						case 'pause':
+							paused = true;
 							return vimeoPlayer.pause();
 						case 'load':
 							return null;
@@ -8661,9 +8661,6 @@ var vimeoIframeRenderer = {
 			});
 
 			vimeoPlayer.on('progress', function () {
-
-				paused = vimeo.mediaElement.getPaused();
-
 				vimeoPlayer.getDuration().then(function (loadProgress) {
 
 					duration = loadProgress;
@@ -8679,10 +8676,6 @@ var vimeoIframeRenderer = {
 				});
 			});
 			vimeoPlayer.on('timeupdate', function () {
-
-				paused = vimeo.mediaElement.getPaused();
-				ended = false;
-
 				vimeoPlayer.getCurrentTime().then(function (seconds) {
 					currentTime = seconds;
 				});
@@ -8693,22 +8686,12 @@ var vimeoIframeRenderer = {
 			vimeoPlayer.on('play', function () {
 				paused = false;
 				ended = false;
-
-				vimeoPlayer.play()['catch'](function (error) {
-					vimeoApi.errorHandler(error, vimeo);
-				});
-
 				var event = (0, _dom.createEvent)('play', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', function () {
 				paused = true;
 				ended = false;
-
-				vimeoPlayer.pause()['catch'](function (error) {
-					vimeoApi.errorHandler(error, vimeo);
-				});
-
 				var event = (0, _dom.createEvent)('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
@@ -9158,7 +9141,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						default:
-							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
+							
 					}
 				} else {
 					// store for after "READY" event fires

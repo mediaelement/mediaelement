@@ -207,8 +207,8 @@ const vimeoIframeRenderer = {
 							case 'muted':
 								return volume === 0;
 							case 'paused':
+								console.log(paused);
 								return paused;
-
 							case 'ended':
 								return ended;
 
@@ -331,8 +331,6 @@ const vimeoIframeRenderer = {
 		let
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
-
-				// run the method on the Soundcloud API
 				vimeo[methodName] = () => {
 
 					if (vimeoPlayer !== null) {
@@ -340,8 +338,10 @@ const vimeoIframeRenderer = {
 						// DO method
 						switch (methodName) {
 							case 'play':
+								paused = false;
 								return vimeoPlayer.play();
 							case 'pause':
+								paused = true;
 								return vimeoPlayer.pause();
 							case 'load':
 								return null;
@@ -418,9 +418,6 @@ const vimeoIframeRenderer = {
 			});
 
 			vimeoPlayer.on('progress', () => {
-
-				paused = vimeo.mediaElement.getPaused();
-
 				vimeoPlayer.getDuration().then((loadProgress) => {
 
 					duration = loadProgress;
@@ -437,10 +434,6 @@ const vimeoIframeRenderer = {
 				});
 			});
 			vimeoPlayer.on('timeupdate', () => {
-
-				paused = vimeo.mediaElement.getPaused();
-				ended = false;
-
 				vimeoPlayer.getCurrentTime().then((seconds) => {
 					currentTime = seconds;
 				});
@@ -452,22 +445,12 @@ const vimeoIframeRenderer = {
 			vimeoPlayer.on('play', () => {
 				paused = false;
 				ended = false;
-
-				vimeoPlayer.play()['catch']((error) => {
-					vimeoApi.errorHandler(error, vimeo);
-				});
-
 				let event = createEvent('play', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', () => {
 				paused = true;
 				ended = false;
-
-				vimeoPlayer.pause()['catch']((error) => {
-					vimeoApi.errorHandler(error, vimeo);
-				});
-
 				let event = createEvent('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
