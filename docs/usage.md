@@ -37,7 +37,7 @@ $('#mediaplayer').mediaelementplayer({pluginPath: "/path/to/shims/", success: fu
 }});
 
 // To access player after its creation through jQuery use:
-var playerId = $('#mediaplayer').closest('.mejs-container').attr('id');
+var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
 var player = mejs.players[playerId];
 
 // With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
