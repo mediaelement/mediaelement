@@ -176,6 +176,7 @@ const vimeoIframeRenderer = {
 			ended = false,
 			duration = 0,
 			url = "",
+			readyState = 4,
 			i,
 			il
 		;
@@ -227,6 +228,8 @@ const vimeoIframeRenderer = {
 									},
 									length: 1
 								};
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;
@@ -308,6 +311,10 @@ const vimeoIframeRenderer = {
 										vimeoApi.errorHandler(error, vimeo);
 									});
 								}
+								break;
+							case 'readyState':
+								let event = createEvent('canplay', vimeo);
+								mediaElement.dispatchEvent(event);
 								break;
 							default:
 								console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
@@ -446,10 +453,14 @@ const vimeoIframeRenderer = {
 				ended = false;
 				let event = createEvent('play', vimeo);
 				mediaElement.dispatchEvent(event);
+
+				event = createEvent('playing', vimeo);
+				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', () => {
 				paused = true;
 				ended = false;
+
 				let event = createEvent('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});

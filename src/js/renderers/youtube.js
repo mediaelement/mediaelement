@@ -235,6 +235,7 @@ const YouTubeIframeRenderer = {
 			ended = false,
 			youTubeIframe = null,
 			volume = 1,
+			readyState = 4,
 			i,
 			il
 		;
@@ -287,6 +288,9 @@ const YouTubeIframeRenderer = {
 								};
 							case 'src':
 								return youTubeApi.getVideoUrl();
+
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;
@@ -336,6 +340,10 @@ const YouTubeIframeRenderer = {
 									let event = createEvent('volumechange', youtube);
 									mediaElement.dispatchEvent(event);
 								}, 50);
+								break;
+							case 'readyState':
+								let event = createEvent('canplay', vimeo);
+								mediaElement.dispatchEvent(event);
 								break;
 
 							default:

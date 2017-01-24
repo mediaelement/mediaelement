@@ -717,6 +717,7 @@ class MediaElementPlayer {
 								.find(`.${t.options.classPrefix}overlay-button`),
 								pressed = button.attr('aria-pressed')
 								;
+
 							if (t.media.paused && pressed) {
 								t.pause();
 							} else if (t.media.paused) {
@@ -725,12 +726,13 @@ class MediaElementPlayer {
 								t.pause();
 							}
 
-							button.attr('aria-pressed', !pressed);
+							button.attr('aria-pressed', !(pressed));
 						}
 					};
 
 					// click to play/pause
 					t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
+					// t.iframeMouseOver = false;
 
 					// show/hide controls
 					t.container
@@ -760,6 +762,20 @@ class MediaElementPlayer {
 							}
 						}
 					});
+					// }).on('mouseover', () => {
+					// 	t.iframeMouseOver = true;
+					// }).on('mouseout', () => {
+					// 	t.iframeMouseOver = false;
+					// });
+					//
+					// const monitor = setInterval(function(){
+					// 	const elem = document.activeElement;
+					// 	if (elem && elem.tagName === 'IFRAME') {
+					// 		console.log('aaaaa');
+					// 		t.clickToPlayPauseCallback();
+					// 		clearInterval(monitor);
+					// 	}
+					// }, 50);
 				}
 
 				if (t.options.hideVideoControlsOnLoad) {

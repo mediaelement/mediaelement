@@ -157,7 +157,8 @@ let DashNativeRenderer = {
 				node[`get${capName}`] = () => (dashPlayer !== null) ? node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (dashPlayer !== null) {
+					const property = Object.getOwnPropertyDescriptor(node, propName);
+					if (property !== undefined && property !== null && property.writable && dashPlayer !== null) {
 						if (propName === 'src') {
 
 							dashPlayer.attachSource(value);

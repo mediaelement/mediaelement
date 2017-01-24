@@ -1358,6 +1358,7 @@ var DailyMotionIframeRenderer = {
 		    dmPlayer = null,
 		    dmIframe = null,
 		    events = void 0,
+		    readyState = 4,
 		    i = void 0,
 		    il = void 0;
 
@@ -1425,6 +1426,11 @@ var DailyMotionIframeRenderer = {
 								return {
 									v: mediaElement.originalNode.getAttribute('src')
 								};
+
+							case 'readyState':
+								return {
+									v: readyState
+								};
 						}
 					}();
 
@@ -1468,6 +1474,11 @@ var DailyMotionIframeRenderer = {
 								var event = (0, _dom.createEvent)('volumechange', dm);
 								mediaElement.dispatchEvent(event);
 							}, 50);
+							break;
+
+						case 'readyState':
+							var event = (0, _dom.createEvent)('canplay', vimeo);
+							mediaElement.dispatchEvent(event);
 							break;
 
 						default:
@@ -1866,7 +1877,8 @@ var DashNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				if (dashPlayer !== null) {
+				var property = Object.getOwnPropertyDescriptor(node, propName);
+				if (property !== undefined && property !== null && property.writable && dashPlayer !== null) {
 					if (propName === 'src') {
 
 						dashPlayer.attachSource(value);
@@ -2092,6 +2104,7 @@ var FacebookRenderer = {
 		    hasStartedPlaying = false,
 		    src = '',
 		    eventHandler = {},
+		    readyState = 4,
 		    i = void 0,
 		    il = void 0;
 
@@ -2143,6 +2156,9 @@ var FacebookRenderer = {
 							};
 						case 'src':
 							return src;
+
+						case 'readyState':
+							return readyState;
 					}
 
 					return value;
@@ -2192,6 +2208,11 @@ var FacebookRenderer = {
 								var event = (0, _dom.createEvent)('volumechange', fbWrapper);
 								mediaElement.dispatchEvent(event);
 							}, 50);
+							break;
+
+						case 'readyState':
+							var event = (0, _dom.createEvent)('canplay', vimeo);
+							mediaElement.dispatchEvent(event);
 							break;
 
 						default:
@@ -3168,7 +3189,9 @@ var FlvNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				if (flvPlayer !== null) {
+				// Detect if element can assign the current property through `set`
+				var property = Object.getOwnPropertyDescriptor(node, propName);
+				if (property !== undefined && property !== null && property.writable && flvPlayer !== null) {
 					node[propName] = value;
 
 					if (propName === 'src') {
@@ -3522,7 +3545,9 @@ var HlsNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				if (hlsPlayer !== null) {
+				// Detect if element can assign the current property through `set`
+				var property = Object.getOwnPropertyDescriptor(node, propName);
+				if (property !== undefined && property !== null && property.writable && hlsPlayer !== null) {
 					node[propName] = value;
 
 					if (propName === 'src') {
@@ -4034,6 +4059,7 @@ var SoundCloudIframeRenderer = {
 		    volume = 1,
 		    muted = false,
 		    ended = false,
+		    readyState = 4,
 		    i = void 0,
 		    il = void 0;
 
@@ -4081,6 +4107,9 @@ var SoundCloudIframeRenderer = {
 							};
 						case 'src':
 							return scIframe ? scIframe.src : '';
+
+						case 'readyState':
+							return readyState;
 					}
 
 					return value;
@@ -4124,6 +4153,11 @@ var SoundCloudIframeRenderer = {
 								var event = (0, _dom.createEvent)('volumechange', sc);
 								mediaElement.dispatchEvent(event);
 							}, 50);
+							break;
+
+						case 'readyState':
+							var event = (0, _dom.createEvent)('canplay', vimeo);
+							mediaElement.dispatchEvent(event);
 							break;
 
 						default:
@@ -4504,6 +4538,7 @@ var vimeoIframeRenderer = {
 		    ended = false,
 		    duration = 0,
 		    url = "",
+		    readyState = 4,
 		    i = void 0,
 		    il = void 0;
 
@@ -4553,6 +4588,8 @@ var vimeoIframeRenderer = {
 								},
 								length: 1
 							};
+						case 'readyState':
+							return readyState;
 					}
 
 					return value;
@@ -4633,6 +4670,10 @@ var vimeoIframeRenderer = {
 									vimeoApi.errorHandler(error, vimeo);
 								});
 							}
+							break;
+						case 'readyState':
+							var event = (0, _dom.createEvent)('canplay', vimeo);
+							mediaElement.dispatchEvent(event);
 							break;
 						default:
 							
@@ -4762,10 +4803,14 @@ var vimeoIframeRenderer = {
 				ended = false;
 				var event = (0, _dom.createEvent)('play', vimeo);
 				mediaElement.dispatchEvent(event);
+
+				event = (0, _dom.createEvent)('playing', vimeo);
+				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', function () {
 				paused = true;
 				ended = false;
+
 				var event = (0, _dom.createEvent)('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
@@ -5119,6 +5164,7 @@ var YouTubeIframeRenderer = {
 		    ended = false,
 		    youTubeIframe = null,
 		    volume = 1,
+		    readyState = 4,
 		    i = void 0,
 		    il = void 0;
 
@@ -5187,6 +5233,11 @@ var YouTubeIframeRenderer = {
 								return {
 									v: youTubeApi.getVideoUrl()
 								};
+
+							case 'readyState':
+								return {
+									v: readyState
+								};
 						}
 					}();
 
@@ -5238,6 +5289,10 @@ var YouTubeIframeRenderer = {
 								var event = (0, _dom.createEvent)('volumechange', youtube);
 								mediaElement.dispatchEvent(event);
 							}, 50);
+							break;
+						case 'readyState':
+							var event = (0, _dom.createEvent)('canplay', vimeo);
+							mediaElement.dispatchEvent(event);
 							break;
 
 						default:

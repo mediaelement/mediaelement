@@ -143,6 +143,7 @@ const SoundCloudIframeRenderer = {
 			volume = 1,
 			muted = false,
 			ended = false,
+			readyState = 4,
 			i,
 			il
 		;
@@ -192,6 +193,9 @@ const SoundCloudIframeRenderer = {
 								};
 							case 'src':
 								return (scIframe) ? scIframe.src : '';
+
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;
@@ -235,6 +239,11 @@ const SoundCloudIframeRenderer = {
 									let event = createEvent('volumechange', sc);
 									mediaElement.dispatchEvent(event);
 								}, 50);
+								break;
+
+							case 'readyState':
+								let event = createEvent('canplay', vimeo);
+								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
