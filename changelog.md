@@ -3,14 +3,18 @@
 *3.0.2 (2017/01/??)*
 
 * Fixed issues related to volume in YouTube renderer @ron666
-* Removed must of features and moved them to new repository (https://github.com/johndyer/mediaelement-plugins) and updated/cleaned documentation @ron666
+* Removed must of features and moved them to new repository (https://github.com/johndyer/mediaelement-plugins) @ron666 
+* Updated/cleaned documentation in terms on Guidelines and Usage @ron666
 * Cleaned up CSS stylesheets @ron666
 * Removed `—features` option from Grunt file @ron666
 * Fixed issue with Vimeo renderer when playing/pausing video causing unexpected behavior @ron666
+* Added validation on default renderer (HTML5) to make sure property can be set @ron666
 * Fixed npm installation command reference in main site (https://github.com/johndyer/mediaelement/pull/2018) @pra85
 * Fixed minor typo in documentation (https://github.com/johndyer/mediaelement/pull/2019) @denismosolov
 * Fixed class reference in the jQuery usage documentation (https://github.com/johndyer/mediaelement/pull/2020) @vrozkovec
-
+* Updated Russian translation file (https://github.com/johndyer/mediaelement/pull/2023) @Globulopolis
+* Added mechanism in Vimeo renderer to hide controls using `background` argument @ron666
+* Added missing global variables when libraries are detected @ron666
 
 *3.0.1 (2017/01/20)*
 
