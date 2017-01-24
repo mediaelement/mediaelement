@@ -7731,7 +7731,11 @@ var HtmlMediaElement = {
 			};
 
 			node['set' + capName] = function (value) {
-				node[propName] = value;
+				// Detect if element can assign the current property through `set`
+				var property = Object.getOwnPropertyDescriptor(node, propName);
+				if (property !== undefined && property !== null && property.writable) {
+					node[propName] = value;
+				}
 			};
 		};
 
