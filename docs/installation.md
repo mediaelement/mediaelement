@@ -174,14 +174,15 @@ Optionally, just can set the attribute `lang` in the `<html>` tag with the one y
 ```html
 <script>
 
-    mejs.i18n.locale.language = 'de'; // Setting German language
+    mejs.i18n.language('de'); // Setting German language
     
     $('audio,video').mediaelementplayer({
         success: function(player, node) {
         
-            $(player).closest('.mejs__container').attr('lang', mejs.i18n.getLanguage());
+        	// Optional
+            $(player).closest('.mejs__container').attr('lang', mejs.i18n.language());
             
-            $('html').attr('lang', mejs.i18n.getLanguage());
+            $('html').attr('lang', mejs.i18n.language());
             
             // More code
         }
