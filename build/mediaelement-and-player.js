@@ -3471,6 +3471,10 @@ var EN = exports.EN = {
 },{}],15:[function(_dereq_,module,exports){
 'use strict';
 
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
 var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
@@ -3478,9 +3482,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 if (typeof jQuery !== 'undefined') {
-	_mejs2.default.$ = jQuery;
+	_mejs2.default.$ = _window2.default.jQuery = _window2.default.$ = jQuery;
 } else if (typeof Zepto !== 'undefined') {
-	_mejs2.default.$ = Zepto;
+	_mejs2.default.$ = _window2.default.Zepto = _window2.default.$ = Zepto;
 
 	// define `outerWidth` method which has not been realized in Zepto
 	Zepto.fn.outerWidth = function (includeMargin) {
@@ -3492,10 +3496,10 @@ if (typeof jQuery !== 'undefined') {
 		return width;
 	};
 } else if (typeof ender !== 'undefined') {
-	_mejs2.default.$ = ender;
+	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
 }
 
-},{"6":6}],16:[function(_dereq_,module,exports){
+},{"3":3,"6":6}],16:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

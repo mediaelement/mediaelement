@@ -1,11 +1,12 @@
 'use strict';
 
+import window from 'global/window';
 import mejs from './core/mejs';
 
 if (typeof jQuery !== 'undefined') {
-	mejs.$ = jQuery;
+	mejs.$ = window.jQuery = window.$ = jQuery;
 } else if (typeof Zepto !== 'undefined') {
-	mejs.$ = Zepto;
+	mejs.$ = window.Zepto = window.$ = Zepto;
 
 	// define `outerWidth` method which has not been realized in Zepto
 	Zepto.fn.outerWidth = function (includeMargin) {
@@ -18,5 +19,5 @@ if (typeof jQuery !== 'undefined') {
 	};
 
 } else if (typeof ender !== 'undefined') {
-	mejs.$ = ender;
+	mejs.$ = window.ender = window.$ = ender;
 }
