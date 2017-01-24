@@ -7,6 +7,10 @@
 * Cleaned up CSS stylesheets @ron666
 * Removed `—features` option from Grunt file @ron666
 * Fixed issue with Vimeo renderer when playing/pausing video causing unexpected behavior @ron666
+* Fixed npm installation command reference in main site (https://github.com/johndyer/mediaelement/pull/2018) @pra85
+* Fixed minor typo in documentation (https://github.com/johndyer/mediaelement/pull/2019) @denismosolov
+* Fixed class reference in the jQuery usage documentation (https://github.com/johndyer/mediaelement/pull/2020) @vrozkovec
+
 
 *3.0.1 (2017/01/20)*
 
