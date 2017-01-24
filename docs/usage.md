@@ -112,7 +112,7 @@ require(['path/to/hls'], function (Hls) {
 
 ```
 
-**IMPORTANT NOTE:** To keep Flash shims working you MUST setup the path where the shims are via `pluginPath`, and do not forget to add a slash at the end of the string. Please refer to the examples above.
+**IMPORTANT NOTE:** To keep Flash shims working you **MUST** setup the path where the shims are via `pluginPath`, and do not forget to add a slash at the end of the string. Please refer to the examples above. In Meteor, the right path to be used is `/packages/johndyer_mediaelement/build/`;
 
 <a id="renderers-usage"></a>
 ## Use of Renderers
