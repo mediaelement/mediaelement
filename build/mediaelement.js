@@ -4533,7 +4533,6 @@ var vimeoIframeRenderer = {
 						case 'muted':
 							return volume === 0;
 						case 'paused':
-							
 							return paused;
 						case 'ended':
 							return ended;
@@ -4790,14 +4789,40 @@ var vimeoIframeRenderer = {
 		var height = mediaElement.originalNode.height,
 		    width = mediaElement.originalNode.width,
 		    vimeoContainer = _document2.default.createElement('iframe'),
-		    standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src);
+		    standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src),
+		    queryArgs = '',
+		    autoplay = mediaElement.originalNode.getAttribute('autoplay') ? 1 : 0;
+
+		// Check if any query arguments where passed and append them
+		// This is to hide controls bar properly
+		if (mediaFiles[0].src.includes('?')) {
+			queryArgs = mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1);
+
+			if (!mediaFiles[0].src.includes('api=')) {
+				queryArgs += 'api=1';
+			}
+			if (!mediaFiles[0].src.includes('background=')) {
+				queryArgs += 'background=1';
+			}
+			if (!mediaFiles[0].src.includes('loop=')) {
+				queryArgs += 'loop=0';
+			}
+			if (!mediaFiles[0].src.includes('mute=')) {
+				queryArgs += 'mute=0';
+			}
+			if (!mediaFiles[0].src.includes('autoplay=')) {
+				queryArgs += 'autoplay=' + autoplay;
+			}
+		} else {
+			queryArgs = 'background=1&loop=0&mute=0&autoplay=' + autoplay;
+		}
 
 		// Create Vimeo <iframe> markup
 		vimeoContainer.setAttribute('id', vimeo.id);
 		vimeoContainer.setAttribute('width', width);
 		vimeoContainer.setAttribute('height', height);
 		vimeoContainer.setAttribute('frameBorder', '0');
-		vimeoContainer.setAttribute('src', standardUrl);
+		vimeoContainer.setAttribute('src', standardUrl + '?' + queryArgs);
 		vimeoContainer.setAttribute('webkitallowfullscreen', '');
 		vimeoContainer.setAttribute('mozallowfullscreen', '');
 		vimeoContainer.setAttribute('allowfullscreen', '');
