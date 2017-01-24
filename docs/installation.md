@@ -13,7 +13,7 @@
 
 <a id="mime-types"></a>
 ## 0. Setup MIME-types (optional)
-On Linux/Apache servers, create a filed called .htaccess with the following text and upload it to the root of your website
+On Linux/Apache servers, create a file called .htaccess with the following text and upload it to the root of your website
 ```
 # Video support
 AddType video/ogg .ogv
