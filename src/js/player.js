@@ -771,7 +771,6 @@ class MediaElementPlayer {
 					// const monitor = setInterval(function(){
 					// 	const elem = document.activeElement;
 					// 	if (elem && elem.tagName === 'IFRAME') {
-					// 		console.log('aaaaa');
 					// 		t.clickToPlayPauseCallback();
 					// 		clearInterval(monitor);
 					// 	}

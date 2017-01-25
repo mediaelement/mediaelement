@@ -4239,7 +4239,6 @@ var MediaElementPlayer = function () {
 							// const monitor = setInterval(function(){
 							// 	const elem = document.activeElement;
 							// 	if (elem && elem.tagName === 'IFRAME') {
-							// 		
 							// 		t.clickToPlayPauseCallback();
 							// 		clearInterval(monitor);
 							// 	}
