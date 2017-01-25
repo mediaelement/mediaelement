@@ -14,7 +14,7 @@
 * Fixed class reference in the jQuery usage documentation (https://github.com/johndyer/mediaelement/pull/2020) @vrozkovec
 * Updated Russian translation file (https://github.com/johndyer/mediaelement/pull/2023) @Globulopolis
 * Added workflow in Vimeo renderer to allow query arguments passed through the media URL @ron666
-* Added missing global variables when jQuery, Zepto or Ender libraries are detected @ron666
+* Added missing global variables when jQuery, Zepto or Ender libraries are detected in `src/js/library.js` file @ron666
 * Fixed issue with `iframe` renderers (YouTube, Vimeo, Facebook, SoundCloud and Dailymotion) not hiding controls properly @ron666
 
 *3.0.1 (2017/01/20)*
