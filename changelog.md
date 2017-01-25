@@ -13,8 +13,9 @@
 * Fixed minor typo in documentation (https://github.com/johndyer/mediaelement/pull/2019) @denismosolov
 * Fixed class reference in the jQuery usage documentation (https://github.com/johndyer/mediaelement/pull/2020) @vrozkovec
 * Updated Russian translation file (https://github.com/johndyer/mediaelement/pull/2023) @Globulopolis
-* Added mechanism in Vimeo renderer to hide controls using `background` argument @ron666
+* Added workflow in Vimeo renderer to allow query arguments passed through the media URL @ron666
 * Added missing global variables when libraries are detected @ron666
+* Fixed issue with `iframe` renderers not hiding controls properly @ron666
 
 *3.0.1 (2017/01/20)*
 

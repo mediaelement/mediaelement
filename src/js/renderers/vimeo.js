@@ -486,33 +486,23 @@ const vimeoIframeRenderer = {
 			width = mediaElement.originalNode.width,
 			vimeoContainer = document.createElement('iframe'),
 			standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src),
-			queryArgs = '',
-			autoplay = mediaElement.originalNode.getAttribute('autoplay') ? 1 : 0
+			autoplay = mediaElement.originalNode.getAttribute('autoplay') ? 1 : 0,
+			queryArgs
 		;
 
 		// Check if any query arguments where passed and append them
-		// This is to hide controls bar properly
 		if (mediaFiles[0].src.includes('?')) {
 			queryArgs = mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1);
 
 			if (!mediaFiles[0].src.includes('api=')) {
 				queryArgs += 'api=1';
 			}
-			if (!mediaFiles[0].src.includes('background=')) {
-				queryArgs += 'background=1';
-			}
-			if (!mediaFiles[0].src.includes('loop=')) {
-				queryArgs += 'loop=0';
-			}
-			if (!mediaFiles[0].src.includes('mute=')) {
-				queryArgs += 'mute=0';
-			}
 			if (!mediaFiles[0].src.includes('autoplay=')) {
 				queryArgs += `autoplay=${autoplay}`;
 			}
 
 		} else {
-			queryArgs = `background=1&loop=0&mute=0&autoplay=${autoplay}`;
+			queryArgs = `api=1&autoplay=${autoplay}`;
 		}
 
 		// Create Vimeo <iframe> markup
