@@ -78,11 +78,7 @@ const HtmlMediaElement = {
 				node[`get${capName}`] = () => node[propName];
 
 				node[`set${capName}`] = (value) => {
-					// Detect if element can assign the current property through `set`
-					const property = Object.getOwnPropertyDescriptor(node, propName);
-					if (property !== undefined && property !== null && property.writable) {
-						node[propName] = value;
-					}
+					node[propName] = value;
 				};
 			}
 		;

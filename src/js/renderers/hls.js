@@ -206,9 +206,7 @@ const HlsNativeRenderer = {
 				node[`get${capName}`] = () => hlsPlayer !== null ?  node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					// Detect if element can assign the current property through `set`
-					const property = Object.getOwnPropertyDescriptor(node, propName);
-					if (property !== undefined && property !== null && property.writable && hlsPlayer !== null) {
+					if (hlsPlayer !== null) {
 						node[propName] = value;
 
 						if (propName === 'src') {

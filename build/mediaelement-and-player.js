@@ -3274,12 +3274,9 @@ Object.assign(_player2.default.prototype, {
 		});
 
 		// MUTE button
-		mute.find('button').click(function () {
+		mute.find('button').on('click', function () {
 			media.setMuted(!media.muted);
-		});
-
-		//Keyboard input
-		mute.find('button').on('focus', function () {
+		}).on('focus', function () {
 			if (mode === 'vertical') {
 				volumeSlider.show();
 			}
@@ -5826,8 +5823,7 @@ var DashNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				var property = Object.getOwnPropertyDescriptor(node, propName);
-				if (property !== undefined && property !== null && property.writable && dashPlayer !== null) {
+				if (dashPlayer !== null) {
 					if (propName === 'src') {
 
 						dashPlayer.attachSource(value);
@@ -7138,9 +7134,7 @@ var FlvNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				// Detect if element can assign the current property through `set`
-				var property = Object.getOwnPropertyDescriptor(node, propName);
-				if (property !== undefined && property !== null && property.writable && flvPlayer !== null) {
+				if (flvPlayer !== null) {
 					node[propName] = value;
 
 					if (propName === 'src') {
@@ -7494,9 +7488,7 @@ var HlsNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				// Detect if element can assign the current property through `set`
-				var property = Object.getOwnPropertyDescriptor(node, propName);
-				if (property !== undefined && property !== null && property.writable && hlsPlayer !== null) {
+				if (hlsPlayer !== null) {
 					node[propName] = value;
 
 					if (propName === 'src') {
@@ -7776,11 +7768,7 @@ var HtmlMediaElement = {
 			};
 
 			node['set' + capName] = function (value) {
-				// Detect if element can assign the current property through `set`
-				var property = Object.getOwnPropertyDescriptor(node, propName);
-				if (property !== undefined && property !== null && property.writable) {
-					node[propName] = value;
-				}
+				node[propName] = value;
 			};
 		};
 

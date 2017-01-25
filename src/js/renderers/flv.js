@@ -179,9 +179,7 @@ const FlvNativeRenderer = {
 				node[`get${capName}`] = () => flvPlayer !== null ?  node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					// Detect if element can assign the current property through `set`
-					const property = Object.getOwnPropertyDescriptor(node, propName);
-					if (property !== undefined && property !== null && property.writable && flvPlayer !== null) {
+					if (flvPlayer !== null) {
 						node[propName] = value;
 
 						if (propName === 'src') {

@@ -3274,12 +3274,9 @@ Object.assign(_player2.default.prototype, {
 		});
 
 		// MUTE button
-		mute.find('button').click(function () {
+		mute.find('button').on('click', function () {
 			media.setMuted(!media.muted);
-		});
-
-		//Keyboard input
-		mute.find('button').on('focus', function () {
+		}).on('focus', function () {
 			if (mode === 'vertical') {
 				volumeSlider.show();
 			}

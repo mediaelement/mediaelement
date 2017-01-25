@@ -278,12 +278,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 
 		// MUTE button
-		mute.find('button').click(() => {
+		mute.find('button').on('click', () => {
 			media.setMuted(!media.muted);
-		});
-
-		//Keyboard input
-		mute.find('button').on('focus', () => {
+		}).on('focus', () => {
 			if (mode === 'vertical') {
 				volumeSlider.show();
 			}
