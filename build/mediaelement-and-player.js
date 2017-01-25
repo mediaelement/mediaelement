@@ -8771,29 +8771,14 @@ var vimeoIframeRenderer = {
 		    width = mediaElement.originalNode.width,
 		    vimeoContainer = _document2.default.createElement('iframe'),
 		    standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src),
-		    autoplay = mediaElement.originalNode.getAttribute('autoplay') ? 1 : 0,
-		    queryArgs = void 0;
-
-		// Check if any query arguments where passed and append them
-		if (mediaFiles[0].src.includes('?')) {
-			queryArgs = mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1);
-
-			if (!mediaFiles[0].src.includes('api=')) {
-				queryArgs += 'api=1';
-			}
-			if (!mediaFiles[0].src.includes('autoplay=')) {
-				queryArgs += 'autoplay=' + autoplay;
-			}
-		} else {
-			queryArgs = 'api=1&autoplay=' + autoplay;
-		}
+		    queryArgs = mediaFiles[0].src.includes('?') ? '?' + mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1) : '';
 
 		// Create Vimeo <iframe> markup
 		vimeoContainer.setAttribute('id', vimeo.id);
 		vimeoContainer.setAttribute('width', width);
 		vimeoContainer.setAttribute('height', height);
 		vimeoContainer.setAttribute('frameBorder', '0');
-		vimeoContainer.setAttribute('src', standardUrl + '?' + queryArgs);
+		vimeoContainer.setAttribute('src', '' + standardUrl + queryArgs);
 		vimeoContainer.setAttribute('webkitallowfullscreen', '');
 		vimeoContainer.setAttribute('mozallowfullscreen', '');
 		vimeoContainer.setAttribute('allowfullscreen', '');
