@@ -1,4 +1,4 @@
-# <img width="100%" alt="MediaElementJS" src="https://cloud.githubusercontent.com/assets/910829/22048731/f3627e1e-dcfc-11e6-956d-372f134f25de.png">
+# ![MediaElementJS](https://cloud.githubusercontent.com/assets/910829/22357262/e6cf32b4-e404-11e6-876b-59afa009f65c.png)
 
 One file. Any browser. Same UI.
 
