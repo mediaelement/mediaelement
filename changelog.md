@@ -1,6 +1,6 @@
 ### Version History
 
-*3.0.2 (2017/01/??)*
+*3.0.2 (2017/01/27)*
 
 * Fixed issues related to volume in YouTube renderer @ron666
 * Removed must of features and moved them to new repository (https://github.com/johndyer/mediaelement-plugins) @ron666 
@@ -15,6 +15,7 @@
 * Added workflow in Vimeo renderer to allow query arguments passed through the media URL @ron666
 * Added missing global variables when jQuery, Zepto or Ender libraries are detected in `src/js/library.js` file @ron666
 * Fixed issue with `iframe` renderers (YouTube, Vimeo, Facebook, SoundCloud and Dailymotion) not hiding controls properly @ron666
+* Added new logo in README file @ron666
 
 *3.0.1 (2017/01/20)*
 
