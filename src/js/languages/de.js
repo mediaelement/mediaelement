@@ -31,7 +31,7 @@
 			"mejs.time-jump-forward": ["1 Sekunde vorspulen", "%1 Sekunden vorspulen"],
 
 			// features/loop.js
-			//"mejs.loop": "Wiederholung (de-)aktivieren",
+			"mejs.loop": "Wiederholung (de-)aktivieren",
 
 			// features/playpause.js
 			"mejs.play": "Abspielen",
