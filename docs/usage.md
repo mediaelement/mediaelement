@@ -139,28 +139,50 @@ $('video, audio').mediaelementplayer({
 ```javascript
 $('video').mediaelementplayer({
     pluginPath: '../build/',
+    // All the config related to HLS
     hls: {
         debug: true,
-        // HLS is not gonna start loading immediatly 
         autoStartLoad: false
     },
     
-    // More configuration parameters
+    // More configuration parameters...
     
     success: function(media, node) {
-    
-        media.addEventListener('hlsMediaAttached', function() {
+    	
+    	// Since it could be that the HLS element is not yet loaded, use a setInterval method to check when it's ready
+    	// and then destroy it; this applies to the native renderers (HLS, DASH and FLV)
+    	
+    	var interval = setInterval(function () {
         
-            console.log('Media attached!');
-        });
-        
-        // Manifest file was parsed, invoke loading method
-        media.addEventListener('hlsManifestParsed', function() {
-        
-            // hlsPlayer is the instance of HLS.js in MediaElement
-            media.hlsPlayer.startLoad();
-    
-        });
+    		// media.hlsPlayer is the instance of HLS.js in MediaElement
+    		// each one of the renderers has a player instance
+    		// See `Use of Renderers` above for more information
+            if (media.hlsPlayer !== undefined) {
+            	
+            	media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
+            		// All the code when this event is reached...
+                    console.log('Media attached!');
+                });
+                
+                // Manifest file was parsed, invoke loading method
+                media.hlsPlayer.on('hlsManifestParsed', function() {
+            		// All the code when this event is reached...
+            		console.log()
+            
+                });
+                
+            	media.hlsPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
+            		// All the code when this event is reached...
+            		console.log(data);
+                });
+
+
+                // clear interval
+                clearInterval(interval);
+
+            }
+            
+        }, 500); 
     }
 });
 ```
