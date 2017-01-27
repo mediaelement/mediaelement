@@ -67,7 +67,7 @@
 			"mejs.ad-skip-info": ["Überspringen in 1 Sekunde", "Überspringen in %1 Sekunden"],
 
 			// features/sourcechooser.js
-			"mejs.source-chooser": "Quellenauswahl"
+			"mejs.source-chooser": "Quellenauswahl",
 
 			// features/stop.js
 			"mejs.stop": "Stop",

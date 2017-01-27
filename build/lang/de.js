@@ -37,7 +37,7 @@
 			"mejs.audio-player": "Audio-Player",			
 			"mejs.ad-skip": "Werbung überspringen",
 			"mejs.ad-skip-info": ["Überspringen in 1 Sekunde", "Überspringen in %1 Sekunden"],			
-			"mejs.source-chooser": "Quellenauswahl"			
+			"mejs.source-chooser": "Quellenauswahl",			
 			"mejs.stop": "Stop",			
 			"mejs.speed-rate" : "Geschwindigkeitsrate",			
 			"mejs.live-broadcast" : "Live-Übertragung",			
