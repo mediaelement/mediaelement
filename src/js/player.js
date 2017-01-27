@@ -83,8 +83,10 @@ export let config = {
 	framesPerSecond: 25,
 	// Hide controls when playing and mouse is not over the video
 	alwaysShowControls: false,
-	// Display the video control
+	// Display the video control when media is loading
 	hideVideoControlsOnLoad: false,
+	// Display the video controls when media is paused
+	hideVideoControlsOnPause: false,
 	// Enable click video element to toggle play/pause
 	clickToPlayPause: true,
 	// Time in ms to hide controls
@@ -531,7 +533,7 @@ class MediaElementPlayer {
 
 		if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
 			(t.media.paused && t.media.readyState === 4 && ((!t.options.hideVideoControlsOnLoad &&
-			t.media.currentTime <= 0) || t.media.currentTime > 0)) ||
+			t.media.currentTime <= 0) || (!t.options.hideVideoControlsOnPause && t.media.currentTime > 0))) ||
 			(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState) ||
 			t.media.ended) {
 			return;

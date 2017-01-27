@@ -57,7 +57,8 @@ showTimecodeFrameCount | boolean| `false` | Whether to show frame count in timec
 framesPerSecond | number | `25` | Used when `showTimecodeFrameCount` is set to `true`
 autosizeProgress | boolean | `true` | Automatically calculate the width of the progress bar based on the sizes of other elements
 alwaysShowControls | boolean | `false` | Hide controls when playing and mouse is not over the video
-hideVideoControlsOnLoad | boolean | `false` | Display the video control
+hideVideoControlsOnLoad | boolean | `false` | Display the video control when media is loading
+hideVideoControlsOnPause | boolean | `false` | Display the video controls when media is paused
 clickToPlayPause | boolean | `true` | Enable click video element to toggle play/pause
 controlsTimeoutDefault | number | `1500` | Time in ms to hide controls
 controlsTimeoutMouseEnter | number | `2500` | Time in ms to trigger the timer when mouse moves
