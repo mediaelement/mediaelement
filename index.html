@@ -1,345 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-	
-	<title>MediaElement.js - HTML5 video and audio unification framework</title>
-	<meta name="description" content="HTML5 video and audio player with support for YouTube, SoundCloud, Facebook, Vimeo, HLS, Dash, and others." />
-	<meta name="keywords" content="HTML5, video, H.264, Javascript, media, mp3, mp4" />	
-	
-	<!-- fonts -->
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700" >
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" >
-    
-	<!-- site -->
-	<link rel="stylesheet" href="css/mejs-site.css" >	
-	
-	<!-- library -->
-    <link rel="stylesheet" type="text/css" href="//rawgit.com/johndyer/mediaelement/master/build/mediaelementplayer.min.css">
-    <!--<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/mediaelement/latest/mediaelementplayer.min.css">-->
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-	<!-- favicon -->
+        <title>MediaElement.js - HTML5 video and audio unification framework</title>
+        <meta name="description" content="HTML5 video and audio player with support for YouTube, SoundCloud, Facebook, Vimeo, HLS, Dash, and others."/>
+        <meta name="keywords" content="HTML5, video, H.264, Javascript, media, mp3, mp4"/>
 
-</head>
-<body>
+        <!-- fonts -->
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
+
+        <!-- site -->
+        <link rel="stylesheet" href="css/mejs-site.css">
+
+        <!-- library -->
+        <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/mediaelement/latest/mediaelementplayer.min.css">
+    </head>
+    <body>
 
 
-<header>
-	<div class="container">
-		<nav>
+        <header>
+            <div class="container">
+                <nav>
+                    <div class="logo">
+                        <a href="/"><img src="images/mejs-logo.svg" alt="MediaElement.js Logo"/></a>
+                    </div>
 
-			<div class="logo">
-				<a href="/"><img src="images/mejs-logo.svg" alt="MediaElement.js Logo" /></a>
-			</div>
-			
-			<div class="brand">MediaElement.js</div>
-		
-			<div class="menu">
-				<ul>
-	                <li>
-	                    <a href="//github.com/johndyer/mediaelement/blob/master/docs/installation.md">Installation</a>
-	                </li>
-	                <li>
-	                    <a href="//github.com/johndyer/mediaelement/blob/master/docs/usage.md">Usage</a>
-	                </li>                
-	                <li>
-	                    <a href="//github.com/johndyer/mediaelement/blob/master/docs/api.md">API</a>
-	                </li>
-					<li>
-						<a href="//github.com/johndyer/mediaelement-plugins">Plugins</a>
-					</li>
-	                <li>
-	                    <a class="download" href="//github.com/johndyer/mediaelement/zipball/master">Download</a>
-	                </li>			
-				</ul>
-			</div>		
-		</nav>
-	</div>
-</header>
+                    <div class="brand">MediaElement.js</div>
 
-<section class="overview">
-	
-	<div class="container">
-	
-		<h2>HTML5 Audio &amp; Video<br>Unification Framework</h2>
-		
-		<p>
-			MediaElement.js is a blazingly fast and amazingly powerful HTML5 audio and video library that creates a unified feel for  
-			for all media files (MP4, WebM, MP3, FLV), streaming content (HLS, M(PEG)-DASH, RTMP), and embeddable players like
-			YouTube, Vimeo, DailyMotion, Facebook, and SoundCloud.
-		</p>
-		
-		<div class="overview-links">
-			
-	        <a class="github-button" href="https://github.com/johndyer/mediaelement" data-style="mega" data-count-href="/johndyer/mediaelement/stargazers" data-count-api="/repos/johndyer/mediaelement#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star johndyer/mediaelement on GitHub">Star</a>
-	        <a href="https://badge.fury.io/js/mediaelement"><img src="https://badge.fury.io/js/mediaelement.svg" alt="npm version" height="18"></a>
-			
-		</div>
-	
-	</div>
-	
-</section>
+                    <div class="menu">
+                        <ul>
+                            <li><a href="//github.com/johndyer/mediaelement/blob/master/docs/installation.md">Installation</a></li>
+                            <li><a href="//github.com/johndyer/mediaelement/blob/master/docs/usage.md">Usage</a></li>
+                            <li><a href="//github.com/johndyer/mediaelement/blob/master/docs/api.md">API</a></li>
+                            <li><a href="//github.com/johndyer/mediaelement-plugins">Plugins</a></li>
+                            <li><a class="download" href="//github.com/johndyer/mediaelement/zipball/master">Download</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <section class="overview">
+            <div class="container">
+                <h2>HTML5 Audio &amp; Video<br>Unification Framework</h2>
+
+                <p>
+                    MediaElement.js is a blazingly fast and amazingly powerful HTML5 audio and video library that creates a
+                    unified feel for
+                    for all media files (MP4, WebM, MP3, FLV), streaming content (HLS, M(PEG)-DASH, RTMP), and embeddable
+                    players like
+                    YouTube, Vimeo, DailyMotion, Facebook, and SoundCloud.
+                </p>
+
+                <div class="overview-links">
+                    <a class="github-button" href="https://github.com/johndyer/mediaelement" data-style="mega"
+                       data-count-href="/johndyer/mediaelement/stargazers"
+                       data-count-api="/repos/johndyer/mediaelement#stargazers_count"
+                       data-count-aria-label="# stargazers on GitHub" aria-label="Star johndyer/mediaelement on GitHub">Star</a>
+                    <a href="https://badge.fury.io/js/mediaelement">
+                        <img src="https://badge.fury.io/js/mediaelement.svg" alt="npm version" height="18">
+                    </a>
+                </div>
+            </div>
+        </section>
 
 
-<!-- player demos -->
-<section class="players">
-	
-	<div class="container">
-		
-		<h4><a id="video-player" class="anchor" href="#video-player" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Video Player</h4>
-		
-	    <div class="player">
-	        <video id="player1" width="640" height="360" preload="none" style="max-width: 100%" poster="images/big_buck_bunny.jpg" >
-	            <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
-	            <track src="dist/mediaelement.vtt" srclang="en" label="English" kind="subtitles" type="text/vtt">
-	        </video>
-	    </div>
-	
-		<div class="player-selector">
-		   Try other media sources
-		    
-		    <select name="player1-sources">
-		        <option value="https://media.w3.org/2010/05/sintel/trailer.mp4">MP4</option>
-		        <option value="https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm">WebM</option>
-				<option value="rtmp://184.72.239.149/vod/BigBuckBunny_115k.mov">RTMP</option>
-		        <!--<option value="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4">RTMP (MP4)</option>-->
-		        <option value="http://www.streambox.fr/playlists/test_001/stream.m3u8">HLS</option>
-		        <!--<option value="http://220.243.230.204/ws.acgvideo.com/1/f6/10188762-1.flv?wsTime=1480485416&wsSecret2=44ad693c7089a8a0226bfd818c76bc29&oi=1286998248&rate=2500&wshc_tag=0&wsts_tag=583e31e9&wsid_tag=4cb608e8&wsiphost=ipdbm">FLV</option>-->
-		        <option value="http://www.bok.net/dash/tears_of_steel/cleartext/stream.mpd">M(PEG)-DASH</option>
-		        <!--<option value="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">M(PEG)-DASH</option>-->
-		        <option value="http://www.dailymotion.com/embed/video/x2lzodk">DailyMotion</option>
-		        <option value="https://www.youtube.com/watch?v=twYp6W6vt2U">YouTube</option>
-		        <option value="https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0">Vimeo</option>
-		        <option value="https://www.facebook.com/facebook/videos/10155278547321729">Facebook</option>
-		    </select>
-		    
-		    </p>
-		</div>
-		
-	    <h4><a id="audio-player" class="anchor" href="#audio-player" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Audio Player</h4>
-	
-	    <div class="player">
-	        <audio id="player2" preload="none" controls style="max-width: 100%">
-	            <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-	        </audio>
-	    </div>
-	    
-	    <div class="player-selector">
-   		   Try other media sources
+        <!-- player demos -->
+        <section class="players">
 
-	        <select name="player2-sources">
-	            <option value="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3">MP3</option>
-	            <option value="http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg">OGG</option>
-	            <option value="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr">RTMP (MP3)</option>
-	            <option value="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">SoundCloud</option>
-	        </select>
-	        
+            <div class="container">
+
+                <h4><a id="video-player" class="anchor" href="#video-player" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span></a>Video Player</h4>
+
+                <div class="player">
+                    <video id="player1" width="640" height="360" preload="none" style="max-width: 100%"
+                           poster="images/big_buck_bunny.jpg">
+                        <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+                        <track src="dist/mediaelement.vtt" srclang="en" label="English" kind="subtitles" type="text/vtt">
+                    </video>
+                </div>
+
+                <div class="player-selector">
+                    <label for="player1-sources">Try other media sources</label>
+
+                    <select name="player1-sources" id="player1-sources">
+                        <option value="https://media.w3.org/2010/05/sintel/trailer.mp4">MP4</option>
+                        <option value="https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm">WebM</option>
+                        <!--<option value="rtmp://184.72.239.149/vod/BigBuckBunny_115k.mov">RTMP</option>-->
+                        <option value="rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4">RTMP</option>
+                        <option value="http://www.streambox.fr/playlists/test_001/stream.m3u8">HLS</option>
+                        <option value="http://la2.indexcom.com/me/flv/guqin.flv">FLV</option>
+                        <option value="http://www.bok.net/dash/tears_of_steel/cleartext/stream.mpd">M(PEG)-DASH</option>
+                        <!--<option value="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd">M(PEG)-DASH</option>-->
+                        <option value="http://www.dailymotion.com/embed/video/x2lzodk">DailyMotion</option>
+                        <option value="https://www.youtube.com/watch?v=twYp6W6vt2U">YouTube</option>
+                        <option value="https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0">Vimeo</option>
+                        <option value="https://www.facebook.com/facebook/videos/10155278547321729">Facebook</option>
+                    </select>
+                </div>
+
+                <h4><a id="audio-player" class="anchor" href="#audio-player" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span></a>Audio Player</h4>
+
+                <div class="player">
+                    <audio id="player2" preload="none" controls style="max-width: 100%">
+                        <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+                    </audio>
+                </div>
+
+                <div class="player-selector">
+                    <label for="player2-sources">Try other media sources</label>
+
+                    <select name="player2-sources" id="player2-sources">
+                        <option value="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3">MP3</option>
+                        <option value="http://www.vorbis.com/music/Hydrate-Kenny_Beltrey.ogg">OGG</option>
+                        <option value="http://db3.indexcom.com/bucket/ram/00/05/64k/05.m3u8">HLS</option>
+                        <option value="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr">RTMP (MP3)</option>
+                        <option value="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">
+                            SoundCloud
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+        </section><!-- /.players -->
+
+
+        <section class="sitesusing">
+            <div class="container">
+
+                <h2>Friends Using MediaElement.js</h2>
+
+                <div class="site-logos">
+
+                    <div class="site-logo">
+                        <a href="http://www.wordpress.org/" target="_blank"><img src="images/wordpress.png" alt="Wordpress"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="http://www.canvaslms.com/" target="_blank"><img src="images/canvas.png" alt="Instructure Canvas"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="http://www.revision3.com/" target="_blank"><img src="images/revision3.png" alt="Revision3"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="http://www.rottentomatoes.com/" target="_blank"><img src="images/rottentomatoes.png" alt="Rotten Tomatoes"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="http://www.teamtreehouse.com/" target="_blank"><img src="images/treehouse.png" alt="Treehouse Coding"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="http://www.mozilla.org/" target="_blank"><img src="images/mozilla.svg" alt="Mozilla Nightly News"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="http://articles.salsalabs.com/" target="_blank"><img src="images/salsa.png" alt="Salsa Labs"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="http://www.streamindex.com/" target="_blank"><img src="images/streams.svg" alt="StreamS"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="https://contao.org/" target="_blank"><img src="images/contao.svg" alt="Contao"/></a>
+                    </div>
+
+                    <div class="site-logo">
+                        <a href="https://medsims.com/" target="_blank"><img src="images/medsims.svg" alt="MedSims from WebMD/Medscape"/></a>
+                    </div>
+
+                </div><!-- /.site-logos -->
+
+            </div>
+        </section>
+
+        <div class="features">
+            <div class="container">
+                <h2>What's New in 3.0</h2>
+
+                <ul>
+                    <li>Complete code rewrite in <em>Ecmascript 2015</em> (ES6).</li>
+
+                    <li>Updated control styling for better mobile use and faster loading</li>
+
+                    <li>Introduction of Renderers, pluggable code that allows the introduction of new media formats in an easier way.</li>
+
+                    <li>Ability to play Facebook, SoundCloud, M(PEG)-DASH using <a href="https://github.com/Dash-Industry-Forum/dash.js" target="_blank">dash.js</a> for native support
+                        and <a href="https://github.com/castlabs/dashas" target="_blank">dash.as</a> for Flash fallback, native HLS using <a href="https://github.com/dailymotion/hls.js" target="_blank">hls.js</a> library.</li>
+
+                </ul>
+
+                <p>For a full list of change and new features, please visit the <a href="https://github.com/johndyer/mediaelement/blob/master/changelog.md" target="_blank">change log</a>.</p>
+
+                <p>If you already have a MediaElement installation and you want to upgrade, please follow the <a href="https://github.com/johndyer/mediaelement/blob/master/README.md#migration" target="_blank">migration guide</a>.</p>
+
+                <p>If you want to expand the player, please visit the <a href="https://github.com/johndyer/mediaelement-plugins" target="_blank">MediaElement.js plugins repository</a>.</p>
+
+            </div>
+
         </div>
 
+        <div class="get-started">
+            <div class="container">
 
-	   
-	</div>
-	
-</section><!-- /.players -->
+                <h2>Getting Started</h2>
 
+                <h3>1. Download MediaElement.js</h3>
 
+                <a href="https://github.com/johndyer/mediaelement/zipball/master" class="button">Download .zip</a>
 
-<section class="sitesusing">
-	<div class="container">
-	
-	<h2>Friends Using MediaElement.js</h2>
-	
-	<div class="site-logos">
-		
-		<div class="site-logo">		
-			<a href="http://www.wordpress.org/"><img src="images/wordpress.png" alt="Wordpress" /></a>
-		</div>
-		
-		<div class="site-logo">		
-			<a href="http://www.canvaslms.com/"><img src="images/canvas.png" alt="Instructure Canvas" /></a>
-		</div>
+                <p>Or clone the repository<p>
 
-		<div class="site-logo">		
-			<a href="http://www.revision3.com/"><img src="images/revision3.png" alt="Revision3" /></a>
-		</div>
+                <pre>git clone https://github.com/johndyer/mediaelement.git</pre>
 
-		<div class="site-logo">		
-			<a href="http://www.rottentomatoes.com/"><img src="images/rottentomatoes.png" alt="Rotten Tomatoes" /></a>
-		</div>
+                <p>Or use NPM<p>
 
-		<div class="site-logo">		
-			<a href="http://www.teamtreehouse.com/"><img src="images/treehouse.png" alt="Treehouse Coding" /></a>
-		</div>
-		
-		<div class="site-logo">		
-			<a href="http://www.mozilla.org/"><img src="images/mozilla.svg" alt="Mozilla Nightly News" /></a>
-		</div>	
-		
-		<div class="site-logo">		
-			<a href="http://articles.salsalabs.com/"><img src="images/salsa.png" alt="Salsa Labs" /></a>
-		</div>
+                <pre>npm install mediaelement</pre>
 
-		<div class="site-logo">
-			<a href="http://www.streamindex.com/"><img src="images/streams.svg" alt="StreamS" /></a>
-		</div>
+                <h3>2. Include JavaScript and CSS</h3>
 
-		<div class="site-logo">
-			<a href="https://contao.org/"><img src="images/contao.svg" alt="Contao" /></a>
-		</div>
+                <p>Use your local files</p>
 
-		<div class="site-logo">
-			<a href="https://medsims.com/"><img src="images/medsims.svg" alt="MedSims from WebMD/Medscape" /></a>
-		</div>
-
-	</div><!-- /.site-logos -->
-		
-</section>
-
-
-<div class="features">
-	<div class="container">
-		<h2>What's New in 3.0</h2>
-	
-        <ul>
-            <li>Complete code rewrite in <em>Ecmascript 2015</em> (ES6).</li>
-            
-            <li>Updated control styling for better mobile use and faster loading</li>
-            
-            <li>Introduction of Renderers, pluggable code that allows the introduction of new media formats in an easier way.</li>
-
-            <li>Ability to play Facebook, SoundCloud, M(PEG)-DASH using <a href="https://github.com/Dash-Industry-Forum/dash.js" target="_blank">dash.js</a> for native support and <a href="https://github.com/castlabs/dashas" target="_blank">dash.as</a> for Flash fallback, native HLS using <a href="https://github.com/dailymotion/hls.js" target="_blank">hls.js</a> library.</li>
-
-        </ul>	
-        
-		<p>For a full list of change and new features, please visit the <a href="https://github.com/johndyer/mediaelement/blob/master/changelog.md" target="_blank">change log</a>.</p>
-
-		<p>If you already have a MediaElement installation and you want to upgrade, please follow the <a href="https://github.com/johndyer/mediaelement/blob/master/README.md#migration" target="_blank">migration guide</a>.</p>
-
-		<p>If you want to expand the player, please visit the <a href="https://github.com/johndyer/mediaelement-plugins" target="_blank">MediaElement.js plugins repository</a>.</p>
-
-	</div>
-	
-</div>
-
-
-<div class="get-started">
-	<div class="container">
-	
-		<h2>Getting Started</h2>
-		
-		
-		<h3>1. Download MediaElement.js</h3>
-		
-			<a href="https://github.com/johndyer/mediaelement/zipball/master" class="button">Download .zip</a>
-		
-			<p>Or clone the repository<p>
-			
-			<pre>git clone https://github.com/johndyer/mediaelement.git</pre>
-			
-			<p>Or use NPM<p>
-			
-			<pre>npm install mediaelement</pre>		
-	 
-		<h3>2. Include JavaScript and CSS</h3>
-			
-			<p>Use your local files</p>
-
-<pre>
+                <pre>
 &lt;script src="path/to/mediaelement-and-player.min.js"&gt;&lt;/script&gt;
-&lt;link href="path/to/mediaelementplayer.css" rel="stylesheet"&gt;
-</pre>
-			
-			<p>Use CDN files</p>
-				
-<pre>
+&lt;link href="path/to/mediaelementplayer.css" rel="stylesheet"&gt;</pre>
+
+                <p>Use CDN files</p>
+
+                <pre>
 &lt;script src="https://cdn.jsdelivr.net/mediaelement/latest/mediaelement-and-player.min.js"&gt;&lt;/script&gt;
-&lt;link href="https://cdn.jsdelivr.net/mediaelement/latest/mediaelementplayer.css" rel="stylesheet"&gt;
-</pre>
-	
-		<h3>3. Setup player</h3>
-		
-			<p>Add the <code>class="mejs-player"</code> to any <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>, or <code>&lt;iframe&gt;</code> tags 
-				
-				
-			<p>HTML5 audio or video</p>
-				
-<pre>
+&lt;link href="https://cdn.jsdelivr.net/mediaelement/latest/mediaelementplayer.css" rel="stylesheet"&gt;</pre>
+
+                <h3>3. Setup player</h3>
+
+                <p>Add the <code>class="mejs-player"</code> to any <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>, or <code>&lt;iframe&gt;</code> tags
+
+
+                <p>HTML5 audio or video</p>
+
+                <pre>
 &lt;video class="mejs-player"&gt;
-	&lt;source src="/path/to/video.mp4" /&gt;
+    &lt;source src="/path/to/video.mp4" /&gt;
 &lt;/video&gt;
 
-&lt;audio src="/path/to/audio.mp4" class="mejs-player"&gt;&lt;/audio&gt;
-</pre>		
+&lt;audio src="/path/to/audio.mp4" class="mejs-player"&gt;&lt;/audio&gt;</pre>
 
-			<p>Embeddable players (YouTube, etc.)</p>
-				
-<pre>
-&lt;iframe class="mejs-player" width="640" height="360" src="https://www.youtube.com/embed/frdj1zb9sMY?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
-</pre>		
+                <p>Embeddable players (YouTube, etc.)</p>
 
-			<p>See the <a href="//github.com/johndyer/mediaelement/blob/master/docs/installation.md">detailed installation instructions</a> for additional settings.</p>
-					
-	
-	</div>
-	
-</div>
+                <pre>&lt;iframe class="mejs-player" width="640" height="360" src="https://www.youtube.com/embed/frdj1zb9sMY?rel=0" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;</pre>
 
+                <p>See the <a href="//github.com/johndyer/mediaelement/blob/master/docs/installation.md">detailed installation instructions</a> for additional settings.</p>
 
+            </div>
+        </div>
 
+        <footer>
+            <div class="container">
+                <a href="https://github.com/johndyer/mediaelement">MediaElement.js</a> was created by
+                <a href="https://github.com/johndyer">John Dyer</a> at <a href="http://www.dts.edu/">Dallas Theological
+                Seminary</a> and is currently maintained by <a href="https://github.com/ron666">Rafael Miranda</a>.
+            </div>
+        </footer>
 
-<footer>
-	<div class="container">
-	    <a href="https://github.com/johndyer/mediaelement">MediaElement.js</a> was created by <a href="https://github.com/johndyer">John Dyer</a> at <a href="http://www.dts.edu/">Dallas Theological Seminary</a> and is currently maintained by <a href="https://github.com/ron666">Rafael Miranda</a>.
-	</footer>
-	</div>
-</div><!-- /.container -->
+        <!-- JS -->
+        <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="//cdn.jsdelivr.net/mediaelement/latest/mediaelement-and-player.min.js"></script>
+        <script src="//buttons.github.io/buttons.js"></script>
+        <script src="//platform.twitter.com/widgets.js"></script>
+        <script>
+            if (mejs.Features.isiOS) {
+                $('select').find('option[value^="rtmp"]').prop('disabled', true)
+                    .end()
+                    .find('option[value$="webm"]').prop('disabled', true)
+                    .end()
+                    .find('option[value$=".mpd"]').prop('disabled', true)
+                    .end()
+                    .find('option[value$=".ogg"]').prop('disabled', true)
+                    .end()
+                    .find('option[value*=".flv"]').prop('disabled', true);
+            }
 
+            $('select').change(function () {
+                var
+                    _this = $(this),
+                    media = _this.closest('div').prev('div').children('div:first').attr('id');
 
+                mejs.players[media].setSrc(_this.val());
+                mejs.players[media].setPoster('');
+                mejs.players[media].load();
+            });
 
-<!-- JS -->
-<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="//rawgit.com/johndyer/mediaelement/master/build/mediaelement-and-player.min.js"></script>
-<!--<script src="//cdn.jsdelivr.net/mediaelement/latest/mediaelement-and-player.min.js"></script>-->
+            $(document).ready(function() {
+                $('video, audio').mediaelementplayer({
+                    pluginPath: 'dist/',
+                    success: function () {
+                        $('.player').css('visibility', 'visible');
+                    }
+                });
+            });
 
-<script src="//buttons.github.io/buttons.js"></script>
-<script src="//platform.twitter.com/widgets.js"></script>
+        </script>
 
-<script>
-
-    if (mejs.Features.isiOS) {
-        $('select').find('option[value^="rtmp"]').prop('disabled', true)
-            .end()
-            .find('option[value$="webm"]').prop('disabled', true)
-            .end()
-            .find('option[value$=".mpd"]').prop('disabled', true)
-            .end()
-            .find('option[value$=".ogg"]').prop('disabled', true)
-            .end()
-            .find('option[value*=".flv"]').prop('disabled', true);
-    }
-
-    $('video, audio').mediaelementplayer({
-        pluginPath: 'dist/',
-        success: function() {
-        	$('.player').css('visibility', 'visible');
-        }
-    });
-
-    $('select').change(function() {
-        var
-            _this = $(this),
-            media = _this.closest('div').prev('div').children('div:first').attr('id');          
-
-        mejs.players[media].setSrc(_this.val());
-        mejs.players[media].setPoster('');
-        mejs.players[media].load();
-    });
-
-</script>
-
-
-</body>
+    </body>
 </html>
