@@ -93,17 +93,26 @@ p, li {
 	line-height: 1.4;
 }
 
-
-
 /* menu */
 header {
 	padding: 1.5em;	
 	background: #fff;
-	color: #ed6034;
+	color: #FA7D18;
 	overflow: hidden;
 }
 header .container {
 	max-width: 960px;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0,0,0,0);
+	border: 0;
 }
 
 .logo {
@@ -114,9 +123,18 @@ header .container {
 	top: 1em;
 }
 
+.logo img {
+	max-width: 50px;
+}
+
 .brand {
 	float: left;
 	font-size: 1.5em;
+}
+
+.brand img {
+	max-height: 25px;
+	max-width: 100%;
 }
 
 .menu {
@@ -138,13 +156,7 @@ header .container {
 .menu a {
 	padding: 0.5em 0.75em;
 	text-decoration: none;
-	color: #ed6034;
-}
-
-.menu a.download {
-	color: #fff;
-	background: #ed6034;
-	border-radius: 4px;
+	color: #FA7D18;
 }
 
 .container {
@@ -192,6 +204,21 @@ header .container {
 	color: #fff;
 }
 
+.center {
+	text-align: center;
+	margin: 0 auto;
+}
+
+a.download {
+	margin: 0 0 0 0.5em;
+	padding: 0.5em 0.75em;
+	text-decoration: none;
+	display: inline-block;
+	color: #fff;
+	background: #FA7D18;
+	border-radius: 4px;
+}
+
 .overview p {
 	line-height: 1.5;
 	max-width: 650px;
@@ -220,7 +247,6 @@ header .container {
 	margin: 1em 0;
 	text-align: center;
 }
-
 
 .player-selector {
 	max-width: 600px;
@@ -265,8 +291,8 @@ header .container {
 	background: #4B9303;
 	color: #fff;
 }
-.features .container {
-	
+.features .container ul {
+	margin: 0 20px;
 }
 .features a {
 	color: #084468;
@@ -280,11 +306,11 @@ header .container {
 
 
 .get-started h2 {
-	color: #ed6034;
+	color: #FA7D18;
 }
 
 .get-started .button {
-	background: #ed6034;
+	background: #FA7D18;
 	color: #fff;
 	text-align: center;
 	padding: 0.5em 0.75em;;
@@ -307,9 +333,42 @@ footer {
 	color: #fff;
 	padding: 2em 0;
 	text-align: center;
+	line-height: 1.2;
+	position: relative;
+}
+
+.footer-container {
+	margin: 0 20px;
+	font-size: 0.8em;
+	overflow: auto;
+	zoom: 1;
+}
+
+.footer-container .left {
+	float: left;
+}
+
+.footer-container .right {
+	float: right;
 }
 
 footer a {
 	color: #fff;
 	font-weight: bold;
+}
+
+@media (max-width: 800px) {
+	.footer-container {
+		margin: -20px 10px;
+	}
+	.footer-container .left, .footer-container .right {
+		width: 100%;
+		display: block;
+	}
+	.footer-container .left {
+		margin-bottom: 10px;
+	}
+	.footer-container .right {
+		padding-bottom: 10px;
+	}
 }
