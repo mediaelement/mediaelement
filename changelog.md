@@ -1,10 +1,12 @@
 ### Version History
 
-*3.0.2 (2017/??/??)*
+*3.1.0 (2017/??/??)*
 
 * Updated documentation about how to use custom player (HLS, DASH, FLV, etc.) correctly @ron666
 * Updated German translations (https://github.com/johndyer/mediaelement/pull/2031) @SoftCreatR
 * Added `hideVideoControlsOnPause` configuration element to hide controls when media is paused @ron666
+* Added `showPosterWhenPaused` option and updated documentation @ron666
+* Added new media to demo file to match main website and reformatted `demo/demo.js` @ron666
 
 *3.0.2 (2017/01/27)*
 

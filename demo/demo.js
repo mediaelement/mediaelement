@@ -43,8 +43,6 @@ var
 	stretching = getQueryStringValue('stretching') || 'auto'
 ;
 
-mejs.i18n.language(lang);
-
 $('select[name=lang]').on('change', function () {
 	window.location.href = updateUrlParameter(window.location.href, 'lang', $(this).val());
 }).val(lang);
@@ -54,17 +52,18 @@ $('select[name=stretching]').on('change', function () {
 
 }).val(stretching);
 
-$('select[name=sources]').on('change', function() {
+$('select[name=sources]').on('change', function () {
 	var
 		_this = $(this),
 		media = _this.closest('.players').find('.media-wrapper').children('div:first').attr('id'),
-		player = mejs.players[media];
+		player = mejs.players[media]
+	;
 
 	player.setSrc(_this.val().replace('&amp;', '&'));
 	player.load();
 
 	var renderer = $('#' + player.media.id + '-rendername');
-	renderer.find('.src').html('<a href="' + _this.val() +'" target="_blank">' + _this.val() + '</a>')
+	renderer.find('.src').html('<a href="' + _this.val() + '" target="_blank">' + _this.val() + '</a>')
 		.end()
 		.find('.renderer').html(player.media.rendererName)
 		.end()
@@ -73,28 +72,33 @@ $('select[name=sources]').on('change', function() {
 
 });
 
-$('video, audio').mediaelementplayer({
-	stretching: stretching,
-	pluginPath: '../build/',
-	success: function (media) {
-		$(media).closest('.media-wrapper').children('div:first').attr('lang', mejs.i18n.language());
+$(document).ready(function () {
 
-		var renderer = $('#' + media.id + '-rendername');
+	mejs.i18n.language(lang);
 
-		media.addEventListener('loadedmetadata', function (e) {
-			var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
-			if (src !== null && src !== undefined) {
-				renderer.find('.src').html('<a href="' + src +'" target="_blank">' + src + '</a>')
-				.end()
-				.find('.renderer').html(media.rendererName)
-				.end()
-				.find('.error').html('')
-				;
-			}
-		}, false);
+	$('video, audio').mediaelementplayer({
+		stretching: stretching,
+		pluginPath: '../build/',
+		success: function (media) {
+			$(media).closest('.media-wrapper').children('div:first').attr('lang', mejs.i18n.language());
 
-		media.addEventListener('error', function (e) {
-			renderer.find('.error').html('<strong>Error</strong>: ' + e.message);
-		}, false);
-	}
+			var renderer = $('#' + media.id + '-rendername');
+
+			media.addEventListener('loadedmetadata', function (e) {
+				var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
+				if (src !== null && src !== undefined) {
+					renderer.find('.src').html('<a href="' + src + '" target="_blank">' + src + '</a>')
+					.end()
+					.find('.renderer').html(media.rendererName)
+					.end()
+					.find('.error').html('')
+					;
+				}
+			}, false);
+
+			media.addEventListener('error', function (e) {
+				renderer.find('.error').html('<strong>Error</strong>: ' + e.message);
+			}, false);
+		}
+	});
 });

@@ -3548,8 +3548,10 @@ _mejs2.default.players = {};
 var config = exports.config = {
 	// url to poster (to fix iOS 3.x)
 	poster: '',
-	// When the video is ended, we can show the poster.
+	// When the video is ended, show the poster.
 	showPosterWhenEnded: false,
+	// When the video is paused, show the poster.
+	showPosterWhenPaused: false,
 	// default if the <video width> is not specified
 	defaultVideoWidth: 480,
 	// default if the <video height> is not specified
@@ -4821,6 +4823,16 @@ var MediaElementPlayer = function () {
 			if (player.options.showPosterWhenEnded && player.options.autoRewind) {
 				media.addEventListener('ended', function () {
 					poster.show();
+				}, false);
+			}
+
+			if (player.options.showPosterWhenPaused) {
+				media.addEventListener('pause', function () {
+					// To avoid displaying the poster when video ended, since it
+					// triggers a pause event as well
+					if (!media.ended) {
+						poster.show();
+					}
 				}, false);
 			}
 		}

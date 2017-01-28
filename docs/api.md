@@ -36,6 +36,7 @@ Parameter | Type | Default | Description
 classPrefix | string | `mejs__` | Class prefix for player elements
 poster | string | _(empty)_ | Poster URL that overrides `poster` attribute
 showPosterWhenEnded | boolean | `false` | When the video is ended, show the poster
+showPosterWhenPaused | boolean | `false` | When the video is paused, show the poster
 defaultVideoWidth | number | `480` | Default width if the `<video>` width is not specified
 defaultVideoHeight | number | `270` | Default height if the `<video>` height is not specified
 videoWidth | number | `-1` | If set, overrides `<video>` width
