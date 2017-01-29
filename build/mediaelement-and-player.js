@@ -1695,6 +1695,7 @@ Object.assign(_player2.default.prototype, {
 		var t = this,
 		    mouseIsDown = false,
 		    mouseIsOver = false,
+		    forcedHandlePause = false,
 		    lastKeyPressTime = 0,
 		    startedPaused = false,
 		    autoRewindInitial = player.options.autoRewind,
@@ -1906,6 +1907,12 @@ Object.assign(_player2.default.prototype, {
 			if (media.duration !== Infinity) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
+					
+					if(!media.paused){
+						t.media.pause();
+						forcedHandlePause = true;
+					}
+					
 					mouseIsDown = true;
 					handleMouseMove(e);
 					t.globalBind('mousemove.dur touchmove.dur', function (e) {
@@ -1920,6 +1927,11 @@ Object.assign(_player2.default.prototype, {
 					});
 				}
 			}
+		}).on('mouseup', function (e) {
+			 if(forcedHandlePause){
+				 t.media.play();
+				 forcedHandlePause = true;
+			 }			
 		}).on('mouseenter', function (e) {
 			if (media.duration !== Infinity) {
 				mouseIsOver = true;
