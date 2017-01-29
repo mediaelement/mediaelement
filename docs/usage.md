@@ -6,6 +6,7 @@
 * [NPM/Meteor](#npm-meteor)
 * [RequireJS](#requirejs)
 * [Use of Renderers](#renderers-usage)
+* [Destroy player](#destroy)
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
@@ -207,5 +208,38 @@ HLS shim | `flash_hls` | --- | ---
 M(PEG)-DASH shim | `flash_dash` | --- | ---
 
 
+<a id="destroy"></a>
+## Destroy player
+
+In order to destroy the player, you must pause the player and then invoke the `remove()` method.
+```javascript
+
+var player = new MediaElementPlayer('#player');
+
+// Using jQuery:
+// var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
+// var player = mejs.players[playerId];
+
+
+if (!player.paused) {
+        player.pause();	
+}
+
+player.remove();
+
+// If you wanna destroy COMPLETELY the player (including also the `video` tag) use the above and also the following:
+var videos = document.getElementsByTagName('video');
+for( var i = 0, total = videos.length; i < total; i++ ){ 
+        videos[i].parentNode.removeChild(videos[i]);
+}
+
+
+// Using jQuery:
+// $('video').each(function() {
+//         $(this).remove();
+// });
+```
+
+Same code can be used for `<audio>` elements.
 ________
 [Back to Main](../README.md)

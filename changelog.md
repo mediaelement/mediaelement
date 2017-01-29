@@ -7,6 +7,7 @@
 * Added `hideVideoControlsOnPause` configuration element to hide controls when media is paused @ron666
 * Added `showPosterWhenPaused` option and updated documentation @ron666
 * Added new media to demo file to match main website and reformatted `demo/demo.js` @ron666
+* Added missing method call when removing media through `remove()` method and documented workflow to remove player @ron666
 
 *3.0.2 (2017/01/27)*
 

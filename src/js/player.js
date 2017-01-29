@@ -1642,7 +1642,12 @@ class MediaElementPlayer {
 			t.$node.insertBefore(t.container);
 		}
 
+		if (typeof t.media.destroy === 'function') {
+			t.media.destroy();
+		}
+
 		t.media.remove();
+
 
 		// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to
 		// pause a non existent Flash API.
