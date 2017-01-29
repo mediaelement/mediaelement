@@ -9,7 +9,7 @@
 * Added new media to demo file to match main website and reformatted `demo/demo.js` @ron666
 * Added missing method call when removing media through `remove()` method and documented workflow to remove player @ron666
 * Added `previewMode` config element and flag to mute/unmute when using that mode @ron666
-* Added new array element to map all read-only properties to avoid `TypeError` on native renderers @ron666
+* Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
 
 *3.0.2 (2017/01/27)*
 
