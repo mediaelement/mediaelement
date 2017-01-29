@@ -3640,6 +3640,10 @@ var config = exports.config = {
 	enableKeyboard: true,
 	// when this player starts, it will pause other players
 	pauseOtherPlayers: true,
+	// media starts playing when users mouse hovers on it, and resets when leaving player area
+	previewMode: false,
+	// when playing in preview mode, turn on/off sound
+	muteOnPreviewMode: true,
 	// array of keyboard actions such as play/pause
 	keyActions: [{
 		keys: [32, // SPACE
@@ -4218,6 +4222,15 @@ var MediaElementPlayer = function () {
 										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
+
+								if (t.options.previewMode) {
+
+									if (t.options.muteOnPreviewMode) {
+										t.media.setMuted(true);
+									}
+
+									t.media.play();
+								}
 							}).on('mousemove', function () {
 								if (t.controlsEnabled) {
 									if (!t.controlsAreVisible) {
@@ -4232,6 +4245,11 @@ var MediaElementPlayer = function () {
 									if (!t.media.paused && !t.options.alwaysShowControls) {
 										t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 									}
+								}
+
+								if (t.options.previewMode) {
+									t.media.pause();
+									t.media.setCurrentTime(0);
 								}
 							});
 							// }).on('mouseover', () => {

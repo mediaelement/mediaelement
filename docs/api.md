@@ -72,6 +72,8 @@ isVideo | boolean | `true` | Only for dynamic purposes
 stretching | string | `auto` | Stretching modes for video player. If `auto` is set, player will try to find the `max-width` and `max-height` CSS styles to turn it into `responsive` mode; otherwise, will set the dimensions specified in the tag (same as setting this option as `none`). The `fill` mode will try to use the available space to make the video fit and, when window is resized, it will crop the dimensions to center it according to the available space.
 enableKeyboard | boolean | `true` | Turns keyboard support on and off for this instance
 pauseOtherPlayers | boolean | `true` | When focused player starts, it will pause other players
+previewMode | boolean | `false` | Media starts playing when users mouse hovers on it, and resets when leaving player area
+muteOnPreviewMode | boolean | `true` | When playing in preview mode, turn on/off sound
 keyActions | array | `[...]` | Keyboard actions to trigger different actions. Accepts array of objects in format: `{keys: [1,2,3...], action: function(player, media) { ... }}`. To see the entire list, please check `/src/js/mediaelementplayer-player.js`
 duration | number | `-1` | Start point to detect changes on media time duration
 timeAndDurationSeparator | string | `<span> | </span>` | Separator between the current time and the total duration of media being played
