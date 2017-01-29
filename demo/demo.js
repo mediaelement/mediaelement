@@ -78,8 +78,6 @@ $(document).ready(function () {
 
 	$('video, audio').mediaelementplayer({
 		stretching: stretching,
-		previewMode: true,
-		muteOnPreviewMode: true,
 		pluginPath: '../build/',
 		success: function (media) {
 			$(media).closest('.media-wrapper').children('div:first').attr('lang', mejs.i18n.language());
