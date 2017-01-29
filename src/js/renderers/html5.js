@@ -78,7 +78,9 @@ const HtmlMediaElement = {
 				node[`get${capName}`] = () => node[propName];
 
 				node[`set${capName}`] = (value) => {
-					node[propName] = value;
+					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+						node[propName] = value;
+					}
 				};
 			}
 		;

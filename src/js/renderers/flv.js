@@ -179,17 +179,19 @@ const FlvNativeRenderer = {
 				node[`get${capName}`] = () => flvPlayer !== null ?  node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (flvPlayer !== null) {
-						node[propName] = value;
+					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+						if (flvPlayer !== null) {
+							node[propName] = value;
 
-						if (propName === 'src') {
-							flvPlayer.detachMediaElement();
-							flvPlayer.attachMediaElement(node);
-							flvPlayer.load();
+							if (propName === 'src') {
+								flvPlayer.detachMediaElement();
+								flvPlayer.attachMediaElement(node);
+								flvPlayer.load();
+							}
+						} else {
+							// store for after "READY" event fires
+							stack.push({type: 'set', propName: propName, value: value});
 						}
-					} else {
-						// store for after "READY" event fires
-						stack.push({type: 'set', propName: propName, value: value});
 					}
 				};
 

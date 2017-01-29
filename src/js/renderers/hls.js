@@ -206,26 +206,28 @@ const HlsNativeRenderer = {
 				node[`get${capName}`] = () => hlsPlayer !== null ?  node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (hlsPlayer !== null) {
-						node[propName] = value;
+					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+						if (hlsPlayer !== null) {
+							node[propName] = value;
 
-						if (propName === 'src') {
+							if (propName === 'src') {
 
-							hlsPlayer.destroy();
-							hlsPlayer = null;
-							hlsPlayer = NativeHls.createInstance({
-								options: options.hls,
-								id: id
-							});
+								hlsPlayer.destroy();
+								hlsPlayer = null;
+								hlsPlayer = NativeHls.createInstance({
+									options: options.hls,
+									id: id
+								});
 
-							hlsPlayer.attachMedia(node);
-							hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, () => {
-								hlsPlayer.loadSource(value);
-							});
+								hlsPlayer.attachMedia(node);
+								hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, () => {
+									hlsPlayer.loadSource(value);
+								});
+							}
+						} else {
+							// store for after "READY" event fires
+							stack.push({type: 'set', propName: propName, value: value});
 						}
-					} else {
-						// store for after "READY" event fires
-						stack.push({type: 'set', propName: propName, value: value});
 					}
 				};
 
