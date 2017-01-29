@@ -158,7 +158,7 @@ $('video').mediaelementplayer({
     		// media.hlsPlayer is the instance of HLS.js in MediaElement
     		// each one of the renderers has a player instance
     		// See `Use of Renderers` above for more information
-            if (media.hlsPlayer !== undefined) {
+            if (media.rendererName === 'native_hls' && media.hlsPlayer !== undefined) {
             	
             	media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
             		// All the code when this event is reached...
@@ -168,7 +168,7 @@ $('video').mediaelementplayer({
                 // Manifest file was parsed, invoke loading method
                 media.hlsPlayer.on('hlsManifestParsed', function() {
             		// All the code when this event is reached...
-            		console.log()
+            		console.log('Manifest parsed!');
             
                 });
                 
