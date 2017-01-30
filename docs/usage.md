@@ -15,9 +15,24 @@
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
+## Standalone
+```html
+<script>
+
+    var player = new MediaElement('#player', {
+    	pluginPath: "/path/to/shims/", 
+    	success: function(mediaElement, originalNode) {
+            // do things
+            
+        }
+    });
+
+</script>
+```
+
 <a id="automatic"></a>
 ### Automatic start
-You can avoid running any startup scripts by added `class="mejs-player"` to the `<video>` or `<audio>` tag. Options can be added using the `data-mejsoptions` attribute.
+You can avoid running any startup scripts by adding `class="mejs-player"` to the `<video>` or `<audio>` tag. All the player configuration can be added through `data-mejsoptions` attribute.
 ```html	
 <video src="myvideo.mp4" width="320" height="240" 
 		class="mejs-player" 
@@ -28,9 +43,14 @@ You can avoid running any startup scripts by added `class="mejs-player"` to the 
 ### Vanilla JavaScript
 ```html
 <script>
-var player = new MediaElementPlayer('#player', {pluginPath: "/path/to/shims/", success: function(mediaElement, originalNode) {
-	// do things
-}});
+
+    var player = new MediaElementPlayer('#player', {
+    	pluginPath: "/path/to/shims/", 
+    	success: function(mediaElement, originalNode) {
+	        // do things
+        }
+    });
+    
 </script>	
 ```
 
@@ -38,21 +58,25 @@ var player = new MediaElementPlayer('#player', {pluginPath: "/path/to/shims/", s
 ### jQuery
 ```html
 <script>
-$('#mediaplayer').mediaelementplayer({pluginPath: "/path/to/shims/", success: function(mediaElement, originalNode) {
-	// do things
-}});
 
-// To access player after its creation through jQuery use:
-var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
-// or $('#mediaplayer').closest('.mejs-container').attr('id') in "legacy" stylesheet
+    $('#mediaplayer').mediaelementplayer({
+    	pluginPath: "/path/to/shims/", 
+    	success: function(mediaElement, originalNode) {
+	        // do things
+        }
+    });
 
-var player = mejs.players[playerId];
-
-// With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
-// i.e., if you wanna exit fullscreen on iPhone using the player, use this:
-var player = $('#mediaplayer')[0];
-player.webkitExitFullScreen();
- 
+    // To access player after its creation through jQuery use:
+    var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
+    // or $('#mediaplayer').closest('.mejs-container').attr('id') in "legacy" stylesheet
+    
+    var player = mejs.players[playerId];
+    
+    // With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
+    // i.e., if you wanna exit fullscreen on iPhone using the player, use this:
+    var player = $('#mediaplayer')[0];
+    player.webkitExitFullScreen();
+    
 </script>
 ```
 
@@ -70,7 +94,7 @@ import 'mediaelement/player';
 import 'mediaelement/all';
 ```
 
-**IMPORTANT**: In order to use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
+**IMPORTANT**: To ensure you can use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
 
 1. Create a `jquery-global.js` file that contains:
 ```javascript
@@ -135,9 +159,8 @@ However, if you need to use just a subset of renderers in a specific order, you 
 mejs.Renderers.order = ['native_dash', 'flash_dash'];
 
 $('video, audio').mediaelementplayer({
-    // Use only M(PEG)DASH renderers
-    renderers: ['native_dash', 'flash_dash'],
-    ...
+    renderers: ['native_dash', 'flash_dash'], // Use only M(PEG)DASH renderers
+    // More configuration
 });
 ```
 
