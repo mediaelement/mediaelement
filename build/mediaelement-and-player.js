@@ -1671,8 +1671,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
    
-	function setCurrentRailMain(t,fakeTime){
- 
+	function setCurrentRailMain(t,fakeTime){ 
 		if (t.media.currentTime !== undefined && t.media.duration) {
 		var nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
 
