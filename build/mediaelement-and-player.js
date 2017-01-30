@@ -1670,6 +1670,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * This feature creates a progress bar with a slider in the control bar, and updates it based on native events.
  */
 
+   
+	function setCurrentRailMain(t,fakeTime){
+
+		var t = this;
+console.log(t.media.currentTime);
+		if (t.media.currentTime !== undefined && t.media.duration) {
+		var nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
+
+			// update bar and handle
+			if (t.total && t.handle) {
+				var newWidth = Math.round(t.total.width() * nTime / t.media.duration),
+				    handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
+
+				newWidth = t.media.currentTime / t.media.duration * 100;
+				t.current.width(newWidth + '%');
+				t.handle.css('left', handlePos);
+			}
+		}
+	}
+ 
 // Feature configuration
 Object.assign(_player.config, {
 	/**
@@ -1712,6 +1732,9 @@ Object.assign(_player2.default.prototype, {
 		t.timefloat = controls.find('.' + t.options.classPrefix + 'time-float');
 		t.timefloatcurrent = controls.find('.' + t.options.classPrefix + 'time-float-current');
 		t.slider = controls.find('.' + t.options.classPrefix + 'time-slider');
+		
+		t.newTime = 0;
+		t.forcedHandlePause = false;
 
 		/**
    *
@@ -1722,8 +1745,7 @@ Object.assign(_player2.default.prototype, {
 
 			var offset = t.total.offset(),
 			    width = t.total.width(),
-			    percentage = 0,
-			    newTime = 0,
+			    percentage = 0, 
 			    pos = 0,
 			    x = void 0;
 
@@ -1746,12 +1768,13 @@ Object.assign(_player2.default.prototype, {
 
 				pos = x - offset.left;
 				percentage = pos / width;
-				newTime = percentage <= 0.02 ? 0 : percentage * media.duration;
+				t.newTime = percentage <= 0.02 ? 0 : percentage * media.duration;
 
 				// seek to where the mouse is
-				if (mouseIsDown && newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
-					media.setCurrentTime(newTime);
-				}
+				if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) { 
+					t.setCurrentRailHandle(t.newTime);
+					t.updateCurrent(t.newTime); 
+				} 
 
 				// position floating time box
 				if (!_constants.HAS_TOUCH) {
@@ -1801,6 +1824,16 @@ Object.assign(_player2.default.prototype, {
 			if (now - lastKeyPressTime >= 1000) {
 				media.play();
 			}
+		},
+		handleMouseup = function handleMouseup(){
+			 t.container.removeClass('mouseIsDownSlider');
+			 if(t.forcedHandlePause){
+				t.media.play(); 
+			 }			
+			if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+				media.setCurrentTime(t.newTime);
+			}				 
+			t.forcedHandlePause = false;
 		};
 
 		// Events
@@ -1919,6 +1952,7 @@ Object.assign(_player2.default.prototype, {
 						handleMouseMove(e);
 					});
 					t.globalBind('mouseup.dur touchend.dur', function () {
+						handleMouseup();
 						mouseIsDown = false;
 						if (t.timefloat !== undefined) {
 							t.timefloat.hide();
@@ -1926,12 +1960,7 @@ Object.assign(_player2.default.prototype, {
 						t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
 					});
 				}
-			}
-		}).on('mouseup', function (e) {
-			 if(forcedHandlePause){
-				 t.media.play();
-				 forcedHandlePause = true;
-			 }			
+			} 		
 		}).on('mouseenter', function (e) {
 			if (media.duration !== Infinity) {
 				mouseIsOver = true;
@@ -1960,7 +1989,9 @@ Object.assign(_player2.default.prototype, {
 		media.addEventListener('progress', function (e) {
 			if (media.duration !== Infinity) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if(!t.forcedHandlePause){
+					player.setCurrentRail(e);
+				}
 			} else if (!controls.find('.' + t.options.classPrefix + 'broadcast').length) {
 				controls.find('.' + t.options.classPrefix + 'time-rail').empty().html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
 			}
@@ -1970,7 +2001,9 @@ Object.assign(_player2.default.prototype, {
 		media.addEventListener('timeupdate', function (e) {
 			if (media.duration !== Infinity) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if(!t.forcedHandlePause){
+					player.setCurrentRail(e);
+				}
 				updateSlider(e);
 			} else if (!controls.find('.' + t.options.classPrefix + 'broadcast').length) {
 				controls.find('.' + t.options.classPrefix + 'time-rail').empty().html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
@@ -2026,23 +2059,15 @@ Object.assign(_player2.default.prototype, {
   * Update the slider's width depending on the current time
   *
   */
-	setCurrentRail: function setCurrentRail() {
-
+	setCurrentRailHandle: function setCurrentRailHandle(fakeTime) {
 		var t = this;
-console.log(t.media.currentTime);
-		if (t.media.currentTime !== undefined && t.media.duration) {
-
-			// update bar and handle
-			if (t.total && t.handle) {
-				var newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
-				    handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
-
-				newWidth = t.media.currentTime / t.media.duration * 100;
-				t.current.width(newWidth + '%');
-				t.handle.css('left', handlePos);
-			}
-		}
-	}
+		setCurrentRailMain(t,fakeTime);
+		
+	},
+	setCurrentRail: function setCurrentRail() {
+		var t = this;
+		setCurrentRailMain(t);
+	} 
 });
 
 },{"16":16,"27":27,"32":32,"4":4}],11:[function(_dereq_,module,exports){
