@@ -1,4 +1,4 @@
-setCurrentRailMain/*!
+/*!
  * MediaElement.js
  * http://www.mediaelement.com/
  *
@@ -1778,7 +1778,7 @@ Object.assign(_player2.default.prototype, {
 				// position floating time box
 				if (!_constants.HAS_TOUCH) {
 					t.timefloat.css('left', pos);
-					t.timefloatcurrent.html((0, _time.secondsToTimeCode)(newTime, player.options.alwaysShowHours));
+					t.timefloatcurrent.html((0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours));
 					t.timefloat.show();
 				}
 			}
