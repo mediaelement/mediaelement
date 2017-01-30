@@ -5462,6 +5462,11 @@ var YouTubeIframeRenderer = {
 			}
 		};
 
+		// The following will prevent that in mobile devices, YouTube is displayed in fullscreen when using audio
+		if (isAudio) {
+			youtubeSettings.playerVars.playsinline = 1;
+		}
+
 		// send it off for async loading and creation
 		YouTubeApi.enqueueIframe(youtubeSettings);
 
