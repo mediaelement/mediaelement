@@ -115,20 +115,6 @@ export let config = {
 	enableKeyboard: true,
 	// When this player starts, it will pause other players
 	pauseOtherPlayers: true,
-	// Media starts playing when users mouse hovers on it, and resets when leaving player area
-	previewMode: false,
-	// When playing on preview mode, turn on/off audio completely
-	muteOnPreviewMode: true,
-	// If fade in set in, time when it starts fading in
-	fadeInAudioStart: 0,
-	// When playing media, time interval to fade in audio (must be greater than zero)
-	fadeInAudioInterval: 0,
-	// If fade out set in, time when it starts fading out
-	fadeOutAudioStart: 0,
-	// When playing media, time interval to fade out audio (must be greater than zero)
-	fadeOutAudioInterval: 0,
-	// Percentage in decimals in which media will fade in/out (i.e., 0.02 = 2%)
-	fadePercent: 0.02,
 	// Array of keyboard actions such as play/pause
 	keyActions: [
 		{
@@ -762,15 +748,6 @@ class MediaElementPlayer {
 								t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 							}
 						}
-
-						if (t.options.previewMode) {
-
-							if (t.options.muteOnPreviewMode) {
-								t.media.setMuted(true);
-							}
-
-							t.media.play();
-						}
 					})
 					.on('mousemove', () => {
 						if (t.controlsEnabled) {
@@ -787,11 +764,6 @@ class MediaElementPlayer {
 							if (!t.media.paused && !t.options.alwaysShowControls) {
 								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 							}
-						}
-
-						if (t.options.previewMode) {
-							t.media.pause();
-							t.media.setCurrentTime(0);
 						}
 					});
 					// }).on('mouseover', () => {
@@ -918,64 +890,6 @@ class MediaElementPlayer {
 						t.updateCurrent();
 					}
 					t.setControlsSize();
-				}
-
-				if (t.options.fadeInAudioInterval && Math.floor(t.media.currentTime) === t.options.fadeInAudioStart) {
-
-					t.media.setVolume(0);
-
-					let
-						volume = 0,
-						audioInterval = t.options.fadeInAudioInterval,
-						interval = setInterval(() => {
-
-							// Increase volume by step as long as it is below 1
-
-							if (volume < 1) {
-								volume += t.options.fadePercent;
-								if (volume > 1) {
-									volume = 1;
-								}
-
-								// limit to 2 decimal places
-								t.media.setVolume(volume.toFixed(2));
-
-							} else {
-								// Stop firing interval when 1 is reached
-								clearInterval(interval);
-
-							}
-						}, audioInterval)
-					;
-				}
-
-				if (t.options.fadeOutAudioInterval && Math.floor(t.media.currentTime) === t.options.fadeOutAudioStart) {
-
-					t.media.setVolume(1);
-
-					let
-						volume = 1,
-						audioInterval = t.options.fadeOutAudioInterval,
-						interval = setInterval(() => {
-
-							// Increase volume by step as long as it is above 0
-
-							if (volume > 0) {
-								volume -= t.options.fadePercent;
-								if (volume < 0) {
-									volume = 0;
-								}
-
-								// limit to 2 decimal places
-								t.media.setVolume(volume.toFixed(2));
-
-							} else {
-								// Stop firing interval when 0 is reached
-								clearInterval(interval);
-
-							}
-						}, audioInterval)
-					;
 				}
 			}, false);
 
