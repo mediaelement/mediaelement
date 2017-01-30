@@ -2029,7 +2029,7 @@ Object.assign(_player2.default.prototype, {
 	setCurrentRail: function setCurrentRail() {
 
 		var t = this;
-
+console.log(t.media.currentTime);
 		if (t.media.currentTime !== undefined && t.media.duration) {
 
 			// update bar and handle
