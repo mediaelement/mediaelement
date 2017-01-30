@@ -9306,8 +9306,9 @@ var YouTubeIframeRenderer = {
 		mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 
-		var height = mediaElement.originalNode.height,
-		    width = mediaElement.originalNode.width,
+		var isAudio = mediaElement.originalNode.tagName.toLowerCase() === 'audio',
+		    height = isAudio ? '0' : mediaElement.originalNode.height,
+		    width = isAudio ? '0' : mediaElement.originalNode.width,
 		    videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
 		    youtubeSettings = {
 			id: youtube.id,
