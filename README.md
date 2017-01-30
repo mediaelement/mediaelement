@@ -18,7 +18,6 @@ One file. Any browser. Same UI.
 # Table of Contents
 
 * [Introduction](#intro)
-* [Browser and Device support](#browser-support)
 * [Migrating from `2.x` to `3.x` version](#migration)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
