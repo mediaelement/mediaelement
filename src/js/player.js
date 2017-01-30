@@ -31,35 +31,35 @@ export let config = {
 	showPosterWhenEnded: false,
 	// When the video is paused, show the poster.
 	showPosterWhenPaused: false,
-	// default if the <video width> is not specified
+	// Default if the <video width> is not specified
 	defaultVideoWidth: 480,
-	// default if the <video height> is not specified
+	// Default if the <video height> is not specified
 	defaultVideoHeight: 270,
-	// if set, overrides <video width>
+	// If set, overrides <video width>
 	videoWidth: -1,
-	// if set, overrides <video height>
+	// If set, overrides <video height>
 	videoHeight: -1,
-	// default if the user doesn't specify
+	// Default if the user doesn't specify
 	defaultAudioWidth: 400,
-	// default if the user doesn't specify
+	// Default if the user doesn't specify
 	defaultAudioHeight: 40,
-	// default amount to move back when back key is pressed
+	// Default amount to move back when back key is pressed
 	defaultSeekBackwardInterval: (media) => media.duration * 0.05,
-	// default amount to move forward when forward key is pressed
+	// Default amount to move forward when forward key is pressed
 	defaultSeekForwardInterval: (media) => media.duration * 0.05,
-	// set dimensions via JS instead of CSS
+	// Set dimensions via JS instead of CSS
 	setDimensions: true,
-	// width of audio player
+	// Width of audio player
 	audioWidth: -1,
-	// height of audio player
+	// Height of audio player
 	audioHeight: -1,
-	// initial volume when the player starts (overridden by user cookie)
+	// Initial volume when the player starts (overridden by user cookie)
 	startVolume: 0.8,
-	// useful for <audio> player loops
+	// Useful for <audio> player loops
 	loop: false,
-	// rewind to beginning when media ends
+	// Rewind to beginning when media ends
 	autoRewind: true,
-	// resize to media dimensions
+	// Resize to media dimensions
 	enableAutosize: true,
 	/*
 	 * Time format to use. Default: 'mm:ss'
@@ -77,11 +77,11 @@ export let config = {
 	 * Format 'm:s': 1:15
 	 */
 	timeFormat: '',
-	// forces the hour marker (##:00:00)
+	// Force the hour marker (##:00:00)
 	alwaysShowHours: false,
-	// show framecount in timecode (##:00:00:00)
+	// Show framecount in timecode (##:00:00:00)
 	showTimecodeFrameCount: false,
-	// used when showTimecodeFrameCount is set to true
+	// Used when showTimecodeFrameCount is set to true
 	framesPerSecond: 25,
 	// Hide controls when playing and mouse is not over the video
 	alwaysShowControls: false,
@@ -97,29 +97,39 @@ export let config = {
 	controlsTimeoutMouseEnter: 2500,
 	// Time in ms to trigger the timer when mouse leaves
 	controlsTimeoutMouseLeave: 1000,
-	// force iPad's native controls
+	// Force iPad's native controls
 	iPadUseNativeControls: false,
-	// force iPhone's native controls
+	// Force iPhone's native controls
 	iPhoneUseNativeControls: false,
-	// force Android's native controls
+	// Force Android's native controls
 	AndroidUseNativeControls: false,
-	// features to show
+	// Features to show
 	features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'],
-	// only for dynamic
+	// Only for dynamic
 	isVideo: true,
-	// stretching modes (auto, fill, responsive, none)
+	// Stretching modes (auto, fill, responsive, none)
 	stretching: 'auto',
-	// prefix class names on elements
+	// Prefix class names on elements
 	classPrefix: 'mejs__',
-	// turns keyboard support on and off for this instance
+	// Turn keyboard support on and off for this instance
 	enableKeyboard: true,
-	// when this player starts, it will pause other players
+	// When this player starts, it will pause other players
 	pauseOtherPlayers: true,
-	// media starts playing when users mouse hovers on it, and resets when leaving player area
+	// Media starts playing when users mouse hovers on it, and resets when leaving player area
 	previewMode: false,
-	// when playing in preview mode, turn on/off sound
+	// When playing on preview mode, turn on/off audio completely
 	muteOnPreviewMode: true,
-	// array of keyboard actions such as play/pause
+	// If fade in set in, time when it starts fading in
+	fadeInAudioStart: 0,
+	// When playing media, time interval to fade in audio (must be greater than zero)
+	fadeInAudioInterval: 0,
+	// If fade out set in, time when it starts fading out
+	fadeOutAudioStart: 0,
+	// When playing media, time interval to fade out audio (must be greater than zero)
+	fadeOutAudioInterval: 0,
+	// Percentage in decimals in which media will fade in/out (i.e., 0.02 = 2%)
+	fadePercent: 0.02,
+	// Array of keyboard actions such as play/pause
 	keyActions: [
 		{
 			keys: [
@@ -896,8 +906,8 @@ class MediaElementPlayer {
 			// Only change the time format when necessary
 			let duration = null;
 			t.media.addEventListener('timeupdate', () => {
-				if (duration !== this.duration) {
-					duration = this.duration;
+				if (duration !== t.media.duration) {
+					duration = t.media.duration;
 					calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
 
 					// make sure to fill in and resize the controls (e.g., 00:00 => 01:13:15
@@ -908,7 +918,64 @@ class MediaElementPlayer {
 						t.updateCurrent();
 					}
 					t.setControlsSize();
+				}
 
+				if (t.options.fadeInAudioInterval && Math.floor(t.media.currentTime) === t.options.fadeInAudioStart) {
+
+					t.media.setVolume(0);
+
+					let
+						volume = 0,
+						audioInterval = t.options.fadeInAudioInterval,
+						interval = setInterval(() => {
+
+							// Increase volume by step as long as it is below 1
+
+							if (volume < 1) {
+								volume += t.options.fadePercent;
+								if (volume > 1) {
+									volume = 1;
+								}
+
+								// limit to 2 decimal places
+								t.media.setVolume(volume.toFixed(2));
+
+							} else {
+								// Stop firing interval when 1 is reached
+								clearInterval(interval);
+
+							}
+						}, audioInterval)
+					;
+				}
+
+				if (t.options.fadeOutAudioInterval && Math.floor(t.media.currentTime) === t.options.fadeOutAudioStart) {
+
+					t.media.setVolume(1);
+
+					let
+						volume = 1,
+						audioInterval = t.options.fadeOutAudioInterval,
+						interval = setInterval(() => {
+
+							// Increase volume by step as long as it is above 0
+
+							if (volume > 0) {
+								volume -= t.options.fadePercent;
+								if (volume < 0) {
+									volume = 0;
+								}
+
+								// limit to 2 decimal places
+								t.media.setVolume(volume.toFixed(2));
+
+							} else {
+								// Stop firing interval when 0 is reached
+								clearInterval(interval);
+
+							}
+						}, audioInterval)
+					;
 				}
 			}, false);
 

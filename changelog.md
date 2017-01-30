@@ -11,6 +11,7 @@
 * Added `previewMode` config element and flag to mute/unmute when using that mode @ron666
 * Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
 * Added workflow to use YouTube as an audio player @ron666
+* Added new configuration elements and workflow to fade in/out audio (both in `video` and `audio` tags) @ron666
 
 *3.0.2 (2017/01/27)*
 
