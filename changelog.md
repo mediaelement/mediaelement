@@ -9,10 +9,9 @@
 * Added `showPosterWhenPaused` option and updated documentation @ron666
 * Added new media to demo file to match main website and reformatted `demo/demo.js` @ron666
 * Added missing method call when removing media through `remove()` method and documented workflow to remove player @ron666
-* Added `previewMode` config element and flag to mute/unmute when using that mode @ron666
 * Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
 * Added workflow to use YouTube as an audio player @ron666
-* Added new configuration elements and workflow to fade in/out audio (both in `video` and `audio` tags) @ron666
+* Updated usage.md file (https://github.com/johndyer/mediaelement/pull/2043) @theomathieubhvr 
 
 *3.0.2 (2017/01/27)*
 
