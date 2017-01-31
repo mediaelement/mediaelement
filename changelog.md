@@ -11,6 +11,7 @@
 * Added missing method call when removing media through `remove()` method and documented workflow to remove player @ron666
 * Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
 * Added workflow to use YouTube as an audio player @ron666
+* Updated usage.md file (https://github.com/johndyer/mediaelement/pull/2043) @theomathieubhvr 
 
 *3.0.2 (2017/01/27)*
 
