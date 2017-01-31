@@ -19,7 +19,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 ```html
 <script>
 
-    var player = new MediaElement('#player', {
+    var player = new MediaElement('player', {
     	pluginPath: "/path/to/shims/", 
     	success: function(mediaElement, originalNode) {
             // do things
@@ -44,7 +44,7 @@ You can avoid running any startup scripts by adding `class="mejs-player"` to the
 ```html
 <script>
 
-    var player = new MediaElementPlayer('#player', {
+    var player = new MediaElementPlayer('player', {
     	pluginPath: "/path/to/shims/", 
     	success: function(mediaElement, originalNode) {
 	        // do things
