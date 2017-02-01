@@ -58,7 +58,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(14);
 
-var _general = _dereq_(19);
+var _general = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -429,7 +429,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"14":14,"19":19,"6":6}],5:[function(_dereq_,module,exports){
+},{"14":14,"21":21,"6":6}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -448,7 +448,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _media = _dereq_(20);
+var _media = _dereq_(22);
 
 var _renderer = _dereq_(7);
 
@@ -861,7 +861,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"20":20,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1062,7 +1062,7 @@ var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _constants = _dereq_(17);
+var _constants = _dereq_(19);
 
 var Features = _interopRequireWildcard(_constants);
 
@@ -1545,7 +1545,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"17":17,"2":2,"3":3,"4":4,"6":6}],9:[function(_dereq_,module,exports){
+},{"16":16,"19":19,"2":2,"3":3,"4":4,"6":6}],9:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -1658,9 +1658,9 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(17);
+var _constants = _dereq_(19);
 
-var _time = _dereq_(21);
+var _time = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2033,14 +2033,14 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"17":17,"21":21,"4":4}],11:[function(_dereq_,module,exports){
+},{"16":16,"19":19,"24":24,"4":4}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(21);
+var _time = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2163,7 +2163,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"21":21}],12:[function(_dereq_,module,exports){
+},{"16":16,"24":24}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _mejs = _dereq_(6);
@@ -2178,7 +2178,7 @@ var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(21);
+var _time = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3024,7 +3024,7 @@ if ('x\n\ny'.split(/\n/gi).length !== 3) {
 	};
 }
 
-},{"16":16,"21":21,"4":4,"6":6}],13:[function(_dereq_,module,exports){
+},{"16":16,"24":24,"4":4,"6":6}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -3035,7 +3035,7 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(17);
+var _constants = _dereq_(19);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3325,7 +3325,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"17":17,"4":4}],14:[function(_dereq_,module,exports){
+},{"16":16,"19":19,"4":4}],14:[function(_dereq_,module,exports){
 'use strict';
 
 /*!
@@ -3529,13 +3529,13 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(17);
+var _constants = _dereq_(19);
 
-var _general = _dereq_(19);
+var _general = _dereq_(21);
 
-var _time = _dereq_(21);
+var _time = _dereq_(24);
 
-var _dom = _dereq_(18);
+var _dom = _dereq_(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5142,7 +5142,697 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"17":17,"18":18,"19":19,"2":2,"21":21,"3":3,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
+},{"19":19,"2":2,"20":20,"21":21,"24":24,"3":3,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.PluginDetector = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _mejs = _dereq_(6);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+var _i18n = _dereq_(4);
+
+var _i18n2 = _interopRequireDefault(_i18n);
+
+var _renderer = _dereq_(7);
+
+var _dom = _dereq_(20);
+
+var _constants = _dereq_(19);
+
+var _media = _dereq_(22);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Shim that falls back to Flash if a media type is not supported.
+ *
+ * Any format not supported natively, including, RTMP, FLV, HLS and M(PEG)-DASH (if browser does not support MSE),
+ * will play using Flash.
+ */
+
+/**
+ * Core detector, plugins are added below
+ *
+ */
+var PluginDetector = exports.PluginDetector = {
+	/**
+  * Cached version numbers
+  * @type {Array}
+  */
+	plugins: [],
+
+	/**
+  * Test a plugin version number
+  * @param {String} plugin - In this scenario 'flash' will be tested
+  * @param {Array} v - An array containing the version up to 3 numbers (major, minor, revision)
+  * @return {Boolean}
+  */
+	hasPluginVersion: function hasPluginVersion(plugin, v) {
+		var pv = PluginDetector.plugins[plugin];
+		v[1] = v[1] || 0;
+		v[2] = v[2] || 0;
+		return pv[0] > v[0] || pv[0] === v[0] && pv[1] > v[1] || pv[0] === v[0] && pv[1] === v[1] && pv[2] >= v[2];
+	},
+
+	/**
+  * Detect plugin and store its version number
+  *
+  * @see PluginDetector.detectPlugin
+  * @param {String} p
+  * @param {String} pluginName
+  * @param {String} mimeType
+  * @param {String} activeX
+  * @param {Function} axDetect
+  */
+	addPlugin: function addPlugin(p, pluginName, mimeType, activeX, axDetect) {
+		PluginDetector.plugins[p] = PluginDetector.detectPlugin(pluginName, mimeType, activeX, axDetect);
+	},
+
+	/**
+  * Obtain version number from the mime-type (all but IE) or ActiveX (IE)
+  *
+  * @param {String} pluginName
+  * @param {String} mimeType
+  * @param {String} activeX
+  * @param {Function} axDetect
+  * @return {int[]}
+  */
+	detectPlugin: function detectPlugin(pluginName, mimeType, activeX, axDetect) {
+
+		var version = [0, 0, 0],
+		    description = void 0,
+		    ax = void 0;
+
+		// Firefox, Webkit, Opera
+		if (_constants.NAV.plugins !== undefined && _typeof(_constants.NAV.plugins[pluginName]) === 'object') {
+			description = _constants.NAV.plugins[pluginName].description;
+			if (description && !(typeof _constants.NAV.mimeTypes !== 'undefined' && _constants.NAV.mimeTypes[mimeType] && !_constants.NAV.mimeTypes[mimeType].enabledPlugin)) {
+				version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
+				for (var i = 0; i < version.length; i++) {
+					version[i] = parseInt(version[i].match(/\d+/), 10);
+				}
+			}
+			// Internet Explorer / ActiveX
+		} else if (_window2.default.ActiveXObject !== undefined) {
+			try {
+				ax = new ActiveXObject(activeX);
+				if (ax) {
+					version = axDetect(ax);
+				}
+			} catch (e) {}
+		}
+		return version;
+	}
+};
+
+/**
+ * Add Flash detection
+ *
+ */
+PluginDetector.addPlugin('flash', 'Shockwave Flash', 'application/x-shockwave-flash', 'ShockwaveFlash.ShockwaveFlash', function (ax) {
+	// adapted from SWFObject
+	var version = [],
+	    d = ax.GetVariable("$version");
+	if (d) {
+		d = d.split(" ")[1].split(",");
+		version = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
+	}
+	return version;
+});
+
+var FlashMediaElementRenderer = {
+
+	/**
+  * Create the player instance and add all native events/methods/properties as possible
+  *
+  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+  * @param {Object} options All the player configuration options passed through constructor
+  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+  * @return {Object}
+  */
+	create: function create(mediaElement, options, mediaFiles) {
+
+		var flash = {},
+		    i = void 0,
+		    il = void 0;
+
+		// store main variable
+		flash.options = options;
+		flash.id = mediaElement.id + '_' + flash.options.prefix;
+		flash.mediaElement = mediaElement;
+
+		// insert data
+		flash.flashState = {};
+		flash.flashApi = null;
+		flash.flashApiStack = [];
+
+		// mediaElements for get/set
+		var props = _mejs2.default.html5media.properties,
+		    assignGettersSetters = function assignGettersSetters(propName) {
+
+			// add to flash state that we will store
+			flash.flashState[propName] = null;
+
+			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+			flash['get' + capName] = function () {
+
+				if (flash.flashApi !== null) {
+
+					if (flash.flashApi['get_' + propName] !== undefined) {
+						var _ret = function () {
+							var value = flash.flashApi['get_' + propName]();
+
+							// special case for buffered to conform to HTML5's newest
+							if (propName === 'buffered') {
+								return {
+									v: {
+										start: function start() {
+											return 0;
+										},
+										end: function end() {
+											return value;
+										},
+										length: 1
+									}
+								};
+							}
+
+							return {
+								v: value
+							};
+						}();
+
+						if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+					} else {
+						return null;
+					}
+				} else {
+					return null;
+				}
+			};
+
+			flash['set' + capName] = function (value) {
+				if (propName === 'src') {
+					value = (0, _media.absolutizeUrl)(value);
+				}
+
+				// send value to Flash
+				if (flash.flashApi !== null && flash.flashApi['set_' + propName] !== undefined) {
+					flash.flashApi['set_' + propName](value);
+				} else {
+					// store for after "READY" event fires
+					flash.flashApiStack.push({
+						type: 'set',
+						propName: propName,
+						value: value
+					});
+				}
+			};
+		};
+
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
+		}
+
+		// add mediaElements for native methods
+		var methods = _mejs2.default.html5media.methods,
+		    assignMethods = function assignMethods(methodName) {
+
+			// run the method on the native HTMLMediaElement
+			flash[methodName] = function () {
+
+				if (flash.flashApi !== null) {
+
+					// send call up to Flash ExternalInterface API
+					if (flash.flashApi['fire_' + methodName]) {
+						try {
+							flash.flashApi['fire_' + methodName]();
+						} catch (e) {
+							
+						}
+					} else {
+						
+					}
+				} else {
+					// store for after "READY" event fires
+					flash.flashApiStack.push({
+						type: 'call',
+						methodName: methodName
+					});
+				}
+			};
+		};
+		methods.push('stop');
+		for (i = 0, il = methods.length; i < il; i++) {
+			assignMethods(methods[i]);
+		}
+
+		// add a ready method that Flash can call to
+		_window2.default['__ready__' + flash.id] = function () {
+
+			flash.flashReady = true;
+			flash.flashApi = _document2.default.getElementById('__' + flash.id);
+
+			var event = (0, _dom.createEvent)('rendererready', flash);
+			mediaElement.dispatchEvent(event);
+
+			// do call stack
+			if (flash.flashApiStack.length) {
+				for (var _i = 0, _il = flash.flashApiStack.length; _i < _il; _i++) {
+
+					var stackItem = flash.flashApiStack[_i];
+
+					if (stackItem.type === 'set') {
+						var propName = stackItem.propName,
+						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+						flash['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						flash[stackItem.methodName]();
+					}
+				}
+			}
+		};
+
+		_window2.default['__event__' + flash.id] = function (eventName, message) {
+
+			var event = (0, _dom.createEvent)(eventName, flash);
+			event.message = message || '';
+
+			// send event from Flash up to the mediaElement
+			flash.mediaElement.dispatchEvent(event);
+		};
+
+		// insert Flash object
+		flash.flashWrapper = _document2.default.createElement('div');
+
+		var autoplay = !!mediaElement.getAttribute('autoplay'),
+		    flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay],
+		    isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
+		    flashHeight = isVideo ? mediaElement.originalNode.height : 1,
+		    flashWidth = isVideo ? mediaElement.originalNode.width : 1;
+
+		if (flash.options.enablePseudoStreaming === true) {
+			flashVars.push('pseudostreamstart=' + flash.options.pseudoStreamingStartQueryParam);
+			flashVars.push('pseudostreamtype=' + flash.options.pseudoStreamingType);
+		}
+
+		mediaElement.appendChild(flash.flashWrapper);
+
+		if (isVideo && mediaElement.originalNode !== null) {
+			mediaElement.originalNode.style.display = 'none';
+		}
+
+		var settings = [];
+
+		if (_constants.IS_IE) {
+			var specialIEContainer = _document2.default.createElement('div');
+			flash.flashWrapper.appendChild(specialIEContainer);
+
+			settings = ['classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"', 'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"', 'id="__' + flash.id + '"', 'width="' + flashWidth + '"', 'height="' + flashHeight + '"'];
+
+			if (!isVideo) {
+				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+			}
+
+			specialIEContainer.outerHTML = '<object ' + settings.join(' ') + '>' + ('<param name="movie" value="' + flash.options.pluginPath + flash.options.filename + '?x=' + new Date() + '" />') + ('<param name="flashvars" value="' + flashVars.join('&amp;') + '" />') + '<param name="quality" value="high" />' + '<param name="bgcolor" value="#000000" />' + '<param name="wmode" value="transparent" />' + '<param name="allowScriptAccess" value="always" />' + '<param name="allowFullScreen" value="true" />' + ('<div>' + _i18n2.default.t('mejs.install-flash') + '</div>') + '</object>';
+		} else {
+
+			settings = ['id="__' + flash.id + '"', 'name="__' + flash.id + '"', 'play="true"', 'loop="false"', 'quality="high"', 'bgcolor="#000000"', 'wmode="transparent"', 'allowScriptAccess="always"', 'allowFullScreen="true"', 'type="application/x-shockwave-flash"', 'pluginspage="//www.macromedia.com/go/getflashplayer"', 'src="' + flash.options.pluginPath + flash.options.filename + '"', 'flashvars="' + flashVars.join('&') + '"', 'width="' + flashWidth + '"', 'height="' + flashHeight + '"'];
+
+			if (!isVideo) {
+				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+			}
+
+			flash.flashWrapper.innerHTML = '<embed ' + settings.join(' ') + '>';
+		}
+
+		flash.flashNode = flash.flashWrapper.lastChild;
+
+		flash.hide = function () {
+			if (isVideo) {
+				flash.flashNode.style.position = 'absolute';
+				flash.flashNode.style.width = '1px';
+				flash.flashNode.style.height = '1px';
+				try {
+					flash.flashNode.style.clip = 'rect(0 0 0 0);';
+				} catch (e) {}
+			}
+		};
+		flash.show = function () {
+			if (isVideo) {
+				flash.flashNode.style.position = '';
+				flash.flashNode.style.width = '';
+				flash.flashNode.style.height = '';
+				try {
+					flash.flashNode.style.clip = '';
+				} catch (e) {}
+			}
+		};
+		flash.setSize = function (width, height) {
+			flash.flashNode.style.width = width + 'px';
+			flash.flashNode.style.height = height + 'px';
+
+			if (flash.flashApi !== null) {
+				flash.flashApi.fire_setSize(width, height);
+			}
+		};
+
+		if (mediaFiles && mediaFiles.length > 0) {
+			for (i = 0, il = mediaFiles.length; i < il; i++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+					flash.setSrc(mediaFiles[i].src);
+					flash.load();
+					break;
+				}
+			}
+		}
+
+		return flash;
+	}
+};
+
+var hasFlash = PluginDetector.hasPluginVersion('flash', [10, 0, 0]);
+
+if (hasFlash) {
+
+	/**
+  * Register media type based on URL structure if Flash is detected
+  *
+  */
+	_media.typeChecks.push(function (url) {
+
+		url = url.toLowerCase();
+
+		if (url.startsWith('rtmp')) {
+			if (url.includes('.mp3')) {
+				return 'audio/rtmp';
+			} else {
+				return 'video/rtmp';
+			}
+		} else if (url.includes('.oga') || url.includes('.ogg')) {
+			return 'audio/ogg';
+		} else if (!_constants.HAS_MSE && !_constants.SUPPORTS_NATIVE_HLS && url.includes('.m3u8')) {
+			return 'application/x-mpegURL';
+		} else if (!_constants.HAS_MSE && url.includes('.mpd')) {
+			return 'application/dash+xml';
+		} else {
+			return null;
+		}
+	});
+
+	// VIDEO
+	var FlashMediaElementVideoRenderer = {
+		name: 'flash_video',
+
+		options: {
+			prefix: 'flash_video',
+			filename: 'mediaelement-flash-video.swf',
+			enablePseudoStreaming: false,
+			// start query parameter sent to server for pseudo-streaming
+			pseudoStreamingStartQueryParam: 'start',
+			// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
+			pseudoStreamingType: 'byte'
+		},
+		/**
+   * Determine if a specific element type can be played with this render
+   *
+   * @param {String} type
+   * @return {Boolean}
+   */
+		canPlayType: function canPlayType(type) {
+			return hasFlash && ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type);
+		},
+
+		create: FlashMediaElementRenderer.create
+
+	};
+	_renderer.renderer.add(FlashMediaElementVideoRenderer);
+
+	// HLS
+	var FlashMediaElementHlsVideoRenderer = {
+		name: 'flash_hls',
+
+		options: {
+			prefix: 'flash_hls',
+			filename: 'mediaelement-flash-video-hls.swf'
+		},
+		/**
+   * Determine if a specific element type can be played with this render
+   *
+   * @param {String} type
+   * @return {Boolean}
+   */
+		canPlayType: function canPlayType(type) {
+			return !_constants.HAS_MSE && hasFlash && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase());
+		},
+
+		create: FlashMediaElementRenderer.create
+	};
+	_renderer.renderer.add(FlashMediaElementHlsVideoRenderer);
+
+	// M(PEG)-DASH
+	var FlashMediaElementMdashVideoRenderer = {
+		name: 'flash_dash',
+
+		options: {
+			prefix: 'flash_dash',
+			filename: 'mediaelement-flash-video-mdash.swf'
+		},
+		/**
+   * Determine if a specific element type can be played with this render
+   *
+   * @param {String} type
+   * @return {Boolean}
+   */
+		canPlayType: function canPlayType(type) {
+			return !_constants.HAS_MSE && hasFlash && ['application/dash+xml'].includes(type);
+		},
+
+		create: FlashMediaElementRenderer.create
+	};
+	_renderer.renderer.add(FlashMediaElementMdashVideoRenderer);
+
+	// AUDIO
+	var FlashMediaElementAudioRenderer = {
+		name: 'flash_audio',
+
+		options: {
+			prefix: 'flash_audio',
+			filename: 'mediaelement-flash-audio.swf'
+		},
+		/**
+   * Determine if a specific element type can be played with this render
+   *
+   * @param {String} type
+   * @return {Boolean}
+   */
+		canPlayType: function canPlayType(type) {
+			return hasFlash && ['audio/mp3'].includes(type);
+		},
+
+		create: FlashMediaElementRenderer.create
+	};
+	_renderer.renderer.add(FlashMediaElementAudioRenderer);
+
+	// AUDIO - ogg
+	var FlashMediaElementAudioOggRenderer = {
+		name: 'flash_audio_ogg',
+
+		options: {
+			prefix: 'flash_audio_ogg',
+			filename: 'mediaelement-flash-audio-ogg.swf'
+		},
+		/**
+   * Determine if a specific element type can be played with this render
+   *
+   * @param {String} type
+   * @return {Boolean}
+   */
+		canPlayType: function canPlayType(type) {
+			return hasFlash && ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type);
+		},
+
+		create: FlashMediaElementRenderer.create
+	};
+	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
+}
+
+},{"19":19,"2":2,"20":20,"22":22,"3":3,"4":4,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+'use strict';
+
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _mejs = _dereq_(6);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+var _renderer = _dereq_(7);
+
+var _dom = _dereq_(20);
+
+var _constants = _dereq_(19);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Native HTML5 Renderer
+ *
+ * Wraps the native HTML5 <audio> or <video> tag and bubbles its properties, events, and methods up to the mediaElement.
+ */
+var HtmlMediaElement = {
+
+	name: 'html5',
+
+	options: {
+		prefix: 'html5'
+	},
+
+	/**
+  * Determine if a specific element type can be played with this render
+  *
+  * @param {String} type
+  * @return {String}
+  */
+	canPlayType: function canPlayType(type) {
+
+		var mediaElement = _document2.default.createElement('video');
+
+		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
+		if (_constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
+			return 'yes';
+		} else if (mediaElement.canPlayType) {
+			return mediaElement.canPlayType(type).replace(/no/, '');
+		} else {
+			return '';
+		}
+	},
+	/**
+  * Create the player instance and add all native events/methods/properties as possible
+  *
+  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+  * @param {Object} options All the player configuration options passed through constructor
+  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+  * @return {Object}
+  */
+	create: function create(mediaElement, options, mediaFiles) {
+
+		var node = null,
+		    id = mediaElement.id + '_' + options.prefix,
+		    i = void 0,
+		    il = void 0;
+
+		// CREATE NODE
+		if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
+			node = _document2.default.createElement('audio');
+			mediaElement.appendChild(node);
+		} else {
+			node = mediaElement.originalNode;
+		}
+
+		node.setAttribute('id', id);
+
+		// WRAPPERS for PROPs
+		var props = _mejs2.default.html5media.properties,
+		    assignGettersSetters = function assignGettersSetters(propName) {
+			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+			node['get' + capName] = function () {
+				return node[propName];
+			};
+
+			node['set' + capName] = function (value) {
+				if (!_mejs2.default.html5media.readOnlyProperties.includes(propName)) {
+					node[propName] = value;
+				}
+			};
+		};
+
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
+		}
+
+		var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+		    assignEvents = function assignEvents(eventName) {
+
+			node.addEventListener(eventName, function (e) {
+				// copy event
+
+				var event = _document2.default.createEvent('HTMLEvents');
+				event.initEvent(e.type, e.bubbles, e.cancelable);
+				// event.srcElement = e.srcElement;
+				// event.target = e.srcElement;
+				mediaElement.dispatchEvent(event);
+			});
+		};
+
+		for (i = 0, il = events.length; i < il; i++) {
+			assignEvents(events[i]);
+		}
+
+		// HELPER METHODS
+		node.setSize = function (width, height) {
+			node.style.width = width + 'px';
+			node.style.height = height + 'px';
+
+			return node;
+		};
+
+		node.hide = function () {
+			node.style.display = 'none';
+
+			return node;
+		};
+
+		node.show = function () {
+			node.style.display = '';
+
+			return node;
+		};
+
+		if (mediaFiles && mediaFiles.length > 0) {
+			for (i = 0, il = mediaFiles.length; i < il; i++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+					node.setAttribute('src', mediaFiles[i].src);
+					break;
+				}
+			}
+		}
+
+		var event = (0, _dom.createEvent)('rendererready', node);
+		mediaElement.dispatchEvent(event);
+
+		return node;
+	}
+};
+
+_window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaElement;
+
+_renderer.renderer.add(HtmlMediaElement);
+
+},{"19":19,"2":2,"20":20,"3":3,"6":6,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5333,7 +6023,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"2":2,"3":3,"6":6}],18:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"6":6}],20:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5430,7 +6120,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.removeEvent = removeEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 
-},{"2":2,"6":6}],19:[function(_dereq_,module,exports){
+},{"2":2,"6":6}],21:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5587,7 +6277,7 @@ _mejs2.default.Utils.isObjectEmpty = isObjectEmpty;
 _mejs2.default.Utils.splitEvents = splitEvents;
 _mejs2.default.Utils.getElementsByClassName = getElementsByClassName;
 
-},{"2":2,"6":6}],20:[function(_dereq_,module,exports){
+},{"2":2,"6":6}],22:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5605,7 +6295,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(19);
+var _general = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5757,7 +6447,216 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"19":19,"6":6}],21:[function(_dereq_,module,exports){
+},{"21":21,"6":6}],23:[function(_dereq_,module,exports){
+'use strict';
+
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Polyfill
+ *
+ * Mimics the missing methods like Object.assign, Array.includes, etc., as a way to avoid including the whole list
+ * of polyfills provided by Babel.
+ */
+
+// IE6,7,8
+// Production steps of ECMA-262, Edition 5, 15.4.4.14
+// Reference: http://es5.github.io/#x15.4.4.14
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function (searchElement, fromIndex) {
+
+		var k = void 0;
+
+		// 1. Let O be the result of calling ToObject passing
+		//	   the this value as the argument.
+		if (undefined === undefined || undefined === null) {
+			throw new TypeError('"this" is null or not defined');
+		}
+
+		var O = Object(undefined);
+
+		// 2. Let lenValue be the result of calling the Get
+		//	   internal method of O with the argument "length".
+		// 3. Let len be ToUint32(lenValue).
+		var len = O.length >>> 0;
+
+		// 4. If len is 0, return -1.
+		if (len === 0) {
+			return -1;
+		}
+
+		// 5. If argument fromIndex was passed let n be
+		//	   ToInteger(fromIndex); else let n be 0.
+		var n = +fromIndex || 0;
+
+		if (Math.abs(n) === Infinity) {
+			n = 0;
+		}
+
+		// 6. If n >= len, return -1.
+		if (n >= len) {
+			return -1;
+		}
+
+		// 7. If n >= 0, then Let k be n.
+		// 8. Else, n<0, Let k be len - abs(n).
+		//	   If k is less than 0, then let k be 0.
+		k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+		// 9. Repeat, while k < len
+		while (k < len) {
+			// a. Let Pk be ToString(k).
+			//   This is implicit for LHS operands of the in operator
+			// b. Let kPresent be the result of calling the
+			//	HasProperty internal method of O with argument Pk.
+			//   This step can be combined with c
+			// c. If kPresent is true, then
+			//	i.	Let elementK be the result of calling the Get
+			//		internal method of O with the argument ToString(k).
+			//   ii.	Let same be the result of applying the
+			//		Strict Equality Comparison Algorithm to
+			//		searchElement and elementK.
+			//  iii.	If same is true, return k.
+			if (k in O && O[k] === searchElement) {
+				return k;
+			}
+			k++;
+		}
+		return -1;
+	};
+}
+
+// document.createEvent for IE8 or other old browsers that do not implement it
+// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
+if (_document2.default.createEvent === undefined) {
+	_document2.default.createEvent = function () {
+
+		var e = void 0;
+
+		e = _document2.default.createEventObject();
+		e.timeStamp = new Date().getTime();
+		e.enumerable = true;
+		e.writable = true;
+		e.configurable = true;
+
+		e.initEvent = function (type, bubbles, cancelable) {
+			undefined.type = type;
+			undefined.bubbles = !!bubbles;
+			undefined.cancelable = !!cancelable;
+			if (!undefined.bubbles) {
+				undefined.stopPropagation = function () {
+					undefined.stoppedPropagation = true;
+					undefined.cancelBubble = true;
+				};
+			}
+		};
+
+		return e;
+	};
+}
+
+// Object.assign polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
+if (typeof Object.assign !== 'function') {
+	Object.assign = function (target, varArgs) {
+		// .length of function is 2
+
+		'use strict';
+
+		if (target === null || target === undefined) {
+			// TypeError if undefined or null
+			throw new TypeError('Cannot convert undefined or null to object');
+		}
+
+		var to = Object(target);
+
+		for (var index = 1; index < arguments.length; index++) {
+			var nextSource = arguments[index];
+
+			if (nextSource !== null) {
+				// Skip over if undefined or null
+				for (var nextKey in nextSource) {
+					// Avoid bugs when hasOwnProperty is shadowed
+					if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+						to[nextKey] = nextSource[nextKey];
+					}
+				}
+			}
+		}
+		return to;
+	};
+}
+
+// Array.includes polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
+if (!Array.prototype.includes) {
+	Object.defineProperty(Array.prototype, 'includes', {
+		value: function value(searchElement, fromIndex) {
+
+			// 1. Let O be ? ToObject(this value).
+			if (this === null || this === undefined) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If len is 0, return false.
+			if (len === 0) {
+				return false;
+			}
+
+			// 4. Let n be ? ToInteger(fromIndex).
+			//    (If fromIndex is undefined, this step produces the value 0.)
+			var n = fromIndex | 0;
+
+			// 5. If n ≥ 0, then
+			//  a. Let k be n.
+			// 6. Else n < 0,
+			//  a. Let k be len + n.
+			//  b. If k < 0, let k be 0.
+			var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+			// 7. Repeat, while k < len
+			while (k < len) {
+				// a. Let elementK be the result of ? Get(O, ! ToString(k)).
+				// b. If SameValueZero(searchElement, elementK) is true, return true.
+				// c. Increase k by 1.
+				// NOTE: === provides the correct "SameValueZero" comparison needed here.
+				if (o[k] === searchElement) {
+					return true;
+				}
+				k++;
+			}
+
+			// 8. Return false
+			return false;
+		}
+	});
+}
+
+if (!String.prototype.includes) {
+	String.prototype.includes = function () {
+		return String.prototype.indexOf.apply(this, arguments) !== -1;
+	};
+}
+
+// String.startsWith polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith#Polyfill
+if (!String.prototype.startsWith) {
+	String.prototype.startsWith = function (searchString, position) {
+		position = position || 0;
+		return this.substr(position, searchString.length) === searchString;
+	};
+}
+
+},{"2":2}],24:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5952,4 +6851,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"6":6}]},{},[15,16,8,9,10,11,12,13]);
+},{"6":6}]},{},[23,5,4,14,18,17,15,16,8,9,10,11,12,13]);
