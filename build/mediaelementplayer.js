@@ -1810,6 +1810,8 @@ Object.assign(_player2.default.prototype, {
 			}
 			if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 				media.setCurrentTime(t.newTime);
+				player.setCurrentRail();
+				t.updateCurrent(t.newTime);
 			}
 			t.forcedHandlePause = false;
 		};
@@ -1967,9 +1969,9 @@ Object.assign(_player2.default.prototype, {
 		// and indicate that is a live broadcast
 		media.addEventListener('progress', function (e) {
 			if (media.duration !== Infinity) {
-				t.setProgressRail(e);
+				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
-					t.setCurrentRail(e);
+					player.setCurrentRail(e);
 				}
 			} else if (!controls.find('.' + t.options.classPrefix + 'broadcast').length) {
 				controls.find('.' + t.options.classPrefix + 'time-rail').empty().html('<span class="' + t.options.classPrefix + 'broadcast">' + mejs.i18n.t('mejs.live-broadcast') + '</span>');
