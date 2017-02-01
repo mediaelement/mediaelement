@@ -1483,7 +1483,7 @@ var DailyMotionIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('dm ' + dm.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -2218,7 +2218,7 @@ var FacebookRenderer = {
 							break;
 
 						default:
-							
+							console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -2705,10 +2705,10 @@ var FlashMediaElementRenderer = {
 						try {
 							flash.flashApi['fire_' + methodName]();
 						} catch (e) {
-							
+							console.log(e);
 						}
 					} else {
-						
+						console.log('flash', 'missing method', methodName);
 					}
 				} else {
 					// store for after "READY" event fires
@@ -4161,7 +4161,7 @@ var SoundCloudIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -4676,7 +4676,7 @@ var vimeoIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							
+							console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
@@ -5271,7 +5271,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 					}
 				} else {
 					// store for after "READY" event fires
