@@ -1,6 +1,6 @@
 ### Version History
 
-*3.1.0 (2017/??/??)*
+*3.1.0 (2017/02/??)*
 
 * Updated documentation about how to use custom player (HLS, DASH, FLV, etc.) correctly @ron666
 * Expanded Renderers List table and other documentation tweaks @ron666
@@ -11,7 +11,9 @@
 * Added missing method call when removing media through `remove()` method and documented workflow to remove player @ron666
 * Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
 * Added workflow to use YouTube as an audio player @ron666
-* Updated usage.md file (https://github.com/johndyer/mediaelement/pull/2043) @theomathieubhvr 
+* Updated usage.md file (https://github.com/johndyer/mediaelement/pull/2043) @theomathieubhvr
+* Changed name of NPM file `all.js` to `full.js` for clarity purposes @ron666
+* Added missing elements on `mediaelementplayer.js` bundle @ron666
 
 *3.0.2 (2017/01/27)*
 
