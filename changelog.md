@@ -12,12 +12,10 @@
 * Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
 * Added workflow to use YouTube as an audio player @ron666
 * Updated usage.md file (https://github.com/johndyer/mediaelement/pull/2043) @theomathieubhvr
-<<<<<<< HEAD
-* Added workflow to pause media when sliding rail (https://github.com/johndyer/mediaelement/pull/2041) @ricking06 and @ron666
-=======
+* Added workflow to pause media when sliding rail to improve memory performance (https://github.com/johndyer/mediaelement/pull/2041) @ricking06 and @ron666
 * Changed name of NPM file `all.js` to `full.js` for clarity purposes @ron666
 * Added missing elements on `mediaelementplayer.js` bundle @ron666
->>>>>>> master
+* Fixed issues when using audio shim @ron666
 
 *3.0.2 (2017/01/27)*
 

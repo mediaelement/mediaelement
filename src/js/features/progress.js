@@ -106,7 +106,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// fake seek to where the mouse is 
 					if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
-						media.setCurrentTime(t.newTime);
 						t.setCurrentRailHandle(t.newTime);
 						t.updateCurrent(t.newTime);
 					}
@@ -393,26 +392,39 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 	/**
-	 * Update the slider's width depending on the current time
+	 * Update the slider's width depending on the time assigned
 	 *
+	 * @param {Number} fakeTime
 	 */
 	setCurrentRailHandle: function (fakeTime) {
 		const t = this;
 		t.setCurrentRailMain(t, fakeTime);
 	},
+	/**
+	 * Update the slider's width depending on the current time
+	 *
+	 */
 	setCurrentRail: function () {
 		const t = this;
 		t.setCurrentRailMain(t);
 	},
-
+	/**
+	 * Method that handles the calculation of the width of the rail.
+	 *
+	 * @param {MediaElementPlayer} t
+	 * @param {?Number} fakeTime
+	 */
 	setCurrentRailMain: function (t, fakeTime) {
 		if (t.media.currentTime !== undefined && t.media.duration) {
 			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
 
 			// update bar and handle
 			if (t.total && t.handle) {
-				let newWidth = Math.round(t.total.width() * nTime / t.media.duration),
-					handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
+				let
+					newWidth = Math.round(t.total.width() * nTime / t.media.duration),
+					handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2)
+				;
+
 				newWidth = nTime / t.media.duration * 100;
 				t.current.width(newWidth + '%');
 				t.handle.css('left', handlePos);
