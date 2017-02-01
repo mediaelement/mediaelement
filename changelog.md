@@ -14,6 +14,7 @@
 * Updated usage.md file (https://github.com/johndyer/mediaelement/pull/2043) @theomathieubhvr
 * Changed name of NPM file `all.js` to `full.js` for clarity purposes @ron666
 * Added missing elements on `mediaelementplayer.js` bundle @ron666
+* Fixed issues when using audio shim @ron666
 
 *3.0.2 (2017/01/27)*
 
