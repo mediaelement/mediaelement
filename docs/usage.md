@@ -86,12 +86,12 @@ You can avoid running any startup scripts by adding `class="mejs-player"` to the
 // To import only MediaElement class
 import 'mediaelement/standalone';
 
-// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin
+// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin (includes the HTML5 and FLahs renderers ONLY)
 import 'mediaelement/player';
 
 // To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes
 // and $.fn.mediaelementplayer plugin)
-import 'mediaelement/all';
+import 'mediaelement/full';
 ```
 
 **IMPORTANT**: To ensure you can use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:

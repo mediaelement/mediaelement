@@ -2,7 +2,7 @@
   "name": "mediaelement",
   "license": "MIT",
   "version": "3.0.2",
-  "main": "all.js",
+  "main": "full.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/johndyer/mediaelement.git"
