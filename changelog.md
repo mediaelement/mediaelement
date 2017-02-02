@@ -1,6 +1,6 @@
 ### Version History
 
-*3.1.0 (2017/02/??)*
+*3.1.0 (2017/02/02)*
 
 * Updated documentation about how to use custom player (HLS, DASH, FLV, etc.) correctly @ron666
 * Expanded Renderers List table and other documentation tweaks @ron666

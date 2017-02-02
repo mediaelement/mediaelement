@@ -1,7 +1,7 @@
 {
   "name": "mediaelement",
   "license": "MIT",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "main": "full.js",
   "repository": {
     "type": "git",
