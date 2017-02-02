@@ -1,6 +1,6 @@
 ### Version History
 
-*3.1.1 (2017/02/04)*
+*3.1.1 (2017/02/02)*
 
 * Added patch in Flash audio shim to load new source correctly @an1rk4
 * Fixed issues when removing player, specially when using any Flash shim @ron666
