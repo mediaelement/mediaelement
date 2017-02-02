@@ -1635,6 +1635,7 @@ class MediaElementPlayer {
 			// detach events from the video
 			// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
 			t.$node.attr('id', t.$node.attr('id').replace(`_${rendererName}`, ''));
+			t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
 			t.$node.clone().insertBefore(t.container).show();
 			t.$node.remove();
 		} else {
@@ -1644,9 +1645,6 @@ class MediaElementPlayer {
 		if (typeof t.media.destroy === 'function') {
 			t.media.destroy();
 		}
-
-		t.media.remove();
-
 
 		// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to
 		// pause a non existent Flash API.

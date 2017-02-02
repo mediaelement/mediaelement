@@ -1477,7 +1477,7 @@ Object.assign(_player2.default.prototype, {
 			t.container.find('iframe, embed, object, video').width('100%').height('100%');
 		}
 
-		if (t.options.setDimensions) {
+		if (t.options.setDimensions && typeof t.media.setSize === 'function') {
 			t.media.setSize(screen.width, screen.height);
 		}
 
@@ -1527,7 +1527,9 @@ Object.assign(_player2.default.prototype, {
 				t.container.find('iframe, embed, object, video').width(t.normalWidth).height(t.normalHeight);
 			}
 
-			t.media.setSize(t.normalWidth, t.normalHeight);
+			if (typeof t.media.setSize === 'function') {
+				t.media.setSize(t.normalWidth, t.normalHeight);
+			}
 
 			t.layers.children('div').width(t.normalWidth).height(t.normalHeight);
 		}
@@ -5126,6 +5128,7 @@ var MediaElementPlayer = function () {
 				// detach events from the video
 				// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
 				t.$node.attr('id', t.$node.attr('id').replace('_' + rendererName, ''));
+				t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
 				t.$node.clone().insertBefore(t.container).show();
 				t.$node.remove();
 			} else {
@@ -5135,8 +5138,6 @@ var MediaElementPlayer = function () {
 			if (typeof t.media.destroy === 'function') {
 				t.media.destroy();
 			}
-
-			t.media.remove();
 
 			// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to
 			// pause a non existent Flash API.
@@ -5554,9 +5555,13 @@ var FlashMediaElementRenderer = {
 			flash.flashNode.style.width = width + 'px';
 			flash.flashNode.style.height = height + 'px';
 
-			if (flash.flashApi !== null) {
+			if (flash.flashApi !== null && typeof flash.flashApi.fire_setSize === 'function') {
 				flash.flashApi.fire_setSize(width, height);
 			}
+		};
+
+		flash.destroy = function () {
+			flash.flashNode.parentNode.removeChild(flash.flashNode);
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {

@@ -2830,9 +2830,13 @@ var FlashMediaElementRenderer = {
 			flash.flashNode.style.width = width + 'px';
 			flash.flashNode.style.height = height + 'px';
 
-			if (flash.flashApi !== null) {
+			if (flash.flashApi !== null && typeof flash.flashApi.fire_setSize === 'function') {
 				flash.flashApi.fire_setSize(width, height);
 			}
+		};
+
+		flash.destroy = function () {
+			flash.flashNode.parentNode.removeChild(flash.flashNode);
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {

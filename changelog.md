@@ -1,5 +1,10 @@
 ### Version History
 
+*3.1.1 (2017/02/04)*
+
+* Added patch in Flash audio shim to load new source correctly @an1rk4
+* Fixed issues when removing player, specially when using any Flash shim @ron666
+
 *3.1.0 (2017/02/02)*
 
 * Updated documentation about how to use custom player (HLS, DASH, FLV, etc.) correctly @ron666
