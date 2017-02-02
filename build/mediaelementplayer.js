@@ -5597,9 +5597,11 @@ if (hasFlash) {
 			return 'application/x-mpegURL';
 		} else if (!_constants.HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
-		} else {
-			return null;
-		}
+		} else if (url.includes('.mp3')) {
+            return 'audio/mp3';
+        } else {
+            return null;
+        }
 	});
 
 	// VIDEO
