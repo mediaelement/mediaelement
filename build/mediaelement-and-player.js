@@ -3584,6 +3584,8 @@ var _time = _dereq_(32);
 
 var _dom = _dereq_(28);
 
+var _media = _dereq_(30);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5103,6 +5105,14 @@ var MediaElementPlayer = function () {
 			var t = this,
 			    rendererName = t.media.rendererName;
 
+			// Stop completely media playing
+			if (!t.media.paused) {
+				t.media.pause();
+			}
+
+			var src = t.media.originalNode.getAttribute('src');
+			t.media.setSrc('');
+
 			// invoke features cleanup
 			for (var featureIndex in t.options.features) {
 				var feature = t.options.features[featureIndex];
@@ -5129,6 +5139,14 @@ var MediaElementPlayer = function () {
 				// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
 				t.$node.attr('id', t.$node.attr('id').replace('_' + rendererName, ''));
 				t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
+
+				// Remove `autoplay` (not worth bringing it back once player is destroyed)
+				t.$node.removeProp('autoplay');
+
+				// Reintegrate file if it can be played
+				if (t.media.canPlayType((0, _media.getTypeFromFile)(src))) {
+					t.$node.attr('src', src);
+				}
 				t.$node.clone().insertBefore(t.container).show();
 				t.$node.remove();
 			} else {
@@ -5148,6 +5166,7 @@ var MediaElementPlayer = function () {
 				t.container.remove();
 			}
 			t.globalUnbind();
+
 			delete t.node.player;
 		}
 	}]);
@@ -5188,7 +5207,7 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"2":2,"27":27,"28":28,"29":29,"3":3,"32":32,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
+},{"2":2,"27":27,"28":28,"29":29,"3":3,"30":30,"32":32,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };

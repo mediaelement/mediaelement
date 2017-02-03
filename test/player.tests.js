@@ -8,6 +8,7 @@ describe('MediaElement Player - Test Results', function () {
 		id,
 		player,
 		setMedia = function(player, src) {
+			player.pause();
 			player.setSrc(src.replace('&amp;', '&'));
 			player.load();
 		}
