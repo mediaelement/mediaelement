@@ -2720,6 +2720,7 @@ var FlashMediaElementRenderer = {
 			};
 		};
 		methods.push('stop');
+        methods.push('canplay');
 		for (i = 0, il = methods.length; i < il; i++) {
 			assignMethods(methods[i]);
 		}
