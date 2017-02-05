@@ -3,7 +3,7 @@
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
-import {IS_FIREFOX, HAS_TOUCH} from '../utils/constants';
+import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
 
 /**
@@ -111,7 +111,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 
 					// position floating time box
-					if (!HAS_TOUCH) {
+					if (!IS_IOS && !IS_ANDROID) {
 						t.timefloat.css('left', pos);
 						t.timefloatcurrent.html(secondsToTimeCode(t.newTime, player.options.alwaysShowHours));
 						t.timefloat.show();
@@ -300,7 +300,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.globalBind('mousemove.dur', (e) => {
 					handleMouseMove(e);
 				});
-				if (t.timefloat !== undefined && !HAS_TOUCH) {
+				if (t.timefloat !== undefined && !IS_IOS && !IS_ANDROID) {
 					t.timefloat.show();
 				}
 			}

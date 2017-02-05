@@ -1757,7 +1757,7 @@ Object.assign(_player2.default.prototype, {
 				}
 
 				// position floating time box
-				if (!_constants.HAS_TOUCH) {
+				if (!_constants.IS_IOS && !_constants.IS_ANDROID) {
 					t.timefloat.css('left', pos);
 					t.timefloatcurrent.html((0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours));
 					t.timefloat.show();
@@ -1950,7 +1950,7 @@ Object.assign(_player2.default.prototype, {
 				t.globalBind('mousemove.dur', function (e) {
 					handleMouseMove(e);
 				});
-				if (t.timefloat !== undefined && !_constants.HAS_TOUCH) {
+				if (t.timefloat !== undefined && !_constants.IS_IOS && !_constants.IS_ANDROID) {
 					t.timefloat.show();
 				}
 			}
@@ -4216,7 +4216,7 @@ var MediaElementPlayer = function () {
 					// controls fade
 					if (t.isVideo) {
 
-						if (_constants.HAS_TOUCH && !t.options.alwaysShowControls) {
+						if ((_constants.IS_ANDROID || _constants.IS_IOS) && !t.options.alwaysShowControls) {
 
 							// for touch devices (iOS, Android)
 							// show/hide without animation on touch
@@ -9567,7 +9567,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORTS_MEDIA_TAG = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.HAS_TOUCH = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
+exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORTS_MEDIA_TAG = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
 
 var _window = _dereq_(3);
 
@@ -9596,7 +9596,6 @@ var IS_FIREFOX = exports.IS_FIREFOX = UA.match(/firefox/gi) !== null;
 var IS_SAFARI = exports.IS_SAFARI = UA.match(/safari/gi) !== null && !IS_CHROME;
 var IS_STOCK_ANDROID = exports.IS_STOCK_ANDROID = UA.match(/^mozilla\/\d+\.\d+\s\(linux;\su;/gi) !== null;
 
-var HAS_TOUCH = exports.HAS_TOUCH = !!('ontouchstart' in _window2.default || _window2.default.DocumentTouch && _document2.default instanceof _window2.default.DocumentTouch);
 var HAS_MSE = exports.HAS_MSE = 'MediaSource' in _window2.default;
 var SUPPORT_POINTER_EVENTS = exports.SUPPORT_POINTER_EVENTS = function () {
 	var element = _document2.default.createElement('x'),
@@ -9734,7 +9733,6 @@ _mejs2.default.Features.isChrome = IS_CHROME;
 _mejs2.default.Features.isFirefox = IS_FIREFOX;
 _mejs2.default.Features.isSafari = IS_SAFARI;
 _mejs2.default.Features.isStockAndroid = IS_STOCK_ANDROID;
-_mejs2.default.Features.hasTouch = HAS_TOUCH;
 _mejs2.default.Features.hasMSE = HAS_MSE;
 _mejs2.default.Features.supportsMediaTag = SUPPORTS_MEDIA_TAG;
 _mejs2.default.Features.supportsNativeHLS = SUPPORTS_NATIVE_HLS;
