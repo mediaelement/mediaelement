@@ -403,7 +403,6 @@ const FlashMediaElementRenderer = {
 			for (i = 0, il = mediaFiles.length; i < il; i++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
 					flash.setSrc(mediaFiles[i].src);
-					//flash.load(); //incorrect because in native html5 is not trigger automatically, must be triggered by js script
 					break;
 				}
 			}
@@ -438,8 +437,8 @@ if (hasFlash) {
 		} else if (!HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
 		} else {
-        	return null;
-    	}
+			return null;
+		}
 
 	});
 

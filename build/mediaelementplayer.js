@@ -5468,14 +5468,19 @@ var FlashMediaElementRenderer = {
 			assignMethods(methods[i]);
 		}
 
+		// give initial events like in others renderers
+		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+
+		for (i = 0, il = initEvents.length; i < il; i++) {
+			var event = (0, _dom.createEvent)(initEvents[i], flash);
+			mediaElement.dispatchEvent(event);
+		}
+
 		// add a ready method that Flash can call to
 		_window2.default['__ready__' + flash.id] = function () {
 
 			flash.flashReady = true;
 			flash.flashApi = _document2.default.getElementById('__' + flash.id);
-
-			var event = (0, _dom.createEvent)('rendererready', flash);
-			mediaElement.dispatchEvent(event);
 
 			// do call stack
 			if (flash.flashApiStack.length) {
