@@ -6875,7 +6875,6 @@ var FlashMediaElementRenderer = {
 			for (i = 0, il = mediaFiles.length; i < il; i++) {
 				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
 					flash.setSrc(mediaFiles[i].src);
-					flash.load();
 					break;
 				}
 			}
