@@ -31,7 +31,7 @@ mejs.html5media = {
 	 * @type {String[]}
 	 */
 	methods: [
-		'load', 'play', 'pause', 'canPlayType','canplay'
+		'load', 'play', 'pause', 'canPlayType'
 	],
 	/**
 	 * @type {String[]}

@@ -241,14 +241,19 @@ const FlashMediaElementRenderer = {
 			assignMethods(methods[i]);
 		}
 
+		// give initial events like in others renderers
+		let initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+
+		for (i = 0, il = initEvents.length; i < il; i++) {
+			let event = createEvent(initEvents[i], flash);
+			mediaElement.dispatchEvent(event);
+		}
+
 		// add a ready method that Flash can call to
 		window[`__ready__${flash.id}`] = () => {
 
 			flash.flashReady = true;
 			flash.flashApi = document.getElementById(`__${flash.id}`);
-
-			let event = createEvent('rendererready', flash);
-			mediaElement.dispatchEvent(event);
 
 			// do call stack
 			if (flash.flashApiStack.length) {
@@ -398,7 +403,7 @@ const FlashMediaElementRenderer = {
 			for (i = 0, il = mediaFiles.length; i < il; i++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
 					flash.setSrc(mediaFiles[i].src);
-					flash.load();
+					//flash.load(); //incorrect because in native html5 is not trigger automatically, must be triggered by js script
 					break;
 				}
 			}
@@ -432,12 +437,10 @@ if (hasFlash) {
 			return 'application/x-mpegURL';
 		} else if (!HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
-		} else if (url.includes('.mp3')) {
-            return 'audio/mp3';
-		} else{
+		} else {
         	return null;
     	}
-	}
+
 	});
 
 	// VIDEO
