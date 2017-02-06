@@ -11,7 +11,6 @@ import {
 	IS_IPHONE,
 	IS_ANDROID,
 	IS_IOS,
-	HAS_TOUCH,
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
@@ -693,7 +692,7 @@ class MediaElementPlayer {
 			// controls fade
 			if (t.isVideo) {
 
-				if (HAS_TOUCH && !t.options.alwaysShowControls) {
+				if ((IS_ANDROID || IS_IOS) && !t.options.alwaysShowControls) {
 
 					// for touch devices (iOS, Android)
 					// show/hide without animation on touch
