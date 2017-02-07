@@ -1,16 +1,50 @@
 ### Version History
 
-*3.0.2 (2017/01/??)*
+*3.1.2 (2017/02/??)*
+
+* Expanded workflow to stop media loading completely when removing player @ron666
+* Added more fixes to Flash audio shim (https://github.com/johndyer/mediaelement/pull/2054) @an1rk4
+* Added security statements on almost all shims to allow to be played cross-domain @ron666
+* Removed HAS_TOUCH flag considered unnecessary @ron666
+
+*3.1.1 (2017/02/02)*
+
+* Added patch in Flash audio shim to load new source correctly @an1rk4
+* Fixed issues when removing player, specially when using any Flash shim @ron666
+
+*3.1.0 (2017/02/02)*
+
+* Updated documentation about how to use custom player (HLS, DASH, FLV, etc.) correctly @ron666
+* Expanded Renderers List table and other documentation tweaks @ron666
+* Updated German translations (https://github.com/johndyer/mediaelement/pull/2031) @SoftCreatR
+* Added `hideVideoControlsOnPause` configuration element to hide controls when media is paused @ron666
+* Added `showPosterWhenPaused` option and updated documentation @ron666
+* Added new media to demo file to match main website and reformatted `demo/demo.js` @ron666
+* Added missing method call when removing media through `remove()` method and documented workflow to remove player @ron666
+* Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
+* Added workflow to use YouTube as an audio player @ron666
+* Updated usage.md file (https://github.com/johndyer/mediaelement/pull/2043) @theomathieubhvr
+* Added workflow to pause media when sliding rail to improve memory performance (https://github.com/johndyer/mediaelement/pull/2041) @ricking06 and @ron666
+* Changed name of NPM file `all.js` to `full.js` for clarity purposes @ron666
+* Added missing elements on `mediaelementplayer.js` bundle @ron666
+* Fixed issues when using audio shim @ron666
+
+*3.0.2 (2017/01/27)*
 
 * Fixed issues related to volume in YouTube renderer @ron666
-* Removed must of features and moved them to new repository (https://github.com/johndyer/mediaelement-plugins) and updated/cleaned documentation @ron666
+* Removed must of features and moved them to new repository (https://github.com/johndyer/mediaelement-plugins) @ron666 
+* Updated/cleaned documentation in terms on Guidelines and Usage @ron666
 * Cleaned up CSS stylesheets @ron666
 * Removed `—features` option from Grunt file @ron666
 * Fixed issue with Vimeo renderer when playing/pausing video causing unexpected behavior @ron666
 * Fixed npm installation command reference in main site (https://github.com/johndyer/mediaelement/pull/2018) @pra85
 * Fixed minor typo in documentation (https://github.com/johndyer/mediaelement/pull/2019) @denismosolov
 * Fixed class reference in the jQuery usage documentation (https://github.com/johndyer/mediaelement/pull/2020) @vrozkovec
-
+* Updated Russian translation file (https://github.com/johndyer/mediaelement/pull/2023) @Globulopolis
+* Added workflow in Vimeo renderer to allow query arguments passed through the media URL @ron666
+* Added missing global variables when jQuery, Zepto or Ender libraries are detected in `src/js/library.js` file @ron666
+* Fixed issue with `iframe` renderers (YouTube, Vimeo, Facebook, SoundCloud and Dailymotion) not hiding controls properly @ron666
+* Added new logo in README file @ron666
 
 *3.0.1 (2017/01/20)*
 

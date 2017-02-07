@@ -176,6 +176,7 @@ const vimeoIframeRenderer = {
 			ended = false,
 			duration = 0,
 			url = "",
+			readyState = 4,
 			i,
 			il
 		;
@@ -207,7 +208,6 @@ const vimeoIframeRenderer = {
 							case 'muted':
 								return volume === 0;
 							case 'paused':
-								console.log(paused);
 								return paused;
 							case 'ended':
 								return ended;
@@ -228,6 +228,8 @@ const vimeoIframeRenderer = {
 									},
 									length: 1
 								};
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;
@@ -309,6 +311,10 @@ const vimeoIframeRenderer = {
 										vimeoApi.errorHandler(error, vimeo);
 									});
 								}
+								break;
+							case 'readyState':
+								let event = createEvent('canplay', vimeo);
+								mediaElement.dispatchEvent(event);
 								break;
 							default:
 								console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
@@ -447,10 +453,14 @@ const vimeoIframeRenderer = {
 				ended = false;
 				let event = createEvent('play', vimeo);
 				mediaElement.dispatchEvent(event);
+
+				event = createEvent('playing', vimeo);
+				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', () => {
 				paused = true;
 				ended = false;
+
 				let event = createEvent('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
@@ -475,7 +485,8 @@ const vimeoIframeRenderer = {
 			height = mediaElement.originalNode.height,
 			width = mediaElement.originalNode.width,
 			vimeoContainer = document.createElement('iframe'),
-			standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src)
+			standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src),
+			queryArgs = mediaFiles[0].src.includes('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : ''
 		;
 
 		// Create Vimeo <iframe> markup
@@ -483,7 +494,7 @@ const vimeoIframeRenderer = {
 		vimeoContainer.setAttribute('width', width);
 		vimeoContainer.setAttribute('height', height);
 		vimeoContainer.setAttribute('frameBorder', '0');
-		vimeoContainer.setAttribute('src', standardUrl);
+		vimeoContainer.setAttribute('src', `${standardUrl}${queryArgs}`);
 		vimeoContainer.setAttribute('webkitallowfullscreen', '');
 		vimeoContainer.setAttribute('mozallowfullscreen', '');
 		vimeoContainer.setAttribute('allowfullscreen', '');

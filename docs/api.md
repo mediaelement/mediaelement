@@ -36,6 +36,7 @@ Parameter | Type | Default | Description
 classPrefix | string | `mejs__` | Class prefix for player elements
 poster | string | _(empty)_ | Poster URL that overrides `poster` attribute
 showPosterWhenEnded | boolean | `false` | When the video is ended, show the poster
+showPosterWhenPaused | boolean | `false` | When the video is paused, show the poster
 defaultVideoWidth | number | `480` | Default width if the `<video>` width is not specified
 defaultVideoHeight | number | `270` | Default height if the `<video>` height is not specified
 videoWidth | number | `-1` | If set, overrides `<video>` width
@@ -57,7 +58,8 @@ showTimecodeFrameCount | boolean| `false` | Whether to show frame count in timec
 framesPerSecond | number | `25` | Used when `showTimecodeFrameCount` is set to `true`
 autosizeProgress | boolean | `true` | Automatically calculate the width of the progress bar based on the sizes of other elements
 alwaysShowControls | boolean | `false` | Hide controls when playing and mouse is not over the video
-hideVideoControlsOnLoad | boolean | `false` | Display the video control
+hideVideoControlsOnLoad | boolean | `false` | Display the video control when media is loading
+hideVideoControlsOnPause | boolean | `false` | Display the video controls when media is paused
 clickToPlayPause | boolean | `true` | Enable click video element to toggle play/pause
 controlsTimeoutDefault | number | `1500` | Time in ms to hide controls
 controlsTimeoutMouseEnter | number | `2500` | Time in ms to trigger the timer when mouse moves

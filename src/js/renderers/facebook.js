@@ -54,6 +54,7 @@ const FacebookRenderer = {
 			hasStartedPlaying = false,
 			src = '',
 			eventHandler = {},
+			readyState = 4,
 			i,
 			il
 		;
@@ -107,6 +108,9 @@ const FacebookRenderer = {
 								};
 							case 'src':
 								return src;
+
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;
@@ -156,6 +160,11 @@ const FacebookRenderer = {
 									let event = createEvent('volumechange', fbWrapper);
 									mediaElement.dispatchEvent(event);
 								}, 50);
+								break;
+
+							case 'readyState':
+								let event = createEvent('canplay', vimeo);
+								mediaElement.dispatchEvent(event);
 								break;
 
 							default:

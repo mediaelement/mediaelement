@@ -3,7 +3,7 @@
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
-import {IS_FIREFOX, HAS_TOUCH} from '../utils/constants';
+import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
 
 /**
@@ -11,7 +11,6 @@ import {secondsToTimeCode} from '../utils/time';
  *
  * This feature creates a progress bar with a slider in the control bar, and updates it based on native events.
  */
-
 
 // Feature configuration
 Object.assign(config, {
@@ -68,6 +67,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.timefloat = controls.find(`.${t.options.classPrefix}time-float`);
 		t.timefloatcurrent = controls.find(`.${t.options.classPrefix}time-float-current`);
 		t.slider = controls.find(`.${t.options.classPrefix}time-slider`);
+		t.newTime = 0;
+		t.forcedHandlePause = false;
 
 		/**
 		 *
@@ -79,7 +80,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				let offset = t.total.offset(),
 					width = t.total.width(),
 					percentage = 0,
-					newTime = 0,
 					pos = 0,
 					x
 				;
@@ -102,17 +102,18 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					pos = x - offset.left;
 					percentage = (pos / width);
-					newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
+					t.newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
-					// seek to where the mouse is
-					if (mouseIsDown && newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
-						media.setCurrentTime(newTime);
+					// fake seek to where the mouse is 
+					if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+						t.setCurrentRailHandle(t.newTime);
+						t.updateCurrent(t.newTime);
 					}
 
 					// position floating time box
-					if (!HAS_TOUCH) {
+					if (!IS_IOS && !IS_ANDROID) {
 						t.timefloat.css('left', pos);
-						t.timefloatcurrent.html(secondsToTimeCode(newTime, player.options.alwaysShowHours));
+						t.timefloatcurrent.html(secondsToTimeCode(t.newTime, player.options.alwaysShowHours));
 						t.timefloat.show();
 					}
 				}
@@ -155,6 +156,18 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (now - lastKeyPressTime >= 1000) {
 					media.play();
 				}
+			},
+			handleMouseup = () => {
+
+				if (t.forcedHandlePause) {
+					t.media.play();
+				}
+				if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+					media.setCurrentTime(t.newTime);
+					player.setCurrentRail();
+					t.updateCurrent(t.newTime);
+				}
+				t.forcedHandlePause = false;
 			};
 
 		// Events
@@ -256,15 +269,23 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// handle clicks
 		t.rail.on('mousedown touchstart', (e) => {
+			t.forcedHandlePause = false;
 			if (media.duration !== Infinity) {
 				// only handle left clicks or touch
 				if (e.which === 1 || e.which === 0) {
+
+					if (!media.paused) {
+						t.media.pause();
+						t.forcedHandlePause = true;
+					}
+
 					mouseIsDown = true;
 					handleMouseMove(e);
 					t.globalBind('mousemove.dur touchmove.dur', (e) => {
 						handleMouseMove(e);
 					});
 					t.globalBind('mouseup.dur touchend.dur', () => {
+						handleMouseup();
 						mouseIsDown = false;
 						if (t.timefloat !== undefined) {
 							t.timefloat.hide();
@@ -279,7 +300,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.globalBind('mousemove.dur', (e) => {
 					handleMouseMove(e);
 				});
-				if (t.timefloat !== undefined && !HAS_TOUCH) {
+				if (t.timefloat !== undefined && !IS_IOS && !IS_ANDROID) {
 					t.timefloat.show();
 				}
 			}
@@ -301,7 +322,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		media.addEventListener('progress', (e) => {
 			if (media.duration !== Infinity) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if (!t.forcedHandlePause) {
+					player.setCurrentRail(e);
+				}
 			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
 				controls.find(`.${t.options.classPrefix}time-rail`).empty()
 					.html(`<span class="${t.options.classPrefix}broadcast">${mejs.i18n.t('mejs.live-broadcast')}</span>`);
@@ -312,7 +335,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		media.addEventListener('timeupdate', (e) => {
 			if (media.duration !== Infinity ) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if (!t.forcedHandlePause) {
+					player.setCurrentRail(e);
+				}
 				updateSlider(e);
 			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
 				controls.find(`.${t.options.classPrefix}time-rail`).empty()
@@ -323,7 +348,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.container.on('controlsresize', (e) => {
 			if (media.duration !== Infinity) {
 				player.setProgressRail(e);
-				player.setCurrentRail(e);
+				if (!t.forcedHandlePause) {
+					player.setCurrentRail(e);
+				}
 			}
 		});
 	},
@@ -367,27 +394,44 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 	/**
+	 * Update the slider's width depending on the time assigned
+	 *
+	 * @param {Number} fakeTime
+	 */
+	setCurrentRailHandle: function (fakeTime) {
+		const t = this;
+		t.setCurrentRailMain(t, fakeTime);
+	},
+	/**
 	 * Update the slider's width depending on the current time
 	 *
 	 */
-	setCurrentRail: function ()  {
-
-		let t = this;
-
+	setCurrentRail: function () {
+		const t = this;
+		t.setCurrentRailMain(t);
+	},
+	/**
+	 * Method that handles the calculation of the width of the rail.
+	 *
+	 * @param {MediaElementPlayer} t
+	 * @param {?Number} fakeTime
+	 */
+	setCurrentRailMain: function (t, fakeTime) {
 		if (t.media.currentTime !== undefined && t.media.duration) {
+			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
 
 			// update bar and handle
 			if (t.total && t.handle) {
 				let
-					newWidth = Math.round(t.total.width() * t.media.currentTime / t.media.duration),
-					handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
+					newWidth = Math.round(t.total.width() * nTime / t.media.duration),
+					handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2)
+				;
 
-				newWidth = (t.media.currentTime / t.media.duration) * 100;
-				t.current.width(`${newWidth}%`);
+				newWidth = nTime / t.media.duration * 100;
+				t.current.width(newWidth + '%');
 				t.handle.css('left', handlePos);
 			}
 		}
-
 	}
 });
 

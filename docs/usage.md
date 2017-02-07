@@ -1,17 +1,38 @@
 # Usage
 
-* [Automatic start](#automatic)
-* [Vanilla JavaScript](#vanilla)
-* [jQuery](#jquery)
-* [NPM/Meteor](#npm-meteor)
-* [RequireJS](#requirejs)
-* [Use of Renderers](#renderers-usage)
+* [Initialize player](#initialize)
+    * [Automatic start](#automatic)
+    * [Vanilla JavaScript](#vanilla)
+    * [jQuery](#jquery)
+    * [NPM/Meteor](#npm-meteor)
+    * [RequireJS](#requirejs)
+* [Use Renderers](#renderers-usage)
+* [Destroy player](#destroy)
+
+
+<a id="initialize"></a>
+## Initialize player
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
 
+## Standalone
+```html
+<script>
+
+    var player = new MediaElement('player', {
+    	pluginPath: "/path/to/shims/", 
+    	success: function(mediaElement, originalNode) {
+            // do things
+            
+        }
+    });
+
+</script>
+```
+
 <a id="automatic"></a>
-## Automatic start
-You can avoid running any startup scripts by added `class="mejs-player"` to the `<video>` or `<audio>` tag. Options can be added using the `data-mejsoptions` attribute.
+### Automatic start
+You can avoid running any startup scripts by adding `class="mejs-player"` to the `<video>` or `<audio>` tag. All the player configuration can be added through `data-mejsoptions` attribute.
 ```html	
 <video src="myvideo.mp4" width="320" height="240" 
 		class="mejs-player" 
@@ -19,52 +40,62 @@ You can avoid running any startup scripts by added `class="mejs-player"` to the 
 ```
 
 <a id="vanilla"></a>
-## Vanilla JavaScript
+### Vanilla JavaScript
 ```html
 <script>
-var player = new MediaElementPlayer('#player', {pluginPath: "/path/to/shims/", success: function(mediaElement, originalNode) {
-	// do things
-}});
+
+    var player = new MediaElementPlayer('player', {
+    	pluginPath: "/path/to/shims/", 
+    	success: function(mediaElement, originalNode) {
+	        // do things
+        }
+    });
+    
 </script>	
 ```
 
 <a id="jquery"></a>
-## jQuery
+### jQuery
 ```html
 <script>
-$('#mediaplayer').mediaelementplayer({pluginPath: "/path/to/shims/", success: function(mediaElement, originalNode) {
-	// do things
-}});
 
-// To access player after its creation through jQuery use:
-var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
-// or $('#mediaplayer').closest('.mejs-container').attr('id') in "legacy" stylesheet
+    $('#mediaplayer').mediaelementplayer({
+    	pluginPath: "/path/to/shims/", 
+    	success: function(mediaElement, originalNode) {
+	        // do things
+        }
+    });
 
-var player = mejs.players[playerId];
-
-// With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
-// i.e., if you wanna exit fullscreen on iPhone using the player, use this:
-var player = $('#mediaplayer')[0];
-player.webkitExitFullScreen();
- 
+    // To access player after its creation through jQuery use:
+    var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
+    // or $('#mediaplayer').closest('.mejs-container').attr('id') in "legacy" stylesheet
+    
+    var player = mejs.players[playerId];
+    
+    // With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
+    // i.e., if you wanna exit fullscreen on iPhone using the player, use this:
+    var player = $('#mediaplayer')[0];
+    player.webkitExitFullScreen();
+    
 </script>
 ```
 
 <a id="npm-meteor"></a>
-## NPM/Meteor
+### NPM/Meteor
 ```javascript
 // To import only MediaElement class
 import 'mediaelement/standalone';
 
-// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin
+// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin 
+// (includes the HTML5 and FLahs renderers ONLY)
 import 'mediaelement/player';
 
-// To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes
-// and $.fn.mediaelementplayer plugin)
-import 'mediaelement/all';
+// To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes,
+// $.fn.mediaelementplayer plugin and all the renderers)
+import 'mediaelement/full';
 ```
 
-**IMPORTANT**: In order to use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
+**IMPORTANT**: To ensure you can use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
 
 1. Create a `jquery-global.js` file that contains:
 ```javascript
@@ -83,7 +114,7 @@ import 'mediaelement/all'; // or import `mediaelement/player`;
 ```
 
 <a id="requirejs"></a>
-## RequireJS
+### RequireJS
 With RequireJS, you will need the following setup if you are planning to use HLS, M(PEG)-DASH or FLV, given the way the packages are bundled.
 
 To make it work, install via NPM any of the external libraries you will need (i.e., HLS.js).
@@ -117,7 +148,7 @@ require(['path/to/hls'], function (Hls) {
 **IMPORTANT NOTE:** To keep Flash shims working you **MUST** setup the path where the shims are via `pluginPath`, and do not forget to add a slash at the end of the string. Please refer to the examples above. In Meteor, the right path to be used is `/packages/johndyer_mediaelement/build/`;
 
 <a id="renderers-usage"></a>
-## Use of Renderers
+## Use Renderers
 
 By default, all the renderers will be called by their IDs and the plugin will try to detect the best one. 
 
@@ -129,9 +160,8 @@ However, if you need to use just a subset of renderers in a specific order, you 
 mejs.Renderers.order = ['native_dash', 'flash_dash'];
 
 $('video, audio').mediaelementplayer({
-    // Use only M(PEG)DASH renderers
-    renderers: ['native_dash', 'flash_dash'],
-    ...
+    renderers: ['native_dash', 'flash_dash'], // Use only M(PEG)DASH renderers
+    // More configuration
 });
 ```
 
@@ -139,51 +169,112 @@ $('video, audio').mediaelementplayer({
 ```javascript
 $('video').mediaelementplayer({
     pluginPath: '../build/',
+    // All the config related to HLS
     hls: {
         debug: true,
-        // HLS is not gonna start loading immediatly 
         autoStartLoad: false
     },
     
-    // More configuration parameters
+    // More configuration parameters...
     
     success: function(media, node) {
-    
-        media.addEventListener('hlsMediaAttached', function() {
+    	
+    	// Since it could be that the HLS element is not yet loaded, use a `setInterval()` method to check when 
+    	// it's ready and then destroy it; this applies to the native renderers (HLS, DASH and FLV)
+    	var interval = setInterval(function () {
         
-            console.log('Media attached!');
-        });
-        
-        // Manifest file was parsed, invoke loading method
-        media.addEventListener('hlsManifestParsed', function() {
-        
-            // hlsPlayer is the instance of HLS.js in MediaElement
-            media.hlsPlayer.startLoad();
-    
-        });
+    		// media.hlsPlayer is the instance of HLS.js in MediaElement
+    		// each one of the renderers has a player instance
+    		// See `Use of Renderers` above for more information
+            if (media.rendererName === 'native_hls' && media.hlsPlayer !== undefined) {
+            	
+            	// clear interval to stop checking if HLS object is available
+                clearInterval(interval);
+            	
+            	media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
+            		// All the code when this event is reached...
+                    console.log('Media attached!');
+                });
+                
+                // Manifest file was parsed, invoke loading method
+                media.hlsPlayer.on('hlsManifestParsed', function() {
+            		// All the code when this event is reached...
+            		console.log('Manifest parsed!');
+            
+                });
+                
+            	media.hlsPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
+            		// All the code when this event is reached...
+            		console.log(data);
+                });
+            }
+            
+        }, 500); 
     }
 });
 ```
 <a id="renderers-list"></a>
 Below are listed the renderers with their IDs and player instance to execute other methods from APIs.
 
-Renderer | ID | API instance | Reference
--------- | --- | ------------ | ----------
-Native video/audio | `html5` | --- | ---
-HLS native | `native_hls` | `hlsPlayer` | https://github.com/dailymotion/hls.js
-M(PEG)-DASH native | `native_dash` | `dashPlayer` | https://github.com/Dash-Industry-Forum/dash.js
-FLV native | `native_flv` | `flvPlayer` | https://github.com/Bilibili/flv.js
-SoundCloud | `soundcloud_iframe` | `scPlayer` | https://developers.soundcloud.com/docs/api/html5-widget
-Facebook | `facebook` | --- | --- 
-Vimeo | `vimeo_iframe` | `vimeoPlayer` | https://github.com/vimeo/player.js
-YouTube | `youtube_iframe` | `youTubeApi` | https://developers.google.com/youtube/iframe_api_reference
-DailyMotion | `dailymotion_iframe` | `dmPlayer` | https://developer.dailymotion.com/player 
-Video shim (MP4/RTMP) | `flash_video` | --- | ---
-Audio shim (MP3) | `flash_audio` | --- | ---
-Audio shim (OGG) | `flash_audio_ogg` | --- | ---
-HLS shim | `flash_hls` | --- | ---
-M(PEG)-DASH shim | `flash_dash` | --- | ---
+Renderer | ID | API instance | Reference | MIME Type(s) 
+-------- | --- | ------------ | -------- | --------- 
+Native video/audio | `html5` | --- | --- | video/mp4, audio/mp4, video/webm, audio/mpeg, audio/mp3, audio/ogg, audio/oga, video/ogg
+HLS native | `native_hls` | `hlsPlayer` | https://github.com/dailymotion/hls.js | application/x-mpegURL, vnd.apple.mpegURL
+M(PEG)-DASH native | `native_dash` | `dashPlayer` | https://github.com/Dash-Industry-Forum/dash.js | application/dash+xml
+FLV native | `native_flv` | `flvPlayer` | https://github.com/Bilibili/flv.js | video/flv
+SoundCloud | `soundcloud_iframe` | `scPlayer` | https://developers.soundcloud.com/docs/api/html5-widget | video/soundcloud, video/x-soundcloud
+Facebook | `facebook` | --- | --- | video/facebook, video/x-facebook
+Vimeo | `vimeo_iframe` | `vimeoPlayer` | https://github.com/vimeo/player.js | video/vimeo, video/x-vimeo
+YouTube | `youtube_iframe` | `youTubeApi` | https://developers.google.com/youtube/iframe_api_reference | video/youtube, video/x-youtube
+DailyMotion | `dailymotion_iframe` | `dmPlayer` | https://developer.dailymotion.com/player  | video/dailymotion, video/x-dailymotion
+Video shim  | `flash_video` | --- | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 
+Audio shim | `flash_audio` | --- | --- | audio/mp3
+OGG Audio shim  | `flash_audio_ogg` | --- | --- | audio/ogg, audio/oga
+HLS shim | `flash_hls` | --- | --- | application/x-mpegURL, vnd.apple.mpegURL
+M(PEG)-DASH shim | `flash_dash` | --- | --- |application/dash+xml
+
+To know how well-supported are each one of the formats, visit http://caniuse.com/
 
 
+**Notes** 
+* Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
+* `ogg` formats will not play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
+* `wav` and `webm` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
+* `flv` and `mpd` will not work on iOS since it doesn't support MSE; for `mpd` use a `m3u8` fallback.
+
+
+<a id="destroy"></a>
+## Destroy player
+
+In order to destroy the player, you must pause the player and then invoke the `remove()` method.
+```javascript
+
+var player = new MediaElementPlayer('#player');
+
+// Using jQuery:
+// var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
+// var player = mejs.players[playerId];
+
+
+if (!player.paused) {
+        player.pause();	
+}
+
+player.remove();
+
+// If you wanna destroy COMPLETELY the player (including also the `video` tag) use the above and also the following:
+var videos = document.getElementsByTagName('video');
+for( var i = 0, total = videos.length; i < total; i++ ){ 
+        videos[i].parentNode.removeChild(videos[i]);
+}
+
+
+// Using jQuery:
+// $('video').each(function() {
+//         $(this).remove();
+// });
+```
+
+Same code can be used for `<audio>` elements.
 ________
 [Back to Main](../README.md)

@@ -157,20 +157,22 @@ let DashNativeRenderer = {
 				node[`get${capName}`] = () => (dashPlayer !== null) ? node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (dashPlayer !== null) {
-						if (propName === 'src') {
+					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+						if (dashPlayer !== null) {
+							if (propName === 'src') {
 
-							dashPlayer.attachSource(value);
+								dashPlayer.attachSource(value);
 
-							if (node.getAttribute('autoplay')) {
-								node.play();
+								if (node.getAttribute('autoplay')) {
+									node.play();
+								}
 							}
-						}
 
-						node[propName] = value;
-					} else {
-						// store for after "READY" event fires
-						stack.push({type: 'set', propName: propName, value: value});
+							node[propName] = value;
+						} else {
+							// store for after "READY" event fires
+							stack.push({type: 'set', propName: propName, value: value});
+						}
 					}
 				};
 

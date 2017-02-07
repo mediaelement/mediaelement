@@ -6,7 +6,7 @@ import window from 'global/window';
 let mejs = {};
 
 // version number
-mejs.version = '3.0.1';
+mejs.version = '3.1.1';
 
 // Basic HTML5 settings
 mejs.html5media = {
@@ -18,11 +18,14 @@ mejs.html5media = {
 		'volume', 'src', 'currentTime', 'muted',
 
 		// GET only
-		'duration', 'paused', 'ended',
+		'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable',
 
 		// OTHERS
-		'error', 'currentSrc', 'networkState', 'preload', 'buffered', 'bufferedBytes', 'bufferedTime', 'readyState', 'seeking',
-		'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'seekable', 'autoplay', 'loop', 'controls'
+		'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime',
+		'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'
+	],
+	readOnlyProperties: [
+		'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable',
 	],
 	/**
 	 * @type {String[]}

@@ -163,6 +163,7 @@ const DailyMotionIframeRenderer = {
 			dmPlayer = null,
 			dmIframe = null,
 			events,
+			readyState = 4,
 			i,
 			il
 		;
@@ -214,6 +215,9 @@ const DailyMotionIframeRenderer = {
 								};
 							case 'src':
 								return mediaElement.originalNode.getAttribute('src');
+
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;
@@ -255,6 +259,11 @@ const DailyMotionIframeRenderer = {
 									let event = createEvent('volumechange', dm);
 									mediaElement.dispatchEvent(event);
 								}, 50);
+								break;
+
+							case 'readyState':
+								let event = createEvent('canplay', vimeo);
+								mediaElement.dispatchEvent(event);
 								break;
 
 							default:

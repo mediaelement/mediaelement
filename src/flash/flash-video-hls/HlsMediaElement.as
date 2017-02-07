@@ -45,6 +45,9 @@
 		 */
 		public function HlsMediaElement() {
 
+			Security.allowDomain(['*']);
+			Security.allowInsecureDomain(['*']);
+
 			var flashVars: Object = LoaderInfo(this.root.loaderInfo).parameters;
 
 			_id = flashVars.uid;

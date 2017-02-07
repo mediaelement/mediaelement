@@ -461,7 +461,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				.height('100%');
 		}
 
-		if (t.options.setDimensions) {
+		if (t.options.setDimensions && typeof t.media.setSize === 'function') {
 			t.media.setSize(screen.width, screen.height);
 		}
 
@@ -523,7 +523,9 @@ Object.assign(MediaElementPlayer.prototype, {
 					.height(t.normalHeight);
 			}
 
-			t.media.setSize(t.normalWidth, t.normalHeight);
+			if (typeof t.media.setSize === 'function') {
+				t.media.setSize(t.normalWidth, t.normalHeight);
+			}
 
 			t.layers.children('div')
 				.width(t.normalWidth)

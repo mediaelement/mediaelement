@@ -70,6 +70,12 @@ module.exports = function(grunt) {
 					]),
 					// just player
 					'build/mediaelementplayer.js': [
+						'src/js/utils/polyfill.js',
+						'src/js/core/mediaelement.js',
+						'src/js/core/i18n.js',
+						'src/js/languages/en.js',
+						'src/js/renderers/html5.js',
+						'src/js/renderers/flash.js',
 						'src/js/library.js',
 						'src/js/player.js',
 						'src/js/features/fullscreen.js',

@@ -235,6 +235,7 @@ const YouTubeIframeRenderer = {
 			ended = false,
 			youTubeIframe = null,
 			volume = 1,
+			readyState = 4,
 			i,
 			il
 		;
@@ -287,6 +288,9 @@ const YouTubeIframeRenderer = {
 								};
 							case 'src':
 								return youTubeApi.getVideoUrl();
+
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;
@@ -336,6 +340,10 @@ const YouTubeIframeRenderer = {
 									let event = createEvent('volumechange', youtube);
 									mediaElement.dispatchEvent(event);
 								}, 50);
+								break;
+							case 'readyState':
+								let event = createEvent('canplay', vimeo);
+								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
@@ -401,8 +409,9 @@ const YouTubeIframeRenderer = {
 		mediaElement.originalNode.style.display = 'none';
 
 		let
-			height = mediaElement.originalNode.height,
-			width = mediaElement.originalNode.width,
+			isAudio = mediaElement.originalNode.tagName.toLowerCase() === 'audio',
+			height = isAudio ? '0' : mediaElement.originalNode.height,
+			width = isAudio ? '0' : mediaElement.originalNode.width,
 			videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
 			youtubeSettings = {
 				id: youtube.id,
@@ -534,7 +543,13 @@ const YouTubeIframeRenderer = {
 
 					}
 				}
-			};
+			}
+		;
+
+		// The following will prevent that in mobile devices, YouTube is displayed in fullscreen when using audio
+		if (isAudio) {
+			youtubeSettings.playerVars.playsinline = 1;
+		}
 
 		// send it off for async loading and creation
 		YouTubeApi.enqueueIframe(youtubeSettings);
