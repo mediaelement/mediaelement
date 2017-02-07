@@ -51,34 +51,33 @@ const NativeFlv = {
 	 * @param {Object} settings - an object with settings needed to load an FLV player instance
 	 */
 	loadScript: (settings) => {
-		if (!NativeFlv.isMediaStarted) {
 
-			if (typeof flvjs !== 'undefined') {
-				NativeFlv.createInstance(settings);
-			} else {
+		// Skip script loading since it is already loaded
+		if (typeof flvjs !== 'undefined') {
+			NativeFlv.createInstance(settings);
+		} else if (!NativeFlv.isMediaStarted) {
 
-				settings.options.path = typeof settings.options.path === 'string' ?
-					settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
+			settings.options.path = typeof settings.options.path === 'string' ?
+				settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
-				let
-					script = document.createElement('script'),
-					firstScriptTag = document.getElementsByTagName('script')[0],
-					done = false;
+			let
+				script = document.createElement('script'),
+				firstScriptTag = document.getElementsByTagName('script')[0],
+				done = false;
 
-				script.src = settings.options.path;
+			script.src = settings.options.path;
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function() {
-					if (!done && (!this.readyState || this.readyState === undefined ||
-						this.readyState === 'loaded' || this.readyState === 'complete')) {
-						done = true;
-						NativeFlv.mediaReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function () {
+				if (!done && (!this.readyState || this.readyState === undefined ||
+					this.readyState === 'loaded' || this.readyState === 'complete')) {
+					done = true;
+					NativeFlv.mediaReady();
+					script.onload = script.onreadystatechange = null;
+				}
+			};
 
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			}
+			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
 			NativeFlv.isMediaStarted = true;
 		}
 	},
@@ -165,7 +164,7 @@ const FlvNativeRenderer = {
 			stack = {},
 			i,
 			il
-		;
+			;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
@@ -176,7 +175,7 @@ const FlvNativeRenderer = {
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
-				node[`get${capName}`] = () => flvPlayer !== null ?  node[propName] : null;
+				node[`get${capName}`] = () => flvPlayer !== null ? node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
 					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
@@ -196,7 +195,7 @@ const FlvNativeRenderer = {
 				};
 
 			}
-		;
+			;
 
 		for (i = 0, il = props.length; i < il; i++) {
 			assignGettersSetters(props[i]);
@@ -247,7 +246,7 @@ const FlvNativeRenderer = {
 					});
 
 				}
-			;
+				;
 
 			events = events.concat(['click', 'mouseover', 'mouseout']);
 
