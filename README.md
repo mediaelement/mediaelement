@@ -73,6 +73,8 @@ The full documentation on how to install `MediaElement.js` is available at [Inst
 
 A brief guide on how to create and use instances of `MediaElement` available at [Usage](docs/usage.md).
 
+Additional features can be found at https://github.com/johndyer/mediaelement-plugins
+
 <a id="api"></a>
 ## API and Configuration
    
