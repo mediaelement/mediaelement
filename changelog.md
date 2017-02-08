@@ -9,6 +9,7 @@
 * Fixed workflow to detect if libraries on HLS, DASH and FLV renderers were already loaded @ron666
 * Reintegrated workflow to load source using flashvar `src` in audio (https://github.com/johndyer/mediaelement/pull/2059) @astr0junk
 * Improved documentation for Installation and API @ron666
+* Added workflow to sanitize HTML for captions due to potential XSS vulnerability @ron666 
 
 *3.1.1 (2017/02/02)*
 
