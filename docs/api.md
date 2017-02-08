@@ -100,7 +100,23 @@ MediaElementPlayer is a complete audio and video player, but you can also use ju
 
 <a id="properties"></a>
 ### Properties
-All properties are listed in https://www.w3.org/2010/05/video/mediaevents.html; they can be accessed through an instance of player as described [here](usage.md).
+Property | Description | GET | SET 
+-------- | ----------- | --- | ---
+autoplay | Set or return whether the audio/video should start playing as soon as it is loaded | X | X
+buffered | Return a TimeRanges object representing the buffered parts of the audio/video | X | 
+controls | Set or return whether the audio/video should display controls (like play/pause etc.) | X | X
+currentSrc | Return the URL of the current audio/video | X | 
+currentTime | Set or return the current playback position in the audio/video (in seconds) | X | X
+duration | Return the length of the current audio/video (in seconds); to determine it without playing media, `preload="auto"` must be set | X |  
+ended | Return whether the playback of the audio/video has ended or not | X | 
+error | Return a MediaError object representing the error state of the audio/video | X | 
+loop | Set or return whether the audio/video should start over again when finished | X | X
+muted | Set or returns whether the audio/video is muted or not | X | X
+paused | Return whether the audio/video is paused or not | X | 
+readyState | Return the current ready state of the audio/video | X | 
+seeking | Return whether the user is currently seeking in the audio/video | X |
+src | Set or return the current source of the audio/video element | X | X
+volume | Set or return the volume of the audio/video | X | X
 
 <a id="methods"></a>
 ### Methods
@@ -112,18 +128,26 @@ play() | Start playing the audio/video
 pause() | Halt (pauses) the currently playing audio or video
 stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is `pause`
 remove() | Destroy the video/audio player instance
-
-**Note:** `canPlayType()` method is used internally and accounts for other types of media to be played (such as HLS, RTMP, etc.); ```addTextTrack()``` is replaced also with more code to manage clsoed captioning and tracks. For that reason, they are not listed.
+canPlayType(type) | Determine whether current player can/cannot play a specific media type; `type` is MIME type and each renderer has a whitelist of them 
+setPlayerSize (width, height) | Set player's `width` and `height` also considering the `stretching` configuration
+setPoster (url) | Add a `image` tag with the poster's `url` inside the player's layer 
+setMuted (muted) | Mute/unmute the player; `muted` is a boolean value
+setCurrentTime (time) | Set a new current time for the player; `time` is either an integer or float number, and if negative, it will start from zero. 
+getCurrentTime () | Retrieve the current time of the media being played
+setVolume (volume) | Set a volume level for the player; `volume` is a number between `0` and `1`
+getVolume () | Retrieve the current volume level of the media being played
+setSrc (src) | Set a new URL/path for the player; each renderer has a different mechanism to set it
+getSrc () | Retrieve the media URL/path currently being played; each renderer has a different mechanism to return it
 
 <a id="events"></a>
 ### Events
 
 Event | Action(s) executed when...
 ----- | ----------- 
-loadeddata | Media data is loaded
 loadedmetadata | Meta data (like dimensions and duration) are loaded
 progress | Browser is in the process of getting the media data
 timeupdate | The playing position has changed (like when the user fast forwards to a different point in the media)
+seeking | The seeking attribute is set to true indicating that seeking has started
 seeked | The seeking attribute is set to false indicating that seeking has ended
 canplay | A file is ready to start playing (when it has buffered enough to begin)
 play | The media is ready to start playing
@@ -131,7 +155,5 @@ playing	| The media actually has started playing
 pause | The media is paused either by the user or programmatically
 ended | The media has reach the end (a useful event for messages like "thanks for listening")
 volumechange | Volume is changed (including setting the volume to "mute")
-
-For a more comprehensive list of events and more detailed information about them, please check the [Event summary](https://www.w3.org/TR/html5/embedded-content-0.html#mediaevents) page.
 ________
 [Back to Main](../README.md)

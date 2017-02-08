@@ -1,5 +1,15 @@
 ### Version History
 
+*3.1.2 (2017/02/??)*
+
+* Expanded workflow to stop media loading completely when removing player @ron666
+* Added more fixes to Flash audio shim (https://github.com/johndyer/mediaelement/pull/2054) @an1rk4
+* Added security statements on almost all shims to allow to be played cross-domain @ron666
+* Removed HAS_TOUCH flag considered unnecessary @ron666
+* Fixed workflow to detect if libraries on HLS, DASH and FLV renderers were already loaded @ron666
+* Reintegrated workflow to load source using flashvar `src` in audio (https://github.com/johndyer/mediaelement/pull/2059) @astr0junk
+* Improved documentation for Installation and API @ron666
+
 *3.1.1 (2017/02/02)*
 
 * Added patch in Flash audio shim to load new source correctly @an1rk4

@@ -11,13 +11,13 @@ import {
 	IS_IPHONE,
 	IS_ANDROID,
 	IS_IOS,
-	HAS_TOUCH,
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
 import {splitEvents} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
 import {isNodeAfter} from './utils/dom';
+import {getTypeFromFile} from './utils/media';
 
 mejs.mepIndex = 0;
 
@@ -692,7 +692,7 @@ class MediaElementPlayer {
 			// controls fade
 			if (t.isVideo) {
 
-				if (HAS_TOUCH && !t.options.alwaysShowControls) {
+				if ((IS_ANDROID || IS_IOS) && !t.options.alwaysShowControls) {
 
 					// for touch devices (iOS, Android)
 					// show/hide without animation on touch
@@ -1610,6 +1610,14 @@ class MediaElementPlayer {
 			rendererName = t.media.rendererName
 		;
 
+		// Stop completely media playing
+		if (!t.media.paused) {
+			t.media.pause();
+		}
+
+		const src = t.media.originalNode.getAttribute('src');
+		t.media.setSrc('');
+
 		// invoke features cleanup
 		for (let featureIndex in t.options.features) {
 			let feature = t.options.features[featureIndex];
@@ -1636,6 +1644,14 @@ class MediaElementPlayer {
 			// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
 			t.$node.attr('id', t.$node.attr('id').replace(`_${rendererName}`, ''));
 			t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
+
+			// Remove `autoplay` (not worth bringing it back once player is destroyed)
+			t.$node.removeProp('autoplay');
+
+			// Reintegrate file if it can be played
+			if (t.media.canPlayType(getTypeFromFile(src))) {
+				t.$node.attr('src', src);
+			}
 			t.$node.clone().insertBefore(t.container).show();
 			t.$node.remove();
 		} else {
@@ -1655,6 +1671,7 @@ class MediaElementPlayer {
 			t.container.remove();
 		}
 		t.globalUnbind();
+
 		delete t.node.player;
 	}
 }

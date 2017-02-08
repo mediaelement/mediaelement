@@ -48,6 +48,8 @@ If you want to make your media to play in `Chromium` browser, please read [this 
 
 For more information about how to set up a server to serve media properly and other general and useful topics about dealing with HTML5 video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
 
+**Do not** compress media (`mod_deflate` or `gzip`), since it can lead to unexpected results, like headers not being passed correctly.
+ 
 <a id="install"></a>
 ## 1. Install `MediaElementJS`
  
