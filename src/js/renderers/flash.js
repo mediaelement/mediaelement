@@ -6,7 +6,7 @@ import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/dom';
-import {NAV, IS_IE, HAS_MSE, SUPPORTS_NATIVE_HLS} from '../utils/constants';
+import {NAV, IS_IE, IS_EDGE, HAS_MSE, SUPPORTS_NATIVE_HLS} from '../utils/constants';
 import {typeChecks, absolutizeUrl} from '../utils/media';
 
 /**
@@ -72,8 +72,8 @@ export const PluginDetector = {
 			ax
 		;
 
-		// Firefox, Webkit, Opera
-		if (NAV.plugins !== undefined && typeof NAV.plugins[pluginName] === 'object') {
+		// Firefox, Webkit, Opera; avoid MS Edge since `plugins` cannot be accessed
+		if (!IS_EDGE && NAV.plugins !== null && NAV.plugins !== undefined && typeof NAV.plugins[pluginName] === 'object') {
 			description = NAV.plugins[pluginName].description;
 			if (description && !(typeof NAV.mimeTypes !== 'undefined' && NAV.mimeTypes[mimeType] && !NAV.mimeTypes[mimeType].enabledPlugin)) {
 				version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
