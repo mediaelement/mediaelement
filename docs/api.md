@@ -108,8 +108,8 @@ controls | Set or return whether the audio/video should display controls (like p
 currentSrc | Return the URL of the current audio/video | X | 
 currentTime | Set or return the current playback position in the audio/video (in seconds) | X | X
 duration | Return the length of the current audio/video (in seconds); to determine it without playing media, `preload="auto"` must be set | X |  
-ended | X | Return whether the playback of the audio/video has ended or not
-error | X | Return a MediaError object representing the error state of the audio/video
+ended | Return whether the playback of the audio/video has ended or not | X | 
+error | Return a MediaError object representing the error state of the audio/video | X | 
 loop | Set or return whether the audio/video should start over again when finished | X | X
 muted | Set or returns whether the audio/video is muted or not | X | X
 paused | Return whether the audio/video is paused or not | X | 
