@@ -11,6 +11,7 @@
 * Improved documentation for Installation and API @ron666
 * Added workflow to sanitize HTML for captions due to potential XSS vulnerability @ron666 
 * Added muted workflow for audio Flash shim (https://github.com/johndyer/mediaelement/pull/2063) @an1rk4
+* Added CDNjs badge for README @ron666
 
 *3.1.1 (2017/02/02)*
 

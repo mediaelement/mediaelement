@@ -14,6 +14,7 @@ One file. Any browser. Same UI.
 [![Build Status](https://img.shields.io/travis/johndyer/mediaelement.svg)](https://travis-ci.org/johndyer/mediaelement)
 [![Coverage Status](https://img.shields.io/coveralls/johndyer/mediaelement.svg)](https://coveralls.io/github/johndyer/mediaelement)
 [![MIT License](https://img.shields.io/npm/l/mediaelement.svg)](https://johndyer.mit-license.org/)
+[![CDNJS](https://img.shields.io/cdnjs/v/mediaelement.svg)](https://cdnjs.com/libraries/mediaelement)
 
 # Table of Contents
 
