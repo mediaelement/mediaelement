@@ -1,6 +1,6 @@
 ### Version History
 
-*3.1.2 (2017/02/??)*
+*3.1.2 (2017/02/10)*
 
 * Expanded workflow to stop media loading completely when removing player @ron666
 * Added more fixes to Flash audio shim (https://github.com/johndyer/mediaelement/pull/2054) @an1rk4
