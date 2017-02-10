@@ -49,7 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Podpisy/napisy",
-			// "mejs.captions-chapters": "Chapters",
+			"mejs.captions-chapters": "Rozdziały",
 			"mejs.none": "Brak",
 
 			// features/volume.js
