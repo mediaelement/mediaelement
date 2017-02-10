@@ -1,5 +1,9 @@
 ### Version History
 
+*3.1.3 (2017/??/??)*
+
+* Fixed typo in `usage.md` in regards of Automatic start (https://github.com/johndyer/mediaelement/pull/2071) @SvenJuergens
+
 *3.1.2 (2017/02/10)*
 
 * Expanded workflow to stop media loading completely when removing player @ron666
