@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Képaláírás/Feliratok",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Nincs",
 
 			// features/volume.js

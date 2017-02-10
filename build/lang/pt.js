@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Use as teclas das setas para a esquerda/direita para avançar um segundo, e as setas para cima/baixo para avançar dez segundos.",			
 			"mejs.time-skip-back": "Retroceder %1 segundos",			
 			"mejs.captions-subtitles": "Legendas",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Nenhum",			
 			"mejs.mute-toggle": "Alternar silêncio",
 			"mejs.volume-help-text": "Use as teclas das setas para cima/baixo para aumentar ou diminuir o volume.",

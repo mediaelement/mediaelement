@@ -516,7 +516,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Mute/Volume */
 
 /* Start: Track (Captions and Chapters) */
-.mejs-captions-button {
+.mejs-captions-button, .mejs-chapters-button {
     position: relative;
 }
 
@@ -524,7 +524,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     background-position: -140px 0;
 }
 
-.mejs-captions-button > .mejs-captions-selector {
+.mejs-chapters-button > button {
+    background-position: -302px 0;
+}
+
+.mejs-captions-button > .mejs-captions-selector, .mejs-chapters-button > .mejs-chapters-selector {
     visibility: hidden;
     position: absolute;
     bottom: 40px;
@@ -537,11 +541,15 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     border-radius: 0;
 }
 
-.mejs-captions-button > .mejs-captions-selector {
+.mejs-chapters-button > .mejs-chapters-selector {
+    width: 110px;
+}
+
+.mejs-captions-button > .mejs-captions-selector, .mejs-chapters-button > .mejs-chapters-selector {
     visibility: visible;
 }
 
-.mejs-captions-selector-list {
+.mejs-captions-selector-list, .mejs-chapters-selector-list {
     margin: 0;
     padding: 0;
     display: block;
@@ -549,7 +557,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     overflow: hidden;
 }
 
-.mejs-captions-selector-list-item {
+.mejs-captions-selector-list-item, .mejs-chapters-selector-list-item {
     margin: 0 0 6px 0;
     padding: 0 10px;
     list-style-type: none !important;
@@ -559,12 +567,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     cursor: pointer;
 }
 
-.mejs-captions-selector-list-item:hover {
+.mejs-captions-selector-list-item:hover, .mejs-chapters-selector-list-item:hover {
     background-color: rgb(200, 200, 200) !important;
     background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-.mejs-captions-selector-input {
+.mejs-captions-selector-input, .mejs-chapters-selector-input {
     clear: both;
     float: left;
     margin: 3px 3px 0 5px;
@@ -572,7 +580,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     left: -1000px;
 }
 
-.mejs-captions-selector-label {
+.mejs-captions-selector-label, .mejs-chapters-selector-label {
     width: 55px;
     float: left;
     padding: 4px 0 0 0;
@@ -581,69 +589,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     cursor: pointer;
 }
 
-.mejs-captions-selected {
+.mejs-captions-selected, .mejs-chapters-selected {
     color: rgba(33, 248, 248, 1);
 }
 
 .mejs-captions-translations {
     font-size: 10px;
     margin: 0 0 5px 0;
-}
-
-.mejs-chapters {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-right: solid 1px #fff;
-    width: 10000px;
-    z-index: 1;
-}
-
-.mejs-chapter {
-    position: absolute;
-    float: left;
-    background: rgba(0, 0, 0, 0.7);
-    background: linear-gradient(rgba(50, 50, 50, 0.7), rgba(0, 0, 0, 0.7));
-    overflow: hidden;
-    border: 0;
-}
-
-.mejs-chapter-block {
-    font-size: 11px;
-    color: #fff;
-    padding: 5px;
-    display: block;
-    border-right: solid 1px #333;
-    border-bottom: solid 1px #333;
-    cursor: pointer;
-}
-
-.mejs-chapter-block-last {
-    border-right: none;
-}
-
-.mejs-chapter-block:hover {
-    background: rgba(102, 102, 102, 0.7);
-    background: linear-gradient(rgba(102, 102, 102, 0.7), rgba(50, 50, 50, 0.6));
-}
-
-.mejs-chapter-block .ch-title {
-    font-size: 12px;
-    font-weight: bold;
-    display: block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin: 0 0 3px 0;
-    line-height: 12px;
-}
-
-.mejs-chapter-block .ch-timespan {
-    font-size: 12px;
-    line-height: 12px;
-    margin: 3px 0 4px 0;
-    display: block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .mejs-captions-layer {
@@ -685,16 +637,3 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 /* End: Track (Captions and Chapters) */
-
-/* Start: Error */
-.me-cannotplay a {
-    color: #fff;
-    font-weight: bold;
-}
-
-.me-cannotplay span {
-    padding: 15px;
-    display: block;
-}
-
-/* End: Error */

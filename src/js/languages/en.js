@@ -47,6 +47,7 @@ export const EN = {
 
 	// features/tracks.js
 	"mejs.captions-subtitles": "Captions/Subtitles",
+	"mejs.captions-chapters": "Chapters",
 	"mejs.none": "None",
 
 	// features/volume.js

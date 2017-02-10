@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Leyendas/Subtítulos",
+			"mejs.captions-chapters": "Capítulos",
 			"mejs.none": "Ninguno",
 
 			// features/volume.js

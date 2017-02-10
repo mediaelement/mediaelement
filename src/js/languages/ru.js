@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Титры/Субтитры",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Нет",
 
 			// features/volume.js

@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "캡션/자막",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "없음",
 
 			// features/volume.js

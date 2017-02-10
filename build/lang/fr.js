@@ -28,6 +28,7 @@
 			"mejs.time-help-text": "Utilisez les flèches Gauche/Droite du clavier pour avancer d'une seconde, les flèches Haut/Bas pour avancer de 10 secondes.",			
 			"mejs.time-skip-back": "Reculer de %1 secondes",			
 			"mejs.captions-subtitles": "Sous-titres",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Aucun",			
 			"mejs.mute-toggle": "Activer/désactiver le son",
 			"mejs.volume-help-text": "Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.",

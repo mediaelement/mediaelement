@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Legende/Subtitrări",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Niciunul",
 
 			// features/volume.js

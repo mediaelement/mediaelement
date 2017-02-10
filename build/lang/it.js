@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Utilizzare i tasti Freccia sinistra/Freccia destra per avanzare di un secondo, Freccia Su/Giù per avanzare dieci secondi.",			
 			"mejs.time-skip-back": "Riavvolgere %1 secondi",			
 			"mejs.captions-subtitles": "Acquisizioni/sottotitoli",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Nessuno",			
 			"mejs.mute-toggle": "Toggle muto",
 			"mejs.volume-help-text": "Utilizzare i tasti Freccia Su/Giù per aumentare o diminuire il volume.",

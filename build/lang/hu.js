@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Használja a Bal/Jobb nyíl gombokat az egy másodperces léptetéshez, a Fel/Le nyíl gombokat a tíz másodperces léptetéshez.",			
 			"mejs.time-skip-back": "Ugrás vissza %1 másodperccel",			
 			"mejs.captions-subtitles": "Képaláírás/Feliratok",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Nincs",			
 			"mejs.mute-toggle": "Némítás kapcsolója",
 			"mejs.volume-help-text": "Használja a Fel/Le nyíl gombokat a hangerő növeléséhez vagy csökkentéséhez.",
