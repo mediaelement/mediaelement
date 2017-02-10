@@ -17,7 +17,7 @@
 			"mejs.plural-form": 7,
 
 			// renderers/flash.js
-			"mejs.install-flash": "Flash player в вашем браузере не установлен или отключен. Пожалуйста включите ваш Flash player или скачайте последнюю версию на https://get.adobe.com/flashplayer/",
+			"mejs.install-flash": "Flash player в вашем браузере не установлен или отключен. Пожалуйста включите ваш Flash player или скачайте последнюю версию с https://get.adobe.com/flashplayer/",
 
 			// features/contextmenu.js
 			"mejs.fullscreen-off": "Выключить полноэкранный режим",
@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Титры/Субтитры",
+			"mejs.captions-chapters": "Главы",
 			"mejs.none": "Нет",
 
 			// features/volume.js
