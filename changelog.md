@@ -14,6 +14,7 @@
 * Added CDNjs badge for README @ron666
 * Added validation to avoid Flash check on MS Edge due to issues with `plugins` element @ron666
 * Added reference to "johndyer/mediaelement-plugins" (https://github.com/johndyer/mediaelement/pull/2067) @isantolin
+* Standardized way to display chapters tracks using button and menu @ron666
 
 *3.1.1 (2017/02/02)*
 
