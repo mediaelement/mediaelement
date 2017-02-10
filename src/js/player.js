@@ -1261,7 +1261,9 @@ class MediaElementPlayer {
 		;
 
 		t.rail.siblings().each((index, object) => {
-			siblingsWidth += parseFloat($(object).outerWidth(true));
+			if ($(object).is(':visible')) {
+				siblingsWidth += parseFloat($(object).outerWidth(true));
+			}
 		});
 
 		siblingsWidth += totalMargin + railMargin + 1;

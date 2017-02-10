@@ -5,6 +5,7 @@ import i18n from '../core/i18n';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import {secondsToTimeCode, convertSMPTEtoSeconds} from '../utils/time';
+import {sanitizeHTML} from '../utils/general';
 
 /**
  * Closed Captions (CC) button
@@ -27,6 +28,10 @@ Object.assign(config, {
 	 * @type {String}
 	 */
 	tracksText: '',
+	/**
+	 * @type {String}
+	 */
+	chaptersText: '',
 	/**
 	 * Avoid to screen reader speak captions over an audio track.
 	 *
@@ -65,7 +70,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildtracks: function (player, controls, layers, media)  {
+	buildtracks: function (player, controls, layers, media) {
 		if (player.tracks.length === 0) {
 			return;
 		}
@@ -74,9 +79,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			t = this,
 			attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
 			tracksTitle = t.options.tracksText ? t.options.tracksText : i18n.t('mejs.captions-subtitles'),
+			chaptersTitle = t.options.chaptersText ? t.options.chaptersText : i18n.t('mejs.captions-chapters'),
 			i,
 			kind
-			;
+		;
 
 		// If browser will do native captions, prefer mejs captions, loop through tracks and hide
 		if (t.domNode.textTracks) {
@@ -86,44 +92,51 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		t.cleartracks(player);
-		player.chapters = $(`<div class="${t.options.classPrefix}chapters ${t.options.classPrefix}layer"></div>`)
-			.prependTo(layers).hide();
-		player.captions =
-			$(`<div class="${t.options.classPrefix}captions-layer ${t.options.classPrefix}layer">` +
-				`<div class="${t.options.classPrefix}captions-position ${t.options.classPrefix}captions-position-hover"${attr}>` +
-					`<span class="${t.options.classPrefix}captions-text"></span>` +
-				`</div>` +
-			`</div>`)
-			.prependTo(layers).hide();
+
+		player.captions = $(`<div class="${t.options.classPrefix}captions-layer ${t.options.classPrefix}layer">` +
+			`<div class="${t.options.classPrefix}captions-position ${t.options.classPrefix}captions-position-hover"${attr}>` +
+				`<span class="${t.options.classPrefix}captions-text"></span>` +
+			`</div>` +
+		`</div>`)
+		.prependTo(layers).hide();
+
 		player.captionsText = player.captions.find(`.${t.options.classPrefix}captions-text`);
-		player.captionsButton =
-			$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}captions-button">` +
-				`<button type="button" aria-controls="${t.id}" title="${tracksTitle}" aria-label="${tracksTitle}"></button>` +
-				`<div class="${t.options.classPrefix}captions-selector ${t.options.classPrefix}offscreen">` +
-					`<ul class="${t.options.classPrefix}captions-selector-list">` +
-						`<li class="${t.options.classPrefix}captions-selector-list-item">` +
-							`<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
-								`name="${player.id}_captions" id="${player.id}_captions_none" ` +
-								`value="none" checked="checked" />` +
-							`<label class="${t.options.classPrefix}captions-selector-label ` +
-								`${t.options.classPrefix}captions-selected" ` +
-								`for="${player.id}_captions_none">${i18n.t('mejs.none')}</label>` +
-						`</li>` +
-					`</ul>` +
-				`</div>` +
-			`</div>`)
-			.appendTo(controls);
+		player.captionsButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}captions-button">` +
+			`<button type="button" aria-controls="${t.id}" title="${tracksTitle}" aria-label="${tracksTitle}"></button>` +
+			`<div class="${t.options.classPrefix}captions-selector ${t.options.classPrefix}offscreen">` +
+				`<ul class="${t.options.classPrefix}captions-selector-list">` +
+					`<li class="${t.options.classPrefix}captions-selector-list-item">` +
+						`<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
+						`name="${player.id}_captions" id="${player.id}_captions_none" ` +
+						`value="none" checked="checked" />` +
+						`<label class="${t.options.classPrefix}captions-selector-label ` +
+						`${t.options.classPrefix}captions-selected" ` +
+						`for="${player.id}_captions_none">${i18n.t('mejs.none')}</label>` +
+					`</li>` +
+				`</ul>` +
+			`</div>` +
+		`</div>`)
+		.appendTo(controls);
+
+		player.chaptersButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}chapters-button">` +
+			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}"></button>` +
+			`<div class="${t.options.classPrefix}chapters-selector ${t.options.classPrefix}offscreen">` +
+				`<ul class="${t.options.classPrefix}chapters-selector-list" aria-role="menu"></ul>` +
+			`</div>` +
+		`</div>`);
 
 
 		let
 			subtitleCount = 0,
 			total = player.tracks.length
-		;
+			;
 
 		for (i = 0; i < total; i++) {
 			kind = player.tracks[i].kind;
 			if (kind === 'subtitles' || kind === 'captions') {
 				subtitleCount++;
+			} else if (kind === 'chapters' && !controls.find(`.${t.options.classPrefix}chapter-selector`).length) {
+				player.chaptersButton.appendTo(controls);
 			}
 		}
 
@@ -140,22 +153,22 @@ Object.assign(MediaElementPlayer.prototype, {
 		} else {
 			// hover or keyboard focus
 			player.captionsButton
-				.on('mouseenter focusin', function() {
+				.on('mouseenter focusin', function () {
 					$(this).find(`.${t.options.classPrefix}captions-selector`)
 						.removeClass(`${t.options.classPrefix}offscreen`);
 				})
-				.on('mouseleave focusout', function() {
+				.on('mouseleave focusout', function () {
 					$(this).find(`.${t.options.classPrefix}captions-selector`)
 						.addClass(`${t.options.classPrefix}offscreen`);
 				})
 				// handle clicks to the language radio buttons
-				.on('click', 'input[type=radio]', function() {
+				.on('click', 'input[type=radio]', function () {
 					// value is trackId, same as the actual id, and we're using it here
 					// because the "none" checkbox doesn't have a trackId
 					// to use, but we want to know when "none" is clicked
 					player.setTrack(this.value);
 				})
-				.on('click', `.${t.options.classPrefix}captions-selector-label`, function() {
+				.on('click', `.${t.options.classPrefix}captions-selector-label`, function () {
 					$(this).siblings('input[type="radio"]').trigger('click');
 				})
 				//Allow up/down arrow to change the selected radio without changing the volume.
@@ -164,25 +177,68 @@ Object.assign(MediaElementPlayer.prototype, {
 				});
 		}
 
+		player.chaptersButton
+			.on('mouseenter focusin', function () {
+				const
+					self = $(this),
+					chapters = self.find(`.${t.options.classPrefix}chapters-selector-list`).children().length
+				;
+
+				if (chapters) {
+					self.find(`.${t.options.classPrefix}chapters-selector`)
+						.removeClass(`${t.options.classPrefix}offscreen`);
+				}
+			})
+			.on('mouseleave focusout', function () {
+				$(this).find(`.${t.options.classPrefix}chapters-selector`)
+					.addClass(`${t.options.classPrefix}offscreen`);
+			})
+			// handle clicks to the chapters radio buttons
+			.on('click', 'input[type=radio]', function () {
+				const self = $(this);
+				player.chaptersButton.find('li').attr('aria-checked', false)
+					.end()
+					.find(`.${t.options.classPrefix}chapters-selected`)
+					.removeClass(`${t.options.classPrefix}chapters-selected`);
+
+				self.prop('checked', true)
+					.siblings(`.${t.options.classPrefix}chapters-selector-label`)
+					.addClass(`${t.options.classPrefix}chapters-selected`)
+					.end()
+					.parent().attr('aria-checked', true);
+
+				media.setCurrentTime(parseFloat(self.val()));
+				if (media.paused) {
+					media.play();
+				}
+			})
+			.on('click', `.${t.options.classPrefix}chapters-selector-label`, function () {
+				$(this).siblings('input[type="radio"]').trigger('click');
+			})
+			//Allow up/down arrow to change the selected radio without changing the volume.
+			.on('keydown', (e) => {
+				e.stopPropagation();
+			});
+
 		if (!player.options.alwaysShowControls) {
 			// move with controls
 			player.container
 			.on('controlsshown', () => {
 				// push captions above controls
 				player.container.find(`.${t.options.classPrefix}captions-position`)
-				.addClass(`${t.options.classPrefix}captions-position-hover`);
+					.addClass(`${t.options.classPrefix}captions-position-hover`);
 
 			})
 			.on('controlshidden', () => {
 				if (!media.paused) {
 					// move back to normal place
 					player.container.find(`.${t.options.classPrefix}captions-position`)
-					.removeClass(`${t.options.classPrefix}captions-position-hover`);
+						.removeClass(`${t.options.classPrefix}captions-position-hover`);
 				}
 			});
 		} else {
 			player.container.find(`.${t.options.classPrefix}captions-position`)
-			.addClass(`${t.options.classPrefix}captions-position-hover`);
+				.addClass(`${t.options.classPrefix}captions-position-hover`);
 		}
 
 		player.trackToLoad = -1;
@@ -213,42 +269,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		}
 
-		media.addEventListener('loadedmetadata', () => {
-			player.displayChapters();
-		}, false);
-
-		player.container.hover(
-			function() {
-				// chapters
-				if (player.hasChapters) {
-					player.chapters.removeClass(`${t.options.classPrefix}offscreen`);
-					player.chapters.fadeIn(200, function() {
-						let self = $(this);
-						self.height(self.find(`.${t.options.classPrefix}chapter`).outerHeight());
-					});
-				}
-			},
-			function() {
-				if (player.hasChapters) {
-					if (media.paused) {
-						player.chapters.fadeOut(200, function() {
-							$(this).addClass(`${t.options.classPrefix}offscreen`);
-						});
-					} else {
-						player.chapters.show();
-					}
-				}
-
-			});
-
 		t.container.on('controlsresize', () => {
 			t.adjustLanguageBox();
 		});
-
-		// check for autoplay
-		if (player.node.getAttribute('autoplay') !== null) {
-			player.chapters.addClass(`${t.options.classPrefix}offscreen`);
-		}
 	},
 
 	/**
@@ -257,7 +280,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
 	 */
-	cleartracks: function (player)  {
+	cleartracks: function (player) {
 		if (player) {
 			if (player.captions) {
 				player.captions.remove();
@@ -274,13 +297,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 
-	rebuildtracks: function ()  {
+	rebuildtracks: function () {
 		let t = this;
 		t.findTracks();
 		t.buildtracks(t, t.controls, t.layers, t.media);
 	},
 
-	findTracks: function ()  {
+	findTracks: function () {
 		let
 			t = this,
 			tracktags = t.$media.find('track')
@@ -310,11 +333,11 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} trackId, or "none" to disable captions
 	 */
-	setTrack: function (trackId)  {
+	setTrack: function (trackId) {
 		let
 			t = this,
 			i
-			;
+		;
 
 		t.captionsButton
 			.find('input[type="radio"]').prop('checked', false)
@@ -350,7 +373,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	loadNextTrack: function ()  {
+	loadNextTrack: function () {
 		let t = this;
 
 		t.trackToLoad++;
@@ -369,7 +392,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param index
 	 */
-	loadTrack: function (index)  {
+	loadTrack: function (index) {
 		let
 			t = this,
 			track = t.tracks[index],
@@ -382,13 +405,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.loadNextTrack();
 
 			}
-			;
+		;
 
 		if (track !== undefined && (track.src !== undefined || track.src !== "")) {
 			$.ajax({
 				url: track.src,
 				dataType: 'text',
-				success: function (d)  {
+				success: function (d) {
 
 					// parse the loaded file
 					if (typeof d === 'string' && (/<tt\s+xml/ig).exec(d)) {
@@ -399,19 +422,16 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					after();
 
-					if (track.kind === 'chapters') {
-						t.media.addEventListener('play', () => {
-							if (t.media.duration > 0) {
-								t.displayChapters();
-							}
-						}, false);
-					}
-
 					if (track.kind === 'slides') {
 						t.setupSlides(track);
 					}
+					// Load by default the first track with `chapters` kind
+					else if (track.kind === 'chapters' && !t.hasChapters) {
+						t.drawChapters(track);
+						t.hasChapters = true;
+					}
 				},
-				error: function ()  {
+				error: function () {
 					t.removeTrackButton(track.trackId);
 					t.loadNextTrack();
 				}
@@ -423,7 +443,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} track - The language code
 	 */
-	enableTrackButton: function (track)  {
+	enableTrackButton: function (track) {
 		let
 			t = this,
 			lang = track.srclang,
@@ -436,7 +456,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		target.prop('disabled', false)
-		.siblings(`.${t.options.classPrefix}captions-selector-label`).html(label);
+			.siblings(`.${t.options.classPrefix}captions-selector-label`).html(label);
 
 		// auto select
 		if (t.options.startLanguage === lang) {
@@ -450,7 +470,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} trackId
 	 */
-	removeTrackButton: function (trackId)  {
+	removeTrackButton: function (trackId) {
 		let t = this;
 
 		t.captionsButton.find(`input[id=${trackId}]`).closest('li').remove();
@@ -464,7 +484,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} lang - The language code
 	 * @param {String} label
 	 */
-	addTrackButton: function (trackId, lang, label)  {
+	addTrackButton: function (trackId, lang, label) {
 		let t = this;
 		if (label === '') {
 			label = i18n.t(mejs.language.codes[lang]) || lang;
@@ -490,7 +510,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	adjustLanguageBox: function ()  {
+	adjustLanguageBox: function () {
 		let t = this;
 		// adjust the size of the outer box
 		t.captionsButton.find(`.${t.options.classPrefix}captions-selector`).height(
@@ -502,11 +522,11 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	checkForTracks: function ()  {
+	checkForTracks: function () {
 		let
 			t = this,
 			hasSubtitles = false
-		;
+			;
 
 		// check if any subtitles
 		if (t.options.hideCaptionsButtonWhenEmpty) {
@@ -528,7 +548,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	displayCaptions: function ()  {
+	displayCaptions: function () {
 
 		if (this.tracks === undefined) {
 			return;
@@ -537,15 +557,48 @@ Object.assign(MediaElementPlayer.prototype, {
 		let
 			t = this,
 			track = t.selectedTrack,
-			i
+			i,
+			sanitize = (html) => {
+
+				const div = document.createElement('div');
+
+				div.innerHTML = html;
+
+				// Remove all `<script>` tags first
+				const scripts = div.getElementsByTagName('script');
+				let i = scripts.length;
+				while (i--) {
+					scripts[i].parentNode.removeChild(scripts[i]);
+				}
+
+				// Loop the elements and remove anything that contains value="javascript:" or an `on*` attribute
+				// (`onerror`, `onclick`, etc.)
+				const allElements = div.getElementsByTagName('*');
+				for (let i = 0, n = allElements.length; i < n; i++) {
+					const
+						attributesObj = allElements[i].attributes,
+						attributes = Array.prototype.slice.call(attributesObj)
+					;
+
+					for (let j = 0, total = attributes.length; j < total; j++) {
+						if (attributes[j].name.startsWith('on') || attributes[j].value.startsWith('javascript')) {
+							allElements[i].parentNode.removeChild(allElements[i]);
+						} else if (attributes[j].name === 'style') {
+							allElements[i].removeAttribute(attributes[j].name);
+						}
+					}
+
+				}
+				return div.innerHTML;
+			}
 		;
 
 		if (track !== null && track.isLoaded) {
 			i = t.searchTrackPosition(track.entries, t.media.currentTime);
 			if (i > -1) {
 				// Set the line before the timecode as a class so the cue can be targeted if needed
-				t.captionsText.html(track.entries[i].text)
-				.attr('class', `${t.options.classPrefix}captions-text ${(track.entries[i].identifier || '')}`);
+				t.captionsText.html(sanitize(track.entries[i].text))
+					.attr('class', `${t.options.classPrefix}captions-text ${(track.entries[i].identifier || '')}`);
 				t.captions.show().height(0);
 				return; // exit out if one is visible;
 			}
@@ -560,7 +613,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {HTMLElement} track
 	 */
-	setupSlides: function (track)  {
+	setupSlides: function (track) {
 		let t = this;
 
 		t.slides = track;
@@ -573,7 +626,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {Number} index
 	 */
-	showSlide: function (index)  {
+	showSlide: function (index) {
 		if (this.tracks === undefined || this.slidesContainer === undefined) {
 			return;
 		}
@@ -587,21 +640,21 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (img === undefined || img.fadeIn === undefined) {
 
 			t.slides.entries[index].imgs = img = $(`<img src="${url}">`)
-			.on('load', () => {
-				img.appendTo(t.slidesContainer)
-				.hide()
-				.fadeIn()
-				.siblings(':visible')
-				.fadeOut();
+				.on('load', () => {
+					img.appendTo(t.slidesContainer)
+						.hide()
+						.fadeIn()
+						.siblings(':visible')
+						.fadeOut();
 
-			});
+				});
 
 		} else {
 
 			if (!img.is(':visible') && !img.is(':animated')) {
 				img.fadeIn()
-				.siblings(':visible')
-				.fadeOut();
+					.siblings(':visible')
+					.fadeOut();
 			}
 		}
 
@@ -610,7 +663,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	displaySlides: function ()  {
+	displaySlides: function () {
 
 		if (this.slides === undefined) {
 			return;
@@ -630,68 +683,36 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 *
-	 */
-	displayChapters: function ()  {
-		let t = this;
-
-		for (let i = 0, total = t.tracks.length; i < total; i++) {
-			if (t.tracks[i].kind === 'chapters' && t.tracks[i].isLoaded) {
-				t.drawChapters(t.tracks[i]);
-				t.hasChapters = true;
-				break;
-			}
-		}
-	},
-
-	/**
-	 *
 	 * @param {Object} chapters
 	 */
-	drawChapters: function (chapters)  {
+	drawChapters: function (chapters) {
 		let
 			t = this,
 			i,
-			dur,
-			percent = 0,
-			usedPercent = 0,
 			total = chapters.entries.length
 		;
 
-		t.chapters.empty();
-
-		for (i = 0; i < total; i++) {
-			dur = chapters.entries[i].stop - chapters.entries[i].start;
-			percent = Math.floor(dur / t.media.duration * 100);
-
-			// too large or not going to fill it in
-			if (percent + usedPercent > 100 ||
-				i === chapters.entries.length - 1 && percent + usedPercent < 100) {
-				percent = 100 - usedPercent;
-			}
-
-			t.chapters.append($(
-				`<div class="${t.options.classPrefix}chapter" rel="${chapters.entries[i].start}" style="left: ${usedPercent.toString()}%; width: ${percent.toString()}%;">` +
-				 	`<div class="${t.options.classPrefix}chapter-block` +
-				 	`${(i === chapters.entries.length - 1) ? ` ${t.options.classPrefix}chapter-block-last` : ''}">` +
-						`<span class="ch-title">${chapters.entries[i].text}</span>` +
-						`<span class="ch-time">` +
-							`${secondsToTimeCode(chapters.entries[i].start, t.options.alwaysShowHours)}` +
-				 			`&ndash;` +
-				 			`${secondsToTimeCode(chapters.entries[i].stop, t.options.alwaysShowHours)}` +
-						`</span>` +
-					`</div>` +
-				`</div>`));
-			usedPercent += percent;
+		if (!total) {
+			return;
 		}
 
-		t.chapters.find(`.${t.options.classPrefix}chapter`).click(function() {
-			t.media.setCurrentTime(parseFloat($(this).attr('rel')));
-			if (t.media.paused) {
-				t.media.play();
-			}
-		});
+		t.chaptersButton.find('ul').empty();
 
-		t.chapters.show();
+		for (i = 0; i < total; i++) {
+			t.chaptersButton.find('ul').append($(`<li class="${t.options.classPrefix}chapters-selector-list-item" ` +
+				`role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">` +
+				`<input type="radio" class="${t.options.classPrefix}captions-selector-input"` +
+					`name="${t.id}_chapters" value="${chapters.entries[i].start}" disabled>` +
+				`<label class="${t.options.classPrefix}chapters-selector-label">${chapters.entries[i].text}</label>` +
+			`</li>`));
+		}
+
+		$.each(t.chaptersButton.find('input[type="radio"]'), function() {
+			$(this).prop({
+				disabled: false,
+				checked: false
+			});
+		});
 	},
 	/**
 	 * Perform binary search to look for proper track index
@@ -700,7 +721,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {Number} currentTime
 	 * @return {Number}
 	 */
-	searchTrackPosition: function (tracks, currentTime)  {
+	searchTrackPosition: function (tracks, currentTime) {
 		let
 			lo = 0,
 			hi = tracks.length - 1,
@@ -821,7 +842,7 @@ mejs.TrackFormatParser = {
 		 * @param {String} trackText
 		 * @returns {{text: Array, times: Array}}
 		 */
-		parse: function (trackText)  {
+		parse: function (trackText) {
 			let
 				i = 0,
 				lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
@@ -865,7 +886,7 @@ mejs.TrackFormatParser = {
 		 * @param {String} trackText
 		 * @returns {{text: Array, times: Array}}
 		 */
-		parse: function (trackText)  {
+		parse: function (trackText) {
 			trackText = $(trackText).filter('tt');
 			let
 				container = trackText.children('div').eq(0),
@@ -874,7 +895,7 @@ mejs.TrackFormatParser = {
 				styles,
 				entries = [],
 				i
-			;
+				;
 
 
 			if (styleNode.length) {
@@ -896,7 +917,7 @@ mejs.TrackFormatParser = {
 						style: null,
 						text: null
 					}
-				;
+					;
 
 				if (lines.eq(i).attr('begin')) {
 					_temp.start = convertSMPTEtoSeconds(lines.eq(i).attr('begin'));
@@ -935,7 +956,7 @@ mejs.TrackFormatParser = {
 	 * @param {String} regex
 	 * @returns {Array}
 	 */
-	split2: function (text, regex)  {
+	split2: function (text, regex) {
 		// normal version for compliant browsers
 		// see below for IE fix
 		return text.split(regex);
@@ -962,5 +983,3 @@ if ('x\n\ny'.split(/\n/gi).length !== 3) {
 		return parts;
 	};
 }
-
-

@@ -878,7 +878,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mejs = {};
 
 // version number
-mejs.version = '3.1.1';
+mejs.version = '3.1.2';
 
 // Basic HTML5 settings
 mejs.html5media = {
@@ -2227,6 +2227,8 @@ var _player2 = _interopRequireDefault(_player);
 
 var _time = _dereq_(24);
 
+var _general = _dereq_(21);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -2249,6 +2251,10 @@ Object.assign(_player.config, {
   * @type {String}
   */
 	tracksText: '',
+	/**
+  * @type {String}
+  */
+	chaptersText: '',
 	/**
   * Avoid to screen reader speak captions over an audio track.
   *
@@ -2295,6 +2301,7 @@ Object.assign(_player2.default.prototype, {
 		var t = this,
 		    attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
 		    tracksTitle = t.options.tracksText ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
+		    chaptersTitle = t.options.chaptersText ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters'),
 		    i = void 0,
 		    kind = void 0;
 
@@ -2306,10 +2313,13 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		t.cleartracks(player);
-		player.chapters = $('<div class="' + t.options.classPrefix + 'chapters ' + t.options.classPrefix + 'layer"></div>').prependTo(layers).hide();
+
 		player.captions = $('<div class="' + t.options.classPrefix + 'captions-layer ' + t.options.classPrefix + 'layer">' + ('<div class="' + t.options.classPrefix + 'captions-position ' + t.options.classPrefix + 'captions-position-hover"' + attr + '>') + ('<span class="' + t.options.classPrefix + 'captions-text"></span>') + '</div>' + '</div>').prependTo(layers).hide();
+
 		player.captionsText = player.captions.find('.' + t.options.classPrefix + 'captions-text');
 		player.captionsButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '"></button>') + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked" />' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>' + '</div>').appendTo(controls);
+
+		player.chaptersButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '"></button>') + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list" aria-role="menu"></ul>') + '</div>' + '</div>');
 
 		var subtitleCount = 0,
 		    total = player.tracks.length;
@@ -2318,6 +2328,8 @@ Object.assign(_player2.default.prototype, {
 			kind = player.tracks[i].kind;
 			if (kind === 'subtitles' || kind === 'captions') {
 				subtitleCount++;
+			} else if (kind === 'chapters' && !controls.find('.' + t.options.classPrefix + 'chapter-selector').length) {
+				player.chaptersButton.appendTo(controls);
 			}
 		}
 
@@ -2352,6 +2364,35 @@ Object.assign(_player2.default.prototype, {
 				e.stopPropagation();
 			});
 		}
+
+		player.chaptersButton.on('mouseenter focusin', function () {
+			var self = $(this),
+			    chapters = self.find('.' + t.options.classPrefix + 'chapters-selector-list').children().length;
+
+			if (chapters) {
+				self.find('.' + t.options.classPrefix + 'chapters-selector').removeClass(t.options.classPrefix + 'offscreen');
+			}
+		}).on('mouseleave focusout', function () {
+			$(this).find('.' + t.options.classPrefix + 'chapters-selector').addClass(t.options.classPrefix + 'offscreen');
+		})
+		// handle clicks to the chapters radio buttons
+		.on('click', 'input[type=radio]', function () {
+			var self = $(this);
+			player.chaptersButton.find('li').attr('aria-checked', false).end().find('.' + t.options.classPrefix + 'chapters-selected').removeClass(t.options.classPrefix + 'chapters-selected');
+
+			self.prop('checked', true).siblings('.' + t.options.classPrefix + 'chapters-selector-label').addClass(t.options.classPrefix + 'chapters-selected').end().parent().attr('aria-checked', true);
+
+			media.setCurrentTime(parseFloat(self.val()));
+			if (media.paused) {
+				media.play();
+			}
+		}).on('click', '.' + t.options.classPrefix + 'chapters-selector-label', function () {
+			$(this).siblings('input[type="radio"]').trigger('click');
+		})
+		//Allow up/down arrow to change the selected radio without changing the volume.
+		.on('keydown', function (e) {
+			e.stopPropagation();
+		});
 
 		if (!player.options.alwaysShowControls) {
 			// move with controls
@@ -2395,39 +2436,9 @@ Object.assign(_player2.default.prototype, {
 			}, false);
 		}
 
-		media.addEventListener('loadedmetadata', function () {
-			player.displayChapters();
-		}, false);
-
-		player.container.hover(function () {
-			// chapters
-			if (player.hasChapters) {
-				player.chapters.removeClass(t.options.classPrefix + 'offscreen');
-				player.chapters.fadeIn(200, function () {
-					var self = $(this);
-					self.height(self.find('.' + t.options.classPrefix + 'chapter').outerHeight());
-				});
-			}
-		}, function () {
-			if (player.hasChapters) {
-				if (media.paused) {
-					player.chapters.fadeOut(200, function () {
-						$(this).addClass(t.options.classPrefix + 'offscreen');
-					});
-				} else {
-					player.chapters.show();
-				}
-			}
-		});
-
 		t.container.on('controlsresize', function () {
 			t.adjustLanguageBox();
 		});
-
-		// check for autoplay
-		if (player.node.getAttribute('autoplay') !== null) {
-			player.chapters.addClass(t.options.classPrefix + 'offscreen');
-		}
 	},
 
 	/**
@@ -2562,17 +2573,14 @@ Object.assign(_player2.default.prototype, {
 
 					after();
 
-					if (track.kind === 'chapters') {
-						t.media.addEventListener('play', function () {
-							if (t.media.duration > 0) {
-								t.displayChapters();
-							}
-						}, false);
-					}
-
 					if (track.kind === 'slides') {
 						t.setupSlides(track);
 					}
+					// Load by default the first track with `chapters` kind
+					else if (track.kind === 'chapters' && !t.hasChapters) {
+							t.drawChapters(track);
+							t.hasChapters = true;
+						}
 				},
 				error: function error() {
 					t.removeTrackButton(track.trackId);
@@ -2685,13 +2693,43 @@ Object.assign(_player2.default.prototype, {
 
 		var t = this,
 		    track = t.selectedTrack,
-		    i = void 0;
+		    i = void 0,
+		    sanitize = function sanitize(html) {
+
+			var div = document.createElement('div');
+
+			div.innerHTML = html;
+
+			// Remove all `<script>` tags first
+			var scripts = div.getElementsByTagName('script');
+			var i = scripts.length;
+			while (i--) {
+				scripts[i].parentNode.removeChild(scripts[i]);
+			}
+
+			// Loop the elements and remove anything that contains value="javascript:" or an `on*` attribute
+			// (`onerror`, `onclick`, etc.)
+			var allElements = div.getElementsByTagName('*');
+			for (var _i = 0, n = allElements.length; _i < n; _i++) {
+				var attributesObj = allElements[_i].attributes,
+				    attributes = Array.prototype.slice.call(attributesObj);
+
+				for (var j = 0, total = attributes.length; j < total; j++) {
+					if (attributes[j].name.startsWith('on') || attributes[j].value.startsWith('javascript')) {
+						allElements[_i].parentNode.removeChild(allElements[_i]);
+					} else if (attributes[j].name === 'style') {
+						allElements[_i].removeAttribute(attributes[j].name);
+					}
+				}
+			}
+			return div.innerHTML;
+		};
 
 		if (track !== null && track.isLoaded) {
 			i = t.searchTrackPosition(track.entries, t.media.currentTime);
 			if (i > -1) {
 				// Set the line before the timecode as a class so the cue can be targeted if needed
-				t.captionsText.html(track.entries[i].text).attr('class', t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || ''));
+				t.captionsText.html(sanitize(track.entries[i].text)).attr('class', t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || ''));
 				t.captions.show().height(0);
 				return; // exit out if one is visible;
 			}
@@ -2761,54 +2799,29 @@ Object.assign(_player2.default.prototype, {
 
 	/**
   *
-  */
-	displayChapters: function displayChapters() {
-		var t = this;
-
-		for (var i = 0, total = t.tracks.length; i < total; i++) {
-			if (t.tracks[i].kind === 'chapters' && t.tracks[i].isLoaded) {
-				t.drawChapters(t.tracks[i]);
-				t.hasChapters = true;
-				break;
-			}
-		}
-	},
-
-	/**
-  *
   * @param {Object} chapters
   */
 	drawChapters: function drawChapters(chapters) {
 		var t = this,
 		    i = void 0,
-		    dur = void 0,
-		    percent = 0,
-		    usedPercent = 0,
 		    total = chapters.entries.length;
 
-		t.chapters.empty();
-
-		for (i = 0; i < total; i++) {
-			dur = chapters.entries[i].stop - chapters.entries[i].start;
-			percent = Math.floor(dur / t.media.duration * 100);
-
-			// too large or not going to fill it in
-			if (percent + usedPercent > 100 || i === chapters.entries.length - 1 && percent + usedPercent < 100) {
-				percent = 100 - usedPercent;
-			}
-
-			t.chapters.append($('<div class="' + t.options.classPrefix + 'chapter" rel="' + chapters.entries[i].start + '" style="left: ' + usedPercent.toString() + '%; width: ' + percent.toString() + '%;">' + ('<div class="' + t.options.classPrefix + 'chapter-block') + ((i === chapters.entries.length - 1 ? ' ' + t.options.classPrefix + 'chapter-block-last' : '') + '">') + ('<span class="ch-title">' + chapters.entries[i].text + '</span>') + '<span class="ch-time">' + ('' + (0, _time.secondsToTimeCode)(chapters.entries[i].start, t.options.alwaysShowHours)) + '&ndash;' + ('' + (0, _time.secondsToTimeCode)(chapters.entries[i].stop, t.options.alwaysShowHours)) + '</span>' + '</div>' + '</div>'));
-			usedPercent += percent;
+		if (!total) {
+			return;
 		}
 
-		t.chapters.find('.' + t.options.classPrefix + 'chapter').click(function () {
-			t.media.setCurrentTime(parseFloat($(this).attr('rel')));
-			if (t.media.paused) {
-				t.media.play();
-			}
-		});
+		t.chaptersButton.find('ul').empty();
 
-		t.chapters.show();
+		for (i = 0; i < total; i++) {
+			t.chaptersButton.find('ul').append($('<li class="' + t.options.classPrefix + 'chapters-selector-list-item" ' + 'role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input"') + ('name="' + t.id + '_chapters" value="' + chapters.entries[i].start + '" disabled>') + ('<label class="' + t.options.classPrefix + 'chapters-selector-label">' + chapters.entries[i].text + '</label>') + '</li>'));
+		}
+
+		$.each(t.chaptersButton.find('input[type="radio"]'), function () {
+			$(this).prop({
+				disabled: false,
+				checked: false
+			});
+		});
 	},
 	/**
   * Perform binary search to look for proper track index
@@ -3071,7 +3084,7 @@ if ('x\n\ny'.split(/\n/gi).length !== 3) {
 	};
 }
 
-},{"16":16,"24":24,"4":4,"6":6}],13:[function(_dereq_,module,exports){
+},{"16":16,"21":21,"24":24,"4":4,"6":6}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -3426,6 +3439,7 @@ var EN = exports.EN = {
 
 	// features/tracks.js
 	"mejs.captions-subtitles": "Captions/Subtitles",
+	"mejs.captions-chapters": "Chapters",
 	"mejs.none": "None",
 
 	// features/volume.js
@@ -4773,7 +4787,9 @@ var MediaElementPlayer = function () {
 			    siblingsWidth = 0;
 
 			t.rail.siblings().each(function (index, object) {
-				siblingsWidth += parseFloat($(object).outerWidth(true));
+				if ($(object).is(':visible')) {
+					siblingsWidth += parseFloat($(object).outerWidth(true));
+				}
 			});
 
 			siblingsWidth += totalMargin + railMargin + 1;
@@ -5303,8 +5319,8 @@ var PluginDetector = exports.PluginDetector = {
 		    description = void 0,
 		    ax = void 0;
 
-		// Firefox, Webkit, Opera
-		if (_constants.NAV.plugins !== undefined && _typeof(_constants.NAV.plugins[pluginName]) === 'object') {
+		// Firefox, Webkit, Opera; avoid MS Edge since `plugins` cannot be accessed
+		if (!_constants.IS_EDGE && _constants.NAV.plugins !== null && _constants.NAV.plugins !== undefined && _typeof(_constants.NAV.plugins[pluginName]) === 'object') {
 			description = _constants.NAV.plugins[pluginName].description;
 			if (description && !(typeof _constants.NAV.mimeTypes !== 'undefined' && _constants.NAV.mimeTypes[mimeType] && !_constants.NAV.mimeTypes[mimeType].enabledPlugin)) {
 				version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
@@ -5517,6 +5533,10 @@ var FlashMediaElementRenderer = {
 		    isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 		    flashHeight = isVideo ? mediaElement.originalNode.height : 1,
 		    flashWidth = isVideo ? mediaElement.originalNode.width : 1;
+
+		if (!!mediaElement.originalNode.currentSrc.length) {
+			flashVars.push('src=' + mediaElement.originalNode.currentSrc);
+		}
 
 		if (flash.options.enablePseudoStreaming === true) {
 			flashVars.push('pseudostreamstart=' + flash.options.pseudoStreamingStartQueryParam);
@@ -5911,7 +5931,7 @@ _renderer.renderer.add(HtmlMediaElement);
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORTS_MEDIA_TAG = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
+exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORTS_MEDIA_TAG = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_EDGE = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
 
 var _window = _dereq_(3);
 
@@ -5935,6 +5955,7 @@ var IS_IPHONE = exports.IS_IPHONE = UA.match(/iphone/i) !== null;
 var IS_IOS = exports.IS_IOS = IS_IPHONE || IS_IPAD;
 var IS_ANDROID = exports.IS_ANDROID = UA.match(/android/i) !== null;
 var IS_IE = exports.IS_IE = NAV.appName.toLowerCase().includes('microsoft') || NAV.appName.toLowerCase().match(/trident/gi) !== null;
+var IS_EDGE = exports.IS_EDGE = 'msLaunchUri' in NAV && !('documentMode' in _document2.default);
 var IS_CHROME = exports.IS_CHROME = UA.match(/chrome/gi) !== null;
 var IS_FIREFOX = exports.IS_FIREFOX = UA.match(/firefox/gi) !== null;
 var IS_SAFARI = exports.IS_SAFARI = UA.match(/safari/gi) !== null && !IS_CHROME;
@@ -6073,6 +6094,7 @@ _mejs2.default.Features.isiPhone = IS_IPHONE;
 _mejs2.default.Features.isiOS = _mejs2.default.Features.isiPhone || _mejs2.default.Features.isiPad;
 _mejs2.default.Features.isAndroid = IS_ANDROID;
 _mejs2.default.Features.isIE = IS_IE;
+_mejs2.default.Features.isEdge = IS_EDGE;
 _mejs2.default.Features.isChrome = IS_CHROME;
 _mejs2.default.Features.isFirefox = IS_FIREFOX;
 _mejs2.default.Features.isSafari = IS_SAFARI;

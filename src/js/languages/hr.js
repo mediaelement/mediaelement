@@ -48,6 +48,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Opisi/Prijevodi",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Ništa",
 
 			// features/volume.js

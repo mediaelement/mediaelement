@@ -50,6 +50,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Sous-titres",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Aucun",
 
 			// features/volume.js

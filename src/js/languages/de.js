@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Überschriften/Untertitel",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Keine",
 
 			// features/volume.js

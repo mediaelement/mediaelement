@@ -24,6 +24,7 @@
 			"mejs.time-help-text": "Koristi strelice lijevo/desno za pomak naprijed za 1 sekundu te gore/dolje za pomak od 10 sekundi.",			
 			"mejs.time-skip-back": ["Skoči natrag 1 sekundu", "Skoči natrag %1 sekunde", "Skoči natrag %1 sekundi"],			
 			"mejs.captions-subtitles": "Opisi/Prijevodi",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Ništa",			
 			"mejs.mute-toggle": "Uključi/isključi zvuk",
 			"mejs.volume-help-text": "Koristi strelice gore/dolje za pojačavanje ili stišavanje.",

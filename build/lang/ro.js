@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Utilizează tastele săgeată Stânga/Dreapta pentru a avansa o secundă şi săgeţile Sus/Jos pentru a avansa zece secunde.",			
 			"mejs.time-skip-back": "Sari înapoi %1 secunde",			
 			"mejs.captions-subtitles": "Legende/Subtitrări",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Niciunul",			
 			"mejs.mute-toggle": "Comutare dezactivare sunet",
 			"mejs.volume-help-text": "Utilizează tastele de săgeată Sus/Jos pentru a creşte/micşora volumul",

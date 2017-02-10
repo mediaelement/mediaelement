@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.",			
 			"mejs.time-skip-back": ["Rebobinar 1 segundo", "Rebobinar %1 segundos"],			
 			"mejs.captions-subtitles": "Leyendas/Subtítulos",
+			"mejs.captions-chapters": "Capítulos",
 			"mejs.none": "Ninguno",			
 			"mejs.mute-toggle": "Alternar silencio",
 			"mejs.volume-help-text": "Use las flechas Arriba/Abajo para subir o bajar el volumen.",

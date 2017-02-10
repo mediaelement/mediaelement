@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Použijte tlačítka se šipkami doleva / doprava pro posun o jednu vteřinu, tlačítka se šipkami nahoru / dolů pro posun o deset vteřin.",			
 			"mejs.time-skip-back": "Zpět o %1 vteřin",			
 			"mejs.captions-subtitles": "Titulky",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Žádný",			
 			"mejs.mute-toggle": "Vypnout/zapnout zvuk",
 			"mejs.volume-help-text": "Použijte tlačítka se šipkami nahoru / dolů pro zesílení nebo zeslabení hlasitosti.",

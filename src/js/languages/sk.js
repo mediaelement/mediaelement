@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Skryté titulky/Titulky",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Žiadne",
 
 			// features/volume.js

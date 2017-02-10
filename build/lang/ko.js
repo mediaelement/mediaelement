@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "1초 전진하려면 좌/우측 화살표를 사용하시고 10초 전진하려면 위/아래 화살표를 사용하세요.",			
 			"mejs.time-skip-back": "%1초 를 뒤로 건너뛰세요",			
 			"mejs.captions-subtitles": "캡션/자막",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "없음",			
 			"mejs.mute-toggle": "음소거 전환",
 			"mejs.volume-help-text": "볼륨을 높이거나 낮추려면 위/아래 화살표를 이용하세요.",

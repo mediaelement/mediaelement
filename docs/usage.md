@@ -32,10 +32,10 @@ You can use this as a standalone library if you wish, or just stick with the ful
 
 <a id="automatic"></a>
 ### Automatic start
-You can avoid running any startup scripts by adding `class="mejs-player"` to the `<video>` or `<audio>` tag. All the player configuration can be added through `data-mejsoptions` attribute.
+You can avoid running any startup scripts by adding `class="mejs__player"` to the `<video>` or `<audio>` tag. All the player configuration can be added through `data-mejsoptions` attribute.
 ```html	
 <video src="myvideo.mp4" width="320" height="240" 
-		class="mejs-player" 
+		class="mejs__player" 
 		data-mejsoptions='{"pluginPath": "/path/to/shims/", "alwaysShowControls": "true"}'></video>
 ```
 

@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Klávesmi so šípkou doľava/doprava posuniete o jednu sekundu, šípkami nahor/ nadol posuniete o desať sekúnd.",			
 			"mejs.time-skip-back": "Preskočiť dozadu o %1 s.",			
 			"mejs.captions-subtitles": "Skryté titulky/Titulky",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Žiadne",			
 			"mejs.mute-toggle": "Prepínač stlmenia",
 			"mejs.volume-help-text": "Klávesmi so šípkou nahor/nadol zvýšite alebo znížite hlasitosť.",
