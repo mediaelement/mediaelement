@@ -4270,7 +4270,6 @@ var MediaElementPlayer = function () {
 
 							// click to play/pause
 							t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
-							// t.iframeMouseOver = false;
 
 							// show/hide controls
 							t.container.on('mouseenter', function () {
@@ -4297,19 +4296,6 @@ var MediaElementPlayer = function () {
 									}
 								}
 							});
-							// }).on('mouseover', () => {
-							// 	t.iframeMouseOver = true;
-							// }).on('mouseout', () => {
-							// 	t.iframeMouseOver = false;
-							// });
-							//
-							// const monitor = setInterval(function(){
-							// 	const elem = document.activeElement;
-							// 	if (elem && elem.tagName === 'IFRAME') {
-							// 		t.clickToPlayPauseCallback();
-							// 		clearInterval(monitor);
-							// 	}
-							// }, 50);
 						}
 
 						if (t.options.hideVideoControlsOnLoad) {
@@ -5112,7 +5098,24 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'setSrc',
 		value: function setSrc(src) {
-			this.media.setSrc(src);
+			var t = this;
+			t.media.setSrc(src);
+
+			if (t.media.rendererName.match(/iframe/i) !== null) {
+
+				$('<div id="' + t.media.id + '-iframe-overlay" class="' + t.options.classPrefix + 'iframe-overlay"></div>').insertBefore($('#' + t.media.id + '_' + t.media.rendererName)).on('click', function (e) {
+					if (t.options.clickToPlayPause) {
+						if (t.media.paused) {
+							t.media.play();
+						} else {
+							t.media.pause();
+						}
+
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				});
+			}
 		}
 	}, {
 		key: 'remove',
@@ -5163,6 +5166,12 @@ var MediaElementPlayer = function () {
 				if (t.media.canPlayType((0, _media.getTypeFromFile)(src))) {
 					t.$node.attr('src', src);
 				}
+
+				// If <iframe>, remove overlay
+				if (rendererName.match(/iframe/i) !== null) {
+					t.container.find('#' + t.media.id + '-iframe-overlay').remove();
+				}
+
 				t.$node.clone().insertBefore(t.container).show();
 				t.$node.remove();
 			} else {
@@ -5645,6 +5654,8 @@ if (hasFlash) {
 			return 'application/x-mpegURL';
 		} else if (!_constants.HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
+		} else if (!_constants.HAS_MSE && url.includes('.flv')) {
+			return 'video/flv';
 		} else {
 			return null;
 		}
@@ -5670,7 +5681,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return hasFlash && ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type);
+			return hasFlash && ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type) || !_constants.HAS_MSE && hasFlash && ['video/flv', 'video/x-flv'].includes(type);
 		},
 
 		create: FlashMediaElementRenderer.create

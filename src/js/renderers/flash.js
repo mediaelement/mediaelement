@@ -440,7 +440,9 @@ if (hasFlash) {
 			return 'application/x-mpegURL';
 		} else if (!HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
-		} else {
+		} else if (!HAS_MSE && url.includes('.flv')) {
+			return 'video/flv';
+		}else {
 			return null;
 		}
 
@@ -465,7 +467,8 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => hasFlash && ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type),
+		canPlayType: (type) => hasFlash && ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type) ||
+			!HAS_MSE && hasFlash && ['video/flv', 'video/x-flv'].includes(type),
 
 		create: FlashMediaElementRenderer.create
 

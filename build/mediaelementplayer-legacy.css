@@ -46,8 +46,10 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     outline: none;
 }
 
-.me-plugin {
+.mejs-iframe-overlay {
     position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .mejs-embed,

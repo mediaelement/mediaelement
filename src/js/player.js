@@ -736,49 +736,35 @@ class MediaElementPlayer {
 
 					// click to play/pause
 					t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
-					// t.iframeMouseOver = false;
 
 					// show/hide controls
 					t.container
-					.on('mouseenter', () => {
-						if (t.controlsEnabled) {
-							if (!t.options.alwaysShowControls) {
-								t.killControlsTimer('enter');
-								t.showControls();
-								t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+						.on('mouseenter', () => {
+							if (t.controlsEnabled) {
+								if (!t.options.alwaysShowControls) {
+									t.killControlsTimer('enter');
+									t.showControls();
+									t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+								}
 							}
-						}
-					})
-					.on('mousemove', () => {
-						if (t.controlsEnabled) {
-							if (!t.controlsAreVisible) {
-								t.showControls();
+						})
+						.on('mousemove', () => {
+							if (t.controlsEnabled) {
+								if (!t.controlsAreVisible) {
+									t.showControls();
+								}
+								if (!t.options.alwaysShowControls) {
+									t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+								}
 							}
-							if (!t.options.alwaysShowControls) {
-								t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+						})
+						.on('mouseleave', () => {
+							if (t.controlsEnabled) {
+								if (!t.media.paused && !t.options.alwaysShowControls) {
+									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
+								}
 							}
-						}
-					})
-					.on('mouseleave', () => {
-						if (t.controlsEnabled) {
-							if (!t.media.paused && !t.options.alwaysShowControls) {
-								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
-							}
-						}
-					});
-					// }).on('mouseover', () => {
-					// 	t.iframeMouseOver = true;
-					// }).on('mouseout', () => {
-					// 	t.iframeMouseOver = false;
-					// });
-					//
-					// const monitor = setInterval(function(){
-					// 	const elem = document.activeElement;
-					// 	if (elem && elem.tagName === 'IFRAME') {
-					// 		t.clickToPlayPauseCallback();
-					// 		clearInterval(monitor);
-					// 	}
-					// }, 50);
+						});
 				}
 
 				if (t.options.hideVideoControlsOnLoad) {
@@ -1602,7 +1588,26 @@ class MediaElementPlayer {
 	}
 
 	setSrc (src) {
-		this.media.setSrc(src);
+		const t = this;
+		t.media.setSrc(src);
+
+		if (t.media.rendererName.match(/iframe/i) !== null) {
+
+			$(`<div id="${t.media.id}-iframe-overlay" class="${t.options.classPrefix}iframe-overlay"></div>`)
+				.insertBefore($(`#${t.media.id}_${t.media.rendererName}`))
+				.on('click', function(e) {
+					if (t.options.clickToPlayPause) {
+						if (t.media.paused) {
+							t.media.play();
+						} else {
+							t.media.pause();
+						}
+
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				});
+		}
 	}
 
 	remove () {
@@ -1654,6 +1659,12 @@ class MediaElementPlayer {
 			if (t.media.canPlayType(getTypeFromFile(src))) {
 				t.$node.attr('src', src);
 			}
+
+			// If <iframe>, remove overlay
+			if (rendererName.match(/iframe/i) !== null) {
+				t.container.find(`#${t.media.id}-iframe-overlay`).remove();
+			}
+
 			t.$node.clone().insertBefore(t.container).show();
 			t.$node.remove();
 		} else {

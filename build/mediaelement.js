@@ -2886,6 +2886,8 @@ if (hasFlash) {
 			return 'application/x-mpegURL';
 		} else if (!_constants.HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
+		} else if (!_constants.HAS_MSE && url.includes('.flv')) {
+			return 'video/flv';
 		} else {
 			return null;
 		}
@@ -2911,7 +2913,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return hasFlash && ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type);
+			return hasFlash && ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type) || !_constants.HAS_MSE && hasFlash && ['video/flv', 'video/x-flv'].includes(type);
 		},
 
 		create: FlashMediaElementRenderer.create
