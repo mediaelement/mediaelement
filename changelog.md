@@ -4,6 +4,7 @@
 
 * Fixed typo in `usage.md` in regards of Automatic start (https://github.com/johndyer/mediaelement/pull/2071) @SvenJuergens
 * Added translation for Polish language (https://github.com/johndyer/mediaelement/pull/2074) @greg-dev
+* Added translation for Russian language (https://github.com/johndyer/mediaelement/pull/2073) @Globulopolis
 
 *3.1.2 (2017/02/10)*
 
