@@ -253,7 +253,7 @@ mejs.MepDefaults = config;
  * Wrap a MediaElement object in player controls
  *
  * @constructor
- * @param {HTMLElement} node
+ * @param {HTMLElement|String} node
  * @param {Object} o
  * @return {?MediaElementPlayer}
  */
@@ -271,13 +271,15 @@ class MediaElementPlayer {
 
 		t.controlsTimer = null;
 
+		const element = typeof node === 'string' ? document.getElementById(node) : node;
+
 		// enforce object, even without "new" (via John Resig)
 		if (!(t instanceof MediaElementPlayer)) {
-			return new MediaElementPlayer(node, o);
+			return new MediaElementPlayer(element, o);
 		}
 
 		// these will be reset after the MediaElement.success fires
-		t.$media = t.$node = $(node);
+		t.$media = t.$node = $(element);
 		t.node = t.media = t.$media[0];
 
 		if (!t.node) {
