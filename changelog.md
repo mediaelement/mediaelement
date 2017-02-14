@@ -6,6 +6,7 @@
 * Added translation for Polish language (https://github.com/johndyer/mediaelement/pull/2074) @greg-dev
 * Added translation for Russian language (https://github.com/johndyer/mediaelement/pull/2073) @Globulopolis
 * Added overlay on `iframe` renderers to allow triggering mouse/click events properly @ron666 
+* Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @ron666
 
 *3.1.2 (2017/02/10)*
 
