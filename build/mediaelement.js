@@ -3210,6 +3210,7 @@ var FlvNativeRenderer = {
 						node[propName] = value;
 
 						if (propName === 'src') {
+							flvPlayer.unload();
 							flvPlayer.detachMediaElement();
 							flvPlayer.attachMediaElement(node);
 							flvPlayer.load();
@@ -3254,6 +3255,7 @@ var FlvNativeRenderer = {
 
 				if (eventName === 'loadedmetadata') {
 
+					flvPlayer.unload();
 					flvPlayer.detachMediaElement();
 					flvPlayer.attachMediaElement(node);
 					flvPlayer.load();
@@ -3307,7 +3309,7 @@ var FlvNativeRenderer = {
 		};
 
 		node.hide = function () {
-			node.pause();
+			flvPlayer.pause();
 			node.style.display = 'none';
 			return node;
 		};

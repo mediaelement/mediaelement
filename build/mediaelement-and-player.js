@@ -5046,13 +5046,19 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'play',
 		value: function play() {
-			var t = this;
+			var t = this,
+			    waitTime = 150;
 
-			// only load if the current time is 0 to ensure proper playing
-			if (t.media.getCurrentTime() <= 0) {
-				t.load();
-			}
-			t.media.play();
+			// Give the timeout enough time to avoid race conflict between `pause()` and `play()`.
+			setTimeout(function () {
+				if (t.media.paused) {
+					// only load if the current time is 0 to ensure proper playing
+					if (t.media.getCurrentTime() <= 0) {
+						t.load();
+					}
+					t.media.play();
+				}
+			}, waitTime);
 		}
 	}, {
 		key: 'pause',
@@ -7263,6 +7269,7 @@ var FlvNativeRenderer = {
 						node[propName] = value;
 
 						if (propName === 'src') {
+							flvPlayer.unload();
 							flvPlayer.detachMediaElement();
 							flvPlayer.attachMediaElement(node);
 							flvPlayer.load();
@@ -7307,6 +7314,7 @@ var FlvNativeRenderer = {
 
 				if (eventName === 'loadedmetadata') {
 
+					flvPlayer.unload();
 					flvPlayer.detachMediaElement();
 					flvPlayer.attachMediaElement(node);
 					flvPlayer.load();
@@ -7360,7 +7368,7 @@ var FlvNativeRenderer = {
 		};
 
 		node.hide = function () {
-			node.pause();
+			flvPlayer.pause();
 			node.style.display = 'none';
 			return node;
 		};

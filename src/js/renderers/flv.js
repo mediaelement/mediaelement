@@ -183,6 +183,7 @@ const FlvNativeRenderer = {
 							node[propName] = value;
 
 							if (propName === 'src') {
+								flvPlayer.unload();
 								flvPlayer.detachMediaElement();
 								flvPlayer.attachMediaElement(node);
 								flvPlayer.load();
@@ -210,13 +211,13 @@ const FlvNativeRenderer = {
 			if (stack.length) {
 				for (i = 0, il = stack.length; i < il; i++) {
 
-					let stackItem = stack[i];
+					const stackItem = stack[i];
 
 					if (stackItem.type === 'set') {
-						let
+						const
 							propName = stackItem.propName,
 							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`
-							;
+						;
 
 						node[`set${capName}`](stackItem.value);
 					} else if (stackItem.type === 'call') {
@@ -232,6 +233,7 @@ const FlvNativeRenderer = {
 
 					if (eventName === 'loadedmetadata') {
 
+						flvPlayer.unload();
 						flvPlayer.detachMediaElement();
 						flvPlayer.attachMediaElement(node);
 						flvPlayer.load();
@@ -246,7 +248,7 @@ const FlvNativeRenderer = {
 					});
 
 				}
-				;
+			;
 
 			events = events.concat(['click', 'mouseover', 'mouseout']);
 
@@ -287,7 +289,7 @@ const FlvNativeRenderer = {
 		};
 
 		node.hide = () => {
-			node.pause();
+			flvPlayer.pause();
 			node.style.display = 'none';
 			return node;
 		};

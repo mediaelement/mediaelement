@@ -1543,13 +1543,23 @@ class MediaElementPlayer {
 	}
 
 	play () {
-		let t = this;
+		let
+			t = this,
+			waitTime = 150
+		;
 
-		// only load if the current time is 0 to ensure proper playing
-		if (t.media.getCurrentTime() <= 0) {
-			t.load();
-		}
-		t.media.play();
+		// Give the timeout enough time to avoid race conflict between `pause()` and `play()`.
+		setTimeout(function () {
+			if (t.media.paused) {
+				// only load if the current time is 0 to ensure proper playing
+				if (t.media.getCurrentTime() <= 0) {
+					t.load();
+				}
+				t.media.play();
+			}
+		}, waitTime);
+
+
 	}
 
 	pause () {

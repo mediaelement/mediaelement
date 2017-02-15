@@ -7,6 +7,8 @@
 * Added translation for Russian language (https://github.com/johndyer/mediaelement/pull/2073) @Globulopolis
 * Added overlay on `iframe` renderers to allow triggering mouse/click events properly @ron666 
 * Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @ron666
+* Fixed race issue when calling `play` and `pause` together @ron666
+* Fixed minor issues with FLV native renderer @ron666
 
 *3.1.2 (2017/02/10)*
 
