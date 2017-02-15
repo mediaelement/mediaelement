@@ -219,14 +219,14 @@ Below are listed the renderers with their IDs and player instance to execute oth
 Renderer | ID | API instance | Reference | MIME Type(s) 
 -------- | --- | ------------ | -------- | --------- 
 Native video/audio | `html5` | --- | --- | video/mp4, audio/mp4, video/webm, audio/mpeg, audio/mp3, audio/ogg, audio/oga, video/ogg
-HLS native | `native_hls` | `hlsPlayer` | https://github.com/dailymotion/hls.js | application/x-mpegURL, vnd.apple.mpegURL
-M(PEG)-DASH native | `native_dash` | `dashPlayer` | https://github.com/Dash-Industry-Forum/dash.js | application/dash+xml
-FLV native | `native_flv` | `flvPlayer` | https://github.com/Bilibili/flv.js | video/flv
-SoundCloud | `soundcloud_iframe` | `scPlayer` | https://developers.soundcloud.com/docs/api/html5-widget | video/soundcloud, video/x-soundcloud
+HLS native | `native_hls` | `hlsPlayer` | [`hls.js` API](https://github.com/dailymotion/hls.js/blob/master/doc/API.md) | application/x-mpegURL, vnd.apple.mpegURL
+M(PEG)-DASH native | `native_dash` | `dashPlayer` | [`dash.js` Documentation](http://cdn.dashjs.org/latest/jsdoc/index.html) | application/dash+xml
+FLV native | `native_flv` | `flvPlayer` | [`flv.js` API](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) | video/flv
+SoundCloud | `soundcloud_iframe` | `scPlayer` | [SoundCloud Widget API](https://developers.soundcloud.com/docs/api/html5-widget) | video/soundcloud, video/x-soundcloud
 Facebook | `facebook` | --- | --- | video/facebook, video/x-facebook
-Vimeo | `vimeo_iframe` | `vimeoPlayer` | https://github.com/vimeo/player.js | video/vimeo, video/x-vimeo
-YouTube | `youtube_iframe` | `youTubeApi` | https://developers.google.com/youtube/iframe_api_reference | video/youtube, video/x-youtube
-DailyMotion | `dailymotion_iframe` | `dmPlayer` | https://developer.dailymotion.com/player  | video/dailymotion, video/x-dailymotion
+Vimeo | `vimeo_iframe` | `vimeoPlayer` | [Vimeo Player API](https://github.com/vimeo/player.js) | video/vimeo, video/x-vimeo
+YouTube | `youtube_iframe` | `youTubeApi` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
+DailyMotion | `dailymotion_iframe` | `dmPlayer` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
 Video shim  | `flash_video` | --- | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 
 Audio shim | `flash_audio` | --- | --- | audio/mp3
 OGG Audio shim  | `flash_audio_ogg` | --- | --- | audio/ogg, audio/oga
