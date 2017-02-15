@@ -713,6 +713,8 @@ class MediaElementPlayer {
 
 				} else {
 
+					t.createIframeLayer();
+
 					// create callback here since it needs access to current
 					// MediaElement object
 					t.clickToPlayPauseCallback = () => {
@@ -1262,6 +1264,29 @@ class MediaElementPlayer {
 		t.container.trigger('controlsresize');
 	}
 
+	createIframeLayer () {
+
+		const t = this;
+
+		if (t.isVideo && t.media.rendererName.match(/iframe/i) !== null && !t.container.find(`#${t.media.id}-iframe-overlay`).length) {
+
+			$(`<div id="${t.media.id}-iframe-overlay" class="${t.options.classPrefix}iframe-overlay"></div>`)
+			.insertBefore($(`#${t.media.id}_${t.media.rendererName}`))
+			.on('click', function(e) {
+				if (t.options.clickToPlayPause) {
+					if (t.media.paused) {
+						t.media.play();
+					} else {
+						t.media.pause();
+					}
+
+					e.preventDefault();
+					e.stopPropagation();
+				}
+			});
+		}
+	}
+
 	resetSize () {
 		let t = this;
 		// webkit has trouble doing this without a delay
@@ -1543,23 +1568,13 @@ class MediaElementPlayer {
 	}
 
 	play () {
-		let
-			t = this,
-			waitTime = 150
-		;
+		let t = this;
 
-		// Give the timeout enough time to avoid race conflict between `pause()` and `play()`.
-		setTimeout(function () {
-			if (t.media.paused) {
-				// only load if the current time is 0 to ensure proper playing
-				if (t.media.getCurrentTime() <= 0) {
-					t.load();
-				}
-				t.media.play();
-			}
-		}, waitTime);
-
-
+		// only load if the current time is 0 to ensure proper playing
+		if (t.media.getCurrentTime() <= 0) {
+			t.load();
+		}
+		t.media.play();
 	}
 
 	pause () {
@@ -1600,26 +1615,16 @@ class MediaElementPlayer {
 	}
 
 	setSrc (src) {
-		const t = this;
+		const
+			t = this,
+			layer = t.container.find(`#${t.media.id}-iframe-overlay`)
+		;
 		t.media.setSrc(src);
 
-		if (t.media.rendererName.match(/iframe/i) !== null) {
-
-			$(`<div id="${t.media.id}-iframe-overlay" class="${t.options.classPrefix}iframe-overlay"></div>`)
-				.insertBefore($(`#${t.media.id}_${t.media.rendererName}`))
-				.on('click', function(e) {
-					if (t.options.clickToPlayPause) {
-						if (t.media.paused) {
-							t.media.play();
-						} else {
-							t.media.pause();
-						}
-
-						e.preventDefault();
-						e.stopPropagation();
-					}
-				});
+		if (layer.length) {
+			layer.remove();
 		}
+		t.createIframeLayer();
 	}
 
 	remove () {

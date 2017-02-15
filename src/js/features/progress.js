@@ -159,13 +159,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			},
 			handleMouseup = () => {
 
-				if (t.forcedHandlePause) {
-					t.media.play();
-				}
 				if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 					media.setCurrentTime(t.newTime);
 					player.setCurrentRail();
 					t.updateCurrent(t.newTime);
+				}
+				if (t.forcedHandlePause) {
+					t.media.play();
 				}
 				t.forcedHandlePause = false;
 			};

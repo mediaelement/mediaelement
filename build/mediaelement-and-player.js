@@ -1807,13 +1807,13 @@ Object.assign(_player2.default.prototype, {
 		},
 		    handleMouseup = function handleMouseup() {
 
-			if (t.forcedHandlePause) {
-				t.media.play();
-			}
 			if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 				media.setCurrentTime(t.newTime);
 				player.setCurrentRail();
 				t.updateCurrent(t.newTime);
+			}
+			if (t.forcedHandlePause) {
+				t.media.play();
 			}
 			t.forcedHandlePause = false;
 		};
@@ -4250,6 +4250,8 @@ var MediaElementPlayer = function () {
 							});
 						} else {
 
+							t.createIframeLayer();
+
 							// create callback here since it needs access to current
 							// MediaElement object
 							t.clickToPlayPauseCallback = function () {
@@ -4788,6 +4790,28 @@ var MediaElementPlayer = function () {
 			t.container.trigger('controlsresize');
 		}
 	}, {
+		key: 'createIframeLayer',
+		value: function createIframeLayer() {
+
+			var t = this;
+
+			if (t.isVideo && t.media.rendererName.match(/iframe/i) !== null && !t.container.find('#' + t.media.id + '-iframe-overlay').length) {
+
+				$('<div id="' + t.media.id + '-iframe-overlay" class="' + t.options.classPrefix + 'iframe-overlay"></div>').insertBefore($('#' + t.media.id + '_' + t.media.rendererName)).on('click', function (e) {
+					if (t.options.clickToPlayPause) {
+						if (t.media.paused) {
+							t.media.play();
+						} else {
+							t.media.pause();
+						}
+
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				});
+			}
+		}
+	}, {
 		key: 'resetSize',
 		value: function resetSize() {
 			var t = this;
@@ -5046,19 +5070,13 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'play',
 		value: function play() {
-			var t = this,
-			    waitTime = 150;
+			var t = this;
 
-			// Give the timeout enough time to avoid race conflict between `pause()` and `play()`.
-			setTimeout(function () {
-				if (t.media.paused) {
-					// only load if the current time is 0 to ensure proper playing
-					if (t.media.getCurrentTime() <= 0) {
-						t.load();
-					}
-					t.media.play();
-				}
-			}, waitTime);
+			// only load if the current time is 0 to ensure proper playing
+			if (t.media.getCurrentTime() <= 0) {
+				t.load();
+			}
+			t.media.play();
 		}
 	}, {
 		key: 'pause',
@@ -5106,24 +5124,14 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'setSrc',
 		value: function setSrc(src) {
-			var t = this;
+			var t = this,
+			    layer = t.container.find('#' + t.media.id + '-iframe-overlay');
 			t.media.setSrc(src);
 
-			if (t.media.rendererName.match(/iframe/i) !== null) {
-
-				$('<div id="' + t.media.id + '-iframe-overlay" class="' + t.options.classPrefix + 'iframe-overlay"></div>').insertBefore($('#' + t.media.id + '_' + t.media.rendererName)).on('click', function (e) {
-					if (t.options.clickToPlayPause) {
-						if (t.media.paused) {
-							t.media.play();
-						} else {
-							t.media.pause();
-						}
-
-						e.preventDefault();
-						e.stopPropagation();
-					}
-				});
+			if (layer.length) {
+				layer.remove();
 			}
+			t.createIframeLayer();
 		}
 	}, {
 		key: 'remove',
