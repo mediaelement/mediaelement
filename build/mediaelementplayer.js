@@ -4795,7 +4795,7 @@ var MediaElementPlayer = function () {
 
 			var t = this;
 
-			if (t.isVideo && t.media.rendererName.match(/iframe/i) !== null && !t.container.find('#' + t.media.id + '-iframe-overlay').length) {
+			if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !t.container.find('#' + t.media.id + '-iframe-overlay').length) {
 
 				$('<div id="' + t.media.id + '-iframe-overlay" class="' + t.options.classPrefix + 'iframe-overlay"></div>').insertBefore($('#' + t.media.id + '_' + t.media.rendererName)).on('click', function (e) {
 					if (t.options.clickToPlayPause) {
