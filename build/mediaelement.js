@@ -2372,7 +2372,7 @@ var FacebookRenderer = {
 							eventHandler.paused = fbApi.subscribe('paused', function () {
 								paused = true;
 								ended = false;
-								sendEvents(['paused']);
+								sendEvents(['pause']);
 							});
 							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
 								paused = true;
@@ -5445,7 +5445,7 @@ var YouTubeIframeRenderer = {
 
 						case 2:
 							// YT.PlayerState.PAUSED
-							events = ['paused'];
+							events = ['pause'];
 							paused = true;
 							ended = false;
 

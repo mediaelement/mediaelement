@@ -514,7 +514,7 @@ const YouTubeIframeRenderer = {
 								break;
 
 							case 2: // YT.PlayerState.PAUSED
-								events = ['paused'];
+								events = ['pause'];
 								paused = true;
 								ended = false;
 
