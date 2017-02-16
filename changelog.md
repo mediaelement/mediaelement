@@ -8,8 +8,9 @@
 * Added overlay on `iframe` renderers to allow triggering mouse/click events properly @ron666 
 * Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @ron666
 * Fixed minor issues with FLV native renderer and updated documentation @ron666
-* Fixed typo in `pause` events not being triggered on Facebook and YouTube renderers @ron666
+* Fixed typo in `pause` event not being triggered on Facebook and YouTube renderers @ron666
 * Fixed issue on `progress` feature that caused multiple events being fired incorrectly when clicking on rail @ron666
+* Corrected typo in `full.js` file (https://github.com/johndyer/mediaelement/pull/2081) @helmetroo
 
 *3.1.2 (2017/02/10)*
 
