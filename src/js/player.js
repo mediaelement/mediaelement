@@ -1374,11 +1374,19 @@ class MediaElementPlayer {
 			poster.hide();
 		}, false);
 
+		media.addEventListener('playing', () => {
+		    poster.hide();
+		}, false);
+
 		if (player.options.showPosterWhenEnded && player.options.autoRewind) {
 			media.addEventListener('ended', () => {
 				poster.show();
 			}, false);
 		}
+
+		media.addEventListener('error', () => {
+		    poster.hide();
+		}, false);
 
 		if (player.options.showPosterWhenPaused) {
 			media.addEventListener('pause', () => {

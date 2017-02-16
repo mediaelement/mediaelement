@@ -4956,6 +4956,9 @@ var YouTubeApi = {
   */
 	enqueueIframe: function enqueueIframe(settings) {
 
+		// Check whether YouTube API is already loaded.
+		YouTubeApi.isLoaded = typeof YT !== 'undefined' && YT.loaded;
+
 		if (YouTubeApi.isLoaded) {
 			YouTubeApi.createIframe(settings);
 		} else {
@@ -5115,6 +5118,7 @@ var YouTubeIframeRenderer = {
 			rel: 0,
 			showinfo: 0,
 			start: 0,
+			iv_load_policy: 3,
 			// custom to inject `-nocookie` element in URL
 			nocookie: false
 		}
@@ -5311,8 +5315,10 @@ var YouTubeIframeRenderer = {
 					// DO method
 					switch (methodName) {
 						case 'play':
+							paused = false;
 							return youTubeApi.playVideo();
 						case 'pause':
+							paused = true;
 							return youTubeApi.pauseVideo();
 						case 'load':
 							return null;
@@ -5359,7 +5365,8 @@ var YouTubeIframeRenderer = {
 				html5: 1,
 				playsinline: 0,
 				start: 0,
-				end: 0
+				end: 0,
+				iv_load_policy: 3
 			}, youtube.options.youtube),
 			origin: _window2.default.location.host,
 			events: {
@@ -5455,7 +5462,6 @@ var YouTubeIframeRenderer = {
 						case 3:
 							// YT.PlayerState.BUFFERING
 							events = ['progress'];
-							paused = false;
 							ended = false;
 
 							break;
@@ -5473,6 +5479,10 @@ var YouTubeIframeRenderer = {
 						var event = (0, _dom.createEvent)(events[_i], youtube);
 						mediaElement.dispatchEvent(event);
 					}
+				},
+				onError: function onError(e) {
+					var event = (0, _dom.createEvent)('error', youtube);
+					mediaElement.dispatchEvent(event);
 				}
 			}
 		};

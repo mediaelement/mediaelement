@@ -36,6 +36,9 @@ const YouTubeApi = {
 	 */
 	enqueueIframe: (settings) => {
 
+		// Check whether YouTube API is already loaded.
+		YouTubeApi.isLoaded = typeof YT !== 'undefined' && YT.loaded;
+
 		if (YouTubeApi.isLoaded) {
 			YouTubeApi.createIframe(settings);
 		} else {
@@ -197,6 +200,7 @@ const YouTubeIframeRenderer = {
 			rel: 0,
 			showinfo: 0,
 			start: 0,
+			iv_load_policy: 3,
 			// custom to inject `-nocookie` element in URL
 			nocookie: false
 		}
@@ -376,8 +380,10 @@ const YouTubeIframeRenderer = {
 						// DO method
 						switch (methodName) {
 							case 'play':
+								paused = false;
 								return youTubeApi.playVideo();
 							case 'pause':
+								paused = true;
 								return youTubeApi.pauseVideo();
 							case 'load':
 								return null;
@@ -428,7 +434,8 @@ const YouTubeIframeRenderer = {
 					html5: 1,
 					playsinline: 0,
 					start: 0,
-					end: 0
+					end: 0,
+					iv_load_policy: 3
 				}, youtube.options.youtube),
 				origin: window.location.host,
 				events: {
@@ -523,7 +530,6 @@ const YouTubeIframeRenderer = {
 
 							case 3: // YT.PlayerState.BUFFERING
 								events = ['progress'];
-								paused = false;
 								ended = false;
 
 								break;
@@ -541,6 +547,10 @@ const YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 						}
 
+					},
+					onError: (e) => {
+						let event = createEvent('error', youtube);
+						mediaElement.dispatchEvent(event);
 					}
 				}
 			}
