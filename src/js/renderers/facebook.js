@@ -336,7 +336,7 @@ const FacebookRenderer = {
 						eventHandler.paused = fbApi.subscribe('paused', () => {
 							paused = true;
 							ended = false;
-							sendEvents(['paused']);
+							sendEvents(['pause']);
 						});
 						eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', () => {
 							paused = true;

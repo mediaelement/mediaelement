@@ -1,6 +1,18 @@
 ### Version History
 
-*3.1.2 (2017/02/??)*
+*3.1.3 (2017/??/??)*
+
+* Fixed typo in `usage.md` in regards of Automatic start (https://github.com/johndyer/mediaelement/pull/2071) @SvenJuergens
+* Added translation for Polish language (https://github.com/johndyer/mediaelement/pull/2074) @greg-dev
+* Added translation for Russian language (https://github.com/johndyer/mediaelement/pull/2073) @Globulopolis
+* Added overlay on `iframe` renderers to allow triggering mouse/click events properly @ron666 
+* Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @ron666
+* Fixed minor issues with FLV native renderer and updated documentation @ron666
+* Fixed typo in `pause` event not being triggered on Facebook and YouTube renderers @ron666
+* Fixed issue on `progress` feature that caused multiple events being fired incorrectly when clicking on rail @ron666
+* Corrected typo in `full.js` file (https://github.com/johndyer/mediaelement/pull/2081) @helmetroo
+
+*3.1.2 (2017/02/10)*
 
 * Expanded workflow to stop media loading completely when removing player @ron666
 * Added more fixes to Flash audio shim (https://github.com/johndyer/mediaelement/pull/2054) @an1rk4
@@ -14,6 +26,7 @@
 * Added CDNjs badge for README @ron666
 * Added validation to avoid Flash check on MS Edge due to issues with `plugins` element @ron666
 * Added reference to "johndyer/mediaelement-plugins" (https://github.com/johndyer/mediaelement/pull/2067) @isantolin
+* Standardized way to display chapters tracks using button and menu @ron666
 
 *3.1.1 (2017/02/02)*
 

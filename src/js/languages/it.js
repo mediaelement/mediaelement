@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Acquisizioni/sottotitoli",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Nessuno",
 
 			// features/volume.js

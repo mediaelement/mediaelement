@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.",			
 			"mejs.time-skip-back": ["Cofnij o sekundę", "Cofnij o %1 sekundy", "Cofnij o %1 sekund"],			
 			"mejs.captions-subtitles": "Podpisy/napisy",
+			"mejs.captions-chapters": "Rozdziały",
 			"mejs.none": "Brak",			
 			"mejs.mute-toggle": "Przełączanie wyciszania",
 			"mejs.volume-help-text": "Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.",

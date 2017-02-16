@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "使用左/右箭頭快進1秒，上/下箭頭快進10秒。",			
 			"mejs.time-skip-back": "跳躍式迴繞%1秒",			
 			"mejs.captions-subtitles": "字幕/標題",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "沒有",			
 			"mejs.mute-toggle": "靜音切換",
 			"mejs.volume-help-text": "使用上/下箭頭提高或降低音量。",

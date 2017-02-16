@@ -1,1 +1,1 @@
-module.export = require('./build/mediaelement-and-player.js');
+module.exports = require('./build/mediaelement-and-player.js');

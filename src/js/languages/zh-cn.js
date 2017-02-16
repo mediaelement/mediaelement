@@ -49,6 +49,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "字幕/标题",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "无",
 
 			// features/volume.js

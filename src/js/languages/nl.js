@@ -50,6 +50,7 @@
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Bijschriften/ondertiteling",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Geen",
 
 			// features/volume.js

@@ -253,7 +253,7 @@ mejs.MepDefaults = config;
  * Wrap a MediaElement object in player controls
  *
  * @constructor
- * @param {HTMLElement} node
+ * @param {HTMLElement|String} node
  * @param {Object} o
  * @return {?MediaElementPlayer}
  */
@@ -271,13 +271,15 @@ class MediaElementPlayer {
 
 		t.controlsTimer = null;
 
+		const element = typeof node === 'string' ? document.getElementById(node) : node;
+
 		// enforce object, even without "new" (via John Resig)
 		if (!(t instanceof MediaElementPlayer)) {
-			return new MediaElementPlayer(node, o);
+			return new MediaElementPlayer(element, o);
 		}
 
 		// these will be reset after the MediaElement.success fires
-		t.$media = t.$node = $(node);
+		t.$media = t.$node = $(element);
 		t.node = t.media = t.$media[0];
 
 		if (!t.node) {
@@ -711,6 +713,8 @@ class MediaElementPlayer {
 
 				} else {
 
+					t.createIframeLayer();
+
 					// create callback here since it needs access to current
 					// MediaElement object
 					t.clickToPlayPauseCallback = () => {
@@ -736,49 +740,35 @@ class MediaElementPlayer {
 
 					// click to play/pause
 					t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
-					// t.iframeMouseOver = false;
 
 					// show/hide controls
 					t.container
-					.on('mouseenter', () => {
-						if (t.controlsEnabled) {
-							if (!t.options.alwaysShowControls) {
-								t.killControlsTimer('enter');
-								t.showControls();
-								t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+						.on('mouseenter', () => {
+							if (t.controlsEnabled) {
+								if (!t.options.alwaysShowControls) {
+									t.killControlsTimer('enter');
+									t.showControls();
+									t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+								}
 							}
-						}
-					})
-					.on('mousemove', () => {
-						if (t.controlsEnabled) {
-							if (!t.controlsAreVisible) {
-								t.showControls();
+						})
+						.on('mousemove', () => {
+							if (t.controlsEnabled) {
+								if (!t.controlsAreVisible) {
+									t.showControls();
+								}
+								if (!t.options.alwaysShowControls) {
+									t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+								}
 							}
-							if (!t.options.alwaysShowControls) {
-								t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
+						})
+						.on('mouseleave', () => {
+							if (t.controlsEnabled) {
+								if (!t.media.paused && !t.options.alwaysShowControls) {
+									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
+								}
 							}
-						}
-					})
-					.on('mouseleave', () => {
-						if (t.controlsEnabled) {
-							if (!t.media.paused && !t.options.alwaysShowControls) {
-								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
-							}
-						}
-					});
-					// }).on('mouseover', () => {
-					// 	t.iframeMouseOver = true;
-					// }).on('mouseout', () => {
-					// 	t.iframeMouseOver = false;
-					// });
-					//
-					// const monitor = setInterval(function(){
-					// 	const elem = document.activeElement;
-					// 	if (elem && elem.tagName === 'IFRAME') {
-					// 		t.clickToPlayPauseCallback();
-					// 		clearInterval(monitor);
-					// 	}
-					// }, 50);
+						});
 				}
 
 				if (t.options.hideVideoControlsOnLoad) {
@@ -1261,7 +1251,9 @@ class MediaElementPlayer {
 		;
 
 		t.rail.siblings().each((index, object) => {
-			siblingsWidth += parseFloat($(object).outerWidth(true));
+			if ($(object).is(':visible')) {
+				siblingsWidth += parseFloat($(object).outerWidth(true));
+			}
 		});
 
 		siblingsWidth += totalMargin + railMargin + 1;
@@ -1270,6 +1262,30 @@ class MediaElementPlayer {
 		t.rail.width(t.controls.width() - siblingsWidth);
 
 		t.container.trigger('controlsresize');
+	}
+
+	createIframeLayer () {
+
+		const t = this;
+
+		if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null &&
+			!t.container.find(`#${t.media.id}-iframe-overlay`).length) {
+
+			$(`<div id="${t.media.id}-iframe-overlay" class="${t.options.classPrefix}iframe-overlay"></div>`)
+			.insertBefore($(`#${t.media.id}_${t.media.rendererName}`))
+			.on('click', function(e) {
+				if (t.options.clickToPlayPause) {
+					if (t.media.paused) {
+						t.media.play();
+					} else {
+						t.media.pause();
+					}
+
+					e.preventDefault();
+					e.stopPropagation();
+				}
+			});
+		}
 	}
 
 	resetSize () {
@@ -1600,7 +1616,16 @@ class MediaElementPlayer {
 	}
 
 	setSrc (src) {
-		this.media.setSrc(src);
+		const
+			t = this,
+			layer = t.container.find(`#${t.media.id}-iframe-overlay`)
+		;
+		t.media.setSrc(src);
+
+		if (layer.length) {
+			layer.remove();
+		}
+		t.createIframeLayer();
 	}
 
 	remove () {
@@ -1652,6 +1677,12 @@ class MediaElementPlayer {
 			if (t.media.canPlayType(getTypeFromFile(src))) {
 				t.$node.attr('src', src);
 			}
+
+			// If <iframe>, remove overlay
+			if (rendererName.match(/iframe/i) !== null) {
+				t.container.find(`#${t.media.id}-iframe-overlay`).remove();
+			}
+
 			t.$node.clone().insertBefore(t.container).show();
 			t.$node.remove();
 		} else {

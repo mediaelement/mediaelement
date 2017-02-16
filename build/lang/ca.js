@@ -26,6 +26,7 @@
 			// "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",			
 			// "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],			
 			"mejs.captions-subtitles": "Llegendes/Subtítols",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Ningú",			
 			"mejs.mute-toggle": "Alternar silenci",
 			// "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",

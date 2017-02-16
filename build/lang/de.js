@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Verwende die Pfeiltaste nach links/rechts, um eine Sekunde zu spulen, hoch/runter um zehn Sekunden zu spulen.",			
 			"mejs.time-skip-back": ["1 Sekunde zurückspulen", "%1 Sekunden zurückspulen"],			
 			"mejs.captions-subtitles": "Überschriften/Untertitel",
+			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Keine",			
 			"mejs.mute-toggle": "Stummschaltung umschalten",
 			"mejs.volume-help-text": "Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.",

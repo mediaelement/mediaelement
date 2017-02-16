@@ -13,7 +13,7 @@
 	if (exports.ru === undefined) {
 		exports.ru = {
 			"mejs.plural-form": 7,			
-			"mejs.install-flash": "Flash player в вашем браузере не установлен или отключен. Пожалуйста включите ваш Flash player или скачайте последнюю версию на https://get.adobe.com/flashplayer/",			
+			"mejs.install-flash": "Flash player в вашем браузере не установлен или отключен. Пожалуйста включите ваш Flash player или скачайте последнюю версию с https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen-off": "Выключить полноэкранный режим",
 			"mejs.fullscreen-on": "Перейти в полноэкранный режим",
 			"mejs.download-video": "Скачать видео",			
@@ -27,6 +27,7 @@
 			"mejs.time-help-text": "Используйте Левую/Правую клавиши со стрелками, чтобы продвинуться на одну секунду, клавиши со стрелками Вверх/Вниз, чтобы продвинуться на десять секунд.",			
 			"mejs.time-skip-back": ["Перейти назад на %1 секунду", "Перейти назад на %1 секунды", "Перейти назад на %1 секунд"],			
 			"mejs.captions-subtitles": "Титры/Субтитры",
+			"mejs.captions-chapters": "Главы",
 			"mejs.none": "Нет",			
 			"mejs.mute-toggle": "Без звука",
 			"mejs.volume-help-text": "Используйте клавиши со стрелками Вверх/Вниз, чтобы увеличить или уменьшить громкость.",

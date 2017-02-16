@@ -878,7 +878,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mejs = {};
 
 // version number
-mejs.version = '3.1.1';
+mejs.version = '3.1.2';
 
 // Basic HTML5 settings
 mejs.html5media = {
@@ -1093,6 +1093,7 @@ var EN = exports.EN = {
 
 	// features/tracks.js
 	"mejs.captions-subtitles": "Captions/Subtitles",
+	"mejs.captions-chapters": "Chapters",
 	"mejs.none": "None",
 
 	// features/volume.js
@@ -2371,7 +2372,7 @@ var FacebookRenderer = {
 							eventHandler.paused = fbApi.subscribe('paused', function () {
 								paused = true;
 								ended = false;
-								sendEvents(['paused']);
+								sendEvents(['pause']);
 							});
 							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
 								paused = true;
@@ -2885,6 +2886,8 @@ if (hasFlash) {
 			return 'application/x-mpegURL';
 		} else if (!_constants.HAS_MSE && url.includes('.mpd')) {
 			return 'application/dash+xml';
+		} else if (!_constants.HAS_MSE && url.includes('.flv')) {
+			return 'video/flv';
 		} else {
 			return null;
 		}
@@ -2910,7 +2913,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return hasFlash && ['video/mp4', 'video/flv', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type);
+			return hasFlash && ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type) || !_constants.HAS_MSE && hasFlash && ['video/flv', 'video/x-flv'].includes(type);
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -3207,6 +3210,7 @@ var FlvNativeRenderer = {
 						node[propName] = value;
 
 						if (propName === 'src') {
+							flvPlayer.unload();
 							flvPlayer.detachMediaElement();
 							flvPlayer.attachMediaElement(node);
 							flvPlayer.load();
@@ -3251,6 +3255,7 @@ var FlvNativeRenderer = {
 
 				if (eventName === 'loadedmetadata') {
 
+					flvPlayer.unload();
 					flvPlayer.detachMediaElement();
 					flvPlayer.attachMediaElement(node);
 					flvPlayer.load();
@@ -3304,7 +3309,7 @@ var FlvNativeRenderer = {
 		};
 
 		node.hide = function () {
-			node.pause();
+			flvPlayer.pause();
 			node.style.display = 'none';
 			return node;
 		};
@@ -5440,7 +5445,7 @@ var YouTubeIframeRenderer = {
 
 						case 2:
 							// YT.PlayerState.PAUSED
-							events = ['paused'];
+							events = ['pause'];
 							paused = true;
 							ended = false;
 
