@@ -102,7 +102,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.captionsText = player.captions.find(`.${t.options.classPrefix}captions-text`);
 		player.captionsButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}captions-button">` +
-			`<button type="button" aria-controls="${t.id}" title="${tracksTitle}" aria-label="${tracksTitle}"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${tracksTitle}" aria-label="${tracksTitle}" tabindex="0"></button>` +
 			`<div class="${t.options.classPrefix}captions-selector ${t.options.classPrefix}offscreen">` +
 				`<ul class="${t.options.classPrefix}captions-selector-list">` +
 					`<li class="${t.options.classPrefix}captions-selector-list-item">` +
@@ -119,7 +119,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		.appendTo(controls);
 
 		player.chaptersButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}chapters-button">` +
-			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}" tabindex="0"></button>` +
 			`<div class="${t.options.classPrefix}chapters-selector ${t.options.classPrefix}offscreen">` +
 				`<ul class="${t.options.classPrefix}chapters-selector-list" aria-role="menu"></ul>` +
 			`</div>` +

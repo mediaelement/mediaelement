@@ -91,7 +91,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : i18n.t('mejs.fullscreen'),
 			fullscreenBtn =
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button">` +
-					`<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}"></button>` +
+					`<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0"></button>` +
 				`</div>`)
 				.appendTo(controls)
 				.on('click', () => {

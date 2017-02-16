@@ -14,7 +14,7 @@ import {
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
-import {splitEvents} from './utils/general';
+import {splitEvents, debounce} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
 import {isNodeAfter} from './utils/dom';
 import {getTypeFromFile} from './utils/media';
@@ -366,9 +366,9 @@ class MediaElementPlayer {
 				$(`<div id="${t.id}" class="${t.options.classPrefix}container ${t.options.classPrefix}container-keyboard-inactive"` +
 					`tabindex="0" role="application" aria-label="${videoPlayerTitle}">` +
 					`<div class="${t.options.classPrefix}inner">` +
-					`<div class="${t.options.classPrefix}mediaelement"></div>` +
 					`<div class="${t.options.classPrefix}layers"></div>` +
 					`<div class="${t.options.classPrefix}controls"></div>` +
+					`<div class="${t.options.classPrefix}mediaelement"></div>` +
 					`<div class="${t.options.classPrefix}clear"></div>` +
 					`</div>` +
 				`</div>`)
@@ -419,6 +419,7 @@ class MediaElementPlayer {
 
 
 			// move the <video/video> tag into the right spot
+			//t.$media.attr('tabindex', -1);
 			t.container.find(`.${t.options.classPrefix}mediaelement`).append(t.$media);
 
 			// needs to be assigned here, after iOS remap
@@ -883,18 +884,22 @@ class MediaElementPlayer {
 				}
 			}, false);
 
-			t.container.focusout((e) => {
-				if (e.relatedTarget) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
-					let $target = $(e.relatedTarget);
-					if (t.keyboardAction && $target.parents(`.${t.options.classPrefix}container`).length === 0) {
+			t.container.on('focusout', debounce(() => {
+				setTimeout(() => {
+					// Safari triggers focusout multiple times
+					// Firefox does NOT support e.relatedTarget to see which element
+					// just lost focus, so wait to find the next focused element
+
+					const parent = $(document.activeElement).closest(`.${t.options.classPrefix}container`);
+					if (t.keyboardAction && !parent.length) {
 						t.keyboardAction = false;
 						if (t.isVideo && !t.options.alwaysShowControls) {
+							// focus is outside the control; hide controls
 							t.hideControls(true);
 						}
-
 					}
-				}
-			});
+				}, 0);
+			}, 100));
 
 			// webkit has trouble doing this without a delay
 			setTimeout(() => {
@@ -1424,7 +1429,7 @@ class MediaElementPlayer {
 			// this needs to come last so it's on top
 			bigPlay =
 				$(`<div class="${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play">` +
-					`<div class="${t.options.classPrefix}overlay-button" role="button" ` +
+					`<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0"` +
 						`aria-label="${i18n.t('mejs.play')}" aria-pressed="false">` +
 					`</div>` +
 				`</div>`)
@@ -1677,6 +1682,7 @@ class MediaElementPlayer {
 			// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
 			t.$node.attr('id', t.$node.attr('id').replace(`_${rendererName}`, ''));
 			t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
+			t.$node.removeAttr('tabindex');
 
 			// Remove `autoplay` (not worth bringing it back once player is destroyed)
 			t.$node.removeProp('autoplay');

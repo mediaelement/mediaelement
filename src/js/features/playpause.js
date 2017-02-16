@@ -44,7 +44,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			play =
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ` +
 					`${t.options.classPrefix}play">` +
-					`<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}"></button>` +
+					`<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0"></button>` +
 				`</div>`)
 				.appendTo(controls)
 				.click(() => {
