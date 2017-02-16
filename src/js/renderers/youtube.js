@@ -35,6 +35,8 @@ const YouTubeApi = {
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
 	enqueueIframe: (settings) => {
+		// Check whether youtube API is already loaded.
+		YouTubeApi.isLoaded = typeof YT !== "undefined" && YT.loaded;
 
 		if (YouTubeApi.isLoaded) {
 			YouTubeApi.createIframe(settings);
@@ -197,6 +199,7 @@ const YouTubeIframeRenderer = {
 			rel: 0,
 			showinfo: 0,
 			start: 0,
+			iv_load_policy: 3,
 			// custom to inject `-nocookie` element in URL
 			nocookie: false
 		}
@@ -376,8 +379,10 @@ const YouTubeIframeRenderer = {
 						// DO method
 						switch (methodName) {
 							case 'play':
+								paused = false; // Fix for issue when youtube API does not call onStateChange
 								return youTubeApi.playVideo();
 							case 'pause':
+								paused = true; // Fix for issue when youtube API does not call onStateChange
 								return youTubeApi.pauseVideo();
 							case 'load':
 								return null;
@@ -428,7 +433,9 @@ const YouTubeIframeRenderer = {
 					html5: 1,
 					playsinline: 0,
 					start: 0,
-					end: 0
+					end: 0,
+					// Let's hide youtube video annotations.
+					iv_load_policy: 3
 				}, youtube.options.youtube),
 				origin: window.location.host,
 				events: {
@@ -523,7 +530,7 @@ const YouTubeIframeRenderer = {
 
 							case 3: // YT.PlayerState.BUFFERING
 								events = ['progress'];
-								paused = false;
+								//paused = false;  // Fix for issue when youtube API does not call onStateChange
 								ended = false;
 
 								break;
@@ -541,6 +548,10 @@ const YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 						}
 
+					},
+					onError: (e) => {
+                        var event = (0, _dom.createEvent)("error", youtube);
+                        mediaElement.dispatchEvent(event);
 					}
 				}
 			}
