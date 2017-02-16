@@ -4897,11 +4897,19 @@ var MediaElementPlayer = function () {
 				poster.hide();
 			}, false);
 
+			media.addEventListener('playing', function () {
+				poster.hide();
+			}, false);
+
 			if (player.options.showPosterWhenEnded && player.options.autoRewind) {
 				media.addEventListener('ended', function () {
 					poster.show();
 				}, false);
 			}
+
+			media.addEventListener('error', function () {
+				poster.hide();
+			}, false);
 
 			if (player.options.showPosterWhenPaused) {
 				media.addEventListener('pause', function () {

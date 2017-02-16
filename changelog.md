@@ -11,6 +11,7 @@
 * Fixed typo in `pause` event not being triggered on Facebook and YouTube renderers @ron666
 * Fixed issue on `progress` feature that caused multiple events being fired incorrectly when clicking on rail @ron666
 * Corrected typo in `full.js` file (https://github.com/johndyer/mediaelement/pull/2081) @helmetroo
+* Several fixes for YouTube renderer (https://github.com/johndyer/mediaelement/pull/2082) @anomaly-stalker
 
 *3.1.2 (2017/02/10)*
 
