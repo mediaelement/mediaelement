@@ -35,7 +35,7 @@ export const PluginDetector = {
 	 * @return {Boolean}
 	 */
 	hasPluginVersion: (plugin, v) => {
-		let pv = PluginDetector.plugins[plugin];
+		const pv = PluginDetector.plugins[plugin];
 		v[1] = v[1] || 0;
 		v[2] = v[2] || 0;
 		return (pv[0] > v[0] || (pv[0] === v[0] && pv[1] > v[1]) || (pv[0] === v[0] && pv[1] === v[1] && pv[2] >= v[2]));
@@ -103,8 +103,11 @@ export const PluginDetector = {
  */
 PluginDetector.addPlugin('flash', 'Shockwave Flash', 'application/x-shockwave-flash', 'ShockwaveFlash.ShockwaveFlash', (ax) => {
 	// adapted from SWFObject
-	let version = [],
-		d = ax.GetVariable("$version");
+	let
+		version = [],
+		d = ax.GetVariable("$version")
+	;
+
 	if (d) {
 		d = d.split(" ")[1].split(",");
 		version = [parseInt(d[0], 10), parseInt(d[1], 10), parseInt(d[2], 10)];
@@ -124,8 +127,9 @@ const FlashMediaElementRenderer = {
 	 */
 	create: (mediaElement, options, mediaFiles) => {
 
+		const flash = {};
+
 		let
-			flash = {},
 			i,
 			il
 		;
@@ -141,7 +145,7 @@ const FlashMediaElementRenderer = {
 		flash.flashApiStack = [];
 
 		// mediaElements for get/set
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
 
@@ -155,7 +159,7 @@ const FlashMediaElementRenderer = {
 					if (flash.flashApi !== null) {
 
 						if (flash.flashApi['get_' + propName] !== undefined) {
-							let value = flash.flashApi['get_' + propName]();
+							const value = flash.flashApi['get_' + propName]();
 
 							// special case for buffered to conform to HTML5's newest
 							if (propName === 'buffered') {
@@ -206,7 +210,7 @@ const FlashMediaElementRenderer = {
 		}
 
 		// add mediaElements for native methods
-		let
+		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 
@@ -243,10 +247,10 @@ const FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		let initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+		const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 		for (i = 0, il = initEvents.length; i < il; i++) {
-			let event = createEvent(initEvents[i], flash);
+			const event = createEvent(initEvents[i], flash);
 			mediaElement.dispatchEvent(event);
 		}
 
@@ -258,15 +262,15 @@ const FlashMediaElementRenderer = {
 
 			// do call stack
 			if (flash.flashApiStack.length) {
-				for (let i = 0, il = flash.flashApiStack.length; i < il; i++) {
+				for (i = 0, il = flash.flashApiStack.length; i < il; i++) {
 
-					let stackItem = flash.flashApiStack[i];
+					const stackItem = flash.flashApiStack[i];
 
 					if (stackItem.type === 'set') {
-						let
+						const
 							propName = stackItem.propName,
 							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`
-							;
+						;
 
 						flash[`set${capName}`](stackItem.value);
 					} else if (stackItem.type === 'call') {
@@ -278,7 +282,7 @@ const FlashMediaElementRenderer = {
 
 		window[`__event__${flash.id}`] = (eventName, message) => {
 
-			let event = createEvent(eventName, flash);
+			const event = createEvent(eventName, flash);
 			event.message = message || '';
 
 			// send event from Flash up to the mediaElement
@@ -288,7 +292,7 @@ const FlashMediaElementRenderer = {
 		// insert Flash object
 		flash.flashWrapper = document.createElement('div');
 
-		let
+		const
 			autoplay = !!mediaElement.getAttribute('autoplay'),
 			flashVars = [`uid=${flash.id}`, `autoplay=${autoplay}`],
 			isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
@@ -313,7 +317,7 @@ const FlashMediaElementRenderer = {
 		let settings = [];
 
 		if (IS_IE) {
-			let specialIEContainer = document.createElement('div');
+			const specialIEContainer = document.createElement('div');
 			flash.flashWrapper.appendChild(specialIEContainer);
 
 			settings = [
@@ -540,7 +544,7 @@ if (hasFlash) {
 	renderer.add(FlashMediaElementAudioRenderer);
 
 	// AUDIO - ogg
-	let FlashMediaElementAudioOggRenderer = {
+	const FlashMediaElementAudioOggRenderer = {
 		name: 'flash_audio_ogg',
 
 		options: {

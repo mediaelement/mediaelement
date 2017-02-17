@@ -3,7 +3,7 @@
 import mejs from '../core/mejs';
 import {escapeHTML} from './general';
 
-export let typeChecks = [];
+export const typeChecks = [];
 
 /**
  *
@@ -16,7 +16,7 @@ export function absolutizeUrl (url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	let el = document.createElement('div');
+	const el = document.createElement('div');
 	el.innerHTML = `<a href="${escapeHTML(url)}">x</a>`;
 	return el.firstChild.href;
 }
@@ -61,7 +61,11 @@ export function getTypeFromFile (url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	let type;
+	let
+		i,
+		il,
+		type
+	;
 
 	// Validate `typeChecks` array
 	if (!Array.isArray(typeChecks)) {
@@ -69,7 +73,7 @@ export function getTypeFromFile (url) {
 	}
 
 	if (typeChecks.length) {
-		for (let i = 0, total = typeChecks.length; i < total; i++) {
+		for (i = 0, il = typeChecks.length; i < il; i++) {
 			const type = typeChecks[i];
 
 			if (typeof type !== 'function') {
@@ -79,7 +83,7 @@ export function getTypeFromFile (url) {
 	}
 
 	// do type checks first
-	for (let i = 0, total = typeChecks.length; i < total; i++) {
+	for (i = 0, il = typeChecks.length; i < il; i++) {
 
 		type = typeChecks[i](url);
 
@@ -89,10 +93,10 @@ export function getTypeFromFile (url) {
 	}
 
 	// the do standard extension check
-	let
+	const
 		ext = getExtension(url),
 		normalizedExt = normalizeExtension(ext)
-		;
+	;
 
 	return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + normalizedExt;
 }
@@ -109,7 +113,7 @@ export function getExtension (url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	let baseUrl = url.split('?')[0];
+	const baseUrl = url.split('?')[0];
 
 	return ~baseUrl.indexOf('.') ? baseUrl.substring(baseUrl.lastIndexOf('.') + 1) : '';
 }

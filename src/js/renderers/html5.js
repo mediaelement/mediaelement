@@ -28,7 +28,7 @@ const HtmlMediaElement = {
 	 */
 	canPlayType: (type) => {
 
-		let mediaElement = document.createElement('video');
+		const mediaElement = document.createElement('video');
 
 		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
 		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
@@ -51,9 +51,10 @@ const HtmlMediaElement = {
 	 */
 	create: (mediaElement, options, mediaFiles) => {
 
+		const id = mediaElement.id + '_' + options.prefix;
+
 		let
 			node = null,
-			id = mediaElement.id + '_' + options.prefix,
 			i,
 			il
 		;
@@ -96,7 +97,7 @@ const HtmlMediaElement = {
 				node.addEventListener(eventName, (e) => {
 					// copy event
 
-					let event = document.createEvent('HTMLEvents');
+					const event = document.createEvent('HTMLEvents');
 					event.initEvent(e.type, e.bubbles, e.cancelable);
 					// event.srcElement = e.srcElement;
 					// event.target = e.srcElement;
@@ -139,7 +140,7 @@ const HtmlMediaElement = {
 			}
 		}
 
-		let event = createEvent('rendererready', node);
+		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;

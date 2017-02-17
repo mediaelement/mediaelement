@@ -38,14 +38,14 @@ export function debounce (func, wait, immediate = false) {
 
 	let timeout;
 	return () => {
-		let context = this, args = arguments;
-		let later = () => {
+		const context = this, args = arguments;
+		const later = () => {
 			timeout = null;
 			if (!immediate) {
 				func.apply(context, args);
 			}
 		};
-		let callNow = immediate && !timeout;
+		const callNow = immediate && !timeout;
 		clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
 
@@ -67,9 +67,9 @@ export function isObjectEmpty (instance) {
 }
 
 export function splitEvents (events, id) {
-	let rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
+	const rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
 	// add player ID as an event namespace so it's easier to unbind them all later
-	let ret = {d: [], w: []};
+	const ret = {d: [], w: []};
 	(events || '').split(' ').forEach((v) => {
 		const eventName = v + '.' + id;
 

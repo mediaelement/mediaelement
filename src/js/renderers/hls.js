@@ -60,10 +60,12 @@ const NativeHls = {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
-			let
+			const
 				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0],
-				done = false;
+				firstScriptTag = document.getElementsByTagName('script')[0]
+			;
+
+			let done = false;
 
 			script.src = settings.options.path;
 
@@ -91,7 +93,7 @@ const NativeHls = {
 		NativeHls.isMediaLoaded = true;
 
 		while (NativeHls.creationQueue.length > 0) {
-			let settings = NativeHls.creationQueue.pop();
+			const settings = NativeHls.creationQueue.pop();
 			NativeHls.createInstance(settings);
 		}
 	},
@@ -103,7 +105,7 @@ const NativeHls = {
 	 * @return {Hls}
 	 */
 	createInstance: (settings) => {
-		let player = new Hls(settings.options);
+		const player = new Hls(settings.options);
 		window['__ready__' + settings.id](player);
 		return player;
 	}
@@ -183,21 +185,24 @@ const HlsNativeRenderer = {
 	 */
 	create: (mediaElement, options, mediaFiles) => {
 
-		let
-			node = null,
+		const
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
-			hlsPlayer,
-			stack = {},
+			stack = {}
+		;
+
+		let
 			i,
-			il
-			;
+			il,
+			hlsPlayer,
+			node = null
+		;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
 
 		// WRAPPERS for PROPs
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
@@ -246,10 +251,10 @@ const HlsNativeRenderer = {
 			if (stack.length) {
 				for (i = 0, il = stack.length; i < il; i++) {
 
-					let stackItem = stack[i];
+					const stackItem = stack[i];
 
 					if (stackItem.type === 'set') {
-						let propName = stackItem.propName,
+						const propName = stackItem.propName,
 							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 						node[`set${capName}`](stackItem.value);
@@ -260,15 +265,16 @@ const HlsNativeRenderer = {
 			}
 
 			// BUBBLE EVENTS
-			let
-				events = mejs.html5media.events, hlsEvents = Hls.Events,
+			const
+				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+				hlsEvents = Hls.Events,
 				assignEvents = (eventName) => {
 
 					if (eventName === 'loadedmetadata') {
 
 						hlsPlayer.detachMedia();
 
-						let url = node.src;
+						const url = node.src;
 
 						hlsPlayer.attachMedia(node);
 						hlsPlayer.on(hlsEvents.MEDIA_ATTACHED, () => {
@@ -278,7 +284,7 @@ const HlsNativeRenderer = {
 
 					node.addEventListener(eventName, (e) => {
 						// copy event
-						let event = document.createEvent('HTMLEvents');
+						const event = document.createEvent('HTMLEvents');
 						event.initEvent(e.type, e.bubbles, e.cancelable);
 						// event.srcElement = e.srcElement;
 						// event.target = e.srcElement;
@@ -287,9 +293,7 @@ const HlsNativeRenderer = {
 					});
 
 				}
-				;
-
-			events = events.concat(['click', 'mouseover', 'mouseout']);
+			;
 
 			for (i = 0, il = events.length; i < il; i++) {
 				assignEvents(events[i]);
@@ -306,7 +310,7 @@ const HlsNativeRenderer = {
 			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
 			 */
 			const assignHlsEvents = function (e, data) {
-				let event = createEvent(e, node);
+				const event = createEvent(e, node);
 				event.data = data;
 				mediaElement.dispatchEvent(event);
 
@@ -331,7 +335,7 @@ const HlsNativeRenderer = {
 				}
 			};
 
-			for (let eventType in hlsEvents) {
+			for (const eventType in hlsEvents) {
 				if (hlsEvents.hasOwnProperty(eventType)) {
 					hlsPlayer.on(hlsEvents[eventType], assignHlsEvents);
 				}
@@ -381,7 +385,7 @@ const HlsNativeRenderer = {
 			hlsPlayer.destroy();
 		};
 
-		let event = createEvent('rendererready', node);
+		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;

@@ -228,7 +228,7 @@
 // 	 */
 // 	create: (mediaElement, options, mediaFiles) => {
 //
-// 		let
+// 		const
 // 			jsmad = {},
 // 			i,
 // 			il
@@ -267,9 +267,9 @@
 // 				mediaElement.dispatchEvent('ready');
 //
 // 				// do call stack
-// 				for (let i = 0, il = t.apiStack.length; i < il; i++) {
+// 				for (const i = 0, il = t.apiStack.length; i < il; i++) {
 //
-// 					let stackItem = t.apiStack[i];
+// 					const stackItem = t.apiStack[i];
 //
 // 					if (stackItem.type === 'set') {
 // 						jsmad[stackItem.propName] = stackItem.value;
@@ -282,7 +282,7 @@
 // 		};
 //
 // 		// wrappers for get/set
-// 		let
+// 		const
 // 			props = mejs.html5media.properties,
 // 			assignGettersSetters = (propName) => {
 //
@@ -290,7 +290,7 @@
 //
 // 				jsmad[`get${capName}`] = () => {
 //
-// 					let value = null;
+// 					const value = null;
 //
 // 					if (jsmad.jsMad !== null) {
 // 						switch (propName) {
@@ -340,7 +340,7 @@
 // 		}
 //
 // 		// add wrappers for native methods
-// 		let
+// 		const
 // 			methods = mejs.html5media.methods,
 // 			assignMethods = (methodName) => {
 //

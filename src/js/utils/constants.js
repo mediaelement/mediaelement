@@ -20,11 +20,10 @@ export const IS_STOCK_ANDROID = (UA.match(/^mozilla\/\d+\.\d+\s\(linux;\su;/gi) 
 
 export const HAS_MSE = ('MediaSource' in window);
 export const SUPPORT_POINTER_EVENTS = (() => {
-	let
+	const
 		element = document.createElement('x'),
 		documentElement = document.documentElement,
-		getComputedStyle = window.getComputedStyle,
-		supports
+		getComputedStyle = window.getComputedStyle
 	;
 
 	if (!('pointerEvents' in element.style)) {
@@ -34,13 +33,14 @@ export const SUPPORT_POINTER_EVENTS = (() => {
 	element.style.pointerEvents = 'auto';
 	element.style.pointerEvents = 'x';
 	documentElement.appendChild(element);
-	supports = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
+	let supports = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
 	documentElement.removeChild(element);
 	return !!supports;
 })();
 
 // for IE
-let html5Elements = ['source', 'track', 'audio', 'video'], video;
+const html5Elements = ['source', 'track', 'audio', 'video'];
+let video;
 
 for (let i = 0, il = html5Elements.length; i < il; i++) {
 	video = document.createElement(html5Elements[i]);
@@ -67,13 +67,12 @@ if (hasiOSFullScreen && UA.match(/mac os x 10_5/i)) {
 }
 
 // webkit/firefox/IE11+
-let hasWebkitNativeFullScreen = (video.webkitRequestFullScreen !== undefined);
-let hasMozNativeFullScreen = (video.mozRequestFullScreen !== undefined);
-let hasMsNativeFullScreen = (video.msRequestFullscreen !== undefined);
+const hasWebkitNativeFullScreen = (video.webkitRequestFullScreen !== undefined);
+const hasMozNativeFullScreen = (video.mozRequestFullScreen !== undefined);
+const hasMsNativeFullScreen = (video.msRequestFullscreen !== undefined);
 
-let hasTrueNativeFullScreen = (hasWebkitNativeFullScreen || hasMozNativeFullScreen || hasMsNativeFullScreen);
+const hasTrueNativeFullScreen = (hasWebkitNativeFullScreen || hasMozNativeFullScreen || hasMsNativeFullScreen);
 let nativeFullScreenEnabled = hasTrueNativeFullScreen;
-
 let fullScreenEventName = '';
 let isFullScreen, requestFullScreen, cancelFullScreen;
 

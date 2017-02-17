@@ -35,10 +35,13 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildprogress: function (player, controls, layers, media)  {
 
 		let
-			t = this,
-			mouseIsDown = false,
 			lastKeyPressTime = 0,
-			startedPaused = false,
+			mouseIsDown = false,
+			startedPaused = false
+		;
+
+		const
+			t = this,
 			autoRewindInitial = player.options.autoRewind,
 			tooltip = player.options.enableProgressTooltip ?
 				`<span class="${t.options.classPrefix}time-float">` +
@@ -76,8 +79,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		 */
 		let handleMouseMove = (e) => {
 
-				let offset = t.total.offset(),
-					width = t.total.width(),
+				const
+					offset = t.total.offset(),
+					width = t.total.width()
+				;
+
+				let
 					percentage = 0,
 					pos = 0,
 					x
@@ -125,10 +132,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			 */
 			updateSlider = () => {
 
-				let seconds = media.currentTime,
+				const
+					seconds = media.currentTime,
 					timeSliderText = i18n.t('mejs.time-slider'),
 					time = secondsToTimeCode(seconds, player.options.alwaysShowHours),
-					duration = media.duration;
+					duration = media.duration
+				;
 
 				t.slider.attr({
 					'role': 'slider',
@@ -182,13 +191,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			if (t.options.keyActions.length) {
 
-				let
+				const
 					keyCode = e.which || e.keyCode || 0,
 					duration = media.duration,
-					seekTime = media.currentTime,
 					seekForward = player.options.defaultSeekForwardInterval(media),
 					seekBackward = player.options.defaultSeekBackwardInterval(media)
 				;
+
+				let seekTime = media.currentTime;
 
 				switch (keyCode) {
 					case 37: // left
@@ -359,10 +369,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	setProgressRail: function (e)  {
 
-		let
+		let percent = null;
+
+		const
 			t = this,
-			target = (e !== undefined) ? e.target : t.media,
-			percent = null;
+			target = (e !== undefined) ? e.target : t.media
+		;
 
 		// newest HTML5 spec has buffered array (FF4, Webkit)
 		if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {

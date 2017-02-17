@@ -16,7 +16,7 @@ class MediaElement {
 
 	constructor (idOrNode, options) {
 		
-		let t = this;
+		const t = this;
 		
 		t.defaults = {
 			/**
@@ -85,7 +85,7 @@ class MediaElement {
 		 */
 		t.mediaElement.changeRenderer = (rendererName, mediaFiles) => {
 
-			let t = this;
+			const t = this;
 
 			// check for a match on the current renderer
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
@@ -109,8 +109,10 @@ class MediaElement {
 			}
 
 			// see if we have the renderer already created
-			let newRenderer = t.mediaElement.renderers[rendererName],
-				newRendererType = null;
+			let
+				newRenderer = t.mediaElement.renderers[rendererName],
+				newRendererType = null
+			;
 
 			if (newRenderer !== undefined && newRenderer !== null) {
 				newRenderer.show();
@@ -120,7 +122,7 @@ class MediaElement {
 				return true;
 			}
 
-			let rendererArray = t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers :
+			const rendererArray = t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers :
 				renderer.order;
 
 			// find the desired renderer in the array of possible ones
@@ -134,7 +136,7 @@ class MediaElement {
 					const rendererList = renderer.renderers;
 					newRendererType = rendererList[index];
 
-					let renderOptions = Object.assign(newRendererType.options, t.mediaElement.options);
+					const renderOptions = Object.assign(newRendererType.options, t.mediaElement.options);
 					newRenderer = newRendererType.create(t.mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
 
@@ -216,7 +218,7 @@ class MediaElement {
 			getSrc = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer.getSrc() : null,
 			setSrc = (value) => {
 
-				let mediaFiles = [];
+				const mediaFiles = [];
 
 				// clean up URLs
 				if (typeof value === 'string') {
@@ -227,7 +229,7 @@ class MediaElement {
 				} else {
 					for (i = 0, il = value.length; i < il; i++) {
 
-						let
+						const
 							src = absolutizeUrl(value[i].src),
 							type = value[i].type
 						;
@@ -314,7 +316,7 @@ class MediaElement {
 				}
 
 				// see if we have any callbacks for this eventName
-				let callbacks = t.mediaElement.events[eventName];
+				const callbacks = t.mediaElement.events[eventName];
 
 				if (!callbacks) {
 					return true;
@@ -342,7 +344,7 @@ class MediaElement {
 			 */
 			t.mediaElement.dispatchEvent = (event) => {
 
-				let callbacks = t.mediaElement.events[event.type];
+				const callbacks = t.mediaElement.events[event.type];
 
 				if (callbacks) {
 					for (i = 0, il = callbacks.length; i < il; i++) {
@@ -353,7 +355,7 @@ class MediaElement {
 		}
 
 		if (t.mediaElement.originalNode !== null) {
-			let mediaFiles = [];
+			const mediaFiles = [];
 
 			switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
 
@@ -377,7 +379,7 @@ class MediaElement {
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
-						let node = t.mediaElement.originalNode;
+						const node = t.mediaElement.originalNode;
 						mediaFiles.push({
 							type: formatType(nodeSource, node.getAttribute('type')),
 							src: nodeSource

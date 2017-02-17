@@ -36,7 +36,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @public
 	 */
 	buildplaypause: function (player, controls, layers, media)  {
-		let
+		const
 			t = this,
 			op = t.options,
 			playTitle = op.playText ? op.playText : i18n.t('mejs.play'),
@@ -54,7 +54,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						media.pause();
 					}
 				}),
-			play_btn = play.find('button');
+			playBtn = play.find('button');
 
 
 		/**
@@ -64,17 +64,17 @@ Object.assign(MediaElementPlayer.prototype, {
 		function togglePlayPause (which) {
 			if ('play' === which) {
 				play.removeClass(`${t.options.classPrefix}play`)
-				.removeClass(`${t.options.classPrefix}replay`)
-				.addClass(`${t.options.classPrefix}pause`);
-				play_btn.attr({
+					.removeClass(`${t.options.classPrefix}replay`)
+					.addClass(`${t.options.classPrefix}pause`);
+				playBtn.attr({
 					'title': pauseTitle,
 					'aria-label': pauseTitle
 				});
 			} else {
 				play.removeClass(`${t.options.classPrefix}pause`)
-				.removeClass(`${t.options.classPrefix}replay`)
-				.addClass(`${t.options.classPrefix}play`);
-				play_btn.attr({
+					.removeClass(`${t.options.classPrefix}replay`)
+					.addClass(`${t.options.classPrefix}play`);
+				playBtn.attr({
 					'title': playTitle,
 					'aria-label': playTitle
 				});
@@ -102,8 +102,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			if (!player.options.loop) {
 				play.removeClass(`${t.options.classPrefix}pause`)
-				.removeClass(`${t.options.classPrefix}play`)
-				.addClass(`${t.options.classPrefix}replay`);
+					.removeClass(`${t.options.classPrefix}play`)
+					.addClass(`${t.options.classPrefix}replay`);
+
+				playBtn.attr({
+					'title': playTitle,
+					'aria-label': playTitle
+				});
 			}
 
 		}, false);

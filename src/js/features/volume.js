@@ -56,7 +56,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		let
+		const
 			t = this,
 			mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
 			muteText = t.options.muteText ? t.options.muteText : i18n.t('mejs.mute-toggle'),
@@ -122,7 +122,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					});
 				}
 
-				let volumePercentage = `${(volume * 100)}%`;
+				const volumePercentage = `${(volume * 100)}%`;
 
 				// position slider
 				if (mode === 'vertical') {
@@ -158,7 +158,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				// calculate the new volume based on the most recent position
 				if (mode === 'vertical') {
 
-					let
+					const
 						railHeight = volumeTotal.height(),
 						newY = e.pageY - totalOffset.top
 					;
@@ -171,7 +171,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 
 				} else {
-					let
+					const
 						railWidth = volumeTotal.width(),
 						newX = e.pageX - totalOffset.left
 					;
@@ -193,9 +193,13 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.setMuted(false);
 				}
 				media.setVolume(volume);
-			},
+			}
+		;
+
+		let
 			mouseIsDown = false,
-			mouseIsOver = false;
+			mouseIsOver = false
+		;
 
 		// SLIDER
 		mute
@@ -216,7 +220,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		 */
 		let updateVolumeSlider = () => {
 
-			let volume = Math.floor(media.volume * 100);
+			const volume = Math.floor(media.volume * 100);
 
 			volumeSlider.attr({
 				'aria-label': i18n.t('mejs.volume-slider'),

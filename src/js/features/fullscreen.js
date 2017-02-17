@@ -83,10 +83,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.detectFullscreenMode();
 		});
 
+		let hideTimeout = null;
+
 		// build button
-		let
+		const
 			t = this,
-			hideTimeout = null,
 			fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : i18n.t('mejs.fullscreen'),
 			fullscreenBtn =
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button">` +
@@ -184,11 +185,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	detectFullscreenMode: function ()  {
 
-		let
+		const
 			t = this,
-			mode = '',
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
 		;
+
+		let mode = '';
 
 		if (Features.HAS_TRUE_NATIVE_FULLSCREEN && isNative) {
 			mode = 'native-native';
@@ -217,7 +219,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	createPluginClickThrough: function ()  {
 
-		let t = this;
+		const t = this;
 
 		// don't build twice
 		if (t.isPluginClickThroughCreated) {
@@ -384,7 +386,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	enterFullScreen: function ()  {
 
-		let
+		const
 			t = this,
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/) !== null
 		;
@@ -490,7 +492,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	exitFullScreen: function ()  {
 
-		let
+		const
 			t = this,
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
 			;
