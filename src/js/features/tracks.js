@@ -4,8 +4,7 @@ import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
-import {secondsToTimeCode, convertSMPTEtoSeconds} from '../utils/time';
-import {sanitizeHTML} from '../utils/general';
+import {convertSMPTEtoSeconds} from '../utils/time';
 
 /**
  * Closed Captions (CC) button

@@ -1,6 +1,5 @@
 'use strict';
 
-import document from 'global/document';
 import mejs from '../core/mejs';
 
 /**
@@ -89,49 +88,8 @@ export function splitEvents (events, id) {
 	return ret;
 }
 
-/**
- *
- * @param {String} className
- * @param {HTMLElement} node
- * @param {String} tag
- * @return {HTMLElement[]}
- */
-export function getElementsByClassName (className, node, tag) {
-
-	if (node === undefined || node === null) {
-		node = document;
-	}
-	if (node.getElementsByClassName !== undefined && node.getElementsByClassName !== null) {
-		return node.getElementsByClassName(className);
-	}
-	if (tag === undefined || tag === null) {
-		tag = '*';
-	}
-
-	let
-		classElements = [],
-		j = 0,
-		teststr,
-		els = node.getElementsByTagName(tag),
-		elsLen = els.length
-		;
-
-	for (i = 0; i < elsLen; i++) {
-		if (els[i].className.indexOf(className) > -1) {
-			teststr = `,${els[i].className.split(' ').join(',')},`;
-			if (teststr.indexOf(`,${className},`) > -1) {
-				classElements[j] = els[i];
-				j++;
-			}
-		}
-	}
-
-	return classElements;
-}
-
 mejs.Utils = mejs.Utils || {};
 mejs.Utils.escapeHTML = escapeHTML;
 mejs.Utils.debounce = debounce;
 mejs.Utils.isObjectEmpty = isObjectEmpty;
 mejs.Utils.splitEvents = splitEvents;
-mejs.Utils.getElementsByClassName = getElementsByClassName;

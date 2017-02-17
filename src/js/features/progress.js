@@ -37,7 +37,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		let
 			t = this,
 			mouseIsDown = false,
-			mouseIsOver = false,
 			lastKeyPressTime = 0,
 			startedPaused = false,
 			autoRewindInitial = player.options.autoRewind,
@@ -294,9 +293,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					});
 				}
 			}
-		}).on('mouseenter', (e) => {
+		}).on('mouseenter', () => {
 			if (media.duration !== Infinity) {
-				mouseIsOver = true;
 				t.globalBind('mousemove.dur', (e) => {
 					handleMouseMove(e);
 				});
@@ -306,7 +304,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}).on('mouseleave', () => {
 			if (media.duration !== Infinity) {
-				mouseIsOver = false;
 				if (!mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
 					if (t.timefloat !== undefined) {
@@ -327,7 +324,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
 				controls.find(`.${t.options.classPrefix}time-rail`).empty()
-					.html(`<span class="${t.options.classPrefix}broadcast">${mejs.i18n.t('mejs.live-broadcast')}</span>`);
+					.html(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
 			}
 		}, false);
 
@@ -341,7 +338,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				updateSlider(e);
 			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
 				controls.find(`.${t.options.classPrefix}time-rail`).empty()
-					.html(`<span class="${t.options.classPrefix}broadcast">${mejs.i18n.t('mejs.live-broadcast')}</span>`);
+					.html(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
 			}
 		}, false);
 

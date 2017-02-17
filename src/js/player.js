@@ -545,7 +545,7 @@ class MediaElementPlayer {
 
 		if (doAnimation) {
 			// fade out main controls
-			t.controls.stop(true, true).fadeOut(200, function() {
+			t.controls.stop(true, true).fadeOut(200, function () {
 				$(this).addClass(`${t.options.classPrefix}offscreen`).css('display', 'block');
 
 				t.controlsAreVisible = false;
@@ -553,7 +553,7 @@ class MediaElementPlayer {
 			});
 
 			// any additional controls people might add and want to hide
-			t.container.find(`.${t.options.classPrefix}control`).stop(true, true).fadeOut(200, function() {
+			t.container.find(`.${t.options.classPrefix}control`).stop(true, true).fadeOut(200, function () {
 				$(this).addClass(`${t.options.classPrefix}offscreen`).css('display', 'block');
 			});
 		} else {
@@ -823,7 +823,7 @@ class MediaElementPlayer {
 							.parent().hide();
 						}, 20);
 					} catch (exp) {
-
+						console.log(exp);
 					}
 				}
 
@@ -1248,7 +1248,7 @@ class MediaElementPlayer {
 			railMargin = parseFloat(t.rail.css('margin-left')) + parseFloat(t.rail.css('margin-right')),
 			totalMargin = parseFloat(t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')) || 0,
 			siblingsWidth = 0
-		;
+			;
 
 		t.rail.siblings().each((index, object) => {
 			if ($(object).is(':visible')) {
@@ -1272,19 +1272,19 @@ class MediaElementPlayer {
 			!t.container.find(`#${t.media.id}-iframe-overlay`).length) {
 
 			$(`<div id="${t.media.id}-iframe-overlay" class="${t.options.classPrefix}iframe-overlay"></div>`)
-			.insertBefore($(`#${t.media.id}_${t.media.rendererName}`))
-			.on('click', function(e) {
-				if (t.options.clickToPlayPause) {
-					if (t.media.paused) {
-						t.media.play();
-					} else {
-						t.media.pause();
-					}
+				.insertBefore($(`#${t.media.id}_${t.media.rendererName}`))
+				.on('click', function (e) {
+					if (t.options.clickToPlayPause) {
+						if (t.media.paused) {
+							t.media.play();
+						} else {
+							t.media.pause();
+						}
 
-					e.preventDefault();
-					e.stopPropagation();
-				}
-			});
+						e.preventDefault();
+						e.stopPropagation();
+					}
+				});
 		}
 	}
 
@@ -1375,7 +1375,7 @@ class MediaElementPlayer {
 		}, false);
 
 		media.addEventListener('playing', () => {
-		    poster.hide();
+			poster.hide();
 		}, false);
 
 		if (player.options.showPosterWhenEnded && player.options.autoRewind) {
@@ -1385,7 +1385,7 @@ class MediaElementPlayer {
 		}
 
 		media.addEventListener('error', () => {
-		    poster.hide();
+			poster.hide();
 		}, false);
 
 		if (player.options.showPosterWhenPaused) {
@@ -1425,8 +1425,7 @@ class MediaElementPlayer {
 			bigPlay =
 				$(`<div class="${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play">` +
 					`<div class="${t.options.classPrefix}overlay-button" role="button" ` +
-						`aria-label="${i18n.t('mejs.play')}" aria-pressed="false">` +
-					`</div>` +
+						`aria-label="${i18n.t('mejs.play')}" aria-pressed="false"></div>` +
 				`</div>`)
 				.appendTo(layers)
 				.on('click', () => {
@@ -1436,7 +1435,7 @@ class MediaElementPlayer {
 
 						let
 							button = t.$media.closest(`.${t.options.classPrefix}container`)
-							.find(`.${t.options.classPrefix}overlay-button`),
+								.find(`.${t.options.classPrefix}overlay-button`),
 							pressed = button.attr('aria-pressed')
 						;
 
@@ -1590,6 +1589,7 @@ class MediaElementPlayer {
 		try {
 			this.media.pause();
 		} catch (e) {
+			console.log(e);
 		}
 	}
 

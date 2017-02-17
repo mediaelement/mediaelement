@@ -90,6 +90,7 @@ export const PluginDetector = {
 				}
 			}
 			catch (e) {
+				console.log(e);
 			}
 		}
 		return version;
@@ -294,7 +295,7 @@ const FlashMediaElementRenderer = {
 			flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
 			flashWidth = (isVideo) ? mediaElement.originalNode.width : 1;
 
-		if (!!mediaElement.originalNode.currentSrc.length) {
+		if (mediaElement.originalNode.currentSrc.length) {
 			flashVars.push(`src=${mediaElement.originalNode.currentSrc}`);
 		}
 
@@ -375,6 +376,7 @@ const FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = 'rect(0 0 0 0);';
 				} catch (e) {
+					console.log(e);
 				}
 			}
 		};
@@ -386,6 +388,7 @@ const FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = '';
 				} catch (e) {
+					console.log(e);
 				}
 			}
 		};

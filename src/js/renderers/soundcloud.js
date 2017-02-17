@@ -133,7 +133,6 @@ const SoundCloudIframeRenderer = {
 		// create our fake element that allows events and such to work
 		let
 			apiStack = [],
-			scPlayerReady = false,
 			scPlayer = null,
 			scIframe = null,
 			currentTime = 0,
@@ -242,12 +241,13 @@ const SoundCloudIframeRenderer = {
 								break;
 
 							case 'readyState':
-								let event = createEvent('canplay', vimeo);
+								let event = createEvent('canplay', sc);
 								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
 								console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {
@@ -299,7 +299,6 @@ const SoundCloudIframeRenderer = {
 		// add a ready method that SC can fire
 		window['__ready__' + sc.id] = (_scPlayer) => {
 
-			scPlayerReady = true;
 			mediaElement.scPlayer = scPlayer = _scPlayer;
 
 			// do call stack
@@ -405,9 +404,7 @@ const SoundCloudIframeRenderer = {
 
 		SoundCloudApi.enqueueIframe(scSettings);
 
-		sc.setSize = (width, height) => {
-			// nothing here, audio only
-		};
+		sc.setSize = () => {};
 		sc.hide = () => {
 			sc.pause();
 			if (scIframe) {

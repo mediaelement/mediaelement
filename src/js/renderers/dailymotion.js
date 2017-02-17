@@ -159,7 +159,6 @@ const DailyMotionIframeRenderer = {
 
 		let
 			apiStack = [],
-			dmPlayerReady = false,
 			dmPlayer = null,
 			dmIframe = null,
 			events,
@@ -262,12 +261,13 @@ const DailyMotionIframeRenderer = {
 								break;
 
 							case 'readyState':
-								let event = createEvent('canplay', vimeo);
+								let event = createEvent('canplay', dm);
 								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
 								console.log('dm ' + dm.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {
@@ -318,7 +318,6 @@ const DailyMotionIframeRenderer = {
 		// Initial method to register all DailyMotion events when initializing <iframe>
 		window['__ready__' + dm.id] = (_dmPlayer) => {
 
-			dmPlayerReady = true;
 			mediaElement.dmPlayer = dmPlayer = _dmPlayer;
 
 			// do call stack

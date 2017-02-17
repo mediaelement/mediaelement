@@ -121,19 +121,6 @@ const vimeoApi = {
 		url = parts[0];
 
 		return parseInt(url.substring(url.lastIndexOf('/') + 1));
-	},
-
-	/**
-	 * Generate custom errors for Vimeo based on the API specifications
-	 *
-	 * @see https://github.com/vimeo/player.js#error
-	 * @param {Object} error
-	 * @param {Object} target
-	 */
-	errorHandler: (error, target) => {
-		let event = createEvent('error', target);
-		event.message = error.name + ': ' + error.message;
-		mediaElement.dispatchEvent(event);
 	}
 };
 
@@ -165,7 +152,6 @@ const vimeoIframeRenderer = {
 		// exposed object
 		let
 			apiStack = [],
-			vimeoApiReady = false,
 			vimeo = {},
 			vimeoPlayer = null,
 			paused = true,
@@ -185,8 +171,21 @@ const vimeoIframeRenderer = {
 		vimeo.id = mediaElement.id + '_' + options.prefix;
 		vimeo.mediaElement = mediaElement;
 
+		/**
+		 * Generate custom errors for Vimeo based on the API specifications
+		 *
+		 * @see https://github.com/vimeo/player.js#error
+		 * @param {Object} error
+		 * @param {Object} target
+		 */
+		const errorHandler = (error, target) => {
+			let event = createEvent('error', target);
+			event.message = error.name + ': ' + error.message;
+			mediaElement.dispatchEvent(event);
+		};
+
 		// wrappers for get/set
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
 
@@ -255,7 +254,7 @@ const vimeoIframeRenderer = {
 									}
 
 								})['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 
@@ -267,7 +266,7 @@ const vimeoIframeRenderer = {
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 
@@ -280,13 +279,13 @@ const vimeoIframeRenderer = {
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 
 							case 'loop':
 								vimeoPlayer.setLoop(value)['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 							case 'muted':
@@ -298,7 +297,7 @@ const vimeoIframeRenderer = {
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch']((error) => {
-										vimeoApi.errorHandler(error, vimeo);
+										errorHandler(error, vimeo);
 									});
 								} else {
 									vimeoPlayer.setVolume(oldVolume).then(() => {
@@ -308,7 +307,7 @@ const vimeoIframeRenderer = {
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch']((error) => {
-										vimeoApi.errorHandler(error, vimeo);
+										errorHandler(error, vimeo);
 									});
 								}
 								break;
@@ -318,6 +317,7 @@ const vimeoIframeRenderer = {
 								break;
 							default:
 								console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {
@@ -334,7 +334,7 @@ const vimeoIframeRenderer = {
 		}
 
 		// add wrappers for native methods
-		let
+		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 				vimeo[methodName] = () => {
@@ -369,7 +369,6 @@ const vimeoIframeRenderer = {
 		// Initial method to register all Vimeo events when initializing <iframe>
 		window['__ready__' + vimeo.id] = (_vimeoPlayer) => {
 
-			vimeoApiReady = true;
 			mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
 
 			// do call stack
@@ -419,7 +418,7 @@ const vimeoIframeRenderer = {
 					mediaElement.dispatchEvent(event);
 
 				})['catch']((error) => {
-					vimeoApi.errorHandler(error, vimeo);
+					errorHandler(error, vimeo);
 				});
 			});
 
@@ -436,7 +435,7 @@ const vimeoIframeRenderer = {
 					mediaElement.dispatchEvent(event);
 
 				})['catch']((error) => {
-					vimeoApi.errorHandler(error, vimeo);
+					errorHandler(error, vimeo);
 				});
 			});
 			vimeoPlayer.on('timeupdate', () => {

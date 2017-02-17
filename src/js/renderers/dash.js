@@ -64,7 +64,7 @@ const NativeDash = {
 			script.src = settings.options.path;
 
 			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function() {
+			script.onload = script.onreadystatechange = function () {
 				if (!done && (!this.readyState || this.readyState === undefined ||
 					this.readyState === 'loaded' || this.readyState === 'complete')) {
 					done = true;
@@ -255,7 +255,7 @@ let DashNativeRenderer = {
 
 			for (let eventType in dashEvents) {
 				if (dashEvents.hasOwnProperty(eventType)) {
- 					dashPlayer.on(dashEvents[eventType], assignMdashEvents);
+					dashPlayer.on(dashEvents[eventType], assignMdashEvents);
 				}
 			}
 		};

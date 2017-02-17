@@ -33,6 +33,7 @@
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "~0.2.2",
+    "grunt-eslint": "^19.0.0",
     "grunt-postcss": "^0.8.0",
     "grunt-remove-logging": "~0.2.0",
     "grunt-shell": "~1.1.1",
@@ -50,7 +51,9 @@
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "browserify": {
-    "extensions": [".js"],
+    "extensions": [
+      ".js"
+    ],
     "transform": [
       [
         "babelify",

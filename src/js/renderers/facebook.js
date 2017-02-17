@@ -163,12 +163,13 @@ const FacebookRenderer = {
 								break;
 
 							case 'readyState':
-								let event = createEvent('canplay', vimeo);
+								let event = createEvent('canplay', fbWrapper);
 								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
 								console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {

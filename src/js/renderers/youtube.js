@@ -234,7 +234,6 @@ const YouTubeIframeRenderer = {
 		let
 			apiStack = [],
 			youTubeApi = null,
-			youTubeApiReady = false,
 			paused = true,
 			ended = false,
 			youTubeIframe = null,
@@ -346,12 +345,13 @@ const YouTubeIframeRenderer = {
 								}, 50);
 								break;
 							case 'readyState':
-								let event = createEvent('canplay', vimeo);
+								let event = createEvent('canplay', youtube);
 								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
 								console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {
@@ -440,8 +440,6 @@ const YouTubeIframeRenderer = {
 				origin: window.location.host,
 				events: {
 					onReady: (e) => {
-
-						youTubeApiReady = true;
 						mediaElement.youTubeApi = youTubeApi = e.target;
 						mediaElement.youTubeState = {
 							paused: true,
@@ -550,6 +548,7 @@ const YouTubeIframeRenderer = {
 					},
 					onError: (e) => {
 						let event = createEvent('error', youtube);
+						event.data = e.data;
 						mediaElement.dispatchEvent(event);
 					}
 				}
