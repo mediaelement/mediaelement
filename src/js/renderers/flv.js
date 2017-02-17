@@ -60,10 +60,12 @@ const NativeFlv = {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js';
 
-			let
+			const
 				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0],
-				done = false;
+				firstScriptTag = document.getElementsByTagName('script')[0]
+			;
+
+			let done = false;
 
 			script.src = settings.options.path;
 
@@ -91,7 +93,7 @@ const NativeFlv = {
 		NativeFlv.isMediaLoaded = true;
 
 		while (NativeFlv.creationQueue.length > 0) {
-			let settings = NativeFlv.creationQueue.pop();
+			const settings = NativeFlv.creationQueue.pop();
 			NativeFlv.createInstance(settings);
 		}
 	},
@@ -102,7 +104,7 @@ const NativeFlv = {
 	 * @param {Object} settings - an object with settings needed to instantiate FLV object
 	 */
 	createInstance: (settings) => {
-		let player = flvjs.createPlayer(settings.options);
+		const player = flvjs.createPlayer(settings.options);
 		window[`__ready__${settings.id}`](player);
 	}
 };
@@ -156,21 +158,24 @@ const FlvNativeRenderer = {
 	 */
 	create: (mediaElement, options, mediaFiles) => {
 
-		let
-			node = null,
+		const
 			originalNode = mediaElement.originalNode,
 			id = `${mediaElement.id}_${options.prefix}`,
-			flvPlayer,
-			stack = {},
+			stack = {}
+		;
+
+		let
 			i,
-			il
-			;
+			il,
+			node = null,
+			flvPlayer
+		;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
 
 		// WRAPPERS for PROPs
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
@@ -227,8 +232,8 @@ const FlvNativeRenderer = {
 			}
 
 			// BUBBLE EVENTS
-			let
-				events = mejs.html5media.events,
+			const
+				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				assignEvents = (eventName) => {
 
 					if (eventName === 'loadedmetadata') {
@@ -240,17 +245,13 @@ const FlvNativeRenderer = {
 					}
 
 					node.addEventListener(eventName, (e) => {
-						let event = document.createEvent('HTMLEvents');
+						const event = document.createEvent('HTMLEvents');
 						event.initEvent(e.type, e.bubbles, e.cancelable);
-						// event.srcElement = e.srcElement;
-						// event.target = e.srcElement;
 						mediaElement.dispatchEvent(event);
 					});
 
 				}
 			;
-
-			events = events.concat(['click', 'mouseover', 'mouseout']);
 
 			for (i = 0, il = events.length; i < il; i++) {
 				assignEvents(events[i]);
@@ -303,7 +304,7 @@ const FlvNativeRenderer = {
 			flvPlayer.destroy();
 		};
 
-		let event = createEvent('rendererready', node);
+		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;

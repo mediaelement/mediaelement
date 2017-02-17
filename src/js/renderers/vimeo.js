@@ -56,10 +56,12 @@ const vimeoApi = {
 
 		if (!vimeoApi.isIframeStarted) {
 
-			let
+			const
 				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0],
-				done = false;
+				firstScriptTag = document.getElementsByTagName('script')[0]
+			;
+
+			let done = false;
 
 			script.src = '//player.vimeo.com/api/player.js';
 
@@ -87,7 +89,7 @@ const vimeoApi = {
 		vimeoApi.isIframeLoaded = true;
 
 		while (vimeoApi.iframeQueue.length > 0) {
-			let settings = vimeoApi.iframeQueue.pop();
+			const settings = vimeoApi.iframeQueue.pop();
 			vimeoApi.createIframe(settings);
 		}
 	},
@@ -98,7 +100,7 @@ const vimeoApi = {
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
 	createIframe: (settings) => {
-		let player = new Vimeo.Player(settings.iframe);
+		const player = new Vimeo.Player(settings.iframe);
 		window['__ready__' + settings.id](player);
 	},
 
@@ -116,24 +118,11 @@ const vimeoApi = {
 			return null;
 		}
 
-		let parts = url.split('?');
+		const parts = url.split('?');
 
 		url = parts[0];
 
 		return parseInt(url.substring(url.lastIndexOf('/') + 1));
-	},
-
-	/**
-	 * Generate custom errors for Vimeo based on the API specifications
-	 *
-	 * @see https://github.com/vimeo/player.js#error
-	 * @param {Object} error
-	 * @param {Object} target
-	 */
-	errorHandler: (error, target) => {
-		let event = createEvent('error', target);
-		event.message = error.name + ': ' + error.message;
-		mediaElement.dispatchEvent(event);
 	}
 };
 
@@ -163,11 +152,16 @@ const vimeoIframeRenderer = {
 	create: (mediaElement, options, mediaFiles) => {
 
 		// exposed object
-		let
+		const
 			apiStack = [],
-			vimeoApiReady = false,
 			vimeo = {},
-			vimeoPlayer = null,
+			readyState = 4
+
+		;
+
+		let
+			i,
+			il,
 			paused = true,
 			volume = 1,
 			oldVolume = volume,
@@ -175,18 +169,29 @@ const vimeoIframeRenderer = {
 			bufferedTime = 0,
 			ended = false,
 			duration = 0,
-			url = "",
-			readyState = 4,
-			i,
-			il
+			vimeoPlayer = null,
+			url = ''
 		;
 
 		vimeo.options = options;
 		vimeo.id = mediaElement.id + '_' + options.prefix;
 		vimeo.mediaElement = mediaElement;
 
+		/**
+		 * Generate custom errors for Vimeo based on the API specifications
+		 *
+		 * @see https://github.com/vimeo/player.js#error
+		 * @param {Object} error
+		 * @param {Object} target
+		 */
+		const errorHandler = (error, target) => {
+			const event = createEvent('error', target);
+			event.message = error.name + ': ' + error.message;
+			mediaElement.dispatchEvent(event);
+		};
+
 		// wrappers for get/set
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
 
@@ -194,7 +199,7 @@ const vimeoIframeRenderer = {
 
 				vimeo[`get${capName}`] = () => {
 					if (vimeoPlayer !== null) {
-						let value = null;
+						const value = null;
 
 						switch (propName) {
 							case 'currentTime':
@@ -246,7 +251,7 @@ const vimeoIframeRenderer = {
 						switch (propName) {
 
 							case 'src':
-								let url = typeof value === 'string' ? value : value[0].src,
+								const url = typeof value === 'string' ? value : value[0].src,
 									videoId = vimeoApi.getVimeoId(url);
 
 								vimeoPlayer.loadVideo(videoId).then(() => {
@@ -255,7 +260,7 @@ const vimeoIframeRenderer = {
 									}
 
 								})['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 
@@ -263,11 +268,11 @@ const vimeoIframeRenderer = {
 								vimeoPlayer.setCurrentTime(value).then(() => {
 									currentTime = value;
 									setTimeout(() => {
-										let event = createEvent('timeupdate', vimeo);
+										const event = createEvent('timeupdate', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 
@@ -276,17 +281,17 @@ const vimeoIframeRenderer = {
 									volume = value;
 									oldVolume = volume;
 									setTimeout(() => {
-										let event = createEvent('volumechange', vimeo);
+										const event = createEvent('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 
 							case 'loop':
 								vimeoPlayer.setLoop(value)['catch']((error) => {
-									vimeoApi.errorHandler(error, vimeo);
+									errorHandler(error, vimeo);
 								});
 								break;
 							case 'muted':
@@ -294,30 +299,31 @@ const vimeoIframeRenderer = {
 									vimeoPlayer.setVolume(0).then(() => {
 										volume = 0;
 										setTimeout(() => {
-											let event = createEvent('volumechange', vimeo);
+											const event = createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch']((error) => {
-										vimeoApi.errorHandler(error, vimeo);
+										errorHandler(error, vimeo);
 									});
 								} else {
 									vimeoPlayer.setVolume(oldVolume).then(() => {
 										volume = oldVolume;
 										setTimeout(() => {
-											let event = createEvent('volumechange', vimeo);
+											const event = createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch']((error) => {
-										vimeoApi.errorHandler(error, vimeo);
+										errorHandler(error, vimeo);
 									});
 								}
 								break;
 							case 'readyState':
-								let event = createEvent('canplay', vimeo);
+								const event = createEvent('canplay', vimeo);
 								mediaElement.dispatchEvent(event);
 								break;
 							default:
 								console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {
@@ -334,7 +340,7 @@ const vimeoIframeRenderer = {
 		}
 
 		// add wrappers for native methods
-		let
+		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 				vimeo[methodName] = () => {
@@ -369,17 +375,16 @@ const vimeoIframeRenderer = {
 		// Initial method to register all Vimeo events when initializing <iframe>
 		window['__ready__' + vimeo.id] = (_vimeoPlayer) => {
 
-			vimeoApiReady = true;
 			mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
 
 			// do call stack
 			if (apiStack.length) {
 				for (i = 0, il = apiStack.length; i < il; i++) {
 
-					let stackItem = apiStack[i];
+					const stackItem = apiStack[i];
 
 					if (stackItem.type === 'set') {
-						let propName = stackItem.propName,
+						const propName = stackItem.propName,
 							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 						vimeo[`set${capName}`](stackItem.value);
@@ -389,18 +394,19 @@ const vimeoIframeRenderer = {
 				}
 			}
 
-			let vimeoIframe = document.getElementById(vimeo.id), events;
+			const vimeoIframe = document.getElementById(vimeo.id);
+			let events;
 
 			// a few more events
 			events = ['mouseover', 'mouseout'];
 
 			const assignEvents = (e) => {
-				let event = createEvent(e.type, vimeo);
+				const event = createEvent(e.type, vimeo);
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (let j in events) {
-				let eventName = events[j];
+			for (i = 0, il = events.length; i < il; i++) {
+				const eventName = events[i];
 				addEvent(vimeoIframe, eventName, assignEvents);
 			}
 
@@ -415,11 +421,11 @@ const vimeoIframeRenderer = {
 						bufferedTime = duration * loadProgress;
 					}
 
-					let event = createEvent('loadedmetadata', vimeo);
+					const event = createEvent('loadedmetadata', vimeo);
 					mediaElement.dispatchEvent(event);
 
 				})['catch']((error) => {
-					vimeoApi.errorHandler(error, vimeo);
+					errorHandler(error, vimeo);
 				});
 			});
 
@@ -432,11 +438,11 @@ const vimeoIframeRenderer = {
 						bufferedTime = duration * loadProgress;
 					}
 
-					let event = createEvent('progress', vimeo);
+					const event = createEvent('progress', vimeo);
 					mediaElement.dispatchEvent(event);
 
 				})['catch']((error) => {
-					vimeoApi.errorHandler(error, vimeo);
+					errorHandler(error, vimeo);
 				});
 			});
 			vimeoPlayer.on('timeupdate', () => {
@@ -444,7 +450,7 @@ const vimeoIframeRenderer = {
 					currentTime = seconds;
 				});
 
-				let event = createEvent('timeupdate', vimeo);
+				const event = createEvent('timeupdate', vimeo);
 				mediaElement.dispatchEvent(event);
 
 			});
@@ -461,14 +467,14 @@ const vimeoIframeRenderer = {
 				paused = true;
 				ended = false;
 
-				let event = createEvent('pause', vimeo);
+				const event = createEvent('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('ended', () => {
 				paused = false;
 				ended = true;
 
-				let event = createEvent('ended', vimeo);
+				const event = createEvent('ended', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 
@@ -476,12 +482,12 @@ const vimeoIframeRenderer = {
 			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (i = 0, il = events.length; i < il; i++) {
-				let event = createEvent(events[i], vimeo);
+				const event = createEvent(events[i], vimeo);
 				mediaElement.dispatchEvent(event);
 			}
 		};
 
-		let
+		const
 			height = mediaElement.originalNode.height,
 			width = mediaElement.originalNode.width,
 			vimeoContainer = document.createElement('iframe'),

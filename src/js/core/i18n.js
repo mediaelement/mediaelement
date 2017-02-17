@@ -10,7 +10,7 @@ import {escapeHTML, isObjectEmpty} from '../utils/general';
  * This object manages translations with pluralization. Also deals with WordPress compatibility.
  * @type {Object}
  */
-let i18n = {lang: 'en', en: en};
+const i18n = {lang: 'en', en: en};
 
 /**
  * Language setter/getter
@@ -58,7 +58,7 @@ i18n.t = (message, pluralParam = null) => {
 		let
 			str,
 			pluralForm
-			;
+		;
 
 		const language = i18n.language();
 
@@ -83,7 +83,7 @@ i18n.t = (message, pluralParam = null) => {
 			 * @return {Function[]}
 			 * @private
 			 */
-			let _pluralForms = (() => {
+			const _pluralForms = (() => {
 				return [
 					// 0: Chinese, Japanese, Korean, Persian, Turkish, Thai, Lao, Aymará,
 					// Tibetan, Chiga, Dzongkha, Indonesian, Lojban, Georgian, Kazakh, Khmer, Kyrgyz, Malay,

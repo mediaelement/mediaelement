@@ -37,7 +37,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildcurrent: function (player, controls, layers, media)  {
-		let t = this;
+		const t = this;
 
 		$(`<div class="${t.options.classPrefix}time" role="timer" aria-live="off">` +
 			`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours)}</span>` +
@@ -64,7 +64,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildduration: function (player, controls, layers, media)  {
-		let t = this;
+		const t = this;
 
 		if (controls.children().last().find(`.${t.options.classPrefix}currenttime`).length > 0) {
 			$(`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
@@ -97,7 +97,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	updateCurrent: function ()  {
-		let t = this;
+		const t = this;
 
 		let currentTime = t.media.currentTime;
 
@@ -115,7 +115,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	updateDuration: function ()  {
-		let t = this;
+		const t = this;
 
 		let duration = t.media.duration;
 

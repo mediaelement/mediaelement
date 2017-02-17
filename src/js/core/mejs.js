@@ -3,7 +3,7 @@
 import window from 'global/window';
 
 // Namespace
-let mejs = {};
+const mejs = {};
 
 // version number
 mejs.version = '3.1.2';

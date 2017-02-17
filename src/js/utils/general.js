@@ -1,6 +1,5 @@
 'use strict';
 
-import document from 'global/document';
 import mejs from '../core/mejs';
 
 /**
@@ -39,14 +38,14 @@ export function debounce (func, wait, immediate = false) {
 
 	let timeout;
 	return () => {
-		let context = this, args = arguments;
-		let later = () => {
+		const context = this, args = arguments;
+		const later = () => {
 			timeout = null;
 			if (!immediate) {
 				func.apply(context, args);
 			}
 		};
-		let callNow = immediate && !timeout;
+		const callNow = immediate && !timeout;
 		clearTimeout(timeout);
 		timeout = setTimeout(later, wait);
 
@@ -68,9 +67,9 @@ export function isObjectEmpty (instance) {
 }
 
 export function splitEvents (events, id) {
-	let rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
+	const rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
 	// add player ID as an event namespace so it's easier to unbind them all later
-	let ret = {d: [], w: []};
+	const ret = {d: [], w: []};
 	(events || '').split(' ').forEach((v) => {
 		const eventName = v + '.' + id;
 
@@ -89,49 +88,8 @@ export function splitEvents (events, id) {
 	return ret;
 }
 
-/**
- *
- * @param {String} className
- * @param {HTMLElement} node
- * @param {String} tag
- * @return {HTMLElement[]}
- */
-export function getElementsByClassName (className, node, tag) {
-
-	if (node === undefined || node === null) {
-		node = document;
-	}
-	if (node.getElementsByClassName !== undefined && node.getElementsByClassName !== null) {
-		return node.getElementsByClassName(className);
-	}
-	if (tag === undefined || tag === null) {
-		tag = '*';
-	}
-
-	let
-		classElements = [],
-		j = 0,
-		teststr,
-		els = node.getElementsByTagName(tag),
-		elsLen = els.length
-		;
-
-	for (i = 0; i < elsLen; i++) {
-		if (els[i].className.indexOf(className) > -1) {
-			teststr = `,${els[i].className.split(' ').join(',')},`;
-			if (teststr.indexOf(`,${className},`) > -1) {
-				classElements[j] = els[i];
-				j++;
-			}
-		}
-	}
-
-	return classElements;
-}
-
 mejs.Utils = mejs.Utils || {};
 mejs.Utils.escapeHTML = escapeHTML;
 mejs.Utils.debounce = debounce;
 mejs.Utils.isObjectEmpty = isObjectEmpty;
 mejs.Utils.splitEvents = splitEvents;
-mejs.Utils.getElementsByClassName = getElementsByClassName;

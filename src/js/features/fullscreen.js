@@ -2,7 +2,6 @@
 
 import window from 'global/window';
 import document from 'global/document';
-import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
@@ -84,10 +83,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.detectFullscreenMode();
 		});
 
+		let hideTimeout = null;
+
 		// build button
-		let
+		const
 			t = this,
-			hideTimeout = null,
 			fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : i18n.t('mejs.fullscreen'),
 			fullscreenBtn =
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button">` +
@@ -185,11 +185,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	detectFullscreenMode: function ()  {
 
-		let
+		const
 			t = this,
-			mode = '',
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
 		;
+
+		let mode = '';
 
 		if (Features.HAS_TRUE_NATIVE_FULLSCREEN && isNative) {
 			mode = 'native-native';
@@ -218,7 +219,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	createPluginClickThrough: function ()  {
 
-		let t = this;
+		const t = this;
 
 		// don't build twice
 		if (t.isPluginClickThroughCreated) {
@@ -255,10 +256,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			hoverDivs = {},
 			hoverDivNames = ['top', 'left', 'right', 'bottom'],
 			positionHoverDivs = () => {
-				let fullScreenBtnOffsetLeft = fullscreenBtn.offset().left - t.container.offset().left,
-					fullScreenBtnOffsetTop = fullscreenBtn.offset().top - t.container.offset().top,
-					fullScreenBtnWidth = fullscreenBtn.outerWidth(true),
-					fullScreenBtnHeight = fullscreenBtn.outerHeight(true),
+				let fullScreenBtnOffsetLeft = t.fullscreenBtn.offset().left - t.container.offset().left,
+					fullScreenBtnOffsetTop = t.fullscreenBtn.offset().top - t.container.offset().top,
+					fullScreenBtnWidth = t.fullscreenBtn.outerWidth(true),
+					fullScreenBtnHeight = t.fullscreenBtn.outerHeight(true),
 					containerWidth = t.container.width(),
 					containerHeight = t.container.height();
 
@@ -303,15 +304,17 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
-		fullscreenBtn.on('mouseover', () => {
+		t.fullscreenBtn.on('mouseover', () => {
 
 			if (!t.isFullScreen) {
 
-				let buttonPos = fullscreenBtn.offset(),
-					containerPos = player.container.offset();
+				let
+					buttonPos = t.fullscreenBtn.offset(),
+					containerPos = t.container.offset()
+				;
 
 				// move the button in Flash into place
-				media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
+				t.media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
 
 				// allows click through
 				t.fullscreenBtn.css('pointer-events', 'none');
@@ -321,7 +324,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.media.addEventListener('click', t.clickToPlayPauseCallback);
 
 				// show the divs that will restore things
-				for (let i in hoverDivs) {
+				for (let i = 0, il = hoverDivs.length; i < il; i++) {
 					hoverDivs[i].show();
 				}
 
@@ -333,7 +336,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		// restore controls anytime the user enters or leaves fullscreen
-		media.addEventListener('fullscreenchange', () => {
+		t.media.addEventListener('fullscreenchange', () => {
 			t.isFullScreen = !t.isFullScreen;
 			// don't allow plugin click to pause video - messes with
 			// plugin's controls
@@ -354,14 +357,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			// if the mouse is anywhere but the fullsceen button, then restore it all
 			if (fullscreenIsDisabled) {
 
-				const fullscreenBtnPos = fullscreenBtn.offset();
+				const fullscreenBtnPos = t.fullscreenBtn.offset();
 
-				if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + fullscreenBtn.outerHeight(true) ||
-					e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + fullscreenBtn.outerWidth(true)) {
-
-					fullscreenBtn.css('pointer-events', '');
+				if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + t.fullscreenBtn.outerHeight(true) ||
+					e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + t.fullscreenBtn.outerWidth(true)) {
+					t.fullscreenBtn.css('pointer-events', '');
 					t.controls.css('pointer-events', '');
-
 					fullscreenIsDisabled = false;
 				}
 			}
@@ -385,7 +386,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	enterFullScreen: function ()  {
 
-		let
+		const
 			t = this,
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/) !== null
 		;
@@ -491,7 +492,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	exitFullScreen: function ()  {
 
-		let
+		const
 			t = this,
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
 			;

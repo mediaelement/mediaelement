@@ -15,16 +15,19 @@ export function secondsToTimeCode (time, forceHours = false, showFrameCount = fa
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
-	let hours = Math.floor(time / 3600) % 24;
-	let minutes = Math.floor(time / 60) % 60;
-	let seconds = Math.floor(time % 60);
-	let frames = Math.floor(((time % 1) * fps).toFixed(3));
+	const frames = Math.floor(((time % 1) * fps).toFixed(3));
+
+	let
+		hours = Math.floor(time / 3600) % 24,
+		minutes = Math.floor(time / 60) % 60,
+		seconds = Math.floor(time % 60)
+	;
 
 	hours = hours <= 0 ? 0 : hours;
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
 
-	let result = (forceHours || hours > 0) ? `${(hours < 10 ? `0${hours}` : hours)}:` : '';
+	let  result = (forceHours || hours > 0) ? `${(hours < 10 ? `0${hours}` : hours)}:` : '';
 	result += `${(minutes < 10 ? `0${minutes}` : minutes)}:`;
 	result += `${(seconds < 10 ? `0${seconds}` : seconds)}`;
 	result += `${((showFrameCount) ? `:${(frames < 10 ? `0${frames}` : frames)}` : '')}`;
@@ -50,14 +53,15 @@ export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
 		throw new TypeError('Time code must have the format `00:00:00`');
 	}
 
+	const parts = time.split(':');
+
 	let
-		parts = time.split(':'),
+		output,
 		hours = 0,
 		minutes = 0,
-		frames = 0,
 		seconds = 0,
-		output
-		;
+		frames = 0
+	;
 
 	switch (parts.length) {
 		default:
@@ -95,13 +99,7 @@ export function calculateTimeFormat (time, options, fps = 25) {
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
-	let
-		required = false,
-		format = options.timeFormat,
-		firstChar = format[0],
-		firstTwoPlaces = (format[1] === format[0]),
-		separatorIndex = firstTwoPlaces ? 2 : 1,
-		separator = format.length < separatorIndex ? format[separatorIndex] : ':',
+	const
 		hours = Math.floor(time / 3600) % 24,
 		minutes = Math.floor(time / 60) % 60,
 		seconds = Math.floor(time % 60),
@@ -112,7 +110,16 @@ export function calculateTimeFormat (time, options, fps = 25) {
 			[minutes, 'm'],
 			[hours, 'h']
 		]
-		;
+	;
+
+	let
+		format = options.timeFormat,
+		firstTwoPlaces = (format[1] === format[0]),
+		separatorIndex = firstTwoPlaces ? 2 : 1,
+		separator = format.length < separatorIndex ? format[separatorIndex] : ':',
+		firstChar = format[0],
+		required = false
+	;
 
 	for (let i = 0, len = lis.length; i < len; i++) {
 		if (format.indexOf(lis[i][1]) > -1) {
@@ -159,11 +166,12 @@ export function convertSMPTEtoSeconds (SMPTE) {
 
 	SMPTE = SMPTE.replace(',', '.');
 
+	const decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0;
+
 	let
 		secs = 0,
-		decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0,
 		multiplier = 1
-		;
+	;
 
 	SMPTE = SMPTE.split(':').reverse();
 

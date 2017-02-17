@@ -44,19 +44,22 @@ const FacebookRenderer = {
 	 */
 	create: (mediaElement, options, mediaFiles)  => {
 
-		let
+		const
 			fbWrapper = {},
-			fbApi = null,
-			fbDiv = null,
 			apiStack = [],
+			eventHandler = {},
+			readyState = 4
+		;
+
+		let
+			i,
+			il,
+			src = '',
 			paused = true,
 			ended = false,
 			hasStartedPlaying = false,
-			src = '',
-			eventHandler = {},
-			readyState = 4,
-			i,
-			il
+			fbApi = null,
+			fbDiv = null
 		;
 
 		options = Object.assign(options, mediaElement.options);
@@ -65,7 +68,7 @@ const FacebookRenderer = {
 		fbWrapper.mediaElement = mediaElement;
 
 		// wrappers for get/set
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName)  => {
 
@@ -74,7 +77,7 @@ const FacebookRenderer = {
 				fbWrapper[`get${capName}`] = () => {
 
 					if (fbApi !== null) {
-						let value = null;
+						const value = null;
 
 						// figure out how to get youtube dta here
 						switch (propName) {
@@ -126,7 +129,7 @@ const FacebookRenderer = {
 						switch (propName) {
 
 							case 'src':
-								let url = typeof value === 'string' ? value : value[0].src;
+								const url = typeof value === 'string' ? value : value[0].src;
 
 								// Only way is to destroy instance and all the events fired,
 								// and create new one
@@ -149,7 +152,7 @@ const FacebookRenderer = {
 									fbApi.unmute();
 								}
 								setTimeout(() => {
-									let event = createEvent('volumechange', fbWrapper);
+									const event = createEvent('volumechange', fbWrapper);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
@@ -157,18 +160,19 @@ const FacebookRenderer = {
 							case 'volume':
 								fbApi.setVolume(value);
 								setTimeout(() => {
-									let event = createEvent('volumechange', fbWrapper);
+									const event = createEvent('volumechange', fbWrapper);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
 
 							case 'readyState':
-								let event = createEvent('canplay', vimeo);
+								const event = createEvent('canplay', fbWrapper);
 								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
 								console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {
@@ -185,7 +189,7 @@ const FacebookRenderer = {
 		}
 
 		// add wrappers for native methods
-		let
+		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName)  => {
 
@@ -226,7 +230,7 @@ const FacebookRenderer = {
 		 */
 		function sendEvents (events) {
 			for (let i = 0, il = events.length; i < il; i++) {
-				let event = mejs.Utils.createEvent(events[i], fbWrapper);
+				const event = mejs.Utils.createEvent(events[i], fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}
 		}
@@ -242,9 +246,7 @@ const FacebookRenderer = {
 		 * @param {Object} config
 		 */
 		function createFacebookEmbed (url, config) {
-
 			src = url;
-
 			fbDiv = document.createElement('div');
 			fbDiv.id = fbWrapper.id;
 			fbDiv.className = "fb-video";
@@ -270,7 +272,7 @@ const FacebookRenderer = {
 						fbApi = msg.instance;
 
 						// Set proper size since player dimensions are unknown before this event
-						let
+						const
 							fbIframe = fbDiv.getElementsByTagName('iframe')[0],
 							width = parseInt(window.getComputedStyle(fbIframe, null).width),
 							height = parseInt(fbIframe.style.height)
@@ -281,9 +283,9 @@ const FacebookRenderer = {
 						sendEvents(['mouseover', 'mouseout']);
 
 						// remove previous listeners
-						let fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
+						const fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
 						for (i = 0, il = fbEvents.length; i < il; i++) {
-							let
+							const
 								event = fbEvents[i],
 								handler = eventHandler[event]
 							;
@@ -297,10 +299,10 @@ const FacebookRenderer = {
 						if (apiStack.length) {
 							for (i = 0, il = apiStack.length; i < il; i++) {
 
-								let stackItem = apiStack[i];
+								const stackItem = apiStack[i];
 
 								if (stackItem.type === 'set') {
-									let
+									const
 										propName = stackItem.propName,
 										capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`
 									;
@@ -364,12 +366,11 @@ const FacebookRenderer = {
 			};
 
 			(((d, s, id) => {
-				let js;
-				let fjs = d.getElementsByTagName(s)[0];
+				const fjs = d.getElementsByTagName(s)[0];
 				if (d.getElementById(id)) {
 					return;
 				}
-				js = d.createElement(s);
+				const js = d.createElement(s);
 				js.id = id;
 				js.src = '//connect.facebook.net/en_US/sdk.js';
 				fjs.parentNode.insertBefore(js, fjs);
@@ -405,7 +406,7 @@ const FacebookRenderer = {
 		fbWrapper.startInterval = () => {
 			// create timer
 			fbWrapper.interval = setInterval(() => {
-				let event = createEvent('timeupdate', fbWrapper);
+				const event = createEvent('timeupdate', fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}, 250);
 		};

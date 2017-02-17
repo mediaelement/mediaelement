@@ -56,15 +56,17 @@ const NativeDash = {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-			let
+			const
 				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0],
-				done = false;
+				firstScriptTag = document.getElementsByTagName('script')[0]
+			;
+
+			let done = false;
 
 			script.src = settings.options.path;
 
 			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function() {
+			script.onload = script.onreadystatechange = function () {
 				if (!done && (!this.readyState || this.readyState === undefined ||
 					this.readyState === 'loaded' || this.readyState === 'complete')) {
 					done = true;
@@ -89,7 +91,7 @@ const NativeDash = {
 		NativeDash.isScriptLoaded = true;
 
 		while (NativeDash.creationQueue.length > 0) {
-			let settings = NativeDash.creationQueue.pop();
+			const settings = NativeDash.creationQueue.pop();
 			NativeDash.createInstance(settings);
 		}
 	},
@@ -101,12 +103,12 @@ const NativeDash = {
 	 */
 	createInstance: (settings) => {
 
-		let player = dashjs.MediaPlayer().create();
+		const player = dashjs.MediaPlayer().create();
 		window['__ready__' + settings.id](player);
 	}
 };
 
-let DashNativeRenderer = {
+const DashNativeRenderer = {
 	name: 'native_dash',
 
 	options: {
@@ -135,21 +137,24 @@ let DashNativeRenderer = {
 	 */
 	create: (mediaElement, options, mediaFiles) => {
 
-		let
-			node = null,
+		const
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
-			dashPlayer,
-			stack = {},
+			stack = {}
+		;
+
+		let
 			i,
-			il
+			il,
+			node = null,
+			dashPlayer
 		;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
 
 		// WRAPPERS for PROPs
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
@@ -195,10 +200,10 @@ let DashNativeRenderer = {
 			if (stack.length) {
 				for (i = 0, il = stack.length; i < il; i++) {
 
-					let stackItem = stack[i];
+					const stackItem = stack[i];
 
 					if (stackItem.type === 'set') {
-						let propName = stackItem.propName,
+						const propName = stackItem.propName,
 							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 						node[`set${capName}`](stackItem.value);
@@ -209,8 +214,9 @@ let DashNativeRenderer = {
 			}
 
 			// BUBBLE EVENTS
-			let
-				events = mejs.html5media.events, dashEvents = dashjs.MediaPlayer.events,
+			const
+				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
 
 					if (eventName === 'loadedmetadata') {
@@ -218,7 +224,7 @@ let DashNativeRenderer = {
 					}
 
 					node.addEventListener(eventName, (e) => {
-						let event = document.createEvent('HTMLEvents');
+						const event = document.createEvent('HTMLEvents');
 						event.initEvent(e.type, e.bubbles, e.cancelable);
 						// @todo Check this
 						// event.srcElement = e.srcElement;
@@ -229,8 +235,6 @@ let DashNativeRenderer = {
 
 				}
 			;
-
-			events = events.concat(['click', 'mouseover', 'mouseout']);
 
 			for (i = 0, il = events.length; i < il; i++) {
 				assignEvents(events[i]);
@@ -244,7 +248,7 @@ let DashNativeRenderer = {
 			 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 			 */
 			const assignMdashEvents = (e) => {
-				let event = createEvent(e.type, node);
+				const event = createEvent(e.type, node);
 				event.data = e;
 				mediaElement.dispatchEvent(event);
 
@@ -253,9 +257,9 @@ let DashNativeRenderer = {
 				}
 			};
 
-			for (let eventType in dashEvents) {
+			for (const eventType in dashEvents) {
 				if (dashEvents.hasOwnProperty(eventType)) {
- 					dashPlayer.on(dashEvents[eventType], assignMdashEvents);
+					dashPlayer.on(dashEvents[eventType], assignMdashEvents);
 				}
 			}
 		};
@@ -299,7 +303,7 @@ let DashNativeRenderer = {
 			return node;
 		};
 
-		let event = createEvent('rendererready', node);
+		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;

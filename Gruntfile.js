@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -10,6 +10,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-text-replace');
 	grunt.loadNpmTasks("grunt-remove-logging");
 	grunt.loadNpmTasks('grunt-browserify');
+	grunt.loadNpmTasks('grunt-eslint');
+
 
 	var rendererSources;
 
@@ -18,7 +20,7 @@ module.exports = function(grunt) {
 	if (rendererList) {
 		rendererList = rendererList.split(',');
 		rendererSources = [];
-		rendererList.forEach(function(renderer) {
+		rendererList.forEach(function (renderer) {
 			var path = 'src/js/renderers/' + renderer + '.js';
 			if (grunt.file.isFile(path)) {
 				rendererSources.push(path);
@@ -28,24 +30,19 @@ module.exports = function(grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		jshint: {
-			options: {
-				jshintrc: '.jshintrc'
-			},
-			files: {
-				src: [
-					'Gruntfile.js',
-					'src/js/core/*.js',
-					'src/js/features/*.js',
-					'src/js/languages/*.js',
-					'src/js/renderers/*.js',
-					'src/js/utils/*.js',
-					'src/js/library.js',
-					'src/js/player.js',
-					'src/js/index.js',
-					'test/core/*.js'
-				]
-			}
+		eslint: {
+			target: [
+				'Gruntfile.js',
+				'src/js/core/*.js',
+				'src/js/features/*.js',
+				'src/js/languages/*.js',
+				'src/js/renderers/*.js',
+				'src/js/utils/*.js',
+				'src/js/library.js',
+				'src/js/player.js',
+				'src/js/index.js',
+				'test/core/*.js'
+			]
 		},
 		browserify: {
 			dist: {
@@ -59,15 +56,15 @@ module.exports = function(grunt) {
 						'src/js/renderers/html5.js',
 						'src/js/renderers/flash.js'
 					].concat(rendererSources || [
-						'src/js/renderers/dailymotion.js',
-						'src/js/renderers/dash.js',
-						'src/js/renderers/facebook.js',
-						'src/js/renderers/flv.js',
-						'src/js/renderers/hls.js',
-						'src/js/renderers/soundcloud.js',
-						'src/js/renderers/vimeo.js',
-						'src/js/renderers/youtube.js',
-					]),
+							'src/js/renderers/dailymotion.js',
+							'src/js/renderers/dash.js',
+							'src/js/renderers/facebook.js',
+							'src/js/renderers/flv.js',
+							'src/js/renderers/hls.js',
+							'src/js/renderers/soundcloud.js',
+							'src/js/renderers/vimeo.js',
+							'src/js/renderers/youtube.js',
+						]),
 					// just player
 					'build/mediaelementplayer.js': [
 						'src/js/utils/polyfill.js',
@@ -94,15 +91,15 @@ module.exports = function(grunt) {
 						'src/js/renderers/html5.js',
 						'src/js/renderers/flash.js'
 					].concat(rendererSources || [
-						'src/js/renderers/dailymotion.js',
-						'src/js/renderers/dash.js',
-						'src/js/renderers/facebook.js',
-						'src/js/renderers/flv.js',
-						'src/js/renderers/hls.js',
-						'src/js/renderers/soundcloud.js',
-						'src/js/renderers/vimeo.js',
-						'src/js/renderers/youtube.js',
-					]).concat([
+							'src/js/renderers/dailymotion.js',
+							'src/js/renderers/dash.js',
+							'src/js/renderers/facebook.js',
+							'src/js/renderers/flv.js',
+							'src/js/renderers/hls.js',
+							'src/js/renderers/soundcloud.js',
+							'src/js/renderers/vimeo.js',
+							'src/js/renderers/youtube.js',
+						]).concat([
 						'src/js/library.js',
 						'src/js/player.js',
 						'src/js/features/fullscreen.js',
@@ -182,7 +179,7 @@ module.exports = function(grunt) {
 				processors: [
 					// Add vendor prefixes.
 					require('autoprefixer')({browsers: 'last 2 versions, ie > 8'}),
-					 // Minify the result.
+					// Minify the result.
 					require('cssnano')()
 				]
 			},
@@ -197,20 +194,20 @@ module.exports = function(grunt) {
 		},
 		copy: {
 			build: {
-				expand  : true,
-				cwd     : 'src/css/',
-				src     : ['*.png', '*.svg', '*.gif', '*.css'],
-				dest    : 'build/',
-				flatten : true,
-				filter  : 'isFile'
+				expand: true,
+				cwd: 'src/css/',
+				src: ['*.png', '*.svg', '*.gif', '*.css'],
+				dest: 'build/',
+				flatten: true,
+				filter: 'isFile'
 			},
 			translation: {
-				expand  : true,
-				cwd     : 'src/js/languages/',
-				src     : ['*.js', '!*en.js'],
-				dest    : 'build/lang/',
-				flatten : true,
-				filter  : 'isFile',
+				expand: true,
+				cwd: 'src/js/languages/',
+				src: ['*.js', '!*en.js'],
+				dest: 'build/lang/',
+				flatten: true,
+				filter: 'isFile',
 				options: {
 					processContent: function (content) {
 						content = content.replace(/\/\/.*?\.js/gm, '');
@@ -221,7 +218,7 @@ module.exports = function(grunt) {
 		},
 		clean: {
 			build: ['build'],
-			temp:  ['tmp']
+			temp: ['tmp']
 		},
 
 		// Task that compiles all SWF files using the free Flex SDK on Linux/Mac.
@@ -250,7 +247,7 @@ module.exports = function(grunt) {
 
 		shell: {
 			buildFlashVideo: {
-				command: function() {
+				command: function () {
 					grunt.config.set("sourceFile", 'src/flash/flash-video/VideoMediaElement.as');
 					grunt.config.set("sourcePath", 'src/flash/flash-video');
 					grunt.config.set("flashOut", 'build/mediaelement-flash-video.swf');
@@ -259,7 +256,7 @@ module.exports = function(grunt) {
 				}
 			},
 			buildFlashVideoHls: {
-				command: function() {
+				command: function () {
 					grunt.config.set("sourceFile", 'src/flash/flash-video-hls/HlsMediaElement.as');
 					grunt.config.set("sourcePath", 'src/flash/flash-video-hls');
 					grunt.config.set("flashOut", 'build/mediaelement-flash-video-hls.swf');
@@ -268,7 +265,7 @@ module.exports = function(grunt) {
 				}
 			},
 			buildFlashVideoMDash: {
-				command: function() {
+				command: function () {
 					grunt.config.set("sourceFile", 'src/flash/flash-video-dash/DashMediaElement.as');
 					grunt.config.set("sourcePath", 'src/flash/flash-video-dash');
 					grunt.config.set("flashOut", 'build/mediaelement-flash-video-mdash.swf');
@@ -277,7 +274,7 @@ module.exports = function(grunt) {
 				}
 			},
 			buildFlashAudio: {
-				command: function() {
+				command: function () {
 					grunt.config.set("sourceFile", 'src/flash/flash-audio/AudioMediaElement.as');
 					grunt.config.set("sourcePath", 'src/flash/flash-audio');
 					grunt.config.set("flashOut", 'build/mediaelement-flash-audio.swf');
@@ -286,7 +283,7 @@ module.exports = function(grunt) {
 				}
 			},
 			buildFlashAudioOgg: {
-				command: function() {
+				command: function () {
 					grunt.config.set("sourceFile", 'src/flash/flash-audio-ogg/OggMediaElement.as');
 					grunt.config.set("sourcePath", 'src/flash/flash-audio-ogg');
 					grunt.config.set("flashOut", 'build/mediaelement-flash-audio-ogg.swf');
@@ -297,7 +294,7 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['jshint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
-	grunt.registerTask('debug', ['jshint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
 	grunt.registerTask('flash', ['shell']);
 };

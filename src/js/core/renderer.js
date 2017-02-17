@@ -93,6 +93,6 @@ class Renderer {
 	}
 }
 
-export let renderer = new Renderer();
+export const renderer = new Renderer();
 
 mejs.Renderers = renderer;

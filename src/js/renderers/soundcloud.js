@@ -49,9 +49,12 @@ const SoundCloudApi = {
 	loadIframeApi: () => {
 		if (!SoundCloudApi.isSDKStarted) {
 
-			let head = document.getElementsByTagName("head")[0] || document.documentElement,
-				script = document.createElement("script"),
-				done = false;
+			const
+				head = document.getElementsByTagName("head")[0] || document.documentElement,
+				script = document.createElement("script")
+			;
+
+			let done = false;
 
 			script.src = '//w.soundcloud.com/player/api.js';
 
@@ -82,7 +85,7 @@ const SoundCloudApi = {
 		SoundCloudApi.isSDKLoaded = true;
 
 		while (SoundCloudApi.iframeQueue.length > 0) {
-			let settings = SoundCloudApi.iframeQueue.pop();
+			const settings = SoundCloudApi.iframeQueue.pop();
 			SoundCloudApi.createIframe(settings);
 		}
 	},
@@ -93,7 +96,7 @@ const SoundCloudApi = {
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
 	createIframe: (settings) => {
-		let player = SC.Widget(settings.iframe);
+		const player = SC.Widget(settings.iframe);
 		window['__ready__' + settings.id](player);
 	}
 };
@@ -123,33 +126,34 @@ const SoundCloudIframeRenderer = {
 	 */
 	create: (mediaElement, options, mediaFiles) => {
 
-		let sc = {};
+		// create our fake element that allows events and such to work
+		const
+			sc = {},
+			apiStack = [],
+			readyState = 4
+		;
+
+		let
+			i,
+			il,
+			duration = 0,
+			currentTime = 0,
+			bufferedTime = 0,
+			volume = 1,
+			muted = false,
+			paused = true,
+			ended = false,
+			scPlayer = null,
+			scIframe = null
+		;
 
 		// store main variable
 		sc.options = options;
 		sc.id = mediaElement.id + '_' + options.prefix;
 		sc.mediaElement = mediaElement;
 
-		// create our fake element that allows events and such to work
-		let
-			apiStack = [],
-			scPlayerReady = false,
-			scPlayer = null,
-			scIframe = null,
-			currentTime = 0,
-			duration = 0,
-			bufferedTime = 0,
-			paused = true,
-			volume = 1,
-			muted = false,
-			ended = false,
-			readyState = 4,
-			i,
-			il
-		;
-
 		// wrappers for get/set
-		let
+		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
 
@@ -159,7 +163,7 @@ const SoundCloudIframeRenderer = {
 
 				sc[`get${capName}`] = () => {
 					if (scPlayer !== null) {
-						let value = null;
+						const value = null;
 
 						// figure out how to get dm dta here
 						switch (propName) {
@@ -212,7 +216,7 @@ const SoundCloudIframeRenderer = {
 						switch (propName) {
 
 							case 'src':
-								let url = typeof value === 'string' ? value : value[0].src;
+								const url = typeof value === 'string' ? value : value[0].src;
 
 								scPlayer.load(url);
 								break;
@@ -228,7 +232,7 @@ const SoundCloudIframeRenderer = {
 									scPlayer.setVolume(1); // ?
 								}
 								setTimeout(() => {
-									let event = createEvent('volumechange', sc);
+									const event = createEvent('volumechange', sc);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
@@ -236,18 +240,19 @@ const SoundCloudIframeRenderer = {
 							case 'volume':
 								scPlayer.setVolume(value);
 								setTimeout(() => {
-									let event = createEvent('volumechange', sc);
+									const event = createEvent('volumechange', sc);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
 
 							case 'readyState':
-								let event = createEvent('canplay', vimeo);
+								const event = createEvent('canplay', sc);
 								mediaElement.dispatchEvent(event);
 								break;
 
 							default:
 								console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
+								break;
 						}
 
 					} else {
@@ -264,7 +269,7 @@ const SoundCloudIframeRenderer = {
 		}
 
 		// add wrappers for native methods
-		let
+		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 
@@ -299,17 +304,16 @@ const SoundCloudIframeRenderer = {
 		// add a ready method that SC can fire
 		window['__ready__' + sc.id] = (_scPlayer) => {
 
-			scPlayerReady = true;
 			mediaElement.scPlayer = scPlayer = _scPlayer;
 
 			// do call stack
 			if (apiStack.length) {
 				for (i = 0, il = apiStack.length; i < il; i++) {
 
-					let stackItem = apiStack[i];
+					const stackItem = apiStack[i];
 
 					if (stackItem.type === 'set') {
-						let propName = stackItem.propName,
+						const propName = stackItem.propName,
 							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 						sc[`set${capName}`](stackItem.value);
@@ -326,7 +330,7 @@ const SoundCloudIframeRenderer = {
 
 				scPlayer.getPosition((_currentTime) => {
 					currentTime = _currentTime / 1000;
-					let event = createEvent('timeupdate', sc);
+					const event = createEvent('timeupdate', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -334,28 +338,28 @@ const SoundCloudIframeRenderer = {
 			scPlayer.bind(SC.Widget.Events.PAUSE, () => {
 				paused = true;
 
-				let event = createEvent('pause', sc);
+				const event = createEvent('pause', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.PLAY, () => {
 				paused = false;
 				ended = false;
 
-				let event = createEvent('play', sc);
+				const event = createEvent('play', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.FINISHED, () => {
 				paused = false;
 				ended = true;
 
-				let event = createEvent('ended', sc);
+				const event = createEvent('ended', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.READY, () => {
 				scPlayer.getDuration((_duration) => {
 					duration = _duration / 1000;
 
-					let event = createEvent('loadedmetadata', sc);
+					const event = createEvent('loadedmetadata', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -364,23 +368,23 @@ const SoundCloudIframeRenderer = {
 					if (duration > 0) {
 						bufferedTime = duration * loadProgress;
 
-						let event = createEvent('progress', sc);
+						const event = createEvent('progress', sc);
 						mediaElement.dispatchEvent(event);
 					}
 				});
 				scPlayer.getDuration((_duration) => {
 					duration = _duration;
 
-					let event = createEvent('loadedmetadata', sc);
+					const event = createEvent('loadedmetadata', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
 
 			// give initial events
-			let initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+			const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (let i = 0, il = initEvents.length; i < il; i++) {
-				let event = createEvent(initEvents[i], sc);
+				const event = createEvent(initEvents[i], sc);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -398,16 +402,14 @@ const SoundCloudIframeRenderer = {
 		mediaElement.appendChild(scIframe);
 		mediaElement.originalNode.style.display = 'none';
 
-		let scSettings = {
+		const scSettings = {
 			iframe: scIframe,
 			id: sc.id
 		};
 
 		SoundCloudApi.enqueueIframe(scSettings);
 
-		sc.setSize = (width, height) => {
-			// nothing here, audio only
-		};
+		sc.setSize = () => {};
 		sc.hide = () => {
 			sc.pause();
 			if (scIframe) {

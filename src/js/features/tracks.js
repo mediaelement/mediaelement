@@ -4,8 +4,7 @@ import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
-import {secondsToTimeCode, convertSMPTEtoSeconds} from '../utils/time';
-import {sanitizeHTML} from '../utils/general';
+import {convertSMPTEtoSeconds} from '../utils/time';
 
 /**
  * Closed Captions (CC) button
@@ -75,11 +74,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		let
+		const
 			t = this,
 			attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
 			tracksTitle = t.options.tracksText ? t.options.tracksText : i18n.t('mejs.captions-subtitles'),
 			chaptersTitle = t.options.chaptersText ? t.options.chaptersText : i18n.t('mejs.captions-chapters'),
+			total = player.tracks.length
+		;
+
+		let
 			i,
 			kind
 		;
@@ -121,15 +124,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.chaptersButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}chapters-button">` +
 			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}" tabindex="0"></button>` +
 			`<div class="${t.options.classPrefix}chapters-selector ${t.options.classPrefix}offscreen">` +
-				`<ul class="${t.options.classPrefix}chapters-selector-list" aria-role="menu"></ul>` +
+				`<ul class="${t.options.classPrefix}chapters-selector-list"></ul>` +
 			`</div>` +
 		`</div>`);
 
 
-		let
-			subtitleCount = 0,
-			total = player.tracks.length
-			;
+		let subtitleCount = 0;
 
 		for (i = 0; i < total; i++) {
 			kind = player.tracks[i].kind;
@@ -298,16 +298,16 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	rebuildtracks: function () {
-		let t = this;
+		const t = this;
 		t.findTracks();
 		t.buildtracks(t, t.controls, t.layers, t.media);
 	},
 
 	findTracks: function () {
-		let
+		const
 			t = this,
 			tracktags = t.$media.find('track')
-			;
+		;
 
 		// store for use by plugins
 		t.tracks = [];
@@ -334,10 +334,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} trackId, or "none" to disable captions
 	 */
 	setTrack: function (trackId) {
-		let
-			t = this,
-			i
-		;
+
+		const t = this;
 
 		t.captionsButton
 			.find('input[type="radio"]').prop('checked', false)
@@ -356,7 +354,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		for (i = 0; i < t.tracks.length; i++) {
+		for (let i = 0; i < t.tracks.length; i++) {
 			let track = t.tracks[i];
 			if (track.trackId === trackId) {
 				if (t.selectedTrack === null) {
@@ -374,7 +372,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	loadNextTrack: function () {
-		let t = this;
+		const t = this;
 
 		t.trackToLoad++;
 		if (t.trackToLoad < t.tracks.length) {
@@ -393,7 +391,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param index
 	 */
 	loadTrack: function (index) {
-		let
+		const
 			t = this,
 			track = t.tracks[index],
 			after = () => {
@@ -444,12 +442,13 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} track - The language code
 	 */
 	enableTrackButton: function (track) {
-		let
+		const
 			t = this,
 			lang = track.srclang,
-			label = track.label,
 			target = $(`#${track.trackId}`)
 		;
+
+		let label = track.label;
 
 		if (label === '') {
 			label = i18n.t(mejs.language.codes[lang]) || lang;
@@ -471,7 +470,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} trackId
 	 */
 	removeTrackButton: function (trackId) {
-		let t = this;
+		const t = this;
 
 		t.captionsButton.find(`input[id=${trackId}]`).closest('li').remove();
 
@@ -485,7 +484,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} label
 	 */
 	addTrackButton: function (trackId, lang, label) {
-		let t = this;
+		const t = this;
 		if (label === '') {
 			label = i18n.t(mejs.language.codes[lang]) || lang;
 		}
@@ -495,8 +494,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		// to set it, too
 		t.captionsButton.find('ul').append(
 			$(`<li class="${t.options.classPrefix}captions-selector-list-item">` +
-				`<input type="radio" class="${t.options.classPrefix}captions-selector-input"` +
-				`name="${t.id}_captions" id="${trackId}" value="${trackId}" disabled="disabled" />` +
+				`<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
+					`name="${t.id}_captions" id="${trackId}" value="${trackId}" disabled="disabled" />` +
 				`<label class="${t.options.classPrefix}captions-selector-label">${label} (loading)</label>` +
 			`</li>`)
 		);
@@ -511,7 +510,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	adjustLanguageBox: function () {
-		let t = this;
+		const t = this;
 		// adjust the size of the outer box
 		t.captionsButton.find(`.${t.options.classPrefix}captions-selector`).height(
 			t.captionsButton.find(`.${t.options.classPrefix}captions-selector-list`).outerHeight(true) +
@@ -523,10 +522,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	checkForTracks: function () {
-		let
-			t = this,
-			hasSubtitles = false
-			;
+		const t = this;
+
+		let hasSubtitles = false;
 
 		// check if any subtitles
 		if (t.options.hideCaptionsButtonWhenEmpty) {
@@ -554,10 +552,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		let
+		const
 			t = this,
 			track = t.selectedTrack,
-			i,
 			sanitize = (html) => {
 
 				const div = document.createElement('div');
@@ -594,7 +591,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		if (track !== null && track.isLoaded) {
-			i = t.searchTrackPosition(track.entries, t.media.currentTime);
+			let i = t.searchTrackPosition(track.entries, t.media.currentTime);
 			if (i > -1) {
 				// Set the line before the timecode as a class so the cue can be targeted if needed
 				t.captionsText.html(sanitize(track.entries[i].text))
@@ -614,7 +611,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} track
 	 */
 	setupSlides: function (track) {
-		let t = this;
+		const t = this;
 
 		t.slides = track;
 		t.slides.entries.imgs = [t.slides.entries.length];
@@ -631,11 +628,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		let
+		const
 			t = this,
-			url = t.slides.entries[index].text,
-			img = t.slides.entries[index].imgs
+			url = t.slides.entries[index].text
 		;
+
+		let img = t.slides.entries[index].imgs;
 
 		if (img === undefined || img.fadeIn === undefined) {
 
@@ -669,7 +667,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		let
+		const
 			t = this,
 			slides = t.slides,
 			i = t.searchTrackPosition(slides.entries, t.media.currentTime)
@@ -686,9 +684,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {Object} chapters
 	 */
 	drawChapters: function (chapters) {
-		let
+		const
 			t = this,
-			i,
 			total = chapters.entries.length
 		;
 
@@ -698,10 +695,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.chaptersButton.find('ul').empty();
 
-		for (i = 0; i < total; i++) {
+		for (let i = 0; i < total; i++) {
 			t.chaptersButton.find('ul').append($(`<li class="${t.options.classPrefix}chapters-selector-list-item" ` +
 				`role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">` +
-				`<input type="radio" class="${t.options.classPrefix}captions-selector-input"` +
+				`<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
 					`name="${t.id}_chapters" value="${chapters.entries[i].start}" disabled>` +
 				`<label class="${t.options.classPrefix}chapters-selector-label">${chapters.entries[i].text}</label>` +
 			`</li>`));
@@ -728,7 +725,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			mid,
 			start,
 			stop
-			;
+		;
 
 		while (lo <= hi) {
 			mid = ((lo + hi) >> 1);
@@ -843,13 +840,18 @@ mejs.TrackFormatParser = {
 		 * @returns {{text: Array, times: Array}}
 		 */
 		parse: function (trackText) {
+			const
+				lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
+				entries = []
+			;
+
 			let
 				i = 0,
-				lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
-				entries = [],
 				timecode,
 				text,
-				identifier;
+				identifier
+			;
+
 			for (; i < lines.length; i++) {
 				timecode = this.pattern_timecode.exec(lines[i]);
 
@@ -888,15 +890,17 @@ mejs.TrackFormatParser = {
 		 */
 		parse: function (trackText) {
 			trackText = $(trackText).filter('tt');
-			let
+			const
 				container = trackText.children('div').eq(0),
 				lines = container.find('p'),
 				styleNode = trackText.find(`#${container.attr('style')}`),
-				styles,
-				entries = [],
-				i
-				;
+				entries = []
+			;
 
+			let
+				styles,
+				i
+			;
 
 			if (styleNode.length) {
 				let attributes = styleNode.removeAttr('id').get(0).attributes;
@@ -967,12 +971,10 @@ mejs.TrackFormatParser = {
 if ('x\n\ny'.split(/\n/gi).length !== 3) {
 	// add super slow IE8 and below version
 	mejs.TrackFormatParser.split2 = (text, regex) => {
-		let
-			parts = [],
-			chunk = '',
-			i;
+		const parts = [];
+		let chunk = '';
 
-		for (i = 0; i < text.length; i++) {
+		for (let i = 0; i < text.length; i++) {
 			chunk += text.substring(i, i + 1);
 			if (regex.test(chunk)) {
 				parts.push(chunk.replace(regex, ''));
