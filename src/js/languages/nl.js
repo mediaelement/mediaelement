@@ -54,7 +54,6 @@
 			"mejs.none": "Geen",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Dempen schakelen",
 			"mejs.volume-help-text": "Gebruik pijl omhoog/omlaag om het volume te verhogen/verlagen.",
 			"mejs.unmute": "Dempen opheffen",
 			"mejs.mute": "Dempen",

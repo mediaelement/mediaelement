@@ -355,10 +355,9 @@ if (mejs.i18n.[lang] === undefined) {
 		"mejs.none": "",
 
 		// features/volume.js
-		"mejs.mute-toggle": "",
 		"mejs.volume-help-text": "",
 		"mejs.unmute": "",
-		"mejs.mute": ""
+		"mejs.mute": "",
 		"mejs.volume-slider": "",
 
 		// core/player.js

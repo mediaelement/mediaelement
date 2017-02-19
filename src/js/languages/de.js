@@ -53,7 +53,6 @@
 			"mejs.none": "Keine",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Stummschaltung umschalten",
 			"mejs.volume-help-text": "Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.",
 			"mejs.unmute": "Stummschaltung aufheben",
 			"mejs.mute": "Stummschalten",

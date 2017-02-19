@@ -59,7 +59,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
-			muteText = t.options.muteText ? t.options.muteText : i18n.t('mejs.mute-toggle'),
+			muteText = t.options.muteText ? t.options.muteText : i18n.t('mejs.mute'),
 			volumeControlText = t.options.allyVolumeControlText ? t.options.allyVolumeControlText : i18n.t('mejs.volume-help-text'),
 			mute = (mode === 'horizontal') ?
 
@@ -111,14 +111,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (volume === 0) {
 					mute.removeClass(`${t.options.classPrefix}mute`).addClass(`${t.options.classPrefix}unmute`);
 					mute.children('button').attr({
-						title: i18n.t('mejs.unmute'),
-						'aria-label': i18n.t('mejs.unmute')
+						title: t.options.unmuteText ? t.options.unmuteText : i18n.t('mejs.unmute'),
+						'aria-label': t.options.unmuteText ? t.options.unmuteText : i18n.t('mejs.unmute'),
 					});
 				} else {
 					mute.removeClass(`${t.options.classPrefix}unmute`).addClass(`${t.options.classPrefix}mute`);
 					mute.children('button').attr({
-						title: i18n.t('mejs.mute'),
-						'aria-label': i18n.t('mejs.mute')
+						title: t.options.muteText ? t.options.muteText : i18n.t('mejs.mute'),
+						'aria-label': t.options.muteText ? t.options.muteText : i18n.t('mejs.mute'),
 					});
 				}
 

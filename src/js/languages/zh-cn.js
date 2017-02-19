@@ -53,7 +53,6 @@
 			"mejs.none": "无",
 
 			// features/volume.js
-			"mejs.mute-toggle": "静音切换",
 			"mejs.volume-help-text": "使用上/下箭头提高或降低音量。",
 			"mejs.unmute": "取消静音",
 			"mejs.mute": "静音",
