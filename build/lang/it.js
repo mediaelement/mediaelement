@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Acquisizioni/sottotitoli",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Nessuno",			
-			"mejs.mute-toggle": "Toggle muto",
 			"mejs.volume-help-text": "Utilizzare i tasti Freccia Su/Giù per aumentare o diminuire il volume.",
 			"mejs.unmute": "Disattivare muto",
 			"mejs.mute": "Muto",

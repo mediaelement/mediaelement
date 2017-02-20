@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Podpisy/napisy",
 			"mejs.captions-chapters": "Rozdziały",
 			"mejs.none": "Brak",			
-			"mejs.mute-toggle": "Przełączanie wyciszania",
 			"mejs.volume-help-text": "Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.",
 			"mejs.unmute": "Wyłącz wyciszenie",
 			"mejs.mute": "Wycisz",

@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Titulky",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Žádný",			
-			"mejs.mute-toggle": "Vypnout/zapnout zvuk",
 			"mejs.volume-help-text": "Použijte tlačítka se šipkami nahoru / dolů pro zesílení nebo zeslabení hlasitosti.",
 			"mejs.unmute": "Zapnout zvuk",
 			"mejs.mute": "Vypnout zvuk",
