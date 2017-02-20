@@ -52,7 +52,6 @@
 			"mejs.none": "Ništa",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Uključi/isključi zvuk",
 			"mejs.volume-help-text": "Koristi strelice gore/dolje za pojačavanje ili stišavanje.",
 			"mejs.unmute": "Uključi zvuk",
 			"mejs.mute": "Isključi zvuk",
