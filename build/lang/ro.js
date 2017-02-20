@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Legende/Subtitrări",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Niciunul",			
-			"mejs.mute-toggle": "Comutare dezactivare sunet",
 			"mejs.volume-help-text": "Utilizează tastele de săgeată Sus/Jos pentru a creşte/micşora volumul",
 			"mejs.unmute": "Cu sunet",
 			"mejs.mute": "Fără sunet",

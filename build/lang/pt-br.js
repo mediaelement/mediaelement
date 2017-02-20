@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Legendas",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Sem legendas",			
-			"mejs.mute-toggle": "Alternar silêncio",
 			//"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 			"mejs.unmute": "Tirar silêncio",
 			"mejs.mute": "Silenciar"

@@ -53,7 +53,6 @@
 			"mejs.none": "없음",
 
 			// features/volume.js
-			"mejs.mute-toggle": "음소거 전환",
 			"mejs.volume-help-text": "볼륨을 높이거나 낮추려면 위/아래 화살표를 이용하세요.",
 			"mejs.unmute": "음소거 해제",
 			"mejs.mute": "말 없는",

@@ -30,7 +30,6 @@
 			"mejs.captions-subtitles": "Sous-titres",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Aucun",			
-			"mejs.mute-toggle": "Activer/désactiver le son",
 			"mejs.volume-help-text": "Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.",
 			"mejs.unmute": "Activer le son",
 			"mejs.mute": "Désactiver le son",

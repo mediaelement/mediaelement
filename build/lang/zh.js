@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "字幕/標題",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "沒有",			
-			"mejs.mute-toggle": "靜音切換",
 			"mejs.volume-help-text": "使用上/下箭頭提高或降低音量。",
 			"mejs.unmute": "取消靜音",
 			"mejs.mute": "靜音",

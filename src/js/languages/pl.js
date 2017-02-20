@@ -53,7 +53,6 @@
 			"mejs.none": "Brak",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Przełączanie wyciszania",
 			"mejs.volume-help-text": "Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.",
 			"mejs.unmute": "Wyłącz wyciszenie",
 			"mejs.mute": "Wycisz",

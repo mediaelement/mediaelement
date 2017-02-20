@@ -87,6 +87,7 @@ startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element
 slidesSelector | string | _(empty)_ | Selector for slides; could be an ID or class represented in jQuery notation (`#id` or `.class`)
 tracksText | string | _(empty)_ | Title for Closed Captioning button for WARIA purposes
 muteText | string | _(empty)_ | Title for Mute button for WARIA purposes
+unmuteText | string | _(empty)_ | Title for Unmute button for WARIA purposes
 allyVolumeControlText | string | _(empty)_ | Title for Volume slider for WARIA purposes
 fullscreenText | string | _(empty)_ | Title for Fullscreen button for WARIA purposes
 playText | string | _(empty)_ | Title for Play/Pause button for WARIA purposes when media is playing

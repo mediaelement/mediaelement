@@ -53,7 +53,6 @@
 			"mejs.none": "Nessuno",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Toggle muto",
 			"mejs.volume-help-text": "Utilizzare i tasti Freccia Su/Giù per aumentare o diminuire il volume.",
 			"mejs.unmute": "Disattivare muto",
 			"mejs.mute": "Muto",

@@ -28,7 +28,6 @@
 			"mejs.captions-subtitles": "Llegendes/Subtítols",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Ningú",			
-			"mejs.mute-toggle": "Alternar silenci",
 			// "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 			"mejs.unmute": "Reactivar silenci",
 			"mejs.mute": "Silenci",

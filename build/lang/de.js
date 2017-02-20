@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Überschriften/Untertitel",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Keine",			
-			"mejs.mute-toggle": "Stummschaltung umschalten",
 			"mejs.volume-help-text": "Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.",
 			"mejs.unmute": "Stummschaltung aufheben",
 			"mejs.mute": "Stummschalten",
