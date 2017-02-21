@@ -32,11 +32,11 @@ const HtmlMediaElement = {
 
 		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS;
 		// also consider URLs that might have obfuscated URLs
-		if (SUPPORTS_MEDIA_TAG || (IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
+		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
 			(['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
 			'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
-		} else if (mediaElement.canPlayType) {
+		} else if (mediaElement.canPlayType || SUPPORTS_MEDIA_TAG) {
 			return mediaElement.canPlayType(type).replace(/no/, '');
 		} else {
 			return '';
