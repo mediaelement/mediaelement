@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Leyendas/Subtítulos",
 			"mejs.captions-chapters": "Capítulos",
 			"mejs.none": "Ninguno",			
-			"mejs.mute-toggle": "Alternar silencio",
 			"mejs.volume-help-text": "Use las flechas Arriba/Abajo para subir o bajar el volumen.",
 			"mejs.unmute": "Reactivar silencio",
 			"mejs.mute": "Silencio",

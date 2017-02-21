@@ -7,18 +7,22 @@ describe('MediaElement Player - Test Results', function () {
 		container,
 		id,
 		player,
-		setMedia = function(player, src) {
+		setMedia = function (player, src) {
 			player.pause();
 			player.setSrc(src.replace('&amp;', '&'));
 			player.load();
-		}
-	;
+		};
 
-	beforeEach(function() {
-
+	beforeEach(function () {
 		videoTag = $('video#player1');
 		player = new MediaElementPlayer(videoTag, {
 			pluginPath: '../build/',
+			playText: 'Play track',
+			pauseText: 'Pause track',
+			stopText: 'Stop track',
+			fullscreenText: 'Fullscreen video',
+			muteText: 'Mute volume',
+			unmuteText: 'Unmute volume',
 			success: function (media) {
 				container = $(media).closest('.media-wrapper').children('div:first');
 				id = container.attr('id');
@@ -27,7 +31,7 @@ describe('MediaElement Player - Test Results', function () {
 		});
 	});
 
-	afterEach(function() {
+	afterEach(function () {
 		player.remove();
 	});
 
@@ -41,7 +45,7 @@ describe('MediaElement Player - Test Results', function () {
 		expect(player.paused).to.not.equal(null);
 	});
 
-	it ('Toggle `fullscreen` mode when clicking button or using keyboard', function() {
+	it('Toggle `fullscreen` mode when clicking button or using keyboard', function () {
 		container.find('.mejs__fullscreen-button>button').trigger('click');
 		expect($(document.documentElement).hasClass('mejs__fullscreen')).to.equal(true);
 
@@ -57,5 +61,35 @@ describe('MediaElement Player - Test Results', function () {
 		expect(player.media.originalNode.getAttribute('src')).to.equal('http://www.streambox.fr/playlists/test_001/stream.m3u8');
 		setMedia(player, 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
 		expect(player.media.originalNode.getAttribute('src')).to.equal('http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
+	});
+
+	it('Should set custom play text', function () {
+		expect(container.find('.mejs__play>button').attr('title')).to.equal('Play track');
+	});
+
+	it('Should set custom pause text', function (done) {
+		player.play();
+		player.media.addEventListener('play', function () {
+			expect(container.find('.mejs__pause>button').attr('title')).to.equal('Pause track');
+			done();
+		}, false);
+	});
+
+	it('Should set custom fullscreen text', function () {
+		expect(container.find('.mejs__fullscreen-button>button').attr('title')).to.equal('Fullscreen video');
+	});
+
+	it('Should set custom mute text', function () {
+		expect(container.find('.mejs__mute>button').attr('title')).to.equal('Mute volume');
+	});
+
+	it('Should set custom unmute text', function (done) {
+		container.find('.mejs__mute>button').click();
+		var listener = function () {
+			expect(container.find('.mejs__unmute>button').attr('title')).to.equal('Unmute volume');
+			player.media.removeEventListener('volumechange', listener, false);
+			done();
+		};
+		player.media.addEventListener('volumechange', listener, false);
 	});
 });

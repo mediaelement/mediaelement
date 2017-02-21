@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "キャプション/字幕",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "なし",			
-			"mejs.mute-toggle": "ミュートトグル",
 			"mejs.volume-help-text": "音量を上げたり下げたりするには、上/下矢印を使います。",
 			"mejs.unmute": "ミュートを解除",
 			"mejs.mute": "ミュート",

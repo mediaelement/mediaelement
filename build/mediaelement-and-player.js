@@ -3155,7 +3155,7 @@ Object.assign(_player2.default.prototype, {
 
 		var t = this,
 		    mode = t.isVideo ? t.options.videoVolume : t.options.audioVolume,
-		    muteText = t.options.muteText ? t.options.muteText : _i18n2.default.t('mejs.mute-toggle'),
+		    muteText = t.options.muteText ? t.options.muteText : _i18n2.default.t('mejs.mute'),
 		    volumeControlText = t.options.allyVolumeControlText ? t.options.allyVolumeControlText : _i18n2.default.t('mejs.volume-help-text'),
 		    mute = mode === 'horizontal' ?
 
@@ -3184,14 +3184,14 @@ Object.assign(_player2.default.prototype, {
 			if (volume === 0) {
 				mute.removeClass(t.options.classPrefix + 'mute').addClass(t.options.classPrefix + 'unmute');
 				mute.children('button').attr({
-					title: _i18n2.default.t('mejs.unmute'),
-					'aria-label': _i18n2.default.t('mejs.unmute')
+					title: t.options.unmuteText ? t.options.unmuteText : _i18n2.default.t('mejs.unmute'),
+					'aria-label': t.options.unmuteText ? t.options.unmuteText : _i18n2.default.t('mejs.unmute')
 				});
 			} else {
 				mute.removeClass(t.options.classPrefix + 'unmute').addClass(t.options.classPrefix + 'mute');
 				mute.children('button').attr({
-					title: _i18n2.default.t('mejs.mute'),
-					'aria-label': _i18n2.default.t('mejs.mute')
+					title: t.options.muteText ? t.options.muteText : _i18n2.default.t('mejs.mute'),
+					'aria-label': t.options.muteText ? t.options.muteText : _i18n2.default.t('mejs.mute')
 				});
 			}
 
@@ -3448,7 +3448,6 @@ var EN = exports.EN = {
 	"mejs.none": "None",
 
 	// features/volume.js
-	"mejs.mute-toggle": "Mute Toggle",
 	"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 	"mejs.unmute": "Unmute",
 	"mejs.mute": "Mute",
@@ -7891,8 +7890,9 @@ var HtmlMediaElement = {
 
 		var mediaElement = _document2.default.createElement('video');
 
-		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
-		if (_constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
+		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS;
+		// also consider URLs that might have obfuscated URLs
+		if (_constants.SUPPORTS_MEDIA_TAG || _constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');

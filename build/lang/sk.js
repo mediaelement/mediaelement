@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Skryté titulky/Titulky",
 			// "mejs.captions-chapters": "Chapters",
 			"mejs.none": "Žiadne",			
-			"mejs.mute-toggle": "Prepínač stlmenia",
 			"mejs.volume-help-text": "Klávesmi so šípkou nahor/nadol zvýšite alebo znížite hlasitosť.",
 			"mejs.unmute": "Zrušiť stlmenie",
 			"mejs.mute": "Stlmiť",

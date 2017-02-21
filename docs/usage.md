@@ -8,6 +8,7 @@
     * [RequireJS](#requirejs)
 * [Use Renderers](#renderers-usage)
 * [Destroy player](#destroy)
+* [Responsive grid](#grid)
 
 
 <a id="initialize"></a>
@@ -276,5 +277,12 @@ for( var i = 0, total = videos.length; i < total; i++ ){
 ```
 
 Same code can be used for `<audio>` elements.
+
+<a id="grid"></a>
+## Responsive grid
+
+Since `MediaElement` can adapt its size to be responsive, some might be tempted to use CSS or Javascript to create a responsive grid of videos. 
+
+So far, right now the best plugin to be used with `MediaElement` for this task has been [Flexr](http://flexrgrid.com/).
 ________
 [Back to Main](../README.md)

@@ -53,7 +53,6 @@
 			"mejs.none": "Nincs",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Némítás kapcsolója",
 			"mejs.volume-help-text": "Használja a Fel/Le nyíl gombokat a hangerő növeléséhez vagy csökkentéséhez.",
 			"mejs.unmute": "Némítás feloldása",
 			"mejs.mute": "Némítás",

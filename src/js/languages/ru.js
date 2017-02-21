@@ -53,7 +53,6 @@
 			"mejs.none": "Нет",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Без звука",
 			"mejs.volume-help-text": "Используйте клавиши со стрелками Вверх/Вниз, чтобы увеличить или уменьшить громкость.",
 			"mejs.unmute": "Включить звук",
 			"mejs.mute": "Отключить звук",

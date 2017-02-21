@@ -5,7 +5,7 @@ import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/dom';
-import {SUPPORTS_NATIVE_HLS, IS_ANDROID} from '../utils/constants';
+import {SUPPORTS_NATIVE_HLS, IS_ANDROID, SUPPORTS_MEDIA_TAG} from '../utils/constants';
 
 /**
  * Native HTML5 Renderer
@@ -30,10 +30,11 @@ const HtmlMediaElement = {
 
 		const mediaElement = document.createElement('video');
 
-		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
-		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
+		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS;
+		// also consider URLs that might have obfuscated URLs
+		if (SUPPORTS_MEDIA_TAG || (IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
 			(['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-				'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
+			'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');

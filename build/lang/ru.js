@@ -29,7 +29,6 @@
 			"mejs.captions-subtitles": "Титры/Субтитры",
 			"mejs.captions-chapters": "Главы",
 			"mejs.none": "Нет",			
-			"mejs.mute-toggle": "Без звука",
 			"mejs.volume-help-text": "Используйте клавиши со стрелками Вверх/Вниз, чтобы увеличить или уменьшить громкость.",
 			"mejs.unmute": "Включить звук",
 			"mejs.mute": "Отключить звук",
