@@ -65,7 +65,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				// horizontal version
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute">` +
-					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}"></button>` +
+					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
 				`</div>` +
 				`<a href="javascript:void(0);" class="${t.options.classPrefix}horizontal-volume-slider">` +
 					`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
@@ -78,7 +78,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				// vertical version
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute">` +
-					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}"></button>` +
+					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
 					`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider">` +
 						`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 						`<div class="${t.options.classPrefix}volume-total">` +
