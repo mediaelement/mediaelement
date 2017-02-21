@@ -419,7 +419,6 @@ class MediaElementPlayer {
 
 
 			// move the <video/video> tag into the right spot
-			//t.$media.attr('tabindex', -1);
 			t.container.find(`.${t.options.classPrefix}mediaelement`).append(t.$media);
 
 			// needs to be assigned here, after iOS remap
@@ -1691,7 +1690,6 @@ class MediaElementPlayer {
 			// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
 			t.$node.attr('id', t.$node.attr('id').replace(`_${rendererName}`, ''));
 			t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
-			t.$node.removeAttr('tabindex');
 
 			// Remove `autoplay` (not worth bringing it back once player is destroyed)
 			t.$node.removeProp('autoplay');

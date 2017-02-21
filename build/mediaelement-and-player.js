@@ -3968,7 +3968,6 @@ var MediaElementPlayer = function () {
 			t.container.addClass((_constants.IS_ANDROID ? t.options.classPrefix + 'android ' : '') + (_constants.IS_IOS ? t.options.classPrefix + 'ios ' : '') + (_constants.IS_IPAD ? t.options.classPrefix + 'ipad ' : '') + (_constants.IS_IPHONE ? t.options.classPrefix + 'iphone ' : '') + (t.isVideo ? t.options.classPrefix + 'video ' : t.options.classPrefix + 'audio '));
 
 			// move the <video/video> tag into the right spot
-			//t.$media.attr('tabindex', -1);
 			t.container.find('.' + t.options.classPrefix + 'mediaelement').append(t.$media);
 
 			// needs to be assigned here, after iOS remap
@@ -5192,7 +5191,6 @@ var MediaElementPlayer = function () {
 				// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
 				t.$node.attr('id', t.$node.attr('id').replace('_' + rendererName, ''));
 				t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
-				t.$node.removeAttr('tabindex');
 
 				// Remove `autoplay` (not worth bringing it back once player is destroyed)
 				t.$node.removeProp('autoplay');
