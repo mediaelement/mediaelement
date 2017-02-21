@@ -31,7 +31,6 @@
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
-    "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-eslint": "^19.0.0",
     "grunt-postcss": "^0.8.0",
@@ -39,7 +38,6 @@
     "grunt-shell": "~1.1.1",
     "grunt-text-replace": "~0.3.12",
     "istanbul": "^1.0.0-alpha.2",
-    "jshint": "^2.9.4",
     "mocha": "^3.2.0",
     "uglify-js": "^2.4.21"
   },
