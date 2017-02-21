@@ -38,16 +38,7 @@ export function createEvent (eventName, target) {
  * @param {Function} fn
  */
 export function addEvent (obj, type, fn) {
-	if (obj.addEventListener) {
-		obj.addEventListener(type, fn, false);
-	} else if (obj.attachEvent) {
-		obj[`e${type}${fn}`] = fn;
-		obj[`${type}${fn}`] = () => {
-			obj[`e${type}${fn}`](window.event);
-		};
-		obj.attachEvent(`on${type}`, obj[`${type}${fn}`]);
-	}
-
+	obj.addEventListener(type, fn, false);
 }
 
 /**
@@ -57,13 +48,7 @@ export function addEvent (obj, type, fn) {
  * @param {Function} fn
  */
 export function removeEvent (obj, type, fn) {
-
-	if (obj.removeEventListener) {
-		obj.removeEventListener(type, fn, false);
-	} else if (obj.detachEvent) {
-		obj.detachEvent(`on${type}`, obj[`${type}${fn}`]);
-		obj[`${type}${fn}`] = null;
-	}
+	obj.removeEventListener(type, fn, false);
 }
 
 /**
