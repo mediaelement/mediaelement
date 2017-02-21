@@ -72,6 +72,19 @@ $('select[name=sources]').on('change', function () {
 
 });
 
+// These media types cannot play at all on iOS, so disabling them
+if (mejs.Features.isiOS) {
+	$('select').find('option[value^="rtmp"]').prop('disabled', true)
+	.end()
+	.find('option[value$="webm"]').prop('disabled', true)
+	.end()
+	.find('option[value$=".mpd"]').prop('disabled', true)
+	.end()
+	.find('option[value$=".ogg"]').prop('disabled', true)
+	.end()
+	.find('option[value*=".flv"]').prop('disabled', true);
+}
+
 $(document).ready(function () {
 
 	mejs.i18n.language(lang);
