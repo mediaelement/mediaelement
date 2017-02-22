@@ -96,8 +96,24 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 </style>
 ```
 
-Also, update ```pluginPath``` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
+Also, update `pluginPath` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
 
+You can also use a CDN to load your script and stylesheet. 
+
+As stated above, the important factor is to set the `pluginPath` correctly, but also, for this scenario, you will need to set the `shimScriptAccess` configuration element as ***`always`*** to make the shims to work. 
+
+As an example:
+
+```javascript
+$('video, audio').mediaelementplayer({
+	// Do not forget to put a final slash (/)
+	pluginPath: 'https://cdnjs.com/libraries/mediaelement/',
+	// this will allow the CDN to use Flash without restrictions 
+    // (by default, this is set as `sameDomain`)
+	shimScriptAccess: 'always' 
+	// more configuration
+});
+```
 <a id="tags"></a>
 ## 3. Add `<video>` or `<audio>` tags
 

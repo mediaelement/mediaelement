@@ -33,7 +33,12 @@ class MediaElement {
 			 * The path where shims are located
 			 * @type {String}
 			 */
-			pluginPath: 'build/'
+			pluginPath: 'build/',
+			/**
+			 * Flag in `<object>` and `<embed>` to determine whether to use local or CDN
+			 * Possible values: 'always' (CDN version) or 'sameDomain' (local files)
+			 */
+			shimScriptAccess: 'sameDomain'
 		};
 
 		options = Object.assign(t.defaults, options);

@@ -22,9 +22,15 @@ Parameter | Type | Default | Description
 renderers | array | `[]` | List of the renderers to use
 fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
 pluginPath | string | `build/` | Path where Flash shims are located
-facebook | object | | Facebook API configuration; all elements listed at https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup are accepted
-hls | object | | Native HLS player configuration; all elements listed at https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning (except amy callback elements) are accepted
-youtube | object | | YouTube iframe player parameters; all elements listed at https://developers.google.com/youtube/player_parameters#Parameters (and a custom `nocookie` parameter to switch to YouTube's no-cookie URL)
+shimScriptAccess | string | `sameDomain` | Flag in `<object>` and `<embed>` to determine whether to use local or CDN files. Possible values: `always` (CDN version) or `sameDomain` (local files)
+dailymotion | object | | See [Documentation](https://developer.dailymotion.com/player
+dash | object | | Just `debug` and `path` parameters to indicate where to load library
+facebook | object | | See [Documentation](https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup)
+flv | object | | See [Documentation](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) (and a custom `path` parameter to indicate where to load library)
+hls | object | | See [Documentation](https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning) (and a custom `path` parameter to indicate where to load library)
+youtube | object | | See [Documentation](https://developers.google.com/youtube/player_parameters#Parameters) (and a custom `nocookie` parameter to switch to YouTube's no-cookie URL)
+
+**Note**: Vimeo and Soundcloud don't need any configuration for now since they are pretty straight forward.
 
 <a id="player"></a>
 ### MediaElementPlayer

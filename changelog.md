@@ -20,6 +20,7 @@
 * Fixed typo in `demo` file related to switching to Chinese language and added conditional to disable media URLs on iOS @ron666
 * Removed IE8 hacks (https://github.com/johndyer/mediaelement/pull/2095) @jimmywarting
 * Cleaned unnecessary code and fixed issue with Vimeo renderer @ron666
+* Fixed security issue with Flash by introducing `shimScriptAccess` configuration element and reading `allowScriptAccess` flag @ron666
 
 *3.1.2 (2017/02/10)*
 

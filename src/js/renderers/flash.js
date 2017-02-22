@@ -292,9 +292,14 @@ const FlashMediaElementRenderer = {
 		// insert Flash object
 		flash.flashWrapper = document.createElement('div');
 
+		// If the access script flag does not have any of the valid values, set to `sameDomain` by default
+		if (!['always', 'sameDomain'].includes(flash.options.shimScriptAccess)) {
+			flash.options.shimScriptAccess = 'sameDomain';
+		}
+
 		const
 			autoplay = !!mediaElement.getAttribute('autoplay'),
-			flashVars = [`uid=${flash.id}`, `autoplay=${autoplay}`],
+			flashVars = [`uid=${flash.id}`, `autoplay=${autoplay}`, `allowScriptAccess=${flash.options.shimScriptAccess}`],
 			isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 			flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
 			flashWidth = (isVideo) ? mediaElement.originalNode.width : 1;
@@ -338,7 +343,7 @@ const FlashMediaElementRenderer = {
 				`<param name="quality" value="high" />` +
 				`<param name="bgcolor" value="#000000" />` +
 				`<param name="wmode" value="transparent" />` +
-				`<param name="allowScriptAccess" value="always" />` +
+				`<param name="allowScriptAccess" value="${flash.options.shimScriptAccess}" />` +
 				`<param name="allowFullScreen" value="true" />` +
 				`<div>${i18n.t('mejs.install-flash')}</div>` +
 			`</object>`;
@@ -353,7 +358,7 @@ const FlashMediaElementRenderer = {
 				'quality="high"',
 				'bgcolor="#000000"',
 				'wmode="transparent"',
-				'allowScriptAccess="always"',
+				`allowScriptAccess="${flash.options.shimScriptAccess}"`,
 				'allowFullScreen="true"',
 				'type="application/x-shockwave-flash"',
 				'pluginspage="//www.macromedia.com/go/getflashplayer"',

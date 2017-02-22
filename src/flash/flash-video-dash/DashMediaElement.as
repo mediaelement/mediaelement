@@ -66,10 +66,13 @@ package {
 		 */
 		public function DashMediaElement() {
 
-			Security.allowDomain(['*']);
-			Security.allowInsecureDomain(['*']);
-
 			var flashVars: Object = LoaderInfo(this.root.loaderInfo).parameters;
+
+			// Use this for CDN
+			if (flashVars.allowScriptAccess == 'always') {
+				Security.allowDomain(['*']);
+				Security.allowInsecureDomain(['*']);
+			}
 
 			_id = flashVars.uid;
 			_autoplay = (flashVars.autoplay == true);
