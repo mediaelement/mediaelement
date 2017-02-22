@@ -4,8 +4,8 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/dom';
-import {SUPPORTS_NATIVE_HLS, IS_ANDROID, SUPPORTS_MEDIA_TAG} from '../utils/constants';
+import {createEvent} from '../utils/general';
+import {SUPPORTS_NATIVE_HLS, IS_ANDROID} from '../utils/constants';
 
 /**
  * Native HTML5 Renderer
@@ -36,7 +36,7 @@ const HtmlMediaElement = {
 			(['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
 			'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
-		} else if (mediaElement.canPlayType || SUPPORTS_MEDIA_TAG) {
+		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');
 		} else {
 			return '';

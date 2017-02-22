@@ -5,7 +5,7 @@ import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {isObjectEmpty} from '../utils/general';
-import {createEvent} from '../utils/dom';
+import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 
 /**

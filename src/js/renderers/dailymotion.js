@@ -4,7 +4,7 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
-import {createEvent, addEvent} from '../utils/dom';
+import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 
 /**
@@ -346,13 +346,13 @@ const DailyMotionIframeRenderer = {
 
 			// a few more events
 			events = ['mouseover', 'mouseout'];
-			const assignEvent = (e) => {
+			const assignEvents = (e) => {
 				const event = createEvent(e.type, dm);
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (const j in events) {
-				addEvent(dmIframe, events[j], assignEvent);
+			for (let i = 0, il = events.length; i < il; i++) {
+				dmIframe.addEventListener(events[i], assignEvents, false);
 			}
 
 			// BUBBLE EVENTS up

@@ -15,9 +15,11 @@
 * Integrated ESLint to verify/fix code with more strict standards @ron666
 * Fixed issue with mute/unmute text (https://github.com/johndyer/mediaelement/pull/2091) @DmitryKrekota
 * Fixed issue with obfuscated URLs or URLs without extension detected in #2087 @ron666
-* Added documentation about use of MediaElement in a responsive grid, thanks to @DeysonOrtiz @ron666
+* Added documentation about use of MediaElement with a responsive grid plugin effectively, thanks to @DeysonOrtiz @ron666
 * Fixed accessibility issue related to use keyboard in Safari @ron666 
 * Fixed typo in `demo` file related to switching to Chinese language and added conditional to disable media URLs on iOS @ron666
+* Removed IE8 hacks (https://github.com/johndyer/mediaelement/pull/2095) @jimmywarting
+* Cleaned unnecessary code and improved way to detect extension through URL @ron666
 
 *3.1.2 (2017/02/10)*
 

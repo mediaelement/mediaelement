@@ -46,9 +46,6 @@ for (let i = 0, il = html5Elements.length; i < il; i++) {
 	video = document.createElement(html5Elements[i]);
 }
 
-// Test if Media Source Extensions are supported by browser
-export const SUPPORTS_MEDIA_TAG = (video.canPlayType !== undefined || HAS_MSE);
-
 // Test if browsers support HLS natively (right now Safari, Android's Chrome and Stock browsers, and MS Edge)
 export const SUPPORTS_NATIVE_HLS = (IS_SAFARI || (IS_ANDROID && (IS_CHROME || IS_STOCK_ANDROID)) || (IS_IE && UA.match(/edge/gi) !== null));
 
@@ -157,7 +154,6 @@ mejs.Features.isFirefox = IS_FIREFOX;
 mejs.Features.isSafari = IS_SAFARI;
 mejs.Features.isStockAndroid = IS_STOCK_ANDROID;
 mejs.Features.hasMSE = HAS_MSE;
-mejs.Features.supportsMediaTag = SUPPORTS_MEDIA_TAG;
 mejs.Features.supportsNativeHLS = SUPPORTS_NATIVE_HLS;
 
 mejs.Features.supportsPointerEvents = SUPPORT_POINTER_EVENTS;

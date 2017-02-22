@@ -5,7 +5,7 @@ import document from 'global/document';
 import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/dom';
+import {createEvent} from '../utils/general';
 import {NAV, IS_IE, IS_EDGE, HAS_MSE, SUPPORTS_NATIVE_HLS} from '../utils/constants';
 import {typeChecks, absolutizeUrl} from '../utils/media';
 
