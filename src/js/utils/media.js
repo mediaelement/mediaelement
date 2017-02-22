@@ -98,7 +98,7 @@ export function getTypeFromFile (url) {
 		normalizedExt = normalizeExtension(ext)
 	;
 
-	let mime = '';
+	let mime = 'video/mp4';
 
 	// Obtain correct MIME types
 	if (normalizedExt) {

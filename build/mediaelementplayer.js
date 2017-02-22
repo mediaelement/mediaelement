@@ -6431,7 +6431,7 @@ function getTypeFromFile(url) {
 	var ext = getExtension(url),
 	    normalizedExt = normalizeExtension(ext);
 
-	var mime = '';
+	var mime = 'video/mp4';
 
 	// Obtain correct MIME types
 	if (normalizedExt) {
