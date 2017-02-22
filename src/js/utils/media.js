@@ -98,7 +98,19 @@ export function getTypeFromFile (url) {
 		normalizedExt = normalizeExtension(ext)
 	;
 
-	return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + normalizedExt;
+	let mime = '';
+
+	// Obtain correct MIME types
+	if (normalizedExt) {
+		if (['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].includes(normalizedExt)) {
+			mime = `video/${normalizedExt}`;
+		} else if (['mp3', 'oga', 'wav', 'mid', 'midi'].includes(normalizedExt)) {
+			mime = `audio/${normalizedExt}`;
+		}
+	}
+
+	return mime;
+
 }
 
 /**
@@ -113,9 +125,9 @@ export function getExtension (url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	const baseUrl = url.split('?')[0];
+	const baseUrl = url.split('?')[0], baseName = baseUrl.split('\\').pop().split('/').pop();
 
-	return ~baseUrl.indexOf('.') ? baseUrl.substring(baseUrl.lastIndexOf('.') + 1) : '';
+	return baseName.indexOf('.') > -1 ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
 }
 
 /**

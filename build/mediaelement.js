@@ -58,7 +58,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(8);
 
-var _general = _dereq_(21);
+var _general = _dereq_(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -429,7 +429,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"21":21,"6":6,"8":8}],5:[function(_dereq_,module,exports){
+},{"20":20,"6":6,"8":8}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -448,7 +448,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 var _renderer = _dereq_(7);
 
@@ -861,7 +861,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"22":22,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"2":2,"21":21,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1199,9 +1199,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1463,7 +1463,7 @@ var DailyMotionIframeRenderer = {
 								dmPlayer.setMuted(false);
 							}
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', dm);
+								var event = (0, _general.createEvent)('volumechange', dm);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
@@ -1471,13 +1471,13 @@ var DailyMotionIframeRenderer = {
 						case 'volume':
 							dmPlayer.setVolume(value);
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', dm);
+								var event = (0, _general.createEvent)('volumechange', dm);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
 
 						case 'readyState':
-							var event = (0, _dom.createEvent)('canplay', dm);
+							var event = (0, _general.createEvent)('canplay', dm);
 							mediaElement.dispatchEvent(event);
 							break;
 
@@ -1550,13 +1550,13 @@ var DailyMotionIframeRenderer = {
 
 			// a few more events
 			events = ['mouseover', 'mouseout'];
-			var assignEvent = function assignEvent(e) {
-				var event = (0, _dom.createEvent)(e.type, dm);
+			var assignEvents = function assignEvents(e) {
+				var event = (0, _general.createEvent)(e.type, dm);
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (var j in events) {
-				(0, _dom.addEvent)(dmIframe, events[j], assignEvent);
+			for (var _i = 0, _il = events.length; _i < _il; _i++) {
+				dmIframe.addEventListener(events[_i], assignEvents, false);
 			}
 
 			// BUBBLE EVENTS up
@@ -1568,7 +1568,7 @@ var DailyMotionIframeRenderer = {
 				if (eventName !== 'ended') {
 
 					dmPlayer.addEventListener(eventName, function (e) {
-						var event = (0, _dom.createEvent)(e.type, dmPlayer);
+						var event = (0, _general.createEvent)(e.type, dmPlayer);
 						mediaElement.dispatchEvent(event);
 					});
 				}
@@ -1580,44 +1580,44 @@ var DailyMotionIframeRenderer = {
 
 			// Custom DailyMotion events
 			dmPlayer.addEventListener('ad_start', function () {
-				var event = (0, _dom.createEvent)('play', dmPlayer);
+				var event = (0, _general.createEvent)('play', dmPlayer);
 				mediaElement.dispatchEvent(event);
 
-				event = (0, _dom.createEvent)('progress', dmPlayer);
+				event = (0, _general.createEvent)('progress', dmPlayer);
 				mediaElement.dispatchEvent(event);
 
-				event = (0, _dom.createEvent)('timeupdate', dmPlayer);
+				event = (0, _general.createEvent)('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_timeupdate', function () {
-				var event = (0, _dom.createEvent)('timeupdate', dmPlayer);
+				var event = (0, _general.createEvent)('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_pause', function () {
-				var event = (0, _dom.createEvent)('pause', dmPlayer);
+				var event = (0, _general.createEvent)('pause', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_end', function () {
-				var event = (0, _dom.createEvent)('ended', dmPlayer);
+				var event = (0, _general.createEvent)('ended', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('video_start', function () {
-				var event = (0, _dom.createEvent)('play', dmPlayer);
+				var event = (0, _general.createEvent)('play', dmPlayer);
 				mediaElement.dispatchEvent(event);
 
-				event = (0, _dom.createEvent)('timeupdate', dmPlayer);
+				event = (0, _general.createEvent)('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('video_end', function () {
-				var event = (0, _dom.createEvent)('ended', dmPlayer);
+				var event = (0, _general.createEvent)('ended', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('progress', function () {
-				var event = (0, _dom.createEvent)('timeupdate', dmPlayer);
+				var event = (0, _general.createEvent)('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('durationchange', function () {
-				var event = (0, _dom.createEvent)('timeupdate', dmPlayer);
+				var event = (0, _general.createEvent)('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 
@@ -1625,7 +1625,7 @@ var DailyMotionIframeRenderer = {
 			var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (i = 0, il = initEvents.length; i < il; i++) {
-				var event = (0, _dom.createEvent)(initEvents[i], dm);
+				var event = (0, _general.createEvent)(initEvents[i], dm);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -1703,7 +1703,7 @@ _window2.default.dmAsyncInit = function () {
 
 _renderer.renderer.add(DailyMotionIframeRenderer);
 
-},{"2":2,"20":20,"22":22,"3":3,"6":6,"7":7}],10:[function(_dereq_,module,exports){
+},{"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -1720,9 +1720,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 var _constants = _dereq_(19);
 
@@ -1960,7 +1960,7 @@ var DashNativeRenderer = {
     * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
     */
 			var assignMdashEvents = function assignMdashEvents(e) {
-				var event = (0, _dom.createEvent)(e.type, node);
+				var event = (0, _general.createEvent)(e.type, node);
 				event.data = e;
 				mediaElement.dispatchEvent(event);
 
@@ -2015,7 +2015,7 @@ var DashNativeRenderer = {
 			return node;
 		};
 
-		var event = (0, _dom.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;
@@ -2033,7 +2033,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"19":19,"2":2,"20":20,"22":22,"3":3,"6":6,"7":7}],11:[function(_dereq_,module,exports){
+},{"19":19,"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -2050,11 +2050,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(21);
+var _general = _dereq_(20);
 
-var _dom = _dereq_(20);
-
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2199,7 +2197,7 @@ var FacebookRenderer = {
 								fbApi.unmute();
 							}
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', fbWrapper);
+								var event = (0, _general.createEvent)('volumechange', fbWrapper);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
@@ -2207,13 +2205,13 @@ var FacebookRenderer = {
 						case 'volume':
 							fbApi.setVolume(value);
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', fbWrapper);
+								var event = (0, _general.createEvent)('volumechange', fbWrapper);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
 
 						case 'readyState':
-							var event = (0, _dom.createEvent)('canplay', fbWrapper);
+							var event = (0, _general.createEvent)('canplay', fbWrapper);
 							mediaElement.dispatchEvent(event);
 							break;
 
@@ -2436,7 +2434,7 @@ var FacebookRenderer = {
 		fbWrapper.startInterval = function () {
 			// create timer
 			fbWrapper.interval = setInterval(function () {
-				var event = (0, _dom.createEvent)('timeupdate', fbWrapper);
+				var event = (0, _general.createEvent)('timeupdate', fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}, 250);
 		};
@@ -2461,7 +2459,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FacebookRenderer);
 
-},{"2":2,"20":20,"21":21,"22":22,"3":3,"6":6,"7":7}],12:[function(_dereq_,module,exports){
+},{"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],12:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2489,11 +2487,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
 var _constants = _dereq_(19);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2730,7 +2728,7 @@ var FlashMediaElementRenderer = {
 		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 		for (i = 0, il = initEvents.length; i < il; i++) {
-			var event = (0, _dom.createEvent)(initEvents[i], flash);
+			var event = (0, _general.createEvent)(initEvents[i], flash);
 			mediaElement.dispatchEvent(event);
 		}
 
@@ -2760,7 +2758,7 @@ var FlashMediaElementRenderer = {
 
 		_window2.default['__event__' + flash.id] = function (eventName, message) {
 
-			var event = (0, _dom.createEvent)(eventName, flash);
+			var event = (0, _general.createEvent)(eventName, flash);
 			event.message = message || '';
 
 			// send event from Flash up to the mediaElement
@@ -3015,7 +3013,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"19":19,"2":2,"20":20,"22":22,"3":3,"4":4,"6":6,"7":7}],13:[function(_dereq_,module,exports){
+},{"19":19,"2":2,"20":20,"21":21,"3":3,"4":4,"6":6,"7":7}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -3032,11 +3030,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
 var _constants = _dereq_(19);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3326,7 +3324,7 @@ var FlvNativeRenderer = {
 			flvPlayer.destroy();
 		};
 
-		var event = (0, _dom.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;
@@ -3344,7 +3342,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"19":19,"2":2,"20":20,"22":22,"3":3,"6":6,"7":7}],14:[function(_dereq_,module,exports){
+},{"19":19,"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -3361,11 +3359,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
 var _constants = _dereq_(19);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3664,7 +3662,7 @@ var HlsNativeRenderer = {
     * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
     */
 			var assignHlsEvents = function assignHlsEvents(e, data) {
-				var event = (0, _dom.createEvent)(e, node);
+				var event = (0, _general.createEvent)(e, node);
 				event.data = data;
 				mediaElement.dispatchEvent(event);
 
@@ -3739,7 +3737,7 @@ var HlsNativeRenderer = {
 			hlsPlayer.destroy();
 		};
 
-		var event = (0, _dom.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;
@@ -3757,7 +3755,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"19":19,"2":2,"20":20,"22":22,"3":3,"6":6,"7":7}],15:[function(_dereq_,module,exports){
+},{"19":19,"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -3774,7 +3772,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
 var _constants = _dereq_(19);
 
@@ -3807,7 +3805,7 @@ var HtmlMediaElement = {
 		// also consider URLs that might have obfuscated URLs
 		if (_constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
 			return 'yes';
-		} else if (mediaElement.canPlayType || _constants.SUPPORTS_MEDIA_TAG) {
+		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');
 		} else {
 			return '';
@@ -3906,7 +3904,7 @@ var HtmlMediaElement = {
 			}
 		}
 
-		var event = (0, _dom.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;
@@ -3934,9 +3932,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4162,7 +4160,7 @@ var SoundCloudIframeRenderer = {
 								scPlayer.setVolume(1); // ?
 							}
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', sc);
+								var event = (0, _general.createEvent)('volumechange', sc);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
@@ -4170,13 +4168,13 @@ var SoundCloudIframeRenderer = {
 						case 'volume':
 							scPlayer.setVolume(value);
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', sc);
+								var event = (0, _general.createEvent)('volumechange', sc);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
 
 						case 'readyState':
-							var event = (0, _dom.createEvent)('canplay', sc);
+							var event = (0, _general.createEvent)('canplay', sc);
 							mediaElement.dispatchEvent(event);
 							break;
 
@@ -4253,7 +4251,7 @@ var SoundCloudIframeRenderer = {
 
 				scPlayer.getPosition(function (_currentTime) {
 					currentTime = _currentTime / 1000;
-					var event = (0, _dom.createEvent)('timeupdate', sc);
+					var event = (0, _general.createEvent)('timeupdate', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -4261,28 +4259,28 @@ var SoundCloudIframeRenderer = {
 			scPlayer.bind(SC.Widget.Events.PAUSE, function () {
 				paused = true;
 
-				var event = (0, _dom.createEvent)('pause', sc);
+				var event = (0, _general.createEvent)('pause', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.PLAY, function () {
 				paused = false;
 				ended = false;
 
-				var event = (0, _dom.createEvent)('play', sc);
+				var event = (0, _general.createEvent)('play', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.FINISHED, function () {
 				paused = false;
 				ended = true;
 
-				var event = (0, _dom.createEvent)('ended', sc);
+				var event = (0, _general.createEvent)('ended', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.READY, function () {
 				scPlayer.getDuration(function (_duration) {
 					duration = _duration / 1000;
 
-					var event = (0, _dom.createEvent)('loadedmetadata', sc);
+					var event = (0, _general.createEvent)('loadedmetadata', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -4291,14 +4289,14 @@ var SoundCloudIframeRenderer = {
 					if (duration > 0) {
 						bufferedTime = duration * loadProgress;
 
-						var event = (0, _dom.createEvent)('progress', sc);
+						var event = (0, _general.createEvent)('progress', sc);
 						mediaElement.dispatchEvent(event);
 					}
 				});
 				scPlayer.getDuration(function (_duration) {
 					duration = _duration;
 
-					var event = (0, _dom.createEvent)('loadedmetadata', sc);
+					var event = (0, _general.createEvent)('loadedmetadata', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -4307,7 +4305,7 @@ var SoundCloudIframeRenderer = {
 			var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (var _i = 0, _il = initEvents.length; _i < _il; _i++) {
-				var event = (0, _dom.createEvent)(initEvents[_i], sc);
+				var event = (0, _general.createEvent)(initEvents[_i], sc);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -4363,7 +4361,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(SoundCloudIframeRenderer);
 
-},{"2":2,"20":20,"22":22,"3":3,"6":6,"7":7}],17:[function(_dereq_,module,exports){
+},{"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -4380,9 +4378,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4560,7 +4558,7 @@ var vimeoIframeRenderer = {
    * @param {Object} target
    */
 		var errorHandler = function errorHandler(error, target) {
-			var event = (0, _dom.createEvent)('error', target);
+			var event = (0, _general.createEvent)('error', target);
 			event.message = error.name + ': ' + error.message;
 			mediaElement.dispatchEvent(event);
 		};
@@ -4641,7 +4639,7 @@ var vimeoIframeRenderer = {
 							vimeoPlayer.setCurrentTime(value).then(function () {
 								currentTime = value;
 								setTimeout(function () {
-									var event = (0, _dom.createEvent)('timeupdate', vimeo);
+									var event = (0, _general.createEvent)('timeupdate', vimeo);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 							})['catch'](function (error) {
@@ -4654,7 +4652,7 @@ var vimeoIframeRenderer = {
 								volume = value;
 								oldVolume = volume;
 								setTimeout(function () {
-									var event = (0, _dom.createEvent)('volumechange', vimeo);
+									var event = (0, _general.createEvent)('volumechange', vimeo);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 							})['catch'](function (error) {
@@ -4672,7 +4670,7 @@ var vimeoIframeRenderer = {
 								vimeoPlayer.setVolume(0).then(function () {
 									volume = 0;
 									setTimeout(function () {
-										var event = (0, _dom.createEvent)('volumechange', vimeo);
+										var event = (0, _general.createEvent)('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch'](function (error) {
@@ -4682,7 +4680,7 @@ var vimeoIframeRenderer = {
 								vimeoPlayer.setVolume(oldVolume).then(function () {
 									volume = oldVolume;
 									setTimeout(function () {
-										var event = (0, _dom.createEvent)('volumechange', vimeo);
+										var event = (0, _general.createEvent)('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch'](function (error) {
@@ -4691,7 +4689,7 @@ var vimeoIframeRenderer = {
 							}
 							break;
 						case 'readyState':
-							var event = (0, _dom.createEvent)('canplay', vimeo);
+							var event = (0, _general.createEvent)('canplay', vimeo);
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
@@ -4767,13 +4765,12 @@ var vimeoIframeRenderer = {
 			events = ['mouseover', 'mouseout'];
 
 			var assignEvents = function assignEvents(e) {
-				var event = (0, _dom.createEvent)(e.type, vimeo);
+				var event = (0, _general.createEvent)(e.type, vimeo);
 				mediaElement.dispatchEvent(event);
 			};
 
 			for (i = 0, il = events.length; i < il; i++) {
-				var eventName = events[i];
-				(0, _dom.addEvent)(vimeoIframe, eventName, assignEvents);
+				vimeoIframe.addEventListener(events[i], assignEvents, false);
 			}
 
 			// Vimeo events
@@ -4787,7 +4784,7 @@ var vimeoIframeRenderer = {
 						bufferedTime = duration * loadProgress;
 					}
 
-					var event = (0, _dom.createEvent)('loadedmetadata', vimeo);
+					var event = (0, _general.createEvent)('loadedmetadata', vimeo);
 					mediaElement.dispatchEvent(event);
 				})['catch'](function (error) {
 					errorHandler(error, vimeo);
@@ -4803,7 +4800,7 @@ var vimeoIframeRenderer = {
 						bufferedTime = duration * loadProgress;
 					}
 
-					var event = (0, _dom.createEvent)('progress', vimeo);
+					var event = (0, _general.createEvent)('progress', vimeo);
 					mediaElement.dispatchEvent(event);
 				})['catch'](function (error) {
 					errorHandler(error, vimeo);
@@ -4814,30 +4811,30 @@ var vimeoIframeRenderer = {
 					currentTime = seconds;
 				});
 
-				var event = (0, _dom.createEvent)('timeupdate', vimeo);
+				var event = (0, _general.createEvent)('timeupdate', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('play', function () {
 				paused = false;
 				ended = false;
-				var event = (0, _dom.createEvent)('play', vimeo);
+				var event = (0, _general.createEvent)('play', vimeo);
 				mediaElement.dispatchEvent(event);
 
-				event = (0, _dom.createEvent)('playing', vimeo);
+				event = (0, _general.createEvent)('playing', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', function () {
 				paused = true;
 				ended = false;
 
-				var event = (0, _dom.createEvent)('pause', vimeo);
+				var event = (0, _general.createEvent)('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('ended', function () {
 				paused = false;
 				ended = true;
 
-				var event = (0, _dom.createEvent)('ended', vimeo);
+				var event = (0, _general.createEvent)('ended', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 
@@ -4845,7 +4842,7 @@ var vimeoIframeRenderer = {
 			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (i = 0, il = events.length; i < il; i++) {
-				var event = (0, _dom.createEvent)(events[i], vimeo);
+				var event = (0, _general.createEvent)(events[i], vimeo);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -4906,7 +4903,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(vimeoIframeRenderer);
 
-},{"2":2,"20":20,"22":22,"3":3,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+},{"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -4925,9 +4922,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5275,7 +5272,7 @@ var YouTubeIframeRenderer = {
 								youTubeApi.unMute();
 							}
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', youtube);
+								var event = (0, _general.createEvent)('volumechange', youtube);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
@@ -5284,12 +5281,12 @@ var YouTubeIframeRenderer = {
 							volume = value;
 							youTubeApi.setVolume(value * 100);
 							setTimeout(function () {
-								var event = (0, _dom.createEvent)('volumechange', youtube);
+								var event = (0, _general.createEvent)('volumechange', youtube);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
 						case 'readyState':
-							var event = (0, _dom.createEvent)('canplay', youtube);
+							var event = (0, _general.createEvent)('canplay', youtube);
 							mediaElement.dispatchEvent(event);
 							break;
 
@@ -5405,19 +5402,19 @@ var YouTubeIframeRenderer = {
 					var events = ['mouseover', 'mouseout'],
 					    assignEvents = function assignEvents(e) {
 
-						var newEvent = (0, _dom.createEvent)(e.type, youtube);
+						var newEvent = (0, _general.createEvent)(e.type, youtube);
 						mediaElement.dispatchEvent(newEvent);
 					};
 
 					for (i = 0, il = events.length; i < il; i++) {
-						(0, _dom.addEvent)(youTubeIframe, events[i], assignEvents);
+						youTubeIframe.addEventListener(events[i], assignEvents, false);
 					}
 
 					// send init events
 					var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 					for (i = 0, il = initEvents.length; i < il; i++) {
-						var event = (0, _dom.createEvent)(initEvents[i], youtube);
+						var event = (0, _general.createEvent)(initEvents[i], youtube);
 						mediaElement.dispatchEvent(event);
 					}
 				},
@@ -5479,12 +5476,12 @@ var YouTubeIframeRenderer = {
 
 					// send events up
 					for (i = 0, il = events.length; i < il; i++) {
-						var event = (0, _dom.createEvent)(events[i], youtube);
+						var event = (0, _general.createEvent)(events[i], youtube);
 						mediaElement.dispatchEvent(event);
 					}
 				},
 				onError: function onError(e) {
-					var event = (0, _dom.createEvent)('error', youtube);
+					var event = (0, _general.createEvent)('error', youtube);
 					event.data = e.data;
 					mediaElement.dispatchEvent(event);
 				}
@@ -5531,7 +5528,7 @@ var YouTubeIframeRenderer = {
 			// create timer
 			youtube.interval = setInterval(function () {
 
-				var event = (0, _dom.createEvent)('timeupdate', youtube);
+				var event = (0, _general.createEvent)('timeupdate', youtube);
 				mediaElement.dispatchEvent(event);
 			}, 250);
 		};
@@ -5559,13 +5556,13 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	_renderer.renderer.add(YouTubeIframeRenderer);
 }
 
-},{"2":2,"20":20,"22":22,"3":3,"6":6,"7":7}],19:[function(_dereq_,module,exports){
+},{"2":2,"20":20,"21":21,"3":3,"6":6,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORTS_MEDIA_TAG = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_EDGE = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
+exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_EDGE = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
 
 var _window = _dereq_(3);
 
@@ -5620,9 +5617,6 @@ var video = void 0;
 for (var i = 0, il = html5Elements.length; i < il; i++) {
 	video = _document2.default.createElement(html5Elements[i]);
 }
-
-// Test if Media Source Extensions are supported by browser
-var SUPPORTS_MEDIA_TAG = exports.SUPPORTS_MEDIA_TAG = video.canPlayType !== undefined || HAS_MSE;
 
 // Test if browsers support HLS natively (right now Safari, Android's Chrome and Stock browsers, and MS Edge)
 var SUPPORTS_NATIVE_HLS = exports.SUPPORTS_NATIVE_HLS = IS_SAFARI || IS_ANDROID && (IS_CHROME || IS_STOCK_ANDROID) || IS_IE && UA.match(/edge/gi) !== null;
@@ -5732,7 +5726,6 @@ _mejs2.default.Features.isFirefox = IS_FIREFOX;
 _mejs2.default.Features.isSafari = IS_SAFARI;
 _mejs2.default.Features.isStockAndroid = IS_STOCK_ANDROID;
 _mejs2.default.Features.hasMSE = HAS_MSE;
-_mejs2.default.Features.supportsMediaTag = SUPPORTS_MEDIA_TAG;
 _mejs2.default.Features.supportsNativeHLS = SUPPORTS_NATIVE_HLS;
 
 _mejs2.default.Features.supportsPointerEvents = SUPPORT_POINTER_EVENTS;
@@ -5754,107 +5747,12 @@ _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.createEvent = createEvent;
-exports.addEvent = addEvent;
-exports.removeEvent = removeEvent;
-exports.isNodeAfter = isNodeAfter;
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = _dereq_(6);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- *
- * @param {string} eventName
- * @param {*} target
- * @return {Event|Object}
- */
-function createEvent(eventName, target) {
-
-	if (typeof eventName !== 'string') {
-		throw new Error('Event name must be a string');
-	}
-
-	var event = void 0;
-
-	if (_document2.default.createEvent) {
-		event = _document2.default.createEvent('Event');
-		event.initEvent(eventName, true, false);
-	} else {
-		event = {};
-		event.type = eventName;
-		event.target = target;
-		event.canceleable = true;
-		event.bubbable = false;
-	}
-
-	return event;
-}
-
-/**
- *
- * @param {Object} obj
- * @param {String} type
- * @param {Function} fn
- */
-function addEvent(obj, type, fn) {
-	if (obj.addEventListener) {
-		obj.addEventListener(type, fn, false);
-	} else if (obj.attachEvent) {
-		obj['e' + type + fn] = fn;
-		obj['' + type + fn] = function () {
-			obj['e' + type + fn](window.event);
-		};
-		obj.attachEvent('on' + type, obj['' + type + fn]);
-	}
-}
-
-/**
- *
- * @param {Object} obj
- * @param {String} type
- * @param {Function} fn
- */
-function removeEvent(obj, type, fn) {
-
-	if (obj.removeEventListener) {
-		obj.removeEventListener(type, fn, false);
-	} else if (obj.detachEvent) {
-		obj.detachEvent('on' + type, obj['' + type + fn]);
-		obj['' + type + fn] = null;
-	}
-}
-
-/**
- * Returns true if targetNode appears after sourceNode in the dom.
- * @param {HTMLElement} sourceNode - the source node for comparison
- * @param {HTMLElement} targetNode - the node to compare against sourceNode
- */
-function isNodeAfter(sourceNode, targetNode) {
-	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
-}
-
-_mejs2.default.Utils = _mejs2.default.Utils || {};
-_mejs2.default.Utils.createEvent = createEvent;
-_mejs2.default.Utils.removeEvent = removeEvent;
-_mejs2.default.Utils.isNodeAfter = isNodeAfter;
-
-},{"2":2,"6":6}],21:[function(_dereq_,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
 exports.escapeHTML = escapeHTML;
 exports.debounce = debounce;
 exports.isObjectEmpty = isObjectEmpty;
 exports.splitEvents = splitEvents;
+exports.createEvent = createEvent;
+exports.isNodeAfter = isNodeAfter;
 
 var _mejs = _dereq_(6);
 
@@ -5952,13 +5850,52 @@ function splitEvents(events, id) {
 	return ret;
 }
 
+/**
+ *
+ * @param {string} eventName
+ * @param {*} target
+ * @return {Event|Object}
+ */
+function createEvent(eventName, target) {
+
+	if (typeof eventName !== 'string') {
+		throw new Error('Event name must be a string');
+	}
+
+	var event = void 0;
+
+	if (document.createEvent) {
+		event = document.createEvent('Event');
+		event.initEvent(eventName, true, false);
+	} else {
+		event = {};
+		event.type = eventName;
+		event.target = target;
+		event.canceleable = true;
+		event.bubbable = false;
+	}
+
+	return event;
+}
+
+/**
+ * Returns true if targetNode appears after sourceNode in the dom.
+ * @param {HTMLElement} sourceNode - the source node for comparison
+ * @param {HTMLElement} targetNode - the node to compare against sourceNode
+ */
+function isNodeAfter(sourceNode, targetNode) {
+	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
+}
+
 _mejs2.default.Utils = _mejs2.default.Utils || {};
 _mejs2.default.Utils.escapeHTML = escapeHTML;
 _mejs2.default.Utils.debounce = debounce;
 _mejs2.default.Utils.isObjectEmpty = isObjectEmpty;
 _mejs2.default.Utils.splitEvents = splitEvents;
+_mejs2.default.Utils.createEvent = createEvent;
+_mejs2.default.Utils.isNodeAfter = isNodeAfter;
 
-},{"6":6}],22:[function(_dereq_,module,exports){
+},{"6":6}],21:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5976,7 +5913,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(21);
+var _general = _dereq_(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6073,7 +6010,18 @@ function getTypeFromFile(url) {
 	var ext = getExtension(url),
 	    normalizedExt = normalizeExtension(ext);
 
-	return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + normalizedExt;
+	var mime = '';
+
+	// Obtain correct MIME types
+	if (normalizedExt) {
+		if (['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].includes(normalizedExt)) {
+			mime = 'video/' + normalizedExt;
+		} else if (['mp3', 'oga', 'wav', 'mid', 'midi'].includes(normalizedExt)) {
+			mime = 'audio/' + normalizedExt;
+		}
+	}
+
+	return mime;
 }
 
 /**
@@ -6088,9 +6036,10 @@ function getExtension(url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	var baseUrl = url.split('?')[0];
+	var baseUrl = url.split('?')[0],
+	    baseName = baseUrl.split('\\').pop().split('/').pop();
 
-	return ~baseUrl.indexOf('.') ? baseUrl.substring(baseUrl.lastIndexOf('.') + 1) : '';
+	return baseName.indexOf('.') > -1 ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
 }
 
 /**
@@ -6130,7 +6079,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"21":21,"6":6}],23:[function(_dereq_,module,exports){
+},{"20":20,"6":6}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -6334,4 +6283,4 @@ if (!String.prototype.startsWith) {
 	};
 }
 
-},{"2":2}]},{},[23,5,4,8,15,12,9,10,11,13,14,16,17,18]);
+},{"2":2}]},{},[22,5,4,8,15,12,9,10,11,13,14,16,17,18]);

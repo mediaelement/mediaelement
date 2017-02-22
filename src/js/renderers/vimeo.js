@@ -4,7 +4,7 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
-import {createEvent, addEvent} from '../utils/dom';
+import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 
 /**
@@ -406,8 +406,7 @@ const vimeoIframeRenderer = {
 			};
 
 			for (i = 0, il = events.length; i < il; i++) {
-				const eventName = events[i];
-				addEvent(vimeoIframe, eventName, assignEvents);
+				vimeoIframe.addEventListener(events[i], assignEvents, false);
 			}
 
 			// Vimeo events

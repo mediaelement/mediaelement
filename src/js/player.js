@@ -14,9 +14,8 @@ import {
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
-import {splitEvents, debounce} from './utils/general';
+import {splitEvents, debounce, isNodeAfter} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
-import {isNodeAfter} from './utils/dom';
 import {getTypeFromFile} from './utils/media';
 
 mejs.mepIndex = 0;

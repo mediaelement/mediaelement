@@ -58,7 +58,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(14);
 
-var _general = _dereq_(21);
+var _general = _dereq_(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -429,7 +429,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"14":14,"21":21,"6":6}],5:[function(_dereq_,module,exports){
+},{"14":14,"20":20,"6":6}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -448,7 +448,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 var _renderer = _dereq_(7);
 
@@ -861,7 +861,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"22":22,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"2":2,"21":21,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1663,7 +1663,7 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _constants = _dereq_(19);
 
-var _time = _dereq_(24);
+var _time = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2082,14 +2082,14 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"19":19,"24":24,"4":4}],11:[function(_dereq_,module,exports){
+},{"16":16,"19":19,"23":23,"4":4}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(24);
+var _time = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2212,7 +2212,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"24":24}],12:[function(_dereq_,module,exports){
+},{"16":16,"23":23}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _mejs = _dereq_(6);
@@ -2227,7 +2227,7 @@ var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(24);
+var _time = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3088,7 +3088,7 @@ if ('x\n\ny'.split(/\n/gi).length !== 3) {
 	};
 }
 
-},{"16":16,"24":24,"4":4,"6":6}],13:[function(_dereq_,module,exports){
+},{"16":16,"23":23,"4":4,"6":6}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -3596,13 +3596,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _constants = _dereq_(19);
 
-var _general = _dereq_(21);
+var _general = _dereq_(20);
 
-var _time = _dereq_(24);
+var _time = _dereq_(23);
 
-var _dom = _dereq_(20);
-
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3945,7 +3943,7 @@ var MediaElementPlayer = function () {
 					if (!_constants.HAS_MS_NATIVE_FULLSCREEN) {
 						// If e.relatedTarget appears before container, send focus to play button,
 						// else send focus to last control button.
-						var btnSelector = (0, _dom.isNodeAfter)(e.relatedTarget, t.container[0]) ? '.' + t.options.classPrefix + 'controls .' + t.options.classPrefix + 'button:last-child > button' : '.' + t.options.classPrefix + 'playpause-button > button',
+						var btnSelector = (0, _general.isNodeAfter)(e.relatedTarget, t.container[0]) ? '.' + t.options.classPrefix + 'controls .' + t.options.classPrefix + 'button:last-child > button' : '.' + t.options.classPrefix + 'playpause-button > button',
 						    button = t.container.find(btnSelector);
 
 						button.focus();
@@ -5265,7 +5263,7 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"19":19,"2":2,"20":20,"21":21,"22":22,"24":24,"3":3,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
+},{"19":19,"2":2,"20":20,"21":21,"23":23,"3":3,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5293,11 +5291,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
 var _constants = _dereq_(19);
 
-var _media = _dereq_(22);
+var _media = _dereq_(21);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5534,7 +5532,7 @@ var FlashMediaElementRenderer = {
 		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 		for (i = 0, il = initEvents.length; i < il; i++) {
-			var event = (0, _dom.createEvent)(initEvents[i], flash);
+			var event = (0, _general.createEvent)(initEvents[i], flash);
 			mediaElement.dispatchEvent(event);
 		}
 
@@ -5564,7 +5562,7 @@ var FlashMediaElementRenderer = {
 
 		_window2.default['__event__' + flash.id] = function (eventName, message) {
 
-			var event = (0, _dom.createEvent)(eventName, flash);
+			var event = (0, _general.createEvent)(eventName, flash);
 			event.message = message || '';
 
 			// send event from Flash up to the mediaElement
@@ -5819,7 +5817,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"19":19,"2":2,"20":20,"22":22,"3":3,"4":4,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+},{"19":19,"2":2,"20":20,"21":21,"3":3,"4":4,"6":6,"7":7}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -5836,7 +5834,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _dom = _dereq_(20);
+var _general = _dereq_(20);
 
 var _constants = _dereq_(19);
 
@@ -5869,7 +5867,7 @@ var HtmlMediaElement = {
 		// also consider URLs that might have obfuscated URLs
 		if (_constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
 			return 'yes';
-		} else if (mediaElement.canPlayType || _constants.SUPPORTS_MEDIA_TAG) {
+		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');
 		} else {
 			return '';
@@ -5968,7 +5966,7 @@ var HtmlMediaElement = {
 			}
 		}
 
-		var event = (0, _dom.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
 		return node;
@@ -5985,7 +5983,7 @@ _renderer.renderer.add(HtmlMediaElement);
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORTS_MEDIA_TAG = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_EDGE = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
+exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_EDGE = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
 
 var _window = _dereq_(3);
 
@@ -6040,9 +6038,6 @@ var video = void 0;
 for (var i = 0, il = html5Elements.length; i < il; i++) {
 	video = _document2.default.createElement(html5Elements[i]);
 }
-
-// Test if Media Source Extensions are supported by browser
-var SUPPORTS_MEDIA_TAG = exports.SUPPORTS_MEDIA_TAG = video.canPlayType !== undefined || HAS_MSE;
 
 // Test if browsers support HLS natively (right now Safari, Android's Chrome and Stock browsers, and MS Edge)
 var SUPPORTS_NATIVE_HLS = exports.SUPPORTS_NATIVE_HLS = IS_SAFARI || IS_ANDROID && (IS_CHROME || IS_STOCK_ANDROID) || IS_IE && UA.match(/edge/gi) !== null;
@@ -6152,7 +6147,6 @@ _mejs2.default.Features.isFirefox = IS_FIREFOX;
 _mejs2.default.Features.isSafari = IS_SAFARI;
 _mejs2.default.Features.isStockAndroid = IS_STOCK_ANDROID;
 _mejs2.default.Features.hasMSE = HAS_MSE;
-_mejs2.default.Features.supportsMediaTag = SUPPORTS_MEDIA_TAG;
 _mejs2.default.Features.supportsNativeHLS = SUPPORTS_NATIVE_HLS;
 
 _mejs2.default.Features.supportsPointerEvents = SUPPORT_POINTER_EVENTS;
@@ -6174,107 +6168,12 @@ _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.createEvent = createEvent;
-exports.addEvent = addEvent;
-exports.removeEvent = removeEvent;
-exports.isNodeAfter = isNodeAfter;
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = _dereq_(6);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- *
- * @param {string} eventName
- * @param {*} target
- * @return {Event|Object}
- */
-function createEvent(eventName, target) {
-
-	if (typeof eventName !== 'string') {
-		throw new Error('Event name must be a string');
-	}
-
-	var event = void 0;
-
-	if (_document2.default.createEvent) {
-		event = _document2.default.createEvent('Event');
-		event.initEvent(eventName, true, false);
-	} else {
-		event = {};
-		event.type = eventName;
-		event.target = target;
-		event.canceleable = true;
-		event.bubbable = false;
-	}
-
-	return event;
-}
-
-/**
- *
- * @param {Object} obj
- * @param {String} type
- * @param {Function} fn
- */
-function addEvent(obj, type, fn) {
-	if (obj.addEventListener) {
-		obj.addEventListener(type, fn, false);
-	} else if (obj.attachEvent) {
-		obj['e' + type + fn] = fn;
-		obj['' + type + fn] = function () {
-			obj['e' + type + fn](window.event);
-		};
-		obj.attachEvent('on' + type, obj['' + type + fn]);
-	}
-}
-
-/**
- *
- * @param {Object} obj
- * @param {String} type
- * @param {Function} fn
- */
-function removeEvent(obj, type, fn) {
-
-	if (obj.removeEventListener) {
-		obj.removeEventListener(type, fn, false);
-	} else if (obj.detachEvent) {
-		obj.detachEvent('on' + type, obj['' + type + fn]);
-		obj['' + type + fn] = null;
-	}
-}
-
-/**
- * Returns true if targetNode appears after sourceNode in the dom.
- * @param {HTMLElement} sourceNode - the source node for comparison
- * @param {HTMLElement} targetNode - the node to compare against sourceNode
- */
-function isNodeAfter(sourceNode, targetNode) {
-	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
-}
-
-_mejs2.default.Utils = _mejs2.default.Utils || {};
-_mejs2.default.Utils.createEvent = createEvent;
-_mejs2.default.Utils.removeEvent = removeEvent;
-_mejs2.default.Utils.isNodeAfter = isNodeAfter;
-
-},{"2":2,"6":6}],21:[function(_dereq_,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
 exports.escapeHTML = escapeHTML;
 exports.debounce = debounce;
 exports.isObjectEmpty = isObjectEmpty;
 exports.splitEvents = splitEvents;
+exports.createEvent = createEvent;
+exports.isNodeAfter = isNodeAfter;
 
 var _mejs = _dereq_(6);
 
@@ -6372,13 +6271,52 @@ function splitEvents(events, id) {
 	return ret;
 }
 
+/**
+ *
+ * @param {string} eventName
+ * @param {*} target
+ * @return {Event|Object}
+ */
+function createEvent(eventName, target) {
+
+	if (typeof eventName !== 'string') {
+		throw new Error('Event name must be a string');
+	}
+
+	var event = void 0;
+
+	if (document.createEvent) {
+		event = document.createEvent('Event');
+		event.initEvent(eventName, true, false);
+	} else {
+		event = {};
+		event.type = eventName;
+		event.target = target;
+		event.canceleable = true;
+		event.bubbable = false;
+	}
+
+	return event;
+}
+
+/**
+ * Returns true if targetNode appears after sourceNode in the dom.
+ * @param {HTMLElement} sourceNode - the source node for comparison
+ * @param {HTMLElement} targetNode - the node to compare against sourceNode
+ */
+function isNodeAfter(sourceNode, targetNode) {
+	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
+}
+
 _mejs2.default.Utils = _mejs2.default.Utils || {};
 _mejs2.default.Utils.escapeHTML = escapeHTML;
 _mejs2.default.Utils.debounce = debounce;
 _mejs2.default.Utils.isObjectEmpty = isObjectEmpty;
 _mejs2.default.Utils.splitEvents = splitEvents;
+_mejs2.default.Utils.createEvent = createEvent;
+_mejs2.default.Utils.isNodeAfter = isNodeAfter;
 
-},{"6":6}],22:[function(_dereq_,module,exports){
+},{"6":6}],21:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6396,7 +6334,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(21);
+var _general = _dereq_(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6493,7 +6431,18 @@ function getTypeFromFile(url) {
 	var ext = getExtension(url),
 	    normalizedExt = normalizeExtension(ext);
 
-	return (/(mp4|m4v|ogg|ogv|webm|webmv|flv|wmv|mpeg|mov)/gi.test(ext) ? 'video' : 'audio') + '/' + normalizedExt;
+	var mime = '';
+
+	// Obtain correct MIME types
+	if (normalizedExt) {
+		if (['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].includes(normalizedExt)) {
+			mime = 'video/' + normalizedExt;
+		} else if (['mp3', 'oga', 'wav', 'mid', 'midi'].includes(normalizedExt)) {
+			mime = 'audio/' + normalizedExt;
+		}
+	}
+
+	return mime;
 }
 
 /**
@@ -6508,9 +6457,10 @@ function getExtension(url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	var baseUrl = url.split('?')[0];
+	var baseUrl = url.split('?')[0],
+	    baseName = baseUrl.split('\\').pop().split('/').pop();
 
-	return ~baseUrl.indexOf('.') ? baseUrl.substring(baseUrl.lastIndexOf('.') + 1) : '';
+	return baseName.indexOf('.') > -1 ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
 }
 
 /**
@@ -6550,7 +6500,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"21":21,"6":6}],23:[function(_dereq_,module,exports){
+},{"20":20,"6":6}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -6754,7 +6704,7 @@ if (!String.prototype.startsWith) {
 	};
 }
 
-},{"2":2}],24:[function(_dereq_,module,exports){
+},{"2":2}],23:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6953,4 +6903,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"6":6}]},{},[23,5,4,14,18,17,15,16,8,9,10,11,12,13]);
+},{"6":6}]},{},[22,5,4,14,18,17,15,16,8,9,10,11,12,13]);
