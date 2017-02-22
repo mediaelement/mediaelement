@@ -447,11 +447,12 @@ const vimeoIframeRenderer = {
 			vimeoPlayer.on('timeupdate', () => {
 				vimeoPlayer.getCurrentTime().then((seconds) => {
 					currentTime = seconds;
+
+					const event = createEvent('timeupdate', vimeo);
+					mediaElement.dispatchEvent(event);
+				})['catch']((error) => {
+					errorHandler(error, vimeo);
 				});
-
-				const event = createEvent('timeupdate', vimeo);
-				mediaElement.dispatchEvent(event);
-
 			});
 			vimeoPlayer.on('play', () => {
 				paused = false;

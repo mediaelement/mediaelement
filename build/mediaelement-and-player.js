@@ -8892,10 +8892,12 @@ var vimeoIframeRenderer = {
 			vimeoPlayer.on('timeupdate', function () {
 				vimeoPlayer.getCurrentTime().then(function (seconds) {
 					currentTime = seconds;
-				});
 
-				var event = (0, _general.createEvent)('timeupdate', vimeo);
-				mediaElement.dispatchEvent(event);
+					var event = (0, _general.createEvent)('timeupdate', vimeo);
+					mediaElement.dispatchEvent(event);
+				})['catch'](function (error) {
+					errorHandler(error, vimeo);
+				});
 			});
 			vimeoPlayer.on('play', function () {
 				paused = false;
