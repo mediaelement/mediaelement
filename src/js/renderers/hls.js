@@ -286,9 +286,6 @@ const HlsNativeRenderer = {
 						// copy event
 						const event = document.createEvent('HTMLEvents');
 						event.initEvent(e.type, e.bubbles, e.cancelable);
-						// event.srcElement = e.srcElement;
-						// event.target = e.srcElement;
-
 						mediaElement.dispatchEvent(event);
 					});
 

@@ -7,7 +7,7 @@
 * Added translation for Russian language (https://github.com/johndyer/mediaelement/pull/2073) @Globulopolis
 * Added overlay on `iframe` renderers to allow triggering mouse/click events properly @ron666 
 * Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @ron666
-* Fixed minor issues with FLV native renderer and updated documentation @ron666
+* Fixed minor issues with FLV native renderer @ron666
 * Fixed typo in `pause` event not being triggered on Facebook and YouTube renderers @ron666
 * Fixed issue on `progress` feature that caused multiple events being fired incorrectly when clicking on rail @ron666
 * Corrected typo in `full.js` file (https://github.com/johndyer/mediaelement/pull/2081) @helmetroo
@@ -15,12 +15,12 @@
 * Integrated ESLint to verify/fix code with more strict standards @ron666
 * Fixed issue with mute/unmute ARIA text (https://github.com/johndyer/mediaelement/pull/2091) @DmitryKrekota
 * Fixed issue with obfuscated URLs or URLs without extension detected in #2087 @ron666
-* Added documentation about use of MediaElement with a responsive grid plugin effectively, thanks to @DeysonOrtiz @ron666
 * Fixed accessibility issue related to use keyboard in Safari @ron666 
 * Fixed typo in `demo` file related to switching to Chinese language and added conditional to disable media URLs on iOS @ron666
 * Removed IE8 hacks (https://github.com/johndyer/mediaelement/pull/2095) @jimmywarting
 * Cleaned unnecessary code and fixed issue with Vimeo renderer @ron666
 * Fixed security issue with Flash by introducing `shimScriptAccess` configuration element and reading `allowScriptAccess` flag @ron666
+* Added documentation about use of MediaElement with a responsive grid plugin effectively, thanks to @DeysonOrtiz, and other updates on it @ron666
 
 *3.1.2 (2017/02/10)*
 

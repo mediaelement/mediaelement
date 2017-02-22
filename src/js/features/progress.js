@@ -255,29 +255,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		}).on('click', (e) => {
-
-			if (media.duration !== Infinity) {
-				let paused = media.paused;
-
-				if (!paused) {
-					media.pause();
-				}
-
-				handleMouseMove(e);
-
-				if (!paused) {
-					media.play();
-				}
-			}
-
-			e.preventDefault();
-			e.stopPropagation();
-		});
-
-
-		// handle clicks
-		t.rail.on('mousedown touchstart', (e) => {
+		}).on('mousedown touchstart', (e) => {
 			t.forcedHandlePause = false;
 			if (media.duration !== Infinity) {
 				// only handle left clicks or touch

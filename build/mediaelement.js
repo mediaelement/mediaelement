@@ -1945,10 +1945,6 @@ var DashNativeRenderer = {
 				node.addEventListener(eventName, function (e) {
 					var event = _document2.default.createEvent('HTMLEvents');
 					event.initEvent(e.type, e.bubbles, e.cancelable);
-					// @todo Check this
-					// event.srcElement = e.srcElement;
-					// event.target = e.srcElement;
-
 					mediaElement.dispatchEvent(event);
 				});
 			};
@@ -3650,9 +3646,6 @@ var HlsNativeRenderer = {
 					// copy event
 					var event = _document2.default.createEvent('HTMLEvents');
 					event.initEvent(e.type, e.bubbles, e.cancelable);
-					// event.srcElement = e.srcElement;
-					// event.target = e.srcElement;
-
 					mediaElement.dispatchEvent(event);
 				});
 			};
@@ -3875,8 +3868,6 @@ var HtmlMediaElement = {
 
 				var event = _document2.default.createEvent('HTMLEvents');
 				event.initEvent(e.type, e.bubbles, e.cancelable);
-				// event.srcElement = e.srcElement;
-				// event.target = e.srcElement;
 				mediaElement.dispatchEvent(event);
 			});
 		};

@@ -1905,28 +1905,7 @@ Object.assign(_player2.default.prototype, {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		}).on('click', function (e) {
-
-			if (media.duration !== Infinity) {
-				var paused = media.paused;
-
-				if (!paused) {
-					media.pause();
-				}
-
-				handleMouseMove(e);
-
-				if (!paused) {
-					media.play();
-				}
-			}
-
-			e.preventDefault();
-			e.stopPropagation();
-		});
-
-		// handle clicks
-		t.rail.on('mousedown touchstart', function (e) {
+		}).on('mousedown touchstart', function (e) {
 			t.forcedHandlePause = false;
 			if (media.duration !== Infinity) {
 				// only handle left clicks or touch
@@ -5937,8 +5916,6 @@ var HtmlMediaElement = {
 
 				var event = _document2.default.createEvent('HTMLEvents');
 				event.initEvent(e.type, e.bubbles, e.cancelable);
-				// event.srcElement = e.srcElement;
-				// event.target = e.srcElement;
 				mediaElement.dispatchEvent(event);
 			});
 		};
