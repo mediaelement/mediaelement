@@ -1,5 +1,9 @@
 ### Version History
 
+*3.x.x (2017/??/??)*
+
+* Fixed typo in header file @ron666
+
 *3.1.3 (2017/02/23)*
 
 * Fixed typo in `usage.md` in regards of Automatic start (https://github.com/johndyer/mediaelement/pull/2071) @SvenJuergens

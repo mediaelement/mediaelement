@@ -1,6 +1,6 @@
 /*!
  * MediaElement.js
- * http://www.mediaelement.com/
+ * http://www.mediaelementjs.com/
  *
  * Wrapper that mimics native HTML5 MediaElement (audio and video)
  * using a variety of technologies (pure JavaScript, Flash, iframe)
