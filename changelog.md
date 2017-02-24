@@ -3,6 +3,7 @@
 *3.x.x (2017/??/??)*
 
 * Fixed typo in header file @ron666
+* Added Ukrainian translation (https://github.com/johndyer/mediaelement/pull/2100) @DmitryKrekota 
 
 *3.1.3 (2017/02/23)*
 
