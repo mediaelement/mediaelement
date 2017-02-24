@@ -228,6 +228,7 @@ Available languages:
 * Romanian (ro)
 * Russian (ru)
 * Slovak (sk)
+* Swedish (sv)
 * Ukrainian (uk)
 * Simplified Chinese (zh-CN)
 * Traditional Chinese (zh-TW)
