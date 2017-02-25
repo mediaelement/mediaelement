@@ -5567,8 +5567,8 @@ var FlashMediaElementRenderer = {
 		    flashHeight = isVideo ? mediaElement.originalNode.height : 1,
 		    flashWidth = isVideo ? mediaElement.originalNode.width : 1;
 
-		if (mediaElement.originalNode.currentSrc.length) {
-			flashVars.push('src=' + mediaElement.originalNode.currentSrc);
+		if (mediaElement.originalNode.getAttribute('src')) {
+			flashVars.push('src=' + mediaElement.originalNode.getAttribute('src'));
 		}
 
 		if (flash.options.enablePseudoStreaming === true) {
