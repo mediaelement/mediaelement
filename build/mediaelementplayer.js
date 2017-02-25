@@ -735,63 +735,60 @@ var MediaElement = function MediaElement(idOrNode, options) {
 	}
 
 	// IE && iOS
-	if (!t.mediaElement.addEventListener) {
+	t.mediaElement.events = {};
 
-		t.mediaElement.events = {};
+	// start: fake events
+	t.mediaElement.addEventListener = function (eventName, callback) {
+		// create or find the array of callbacks for this eventName
+		t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
 
-		// start: fake events
-		t.mediaElement.addEventListener = function (eventName, callback) {
-			// create or find the array of callbacks for this eventName
-			t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
+		// push the callback into the stack
+		t.mediaElement.events[eventName].push(callback);
+	};
+	t.mediaElement.removeEventListener = function (eventName, callback) {
+		// no eventName means remove all listeners
+		if (!eventName) {
+			t.mediaElement.events = {};
+			return true;
+		}
 
-			// push the callback into the stack
-			t.mediaElement.events[eventName].push(callback);
-		};
-		t.mediaElement.removeEventListener = function (eventName, callback) {
-			// no eventName means remove all listeners
-			if (!eventName) {
-				t.mediaElement.events = {};
+		// see if we have any callbacks for this eventName
+		var callbacks = t.mediaElement.events[eventName];
+
+		if (!callbacks) {
+			return true;
+		}
+
+		// check for a specific callback
+		if (!callback) {
+			t.mediaElement.events[eventName] = [];
+			return true;
+		}
+
+		// remove the specific callback
+		for (var _i = 0, _il = callbacks.length; _i < _il; _i++) {
+			if (callbacks[_i] === callback) {
+				t.mediaElement.events[eventName].splice(_i, 1);
 				return true;
 			}
+		}
+		return false;
+	};
 
-			// see if we have any callbacks for this eventName
-			var callbacks = t.mediaElement.events[eventName];
+	/**
+  *
+  * @param {Event} event
+  */
+	t.mediaElement.dispatchEvent = function (event) {
 
-			if (!callbacks) {
-				return true;
+		var callbacks = t.mediaElement.events[event.type];
+
+		if (callbacks) {
+			for (i = 0, il = callbacks.length; i < il; i++) {
+				callbacks[i].apply(null, [event]);
 			}
-
-			// check for a specific callback
-			if (!callback) {
-				t.mediaElement.events[eventName] = [];
-				return true;
-			}
-
-			// remove the specific callback
-			for (var _i = 0, _il = callbacks.length; _i < _il; _i++) {
-				if (callbacks[_i] === callback) {
-					t.mediaElement.events[eventName].splice(_i, 1);
-					return true;
-				}
-			}
-			return false;
-		};
-
-		/**
-   *
-   * @param {Event} event
-   */
-		t.mediaElement.dispatchEvent = function (event) {
-
-			var callbacks = t.mediaElement.events[event.type];
-
-			if (callbacks) {
-				for (i = 0, il = callbacks.length; i < il; i++) {
-					callbacks[i].apply(null, [event]);
-				}
-			}
-		};
-	}
+		}
+	};
 
 	if (t.mediaElement.originalNode !== null) {
 		var mediaFiles = [];
