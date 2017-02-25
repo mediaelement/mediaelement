@@ -2100,7 +2100,7 @@ Object.assign(_player2.default.prototype, {
 	buildcurrent: function buildcurrent(player, controls, layers, media) {
 		var t = this;
 
-		$('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' + ('<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours) + '</span>') + '</div>').appendTo(controls);
+		$('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' + ('<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond) + '</span>') + '</div>').appendTo(controls);
 
 		t.currenttime = t.controls.find('.' + t.options.classPrefix + 'currenttime');
 
@@ -2124,13 +2124,13 @@ Object.assign(_player2.default.prototype, {
 		var t = this;
 
 		if (controls.children().last().find('.' + t.options.classPrefix + 'currenttime').length > 0) {
-			$(t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours) + '</span>')).appendTo(controls.find('.' + t.options.classPrefix + 'time'));
+			$(t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>')).appendTo(controls.find('.' + t.options.classPrefix + 'time'));
 		} else {
 
 			// add class to current time
 			controls.find('.' + t.options.classPrefix + 'currenttime').parent().addClass(t.options.classPrefix + 'currenttime-container');
 
-			$('<div class="' + t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container">' + ('<span class="' + t.options.classPrefix + 'duration">') + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours) + '</span>') + '</div>').appendTo(controls);
+			$('<div class="' + t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container">' + ('<span class="' + t.options.classPrefix + 'duration">') + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>') + '</div>').appendTo(controls);
 		}
 
 		t.durationD = t.controls.find('.' + t.options.classPrefix + 'duration');
@@ -2156,7 +2156,7 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.currenttime) {
-			t.currenttime.html((0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours));
+			t.currenttime.html((0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
 		}
 	},
 
@@ -2181,7 +2181,7 @@ Object.assign(_player2.default.prototype, {
 		t.container.toggleClass(t.options.classPrefix + 'long-video', duration > 3600);
 
 		if (t.durationD && duration > 0) {
-			t.durationD.html((0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours));
+			t.durationD.html((0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
 		}
 	}
 });
