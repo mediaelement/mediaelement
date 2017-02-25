@@ -186,20 +186,10 @@ class MediaElement {
 						return oldValue;
 					};
 
-				// Modern browsers, IE9+ (IE8 only works on DOM objects, not normal JS objects)
-				if (Object.defineProperty) {
-
-					Object.defineProperty(obj, name, {
-						get: getFn,
-						set: setFn
-					});
-
-					// Older Firefox
-				} else if (obj.__defineGetter__) {
-
-					obj.__defineGetter__(name, getFn);
-					obj.__defineSetter__(name, setFn);
-				}
+				Object.defineProperty(obj, name, {
+					get: getFn,
+					set: setFn
+				});
 			},
 			assignGettersSetters = (propName) => {
 				if (propName !== 'src') {
