@@ -6,6 +6,7 @@ import i18n from '../core/i18n';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import * as Features from '../utils/constants';
+import {isString} from '../utils/general';
 
 
 /**
@@ -24,7 +25,7 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	fullscreenText: ''
+	fullscreenText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -88,7 +89,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// build button
 		const
 			t = this,
-			fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : i18n.t('mejs.fullscreen'),
+			fullscreenTitle = isString(t.options.fullscreenText) ? t.options.fullscreenText : i18n.t('mejs.fullscreen'),
 			fullscreenBtn =
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button">` +
 					`<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0"></button>` +

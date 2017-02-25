@@ -5,6 +5,7 @@ import i18n from '../core/i18n';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import {convertSMPTEtoSeconds} from '../utils/time';
+import {isString} from '../utils/general';
 
 /**
  * Closed Captions (CC) button
@@ -26,11 +27,11 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	tracksText: '',
+	tracksText: null,
 	/**
 	 * @type {String}
 	 */
-	chaptersText: '',
+	chaptersText: null,
 	/**
 	 * Avoid to screen reader speak captions over an audio track.
 	 *
@@ -77,8 +78,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
-			tracksTitle = t.options.tracksText ? t.options.tracksText : i18n.t('mejs.captions-subtitles'),
-			chaptersTitle = t.options.chaptersText ? t.options.chaptersText : i18n.t('mejs.captions-chapters'),
+			tracksTitle = isString(t.options.tracksText) ? t.options.tracksText : i18n.t('mejs.captions-subtitles'),
+			chaptersTitle = isString(t.options.chaptersText) ? t.options.chaptersText : i18n.t('mejs.captions-chapters'),
 			total = player.tracks.length
 		;
 
