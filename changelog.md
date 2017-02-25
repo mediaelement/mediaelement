@@ -1,9 +1,13 @@
 ### Version History
 
-*3.x.x (2017/??/??)*
+*3.x.x (2017/03/??)*
 
 * Fixed typo in header file @ron666
-* Added Ukrainian translation (https://github.com/johndyer/mediaelement/pull/2100) @DmitryKrekota 
+* Added Ukrainian translation (https://github.com/johndyer/mediaelement/pull/2100) @DmitryKrekota
+* Added Swedish translation (https://github.com/johndyer/mediaelement/pull/2101) @xpetter
+* Fixed issue with poster image not being shown up on YouTube on mobile devices @ron666
+* Removed hacks for old browsers (https://github.com/johndyer/mediaelement/pull/2102) @jimmywarting
+* Fixed issue with Win8 Safari not detecting `src` attribute properly @ron666 
 
 *3.1.3 (2017/02/23)*
 

@@ -630,20 +630,10 @@ var MediaElement = function MediaElement(idOrNode, options) {
 			return oldValue;
 		};
 
-		// Modern browsers, IE9+ (IE8 only works on DOM objects, not normal JS objects)
-		if (Object.defineProperty) {
-
-			Object.defineProperty(obj, name, {
-				get: getFn,
-				set: setFn
-			});
-
-			// Older Firefox
-		} else if (obj.__defineGetter__) {
-
-			obj.__defineGetter__(name, getFn);
-			obj.__defineSetter__(name, setFn);
-		}
+		Object.defineProperty(obj, name, {
+			get: getFn,
+			set: setFn
+		});
 	},
 	    assignGettersSetters = function assignGettersSetters(propName) {
 		if (propName !== 'src') {
@@ -4453,10 +4443,10 @@ var MediaElementPlayer = function () {
 					// This is a work-around for a bug in the YouTube iFrame player, which means
 					//	we can't use the play() API for the initial playback on iOS or Android;
 					//	user has to start playback directly by tapping on the iFrame.
-					if (t.media.rendererName !== null && t.media.rendererName.match(/youtube/) && (_constants.IS_IOS || _constants.IS_ANDROID)) {
-						t.container.find('.' + t.options.classPrefix + 'overlay-play').hide();
-						t.container.find('.' + t.options.classPrefix + 'poster').hide();
-					}
+					// if (t.media.rendererName !== null && t.media.rendererName.match(/youtube/) && (IS_IOS || IS_ANDROID)) {
+					// 	t.container.find(`.${t.options.classPrefix}overlay-play`).hide();
+					// 	t.container.find(`.${t.options.classPrefix}poster`).hide();
+					// }
 				}();
 
 				if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
@@ -4945,7 +4935,7 @@ var MediaElementPlayer = function () {
 			});
 
 			// if (t.options.supportVR || (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/))) {
-			if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/)) {
+			if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/) && !(player.$media.attr('poster') || player.options.poster)) {
 				bigPlay.hide();
 			}
 
@@ -6842,8 +6832,8 @@ var FlashMediaElementRenderer = {
 		    flashHeight = isVideo ? mediaElement.originalNode.height : 1,
 		    flashWidth = isVideo ? mediaElement.originalNode.width : 1;
 
-		if (mediaElement.originalNode.currentSrc.length) {
-			flashVars.push('src=' + mediaElement.originalNode.currentSrc);
+		if (mediaElement.originalNode.getAttribute('src')) {
+			flashVars.push('src=' + mediaElement.originalNode.getAttribute('src'));
 		}
 
 		if (flash.options.enablePseudoStreaming === true) {
