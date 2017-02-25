@@ -40,7 +40,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const t = this;
 
 		$(`<div class="${t.options.classPrefix}time" role="timer" aria-live="off">` +
-			`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours)}</span>` +
+			`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond)}</span>` +
 		`</div>`)
 		.appendTo(controls);
 
@@ -68,7 +68,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (controls.children().last().find(`.${t.options.classPrefix}currenttime`).length > 0) {
 			$(`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours)}</span>`)
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>`)
 			.appendTo(controls.find(`.${t.options.classPrefix}time`));
 		} else {
 
@@ -78,7 +78,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			$(`<div class="${t.options.classPrefix}time ${t.options.classPrefix}duration-container">` +
 				`<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours)}</span>` +
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>` +
 			`</div>`)
 			.appendTo(controls);
 		}
@@ -106,7 +106,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.currenttime) {
-			t.currenttime.html(secondsToTimeCode(currentTime, t.options.alwaysShowHours));
+			t.currenttime.html(secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
 		}
 	},
 
@@ -131,7 +131,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.container.toggleClass(`${t.options.classPrefix}long-video`, duration > 3600);
 
 		if (t.durationD && duration > 0) {
-			t.durationD.html(secondsToTimeCode(duration, t.options.alwaysShowHours));
+			t.durationD.html(secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
 		}
 	}
 });
