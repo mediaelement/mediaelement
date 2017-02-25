@@ -5,6 +5,7 @@
 * Fixed typo in header file @ron666
 * Added Ukrainian translation (https://github.com/johndyer/mediaelement/pull/2100) @DmitryKrekota
 * Added Swedish translation (https://github.com/johndyer/mediaelement/pull/2101) @xpetter
+* Fixed issue with poster image not being shown up on YouTube on mobile devices @ron666
 
 *3.1.3 (2017/02/23)*
 
