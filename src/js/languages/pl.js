@@ -19,38 +19,17 @@
 			// renderers/flash.js
 			"mejs.install-flash": "Twoja przeglądarka nie ma włączonej lub zainstalowanej wtyczki Flash Player. Prosimy ją włączyć lub pobrać najnowszą wersję ze strony https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Wyłącz pełny ekran",
-			"mejs.fullscreen-on": "Przejdź na pełny ekran",
-			"mejs.download-video": "Pobierz wideo",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Pełny ekran",
-
-			// features/jumpforward.js
-			"mejs.time-jump-forward": ["Przewiń do przodu o sekundę", "Przewiń do przodu o %1 sekundy", "Przewiń do przodu o %1 sekund"],
-
-			// features/loop.js
-			"mejs.loop": "Zapętl",
 
 			// features/playpause.js
 			"mejs.play": "Odtwarzaj",
 			"mejs.pause": "Wstrzymaj",
 
-			// features/postroll.js
-			"mejs.close": "Zamknij",
-
 			// features/progress.js
 			"mejs.time-slider": "Suwak czasu",
 			"mejs.time-help-text": "Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.",
-
-			// features/skipback.js
-			"mejs.time-skip-back": ["Cofnij o sekundę", "Cofnij o %1 sekundy", "Cofnij o %1 sekund"],
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Podpisy/napisy",
-			"mejs.captions-chapters": "Rozdziały",
-			"mejs.none": "Brak",
+			"mejs.live-broadcast": "Transmisja na żywo",
 
 			// features/volume.js
 			"mejs.volume-help-text": "Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.",
@@ -62,23 +41,10 @@
 			"mejs.video-player": "Odtwarzacz wideo",
 			"mejs.audio-player": "Odtwarzacz audio",
 
-			// features/ads.js
-			"mejs.ad-skip": "Pomiń reklamę",
-			"mejs.ad-skip-info": ["Pomiń za sekundę", "Pomiń za %1 sekundy", "Pomiń za %1 sekund"],
-
-			// features/sourcechooser.js
-			"mejs.source-chooser": "Wybór źródła",
-
-			// features/stop.js
-			"mejs.stop": "Zatrzymaj",
-
-			//features/speed.js
-			"mejs.speed-rate": "Prędkość",
-
-			//features/progress.js
-			"mejs.live-broadcast": "Transmisja na żywo",
-
 			// features/tracks.js
+			"mejs.captions-subtitles": "Podpisy/napisy",
+			"mejs.captions-chapters": "Rozdziały",
+			"mejs.none": "Brak",
 			"mejs.afrikaans": "Afrykański",
 			"mejs.albanian": "Albański",
 			"mejs.arabic": "Arabski",

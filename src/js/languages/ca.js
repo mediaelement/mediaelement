@@ -18,38 +18,17 @@
 			// renderers/flash.js
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Desconnectar pantalla completaa",
-			"mejs.fullscreen-on": "Anar a pantalla completa",
-			"mejs.download-video": "Descarregar vídeo",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Pantalla completa",
-
-			// features/jumpforward.js
-			// "mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
-
-			// features/loop.js
-			//"mejs.loop": "Toggle Loop",
 
 			// features/playpause.js
 			"mejs.play": "Reproducció",
 			"mejs.pause": "Pausa",
 
-			// features/postroll.js
-			"mejs.close": "Tancar",
-
 			// features/progress.js
 			// "mejs.time-slider": "Time Slider",
 			// "mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
-
-			// features/skipback.js
-			// "mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Llegendes/Subtítols",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "Ningú",
+			//"mejs.live-broadcast" : "Live Broadcast",
 
 			// features/volume.js
 			// "mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
@@ -61,23 +40,10 @@
 			"mejs.video-player": "Reproductor de vídeo",
 			"mejs.audio-player": "Reproductor d'àudio",
 
-			// features/ads.js
-			"mejs.ad-skip": "Salta publicitat",
-			"mejs.ad-skip-info": ["Salta en 1 segon", "Salta en %1 segons"],
-
-			// features/sourcechooser.js
-			// "mejs.source-chooser": "Source Chooser",
-
-			// features/stop.js
-			"mejs.stop": "Aturar"
-
-			//features/speed.js
-			//"mejs.speed-rate" : "Speed Rate",
-
-			//features/progress.js
-			//"mejs.live-broadcast" : "Live Broadcast",
-
 			// features/tracks.js
+			"mejs.captions-subtitles": "Llegendes/Subtítols",
+			// "mejs.captions-chapters": "Chapters",
+			"mejs.none": "Ningú"
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",

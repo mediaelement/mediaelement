@@ -19,38 +19,17 @@
 			// renderers/flash.js
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Opreşte ecranul complet",
-			"mejs.fullscreen-on": "Treci la ecran complet",
-			"mejs.download-video": "Descarcă fişierul video",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Ecran complet",
-
-			// features/jumpforward.js
-			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-			// features/loop.js
-			//"mejs.loop": "Toggle Loop",
 
 			// features/playpause.js
 			"mejs.play": "Redare",
 			"mejs.pause": "Pauză",
 
-			// features/postroll.js
-			"mejs.close": "Închide",
-
 			// features/progress.js
 			"mejs.time-slider": "Cursor timp",
 			"mejs.time-help-text": "Utilizează tastele săgeată Stânga/Dreapta pentru a avansa o secundă şi săgeţile Sus/Jos pentru a avansa zece secunde.",
-
-			// features/skipback.js
-			"mejs.time-skip-back": "Sari înapoi %1 secunde",
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Legende/Subtitrări",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "Niciunul",
+			//"mejs.live-broadcast" : "Live Broadcast",
 
 			// features/volume.js
 			"mejs.volume-help-text": "Utilizează tastele de săgeată Sus/Jos pentru a creşte/micşora volumul",
@@ -60,25 +39,12 @@
 
 			// core/player.js
 			"mejs.video-player": "Player video",
-			"mejs.audio-player": "Player audio"
-
-			// features/ads.js
-			//"mejs.ad-skip": "Skip ad",
-			//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-			// features/sourcechooser.js
-			//"mejs.source-chooser": "Source Chooser",
-
-			// features/stop.js
-			//"mejs.stop": "Stop",
-
-			//features/speed.js
-			//"mejs.speed-rate" : "Speed Rate",
-
-			//features/progress.js
-			//"mejs.live-broadcast" : "Live Broadcast",
+			"mejs.audio-player": "Player audio",
 
 			// features/tracks.js
+			"mejs.captions-subtitles": "Legende/Subtitrări",
+			// "mejs.captions-chapters": "Chapters",
+			"mejs.none": "Niciunul"
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",

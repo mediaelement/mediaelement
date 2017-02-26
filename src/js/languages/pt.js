@@ -19,39 +19,18 @@
 			// renderers/flash.js
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Desligar ecrã completo",
-			"mejs.fullscreen-on": "Ir para ecrã completo",
-			"mejs.download-video": "Descarregar o vídeo",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Ecrã completo",
-
-			// features/jumpforward.js
-			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-			// features/loop.js
-			//"mejs.loop": "Toggle Loop",
 
 			// features/playpause.js
 			"mejs.play": "Reprodução",
 			"mejs.pause": "Pausa",
 
-			// features/postroll.js
-			"mejs.close": "Fechar",
-
 			// features/progress.js
 			"mejs.time-slider": "Deslizador do tempo",
 			"mejs.time-help-text": "Use as teclas das setas para a esquerda/direita para avançar um segundo, e as setas para cima/baixo para avançar dez segundos.",
-
-			// features/skipback.js
-			"mejs.time-skip-back": "Retroceder %1 segundos",
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Legendas",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "Nenhum",
-
+			//"mejs.live-broadcast" : "Live Broadcast",
+			
 			// features/volume.js
 			"mejs.volume-help-text": "Use as teclas das setas para cima/baixo para aumentar ou diminuir o volume.",
 			"mejs.unmute": "Voltar ao som",
@@ -60,25 +39,12 @@
 
 			// core/player.js
 			"mejs.video-player": "Leitor de vídeo",
-			"mejs.audio-player": "Leitor de áudio"
-
-			// features/ads.js
-			//"mejs.ad-skip": "Skip ad",
-			//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-			// features/sourcechooser.js
-			//"mejs.source-chooser": "Source Chooser",
-
-			// features/stop.js
-			//"mejs.stop": "Stop",
-
-			//features/speed.js
-			//"mejs.speed-rate" : "Speed Rate",
-
-			//features/progress.js
-			//"mejs.live-broadcast" : "Live Broadcast",
+			"mejs.audio-player": "Leitor de áudio",
 
 			// features/tracks.js
+			"mejs.captions-subtitles": "Legendas",
+			// "mejs.captions-chapters": "Chapters",
+			"mejs.none": "Nenhum"
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",
