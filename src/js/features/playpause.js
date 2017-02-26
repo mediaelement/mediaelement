@@ -16,11 +16,11 @@ import {isString} from '../utils/general';
 // Feature configuration
 Object.assign(config, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	playText: null,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	pauseText: null
 });

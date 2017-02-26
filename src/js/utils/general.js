@@ -66,7 +66,15 @@ export function isObjectEmpty (instance) {
 	return (Object.getOwnPropertyNames(instance).length <= 0);
 }
 
+/**
+ * Group a string of events into `document` (d) and `window` (w) events
+ *
+ * @param {String} events  List of space separated events
+ * @param {String} id      Namespace appended to events
+ * @return {{d: Array, w: Array}}
+ */
 export function splitEvents (events, id) {
+	// Global events
 	const rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
 	// add player ID as an event namespace so it's easier to unbind them all later
 	const ret = {d: [], w: []};
@@ -133,7 +141,7 @@ export function isNodeAfter (sourceNode, targetNode) {
  * Determines if a value is a string
  *
  * @param {*} value to check
- * @returns {boolean} True if a value is a string
+ * @returns {Boolean} True if a value is a string
  */
 export function isString (value) {
 	return typeof value === 'string';

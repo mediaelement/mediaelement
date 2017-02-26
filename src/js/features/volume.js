@@ -17,15 +17,15 @@ import {isString} from '../utils/general';
 // Feature configuration
 Object.assign(config, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	muteText: null,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	unmuteText: null,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	allyVolumeControlText: null,
 	/**

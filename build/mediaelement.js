@@ -5743,6 +5743,7 @@ exports.isObjectEmpty = isObjectEmpty;
 exports.splitEvents = splitEvents;
 exports.createEvent = createEvent;
 exports.isNodeAfter = isNodeAfter;
+exports.isString = isString;
 
 var _mejs = _dereq_(6);
 
@@ -5820,7 +5821,15 @@ function isObjectEmpty(instance) {
 	return Object.getOwnPropertyNames(instance).length <= 0;
 }
 
+/**
+ * Group a string of events into `document` (d) and `window` (w) events
+ *
+ * @param {String} events  List of space separated events
+ * @param {String} id      Namespace appended to events
+ * @return {{d: Array, w: Array}}
+ */
 function splitEvents(events, id) {
+	// Global events
 	var rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
 	// add player ID as an event namespace so it's easier to unbind them all later
 	var ret = { d: [], w: [] };
@@ -5877,6 +5886,16 @@ function isNodeAfter(sourceNode, targetNode) {
 	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
 }
 
+/**
+ * Determines if a value is a string
+ *
+ * @param {*} value to check
+ * @returns {Boolean} True if a value is a string
+ */
+function isString(value) {
+	return typeof value === 'string';
+}
+
 _mejs2.default.Utils = _mejs2.default.Utils || {};
 _mejs2.default.Utils.escapeHTML = escapeHTML;
 _mejs2.default.Utils.debounce = debounce;
@@ -5884,6 +5903,7 @@ _mejs2.default.Utils.isObjectEmpty = isObjectEmpty;
 _mejs2.default.Utils.splitEvents = splitEvents;
 _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
+_mejs2.default.Utils.isString = isString;
 
 },{"6":6}],21:[function(_dereq_,module,exports){
 'use strict';

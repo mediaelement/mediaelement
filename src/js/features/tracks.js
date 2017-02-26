@@ -25,11 +25,11 @@ Object.assign(config, {
 	 */
 	startLanguage: '',
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	tracksText: null,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	chaptersText: null,
 	/**

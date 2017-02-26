@@ -77,6 +77,32 @@ describe('Utilities', () => {
 
 	});
 
+	describe('#isString', () => {
+
+		it('checks effectively that an argument is a string', () => {
+
+			expect(general.isString('1234')).to.equal(true);
+			expect(general.isString(1234)).to.equal(false);
+			expect(general.isString({})).to.equal(false);
+		});
+	});
+
+	describe('#splitEvents', () => {
+
+		it('separates and group events depending their format', () => {
+			let
+				events = 'beforeunload hashchange message resize storage .mouseup .volumechange.test',
+				id = 'mep_0'
+			;
+
+			const result = general.splitEvents(events, id);
+			expect(typeof result.d).to.equal('string');
+			expect(result.d).to.equal('.mouseup.mep_0 .volumechange.test.mep_0');
+			expect(typeof result.w).to.equal('string');
+			expect(result.w).to.equal('beforeunload.mep_0 hashchange.mep_0 message.mep_0 resize.mep_0 storage.mep_0 .mouseup.mep_0 .volumechange.test.mep_0');
+		});
+	});
+
 	describe('#escapeHTML', () => {
 
 		it('can escape `<`, `"`, `&` and `>` symbols', () => {
@@ -219,7 +245,7 @@ describe('Utilities', () => {
 		it('returns the format of a specific media using ONLY a URL', () => {
 
 			const url = 'http://example.com/media.mp4';
-			media.typeChecks = [
+			media.typeChecks= [
 				(url) => {
 					if (url.match(/.mp4/)) {
 						return 'video/mp4';
@@ -230,7 +256,6 @@ describe('Utilities', () => {
 						return 'audio/mp3';
 					}
 				}
-
 			];
 
 			expect(media.formatType(url)).to.equal('video/mp4');

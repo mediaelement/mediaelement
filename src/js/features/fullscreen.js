@@ -23,7 +23,7 @@ Object.assign(config, {
 	 */
 	usePluginFullScreen: true,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
 	fullscreenText: null
 });
