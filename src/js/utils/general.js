@@ -129,6 +129,16 @@ export function isNodeAfter (sourceNode, targetNode) {
 	);
 }
 
+/**
+ * Determines if a value is a string
+ *
+ * @param {*} value to check
+ * @returns {boolean} True if a value is a string
+ */
+export function isString (value) {
+	return typeof value === 'string';
+}
+
 mejs.Utils = mejs.Utils || {};
 mejs.Utils.escapeHTML = escapeHTML;
 mejs.Utils.debounce = debounce;
@@ -136,3 +146,4 @@ mejs.Utils.isObjectEmpty = isObjectEmpty;
 mejs.Utils.splitEvents = splitEvents;
 mejs.Utils.createEvent = createEvent;
 mejs.Utils.isNodeAfter = isNodeAfter;
+mejs.Utils.isString = isString;

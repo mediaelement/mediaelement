@@ -3,6 +3,7 @@
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
+import {isString} from '../utils/general';
 
 /**
  * Play/Pause button
@@ -17,11 +18,11 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	playText: '',
+	playText: null,
 	/**
 	 * @type {String}
 	 */
-	pauseText: ''
+	pauseText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -39,8 +40,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			op = t.options,
-			playTitle = op.playText ? op.playText : i18n.t('mejs.play'),
-			pauseTitle = op.pauseText ? op.pauseText : i18n.t('mejs.pause'),
+			playTitle = isString(op.playText) ? op.playText : i18n.t('mejs.play'),
+			pauseTitle = isString(op.pauseText) ? op.pauseText : i18n.t('mejs.pause'),
 			play =
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ` +
 					`${t.options.classPrefix}play">` +
