@@ -10,6 +10,7 @@
 * Fixed issue with Win8 Safari not detecting `src` attribute properly @ron666
 * Fixed `secondsToTimeCode` method not being called with all parameters (https://github.com/johndyer/mediaelement/pull/2103) @dmongrel
 * Added workflow to set WARIA text elements, added `isString` method (https://github.com/johndyer/mediaelement/pull/2105) @DmitryKrekota
+* Added new `resources` section in documentation @ron666 
 
 *3.1.3 (2017/02/23)*
 

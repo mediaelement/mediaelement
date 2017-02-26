@@ -87,6 +87,11 @@ Additional features can be found at https://github.com/johndyer/mediaelement-plu
 
 If you want to contribute to improve this package, please read [Guidelines](docs/guidelines.md).
 
+<a id="sources"></a>
+## Useful resources
+
+A compilation of useful articles can be found [here](docs/resources).
+
 <a id="changelog"></a>
 ## Change Log
 
