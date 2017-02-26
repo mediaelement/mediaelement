@@ -1054,6 +1054,8 @@ var _constants = _dereq_(27);
 
 var Features = _interopRequireWildcard(_constants);
 
+var _general = _dereq_(28);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -1072,9 +1074,9 @@ Object.assign(_player.config, {
   */
 	usePluginFullScreen: true,
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	fullscreenText: ''
+	fullscreenText: null
 });
 
 Object.assign(_player2.default.prototype, {
@@ -1137,7 +1139,7 @@ Object.assign(_player2.default.prototype, {
 
 		// build button
 		var t = this,
-		    fullscreenTitle = t.options.fullscreenText ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
+		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
 		    fullscreenBtn = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0"></button>') + '</div>').appendTo(controls).on('click', function () {
 
 			// toggle fullscreen
@@ -1535,7 +1537,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"27":27,"3":3,"4":4}],9:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"27":27,"28":28,"3":3,"4":4}],9:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -1545,6 +1547,8 @@ var _player2 = _interopRequireDefault(_player);
 var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
+
+var _general = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1558,13 +1562,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Feature configuration
 Object.assign(_player.config, {
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	playText: '',
+	playText: null,
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	pauseText: ''
+	pauseText: null
 });
 
 Object.assign(_player2.default.prototype, {
@@ -1581,8 +1585,8 @@ Object.assign(_player2.default.prototype, {
 	buildplaypause: function buildplaypause(player, controls, layers, media) {
 		var t = this,
 		    op = t.options,
-		    playTitle = op.playText ? op.playText : _i18n2.default.t('mejs.play'),
-		    pauseTitle = op.pauseText ? op.pauseText : _i18n2.default.t('mejs.pause'),
+		    playTitle = (0, _general.isString)(op.playText) ? op.playText : _i18n2.default.t('mejs.play'),
+		    pauseTitle = (0, _general.isString)(op.pauseText) ? op.pauseText : _i18n2.default.t('mejs.pause'),
 		    play = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + (t.options.classPrefix + 'play">') + ('<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>') + '</div>').appendTo(controls).click(function () {
 			if (media.paused) {
 				media.play();
@@ -1642,7 +1646,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"4":4}],10:[function(_dereq_,module,exports){
+},{"16":16,"28":28,"4":4}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -2200,6 +2204,8 @@ var _player2 = _interopRequireDefault(_player);
 
 var _time = _dereq_(31);
 
+var _general = _dereq_(28);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -2219,13 +2225,13 @@ Object.assign(_player.config, {
   */
 	startLanguage: '',
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	tracksText: '',
+	tracksText: null,
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	chaptersText: '',
+	chaptersText: null,
 	/**
   * Avoid to screen reader speak captions over an audio track.
   *
@@ -2271,8 +2277,8 @@ Object.assign(_player2.default.prototype, {
 
 		var t = this,
 		    attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
-		    tracksTitle = t.options.tracksText ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
-		    chaptersTitle = t.options.chaptersText ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters'),
+		    tracksTitle = (0, _general.isString)(t.options.tracksText) ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
+		    chaptersTitle = (0, _general.isString)(t.options.chaptersText) ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters'),
 		    total = player.tracks.length;
 
 		var i = void 0,
@@ -3059,7 +3065,7 @@ if ('x\n\ny'.split(/\n/gi).length !== 3) {
 	};
 }
 
-},{"16":16,"31":31,"4":4,"6":6}],13:[function(_dereq_,module,exports){
+},{"16":16,"28":28,"31":31,"4":4,"6":6}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -3071,6 +3077,8 @@ var _i18n = _dereq_(4);
 var _i18n2 = _interopRequireDefault(_i18n);
 
 var _constants = _dereq_(27);
+
+var _general = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3084,13 +3092,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Feature configuration
 Object.assign(_player.config, {
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	muteText: '',
+	muteText: null,
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	allyVolumeControlText: '',
+	unmuteText: null,
+	/**
+  * @type {?String}
+  */
+	allyVolumeControlText: null,
 	/**
   * @type {Boolean}
   */
@@ -3126,8 +3138,9 @@ Object.assign(_player2.default.prototype, {
 
 		var t = this,
 		    mode = t.isVideo ? t.options.videoVolume : t.options.audioVolume,
-		    muteText = t.options.muteText ? t.options.muteText : _i18n2.default.t('mejs.mute'),
-		    volumeControlText = t.options.allyVolumeControlText ? t.options.allyVolumeControlText : _i18n2.default.t('mejs.volume-help-text'),
+		    muteText = (0, _general.isString)(t.options.muteText) ? t.options.muteText : _i18n2.default.t('mejs.mute'),
+		    unmuteText = (0, _general.isString)(t.options.unmuteText) ? t.options.unmuteText : _i18n2.default.t('mejs.unmute'),
+		    volumeControlText = (0, _general.isString)(t.options.allyVolumeControlText) ? t.options.allyVolumeControlText : _i18n2.default.t('mejs.volume-help-text'),
 		    mute = mode === 'horizontal' ?
 
 		// horizontal version
@@ -3155,14 +3168,14 @@ Object.assign(_player2.default.prototype, {
 			if (volume === 0) {
 				mute.removeClass(t.options.classPrefix + 'mute').addClass(t.options.classPrefix + 'unmute');
 				mute.children('button').attr({
-					title: t.options.unmuteText ? t.options.unmuteText : _i18n2.default.t('mejs.unmute'),
-					'aria-label': t.options.unmuteText ? t.options.unmuteText : _i18n2.default.t('mejs.unmute')
+					title: unmuteText,
+					'aria-label': unmuteText
 				});
 			} else {
 				mute.removeClass(t.options.classPrefix + 'unmute').addClass(t.options.classPrefix + 'mute');
 				mute.children('button').attr({
-					title: t.options.muteText ? t.options.muteText : _i18n2.default.t('mejs.mute'),
-					'aria-label': t.options.muteText ? t.options.muteText : _i18n2.default.t('mejs.mute')
+					title: muteText,
+					'aria-label': muteText
 				});
 			}
 
@@ -3361,7 +3374,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"27":27,"4":4}],14:[function(_dereq_,module,exports){
+},{"16":16,"27":27,"28":28,"4":4}],14:[function(_dereq_,module,exports){
 'use strict';
 
 /*!
@@ -9805,6 +9818,7 @@ exports.isObjectEmpty = isObjectEmpty;
 exports.splitEvents = splitEvents;
 exports.createEvent = createEvent;
 exports.isNodeAfter = isNodeAfter;
+exports.isString = isString;
 
 var _mejs = _dereq_(6);
 
@@ -9882,7 +9896,15 @@ function isObjectEmpty(instance) {
 	return Object.getOwnPropertyNames(instance).length <= 0;
 }
 
+/**
+ * Group a string of events into `document` (d) and `window` (w) events
+ *
+ * @param {String} events  List of space separated events
+ * @param {String} id      Namespace appended to events
+ * @return {{d: Array, w: Array}}
+ */
 function splitEvents(events, id) {
+	// Global events
 	var rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
 	// add player ID as an event namespace so it's easier to unbind them all later
 	var ret = { d: [], w: [] };
@@ -9939,6 +9961,16 @@ function isNodeAfter(sourceNode, targetNode) {
 	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
 }
 
+/**
+ * Determines if a value is a string
+ *
+ * @param {*} value to check
+ * @returns {Boolean} True if a value is a string
+ */
+function isString(value) {
+	return typeof value === 'string';
+}
+
 _mejs2.default.Utils = _mejs2.default.Utils || {};
 _mejs2.default.Utils.escapeHTML = escapeHTML;
 _mejs2.default.Utils.debounce = debounce;
@@ -9946,6 +9978,7 @@ _mejs2.default.Utils.isObjectEmpty = isObjectEmpty;
 _mejs2.default.Utils.splitEvents = splitEvents;
 _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
+_mejs2.default.Utils.isString = isString;
 
 },{"6":6}],29:[function(_dereq_,module,exports){
 'use strict';

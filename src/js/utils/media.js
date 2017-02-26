@@ -3,7 +3,7 @@
 import mejs from '../core/mejs';
 import {escapeHTML} from './general';
 
-export const typeChecks = [];
+export let typeChecks = [];
 
 /**
  *
