@@ -735,63 +735,60 @@ var MediaElement = function MediaElement(idOrNode, options) {
 	}
 
 	// IE && iOS
-	if (!t.mediaElement.addEventListener) {
+	t.mediaElement.events = {};
 
-		t.mediaElement.events = {};
+	// start: fake events
+	t.mediaElement.addEventListener = function (eventName, callback) {
+		// create or find the array of callbacks for this eventName
+		t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
 
-		// start: fake events
-		t.mediaElement.addEventListener = function (eventName, callback) {
-			// create or find the array of callbacks for this eventName
-			t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
+		// push the callback into the stack
+		t.mediaElement.events[eventName].push(callback);
+	};
+	t.mediaElement.removeEventListener = function (eventName, callback) {
+		// no eventName means remove all listeners
+		if (!eventName) {
+			t.mediaElement.events = {};
+			return true;
+		}
 
-			// push the callback into the stack
-			t.mediaElement.events[eventName].push(callback);
-		};
-		t.mediaElement.removeEventListener = function (eventName, callback) {
-			// no eventName means remove all listeners
-			if (!eventName) {
-				t.mediaElement.events = {};
+		// see if we have any callbacks for this eventName
+		var callbacks = t.mediaElement.events[eventName];
+
+		if (!callbacks) {
+			return true;
+		}
+
+		// check for a specific callback
+		if (!callback) {
+			t.mediaElement.events[eventName] = [];
+			return true;
+		}
+
+		// remove the specific callback
+		for (var _i = 0, _il = callbacks.length; _i < _il; _i++) {
+			if (callbacks[_i] === callback) {
+				t.mediaElement.events[eventName].splice(_i, 1);
 				return true;
 			}
+		}
+		return false;
+	};
 
-			// see if we have any callbacks for this eventName
-			var callbacks = t.mediaElement.events[eventName];
+	/**
+  *
+  * @param {Event} event
+  */
+	t.mediaElement.dispatchEvent = function (event) {
 
-			if (!callbacks) {
-				return true;
+		var callbacks = t.mediaElement.events[event.type];
+
+		if (callbacks) {
+			for (i = 0, il = callbacks.length; i < il; i++) {
+				callbacks[i].apply(null, [event]);
 			}
-
-			// check for a specific callback
-			if (!callback) {
-				t.mediaElement.events[eventName] = [];
-				return true;
-			}
-
-			// remove the specific callback
-			for (var _i = 0, _il = callbacks.length; _i < _il; _i++) {
-				if (callbacks[_i] === callback) {
-					t.mediaElement.events[eventName].splice(_i, 1);
-					return true;
-				}
-			}
-			return false;
-		};
-
-		/**
-   *
-   * @param {Event} event
-   */
-		t.mediaElement.dispatchEvent = function (event) {
-
-			var callbacks = t.mediaElement.events[event.type];
-
-			if (callbacks) {
-				for (i = 0, il = callbacks.length; i < il; i++) {
-					callbacks[i].apply(null, [event]);
-				}
-			}
-		};
-	}
+		}
+	};
 
 	if (t.mediaElement.originalNode !== null) {
 		var mediaFiles = [];
@@ -5746,6 +5743,7 @@ exports.isObjectEmpty = isObjectEmpty;
 exports.splitEvents = splitEvents;
 exports.createEvent = createEvent;
 exports.isNodeAfter = isNodeAfter;
+exports.isString = isString;
 
 var _mejs = _dereq_(6);
 
@@ -5823,7 +5821,15 @@ function isObjectEmpty(instance) {
 	return Object.getOwnPropertyNames(instance).length <= 0;
 }
 
+/**
+ * Group a string of events into `document` (d) and `window` (w) events
+ *
+ * @param {String} events  List of space separated events
+ * @param {String} id      Namespace appended to events
+ * @return {{d: Array, w: Array}}
+ */
 function splitEvents(events, id) {
+	// Global events
 	var rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
 	// add player ID as an event namespace so it's easier to unbind them all later
 	var ret = { d: [], w: [] };
@@ -5880,6 +5886,16 @@ function isNodeAfter(sourceNode, targetNode) {
 	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
 }
 
+/**
+ * Determines if a value is a string
+ *
+ * @param {*} value to check
+ * @returns {Boolean} True if a value is a string
+ */
+function isString(value) {
+	return typeof value === 'string';
+}
+
 _mejs2.default.Utils = _mejs2.default.Utils || {};
 _mejs2.default.Utils.escapeHTML = escapeHTML;
 _mejs2.default.Utils.debounce = debounce;
@@ -5887,6 +5903,7 @@ _mejs2.default.Utils.isObjectEmpty = isObjectEmpty;
 _mejs2.default.Utils.splitEvents = splitEvents;
 _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
+_mejs2.default.Utils.isString = isString;
 
 },{"6":6}],21:[function(_dereq_,module,exports){
 'use strict';

@@ -15,9 +15,9 @@ import {renderer} from './renderer';
 class MediaElement {
 
 	constructor (idOrNode, options) {
-		
+
 		const t = this;
-		
+
 		t.defaults = {
 			/**
 			 * List of the renderers to use
@@ -51,7 +51,7 @@ class MediaElement {
 			id = idOrNode,
 			i,
 			il
-		;
+			;
 
 		if (typeof idOrNode === 'string') {
 			t.mediaElement.originalNode = document.getElementById(idOrNode);
@@ -117,7 +117,7 @@ class MediaElement {
 			let
 				newRenderer = t.mediaElement.renderers[rendererName],
 				newRendererType = null
-			;
+				;
 
 			if (newRenderer !== undefined && newRenderer !== null) {
 				newRenderer.show();
@@ -227,7 +227,7 @@ class MediaElement {
 						const
 							src = absolutizeUrl(value[i].src),
 							type = value[i].type
-						;
+							;
 
 						mediaFiles.push({
 							src: src,
@@ -243,7 +243,7 @@ class MediaElement {
 					renderInfo = renderer.select(mediaFiles,
 						(t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers : [])),
 					event
-				;
+					;
 
 				// Ensure that the original gets the first source found
 				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
@@ -271,7 +271,7 @@ class MediaElement {
 				// run the method on the current renderer
 				t.mediaElement[methodName] = (...args) => {
 					return (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
-						typeof t.mediaElement.renderer[methodName] === 'function') ?
+					typeof t.mediaElement.renderer[methodName] === 'function') ?
 						t.mediaElement.renderer[methodName](args) : null;
 				};
 
@@ -291,63 +291,60 @@ class MediaElement {
 		}
 
 		// IE && iOS
-		if (!t.mediaElement.addEventListener) {
+		t.mediaElement.events = {};
 
-			t.mediaElement.events = {};
+		// start: fake events
+		t.mediaElement.addEventListener = (eventName, callback) => {
+			// create or find the array of callbacks for this eventName
+			t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
 
-			// start: fake events
-			t.mediaElement.addEventListener = (eventName, callback) => {
-				// create or find the array of callbacks for this eventName
-				t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
+			// push the callback into the stack
+			t.mediaElement.events[eventName].push(callback);
+		};
+		t.mediaElement.removeEventListener = (eventName, callback) => {
+			// no eventName means remove all listeners
+			if (!eventName) {
+				t.mediaElement.events = {};
+				return true;
+			}
 
-				// push the callback into the stack
-				t.mediaElement.events[eventName].push(callback);
-			};
-			t.mediaElement.removeEventListener = (eventName, callback) => {
-				// no eventName means remove all listeners
-				if (!eventName) {
-					t.mediaElement.events = {};
+			// see if we have any callbacks for this eventName
+			const callbacks = t.mediaElement.events[eventName];
+
+			if (!callbacks) {
+				return true;
+			}
+
+			// check for a specific callback
+			if (!callback) {
+				t.mediaElement.events[eventName] = [];
+				return true;
+			}
+
+			// remove the specific callback
+			for (let i = 0, il = callbacks.length; i < il; i++) {
+				if (callbacks[i] === callback) {
+					t.mediaElement.events[eventName].splice(i, 1);
 					return true;
 				}
+			}
+			return false;
+		};
 
-				// see if we have any callbacks for this eventName
-				const callbacks = t.mediaElement.events[eventName];
+		/**
+		 *
+		 * @param {Event} event
+		 */
+		t.mediaElement.dispatchEvent = (event) => {
 
-				if (!callbacks) {
-					return true;
+			const callbacks = t.mediaElement.events[event.type];
+
+			if (callbacks) {
+				for (i = 0, il = callbacks.length; i < il; i++) {
+					callbacks[i].apply(null, [event]);
 				}
-
-				// check for a specific callback
-				if (!callback) {
-					t.mediaElement.events[eventName] = [];
-					return true;
-				}
-
-				// remove the specific callback
-				for (let i = 0, il = callbacks.length; i < il; i++) {
-					if (callbacks[i] === callback) {
-						t.mediaElement.events[eventName].splice(i, 1);
-						return true;
-					}
-				}
-				return false;
-			};
-
-			/**
-			 *
-			 * @param {Event} event
-			 */
-			t.mediaElement.dispatchEvent = (event) => {
-
-				const callbacks = t.mediaElement.events[event.type];
-
-				if (callbacks) {
-					for (i = 0, il = callbacks.length; i < il; i++) {
-						callbacks[i].apply(null, [event]);
-					}
-				}
-			};
-		}
+			}
+		};
 
 		if (t.mediaElement.originalNode !== null) {
 			const mediaFiles = [];

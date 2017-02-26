@@ -8,7 +8,7 @@ import {expect} from 'chai';
 describe('i18n', () => {
 
 	// cache original language
-	let english = i18n.en;
+	const english = i18n.en;
 
 	beforeEach(() => {
 		i18n.language('en', english);
