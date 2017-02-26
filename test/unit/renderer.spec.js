@@ -66,7 +66,7 @@ describe('Renderers', () => {
 		it('can add a renderer as an object with at least `name` property', () => {
 
 			// Proper structure of renderer
-			let a = () => {
+			const a = () => {
 				renderer.add(mockRenderer);
 			};
 			expect(a).to.not.throw(Error);
@@ -76,7 +76,7 @@ describe('Renderers', () => {
 		it('cannot add a renderer as an object without at least `name` property', () => {
 
 			// Incorrect structure
-			let b = () => {
+			const b = () => {
 				renderer.add({});
 			};
 			expect(b).to.throw(Error);
@@ -87,7 +87,7 @@ describe('Renderers', () => {
 
 	describe('#select', () => {
 
-		let mediaFiles = [
+		const mediaFiles = [
 			{type: 'video/mime-1', src: '/path/to/media/1'},
 			{type: 'video/mime-2', src: '/path/to/media/2'},
 			{type: 'video/mime-3', src: '/path/to/media/3'},
@@ -100,27 +100,27 @@ describe('Renderers', () => {
 
 		it('selects a renderer based on media files', () => {
 
-			let a = renderer.select(mediaFiles);
+			const a = renderer.select(mediaFiles);
 			expect(a).to.deep.equal({rendererName: 'mock', src: '/path/to/media/3'});
 		});
 
 		it('selects a renderer based on media files from argument `renderers`', () => {
 
-			let a = renderer.select(mediaFiles, ['mock', 'dummy']);
+			const a = renderer.select(mediaFiles, ['mock', 'dummy']);
 			expect(a).to.deep.equal({rendererName: 'mock', src: '/path/to/media/3'});
 
 		});
 
 		it('returns null if no renderer was selected', () => {
 
-			let b = renderer.select([{type: 'video/mime-4', src: '/path/to/media/4'}]);
+			const b = renderer.select([{type: 'video/mime-4', src: '/path/to/media/4'}]);
 			expect(b === null).to.be.true;
 
 		});
 
 		it('returns null if no renderer was selected from argument `renderers`', () => {
 
-			let a = renderer.select(mediaFiles, ['dummy']);
+			const a = renderer.select(mediaFiles, ['dummy']);
 			expect(a === null).to.be.true;
 
 		});

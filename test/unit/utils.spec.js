@@ -42,7 +42,7 @@ describe('Utilities', () => {
 
 		it('can only accept a method as a first argument', () => {
 
-			let
+			const
 				type = {},
 				test = () => {
 					general.debounce(type, 100);
@@ -52,12 +52,11 @@ describe('Utilities', () => {
 
 		it('can only accept a numeric value as a second argument', () => {
 
-			let
-				test = () => {
-					general.debounce(() => {
-						return;
-					}, 'dummy');
-				};
+			const test = () => {
+				general.debounce(() => {
+					return;
+				}, 'dummy');
+			};
 			expect(test).to.throw(Error);
 		});
 
@@ -66,10 +65,10 @@ describe('Utilities', () => {
 	describe('#isObjectEmpty', () => {
 
 		it('checks effectively that an object is empty', () => {
-			let
+			const
 				empty = {},
 				nonEmpty = {name: 'aaa', alias: 'bbbb'}
-				;
+			;
 
 			expect(general.isObjectEmpty(empty)).to.equal(true);
 			expect(general.isObjectEmpty(nonEmpty)).to.equal(false);
@@ -90,12 +89,12 @@ describe('Utilities', () => {
 	describe('#splitEvents', () => {
 
 		it('separates and group events depending their format', () => {
-			let
+			const
 				events = 'beforeunload hashchange message resize storage .mouseup .volumechange.test',
-				id = 'mep_0'
+				id = 'mep_0',
+				result = general.splitEvents(events, id)
 			;
 
-			const result = general.splitEvents(events, id);
 			expect(typeof result.d).to.equal('string');
 			expect(result.d).to.equal('.mouseup.mep_0 .volumechange.test.mep_0');
 			expect(typeof result.w).to.equal('string');
@@ -113,7 +112,7 @@ describe('Utilities', () => {
 
 		it('can only accept strings', () => {
 
-			let
+			const
 				type = {},
 				test = () => {
 					general.escapeHTML(type);
@@ -172,7 +171,7 @@ describe('Utilities', () => {
 
 		it('can only accept a string for the time', () => {
 
-			let
+			const
 				type = {},
 				test = () => {
 					time.timeCodeToSeconds(type);
@@ -182,7 +181,7 @@ describe('Utilities', () => {
 
 		it('can only accept a string with format `00:00:00`', () => {
 
-			let
+			const
 				type = 'dummy',
 				test = () => {
 					time.timeCodeToSeconds(type);
@@ -194,7 +193,7 @@ describe('Utilities', () => {
 
 	describe('#calculateTimeFormat', () => {
 
-		let options = {
+		const options = {
 			timeFormat: 'mm:ss',
 			currentTimeFormat: '',
 		};
@@ -212,7 +211,7 @@ describe('Utilities', () => {
 
 		it('can only accept numeric values for the time', () => {
 
-			let
+			const
 				type = {},
 				test = () => {
 					time.calculateTimeFormat(type);
@@ -230,7 +229,7 @@ describe('Utilities', () => {
 
 		it('can only accept a string value for time', () => {
 
-			let
+			const
 				type = {},
 				test = () => {
 					time.convertSMPTEtoSeconds(type);
@@ -245,7 +244,7 @@ describe('Utilities', () => {
 		it('returns the format of a specific media using ONLY a URL', () => {
 
 			const url = 'http://example.com/media.mp4';
-			media.typeChecks= [
+			media.typeChecks = [
 				(url) => {
 					if (url.match(/.mp4/)) {
 						return 'video/mp4';
@@ -352,7 +351,7 @@ describe('Utilities', () => {
 
 		it('can only accept strings', () => {
 
-			let
+			const
 				type = {},
 				test = () => {
 					media.getExtension(type);
@@ -365,7 +364,7 @@ describe('Utilities', () => {
 
 		it('returns the standard extension of a media file', () => {
 
-			let extensions = {
+			const extensions = {
 				'm4v': 'mp4',
 				'webma': 'webm',
 				'webm': 'webm',
@@ -381,7 +380,7 @@ describe('Utilities', () => {
 
 		it('can only accept strings', () => {
 
-			let
+			const
 				type = {},
 				test = () => {
 					media.normalizeExtension(type);
