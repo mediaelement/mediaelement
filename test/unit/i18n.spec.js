@@ -1,8 +1,6 @@
 'use strict';
 
 import i18n from '../../src/js/core/i18n';
-import {ES as es} from '../../src/js/languages/es';
-import {KO as ko} from '../../src/js/languages/ko';
 import {expect} from 'chai';
 
 describe('i18n', () => {
@@ -64,21 +62,34 @@ describe('i18n', () => {
 
 		it('translate to a specific language', () => {
 
-			i18n.language('ko', ko);
+			i18n.language('ko', {
+				"mejs.plural-form": 0,
+				'mejs.play': '작동'
+			});
 			expect(i18n.t('mejs.play')).to.equal('작동');
 
-			i18n.language('es', es);
+			i18n.language('es', {
+				"mejs.plural-form": 1,
+				'mejs.play': 'Reproducción'
+			});
 			expect(i18n.t('mejs.play')).to.equal('Reproducción');
 
 		});
 
 		it('pluralize a string properly in different languages', () => {
 
-			i18n.language('ko', ko);
+			i18n.language('ko', {
+				"mejs.plural-form": 0,
+				'mejs.time-skip-back': '%1초 를 뒤로 건너뛰세요'
+			});
 			expect(i18n.t('mejs.time-skip-back', 1)).to.equal('1초 를 뒤로 건너뛰세요');
 			expect(i18n.t('mejs.time-skip-back', 30)).to.equal('30초 를 뒤로 건너뛰세요');
 
-			i18n.language('es', es);
+			i18n.language('es', {
+				"mejs.plural-form": 1,
+				'mejs.time-jump-forward': ['Adelantar 1 segundo', 'Adelantar %1 segundos'],
+				'mejs.fullscreen-off': 'Desconectar pantalla completa'
+			});
 			expect(i18n.t('mejs.time-jump-forward', 1)).to.equal('Adelantar 1 segundo');
 			expect(i18n.t('mejs.time-jump-forward', 30)).to.equal('Adelantar 30 segundos');
 			expect(i18n.t('mejs.fullscreen-off', 400)).to.equal('Desconectar pantalla completa');
