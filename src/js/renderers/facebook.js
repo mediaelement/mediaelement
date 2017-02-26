@@ -275,12 +275,19 @@ const FacebookRenderer = {
 						const
 							fbIframe = fbDiv.getElementsByTagName('iframe')[0],
 							width = parseInt(window.getComputedStyle(fbIframe, null).width),
-							height = parseInt(fbIframe.style.height)
+							height = parseInt(fbIframe.style.height),
+							events = ['mouseover', 'mouseout'],
+							assignEvents = (e) => {
+								const event = createEvent(e.type, fbWrapper);
+								mediaElement.dispatchEvent(event);
+							}
 						;
 
 						fbWrapper.setSize(width, height);
-
-						sendEvents(['mouseover', 'mouseout']);
+						
+						for (i = 0, il = events.length; i < il; i++) {
+							fbIframe.addEventListener(events[i], assignEvents, false);
+						}
 
 						// remove previous listeners
 						const fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
@@ -315,8 +322,7 @@ const FacebookRenderer = {
 							}
 						}
 
-						sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
-						sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
+						sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
 
 						let timer;
 

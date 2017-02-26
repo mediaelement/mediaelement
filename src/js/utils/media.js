@@ -160,6 +160,7 @@ export function normalizeExtension (extension) {
 }
 
 mejs.Utils = mejs.Utils || {};
+mejs.Utils.typeChecks = typeChecks;
 mejs.Utils.absolutizeUrl = absolutizeUrl;
 mejs.Utils.formatType = formatType;
 mejs.Utils.getMimeFromType = getMimeFromType;

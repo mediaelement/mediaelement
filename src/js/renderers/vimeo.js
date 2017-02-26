@@ -156,7 +156,6 @@ const vimeoIframeRenderer = {
 			apiStack = [],
 			vimeo = {},
 			readyState = 4
-
 		;
 
 		let
@@ -457,10 +456,7 @@ const vimeoIframeRenderer = {
 			vimeoPlayer.on('play', () => {
 				paused = false;
 				ended = false;
-				let event = createEvent('play', vimeo);
-				mediaElement.dispatchEvent(event);
-
-				event = createEvent('playing', vimeo);
+				const event = createEvent('play', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', () => {
@@ -491,7 +487,7 @@ const vimeoIframeRenderer = {
 			height = mediaElement.originalNode.height,
 			width = mediaElement.originalNode.width,
 			vimeoContainer = document.createElement('iframe'),
-			standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src),
+			standardUrl = `//player.vimeo.com/video/${vimeoApi.getVimeoId(mediaFiles[0].src)}`,
 			queryArgs = mediaFiles[0].src.includes('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : ''
 		;
 

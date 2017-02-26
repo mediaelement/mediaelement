@@ -108,7 +108,10 @@ module.exports = function (grunt) {
 						'src/js/features/time.js',
 						'src/js/features/tracks.js',
 						'src/js/features/volume.js'
-					])
+					]),
+
+					// new renderers
+					'build/renderers/twitch.js': 'src/js/renderers/twitch.js'
 				},
 				options: {
 					plugin: [
@@ -154,24 +157,19 @@ module.exports = function (grunt) {
 			}
 		},
 		uglify: {
-			me: {
-				src: ['build/mediaelement.js'],
-				dest: 'build/mediaelement.min.js',
-				banner: 'src/js/header.js'
-			},
-			mep: {
-				src: ['build/mediaelementplayer.js'],
-				dest: 'build/mediaelementplayer.min.js',
-				banner: 'src/js/header.js'
-			},
-			bundle: {
-				src: ['build/mediaelement-and-player.js'],
-				dest: 'build/mediaelement-and-player.min.js',
-				banner: 'src/js/header.js'
-			},
+
 			options: {
 				// Preserve comments that start with a bang (like the file header)
-				preserveComments: "some"
+				preserveComments: "some",
+				banner: grunt.file.read('src/js/header.js'),
+				screwIE8: true
+			},
+			build: {
+				files: [{
+					expand: true,
+					src: ['build/**/*.js', '!build/lang/*.js', '!build/jquery.js', '!build/**/*.min.js'],
+					ext: '.min.js'
+				}]
 			}
 		},
 		postcss: {

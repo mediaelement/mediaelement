@@ -6375,11 +6375,18 @@ var FacebookRenderer = {
 							// Set proper size since player dimensions are unknown before this event
 							var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
 							    width = parseInt(_window2.default.getComputedStyle(fbIframe, null).width),
-							    height = parseInt(fbIframe.style.height);
+							    height = parseInt(fbIframe.style.height),
+							    events = ['mouseover', 'mouseout'],
+							    assignEvents = function assignEvents(e) {
+								var event = (0, _general.createEvent)(e.type, fbWrapper);
+								mediaElement.dispatchEvent(event);
+							};
 
 							fbWrapper.setSize(width, height);
 
-							sendEvents(['mouseover', 'mouseout']);
+							for (i = 0, il = events.length; i < il; i++) {
+								fbIframe.addEventListener(events[i], assignEvents, false);
+							}
 
 							// remove previous listeners
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
@@ -6408,8 +6415,7 @@ var FacebookRenderer = {
 								}
 							}
 
-							sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
-							sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
+							sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
 
 							var timer = void 0;
 
@@ -8884,9 +8890,6 @@ var vimeoIframeRenderer = {
 				ended = false;
 				var event = (0, _general.createEvent)('play', vimeo);
 				mediaElement.dispatchEvent(event);
-
-				event = (0, _general.createEvent)('playing', vimeo);
-				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', function () {
 				paused = true;
@@ -10157,6 +10160,7 @@ function normalizeExtension(extension) {
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};
+_mejs2.default.Utils.typeChecks = typeChecks;
 _mejs2.default.Utils.absolutizeUrl = absolutizeUrl;
 _mejs2.default.Utils.formatType = formatType;
 _mejs2.default.Utils.getMimeFromType = getMimeFromType;

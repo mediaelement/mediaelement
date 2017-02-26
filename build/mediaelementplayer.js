@@ -6500,6 +6500,7 @@ function normalizeExtension(extension) {
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};
+_mejs2.default.Utils.typeChecks = typeChecks;
 _mejs2.default.Utils.absolutizeUrl = absolutizeUrl;
 _mejs2.default.Utils.formatType = formatType;
 _mejs2.default.Utils.getMimeFromType = getMimeFromType;
