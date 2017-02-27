@@ -13,6 +13,7 @@
 * Added new `resources` section in documentation @ron666 
 * Cleaned up translation files and move others to `mediaelement-plugins` repo @ron666
 * Fixed wrong link in documentation (https://github.com/johndyer/mediaelement/pull/2106) @7huo
+* Added fix to avoid `jQuery.noConflict()` issues @ron666
 
 *3.1.3 (2017/02/23)*
 
