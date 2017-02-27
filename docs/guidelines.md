@@ -322,37 +322,17 @@ if (mejs.i18n.[lang] === undefined) {
 		// renderers/flash.js
 		"mejs.install-flash": "",
 
-		// features/contextmenu.js
-		"mejs.fullscreen-off": "",
-		"mejs.fullscreen-on": "",
-		"mejs.download-video": "",
-
 		// features/fullscreen.js
 		"mejs.fullscreen": "",
-
-		// features/jumpforward.js
-		"mejs.time-jump-forward": "",
-
-		// features/loop.js
-		"mejs.loop": "",
 
 		// features/playpause.js
 		"mejs.play": "",
 		"mejs.pause": "",
 
-		// features/postroll.js
-		"mejs.close": "",
-
 		// features/progress.js
 		"mejs.time-slider": "",
 		"mejs.time-help-text": "",
-
-		// features/skipback.js
-		"mejs.time-skip-back": "",
-
-		// features/tracks.js
-		"mejs.captions-subtitles": "",
-		"mejs.none": "",
+		"mejs.live-broadcast" : "",
 
 		// features/volume.js
 		"mejs.volume-help-text": "",
@@ -364,23 +344,10 @@ if (mejs.i18n.[lang] === undefined) {
 		"mejs.video-player": "",
 		"mejs.audio-player": "",
 
-		// features/ads.js
-		"mejs.ad-skip": "",
-		"mejs.ad-skip-info": "",
-
-		// features/sourcechooser.js
-		"mejs.source-chooser": "",
-
-		// features/stop.js
-		"mejs.stop": "",
-
-		//features/speed.js
-		"mejs.speed-rate" : "",
-
-		//features/progress.js
-		"mejs.live-broadcast" : "",
-
 		// features/tracks.js
+		"mejs.captions-subtitles": "",
+		"mejs.none": "",
+		"mejs.captions-chapters": "",
 		"mejs.afrikaans": "",
 		"mejs.albanian": "",
 		"mejs.arabic": "",
@@ -439,6 +406,10 @@ if (mejs.i18n.[lang] === undefined) {
 	};
 }
 ```
+
+**IMPORTANT**: You will also need to add the language in the `MediaElement Plugins` repository. 
+
+For more information about this, read the [Template for Translations](https://github.com/johndyer/mediaelement-plugins#translations) documentation.
 
 <a id="es6"></a>
 ### A word on `ES6` for Renderers
