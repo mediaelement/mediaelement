@@ -1,12 +1,5 @@
 'use strict';
 
-import window from 'global/window';
-import document from 'global/document';
-import mejs from '../core/mejs';
-import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/general';
-import {typeChecks} from '../utils/media';
-
 /**
  * YouTube renderer
  *
@@ -334,7 +327,7 @@ const YouTubeIframeRenderer = {
 									youTubeApi.unMute();
 								}
 								setTimeout(() => {
-									const event = createEvent('volumechange', youtube);
+									const event = mejs.Utils.createEvent('volumechange', youtube);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
@@ -343,12 +336,12 @@ const YouTubeIframeRenderer = {
 								volume = value;
 								youTubeApi.setVolume(value * 100);
 								setTimeout(() => {
-									const event = createEvent('volumechange', youtube);
+									const event = mejs.Utils.createEvent('volumechange', youtube);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
 							case 'readyState':
-								const event = createEvent('canplay', youtube);
+								const event = mejs.Utils.createEvent('canplay', youtube);
 								mediaElement.dispatchEvent(event);
 								break;
 
@@ -475,7 +468,7 @@ const YouTubeIframeRenderer = {
 							events = ['mouseover', 'mouseout'],
 							assignEvents = (e) => {
 
-								const newEvent = createEvent(e.type, youtube);
+								const newEvent = mejs.Utils.createEvent(e.type, youtube);
 								mediaElement.dispatchEvent(newEvent);
 							}
 						;
@@ -488,7 +481,7 @@ const YouTubeIframeRenderer = {
 						const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 						for (i = 0, il = initEvents.length; i < il; i++) {
-							const event = createEvent(initEvents[i], youtube);
+							const event = mejs.Utils.createEvent(initEvents[i], youtube);
 							mediaElement.dispatchEvent(event);
 						}
 					},
@@ -544,13 +537,13 @@ const YouTubeIframeRenderer = {
 
 						// send events up
 						for (i = 0, il = events.length; i < il; i++) {
-							const event = createEvent(events[i], youtube);
+							const event = mejs.Utils.createEvent(events[i], youtube);
 							mediaElement.dispatchEvent(event);
 						}
 
 					},
 					onError: (e) => {
-						const event = createEvent('error', youtube);
+						const event = mejs.Utils.createEvent('error', youtube);
 						event.data = e.data;
 						mediaElement.dispatchEvent(event);
 					}
@@ -599,7 +592,7 @@ const YouTubeIframeRenderer = {
 			// create timer
 			youtube.interval = setInterval(() => {
 
-				const event = createEvent('timeupdate', youtube);
+				const event = mejs.Utils.createEvent('timeupdate', youtube);
 				mediaElement.dispatchEvent(event);
 
 			}, 250);
@@ -620,10 +613,10 @@ if (window.postMessage && typeof window.addEventListener) {
 		YouTubeApi.iFrameReady();
 	};
 
-	typeChecks.push((url) => {
+	mejs.Utils.typeChecks.push((url) => {
 		url = url.toLowerCase();
 		return (url.includes('//www.youtube') || url.includes('//youtu.be')) ? 'video/x-youtube' : null;
 	});
 
-	renderer.add(YouTubeIframeRenderer);
+	mejs.Renderers.add(YouTubeIframeRenderer);
 }

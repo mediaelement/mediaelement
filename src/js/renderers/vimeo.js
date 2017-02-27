@@ -1,12 +1,5 @@
 'use strict';
 
-import window from 'global/window';
-import document from 'global/document';
-import mejs from '../core/mejs';
-import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/general';
-import {typeChecks} from '../utils/media';
-
 /**
  * Vimeo renderer
  *
@@ -184,7 +177,7 @@ const vimeoIframeRenderer = {
 		 * @param {Object} target
 		 */
 		const errorHandler = (error, target) => {
-			const event = createEvent('error', target);
+			const event = mejs.Utils.createEvent('error', target);
 			event.message = error.name + ': ' + error.message;
 			mediaElement.dispatchEvent(event);
 		};
@@ -267,7 +260,7 @@ const vimeoIframeRenderer = {
 								vimeoPlayer.setCurrentTime(value).then(() => {
 									currentTime = value;
 									setTimeout(() => {
-										const event = createEvent('timeupdate', vimeo);
+										const event = mejs.Utils.createEvent('timeupdate', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch']((error) => {
@@ -280,7 +273,7 @@ const vimeoIframeRenderer = {
 									volume = value;
 									oldVolume = volume;
 									setTimeout(() => {
-										const event = createEvent('volumechange', vimeo);
+										const event = mejs.Utils.createEvent('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
 								})['catch']((error) => {
@@ -298,7 +291,7 @@ const vimeoIframeRenderer = {
 									vimeoPlayer.setVolume(0).then(() => {
 										volume = 0;
 										setTimeout(() => {
-											const event = createEvent('volumechange', vimeo);
+											const event = mejs.Utils.createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch']((error) => {
@@ -308,7 +301,7 @@ const vimeoIframeRenderer = {
 									vimeoPlayer.setVolume(oldVolume).then(() => {
 										volume = oldVolume;
 										setTimeout(() => {
-											const event = createEvent('volumechange', vimeo);
+											const event = mejs.Utils.createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
 									})['catch']((error) => {
@@ -317,7 +310,7 @@ const vimeoIframeRenderer = {
 								}
 								break;
 							case 'readyState':
-								const event = createEvent('canplay', vimeo);
+								const event = mejs.Utils.createEvent('canplay', vimeo);
 								mediaElement.dispatchEvent(event);
 								break;
 							default:
@@ -400,7 +393,7 @@ const vimeoIframeRenderer = {
 			events = ['mouseover', 'mouseout'];
 
 			const assignEvents = (e) => {
-				const event = createEvent(e.type, vimeo);
+				const event = mejs.Utils.createEvent(e.type, vimeo);
 				mediaElement.dispatchEvent(event);
 			};
 
@@ -419,7 +412,7 @@ const vimeoIframeRenderer = {
 						bufferedTime = duration * loadProgress;
 					}
 
-					const event = createEvent('loadedmetadata', vimeo);
+					const event = mejs.Utils.createEvent('loadedmetadata', vimeo);
 					mediaElement.dispatchEvent(event);
 
 				})['catch']((error) => {
@@ -436,7 +429,7 @@ const vimeoIframeRenderer = {
 						bufferedTime = duration * loadProgress;
 					}
 
-					const event = createEvent('progress', vimeo);
+					const event = mejs.Utils.createEvent('progress', vimeo);
 					mediaElement.dispatchEvent(event);
 
 				})['catch']((error) => {
@@ -447,7 +440,7 @@ const vimeoIframeRenderer = {
 				vimeoPlayer.getCurrentTime().then((seconds) => {
 					currentTime = seconds;
 
-					const event = createEvent('timeupdate', vimeo);
+					const event = mejs.Utils.createEvent('timeupdate', vimeo);
 					mediaElement.dispatchEvent(event);
 				})['catch']((error) => {
 					errorHandler(error, vimeo);
@@ -456,21 +449,21 @@ const vimeoIframeRenderer = {
 			vimeoPlayer.on('play', () => {
 				paused = false;
 				ended = false;
-				const event = createEvent('play', vimeo);
+				const event = mejs.Utils.createEvent('play', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('pause', () => {
 				paused = true;
 				ended = false;
 
-				const event = createEvent('pause', vimeo);
+				const event = mejs.Utils.createEvent('pause', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 			vimeoPlayer.on('ended', () => {
 				paused = false;
 				ended = true;
 
-				const event = createEvent('ended', vimeo);
+				const event = mejs.Utils.createEvent('ended', vimeo);
 				mediaElement.dispatchEvent(event);
 			});
 
@@ -478,7 +471,7 @@ const vimeoIframeRenderer = {
 			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (i = 0, il = events.length; i < il; i++) {
-				const event = createEvent(events[i], vimeo);
+				const event = mejs.Utils.createEvent(events[i], vimeo);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -534,9 +527,9 @@ const vimeoIframeRenderer = {
  * Register Vimeo type based on URL structure
  *
  */
-typeChecks.push((url) => {
+mejs.Utils.typeChecks.push((url) => {
 	url = url.toLowerCase();
 	return url.includes('//player.vimeo') || url.includes('vimeo.com') ? 'video/x-vimeo' : null;
 });
 
-renderer.add(vimeoIframeRenderer);
+mejs.Renderers.add(vimeoIframeRenderer);
