@@ -12,6 +12,7 @@
 * Added workflow to set WARIA text elements, added `isString` method (https://github.com/johndyer/mediaelement/pull/2105) @DmitryKrekota
 * Added new `resources` section in documentation @ron666 
 * Cleaned up translation files and move others to `mediaelement-plugins` repo @ron666
+* Fixed wrong link in documentation (https://github.com/johndyer/mediaelement/pull/2106) @7huo
 
 *3.1.3 (2017/02/23)*
 
