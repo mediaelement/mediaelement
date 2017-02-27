@@ -58,7 +58,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(14);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -429,7 +429,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"14":14,"28":28,"6":6}],5:[function(_dereq_,module,exports){
+},{"14":14,"23":23,"6":6}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -448,7 +448,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _media = _dereq_(29);
+var _media = _dereq_(24);
 
 var _renderer = _dereq_(7);
 
@@ -853,7 +853,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"29":29,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"2":2,"24":24,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1050,11 +1050,11 @@ var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
 var Features = _interopRequireWildcard(_constants);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1537,7 +1537,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"27":27,"28":28,"3":3,"4":4}],9:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"22":22,"23":23,"3":3,"4":4}],9:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -1548,7 +1548,7 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1646,7 +1646,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"28":28,"4":4}],10:[function(_dereq_,module,exports){
+},{"16":16,"23":23,"4":4}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -1657,9 +1657,9 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
-var _time = _dereq_(31);
+var _time = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2057,14 +2057,14 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"27":27,"31":31,"4":4}],11:[function(_dereq_,module,exports){
+},{"16":16,"22":22,"26":26,"4":4}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(31);
+var _time = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2187,7 +2187,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"31":31}],12:[function(_dereq_,module,exports){
+},{"16":16,"26":26}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _mejs = _dereq_(6);
@@ -2202,9 +2202,9 @@ var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(31);
+var _time = _dereq_(26);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3065,7 +3065,7 @@ if ('x\n\ny'.split(/\n/gi).length !== 3) {
 	};
 }
 
-},{"16":16,"28":28,"31":31,"4":4,"6":6}],13:[function(_dereq_,module,exports){
+},{"16":16,"23":23,"26":26,"4":4,"6":6}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _player = _dereq_(16);
@@ -3076,9 +3076,9 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3374,7 +3374,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"27":27,"28":28,"4":4}],14:[function(_dereq_,module,exports){
+},{"16":16,"22":22,"23":23,"4":4}],14:[function(_dereq_,module,exports){
 'use strict';
 
 /*!
@@ -3398,38 +3398,17 @@ var EN = exports.EN = {
 	// renderers/flash.js
 	"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-	// features/contextmenu.js
-	"mejs.fullscreen-off": "Turn off Fullscreen",
-	"mejs.fullscreen-on": "Go Fullscreen",
-	"mejs.download-video": "Download Video",
-
 	// features/fullscreen.js
 	"mejs.fullscreen": "Fullscreen",
-
-	// features/jumpforward.js
-	"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
-
-	// features/loop.js
-	"mejs.loop": "Toggle Loop",
 
 	// features/playpause.js
 	"mejs.play": "Play",
 	"mejs.pause": "Pause",
 
-	// features/postroll.js
-	"mejs.close": "Close",
-
 	// features/progress.js
 	"mejs.time-slider": "Time Slider",
 	"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
-
-	// features/skipback.js
-	"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
-
-	// features/tracks.js
-	"mejs.captions-subtitles": "Captions/Subtitles",
-	"mejs.captions-chapters": "Chapters",
-	"mejs.none": "None",
+	"mejs.live-broadcast": "Live Broadcast",
 
 	// features/volume.js
 	"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
@@ -3441,23 +3420,10 @@ var EN = exports.EN = {
 	"mejs.video-player": "Video Player",
 	"mejs.audio-player": "Audio Player",
 
-	// features/ads.js
-	"mejs.ad-skip": "Skip ad",
-	"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
-
-	// features/sourcechooser.js
-	"mejs.source-chooser": "Source Chooser",
-
-	// features/stop.js
-	"mejs.stop": "Stop",
-
-	//features/speed.js
-	"mejs.speed-rate": "Speed Rate",
-
-	//features/progress.js
-	"mejs.live-broadcast": "Live Broadcast",
-
 	// features/tracks.js
+	"mejs.captions-subtitles": "Captions/Subtitles",
+	"mejs.captions-chapters": "Chapters",
+	"mejs.none": "None",
 	"mejs.afrikaans": "Afrikaans",
 	"mejs.albanian": "Albanian",
 	"mejs.arabic": "Arabic",
@@ -3578,13 +3544,13 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
-var _time = _dereq_(31);
+var _time = _dereq_(26);
 
-var _media = _dereq_(29);
+var _media = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5247,530 +5213,7 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"2":2,"27":27,"28":28,"29":29,"3":3,"31":31,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
-'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _window = _dereq_(3);
-
-var _window2 = _interopRequireDefault(_window);
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = _dereq_(6);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-var _renderer = _dereq_(7);
-
-var _general = _dereq_(28);
-
-var _media = _dereq_(29);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * DailyMotion renderer
- *
- * Uses <iframe> approach and uses DailyMotion API to manipulate it.
- * @see https://developer.dailymotion.com/player
- *
- */
-var DailyMotionApi = {
-	/**
-  * @type {Boolean}
-  */
-	isSDKStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isSDKLoaded: false,
-	/**
-  * @type {Array}
-  */
-	iframeQueue: [],
-
-	/**
-  * Create a queue to prepare the creation of <iframe>
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	enqueueIframe: function enqueueIframe(settings) {
-
-		if (DailyMotionApi.isLoaded) {
-			DailyMotionApi.createIframe(settings);
-		} else {
-			DailyMotionApi.loadIframeApi();
-			DailyMotionApi.iframeQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load DailyMotion API script on the header of the document
-  *
-  */
-	loadIframeApi: function loadIframeApi() {
-		if (!DailyMotionApi.isSDKStarted) {
-			var e = _document2.default.createElement('script');
-			e.async = true;
-			e.src = '//api.dmcdn.net/all.js';
-			var s = _document2.default.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(e, s);
-			DailyMotionApi.isSDKStarted = true;
-		}
-	},
-
-	/**
-  * Process queue of DailyMotion <iframe> element creation
-  *
-  */
-	apiReady: function apiReady() {
-
-		DailyMotionApi.isLoaded = true;
-		DailyMotionApi.isSDKLoaded = true;
-
-		while (DailyMotionApi.iframeQueue.length > 0) {
-			var settings = DailyMotionApi.iframeQueue.pop();
-			DailyMotionApi.createIframe(settings);
-		}
-	},
-
-	/**
-  * Create a new instance of DailyMotion API player and trigger a custom event to initialize it
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	createIframe: function createIframe(settings) {
-
-		var player = DM.player(settings.container, {
-			height: settings.height || '100%',
-			width: settings.width || '100%',
-			video: settings.videoId,
-			params: Object.assign({ api: true }, settings.params),
-			origin: location.host
-		});
-
-		player.addEventListener('apiready', function () {
-			_window2.default['__ready__' + settings.id](player, { paused: true, ended: false });
-		});
-	},
-
-	/**
-  * Extract ID from DailyMotion's URL to be loaded through API
-  * Valid URL format(s):
-  * - http://www.dailymotion.com/embed/video/x35yawy
-  * - http://dai.ly/x35yawy
-  *
-  * @param {String} url
-  * @return {String}
-  */
-	getDailyMotionId: function getDailyMotionId(url) {
-		var parts = url.split('/'),
-		    lastPart = parts[parts.length - 1],
-		    dashParts = lastPart.split('_');
-
-		return dashParts[0];
-	}
-};
-
-var DailyMotionIframeRenderer = {
-	name: 'dailymotion_iframe',
-
-	options: {
-		prefix: 'dailymotion_iframe',
-
-		dailymotion: {
-			width: '100%',
-			height: '100%',
-			params: {
-				autoplay: false,
-				chromeless: 1,
-				info: 0,
-				logo: 0,
-				related: 0
-			}
-		}
-	},
-
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
-	canPlayType: function canPlayType(type) {
-		return ['video/dailymotion', 'video/x-dailymotion'].includes(type);
-	},
-
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
-	create: function create(mediaElement, options, mediaFiles) {
-
-		var dm = {},
-		    apiStack = [],
-		    readyState = 4;
-
-		var i = void 0,
-		    il = void 0,
-		    events = void 0,
-		    dmPlayer = null,
-		    dmIframe = null;
-
-		dm.options = options;
-		dm.id = mediaElement.id + '_' + options.prefix;
-		dm.mediaElement = mediaElement;
-
-		// wrappers for get/set
-		var props = _mejs2.default.html5media.properties,
-		    assignGettersSetters = function assignGettersSetters(propName) {
-
-			// add to flash state that we will store
-
-			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-			dm['get' + capName] = function () {
-				if (dmPlayer !== null) {
-					var value = null;
-
-					// figure out how to get dm dta here
-
-					var _ret = function () {
-						switch (propName) {
-							case 'currentTime':
-								return {
-									v: dmPlayer.currentTime
-								};
-
-							case 'duration':
-								return {
-									v: isNaN(dmPlayer.duration) ? 0 : dmPlayer.duration
-								};
-
-							case 'volume':
-								return {
-									v: dmPlayer.volume
-								};
-
-							case 'paused':
-								return {
-									v: dmPlayer.paused
-								};
-
-							case 'ended':
-								return {
-									v: dmPlayer.ended
-								};
-
-							case 'muted':
-								return {
-									v: dmPlayer.muted
-								};
-
-							case 'buffered':
-								var percentLoaded = dmPlayer.bufferedTime,
-								    duration = dmPlayer.duration;
-								return {
-									v: {
-										start: function start() {
-											return 0;
-										},
-										end: function end() {
-											return percentLoaded / duration;
-										},
-										length: 1
-									}
-								};
-							case 'src':
-								return {
-									v: mediaElement.originalNode.getAttribute('src')
-								};
-
-							case 'readyState':
-								return {
-									v: readyState
-								};
-						}
-					}();
-
-					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-					return value;
-				} else {
-					return null;
-				}
-			};
-
-			dm['set' + capName] = function (value) {
-				if (dmPlayer !== null) {
-
-					switch (propName) {
-
-						case 'src':
-							var url = typeof value === 'string' ? value : value[0].src;
-
-							dmPlayer.load(DailyMotionApi.getDailyMotionId(url));
-							break;
-
-						case 'currentTime':
-							dmPlayer.seek(value);
-							break;
-
-						case 'muted':
-							if (value) {
-								dmPlayer.setMuted(true);
-							} else {
-								dmPlayer.setMuted(false);
-							}
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', dm);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-
-						case 'volume':
-							dmPlayer.setVolume(value);
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', dm);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-
-						case 'readyState':
-							var event = (0, _general.createEvent)('canplay', dm);
-							mediaElement.dispatchEvent(event);
-							break;
-
-						default:
-							
-							break;
-					}
-				} else {
-					// store for after "READY" event fires
-					apiStack.push({ type: 'set', propName: propName, value: value });
-				}
-			};
-		};
-
-		for (i = 0, il = props.length; i < il; i++) {
-			assignGettersSetters(props[i]);
-		}
-
-		// add wrappers for native methods
-		var methods = _mejs2.default.html5media.methods,
-		    assignMethods = function assignMethods(methodName) {
-
-			// run the method on the native HTMLMediaElement
-			dm[methodName] = function () {
-				if (dmPlayer !== null) {
-
-					// DO method
-					switch (methodName) {
-						case 'play':
-							return dmPlayer.play();
-						case 'pause':
-							return dmPlayer.pause();
-						case 'load':
-							return null;
-
-					}
-				} else {
-					apiStack.push({ type: 'call', methodName: methodName });
-				}
-			};
-		};
-
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
-		}
-
-		// Initial method to register all DailyMotion events when initializing <iframe>
-		_window2.default['__ready__' + dm.id] = function (_dmPlayer) {
-
-			mediaElement.dmPlayer = dmPlayer = _dmPlayer;
-
-			// do call stack
-			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
-
-					var stackItem = apiStack[i];
-
-					if (stackItem.type === 'set') {
-						var propName = stackItem.propName,
-						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-						dm['set' + capName](stackItem.value);
-					} else if (stackItem.type === 'call') {
-						dm[stackItem.methodName]();
-					}
-				}
-			}
-
-			dmIframe = _document2.default.getElementById(dm.id);
-
-			// a few more events
-			events = ['mouseover', 'mouseout'];
-			var assignEvents = function assignEvents(e) {
-				var event = (0, _general.createEvent)(e.type, dm);
-				mediaElement.dispatchEvent(event);
-			};
-
-			for (var _i = 0, _il = events.length; _i < _il; _i++) {
-				dmIframe.addEventListener(events[_i], assignEvents, false);
-			}
-
-			// BUBBLE EVENTS up
-			events = _mejs2.default.html5media.events;
-			events = events.concat(['click', 'mouseover', 'mouseout']);
-			var assignNativeEvents = function assignNativeEvents(eventName) {
-
-				// Deprecated event; not consider it
-				if (eventName !== 'ended') {
-
-					dmPlayer.addEventListener(eventName, function (e) {
-						var event = (0, _general.createEvent)(e.type, dmPlayer);
-						mediaElement.dispatchEvent(event);
-					});
-				}
-			};
-
-			for (i = 0, il = events.length; i < il; i++) {
-				assignNativeEvents(events[i]);
-			}
-
-			// Custom DailyMotion events
-			dmPlayer.addEventListener('ad_start', function () {
-				var event = (0, _general.createEvent)('play', dmPlayer);
-				mediaElement.dispatchEvent(event);
-
-				event = (0, _general.createEvent)('progress', dmPlayer);
-				mediaElement.dispatchEvent(event);
-
-				event = (0, _general.createEvent)('timeupdate', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('ad_timeupdate', function () {
-				var event = (0, _general.createEvent)('timeupdate', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('ad_pause', function () {
-				var event = (0, _general.createEvent)('pause', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('ad_end', function () {
-				var event = (0, _general.createEvent)('ended', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('video_start', function () {
-				var event = (0, _general.createEvent)('play', dmPlayer);
-				mediaElement.dispatchEvent(event);
-
-				event = (0, _general.createEvent)('timeupdate', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('video_end', function () {
-				var event = (0, _general.createEvent)('ended', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('progress', function () {
-				var event = (0, _general.createEvent)('timeupdate', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('durationchange', function () {
-				var event = (0, _general.createEvent)('timeupdate', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-
-			// give initial events
-			var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-
-			for (i = 0, il = initEvents.length; i < il; i++) {
-				var event = (0, _general.createEvent)(initEvents[i], dm);
-				mediaElement.dispatchEvent(event);
-			}
-		};
-
-		var dmContainer = _document2.default.createElement('div');
-		dmContainer.id = dm.id;
-		mediaElement.appendChild(dmContainer);
-		if (mediaElement.originalNode) {
-			dmContainer.style.width = mediaElement.originalNode.style.width;
-			dmContainer.style.height = mediaElement.originalNode.style.height;
-		}
-		mediaElement.originalNode.style.display = 'none';
-
-		var videoId = DailyMotionApi.getDailyMotionId(mediaFiles[0].src),
-		    dmSettings = Object.assign({
-			id: dm.id,
-			container: dmContainer,
-			videoId: videoId,
-			autoplay: !!mediaElement.originalNode.getAttribute('autoplay')
-		}, dm.options.dailymotion);
-
-		DailyMotionApi.enqueueIframe(dmSettings);
-
-		dm.hide = function () {
-			dm.stopInterval();
-			dm.pause();
-			if (dmIframe) {
-				dmIframe.style.display = 'none';
-			}
-		};
-		dm.show = function () {
-			if (dmIframe) {
-				dmIframe.style.display = '';
-			}
-		};
-		dm.setSize = function (width, height) {
-			dmIframe.width = width;
-			dmIframe.height = height;
-		};
-		dm.destroy = function () {
-			dmPlayer.destroy();
-		};
-		dm.interval = null;
-
-		dm.startInterval = function () {
-			dm.interval = setInterval(function () {
-				DailyMotionApi.sendEvent(dm.id, dmPlayer, 'timeupdate', {
-					paused: false,
-					ended: false
-				});
-			}, 250);
-		};
-		dm.stopInterval = function () {
-			if (dm.interval) {
-				clearInterval(dm.interval);
-			}
-		};
-
-		return dm;
-	}
-};
-
-/*
- * Register DailyMotion event globally
- *
- */
-_media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//dailymotion.com') || url.includes('www.dailymotion.com') || url.includes('//dai.ly') ? 'video/x-dailymotion' : null;
-});
-
-_window2.default.dmAsyncInit = function () {
-	DailyMotionApi.apiReady();
-};
-
-_renderer.renderer.add(DailyMotionIframeRenderer);
-
-},{"2":2,"28":28,"29":29,"3":3,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"23":23,"24":24,"26":26,"3":3,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -5787,11 +5230,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
-var _media = _dereq_(29);
+var _media = _dereq_(24);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6096,439 +5539,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"2":2,"27":27,"28":28,"29":29,"3":3,"6":6,"7":7}],19:[function(_dereq_,module,exports){
-'use strict';
-
-var _window = _dereq_(3);
-
-var _window2 = _interopRequireDefault(_window);
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = _dereq_(6);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-var _renderer = _dereq_(7);
-
-var _general = _dereq_(28);
-
-var _media = _dereq_(29);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Facebook renderer
- *
- * It creates an <iframe> from a <div> with specific configuration.
- * @see https://developers.facebook.com/docs/plugins/embedded-video-player
- */
-var FacebookRenderer = {
-	name: 'facebook',
-
-	options: {
-		prefix: 'facebook',
-		facebook: {
-			appId: '{your-app-id}',
-			xfbml: true,
-			version: 'v2.6'
-		}
-	},
-
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
-	canPlayType: function canPlayType(type) {
-		return ['video/facebook', 'video/x-facebook'].includes(type);
-	},
-
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
-	create: function create(mediaElement, options, mediaFiles) {
-
-		var fbWrapper = {},
-		    apiStack = [],
-		    eventHandler = {},
-		    readyState = 4;
-
-		var i = void 0,
-		    il = void 0,
-		    src = '',
-		    paused = true,
-		    ended = false,
-		    hasStartedPlaying = false,
-		    fbApi = null,
-		    fbDiv = null;
-
-		options = Object.assign(options, mediaElement.options);
-		fbWrapper.options = options;
-		fbWrapper.id = mediaElement.id + '_' + options.prefix;
-		fbWrapper.mediaElement = mediaElement;
-
-		// wrappers for get/set
-		var props = _mejs2.default.html5media.properties,
-		    assignGettersSetters = function assignGettersSetters(propName) {
-
-			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-			fbWrapper['get' + capName] = function () {
-
-				if (fbApi !== null) {
-					var value = null;
-
-					// figure out how to get youtube dta here
-					switch (propName) {
-						case 'currentTime':
-							return fbApi.getCurrentPosition();
-
-						case 'duration':
-							return fbApi.getDuration();
-
-						case 'volume':
-							return fbApi.getVolume();
-
-						case 'paused':
-							return paused;
-
-						case 'ended':
-							return ended;
-
-						case 'muted':
-							return fbApi.isMuted();
-
-						case 'buffered':
-							return {
-								start: function start() {
-									return 0;
-								},
-								end: function end() {
-									return 0;
-								},
-								length: 1
-							};
-						case 'src':
-							return src;
-
-						case 'readyState':
-							return readyState;
-					}
-
-					return value;
-				} else {
-					return null;
-				}
-			};
-
-			fbWrapper['set' + capName] = function (value) {
-
-				if (fbApi !== null) {
-
-					switch (propName) {
-
-						case 'src':
-							var url = typeof value === 'string' ? value : value[0].src;
-
-							// Only way is to destroy instance and all the events fired,
-							// and create new one
-							fbDiv.parentNode.removeChild(fbDiv);
-							createFacebookEmbed(url, options.facebook);
-
-							// This method reloads video on-demand
-							FB.XFBML.parse();
-
-							break;
-
-						case 'currentTime':
-							fbApi.seek(value);
-							break;
-
-						case 'muted':
-							if (value) {
-								fbApi.mute();
-							} else {
-								fbApi.unmute();
-							}
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', fbWrapper);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-
-						case 'volume':
-							fbApi.setVolume(value);
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', fbWrapper);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-
-						case 'readyState':
-							var event = (0, _general.createEvent)('canplay', fbWrapper);
-							mediaElement.dispatchEvent(event);
-							break;
-
-						default:
-							
-							break;
-					}
-				} else {
-					// store for after "READY" event fires
-					apiStack.push({ type: 'set', propName: propName, value: value });
-				}
-			};
-		};
-
-		for (i = 0, il = props.length; i < il; i++) {
-			assignGettersSetters(props[i]);
-		}
-
-		// add wrappers for native methods
-		var methods = _mejs2.default.html5media.methods,
-		    assignMethods = function assignMethods(methodName) {
-
-			// run the method on the native HTMLMediaElement
-			fbWrapper[methodName] = function () {
-
-				if (fbApi !== null) {
-
-					// DO method
-					switch (methodName) {
-						case 'play':
-							return fbApi.play();
-						case 'pause':
-							return fbApi.pause();
-						case 'load':
-							return null;
-
-					}
-				} else {
-					apiStack.push({ type: 'call', methodName: methodName });
-				}
-			};
-		};
-
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
-		}
-
-		/**
-   * Dispatch a list of events
-   *
-   * @private
-   * @param {Array} events
-   */
-		function sendEvents(events) {
-			for (var _i = 0, _il = events.length; _i < _il; _i++) {
-				var event = _mejs2.default.Utils.createEvent(events[_i], fbWrapper);
-				mediaElement.dispatchEvent(event);
-			}
-		}
-
-		/**
-   * Create a new Facebook player and attach all its events
-   *
-   * This method creates a <div> element that, once the API is available, will generate an <iframe>.
-   * Valid URL format(s):
-   *  - https://www.facebook.com/johndyer/videos/10107816243681884/
-   *
-   * @param {String} url
-   * @param {Object} config
-   */
-		function createFacebookEmbed(url, config) {
-			src = url;
-			fbDiv = _document2.default.createElement('div');
-			fbDiv.id = fbWrapper.id;
-			fbDiv.className = "fb-video";
-			fbDiv.setAttribute("data-href", url);
-			fbDiv.setAttribute("data-allowfullscreen", "true");
-			fbDiv.setAttribute("data-controls", "false");
-
-			mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
-			mediaElement.originalNode.style.display = 'none';
-
-			/*
-    * Register Facebook API event globally
-    *
-    */
-			_window2.default.fbAsyncInit = function () {
-
-				FB.init(config);
-
-				FB.Event.subscribe('xfbml.ready', function (msg) {
-
-					if (msg.type === 'video') {
-						(function () {
-
-							fbApi = msg.instance;
-
-							// Set proper size since player dimensions are unknown before this event
-							var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
-							    width = parseInt(_window2.default.getComputedStyle(fbIframe, null).width),
-							    height = parseInt(fbIframe.style.height),
-							    events = ['mouseover', 'mouseout'],
-							    assignEvents = function assignEvents(e) {
-								var event = (0, _general.createEvent)(e.type, fbWrapper);
-								mediaElement.dispatchEvent(event);
-							};
-
-							fbWrapper.setSize(width, height);
-
-							for (i = 0, il = events.length; i < il; i++) {
-								fbIframe.addEventListener(events[i], assignEvents, false);
-							}
-
-							// remove previous listeners
-							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
-							for (i = 0, il = fbEvents.length; i < il; i++) {
-								var event = fbEvents[i],
-								    handler = eventHandler[event];
-								if (handler !== undefined && handler !== null && !(0, _general.isObjectEmpty)(handler) && typeof handler.removeListener === 'function') {
-									handler.removeListener(event);
-								}
-							}
-
-							// do call stack
-							if (apiStack.length) {
-								for (i = 0, il = apiStack.length; i < il; i++) {
-
-									var stackItem = apiStack[i];
-
-									if (stackItem.type === 'set') {
-										var propName = stackItem.propName,
-										    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-										fbWrapper['set' + capName](stackItem.value);
-									} else if (stackItem.type === 'call') {
-										fbWrapper[stackItem.methodName]();
-									}
-								}
-							}
-
-							sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
-
-							var timer = void 0;
-
-							// Custom Facebook events
-							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
-								if (!hasStartedPlaying) {
-									hasStartedPlaying = true;
-								}
-								paused = false;
-								ended = false;
-								sendEvents(['play', 'playing', 'timeupdate']);
-
-								// Workaround to update progress bar
-								timer = setInterval(function () {
-									fbApi.getCurrentPosition();
-									sendEvents(['timeupdate']);
-								}, 250);
-							});
-							eventHandler.paused = fbApi.subscribe('paused', function () {
-								paused = true;
-								ended = false;
-								sendEvents(['pause']);
-							});
-							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
-								paused = true;
-								ended = true;
-
-								// Workaround to update progress bar one last time and trigger ended event
-								timer = setInterval(function () {
-									fbApi.getCurrentPosition();
-									sendEvents(['timeupdate', 'ended']);
-								}, 250);
-
-								clearInterval(timer);
-								timer = null;
-							});
-							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
-								sendEvents(['progress', 'timeupdate']);
-							});
-							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
-								sendEvents(['progress', 'timeupdate']);
-							});
-						})();
-					}
-				});
-			};
-
-			(function (d, s, id) {
-				var fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) {
-					return;
-				}
-				var js = d.createElement(s);
-				js.id = id;
-				js.src = '//connect.facebook.net/en_US/sdk.js';
-				fjs.parentNode.insertBefore(js, fjs);
-			})(_document2.default, 'script', 'facebook-jssdk');
-		}
-
-		if (mediaFiles.length > 0) {
-			createFacebookEmbed(mediaFiles[0].src, fbWrapper.options.facebook);
-		}
-
-		fbWrapper.hide = function () {
-			fbWrapper.stopInterval();
-			fbWrapper.pause();
-			if (fbDiv) {
-				fbDiv.style.display = 'none';
-			}
-		};
-		fbWrapper.show = function () {
-			if (fbDiv) {
-				fbDiv.style.display = '';
-			}
-		};
-		fbWrapper.setSize = function (width, height) {
-			if (fbApi !== null && !isNaN(width) && !isNaN(height)) {
-				fbDiv.setAttribute('width', width);
-				fbDiv.setAttribute('height', height);
-			}
-		};
-		fbWrapper.destroy = function () {};
-		fbWrapper.interval = null;
-
-		fbWrapper.startInterval = function () {
-			// create timer
-			fbWrapper.interval = setInterval(function () {
-				var event = (0, _general.createEvent)('timeupdate', fbWrapper);
-				mediaElement.dispatchEvent(event);
-			}, 250);
-		};
-		fbWrapper.stopInterval = function () {
-			if (fbWrapper.interval) {
-				clearInterval(fbWrapper.interval);
-			}
-		};
-
-		return fbWrapper;
-	}
-};
-
-/**
- * Register Facebook type based on URL structure
- *
- */
-_media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//www.facebook') ? 'video/x-facebook' : null;
-});
-
-_renderer.renderer.add(FacebookRenderer);
-
-},{"2":2,"28":28,"29":29,"3":3,"6":6,"7":7}],20:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"23":23,"24":24,"3":3,"6":6,"7":7}],18:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -6556,11 +5567,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
-var _media = _dereq_(29);
+var _media = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7087,7 +6098,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"2":2,"27":27,"28":28,"29":29,"3":3,"4":4,"6":6,"7":7}],21:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"23":23,"24":24,"3":3,"4":4,"6":6,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -7104,11 +6115,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
-var _media = _dereq_(29);
+var _media = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7416,7 +6427,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"2":2,"27":27,"28":28,"29":29,"3":3,"6":6,"7":7}],22:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"23":23,"24":24,"3":3,"6":6,"7":7}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -7433,11 +6444,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
-var _media = _dereq_(29);
+var _media = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7826,7 +6837,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"2":2,"27":27,"28":28,"29":29,"3":3,"6":6,"7":7}],23:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"23":23,"24":24,"3":3,"6":6,"7":7}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -7843,9 +6854,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
-var _constants = _dereq_(27);
+var _constants = _dereq_(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7984,1647 +6995,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"2":2,"27":27,"28":28,"3":3,"6":6,"7":7}],24:[function(_dereq_,module,exports){
-'use strict';
-
-var _window = _dereq_(3);
-
-var _window2 = _interopRequireDefault(_window);
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = _dereq_(6);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-var _renderer = _dereq_(7);
-
-var _general = _dereq_(28);
-
-var _media = _dereq_(29);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * SoundCloud renderer
- *
- * Uses <iframe> approach and uses SoundCloud Widget API to manipulate it.
- * @see https://developers.soundcloud.com/docs/api/html5-widget
- */
-var SoundCloudApi = {
-	/**
-  * @type {Boolean}
-  */
-	isSDKStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isSDKLoaded: false,
-	/**
-  * @type {Array}
-  */
-	iframeQueue: [],
-
-	/**
-  * Create a queue to prepare the creation of <iframe>
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	enqueueIframe: function enqueueIframe(settings) {
-
-		if (SoundCloudApi.isLoaded) {
-			SoundCloudApi.createIframe(settings);
-		} else {
-			SoundCloudApi.loadIframeApi();
-			SoundCloudApi.iframeQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load SoundCloud API script on the header of the document
-  *
-  */
-	loadIframeApi: function loadIframeApi() {
-		if (!SoundCloudApi.isSDKStarted) {
-			(function () {
-
-				var head = _document2.default.getElementsByTagName("head")[0] || _document2.default.documentElement,
-				    script = _document2.default.createElement("script");
-
-				var done = false;
-
-				script.src = '//w.soundcloud.com/player/api.js';
-
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!SoundCloudApi.readyState || SoundCloudApi.readyState === "loaded" || SoundCloudApi.readyState === "complete")) {
-						done = true;
-						SoundCloudApi.apiReady();
-
-						// Handle memory leak in IE
-						script.onload = script.onreadystatechange = null;
-						if (head && script.parentNode) {
-							head.removeChild(script);
-						}
-					}
-				};
-				head.appendChild(script);
-				SoundCloudApi.isSDKStarted = true;
-			})();
-		}
-	},
-
-	/**
-  * Process queue of SoundCloud <iframe> element creation
-  *
-  */
-	apiReady: function apiReady() {
-		SoundCloudApi.isLoaded = true;
-		SoundCloudApi.isSDKLoaded = true;
-
-		while (SoundCloudApi.iframeQueue.length > 0) {
-			var settings = SoundCloudApi.iframeQueue.pop();
-			SoundCloudApi.createIframe(settings);
-		}
-	},
-
-	/**
-  * Create a new instance of SoundCloud Widget player and trigger a custom event to initialize it
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	createIframe: function createIframe(settings) {
-		var player = SC.Widget(settings.iframe);
-		_window2.default['__ready__' + settings.id](player);
-	}
-};
-
-var SoundCloudIframeRenderer = {
-	name: 'soundcloud_iframe',
-
-	options: {
-		prefix: 'soundcloud_iframe'
-	},
-
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
-	canPlayType: function canPlayType(type) {
-		return ['video/soundcloud', 'video/x-soundcloud'].includes(type);
-	},
-
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
-	create: function create(mediaElement, options, mediaFiles) {
-
-		// create our fake element that allows events and such to work
-		var sc = {},
-		    apiStack = [],
-		    readyState = 4;
-
-		var i = void 0,
-		    il = void 0,
-		    duration = 0,
-		    currentTime = 0,
-		    bufferedTime = 0,
-		    volume = 1,
-		    muted = false,
-		    paused = true,
-		    ended = false,
-		    scPlayer = null,
-		    scIframe = null;
-
-		// store main variable
-		sc.options = options;
-		sc.id = mediaElement.id + '_' + options.prefix;
-		sc.mediaElement = mediaElement;
-
-		// wrappers for get/set
-		var props = _mejs2.default.html5media.properties,
-		    assignGettersSetters = function assignGettersSetters(propName) {
-
-			// add to flash state that we will store
-
-			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-			sc['get' + capName] = function () {
-				if (scPlayer !== null) {
-					var value = null;
-
-					// figure out how to get dm dta here
-					switch (propName) {
-						case 'currentTime':
-							return currentTime;
-
-						case 'duration':
-							return duration;
-
-						case 'volume':
-							return volume;
-
-						case 'paused':
-							return paused;
-
-						case 'ended':
-							return ended;
-
-						case 'muted':
-							return muted; // ?
-
-						case 'buffered':
-							return {
-								start: function start() {
-									return 0;
-								},
-								end: function end() {
-									return bufferedTime * duration;
-								},
-								length: 1
-							};
-						case 'src':
-							return scIframe ? scIframe.src : '';
-
-						case 'readyState':
-							return readyState;
-					}
-
-					return value;
-				} else {
-					return null;
-				}
-			};
-
-			sc['set' + capName] = function (value) {
-
-				if (scPlayer !== null) {
-
-					// do something
-					switch (propName) {
-
-						case 'src':
-							var url = typeof value === 'string' ? value : value[0].src;
-
-							scPlayer.load(url);
-							break;
-
-						case 'currentTime':
-							scPlayer.seekTo(value * 1000);
-							break;
-
-						case 'muted':
-							if (value) {
-								scPlayer.setVolume(0); // ?
-							} else {
-								scPlayer.setVolume(1); // ?
-							}
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', sc);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-
-						case 'volume':
-							scPlayer.setVolume(value);
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', sc);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-
-						case 'readyState':
-							var event = (0, _general.createEvent)('canplay', sc);
-							mediaElement.dispatchEvent(event);
-							break;
-
-						default:
-							
-							break;
-					}
-				} else {
-					// store for after "READY" event fires
-					apiStack.push({ type: 'set', propName: propName, value: value });
-				}
-			};
-		};
-
-		for (i = 0, il = props.length; i < il; i++) {
-			assignGettersSetters(props[i]);
-		}
-
-		// add wrappers for native methods
-		var methods = _mejs2.default.html5media.methods,
-		    assignMethods = function assignMethods(methodName) {
-
-			// run the method on the Soundcloud API
-			sc[methodName] = function () {
-
-				if (scPlayer !== null) {
-
-					// DO method
-					switch (methodName) {
-						case 'play':
-							return scPlayer.play();
-						case 'pause':
-							return scPlayer.pause();
-						case 'load':
-							return null;
-
-					}
-				} else {
-					apiStack.push({ type: 'call', methodName: methodName });
-				}
-			};
-		};
-
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
-		}
-
-		// add a ready method that SC can fire
-		_window2.default['__ready__' + sc.id] = function (_scPlayer) {
-
-			mediaElement.scPlayer = scPlayer = _scPlayer;
-
-			// do call stack
-			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
-
-					var stackItem = apiStack[i];
-
-					if (stackItem.type === 'set') {
-						var propName = stackItem.propName,
-						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-						sc['set' + capName](stackItem.value);
-					} else if (stackItem.type === 'call') {
-						sc[stackItem.methodName]();
-					}
-				}
-			}
-
-			// SoundCloud properties are async, so we don't fire the event until the property callback fires
-			scPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, function () {
-				paused = false;
-				ended = false;
-
-				scPlayer.getPosition(function (_currentTime) {
-					currentTime = _currentTime / 1000;
-					var event = (0, _general.createEvent)('timeupdate', sc);
-					mediaElement.dispatchEvent(event);
-				});
-			});
-
-			scPlayer.bind(SC.Widget.Events.PAUSE, function () {
-				paused = true;
-
-				var event = (0, _general.createEvent)('pause', sc);
-				mediaElement.dispatchEvent(event);
-			});
-			scPlayer.bind(SC.Widget.Events.PLAY, function () {
-				paused = false;
-				ended = false;
-
-				var event = (0, _general.createEvent)('play', sc);
-				mediaElement.dispatchEvent(event);
-			});
-			scPlayer.bind(SC.Widget.Events.FINISHED, function () {
-				paused = false;
-				ended = true;
-
-				var event = (0, _general.createEvent)('ended', sc);
-				mediaElement.dispatchEvent(event);
-			});
-			scPlayer.bind(SC.Widget.Events.READY, function () {
-				scPlayer.getDuration(function (_duration) {
-					duration = _duration / 1000;
-
-					var event = (0, _general.createEvent)('loadedmetadata', sc);
-					mediaElement.dispatchEvent(event);
-				});
-			});
-			scPlayer.bind(SC.Widget.Events.LOAD_PROGRESS, function () {
-				scPlayer.getDuration(function (loadProgress) {
-					if (duration > 0) {
-						bufferedTime = duration * loadProgress;
-
-						var event = (0, _general.createEvent)('progress', sc);
-						mediaElement.dispatchEvent(event);
-					}
-				});
-				scPlayer.getDuration(function (_duration) {
-					duration = _duration;
-
-					var event = (0, _general.createEvent)('loadedmetadata', sc);
-					mediaElement.dispatchEvent(event);
-				});
-			});
-
-			// give initial events
-			var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-
-			for (var _i = 0, _il = initEvents.length; _i < _il; _i++) {
-				var event = (0, _general.createEvent)(initEvents[_i], sc);
-				mediaElement.dispatchEvent(event);
-			}
-		};
-
-		// container for API API
-		scIframe = _document2.default.createElement('iframe');
-		scIframe.id = sc.id;
-		scIframe.width = 10;
-		scIframe.height = 10;
-		scIframe.frameBorder = 0;
-		scIframe.style.visibility = 'hidden';
-		scIframe.src = mediaFiles[0].src;
-		scIframe.scrolling = 'no';
-
-		mediaElement.appendChild(scIframe);
-		mediaElement.originalNode.style.display = 'none';
-
-		var scSettings = {
-			iframe: scIframe,
-			id: sc.id
-		};
-
-		SoundCloudApi.enqueueIframe(scSettings);
-
-		sc.setSize = function () {};
-		sc.hide = function () {
-			sc.pause();
-			if (scIframe) {
-				scIframe.style.display = 'none';
-			}
-		};
-		sc.show = function () {
-			if (scIframe) {
-				scIframe.style.display = '';
-			}
-		};
-		sc.destroy = function () {
-			scPlayer.destroy();
-		};
-
-		return sc;
-	}
-};
-
-/**
- * Register SoundCloud type based on URL structure
- *
- */
-_media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//soundcloud.com') || url.includes('//w.soundcloud.com') ? 'video/x-soundcloud' : null;
-});
-
-_renderer.renderer.add(SoundCloudIframeRenderer);
-
-},{"2":2,"28":28,"29":29,"3":3,"6":6,"7":7}],25:[function(_dereq_,module,exports){
-'use strict';
-
-var _window = _dereq_(3);
-
-var _window2 = _interopRequireDefault(_window);
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = _dereq_(6);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-var _renderer = _dereq_(7);
-
-var _general = _dereq_(28);
-
-var _media = _dereq_(29);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Vimeo renderer
- *
- * Uses <iframe> approach and uses Vimeo API to manipulate it.
- * All Vimeo calls return a Promise so this renderer accounts for that
- * to update all the necessary values to interact with MediaElement player.
- * Note: IE8 implements ECMAScript 3 that does not allow bare keywords in dot notation;
- * that's why instead of using .catch ['catch'] is being used.
- * @see https://github.com/vimeo/player.js
- *
- */
-var vimeoApi = {
-
-	/**
-  * @type {Boolean}
-  */
-	isIframeStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isIframeLoaded: false,
-	/**
-  * @type {Array}
-  */
-	iframeQueue: [],
-
-	/**
-  * Create a queue to prepare the creation of <iframe>
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	enqueueIframe: function enqueueIframe(settings) {
-
-		if (vimeoApi.isLoaded) {
-			vimeoApi.createIframe(settings);
-		} else {
-			vimeoApi.loadIframeApi();
-			vimeoApi.iframeQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load Vimeo API script on the header of the document
-  *
-  */
-	loadIframeApi: function loadIframeApi() {
-
-		if (!vimeoApi.isIframeStarted) {
-			(function () {
-
-				var script = _document2.default.createElement('script'),
-				    firstScriptTag = _document2.default.getElementsByTagName('script')[0];
-
-				var done = false;
-
-				script.src = '//player.vimeo.com/api/player.js';
-
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!vimeoApi.readyState || vimeoApi.readyState === undefined || vimeoApi.readyState === "loaded" || vimeoApi.readyState === "complete")) {
-						done = true;
-						vimeoApi.iFrameReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-				vimeoApi.isIframeStarted = true;
-			})();
-		}
-	},
-
-	/**
-  * Process queue of Vimeo <iframe> element creation
-  *
-  */
-	iFrameReady: function iFrameReady() {
-
-		vimeoApi.isLoaded = true;
-		vimeoApi.isIframeLoaded = true;
-
-		while (vimeoApi.iframeQueue.length > 0) {
-			var settings = vimeoApi.iframeQueue.pop();
-			vimeoApi.createIframe(settings);
-		}
-	},
-
-	/**
-  * Create a new instance of Vimeo API player and trigger a custom event to initialize it
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	createIframe: function createIframe(settings) {
-		var player = new Vimeo.Player(settings.iframe);
-		_window2.default['__ready__' + settings.id](player);
-	},
-
-	/**
-  * Extract numeric value from Vimeo to be loaded through API
-  * Valid URL format(s):
-  *  - https://player.vimeo.com/video/59777392
-  *  - https://vimeo.com/59777392
-  *
-  * @param {String} url - Vimeo full URL to grab the number Id of the source
-  * @return {int}
-  */
-	getVimeoId: function getVimeoId(url) {
-		if (url === undefined || url === null) {
-			return null;
-		}
-
-		var parts = url.split('?');
-
-		url = parts[0];
-
-		return parseInt(url.substring(url.lastIndexOf('/') + 1));
-	}
-};
-
-var vimeoIframeRenderer = {
-
-	name: 'vimeo_iframe',
-
-	options: {
-		prefix: 'vimeo_iframe'
-	},
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
-	canPlayType: function canPlayType(type) {
-		return ['video/vimeo', 'video/x-vimeo'].includes(type);
-	},
-
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
-	create: function create(mediaElement, options, mediaFiles) {
-
-		// exposed object
-		var apiStack = [],
-		    vimeo = {},
-		    readyState = 4;
-
-		var i = void 0,
-		    il = void 0,
-		    paused = true,
-		    volume = 1,
-		    oldVolume = volume,
-		    currentTime = 0,
-		    bufferedTime = 0,
-		    ended = false,
-		    duration = 0,
-		    vimeoPlayer = null,
-		    url = '';
-
-		vimeo.options = options;
-		vimeo.id = mediaElement.id + '_' + options.prefix;
-		vimeo.mediaElement = mediaElement;
-
-		/**
-   * Generate custom errors for Vimeo based on the API specifications
-   *
-   * @see https://github.com/vimeo/player.js#error
-   * @param {Object} error
-   * @param {Object} target
-   */
-		var errorHandler = function errorHandler(error, target) {
-			var event = (0, _general.createEvent)('error', target);
-			event.message = error.name + ': ' + error.message;
-			mediaElement.dispatchEvent(event);
-		};
-
-		// wrappers for get/set
-		var props = _mejs2.default.html5media.properties,
-		    assignGettersSetters = function assignGettersSetters(propName) {
-
-			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-			vimeo['get' + capName] = function () {
-				if (vimeoPlayer !== null) {
-					var value = null;
-
-					switch (propName) {
-						case 'currentTime':
-							return currentTime;
-
-						case 'duration':
-							return duration;
-
-						case 'volume':
-							return volume;
-						case 'muted':
-							return volume === 0;
-						case 'paused':
-							return paused;
-						case 'ended':
-							return ended;
-
-						case 'src':
-							vimeoPlayer.getVideoUrl().then(function (_url) {
-								url = _url;
-							});
-
-							return url;
-						case 'buffered':
-							return {
-								start: function start() {
-									return 0;
-								},
-								end: function end() {
-									return bufferedTime * duration;
-								},
-								length: 1
-							};
-						case 'readyState':
-							return readyState;
-					}
-
-					return value;
-				} else {
-					return null;
-				}
-			};
-
-			vimeo['set' + capName] = function (value) {
-
-				if (vimeoPlayer !== null) {
-
-					// do something
-					switch (propName) {
-
-						case 'src':
-							var _url2 = typeof value === 'string' ? value : value[0].src,
-							    videoId = vimeoApi.getVimeoId(_url2);
-
-							vimeoPlayer.loadVideo(videoId).then(function () {
-								if (mediaElement.getAttribute('autoplay')) {
-									vimeoPlayer.play();
-								}
-							})['catch'](function (error) {
-								errorHandler(error, vimeo);
-							});
-							break;
-
-						case 'currentTime':
-							vimeoPlayer.setCurrentTime(value).then(function () {
-								currentTime = value;
-								setTimeout(function () {
-									var event = (0, _general.createEvent)('timeupdate', vimeo);
-									mediaElement.dispatchEvent(event);
-								}, 50);
-							})['catch'](function (error) {
-								errorHandler(error, vimeo);
-							});
-							break;
-
-						case 'volume':
-							vimeoPlayer.setVolume(value).then(function () {
-								volume = value;
-								oldVolume = volume;
-								setTimeout(function () {
-									var event = (0, _general.createEvent)('volumechange', vimeo);
-									mediaElement.dispatchEvent(event);
-								}, 50);
-							})['catch'](function (error) {
-								errorHandler(error, vimeo);
-							});
-							break;
-
-						case 'loop':
-							vimeoPlayer.setLoop(value)['catch'](function (error) {
-								errorHandler(error, vimeo);
-							});
-							break;
-						case 'muted':
-							if (value) {
-								vimeoPlayer.setVolume(0).then(function () {
-									volume = 0;
-									setTimeout(function () {
-										var event = (0, _general.createEvent)('volumechange', vimeo);
-										mediaElement.dispatchEvent(event);
-									}, 50);
-								})['catch'](function (error) {
-									errorHandler(error, vimeo);
-								});
-							} else {
-								vimeoPlayer.setVolume(oldVolume).then(function () {
-									volume = oldVolume;
-									setTimeout(function () {
-										var event = (0, _general.createEvent)('volumechange', vimeo);
-										mediaElement.dispatchEvent(event);
-									}, 50);
-								})['catch'](function (error) {
-									errorHandler(error, vimeo);
-								});
-							}
-							break;
-						case 'readyState':
-							var event = (0, _general.createEvent)('canplay', vimeo);
-							mediaElement.dispatchEvent(event);
-							break;
-						default:
-							
-							break;
-					}
-				} else {
-					// store for after "READY" event fires
-					apiStack.push({ type: 'set', propName: propName, value: value });
-				}
-			};
-		};
-
-		for (i = 0, il = props.length; i < il; i++) {
-			assignGettersSetters(props[i]);
-		}
-
-		// add wrappers for native methods
-		var methods = _mejs2.default.html5media.methods,
-		    assignMethods = function assignMethods(methodName) {
-			vimeo[methodName] = function () {
-
-				if (vimeoPlayer !== null) {
-
-					// DO method
-					switch (methodName) {
-						case 'play':
-							paused = false;
-							return vimeoPlayer.play();
-						case 'pause':
-							paused = true;
-							return vimeoPlayer.pause();
-						case 'load':
-							return null;
-
-					}
-				} else {
-					apiStack.push({ type: 'call', methodName: methodName });
-				}
-			};
-		};
-
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
-		}
-
-		// Initial method to register all Vimeo events when initializing <iframe>
-		_window2.default['__ready__' + vimeo.id] = function (_vimeoPlayer) {
-
-			mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
-
-			// do call stack
-			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
-
-					var stackItem = apiStack[i];
-
-					if (stackItem.type === 'set') {
-						var propName = stackItem.propName,
-						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-						vimeo['set' + capName](stackItem.value);
-					} else if (stackItem.type === 'call') {
-						vimeo[stackItem.methodName]();
-					}
-				}
-			}
-
-			var vimeoIframe = _document2.default.getElementById(vimeo.id);
-			var events = void 0;
-
-			// a few more events
-			events = ['mouseover', 'mouseout'];
-
-			var assignEvents = function assignEvents(e) {
-				var event = (0, _general.createEvent)(e.type, vimeo);
-				mediaElement.dispatchEvent(event);
-			};
-
-			for (i = 0, il = events.length; i < il; i++) {
-				vimeoIframe.addEventListener(events[i], assignEvents, false);
-			}
-
-			// Vimeo events
-			vimeoPlayer.on('loaded', function () {
-
-				vimeoPlayer.getDuration().then(function (loadProgress) {
-
-					duration = loadProgress;
-
-					if (duration > 0) {
-						bufferedTime = duration * loadProgress;
-					}
-
-					var event = (0, _general.createEvent)('loadedmetadata', vimeo);
-					mediaElement.dispatchEvent(event);
-				})['catch'](function (error) {
-					errorHandler(error, vimeo);
-				});
-			});
-
-			vimeoPlayer.on('progress', function () {
-				vimeoPlayer.getDuration().then(function (loadProgress) {
-
-					duration = loadProgress;
-
-					if (duration > 0) {
-						bufferedTime = duration * loadProgress;
-					}
-
-					var event = (0, _general.createEvent)('progress', vimeo);
-					mediaElement.dispatchEvent(event);
-				})['catch'](function (error) {
-					errorHandler(error, vimeo);
-				});
-			});
-			vimeoPlayer.on('timeupdate', function () {
-				vimeoPlayer.getCurrentTime().then(function (seconds) {
-					currentTime = seconds;
-
-					var event = (0, _general.createEvent)('timeupdate', vimeo);
-					mediaElement.dispatchEvent(event);
-				})['catch'](function (error) {
-					errorHandler(error, vimeo);
-				});
-			});
-			vimeoPlayer.on('play', function () {
-				paused = false;
-				ended = false;
-				var event = (0, _general.createEvent)('play', vimeo);
-				mediaElement.dispatchEvent(event);
-			});
-			vimeoPlayer.on('pause', function () {
-				paused = true;
-				ended = false;
-
-				var event = (0, _general.createEvent)('pause', vimeo);
-				mediaElement.dispatchEvent(event);
-			});
-			vimeoPlayer.on('ended', function () {
-				paused = false;
-				ended = true;
-
-				var event = (0, _general.createEvent)('ended', vimeo);
-				mediaElement.dispatchEvent(event);
-			});
-
-			// give initial events
-			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-
-			for (i = 0, il = events.length; i < il; i++) {
-				var event = (0, _general.createEvent)(events[i], vimeo);
-				mediaElement.dispatchEvent(event);
-			}
-		};
-
-		var height = mediaElement.originalNode.height,
-		    width = mediaElement.originalNode.width,
-		    vimeoContainer = _document2.default.createElement('iframe'),
-		    standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src),
-		    queryArgs = mediaFiles[0].src.includes('?') ? '?' + mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1) : '';
-
-		// Create Vimeo <iframe> markup
-		vimeoContainer.setAttribute('id', vimeo.id);
-		vimeoContainer.setAttribute('width', width);
-		vimeoContainer.setAttribute('height', height);
-		vimeoContainer.setAttribute('frameBorder', '0');
-		vimeoContainer.setAttribute('src', '' + standardUrl + queryArgs);
-		vimeoContainer.setAttribute('webkitallowfullscreen', '');
-		vimeoContainer.setAttribute('mozallowfullscreen', '');
-		vimeoContainer.setAttribute('allowfullscreen', '');
-
-		mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
-		mediaElement.originalNode.style.display = 'none';
-
-		vimeoApi.enqueueIframe({
-			iframe: vimeoContainer,
-			id: vimeo.id
-		});
-
-		vimeo.hide = function () {
-			vimeo.pause();
-			if (vimeoPlayer) {
-				vimeoContainer.style.display = 'none';
-			}
-		};
-		vimeo.setSize = function (width, height) {
-			vimeoContainer.setAttribute('width', width);
-			vimeoContainer.setAttribute('height', height);
-		};
-		vimeo.show = function () {
-			if (vimeoPlayer) {
-				vimeoContainer.style.display = '';
-			}
-		};
-
-		return vimeo;
-	}
-
-};
-
-/**
- * Register Vimeo type based on URL structure
- *
- */
-_media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//player.vimeo') || url.includes('vimeo.com') ? 'video/x-vimeo' : null;
-});
-
-_renderer.renderer.add(vimeoIframeRenderer);
-
-},{"2":2,"28":28,"29":29,"3":3,"6":6,"7":7}],26:[function(_dereq_,module,exports){
-'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _window = _dereq_(3);
-
-var _window2 = _interopRequireDefault(_window);
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
-var _mejs = _dereq_(6);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-var _renderer = _dereq_(7);
-
-var _general = _dereq_(28);
-
-var _media = _dereq_(29);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * YouTube renderer
- *
- * Uses <iframe> approach and uses YouTube API to manipulate it.
- * Note: IE6-7 don't have postMessage so don't support <iframe> API, and IE8 doesn't fire the onReady event,
- * so it doesn't work - not sure if Google problem or not.
- * @see https://developers.google.com/youtube/iframe_api_reference
- */
-var YouTubeApi = {
-	/**
-  * @type {Boolean}
-  */
-	isIframeStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isIframeLoaded: false,
-	/**
-  * @type {Array}
-  */
-	iframeQueue: [],
-
-	/**
-  * Create a queue to prepare the creation of <iframe>
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	enqueueIframe: function enqueueIframe(settings) {
-
-		// Check whether YouTube API is already loaded.
-		YouTubeApi.isLoaded = typeof YT !== 'undefined' && YT.loaded;
-
-		if (YouTubeApi.isLoaded) {
-			YouTubeApi.createIframe(settings);
-		} else {
-			YouTubeApi.loadIframeApi();
-			YouTubeApi.iframeQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load YouTube API script on the header of the document
-  *
-  */
-	loadIframeApi: function loadIframeApi() {
-		if (!YouTubeApi.isIframeStarted) {
-			var tag = _document2.default.createElement('script');
-			tag.src = '//www.youtube.com/player_api';
-			var firstScriptTag = _document2.default.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			YouTubeApi.isIframeStarted = true;
-		}
-	},
-
-	/**
-  * Process queue of YouTube <iframe> element creation
-  *
-  */
-	iFrameReady: function iFrameReady() {
-
-		YouTubeApi.isLoaded = true;
-		YouTubeApi.isIframeLoaded = true;
-
-		while (YouTubeApi.iframeQueue.length > 0) {
-			var settings = YouTubeApi.iframeQueue.pop();
-			YouTubeApi.createIframe(settings);
-		}
-	},
-
-	/**
-  * Create a new instance of YouTube API player and trigger a custom event to initialize it
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	createIframe: function createIframe(settings) {
-		return new YT.Player(settings.containerId, settings);
-	},
-
-	/**
-  * Extract ID from YouTube's URL to be loaded through API
-  * Valid URL format(s):
-  * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-  * - http://www.youtube.com/v/VIDEO_ID?version=3
-  * - http://youtu.be/Djd6tPrxc08
-  * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-  *
-  * @param {String} url
-  * @return {string}
-  */
-	getYouTubeId: function getYouTubeId(url) {
-
-		var youTubeId = '';
-
-		if (url.indexOf('?') > 0) {
-			// assuming: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-			youTubeId = YouTubeApi.getYouTubeIdFromParam(url);
-
-			// if it's http://www.youtube.com/v/VIDEO_ID?version=3
-			if (youTubeId === '') {
-				youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
-			}
-		} else {
-			youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
-		}
-
-		return youTubeId;
-	},
-
-	/**
-  * Get ID from URL with format: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
-  *
-  * @param {String} url
-  * @returns {string}
-  */
-	getYouTubeIdFromParam: function getYouTubeIdFromParam(url) {
-
-		if (url === undefined || url === null || !url.trim().length) {
-			return null;
-		}
-
-		var parts = url.split('?'),
-		    parameters = parts[1].split('&');
-
-		var youTubeId = '';
-
-		for (var i = 0, il = parameters.length; i < il; i++) {
-			var paramParts = parameters[i].split('=');
-			if (paramParts[0] === 'v') {
-				youTubeId = paramParts[1];
-				break;
-			}
-		}
-
-		return youTubeId;
-	},
-
-	/**
-  * Get ID from URL with formats
-  *  - http://www.youtube.com/v/VIDEO_ID?version=3
-  *  - http://youtu.be/Djd6tPrxc08
-  * @param {String} url
-  * @return {?String}
-  */
-	getYouTubeIdFromUrl: function getYouTubeIdFromUrl(url) {
-
-		if (url === undefined || url === null || !url.trim().length) {
-			return null;
-		}
-
-		var parts = url.split('?');
-		url = parts[0];
-		return url.substring(url.lastIndexOf('/') + 1);
-	},
-
-	/**
-  * Inject `no-cookie` element to URL. Only works with format: http://www.youtube.com/v/VIDEO_ID?version=3
-  * @param {String} url
-  * @return {?String}
-  */
-	getYouTubeNoCookieUrl: function getYouTubeNoCookieUrl(url) {
-		if (url === undefined || url === null || !url.trim().length || !url.includes('//www.youtube')) {
-			return url;
-		}
-
-		var parts = url.split('/');
-		parts[2] = parts[2].replace('.com', '-nocookie.com');
-		return parts.join('/');
-	}
-};
-
-var YouTubeIframeRenderer = {
-	name: 'youtube_iframe',
-
-	options: {
-		prefix: 'youtube_iframe',
-		/**
-   * Custom configuration for YouTube player
-   *
-   * @see https://developers.google.com/youtube/player_parameters#Parameters
-   * @type {Object}
-   */
-		youtube: {
-			autoplay: 0,
-			controls: 0,
-			disablekb: 1,
-			end: 0,
-			loop: 0,
-			modestbranding: 0,
-			playsinline: 0,
-			rel: 0,
-			showinfo: 0,
-			start: 0,
-			iv_load_policy: 3,
-			// custom to inject `-nocookie` element in URL
-			nocookie: false
-		}
-	},
-
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
-	canPlayType: function canPlayType(type) {
-		return ['video/youtube', 'video/x-youtube'].includes(type);
-	},
-
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
-	create: function create(mediaElement, options, mediaFiles) {
-
-		// API objects
-		var youtube = {},
-		    apiStack = [],
-		    readyState = 4;
-
-		var i = void 0,
-		    il = void 0,
-		    youTubeApi = null,
-		    paused = true,
-		    ended = false,
-		    youTubeIframe = null,
-		    volume = 1;
-
-		youtube.options = options;
-		youtube.id = mediaElement.id + '_' + options.prefix;
-		youtube.mediaElement = mediaElement;
-
-		// wrappers for get/set
-		var props = _mejs2.default.html5media.properties,
-		    assignGettersSetters = function assignGettersSetters(propName) {
-
-			// add to flash state that we will store
-
-			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-			youtube['get' + capName] = function () {
-				if (youTubeApi !== null) {
-					var value = null;
-
-					// figure out how to get youtube dta here
-
-					var _ret = function () {
-						switch (propName) {
-							case 'currentTime':
-								return {
-									v: youTubeApi.getCurrentTime()
-								};
-
-							case 'duration':
-								return {
-									v: youTubeApi.getDuration()
-								};
-
-							case 'volume':
-								volume = youTubeApi.getVolume() / 100;
-								return {
-									v: volume
-								};
-
-							case 'paused':
-								return {
-									v: paused
-								};
-
-							case 'ended':
-								return {
-									v: ended
-								};
-
-							case 'muted':
-								return {
-									v: youTubeApi.isMuted()
-								};
-
-							case 'buffered':
-								var percentLoaded = youTubeApi.getVideoLoadedFraction(),
-								    duration = youTubeApi.getDuration();
-								return {
-									v: {
-										start: function start() {
-											return 0;
-										},
-										end: function end() {
-											return percentLoaded * duration;
-										},
-										length: 1
-									}
-								};
-							case 'src':
-								return {
-									v: youTubeApi.getVideoUrl()
-								};
-
-							case 'readyState':
-								return {
-									v: readyState
-								};
-						}
-					}();
-
-					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-					return value;
-				} else {
-					return null;
-				}
-			};
-
-			youtube['set' + capName] = function (value) {
-
-				if (youTubeApi !== null) {
-
-					// do something
-					switch (propName) {
-
-						case 'src':
-							var url = typeof value === 'string' ? value : value[0].src,
-							    _videoId = YouTubeApi.getYouTubeId(url);
-
-							if (mediaElement.getAttribute('autoplay')) {
-								youTubeApi.loadVideoById(_videoId);
-							} else {
-								youTubeApi.cueVideoById(_videoId);
-							}
-							break;
-
-						case 'currentTime':
-							youTubeApi.seekTo(value);
-							break;
-
-						case 'muted':
-							if (value) {
-								youTubeApi.mute();
-							} else {
-								youTubeApi.unMute();
-							}
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', youtube);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-
-						case 'volume':
-							volume = value;
-							youTubeApi.setVolume(value * 100);
-							setTimeout(function () {
-								var event = (0, _general.createEvent)('volumechange', youtube);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-						case 'readyState':
-							var event = (0, _general.createEvent)('canplay', youtube);
-							mediaElement.dispatchEvent(event);
-							break;
-
-						default:
-							
-							break;
-					}
-				} else {
-					// store for after "READY" event fires
-					apiStack.push({ type: 'set', propName: propName, value: value });
-				}
-			};
-		};
-
-		for (i = 0, il = props.length; i < il; i++) {
-			assignGettersSetters(props[i]);
-		}
-
-		// add wrappers for native methods
-		var methods = _mejs2.default.html5media.methods,
-		    assignMethods = function assignMethods(methodName) {
-
-			// run the method on the native HTMLMediaElement
-			youtube[methodName] = function () {
-
-				if (youTubeApi !== null) {
-
-					// DO method
-					switch (methodName) {
-						case 'play':
-							paused = false;
-							return youTubeApi.playVideo();
-						case 'pause':
-							paused = true;
-							return youTubeApi.pauseVideo();
-						case 'load':
-							return null;
-
-					}
-				} else {
-					apiStack.push({ type: 'call', methodName: methodName });
-				}
-			};
-		};
-
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
-		}
-
-		// CREATE YouTube
-		var youtubeContainer = _document2.default.createElement('div');
-		youtubeContainer.id = youtube.id;
-
-		// If `nocookie` feature was enabled, modify original URL
-		if (youtube.options.youtube.nocookie) {
-			mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
-		}
-
-		mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
-		mediaElement.originalNode.style.display = 'none';
-
-		var isAudio = mediaElement.originalNode.tagName.toLowerCase() === 'audio',
-		    height = isAudio ? '0' : mediaElement.originalNode.height,
-		    width = isAudio ? '0' : mediaElement.originalNode.width,
-		    videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
-		    youtubeSettings = {
-			id: youtube.id,
-			containerId: youtubeContainer.id,
-			videoId: videoId,
-			height: height,
-			width: width,
-			playerVars: Object.assign({
-				controls: 0,
-				rel: 0,
-				disablekb: 1,
-				showinfo: 0,
-				modestbranding: 0,
-				html5: 1,
-				playsinline: 0,
-				start: 0,
-				end: 0,
-				iv_load_policy: 3
-			}, youtube.options.youtube),
-			origin: _window2.default.location.host,
-			events: {
-				onReady: function onReady(e) {
-					mediaElement.youTubeApi = youTubeApi = e.target;
-					mediaElement.youTubeState = {
-						paused: true,
-						ended: false
-					};
-
-					// do call stack
-					if (apiStack.length) {
-						for (i = 0, il = apiStack.length; i < il; i++) {
-
-							var stackItem = apiStack[i];
-
-							if (stackItem.type === 'set') {
-								var propName = stackItem.propName,
-								    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-								youtube['set' + capName](stackItem.value);
-							} else if (stackItem.type === 'call') {
-								youtube[stackItem.methodName]();
-							}
-						}
-					}
-
-					// a few more events
-					youTubeIframe = youTubeApi.getIframe();
-
-					var events = ['mouseover', 'mouseout'],
-					    assignEvents = function assignEvents(e) {
-
-						var newEvent = (0, _general.createEvent)(e.type, youtube);
-						mediaElement.dispatchEvent(newEvent);
-					};
-
-					for (i = 0, il = events.length; i < il; i++) {
-						youTubeIframe.addEventListener(events[i], assignEvents, false);
-					}
-
-					// send init events
-					var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-
-					for (i = 0, il = initEvents.length; i < il; i++) {
-						var event = (0, _general.createEvent)(initEvents[i], youtube);
-						mediaElement.dispatchEvent(event);
-					}
-				},
-				onStateChange: function onStateChange(e) {
-
-					// translate events
-					var events = [];
-
-					switch (e.data) {
-						case -1:
-							// not started
-							events = ['loadedmetadata'];
-							paused = true;
-							ended = false;
-							break;
-
-						case 0:
-							// YT.PlayerState.ENDED
-							events = ['ended'];
-							paused = false;
-							ended = true;
-
-							youtube.stopInterval();
-							break;
-
-						case 1:
-							// YT.PlayerState.PLAYING
-							events = ['play', 'playing'];
-							paused = false;
-							ended = false;
-
-							youtube.startInterval();
-
-							break;
-
-						case 2:
-							// YT.PlayerState.PAUSED
-							events = ['pause'];
-							paused = true;
-							ended = false;
-
-							youtube.stopInterval();
-							break;
-
-						case 3:
-							// YT.PlayerState.BUFFERING
-							events = ['progress'];
-							ended = false;
-
-							break;
-						case 5:
-							// YT.PlayerState.CUED
-							events = ['loadeddata', 'loadedmetadata', 'canplay'];
-							paused = true;
-							ended = false;
-
-							break;
-					}
-
-					// send events up
-					for (i = 0, il = events.length; i < il; i++) {
-						var event = (0, _general.createEvent)(events[i], youtube);
-						mediaElement.dispatchEvent(event);
-					}
-				},
-				onError: function onError(e) {
-					var event = (0, _general.createEvent)('error', youtube);
-					event.data = e.data;
-					mediaElement.dispatchEvent(event);
-				}
-			}
-		};
-
-		// The following will prevent that in mobile devices, YouTube is displayed in fullscreen when using audio
-		if (isAudio) {
-			youtubeSettings.playerVars.playsinline = 1;
-		}
-
-		// send it off for async loading and creation
-		YouTubeApi.enqueueIframe(youtubeSettings);
-
-		youtube.onEvent = function (eventName, player, _youTubeState) {
-			if (_youTubeState !== null && _youTubeState !== undefined) {
-				mediaElement.youTubeState = _youTubeState;
-			}
-		};
-
-		youtube.setSize = function (width, height) {
-			if (youTubeApi !== null) {
-				youTubeApi.setSize(width, height);
-			}
-		};
-		youtube.hide = function () {
-			youtube.stopInterval();
-			youtube.pause();
-			if (youTubeIframe) {
-				youTubeIframe.style.display = 'none';
-			}
-		};
-		youtube.show = function () {
-			if (youTubeIframe) {
-				youTubeIframe.style.display = '';
-			}
-		};
-		youtube.destroy = function () {
-			youTubeApi.destroy();
-		};
-		youtube.interval = null;
-
-		youtube.startInterval = function () {
-			// create timer
-			youtube.interval = setInterval(function () {
-
-				var event = (0, _general.createEvent)('timeupdate', youtube);
-				mediaElement.dispatchEvent(event);
-			}, 250);
-		};
-		youtube.stopInterval = function () {
-			if (youtube.interval) {
-				clearInterval(youtube.interval);
-			}
-		};
-
-		return youtube;
-	}
-};
-
-if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) {
-
-	_window2.default.onYouTubePlayerAPIReady = function () {
-		YouTubeApi.iFrameReady();
-	};
-
-	_media.typeChecks.push(function (url) {
-		url = url.toLowerCase();
-		return url.includes('//www.youtube') || url.includes('//youtu.be') ? 'video/x-youtube' : null;
-	});
-
-	_renderer.renderer.add(YouTubeIframeRenderer);
-}
-
-},{"2":2,"28":28,"29":29,"3":3,"6":6,"7":7}],27:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"23":23,"3":3,"6":6,"7":7}],22:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9809,7 +7180,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"2":2,"3":3,"6":6}],28:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"6":6}],23:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -9983,7 +7354,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 _mejs2.default.Utils.isString = isString;
 
-},{"6":6}],29:[function(_dereq_,module,exports){
+},{"6":6}],24:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -10001,7 +7372,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(28);
+var _general = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10168,7 +7539,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"28":28,"6":6}],30:[function(_dereq_,module,exports){
+},{"23":23,"6":6}],25:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -10372,7 +7743,7 @@ if (!String.prototype.startsWith) {
 	};
 }
 
-},{"2":2}],31:[function(_dereq_,module,exports){
+},{"2":2}],26:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -10571,4 +7942,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"6":6}]},{},[30,5,4,14,23,20,17,18,19,21,22,24,25,26,15,16,8,9,10,11,12,13]);
+},{"6":6}]},{},[25,5,4,14,21,18,17,19,20,15,16,8,9,10,11,12,13]);

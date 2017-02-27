@@ -12,21 +12,20 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
 
-
-	var rendererSources;
-
-	// if commandline list of renderers, (e.g. --renderers=hls,dash,...) build only these
-	var rendererList = grunt.option('features');
-	if (rendererList) {
-		rendererList = rendererList.split(',');
-		rendererSources = [];
-		rendererList.forEach(function (renderer) {
-			var path = 'src/js/renderers/' + renderer + '.js';
-			if (grunt.file.isFile(path)) {
-				rendererSources.push(path);
-			}
-		});
-	}
+	// var rendererSources;
+	//
+	// // if commandline list of renderers, (e.g. --renderers=hls,dash,...) build only these
+	// var rendererList = grunt.option('features');
+	// if (rendererList) {
+	// 	rendererList = rendererList.split(',');
+	// 	rendererSources = [];
+	// 	rendererList.forEach(function (renderer) {
+	// 		var path = 'src/js/renderers/' + renderer + '.js';
+	// 		if (grunt.file.isFile(path)) {
+	// 			rendererSources.push(path);
+	// 		}
+	// 	});
+	// }
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -54,17 +53,18 @@ module.exports = function (grunt) {
 						'src/js/core/i18n.js',
 						'src/js/languages/en.js',
 						'src/js/renderers/html5.js',
-						'src/js/renderers/flash.js'
-					].concat(rendererSources || [
-							'src/js/renderers/dailymotion.js',
-							'src/js/renderers/dash.js',
-							'src/js/renderers/facebook.js',
-							'src/js/renderers/flv.js',
-							'src/js/renderers/hls.js',
-							'src/js/renderers/soundcloud.js',
-							'src/js/renderers/vimeo.js',
-							'src/js/renderers/youtube.js',
-						]),
+						'src/js/renderers/flash.js',
+						// ].concat(rendererSources || [
+						'src/js/renderers/dailymotion.js',
+						'src/js/renderers/dash.js',
+						'src/js/renderers/facebook.js',
+						'src/js/renderers/flv.js',
+						'src/js/renderers/hls.js',
+						'src/js/renderers/soundcloud.js',
+						'src/js/renderers/vimeo.js',
+						'src/js/renderers/youtube.js',
+					],
+					// ]),
 					// just player
 					'build/mediaelementplayer.js': [
 						'src/js/utils/polyfill.js',
@@ -89,17 +89,18 @@ module.exports = function (grunt) {
 						'src/js/core/i18n.js',
 						'src/js/languages/en.js',
 						'src/js/renderers/html5.js',
-						'src/js/renderers/flash.js'
-					].concat(rendererSources || [
-							'src/js/renderers/dailymotion.js',
-							'src/js/renderers/dash.js',
-							'src/js/renderers/facebook.js',
-							'src/js/renderers/flv.js',
-							'src/js/renderers/hls.js',
-							'src/js/renderers/soundcloud.js',
-							'src/js/renderers/vimeo.js',
-							'src/js/renderers/youtube.js',
-						]).concat([
+						'src/js/renderers/flash.js',
+						// ].concat(rendererSources || [
+						// 'src/js/renderers/dailymotion.js',
+						'src/js/renderers/dash.js',
+						// 'src/js/renderers/facebook.js',
+						'src/js/renderers/flv.js',
+						'src/js/renderers/hls.js',
+						// 	'src/js/renderers/soundcloud.js',
+						// 	'src/js/renderers/vimeo.js',
+						// 	'src/js/renderers/twitch.js',
+						// 	'src/js/renderers/youtube.js',
+						// ]).concat([
 						'src/js/library.js',
 						'src/js/player.js',
 						'src/js/features/fullscreen.js',
@@ -108,10 +109,16 @@ module.exports = function (grunt) {
 						'src/js/features/time.js',
 						'src/js/features/tracks.js',
 						'src/js/features/volume.js'
-					]),
+					],
+					// ]),
 
 					// new renderers
-					'build/renderers/twitch.js': 'src/js/renderers/twitch.js'
+					'build/renderers/dailymotion.js': 'src/js/renderers/dailymotion.js',
+					'build/renderers/facebook.js': 'src/js/renderers/facebook.js',
+					'build/renderers/soundcloud.js': 'src/js/renderers/soundcloud.js',
+					'build/renderers/twitch.js': 'src/js/renderers/twitch.js',
+					'build/renderers/vimeo.js': 'src/js/renderers/vimeo.js',
+					'build/renderers/youtube.js': 'src/js/renderers/youtube.js'
 				},
 				options: {
 					plugin: [
@@ -148,7 +155,8 @@ module.exports = function (grunt) {
 				src: [
 					'build/mediaelement.js',
 					'build/mediaelementplayer.js',
-					'build/mediaelement-and-player.js'
+					'build/mediaelement-and-player.js',
+					'build/renderers/*.js'
 				]
 			},
 			options: {
@@ -217,82 +225,14 @@ module.exports = function (grunt) {
 		clean: {
 			build: ['build'],
 			temp: ['tmp']
-		},
-
-		// Task that compiles all SWF files using the free Flex SDK on Linux/Mac.
-		// There are a few prerequisite steps involved in running this task.
-		//
-		// 1) Install the Flex SDK version 4.6 (only needs to be done once)
-		//	 Download the free flex sdk from http://sourceforge.net/adobe/flexsdk/wiki/Download%20Flex%204.6/
-		//	 Unzip it to a directory on your local machine (eg: /usr/local/flex_sdk_4.6)
-		//	 Create a symlink from the install location to this directory
-		//	 (eg: ln -s /usr/local/flex_sdk_4.6 mediaelement/src/flash)
-		//
-		// 2) Update the `flexPath` variable below to reflect the name of the symlink you created
-		//
-		// 3) Run this task from the command line: `grunt shell:buildFlash`
-		//
-		flexPath: './src/flash/flex_sdk_4.6',
-		flexVersion: '10.1',
-		buildFlashCommand: [
-			'<%= flexPath %>/bin/mxmlc -strict=false -compiler.debug -warnings=true',
-			'<%= sourceFile %> -o <%= flashOut %>',
-			'-library-path+="<%= flexPath %>/lib"',
-			'-use-network=true -target-player <%= flexVersion %> -source-path <%= sourcePath %>',
-			'-headless-server -static-link-runtime-shared-libraries',
-			'<%= externalLibraries %>'
-		].join(" "),
-
-		shell: {
-			buildFlashVideo: {
-				command: function () {
-					grunt.config.set("sourceFile", 'src/flash/flash-video/VideoMediaElement.as');
-					grunt.config.set("sourcePath", 'src/flash/flash-video');
-					grunt.config.set("flashOut", 'build/mediaelement-flash-video.swf');
-					grunt.config.set("externalLibraries", '');
-					return grunt.config.get("buildFlashCommand");
-				}
-			},
-			buildFlashVideoHls: {
-				command: function () {
-					grunt.config.set("sourceFile", 'src/flash/flash-video-hls/HlsMediaElement.as');
-					grunt.config.set("sourcePath", 'src/flash/flash-video-hls');
-					grunt.config.set("flashOut", 'build/mediaelement-flash-video-hls.swf');
-					grunt.config.set("externalLibraries", '-include-libraries+=src/flash/flash-video-hls/flashls.swc');
-					return grunt.config.get("buildFlashCommand");
-				}
-			},
-			buildFlashVideoMDash: {
-				command: function () {
-					grunt.config.set("sourceFile", 'src/flash/flash-video-dash/DashMediaElement.as');
-					grunt.config.set("sourcePath", 'src/flash/flash-video-dash');
-					grunt.config.set("flashOut", 'build/mediaelement-flash-video-mdash.swf');
-					grunt.config.set("externalLibraries", '-include-libraries+=src/flash/flash-video-dash/OSMF.swc');
-					return grunt.config.get("buildFlashCommand");
-				}
-			},
-			buildFlashAudio: {
-				command: function () {
-					grunt.config.set("sourceFile", 'src/flash/flash-audio/AudioMediaElement.as');
-					grunt.config.set("sourcePath", 'src/flash/flash-audio');
-					grunt.config.set("flashOut", 'build/mediaelement-flash-audio.swf');
-					grunt.config.set("externalLibraries", '');
-					return grunt.config.get("buildFlashCommand");
-				}
-			},
-			buildFlashAudioOgg: {
-				command: function () {
-					grunt.config.set("sourceFile", 'src/flash/flash-audio-ogg/OggMediaElement.as');
-					grunt.config.set("sourcePath", 'src/flash/flash-audio-ogg');
-					grunt.config.set("flashOut", 'build/mediaelement-flash-audio-ogg.swf');
-					grunt.config.set("externalLibraries", '-include-libraries+=src/flash/flash-audio-ogg/oggvorbis.swc');
-					return grunt.config.get("buildFlashCommand");
-				}
-			}
 		}
 	});
 
 	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
 	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
-	grunt.registerTask('flash', ['shell']);
+	grunt.registerTask('flash', '', function() {
+		var exec = require('child_process').execSync;
+		var result = exec("sh compile_swf.sh", { encoding: 'utf8' });
+		grunt.log.writeln(result);
+	});
 };

@@ -19,38 +19,17 @@
 			// renderers/flash.js
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "关闭全屏",
-			"mejs.fullscreen-on": "转向全屏",
-			"mejs.download-video": "下载视频",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "全屏",
-
-			// features/jumpforward.js
-			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-			// features/loop.js
-			//"mejs.loop": "Toggle Loop",
 
 			// features/playpause.js
 			"mejs.play": "播放",
 			"mejs.pause": "暂停",
 
-			// features/postroll.js
-			"mejs.close": "关闭",
-
 			// features/progress.js
 			"mejs.time-slider": "时间滑动棒",
 			"mejs.time-help-text": "使用作/右箭头快进1秒，使用上/下箭头快进10秒。",
-
-			// features/skipback.js
-			"mejs.time-skip-back": "后退%1秒",
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "字幕/标题",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "无",
+			//"mejs.live-broadcast" : "Live Broadcast",
 
 			// features/volume.js
 			"mejs.volume-help-text": "使用上/下箭头提高或降低音量。",
@@ -60,25 +39,12 @@
 
 			// core/player.js
 			"mejs.video-player": "视频播放器",
-			"mejs.audio-player": "音频播放器"
-
-			// features/ads.js
-			//"mejs.ad-skip": "Skip ad",
-			//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-			// features/sourcechooser.js
-			//"mejs.source-chooser": "Source Chooser",
-
-			// features/stop.js
-			//"mejs.stop": "Stop",
-
-			//features/speed.js
-			//"mejs.speed-rate" : "Speed Rate",
-
-			//features/progress.js
-			//"mejs.live-broadcast" : "Live Broadcast",
+			"mejs.audio-player": "音频播放器",
 
 			// features/tracks.js
+			"mejs.captions-subtitles": "字幕/标题",
+			// "mejs.captions-chapters": "Chapters",
+			"mejs.none": "无"
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",

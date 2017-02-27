@@ -18,38 +18,17 @@
 			// renderers/flash.js
 			"mejs.install-flash": "Flash Player у вашому браузері не встановлений або відключений. Будь ласка включіть Flash Player або скачайте останню версію із https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Вимкнути повноекранний режим",
-			"mejs.fullscreen-on": "Увійти в повноекранний режим",
-			"mejs.download-video": "Скачати відео",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Повноекранний режим",
-
-			// features/jumpforward.js
-			"mejs.time-jump-forward": ["Перейти вперед на %1 секунду", "Перейти вперед на %1 секунди", "Перейти вперед на %1 секунд"],
-
-			// features/loop.js
-			"mejs.loop": "Повторювати",
 
 			// features/playpause.js
 			"mejs.play": "Пуск",
 			"mejs.pause": "Пауза",
 
-			// features/postroll.js
-			"mejs.close": "Закрити",
-
 			// features/progress.js
 			"mejs.time-slider": "Повзунок часу",
 			"mejs.time-help-text": "Використовуйте ліву/праву клавіші зі стрілками, щоб переміститися на одну секунду, або клавіші вверх/вниз, щоб переміститися на десять секунд.",
-
-			// features/skipback.js
-			"mejs.time-skip-back": ["Перейти назад на %1 секунду", "Перейти назад на %1 секунди", "Перейти назад на %1 секунд"],
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Титри/Субтитри",
-			"mejs.captions-chapters": "Глави",
-			"mejs.none": "Немає",
+			"mejs.live-broadcast" : "Пряма трансляція",
 
 			// features/volume.js
 			"mejs.volume-help-text": "Використовуйте клавіші зі стрілками вверх/вниз, щоб збільшити або зменшити звук.",
@@ -61,23 +40,10 @@
 			"mejs.video-player": "Відеоплеєр",
 			"mejs.audio-player": "Аудіоплеєр",
 
-			// features/ads.js
-			"mejs.ad-skip": "Пропустити рекламу",
-			"mejs.ad-skip-info": ["Пропустити через %1 секунду", "Пропустити через %1 секунди", "Пропустити через %1 секунд"],
-
-			// features/sourcechooser.js
-			"mejs.source-chooser": "Вибір джерела",
-
-			// features/stop.js
-			"mejs.stop": "Зупинити",
-
-			//features/speed.js
-			"mejs.speed-rate" : "Швидкість відтворення",
-
-			//features/progress.js
-			"mejs.live-broadcast" : "Пряма трансляція",
-
 			// features/tracks.js
+			"mejs.captions-subtitles": "Титри/Субтитри",
+			"mejs.captions-chapters": "Глави",
+			"mejs.none": "Немає",
 			"mejs.afrikaans": "Африкаанс",
 			"mejs.albanian": "Албанська",
 			"mejs.arabic": "Арабська",

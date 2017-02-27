@@ -237,6 +237,8 @@ M(PEG)-DASH shim | `flash_dash` | --- | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
 
+**IMPORTANT**: Only renderers prefixed as __native__, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
+
 
 **Notes** 
 * Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.

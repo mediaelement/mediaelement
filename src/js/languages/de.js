@@ -19,38 +19,17 @@
 			// renderers/flash.js
 			"mejs.install-flash": "Ihr Browser unterstützt kein Flash. Bitte aktivieren Sie Flash bzw. laden Sie die aktuellste Flash-Version herunter unter https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Vollbildmodus beenden",
-			"mejs.fullscreen-on": "Vollbild",
-			"mejs.download-video": "Video herunterladen",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Vollbild",
-
-			// features/jumpforward.js
-			"mejs.time-jump-forward": ["1 Sekunde vorspulen", "%1 Sekunden vorspulen"],
-
-			// features/loop.js
-			"mejs.loop": "Wiederholung (de-)aktivieren",
 
 			// features/playpause.js
 			"mejs.play": "Abspielen",
 			"mejs.pause": "Pause",
 
-			// features/postroll.js
-			"mejs.close": "Schließen",
-
 			// features/progress.js
 			"mejs.time-slider": "Zeitschieberegler",
 			"mejs.time-help-text": "Verwende die Pfeiltaste nach links/rechts, um eine Sekunde zu spulen, hoch/runter um zehn Sekunden zu spulen.",
-
-			// features/skipback.js
-			"mejs.time-skip-back": ["1 Sekunde zurückspulen", "%1 Sekunden zurückspulen"],
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Überschriften/Untertitel",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "Keine",
+			"mejs.live-broadcast" : "Live-Übertragung",
 
 			// features/volume.js
 			"mejs.volume-help-text": "Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.",
@@ -62,23 +41,10 @@
 			"mejs.video-player": "Video-Player",
 			"mejs.audio-player": "Audio-Player",
 
-			// features/ads.js
-			"mejs.ad-skip": "Werbung überspringen",
-			"mejs.ad-skip-info": ["Überspringen in 1 Sekunde", "Überspringen in %1 Sekunden"],
-
-			// features/sourcechooser.js
-			"mejs.source-chooser": "Quellenauswahl",
-
-			// features/stop.js
-			"mejs.stop": "Stop",
-
-			//features/speed.js
-			"mejs.speed-rate" : "Geschwindigkeitsrate",
-
-			//features/progress.js
-			"mejs.live-broadcast" : "Live-Übertragung",
-
 			// features/tracks.js
+			"mejs.captions-subtitles": "Überschriften/Untertitel",
+			// "mejs.captions-chapters": "Chapters",
+			"mejs.none": "Keine",
 			"mejs.afrikaans": "Afrikanisch",
 			"mejs.albanian": "Albanisch",
 			"mejs.arabic": "Arabisch",
