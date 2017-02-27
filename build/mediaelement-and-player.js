@@ -3790,6 +3790,9 @@ var MediaElementPlayer = function () {
 
 		var t = this;
 
+		// To avoid jQuery.noConflict() issues
+		_window2.default.$ = _mejs2.default.$;
+
 		t.hasFocus = false;
 
 		t.controlsAreVisible = true;
