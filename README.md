@@ -90,7 +90,7 @@ If you want to contribute to improve this package, please read [Guidelines](docs
 <a id="sources"></a>
 ## Useful resources
 
-A compilation of useful articles can be found [here](docs/resources).
+A compilation of useful articles can be found [here](docs/resources.md).
 
 <a id="changelog"></a>
 ## Change Log
