@@ -111,7 +111,7 @@ window.$ = jquery;
 'use strict';
 
 import '/path/to/jquery-global';
-import 'mediaelement/all'; // or import `mediaelement/player`;
+import 'mediaelement/full'; // or import `mediaelement/player`;
 ```
 
 <a id="requirejs"></a>
