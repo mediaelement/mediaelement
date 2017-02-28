@@ -1,5 +1,9 @@
 ### Version History
 
+*3.2.1 (2017/02/28)*
+
+* Added missing documentation for NPM given latest changes @ron666
+
 *3.2.0 (2017/02/28)*
 
 * Fixed typo in header file @ron666
