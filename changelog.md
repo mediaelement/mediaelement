@@ -1,6 +1,6 @@
 ### Version History
 
-*3.2.0 (2017/03/??)*
+*3.2.0 (2017/02/28)*
 
 * Fixed typo in header file @ron666
 * Added Ukrainian translation (https://github.com/johndyer/mediaelement/pull/2100) @DmitryKrekota

@@ -1,7 +1,7 @@
 Package.describe({
     name: 'johndyer:mediaelement',
     summary: '*Official* MediaElement.js: <video> and <audio> made easy. One file. Any browser. Same UI.',
-    version: '3.1.3',
+    version: '3.2.0',
     git: 'https://github.com/johndyer/mediaelement'
 });
 
@@ -28,6 +28,11 @@ Package.onUse(function(api) {
         'build/lang/sk.js',
         'build/lang/zh.js',
         'build/lang/zh-cn.js',
+        'build/renderers/dailymotion.js',
+        'build/renderers/facebook.js',
+        'build/renderers/soundcloud.js',
+        'build/renderers/twitch.js',
+        'build/renderers/vimeo.js',
         'build/mejs-controls.svg',
         'build/mejs-controls.png',
         'build/mediaelement-flash-audio.swf',
