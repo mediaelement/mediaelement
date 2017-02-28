@@ -1,6 +1,6 @@
 ### Version History
 
-*3.x.x (2017/03/??)*
+*3.2.0 (2017/03/??)*
 
 * Fixed typo in header file @ron666
 * Added Ukrainian translation (https://github.com/johndyer/mediaelement/pull/2100) @DmitryKrekota
@@ -14,7 +14,7 @@
 * Cleaned up translation files and move others to `mediaelement-plugins` repo @ron666
 * Fixed wrong link in documentation (https://github.com/johndyer/mediaelement/pull/2106) @7huo
 * Added fix to avoid `jQuery.noConflict()` issues @ron666
-* Reorganized renderers and created `build/renderers` folder to keep bundles size low @ron666
+* Reorganized renderers and created `build/renderers` folder to keep bundles' size low @ron666
 * Integrated Twitch renderer @ron666
 
 *3.1.3 (2017/02/23)*

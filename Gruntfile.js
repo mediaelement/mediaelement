@@ -99,7 +99,6 @@ module.exports = function (grunt) {
 						'src/js/features/time.js',
 						'src/js/features/tracks.js',
 						'src/js/features/volume.js'
-
 					]),
 
 					// new renderers
@@ -107,7 +106,7 @@ module.exports = function (grunt) {
 					'build/renderers/facebook.js': 'src/js/renderers/facebook.js',
 					'build/renderers/soundcloud.js': 'src/js/renderers/soundcloud.js',
 					'build/renderers/twitch.js': 'src/js/renderers/twitch.js',
-					'build/renderers/vimeo.js': 'src/js/renderers/vimeo.js',
+					'build/renderers/vimeo.js': 'src/js/renderers/vimeo.js'
 				},
 				options: {
 					plugin: [
@@ -117,36 +116,18 @@ module.exports = function (grunt) {
 			}
 		},
 		concat: {
-			me: {
-				src: [
-					'src/js/header.js',
-					'build/mediaelement.js'
-				],
-				dest: 'build/mediaelement.js'
-			},
-			mep: {
-				src: [
-					'src/js/header.js',
-					'build/mediaelementplayer.js'
-				],
-				dest: 'build/mediaelementplayer.js'
-			},
-			bundle: {
-				src: [
-					'src/js/header.js',
-					'build/mediaelement-and-player.js'
-				],
-				dest: 'build/mediaelement-and-player.js'
+			dist: {
+				options: {
+					banner: grunt.file.read('src/js/header.js')
+				},
+				expand: true,
+				src: ['build/**/*.js', '!build/lang/*.js', '!build/jquery.js', '!build/**/*.min.js'],
+				ext: '.js'
 			}
 		},
 		removelogging: {
 			dist: {
-				src: [
-					'build/mediaelement.js',
-					'build/mediaelementplayer.js',
-					'build/mediaelement-and-player.js',
-					'build/renderers/*.js'
-				]
+				src: ['build/**/*.js', '!build/lang/*.js', '!build/jquery.js', '!build/**/*.min.js'],
 			},
 			options: {
 				// Keep `warn` and other methods from the console API
