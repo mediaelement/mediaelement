@@ -55,7 +55,7 @@ $('select[name=stretching]').on('change', function () {
 $('select[name=sources]').on('change', function () {
 	var
 		_this = $(this),
-		media = _this.closest('.players').find('.media-wrapper').children('div:first').attr('id'),
+		media = _this.closest('.players').find('.media-wrapper').find('.mejs__container').attr('id'),
 		player = mejs.players[media]
 	;
 
@@ -93,7 +93,7 @@ $(document).ready(function () {
 		stretching: stretching,
 		pluginPath: '../build/',
 		success: function (media) {
-			$(media).closest('.media-wrapper').children('div:first').attr('lang', mejs.i18n.language());
+			$(media).closest('.media-wrapper').find('.mejs__container').attr('lang', mejs.i18n.language());
 
 			var renderer = $('#' + media.id + '-rendername');
 

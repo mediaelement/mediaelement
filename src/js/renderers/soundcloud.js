@@ -1,12 +1,5 @@
 'use strict';
 
-import window from 'global/window';
-import document from 'global/document';
-import mejs from '../core/mejs';
-import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/general';
-import {typeChecks} from '../utils/media';
-
 /**
  * SoundCloud renderer
  *
@@ -232,7 +225,7 @@ const SoundCloudIframeRenderer = {
 									scPlayer.setVolume(1); // ?
 								}
 								setTimeout(() => {
-									const event = createEvent('volumechange', sc);
+									const event = mejs.Utils.createEvent('volumechange', sc);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
@@ -240,13 +233,13 @@ const SoundCloudIframeRenderer = {
 							case 'volume':
 								scPlayer.setVolume(value);
 								setTimeout(() => {
-									const event = createEvent('volumechange', sc);
+									const event = mejs.Utils.createEvent('volumechange', sc);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
 
 							case 'readyState':
-								const event = createEvent('canplay', sc);
+								const event = mejs.Utils.createEvent('canplay', sc);
 								mediaElement.dispatchEvent(event);
 								break;
 
@@ -330,7 +323,7 @@ const SoundCloudIframeRenderer = {
 
 				scPlayer.getPosition((_currentTime) => {
 					currentTime = _currentTime / 1000;
-					const event = createEvent('timeupdate', sc);
+					const event = mejs.Utils.createEvent('timeupdate', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -338,28 +331,28 @@ const SoundCloudIframeRenderer = {
 			scPlayer.bind(SC.Widget.Events.PAUSE, () => {
 				paused = true;
 
-				const event = createEvent('pause', sc);
+				const event = mejs.Utils.createEvent('pause', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.PLAY, () => {
 				paused = false;
 				ended = false;
 
-				const event = createEvent('play', sc);
+				const event = mejs.Utils.createEvent('play', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.FINISHED, () => {
 				paused = false;
 				ended = true;
 
-				const event = createEvent('ended', sc);
+				const event = mejs.Utils.createEvent('ended', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.READY, () => {
 				scPlayer.getDuration((_duration) => {
 					duration = _duration / 1000;
 
-					const event = createEvent('loadedmetadata', sc);
+					const event = mejs.Utils.createEvent('loadedmetadata', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -368,14 +361,14 @@ const SoundCloudIframeRenderer = {
 					if (duration > 0) {
 						bufferedTime = duration * loadProgress;
 
-						const event = createEvent('progress', sc);
+						const event = mejs.Utils.createEvent('progress', sc);
 						mediaElement.dispatchEvent(event);
 					}
 				});
 				scPlayer.getDuration((_duration) => {
 					duration = _duration;
 
-					const event = createEvent('loadedmetadata', sc);
+					const event = mejs.Utils.createEvent('loadedmetadata', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
@@ -384,7 +377,7 @@ const SoundCloudIframeRenderer = {
 			const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (let i = 0, il = initEvents.length; i < il; i++) {
-				const event = createEvent(initEvents[i], sc);
+				const event = mejs.Utils.createEvent(initEvents[i], sc);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -433,9 +426,9 @@ const SoundCloudIframeRenderer = {
  * Register SoundCloud type based on URL structure
  *
  */
-typeChecks.push((url) => {
+mejs.Utils.typeChecks.push((url) => {
 	url = url.toLowerCase();
 	return (url.includes('//soundcloud.com') || url.includes('//w.soundcloud.com')) ? 'video/x-soundcloud' : null;
 });
 
-renderer.add(SoundCloudIframeRenderer);
+mejs.Renderers.add(SoundCloudIframeRenderer);

@@ -151,6 +151,13 @@ require(['path/to/hls'], function (Hls) {
 <a id="renderers-usage"></a>
 ## Use Renderers
 
+After the `MediaElement` package has been loaded, include any renderer(s) you are planning to use that not part of the main bundle (`mediaelement-and-player.js`). For example, to include Vimeo and Twitch support:
+
+```html
+<script src="/path/to/mediaelement-and-player.min.js"></script>
+<script src="/path/to/renderers/vimeo.min.js"></script>
+<script src="/path/to/renderers/twitch.min.js"></script>
+```
 By default, all the renderers will be called by their IDs and the plugin will try to detect the best one. 
 
 However, if you need to use just a subset of renderers in a specific order, you must list their IDs using `renderers` option when configuring your player.
@@ -228,6 +235,7 @@ Facebook | `facebook` | --- | --- | video/facebook, video/x-facebook
 Vimeo | `vimeo_iframe` | `vimeoPlayer` | [Vimeo Player API](https://github.com/vimeo/player.js) | video/vimeo, video/x-vimeo
 YouTube | `youtube_iframe` | `youTubeApi` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
 DailyMotion | `dailymotion_iframe` | `dmPlayer` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
+Twitch | `twitch_iframe` | `twitchPlayer` | [Twitch Emded API](https://github.com/justintv/Twitch-API/blob/master/embed-video.md) | video/twitch, video/x-twitch
 Video shim  | `flash_video` | --- | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 
 Audio shim | `flash_audio` | --- | --- | audio/mp3
 OGG Audio shim  | `flash_audio_ogg` | --- | --- | audio/ogg, audio/oga
@@ -235,6 +243,8 @@ HLS shim | `flash_hls` | --- | --- | application/x-mpegURL, vnd.apple.mpegURL
 M(PEG)-DASH shim | `flash_dash` | --- | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
+
+**IMPORTANT**: Only renderers prefixed as __native__, YouTube, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
 
 
 **Notes** 

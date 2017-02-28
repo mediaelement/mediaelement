@@ -1,13 +1,5 @@
 'use strict';
 
-import window from 'global/window';
-import document from 'global/document';
-import mejs from '../core/mejs';
-import {renderer} from '../core/renderer';
-import {isObjectEmpty} from '../utils/general';
-import {createEvent} from '../utils/general';
-import {typeChecks} from '../utils/media';
-
 /**
  * Facebook renderer
  *
@@ -152,7 +144,7 @@ const FacebookRenderer = {
 									fbApi.unmute();
 								}
 								setTimeout(() => {
-									const event = createEvent('volumechange', fbWrapper);
+									const event = mejs.Utils.createEvent('volumechange', fbWrapper);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
@@ -160,13 +152,13 @@ const FacebookRenderer = {
 							case 'volume':
 								fbApi.setVolume(value);
 								setTimeout(() => {
-									const event = createEvent('volumechange', fbWrapper);
+									const event = mejs.Utils.createEvent('volumechange', fbWrapper);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
 
 							case 'readyState':
-								const event = createEvent('canplay', fbWrapper);
+								const event = mejs.Utils.createEvent('canplay', fbWrapper);
 								mediaElement.dispatchEvent(event);
 								break;
 
@@ -230,7 +222,7 @@ const FacebookRenderer = {
 		 */
 		function sendEvents (events) {
 			for (let i = 0, il = events.length; i < il; i++) {
-				const event = mejs.Utils.createEvent(events[i], fbWrapper);
+				const event = mejs.Utils.mejs.Utils.createEvent(events[i], fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}
 		}
@@ -275,12 +267,19 @@ const FacebookRenderer = {
 						const
 							fbIframe = fbDiv.getElementsByTagName('iframe')[0],
 							width = parseInt(window.getComputedStyle(fbIframe, null).width),
-							height = parseInt(fbIframe.style.height)
+							height = parseInt(fbIframe.style.height),
+							events = ['mouseover', 'mouseout'],
+							assignEvents = (e) => {
+								const event = mejs.Utils.createEvent(e.type, fbWrapper);
+								mediaElement.dispatchEvent(event);
+							}
 						;
 
 						fbWrapper.setSize(width, height);
-
-						sendEvents(['mouseover', 'mouseout']);
+						
+						for (i = 0, il = events.length; i < il; i++) {
+							fbIframe.addEventListener(events[i], assignEvents, false);
+						}
 
 						// remove previous listeners
 						const fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
@@ -290,7 +289,7 @@ const FacebookRenderer = {
 								handler = eventHandler[event]
 							;
 							if (handler !== undefined && handler !== null &&
-								!isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+								!mejs.Utils.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
 								handler.removeListener(event);
 							}
 						}
@@ -315,8 +314,7 @@ const FacebookRenderer = {
 							}
 						}
 
-						sendEvents(['rendererready', 'ready', 'loadeddata', 'canplay', 'progress']);
-						sendEvents(['loadedmetadata', 'timeupdate', 'progress']);
+						sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
 
 						let timer;
 
@@ -406,7 +404,7 @@ const FacebookRenderer = {
 		fbWrapper.startInterval = () => {
 			// create timer
 			fbWrapper.interval = setInterval(() => {
-				const event = createEvent('timeupdate', fbWrapper);
+				const event = mejs.Utils.createEvent('timeupdate', fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}, 250);
 		};
@@ -424,9 +422,9 @@ const FacebookRenderer = {
  * Register Facebook type based on URL structure
  *
  */
-typeChecks.push((url) => {
+mejs.Utils.typeChecks.push((url) => {
 	url = url.toLowerCase();
 	return url.includes('//www.facebook') ? 'video/x-facebook' : null;
 });
 
-renderer.add(FacebookRenderer);
+mejs.Renderers.add(FacebookRenderer);
