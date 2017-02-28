@@ -66,7 +66,7 @@ $('video, audio').mediaelementplayer({
 });
 ```
 
-**It is strongly recommended to read the documentation to get the most out of this package**. Visit [here](docs) to start.
+**It is strongly recommended to read the documentation and check the `demo` folder to get the most out of this package**. Visit [here](docs) to start.
 
 <a id="installation"></a>
 ## Installation and Usage
@@ -90,7 +90,7 @@ If you want to contribute to improve this package, please read [Guidelines](docs
 <a id="sources"></a>
 ## Useful resources
 
-A compilation of useful articles can be found [here](docs/resources).
+A compilation of useful articles can be found [here](docs/resources.md).
 
 <a id="changelog"></a>
 ## Change Log

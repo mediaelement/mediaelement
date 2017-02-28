@@ -151,6 +151,13 @@ require(['path/to/hls'], function (Hls) {
 <a id="renderers-usage"></a>
 ## Use Renderers
 
+After the `MediaElement` package has been loaded, include any renderer(s) you are planning to use that not part of the main bundle (`mediaelement-and-player.js`). For example, to include Vimeo and Twitch support:
+
+```html
+<script src="/path/to/mediaelement-and-player.min.js"></script>
+<script src="/path/to/renderers/vimeo.min.js"></script>
+<script src="/path/to/renderers/twitch.min.js"></script>
+```
 By default, all the renderers will be called by their IDs and the plugin will try to detect the best one. 
 
 However, if you need to use just a subset of renderers in a specific order, you must list their IDs using `renderers` option when configuring your player.
@@ -237,7 +244,7 @@ M(PEG)-DASH shim | `flash_dash` | --- | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
 
-**IMPORTANT**: Only renderers prefixed as __native__, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
+**IMPORTANT**: Only renderers prefixed as __native__, YouTube, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
 
 
 **Notes** 

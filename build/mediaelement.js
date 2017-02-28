@@ -58,7 +58,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(8);
 
-var _general = _dereq_(15);
+var _general = _dereq_(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -429,7 +429,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"15":15,"6":6,"8":8}],5:[function(_dereq_,module,exports){
+},{"16":16,"6":6,"8":8}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -448,7 +448,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _media = _dereq_(16);
+var _media = _dereq_(17);
 
 var _renderer = _dereq_(7);
 
@@ -853,7 +853,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"16":16,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1155,11 +1155,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(15);
+var _general = _dereq_(16);
 
-var _media = _dereq_(16);
+var _media = _dereq_(17);
 
-var _constants = _dereq_(14);
+var _constants = _dereq_(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1464,7 +1464,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"14":14,"15":15,"16":16,"2":2,"3":3,"6":6,"7":7}],10:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],10:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1492,11 +1492,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(15);
+var _general = _dereq_(16);
 
-var _constants = _dereq_(14);
+var _constants = _dereq_(15);
 
-var _media = _dereq_(16);
+var _media = _dereq_(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2023,7 +2023,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"14":14,"15":15,"16":16,"2":2,"3":3,"4":4,"6":6,"7":7}],11:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"2":2,"3":3,"4":4,"6":6,"7":7}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -2040,11 +2040,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(15);
+var _general = _dereq_(16);
 
-var _constants = _dereq_(14);
+var _constants = _dereq_(15);
 
-var _media = _dereq_(16);
+var _media = _dereq_(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2352,7 +2352,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"14":14,"15":15,"16":16,"2":2,"3":3,"6":6,"7":7}],12:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -2369,11 +2369,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(15);
+var _general = _dereq_(16);
 
-var _constants = _dereq_(14);
+var _constants = _dereq_(15);
 
-var _media = _dereq_(16);
+var _media = _dereq_(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2762,7 +2762,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"14":14,"15":15,"16":16,"2":2,"3":3,"6":6,"7":7}],13:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -2779,9 +2779,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(15);
+var _general = _dereq_(16);
 
-var _constants = _dereq_(14);
+var _constants = _dereq_(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2920,7 +2920,660 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"14":14,"15":15,"2":2,"3":3,"6":6,"7":7}],14:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"2":2,"3":3,"6":6,"7":7}],14:[function(_dereq_,module,exports){
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _mejs = _dereq_(6);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+var _renderer = _dereq_(7);
+
+var _general = _dereq_(16);
+
+var _media = _dereq_(17);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * YouTube renderer
+ *
+ * Uses <iframe> approach and uses YouTube API to manipulate it.
+ * Note: IE6-7 don't have postMessage so don't support <iframe> API, and IE8 doesn't fire the onReady event,
+ * so it doesn't work - not sure if Google problem or not.
+ * @see https://developers.google.com/youtube/iframe_api_reference
+ */
+var YouTubeApi = {
+	/**
+  * @type {Boolean}
+  */
+	isIframeStarted: false,
+	/**
+  * @type {Boolean}
+  */
+	isIframeLoaded: false,
+	/**
+  * @type {Array}
+  */
+	iframeQueue: [],
+
+	/**
+  * Create a queue to prepare the creation of <iframe>
+  *
+  * @param {Object} settings - an object with settings needed to create <iframe>
+  */
+	enqueueIframe: function enqueueIframe(settings) {
+
+		// Check whether YouTube API is already loaded.
+		YouTubeApi.isLoaded = typeof YT !== 'undefined' && YT.loaded;
+
+		if (YouTubeApi.isLoaded) {
+			YouTubeApi.createIframe(settings);
+		} else {
+			YouTubeApi.loadIframeApi();
+			YouTubeApi.iframeQueue.push(settings);
+		}
+	},
+
+	/**
+  * Load YouTube API script on the header of the document
+  *
+  */
+	loadIframeApi: function loadIframeApi() {
+		if (!YouTubeApi.isIframeStarted) {
+			var tag = _document2.default.createElement('script');
+			tag.src = '//www.youtube.com/player_api';
+			var firstScriptTag = _document2.default.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			YouTubeApi.isIframeStarted = true;
+		}
+	},
+
+	/**
+  * Process queue of YouTube <iframe> element creation
+  *
+  */
+	iFrameReady: function iFrameReady() {
+
+		YouTubeApi.isLoaded = true;
+		YouTubeApi.isIframeLoaded = true;
+
+		while (YouTubeApi.iframeQueue.length > 0) {
+			var settings = YouTubeApi.iframeQueue.pop();
+			YouTubeApi.createIframe(settings);
+		}
+	},
+
+	/**
+  * Create a new instance of YouTube API player and trigger a custom event to initialize it
+  *
+  * @param {Object} settings - an object with settings needed to create <iframe>
+  */
+	createIframe: function createIframe(settings) {
+		return new YT.Player(settings.containerId, settings);
+	},
+
+	/**
+  * Extract ID from YouTube's URL to be loaded through API
+  * Valid URL format(s):
+  * - http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+  * - http://www.youtube.com/v/VIDEO_ID?version=3
+  * - http://youtu.be/Djd6tPrxc08
+  * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+  *
+  * @param {String} url
+  * @return {string}
+  */
+	getYouTubeId: function getYouTubeId(url) {
+
+		var youTubeId = '';
+
+		if (url.indexOf('?') > 0) {
+			// assuming: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+			youTubeId = YouTubeApi.getYouTubeIdFromParam(url);
+
+			// if it's http://www.youtube.com/v/VIDEO_ID?version=3
+			if (youTubeId === '') {
+				youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
+			}
+		} else {
+			youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
+		}
+
+		return youTubeId;
+	},
+
+	/**
+  * Get ID from URL with format: http://www.youtube.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+  *
+  * @param {String} url
+  * @returns {string}
+  */
+	getYouTubeIdFromParam: function getYouTubeIdFromParam(url) {
+
+		if (url === undefined || url === null || !url.trim().length) {
+			return null;
+		}
+
+		var parts = url.split('?'),
+		    parameters = parts[1].split('&');
+
+		var youTubeId = '';
+
+		for (var i = 0, il = parameters.length; i < il; i++) {
+			var paramParts = parameters[i].split('=');
+			if (paramParts[0] === 'v') {
+				youTubeId = paramParts[1];
+				break;
+			}
+		}
+
+		return youTubeId;
+	},
+
+	/**
+  * Get ID from URL with formats
+  *  - http://www.youtube.com/v/VIDEO_ID?version=3
+  *  - http://youtu.be/Djd6tPrxc08
+  * @param {String} url
+  * @return {?String}
+  */
+	getYouTubeIdFromUrl: function getYouTubeIdFromUrl(url) {
+
+		if (url === undefined || url === null || !url.trim().length) {
+			return null;
+		}
+
+		var parts = url.split('?');
+		url = parts[0];
+		return url.substring(url.lastIndexOf('/') + 1);
+	},
+
+	/**
+  * Inject `no-cookie` element to URL. Only works with format: http://www.youtube.com/v/VIDEO_ID?version=3
+  * @param {String} url
+  * @return {?String}
+  */
+	getYouTubeNoCookieUrl: function getYouTubeNoCookieUrl(url) {
+		if (url === undefined || url === null || !url.trim().length || !url.includes('//www.youtube')) {
+			return url;
+		}
+
+		var parts = url.split('/');
+		parts[2] = parts[2].replace('.com', '-nocookie.com');
+		return parts.join('/');
+	}
+};
+
+var YouTubeIframeRenderer = {
+	name: 'youtube_iframe',
+
+	options: {
+		prefix: 'youtube_iframe',
+		/**
+   * Custom configuration for YouTube player
+   *
+   * @see https://developers.google.com/youtube/player_parameters#Parameters
+   * @type {Object}
+   */
+		youtube: {
+			autoplay: 0,
+			controls: 0,
+			disablekb: 1,
+			end: 0,
+			loop: 0,
+			modestbranding: 0,
+			playsinline: 0,
+			rel: 0,
+			showinfo: 0,
+			start: 0,
+			iv_load_policy: 3,
+			// custom to inject `-nocookie` element in URL
+			nocookie: false
+		}
+	},
+
+	/**
+  * Determine if a specific element type can be played with this render
+  *
+  * @param {String} type
+  * @return {Boolean}
+  */
+	canPlayType: function canPlayType(type) {
+		return ['video/youtube', 'video/x-youtube'].includes(type);
+	},
+
+	/**
+  * Create the player instance and add all native events/methods/properties as possible
+  *
+  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+  * @param {Object} options All the player configuration options passed through constructor
+  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+  * @return {Object}
+  */
+	create: function create(mediaElement, options, mediaFiles) {
+
+		// API objects
+		var youtube = {},
+		    apiStack = [],
+		    readyState = 4;
+
+		var i = void 0,
+		    il = void 0,
+		    youTubeApi = null,
+		    paused = true,
+		    ended = false,
+		    youTubeIframe = null,
+		    volume = 1;
+
+		youtube.options = options;
+		youtube.id = mediaElement.id + '_' + options.prefix;
+		youtube.mediaElement = mediaElement;
+
+		// wrappers for get/set
+		var props = _mejs2.default.html5media.properties,
+		    assignGettersSetters = function assignGettersSetters(propName) {
+
+			// add to flash state that we will store
+
+			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+			youtube['get' + capName] = function () {
+				if (youTubeApi !== null) {
+					var value = null;
+
+					// figure out how to get youtube dta here
+
+					var _ret = function () {
+						switch (propName) {
+							case 'currentTime':
+								return {
+									v: youTubeApi.getCurrentTime()
+								};
+
+							case 'duration':
+								return {
+									v: youTubeApi.getDuration()
+								};
+
+							case 'volume':
+								volume = youTubeApi.getVolume() / 100;
+								return {
+									v: volume
+								};
+
+							case 'paused':
+								return {
+									v: paused
+								};
+
+							case 'ended':
+								return {
+									v: ended
+								};
+
+							case 'muted':
+								return {
+									v: youTubeApi.isMuted()
+								};
+
+							case 'buffered':
+								var percentLoaded = youTubeApi.getVideoLoadedFraction(),
+								    duration = youTubeApi.getDuration();
+								return {
+									v: {
+										start: function start() {
+											return 0;
+										},
+										end: function end() {
+											return percentLoaded * duration;
+										},
+										length: 1
+									}
+								};
+							case 'src':
+								return {
+									v: youTubeApi.getVideoUrl()
+								};
+
+							case 'readyState':
+								return {
+									v: readyState
+								};
+						}
+					}();
+
+					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+					return value;
+				} else {
+					return null;
+				}
+			};
+
+			youtube['set' + capName] = function (value) {
+
+				if (youTubeApi !== null) {
+
+					// do something
+					switch (propName) {
+
+						case 'src':
+							var url = typeof value === 'string' ? value : value[0].src,
+							    _videoId = YouTubeApi.getYouTubeId(url);
+
+							if (mediaElement.getAttribute('autoplay')) {
+								youTubeApi.loadVideoById(_videoId);
+							} else {
+								youTubeApi.cueVideoById(_videoId);
+							}
+							break;
+
+						case 'currentTime':
+							youTubeApi.seekTo(value);
+							break;
+
+						case 'muted':
+							if (value) {
+								youTubeApi.mute();
+							} else {
+								youTubeApi.unMute();
+							}
+							setTimeout(function () {
+								var event = (0, _general.createEvent)('volumechange', youtube);
+								mediaElement.dispatchEvent(event);
+							}, 50);
+							break;
+
+						case 'volume':
+							volume = value;
+							youTubeApi.setVolume(value * 100);
+							setTimeout(function () {
+								var event = (0, _general.createEvent)('volumechange', youtube);
+								mediaElement.dispatchEvent(event);
+							}, 50);
+							break;
+						case 'readyState':
+							var event = (0, _general.createEvent)('canplay', youtube);
+							mediaElement.dispatchEvent(event);
+							break;
+
+						default:
+							
+							break;
+					}
+				} else {
+					// store for after "READY" event fires
+					apiStack.push({ type: 'set', propName: propName, value: value });
+				}
+			};
+		};
+
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
+		}
+
+		// add wrappers for native methods
+		var methods = _mejs2.default.html5media.methods,
+		    assignMethods = function assignMethods(methodName) {
+
+			// run the method on the native HTMLMediaElement
+			youtube[methodName] = function () {
+
+				if (youTubeApi !== null) {
+
+					// DO method
+					switch (methodName) {
+						case 'play':
+							paused = false;
+							return youTubeApi.playVideo();
+						case 'pause':
+							paused = true;
+							return youTubeApi.pauseVideo();
+						case 'load':
+							return null;
+
+					}
+				} else {
+					apiStack.push({ type: 'call', methodName: methodName });
+				}
+			};
+		};
+
+		for (i = 0, il = methods.length; i < il; i++) {
+			assignMethods(methods[i]);
+		}
+
+		// CREATE YouTube
+		var youtubeContainer = _document2.default.createElement('div');
+		youtubeContainer.id = youtube.id;
+
+		// If `nocookie` feature was enabled, modify original URL
+		if (youtube.options.youtube.nocookie) {
+			mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
+		}
+
+		mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
+		mediaElement.originalNode.style.display = 'none';
+
+		var isAudio = mediaElement.originalNode.tagName.toLowerCase() === 'audio',
+		    height = isAudio ? '0' : mediaElement.originalNode.height,
+		    width = isAudio ? '0' : mediaElement.originalNode.width,
+		    videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
+		    youtubeSettings = {
+			id: youtube.id,
+			containerId: youtubeContainer.id,
+			videoId: videoId,
+			height: height,
+			width: width,
+			playerVars: Object.assign({
+				controls: 0,
+				rel: 0,
+				disablekb: 1,
+				showinfo: 0,
+				modestbranding: 0,
+				html5: 1,
+				playsinline: 0,
+				start: 0,
+				end: 0,
+				iv_load_policy: 3
+			}, youtube.options.youtube),
+			origin: _window2.default.location.host,
+			events: {
+				onReady: function onReady(e) {
+					mediaElement.youTubeApi = youTubeApi = e.target;
+					mediaElement.youTubeState = {
+						paused: true,
+						ended: false
+					};
+
+					// do call stack
+					if (apiStack.length) {
+						for (i = 0, il = apiStack.length; i < il; i++) {
+
+							var stackItem = apiStack[i];
+
+							if (stackItem.type === 'set') {
+								var propName = stackItem.propName,
+								    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+								youtube['set' + capName](stackItem.value);
+							} else if (stackItem.type === 'call') {
+								youtube[stackItem.methodName]();
+							}
+						}
+					}
+
+					// a few more events
+					youTubeIframe = youTubeApi.getIframe();
+
+					var events = ['mouseover', 'mouseout'],
+					    assignEvents = function assignEvents(e) {
+
+						var newEvent = (0, _general.createEvent)(e.type, youtube);
+						mediaElement.dispatchEvent(newEvent);
+					};
+
+					for (i = 0, il = events.length; i < il; i++) {
+						youTubeIframe.addEventListener(events[i], assignEvents, false);
+					}
+
+					// send init events
+					var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+
+					for (i = 0, il = initEvents.length; i < il; i++) {
+						var event = (0, _general.createEvent)(initEvents[i], youtube);
+						mediaElement.dispatchEvent(event);
+					}
+				},
+				onStateChange: function onStateChange(e) {
+
+					// translate events
+					var events = [];
+
+					switch (e.data) {
+						case -1:
+							// not started
+							events = ['loadedmetadata'];
+							paused = true;
+							ended = false;
+							break;
+
+						case 0:
+							// YT.PlayerState.ENDED
+							events = ['ended'];
+							paused = false;
+							ended = true;
+
+							youtube.stopInterval();
+							break;
+
+						case 1:
+							// YT.PlayerState.PLAYING
+							events = ['play', 'playing'];
+							paused = false;
+							ended = false;
+
+							youtube.startInterval();
+
+							break;
+
+						case 2:
+							// YT.PlayerState.PAUSED
+							events = ['pause'];
+							paused = true;
+							ended = false;
+
+							youtube.stopInterval();
+							break;
+
+						case 3:
+							// YT.PlayerState.BUFFERING
+							events = ['progress'];
+							ended = false;
+
+							break;
+						case 5:
+							// YT.PlayerState.CUED
+							events = ['loadeddata', 'loadedmetadata', 'canplay'];
+							paused = true;
+							ended = false;
+
+							break;
+					}
+
+					// send events up
+					for (i = 0, il = events.length; i < il; i++) {
+						var event = (0, _general.createEvent)(events[i], youtube);
+						mediaElement.dispatchEvent(event);
+					}
+				},
+				onError: function onError(e) {
+					var event = (0, _general.createEvent)('error', youtube);
+					event.data = e.data;
+					mediaElement.dispatchEvent(event);
+				}
+			}
+		};
+
+		// The following will prevent that in mobile devices, YouTube is displayed in fullscreen when using audio
+		if (isAudio) {
+			youtubeSettings.playerVars.playsinline = 1;
+		}
+
+		// send it off for async loading and creation
+		YouTubeApi.enqueueIframe(youtubeSettings);
+
+		youtube.onEvent = function (eventName, player, _youTubeState) {
+			if (_youTubeState !== null && _youTubeState !== undefined) {
+				mediaElement.youTubeState = _youTubeState;
+			}
+		};
+
+		youtube.setSize = function (width, height) {
+			if (youTubeApi !== null) {
+				youTubeApi.setSize(width, height);
+			}
+		};
+		youtube.hide = function () {
+			youtube.stopInterval();
+			youtube.pause();
+			if (youTubeIframe) {
+				youTubeIframe.style.display = 'none';
+			}
+		};
+		youtube.show = function () {
+			if (youTubeIframe) {
+				youTubeIframe.style.display = '';
+			}
+		};
+		youtube.destroy = function () {
+			youTubeApi.destroy();
+		};
+		youtube.interval = null;
+
+		youtube.startInterval = function () {
+			// create timer
+			youtube.interval = setInterval(function () {
+
+				var event = (0, _general.createEvent)('timeupdate', youtube);
+				mediaElement.dispatchEvent(event);
+			}, 250);
+		};
+		youtube.stopInterval = function () {
+			if (youtube.interval) {
+				clearInterval(youtube.interval);
+			}
+		};
+
+		return youtube;
+	}
+};
+
+if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) {
+
+	_window2.default.onYouTubePlayerAPIReady = function () {
+		YouTubeApi.iFrameReady();
+	};
+
+	_media.typeChecks.push(function (url) {
+		url = url.toLowerCase();
+		return url.includes('//www.youtube') || url.includes('//youtu.be') ? 'video/x-youtube' : null;
+	});
+
+	_renderer.renderer.add(YouTubeIframeRenderer);
+}
+
+},{"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],15:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3105,7 +3758,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"2":2,"3":3,"6":6}],15:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"6":6}],16:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3279,7 +3932,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 _mejs2.default.Utils.isString = isString;
 
-},{"6":6}],16:[function(_dereq_,module,exports){
+},{"6":6}],17:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3297,7 +3950,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(15);
+var _general = _dereq_(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3464,7 +4117,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"15":15,"6":6}],17:[function(_dereq_,module,exports){
+},{"16":16,"6":6}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -3668,4 +4321,4 @@ if (!String.prototype.startsWith) {
 	};
 }
 
-},{"2":2}]},{},[17,5,4,8,13,10,9,11,12]);
+},{"2":2}]},{},[18,5,4,8,13,10,9,11,12,14]);

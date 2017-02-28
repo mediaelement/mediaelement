@@ -76,6 +76,7 @@ If you want to install any of them, refer to the new plugins repository clicking
 ```html
 <script src="/path/to/jquery.js"></script>
 <script src="/path/to/mediaelement-and-player.min.js"></script>
+<!-- Add any other renderers you need; see Use Renderers for more information -->
 <link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
 ```
 

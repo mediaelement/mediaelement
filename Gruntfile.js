@@ -12,20 +12,20 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
 
-	// var rendererSources;
-	//
-	// // if commandline list of renderers, (e.g. --renderers=hls,dash,...) build only these
-	// var rendererList = grunt.option('features');
-	// if (rendererList) {
-	// 	rendererList = rendererList.split(',');
-	// 	rendererSources = [];
-	// 	rendererList.forEach(function (renderer) {
-	// 		var path = 'src/js/renderers/' + renderer + '.js';
-	// 		if (grunt.file.isFile(path)) {
-	// 			rendererSources.push(path);
-	// 		}
-	// 	});
-	// }
+	var rendererSources;
+
+	// if commandline list of renderers, (e.g. --renderers=hls,dash,...) build only these
+	var rendererList = grunt.option('features');
+	if (rendererList) {
+		rendererList = rendererList.split(',');
+		rendererSources = [];
+		rendererList.forEach(function (renderer) {
+			var path = 'src/js/renderers/' + renderer + '.js';
+			if (grunt.file.isFile(path)) {
+				rendererSources.push(path);
+			}
+		});
+	}
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
@@ -54,17 +54,12 @@ module.exports = function (grunt) {
 						'src/js/languages/en.js',
 						'src/js/renderers/html5.js',
 						'src/js/renderers/flash.js',
-						// ].concat(rendererSources || [
-						// 'src/js/renderers/dailymotion.js',
+					].concat(rendererSources || [
 						'src/js/renderers/dash.js',
-						// 'src/js/renderers/facebook.js',
 						'src/js/renderers/flv.js',
 						'src/js/renderers/hls.js',
-						// 'src/js/renderers/soundcloud.js',
-						// 'src/js/renderers/vimeo.js',
-						// 'src/js/renderers/youtube.js',
-					],
-					// ]),
+						'src/js/renderers/youtube.js',
+					]),
 					// just player
 					'build/mediaelementplayer.js': [
 						'src/js/utils/polyfill.js',
@@ -90,17 +85,12 @@ module.exports = function (grunt) {
 						'src/js/languages/en.js',
 						'src/js/renderers/html5.js',
 						'src/js/renderers/flash.js',
-						// ].concat(rendererSources || [
-						// 'src/js/renderers/dailymotion.js',
+					].concat(rendererSources || [
 						'src/js/renderers/dash.js',
-						// 'src/js/renderers/facebook.js',
 						'src/js/renderers/flv.js',
 						'src/js/renderers/hls.js',
-						// 	'src/js/renderers/soundcloud.js',
-						// 	'src/js/renderers/vimeo.js',
-						// 	'src/js/renderers/twitch.js',
-						// 	'src/js/renderers/youtube.js',
-						// ]).concat([
+						'src/js/renderers/youtube.js',
+					]).concat([
 						'src/js/library.js',
 						'src/js/player.js',
 						'src/js/features/fullscreen.js',
@@ -109,8 +99,8 @@ module.exports = function (grunt) {
 						'src/js/features/time.js',
 						'src/js/features/tracks.js',
 						'src/js/features/volume.js'
-					],
-					// ]),
+
+					]),
 
 					// new renderers
 					'build/renderers/dailymotion.js': 'src/js/renderers/dailymotion.js',
@@ -118,7 +108,6 @@ module.exports = function (grunt) {
 					'build/renderers/soundcloud.js': 'src/js/renderers/soundcloud.js',
 					'build/renderers/twitch.js': 'src/js/renderers/twitch.js',
 					'build/renderers/vimeo.js': 'src/js/renderers/vimeo.js',
-					'build/renderers/youtube.js': 'src/js/renderers/youtube.js'
 				},
 				options: {
 					plugin: [
@@ -230,9 +219,9 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
 	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
-	grunt.registerTask('flash', '', function() {
+	grunt.registerTask('flash', '', function () {
 		var exec = require('child_process').execSync;
-		var result = exec("sh compile_swf.sh", { encoding: 'utf8' });
+		var result = exec("sh compile_swf.sh", {encoding: 'utf8'});
 		grunt.log.writeln(result);
 	});
 };

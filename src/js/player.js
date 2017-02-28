@@ -262,6 +262,11 @@ class MediaElementPlayer {
 
 		const t = this;
 
+		// To avoid jQuery.noConflict() issues
+		if (typeof mejs.$ !== 'undefined') {
+			window.$ = mejs.$;
+		}
+
 		t.hasFocus = false;
 
 		t.controlsAreVisible = true;
