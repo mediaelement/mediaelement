@@ -94,6 +94,13 @@ import 'mediaelement/player';
 // To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes,
 // $.fn.mediaelementplayer plugin, all the native renderers, YouTube and Flash shims)
 import 'mediaelement/full';
+
+// To import renderers (i.e., Vimeo)
+import 'mediaelement/build/renderers/vimeo';
+
+// To import languages (i.e., Spanish)
+import 'mediaelement/build/lang/es';
+// Later on the code you need to use mejs.i18n.language('es') to set the language 
 ```
 
 **IMPORTANT**: To ensure you can use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
