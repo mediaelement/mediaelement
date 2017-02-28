@@ -45,13 +45,15 @@ In order to successfully install `3.x` in an existing setup, you must consider t
 
 1. If your installation relies on the legacy player classes (i.e., `mejs-player`, `mejs-container`, etc.), you **must** set up the proper namespace. In `2.x`, the default namespace is `mejs-` but now is `mejs__`. In order to set up a new namespace (or the legacy one), use the `classPrefix` configuration, and make sure you use the `mediaelementplayer-legacy` stylesheet provided in the `/build/` folder.
 
-2. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with Javascript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](docs/installation.md#disabled-javascript) section for more details.
+2. By default, `MediaElement` has bundled native renderers, such as HLS, M(PEG)-DASH and FLV, as well as YouTube and Flash shims. **If you want to use any other renderer, you MUST refer to the `build/renderers` folder and add as many as you want**. Check `demo/index.html` for a better reference.
+
+3. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with Javascript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](docs/installation.md#disabled-javascript) section for more details.
  
-3. If you want to use Flash shims from a CDN, do the change related to `pluginPath` setting the CDN's URL, and also setting `shimScriptAccess` configuration as ***`always`***.
+4. If you want to use Flash shims from a CDN, do the change related to `pluginPath` setting the CDN's URL, and also setting `shimScriptAccess` configuration as ***`always`***.
 
-4. If you need to force the Flash shim, the way to do it in `3.x` version is to use the `renderers` configuration and list them in an array.
+5. If you need to force the Flash shim, the way to do it in `3.x` version is to use the `renderers` configuration and list them in an array.
 
-5. `pluginType` was removed to favor `rendererName`. If you rely on that element, just create conditionals based on the renderer ID (all listed [here](docs/usage.md#renderers-list)). For example:
+6. `pluginType` was removed to favor `rendererName`. If you rely on that element, just create conditionals based on the renderer ID (all listed [here](docs/usage.md#renderers-list)). For example:
 
 ```javascript
 $('video, audio').mediaelementplayer({
