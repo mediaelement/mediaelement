@@ -306,6 +306,7 @@ const HlsNativeRenderer = {
 			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
 			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
 			 */
+			let recoverDecodingErrorDate, recoverSwapAudioCodecDate;
 			const assignHlsEvents = function (e, data) {
 				const event = createEvent(e, node);
 				event.data = data;
@@ -316,15 +317,26 @@ const HlsNativeRenderer = {
 
 					// borrowed from http://dailymotion.github.io/hls.js/demo/
 					if (data.fatal) {
-						hlsPlayer.destroy();
-					} else {
 						switch (data.type) {
 							case 'mediaError':
-								hlsPlayer.recoverMediaError();
+								const now = new Date().getTime();
+								if (!recoverDecodingErrorDate || (now - recoverDecodingErrorDate) > 3000) {
+									recoverDecodingErrorDate = new Date().getTime();
+									hlsPlayer.recoverMediaError();
+								} else if(!recoverSwapAudioCodecDate || (now - recoverSwapAudioCodecDate) > 3000) {
+									recoverSwapAudioCodecDate = new Date().getTime();
+									console.warn('Attempting to swap Audio Codec and recover from media error');
+									hlsPlayer.swapAudioCodec();
+									hlsPlayer.recoverMediaError();
+								} else {
+									console.error('Cannot recover, last media error recovery failed');
+								}
 								break;
-
 							case 'networkError':
-								hlsPlayer.startLoad();
+								console.error('Network error');
+								break;
+							default:
+								hlsPlayer.destroy();
 								break;
 
 						}
