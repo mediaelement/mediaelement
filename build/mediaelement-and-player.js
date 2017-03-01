@@ -972,7 +972,31 @@ var Renderer = function () {
 			var renderers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
 
+			var renderersLength = renderers.length;
+
 			renderers = renderers.length ? renderers : this.order;
+
+			// If renderers are not set, set a default order:
+			// 1) Native renderers (HTML5, HLS, M(PEG)-DASH, FLV)
+			// 2) Flash shims (RTMP, FLV, HLS, M(PEG)-DASH, MP3, OGG)
+			// 3) Iframe renderers (YouTube, SoundCloud, Facebook. etc.)
+			if (!renderersLength) {
+				(function () {
+					var rendererIndicator = [/^(html5|native)/, /^flash/, /iframe$/],
+					    rendererRanking = function rendererRanking(renderer) {
+						for (var i = 0; i < rendererIndicator.length; i++) {
+							if (renderer.match(rendererIndicator[i]) !== null) {
+								return i;
+							}
+						}
+						return rendererIndicator.length;
+					};
+
+					renderers.sort(function (a, b) {
+						return rendererRanking(a) - rendererRanking(b);
+					});
+				})();
+			}
 
 			for (var i = 0, il = renderers.length; i < il; i++) {
 				var key = renderers[i],
@@ -5974,11 +5998,11 @@ if (hasFlash) {
 			}
 		} else if (url.includes('.oga') || url.includes('.ogg')) {
 			return 'audio/ogg';
-		} else if (!_constants.HAS_MSE && !_constants.SUPPORTS_NATIVE_HLS && url.includes('.m3u8')) {
+		} else if (url.includes('.m3u8')) {
 			return 'application/x-mpegURL';
-		} else if (!_constants.HAS_MSE && url.includes('.mpd')) {
+		} else if (url.includes('.mpd')) {
 			return 'application/dash+xml';
-		} else if (!_constants.HAS_MSE && url.includes('.flv')) {
+		} else if (url.includes('.flv')) {
 			return 'video/flv';
 		} else {
 			return null;
@@ -6005,7 +6029,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return hasFlash && ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type) || !_constants.HAS_MSE && hasFlash && ['video/flv', 'video/x-flv'].includes(type);
+			return ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv', 'video/x-flv'].includes(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -6028,7 +6052,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return !_constants.HAS_MSE && hasFlash && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase());
+			return ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -6050,7 +6074,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return !_constants.HAS_MSE && hasFlash && ['application/dash+xml'].includes(type);
+			return ['application/dash+xml'].includes(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -6072,7 +6096,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return hasFlash && ['audio/mp3'].includes(type);
+			return ['audio/mp3'].includes(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -6094,7 +6118,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return hasFlash && ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type);
+			return ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create

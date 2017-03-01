@@ -243,7 +243,7 @@ class MediaElement {
 					renderInfo = renderer.select(mediaFiles,
 						(t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers : [])),
 					event
-					;
+				;
 
 				// Ensure that the original gets the first source found
 				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
