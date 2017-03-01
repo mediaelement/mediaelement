@@ -95,12 +95,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				`</div>`)
 		;
 
-		if (t.featurePosition['volume'] !== undefined) {
-			mute.insertAfter(controls.children(`:eq(${(t.featurePosition['volume'] - 1)})`));
-		} else {
-			mute.appendTo(controls);
-			t.featurePosition['volume'] = controls.children(`.${t.options.classPrefix}volume-button`).index();
-		}
+		t.addControlElement(mute, 'volume');
 
 		const
 			volumeSlider = t.container.find(`.${t.options.classPrefix}volume-slider, 

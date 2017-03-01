@@ -44,12 +44,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>`)
 		;
 
-		if (t.featurePosition['current'] !== undefined) {
-			time.insertAfter(controls.children(`:eq(${(t.featurePosition['current'] - 1)})`));
-		} else {
-			time.appendTo(controls);
-			t.featurePosition['current'] = controls.children(`.${t.options.classPrefix}time`).index();
-		}
+		t.addControlElement(time, 'current');
 
 		t.currenttime = t.controls.find(`.${t.options.classPrefix}currenttime`);
 
@@ -91,12 +86,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>` +
 			`</div>`);
 
-			if (t.featurePosition['duration'] !== undefined) {
-				duration.insertAfter(controls.children(`:eq(${(t.featurePosition['duration'] - 1)})`));
-			} else {
-				duration.appendTo(controls);
-				t.featurePosition['duration'] = controls.children(`.${t.options.classPrefix}duration-container`).index();
-			}
+			t.addControlElement(duration, 'duration');
 		}
 
 		t.durationD = t.controls.find(`.${t.options.classPrefix}duration`);

@@ -51,12 +51,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			playBtn = play.find('button')
 		;
 
-		if (t.featurePosition['playpause'] !== undefined) {
-			play.insertAfter(controls.children(`:eq(${(t.featurePosition['playpause'] - 1)})`));
-		} else {
-			play.appendTo(controls);
-			t.featurePosition['playpause'] = controls.children(`.${t.options.classPrefix}playpause-button`).index();
-		}
+		t.addControlElement(play, 'playpause');
 
 		play.click(() => {
 			if (media.paused) {

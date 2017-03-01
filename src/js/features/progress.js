@@ -59,12 +59,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>`)
 		;
 
-		if (t.featurePosition['progress'] !== undefined) {
-			rail.insertAfter(controls.children(`:eq(${(t.featurePosition['progress'] - 1)})`));
-		} else {
-			rail.appendTo(controls);
-			t.featurePosition['progress'] = controls.children(`.${t.options.classPrefix}time-rail`).index();
-		}
+		t.addControlElement(rail, 'progress');
 
 		controls.find(`.${t.options.classPrefix}time-buffering`).hide();
 

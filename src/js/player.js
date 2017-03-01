@@ -1283,6 +1283,29 @@ class MediaElementPlayer {
 		t.container.trigger('controlsresize');
 	}
 
+	/**
+	 * Add featured control element and cache its position in case features are reset
+	 *
+	 * @param {HTMLElement} element
+	 * @param {String} key
+	 */
+	addControlElement (element, key) {
+
+		const t = this;
+
+		if (t.featurePosition[key] !== undefined) {
+			element.insertAfter(t.controls.children(`:eq(${(t.featurePosition[key] - 1)})`));
+		} else {
+			element.appendTo(t.controls);
+			t.featurePosition[key] = t.controls.find(element).index();
+		}
+	}
+
+	/**
+	 * Append layer to manipulate `<iframe>` elements safely.
+	 *
+	 * This allows the user to trigger events properly given that mouse/click don't get lost in the `<iframe>`.
+	 */
 	createIframeLayer () {
 
 		const t = this;

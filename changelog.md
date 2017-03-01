@@ -3,7 +3,7 @@
 *3.2.2 (2017/03/??)*
 
 * Fixed issue with renderers order by sorting them when user does not specify any order for them @ron666
-* Added worfklow to preserve order of control elements when certain features are reset @ron666
+* Added `addControlElement()` to preserve order of control elements when certain features are reset @ron666
 * Fixed issue with native HLS when processing errors @ron666
 
 *3.2.1 (2017/02/28)*

@@ -121,12 +121,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>` +
 		`</div>`);
 
-		if (t.featurePosition['tracks'] !== undefined) {
-			player.captionsButton.insertAfter(controls.children(`:eq(${(t.featurePosition['tracks'] - 1)})`));
-		} else {
-			player.captionsButton.appendTo(controls);
-			t.featurePosition['tracks'] = controls.children(`.${t.options.classPrefix}captions-button`).index();
-		}
+		t.addControlElement(player.captionsButton, 'tracks');
 
 		player.chaptersButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}chapters-button">` +
 			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}" tabindex="0"></button>` +

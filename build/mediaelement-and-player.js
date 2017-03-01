@@ -1165,12 +1165,7 @@ Object.assign(_player2.default.prototype, {
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
 		    fullscreenBtn = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0"></button>') + '</div>');
 
-		if (t.featurePosition['fullscreen'] !== undefined) {
-			fullscreenBtn.insertAfter(controls.children(':eq(' + (t.featurePosition['fullscreen'] - 1) + ')'));
-		} else {
-			fullscreenBtn.appendTo(controls);
-			t.featurePosition['fullscreen'] = controls.children('.' + t.options.classPrefix + 'fullscreen-button').index();
-		}
+		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.on('click', function () {
 
@@ -1623,12 +1618,7 @@ Object.assign(_player2.default.prototype, {
 		    play = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + (t.options.classPrefix + 'play">') + ('<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>') + '</div>'),
 		    playBtn = play.find('button');
 
-		if (t.featurePosition['playpause'] !== undefined) {
-			play.insertAfter(controls.children(':eq(' + (t.featurePosition['playpause'] - 1) + ')'));
-		} else {
-			play.appendTo(controls);
-			t.featurePosition['playpause'] = controls.children('.' + t.options.classPrefix + 'playpause-button').index();
-		}
+		t.addControlElement(play, 'playpause');
 
 		play.click(function () {
 			if (media.paused) {
@@ -1742,12 +1732,7 @@ Object.assign(_player2.default.prototype, {
 		    tooltip = player.options.enableProgressTooltip ? '<span class="' + t.options.classPrefix + 'time-float">' + ('<span class="' + t.options.classPrefix + 'time-float-current">00:00</span>') + ('<span class="' + t.options.classPrefix + 'time-float-corner"></span>') + '</span>' : "",
 		    rail = $('<div class="' + t.options.classPrefix + 'time-rail">' + ('<span class="' + t.options.classPrefix + 'time-total ' + t.options.classPrefix + 'time-slider">') + ('<span class="' + t.options.classPrefix + 'time-buffering"></span>') + ('<span class="' + t.options.classPrefix + 'time-loaded"></span>') + ('<span class="' + t.options.classPrefix + 'time-current"></span>') + ('<span class="' + t.options.classPrefix + 'time-handle"></span>') + ('' + tooltip) + '</span>' + '</div>');
 
-		if (t.featurePosition['progress'] !== undefined) {
-			rail.insertAfter(controls.children(':eq(' + (t.featurePosition['progress'] - 1) + ')'));
-		} else {
-			rail.appendTo(controls);
-			t.featurePosition['progress'] = controls.children('.' + t.options.classPrefix + 'time-rail').index();
-		}
+		t.addControlElement(rail, 'progress');
 
 		controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 
@@ -2151,12 +2136,7 @@ Object.assign(_player2.default.prototype, {
 		var t = this,
 		    time = $('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' + ('<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond) + '</span>') + '</div>');
 
-		if (t.featurePosition['current'] !== undefined) {
-			time.insertAfter(controls.children(':eq(' + (t.featurePosition['current'] - 1) + ')'));
-		} else {
-			time.appendTo(controls);
-			t.featurePosition['current'] = controls.children('.' + t.options.classPrefix + 'time').index();
-		}
+		t.addControlElement(time, 'current');
 
 		t.currenttime = t.controls.find('.' + t.options.classPrefix + 'currenttime');
 
@@ -2191,12 +2171,7 @@ Object.assign(_player2.default.prototype, {
 
 			var _duration = $('<div class="' + t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container">' + ('<span class="' + t.options.classPrefix + 'duration">') + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>') + '</div>');
 
-			if (t.featurePosition['duration'] !== undefined) {
-				_duration.insertAfter(controls.children(':eq(' + (t.featurePosition['duration'] - 1) + ')'));
-			} else {
-				_duration.appendTo(controls);
-				t.featurePosition['duration'] = controls.children('.' + t.options.classPrefix + 'duration-container').index();
-			}
+			t.addControlElement(_duration, 'duration');
 		}
 
 		t.durationD = t.controls.find('.' + t.options.classPrefix + 'duration');
@@ -2363,12 +2338,7 @@ Object.assign(_player2.default.prototype, {
 		player.captionsText = player.captions.find('.' + t.options.classPrefix + 'captions-text');
 		player.captionsButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked" />' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>' + '</div>');
 
-		if (t.featurePosition['tracks'] !== undefined) {
-			player.captionsButton.insertAfter(controls.children(':eq(' + (t.featurePosition['tracks'] - 1) + ')'));
-		} else {
-			player.captionsButton.appendTo(controls);
-			t.featurePosition['tracks'] = controls.children('.' + t.options.classPrefix + 'captions-button').index();
-		}
+		t.addControlElement(player.captionsButton, 'tracks');
 
 		player.chaptersButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>' + '</div>');
 
@@ -3225,12 +3195,7 @@ Object.assign(_player2.default.prototype, {
 		// vertical version
 		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute">' + ('<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>') + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider">') + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>' + '</div>');
 
-		if (t.featurePosition['volume'] !== undefined) {
-			mute.insertAfter(controls.children(':eq(' + (t.featurePosition['volume'] - 1) + ')'));
-		} else {
-			mute.appendTo(controls);
-			t.featurePosition['volume'] = controls.children('.' + t.options.classPrefix + 'volume-button').index();
-		}
+		t.addControlElement(mute, 'volume');
 
 		var volumeSlider = t.container.find('.' + t.options.classPrefix + 'volume-slider, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-slider'),
 		    volumeTotal = t.container.find('.' + t.options.classPrefix + 'volume-total, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-total'),
@@ -4835,6 +4800,34 @@ var MediaElementPlayer = function () {
 
 			t.container.trigger('controlsresize');
 		}
+
+		/**
+   * Add featured control element and cache its position in case features are reset
+   *
+   * @param {HTMLElement} element
+   * @param {String} key
+   */
+
+	}, {
+		key: 'addControlElement',
+		value: function addControlElement(element, key) {
+
+			var t = this;
+
+			if (t.featurePosition[key] !== undefined) {
+				element.insertAfter(t.controls.children(':eq(' + (t.featurePosition[key] - 1) + ')'));
+			} else {
+				element.appendTo(t.controls);
+				t.featurePosition[key] = t.controls.find(element).index();
+			}
+		}
+
+		/**
+   * Append layer to manipulate `<iframe>` elements safely.
+   *
+   * This allows the user to trigger events properly given that mouse/click don't get lost in the `<iframe>`.
+   */
+
 	}, {
 		key: 'createIframeLayer',
 		value: function createIframeLayer() {
@@ -6835,6 +6828,8 @@ var HlsNativeRenderer = {
     * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
     * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
     */
+			var recoverDecodingErrorDate = void 0,
+			    recoverSwapAudioCodecDate = void 0;
 			var assignHlsEvents = function assignHlsEvents(e, data) {
 				var event = (0, _general.createEvent)(e, node);
 				event.data = data;
@@ -6847,10 +6842,21 @@ var HlsNativeRenderer = {
 					if (data.fatal) {
 						switch (data.type) {
 							case 'mediaError':
-								hlsPlayer.recoverMediaError();
+								var now = new Date().getTime();
+								if (!recoverDecodingErrorDate || now - recoverDecodingErrorDate > 3000) {
+									recoverDecodingErrorDate = new Date().getTime();
+									hlsPlayer.recoverMediaError();
+								} else if (!recoverSwapAudioCodecDate || now - recoverSwapAudioCodecDate > 3000) {
+									recoverSwapAudioCodecDate = new Date().getTime();
+									console.warn('Attempting to swap Audio Codec and recover from media error');
+									hlsPlayer.swapAudioCodec();
+									hlsPlayer.recoverMediaError();
+								} else {
+									console.error('Cannot recover, last media error recovery failed');
+								}
 								break;
 							case 'networkError':
-								hlsPlayer.startLoad();
+								console.error('Network error');
 								break;
 							default:
 								hlsPlayer.destroy();

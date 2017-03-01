@@ -96,12 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				`</div>`)
 		;
 
-		if (t.featurePosition['fullscreen'] !== undefined) {
-			fullscreenBtn.insertAfter(controls.children(`:eq(${(t.featurePosition['fullscreen'] - 1)})`));
-		} else {
-			fullscreenBtn.appendTo(controls);
-			t.featurePosition['fullscreen'] = controls.children(`.${t.options.classPrefix}fullscreen-button`).index();
-		}
+		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn
 			.on('click', () => {
