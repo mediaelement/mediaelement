@@ -94,48 +94,56 @@ Object.assign(MediaElementPlayer.prototype, {
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button">` +
 					`<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0"></button>` +
 				`</div>`)
-				.appendTo(controls)
-				.on('click', () => {
+		;
 
-					// toggle fullscreen
-					let isFullScreen = (Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || player.isFullScreen;
+		if (t.featurePosition['fullscreen'] !== undefined) {
+			fullscreenBtn.insertAfter(controls.children(`:eq(${(t.featurePosition['fullscreen'] - 1)})`));
+		} else {
+			fullscreenBtn.appendTo(controls);
+			t.featurePosition['fullscreen'] = controls.children(`.${t.options.classPrefix}fullscreen-button`).index();
+		}
 
-					if (isFullScreen) {
-						player.exitFullScreen();
-					} else {
-						player.enterFullScreen();
-					}
-				})
-				.on('mouseover', () => {
+		fullscreenBtn
+			.on('click', () => {
 
-					// very old browsers with a plugin
-					if (t.fullscreenMode === 'plugin-hover') {
-						if (hideTimeout !== null) {
-							clearTimeout(hideTimeout);
-							hideTimeout = null;
-						}
+				// toggle fullscreen
+				let isFullScreen = (Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || player.isFullScreen;
 
-						let buttonPos = fullscreenBtn.offset(),
-							containerPos = player.container.offset();
+				if (isFullScreen) {
+					player.exitFullScreen();
+				} else {
+					player.enterFullScreen();
+				}
+			})
+			.on('mouseover', () => {
 
-						media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, true);
-					}
-
-				})
-				.on('mouseout', () => {
-
-					if (t.fullscreenMode === 'plugin-hover') {
-						if (hideTimeout !== null) {
-							clearTimeout(hideTimeout);
-						}
-
-						hideTimeout = setTimeout(() => {
-							media.hideFullscreenButton();
-						}, 1500);
+				// very old browsers with a plugin
+				if (t.fullscreenMode === 'plugin-hover') {
+					if (hideTimeout !== null) {
+						clearTimeout(hideTimeout);
+						hideTimeout = null;
 					}
 
-				});
+					let buttonPos = fullscreenBtn.offset(),
+						containerPos = player.container.offset();
 
+					media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, true);
+				}
+
+			})
+			.on('mouseout', () => {
+
+				if (t.fullscreenMode === 'plugin-hover') {
+					if (hideTimeout !== null) {
+						clearTimeout(hideTimeout);
+					}
+
+					hideTimeout = setTimeout(() => {
+						media.hideFullscreenButton();
+					}, 1500);
+				}
+
+			});
 
 		player.fullscreenBtn = fullscreenBtn;
 

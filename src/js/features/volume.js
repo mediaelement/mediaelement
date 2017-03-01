@@ -93,7 +93,16 @@ Object.assign(MediaElementPlayer.prototype, {
 						`</div>` +
 					`</a>` +
 				`</div>`)
-				.appendTo(controls),
+		;
+
+		if (t.featurePosition['volume'] !== undefined) {
+			mute.insertAfter(controls.children(`:eq(${(t.featurePosition['volume'] - 1)})`));
+		} else {
+			mute.appendTo(controls);
+			t.featurePosition['volume'] = controls.children(`.${t.options.classPrefix}volume-button`).index();
+		}
+
+		const
 			volumeSlider = t.container.find(`.${t.options.classPrefix}volume-slider, 
 				.${t.options.classPrefix}horizontal-volume-slider`),
 			volumeTotal = t.container.find(`.${t.options.classPrefix}volume-total, 

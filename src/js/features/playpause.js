@@ -37,6 +37,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @public
 	 */
 	buildplaypause: function (player, controls, layers, media)  {
+
 		const
 			t = this,
 			op = t.options,
@@ -46,17 +47,24 @@ Object.assign(MediaElementPlayer.prototype, {
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ` +
 					`${t.options.classPrefix}play">` +
 					`<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0"></button>` +
-				`</div>`)
-				.appendTo(controls)
-				.click(() => {
-					if (media.paused) {
-						media.play();
-					} else {
-						media.pause();
-					}
-				}),
-			playBtn = play.find('button');
+				`</div>`),
+			playBtn = play.find('button')
+		;
 
+		if (t.featurePosition['playpause'] !== undefined) {
+			play.insertAfter(controls.children(`:eq(${(t.featurePosition['playpause'] - 1)})`));
+		} else {
+			play.appendTo(controls);
+			t.featurePosition['playpause'] = controls.children(`.${t.options.classPrefix}playpause-button`).index();
+		}
+
+		play.click(() => {
+			if (media.paused) {
+				media.play();
+			} else {
+				media.pause();
+			}
+		});
 
 		/**
 		 * @private

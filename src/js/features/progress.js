@@ -47,18 +47,25 @@ Object.assign(MediaElementPlayer.prototype, {
 				`<span class="${t.options.classPrefix}time-float">` +
 					`<span class="${t.options.classPrefix}time-float-current">00:00</span>` +
 					`<span class="${t.options.classPrefix}time-float-corner"></span>` +
-				`</span>` : "";
+				`</span>` : "",
+			rail = $(`<div class="${t.options.classPrefix}time-rail">` +
+				`<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
+					`<span class="${t.options.classPrefix}time-buffering"></span>` +
+					`<span class="${t.options.classPrefix}time-loaded"></span>` +
+					`<span class="${t.options.classPrefix}time-current"></span>` +
+					`<span class="${t.options.classPrefix}time-handle"></span>` +
+					`${tooltip}` +
+				`</span>` +
+			`</div>`)
+		;
 
-		$(`<div class="${t.options.classPrefix}time-rail">` +
-			`<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
-				`<span class="${t.options.classPrefix}time-buffering"></span>` +
-				`<span class="${t.options.classPrefix}time-loaded"></span>` +
-				`<span class="${t.options.classPrefix}time-current"></span>` +
-				`<span class="${t.options.classPrefix}time-handle"></span>` +
-				`${tooltip}` +
-			`</span>` +
-		`</div>`)
-		.appendTo(controls);
+		if (t.featurePosition['progress'] !== undefined) {
+			rail.insertAfter(controls.children(`:eq(${(t.featurePosition['progress'] - 1)})`));
+		} else {
+			rail.appendTo(controls);
+			t.featurePosition['progress'] = controls.children(`.${t.options.classPrefix}time-rail`).index();
+		}
+
 		controls.find(`.${t.options.classPrefix}time-buffering`).hide();
 
 		t.rail = controls.find(`.${t.options.classPrefix}time-rail`);

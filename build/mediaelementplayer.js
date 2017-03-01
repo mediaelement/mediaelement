@@ -1163,7 +1163,16 @@ Object.assign(_player2.default.prototype, {
 		// build button
 		var t = this,
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
-		    fullscreenBtn = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0"></button>') + '</div>').appendTo(controls).on('click', function () {
+		    fullscreenBtn = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0"></button>') + '</div>');
+
+		if (t.featurePosition['fullscreen'] !== undefined) {
+			fullscreenBtn.insertAfter(controls.children(':eq(' + (t.featurePosition['fullscreen'] - 1) + ')'));
+		} else {
+			fullscreenBtn.appendTo(controls);
+			t.featurePosition['fullscreen'] = controls.children('.' + t.options.classPrefix + 'fullscreen-button').index();
+		}
+
+		fullscreenBtn.on('click', function () {
 
 			// toggle fullscreen
 			var isFullScreen = Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN || player.isFullScreen;
@@ -1606,18 +1615,28 @@ Object.assign(_player2.default.prototype, {
   * @public
   */
 	buildplaypause: function buildplaypause(player, controls, layers, media) {
+
 		var t = this,
 		    op = t.options,
 		    playTitle = (0, _general.isString)(op.playText) ? op.playText : _i18n2.default.t('mejs.play'),
 		    pauseTitle = (0, _general.isString)(op.pauseText) ? op.pauseText : _i18n2.default.t('mejs.pause'),
-		    play = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + (t.options.classPrefix + 'play">') + ('<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>') + '</div>').appendTo(controls).click(function () {
+		    play = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + (t.options.classPrefix + 'play">') + ('<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>') + '</div>'),
+		    playBtn = play.find('button');
+
+		if (t.featurePosition['playpause'] !== undefined) {
+			play.insertAfter(controls.children(':eq(' + (t.featurePosition['playpause'] - 1) + ')'));
+		} else {
+			play.appendTo(controls);
+			t.featurePosition['playpause'] = controls.children('.' + t.options.classPrefix + 'playpause-button').index();
+		}
+
+		play.click(function () {
 			if (media.paused) {
 				media.play();
 			} else {
 				media.pause();
 			}
-		}),
-		    playBtn = play.find('button');
+		});
 
 		/**
    * @private
@@ -1720,9 +1739,16 @@ Object.assign(_player2.default.prototype, {
 
 		var t = this,
 		    autoRewindInitial = player.options.autoRewind,
-		    tooltip = player.options.enableProgressTooltip ? '<span class="' + t.options.classPrefix + 'time-float">' + ('<span class="' + t.options.classPrefix + 'time-float-current">00:00</span>') + ('<span class="' + t.options.classPrefix + 'time-float-corner"></span>') + '</span>' : "";
+		    tooltip = player.options.enableProgressTooltip ? '<span class="' + t.options.classPrefix + 'time-float">' + ('<span class="' + t.options.classPrefix + 'time-float-current">00:00</span>') + ('<span class="' + t.options.classPrefix + 'time-float-corner"></span>') + '</span>' : "",
+		    rail = $('<div class="' + t.options.classPrefix + 'time-rail">' + ('<span class="' + t.options.classPrefix + 'time-total ' + t.options.classPrefix + 'time-slider">') + ('<span class="' + t.options.classPrefix + 'time-buffering"></span>') + ('<span class="' + t.options.classPrefix + 'time-loaded"></span>') + ('<span class="' + t.options.classPrefix + 'time-current"></span>') + ('<span class="' + t.options.classPrefix + 'time-handle"></span>') + ('' + tooltip) + '</span>' + '</div>');
 
-		$('<div class="' + t.options.classPrefix + 'time-rail">' + ('<span class="' + t.options.classPrefix + 'time-total ' + t.options.classPrefix + 'time-slider">') + ('<span class="' + t.options.classPrefix + 'time-buffering"></span>') + ('<span class="' + t.options.classPrefix + 'time-loaded"></span>') + ('<span class="' + t.options.classPrefix + 'time-current"></span>') + ('<span class="' + t.options.classPrefix + 'time-handle"></span>') + ('' + tooltip) + '</span>' + '</div>').appendTo(controls);
+		if (t.featurePosition['progress'] !== undefined) {
+			rail.insertAfter(controls.children(':eq(' + (t.featurePosition['progress'] - 1) + ')'));
+		} else {
+			rail.appendTo(controls);
+			t.featurePosition['progress'] = controls.children('.' + t.options.classPrefix + 'time-rail').index();
+		}
+
 		controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
 
 		t.rail = controls.find('.' + t.options.classPrefix + 'time-rail');
@@ -2122,9 +2148,15 @@ Object.assign(_player2.default.prototype, {
   * @param {HTMLElement} media
   */
 	buildcurrent: function buildcurrent(player, controls, layers, media) {
-		var t = this;
+		var t = this,
+		    time = $('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' + ('<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond) + '</span>') + '</div>');
 
-		$('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' + ('<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond) + '</span>') + '</div>').appendTo(controls);
+		if (t.featurePosition['current'] !== undefined) {
+			time.insertAfter(controls.children(':eq(' + (t.featurePosition['current'] - 1) + ')'));
+		} else {
+			time.appendTo(controls);
+			t.featurePosition['current'] = controls.children('.' + t.options.classPrefix + 'time').index();
+		}
 
 		t.currenttime = t.controls.find('.' + t.options.classPrefix + 'currenttime');
 
@@ -2145,16 +2177,26 @@ Object.assign(_player2.default.prototype, {
   * @param {HTMLElement} media
   */
 	buildduration: function buildduration(player, controls, layers, media) {
+
 		var t = this;
 
 		if (controls.children().last().find('.' + t.options.classPrefix + 'currenttime').length > 0) {
-			$(t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>')).appendTo(controls.find('.' + t.options.classPrefix + 'time'));
+			var duration = $(t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>'));
+
+			duration.appendTo(controls.find('.' + t.options.classPrefix + 'time'));
 		} else {
 
 			// add class to current time
 			controls.find('.' + t.options.classPrefix + 'currenttime').parent().addClass(t.options.classPrefix + 'currenttime-container');
 
-			$('<div class="' + t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container">' + ('<span class="' + t.options.classPrefix + 'duration">') + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>') + '</div>').appendTo(controls);
+			var _duration = $('<div class="' + t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container">' + ('<span class="' + t.options.classPrefix + 'duration">') + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>') + '</div>');
+
+			if (t.featurePosition['duration'] !== undefined) {
+				_duration.insertAfter(controls.children(':eq(' + (t.featurePosition['duration'] - 1) + ')'));
+			} else {
+				_duration.appendTo(controls);
+				t.featurePosition['duration'] = controls.children('.' + t.options.classPrefix + 'duration-container').index();
+			}
 		}
 
 		t.durationD = t.controls.find('.' + t.options.classPrefix + 'duration');
@@ -2319,7 +2361,14 @@ Object.assign(_player2.default.prototype, {
 		player.captions = $('<div class="' + t.options.classPrefix + 'captions-layer ' + t.options.classPrefix + 'layer">' + ('<div class="' + t.options.classPrefix + 'captions-position ' + t.options.classPrefix + 'captions-position-hover"' + attr + '>') + ('<span class="' + t.options.classPrefix + 'captions-text"></span>') + '</div>' + '</div>').prependTo(layers).hide();
 
 		player.captionsText = player.captions.find('.' + t.options.classPrefix + 'captions-text');
-		player.captionsButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked" />' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>' + '</div>').appendTo(controls);
+		player.captionsButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked" />' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>' + '</div>');
+
+		if (t.featurePosition['tracks'] !== undefined) {
+			player.captionsButton.insertAfter(controls.children(':eq(' + (t.featurePosition['tracks'] - 1) + ')'));
+		} else {
+			player.captionsButton.appendTo(controls);
+			t.featurePosition['tracks'] = controls.children('.' + t.options.classPrefix + 'captions-button').index();
+		}
 
 		player.chaptersButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>' + '</div>');
 
@@ -2330,7 +2379,7 @@ Object.assign(_player2.default.prototype, {
 			if (kind === 'subtitles' || kind === 'captions') {
 				subtitleCount++;
 			} else if (kind === 'chapters' && !controls.find('.' + t.options.classPrefix + 'chapter-selector').length) {
-				player.chaptersButton.appendTo(controls);
+				player.chaptersButton.insertAfter(player.captionsButton);
 			}
 		}
 
@@ -2461,6 +2510,10 @@ Object.assign(_player2.default.prototype, {
 			}
 			if (player.captionsButton) {
 				player.captionsButton.remove();
+			}
+
+			if (player.chaptersButton) {
+				player.chaptersButton.remove();
 			}
 		}
 	},
@@ -3170,8 +3223,16 @@ Object.assign(_player2.default.prototype, {
 		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute">' + ('<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>') + '</div>' + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'horizontal-volume-slider">') + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-total">') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-handle"></div>') + '</div>' + '</a>').appendTo(controls) :
 
 		// vertical version
-		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute">' + ('<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>') + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider">') + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>' + '</div>').appendTo(controls),
-		    volumeSlider = t.container.find('.' + t.options.classPrefix + 'volume-slider, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-slider'),
+		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute">' + ('<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>') + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider">') + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>' + '</div>');
+
+		if (t.featurePosition['volume'] !== undefined) {
+			mute.insertAfter(controls.children(':eq(' + (t.featurePosition['volume'] - 1) + ')'));
+		} else {
+			mute.appendTo(controls);
+			t.featurePosition['volume'] = controls.children('.' + t.options.classPrefix + 'volume-button').index();
+		}
+
+		var volumeSlider = t.container.find('.' + t.options.classPrefix + 'volume-slider, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-slider'),
 		    volumeTotal = t.container.find('.' + t.options.classPrefix + 'volume-total, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-total'),
 		    volumeCurrent = t.container.find('.' + t.options.classPrefix + 'volume-current, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-current'),
 		    volumeHandle = t.container.find('.' + t.options.classPrefix + 'volume-handle, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-handle'),
@@ -4186,9 +4247,12 @@ var MediaElementPlayer = function () {
 					// grab for use by features
 					t.findTracks();
 
+					// cache container to store control elements' original position
+					t.featurePosition = {};
+
 					// add user-defined features/controls
-					for (var featureIndex in t.options.features) {
-						var feature = t.options.features[featureIndex];
+					for (var i = 0, il = t.options.features.length; i < il; i++) {
+						var feature = t.options.features[i];
 						if (t['build' + feature]) {
 							try {
 								t['build' + feature](t, t.controls, t.layers, t.media);

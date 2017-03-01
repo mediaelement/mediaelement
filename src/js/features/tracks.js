@@ -119,8 +119,14 @@ Object.assign(MediaElementPlayer.prototype, {
 					`</li>` +
 				`</ul>` +
 			`</div>` +
-		`</div>`)
-		.appendTo(controls);
+		`</div>`);
+
+		if (t.featurePosition['tracks'] !== undefined) {
+			player.captionsButton.insertAfter(controls.children(`:eq(${(t.featurePosition['tracks'] - 1)})`));
+		} else {
+			player.captionsButton.appendTo(controls);
+			t.featurePosition['tracks'] = controls.children(`.${t.options.classPrefix}captions-button`).index();
+		}
 
 		player.chaptersButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}chapters-button">` +
 			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}" tabindex="0"></button>` +
@@ -137,9 +143,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (kind === 'subtitles' || kind === 'captions') {
 				subtitleCount++;
 			} else if (kind === 'chapters' && !controls.find(`.${t.options.classPrefix}chapter-selector`).length) {
-				player.chaptersButton.appendTo(controls);
+				player.chaptersButton.insertAfter(player.captionsButton);
 			}
 		}
+
 
 		// if only one language then just make the button a toggle
 		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
@@ -294,6 +301,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 			if (player.captionsButton) {
 				player.captionsButton.remove();
+			}
+
+			if (player.chaptersButton) {
+				player.chaptersButton.remove();
 			}
 		}
 	},

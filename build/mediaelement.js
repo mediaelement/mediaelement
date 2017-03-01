@@ -2701,15 +2701,15 @@ var HlsNativeRenderer = {
 
 					// borrowed from http://dailymotion.github.io/hls.js/demo/
 					if (data.fatal) {
-						hlsPlayer.destroy();
-					} else {
 						switch (data.type) {
 							case 'mediaError':
 								hlsPlayer.recoverMediaError();
 								break;
-
 							case 'networkError':
 								hlsPlayer.startLoad();
+								break;
+							default:
+								hlsPlayer.destroy();
 								break;
 
 						}

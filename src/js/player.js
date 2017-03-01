@@ -676,9 +676,12 @@ class MediaElementPlayer {
 			// grab for use by features
 			t.findTracks();
 
+			// cache container to store control elements' original position
+			t.featurePosition = {};
+
 			// add user-defined features/controls
-			for (const featureIndex in t.options.features) {
-				const feature = t.options.features[featureIndex];
+			for (let i = 0, il = t.options.features.length; i < il; i++) {
+				const feature = t.options.features[i];
 				if (t[`build${feature}`]) {
 					try {
 						t[`build${feature}`](t, t.controls, t.layers, t.media);
