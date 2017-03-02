@@ -6771,6 +6771,10 @@ var HlsNativeRenderer = {
 			node.addEventListener('play', function () {
 				hlsPlayer.startLoad();
 			}, false);
+
+			node.addEventListener('pause', function () {
+				hlsPlayer.stopLoad();
+			}, false);
 		}
 
 		node.setAttribute('id', id);

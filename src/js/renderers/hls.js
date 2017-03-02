@@ -312,6 +312,10 @@ const HlsNativeRenderer = {
 			node.addEventListener('play', () => {
 				hlsPlayer.startLoad();
 			}, false);
+
+			node.addEventListener('pause', () => {
+				hlsPlayer.stopLoad();
+			}, false);
 		}
 
 		node.setAttribute('id', id);
