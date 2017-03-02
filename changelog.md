@@ -1,6 +1,6 @@
 ### Version History
 
-*3.2.2 (2017/03/??)*
+*3.2.2 (2017/03/02)*
 
 * Fixed issue with renderers order by sorting them when user does not specify any order for them @ron666
 * Added `addControlElement()` to preserve order of control elements when certain features are reset @ron666
