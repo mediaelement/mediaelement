@@ -32,6 +32,56 @@ const NativeHls = {
 	creationQueue: [],
 
 	/**
+	 * Custom configuration for HLS player
+	 *
+	 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
+	 * @type {Object}
+	 */
+	defaultConfiguration: {
+		// Special config: used to set the local path/URL of hls.js library
+		path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
+		autoStartLoad: false,
+		startPosition: -1,
+		capLevelToPlayerSize: false,
+		debug: false,
+		maxBufferLength: 30,
+		maxMaxBufferLength: 600,
+		maxBufferSize: 60 * 1000 * 1000,
+		maxBufferHole: 0.5,
+		maxSeekHole: 2,
+		seekHoleNudgeDuration: 0.01,
+		maxFragLookUpTolerance: 0.2,
+		liveSyncDurationCount: 3,
+		liveMaxLatencyDurationCount: 10,
+		enableWorker: true,
+		enableSoftwareAES: true,
+		manifestLoadingTimeOut: 10000,
+		manifestLoadingMaxRetry: 6,
+		manifestLoadingRetryDelay: 500,
+		manifestLoadingMaxRetryTimeout: 64000,
+		levelLoadingTimeOut: 10000,
+		levelLoadingMaxRetry: 6,
+		levelLoadingRetryDelay: 500,
+		levelLoadingMaxRetryTimeout: 64000,
+		fragLoadingTimeOut: 20000,
+		fragLoadingMaxRetry: 6,
+		fragLoadingRetryDelay: 500,
+		fragLoadingMaxRetryTimeout: 64000,
+		startFragPrefech: false,
+		appendErrorMaxRetry: 3,
+		enableCEA708Captions: true,
+		stretchShortVideoTrack: true,
+		forceKeyFrameOnDiscontinuity: true,
+		abrEwmaFastLive: 5.0,
+		abrEwmaSlowLive: 9.0,
+		abrEwmaFastVoD: 4.0,
+		abrEwmaSlowVoD: 15.0,
+		abrEwmaDefaultEstimate: 500000,
+		abrBandWidthFactor: 0.8,
+		abrBandWidthUpFactor: 0.7
+	},
+
+	/**
 	 * Create a queue to prepare the loading of an HLS source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an HLS player instance
@@ -116,56 +166,9 @@ const HlsNativeRenderer = {
 
 	options: {
 		prefix: 'native_hls',
-		/**
-		 * Custom configuration for HLS player
-		 *
-		 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
-		 * @type {Object}
-		 */
-		hls: {
-			// Special config: used to set the local path/URL of hls.js library
-			path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
-			autoStartLoad: true,
-			startPosition: -1,
-			capLevelToPlayerSize: false,
-			debug: false,
-			maxBufferLength: 30,
-			maxMaxBufferLength: 600,
-			maxBufferSize: 60 * 1000 * 1000,
-			maxBufferHole: 0.5,
-			maxSeekHole: 2,
-			seekHoleNudgeDuration: 0.01,
-			maxFragLookUpTolerance: 0.2,
-			liveSyncDurationCount: 3,
-			liveMaxLatencyDurationCount: 10,
-			enableWorker: true,
-			enableSoftwareAES: true,
-			manifestLoadingTimeOut: 10000,
-			manifestLoadingMaxRetry: 6,
-			manifestLoadingRetryDelay: 500,
-			manifestLoadingMaxRetryTimeout: 64000,
-			levelLoadingTimeOut: 10000,
-			levelLoadingMaxRetry: 6,
-			levelLoadingRetryDelay: 500,
-			levelLoadingMaxRetryTimeout: 64000,
-			fragLoadingTimeOut: 20000,
-			fragLoadingMaxRetry: 6,
-			fragLoadingRetryDelay: 500,
-			fragLoadingMaxRetryTimeout: 64000,
-			startFragPrefech: false,
-			appendErrorMaxRetry: 3,
-			enableCEA708Captions: true,
-			stretchShortVideoTrack: true,
-			forceKeyFrameOnDiscontinuity: true,
-			abrEwmaFastLive: 5.0,
-			abrEwmaSlowLive: 9.0,
-			abrEwmaFastVoD: 4.0,
-			abrEwmaSlowVoD: 15.0,
-			abrEwmaDefaultEstimate: 500000,
-			abrBandWidthFactor: 0.8,
-			abrBandWidthUpFactor: 0.7
-		}
+		hls: NativeHls.defaultConfiguration
 	},
+
 	/**
 	 * Determine if a specific element type can be played with this render
 	 *
@@ -188,7 +191,8 @@ const HlsNativeRenderer = {
 		const
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
-			stack = {}
+			preload = originalNode.getAttribute('preload'),
+			autoplay = originalNode.getAttribute('autoplay')
 		;
 
 		let
@@ -199,7 +203,13 @@ const HlsNativeRenderer = {
 		;
 
 		node = originalNode.cloneNode(true);
-		options = Object.assign(options, mediaElement.options);
+
+		if (preload === 'auto') {
+			NativeHls.defaultConfiguration.startAutoLoad = true;
+		}
+
+		options = Object.assign(options, NativeHls.defaultConfiguration, mediaElement.options);
+		console.log(options);
 
 		// WRAPPERS for PROPs
 		const
@@ -226,17 +236,20 @@ const HlsNativeRenderer = {
 								hlsPlayer.attachMedia(node);
 								hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, () => {
 									hlsPlayer.loadSource(value);
+
+									if (autoplay) {
+										hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
+											node.play();
+										});
+									}
 								});
 							}
-						} else {
-							// store for after "READY" event fires
-							stack.push({type: 'set', propName: propName, value: value});
 						}
 					}
 				};
 
 			}
-			;
+		;
 
 		for (i = 0, il = props.length; i < il; i++) {
 			assignGettersSetters(props[i]);
@@ -247,24 +260,6 @@ const HlsNativeRenderer = {
 
 			mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
 
-			// do call stack
-			if (stack.length) {
-				for (i = 0, il = stack.length; i < il; i++) {
-
-					const stackItem = stack[i];
-
-					if (stackItem.type === 'set') {
-						const propName = stackItem.propName,
-							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
-
-						node[`set${capName}`](stackItem.value);
-					} else if (stackItem.type === 'call') {
-						node[stackItem.methodName]();
-					}
-				}
-			}
-
-			// BUBBLE EVENTS
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				hlsEvents = Hls.Events,
@@ -279,6 +274,11 @@ const HlsNativeRenderer = {
 						hlsPlayer.attachMedia(node);
 						hlsPlayer.on(hlsEvents.MEDIA_ATTACHED, () => {
 							hlsPlayer.loadSource(url);
+							if (autoplay) {
+								hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
+									node.play();
+								});
+							}
 						});
 					}
 
@@ -293,6 +293,7 @@ const HlsNativeRenderer = {
 			;
 
 			for (i = 0, il = events.length; i < il; i++) {
+				console.log(events[i]);
 				assignEvents(events[i]);
 			}
 
@@ -358,6 +359,16 @@ const HlsNativeRenderer = {
 					break;
 				}
 			}
+		}
+
+		if (preload !== 'auto') {
+			node.addEventListener('play', () => {
+				hlsPlayer.startLoad();
+			}, false);
+
+			node.addEventListener('pause', () => {
+				hlsPlayer.stopLoad();
+			}, false);
 		}
 
 		node.setAttribute('id', id);
