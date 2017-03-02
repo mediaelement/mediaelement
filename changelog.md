@@ -1,5 +1,9 @@
 ### Version History
 
+*3.2.3 (2017/03/02)*
+
+* Brought missing fix for HLS @ron666
+
 *3.2.2 (2017/03/02)*
 
 * Fixed issue with renderers order by sorting them when user does not specify any order for them @ron666
