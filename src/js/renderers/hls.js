@@ -32,56 +32,6 @@ const NativeHls = {
 	creationQueue: [],
 
 	/**
-	 * Custom configuration for HLS player
-	 *
-	 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
-	 * @type {Object}
-	 */
-	defaultConfiguration: {
-		// Special config: used to set the local path/URL of hls.js library
-		path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
-		autoStartLoad: false,
-		startPosition: -1,
-		capLevelToPlayerSize: false,
-		debug: false,
-		maxBufferLength: 30,
-		maxMaxBufferLength: 600,
-		maxBufferSize: 60 * 1000 * 1000,
-		maxBufferHole: 0.5,
-		maxSeekHole: 2,
-		seekHoleNudgeDuration: 0.01,
-		maxFragLookUpTolerance: 0.2,
-		liveSyncDurationCount: 3,
-		liveMaxLatencyDurationCount: 10,
-		enableWorker: true,
-		enableSoftwareAES: true,
-		manifestLoadingTimeOut: 10000,
-		manifestLoadingMaxRetry: 6,
-		manifestLoadingRetryDelay: 500,
-		manifestLoadingMaxRetryTimeout: 64000,
-		levelLoadingTimeOut: 10000,
-		levelLoadingMaxRetry: 6,
-		levelLoadingRetryDelay: 500,
-		levelLoadingMaxRetryTimeout: 64000,
-		fragLoadingTimeOut: 20000,
-		fragLoadingMaxRetry: 6,
-		fragLoadingRetryDelay: 500,
-		fragLoadingMaxRetryTimeout: 64000,
-		startFragPrefech: false,
-		appendErrorMaxRetry: 3,
-		enableCEA708Captions: true,
-		stretchShortVideoTrack: true,
-		forceKeyFrameOnDiscontinuity: true,
-		abrEwmaFastLive: 5.0,
-		abrEwmaSlowLive: 9.0,
-		abrEwmaFastVoD: 4.0,
-		abrEwmaSlowVoD: 15.0,
-		abrEwmaDefaultEstimate: 500000,
-		abrBandWidthFactor: 0.8,
-		abrBandWidthUpFactor: 0.7
-	},
-
-	/**
 	 * Create a queue to prepare the loading of an HLS source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an HLS player instance
@@ -155,6 +105,7 @@ const NativeHls = {
 	 * @return {Hls}
 	 */
 	createInstance: (settings) => {
+		console.log(settings.options);
 		const player = new Hls(settings.options);
 		window['__ready__' + settings.id](player);
 		return player;
@@ -166,7 +117,14 @@ const HlsNativeRenderer = {
 
 	options: {
 		prefix: 'native_hls',
-		hls: NativeHls.defaultConfiguration
+		hls: {
+			// Special config: used to set the local path/URL of hls.js library
+			path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
+			// To modify more elements from hls.js,
+			// see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
+			autoStartLoad: false,
+			debug: false
+		}
 	},
 
 	/**
@@ -203,13 +161,8 @@ const HlsNativeRenderer = {
 		;
 
 		node = originalNode.cloneNode(true);
-
-		if (preload === 'auto') {
-			NativeHls.defaultConfiguration.startAutoLoad = true;
-		}
-
-		options = Object.assign(options, NativeHls.defaultConfiguration, mediaElement.options);
-		console.log(options);
+		options = Object.assign(options, mediaElement.options);
+		options.autoStartLoad = (preload === 'auto');
 
 		// WRAPPERS for PROPs
 		const
@@ -227,22 +180,19 @@ const HlsNativeRenderer = {
 							if (propName === 'src') {
 
 								hlsPlayer.destroy();
-								hlsPlayer = null;
 								hlsPlayer = NativeHls.createInstance({
 									options: options.hls,
 									id: id
 								});
 
 								hlsPlayer.attachMedia(node);
-								hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, () => {
-									hlsPlayer.loadSource(value);
+								hlsPlayer.loadSource(value);
 
-									if (autoplay) {
-										hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
-											node.play();
-										});
-									}
-								});
+								if (autoplay) {
+									hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
+										node.play();
+									});
+								}
 							}
 						}
 					}
@@ -272,14 +222,12 @@ const HlsNativeRenderer = {
 						const url = node.src;
 
 						hlsPlayer.attachMedia(node);
-						hlsPlayer.on(hlsEvents.MEDIA_ATTACHED, () => {
-							hlsPlayer.loadSource(url);
-							if (autoplay) {
-								hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
-									node.play();
-								});
-							}
-						});
+						hlsPlayer.loadSource(url);
+						if (autoplay) {
+							hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
+								node.play();
+							});
+						}
 					}
 
 					node.addEventListener(eventName, (e) => {
@@ -293,7 +241,6 @@ const HlsNativeRenderer = {
 			;
 
 			for (i = 0, il = events.length; i < il; i++) {
-				console.log(events[i]);
 				assignEvents(events[i]);
 			}
 
@@ -324,7 +271,7 @@ const HlsNativeRenderer = {
 								if (!recoverDecodingErrorDate || (now - recoverDecodingErrorDate) > 3000) {
 									recoverDecodingErrorDate = new Date().getTime();
 									hlsPlayer.recoverMediaError();
-								} else if(!recoverSwapAudioCodecDate || (now - recoverSwapAudioCodecDate) > 3000) {
+								} else if (!recoverSwapAudioCodecDate || (now - recoverSwapAudioCodecDate) > 3000) {
 									recoverSwapAudioCodecDate = new Date().getTime();
 									console.warn('Attempting to swap Audio Codec and recover from media error');
 									hlsPlayer.swapAudioCodec();
@@ -365,10 +312,6 @@ const HlsNativeRenderer = {
 			node.addEventListener('play', () => {
 				hlsPlayer.startLoad();
 			}, false);
-
-			node.addEventListener('pause', () => {
-				hlsPlayer.stopLoad();
-			}, false);
 		}
 
 		node.setAttribute('id', id);
@@ -403,6 +346,10 @@ const HlsNativeRenderer = {
 
 		node.destroy = () => {
 			hlsPlayer.destroy();
+		};
+
+		node.stop = () => {
+			hlsPlayer.stopLoad();
 		};
 
 		const event = createEvent('rendererready', node);
