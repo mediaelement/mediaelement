@@ -5,6 +5,7 @@
 * Fixed issue with renderers order by sorting them when user does not specify any order for them @ron666
 * Added `addControlElement()` to preserve order of control elements when certain features are reset @ron666
 * Fixed issue with native HLS when processing errors @ron666
+* Fixed issue when no dimensions are being set in `<video>` tag for `<iframe>` renderers @ron666
 
 *3.2.1 (2017/02/28)*
 
