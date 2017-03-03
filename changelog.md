@@ -3,6 +3,7 @@
 *3.2.4 (2017/03/??)*
 
 * Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @ron666
+* Added error event support in Flash shims (https://github.com/johndyer/mediaelement/pull/2115) @astr0junk
 
 *3.2.3 (2017/03/02)*
 

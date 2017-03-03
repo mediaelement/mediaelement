@@ -5869,7 +5869,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
 
 		for (i = 0, il = initEvents.length; i < il; i++) {
 			var event = (0, _general.createEvent)(initEvents[i], flash);
