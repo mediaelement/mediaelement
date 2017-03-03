@@ -4,7 +4,7 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/dom';
+import {createEvent} from '../utils/general';
 import {SUPPORTS_NATIVE_HLS, IS_ANDROID} from '../utils/constants';
 
 /**
@@ -30,10 +30,11 @@ const HtmlMediaElement = {
 
 		const mediaElement = document.createElement('video');
 
-		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS
+		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS;
+		// also consider URLs that might have obfuscated URLs
 		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
 			(['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-				'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
+			'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type).replace(/no/, '');
@@ -99,8 +100,6 @@ const HtmlMediaElement = {
 
 					const event = document.createEvent('HTMLEvents');
 					event.initEvent(e.type, e.bubbles, e.cancelable);
-					// event.srcElement = e.srcElement;
-					// event.target = e.srcElement;
 					mediaElement.dispatchEvent(event);
 				});
 

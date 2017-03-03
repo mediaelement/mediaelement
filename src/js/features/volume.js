@@ -4,6 +4,7 @@ import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
 import {IS_ANDROID, IS_IOS} from '../utils/constants';
+import {isString} from '../utils/general';
 
 /**
  * Volume button
@@ -16,13 +17,17 @@ import {IS_ANDROID, IS_IOS} from '../utils/constants';
 // Feature configuration
 Object.assign(config, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	muteText: '',
+	muteText: null,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	allyVolumeControlText: '',
+	unmuteText: null,
+	/**
+	 * @type {?String}
+	 */
+	allyVolumeControlText: null,
 	/**
 	 * @type {Boolean}
 	 */
@@ -59,13 +64,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			mode = (t.isVideo) ? t.options.videoVolume : t.options.audioVolume,
-			muteText = t.options.muteText ? t.options.muteText : i18n.t('mejs.mute-toggle'),
-			volumeControlText = t.options.allyVolumeControlText ? t.options.allyVolumeControlText : i18n.t('mejs.volume-help-text'),
+			muteText = isString(t.options.muteText) ? t.options.muteText : i18n.t('mejs.mute'),
+			unmuteText = isString(t.options.unmuteText) ? t.options.unmuteText : i18n.t('mejs.unmute'),
+			volumeControlText = isString(t.options.allyVolumeControlText) ? t.options.allyVolumeControlText : i18n.t('mejs.volume-help-text'),
 			mute = (mode === 'horizontal') ?
 
 				// horizontal version
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute">` +
-					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}"></button>` +
+					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
 				`</div>` +
 				`<a href="javascript:void(0);" class="${t.options.classPrefix}horizontal-volume-slider">` +
 					`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
@@ -78,7 +84,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				// vertical version
 				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute">` +
-					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}"></button>` +
+					`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
 					`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider">` +
 						`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 						`<div class="${t.options.classPrefix}volume-total">` +
@@ -87,7 +93,11 @@ Object.assign(MediaElementPlayer.prototype, {
 						`</div>` +
 					`</a>` +
 				`</div>`)
-				.appendTo(controls),
+		;
+
+		t.addControlElement(mute, 'volume');
+
+		const
 			volumeSlider = t.container.find(`.${t.options.classPrefix}volume-slider, 
 				.${t.options.classPrefix}horizontal-volume-slider`),
 			volumeTotal = t.container.find(`.${t.options.classPrefix}volume-total, 
@@ -111,14 +121,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (volume === 0) {
 					mute.removeClass(`${t.options.classPrefix}mute`).addClass(`${t.options.classPrefix}unmute`);
 					mute.children('button').attr({
-						title: i18n.t('mejs.unmute'),
-						'aria-label': i18n.t('mejs.unmute')
+						title: unmuteText,
+						'aria-label': unmuteText,
 					});
 				} else {
 					mute.removeClass(`${t.options.classPrefix}unmute`).addClass(`${t.options.classPrefix}mute`);
 					mute.children('button').attr({
-						title: i18n.t('mejs.mute'),
-						'aria-label': i18n.t('mejs.mute')
+						title: muteText,
+						'aria-label': muteText,
 					});
 				}
 

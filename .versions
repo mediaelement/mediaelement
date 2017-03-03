@@ -1,4 +1,6 @@
-johndyer:mediaelement@3.1.2
-jquery@1.11.3
-meteor@1.1.16
-underscore@1.0.9
+johndyer:mediaelement@3.2.3
+jquery@1.11.10
+meteor@1.6.1
+modules@0.7.9
+modules-runtime@0.7.9
+underscore@1.0.10

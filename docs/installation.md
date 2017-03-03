@@ -76,6 +76,7 @@ If you want to install any of them, refer to the new plugins repository clicking
 ```html
 <script src="/path/to/jquery.js"></script>
 <script src="/path/to/mediaelement-and-player.min.js"></script>
+<!-- Add any other renderers you need; see Use Renderers for more information -->
 <link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
 ```
 
@@ -96,8 +97,24 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 </style>
 ```
 
-Also, update ```pluginPath``` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
+Also, update `pluginPath` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
 
+You can also use a CDN to load your script and stylesheet. 
+
+As stated above, the important factor is to set the `pluginPath` correctly, but also, for this scenario, you will need to set the `shimScriptAccess` configuration element as ***`always`*** to make the shims to work. 
+
+As an example:
+
+```javascript
+$('video, audio').mediaelementplayer({
+	// Do not forget to put a final slash (/)
+	pluginPath: 'https://cdnjs.com/libraries/mediaelement/',
+	// this will allow the CDN to use Flash without restrictions 
+    // (by default, this is set as `sameDomain`)
+	shimScriptAccess: 'always' 
+	// more configuration
+});
+```
 <a id="tags"></a>
 ## 3. Add `<video>` or `<audio>` tags
 
@@ -115,7 +132,9 @@ or
     <source type="video/mp4" src="myvideo.mp4" />
 </video>
 ```
-All the formats listed in [Browser and Device support](../README.md#browser-support) can be instantiated using this setup. It is important to include their MIME type so the plugin renders the media accurately. 
+All the formats listed in [Browser and Device support](../README.md#browser-support) can be instantiated using this setup. 
+
+**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display errors in regards of unknown/custom MIME types. But they don't prevent the plugin to work properly. 
 
 <a id="multi-codecs"></a>
 ### Multiple codecs (Optional)
@@ -210,6 +229,8 @@ Available languages:
 * Romanian (ro)
 * Russian (ru)
 * Slovak (sk)
+* Swedish (sv)
+* Ukrainian (uk)
 * Simplified Chinese (zh-CN)
 * Traditional Chinese (zh-TW)
 

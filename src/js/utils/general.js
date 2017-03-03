@@ -66,7 +66,15 @@ export function isObjectEmpty (instance) {
 	return (Object.getOwnPropertyNames(instance).length <= 0);
 }
 
+/**
+ * Group a string of events into `document` (d) and `window` (w) events
+ *
+ * @param {String} events  List of space separated events
+ * @param {String} id      Namespace appended to events
+ * @return {{d: Array, w: Array}}
+ */
 export function splitEvents (events, id) {
+	// Global events
 	const rwindow = /^((after|before)print|(before)?unload|hashchange|message|o(ff|n)line|page(hide|show)|popstate|resize|storage)\b/;
 	// add player ID as an event namespace so it's easier to unbind them all later
 	const ret = {d: [], w: []};
@@ -88,8 +96,62 @@ export function splitEvents (events, id) {
 	return ret;
 }
 
+/**
+ *
+ * @param {string} eventName
+ * @param {*} target
+ * @return {Event|Object}
+ */
+export function createEvent (eventName, target) {
+
+	if (typeof eventName !== 'string') {
+		throw new Error('Event name must be a string');
+	}
+
+	let event;
+
+	if (document.createEvent) {
+		event = document.createEvent('Event');
+		event.initEvent(eventName, true, false);
+	} else {
+		event = {};
+		event.type = eventName;
+		event.target = target;
+		event.canceleable = true;
+		event.bubbable = false;
+	}
+
+	return event;
+}
+
+/**
+ * Returns true if targetNode appears after sourceNode in the dom.
+ * @param {HTMLElement} sourceNode - the source node for comparison
+ * @param {HTMLElement} targetNode - the node to compare against sourceNode
+ */
+export function isNodeAfter (sourceNode, targetNode) {
+	return !!(
+		sourceNode &&
+		targetNode &&
+		sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING
+	);
+}
+
+/**
+ * Determines if a value is a string
+ *
+ * @param {*} value to check
+ * @returns {Boolean} True if a value is a string
+ */
+export function isString (value) {
+	return typeof value === 'string';
+}
+
 mejs.Utils = mejs.Utils || {};
 mejs.Utils.escapeHTML = escapeHTML;
 mejs.Utils.debounce = debounce;
 mejs.Utils.isObjectEmpty = isObjectEmpty;
 mejs.Utils.splitEvents = splitEvents;
+mejs.Utils.createEvent = createEvent;
+mejs.Utils.isNodeAfter = isNodeAfter;
+mejs.Utils.isString = isString;

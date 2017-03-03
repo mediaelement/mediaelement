@@ -19,41 +19,19 @@
 			// renderers/flash.js
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Disattivare lo schermo intero",
-			"mejs.fullscreen-on": "Attivare lo schermo intero",
-			"mejs.download-video": "Scaricare il video",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Schermo intero",
-
-			// features/jumpforward.js
-			//"mejs.time-jump-forward": "Jump forward %1 second(s)",
-
-			// features/loop.js
-			//"mejs.loop": "Toggle Loop",
 
 			// features/playpause.js
 			"mejs.play": "Eseguire",
 			"mejs.pause": "Pausa",
 
-			// features/postroll.js
-			"mejs.close": "Chiudere",
-
 			// features/progress.js
 			"mejs.time-slider": "Barra di scorrimento",
 			"mejs.time-help-text": "Utilizzare i tasti Freccia sinistra/Freccia destra per avanzare di un secondo, Freccia Su/Giù per avanzare dieci secondi.",
-
-			// features/skipback.js
-			"mejs.time-skip-back": "Riavvolgere %1 secondi",
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Acquisizioni/sottotitoli",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "Nessuno",
+			//"mejs.live-broadcast" : "Live Broadcast",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Toggle muto",
 			"mejs.volume-help-text": "Utilizzare i tasti Freccia Su/Giù per aumentare o diminuire il volume.",
 			"mejs.unmute": "Disattivare muto",
 			"mejs.mute": "Muto",
@@ -61,25 +39,12 @@
 
 			// core/player.js
 			"mejs.video-player": "Lettore Video",
-			"mejs.audio-player": "Lettore Audio"
-
-			// features/ads.js
-			//"mejs.ad-skip": "Skip ad",
-			//"mejs.ad-skip-info": "Skip in %1 second(s)",
-
-			// features/sourcechooser.js
-			//"mejs.source-chooser": "Source Chooser",
-
-			// features/stop.js
-			//"mejs.stop": "Stop",
-
-			//features/speed.js
-			//"mejs.speed-rate" : "Speed Rate",
-
-			//features/progress.js
-			//"mejs.live-broadcast" : "Live Broadcast",
+			"mejs.audio-player": "Lettore Audio",
 
 			// features/tracks.js
+			"mejs.captions-subtitles": "Acquisizioni/sottotitoli",
+			// "mejs.captions-chapters": "Chapters",
+			"mejs.none": "Nessuno"
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",

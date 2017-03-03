@@ -37,12 +37,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildcurrent: function (player, controls, layers, media)  {
-		const t = this;
+		const
+			t = this,
+			time = $(`<div class="${t.options.classPrefix}time" role="timer" aria-live="off">` +
+				`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond)}</span>` +
+			`</div>`)
+		;
 
-		$(`<div class="${t.options.classPrefix}time" role="timer" aria-live="off">` +
-			`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond)}</span>` +
-		`</div>`)
-		.appendTo(controls);
+		t.addControlElement(time, 'current');
 
 		t.currenttime = t.controls.find(`.${t.options.classPrefix}currenttime`);
 
@@ -64,23 +66,27 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildduration: function (player, controls, layers, media)  {
+
 		const t = this;
 
 		if (controls.children().last().find(`.${t.options.classPrefix}currenttime`).length > 0) {
-			$(`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>`)
-			.appendTo(controls.find(`.${t.options.classPrefix}time`));
+			const duration = $(`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>`);
+
+			duration.appendTo(controls.find(`.${t.options.classPrefix}time`));
+
 		} else {
 
 			// add class to current time
 			controls.find(`.${t.options.classPrefix}currenttime`).parent()
 				.addClass(`${t.options.classPrefix}currenttime-container`);
 
-			$(`<div class="${t.options.classPrefix}time ${t.options.classPrefix}duration-container">` +
+			const duration = $(`<div class="${t.options.classPrefix}time ${t.options.classPrefix}duration-container">` +
 				`<span class="${t.options.classPrefix}duration">` +
 				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>` +
-			`</div>`)
-			.appendTo(controls);
+			`</div>`);
+
+			t.addControlElement(duration, 'duration');
 		}
 
 		t.durationD = t.controls.find(`.${t.options.classPrefix}duration`);

@@ -14,9 +14,8 @@ import {
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
-import {splitEvents} from './utils/general';
+import {splitEvents, debounce, isNodeAfter} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
-import {isNodeAfter} from './utils/dom';
 import {getTypeFromFile} from './utils/media';
 
 mejs.mepIndex = 0;
@@ -263,6 +262,11 @@ class MediaElementPlayer {
 
 		const t = this;
 
+		// To avoid jQuery.noConflict() issues
+		if (typeof mejs.$ !== 'undefined') {
+			window.$ = mejs.$;
+		}
+
 		t.hasFocus = false;
 
 		t.controlsAreVisible = true;
@@ -366,9 +370,9 @@ class MediaElementPlayer {
 				$(`<div id="${t.id}" class="${t.options.classPrefix}container ${t.options.classPrefix}container-keyboard-inactive"` +
 					`tabindex="0" role="application" aria-label="${videoPlayerTitle}">` +
 					`<div class="${t.options.classPrefix}inner">` +
-						`<div class="${t.options.classPrefix}mediaelement"></div>` +
 						`<div class="${t.options.classPrefix}layers"></div>` +
 						`<div class="${t.options.classPrefix}controls"></div>` +
+						`<div class="${t.options.classPrefix}mediaelement"></div>` +
 						`<div class="${t.options.classPrefix}clear"></div>` +
 					`</div>` +
 				`</div>`)
@@ -672,9 +676,12 @@ class MediaElementPlayer {
 			// grab for use by features
 			t.findTracks();
 
+			// cache container to store control elements' original position
+			t.featurePosition = {};
+
 			// add user-defined features/controls
-			for (const featureIndex in t.options.features) {
-				const feature = t.options.features[featureIndex];
+			for (let i = 0, il = t.options.features.length; i < il; i++) {
+				const feature = t.options.features[i];
 				if (t[`build${feature}`]) {
 					try {
 						t[`build${feature}`](t, t.controls, t.layers, t.media);
@@ -785,7 +792,8 @@ class MediaElementPlayer {
 					t.media.addEventListener('loadedmetadata', (e) => {
 						// if the <video height> was not set and the options.videoHeight was not set
 						// then resize to the real dimensions
-						if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') && !isNaN(e.target.videoHeight)) {
+						if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') &&
+							e.target !== null && !isNaN(e.target.videoHeight)) {
 							t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
 							t.setControlsSize();
 							t.media.setSize(e.target.videoWidth, e.target.videoHeight);
@@ -887,18 +895,22 @@ class MediaElementPlayer {
 				}
 			}, false);
 
-			t.container.focusout((e) => {
-				if (e.relatedTarget) { //FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
-					const $target = $(e.relatedTarget);
-					if (t.keyboardAction && $target.parents(`.${t.options.classPrefix}container`).length === 0) {
+			t.container.on('focusout', debounce(() => {
+				setTimeout(() => {
+					// Safari triggers focusout multiple times
+					// Firefox does NOT support e.relatedTarget to see which element
+					// just lost focus, so wait to find the next focused element
+
+					const parent = $(document.activeElement).closest(`.${t.options.classPrefix}container`);
+					if (t.keyboardAction && !parent.length) {
 						t.keyboardAction = false;
 						if (t.isVideo && !t.options.alwaysShowControls) {
+							// focus is outside the control; hide controls
 							t.hideControls(true);
 						}
-
 					}
-				}
-			});
+				}, 0);
+			}, 100));
 
 			// webkit has trouble doing this without a delay
 			setTimeout(() => {
@@ -941,10 +953,10 @@ class MediaElementPlayer {
 			// This is a work-around for a bug in the YouTube iFrame player, which means
 			//	we can't use the play() API for the initial playback on iOS or Android;
 			//	user has to start playback directly by tapping on the iFrame.
-			if (t.media.rendererName !== null && t.media.rendererName.match(/youtube/) && (IS_IOS || IS_ANDROID)) {
-				t.container.find(`.${t.options.classPrefix}overlay-play`).hide();
-				t.container.find(`.${t.options.classPrefix}poster`).hide();
-			}
+			// if (t.media.rendererName !== null && t.media.rendererName.match(/youtube/) && (IS_IOS || IS_ANDROID)) {
+			// 	t.container.find(`.${t.options.classPrefix}overlay-play`).hide();
+			// 	t.container.find(`.${t.options.classPrefix}poster`).hide();
+			// }
 		}
 
 		// force autoplay for HTML5
@@ -1272,6 +1284,29 @@ class MediaElementPlayer {
 		t.container.trigger('controlsresize');
 	}
 
+	/**
+	 * Add featured control element and cache its position in case features are reset
+	 *
+	 * @param {HTMLElement} element
+	 * @param {String} key
+	 */
+	addControlElement (element, key) {
+
+		const t = this;
+
+		if (t.featurePosition[key] !== undefined) {
+			element.insertAfter(t.controls.children(`:eq(${(t.featurePosition[key] - 1)})`));
+		} else {
+			element.appendTo(t.controls);
+			t.featurePosition[key] = t.controls.find(element).index();
+		}
+	}
+
+	/**
+	 * Append layer to manipulate `<iframe>` elements safely.
+	 *
+	 * This allows the user to trigger events properly given that mouse/click don't get lost in the `<iframe>`.
+	 */
 	createIframeLayer () {
 
 		const t = this;
@@ -1436,7 +1471,7 @@ class MediaElementPlayer {
 			// this needs to come last so it's on top
 			bigPlay =
 				$(`<div class="${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play">` +
-					`<div class="${t.options.classPrefix}overlay-button" role="button" ` +
+					`<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0"` +
 						`aria-label="${i18n.t('mejs.play')}" aria-pressed="false"></div>` +
 				`</div>`)
 				.appendTo(layers)
@@ -1462,7 +1497,8 @@ class MediaElementPlayer {
 				});
 
 		// if (t.options.supportVR || (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/))) {
-		if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/)) {
+		if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/) &&
+			!(player.$media.attr('poster') || player.options.poster)) {
 			bigPlay.hide();
 		}
 

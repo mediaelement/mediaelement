@@ -15,9 +15,9 @@ import {renderer} from './renderer';
 class MediaElement {
 
 	constructor (idOrNode, options) {
-		
+
 		const t = this;
-		
+
 		t.defaults = {
 			/**
 			 * List of the renderers to use
@@ -33,7 +33,12 @@ class MediaElement {
 			 * The path where shims are located
 			 * @type {String}
 			 */
-			pluginPath: 'build/'
+			pluginPath: 'build/',
+			/**
+			 * Flag in `<object>` and `<embed>` to determine whether to use local or CDN
+			 * Possible values: 'always' (CDN version) or 'sameDomain' (local files)
+			 */
+			shimScriptAccess: 'sameDomain'
 		};
 
 		options = Object.assign(t.defaults, options);
@@ -46,7 +51,7 @@ class MediaElement {
 			id = idOrNode,
 			i,
 			il
-		;
+			;
 
 		if (typeof idOrNode === 'string') {
 			t.mediaElement.originalNode = document.getElementById(idOrNode);
@@ -112,7 +117,7 @@ class MediaElement {
 			let
 				newRenderer = t.mediaElement.renderers[rendererName],
 				newRendererType = null
-			;
+				;
 
 			if (newRenderer !== undefined && newRenderer !== null) {
 				newRenderer.show();
@@ -181,20 +186,10 @@ class MediaElement {
 						return oldValue;
 					};
 
-				// Modern browsers, IE9+ (IE8 only works on DOM objects, not normal JS objects)
-				if (Object.defineProperty) {
-
-					Object.defineProperty(obj, name, {
-						get: getFn,
-						set: setFn
-					});
-
-					// Older Firefox
-				} else if (obj.__defineGetter__) {
-
-					obj.__defineGetter__(name, getFn);
-					obj.__defineSetter__(name, setFn);
-				}
+				Object.defineProperty(obj, name, {
+					get: getFn,
+					set: setFn
+				});
 			},
 			assignGettersSetters = (propName) => {
 				if (propName !== 'src') {
@@ -232,7 +227,7 @@ class MediaElement {
 						const
 							src = absolutizeUrl(value[i].src),
 							type = value[i].type
-						;
+							;
 
 						mediaFiles.push({
 							src: src,
@@ -276,7 +271,7 @@ class MediaElement {
 				// run the method on the current renderer
 				t.mediaElement[methodName] = (...args) => {
 					return (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
-						typeof t.mediaElement.renderer[methodName] === 'function') ?
+					typeof t.mediaElement.renderer[methodName] === 'function') ?
 						t.mediaElement.renderer[methodName](args) : null;
 				};
 
@@ -296,63 +291,60 @@ class MediaElement {
 		}
 
 		// IE && iOS
-		if (!t.mediaElement.addEventListener) {
+		t.mediaElement.events = {};
 
-			t.mediaElement.events = {};
+		// start: fake events
+		t.mediaElement.addEventListener = (eventName, callback) => {
+			// create or find the array of callbacks for this eventName
+			t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
 
-			// start: fake events
-			t.mediaElement.addEventListener = (eventName, callback) => {
-				// create or find the array of callbacks for this eventName
-				t.mediaElement.events[eventName] = t.mediaElement.events[eventName] || [];
+			// push the callback into the stack
+			t.mediaElement.events[eventName].push(callback);
+		};
+		t.mediaElement.removeEventListener = (eventName, callback) => {
+			// no eventName means remove all listeners
+			if (!eventName) {
+				t.mediaElement.events = {};
+				return true;
+			}
 
-				// push the callback into the stack
-				t.mediaElement.events[eventName].push(callback);
-			};
-			t.mediaElement.removeEventListener = (eventName, callback) => {
-				// no eventName means remove all listeners
-				if (!eventName) {
-					t.mediaElement.events = {};
+			// see if we have any callbacks for this eventName
+			const callbacks = t.mediaElement.events[eventName];
+
+			if (!callbacks) {
+				return true;
+			}
+
+			// check for a specific callback
+			if (!callback) {
+				t.mediaElement.events[eventName] = [];
+				return true;
+			}
+
+			// remove the specific callback
+			for (let i = 0, il = callbacks.length; i < il; i++) {
+				if (callbacks[i] === callback) {
+					t.mediaElement.events[eventName].splice(i, 1);
 					return true;
 				}
+			}
+			return false;
+		};
 
-				// see if we have any callbacks for this eventName
-				const callbacks = t.mediaElement.events[eventName];
+		/**
+		 *
+		 * @param {Event} event
+		 */
+		t.mediaElement.dispatchEvent = (event) => {
 
-				if (!callbacks) {
-					return true;
+			const callbacks = t.mediaElement.events[event.type];
+
+			if (callbacks) {
+				for (i = 0, il = callbacks.length; i < il; i++) {
+					callbacks[i].apply(null, [event]);
 				}
-
-				// check for a specific callback
-				if (!callback) {
-					t.mediaElement.events[eventName] = [];
-					return true;
-				}
-
-				// remove the specific callback
-				for (let i = 0, il = callbacks.length; i < il; i++) {
-					if (callbacks[i] === callback) {
-						t.mediaElement.events[eventName].splice(i, 1);
-						return true;
-					}
-				}
-				return false;
-			};
-
-			/**
-			 *
-			 * @param {Event} event
-			 */
-			t.mediaElement.dispatchEvent = (event) => {
-
-				const callbacks = t.mediaElement.events[event.type];
-
-				if (callbacks) {
-					for (i = 0, il = callbacks.length; i < il; i++) {
-						callbacks[i].apply(null, [event]);
-					}
-				}
-			};
-		}
+			}
+		};
 
 		if (t.mediaElement.originalNode !== null) {
 			const mediaFiles = [];

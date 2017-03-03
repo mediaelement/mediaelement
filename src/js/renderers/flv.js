@@ -4,7 +4,7 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/dom';
+import {createEvent} from '../utils/general';
 import {HAS_MSE} from '../utils/constants';
 import {typeChecks} from '../utils/media';
 
@@ -114,30 +114,12 @@ const FlvNativeRenderer = {
 
 	options: {
 		prefix: 'native_flv',
-		/**
-		 * Custom configuration for FLV player
-		 *
-		 * @see https://github.com/Bilibili/flv.js/blob/master/docs/api.md#config
-		 * @type {Object}
-		 */
 		flv: {
 			// Special config: used to set the local path/URL of flv.js library
 			path: '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.1.0/flv.min.js',
-			cors: true,
-			enableWorker: false,
-			enableStashBuffer: true,
-			stashInitialSize: undefined,
-			isLive: false,
-			lazyLoad: true,
-			lazyLoadMaxDuration: 3 * 60,
-			deferLoadAfterSourceOpen: true,
-			statisticsInfoReportInterval: 600,
-			accurateSeek: false,
-			seekType: 'range',  // [range, param, custom]
-			seekParamStart: 'bstart',
-			seekParamEnd: 'bend',
-			rangeLoadZeroStart: false,
-			customSeekHandler: undefined
+			// To modify more elements from FLV player,
+			// see https://github.com/Bilibili/flv.js/blob/master/docs/api.md#config
+			cors: true
 		}
 	},
 	/**
@@ -160,8 +142,7 @@ const FlvNativeRenderer = {
 
 		const
 			originalNode = mediaElement.originalNode,
-			id = `${mediaElement.id}_${options.prefix}`,
-			stack = {}
+			id = `${mediaElement.id}_${options.prefix}`
 		;
 
 		let
@@ -174,7 +155,6 @@ const FlvNativeRenderer = {
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
 
-		// WRAPPERS for PROPs
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
@@ -193,9 +173,6 @@ const FlvNativeRenderer = {
 								flvPlayer.attachMediaElement(node);
 								flvPlayer.load();
 							}
-						} else {
-							// store for after "READY" event fires
-							stack.push({type: 'set', propName: propName, value: value});
 						}
 					}
 				};
@@ -212,26 +189,6 @@ const FlvNativeRenderer = {
 
 			mediaElement.flvPlayer = flvPlayer = _flvPlayer;
 
-			// do call stack
-			if (stack.length) {
-				for (i = 0, il = stack.length; i < il; i++) {
-
-					const stackItem = stack[i];
-
-					if (stackItem.type === 'set') {
-						const
-							propName = stackItem.propName,
-							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`
-						;
-
-						node[`set${capName}`](stackItem.value);
-					} else if (stackItem.type === 'call') {
-						node[stackItem.methodName]();
-					}
-				}
-			}
-
-			// BUBBLE EVENTS
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				assignEvents = (eventName) => {

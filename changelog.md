@@ -1,18 +1,64 @@
 ### Version History
 
-*3.1.3 (2017/??/??)*
+*3.2.4 (2017/03/??)*
+
+* Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @ron666
+
+*3.2.3 (2017/03/02)*
+
+* Brought missing fix for HLS @ron666
+
+*3.2.2 (2017/03/02)*
+
+* Fixed issue with renderers order by sorting them when user does not specify any order for them @ron666
+* Added `addControlElement()` to preserve order of control elements when certain features are reset @ron666
+* Fixed issue with native HLS when processing errors @ron666
+* Fixed issue when no dimensions are being set in `<video>` tag for `<iframe>` renderers @ron666
+* Fixed issues with HLS and M(PEG)-DASH renderers to avoid downloading fragments before playing media @ron666
+* Cleaned code on native renderers @ron666
+
+*3.2.1 (2017/02/28)*
+
+* Added missing documentation for NPM given latest changes @ron666
+
+*3.2.0 (2017/02/28)*
+
+* Fixed typo in header file @ron666
+* Added Ukrainian translation (https://github.com/johndyer/mediaelement/pull/2100) @DmitryKrekota
+* Added Swedish translation (https://github.com/johndyer/mediaelement/pull/2101) @xpetter
+* Fixed issue with poster image not being shown up on YouTube on mobile devices @ron666
+* Removed hacks for old browsers (https://github.com/johndyer/mediaelement/pull/2102) @jimmywarting
+* Fixed issue with Win8 Safari not detecting `src` attribute properly @ron666
+* Fixed `secondsToTimeCode` method not being called with all parameters (https://github.com/johndyer/mediaelement/pull/2103) @dmongrel
+* Added workflow to set WARIA text elements, added `isString` method (https://github.com/johndyer/mediaelement/pull/2105) @DmitryKrekota
+* Added new `resources` section in documentation @ron666 
+* Cleaned up translation files and move others to `mediaelement-plugins` repo @ron666
+* Fixed wrong link in documentation (https://github.com/johndyer/mediaelement/pull/2106) @7huo
+* Added fix to avoid `jQuery.noConflict()` issues @ron666
+* Reorganized renderers and created `build/renderers` folder to keep bundles' size low @ron666
+* Integrated Twitch renderer @ron666
+
+*3.1.3 (2017/02/23)*
 
 * Fixed typo in `usage.md` in regards of Automatic start (https://github.com/johndyer/mediaelement/pull/2071) @SvenJuergens
 * Added translation for Polish language (https://github.com/johndyer/mediaelement/pull/2074) @greg-dev
 * Added translation for Russian language (https://github.com/johndyer/mediaelement/pull/2073) @Globulopolis
 * Added overlay on `iframe` renderers to allow triggering mouse/click events properly @ron666 
 * Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @ron666
-* Fixed minor issues with FLV native renderer and updated documentation @ron666
+* Fixed minor issues with FLV native renderer @ron666
 * Fixed typo in `pause` event not being triggered on Facebook and YouTube renderers @ron666
 * Fixed issue on `progress` feature that caused multiple events being fired incorrectly when clicking on rail @ron666
 * Corrected typo in `full.js` file (https://github.com/johndyer/mediaelement/pull/2081) @helmetroo
 * Several fixes for YouTube renderer (https://github.com/johndyer/mediaelement/pull/2082) @anomaly-stalker
 * Integrated ESLint to verify/fix code with more strict standards @ron666
+* Fixed issue with mute/unmute ARIA text (https://github.com/johndyer/mediaelement/pull/2091) @DmitryKrekota
+* Fixed issue with obfuscated URLs or URLs without extension detected in #2087 @ron666
+* Fixed accessibility issue related to use keyboard in Safari @ron666 
+* Fixed typo in `demo` file related to switching to Chinese language and added conditional to disable media URLs on iOS @ron666
+* Removed IE8 hacks (https://github.com/johndyer/mediaelement/pull/2095) @jimmywarting
+* Cleaned unnecessary code and fixed issue with Vimeo renderer @ron666
+* Fixed security issue with Flash by introducing `shimScriptAccess` configuration element and reading `allowScriptAccess` flag @ron666
+* Added documentation about use of MediaElement with a responsive grid plugin effectively, thanks to @DeysonOrtiz, and other updates on it @ron666
 
 *3.1.2 (2017/02/10)*
 

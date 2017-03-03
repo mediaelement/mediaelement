@@ -20,41 +20,19 @@
 			// renderers/flash.js
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-			// features/contextmenu.js
-			"mejs.fullscreen-off": "Volledig scherm uitschakelen",
-			"mejs.fullscreen-on": "Volledig scherm",
-			"mejs.download-video": "Video downloaden",
-
 			// features/fullscreen.js
 			"mejs.fullscreen": "Volledig scherm",
-
-			// features/jumpforward.js
-			"mejs.time-jump-forward": "%1 seconden vooruit springen",
-
-			// features/loop.js
-			//"mejs.loop": "Toggle Loop",
 
 			// features/playpause.js
 			"mejs.play": "Afspelen",
 			"mejs.pause": "Pauzeren",
 
-			// features/postroll.js
-			"mejs.close": "Sluiten",
-
 			// features/progress.js
 			"mejs.time-slider": "Tijd schuifbalk",
 			"mejs.time-help-text": "Gebruik pijl naar links/rechts om per seconde te springen, pijl omhoog/omlaag om per tien seconden te springen.",
-
-			// features/skipback.js
-			"mejs.time-skip-back": "%1 seconden terug springen",
-
-			// features/tracks.js
-			"mejs.captions-subtitles": "Bijschriften/ondertiteling",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "Geen",
+			//"mejs.live-broadcast" : "Live Broadcast",
 
 			// features/volume.js
-			"mejs.mute-toggle": "Dempen schakelen",
 			"mejs.volume-help-text": "Gebruik pijl omhoog/omlaag om het volume te verhogen/verlagen.",
 			"mejs.unmute": "Dempen opheffen",
 			"mejs.mute": "Dempen",
@@ -64,23 +42,10 @@
 			"mejs.video-player": "Videospeler",
 			"mejs.audio-player": "Audiospeler",
 
-			// features/ads.js
-			"mejs.ad-skip": "Ad overslaan",
-			"mejs.ad-skip-info": "Overslaan in %1 seconden",
-
-			// features/sourcechooser.js
-			"mejs.source-chooser": "Bronkeuze"
-
-			// features/stop.js
-			//"mejs.stop": "Stop",
-
-			//features/speed.js
-			//"mejs.speed-rate" : "Speed Rate",
-
-			//features/progress.js
-			//"mejs.live-broadcast" : "Live Broadcast",
-
 			// features/tracks.js
+			"mejs.captions-subtitles": "Bijschriften/ondertiteling",
+			// "mejs.captions-chapters": "Chapters",
+			"mejs.none": "Geen"
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",

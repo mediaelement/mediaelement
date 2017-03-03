@@ -4,7 +4,7 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/dom';
+import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 import {HAS_MSE} from '../utils/constants';
 
@@ -114,7 +114,7 @@ const DashNativeRenderer = {
 	options: {
 		prefix: 'native_dash',
 		dash: {
-			// Special config: used to set the local path/URL of dash.js mediaplayer library
+			// Special config: used to set the local path/URL of dash.js player library
 			path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
 			debug: false
 		}
@@ -140,7 +140,8 @@ const DashNativeRenderer = {
 		const
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
-			stack = {}
+			preload = originalNode.getAttribute('preload'),
+			autoplay = originalNode.getAttribute('autoplay')
 		;
 
 		let
@@ -153,7 +154,6 @@ const DashNativeRenderer = {
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
 
-		// WRAPPERS for PROPs
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
@@ -167,16 +167,12 @@ const DashNativeRenderer = {
 							if (propName === 'src') {
 
 								dashPlayer.attachSource(value);
-
-								if (node.getAttribute('autoplay')) {
+								if (autoplay) {
 									node.play();
 								}
 							}
 
 							node[propName] = value;
-						} else {
-							// store for after "READY" event fires
-							stack.push({type: 'set', propName: propName, value: value});
 						}
 					}
 				};
@@ -193,27 +189,10 @@ const DashNativeRenderer = {
 
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
-			// By default, console log is off
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
+			dashPlayer.setAutoPlay(autoplay);
+			dashPlayer.setScheduleWhilePaused((preload === 'auto'));
 
-			// do call stack
-			if (stack.length) {
-				for (i = 0, il = stack.length; i < il; i++) {
-
-					const stackItem = stack[i];
-
-					if (stackItem.type === 'set') {
-						const propName = stackItem.propName,
-							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
-
-						node[`set${capName}`](stackItem.value);
-					} else if (stackItem.type === 'call') {
-						node[stackItem.methodName]();
-					}
-				}
-			}
-
-			// BUBBLE EVENTS
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				dashEvents = dashjs.MediaPlayer.events,
@@ -226,10 +205,6 @@ const DashNativeRenderer = {
 					node.addEventListener(eventName, (e) => {
 						const event = document.createEvent('HTMLEvents');
 						event.initEvent(e.type, e.bubbles, e.cancelable);
-						// @todo Check this
-						// event.srcElement = e.srcElement;
-						// event.target = e.srcElement;
-
 						mediaElement.dispatchEvent(event);
 					});
 

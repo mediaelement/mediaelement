@@ -5,6 +5,7 @@ import i18n from '../core/i18n';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import {convertSMPTEtoSeconds} from '../utils/time';
+import {isString} from '../utils/general';
 
 /**
  * Closed Captions (CC) button
@@ -24,13 +25,13 @@ Object.assign(config, {
 	 */
 	startLanguage: '',
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	tracksText: '',
+	tracksText: null,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	chaptersText: '',
+	chaptersText: null,
 	/**
 	 * Avoid to screen reader speak captions over an audio track.
 	 *
@@ -77,8 +78,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
-			tracksTitle = t.options.tracksText ? t.options.tracksText : i18n.t('mejs.captions-subtitles'),
-			chaptersTitle = t.options.chaptersText ? t.options.chaptersText : i18n.t('mejs.captions-chapters'),
+			tracksTitle = isString(t.options.tracksText) ? t.options.tracksText : i18n.t('mejs.captions-subtitles'),
+			chaptersTitle = isString(t.options.chaptersText) ? t.options.chaptersText : i18n.t('mejs.captions-chapters'),
 			total = player.tracks.length
 		;
 
@@ -105,7 +106,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.captionsText = player.captions.find(`.${t.options.classPrefix}captions-text`);
 		player.captionsButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}captions-button">` +
-			`<button type="button" aria-controls="${t.id}" title="${tracksTitle}" aria-label="${tracksTitle}"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${tracksTitle}" aria-label="${tracksTitle}" tabindex="0"></button>` +
 			`<div class="${t.options.classPrefix}captions-selector ${t.options.classPrefix}offscreen">` +
 				`<ul class="${t.options.classPrefix}captions-selector-list">` +
 					`<li class="${t.options.classPrefix}captions-selector-list-item">` +
@@ -118,11 +119,12 @@ Object.assign(MediaElementPlayer.prototype, {
 					`</li>` +
 				`</ul>` +
 			`</div>` +
-		`</div>`)
-		.appendTo(controls);
+		`</div>`);
+
+		t.addControlElement(player.captionsButton, 'tracks');
 
 		player.chaptersButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}chapters-button">` +
-			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}" tabindex="0"></button>` +
 			`<div class="${t.options.classPrefix}chapters-selector ${t.options.classPrefix}offscreen">` +
 				`<ul class="${t.options.classPrefix}chapters-selector-list"></ul>` +
 			`</div>` +
@@ -136,9 +138,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (kind === 'subtitles' || kind === 'captions') {
 				subtitleCount++;
 			} else if (kind === 'chapters' && !controls.find(`.${t.options.classPrefix}chapter-selector`).length) {
-				player.chaptersButton.appendTo(controls);
+				player.chaptersButton.insertAfter(player.captionsButton);
 			}
 		}
+
 
 		// if only one language then just make the button a toggle
 		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
@@ -293,6 +296,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 			if (player.captionsButton) {
 				player.captionsButton.remove();
+			}
+
+			if (player.chaptersButton) {
+				player.chaptersButton.remove();
 			}
 		}
 	},

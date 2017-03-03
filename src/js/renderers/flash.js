@@ -5,8 +5,8 @@ import document from 'global/document';
 import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/dom';
-import {NAV, IS_IE, IS_EDGE, HAS_MSE, SUPPORTS_NATIVE_HLS} from '../utils/constants';
+import {createEvent} from '../utils/general';
+import {NAV, IS_IE} from '../utils/constants';
 import {typeChecks, absolutizeUrl} from '../utils/media';
 
 /**
@@ -73,7 +73,7 @@ export const PluginDetector = {
 		;
 
 		// Firefox, Webkit, Opera; avoid MS Edge since `plugins` cannot be accessed
-		if (!IS_EDGE && NAV.plugins !== null && NAV.plugins !== undefined && typeof NAV.plugins[pluginName] === 'object') {
+		if (NAV.plugins !== null && NAV.plugins !== undefined && typeof NAV.plugins[pluginName] === 'object') {
 			description = NAV.plugins[pluginName].description;
 			if (description && !(typeof NAV.mimeTypes !== 'undefined' && NAV.mimeTypes[mimeType] && !NAV.mimeTypes[mimeType].enabledPlugin)) {
 				version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
@@ -292,15 +292,20 @@ const FlashMediaElementRenderer = {
 		// insert Flash object
 		flash.flashWrapper = document.createElement('div');
 
+		// If the access script flag does not have any of the valid values, set to `sameDomain` by default
+		if (!['always', 'sameDomain'].includes(flash.options.shimScriptAccess)) {
+			flash.options.shimScriptAccess = 'sameDomain';
+		}
+
 		const
 			autoplay = !!mediaElement.getAttribute('autoplay'),
-			flashVars = [`uid=${flash.id}`, `autoplay=${autoplay}`],
+			flashVars = [`uid=${flash.id}`, `autoplay=${autoplay}`, `allowScriptAccess=${flash.options.shimScriptAccess}`],
 			isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 			flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
 			flashWidth = (isVideo) ? mediaElement.originalNode.width : 1;
 
-		if (mediaElement.originalNode.currentSrc.length) {
-			flashVars.push(`src=${mediaElement.originalNode.currentSrc}`);
+		if (mediaElement.originalNode.getAttribute('src')) {
+			flashVars.push(`src=${mediaElement.originalNode.getAttribute('src')}`);
 		}
 
 		if (flash.options.enablePseudoStreaming === true) {
@@ -338,7 +343,7 @@ const FlashMediaElementRenderer = {
 				`<param name="quality" value="high" />` +
 				`<param name="bgcolor" value="#000000" />` +
 				`<param name="wmode" value="transparent" />` +
-				`<param name="allowScriptAccess" value="always" />` +
+				`<param name="allowScriptAccess" value="${flash.options.shimScriptAccess}" />` +
 				`<param name="allowFullScreen" value="true" />` +
 				`<div>${i18n.t('mejs.install-flash')}</div>` +
 			`</object>`;
@@ -353,7 +358,7 @@ const FlashMediaElementRenderer = {
 				'quality="high"',
 				'bgcolor="#000000"',
 				'wmode="transparent"',
-				'allowScriptAccess="always"',
+				`allowScriptAccess="${flash.options.shimScriptAccess}"`,
 				'allowFullScreen="true"',
 				'type="application/x-shockwave-flash"',
 				'pluginspage="//www.macromedia.com/go/getflashplayer"',
@@ -443,11 +448,11 @@ if (hasFlash) {
 			}
 		} else if (url.includes('.oga') || url.includes('.ogg')) {
 			return 'audio/ogg';
-		} else if (!HAS_MSE && !SUPPORTS_NATIVE_HLS && url.includes('.m3u8')) {
+		} else if (url.includes('.m3u8')) {
 			return 'application/x-mpegURL';
-		} else if (!HAS_MSE && url.includes('.mpd')) {
+		} else if (url.includes('.mpd')) {
 			return 'application/dash+xml';
-		} else if (!HAS_MSE && url.includes('.flv')) {
+		} else if (url.includes('.flv')) {
 			return 'video/flv';
 		}else {
 			return null;
@@ -474,8 +479,8 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => hasFlash && ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4'].includes(type) ||
-			!HAS_MSE && hasFlash && ['video/flv', 'video/x-flv'].includes(type),
+		canPlayType: (type) => ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv',
+			'video/x-flv'].includes(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 
@@ -496,7 +501,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => !HAS_MSE && hasFlash && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+		canPlayType: (type) => ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
 			'video/hls'].includes(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
@@ -517,7 +522,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => !HAS_MSE && hasFlash && ['application/dash+xml'].includes(type),
+		canPlayType: (type) => ['application/dash+xml'].includes(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -537,7 +542,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => hasFlash && ['audio/mp3'].includes(type),
+		canPlayType: (type) => ['audio/mp3'].includes(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -557,7 +562,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => hasFlash && ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type),
+		canPlayType: (type) => ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};

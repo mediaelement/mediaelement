@@ -1,12 +1,5 @@
 'use strict';
 
-import window from 'global/window';
-import document from 'global/document';
-import mejs from '../core/mejs';
-import {renderer} from '../core/renderer';
-import {createEvent, addEvent} from '../utils/dom';
-import {typeChecks} from '../utils/media';
-
 /**
  * DailyMotion renderer
  *
@@ -249,7 +242,7 @@ const DailyMotionIframeRenderer = {
 									dmPlayer.setMuted(false);
 								}
 								setTimeout(() => {
-									const event = createEvent('volumechange', dm);
+									const event = mejs.Utils.createEvent('volumechange', dm);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
@@ -257,13 +250,13 @@ const DailyMotionIframeRenderer = {
 							case 'volume':
 								dmPlayer.setVolume(value);
 								setTimeout(() => {
-									const event = createEvent('volumechange', dm);
+									const event = mejs.Utils.createEvent('volumechange', dm);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
 
 							case 'readyState':
-								const event = createEvent('canplay', dm);
+								const event = mejs.Utils.createEvent('canplay', dm);
 								mediaElement.dispatchEvent(event);
 								break;
 
@@ -346,13 +339,13 @@ const DailyMotionIframeRenderer = {
 
 			// a few more events
 			events = ['mouseover', 'mouseout'];
-			const assignEvent = (e) => {
-				const event = createEvent(e.type, dm);
+			const assignEvents = (e) => {
+				const event = mejs.Utils.createEvent(e.type, dm);
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (const j in events) {
-				addEvent(dmIframe, events[j], assignEvent);
+			for (let i = 0, il = events.length; i < il; i++) {
+				dmIframe.addEventListener(events[i], assignEvents, false);
 			}
 
 			// BUBBLE EVENTS up
@@ -364,7 +357,7 @@ const DailyMotionIframeRenderer = {
 				if (eventName !== 'ended') {
 
 					dmPlayer.addEventListener(eventName, (e) => {
-						const event = createEvent(e.type, dmPlayer);
+						const event = mejs.Utils.createEvent(e.type, dmPlayer);
 						mediaElement.dispatchEvent(event);
 					});
 				}
@@ -377,44 +370,44 @@ const DailyMotionIframeRenderer = {
 
 			// Custom DailyMotion events
 			dmPlayer.addEventListener('ad_start', () => {
-				let event = createEvent('play', dmPlayer);
+				let event = mejs.Utils.createEvent('play', dmPlayer);
 				mediaElement.dispatchEvent(event);
 
-				event = createEvent('progress', dmPlayer);
+				event = mejs.Utils.createEvent('progress', dmPlayer);
 				mediaElement.dispatchEvent(event);
 
-				event = createEvent('timeupdate', dmPlayer);
+				event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_timeupdate', () => {
-				const event = createEvent('timeupdate', dmPlayer);
+				const event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_pause', () => {
-				const event = createEvent('pause', dmPlayer);
+				const event = mejs.Utils.createEvent('pause', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_end', () => {
-				const event = createEvent('ended', dmPlayer);
+				const event = mejs.Utils.createEvent('ended', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('video_start', () => {
-				let event = createEvent('play', dmPlayer);
+				let event = mejs.Utils.createEvent('play', dmPlayer);
 				mediaElement.dispatchEvent(event);
 
-				event = createEvent('timeupdate', dmPlayer);
+				event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('video_end', () => {
-				const event = createEvent('ended', dmPlayer);
+				const event = mejs.Utils.createEvent('ended', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('progress', () => {
-				const event = createEvent('timeupdate', dmPlayer);
+				const event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('durationchange', () => {
-				const event = createEvent('timeupdate', dmPlayer);
+				const event = mejs.Utils.createEvent('timeupdate', dmPlayer);
 				mediaElement.dispatchEvent(event);
 			});
 
@@ -423,7 +416,7 @@ const DailyMotionIframeRenderer = {
 			const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (i = 0, il = initEvents.length; i < il; i++) {
-				const event = createEvent(initEvents[i], dm);
+				const event = mejs.Utils.createEvent(initEvents[i], dm);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -492,7 +485,7 @@ const DailyMotionIframeRenderer = {
  * Register DailyMotion event globally
  *
  */
-typeChecks.push((url) => {
+mejs.Utils.typeChecks.push((url) => {
 	url = url.toLowerCase();
 	return (url.includes('//dailymotion.com') || url.includes('www.dailymotion.com') || url.includes('//dai.ly')) ? 'video/x-dailymotion' : null;
 });
@@ -501,4 +494,4 @@ window.dmAsyncInit = () => {
 	DailyMotionApi.apiReady();
 };
 
-renderer.add(DailyMotionIframeRenderer);
+mejs.Renderers.add(DailyMotionIframeRenderer);

@@ -17,41 +17,19 @@ export const EN = {
 	// renderers/flash.js
 	"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 
-	// features/contextmenu.js
-	"mejs.fullscreen-off": "Turn off Fullscreen",
-	"mejs.fullscreen-on": "Go Fullscreen",
-	"mejs.download-video": "Download Video",
-
 	// features/fullscreen.js
 	"mejs.fullscreen": "Fullscreen",
-
-	// features/jumpforward.js
-	"mejs.time-jump-forward": ["Jump forward 1 second", "Jump forward %1 seconds"],
-
-	// features/loop.js
-	"mejs.loop": "Toggle Loop",
 
 	// features/playpause.js
 	"mejs.play": "Play",
 	"mejs.pause": "Pause",
 
-	// features/postroll.js
-	"mejs.close": "Close",
-
 	// features/progress.js
 	"mejs.time-slider": "Time Slider",
 	"mejs.time-help-text": "Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.",
-
-	// features/skipback.js
-	"mejs.time-skip-back": ["Skip back 1 second", "Skip back %1 seconds"],
-
-	// features/tracks.js
-	"mejs.captions-subtitles": "Captions/Subtitles",
-	"mejs.captions-chapters": "Chapters",
-	"mejs.none": "None",
+	"mejs.live-broadcast" : "Live Broadcast",
 
 	// features/volume.js
-	"mejs.mute-toggle": "Mute Toggle",
 	"mejs.volume-help-text": "Use Up/Down Arrow keys to increase or decrease volume.",
 	"mejs.unmute": "Unmute",
 	"mejs.mute": "Mute",
@@ -61,23 +39,10 @@ export const EN = {
 	"mejs.video-player": "Video Player",
 	"mejs.audio-player": "Audio Player",
 
-	// features/ads.js
-	"mejs.ad-skip": "Skip ad",
-	"mejs.ad-skip-info": ["Skip in 1 second", "Skip in %1 seconds"],
-
-	// features/sourcechooser.js
-	"mejs.source-chooser": "Source Chooser",
-
-	// features/stop.js
-	"mejs.stop": "Stop",
-
-	//features/speed.js
-	"mejs.speed-rate" : "Speed Rate",
-
-	//features/progress.js
-	"mejs.live-broadcast" : "Live Broadcast",
-
 	// features/tracks.js
+	"mejs.captions-subtitles": "Captions/Subtitles",
+	"mejs.captions-chapters": "Chapters",
+	"mejs.none": "None",
 	"mejs.afrikaans": "Afrikaans",
 	"mejs.albanian": "Albanian",
 	"mejs.arabic": "Arabic",

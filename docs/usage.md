@@ -8,6 +8,7 @@
     * [RequireJS](#requirejs)
 * [Use Renderers](#renderers-usage)
 * [Destroy player](#destroy)
+* [Responsive grid](#grid)
 
 
 <a id="initialize"></a>
@@ -87,12 +88,19 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 import 'mediaelement/standalone';
 
 // To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin 
-// (includes the HTML5 and FLahs renderers ONLY)
+// (includes the HTML5 and Flahs renderers ONLY)
 import 'mediaelement/player';
 
 // To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes,
-// $.fn.mediaelementplayer plugin and all the renderers)
+// $.fn.mediaelementplayer plugin, all the native renderers, YouTube and Flash shims)
 import 'mediaelement/full';
+
+// To import renderers (i.e., Vimeo)
+import 'mediaelement/build/renderers/vimeo';
+
+// To import languages (i.e., Spanish)
+import 'mediaelement/build/lang/es';
+// Later on the code you need to use mejs.i18n.language('es') to set the language 
 ```
 
 **IMPORTANT**: To ensure you can use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
@@ -110,7 +118,7 @@ window.$ = jquery;
 'use strict';
 
 import '/path/to/jquery-global';
-import 'mediaelement/all'; // or import `mediaelement/player`;
+import 'mediaelement/full'; // or import `mediaelement/player`;
 ```
 
 <a id="requirejs"></a>
@@ -150,6 +158,13 @@ require(['path/to/hls'], function (Hls) {
 <a id="renderers-usage"></a>
 ## Use Renderers
 
+After the `MediaElement` package has been loaded, include any renderer(s) you are planning to use that not part of the main bundle (`mediaelement-and-player.js`). For example, to include Vimeo and Twitch support:
+
+```html
+<script src="/path/to/mediaelement-and-player.min.js"></script>
+<script src="/path/to/renderers/vimeo.min.js"></script>
+<script src="/path/to/renderers/twitch.min.js"></script>
+```
 By default, all the renderers will be called by their IDs and the plugin will try to detect the best one. 
 
 However, if you need to use just a subset of renderers in a specific order, you must list their IDs using `renderers` option when configuring your player.
@@ -227,6 +242,7 @@ Facebook | `facebook` | --- | --- | video/facebook, video/x-facebook
 Vimeo | `vimeo_iframe` | `vimeoPlayer` | [Vimeo Player API](https://github.com/vimeo/player.js) | video/vimeo, video/x-vimeo
 YouTube | `youtube_iframe` | `youTubeApi` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
 DailyMotion | `dailymotion_iframe` | `dmPlayer` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
+Twitch | `twitch_iframe` | `twitchPlayer` | [Twitch Emded API](https://github.com/justintv/Twitch-API/blob/master/embed-video.md) | video/twitch, video/x-twitch
 Video shim  | `flash_video` | --- | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 
 Audio shim | `flash_audio` | --- | --- | audio/mp3
 OGG Audio shim  | `flash_audio_ogg` | --- | --- | audio/ogg, audio/oga
@@ -234,6 +250,8 @@ HLS shim | `flash_hls` | --- | --- | application/x-mpegURL, vnd.apple.mpegURL
 M(PEG)-DASH shim | `flash_dash` | --- | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
+
+**IMPORTANT**: Only renderers prefixed as __native__, YouTube, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
 
 
 **Notes** 
@@ -276,5 +294,12 @@ for( var i = 0, total = videos.length; i < total; i++ ){
 ```
 
 Same code can be used for `<audio>` elements.
+
+<a id="grid"></a>
+## Responsive grid
+
+Since `MediaElement` can adapt its size to be responsive, some might be tempted to use CSS or Javascript to create a responsive grid of videos. 
+
+So far, right now the best plugin to be used with `MediaElement` for this task has been [Flexr](http://flexrgrid.com/).
 ________
 [Back to Main](../README.md)

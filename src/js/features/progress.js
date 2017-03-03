@@ -47,18 +47,20 @@ Object.assign(MediaElementPlayer.prototype, {
 				`<span class="${t.options.classPrefix}time-float">` +
 					`<span class="${t.options.classPrefix}time-float-current">00:00</span>` +
 					`<span class="${t.options.classPrefix}time-float-corner"></span>` +
-				`</span>` : "";
+				`</span>` : "",
+			rail = $(`<div class="${t.options.classPrefix}time-rail">` +
+				`<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
+					`<span class="${t.options.classPrefix}time-buffering"></span>` +
+					`<span class="${t.options.classPrefix}time-loaded"></span>` +
+					`<span class="${t.options.classPrefix}time-current"></span>` +
+					`<span class="${t.options.classPrefix}time-handle"></span>` +
+					`${tooltip}` +
+				`</span>` +
+			`</div>`)
+		;
 
-		$(`<div class="${t.options.classPrefix}time-rail">` +
-			`<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
-				`<span class="${t.options.classPrefix}time-buffering"></span>` +
-				`<span class="${t.options.classPrefix}time-loaded"></span>` +
-				`<span class="${t.options.classPrefix}time-current"></span>` +
-				`<span class="${t.options.classPrefix}time-handle"></span>` +
-				`${tooltip}` +
-			`</span>` +
-		`</div>`)
-		.appendTo(controls);
+		t.addControlElement(rail, 'progress');
+
 		controls.find(`.${t.options.classPrefix}time-buffering`).hide();
 
 		t.rail = controls.find(`.${t.options.classPrefix}time-rail`);
@@ -255,29 +257,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		}).on('click', (e) => {
-
-			if (media.duration !== Infinity) {
-				let paused = media.paused;
-
-				if (!paused) {
-					media.pause();
-				}
-
-				handleMouseMove(e);
-
-				if (!paused) {
-					media.play();
-				}
-			}
-
-			e.preventDefault();
-			e.stopPropagation();
-		});
-
-
-		// handle clicks
-		t.rail.on('mousedown touchstart', (e) => {
+		}).on('mousedown touchstart', (e) => {
 			t.forcedHandlePause = false;
 			if (media.duration !== Infinity) {
 				// only handle left clicks or touch
