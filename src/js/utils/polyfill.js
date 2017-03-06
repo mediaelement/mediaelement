@@ -193,3 +193,40 @@ if (!String.prototype.startsWith) {
 		return this.substr(position, searchString.length) === searchString;
 	};
 }
+
+// Element.matches polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
+if (!Element.prototype.matches) {
+	Element.prototype.matches =
+		Element.prototype.matchesSelector ||
+		Element.prototype.mozMatchesSelector ||
+		Element.prototype.msMatchesSelector ||
+		Element.prototype.oMatchesSelector ||
+		Element.prototype.webkitMatchesSelector ||
+		function(s) {
+			let matches = (this.document || this.ownerDocument).querySelectorAll(s),
+				i = matches.length - 1;
+			while (i >= 0 && matches.item(i) !== this) {
+				--i
+			}
+			return i > -1;
+		};
+}
+
+// Element.closest polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
+if (window.Element && !Element.prototype.closest) {
+	Element.prototype.closest =
+		function(s) {
+			let matches = (this.document || this.ownerDocument).querySelectorAll(s),
+				i,
+				el = this;
+			do {
+				i = matches.length;
+				while (i >= 0 && matches.item(i) !== el) {
+					--i;
+				}
+			} while ((i < 0) && (el == el.parentElement));
+			return el;
+		};
+}

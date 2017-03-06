@@ -40,78 +40,69 @@ function updateUrlParameter (uri, key, value) {
 
 var
 	lang = getQueryStringValue('lang') || 'en',
-	stretching = getQueryStringValue('stretching') || 'auto'
-;
-
-$('select[name=lang]').on('change', function () {
-	window.location.href = updateUrlParameter(window.location.href, 'lang', $(this).val());
-}).val(lang);
-
-$('select[name=stretching]').on('change', function () {
-	window.location.href = updateUrlParameter(window.location.href, 'stretching', $(this).val());
-
-}).val(stretching);
-
-$('select[name=sources]').on('change', function () {
-	var
-		_this = $(this),
-		media = _this.closest('.players').find('.media-wrapper').find('.mejs__container').attr('id'),
-		player = mejs.players[media]
+	stretching = getQueryStringValue('stretching') || 'auto',
+	languageSelector = document.querySelector('select[name=lang]'),
+	stretchingSelector = document.querySelector('select[name=stretching]'),
+	sourcesSelector = document.querySelectorAll('select[name=sources]'),
+	sourcesTotal = sourcesSelector.length
 	;
 
-	player.setSrc(_this.val().replace('&amp;', '&'));
-	player.load();
+languageSelector.value = lang;
+languageSelector.addEventListener('change', function () {
+	window.location.href = updateUrlParameter(window.location.href, 'lang', languageSelector.value);
+}, false);
+stretchingSelector.value = stretching;
+stretchingSelector.addEventListener('change', function () {
+	window.location.href = updateUrlParameter(window.location.href, 'stretching', stretchingSelector.value);
+}, false);
 
-	var renderer = $('#' + player.media.id + '-rendername');
-	renderer.find('.src').html('<a href="' + _this.val() + '" target="_blank">' + _this.val() + '</a>')
-		.end()
-		.find('.renderer').html(player.media.rendererName)
-		.end()
-		.find('.error').html('')
-	;
+for (var i = 0; i < sourcesTotal; i++) {
+	sourcesSelector[i].addEventListener('change', function () {
+		var
+			_this = this,
+			media = _this.closest('.players').querySelector('.media-wrapper').querySelector('.mejs__container').id,
+			player = mejs.players[media]
+		;
 
-});
+		player.setSrc(_this.val().replace('&amp;', '&'));
+		player.load();
 
-// These media types cannot play at all on iOS, so disabling them
-if (mejs.Features.isiOS) {
-	$('select').find('option[value^="rtmp"]').prop('disabled', true)
-	.end()
-	.find('option[value$="webm"]').prop('disabled', true)
-	.end()
-	.find('option[value$=".mpd"]').prop('disabled', true)
-	.end()
-	.find('option[value$=".ogg"]').prop('disabled', true)
-	.end()
-	.find('option[value*=".flv"]').prop('disabled', true);
+		var renderer = document.getElementById(player.media.id + '-rendername');
+		renderer.querySelector('.src').innerHTML = '<a href="' + _this.val() + '" target="_blank">' + _this.val() + '</a>';
+		renderer.querySelector('.renderer').innerHTML = player.media.rendererName;
+		renderer.querySelector('.error').innerHTML = '';
+
+	}, false);
+
+	// These media types cannot play at all on iOS, so disabling them
+	if (mejs.Features.isiOS) {
+		sourcesSelector[i].querySelector('option[value^="rtmp"]').setAttribute('disabled', true);
+		sourcesSelector[i].querySelector('option[value$="webm"]').setAttribute('disabled', true);
+		sourcesSelector[i].querySelector('option[value$=".mpd"]').setAttribute('disabled', true);
+		sourcesSelector[i].querySelector('option[value$=".ogg"]').setAttribute('disabled', true);
+		sourcesSelector[i].querySelector('option[value*=".flv"]').setAttribute('disabled', true);
+	}
 }
 
-$(document).ready(function () {
-
-	mejs.i18n.language(lang);
-
-	$('video, audio').mediaelementplayer({
+document.addEventListener('DOMContentLoaded', function () {
+	new MediaElementPlayer(document.querySelectorAll('video,audio'), {
 		stretching: stretching,
 		pluginPath: '../build/',
 		success: function (media) {
-			$(media).closest('.media-wrapper').find('.mejs__container').attr('lang', mejs.i18n.language());
-
-			var renderer = $('#' + media.id + '-rendername');
+			var renderer = document.getElementById('#' + media.id + '-rendername');
 
 			media.addEventListener('loadedmetadata', function (e) {
 				var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
 				if (src !== null && src !== undefined) {
-					renderer.find('.src').html('<a href="' + src + '" target="_blank">' + src + '</a>')
-					.end()
-					.find('.renderer').html(media.rendererName)
-					.end()
-					.find('.error').html('')
-					;
+					renderer.querySelector('.src').innerHTML = '<a href="' + src + '" target="_blank">' + src + '</a>';
+					renderer.querySelector('.renderer').innerHTML = media.rendererName;
+					renderer.querySelector('.error').innerHTML = '';
 				}
 			}, false);
 
 			media.addEventListener('error', function (e) {
-				renderer.find('.error').html('<strong>Error</strong>: ' + e.message);
+				renderer.querySelector('.error').innerHTML = '<strong>Error</strong>: ' + e.message;
 			}, false);
 		}
 	});
-});
+}, false);
