@@ -5003,7 +5003,7 @@ var MediaElementPlayer = function () {
 			});
 
 			// if (t.options.supportVR || (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/))) {
-			if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/) && !(player.$media.attr('poster') || player.options.poster)) {
+			if (t.media.rendererName !== null && (t.media.rendererName.match(/(youtube|facebook)/) && !(player.$media.attr('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
 				bigPlay.hide();
 			}
 
@@ -5023,7 +5023,9 @@ var MediaElementPlayer = function () {
 			}, false);
 
 			media.addEventListener('seeking', function () {
-				loading.show();
+				if (!_constants.IS_STOCK_ANDROID) {
+					loading.show();
+				}
 				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
 			}, false);
 
@@ -5033,17 +5035,23 @@ var MediaElementPlayer = function () {
 			}, false);
 
 			media.addEventListener('pause', function () {
-				bigPlay.show();
+				if (!_constants.IS_STOCK_ANDROID) {
+					loading.show();
+				}
 			}, false);
 
 			media.addEventListener('waiting', function () {
-				loading.show();
+				if (!_constants.IS_STOCK_ANDROID) {
+					loading.show();
+				}
 				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
 			}, false);
 
 			// show/hide loading
 			media.addEventListener('loadeddata', function () {
-				loading.show();
+				if (!_constants.IS_STOCK_ANDROID) {
+					loading.show();
+				}
 				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
 
 				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
