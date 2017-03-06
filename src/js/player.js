@@ -11,6 +11,7 @@ import {
 	IS_IPHONE,
 	IS_ANDROID,
 	IS_IOS,
+	IS_STOCK_ANDROID,
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
@@ -1531,8 +1532,8 @@ class MediaElementPlayer {
 		}, false);
 		layers.appendChild(bigPlay);
 
-		if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/) &&
-			!(player.$media.getAttribute('poster') || player.options.poster)) {
+		if (t.media.rendererName !== null && ((t.media.rendererName.match(/(youtube|facebook)/) &&
+			!(player.$media.attr('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
 			bigPlay.style.display = 'none';
 		}
 
@@ -1552,7 +1553,9 @@ class MediaElementPlayer {
 		}, false);
 
 		media.addEventListener('seeking', () => {
-			loading.style.display = 'block';
+			if (!IS_STOCK_ANDROID) {
+				loading.style.display = 'block';
+			}
 			controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'block';
 		}, false);
 
@@ -1562,18 +1565,25 @@ class MediaElementPlayer {
 		}, false);
 
 		media.addEventListener('pause', () => {
+			if (!IS_STOCK_ANDROID) {
+				loading.style.display = 'block';
+			}
 			bigPlay.style.display = 'block';
 		}, false);
 
 		media.addEventListener('waiting', () => {
-			loading.style.display = 'block';
+			if (!IS_STOCK_ANDROID) {
+				loading.style.display = 'block';
+			}
 			controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'block';
 		}, false);
 
 
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
-			loading.style.display = 'block';
+			if (!IS_STOCK_ANDROID) {
+				loading.style.display = 'block';
+			}
 			controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'block';
 
 			// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
