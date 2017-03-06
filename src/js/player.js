@@ -1553,9 +1553,7 @@ class MediaElementPlayer {
 		}, false);
 
 		media.addEventListener('seeking', () => {
-			if (!IS_STOCK_ANDROID) {
-				loading.style.display = 'block';
-			}
+			loading.style.display = 'block';
 			controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'block';
 		}, false);
 
@@ -1566,24 +1564,19 @@ class MediaElementPlayer {
 
 		media.addEventListener('pause', () => {
 			if (!IS_STOCK_ANDROID) {
-				loading.style.display = 'block';
+				bigPlay.style.display = 'block';
 			}
-			bigPlay.style.display = 'block';
 		}, false);
 
 		media.addEventListener('waiting', () => {
-			if (!IS_STOCK_ANDROID) {
-				loading.style.display = 'block';
-			}
+			loading.style.display = 'block';
 			controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'block';
 		}, false);
 
 
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
-			if (!IS_STOCK_ANDROID) {
-				loading.style.display = 'block';
-			}
+			loading.style.display = 'block';
 			controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'block';
 
 			// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
