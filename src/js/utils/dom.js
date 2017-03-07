@@ -37,6 +37,10 @@ export const hasClass = hasClassMethod;
 export const addClass = addClassMethod;
 export const removeClass = removeClassMethod;
 
+export function toggleClass(el, className) {
+	hasClass(el, className) ? removeClass(el, className) : addClass(el, className);
+}
+
 // fade an element from the current state to full opacity in "duration" ms
 export function fadeOut (el, duration, callback) {
 	const s = el.style, step = 25 / (duration || 300);
@@ -83,6 +87,7 @@ mejs.Utils.offset = offset;
 mejs.Utils.hasClass = hasClass;
 mejs.Utils.addClass = addClass;
 mejs.Utils.removeClass = removeClass;
+mejs.Utils.toggleClass = toggleClass;
 mejs.Utils.fadeIn = fadeIn;
 mejs.Utils.fadeOut = fadeOut;
 mejs.Utils.siblings = siblings;

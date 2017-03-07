@@ -1052,8 +1052,6 @@ class MediaElementPlayer {
 	hasFluidMode () {
 		const t = this;
 
-		console.log(t.node);
-
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
 		return (t.height.toString().includes('%') || (t.node.style.maxWidth !== 'none' && t.node.style.maxWidth !== t.width) ||
 			(t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
