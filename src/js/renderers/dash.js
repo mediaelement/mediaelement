@@ -148,7 +148,7 @@ const DashNativeRenderer = {
 			i,
 			il,
 			node = null,
-			dashPlayer
+			dashPlayer = null
 		;
 
 		node = originalNode.cloneNode(true);

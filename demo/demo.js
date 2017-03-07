@@ -64,11 +64,11 @@ for (var i = 0; i < sourcesTotal; i++) {
 			player = mejs.players[media]
 		;
 
-		player.setSrc(_this.val().replace('&amp;', '&'));
+		player.setSrc(_this.value.replace('&amp;', '&'));
 		player.load();
 
 		var renderer = document.getElementById(player.media.id + '-rendername');
-		renderer.querySelector('.src').innerHTML = '<a href="' + _this.val() + '" target="_blank">' + _this.val() + '</a>';
+		renderer.querySelector('.src').innerHTML = '<a href="' + _this.value + '" target="_blank">' + _this.value + '</a>';
 		renderer.querySelector('.renderer').innerHTML = player.media.rendererName;
 		renderer.querySelector('.error').innerHTML = '';
 
@@ -85,24 +85,33 @@ for (var i = 0; i < sourcesTotal; i++) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-	new MediaElementPlayer(document.querySelectorAll('video,audio'), {
-		stretching: stretching,
-		pluginPath: '../build/',
-		success: function (media) {
-			var renderer = document.getElementById('#' + media.id + '-rendername');
 
-			media.addEventListener('loadedmetadata', function (e) {
-				var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
-				if (src !== null && src !== undefined) {
-					renderer.querySelector('.src').innerHTML = '<a href="' + src + '" target="_blank">' + src + '</a>';
-					renderer.querySelector('.renderer').innerHTML = media.rendererName;
-					renderer.querySelector('.error').innerHTML = '';
-				}
-			}, false);
+	mejs.i18n.language(lang);
 
-			media.addEventListener('error', function (e) {
-				renderer.querySelector('.error').innerHTML = '<strong>Error</strong>: ' + e.message;
-			}, false);
-		}
-	});
+	var mediaElements = document.querySelectorAll('video, audio'), i, total = mediaElements.length;
+
+	for (i = 0; i < total; i++) {
+		new MediaElementPlayer(mediaElements[i], {
+			stretching: stretching,
+			features: ['playpause'],
+			pluginPath: '../build/',
+			success: function (media) {
+				var renderer = document.getElementById(media.id + '-rendername');
+
+				media.addEventListener('loadedmetadata', function () {
+					var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
+					if (src !== null && src !== undefined) {
+						renderer.querySelector('.src').innerHTML = '<a href="' + src + '" target="_blank">' + src + '</a>';
+						renderer.querySelector('.renderer').innerHTML = media.rendererName;
+						renderer.querySelector('.error').innerHTML = '';
+					}
+				}, false);
+
+				media.addEventListener('error', function (e) {
+					renderer.querySelector('.error').innerHTML = '<strong>Error</strong>: ' + e.message;
+				}, false);
+			}
+		});
+	}
+
 }, false);

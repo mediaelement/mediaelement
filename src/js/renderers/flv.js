@@ -149,7 +149,7 @@ const FlvNativeRenderer = {
 			i,
 			il,
 			node = null,
-			flvPlayer
+			flvPlayer = null
 		;
 
 		node = originalNode.cloneNode(true);
@@ -247,7 +247,9 @@ const FlvNativeRenderer = {
 		};
 
 		node.hide = () => {
-			flvPlayer.pause();
+			if (flvPlayer !== null) {
+				flvPlayer.pause();
+			}
 			node.style.display = 'none';
 			return node;
 		};
@@ -258,7 +260,9 @@ const FlvNativeRenderer = {
 		};
 
 		node.destroy = () => {
-			flvPlayer.destroy();
+			if (flvPlayer !== null) {
+				flvPlayer.destroy();
+			}
 		};
 
 		const event = createEvent('rendererready', node);

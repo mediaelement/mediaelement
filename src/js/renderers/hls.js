@@ -156,7 +156,7 @@ const HlsNativeRenderer = {
 		let
 			i,
 			il,
-			hlsPlayer,
+			hlsPlayer = null,
 			node = null
 		;
 
@@ -349,11 +349,15 @@ const HlsNativeRenderer = {
 		};
 
 		node.destroy = () => {
-			hlsPlayer.destroy();
+			if (hlsPlayer !== null) {
+				hlsPlayer.destroy();
+			}
 		};
 
 		node.stop = () => {
-			hlsPlayer.stopLoad();
+			if (hlsPlayer !== null) {
+				hlsPlayer.stopLoad();
+			}
 		};
 
 		const event = createEvent('rendererready', node);

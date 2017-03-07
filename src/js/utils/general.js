@@ -108,15 +108,22 @@ export function createEvent (eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
+	const namespace = eventName.match(/\[a-z]+\.(\[a-z]+)/);
 	let event;
 
 	if (document.createEvent) {
 		event = document.createEvent('Event');
 		event.initEvent(eventName, true, false);
+		if (namespace !== null) {
+			event.namespace = namespace[1];
+		}
 	} else {
 		event = {};
 		event.type = eventName;
 		event.target = target;
+		if (namespace !== null) {
+			event.namespace = namespace[1];
+		}
 		event.canceleable = true;
 		event.bubbable = false;
 	}

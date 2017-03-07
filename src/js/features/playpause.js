@@ -4,6 +4,7 @@ import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
 import {isString} from '../utils/general';
+import {addClass, removeClass} from '../utils/dom';
 
 /**
  * Play/Pause button
@@ -43,17 +44,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			op = t.options,
 			playTitle = isString(op.playText) ? op.playText : i18n.t('mejs.play'),
 			pauseTitle = isString(op.pauseText) ? op.pauseText : i18n.t('mejs.pause'),
-			play =
-				$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ` +
-					`${t.options.classPrefix}play">` +
-					`<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0"></button>` +
-				`</div>`),
-			playBtn = play.find('button')
+			play = document.createElement('div')
 		;
 
-		t.addControlElement(play, 'playpause');
-
-		play.click(() => {
+		play.className = `${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ${t.options.classPrefix}play`;
+		play.innerHTML = `<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0"></button>`;
+		play.addEventListener('click', () => {
 			if (media.paused) {
 				media.play();
 			} else {
@@ -61,27 +57,27 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
+		const playBtn = play.querySelector('button');
+		t.addControlElement(play, 'playpause');
+
 		/**
 		 * @private
 		 * @param {String} which - token to determine new state of button
 		 */
 		function togglePlayPause (which) {
 			if ('play' === which) {
-				play.removeClass(`${t.options.classPrefix}play`)
-					.removeClass(`${t.options.classPrefix}replay`)
-					.addClass(`${t.options.classPrefix}pause`);
-				playBtn.attr({
-					'title': pauseTitle,
-					'aria-label': pauseTitle
-				});
+				removeClass(play, `${t.options.classPrefix}play`);
+				removeClass(play, `${t.options.classPrefix}replay`);
+				addClass(play, `${t.options.classPrefix}pause`);
+				playBtn.setAttribute('title', pauseTitle);
+				playBtn.setAttribute('aria-label', pauseTitle);
 			} else {
-				play.removeClass(`${t.options.classPrefix}pause`)
-					.removeClass(`${t.options.classPrefix}replay`)
-					.addClass(`${t.options.classPrefix}play`);
-				playBtn.attr({
-					'title': playTitle,
-					'aria-label': playTitle
-				});
+
+				removeClass(play, `${t.options.classPrefix}pause`);
+				removeClass(play, `${t.options.classPrefix}replay`);
+				addClass(play, `${t.options.classPrefix}play`);
+				playBtn.setAttribute('title', playTitle);
+				playBtn.setAttribute('aria-label', playTitle);
 			}
 		}
 
@@ -105,14 +101,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		media.addEventListener('ended', () => {
 
 			if (!player.options.loop) {
-				play.removeClass(`${t.options.classPrefix}pause`)
-					.removeClass(`${t.options.classPrefix}play`)
-					.addClass(`${t.options.classPrefix}replay`);
-
-				playBtn.attr({
-					'title': playTitle,
-					'aria-label': playTitle
-				});
+				removeClass(play, `${t.options.classPrefix}pause`);
+				removeClass(play, `${t.options.classPrefix}play`);
+				addClass(play, `${t.options.classPrefix}replay`);
+				playBtn.setAttribute('title', playTitle);
+				playBtn.setAttribute('aria-label', playTitle);
 			}
 
 		}, false);

@@ -18,7 +18,7 @@ export function closest (el, fn) {
 let hasClassMethod, addClassMethod, removeClassMethod;
 
 if ('classList' in document.documentElement) {
-	hasClassMethod = (el, className) => el.classList.contains(className);
+	hasClassMethod = (el, className) => el.classList !== undefined && el.classList.contains(className);
 	addClassMethod = (el, className) => el.classList.add(className);
 	removeClassMethod = (el, className) => el.classList.remove(className);
 } else {
