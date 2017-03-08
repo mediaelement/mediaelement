@@ -1284,17 +1284,15 @@ class MediaElementPlayer {
 
 		let siblingsWidth = 0;
 
-		const siblings = dom.siblings(t.rail), total = siblings.length;
+		const siblings = dom.siblings(t.rail, (el) => el !== t.rail), total = siblings.length;
 		for (let i = 0; i < total; i++) {
-			if (dom.visible(siblings[i])) {
-				siblingsWidth += parseFloat(getComputedStyle(siblings[i]).width);
-			}
+			siblingsWidth += siblings[i].offsetWidth;
 		}
 
-		siblingsWidth += totalMargin + railMargin + 1;
+		siblingsWidth += totalMargin + ((totalMargin === 0) ?  (railMargin * 2) : railMargin) + 1;
 
 		// Substract the width of the feature siblings from time rail
-		t.rail.style.width = `${(parseFloat(getComputedStyle(t.controls).width) - siblingsWidth)}px`;
+		t.rail.style.width = `${(parseFloat(t.controls.offsetWidth) - siblingsWidth)}px`;
 
 		const event = createEvent('controlsresize', t.container);
 		t.container.dispatchEvent(event);
