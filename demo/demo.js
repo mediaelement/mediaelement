@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
-			features: ['playpause', 'current', 'duration'],
+			features: ['playpause', 'current', 'duration', 'volume', 'fullscreen'],
 			pluginPath: '../build/',
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');

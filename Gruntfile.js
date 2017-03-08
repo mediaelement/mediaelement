@@ -93,12 +93,12 @@ module.exports = function (grunt) {
 					]).concat([
 						'src/js/library.js',
 						'src/js/player.js',
-						// 'src/js/features/fullscreen.js',
+						'src/js/features/fullscreen.js',
 						'src/js/features/playpause.js',
 						// 'src/js/features/progress.js',
 						'src/js/features/time.js',
 						// 'src/js/features/tracks.js',
-						// 'src/js/features/volume.js'
+						'src/js/features/volume.js'
 					]),
 
 					// new renderers

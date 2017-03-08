@@ -907,10 +907,8 @@ class MediaElementPlayer {
 					// Firefox does NOT support e.relatedTarget to see which element
 					// just lost focus, so wait to find the next focused element
 
-					const parent = dom.closest(document.activeElement, (el) => {
-						return el == t.container;
-					});
-					if (t.keyboardAction && !parent.length) {
+					const parent = dom.closest(document.activeElement, (el) => el == t.container);
+					if (t.keyboardAction && parent && !parent.length) {
 						t.keyboardAction = false;
 						if (t.isVideo && !t.options.alwaysShowControls) {
 							// focus is outside the control; hide controls
@@ -940,8 +938,8 @@ class MediaElementPlayer {
 			t.globalBind('click', (e) => {
 				if (e.target.matches(`.${t.options.classPrefix}container`)) {
 					dom.addClass(e.target, `${t.options.classPrefix}container-keyboard-inactive`);
-				} else if (e.target.closest(`.${t.options.classPrefix}container`).length) {
-					dom.addClass(e.target.closest(`.${t.options.classPrefix}container`), `${t.options.classPrefix}container-keyboard-inactive`);
+				} else if (dom.closest(e.target, (el) => el === t.container)) {
+					dom.addClass(dom.closest(e.target, (el) => el === t.container), `${t.options.classPrefix}container-keyboard-inactive`);
 				}
 			});
 
@@ -949,8 +947,8 @@ class MediaElementPlayer {
 			t.globalBind('keydown', (e) => {
 				if (e.target.matches(`.${t.options.classPrefix}container`)) {
 					dom.removeClass(e.target, `${t.options.classPrefix}container-keyboard-inactive`);
-				} else if (e.target.closest(`.${t.options.classPrefix}container`).length) {
-					dom.removeClass(e.target.closest(`.${t.options.classPrefix}container`), `${t.options.classPrefix}container-keyboard-inactive`);
+				} else if (dom.closest(e.target, (el) => el === t.container)) {
+					dom.removeClass(dom.closest(e.target, (el) => el === t.container), `${t.options.classPrefix}container-keyboard-inactive`);
 				}
 			});
 		}
@@ -1060,9 +1058,7 @@ class MediaElementPlayer {
 	setResponsiveMode () {
 		const
 			t = this,
-			parent = dom.closest(t.container, (el) => {
-				return el !== t.container && dom.visible(el);
-			}),
+			parent = dom.closest(t.container, (el) => el !== t.container && dom.visible(el)),
 			parentStyles = getComputedStyle(parent, null),
 			nativeWidth = (() => {
 				if (t.isVideo) {
@@ -1403,8 +1399,7 @@ class MediaElementPlayer {
 			const eventList = events.d.split(' ');
 			for (let i = 0, total = eventList.length; i < total; i++) {
 				eventList[i].split('.').reduce(function (part, e) {
-					e = e ? `${e}.${part}` : part;
-					doc.addEventListener(e, callback, true);
+					doc.addEventListener(e, callback, false);
 					return e;
 				}, '');
 			}
@@ -1413,7 +1408,7 @@ class MediaElementPlayer {
 			const eventList = events.w.split(' ');
 			for (let i = 0, total = eventList.length; i < total; i++) {
 				eventList[i].split('.').reduce(function (part, e) {
-					window.addEventListener(e, callback, true);
+					window.addEventListener(e, callback, false);
 					return e;
 				}, '');
 			}
@@ -1432,8 +1427,7 @@ class MediaElementPlayer {
 			const eventList = events.d.split(' ');
 			for (let i = 0, total = eventList.length; i < total; i++) {
 				eventList[i].split('.').reduce(function (part, e) {
-					e = e ? `${e}.${part}` : part;
-					doc.removeEventListener(e, callback, true);
+					doc.removeEventListener(e, callback, false);
 					return e;
 				}, '');
 			}
@@ -1442,7 +1436,7 @@ class MediaElementPlayer {
 			const eventList = events.d.split(' ');
 			for (let i = 0, total = eventList.length; i < total; i++) {
 				eventList[i].split('.').reduce(function (part, e) {
-					window.removeEventListener(e, callback, true);
+					window.removeEventListener(e, callback, false);
 					return e;
 				}, '');
 			}
@@ -1537,10 +1531,9 @@ class MediaElementPlayer {
 			if (t.options.clickToPlayPause) {
 
 				const
-					button = t.media.closest(`.${t.options.classPrefix}container`)
-					.querySelector(`.${t.options.classPrefix}overlay-button`),
+					button = t.container.querySelector(`.${t.options.classPrefix}overlay-button`),
 					pressed = button.getAttribute('aria-pressed')
-					;
+				;
 
 				if (media.paused) {
 					media.play();
@@ -1657,23 +1650,18 @@ class MediaElementPlayer {
 		// listen for key presses
 		t.globalBind('keydown', (event) => {
 			const
-				container = dom.closest(event.target, (el) => {
-					return el == t.container;
-				}),
-				target = dom.closest(player.media, (el) => {
-					return el == t.container;
-				})
-				;
-			player.hasFocus = container.length !== 0 && container.id === target.id;
+				container = dom.closest(event.target, (el) => el == t.container),
+				target = dom.closest(player.media, (el) => el == t.container)
+			;
+			player.hasFocus = container !== null && container.length !== 0 && container.id === target.id;
 			return t.onkeydown(player, media, event);
 		});
 
 
 		// check if someone clicked outside a player region, then kill its focus
 		t.globalBind('click', (event) => {
-			player.hasFocus = dom.closest(event.target, (el) => {
-				return el == t.container;
-			}).length;
+			const insidePlayer = dom.closest(event.target, (el) => el == t.container);
+			player.hasFocus = (insidePlayer !== null && insidePlayer.length);
 		});
 
 	}
