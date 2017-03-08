@@ -5,6 +5,7 @@
 * Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @ron666
 * Added error event support in Flash shims (https://github.com/johndyer/mediaelement/pull/2115) @astr0junk
 * Added default `preload` element if not set on `video` or `audio` due to issue described on #2114 @ron666
+* Fixed typo in Facebook renderer @ron666
 
 *3.2.3 (2017/03/02)*
 
