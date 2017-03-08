@@ -1,3 +1,7 @@
+function closest (el, fn) {
+	return el && (fn(el) ? el : closest(el.parentNode, fn));
+}
+
 function getQueryStringValue (key) {
 	return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
 }
@@ -57,10 +61,13 @@ stretchingSelector.addEventListener('change', function () {
 }, false);
 
 for (var i = 0; i < sourcesTotal; i++) {
-	sourcesSelector[i].addEventListener('change', function () {
+	sourcesSelector[i].addEventListener('change', function (e) {
+
 		var
-			_this = this,
-			media = _this.closest('.players').querySelector('.media-wrapper').querySelector('.mejs__container').id,
+			_this = e.target,
+			media = closest(this, function(el) {
+					return el.className === 'players';
+				}).querySelector('.mejs__container').id,
 			player = mejs.players[media]
 		;
 
@@ -93,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
-			features: ['playpause', 'current', 'duration', 'volume', 'fullscreen'],
+			features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen'],
 			pluginPath: '../build/',
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');

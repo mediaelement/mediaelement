@@ -55,7 +55,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _en = _dereq_(14);
+var _en = _dereq_(13);
 
 var _general = _dereq_(24);
 
@@ -428,7 +428,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"14":14,"24":24,"6":6}],5:[function(_dereq_,module,exports){
+},{"13":13,"24":24,"6":6}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1076,15 +1076,17 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _player = _dereq_(16);
+var _player = _dereq_(15);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 var Features = _interopRequireWildcard(_constants);
 
 var _general = _dereq_(24);
+
+var _dom = _dereq_(23);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1132,8 +1134,6 @@ Object.assign(_player2.default.prototype, {
   * (1) 'native-native'  HTML5 video  + browser fullscreen (IE10+, etc.)
   * (2) 'plugin-native'  plugin video + browser fullscreen (fails in some versions of Firefox)
   * (3) 'fullwindow'     Full window (retains all UI)
-  * (4) 'plugin-click'   Flash 1 - click through with pointer events
-  * (5) 'plugin-hover'   Flash 2 - hover popup in flash (IE6-8)
   *
   * @type {String}
   */
@@ -1165,17 +1165,15 @@ Object.assign(_player2.default.prototype, {
 			player.detectFullscreenMode();
 		});
 
-		var hideTimeout = null;
-
-		// build button
 		var t = this,
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
-		    fullscreenBtn = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0"></button>') + '</div>');
+		    fullscreenBtn = _document2.default.createElement('div');
 
+		fullscreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button';
+		fullscreenBtn.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0"></button>';
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
-		fullscreenBtn.on('click', function () {
-
+		fullscreenBtn.addEventListener('click', function () {
 			// toggle fullscreen
 			var isFullScreen = Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN || player.isFullScreen;
 
@@ -1184,32 +1182,7 @@ Object.assign(_player2.default.prototype, {
 			} else {
 				player.enterFullScreen();
 			}
-		}).on('mouseover', function () {
-
-			// very old browsers with a plugin
-			if (t.fullscreenMode === 'plugin-hover') {
-				if (hideTimeout !== null) {
-					clearTimeout(hideTimeout);
-					hideTimeout = null;
-				}
-
-				var buttonPos = fullscreenBtn.offset(),
-				    containerPos = player.container.offset();
-
-				media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, true);
-			}
-		}).on('mouseout', function () {
-
-			if (t.fullscreenMode === 'plugin-hover') {
-				if (hideTimeout !== null) {
-					clearTimeout(hideTimeout);
-				}
-
-				hideTimeout = setTimeout(function () {
-					media.hideFullscreenButton();
-				}, 1500);
-			}
-		});
+		}, false);
 
 		player.fullscreenBtn = fullscreenBtn;
 
@@ -1268,14 +1241,8 @@ Object.assign(_player2.default.prototype, {
 			mode = 'native-native';
 		} else if (Features.HAS_TRUE_NATIVE_FULLSCREEN && !isNative) {
 			mode = 'plugin-native';
-		} else if (t.usePluginFullScreen) {
-			if (Features.SUPPORT_POINTER_EVENTS) {
-				mode = 'plugin-click';
-				// this needs some special setup
-				t.createPluginClickThrough();
-			} else {
-				mode = 'plugin-hover';
-			}
+		} else if (t.usePluginFullScreen && Features.SUPPORT_POINTER_EVENTS) {
+			mode = 'plugin-click';
 		} else {
 			mode = 'fullwindow';
 		}
@@ -1284,145 +1251,6 @@ Object.assign(_player2.default.prototype, {
 		return mode;
 	},
 
-	/**
-  *
-  */
-	createPluginClickThrough: function createPluginClickThrough() {
-
-		var t = this;
-
-		// don't build twice
-		if (t.isPluginClickThroughCreated) {
-			return;
-		}
-
-		// allows clicking through the fullscreen button and controls down directly to Flash
-
-		/*
-   When a user puts his mouse over the fullscreen button, we disable the controls so that mouse events can go down to flash (pointer-events)
-   We then put a divs over the video and on either side of the fullscreen button
-   to capture mouse movement and restore the controls once the mouse moves outside of the fullscreen button
-   */
-
-		var fullscreenIsDisabled = false,
-		    restoreControls = function restoreControls() {
-			if (fullscreenIsDisabled) {
-				// hide the hovers
-				for (var i in hoverDivs) {
-					hoverDivs[i].hide();
-				}
-
-				// restore the control bar
-				t.fullscreenBtn.css('pointer-events', '');
-				t.controls.css('pointer-events', '');
-
-				// prevent clicks from pausing video
-				t.media.removeEventListener('click', t.clickToPlayPauseCallback);
-
-				// store for later
-				fullscreenIsDisabled = false;
-			}
-		},
-		    hoverDivs = {},
-		    hoverDivNames = ['top', 'left', 'right', 'bottom'],
-		    positionHoverDivs = function positionHoverDivs() {
-			var fullScreenBtnOffsetLeft = t.fullscreenBtn.offset().left - t.container.offset().left,
-			    fullScreenBtnOffsetTop = t.fullscreenBtn.offset().top - t.container.offset().top,
-			    fullScreenBtnWidth = t.fullscreenBtn.outerWidth(true),
-			    fullScreenBtnHeight = t.fullscreenBtn.outerHeight(true),
-			    containerWidth = t.container.width(),
-			    containerHeight = t.container.height();
-
-			for (var hover in hoverDivs) {
-				hover.css({ position: 'absolute', top: 0, left: 0 }); //, backgroundColor: '#f00'});
-			}
-
-			// over video, but not controls
-			hoverDivs.top.width(containerWidth).height(fullScreenBtnOffsetTop);
-
-			// over controls, but not the fullscreen button
-			hoverDivs.left.width(fullScreenBtnOffsetLeft).height(fullScreenBtnHeight).css({ top: fullScreenBtnOffsetTop });
-
-			// after the fullscreen button
-			hoverDivs.right.width(containerWidth - fullScreenBtnOffsetLeft - fullScreenBtnWidth).height(fullScreenBtnHeight).css({
-				top: fullScreenBtnOffsetTop,
-				left: fullScreenBtnOffsetLeft + fullScreenBtnWidth
-			});
-
-			// under the fullscreen button
-			hoverDivs.bottom.width(containerWidth).height(containerHeight - fullScreenBtnHeight - fullScreenBtnOffsetTop).css({ top: fullScreenBtnOffsetTop + fullScreenBtnHeight });
-		};
-
-		t.globalBind('resize', function () {
-			positionHoverDivs();
-		});
-
-		for (var i = 0, len = hoverDivNames.length; i < len; i++) {
-			hoverDivs[hoverDivNames[i]] = $('<div class="' + t.options.classPrefix + 'fullscreen-hover" />').appendTo(t.container).mouseover(restoreControls).hide();
-		}
-
-		// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
-		t.fullscreenBtn.on('mouseover', function () {
-
-			if (!t.isFullScreen) {
-
-				var buttonPos = t.fullscreenBtn.offset(),
-				    containerPos = t.container.offset();
-
-				// move the button in Flash into place
-				t.media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
-
-				// allows click through
-				t.fullscreenBtn.css('pointer-events', 'none');
-				t.controls.css('pointer-events', 'none');
-
-				// restore click-to-play
-				t.media.addEventListener('click', t.clickToPlayPauseCallback);
-
-				// show the divs that will restore things
-				for (var _i = 0, il = hoverDivs.length; _i < il; _i++) {
-					hoverDivs[_i].show();
-				}
-
-				positionHoverDivs();
-
-				fullscreenIsDisabled = true;
-			}
-		});
-
-		// restore controls anytime the user enters or leaves fullscreen
-		t.media.addEventListener('fullscreenchange', function () {
-			t.isFullScreen = !t.isFullScreen;
-			// don't allow plugin click to pause video - messes with
-			// plugin's controls
-			if (t.isFullScreen) {
-				t.media.removeEventListener('click', t.clickToPlayPauseCallback);
-			} else {
-				t.media.addEventListener('click', t.clickToPlayPauseCallback);
-			}
-			restoreControls();
-		});
-
-		// the mouseout event doesn't work on the fullscren button, because we already killed the pointer-events
-		// so we use the document.mousemove event to restore controls when the mouse moves outside the fullscreen button
-
-		t.globalBind('mousemove', function (e) {
-
-			// if the mouse is anywhere but the fullsceen button, then restore it all
-			if (fullscreenIsDisabled) {
-
-				var fullscreenBtnPos = t.fullscreenBtn.offset();
-
-				if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + t.fullscreenBtn.outerHeight(true) || e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + t.fullscreenBtn.outerWidth(true)) {
-					t.fullscreenBtn.css('pointer-events', '');
-					t.controls.css('pointer-events', '');
-					fullscreenIsDisabled = false;
-				}
-			}
-		});
-
-		t.isPluginClickThroughCreated = true;
-	},
 	/**
   * Feature destructor.
   *
@@ -1439,7 +1267,8 @@ Object.assign(_player2.default.prototype, {
 	enterFullScreen: function enterFullScreen() {
 
 		var t = this,
-		    isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/) !== null;
+		    isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/) !== null,
+		    containerStyles = getComputedStyle(t.container);
 
 		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN && typeof t.media.webkitEnterFullscreen === 'function') {
 			t.media.webkitEnterFullscreen();
@@ -1447,16 +1276,17 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		// set it to not show scroll bars so 100% will work
-		$(_document2.default.documentElement).addClass(t.options.classPrefix + 'fullscreen');
+		(0, _dom.addClass)(_document2.default.documentElement, t.options.classPrefix + 'fullscreen');
+		(0, _dom.addClass)(t.container, t.options.classPrefix + 'container-fullscreen');
 
 		// store sizing
-		t.normalHeight = t.container.height();
-		t.normalWidth = t.container.width();
+		t.normalHeight = parseInt(containerStyles.height);
+		t.normalWidth = parseInt(containerStyles.width);
 
 		// attempt to do true fullscreen
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
 
-			Features.requestFullScreen(t.container[0]);
+			Features.requestFullScreen(t.container);
 
 			if (t.isInIframe) {
 				// sometimes exiting from fullscreen doesn't work
@@ -1466,7 +1296,7 @@ Object.assign(_player2.default.prototype, {
 					if (t.isNativeFullScreen) {
 						var percentErrorMargin = 0.002,
 						    // 0.2%
-						windowWidth = $(_window2.default).width(),
+						windowWidth = _window2.default.innerWidth || _document2.default.documentElement.clientWidth || _document2.default.body.clientWidth,
 						    screenWidth = screen.width,
 						    absDiff = Math.abs(screenWidth - windowWidth),
 						    marginError = screenWidth * percentErrorMargin;
@@ -1486,40 +1316,57 @@ Object.assign(_player2.default.prototype, {
 		// move into position
 
 		// make full size
-		t.container.addClass(t.options.classPrefix + 'container-fullscreen').width('100%').height('100%');
+		t.container.style.width = '100%';
+		t.container.style.height = '100%';
 
 		// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
 		// Actually, it seems to be needed for IE8, too
 		t.containerSizeTimeout = setTimeout(function () {
-			t.container.css({ width: '100%', height: '100%' });
+			t.container.style.width = '100%';
+			t.container.style.height = '100%';
 			t.setControlsSize();
 		}, 500);
 
 		if (isNative) {
-			t.$media.width('100%').height('100%');
+			t.node.style.width = '100%';
+			t.node.style.height = '100%';
 		} else {
-			t.container.find('iframe, embed, object, video').width('100%').height('100%');
+			var elements = t.container.querySelectorAll('iframe, embed, object, video'),
+			    _total = elements.length;
+			for (var i = 0; i < _total; i++) {
+				elements[i].style.width = '100%';
+				elements[i].style.height = '100%';
+			}
 		}
 
 		if (t.options.setDimensions && typeof t.media.setSize === 'function') {
 			t.media.setSize(screen.width, screen.height);
 		}
 
-		t.layers.children('div').width('100%').height('100%');
+		var layers = t.layers.childNodes,
+		    total = layers.length;
+		for (var _i = 0; _i < total; _i++) {
+			layers[_i].style.width = '100%';
+			layers[_i].style.height = '100%';
+		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.removeClass(t.options.classPrefix + 'fullscreen').addClass(t.options.classPrefix + 'unfullscreen');
+			(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
+			(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
 		}
 
 		t.setControlsSize();
 		t.isFullScreen = true;
 
-		var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height);
-		t.container.find('.' + t.options.classPrefix + 'captions-text').css('font-size', zoomFactor * 100 + '%');
-		t.container.find('.' + t.options.classPrefix + 'captions-text').css('line-height', 'normal');
-		t.container.find('.' + t.options.classPrefix + 'captions-position').css('bottom', '45px');
-
-		t.container.trigger('enteredfullscreen');
+		var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height),
+		    captionText = t.container.querySelector('.' + t.options.classPrefix + 'captions-text');
+		if (captionText) {
+			captionText.style.fontSize = zoomFactor * 100 + '%';
+			captionText.style.lineHeight = 'normal';
+			t.container.querySelector('.' + t.options.classPrefix + 'captions-position').style.bottom = '45px';
+		}
+		var event = (0, _general.createEvent)('enteredfullscreen', t.container);
+		t.container.dispatchEvent(event);
 	},
 
 	/**
@@ -1539,42 +1386,62 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		// restore scroll bars to document
-		$(_document2.default.documentElement).removeClass(t.options.classPrefix + 'fullscreen');
-
-		t.container.removeClass(t.options.classPrefix + 'container-fullscreen');
+		(0, _dom.removeClass)(_document2.default.documentElement, t.options.classPrefix + 'fullscreen');
+		(0, _dom.removeClass)(t.container, t.options.classPrefix + 'container-fullscreen');
 
 		if (t.options.setDimensions) {
-			t.container.width(t.normalWidth).height(t.normalHeight);
+			t.container.style.width = t.normalWidth;
+			t.container.style.height = t.normalHeight;
+
 			if (isNative) {
-				t.$media.width(t.normalWidth).height(t.normalHeight);
+				t.node.style.width = t.normalWidth;
+				t.node.style.height = t.normalHeight;
 			} else {
-				t.container.find('iframe, embed, object, video').width(t.normalWidth).height(t.normalHeight);
+				var elements = t.container.querySelectorAll('iframe, embed, object, video'),
+				    _total2 = elements.length;
+				for (var i = 0; i < _total2; i++) {
+					elements[i].style.width = t.normalWidth;
+					elements[i].style.height = t.normalHeight;
+				}
 			}
 
 			if (typeof t.media.setSize === 'function') {
 				t.media.setSize(t.normalWidth, t.normalHeight);
 			}
 
-			t.layers.children('div').width(t.normalWidth).height(t.normalHeight);
+			var layers = t.layers.childNodes,
+			    total = layers.length;
+			for (var _i2 = 0; _i2 < total; _i2++) {
+				layers[_i2].style.width = t.normalWidth;
+				layers[_i2].style.height = t.normalHeight;
+			}
 		}
 
-		t.fullscreenBtn.removeClass(t.options.classPrefix + 'unfullscreen').addClass(t.options.classPrefix + 'fullscreen');
+		(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
+		(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
 
 		t.setControlsSize();
 		t.isFullScreen = false;
 
-		t.container.find('.' + t.options.classPrefix + 'captions-text').css('font-size', '');
-		t.container.find('.' + t.options.classPrefix + 'captions-text').css('line-height', '');
-		t.container.find('.' + t.options.classPrefix + 'captions-position').css('bottom', '');
-
-		t.container.trigger('exitedfullscreen');
+		var captionText = t.container.querySelector('.' + t.options.classPrefix + 'captions-text');
+		if (captionText) {
+			captionText.style.fontSize = '';
+			captionText.style.lineHeight = '';
+			t.container.querySelector('.' + t.options.classPrefix + 'captions-position').style.bottom = '';
+		}
+		var event = (0, _general.createEvent)('exitedfullscreen', t.container);
+		t.container.dispatchEvent(event);
 	}
 });
 
-},{"16":16,"2":2,"23":23,"24":24,"3":3,"4":4}],9:[function(_dereq_,module,exports){
+},{"15":15,"2":2,"22":22,"23":23,"24":24,"3":3,"4":4}],9:[function(_dereq_,module,exports){
 'use strict';
 
-var _player = _dereq_(16);
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _player = _dereq_(15);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1583,6 +1450,8 @@ var _i18n = _dereq_(4);
 var _i18n2 = _interopRequireDefault(_i18n);
 
 var _general = _dereq_(24);
+
+var _dom = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1622,12 +1491,11 @@ Object.assign(_player2.default.prototype, {
 		    op = t.options,
 		    playTitle = (0, _general.isString)(op.playText) ? op.playText : _i18n2.default.t('mejs.play'),
 		    pauseTitle = (0, _general.isString)(op.pauseText) ? op.pauseText : _i18n2.default.t('mejs.pause'),
-		    play = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + (t.options.classPrefix + 'play">') + ('<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>') + '</div>'),
-		    playBtn = play.find('button');
+		    play = _document2.default.createElement('div');
 
-		t.addControlElement(play, 'playpause');
-
-		play.click(function () {
+		play.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + t.options.classPrefix + 'play';
+		play.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>';
+		play.addEventListener('click', function () {
 			if (media.paused) {
 				media.play();
 			} else {
@@ -1635,23 +1503,27 @@ Object.assign(_player2.default.prototype, {
 			}
 		});
 
+		var playBtn = play.querySelector('button');
+		t.addControlElement(play, 'playpause');
+
 		/**
    * @private
    * @param {String} which - token to determine new state of button
    */
 		function togglePlayPause(which) {
 			if ('play' === which) {
-				play.removeClass(t.options.classPrefix + 'play').removeClass(t.options.classPrefix + 'replay').addClass(t.options.classPrefix + 'pause');
-				playBtn.attr({
-					'title': pauseTitle,
-					'aria-label': pauseTitle
-				});
+				(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
+				(0, _dom.removeClass)(play, t.options.classPrefix + 'replay');
+				(0, _dom.addClass)(play, t.options.classPrefix + 'pause');
+				playBtn.setAttribute('title', pauseTitle);
+				playBtn.setAttribute('aria-label', pauseTitle);
 			} else {
-				play.removeClass(t.options.classPrefix + 'pause').removeClass(t.options.classPrefix + 'replay').addClass(t.options.classPrefix + 'play');
-				playBtn.attr({
-					'title': playTitle,
-					'aria-label': playTitle
-				});
+
+				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
+				(0, _dom.removeClass)(play, t.options.classPrefix + 'replay');
+				(0, _dom.addClass)(play, t.options.classPrefix + 'play');
+				playBtn.setAttribute('title', playTitle);
+				playBtn.setAttribute('aria-label', playTitle);
 			}
 		}
 
@@ -1674,21 +1546,24 @@ Object.assign(_player2.default.prototype, {
 		media.addEventListener('ended', function () {
 
 			if (!player.options.loop) {
-				play.removeClass(t.options.classPrefix + 'pause').removeClass(t.options.classPrefix + 'play').addClass(t.options.classPrefix + 'replay');
-
-				playBtn.attr({
-					'title': playTitle,
-					'aria-label': playTitle
-				});
+				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
+				(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
+				(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
+				playBtn.setAttribute('title', playTitle);
+				playBtn.setAttribute('aria-label', playTitle);
 			}
 		}, false);
 	}
 });
 
-},{"16":16,"24":24,"4":4}],10:[function(_dereq_,module,exports){
+},{"15":15,"2":2,"23":23,"24":24,"4":4}],10:[function(_dereq_,module,exports){
 'use strict';
 
-var _player = _dereq_(16);
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _player = _dereq_(15);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1696,9 +1571,11 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 var _time = _dereq_(27);
+
+var _dom = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1737,20 +1614,23 @@ Object.assign(_player2.default.prototype, {
 		var t = this,
 		    autoRewindInitial = player.options.autoRewind,
 		    tooltip = player.options.enableProgressTooltip ? '<span class="' + t.options.classPrefix + 'time-float">' + ('<span class="' + t.options.classPrefix + 'time-float-current">00:00</span>') + ('<span class="' + t.options.classPrefix + 'time-float-corner"></span>') + '</span>' : "",
-		    rail = $('<div class="' + t.options.classPrefix + 'time-rail">' + ('<span class="' + t.options.classPrefix + 'time-total ' + t.options.classPrefix + 'time-slider">') + ('<span class="' + t.options.classPrefix + 'time-buffering"></span>') + ('<span class="' + t.options.classPrefix + 'time-loaded"></span>') + ('<span class="' + t.options.classPrefix + 'time-current"></span>') + ('<span class="' + t.options.classPrefix + 'time-handle"></span>') + ('' + tooltip) + '</span>' + '</div>');
+		    rail = _document2.default.createElement('div');
+
+		rail.className = t.options.classPrefix + 'time-rail';
+		rail.innerHTML = '<span class="' + t.options.classPrefix + 'time-total ' + t.options.classPrefix + 'time-slider">' + ('<span class="' + t.options.classPrefix + 'time-buffering"></span>') + ('<span class="' + t.options.classPrefix + 'time-loaded"></span>') + ('<span class="' + t.options.classPrefix + 'time-current"></span>') + ('<span class="' + t.options.classPrefix + 'time-handle"></span>') + ('' + tooltip) + '</span>';
 
 		t.addControlElement(rail, 'progress');
 
-		controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
+		controls.querySelector('.' + t.options.classPrefix + 'time-buffering').style.display = 'none';
 
-		t.rail = controls.find('.' + t.options.classPrefix + 'time-rail');
-		t.total = controls.find('.' + t.options.classPrefix + 'time-total');
-		t.loaded = controls.find('.' + t.options.classPrefix + 'time-loaded');
-		t.current = controls.find('.' + t.options.classPrefix + 'time-current');
-		t.handle = controls.find('.' + t.options.classPrefix + 'time-handle');
-		t.timefloat = controls.find('.' + t.options.classPrefix + 'time-float');
-		t.timefloatcurrent = controls.find('.' + t.options.classPrefix + 'time-float-current');
-		t.slider = controls.find('.' + t.options.classPrefix + 'time-slider');
+		t.rail = controls.querySelector('.' + t.options.classPrefix + 'time-rail');
+		t.total = controls.querySelector('.' + t.options.classPrefix + 'time-total');
+		t.loaded = controls.querySelector('.' + t.options.classPrefix + 'time-loaded');
+		t.current = controls.querySelector('.' + t.options.classPrefix + 'time-current');
+		t.handle = controls.querySelector('.' + t.options.classPrefix + 'time-handle');
+		t.timefloat = controls.querySelector('.' + t.options.classPrefix + 'time-float');
+		t.timefloatcurrent = controls.querySelector('.' + t.options.classPrefix + 'time-float-current');
+		t.slider = controls.querySelector('.' + t.options.classPrefix + 'time-slider');
 		t.newTime = 0;
 		t.forcedHandlePause = false;
 
@@ -1761,8 +1641,9 @@ Object.assign(_player2.default.prototype, {
    */
 		var handleMouseMove = function handleMouseMove(e) {
 
-			var offset = t.total.offset(),
-			    width = t.total.width();
+			var totalStyles = getComputedStyle(t.total),
+			    offsetStyles = (0, _dom.offset)(t.total),
+			    width = parseInt(totalStyles.width);
 
 			var percentage = 0,
 			    pos = 0,
@@ -1779,13 +1660,13 @@ Object.assign(_player2.default.prototype, {
 			}
 
 			if (media.duration) {
-				if (x < offset.left) {
-					x = offset.left;
-				} else if (x > width + offset.left) {
-					x = width + offset.left;
+				if (x < offsetStyles.left) {
+					x = offsetStyles.left;
+				} else if (x > width + offsetStyles.left) {
+					x = width + offsetStyles.left;
 				}
 
-				pos = x - offset.left;
+				pos = x - offsetStyles.left;
 				percentage = pos / width;
 				t.newTime = percentage <= 0.02 ? 0 : percentage * media.duration;
 
@@ -1797,9 +1678,9 @@ Object.assign(_player2.default.prototype, {
 
 				// position floating time box
 				if (!_constants.IS_IOS && !_constants.IS_ANDROID) {
-					t.timefloat.css('left', pos);
-					t.timefloatcurrent.html((0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours));
-					t.timefloat.show();
+					t.timefloat.style.left = pos + 'px';
+					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours);
+					t.timefloat.style.display = 'block';
 				}
 			}
 		},
@@ -1817,20 +1698,21 @@ Object.assign(_player2.default.prototype, {
 			    time = (0, _time.secondsToTimeCode)(seconds, player.options.alwaysShowHours),
 			    duration = media.duration;
 
-			t.slider.attr({
-				'role': 'slider',
-				'tabindex': 0
-			});
+			t.slider.setAttribute('role', 'slider');
+			t.slider.tabIndex = 0;
+
 			if (media.paused) {
-				t.slider.attr({
-					'aria-label': timeSliderText,
-					'aria-valuemin': 0,
-					'aria-valuemax': duration,
-					'aria-valuenow': seconds,
-					'aria-valuetext': time
-				});
+				t.slider.setAttribute('aria-label', timeSliderText);
+				t.slider.setAttribute('aria-valuemin', 0);
+				t.slider.setAttribute('aria-valuemax', duration);
+				t.slider.setAttribute('aria-valuenow', seconds);
+				t.slider.setAttribute('aria-valuetext', time);
 			} else {
-				t.slider.removeAttr('aria-label aria-valuemin aria-valuemax aria-valuenow aria-valuetext');
+				t.slider.removeAttribute('aria-label');
+				t.slider.removeAttribute('aria-valuemin');
+				t.slider.removeAttribute('aria-valuemax');
+				t.slider.removeAttribute('aria-valuenow');
+				t.slider.removeAttribute('aria-valuetext');
 			}
 		},
 
@@ -1858,11 +1740,13 @@ Object.assign(_player2.default.prototype, {
 		};
 
 		// Events
-		t.slider.on('focus', function () {
+		t.slider.addEventListener('focus', function () {
 			player.options.autoRewind = false;
-		}).on('blur', function () {
+		}, false);
+		t.slider.addEventListener('blur', function () {
 			player.options.autoRewind = autoRewindInitial;
-		}).on('keydown', function (e) {
+		}, false);
+		t.slider.addEventListener('keydown', function (e) {
 
 			if (new Date() - lastKeyPressTime >= 1000) {
 				startedPaused = media.paused;
@@ -1937,51 +1821,59 @@ Object.assign(_player2.default.prototype, {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		}).on('mousedown touchstart', function (e) {
-			t.forcedHandlePause = false;
-			if (media.duration !== Infinity) {
-				// only handle left clicks or touch
-				if (e.which === 1 || e.which === 0) {
+		}, false);
 
-					if (!media.paused) {
-						t.media.pause();
-						t.forcedHandlePause = true;
-					}
+		var events = ['mousedown touchstart'];
 
-					mouseIsDown = true;
-					handleMouseMove(e);
-					t.globalBind('mousemove.dur touchmove.dur', function (e) {
-						handleMouseMove(e);
-					});
-					t.globalBind('mouseup.dur touchend.dur', function () {
-						handleMouseup();
-						mouseIsDown = false;
-						if (t.timefloat !== undefined) {
-							t.timefloat.hide();
+		for (var i = 0, total = events.length; i < total; i++) {
+			t.slider.addEventListener(events[i], function (e) {
+				t.forcedHandlePause = false;
+				if (media.duration !== Infinity) {
+					// only handle left clicks or touch
+					if (e.which === 1 || e.which === 0) {
+
+						if (!media.paused) {
+							t.media.pause();
+							t.forcedHandlePause = true;
 						}
-						t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
-					});
+
+						mouseIsDown = true;
+						handleMouseMove(e);
+						t.globalBind('mousemove.dur touchmove.dur', function (e) {
+							handleMouseMove(e);
+						});
+						t.globalBind('mouseup.dur touchend.dur', function () {
+							handleMouseup();
+							mouseIsDown = false;
+							if (t.timefloat !== undefined) {
+								t.timefloat.style.display = 'none';
+							}
+							t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
+						});
+					}
 				}
-			}
-		}).on('mouseenter', function () {
+			}, false);
+		}
+		t.slider.addEventListener('mouseenter', function () {
 			if (media.duration !== Infinity) {
 				t.globalBind('mousemove.dur', function (e) {
 					handleMouseMove(e);
 				});
 				if (t.timefloat !== undefined && !_constants.IS_IOS && !_constants.IS_ANDROID) {
-					t.timefloat.show();
+					t.timefloat.style.display = 'block';
 				}
 			}
-		}).on('mouseleave', function () {
+		}, false);
+		t.slider.addEventListener('mouseleave', function () {
 			if (media.duration !== Infinity) {
 				if (!mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
 					if (t.timefloat !== undefined) {
-						t.timefloat.hide();
+						t.timefloat.style.display = 'none';
 					}
 				}
 			}
-		});
+		}, false);
 
 		// loading
 		// If media is does not have a finite duration, remove progress bar interaction
@@ -1992,8 +1884,8 @@ Object.assign(_player2.default.prototype, {
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
-			} else if (!controls.find('.' + t.options.classPrefix + 'broadcast').length) {
-				controls.find('.' + t.options.classPrefix + 'time-rail').empty().html('<span class="' + t.options.classPrefix + 'broadcast">' + _i18n2.default.t('mejs.live-broadcast') + '</span>');
+			} else if (!controls.querySelector('.' + t.options.classPrefix + 'broadcast')) {
+				controls.querySelector('.' + t.options.classPrefix + 'time-rail').innerHTML = '<span class="' + t.options.classPrefix + 'broadcast">' + _i18n2.default.t('mejs.live-broadcast') + '</span>';
 			}
 		}, false);
 
@@ -2005,19 +1897,19 @@ Object.assign(_player2.default.prototype, {
 					player.setCurrentRail(e);
 				}
 				updateSlider(e);
-			} else if (!controls.find('.' + t.options.classPrefix + 'broadcast').length) {
-				controls.find('.' + t.options.classPrefix + 'time-rail').empty().html('<span class="' + t.options.classPrefix + 'broadcast">' + _i18n2.default.t('mejs.live-broadcast') + '</span>');
+			} else if (!controls.querySelector('.' + t.options.classPrefix + 'broadcast')) {
+				controls.querySelector('.' + t.options.classPrefix + 'time-rail').innerHTML = '<span class="' + t.options.classPrefix + 'broadcast">' + _i18n2.default.t('mejs.live-broadcast') + '</span>';
 			}
 		}, false);
 
-		t.container.on('controlsresize', function (e) {
+		t.container.addEventListener('controlsresize', function (e) {
 			if (media.duration !== Infinity) {
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
 			}
-		});
+		}, false);
 	},
 
 	/**
@@ -2054,7 +1946,7 @@ Object.assign(_player2.default.prototype, {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
 			if (t.loaded && t.total) {
-				t.loaded.width(percent * 100 + '%');
+				t.loaded.style.width = percent * 100 + '%';
 			}
 		}
 	},
@@ -2087,25 +1979,31 @@ Object.assign(_player2.default.prototype, {
 
 			// update bar and handle
 			if (t.total && t.handle) {
-				var newWidth = Math.round(t.total.width() * nTime / t.media.duration),
-				    handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2);
+				var newWidth = Math.round(parseInt(getComputedStyle(t.total).width) * nTime / t.media.duration),
+				    handlePos = newWidth - Math.round(parseInt(getComputedStyle(t.handle).offsetWidth) / 2);
 
 				newWidth = nTime / t.media.duration * 100;
-				t.current.width(newWidth + '%');
-				t.handle.css('left', handlePos);
+				t.current.style.width = newWidth + '%';
+				t.handle.style.left = handlePos + 'px';
 			}
 		}
 	}
 });
 
-},{"16":16,"23":23,"27":27,"4":4}],11:[function(_dereq_,module,exports){
+},{"15":15,"2":2,"22":22,"23":23,"27":27,"4":4}],11:[function(_dereq_,module,exports){
 'use strict';
 
-var _player = _dereq_(16);
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _player = _dereq_(15);
 
 var _player2 = _interopRequireDefault(_player);
 
 var _time = _dereq_(27);
+
+var _dom = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2141,11 +2039,14 @@ Object.assign(_player2.default.prototype, {
   */
 	buildcurrent: function buildcurrent(player, controls, layers, media) {
 		var t = this,
-		    time = $('<div class="' + t.options.classPrefix + 'time" role="timer" aria-live="off">' + ('<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond) + '</span>') + '</div>');
+		    time = _document2.default.createElement('div');
+
+		time.className = t.options.classPrefix + 'time';
+		time.setAttribute('role', 'timer');
+		time.setAttribute('aria-live', 'off');
+		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond) + '</span>';
 
 		t.addControlElement(time, 'current');
-
-		t.currenttime = t.controls.find('.' + t.options.classPrefix + 'currenttime');
 
 		media.addEventListener('timeupdate', function () {
 			if (t.controlsAreVisible) {
@@ -2165,23 +2066,22 @@ Object.assign(_player2.default.prototype, {
   */
 	buildduration: function buildduration(player, controls, layers, media) {
 
-		var t = this;
+		var t = this,
+		    currTime = controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime');
 
-		if (controls.children().last().find('.' + t.options.classPrefix + 'currenttime').length > 0) {
-			var duration = $(t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>'));
-
-			duration.appendTo(controls.find('.' + t.options.classPrefix + 'time'));
+		if (currTime) {
+			controls.querySelector('.' + t.options.classPrefix + 'time').innerHTML += t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>');
 		} else {
 
 			// add class to current time
-			controls.find('.' + t.options.classPrefix + 'currenttime').parent().addClass(t.options.classPrefix + 'currenttime-container');
+			(0, _dom.addClass)(controls.querySelector('.' + t.options.classPrefix + 'currenttime').parentNode, t.options.classPrefix + 'currenttime-container');
 
-			var _duration = $('<div class="' + t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container">' + ('<span class="' + t.options.classPrefix + 'duration">') + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>') + '</div>');
+			var duration = _document2.default.createElement('div');
+			duration.className = t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container';
+			duration.innerHTML = '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>');
 
-			t.addControlElement(_duration, 'duration');
+			t.addControlElement(duration, 'duration');
 		}
-
-		t.durationD = t.controls.find('.' + t.options.classPrefix + 'duration');
 
 		media.addEventListener('timeupdate', function () {
 			if (t.controlsAreVisible) {
@@ -2203,8 +2103,8 @@ Object.assign(_player2.default.prototype, {
 			currentTime = 0;
 		}
 
-		if (t.currenttime) {
-			t.currenttime.html((0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
+		if (t.controls.querySelector('.' + t.options.classPrefix + 'currenttime')) {
+			t.controls.querySelector('.' + t.options.classPrefix + 'currenttime').innerText = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond);
 		}
 	},
 
@@ -2225,903 +2125,25 @@ Object.assign(_player2.default.prototype, {
 			duration = t.options.duration;
 		}
 
-		//Toggle the long video class if the video is longer than an hour.
-		t.container.toggleClass(t.options.classPrefix + 'long-video', duration > 3600);
+		//Toggle the long video class if the video is longer than an hour
+		if (duration > 3600) {
+			(0, _dom.toggleClass)(t.container, t.options.classPrefix + 'long-video');
+		}
 
-		if (t.durationD && duration > 0) {
-			t.durationD.html((0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
+		if (t.controls.querySelector('.' + t.options.classPrefix + 'duration') && duration > 0) {
+			t.controls.querySelector('.' + t.options.classPrefix + 'duration').innerHTML = (0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond);
 		}
 	}
 });
 
-},{"16":16,"27":27}],12:[function(_dereq_,module,exports){
+},{"15":15,"2":2,"23":23,"27":27}],12:[function(_dereq_,module,exports){
 'use strict';
 
-var _mejs = _dereq_(6);
+var _document = _dereq_(2);
 
-var _mejs2 = _interopRequireDefault(_mejs);
+var _document2 = _interopRequireDefault(_document);
 
-var _i18n = _dereq_(4);
-
-var _i18n2 = _interopRequireDefault(_i18n);
-
-var _player = _dereq_(16);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _time = _dereq_(27);
-
-var _general = _dereq_(24);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Closed Captions (CC) button
- *
- * This feature enables the displaying of a CC button in the control bar, and also contains the methods to start media
- * with a certain language (if available), toggle captions, etc.
- */
-
-// Feature configuration
-Object.assign(_player.config, {
-	/**
-  * Default language to start media using ISO 639-2 Language Code List (en, es, it, etc.)
-  * If there are multiple tracks for one language, the last track node found is activated
-  * @see https://www.loc.gov/standards/iso639-2/php/code_list.php
-  * @type {String}
-  */
-	startLanguage: '',
-	/**
-  * @type {?String}
-  */
-	tracksText: null,
-	/**
-  * @type {?String}
-  */
-	chaptersText: null,
-	/**
-  * Avoid to screen reader speak captions over an audio track.
-  *
-  * @type {Boolean}
-  */
-	tracksAriaLive: false,
-	/**
-  * Remove the [cc] button when no track nodes are present
-  * @type {Boolean}
-  */
-	hideCaptionsButtonWhenEmpty: true,
-	/**
-  * Change captions to pop-up if true and only one track node is found
-  * @type {Boolean}
-  */
-	toggleCaptionsButtonWhenOnlyOne: false,
-	/**
-  * @type {String}
-  */
-	slidesSelector: ''
-});
-
-Object.assign(_player2.default.prototype, {
-
-	/**
-  * @type {Boolean}
-  */
-	hasChapters: false,
-
-	/**
-  * Feature constructor.
-  *
-  * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
-  * @param {MediaElementPlayer} player
-  * @param {$} controls
-  * @param {$} layers
-  * @param {HTMLElement} media
-  */
-	buildtracks: function buildtracks(player, controls, layers, media) {
-		if (player.tracks.length === 0) {
-			return;
-		}
-
-		var t = this,
-		    attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
-		    tracksTitle = (0, _general.isString)(t.options.tracksText) ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
-		    chaptersTitle = (0, _general.isString)(t.options.chaptersText) ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters'),
-		    total = player.tracks.length;
-
-		var i = void 0,
-		    kind = void 0;
-
-		// If browser will do native captions, prefer mejs captions, loop through tracks and hide
-		if (t.domNode.textTracks) {
-			for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
-				t.domNode.textTracks[i].mode = 'hidden';
-			}
-		}
-
-		t.cleartracks(player);
-
-		player.captions = $('<div class="' + t.options.classPrefix + 'captions-layer ' + t.options.classPrefix + 'layer">' + ('<div class="' + t.options.classPrefix + 'captions-position ' + t.options.classPrefix + 'captions-position-hover"' + attr + '>') + ('<span class="' + t.options.classPrefix + 'captions-text"></span>') + '</div>' + '</div>').prependTo(layers).hide();
-
-		player.captionsText = player.captions.find('.' + t.options.classPrefix + 'captions-text');
-		player.captionsButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked" />' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>' + '</div>');
-
-		t.addControlElement(player.captionsButton, 'tracks');
-
-		player.chaptersButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>' + '</div>');
-
-		var subtitleCount = 0;
-
-		for (i = 0; i < total; i++) {
-			kind = player.tracks[i].kind;
-			if (kind === 'subtitles' || kind === 'captions') {
-				subtitleCount++;
-			} else if (kind === 'chapters' && !controls.find('.' + t.options.classPrefix + 'chapter-selector').length) {
-				player.chaptersButton.insertAfter(player.captionsButton);
-			}
-		}
-
-		// if only one language then just make the button a toggle
-		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
-			// click
-			player.captionsButton.on('click', function () {
-				var trackId = 'none';
-				if (player.selectedTrack === null) {
-					trackId = player.tracks[0].trackId;
-				}
-				player.setTrack(trackId);
-			});
-		} else {
-			// hover or keyboard focus
-			player.captionsButton.on('mouseenter focusin', function () {
-				$(this).find('.' + t.options.classPrefix + 'captions-selector').removeClass(t.options.classPrefix + 'offscreen');
-			}).on('mouseleave focusout', function () {
-				$(this).find('.' + t.options.classPrefix + 'captions-selector').addClass(t.options.classPrefix + 'offscreen');
-			})
-			// handle clicks to the language radio buttons
-			.on('click', 'input[type=radio]', function () {
-				// value is trackId, same as the actual id, and we're using it here
-				// because the "none" checkbox doesn't have a trackId
-				// to use, but we want to know when "none" is clicked
-				player.setTrack(this.value);
-			}).on('click', '.' + t.options.classPrefix + 'captions-selector-label', function () {
-				$(this).siblings('input[type="radio"]').trigger('click');
-			})
-			//Allow up/down arrow to change the selected radio without changing the volume.
-			.on('keydown', function (e) {
-				e.stopPropagation();
-			});
-		}
-
-		player.chaptersButton.on('mouseenter focusin', function () {
-			var self = $(this),
-			    chapters = self.find('.' + t.options.classPrefix + 'chapters-selector-list').children().length;
-
-			if (chapters) {
-				self.find('.' + t.options.classPrefix + 'chapters-selector').removeClass(t.options.classPrefix + 'offscreen');
-			}
-		}).on('mouseleave focusout', function () {
-			$(this).find('.' + t.options.classPrefix + 'chapters-selector').addClass(t.options.classPrefix + 'offscreen');
-		})
-		// handle clicks to the chapters radio buttons
-		.on('click', 'input[type=radio]', function () {
-			var self = $(this);
-			player.chaptersButton.find('li').attr('aria-checked', false).end().find('.' + t.options.classPrefix + 'chapters-selected').removeClass(t.options.classPrefix + 'chapters-selected');
-
-			self.prop('checked', true).siblings('.' + t.options.classPrefix + 'chapters-selector-label').addClass(t.options.classPrefix + 'chapters-selected').end().parent().attr('aria-checked', true);
-
-			media.setCurrentTime(parseFloat(self.val()));
-			if (media.paused) {
-				media.play();
-			}
-		}).on('click', '.' + t.options.classPrefix + 'chapters-selector-label', function () {
-			$(this).siblings('input[type="radio"]').trigger('click');
-		})
-		//Allow up/down arrow to change the selected radio without changing the volume.
-		.on('keydown', function (e) {
-			e.stopPropagation();
-		});
-
-		if (!player.options.alwaysShowControls) {
-			// move with controls
-			player.container.on('controlsshown', function () {
-				// push captions above controls
-				player.container.find('.' + t.options.classPrefix + 'captions-position').addClass(t.options.classPrefix + 'captions-position-hover');
-			}).on('controlshidden', function () {
-				if (!media.paused) {
-					// move back to normal place
-					player.container.find('.' + t.options.classPrefix + 'captions-position').removeClass(t.options.classPrefix + 'captions-position-hover');
-				}
-			});
-		} else {
-			player.container.find('.' + t.options.classPrefix + 'captions-position').addClass(t.options.classPrefix + 'captions-position-hover');
-		}
-
-		player.trackToLoad = -1;
-		player.selectedTrack = null;
-		player.isLoadingTrack = false;
-
-		// add to list
-		for (i = 0; i < total; i++) {
-			kind = player.tracks[i].kind;
-			if (kind === 'subtitles' || kind === 'captions') {
-				player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
-			}
-		}
-
-		// start loading tracks
-		player.loadNextTrack();
-
-		media.addEventListener('timeupdate', function () {
-			player.displayCaptions();
-		}, false);
-
-		if (player.options.slidesSelector !== '') {
-			player.slidesContainer = $(player.options.slidesSelector);
-
-			media.addEventListener('timeupdate', function () {
-				player.displaySlides();
-			}, false);
-		}
-
-		t.container.on('controlsresize', function () {
-			t.adjustLanguageBox();
-		});
-	},
-
-	/**
-  * Feature destructor.
-  *
-  * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
-  * @param {MediaElementPlayer} player
-  */
-	cleartracks: function cleartracks(player) {
-		if (player) {
-			if (player.captions) {
-				player.captions.remove();
-			}
-			if (player.chapters) {
-				player.chapters.remove();
-			}
-			if (player.captionsText) {
-				player.captionsText.remove();
-			}
-			if (player.captionsButton) {
-				player.captionsButton.remove();
-			}
-
-			if (player.chaptersButton) {
-				player.chaptersButton.remove();
-			}
-		}
-	},
-
-	rebuildtracks: function rebuildtracks() {
-		var t = this;
-		t.findTracks();
-		t.buildtracks(t, t.controls, t.layers, t.media);
-	},
-
-	findTracks: function findTracks() {
-		var t = this,
-		    tracktags = t.$media.find('track');
-
-		// store for use by plugins
-		t.tracks = [];
-		tracktags.each(function (index, track) {
-
-			track = $(track);
-
-			var srclang = track.attr('srclang') ? track.attr('srclang').toLowerCase() : '';
-			var trackId = t.id + '_track_' + index + '_' + track.attr('kind') + '_' + srclang;
-			t.tracks.push({
-				trackId: trackId,
-				srclang: srclang,
-				src: track.attr('src'),
-				kind: track.attr('kind'),
-				label: track.attr('label') || '',
-				entries: [],
-				isLoaded: false
-			});
-		});
-	},
-
-	/**
-  *
-  * @param {String} trackId, or "none" to disable captions
-  */
-	setTrack: function setTrack(trackId) {
-
-		var t = this;
-
-		t.captionsButton.find('input[type="radio"]').prop('checked', false).end().find('.' + t.options.classPrefix + 'captions-selected').removeClass(t.options.classPrefix + 'captions-selected').end().find('input[value="' + trackId + '"]').prop('checked', true).siblings('.' + t.options.classPrefix + 'captions-selector-label').addClass(t.options.classPrefix + 'captions-selected');
-
-		if (trackId === 'none') {
-			t.selectedTrack = null;
-			t.captionsButton.removeClass(t.options.classPrefix + 'captions-enabled');
-			return;
-		}
-
-		for (var i = 0; i < t.tracks.length; i++) {
-			var track = t.tracks[i];
-			if (track.trackId === trackId) {
-				if (t.selectedTrack === null) {
-					t.captionsButton.addClass(t.options.classPrefix + 'captions-enabled');
-				}
-				t.selectedTrack = track;
-				t.captions.attr('lang', t.selectedTrack.srclang);
-				t.displayCaptions();
-				break;
-			}
-		}
-	},
-
-	/**
-  *
-  */
-	loadNextTrack: function loadNextTrack() {
-		var t = this;
-
-		t.trackToLoad++;
-		if (t.trackToLoad < t.tracks.length) {
-			t.isLoadingTrack = true;
-			t.loadTrack(t.trackToLoad);
-		} else {
-			// add done?
-			t.isLoadingTrack = false;
-
-			t.checkForTracks();
-		}
-	},
-
-	/**
-  *
-  * @param index
-  */
-	loadTrack: function loadTrack(index) {
-		var t = this,
-		    track = t.tracks[index],
-		    after = function after() {
-
-			track.isLoaded = true;
-
-			t.enableTrackButton(track);
-
-			t.loadNextTrack();
-		};
-
-		if (track !== undefined && (track.src !== undefined || track.src !== "")) {
-			$.ajax({
-				url: track.src,
-				dataType: 'text',
-				success: function success(d) {
-
-					// parse the loaded file
-					if (typeof d === 'string' && /<tt\s+xml/ig.exec(d)) {
-						track.entries = _mejs2.default.TrackFormatParser.dfxp.parse(d);
-					} else {
-						track.entries = _mejs2.default.TrackFormatParser.webvtt.parse(d);
-					}
-
-					after();
-
-					if (track.kind === 'slides') {
-						t.setupSlides(track);
-					}
-					// Load by default the first track with `chapters` kind
-					else if (track.kind === 'chapters' && !t.hasChapters) {
-							t.drawChapters(track);
-							t.hasChapters = true;
-						}
-				},
-				error: function error() {
-					t.removeTrackButton(track.trackId);
-					t.loadNextTrack();
-				}
-			});
-		}
-	},
-
-	/**
-  *
-  * @param {String} track - The language code
-  */
-	enableTrackButton: function enableTrackButton(track) {
-		var t = this,
-		    lang = track.srclang,
-		    target = $('#' + track.trackId);
-
-		var label = track.label;
-
-		if (label === '') {
-			label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
-		}
-
-		target.prop('disabled', false).siblings('.' + t.options.classPrefix + 'captions-selector-label').html(label);
-
-		// auto select
-		if (t.options.startLanguage === lang) {
-			target.prop('checked', true).trigger('click');
-		}
-
-		t.adjustLanguageBox();
-	},
-
-	/**
-  *
-  * @param {String} trackId
-  */
-	removeTrackButton: function removeTrackButton(trackId) {
-		var t = this;
-
-		t.captionsButton.find('input[id=' + trackId + ']').closest('li').remove();
-
-		t.adjustLanguageBox();
-	},
-
-	/**
-  *
-  * @param {String} trackId
-  * @param {String} lang - The language code
-  * @param {String} label
-  */
-	addTrackButton: function addTrackButton(trackId, lang, label) {
-		var t = this;
-		if (label === '') {
-			label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
-		}
-
-		// trackId is used in the value, too, because the "none"
-		// caption option doesn't have a trackId but we need to be able
-		// to set it, too
-		t.captionsButton.find('ul').append($('<li class="' + t.options.classPrefix + 'captions-selector-list-item">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled="disabled" />') + ('<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)</label>') + '</li>'));
-
-		t.adjustLanguageBox();
-
-		// remove this from the dropdownlist (if it exists)
-		t.container.find('.' + t.options.classPrefix + 'captions-translations option[value=' + lang + ']').remove();
-	},
-
-	/**
-  *
-  */
-	adjustLanguageBox: function adjustLanguageBox() {
-		var t = this;
-		// adjust the size of the outer box
-		t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector').height(t.captionsButton.find('.' + t.options.classPrefix + 'captions-selector-list').outerHeight(true) + t.captionsButton.find('.' + t.options.classPrefix + 'captions-translations').outerHeight(true));
-	},
-
-	/**
-  *
-  */
-	checkForTracks: function checkForTracks() {
-		var t = this;
-
-		var hasSubtitles = false;
-
-		// check if any subtitles
-		if (t.options.hideCaptionsButtonWhenEmpty) {
-			for (var i = 0, total = t.tracks.length; i < total; i++) {
-				var kind = t.tracks[i].kind;
-				if ((kind === 'subtitles' || kind === 'captions') && t.tracks[i].isLoaded) {
-					hasSubtitles = true;
-					break;
-				}
-			}
-
-			if (!hasSubtitles) {
-				t.captionsButton.hide();
-				t.setControlsSize();
-			}
-		}
-	},
-
-	/**
-  *
-  */
-	displayCaptions: function displayCaptions() {
-
-		if (this.tracks === undefined) {
-			return;
-		}
-
-		var t = this,
-		    track = t.selectedTrack,
-		    sanitize = function sanitize(html) {
-
-			var div = document.createElement('div');
-
-			div.innerHTML = html;
-
-			// Remove all `<script>` tags first
-			var scripts = div.getElementsByTagName('script');
-			var i = scripts.length;
-			while (i--) {
-				scripts[i].parentNode.removeChild(scripts[i]);
-			}
-
-			// Loop the elements and remove anything that contains value="javascript:" or an `on*` attribute
-			// (`onerror`, `onclick`, etc.)
-			var allElements = div.getElementsByTagName('*');
-			for (var _i = 0, n = allElements.length; _i < n; _i++) {
-				var attributesObj = allElements[_i].attributes,
-				    attributes = Array.prototype.slice.call(attributesObj);
-
-				for (var j = 0, total = attributes.length; j < total; j++) {
-					if (attributes[j].name.startsWith('on') || attributes[j].value.startsWith('javascript')) {
-						allElements[_i].parentNode.removeChild(allElements[_i]);
-					} else if (attributes[j].name === 'style') {
-						allElements[_i].removeAttribute(attributes[j].name);
-					}
-				}
-			}
-			return div.innerHTML;
-		};
-
-		if (track !== null && track.isLoaded) {
-			var i = t.searchTrackPosition(track.entries, t.media.currentTime);
-			if (i > -1) {
-				// Set the line before the timecode as a class so the cue can be targeted if needed
-				t.captionsText.html(sanitize(track.entries[i].text)).attr('class', t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || ''));
-				t.captions.show().height(0);
-				return; // exit out if one is visible;
-			}
-
-			t.captions.hide();
-		} else {
-			t.captions.hide();
-		}
-	},
-
-	/**
-  *
-  * @param {HTMLElement} track
-  */
-	setupSlides: function setupSlides(track) {
-		var t = this;
-
-		t.slides = track;
-		t.slides.entries.imgs = [t.slides.entries.length];
-		t.showSlide(0);
-	},
-
-	/**
-  *
-  * @param {Number} index
-  */
-	showSlide: function showSlide(index) {
-		if (this.tracks === undefined || this.slidesContainer === undefined) {
-			return;
-		}
-
-		var t = this,
-		    url = t.slides.entries[index].text;
-
-		var img = t.slides.entries[index].imgs;
-
-		if (img === undefined || img.fadeIn === undefined) {
-
-			t.slides.entries[index].imgs = img = $('<img src="' + url + '">').on('load', function () {
-				img.appendTo(t.slidesContainer).hide().fadeIn().siblings(':visible').fadeOut();
-			});
-		} else {
-
-			if (!img.is(':visible') && !img.is(':animated')) {
-				img.fadeIn().siblings(':visible').fadeOut();
-			}
-		}
-	},
-
-	/**
-  *
-  */
-	displaySlides: function displaySlides() {
-
-		if (this.slides === undefined) {
-			return;
-		}
-
-		var t = this,
-		    slides = t.slides,
-		    i = t.searchTrackPosition(slides.entries, t.media.currentTime);
-
-		if (i > -1) {
-			t.showSlide(i);
-			return; // exit out if one is visible;
-		}
-	},
-
-	/**
-  *
-  * @param {Object} chapters
-  */
-	drawChapters: function drawChapters(chapters) {
-		var t = this,
-		    total = chapters.entries.length;
-
-		if (!total) {
-			return;
-		}
-
-		t.chaptersButton.find('ul').empty();
-
-		for (var i = 0; i < total; i++) {
-			t.chaptersButton.find('ul').append($('<li class="' + t.options.classPrefix + 'chapters-selector-list-item" ' + 'role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_chapters" value="' + chapters.entries[i].start + '" disabled>') + ('<label class="' + t.options.classPrefix + 'chapters-selector-label">' + chapters.entries[i].text + '</label>') + '</li>'));
-		}
-
-		$.each(t.chaptersButton.find('input[type="radio"]'), function () {
-			$(this).prop({
-				disabled: false,
-				checked: false
-			});
-		});
-	},
-	/**
-  * Perform binary search to look for proper track index
-  *
-  * @param {Object[]} tracks
-  * @param {Number} currentTime
-  * @return {Number}
-  */
-	searchTrackPosition: function searchTrackPosition(tracks, currentTime) {
-		var lo = 0,
-		    hi = tracks.length - 1,
-		    mid = void 0,
-		    start = void 0,
-		    stop = void 0;
-
-		while (lo <= hi) {
-			mid = lo + hi >> 1;
-			start = tracks[mid].start;
-			stop = tracks[mid].stop;
-
-			if (currentTime >= start && currentTime < stop) {
-				return mid;
-			} else if (start < currentTime) {
-				lo = mid + 1;
-			} else if (start > currentTime) {
-				hi = mid - 1;
-			}
-		}
-
-		return -1;
-	}
-});
-
-/**
- * Map all possible languages with their respective code
- *
- * @constructor
- */
-_mejs2.default.language = {
-	codes: {
-		af: 'mejs.afrikaans',
-		sq: 'mejs.albanian',
-		ar: 'mejs.arabic',
-		be: 'mejs.belarusian',
-		bg: 'mejs.bulgarian',
-		ca: 'mejs.catalan',
-		zh: 'mejs.chinese',
-		'zh-cn': 'mejs.chinese-simplified',
-		'zh-tw': 'mejs.chines-traditional',
-		hr: 'mejs.croatian',
-		cs: 'mejs.czech',
-		da: 'mejs.danish',
-		nl: 'mejs.dutch',
-		en: 'mejs.english',
-		et: 'mejs.estonian',
-		fl: 'mejs.filipino',
-		fi: 'mejs.finnish',
-		fr: 'mejs.french',
-		gl: 'mejs.galician',
-		de: 'mejs.german',
-		el: 'mejs.greek',
-		ht: 'mejs.haitian-creole',
-		iw: 'mejs.hebrew',
-		hi: 'mejs.hindi',
-		hu: 'mejs.hungarian',
-		is: 'mejs.icelandic',
-		id: 'mejs.indonesian',
-		ga: 'mejs.irish',
-		it: 'mejs.italian',
-		ja: 'mejs.japanese',
-		ko: 'mejs.korean',
-		lv: 'mejs.latvian',
-		lt: 'mejs.lithuanian',
-		mk: 'mejs.macedonian',
-		ms: 'mejs.malay',
-		mt: 'mejs.maltese',
-		no: 'mejs.norwegian',
-		fa: 'mejs.persian',
-		pl: 'mejs.polish',
-		pt: 'mejs.portuguese',
-		ro: 'mejs.romanian',
-		ru: 'mejs.russian',
-		sr: 'mejs.serbian',
-		sk: 'mejs.slovak',
-		sl: 'mejs.slovenian',
-		es: 'mejs.spanish',
-		sw: 'mejs.swahili',
-		sv: 'mejs.swedish',
-		tl: 'mejs.tagalog',
-		th: 'mejs.thai',
-		tr: 'mejs.turkish',
-		uk: 'mejs.ukrainian',
-		vi: 'mejs.vietnamese',
-		cy: 'mejs.welsh',
-		yi: 'mejs.yiddish'
-	}
-};
-
-/*
- Parses WebVTT format which should be formatted as
- ================================
- WEBVTT
-
- 1
- 00:00:01,1 --> 00:00:05,000
- A line of text
-
- 2
- 00:01:15,1 --> 00:02:05,000
- A second line of text
-
- ===============================
-
- Adapted from: http://www.delphiki.com/html5/playr
- */
-_mejs2.default.TrackFormatParser = {
-	webvtt: {
-		/**
-   * @type {String}
-   */
-		pattern_timecode: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
-
-		/**
-   *
-   * @param {String} trackText
-   * @returns {{text: Array, times: Array}}
-   */
-		parse: function parse(trackText) {
-			var lines = _mejs2.default.TrackFormatParser.split2(trackText, /\r?\n/),
-			    entries = [];
-
-			var i = 0,
-			    timecode = void 0,
-			    text = void 0,
-			    identifier = void 0;
-
-			for (; i < lines.length; i++) {
-				timecode = this.pattern_timecode.exec(lines[i]);
-
-				if (timecode && i < lines.length) {
-					if (i - 1 >= 0 && lines[i - 1] !== '') {
-						identifier = lines[i - 1];
-					}
-					i++;
-					// grab all the (possibly multi-line) text that follows
-					text = lines[i];
-					i++;
-					while (lines[i] !== '' && i < lines.length) {
-						text = text + '\n' + lines[i];
-						i++;
-					}
-					text = $.trim(text).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-					entries.push({
-						identifier: identifier,
-						start: (0, _time.convertSMPTEtoSeconds)(timecode[1]) === 0 ? 0.200 : (0, _time.convertSMPTEtoSeconds)(timecode[1]),
-						stop: (0, _time.convertSMPTEtoSeconds)(timecode[3]),
-						text: text,
-						settings: timecode[5]
-					});
-				}
-				identifier = '';
-			}
-			return entries;
-		}
-	},
-	// Thanks to Justin Capella: https://github.com/johndyer/mediaelement/pull/420
-	dfxp: {
-		/**
-   *
-   * @param {String} trackText
-   * @returns {{text: Array, times: Array}}
-   */
-		parse: function parse(trackText) {
-			trackText = $(trackText).filter('tt');
-			var container = trackText.children('div').eq(0),
-			    lines = container.find('p'),
-			    styleNode = trackText.find('#' + container.attr('style')),
-			    entries = [];
-
-			var styles = void 0,
-			    i = void 0;
-
-			if (styleNode.length) {
-				var attributes = styleNode.removeAttr('id').get(0).attributes;
-				if (attributes.length) {
-					styles = {};
-					for (i = 0; i < attributes.length; i++) {
-						styles[attributes[i].name.split(":")[1]] = attributes[i].value;
-					}
-				}
-			}
-
-			for (i = 0; i < lines.length; i++) {
-				var style = void 0,
-				    _temp = {
-					start: null,
-					stop: null,
-					style: null,
-					text: null
-				};
-
-				if (lines.eq(i).attr('begin')) {
-					_temp.start = (0, _time.convertSMPTEtoSeconds)(lines.eq(i).attr('begin'));
-				}
-				if (!_temp.start && lines.eq(i - 1).attr('end')) {
-					_temp.start = (0, _time.convertSMPTEtoSeconds)(lines.eq(i - 1).attr('end'));
-				}
-				if (lines.eq(i).attr('end')) {
-					_temp.stop = (0, _time.convertSMPTEtoSeconds)(lines.eq(i).attr('end'));
-				}
-				if (!_temp.stop && lines.eq(i + 1).attr('begin')) {
-					_temp.stop = (0, _time.convertSMPTEtoSeconds)(lines.eq(i + 1).attr('begin'));
-				}
-
-				if (styles) {
-					style = '';
-					for (var _style in styles) {
-						style += _style + ':' + styles[_style] + ';';
-					}
-				}
-				if (style) {
-					_temp.style = style;
-				}
-				if (_temp.start === 0) {
-					_temp.start = 0.200;
-				}
-				_temp.text = $.trim(lines.eq(i).html()).replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-				entries.push(_temp);
-			}
-			return entries;
-		}
-	},
-	/**
-  *
-  * @param {String} text
-  * @param {String} regex
-  * @returns {Array}
-  */
-	split2: function split2(text, regex) {
-		// normal version for compliant browsers
-		// see below for IE fix
-		return text.split(regex);
-	}
-};
-
-// test for browsers with bad String.split method.
-if ('x\n\ny'.split(/\n/gi).length !== 3) {
-	// add super slow IE8 and below version
-	_mejs2.default.TrackFormatParser.split2 = function (text, regex) {
-		var parts = [];
-		var chunk = '';
-
-		for (var i = 0; i < text.length; i++) {
-			chunk += text.substring(i, i + 1);
-			if (regex.test(chunk)) {
-				parts.push(chunk.replace(regex, ''));
-				chunk = '';
-			}
-		}
-		parts.push(chunk);
-		return parts;
-	};
-}
-
-},{"16":16,"24":24,"27":27,"4":4,"6":6}],13:[function(_dereq_,module,exports){
-'use strict';
-
-var _player = _dereq_(16);
+var _player = _dereq_(15);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -3129,9 +2151,11 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 var _general = _dereq_(24);
+
+var _dom = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3194,20 +2218,27 @@ Object.assign(_player2.default.prototype, {
 		    muteText = (0, _general.isString)(t.options.muteText) ? t.options.muteText : _i18n2.default.t('mejs.mute'),
 		    unmuteText = (0, _general.isString)(t.options.unmuteText) ? t.options.unmuteText : _i18n2.default.t('mejs.unmute'),
 		    volumeControlText = (0, _general.isString)(t.options.allyVolumeControlText) ? t.options.allyVolumeControlText : _i18n2.default.t('mejs.volume-help-text'),
-		    mute = mode === 'horizontal' ?
+		    mute = _document2.default.createElement('div');
 
-		// horizontal version
-		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute">' + ('<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>') + '</div>' + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'horizontal-volume-slider">') + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-total">') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-handle"></div>') + '</div>' + '</a>').appendTo(controls) :
-
-		// vertical version
-		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute">' + ('<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>') + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider">') + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>' + '</div>');
+		mute.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute';
+		mute.innerHTML = mode === 'horizontal' ? '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' : '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider">') + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
 
 		t.addControlElement(mute, 'volume');
 
-		var volumeSlider = t.container.find('.' + t.options.classPrefix + 'volume-slider, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-slider'),
-		    volumeTotal = t.container.find('.' + t.options.classPrefix + 'volume-total, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-total'),
-		    volumeCurrent = t.container.find('.' + t.options.classPrefix + 'volume-current, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-current'),
-		    volumeHandle = t.container.find('.' + t.options.classPrefix + 'volume-handle, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-handle'),
+		// horizontal version
+		if (mode === 'horizontal') {
+			var anchor = _document2.default.createElement('a');
+			anchor.className = t.options.classPrefix + 'horizontal-volume-slider';
+			anchor.href = 'javascript:void(0);';
+			anchor.innerHTML += '<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>' + ('<div class="' + t.options.classPrefix + 'horizontal-volume-total">') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-handle"></div>') + '</div>';
+			mute.parentNode.insertBefore(anchor, mute.nextSibling);
+		}
+
+		var volumeSlider = t.container.querySelector('.' + t.options.classPrefix + 'volume-slider, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-slider'),
+		    volumeTotal = t.container.querySelector('.' + t.options.classPrefix + 'volume-total, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-total'),
+		    volumeCurrent = t.container.querySelector('.' + t.options.classPrefix + 'volume-current, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-current'),
+		    volumeHandle = t.container.querySelector('.' + t.options.classPrefix + 'volume-handle, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-handle'),
+		    button = mute.firstElementChild,
 
 
 		/**
@@ -3222,40 +2253,33 @@ Object.assign(_player2.default.prototype, {
 
 			// adjust mute button style
 			if (volume === 0) {
-				mute.removeClass(t.options.classPrefix + 'mute').addClass(t.options.classPrefix + 'unmute');
-				mute.children('button').attr({
-					title: unmuteText,
-					'aria-label': unmuteText
-				});
+				(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
+				(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
+				var _button = mute.firstElementChild;
+				_button.setAttribute('title', unmuteText);
+				_button.setAttribute('aria-label', unmuteText);
 			} else {
-				mute.removeClass(t.options.classPrefix + 'unmute').addClass(t.options.classPrefix + 'mute');
-				mute.children('button').attr({
-					title: muteText,
-					'aria-label': muteText
-				});
+				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
+				(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
+				var _button2 = mute.firstElementChild;
+				_button2.setAttribute('title', muteText);
+				_button2.setAttribute('aria-label', muteText);
 			}
 
-			var volumePercentage = volume * 100 + '%';
+			var volumePercentage = volume * 100 + '%',
+			    volumeStyles = getComputedStyle(volumeHandle);
 
 			// position slider
 			if (mode === 'vertical') {
-				volumeCurrent.css({
-					bottom: '0',
-					height: volumePercentage
-				});
-				volumeHandle.css({
-					bottom: volumePercentage,
-					marginBottom: -volumeHandle.height() / 2 + 'px'
-				});
+				volumeCurrent.style.bottom = 0;
+				volumeCurrent.style.height = volumePercentage;
+				volumeHandle.style.bottom = volumePercentage;
+				volumeHandle.style.marginBottom = -volumeStyles.height / 2 + 'px';
 			} else {
-				volumeCurrent.css({
-					left: '0',
-					width: volumePercentage
-				});
-				volumeHandle.css({
-					left: volumePercentage,
-					marginLeft: -volumeHandle.width() / 2 + 'px'
-				});
+				volumeCurrent.style.left = 0;
+				volumeCurrent.style.width = volumePercentage;
+				volumeHandle.style.left = volumePercentage;
+				volumeHandle.style.marginLeft = -volumeStyles.width / 2 + 'px';
 			}
 		},
 
@@ -3264,13 +2288,15 @@ Object.assign(_player2.default.prototype, {
    */
 		handleVolumeMove = function handleVolumeMove(e) {
 
-			var volume = null,
-			    totalOffset = volumeTotal.offset();
+			var totalOffset = (0, _dom.offset)(volumeTotal),
+			    volumeStyles = getComputedStyle(volumeTotal);
+
+			var volume = null;
 
 			// calculate the new volume based on the most recent position
 			if (mode === 'vertical') {
 
-				var railHeight = volumeTotal.height(),
+				var railHeight = parseInt(volumeStyles.height),
 				    newY = e.pageY - totalOffset.top;
 
 				volume = (railHeight - newY) / railHeight;
@@ -3280,7 +2306,7 @@ Object.assign(_player2.default.prototype, {
 					return;
 				}
 			} else {
-				var railWidth = volumeTotal.width(),
+				var railWidth = parseInt(volumeStyles.width),
 				    newX = e.pageX - totalOffset.left;
 
 				volume = newX / railWidth;
@@ -3302,59 +2328,70 @@ Object.assign(_player2.default.prototype, {
 			media.setVolume(volume);
 		};
 
-		var mouseIsDown = false,
-		    mouseIsOver = false;
-
-		// SLIDER
-		mute.on('mouseenter focusin', function () {
-			volumeSlider.show();
+		mute.addEventListener('mouseenter', function () {
+			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
-		}).on('mouseleave focusout', function () {
+		}, false);
+		mute.addEventListener('focusin', function () {
+			volumeSlider.style.display = 'block';
+			mouseIsOver = true;
+		}, false);
+		mute.addEventListener('mouseleave', function () {
 			mouseIsOver = false;
-
 			if (!mouseIsDown && mode === 'vertical') {
-				volumeSlider.hide();
+				volumeSlider.style.display = 'none';
 			}
-		});
+		}, false);
+		mute.addEventListener('focusout', function () {
+			mouseIsOver = false;
+			if (!mouseIsDown && mode === 'vertical') {
+				volumeSlider.style.display = 'none';
+			}
+		}, false);
+
+		var mouseIsDown = false,
+		    mouseIsOver = false,
+
 
 		/**
    * @private
    */
-		var updateVolumeSlider = function updateVolumeSlider() {
-
+		updateVolumeSlider = function updateVolumeSlider() {
 			var volume = Math.floor(media.volume * 100);
-
-			volumeSlider.attr({
-				'aria-label': _i18n2.default.t('mejs.volume-slider'),
-				'aria-valuemin': 0,
-				'aria-valuemax': 100,
-				'aria-valuenow': volume,
-				'aria-valuetext': volume + '%',
-				'role': 'slider',
-				'tabindex': -1
-			});
+			volumeSlider.setAttribute('aria-label', _i18n2.default.t('mejs.volume-slider'));
+			volumeSlider.setAttribute('aria-valuemin', 0);
+			volumeSlider.setAttribute('aria-valuemax', 100);
+			volumeSlider.setAttribute('aria-valuenow', volume);
+			volumeSlider.setAttribute('aria-valuetext', volume + '%');
+			volumeSlider.setAttribute('role', 'slider');
+			volumeSlider.tabIndex = -1;
 		};
 
 		// Events
-		volumeSlider.on('mouseover', function () {
+		volumeSlider.addEventListener('mouseover', function () {
 			mouseIsOver = true;
-		}).on('mousedown', function (e) {
+		}, false);
+		volumeSlider.addEventListener('mousedown', function (e) {
 			handleVolumeMove(e);
-			t.globalBind('mousemove.vol', function (e) {
-				handleVolumeMove(e);
-			});
-			t.globalBind('mouseup.vol', function () {
-				mouseIsDown = false;
-				t.globalUnbind('mousemove.vol mouseup.vol');
-
-				if (!mouseIsOver && mode === 'vertical') {
-					volumeSlider.hide();
-				}
-			});
 			mouseIsDown = true;
-
-			return false;
-		}).on('keydown', function (e) {
+		}, false);
+		volumeSlider.addEventListener('mousemove', function (e) {
+			handleVolumeMove(e);
+		}, false);
+		volumeSlider.addEventListener('mouseup', function () {
+			mouseIsDown = false;
+			volumeSlider.addEventListener('mousemove', function () {
+				if (!mouseIsOver && mode === 'vertical') {
+					volumeSlider.style.display = 'none';
+				}
+			}, false);
+			volumeSlider.addEventListener('mouseup', function () {
+				if (!mouseIsOver && mode === 'vertical') {
+					volumeSlider.style.display = 'none';
+				}
+			}, false);
+		}, false);
+		volumeSlider.addEventListener('keydown', function (e) {
 
 			if (t.options.keyActions.length) {
 				var keyCode = e.which || e.keyCode || 0,
@@ -3377,30 +2414,34 @@ Object.assign(_player2.default.prototype, {
 				media.setVolume(volume);
 				return false;
 			}
-		});
+		}, false);
 
 		// MUTE button
-		mute.find('button').on('click', function () {
+		button.addEventListener('click', function () {
 			media.setMuted(!media.muted);
-		}).on('focus', function () {
+		}, false);
+		button.addEventListener('focus', function () {
 			if (mode === 'vertical') {
-				volumeSlider.show();
+				volumeSlider.style.display = 'block';
 			}
-		}).on('blur', function () {
+		}, false);
+		button.addEventListener('blur', function () {
 			if (mode === 'vertical') {
-				volumeSlider.hide();
+				volumeSlider.style.display = 'none';
 			}
-		});
+		}, false);
 
 		// listen for volume change events from other sources
 		media.addEventListener('volumechange', function (e) {
 			if (!mouseIsDown) {
 				if (media.muted) {
 					positionVolumeHandle(0);
-					mute.removeClass(t.options.classPrefix + 'mute').addClass(t.options.classPrefix + 'unmute');
+					(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
+					(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
 				} else {
 					positionVolumeHandle(media.volume);
-					mute.removeClass(t.options.classPrefix + 'unmute').addClass(t.options.classPrefix + 'mute');
+					(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
+					(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
 				}
 			}
 			updateVolumeSlider(e);
@@ -3418,19 +2459,21 @@ Object.assign(_player2.default.prototype, {
 			media.setVolume(player.options.startVolume);
 		}
 
-		t.container.on('controlsresize', function () {
+		t.container.addEventListener('controlsresize', function () {
 			if (media.muted) {
 				positionVolumeHandle(0);
-				mute.removeClass(t.options.classPrefix + 'mute').addClass(t.options.classPrefix + 'unmute');
+				(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
+				(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
 			} else {
 				positionVolumeHandle(media.volume);
-				mute.removeClass(t.options.classPrefix + 'unmute').addClass(t.options.classPrefix + 'mute');
+				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
+				(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
 			}
-		});
+		}, false);
 	}
 });
 
-},{"16":16,"23":23,"24":24,"4":4}],14:[function(_dereq_,module,exports){
+},{"15":15,"2":2,"22":22,"23":23,"24":24,"4":4}],13:[function(_dereq_,module,exports){
 'use strict';
 
 /*!
@@ -3537,7 +2580,7 @@ var EN = exports.EN = {
 	"mejs.yiddish": "Yiddish"
 };
 
-},{}],15:[function(_dereq_,module,exports){
+},{}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -3568,7 +2611,7 @@ if (typeof jQuery !== 'undefined') {
 	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
 }
 
-},{"3":3,"6":6}],16:[function(_dereq_,module,exports){
+},{"3":3,"6":6}],15:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3600,13 +2643,19 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 var _general = _dereq_(24);
 
 var _time = _dereq_(27);
 
 var _media = _dereq_(25);
+
+var _dom = _dereq_(23);
+
+var dom = _interopRequireWildcard(_dom);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3731,8 +2780,8 @@ var config = exports.config = {
 		keys: [38], // UP
 		action: function action(player, media) {
 
-			if (player.container.find('.' + config.classPrefix + 'volume-button>button').is(':focus') || player.container.find('.' + config.classPrefix + 'volume-slider').is(':focus')) {
-				player.container.find('.' + config.classPrefix + 'volume-slider').css('display', 'block');
+			if (player.container.querySelector('.' + config.classPrefix + 'volume-button>button').matches(':focus') || player.container.querySelector('.' + config.classPrefix + 'volume-slider').matches(':focus')) {
+				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = 'block';
 			}
 			if (player.isVideo) {
 				player.showControls();
@@ -3749,8 +2798,8 @@ var config = exports.config = {
 		keys: [40], // DOWN
 		action: function action(player, media) {
 
-			if (player.container.find('.' + config.classPrefix + 'volume-button>button').is(':focus') || player.container.find('.' + config.classPrefix + 'volume-slider').is(':focus')) {
-				player.container.find('.' + config.classPrefix + 'volume-slider').css('display', 'block');
+			if (player.container.querySelector('.' + config.classPrefix + 'volume-button>button').matches(':focus') || player.container.querySelector('.' + config.classPrefix + 'volume-slider').matches(':focus')) {
+				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = 'block';
 			}
 
 			if (player.isVideo) {
@@ -3815,7 +2864,7 @@ var config = exports.config = {
 		keys: [77], // M
 		action: function action(player) {
 
-			player.container.find('.' + config.classPrefix + 'volume-slider').css('display', 'block');
+			player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = 'block';
 			if (player.isVideo) {
 				player.showControls();
 				player.startControlsTimer();
@@ -3844,12 +2893,8 @@ var MediaElementPlayer = function () {
 	function MediaElementPlayer(node, o) {
 		_classCallCheck(this, MediaElementPlayer);
 
-		var t = this;
-
-		// To avoid jQuery.noConflict() issues
-		if (typeof _mejs2.default.$ !== 'undefined') {
-			_window2.default.$ = _mejs2.default.$;
-		}
+		var t = this,
+		    element = typeof node === 'string' ? _document2.default.getElementById(node) : node;
 
 		t.hasFocus = false;
 
@@ -3859,29 +2904,28 @@ var MediaElementPlayer = function () {
 
 		t.controlsTimer = null;
 
-		var element = typeof node === 'string' ? _document2.default.getElementById(node) : node;
-
 		// enforce object, even without "new" (via John Resig)
 		if (!(t instanceof MediaElementPlayer)) {
 			return new MediaElementPlayer(element, o);
 		}
 
 		// these will be reset after the MediaElement.success fires
-		t.$media = t.$node = $(element);
-		t.node = t.media = t.$media[0];
+		// t.media will be the fake node to emulate all HTML5 events, methods, etc
+		// t.node will be the node to be restored
+		t.node = t.media = element;
 
 		if (!t.node) {
 			return;
 		}
 
 		// check for existing player
-		if (t.node.player !== undefined) {
-			return t.node.player;
+		if (t.media.player !== undefined) {
+			return t.media.player;
 		}
 
 		// try to get options from data-mejsoptions
 		if (o === undefined) {
-			o = t.$node.data('mejsoptions');
+			o = t.node.getAttribute('data-mejsoptions');
 		}
 
 		// extend default options
@@ -3915,7 +2959,7 @@ var MediaElementPlayer = function () {
 				t._handleError(e);
 			}
 		}),
-		    tagName = t.media.tagName.toLowerCase();
+		    tagName = t.node.tagName.toLowerCase();
 
 		// get video from src or href?
 		t.isDynamic = tagName !== 'audio' && tagName !== 'video';
@@ -3925,27 +2969,34 @@ var MediaElementPlayer = function () {
 		if (_constants.IS_IPAD && t.options.iPadUseNativeControls || _constants.IS_IPHONE && t.options.iPhoneUseNativeControls) {
 
 			// add controls and stop
-			t.$media.attr('controls', 'controls');
+			t.node.setAttribute('controls', true);
 
 			// override Apple's autoplay override for iPads
-			if (_constants.IS_IPAD && t.media.getAttribute('autoplay')) {
+			if (_constants.IS_IPAD && t.node.getAttribute('autoplay')) {
 				t.play();
 			}
-		} else if (_constants.IS_ANDROID && t.options.AndroidUseNativeControls) {
-
-			// leave default player
-
-		} else if (t.isVideo || !t.isVideo && t.options.features.length) {
+		} else if ((t.isVideo || !t.isVideo && t.options.features.length) && !(_constants.IS_ANDROID && t.options.AndroidUseNativeControls)) {
 
 			// DESKTOP: use MediaElementPlayer controls
 
 			// remove native controls
-			t.$media.removeAttr('controls');
+			t.node.removeAttribute('controls');
 			var videoPlayerTitle = t.isVideo ? _i18n2.default.t('mejs.video-player') : _i18n2.default.t('mejs.audio-player');
 			// insert description for screen readers
-			$('<span class="' + t.options.classPrefix + 'offscreen">' + videoPlayerTitle + '</span>').insertBefore(t.$media);
+			var offscreen = _document2.default.createElement('span');
+			offscreen.className = t.options.classPrefix + 'offscreen';
+			offscreen.innerText = videoPlayerTitle;
+			t.media.parentNode.insertBefore(offscreen, t.media);
+
 			// build container
-			t.container = $('<div id="' + t.id + '" class="' + t.options.classPrefix + 'container ' + t.options.classPrefix + 'container-keyboard-inactive"' + ('tabindex="0" role="application" aria-label="' + videoPlayerTitle + '">') + ('<div class="' + t.options.classPrefix + 'inner">') + ('<div class="' + t.options.classPrefix + 'layers"></div>') + ('<div class="' + t.options.classPrefix + 'controls"></div>') + ('<div class="' + t.options.classPrefix + 'mediaelement"></div>') + ('<div class="' + t.options.classPrefix + 'clear"></div>') + '</div>' + '</div>').addClass(t.$media[0].className).insertBefore(t.$media).focus(function (e) {
+			t.container = _document2.default.createElement('div');
+			t.container.id = t.id;
+			t.container.className = t.options.classPrefix + 'container ' + t.options.classPrefix + 'container-keyboard-inactive ' + t.media.className;
+			t.container.tabIndex = 0;
+			t.container.setAttribute('role', 'application');
+			t.container.setAttribute('aria-label', videoPlayerTitle);
+			t.container.innerHTML = '<div class="' + t.options.classPrefix + 'inner">' + ('<div class="' + t.options.classPrefix + 'layers"></div>') + ('<div class="' + t.options.classPrefix + 'controls"></div>') + ('<div class="' + t.options.classPrefix + 'mediaelement"></div>') + ('<div class="' + t.options.classPrefix + 'clear"></div>') + '</div>';
+			t.container.addEventListener('focus', function (e) {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
 					// In versions older than IE11, the focus causes the playbar to be displayed
@@ -3954,37 +3005,44 @@ var MediaElementPlayer = function () {
 					if (!_constants.HAS_MS_NATIVE_FULLSCREEN) {
 						// If e.relatedTarget appears before container, send focus to play button,
 						// else send focus to last control button.
-						var btnSelector = (0, _general.isNodeAfter)(e.relatedTarget, t.container[0]) ? '.' + t.options.classPrefix + 'controls .' + t.options.classPrefix + 'button:last-child > button' : '.' + t.options.classPrefix + 'playpause-button > button',
-						    button = t.container.find(btnSelector);
+						var btnSelector = (0, _general.isNodeAfter)(e.relatedTarget, t.container) ? '.' + t.options.classPrefix + 'controls .' + t.options.classPrefix + 'button:last-child > button' : '.' + t.options.classPrefix + 'playpause-button > button',
+						    button = t.container.querySelector(btnSelector);
 
 						button.focus();
 					}
 				}
-			});
+			}, false);
+			t.node.parentNode.insertBefore(t.container, t.node);
 
 			// When no elements in controls, hide bar completely
 			if (!t.options.features.length) {
-				t.container.css('background', 'transparent').find('.' + t.options.classPrefix + 'controls').hide();
+				t.container.style.background = 'transparent';
+				t.container.querySelector('.' + t.options.classPrefix + 'controls').style.display = 'none';
 			}
 
-			if (t.isVideo && t.options.stretching === 'fill' && !t.container.parent('.' + t.options.classPrefix + 'fill-container').length) {
+			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, '.' + t.options.classPrefix + 'fill-container')) {
 				// outer container
-				t.outerContainer = t.$media.parent();
-				t.container.wrap('<div class="' + t.options.classPrefix + 'fill-container"/>');
+				t.outerContainer = t.media.parentNode;
+
+				var wrapper = _document2.default.createElement('div');
+				wrapper.className = t.options.classPrefix + 'fill-container';
+				t.container.parentNode.insertBefore(wrapper, t.container);
+				wrapper.appendChild(t.container);
 			}
 
 			// add classes for user and content
-			t.container.addClass((_constants.IS_ANDROID ? t.options.classPrefix + 'android ' : '') + (_constants.IS_IOS ? t.options.classPrefix + 'ios ' : '') + (_constants.IS_IPAD ? t.options.classPrefix + 'ipad ' : '') + (_constants.IS_IPHONE ? t.options.classPrefix + 'iphone ' : '') + (t.isVideo ? t.options.classPrefix + 'video ' : t.options.classPrefix + 'audio '));
+			var mediaClasses = (_constants.IS_ANDROID ? t.options.classPrefix + 'android ' : '') + (_constants.IS_IOS ? t.options.classPrefix + 'ios ' : '') + (_constants.IS_IPAD ? t.options.classPrefix + 'ipad ' : '') + (_constants.IS_IPHONE ? t.options.classPrefix + 'iphone ' : '') + (t.isVideo ? t.options.classPrefix + 'video' : t.options.classPrefix + 'audio');
 
+			dom.addClass(t.container, mediaClasses);
 			// move the <video/video> tag into the right spot
-			t.container.find('.' + t.options.classPrefix + 'mediaelement').append(t.$media);
+			t.container.querySelector('.' + t.options.classPrefix + 'mediaelement').appendChild(t.node);
 
 			// needs to be assigned here, after iOS remap
-			t.node.player = t;
+			t.media.player = t;
 
 			// find parts
-			t.controls = t.container.find('.' + t.options.classPrefix + 'controls');
-			t.layers = t.container.find('.' + t.options.classPrefix + 'layers');
+			t.controls = t.container.querySelector('.' + t.options.classPrefix + 'controls');
+			t.layers = t.container.querySelector('.' + t.options.classPrefix + 'layers');
 
 			// determine the size
 
@@ -4000,20 +3058,20 @@ var MediaElementPlayer = function () {
 
 			if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
 				t.width = t.options[tagType + 'Width'];
-			} else if (t.media.style.width !== '' && t.media.style.width !== null) {
-				t.width = t.media.style.width;
-			} else if (t.media.getAttribute('width')) {
-				t.width = t.$media.attr('width');
+			} else if (t.node.style.width !== '' && t.node.style.width !== null) {
+				t.width = t.node.style.width;
+			} else if (t.node.getAttribute('width')) {
+				t.width = t.node.getAttribute('width');
 			} else {
 				t.width = t.options['default' + capsTagName + 'Width'];
 			}
 
 			if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
 				t.height = t.options[tagType + 'Height'];
-			} else if (t.media.style.height !== '' && t.media.style.height !== null) {
-				t.height = t.media.style.height;
-			} else if (t.$media[0].getAttribute('height')) {
-				t.height = t.$media.attr('height');
+			} else if (t.node.style.height !== '' && t.node.style.height !== null) {
+				t.height = t.node.style.height;
+			} else if (t.node.getAttribute('height')) {
+				t.height = t.node.getAttribute('height');
 			} else {
 				t.height = t.options['default' + capsTagName + 'Height'];
 			}
@@ -4029,15 +3087,16 @@ var MediaElementPlayer = function () {
 		}
 		// Hide media completely for audio that doesn't have any features
 		else if (!t.isVideo && !t.options.features.length) {
-				t.$media.hide();
+				t.node.style.display = 'none';
 			}
 
 		// create MediaElement shim
-		new _mediaelement2.default(t.$media[0], meOptions);
+		new _mediaelement2.default(t.media, meOptions);
 
 		if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
 			// controls are shown when loaded
-			t.container.trigger('controlsshown');
+			var event = (0, _general.createEvent)('controlsshown', t.container);
+			t.container.dispatchEvent(event);
 		}
 
 		return t;
@@ -4055,25 +3114,42 @@ var MediaElementPlayer = function () {
 			}
 
 			if (doAnimation) {
-				t.controls.removeClass(t.options.classPrefix + 'offscreen').stop(true, true).fadeIn(200, function () {
-					t.controlsAreVisible = true;
-					t.container.trigger('controlsshown');
-				});
+				(function () {
+					dom.removeClass(t.controls, t.options.classPrefix + 'offscreen');
+					dom.fadeIn(t.controls, 200, function () {
+						var event = (0, _general.createEvent)('controlsshown', t.container);
+						t.container.dispatchEvent(event);
+					});
 
-				// any additional controls people might add and want to hide
-				t.container.find('.' + t.options.classPrefix + 'control').removeClass(t.options.classPrefix + 'offscreen').stop(true, true).fadeIn(200, function () {
-					t.controlsAreVisible = true;
-				});
+					// any additional controls people might add and want to hide
+					var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
+
+					var _loop = function _loop(i, total) {
+						dom.fadeIn(controls[i], 200, function () {
+							dom.removeClass(controls[i], t.options.classPrefix + 'offscreen');
+						});
+					};
+
+					for (var i = 0, total = controls.length; i < total; i++) {
+						_loop(i, total);
+					}
+				})();
 			} else {
-				t.controls.removeClass(t.options.classPrefix + 'offscreen').css('display', 'block');
+				dom.removeClass(t.controls, t.options.classPrefix + 'offscreen');
+				t.controls.style.display = 'block';
 
 				// any additional controls people might add and want to hide
-				t.container.find('.' + t.options.classPrefix + 'control').removeClass(t.options.classPrefix + 'offscreen').css('display', 'block');
+				var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
+				for (var i = 0, total = controls.length; i < total; i++) {
+					dom.removeClass(controls[i], t.options.classPrefix + 'offscreen');
+					controls[i].style.display = 'block';
+				}
 
-				t.controlsAreVisible = true;
-				t.container.trigger('controlsshown');
+				var event = (0, _general.createEvent)('controlsshown', t.container);
+				t.container.dispatchEvent(event);
 			}
 
+			t.controlsAreVisible = true;
 			t.setControlsSize();
 		}
 	}, {
@@ -4088,29 +3164,47 @@ var MediaElementPlayer = function () {
 			}
 
 			if (doAnimation) {
-				// fade out main controls
-				t.controls.stop(true, true).fadeOut(200, function () {
-					$(this).addClass(t.options.classPrefix + 'offscreen').css('display', 'block');
+				(function () {
+					// fade out main controls
+					dom.fadeOut(t.controls, 200, function () {
+						dom.addClass(t.controls, t.options.classPrefix + 'offscreen');
+						t.controls.style.display = 'block';
+						var event = (0, _general.createEvent)('controlshidden', t.container);
+						t.container.dispatchEvent(event);
+					});
 
-					t.controlsAreVisible = false;
-					t.container.trigger('controlshidden');
-				});
+					// any additional controls people might add and want to hide
+					var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
 
-				// any additional controls people might add and want to hide
-				t.container.find('.' + t.options.classPrefix + 'control').stop(true, true).fadeOut(200, function () {
-					$(this).addClass(t.options.classPrefix + 'offscreen').css('display', 'block');
-				});
+					var _loop2 = function _loop2(i, total) {
+						dom.fadeOut(controls[i], 200, function () {
+							dom.addClass(controls[i], t.options.classPrefix + 'offscreen');
+							controls[i].style.display = 'block';
+						});
+					};
+
+					for (var i = 0, total = controls.length; i < total; i++) {
+						_loop2(i, total);
+					}
+				})();
 			} else {
 
 				// hide main controls
-				t.controls.addClass(t.options.classPrefix + 'offscreen').css('display', 'block');
+				dom.addClass(t.controls, t.options.classPrefix + 'offscreen');
+				t.controls.style.display = 'block';
 
 				// hide others
-				t.container.find('.' + t.options.classPrefix + 'control').addClass(t.options.classPrefix + 'offscreen').css('display', 'block');
+				var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
+				for (var i = 0, total = controls.length; i < total; i++) {
+					dom.addClass(controls[i], t.options.classPrefix + 'offscreen');
+					controls[i].style.display = 'block';
+				}
 
-				t.controlsAreVisible = false;
-				t.container.trigger('controlshidden');
+				var event = (0, _general.createEvent)('controlshidden', t.container);
+				t.container.dispatchEvent(event);
 			}
+
+			t.controlsAreVisible = false;
 		}
 	}, {
 		key: 'startControlsTimer',
@@ -4146,7 +3240,7 @@ var MediaElementPlayer = function () {
 
 			t.killControlsTimer();
 			t.hideControls(false);
-			this.controlsEnabled = false;
+			t.controlsEnabled = false;
 		}
 	}, {
 		key: 'enableControls',
@@ -4154,7 +3248,6 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			t.showControls(false);
-
 			t.controlsEnabled = true;
 		}
 
@@ -4185,7 +3278,7 @@ var MediaElementPlayer = function () {
 			t.domNode = domNode;
 
 			if (!(_constants.IS_ANDROID && t.options.AndroidUseNativeControls) && !(_constants.IS_IPAD && t.options.iPadUseNativeControls) && !(_constants.IS_IPHONE && t.options.iPhoneUseNativeControls)) {
-				var _ret = function () {
+				var _ret5 = function () {
 
 					// In the event that no features are specified for audio,
 					// create only MediaElement instance rather than
@@ -4217,7 +3310,7 @@ var MediaElementPlayer = function () {
 					t.buildoverlays(t, t.controls, t.layers, t.media);
 
 					// grab for use by features
-					t.findTracks();
+					//t.findTracks();
 
 					// cache container to store control elements' original position
 					t.featurePosition = {};
@@ -4235,7 +3328,8 @@ var MediaElementPlayer = function () {
 						}
 					}
 
-					t.container.trigger('controlsready');
+					var event = (0, _general.createEvent)('controlsready', t.container);
+					t.container.dispatchEvent(event);
 
 					// reset all layers and controls
 					t.setPlayerSize(t.width, t.height);
@@ -4249,7 +3343,7 @@ var MediaElementPlayer = function () {
 							// for touch devices (iOS, Android)
 							// show/hide without animation on touch
 
-							t.$media.on('touchstart', function () {
+							t.node.addEventListener('touchstart', function () {
 
 								// toggle controls
 								if (t.controlsAreVisible) {
@@ -4259,7 +3353,7 @@ var MediaElementPlayer = function () {
 										t.showControls(false);
 									}
 								}
-							});
+							}, false);
 						} else {
 
 							t.createIframeLayer();
@@ -4269,8 +3363,8 @@ var MediaElementPlayer = function () {
 							t.clickToPlayPauseCallback = function () {
 
 								if (t.options.clickToPlayPause) {
-									var button = t.$media.closest('.' + t.options.classPrefix + 'container').find('.' + t.options.classPrefix + 'overlay-button'),
-									    pressed = button.attr('aria-pressed');
+									var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
+									    pressed = button.getAttribute('aria-pressed');
 
 									if (t.media.paused && pressed) {
 										t.pause();
@@ -4280,7 +3374,7 @@ var MediaElementPlayer = function () {
 										t.pause();
 									}
 
-									button.attr('aria-pressed', !pressed);
+									button.setAttribute('aria-pressed', !pressed);
 								}
 							};
 
@@ -4288,7 +3382,7 @@ var MediaElementPlayer = function () {
 							t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 							// show/hide controls
-							t.container.on('mouseenter', function () {
+							t.container.addEventListener('mouseenter', function () {
 								if (t.controlsEnabled) {
 									if (!t.options.alwaysShowControls) {
 										t.killControlsTimer('enter');
@@ -4296,7 +3390,8 @@ var MediaElementPlayer = function () {
 										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
-							}).on('mousemove', function () {
+							}, false);
+							t.container.addEventListener('mousemove', function () {
 								if (t.controlsEnabled) {
 									if (!t.controlsAreVisible) {
 										t.showControls();
@@ -4305,13 +3400,14 @@ var MediaElementPlayer = function () {
 										t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 									}
 								}
-							}).on('mouseleave', function () {
+							}, false);
+							t.container.addEventListener('mouseleave', function () {
 								if (t.controlsEnabled) {
 									if (!t.media.paused && !t.options.alwaysShowControls) {
 										t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 									}
 								}
-							});
+							}, false);
 						}
 
 						if (t.options.hideVideoControlsOnLoad) {
@@ -4364,7 +3460,7 @@ var MediaElementPlayer = function () {
 								// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after
 								// ending the video and jumping to the beginning
 								setTimeout(function () {
-									$(t.container).find('.' + t.options.classPrefix + 'overlay-loading').parent().hide();
+									t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 								}, 20);
 							} catch (exp) {
 								
@@ -4427,14 +3523,16 @@ var MediaElementPlayer = function () {
 						}
 					}, false);
 
-					t.container.on('focusout', (0, _general.debounce)(function () {
+					t.container.addEventListener('focusout', (0, _general.debounce)(function () {
 						setTimeout(function () {
 							// Safari triggers focusout multiple times
 							// Firefox does NOT support e.relatedTarget to see which element
 							// just lost focus, so wait to find the next focused element
 
-							var parent = $(_document2.default.activeElement).closest('.' + t.options.classPrefix + 'container');
-							if (t.keyboardAction && !parent.length) {
+							var parent = dom.closest(_document2.default.activeElement, function (el) {
+								return el == t.container;
+							});
+							if (t.keyboardAction && parent && !parent.length) {
 								t.keyboardAction = false;
 								if (t.isVideo && !t.options.alwaysShowControls) {
 									// focus is outside the control; hide controls
@@ -4448,7 +3546,7 @@ var MediaElementPlayer = function () {
 					setTimeout(function () {
 						t.setPlayerSize(t.width, t.height);
 						t.setControlsSize();
-					}, 50);
+					}, 0);
 
 					// adjust controls whenever window sizes (used to be in fullscreen only)
 					t.globalBind('resize', function () {
@@ -4464,32 +3562,32 @@ var MediaElementPlayer = function () {
 
 					// Disable focus outline to improve look-and-feel for regular users
 					t.globalBind('click', function (e) {
-						if ($(e.target).is('.' + t.options.classPrefix + 'container')) {
-							$(e.target).addClass(t.options.classPrefix + 'container-keyboard-inactive');
-						} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
-							$(e.target).closest('.' + t.options.classPrefix + 'container').addClass(t.options.classPrefix + 'container-keyboard-inactive');
+						if (e.target.matches('.' + t.options.classPrefix + 'container')) {
+							dom.addClass(e.target, t.options.classPrefix + 'container-keyboard-inactive');
+						} else if (dom.closest(e.target, function (el) {
+							return el === t.container;
+						})) {
+							dom.addClass(dom.closest(e.target, function (el) {
+								return el === t.container;
+							}), t.options.classPrefix + 'container-keyboard-inactive');
 						}
 					});
 
 					// Enable focus outline for Accessibility purposes
 					t.globalBind('keydown', function (e) {
-						if ($(e.target).is('.' + t.options.classPrefix + 'container')) {
-							$(e.target).removeClass(t.options.classPrefix + 'container-keyboard-inactive');
-						} else if ($(e.target).closest('.' + t.options.classPrefix + 'container').length) {
-							$(e.target).closest('.' + t.options.classPrefix + 'container').removeClass(t.options.classPrefix + 'container-keyboard-inactive');
+						if (e.target.matches('.' + t.options.classPrefix + 'container')) {
+							dom.removeClass(e.target, t.options.classPrefix + 'container-keyboard-inactive');
+						} else if (dom.closest(e.target, function (el) {
+							return el === t.container;
+						})) {
+							dom.removeClass(dom.closest(e.target, function (el) {
+								return el === t.container;
+							}), t.options.classPrefix + 'container-keyboard-inactive');
 						}
 					});
-
-					// This is a work-around for a bug in the YouTube iFrame player, which means
-					//	we can't use the play() API for the initial playback on iOS or Android;
-					//	user has to start playback directly by tapping on the iFrame.
-					// if (t.media.rendererName !== null && t.media.rendererName.match(/youtube/) && (IS_IOS || IS_ANDROID)) {
-					// 	t.container.find(`.${t.options.classPrefix}overlay-play`).hide();
-					// 	t.container.find(`.${t.options.classPrefix}poster`).hide();
-					// }
 				}();
 
-				if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+				if ((typeof _ret5 === 'undefined' ? 'undefined' : _typeof(_ret5)) === "object") return _ret5.v;
 			}
 
 			// force autoplay for HTML5
@@ -4544,9 +3642,10 @@ var MediaElementPlayer = function () {
 				t.height = height;
 			}
 
+			// @todo: Rewrite this
 			if (typeof FB !== 'undefined' && t.isVideo) {
 				FB.Event.subscribe('xfbml.ready', function () {
-					var target = $(t.media).children('.fb-video');
+					var target = t.media.children('.fb-video');
 
 					t.width = target.width();
 					t.height = target.height();
@@ -4594,18 +3693,22 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-			return t.height.toString().includes('%') || t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== t.width || t.$node[0].currentStyle && t.$node[0].currentStyle.maxWidth === '100%';
+			return t.height.toString().includes('%') || t.node.style.maxWidth !== 'none' && t.node.style.maxWidth !== t.width || t.node.currentStyle && t.node.currentStyle.maxWidth === '100%';
 		}
 	}, {
 		key: 'setResponsiveMode',
 		value: function setResponsiveMode() {
 			var t = this,
+			    parent = dom.closest(t.container, function (el) {
+				return el !== t.container && dom.visible(el);
+			}),
+			    parentStyles = getComputedStyle(parent, null),
 			    nativeWidth = function () {
 				if (t.isVideo) {
 					if (t.media.videoWidth && t.media.videoWidth > 0) {
 						return t.media.videoWidth;
-					} else if (t.media.getAttribute('width')) {
-						return t.media.getAttribute('width');
+					} else if (t.node.getAttribute('width')) {
+						return t.node.getAttribute('width');
 					} else {
 						return t.options.defaultVideoWidth;
 					}
@@ -4617,8 +3720,8 @@ var MediaElementPlayer = function () {
 				if (t.isVideo) {
 					if (t.media.videoHeight && t.media.videoHeight > 0) {
 						return t.media.videoHeight;
-					} else if (t.media.getAttribute('height')) {
-						return t.media.getAttribute('height');
+					} else if (t.node.getAttribute('height')) {
+						return t.node.getAttribute('height');
 					} else {
 						return t.options.defaultVideoHeight;
 					}
@@ -4644,10 +3747,10 @@ var MediaElementPlayer = function () {
 
 				return ratio;
 			}(),
-			    parentHeight = t.container.parent().closest(':visible').height();
+			    parentHeight = parseInt(parentStyles.height);
 
 			var newHeight = void 0,
-			    parentWidth = t.container.parent().closest(':visible').width();
+			    parentWidth = parseInt(parentStyles.width);
 
 			if (t.isVideo) {
 				// Responsive video is based on width: 100% and height: 100%
@@ -4665,28 +3768,32 @@ var MediaElementPlayer = function () {
 				newHeight = parentHeight;
 			}
 
-			if (t.container.parent().length > 0 && t.container.parent()[0].tagName.toLowerCase() === 'body') {
-				parentWidth = $(_window2.default).width();
-				newHeight = $(_window2.default).height();
+			if (t.container.parentNode.length > 0 && t.container.parentNode.tagName.toLowerCase() === 'body') {
+				parentWidth = _window2.default.innerWidth || _document2.default.documentElement.clientWidth || _document2.default.body.clientWidth;
+				newHeight = _window2.default.innerHeight || _document2.default.documentElement.clientHeight || _document2.default.body.clientHeight;
 			}
 
 			if (newHeight && parentWidth) {
 
 				// set outer container size
-				t.container.width(parentWidth).height(newHeight);
+				t.container.style.width = parentWidth + 'px';
+				t.container.style.height = newHeight + 'px';
 
 				// set native <video> or <audio> and shims
-				t.$media.width('100%').height('100%');
+				t.node.style.width = '100%';
+				t.node.style.height = '100%';
 
 				// if shim is ready, send the size to the embedded plugin
-				if (t.isVideo) {
-					if (t.media.setSize) {
-						t.media.setSize(parentWidth, newHeight);
-					}
+				if (t.isVideo && t.media.setSize) {
+					t.media.setSize(parentWidth, newHeight);
 				}
 
 				// set the layers
-				t.layers.children('.' + t.options.classPrefix + 'layer').width('100%').height('100%');
+				var layerChildren = t.layers.childNodes;
+				for (var i = 0, total = layerChildren.length; i < total; i++) {
+					layerChildren[i].style.width = '100%';
+					layerChildren[i].style.height = '100%';
+				}
 			}
 		}
 	}, {
@@ -4695,48 +3802,55 @@ var MediaElementPlayer = function () {
 			var t = this,
 			    parent = t.outerContainer;
 
+			var parentStyles = getComputedStyle(parent, null);
+
 			// Remove the responsive attributes in the event they are there
-			if (t.$node.css('height') !== 'none' && t.$node.css('height') !== t.height) {
-				t.$node.css('height', '');
+			if (t.node.style.height !== 'none' && t.node.style.height !== t.height) {
+				t.node.style.height = '';
 			}
-			if (t.$node.css('max-width') !== 'none' && t.$node.css('max-width') !== t.width) {
-				t.$node.css('max-width', '');
-			}
-
-			if (t.$node.css('max-height') !== 'none' && t.$node.css('max-height') !== t.height) {
-				t.$node.css('max-height', '');
+			if (t.node.style.maxWidth !== 'none' && t.node.style.maxWidth !== t.width) {
+				t.node.style.maxWidth = '';
 			}
 
-			if (t.$node[0].currentStyle) {
-				if (t.$node[0].currentStyle.height === '100%') {
-					t.$node[0].currentStyle.height = '';
+			if (t.node.style.maxHeight !== 'none' && t.node.style.maxHeight !== t.height) {
+				t.node.style.maxHeight = '';
+			}
+
+			if (t.node.currentStyle) {
+				if (t.node.currentStyle.height === '100%') {
+					t.node.currentStyle.height = '';
 				}
-				if (t.$node[0].currentStyle.maxWidth === '100%') {
-					t.$node[0].currentStyle.maxWidth = '';
+				if (t.node.currentStyle.maxWidth === '100%') {
+					t.node.currentStyle.maxWidth = '';
 				}
-				if (t.$node[0].currentStyle.maxHeight === '100%') {
-					t.$node[0].currentStyle.maxHeight = '';
+				if (t.node.currentStyle.maxHeight === '100%') {
+					t.node.currentStyle.maxHeight = '';
 				}
 			}
 
-			if (!parent.width()) {
-				parent.height(t.$media.width());
+			if (!parseInt(parentStyles.width)) {
+				parent.style.width = t.media.offsetWidth + 'px';
 			}
 
-			if (!parent.height()) {
-				parent.height(t.$media.height());
+			if (!parseInt(parentStyles.height)) {
+				parent.style.height = t.media.offsetHeight + 'px';
 			}
 
-			var parentWidth = parent.width(),
-			    parentHeight = parent.height();
+			parentStyles = getComputedStyle(parent, null);
+
+			var parentWidth = parseInt(parentStyles.width),
+			    parentHeight = parseInt(parentStyles.height);
 
 			t.setDimensions('100%', '100%');
 
 			// This prevents an issue when displaying poster
-			t.container.find('.' + t.options.classPrefix + 'poster img').css('display', 'block');
+			var poster = t.container.querySelector(t.options.classPrefix + 'poster img');
+			if (poster) {
+				poster.style.display = 'block';
+			}
 
 			// calculate new width and height
-			var targetElement = t.container.find('object, embed, iframe, video'),
+			var targetElement = t.container.querySelectorAll('object, embed, iframe, video'),
 			    initHeight = t.height,
 			    initWidth = t.width,
 
@@ -4751,33 +3865,37 @@ var MediaElementPlayer = function () {
 			// now figure out which one we should use
 			bScaleOnWidth = scaleX2 > parentWidth === false,
 			    finalWidth = bScaleOnWidth ? Math.floor(scaleX1) : Math.floor(scaleX2),
-			    finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2);
+			    finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2),
+			    width = bScaleOnWidth ? parentWidth + 'px' : finalWidth + 'px',
+			    height = bScaleOnWidth ? finalHeight + 'px' : parentHeight + 'px';
 
-			if (bScaleOnWidth) {
-				targetElement.height(finalHeight).width(parentWidth);
+			for (var i = 0, total = targetElement.length; i < total; i++) {
+				targetElement[i].style.height = height;
+				targetElement[i].style.width = width;
 				if (t.media.setSize) {
-					t.media.setSize(parentWidth, finalHeight);
+					t.media.setSize(width, height);
 				}
-			} else {
-				targetElement.height(parentHeight).width(finalWidth);
-				if (t.media.setSize) {
-					t.media.setSize(finalWidth, parentHeight);
-				}
+
+				targetElement[i].style.marginLeft = Math.floor((parentWidth - finalWidth) / 2) + 'px';
+				targetElement[i].style.marginTop = 0;
 			}
-
-			targetElement.css({
-				'margin-left': Math.floor((parentWidth - finalWidth) / 2),
-				'margin-top': 0
-			});
 		}
 	}, {
 		key: 'setDimensions',
 		value: function setDimensions(width, height) {
 			var t = this;
 
-			t.container.width(width).height(height);
+			width = typeof width === 'string' ? width : parseInt(width) + 'px';
+			height = typeof height === 'string' ? height : parseInt(height) + 'px';
 
-			t.layers.children('.' + t.options.classPrefix + 'layer').width(width).height(height);
+			t.container.style.width = width;
+			t.container.style.height = height;
+
+			var layers = t.layers.childNodes;
+			for (var i = 0, total = layers.length; i < total; i++) {
+				layers[i].style.width = width;
+				layers[i].style.height = height;
+			}
 		}
 	}, {
 		key: 'setControlsSize',
@@ -4785,27 +3903,32 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			// skip calculation if hidden
-			if (!t.container.is(':visible') || !t.rail || !t.rail.length || !t.rail.is(':visible')) {
+			if (!dom.visible(t.container) || !t.rail || !dom.visible(t.rail)) {
 				return;
 			}
 
-			var railMargin = parseFloat(t.rail.css('margin-left')) + parseFloat(t.rail.css('margin-right')),
-			    totalMargin = parseFloat(t.total.css('margin-left')) + parseFloat(t.total.css('margin-right')) || 0;
+			var railStyles = getComputedStyle(t.rail),
+			    totalStyles = getComputedStyle(t.total),
+			    railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight),
+			    totalMargin = parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) || 0;
 
 			var siblingsWidth = 0;
 
-			t.rail.siblings().each(function (index, object) {
-				if ($(object).is(':visible')) {
-					siblingsWidth += parseFloat($(object).outerWidth(true));
+			var siblings = dom.siblings(t.rail),
+			    total = siblings.length;
+			for (var i = 0; i < total; i++) {
+				if (dom.visible(siblings[i])) {
+					siblingsWidth += parseFloat(getComputedStyle(siblings[i]).width);
 				}
-			});
+			}
 
 			siblingsWidth += totalMargin + railMargin + 1;
 
 			// Substract the width of the feature siblings from time rail
-			t.rail.width(t.controls.width() - siblingsWidth);
+			t.rail.style.width = parseFloat(getComputedStyle(t.controls).width) - siblingsWidth + 'px';
 
-			t.container.trigger('controlsresize');
+			var event = (0, _general.createEvent)('controlsresize', t.container);
+			t.container.dispatchEvent(event);
 		}
 
 		/**
@@ -4822,10 +3945,17 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			if (t.featurePosition[key] !== undefined) {
-				element.insertAfter(t.controls.children(':eq(' + (t.featurePosition[key] - 1) + ')'));
+				var children = t.controls.querySelector(':eq(' + (t.featurePosition[key] - 1) + ')');
+				children.parentNode.insertAfter(element, children.nextSibling);
 			} else {
-				element.appendTo(t.controls);
-				t.featurePosition[key] = t.controls.find(element).index();
+				t.controls.appendChild(element);
+				var _children = t.controls.childNodes;
+				for (var i = 0, total = _children.length; i < total; i++) {
+					if (element == _children[i]) {
+						t.featurePosition[key] = i;
+						break;
+					}
+				}
 			}
 		}
 
@@ -4841,9 +3971,14 @@ var MediaElementPlayer = function () {
 
 			var t = this;
 
-			if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !t.container.find('#' + t.media.id + '-iframe-overlay').length) {
+			if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !t.container.getElementById(t.media.id + '-iframe-overlay').length) {
 
-				$('<div id="' + t.media.id + '-iframe-overlay" class="' + t.options.classPrefix + 'iframe-overlay"></div>').insertBefore($('#' + t.media.id + '_' + t.media.rendererName)).on('click', function (e) {
+				var layer = _document2.default.createElement('div'),
+				    target = _document2.default.getElementById(t.media.id + '_' + t.media.rendererName);
+
+				layer.id = t.media.id + '-iframe-overlay';
+				layer.className = t.options.classPrefix + 'iframe-overlay';
+				layer.addEventListener('click', function (e) {
 					if (t.options.clickToPlayPause) {
 						if (t.media.paused) {
 							t.media.play();
@@ -4854,7 +3989,9 @@ var MediaElementPlayer = function () {
 						e.preventDefault();
 						e.stopPropagation();
 					}
-				});
+				}, false);
+
+				target.parentNode.insertBefore(layer, target);
 			}
 		}
 	}, {
@@ -4871,38 +4008,54 @@ var MediaElementPlayer = function () {
 		key: 'setPoster',
 		value: function setPoster(url) {
 			var t = this,
-			    posterDiv = t.container.find('.' + t.options.classPrefix + 'poster');
+			    posterDiv = t.container.querySelector('.' + t.options.classPrefix + 'poster');
 
-			var posterImg = posterDiv.find('img');
+			var posterImg = posterDiv.querySelector('img');
 
 			if (posterImg.length === 0) {
-				posterImg = $('<img class="' + t.options.classPrefix + 'poster-img" width="100%" height="100%" alt="" />').appendTo(posterDiv);
+				posterImg = _document2.default.createElement('img');
+				posterImg.className = t.options.classPrefix + 'poster-img';
+				posterImg.width = '100%';
+				posterImg.height = '100%';
+				posterDiv.appendChild(posterImg);
 			}
 
-			posterImg.attr('src', url);
-			posterDiv.css({ 'background-image': 'url("' + url + '")' });
+			posterImg.setAttribute('src', url);
+			posterDiv.style.backgroundImage = 'url("' + url + '")';
 		}
 	}, {
 		key: 'changeSkin',
 		value: function changeSkin(className) {
 			var t = this;
 
-			t.container[0].className = t.options.classPrefix + 'container ' + className;
+			t.container.className = t.options.classPrefix + 'container ' + className;
 			t.setPlayerSize(t.width, t.height);
 			t.setControlsSize();
 		}
 	}, {
 		key: 'globalBind',
-		value: function globalBind(events, data, callback) {
+		value: function globalBind(events, callback) {
 			var t = this,
 			    doc = t.node ? t.node.ownerDocument : _document2.default;
 
 			events = (0, _general.splitEvents)(events, t.id);
 			if (events.d) {
-				$(doc).on(events.d, data, callback);
+				var eventList = events.d.split(' ');
+				for (var i = 0, total = eventList.length; i < total; i++) {
+					eventList[i].split('.').reduce(function (part, e) {
+						doc.addEventListener(e, callback, false);
+						return e;
+					}, '');
+				}
 			}
 			if (events.w) {
-				$(_window2.default).on(events.w, data, callback);
+				var _eventList = events.w.split(' ');
+				for (var _i = 0, _total = _eventList.length; _i < _total; _i++) {
+					_eventList[_i].split('.').reduce(function (part, e) {
+						_window2.default.addEventListener(e, callback, false);
+						return e;
+					}, '');
+				}
 			}
 		}
 	}, {
@@ -4914,10 +4067,22 @@ var MediaElementPlayer = function () {
 
 			events = (0, _general.splitEvents)(events, t.id);
 			if (events.d) {
-				$(doc).off(events.d, callback);
+				var eventList = events.d.split(' ');
+				for (var i = 0, total = eventList.length; i < total; i++) {
+					eventList[i].split('.').reduce(function (part, e) {
+						doc.removeEventListener(e, callback, false);
+						return e;
+					}, '');
+				}
 			}
 			if (events.w) {
-				$(_window2.default).off(events.w, callback);
+				var _eventList2 = events.d.split(' ');
+				for (var _i2 = 0, _total2 = _eventList2.length; _i2 < _total2; _i2++) {
+					_eventList2[_i2].split('.').reduce(function (part, e) {
+						_window2.default.removeEventListener(e, callback, false);
+						return e;
+					}, '');
+				}
 			}
 		}
 	}, {
@@ -4925,9 +4090,12 @@ var MediaElementPlayer = function () {
 		value: function buildposter(player, controls, layers, media) {
 
 			var t = this,
-			    poster = $('<div class="' + t.options.classPrefix + 'poster ' + t.options.classPrefix + 'layer"></div>').appendTo(layers);
+			    poster = _document2.default.createElement('div');
 
-			var posterUrl = player.$media.attr('poster');
+			poster.className = t.options.classPrefix + 'poster ' + t.options.classPrefix + 'layer';
+			layers.appendChild(poster);
+
+			var posterUrl = player.media.getAttribute('poster');
 
 			// priority goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
 			if (player.options.poster !== '') {
@@ -4938,25 +4106,25 @@ var MediaElementPlayer = function () {
 			if (posterUrl) {
 				t.setPoster(posterUrl);
 			} else {
-				poster.hide();
+				poster.style.display = 'none';
 			}
 
 			media.addEventListener('play', function () {
-				poster.hide();
+				poster.style.display = 'none';
 			}, false);
 
 			media.addEventListener('playing', function () {
-				poster.hide();
+				poster.style.display = 'none';
 			}, false);
 
 			if (player.options.showPosterWhenEnded && player.options.autoRewind) {
 				media.addEventListener('ended', function () {
-					poster.show();
+					poster.style.display = 'block';
 				}, false);
 			}
 
 			media.addEventListener('error', function () {
-				poster.hide();
+				poster.style.display = 'none';
 			}, false);
 
 			if (player.options.showPosterWhenPaused) {
@@ -4964,7 +4132,7 @@ var MediaElementPlayer = function () {
 					// To avoid displaying the poster when video ended, since it
 					// triggers a pause event as well
 					if (!media.ended) {
-						poster.show();
+						poster.style.display = 'block';
 					}
 				}, false);
 			}
@@ -4978,19 +4146,31 @@ var MediaElementPlayer = function () {
 			}
 
 			var t = this,
-			    loading = $('<div class="' + t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer">' + ('<div class="' + t.options.classPrefix + 'overlay-loading">') + ('<span class="' + t.options.classPrefix + 'overlay-loading-bg-img"></span>') + '</div>' + '</div>').hide() // start out hidden
-			.appendTo(layers),
-			    error = $('<div class="' + t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer">' + ('<div class="' + t.options.classPrefix + 'overlay-error"></div>') + '</div>').hide() // start out hidden
-			.appendTo(layers),
+			    loading = _document2.default.createElement('div'),
+			    error = _document2.default.createElement('div'),
 
 			// this needs to come last so it's on top
-			bigPlay = $('<div class="' + t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play">' + ('<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0"') + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false"></div>') + '</div>').appendTo(layers).on('click', function () {
+			bigPlay = _document2.default.createElement('div');
+
+			loading.style.display = 'none'; // start out hidden
+			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
+			loading.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-loading">' + ('<span class="' + t.options.classPrefix + 'overlay-loading-bg-img"></span>') + '</div>';
+			layers.appendChild(loading);
+
+			error.style.display = 'none';
+			error.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
+			error.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-error"></div>';
+			layers.appendChild(error);
+
+			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play';
+			bigPlay.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0"' + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false"></div>');
+			bigPlay.addEventListener('click', function () {
 				// Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay
 				// started and immediately stopped the video
 				if (t.options.clickToPlayPause) {
 
-					var button = t.$media.closest('.' + t.options.classPrefix + 'container').find('.' + t.options.classPrefix + 'overlay-button'),
-					    pressed = button.attr('aria-pressed');
+					var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
+					    pressed = button.getAttribute('aria-pressed');
 
 					if (media.paused) {
 						media.play();
@@ -4998,55 +4178,67 @@ var MediaElementPlayer = function () {
 						media.pause();
 					}
 
-					button.attr('aria-pressed', !!pressed);
+					button.setAttribute('aria-pressed', !!pressed);
 				}
-			});
+			}, false);
+			layers.appendChild(bigPlay);
 
-			// if (t.options.supportVR || (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/))) {
-			if (t.media.rendererName !== null && (t.media.rendererName.match(/(youtube|facebook)/) && !(player.$media.attr('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
-				bigPlay.hide();
+			if (t.media.rendererName !== null && (t.media.rendererName.match(/(youtube|facebook)/) && !(player.media.attr('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
+				bigPlay.style.display = 'none';
 			}
 
 			// show/hide big play button
 			media.addEventListener('play', function () {
-				bigPlay.hide();
-				loading.hide();
-				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
-				error.hide();
+				bigPlay.style.display = 'none';
+				loading.style.display = 'none';
+				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'none';
+				}
+				error.style.display = 'none';
 			}, false);
 
 			media.addEventListener('playing', function () {
-				bigPlay.hide();
-				loading.hide();
-				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
-				error.hide();
+				bigPlay.style.display = 'none';
+				loading.style.display = 'none';
+				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'none';
+				}
+				error.style.display = 'none';
 			}, false);
 
 			media.addEventListener('seeking', function () {
-				loading.show();
-				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
+				loading.style.display = 'block';
+				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+				}
 			}, false);
 
 			media.addEventListener('seeked', function () {
-				loading.hide();
-				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
+				loading.style.display = 'none';
+				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+				}
 			}, false);
 
 			media.addEventListener('pause', function () {
 				if (!_constants.IS_STOCK_ANDROID) {
-					bigPlay.show();
+					bigPlay.style.display = 'block';
 				}
 			}, false);
 
 			media.addEventListener('waiting', function () {
-				loading.show();
-				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
+				loading.style.display = 'block';
+				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+				}
 			}, false);
 
 			// show/hide loading
 			media.addEventListener('loadeddata', function () {
-				loading.show();
-				controls.find('.' + t.options.classPrefix + 'time-buffering').show();
+				loading.style.display = 'block';
+				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+				}
 
 				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
 				// (https://github.com/johndyer/mediaelement/issues/1305)
@@ -5061,8 +4253,10 @@ var MediaElementPlayer = function () {
 				}
 			}, false);
 			media.addEventListener('canplay', function () {
-				loading.hide();
-				controls.find('.' + t.options.classPrefix + 'time-buffering').hide();
+				loading.style.display = 'none';
+				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'none';
+				}
 				// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
 				clearTimeout(media.canplayTimeout);
 			}, false);
@@ -5070,10 +4264,10 @@ var MediaElementPlayer = function () {
 			// error handling
 			media.addEventListener('error', function (e) {
 				t._handleError(e);
-				loading.hide();
-				bigPlay.hide();
-				error.show();
-				error.find('.' + t.options.classPrefix + 'overlay-error').html(e.message);
+				loading.style.display = 'none';
+				bigPlay.style.display = 'none';
+				error.style.display = 'block';
+				error.getElementsByClassName(t.options.classPrefix + 'overlay-error')[0].innerHTML = e.message;
 			}, false);
 
 			media.addEventListener('keydown', function (e) {
@@ -5086,20 +4280,28 @@ var MediaElementPlayer = function () {
 
 			var t = this;
 
-			t.container.keydown(function () {
+			t.container.addEventListener('keydown', function () {
 				t.keyboardAction = true;
 			});
 
 			// listen for key presses
 			t.globalBind('keydown', function (event) {
-				var $container = $(event.target).closest('.' + t.options.classPrefix + 'container');
-				player.hasFocus = $container.length !== 0 && $container.attr('id') === player.$media.closest('.' + t.options.classPrefix + 'container').attr('id');
+				var container = dom.closest(event.target, function (el) {
+					return el == t.container;
+				}),
+				    target = dom.closest(player.media, function (el) {
+					return el == t.container;
+				});
+				player.hasFocus = container !== null && container.length !== 0 && container.id === target.id;
 				return t.onkeydown(player, media, event);
 			});
 
 			// check if someone clicked outside a player region, then kill its focus
 			t.globalBind('click', function (event) {
-				player.hasFocus = $(event.target).closest('.' + t.options.classPrefix + 'container').length !== 0;
+				var insidePlayer = dom.closest(event.target, function (el) {
+					return el == t.container;
+				});
+				player.hasFocus = insidePlayer !== null && insidePlayer.length;
 			});
 		}
 	}, {
@@ -5182,13 +4384,13 @@ var MediaElementPlayer = function () {
 		key: 'setSrc',
 		value: function setSrc(src) {
 			var t = this,
-			    layer = t.container.find('#' + t.media.id + '-iframe-overlay');
+			    layer = _document2.default.getElementById(t.media.id + '-iframe-overlay');
 
-			t.media.setSrc(src);
-
-			if (layer.length) {
+			if (layer && layer.length) {
 				layer.remove();
 			}
+
+			t.media.setSrc(src);
 
 			t.createIframeLayer();
 		}
@@ -5221,36 +4423,50 @@ var MediaElementPlayer = function () {
 			}
 
 			// reset dimensions
-			t.$node.css({
-				width: t.$node.attr('width') || 'auto',
-				height: t.$node.attr('height') || 'auto'
-			});
+			var nativeWidth = t.node.getAttribute('width'),
+			    nativeHeight = t.node.getAttribute('height');
+			if (nativeWidth) {
+				if (nativeWidth.match('%') === null) {
+					nativeWidth = nativeWidth + 'px';
+				}
+			} else {
+				nativeWidth = 'auto';
+			}
+			if (nativeHeight) {
+				if (nativeHeight.match('%') === null) {
+					nativeHeight = nativeHeight + 'px';
+				}
+			} else {
+				nativeHeight = 'auto';
+			}
+			t.node.style.width = nativeWidth;
+			t.node.style.height = nativeHeight;
 
 			// grab video and put it back in place
 			if (!t.isDynamic) {
-				t.$media.prop('controls', true);
-				// detach events from the video
-				// @todo: detach event listeners better than this; also detach ONLY the events attached by this plugin!
-				t.$node.attr('id', t.$node.attr('id').replace('_' + rendererName, ''));
-				t.$node.attr('id', t.$node.attr('id').replace('_from_mejs', ''));
+				t.node.setAttribute('controls', true);
+				t.node.setAttribute('id', t.node.getAttribute('id').replace('_' + rendererName, '').replace('_from_mejs', ''));
 
 				// Remove `autoplay` (not worth bringing it back once player is destroyed)
-				t.$node.removeProp('autoplay');
+				delete t.node.autoplay;
 
 				// Reintegrate file if it can be played
 				if (t.media.canPlayType((0, _media.getTypeFromFile)(src))) {
-					t.$node.attr('src', src);
+					t.node.setAttribute('src', src);
 				}
 
 				// If <iframe>, remove overlay
 				if (rendererName.match(/iframe/i) !== null) {
-					t.container.find('#' + t.media.id + '-iframe-overlay').remove();
+					var layer = _document2.default.getElementById(t.media.id + '-iframe-overlay');
+					layer.parentNode.removeChild(layer);
 				}
 
-				t.$node.clone().insertBefore(t.container).show();
-				t.$node.remove();
+				var node = t.node.cloneNode(true);
+				t.container.parentNode.insertBefore(node, t.container);
+				t.node.parentNode.removeChild(t.node);
+				delete t.node;
 			} else {
-				t.$node.insertBefore(t.container);
+				t.container.parentNode.insertBefore(t.node, t.container);
 			}
 
 			if (typeof t.media.destroy === 'function') {
@@ -5262,12 +4478,13 @@ var MediaElementPlayer = function () {
 			delete _mejs2.default.players[t.id];
 
 			if (_typeof(t.container) === 'object') {
-				t.container.prev('.' + t.options.classPrefix + 'offscreen').remove();
-				t.container.remove();
+				var offscreen = t.container.parentNode.querySelector('.' + t.options.classPrefix + 'offscreen');
+				offscreen.parentNode.removeChild(offscreen);
+				t.container.parentNode.removeChild(t.container);
 			}
 			t.globalUnbind();
 
-			delete t.node.player;
+			delete t.media.player;
 		}
 	}]);
 
@@ -5307,7 +4524,7 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"2":2,"23":23,"24":24,"25":25,"27":27,"3":3,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"23":23,"24":24,"25":25,"27":27,"3":3,"4":4,"5":5,"6":6}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -5328,7 +4545,7 @@ var _general = _dereq_(24);
 
 var _media = _dereq_(25);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5469,7 +4686,7 @@ var DashNativeRenderer = {
 		var i = void 0,
 		    il = void 0,
 		    node = null,
-		    dashPlayer = void 0;
+		    dashPlayer = null;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
@@ -5612,7 +4829,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"2":2,"23":23,"24":24,"25":25,"3":3,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"24":24,"25":25,"3":3,"6":6,"7":7}],17:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5642,7 +4859,7 @@ var _renderer = _dereq_(7);
 
 var _general = _dereq_(24);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 var _media = _dereq_(25);
 
@@ -6171,7 +5388,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"2":2,"23":23,"24":24,"25":25,"3":3,"4":4,"6":6,"7":7}],19:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"24":24,"25":25,"3":3,"4":4,"6":6,"7":7}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6190,7 +5407,7 @@ var _renderer = _dereq_(7);
 
 var _general = _dereq_(24);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 var _media = _dereq_(25);
 
@@ -6334,7 +5551,7 @@ var FlvNativeRenderer = {
 		var i = void 0,
 		    il = void 0,
 		    node = null,
-		    flvPlayer = void 0;
+		    flvPlayer = null;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
@@ -6427,7 +5644,9 @@ var FlvNativeRenderer = {
 		};
 
 		node.hide = function () {
-			flvPlayer.pause();
+			if (flvPlayer !== null) {
+				flvPlayer.pause();
+			}
 			node.style.display = 'none';
 			return node;
 		};
@@ -6438,7 +5657,9 @@ var FlvNativeRenderer = {
 		};
 
 		node.destroy = function () {
-			flvPlayer.destroy();
+			if (flvPlayer !== null) {
+				flvPlayer.destroy();
+			}
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node);
@@ -6459,7 +5680,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"2":2,"23":23,"24":24,"25":25,"3":3,"6":6,"7":7}],20:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"24":24,"25":25,"3":3,"6":6,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6478,7 +5699,7 @@ var _renderer = _dereq_(7);
 
 var _general = _dereq_(24);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 var _media = _dereq_(25);
 
@@ -6628,7 +5849,7 @@ var HlsNativeRenderer = {
 
 		var i = void 0,
 		    il = void 0,
-		    hlsPlayer = void 0,
+		    hlsPlayer = null,
 		    node = null;
 
 		node = originalNode.cloneNode(true);
@@ -6817,11 +6038,15 @@ var HlsNativeRenderer = {
 		};
 
 		node.destroy = function () {
-			hlsPlayer.destroy();
+			if (hlsPlayer !== null) {
+				hlsPlayer.destroy();
+			}
 		};
 
 		node.stop = function () {
-			hlsPlayer.stopLoad();
+			if (hlsPlayer !== null) {
+				hlsPlayer.stopLoad();
+			}
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node);
@@ -6842,7 +6067,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"2":2,"23":23,"24":24,"25":25,"3":3,"6":6,"7":7}],21:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"24":24,"25":25,"3":3,"6":6,"7":7}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6861,7 +6086,7 @@ var _renderer = _dereq_(7);
 
 var _general = _dereq_(24);
 
-var _constants = _dereq_(23);
+var _constants = _dereq_(22);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7000,7 +6225,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"2":2,"23":23,"24":24,"3":3,"6":6,"7":7}],22:[function(_dereq_,module,exports){
+},{"2":2,"22":22,"24":24,"3":3,"6":6,"7":7}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -7653,7 +6878,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	_renderer.renderer.add(YouTubeIframeRenderer);
 }
 
-},{"2":2,"24":24,"25":25,"3":3,"6":6,"7":7}],23:[function(_dereq_,module,exports){
+},{"2":2,"24":24,"25":25,"3":3,"6":6,"7":7}],22:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7838,6 +7063,137 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
+},{"2":2,"3":3,"6":6}],23:[function(_dereq_,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.removeClass = exports.addClass = exports.hasClass = undefined;
+exports.offset = offset;
+exports.closest = closest;
+exports.toggleClass = toggleClass;
+exports.fadeOut = fadeOut;
+exports.fadeIn = fadeIn;
+exports.siblings = siblings;
+exports.visible = visible;
+
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _mejs = _dereq_(6);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function offset(el) {
+	var rect = el.getBoundingClientRect(),
+	    scrollLeft = _window2.default.pageXOffset || _document2.default.documentElement.scrollLeft,
+	    scrollTop = _window2.default.pageYOffset || _document2.default.documentElement.scrollTop;
+	return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+}
+
+function closest(el, fn) {
+	return el && (fn(el) ? el : closest(el.parentNode, fn));
+}
+
+var hasClassMethod = void 0,
+    addClassMethod = void 0,
+    removeClassMethod = void 0;
+
+if ('classList' in _document2.default.documentElement) {
+	hasClassMethod = function hasClassMethod(el, className) {
+		return el.classList !== undefined && el.classList.contains(className);
+	};
+	addClassMethod = function addClassMethod(el, className) {
+		return el.classList.add(className);
+	};
+	removeClassMethod = function removeClassMethod(el, className) {
+		return el.classList.remove(className);
+	};
+} else {
+	hasClassMethod = function hasClassMethod(el, className) {
+		return new RegExp('\\b' + className + '\\b').test(el.className);
+	};
+	addClassMethod = function addClassMethod(el, className) {
+		if (!hasClass(el, className)) {
+			el.className += ' ' + className;
+		}
+	};
+	removeClassMethod = function removeClassMethod(el, className) {
+		el.className = el.className.replace(new RegExp('\\b' + className + '\\b', 'g'), '');
+	};
+}
+
+var hasClass = exports.hasClass = hasClassMethod;
+var addClass = exports.addClass = addClassMethod;
+var removeClass = exports.removeClass = removeClassMethod;
+
+function toggleClass(el, className) {
+	hasClass(el, className) ? removeClass(el, className) : addClass(el, className);
+}
+
+// fade an element from the current state to full opacity in "duration" ms
+function fadeOut(el, duration, callback) {
+	var s = el.style,
+	    step = 25 / (duration || 300);
+	s.opacity = s.opacity || 1;
+	(function fade() {
+		(s.opacity -= step) < 0 ? s.display = "none" : setTimeout(fade, 25);
+	})();
+	if (typeof callback === 'function') {
+		setTimeout(callback, 30);
+	}
+}
+
+// fade out an element from the current state to full transparency in "duration" ms
+// display is the display style the element is assigned after the animation is done
+function fadeIn(el, duration, callback) {
+	var s = el.style,
+	    step = 25 / (duration || 300);
+	s.opacity = s.opacity || 0;
+	s.display = "block";
+	(function fade() {
+		(s.opacity = parseFloat(s.opacity) + step) > 1 ? s.opacity = 1 : setTimeout(fade, 25);
+	})();
+	if (typeof callback === 'function') {
+		setTimeout(callback, 30);
+	}
+}
+
+function siblings(el, filter) {
+	var siblings = [];
+	el = el.parentNode.firstChild;
+	do {
+		if (!filter || filter(el)) {
+			siblings.push(el);
+		}
+	} while (el = el.nextSibling);
+	return siblings;
+}
+
+function visible(elem) {
+	return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+}
+
+_mejs2.default.Utils = _mejs2.default.Utils || {};
+_mejs2.default.Utils.offset = offset;
+_mejs2.default.Utils.hasClass = hasClass;
+_mejs2.default.Utils.addClass = addClass;
+_mejs2.default.Utils.removeClass = removeClass;
+_mejs2.default.Utils.toggleClass = toggleClass;
+_mejs2.default.Utils.fadeIn = fadeIn;
+_mejs2.default.Utils.fadeOut = fadeOut;
+_mejs2.default.Utils.siblings = siblings;
+_mejs2.default.Utils.visible = visible;
+_mejs2.default.Utils.closest = closest;
+
 },{"2":2,"3":3,"6":6}],24:[function(_dereq_,module,exports){
 'use strict';
 
@@ -7968,15 +7324,22 @@ function createEvent(eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
+	var namespace = eventName.match(/\[a-z]+\.(\[a-z]+)/);
 	var event = void 0;
 
 	if (document.createEvent) {
 		event = document.createEvent('Event');
 		event.initEvent(eventName, true, false);
+		if (namespace !== null) {
+			event.namespace = namespace[1];
+		}
 	} else {
 		event = {};
 		event.type = eventName;
 		event.target = target;
+		if (namespace !== null) {
+			event.namespace = namespace[1];
+		}
 		event.canceleable = true;
 		event.bubbable = false;
 	}
@@ -8401,6 +7764,32 @@ if (!String.prototype.startsWith) {
 	};
 }
 
+// Element.matches polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
+if (!Element.prototype.matches) {
+	Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function (s) {
+		var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+		    i = matches.length - 1;
+		while (--i >= 0 && matches.item(i) !== this) {}
+		return i > -1;
+	};
+}
+
+// Element.closest polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
+if (window.Element && !Element.prototype.closest) {
+	Element.prototype.closest = function (s) {
+		var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+		    i = void 0,
+		    el = this;
+		do {
+			i = matches.length;
+			while (--i >= 0 && matches.item(i) !== el) {}
+		} while (i < 0 && (el = el.parentElement));
+		return el;
+	};
+}
+
 },{"2":2}],27:[function(_dereq_,module,exports){
 'use strict';
 
@@ -8600,4 +7989,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"6":6}]},{},[26,5,4,14,21,18,17,19,20,22,15,16,8,9,10,11,12,13]);
+},{"6":6}]},{},[26,5,4,13,20,17,16,18,19,21,14,15,8,9,10,11,12]);

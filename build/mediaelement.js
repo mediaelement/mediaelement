@@ -1330,7 +1330,7 @@ var DashNativeRenderer = {
 		var i = void 0,
 		    il = void 0,
 		    node = null,
-		    dashPlayer = void 0;
+		    dashPlayer = null;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
@@ -2195,7 +2195,7 @@ var FlvNativeRenderer = {
 		var i = void 0,
 		    il = void 0,
 		    node = null,
-		    flvPlayer = void 0;
+		    flvPlayer = null;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
@@ -2288,7 +2288,9 @@ var FlvNativeRenderer = {
 		};
 
 		node.hide = function () {
-			flvPlayer.pause();
+			if (flvPlayer !== null) {
+				flvPlayer.pause();
+			}
 			node.style.display = 'none';
 			return node;
 		};
@@ -2299,7 +2301,9 @@ var FlvNativeRenderer = {
 		};
 
 		node.destroy = function () {
-			flvPlayer.destroy();
+			if (flvPlayer !== null) {
+				flvPlayer.destroy();
+			}
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node);
@@ -2489,7 +2493,7 @@ var HlsNativeRenderer = {
 
 		var i = void 0,
 		    il = void 0,
-		    hlsPlayer = void 0,
+		    hlsPlayer = null,
 		    node = null;
 
 		node = originalNode.cloneNode(true);
@@ -2678,11 +2682,15 @@ var HlsNativeRenderer = {
 		};
 
 		node.destroy = function () {
-			hlsPlayer.destroy();
+			if (hlsPlayer !== null) {
+				hlsPlayer.destroy();
+			}
 		};
 
 		node.stop = function () {
-			hlsPlayer.stopLoad();
+			if (hlsPlayer !== null) {
+				hlsPlayer.stopLoad();
+			}
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node);
@@ -3829,15 +3837,22 @@ function createEvent(eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
+	var namespace = eventName.match(/\[a-z]+\.(\[a-z]+)/);
 	var event = void 0;
 
 	if (document.createEvent) {
 		event = document.createEvent('Event');
 		event.initEvent(eventName, true, false);
+		if (namespace !== null) {
+			event.namespace = namespace[1];
+		}
 	} else {
 		event = {};
 		event.type = eventName;
 		event.target = target;
+		if (namespace !== null) {
+			event.namespace = namespace[1];
+		}
 		event.canceleable = true;
 		event.bubbable = false;
 	}
@@ -4259,6 +4274,32 @@ if (!String.prototype.startsWith) {
 	String.prototype.startsWith = function (searchString, position) {
 		position = position || 0;
 		return this.substr(position, searchString.length) === searchString;
+	};
+}
+
+// Element.matches polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
+if (!Element.prototype.matches) {
+	Element.prototype.matches = Element.prototype.matchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.msMatchesSelector || Element.prototype.oMatchesSelector || Element.prototype.webkitMatchesSelector || function (s) {
+		var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+		    i = matches.length - 1;
+		while (--i >= 0 && matches.item(i) !== this) {}
+		return i > -1;
+	};
+}
+
+// Element.closest polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/closest
+if (window.Element && !Element.prototype.closest) {
+	Element.prototype.closest = function (s) {
+		var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+		    i = void 0,
+		    el = this;
+		do {
+			i = matches.length;
+			while (--i >= 0 && matches.item(i) !== el) {}
+		} while (i < 0 && (el = el.parentElement));
+		return el;
 	};
 }
 

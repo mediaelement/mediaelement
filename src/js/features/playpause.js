@@ -1,5 +1,6 @@
 'use strict';
 
+import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';

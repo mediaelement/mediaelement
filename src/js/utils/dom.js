@@ -74,7 +74,7 @@ export function siblings (el, filter) {
 		if (!filter || filter(el)) {
 			siblings.push(el)
 		}
-	} while (el == el.nextSibling);
+	} while ((el = el.nextSibling));
 	return siblings;
 }
 

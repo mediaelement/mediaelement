@@ -706,6 +706,10 @@ class MediaElementPlayer {
 			const event = createEvent('controlsready', t.container);
 			t.container.dispatchEvent(event);
 
+			// reset all layers and controls
+			t.setPlayerSize(t.width, t.height);
+			t.setControlsSize();
+
 			// controls fade
 			if (t.isVideo) {
 
@@ -918,9 +922,12 @@ class MediaElementPlayer {
 				}, 0);
 			}, 100));
 
-			// reset all layers and controls
-			t.setPlayerSize(t.width, t.height);
-			t.setControlsSize();
+			// webkit has trouble doing this without a delay
+			setTimeout(() => {
+				t.setPlayerSize(t.width, t.height);
+				t.setControlsSize();
+			}, 0);
+
 
 			// adjust controls whenever window sizes (used to be in fullscreen only)
 			t.globalBind('resize', () => {
@@ -1264,28 +1271,30 @@ class MediaElementPlayer {
 		const t = this;
 
 		// skip calculation if hidden
-		if (!dom.visible(t.container) || !t.rail || !t.rail.length || !dom.visible(t.rail)) {
+		if (!dom.visible(t.container) || !t.rail || !dom.visible(t.rail)) {
 			return;
 		}
 
 		const
-			railMargin = parseFloat(t.rail.style.marginLeft) + parseFloat(t.rail.style.marginRight),
-			totalMargin = parseFloat(t.total.style.marginLeft) + parseFloat(t.total.style.marginRight) || 0
-			;
+			railStyles = getComputedStyle(t.rail),
+			totalStyles = getComputedStyle(t.total),
+			railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight),
+			totalMargin = parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) || 0
+		;
 
 		let siblingsWidth = 0;
 
 		const siblings = dom.siblings(t.rail), total = siblings.length;
 		for (let i = 0; i < total; i++) {
 			if (dom.visible(siblings[i])) {
-				siblingsWidth += parseFloat(siblings[i].offsetWidth);
+				siblingsWidth += parseFloat(getComputedStyle(siblings[i]).width);
 			}
 		}
 
 		siblingsWidth += totalMargin + railMargin + 1;
 
 		// Substract the width of the feature siblings from time rail
-		t.rail.width = `${(t.controls.width - siblingsWidth)}px`;
+		t.rail.style.width = `${(parseFloat(getComputedStyle(t.controls).width) - siblingsWidth)}px`;
 
 		const event = createEvent('controlsresize', t.container);
 		t.container.dispatchEvent(event);

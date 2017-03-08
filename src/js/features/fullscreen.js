@@ -7,7 +7,7 @@ import {config} from '../player';
 import MediaElementPlayer from '../player';
 import * as Features from '../utils/constants';
 import {isString, createEvent} from '../utils/general';
-import {offset, addClass, removeClass} from '../utils/dom';
+import {addClass, removeClass} from '../utils/dom';
 
 
 /**
@@ -52,7 +52,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * (1) 'native-native'  HTML5 video  + browser fullscreen (IE10+, etc.)
 	 * (2) 'plugin-native'  plugin video + browser fullscreen (fails in some versions of Firefox)
 	 * (3) 'fullwindow'     Full window (retains all UI)
-	 * (4) 'plugin-click'   Flash 1 - click through with pointer events
 	 *
 	 * @type {String}
 	 */
@@ -167,9 +166,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			mode = 'plugin-native';
 		} else if (t.usePluginFullScreen && Features.SUPPORT_POINTER_EVENTS) {
 			mode = 'plugin-click';
-			console.log('ahahahaa');
-			// this needs some special setup
-			t.createPluginClickThrough();
 		} else {
 			mode = 'fullwindow';
 		}
@@ -178,167 +174,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		return mode;
 	},
 
-	/**
-	 *
-	 */
-	// createPluginClickThrough: function ()  {
-	//
-	// 	const t = this;
-	//
-	// 	// don't build twice
-	// 	if (t.isPluginClickThroughCreated) {
-	// 		return;
-	// 	}
-	//
-	// 	// allows clicking through the fullscreen button and controls down directly to Flash
-	//
-	// 	/*
-	// 	 When a user puts his mouse over the fullscreen button, we disable the controls so that mouse events can go down to flash (pointer-events)
-	// 	 We then put a divs over the video and on either side of the fullscreen button
-	// 	 to capture mouse movement and restore the controls once the mouse moves outside of the fullscreen button
-	// 	 */
-	//
-	// 	let fullscreenIsDisabled = false,
-	// 		restoreControls = () => {
-	// 			if (fullscreenIsDisabled) {
-	// 				// hide the hovers
-	// 				for (let i in hoverDivs) {
-	// 					hoverDivs[i].hide();
-	// 				}
-	//
-	// 				// restore the control bar
-	// 				t.fullscreenBtn.css('pointer-events', '');
-	// 				t.controls.css('pointer-events', '');
-	//
-	// 				// prevent clicks from pausing video
-	// 				t.media.removeEventListener('click', t.clickToPlayPauseCallback);
-	//
-	// 				// store for later
-	// 				fullscreenIsDisabled = false;
-	// 			}
-	// 		},
-	// 		hoverDivs = {},
-	// 		hoverDivNames = ['top', 'left', 'right', 'bottom'],
-	// 		positionHoverDivs = () => {
-	// 			const
-	// 				fullScreenDimensions = offset(t.fullscreenBtn),
-	// 				containerDimensions = offset(t.container),
-	// 				fullScreenBtnOffsetLeft = fullScreenDimensions.left - containerDimensions.left,
-	// 				fullScreenBtnOffsetTop = fullScreenDimensions.top - containerDimensions.top,
-	// 				fullScreenBtnWidth = t.fullscreenBtn.outerWidth(true),
-	// 				fullScreenBtnHeight = t.fullscreenBtn.outerHeight(true),
-	// 				containerWidth = t.container.width(),
-	// 				containerHeight = t.container.height()
-	// 			;
-	//
-	// 			for (let hover in hoverDivs) {
-	// 				hover.css({position: 'absolute', top: 0, left: 0});
-	// 			}
-	//
-	// 			// over video, but not controls
-	// 			hoverDivs.top
-	// 				.width(containerWidth)
-	// 				.height(fullScreenBtnOffsetTop);
-	//
-	// 			// over controls, but not the fullscreen button
-	// 			hoverDivs.left
-	// 				.width(fullScreenBtnOffsetLeft)
-	// 				.height(fullScreenBtnHeight)
-	// 				.css({top: fullScreenBtnOffsetTop});
-	//
-	// 			// after the fullscreen button
-	// 			hoverDivs.right
-	// 				.width(containerWidth - fullScreenBtnOffsetLeft - fullScreenBtnWidth)
-	// 				.height(fullScreenBtnHeight)
-	// 				.css({
-	// 					top: fullScreenBtnOffsetTop,
-	// 					left: fullScreenBtnOffsetLeft + fullScreenBtnWidth
-	// 				});
-	//
-	// 			// under the fullscreen button
-	// 			hoverDivs.bottom
-	// 				.width(containerWidth)
-	// 				.height(containerHeight - fullScreenBtnHeight - fullScreenBtnOffsetTop)
-	// 				.css({top: fullScreenBtnOffsetTop + fullScreenBtnHeight});
-	// 		};
-	//
-	// 	t.globalBind('resize', () => {
-	// 		positionHoverDivs();
-	// 	});
-	//
-	// 	for (let i = 0, len = hoverDivNames.length; i < len; i++) {
-	// 		hoverDivs[hoverDivNames[i]] = $(`<div class="${t.options.classPrefix}fullscreen-hover" />`)
-	// 			.appendTo(t.container).mouseover(restoreControls).hide();
-	// 	}
-	//
-	// 	// on hover, kill the fullscreen button's HTML handling, allowing clicks down to Flash
-	// 	t.fullscreenBtn.on('mouseover', () => {
-	//
-	// 		if (!t.isFullScreen) {
-	//
-	// 			const
-	// 				buttonPos = t.fullscreenBtn.offset(),
-	// 				containerPos = t.container.offset()
-	// 			;
-	//
-	// 			// move the button in Flash into place
-	// 			t.media.positionFullscreenButton(buttonPos.left - containerPos.left, buttonPos.top - containerPos.top, false);
-	//
-	// 			// allows click through
-	// 			t.fullscreenBtn.css('pointer-events', 'none');
-	// 			t.controls.css('pointer-events', 'none');
-	//
-	// 			// restore click-to-play
-	// 			t.media.addEventListener('click', t.clickToPlayPauseCallback);
-	//
-	// 			// show the divs that will restore things
-	// 			for (let i = 0, il = hoverDivs.length; i < il; i++) {
-	// 				hoverDivs[i].show();
-	// 			}
-	//
-	// 			positionHoverDivs();
-	//
-	// 			fullscreenIsDisabled = true;
-	// 		}
-	//
-	// 	});
-	//
-	// 	// restore controls anytime the user enters or leaves fullscreen
-	// 	t.media.addEventListener('fullscreenchange', () => {
-	// 		t.isFullScreen = !t.isFullScreen;
-	// 		// don't allow plugin click to pause video - messes with
-	// 		// plugin's controls
-	// 		if (t.isFullScreen) {
-	// 			t.media.removeEventListener('click', t.clickToPlayPauseCallback);
-	// 		} else {
-	// 			t.media.addEventListener('click', t.clickToPlayPauseCallback);
-	// 		}
-	// 		restoreControls();
-	// 	});
-	//
-	//
-	// 	// the mouseout event doesn't work on the fullscren button, because we already killed the pointer-events
-	// 	// so we use the document.mousemove event to restore controls when the mouse moves outside the fullscreen button
-	//
-	// 	t.globalBind('mousemove', (e) => {
-	//
-	// 		// if the mouse is anywhere but the fullsceen button, then restore it all
-	// 		if (fullscreenIsDisabled) {
-	//
-	// 			const fullscreenBtnPos = t.fullscreenBtn.offset();
-	//
-	// 			if (e.pageY < fullscreenBtnPos.top || e.pageY > fullscreenBtnPos.top + t.fullscreenBtn.outerHeight(true) ||
-	// 				e.pageX < fullscreenBtnPos.left || e.pageX > fullscreenBtnPos.left + t.fullscreenBtn.outerWidth(true)) {
-	// 				t.fullscreenBtn.css('pointer-events', '');
-	// 				t.controls.css('pointer-events', '');
-	// 				fullscreenIsDisabled = false;
-	// 			}
-	// 		}
-	// 	});
-	//
-	//
-	// 	t.isPluginClickThroughCreated = true;
-	// },
 	/**
 	 * Feature destructor.
 	 *

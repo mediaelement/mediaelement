@@ -206,9 +206,7 @@ if (!Element.prototype.matches) {
 		function(s) {
 			let matches = (this.document || this.ownerDocument).querySelectorAll(s),
 				i = matches.length - 1;
-			while (i >= 0 && matches.item(i) !== this) {
-				--i
-			}
+			while (--i >= 0 && matches.item(i) !== this) {}
 			return i > -1;
 		};
 }
@@ -223,10 +221,8 @@ if (window.Element && !Element.prototype.closest) {
 				el = this;
 			do {
 				i = matches.length;
-				while (i >= 0 && matches.item(i) !== el) {
-					--i;
-				}
-			} while ((i < 0) && (el == el.parentElement));
+				while (--i >= 0 && matches.item(i) !== el) {}
+			} while ((i < 0) && (el = el.parentElement));
 			return el;
 		};
 }

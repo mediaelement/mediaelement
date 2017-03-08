@@ -1,10 +1,12 @@
 'use strict';
 
+import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
 import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
+import {offset} from '../utils/dom';
 
 /**
  * Progress/loaded bar
@@ -48,29 +50,30 @@ Object.assign(MediaElementPlayer.prototype, {
 					`<span class="${t.options.classPrefix}time-float-current">00:00</span>` +
 					`<span class="${t.options.classPrefix}time-float-corner"></span>` +
 				`</span>` : "",
-			rail = $(`<div class="${t.options.classPrefix}time-rail">` +
-				`<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
-					`<span class="${t.options.classPrefix}time-buffering"></span>` +
-					`<span class="${t.options.classPrefix}time-loaded"></span>` +
-					`<span class="${t.options.classPrefix}time-current"></span>` +
-					`<span class="${t.options.classPrefix}time-handle"></span>` +
-					`${tooltip}` +
-				`</span>` +
-			`</div>`)
+			rail = document.createElement('div')
 		;
+
+		rail.className = `${t.options.classPrefix}time-rail`;
+		rail.innerHTML = `<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
+			`<span class="${t.options.classPrefix}time-buffering"></span>` +
+			`<span class="${t.options.classPrefix}time-loaded"></span>` +
+			`<span class="${t.options.classPrefix}time-current"></span>` +
+			`<span class="${t.options.classPrefix}time-handle"></span>` +
+			`${tooltip}` +
+		`</span>`;
 
 		t.addControlElement(rail, 'progress');
 
-		controls.find(`.${t.options.classPrefix}time-buffering`).hide();
+		controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'none';
 
-		t.rail = controls.find(`.${t.options.classPrefix}time-rail`);
-		t.total = controls.find(`.${t.options.classPrefix}time-total`);
-		t.loaded = controls.find(`.${t.options.classPrefix}time-loaded`);
-		t.current = controls.find(`.${t.options.classPrefix}time-current`);
-		t.handle = controls.find(`.${t.options.classPrefix}time-handle`);
-		t.timefloat = controls.find(`.${t.options.classPrefix}time-float`);
-		t.timefloatcurrent = controls.find(`.${t.options.classPrefix}time-float-current`);
-		t.slider = controls.find(`.${t.options.classPrefix}time-slider`);
+		t.rail = controls.querySelector(`.${t.options.classPrefix}time-rail`);
+		t.total = controls.querySelector(`.${t.options.classPrefix}time-total`);
+		t.loaded = controls.querySelector(`.${t.options.classPrefix}time-loaded`);
+		t.current = controls.querySelector(`.${t.options.classPrefix}time-current`);
+		t.handle = controls.querySelector(`.${t.options.classPrefix}time-handle`);
+		t.timefloat = controls.querySelector(`.${t.options.classPrefix}time-float`);
+		t.timefloatcurrent = controls.querySelector(`.${t.options.classPrefix}time-float-current`);
+		t.slider = controls.querySelector(`.${t.options.classPrefix}time-slider`);
 		t.newTime = 0;
 		t.forcedHandlePause = false;
 
@@ -82,8 +85,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		let handleMouseMove = (e) => {
 
 				const
-					offset = t.total.offset(),
-					width = t.total.width()
+					totalStyles = getComputedStyle(t.total),
+					offsetStyles = offset(t.total),
+					width = parseInt(totalStyles.width)
 				;
 
 				let
@@ -102,13 +106,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 
 				if (media.duration) {
-					if (x < offset.left) {
-						x = offset.left;
-					} else if (x > width + offset.left) {
-						x = width + offset.left;
+					if (x < offsetStyles.left) {
+						x = offsetStyles.left;
+					} else if (x > width + offsetStyles.left) {
+						x = width + offsetStyles.left;
 					}
 
-					pos = x - offset.left;
+					pos = x - offsetStyles.left;
 					percentage = (pos / width);
 					t.newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
@@ -120,9 +124,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// position floating time box
 					if (!IS_IOS && !IS_ANDROID) {
-						t.timefloat.css('left', pos);
-						t.timefloatcurrent.html(secondsToTimeCode(t.newTime, player.options.alwaysShowHours));
-						t.timefloat.show();
+						t.timefloat.style.left = `${pos}px`;
+						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours);
+						t.timefloat.style.display = 'block';
 					}
 				}
 			},
@@ -141,20 +145,21 @@ Object.assign(MediaElementPlayer.prototype, {
 					duration = media.duration
 				;
 
-				t.slider.attr({
-					'role': 'slider',
-					'tabindex': 0
-				});
+				t.slider.setAttribute('role', 'slider');
+				t.slider.tabIndex = 0;
+
 				if (media.paused) {
-					t.slider.attr({
-						'aria-label': timeSliderText,
-						'aria-valuemin': 0,
-						'aria-valuemax': duration,
-						'aria-valuenow': seconds,
-						'aria-valuetext': time
-					});
+					t.slider.setAttribute('aria-label', timeSliderText);
+					t.slider.setAttribute('aria-valuemin', 0);
+					t.slider.setAttribute('aria-valuemax', duration);
+					t.slider.setAttribute('aria-valuenow', seconds);
+					t.slider.setAttribute('aria-valuetext', time);
 				} else {
-					t.slider.removeAttr('aria-label aria-valuemin aria-valuemax aria-valuenow aria-valuetext');
+					t.slider.removeAttribute('aria-label');
+					t.slider.removeAttribute('aria-valuemin');
+					t.slider.removeAttribute('aria-valuemax');
+					t.slider.removeAttribute('aria-valuenow');
+					t.slider.removeAttribute('aria-valuetext');
 				}
 			},
 			/**
@@ -181,11 +186,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			};
 
 		// Events
-		t.slider.on('focus', () => {
+		t.slider.addEventListener('focus', () => {
 			player.options.autoRewind = false;
-		}).on('blur', () => {
+		}, false);
+		t.slider.addEventListener('blur', () => {
 			player.options.autoRewind = autoRewindInitial;
-		}).on('keydown', (e) => {
+		}, false);
+		t.slider.addEventListener('keydown', (e) => {
 
 			if ((new Date() - lastKeyPressTime) >= 1000) {
 				startedPaused = media.paused;
@@ -257,51 +264,59 @@ Object.assign(MediaElementPlayer.prototype, {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		}).on('mousedown touchstart', (e) => {
-			t.forcedHandlePause = false;
-			if (media.duration !== Infinity) {
-				// only handle left clicks or touch
-				if (e.which === 1 || e.which === 0) {
+		}, false);
 
-					if (!media.paused) {
-						t.media.pause();
-						t.forcedHandlePause = true;
-					}
+		const events = ['mousedown touchstart'];
 
-					mouseIsDown = true;
-					handleMouseMove(e);
-					t.globalBind('mousemove.dur touchmove.dur', (e) => {
-						handleMouseMove(e);
-					});
-					t.globalBind('mouseup.dur touchend.dur', () => {
-						handleMouseup();
-						mouseIsDown = false;
-						if (t.timefloat !== undefined) {
-							t.timefloat.hide();
+		for (let i = 0, total = events.length; i < total; i++) {
+			t.slider.addEventListener(events[i], (e) => {
+				t.forcedHandlePause = false;
+				if (media.duration !== Infinity) {
+					// only handle left clicks or touch
+					if (e.which === 1 || e.which === 0) {
+
+						if (!media.paused) {
+							t.media.pause();
+							t.forcedHandlePause = true;
 						}
-						t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
-					});
+
+						mouseIsDown = true;
+						handleMouseMove(e);
+						t.globalBind('mousemove.dur touchmove.dur', (e) => {
+							handleMouseMove(e);
+						});
+						t.globalBind('mouseup.dur touchend.dur', () => {
+							handleMouseup();
+							mouseIsDown = false;
+							if (t.timefloat !== undefined) {
+								t.timefloat.style.display = 'none';
+							}
+							t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
+						});
+					}
 				}
-			}
-		}).on('mouseenter', () => {
+			}, false);
+		}
+		t.slider.addEventListener('mouseenter', () => {
 			if (media.duration !== Infinity) {
 				t.globalBind('mousemove.dur', (e) => {
 					handleMouseMove(e);
 				});
 				if (t.timefloat !== undefined && !IS_IOS && !IS_ANDROID) {
-					t.timefloat.show();
+					t.timefloat.style.display = 'block';
 				}
 			}
-		}).on('mouseleave', () => {
+		}, false);
+		t.slider.addEventListener('mouseleave', () => {
 			if (media.duration !== Infinity) {
 				if (!mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
 					if (t.timefloat !== undefined) {
-						t.timefloat.hide();
+						t.timefloat.style.display = 'none';
 					}
 				}
 			}
-		});
+		}, false);
 
 		// loading
 		// If media is does not have a finite duration, remove progress bar interaction
@@ -312,9 +327,9 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
-			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
-				controls.find(`.${t.options.classPrefix}time-rail`).empty()
-					.html(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
+			} else if (!controls.querySelector(`.${t.options.classPrefix}broadcast`)) {
+				controls.querySelector(`.${t.options.classPrefix}time-rail`).innerHTML =
+					`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`;
 			}
 		}, false);
 
@@ -326,20 +341,20 @@ Object.assign(MediaElementPlayer.prototype, {
 					player.setCurrentRail(e);
 				}
 				updateSlider(e);
-			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
-				controls.find(`.${t.options.classPrefix}time-rail`).empty()
-					.html(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
+			} else if (!controls.querySelector(`.${t.options.classPrefix}broadcast`)) {
+				controls.querySelector(`.${t.options.classPrefix}time-rail`).innerHTML =
+					`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`;
 			}
 		}, false);
 
-		t.container.on('controlsresize', (e) => {
+		t.container.addEventListener('controlsresize', (e) => {
 			if (media.duration !== Infinity) {
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
 			}
-		});
+		}, false);
 	},
 
 	/**
@@ -378,7 +393,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
 			if (t.loaded && t.total) {
-				t.loaded.width(`${(percent * 100)}%`);
+				t.loaded.style.width = `${(percent * 100)}%`;
 			}
 		}
 	},
@@ -412,13 +427,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			// update bar and handle
 			if (t.total && t.handle) {
 				let
-					newWidth = Math.round(t.total.width() * nTime / t.media.duration),
-					handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2)
+					newWidth = Math.round(parseInt(getComputedStyle(t.total).width) * nTime / t.media.duration),
+					handlePos = newWidth - Math.round(parseInt(getComputedStyle(t.handle).offsetWidth) / 2)
 				;
 
 				newWidth = nTime / t.media.duration * 100;
-				t.current.width(newWidth + '%');
-				t.handle.css('left', handlePos);
+				t.current.style.width = `${newWidth}%`;
+				t.handle.style.left = `${handlePos}px`;
 			}
 		}
 	}

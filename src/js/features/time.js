@@ -1,5 +1,6 @@
 'use strict';
 
+import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import {secondsToTimeCode} from '../utils/time';
@@ -69,9 +70,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	buildduration: function (player, controls, layers, media)  {
 
-		const t = this;
+		const
+			t = this,
+			currTime = controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime')
+		;
 
-		if (controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime').innerHTML.length) {
+		if (currTime) {
 			controls.querySelector(`.${t.options.classPrefix}time`).innerHTML +=
 				`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
 				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>`;

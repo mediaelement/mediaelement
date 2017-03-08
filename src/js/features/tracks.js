@@ -1,5 +1,6 @@
 'use strict';
 
+import document from 'global/document';
 import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {config} from '../player';
