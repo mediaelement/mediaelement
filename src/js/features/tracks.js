@@ -511,7 +511,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	removeTrackButton: function (trackId) {
 
-		console.log(trackId);
 		const
 			t = this,
 			element = closest(t.captionsButton.querySelector(`#${trackId}`), (el) => el.tagName === 'LI')
