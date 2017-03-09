@@ -1790,7 +1790,7 @@ Object.assign(_player2.default.prototype, {
 				t.newTime = percentage <= 0.02 ? 0 : percentage * media.duration;
 
 				// fake seek to where the mouse is 
-				if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+				if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 					t.setCurrentRailHandle(t.newTime);
 					t.updateCurrent(t.newTime);
 				}
