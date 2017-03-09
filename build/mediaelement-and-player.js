@@ -55,9 +55,9 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _en = _dereq_(13);
+var _en = _dereq_(14);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -428,7 +428,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"13":13,"24":24,"6":6}],5:[function(_dereq_,module,exports){
+},{"14":14,"25":25,"6":6}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -447,7 +447,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _media = _dereq_(25);
+var _media = _dereq_(26);
 
 var _renderer = _dereq_(7);
 
@@ -859,7 +859,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"25":25,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"2":2,"26":26,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1076,17 +1076,17 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _player = _dereq_(15);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
 var Features = _interopRequireWildcard(_constants);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _dom = _dereq_(23);
+var _dom = _dereq_(24);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1434,14 +1434,14 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"15":15,"2":2,"22":22,"23":23,"24":24,"3":3,"4":4}],9:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"23":23,"24":24,"25":25,"3":3,"4":4}],9:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(15);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1449,9 +1449,9 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _dom = _dereq_(23);
+var _dom = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1556,14 +1556,14 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"15":15,"2":2,"23":23,"24":24,"4":4}],10:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"24":24,"25":25,"4":4}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(15);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1571,11 +1571,11 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
-var _time = _dereq_(27);
+var _time = _dereq_(28);
 
-var _dom = _dereq_(23);
+var _dom = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1671,7 +1671,7 @@ Object.assign(_player2.default.prototype, {
 				t.newTime = percentage <= 0.02 ? 0 : percentage * media.duration;
 
 				// fake seek to where the mouse is 
-				if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+				if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 					t.setCurrentRailHandle(t.newTime);
 					t.updateCurrent(t.newTime);
 				}
@@ -1990,20 +1990,20 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"15":15,"2":2,"22":22,"23":23,"27":27,"4":4}],11:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"23":23,"24":24,"28":28,"4":4}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(15);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(27);
+var _time = _dereq_(28);
 
-var _dom = _dereq_(23);
+var _dom = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2136,14 +2136,965 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"15":15,"2":2,"23":23,"27":27}],12:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"24":24,"28":28}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(15);
+var _mejs = _dereq_(6);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+var _i18n = _dereq_(4);
+
+var _i18n2 = _interopRequireDefault(_i18n);
+
+var _player = _dereq_(16);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _time = _dereq_(28);
+
+var _general = _dereq_(25);
+
+var _dom = _dereq_(24);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Closed Captions (CC) button
+ *
+ * This feature enables the displaying of a CC button in the control bar, and also contains the methods to start media
+ * with a certain language (if available), toggle captions, etc.
+ */
+
+// Feature configuration
+Object.assign(_player.config, {
+	/**
+  * Default language to start media using ISO 639-2 Language Code List (en, es, it, etc.)
+  * If there are multiple tracks for one language, the last track node found is activated
+  * @see https://www.loc.gov/standards/iso639-2/php/code_list.php
+  * @type {String}
+  */
+	startLanguage: '',
+	/**
+  * @type {?String}
+  */
+	tracksText: null,
+	/**
+  * @type {?String}
+  */
+	chaptersText: null,
+	/**
+  * Avoid to screen reader speak captions over an audio track.
+  *
+  * @type {Boolean}
+  */
+	tracksAriaLive: false,
+	/**
+  * Remove the [cc] button when no track nodes are present
+  * @type {Boolean}
+  */
+	hideCaptionsButtonWhenEmpty: true,
+	/**
+  * Change captions to pop-up if true and only one track node is found
+  * @type {Boolean}
+  */
+	toggleCaptionsButtonWhenOnlyOne: false,
+	/**
+  * @type {String}
+  */
+	slidesSelector: ''
+});
+
+Object.assign(_player2.default.prototype, {
+
+	/**
+  * @type {Boolean}
+  */
+	hasChapters: false,
+
+	/**
+  * Feature constructor.
+  *
+  * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+  * @param {MediaElementPlayer} player
+  * @param {$} controls
+  * @param {$} layers
+  * @param {HTMLElement} media
+  */
+	buildtracks: function buildtracks(player, controls, layers, media) {
+		if (player.tracks.length === 0) {
+			return;
+		}
+
+		var t = this,
+		    attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
+		    tracksTitle = (0, _general.isString)(t.options.tracksText) ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
+		    chaptersTitle = (0, _general.isString)(t.options.chaptersText) ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters'),
+		    total = player.tracks.length;
+
+		// If browser will do native captions, prefer mejs captions, loop through tracks and hide
+		if (t.domNode.textTracks) {
+			for (var i = t.domNode.textTracks.length - 1; i >= 0; i--) {
+				t.domNode.textTracks[i].mode = 'hidden';
+			}
+		}
+
+		t.cleartracks(player);
+
+		player.captions = _document2.default.createElement('div');
+		player.captions.className = t.options.classPrefix + 'captions-layer ' + t.options.classPrefix + 'layer';
+		player.captions.innerHTML = '<div class="' + t.options.classPrefix + 'captions-position ' + t.options.classPrefix + 'captions-position-hover"' + attr + '>' + ('<span class="' + t.options.classPrefix + 'captions-text"></span>') + '</div>';
+		player.captions.style.display = 'none';
+		layers.innerHTML = player.captions.outerHTML + layers.innerHTML;
+
+		player.captionsText = player.captions.querySelector('.' + t.options.classPrefix + 'captions-text');
+
+		player.captionsButton = _document2.default.createElement('div');
+		player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
+		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked">' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
+
+		t.addControlElement(player.captionsButton, 'tracks');
+
+		player.chaptersButton = _document2.default.createElement('div');
+		player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
+		player.chaptersButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
+
+		var subtitleCount = 0;
+
+		for (var _i = 0; _i < total; _i++) {
+			var kind = player.tracks[_i].kind;
+			if (kind === 'subtitles' || kind === 'captions') {
+				subtitleCount++;
+			} else if (kind === 'chapters' && !controls.querySelector('.' + t.options.classPrefix + 'chapter-selector')) {
+				player.captionsButton.parentNode.insertBefore(player.chaptersButton, player.captionsButton);
+			}
+		}
+
+		var inEvents = ['mouseenter', 'focusin'],
+		    outEvents = ['mouseleave', 'focusout'];
+
+		// if only one language then just make the button a toggle
+		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
+			// click
+			player.captionsButton.addEventListener('click', function () {
+				var trackId = 'none';
+				if (player.selectedTrack === null) {
+					trackId = player.tracks[0].trackId;
+				}
+				player.setTrack(trackId);
+			}, false);
+		} else {
+			var labels = player.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selector-label'),
+			    _radios = player.captionsButton.querySelectorAll('input[type=radio]');
+			// hover or keyboard focus
+			for (var _i2 = 0, _total = inEvents.length; _i2 < _total; _i2++) {
+				player.captionsButton.addEventListener(inEvents[_i2], function () {
+					(0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
+				}, false);
+			}
+
+			for (var _i3 = 0, _total2 = outEvents.length; _i3 < _total2; _i3++) {
+				player.captionsButton.addEventListener(outEvents[_i3], function () {
+					(0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
+				}, false);
+			}
+
+			// handle clicks to the language radio buttons
+			for (var _i4 = 0, _total3 = _radios.length; _i4 < _total3; _i4++) {
+				_radios[_i4].addEventListener('click', function () {
+					// value is trackId, same as the actual id, and we're using it here
+					// because the "none" checkbox doesn't have a trackId
+					// to use, but we want to know when "none" is clicked
+					player.setTrack(this.value);
+				}, false);
+			}
+
+			for (var _i5 = 0, _total4 = labels.length; _i5 < _total4; _i5++) {
+				labels[_i5].addEventListener('click', function () {
+					var radio = (0, _dom.siblings)(this, function (el) {
+						return el.tagName === 'INPUT' && el.type === 'RADIO';
+					}),
+					    event = (0, _general.createEvent)('click', radio);
+					radio.dispatchEvent(event);
+				}, false);
+			}
+
+			//Allow up/down arrow to change the selected radio without changing the volume.
+			player.captionsButton.addEventListener('keydown', function (e) {
+				e.stopPropagation();
+			}, false);
+		}
+
+		for (var _i6 = 0, _total5 = inEvents.length; _i6 < _total5; _i6++) {
+			player.chaptersButton.addEventListener(inEvents[_i6], function () {
+				if (this.querySelector('.' + t.options.classPrefix + 'chapters-selector-list').childNodes.length) {
+					(0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
+				}
+			}, false);
+		}
+
+		for (var _i7 = 0, _total6 = outEvents.length; _i7 < _total6; _i7++) {
+			player.chaptersButton.addEventListener(outEvents[_i7], function () {
+				(0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
+			}, false);
+		}
+
+		var radios = player.chaptersButton.querySelectorAll('input[type=radio]');
+
+		for (var _i8 = 0, _total7 = radios.length; _i8 < _total7; _i8++) {
+			radios[_i8].addEventListener('click', function () {
+				var self = this,
+				    listItems = player.chaptersButton.querySelectorAll('li'),
+				    label = (0, _dom.siblings)(self, function (el) {
+					return (0, _dom.hasClass)(el, t.options.classPrefix + 'chapters-selector-label');
+				})[0];
+
+				self.checked = true;
+				self.parentNode.setAttribute('aria-checked', true);
+				(0, _dom.addClass)(label, t.options.classPrefix + 'chapters-selected');
+				(0, _dom.removeClass)(player.chaptersButton.querySelector('.' + t.options.classPrefix + 'chapters-selected'), t.options.classPrefix + 'chapters-selected');
+
+				for (var _i9 = 0, _total8 = listItems.length; _i9 < _total8; _i9++) {
+					listItems[_i9].setAttribute('aria-checked', false);
+				}
+
+				media.setCurrentTime(parseFloat(self.val()));
+				if (media.paused) {
+					media.play();
+				}
+			}, false);
+		}
+
+		player.chaptersButton.addEventListener('click', '.' + t.options.classPrefix + 'chapters-selector-label', function () {
+			var radio = (0, _dom.siblings)(this, function (el) {
+				return el.tagName === 'INPUT' && el.type === 'RADIO';
+			}),
+			    event = (0, _general.createEvent)('click', radio);
+			radio.dispatchEvent(event);
+		}, false);
+
+		//Allow up/down arrow to change the selected radio without changing the volume.
+		player.chaptersButton.addEventListener('keydown', function (e) {
+			e.stopPropagation();
+		}, false);
+
+		if (!player.options.alwaysShowControls) {
+			// move with controls
+			player.container.addEventListener('controlsshown', function () {
+				// push captions above controls
+				(0, _dom.addClass)(player.container.querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
+			}, false);
+
+			player.container.addEventListener('controlshidden', function () {
+				if (!media.paused) {
+					// move back to normal place
+					(0, _dom.removeClass)(player.container.querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
+				}
+			});
+		} else {
+			(0, _dom.addClass)(player.container.querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
+		}
+
+		player.trackToLoad = -1;
+		player.selectedTrack = null;
+		player.isLoadingTrack = false;
+
+		// add to list
+		for (var _i10 = 0; _i10 < total; _i10++) {
+			var _kind = player.tracks[_i10].kind;
+			if (_kind === 'subtitles' || _kind === 'captions') {
+				player.addTrackButton(player.tracks[_i10].trackId, player.tracks[_i10].srclang, player.tracks[_i10].label);
+			}
+		}
+
+		// start loading tracks
+		player.loadNextTrack();
+
+		media.addEventListener('timeupdate', function () {
+			player.displayCaptions();
+		}, false);
+
+		if (player.options.slidesSelector !== '') {
+			player.slidesContainer = _document2.default.querySelectorAll(player.options.slidesSelector);
+
+			media.addEventListener('timeupdate', function () {
+				player.displaySlides();
+			}, false);
+		}
+
+		t.container.addEventListener('controlsresize', function () {
+			t.adjustLanguageBox();
+		}, false);
+	},
+
+	/**
+  * Feature destructor.
+  *
+  * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
+  * @param {MediaElementPlayer} player
+  */
+	cleartracks: function cleartracks(player) {
+		if (player) {
+			if (player.captions) {
+				player.captions.parentNode.removeChild(player.captions);
+			}
+			if (player.chapters) {
+				player.chapters.parentNode.removeChild(player.chapters);
+			}
+			if (player.captionsText) {
+				player.captionsText.parentNode.removeChild(player.captionsText);
+			}
+			if (player.captionsButton) {
+				player.captionsButton.parentNode.removeChild(player.captionsButton);
+			}
+
+			if (player.chaptersButton) {
+				player.chaptersButton.parentNode.removeChild(player.chaptersButton);
+			}
+		}
+	},
+
+	rebuildtracks: function rebuildtracks() {
+		var t = this;
+		t.findTracks();
+		t.buildtracks(t, t.controls, t.layers, t.media);
+	},
+
+	findTracks: function findTracks() {
+		var t = this,
+		    tracktags = t.node.querySelectorAll('track'),
+		    total = tracktags.length;
+
+		// store for use by plugins
+		t.tracks = [];
+		for (var i = 0; i < total; i++) {
+			var track = tracktags[i],
+			    srclang = track.getAttribute('srclang').toLowerCase() || '',
+			    trackId = t.id + '_track_' + i + '_' + track.getAttribute('kind') + '_' + srclang;
+			t.tracks.push({
+				trackId: trackId,
+				srclang: srclang,
+				src: track.getAttribute('src'),
+				kind: track.getAttribute('kind'),
+				label: track.getAttribute('label') || '',
+				entries: [],
+				isLoaded: false
+			});
+		}
+	},
+
+	/**
+  *
+  * @param {String} trackId, or "none" to disable captions
+  */
+	setTrack: function setTrack(trackId) {
+
+		var t = this,
+		    radios = t.captionsButton.querySelectorAll('input[type="radio"]'),
+		    captions = t.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selected'),
+		    track = t.captionsButton.querySelector('input[value="' + trackId + '"]');
+
+		for (var i = 0, total = radios.length; i < total; i++) {
+			radios[i].checked = false;
+		}
+
+		for (var _i11 = 0, _total9 = captions.length; _i11 < _total9; _i11++) {
+			(0, _dom.removeClass)(captions[_i11], t.options.classPrefix + 'captions-selected');
+		}
+
+		track.checked = true;
+		var labels = (0, _dom.siblings)(track, function (el) {
+			return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
+		});
+		for (var _i12 = 0, _total10 = labels.length; _i12 < _total10; _i12++) {
+			(0, _dom.addClass)(labels[_i12], t.options.classPrefix + 'captions-selected');
+		}
+
+		if (trackId === 'none') {
+			t.selectedTrack = null;
+			(0, _dom.removeClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+			return;
+		}
+
+		for (var _i13 = 0; _i13 < t.tracks.length; _i13++) {
+			var _track = t.tracks[_i13];
+			if (_track.trackId === trackId) {
+				if (t.selectedTrack === null) {
+					(0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+				}
+				t.selectedTrack = _track;
+				t.captions.setAttribute('lang', t.selectedTrack.srclang);
+				t.displayCaptions();
+				break;
+			}
+		}
+	},
+
+	/**
+  *
+  */
+	loadNextTrack: function loadNextTrack() {
+		var t = this;
+
+		t.trackToLoad++;
+		if (t.trackToLoad < t.tracks.length) {
+			t.isLoadingTrack = true;
+			t.loadTrack(t.trackToLoad);
+		} else {
+			// add done?
+			t.isLoadingTrack = false;
+			t.checkForTracks();
+		}
+	},
+
+	/**
+  *
+  * @param index
+  */
+	loadTrack: function loadTrack(index) {
+		var t = this,
+		    track = t.tracks[index];
+
+		if (track !== undefined && (track.src !== undefined || track.src !== "")) {
+			(0, _dom.ajax)(track.src, function (d) {
+
+				// parse the loaded file
+				track.entries = typeof d === 'string' && /<tt\s+xml/ig.exec(d) ? _mejs2.default.TrackFormatParser.dfxp.parse(d) : _mejs2.default.TrackFormatParser.webvtt.parse(d);
+
+				track.isLoaded = true;
+
+				t.enableTrackButton(track);
+				t.loadNextTrack();
+
+				if (track.kind === 'slides') {
+					t.setupSlides(track);
+				}
+				// Load by default the first track with `chapters` kind
+				else if (track.kind === 'chapters' && !t.hasChapters) {
+						t.drawChapters(track);
+						t.hasChapters = true;
+					}
+			}, function () {
+				t.removeTrackButton(track.trackId);
+				t.loadNextTrack();
+			});
+		}
+	},
+
+	/**
+  *
+  * @param {String} track - The language code
+  */
+	enableTrackButton: function enableTrackButton(track) {
+		var t = this,
+		    lang = track.srclang,
+		    target = _document2.default.getElementById('' + track.trackId);
+
+		if (!target) {
+			return;
+		}
+
+		var label = track.label;
+
+		if (label === '') {
+			label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
+		}
+		target.setAttribute('disabled', '');
+		var targetSiblings = (0, _dom.siblings)(target, function (el) {
+			return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
+		});
+		for (var i = 0, total = targetSiblings.length; i < total; i++) {
+			targetSiblings[i].innerHTML = label;
+		}
+
+		// auto select
+		if (t.options.startLanguage === lang) {
+			target.checked = true;
+			var event = (0, _general.createEvent)('click', target);
+			target.dispatchEvent(event);
+		}
+
+		t.adjustLanguageBox();
+	},
+
+	/**
+  *
+  * @param {String} trackId
+  */
+	removeTrackButton: function removeTrackButton(trackId) {
+
+		console.log(trackId);
+		var t = this,
+		    element = (0, _dom.closest)(t.captionsButton.querySelector('#' + trackId), function (el) {
+			return el.tagName === 'LI';
+		});
+
+		if (element) {
+			element.parentNode.removeChild(element);
+		}
+		t.adjustLanguageBox();
+	},
+
+	/**
+  *
+  * @param {String} trackId
+  * @param {String} lang - The language code
+  * @param {String} label
+  */
+	addTrackButton: function addTrackButton(trackId, lang, label) {
+		var t = this;
+		if (label === '') {
+			label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
+		}
+
+		// trackId is used in the value, too, because the "none"
+		// caption option doesn't have a trackId but we need to be able
+		// to set it, too
+		t.captionsButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'captions-selector-list-item">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled>') + ('<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)</label>') + '</li>';
+
+		t.adjustLanguageBox();
+	},
+
+	/**
+  *
+  */
+	adjustLanguageBox: function adjustLanguageBox() {
+		var t = this;
+		// adjust the size of the outer box
+		t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector').style.height = parseFloat(t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-list').offsetHeight) + 'px';
+	},
+
+	/**
+  *
+  */
+	checkForTracks: function checkForTracks() {
+		var t = this;
+
+		var hasSubtitles = false;
+
+		// check if any subtitles
+		if (t.options.hideCaptionsButtonWhenEmpty) {
+			for (var i = 0, total = t.tracks.length; i < total; i++) {
+				var kind = t.tracks[i].kind;
+				if ((kind === 'subtitles' || kind === 'captions') && t.tracks[i].isLoaded) {
+					hasSubtitles = true;
+					break;
+				}
+			}
+
+			t.captionsButton.style.display = hasSubtitles ? 'block' : 'none';
+			t.setControlsSize();
+		}
+	},
+
+	/**
+  *
+  */
+	displayCaptions: function displayCaptions() {
+
+		if (this.tracks === undefined) {
+			return;
+		}
+
+		var t = this,
+		    track = t.selectedTrack,
+		    sanitize = function sanitize(html) {
+
+			var div = _document2.default.createElement('div');
+			div.innerHTML = html;
+
+			// Remove all `<script>` tags first
+			var scripts = div.getElementsByTagName('script');
+			var i = scripts.length;
+			while (i--) {
+				scripts[i].parentNode.removeChild(scripts[i]);
+			}
+
+			// Loop the elements and remove anything that contains value="javascript:" or an `on*` attribute
+			// (`onerror`, `onclick`, etc.)
+			var allElements = div.getElementsByTagName('*');
+			for (var _i14 = 0, n = allElements.length; _i14 < n; _i14++) {
+				var attributesObj = allElements[_i14].attributes,
+				    attributes = Array.prototype.slice.call(attributesObj);
+
+				for (var j = 0, total = attributes.length; j < total; j++) {
+					if (attributes[j].name.startsWith('on') || attributes[j].value.startsWith('javascript')) {
+						allElements[_i14].parentNode.removeChild(allElements[_i14]);
+					} else if (attributes[j].name === 'style') {
+						allElements[_i14].removeAttribute(attributes[j].name);
+					}
+				}
+			}
+			return div.innerHTML;
+		};
+
+		if (track !== null && track.isLoaded) {
+			var i = t.searchTrackPosition(track.entries, t.media.currentTime);
+			if (i > -1) {
+				// Set the line before the timecode as a class so the cue can be targeted if needed
+				t.captionsText.innerHTML = sanitize(track.entries[i].text);
+				t.captionsText.className = t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || '');
+				t.captions.style.display = 'block';
+				t.captions.style.height = '0px';
+				return; // exit out if one is visible;
+			}
+
+			t.captions.style.display = 'none';
+		} else {
+			t.captions.style.display = 'none';
+		}
+	},
+
+	/**
+  *
+  * @param {HTMLElement} track
+  */
+	setupSlides: function setupSlides(track) {
+		var t = this;
+
+		t.slides = track;
+		t.slides.entries.imgs = [t.slides.entries.length];
+		t.showSlide(0);
+	},
+
+	/**
+  *
+  * @param {Number} index
+  */
+	showSlide: function showSlide(index) {
+		var _this = this;
+
+		var t = this;
+
+		if (t.tracks === undefined || t.slidesContainer === undefined) {
+			return;
+		}
+
+		var url = t.slides.entries[index].text;
+
+		var img = t.slides.entries[index].imgs;
+
+		if (img === undefined || img.fadeIn === undefined) {
+			(function () {
+
+				var image = _document2.default.createElement('img');
+				image.src = url;
+				image.addEventListener('load', function () {
+					var self = _this,
+					    visible = (0, _dom.siblings)(self, function (el) {
+						return visible(el);
+					});
+					self.style.display = 'none';
+					t.slidesContainer.innerHTML += self.innerHTML;
+					(0, _dom.fadeIn)(t.slidesContainer.querySelector(image));
+					for (var i = 0, total = visible.length; i < total; i++) {
+						(0, _dom.fadeOut)(visible[i], 400);
+					}
+				}, false);
+				t.slides.entries[index].imgs = img = image;
+			})();
+		} else if (!(0, _dom.visible)(img)) {
+			(function () {
+				var visible = (0, _dom.siblings)(self, function (el) {
+					return visible(el);
+				});
+				(0, _dom.fadeIn)(t.slidesContainer.querySelector(img));
+				for (var i = 0, total = visible.length; i < total; i++) {
+					(0, _dom.fadeOut)(visible[i]);
+				}
+			})();
+		}
+	},
+
+	/**
+  *
+  */
+	displaySlides: function displaySlides() {
+		var t = this;
+
+		if (this.slides === undefined) {
+			return;
+		}
+
+		var slides = t.slides,
+		    i = t.searchTrackPosition(slides.entries, t.media.currentTime);
+
+		if (i > -1) {
+			t.showSlide(i);
+			return; // exit out if one is visible;
+		}
+	},
+
+	/**
+  *
+  * @param {Object} chapters
+  */
+	drawChapters: function drawChapters(chapters) {
+		var t = this,
+		    total = chapters.entries.length,
+		    radios = t.chaptersButton.querySelectorAll('input[type="radio"]');
+
+		if (!total) {
+			return;
+		}
+
+		t.chaptersButton.querySelector('ul').innerHTML = '';
+
+		for (var i = 0; i < total; i++) {
+			t.chaptersButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'chapters-selector-list-item" ' + 'role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_chapters" value="' + chapters.entries[i].start + '" disabled>') + ('<label class="' + t.options.classPrefix + 'chapters-selector-label">' + chapters.entries[i].text + '</label>') + '</li>';
+		}
+
+		for (var _i15 = 0, _total11 = radios.length; _i15 < _total11; _i15++) {
+			radios[_i15].disabled = false;
+			radios[_i15].checked = false;
+		}
+	},
+	/**
+  * Perform binary search to look for proper track index
+  *
+  * @param {Object[]} tracks
+  * @param {Number} currentTime
+  * @return {Number}
+  */
+	searchTrackPosition: function searchTrackPosition(tracks, currentTime) {
+		var lo = 0,
+		    hi = tracks.length - 1,
+		    mid = void 0,
+		    start = void 0,
+		    stop = void 0;
+
+		while (lo <= hi) {
+			mid = lo + hi >> 1;
+			start = tracks[mid].start;
+			stop = tracks[mid].stop;
+
+			if (currentTime >= start && currentTime < stop) {
+				return mid;
+			} else if (start < currentTime) {
+				lo = mid + 1;
+			} else if (start > currentTime) {
+				hi = mid - 1;
+			}
+		}
+
+		return -1;
+	}
+});
+
+/**
+ * Map all possible languages with their respective code
+ *
+ * @constructor
+ */
+_mejs2.default.language = {
+	codes: {
+		af: 'mejs.afrikaans',
+		sq: 'mejs.albanian',
+		ar: 'mejs.arabic',
+		be: 'mejs.belarusian',
+		bg: 'mejs.bulgarian',
+		ca: 'mejs.catalan',
+		zh: 'mejs.chinese',
+		'zh-cn': 'mejs.chinese-simplified',
+		'zh-tw': 'mejs.chines-traditional',
+		hr: 'mejs.croatian',
+		cs: 'mejs.czech',
+		da: 'mejs.danish',
+		nl: 'mejs.dutch',
+		en: 'mejs.english',
+		et: 'mejs.estonian',
+		fl: 'mejs.filipino',
+		fi: 'mejs.finnish',
+		fr: 'mejs.french',
+		gl: 'mejs.galician',
+		de: 'mejs.german',
+		el: 'mejs.greek',
+		ht: 'mejs.haitian-creole',
+		iw: 'mejs.hebrew',
+		hi: 'mejs.hindi',
+		hu: 'mejs.hungarian',
+		is: 'mejs.icelandic',
+		id: 'mejs.indonesian',
+		ga: 'mejs.irish',
+		it: 'mejs.italian',
+		ja: 'mejs.japanese',
+		ko: 'mejs.korean',
+		lv: 'mejs.latvian',
+		lt: 'mejs.lithuanian',
+		mk: 'mejs.macedonian',
+		ms: 'mejs.malay',
+		mt: 'mejs.maltese',
+		no: 'mejs.norwegian',
+		fa: 'mejs.persian',
+		pl: 'mejs.polish',
+		pt: 'mejs.portuguese',
+		ro: 'mejs.romanian',
+		ru: 'mejs.russian',
+		sr: 'mejs.serbian',
+		sk: 'mejs.slovak',
+		sl: 'mejs.slovenian',
+		es: 'mejs.spanish',
+		sw: 'mejs.swahili',
+		sv: 'mejs.swedish',
+		tl: 'mejs.tagalog',
+		th: 'mejs.thai',
+		tr: 'mejs.turkish',
+		uk: 'mejs.ukrainian',
+		vi: 'mejs.vietnamese',
+		cy: 'mejs.welsh',
+		yi: 'mejs.yiddish'
+	}
+};
+
+/*
+ Parses WebVTT format which should be formatted as
+ ================================
+ WEBVTT
+
+ 1
+ 00:00:01,1 --> 00:00:05,000
+ A line of text
+
+ 2
+ 00:01:15,1 --> 00:02:05,000
+ A second line of text
+
+ ===============================
+
+ Adapted from: http://www.delphiki.com/html5/playr
+ */
+_mejs2.default.TrackFormatParser = {
+	webvtt: {
+		/**
+   * @type {String}
+   */
+		pattern: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
+
+		/**
+   *
+   * @param {String} trackText
+   * @returns {{text: Array, times: Array}}
+   */
+		parse: function parse(trackText) {
+			var lines = trackText.split(/\r?\n/),
+			    entries = [];
+
+			var i = 0,
+			    timecode = void 0,
+			    text = void 0,
+			    identifier = void 0;
+
+			for (; i < lines.length; i++) {
+				timecode = this.pattern.exec(lines[i]);
+
+				if (timecode && i < lines.length) {
+					if (i - 1 >= 0 && lines[i - 1] !== '') {
+						identifier = lines[i - 1];
+					}
+					i++;
+					// grab all the (possibly multi-line) text that follows
+					text = lines[i];
+					i++;
+					while (lines[i] !== '' && i < lines.length) {
+						text = text + '\n' + lines[i];
+						i++;
+					}
+					text = text.trim().replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+					entries.push({
+						identifier: identifier,
+						start: (0, _time.convertSMPTEtoSeconds)(timecode[1]) === 0 ? 0.200 : (0, _time.convertSMPTEtoSeconds)(timecode[1]),
+						stop: (0, _time.convertSMPTEtoSeconds)(timecode[3]),
+						text: text,
+						settings: timecode[5]
+					});
+				}
+				identifier = '';
+			}
+			return entries;
+		}
+	},
+	// Thanks to Justin Capella: https://github.com/johndyer/mediaelement/pull/420
+	dfxp: {
+		/**
+   *
+   * @param {String} trackText
+   * @returns {{text: Array, times: Array}}
+   */
+		parse: function parse(trackText) {
+			trackText = $(trackText).filter('tt');
+			var container = trackText.firstChild,
+			    lines = container.querySelectorAll('p'),
+			    styleNode = trackText.getElementById('' + container.attr('style')),
+			    entries = [];
+
+			var styles = void 0,
+			    i = void 0;
+
+			if (styleNode.length) {
+				styleNode.removeAttribute('id');
+				var attributes = styleNode.attributes;
+				if (attributes.length) {
+					styles = {};
+					for (i = 0; i < attributes.length; i++) {
+						styles[attributes[i].name.split(":")[1]] = attributes[i].value;
+					}
+				}
+			}
+
+			for (i = 0; i < lines.length; i++) {
+				var style = void 0,
+				    _temp = {
+					start: null,
+					stop: null,
+					style: null,
+					text: null
+				};
+
+				if (lines.eq(i).attr('begin')) {
+					_temp.start = (0, _time.convertSMPTEtoSeconds)(lines.eq(i).attr('begin'));
+				}
+				if (!_temp.start && lines.eq(i - 1).attr('end')) {
+					_temp.start = (0, _time.convertSMPTEtoSeconds)(lines.eq(i - 1).attr('end'));
+				}
+				if (lines.eq(i).attr('end')) {
+					_temp.stop = (0, _time.convertSMPTEtoSeconds)(lines.eq(i).attr('end'));
+				}
+				if (!_temp.stop && lines.eq(i + 1).attr('begin')) {
+					_temp.stop = (0, _time.convertSMPTEtoSeconds)(lines.eq(i + 1).attr('begin'));
+				}
+
+				if (styles) {
+					style = '';
+					for (var _style in styles) {
+						style += _style + ':' + styles[_style] + ';';
+					}
+				}
+				if (style) {
+					_temp.style = style;
+				}
+				if (_temp.start === 0) {
+					_temp.start = 0.200;
+				}
+				_temp.text = lines.eq(i).innerHTML.trim().replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+				entries.push(_temp);
+			}
+			return entries;
+		}
+	}
+};
+
+},{"16":16,"2":2,"24":24,"25":25,"28":28,"4":4,"6":6}],13:[function(_dereq_,module,exports){
+'use strict';
+
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -2151,11 +3102,11 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _dom = _dereq_(23);
+var _dom = _dereq_(24);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2473,7 +3424,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"15":15,"2":2,"22":22,"23":23,"24":24,"4":4}],13:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"23":23,"24":24,"25":25,"4":4}],14:[function(_dereq_,module,exports){
 'use strict';
 
 /*!
@@ -2580,7 +3531,7 @@ var EN = exports.EN = {
 	"mejs.yiddish": "Yiddish"
 };
 
-},{}],14:[function(_dereq_,module,exports){
+},{}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -2611,7 +3562,7 @@ if (typeof jQuery !== 'undefined') {
 	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
 }
 
-},{"3":3,"6":6}],15:[function(_dereq_,module,exports){
+},{"3":3,"6":6}],16:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2643,15 +3594,15 @@ var _i18n = _dereq_(4);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _time = _dereq_(27);
+var _time = _dereq_(28);
 
-var _media = _dereq_(25);
+var _media = _dereq_(26);
 
-var _dom = _dereq_(23);
+var _dom = _dereq_(24);
 
 var dom = _interopRequireWildcard(_dom);
 
@@ -3310,7 +4261,7 @@ var MediaElementPlayer = function () {
 					t.buildoverlays(t, t.controls, t.layers, t.media);
 
 					// grab for use by features
-					//t.findTracks();
+					t.findTracks();
 
 					// cache container to store control elements' original position
 					t.featurePosition = {};
@@ -3463,7 +4414,7 @@ var MediaElementPlayer = function () {
 									t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 								}, 20);
 							} catch (exp) {
-								
+								console.log(exp);
 							}
 						}
 
@@ -3914,18 +4865,18 @@ var MediaElementPlayer = function () {
 
 			var siblingsWidth = 0;
 
-			var siblings = dom.siblings(t.rail),
+			var siblings = dom.siblings(t.rail, function (el) {
+				return el !== t.rail;
+			}),
 			    total = siblings.length;
 			for (var i = 0; i < total; i++) {
-				if (dom.visible(siblings[i])) {
-					siblingsWidth += parseFloat(getComputedStyle(siblings[i]).width);
-				}
+				siblingsWidth += siblings[i].offsetWidth;
 			}
 
-			siblingsWidth += totalMargin + railMargin + 1;
+			siblingsWidth += totalMargin + (totalMargin === 0 ? railMargin * 2 : railMargin) + 1;
 
 			// Substract the width of the feature siblings from time rail
-			t.rail.style.width = parseFloat(getComputedStyle(t.controls).width) - siblingsWidth + 'px';
+			t.rail.style.width = parseFloat(t.controls.offsetWidth) - siblingsWidth + 'px';
 
 			var event = (0, _general.createEvent)('controlsresize', t.container);
 			t.container.dispatchEvent(event);
@@ -4341,7 +5292,7 @@ var MediaElementPlayer = function () {
 			try {
 				this.media.pause();
 			} catch (e) {
-				
+				console.log(e);
 			}
 		}
 	}, {
@@ -4524,7 +5475,7 @@ exports.default = MediaElementPlayer;
 	}
 })(_mejs2.default.$);
 
-},{"2":2,"22":22,"23":23,"24":24,"25":25,"27":27,"3":3,"4":4,"5":5,"6":6}],16:[function(_dereq_,module,exports){
+},{"2":2,"23":23,"24":24,"25":25,"26":26,"28":28,"3":3,"4":4,"5":5,"6":6}],17:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -4541,11 +5492,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _media = _dereq_(25);
+var _media = _dereq_(26);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4829,7 +5780,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"2":2,"22":22,"24":24,"25":25,"3":3,"6":6,"7":7}],17:[function(_dereq_,module,exports){
+},{"2":2,"23":23,"25":25,"26":26,"3":3,"6":6,"7":7}],18:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -4857,11 +5808,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
-var _media = _dereq_(25);
+var _media = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4942,7 +5893,7 @@ var PluginDetector = exports.PluginDetector = {
 					version = axDetect(ax);
 				}
 			} catch (e) {
-				
+				console.log(e);
 			}
 		}
 		return version;
@@ -5075,10 +6026,10 @@ var FlashMediaElementRenderer = {
 						try {
 							flash.flashApi['fire_' + methodName]();
 						} catch (e) {
-							
+							console.log(e);
 						}
 					} else {
-						
+						console.log('flash', 'missing method', methodName);
 					}
 				} else {
 					// store for after "READY" event fires
@@ -5198,7 +6149,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = 'rect(0 0 0 0);';
 				} catch (e) {
-					
+					console.log(e);
 				}
 			}
 		};
@@ -5210,7 +6161,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = '';
 				} catch (e) {
-					
+					console.log(e);
 				}
 			}
 		};
@@ -5388,7 +6339,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"2":2,"22":22,"24":24,"25":25,"3":3,"4":4,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+},{"2":2,"23":23,"25":25,"26":26,"3":3,"4":4,"6":6,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -5405,11 +6356,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
-var _media = _dereq_(25);
+var _media = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5680,7 +6631,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"2":2,"22":22,"24":24,"25":25,"3":3,"6":6,"7":7}],19:[function(_dereq_,module,exports){
+},{"2":2,"23":23,"25":25,"26":26,"3":3,"6":6,"7":7}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -5697,11 +6648,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
-var _media = _dereq_(25);
+var _media = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5800,7 +6751,7 @@ var NativeHls = {
   * @return {Hls}
   */
 	createInstance: function createInstance(settings) {
-		
+		console.log(settings.options);
 		var player = new Hls(settings.options);
 		_window2.default['__ready__' + settings.id](player);
 		return player;
@@ -6067,7 +7018,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"2":2,"22":22,"24":24,"25":25,"3":3,"6":6,"7":7}],20:[function(_dereq_,module,exports){
+},{"2":2,"23":23,"25":25,"26":26,"3":3,"6":6,"7":7}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6084,9 +7035,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _constants = _dereq_(22);
+var _constants = _dereq_(23);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6225,7 +7176,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"2":2,"22":22,"24":24,"3":3,"6":6,"7":7}],21:[function(_dereq_,module,exports){
+},{"2":2,"23":23,"25":25,"3":3,"6":6,"7":7}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -6244,9 +7195,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
-var _media = _dereq_(25);
+var _media = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6613,7 +7564,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
@@ -6878,7 +7829,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	_renderer.renderer.add(YouTubeIframeRenderer);
 }
 
-},{"2":2,"24":24,"25":25,"3":3,"6":6,"7":7}],22:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"26":26,"3":3,"6":6,"7":7}],23:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7063,7 +8014,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"2":2,"3":3,"6":6}],23:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"6":6}],24:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7077,6 +8028,7 @@ exports.fadeOut = fadeOut;
 exports.fadeIn = fadeIn;
 exports.siblings = siblings;
 exports.visible = visible;
+exports.ajax = ajax;
 
 var _window = _dereq_(3);
 
@@ -7140,7 +8092,10 @@ function toggleClass(el, className) {
 }
 
 // fade an element from the current state to full opacity in "duration" ms
-function fadeOut(el, duration, callback) {
+function fadeOut(el) {
+	var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
+	var callback = arguments[2];
+
 	var s = el.style,
 	    step = 25 / (duration || 300);
 	s.opacity = s.opacity || 1;
@@ -7154,7 +8109,10 @@ function fadeOut(el, duration, callback) {
 
 // fade out an element from the current state to full transparency in "duration" ms
 // display is the display style the element is assigned after the animation is done
-function fadeIn(el, duration, callback) {
+function fadeIn(el) {
+	var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
+	var callback = arguments[2];
+
 	var s = el.style,
 	    step = 25 / (duration || 300);
 	s.opacity = s.opacity || 0;
@@ -7182,6 +8140,23 @@ function visible(elem) {
 	return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
 }
 
+function ajax(url, success, error) {
+	var xhr = _window2.default.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+	xhr.open('GET', url, true);
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState > 3) {
+			if (xhr.status == 200) {
+				success(xhr.responseText);
+			} else {
+				error(xhr.status);
+			}
+		}
+	};
+	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	xhr.send();
+	return xhr;
+}
+
 _mejs2.default.Utils = _mejs2.default.Utils || {};
 _mejs2.default.Utils.offset = offset;
 _mejs2.default.Utils.hasClass = hasClass;
@@ -7193,8 +8168,9 @@ _mejs2.default.Utils.fadeOut = fadeOut;
 _mejs2.default.Utils.siblings = siblings;
 _mejs2.default.Utils.visible = visible;
 _mejs2.default.Utils.closest = closest;
+_mejs2.default.Utils.ajax = ajax;
 
-},{"2":2,"3":3,"6":6}],24:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"6":6}],25:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7375,7 +8351,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 _mejs2.default.Utils.isString = isString;
 
-},{"6":6}],25:[function(_dereq_,module,exports){
+},{"6":6}],26:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7393,7 +8369,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(24);
+var _general = _dereq_(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7560,7 +8536,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"24":24,"6":6}],26:[function(_dereq_,module,exports){
+},{"25":25,"6":6}],27:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -7790,7 +8766,7 @@ if (window.Element && !Element.prototype.closest) {
 	};
 }
 
-},{"2":2}],27:[function(_dereq_,module,exports){
+},{"2":2}],28:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7989,4 +8965,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"6":6}]},{},[26,5,4,13,20,17,16,18,19,21,14,15,8,9,10,11,12]);
+},{"6":6}]},{},[27,5,4,14,21,18,17,19,20,22,15,16,8,9,10,11,12,13]);

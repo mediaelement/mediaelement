@@ -291,7 +291,7 @@ var DailyMotionIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('dm ' + dm.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {

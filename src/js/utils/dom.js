@@ -42,7 +42,7 @@ export function toggleClass(el, className) {
 }
 
 // fade an element from the current state to full opacity in "duration" ms
-export function fadeOut (el, duration, callback) {
+export function fadeOut (el, duration = 400, callback) {
 	const s = el.style, step = 25 / (duration || 300);
 	s.opacity = s.opacity || 1;
 	(function fade () {
@@ -55,7 +55,7 @@ export function fadeOut (el, duration, callback) {
 
 // fade out an element from the current state to full transparency in "duration" ms
 // display is the display style the element is assigned after the animation is done
-export function fadeIn (el, duration, callback) {
+export function fadeIn (el, duration = 400, callback) {
 	const s = el.style, step = 25 / (duration || 300);
 	s.opacity = s.opacity || 0;
 	s.display = "block";
@@ -82,6 +82,23 @@ export function visible (elem) {
 	return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
 }
 
+export function ajax(url, success, error) {
+	const xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+	xhr.open('GET', url, true);
+	xhr.onreadystatechange = () => {
+		if (xhr.readyState > 3) {
+			if (xhr.status == 200) {
+				success(xhr.responseText);
+			} else {
+				error(xhr.status);
+			}
+		}
+	};
+	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	xhr.send();
+	return xhr;
+}
+
 mejs.Utils = mejs.Utils || {};
 mejs.Utils.offset = offset;
 mejs.Utils.hasClass = hasClass;
@@ -93,3 +110,4 @@ mejs.Utils.fadeOut = fadeOut;
 mejs.Utils.siblings = siblings;
 mejs.Utils.visible = visible;
 mejs.Utils.closest = closest;
+mejs.Utils.ajax = ajax;

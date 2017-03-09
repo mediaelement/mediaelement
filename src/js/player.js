@@ -685,7 +685,7 @@ class MediaElementPlayer {
 			t.buildoverlays(t, t.controls, t.layers, t.media);
 
 			// grab for use by features
-			//t.findTracks();
+			t.findTracks();
 
 			// cache container to store control elements' original position
 			t.featurePosition = {};

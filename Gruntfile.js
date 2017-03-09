@@ -97,7 +97,7 @@ module.exports = function (grunt) {
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
 						'src/js/features/time.js',
-						// 'src/js/features/tracks.js',
+						'src/js/features/tracks.js',
 						'src/js/features/volume.js'
 					]),
 
