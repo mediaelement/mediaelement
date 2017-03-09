@@ -2603,7 +2603,7 @@ Object.assign(_player2.default.prototype, {
 		if (label === '') {
 			label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
 		}
-		target.setAttribute('disabled', '');
+		target.disabled = false;
 		var targetSiblings = (0, _dom.siblings)(target, function (el) {
 			return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
 		});

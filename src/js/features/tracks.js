@@ -488,7 +488,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (label === '') {
 			label = i18n.t(mejs.language.codes[lang]) || lang;
 		}
-		target.setAttribute('disabled', '');
+		target.disabled = false;
 		const targetSiblings = siblings(target, (el) => hasClass(el, `${t.options.classPrefix}captions-selector-label`));
 		for (let i = 0, total = targetSiblings.length; i < total; i++) {
 			targetSiblings[i].innerHTML = label;
