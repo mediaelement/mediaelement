@@ -83,11 +83,11 @@ for (var i = 0; i < sourcesTotal; i++) {
 
 	// These media types cannot play at all on iOS, so disabling them
 	if (mejs.Features.isiOS) {
-		sourcesSelector[i].querySelector('option[value^="rtmp"]').setAttribute('disabled', true);
-		sourcesSelector[i].querySelector('option[value$="webm"]').setAttribute('disabled', true);
-		sourcesSelector[i].querySelector('option[value$=".mpd"]').setAttribute('disabled', true);
-		sourcesSelector[i].querySelector('option[value$=".ogg"]').setAttribute('disabled', true);
-		sourcesSelector[i].querySelector('option[value*=".flv"]').setAttribute('disabled', true);
+		sourcesSelector[i].querySelector('option[value^="rtmp"]').disabled = true;
+		sourcesSelector[i].querySelector('option[value$="webm"]').disabled = true;
+		sourcesSelector[i].querySelector('option[value$=".mpd"]').disabled = true;
+		sourcesSelector[i].querySelector('option[value$=".ogg"]').disabled = true;
+		sourcesSelector[i].querySelector('option[value*=".flv"]').disabled = true;
 	}
 }
 
