@@ -133,7 +133,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			duration = t.options.duration;
 		}
 		let timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond);
-		//Toggle the long video class if the video is longer than an hour.
+		/* Toggle long-video class if time code is >5 digits (MM:SS) */
 		t.container.toggleClass(`${t.options.classPrefix}long-video`, timecode.length > 5);
 
 		if (t.durationD && duration > 0) {

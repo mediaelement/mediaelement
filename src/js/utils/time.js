@@ -104,18 +104,18 @@ export function timeCodeToSeconds(time, showFrameCount = false, fps = 25) {
 	const parts = time.split(':');
 
 	let
-	output,
-	hours = 0,
-	minutes = 0,
-	seconds = 0,
-	frames = 0,
-	totalMinutes = 0;
+		output,
+		hours = 0,
+		minutes = 0,
+		seconds = 0,
+		frames = 0,
+		totalMinutes = 0;
 
 	let
-	dropFrames = Math.round(fps * 0.066666),
-	timeBase = Math.round(fps),
-	hFrames = timeBase * 3600,
-	mFrames = timeBase * 60;
+		dropFrames = Math.round(fps * 0.066666),
+		timeBase = Math.round(fps),
+		hFrames = timeBase * 3600,
+		mFrames = timeBase * 60;
 
 	switch (parts.length) {
 		default:
@@ -137,7 +137,6 @@ export function timeCodeToSeconds(time, showFrameCount = false, fps = 25) {
 			seconds = parseInt(parts[2], 10);
 			frames = parseInt(parts[3], 10);
 			break;
-
 	}
 
 	if (isDropFrame(fps)) {

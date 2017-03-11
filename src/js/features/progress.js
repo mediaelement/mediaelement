@@ -122,7 +122,6 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (!IS_IOS && !IS_ANDROID) {
 						t.timefloat.css('left', pos);
 						t.timefloatcurrent.html(secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond));
-
 						t.timefloat.show();
 					}
 				}
