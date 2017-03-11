@@ -2249,7 +2249,7 @@ Object.assign(_player2.default.prototype, {
 		player.captions.className = t.options.classPrefix + 'captions-layer ' + t.options.classPrefix + 'layer';
 		player.captions.innerHTML = '<div class="' + t.options.classPrefix + 'captions-position ' + t.options.classPrefix + 'captions-position-hover"' + attr + '>' + ('<span class="' + t.options.classPrefix + 'captions-text"></span>') + '</div>';
 		player.captions.style.display = 'none';
-		layers.innerHTML = player.captions.outerHTML + layers.innerHTML;
+		layers.insertBefore(player.captions, layers.firstChild);
 
 		player.captionsText = player.captions.querySelector('.' + t.options.classPrefix + 'captions-text');
 
