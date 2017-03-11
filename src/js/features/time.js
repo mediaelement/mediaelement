@@ -132,12 +132,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (t.options.duration > 0) {
 			duration = t.options.duration;
 		}
-
+		let timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond);
 		//Toggle the long video class if the video is longer than an hour.
-		t.container.toggleClass(`${t.options.classPrefix}long-video`, duration > 3600);
+		t.container.toggleClass(`${t.options.classPrefix}long-video`, timecode.length > 5);
 
 		if (t.durationD && duration > 0) {
-			t.durationD.html(secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
+			t.durationD.html(timecode);
 		}
 	}
 });
