@@ -514,6 +514,13 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		// change id
 		t.mediaElement.originalNode.setAttribute('id', id + '_from_mejs');
 
+		// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
+		// only if video/audio tags are detected
+		var tagName = t.mediaElement.originalNode.tagName.toLowerCase();
+		if (['video', 'audio'].includes(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
+			t.mediaElement.originalNode.setAttribute('preload', 'none');
+		}
+
 		// add next to this one
 		t.mediaElement.originalNode.parentNode.insertBefore(t.mediaElement, t.mediaElement.originalNode);
 
@@ -1783,7 +1790,7 @@ Object.assign(_player2.default.prototype, {
 				t.newTime = percentage <= 0.02 ? 0 : percentage * media.duration;
 
 				// fake seek to where the mouse is 
-				if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+				if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 					t.setCurrentRailHandle(t.newTime);
 					t.updateCurrent(t.newTime);
 				}
@@ -4996,7 +5003,7 @@ var MediaElementPlayer = function () {
 			});
 
 			// if (t.options.supportVR || (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/))) {
-			if (t.media.rendererName !== null && t.media.rendererName.match(/(youtube|facebook)/) && !(player.$media.attr('poster') || player.options.poster)) {
+			if (t.media.rendererName !== null && (t.media.rendererName.match(/(youtube|facebook)/) && !(player.$media.attr('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
 				bigPlay.hide();
 			}
 
@@ -5026,7 +5033,9 @@ var MediaElementPlayer = function () {
 			}, false);
 
 			media.addEventListener('pause', function () {
-				bigPlay.show();
+				if (!_constants.IS_STOCK_ANDROID) {
+					bigPlay.show();
+				}
 			}, false);
 
 			media.addEventListener('waiting', function () {
@@ -5869,7 +5878,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
 
 		for (i = 0, il = initEvents.length; i < il; i++) {
 			var event = (0, _general.createEvent)(initEvents[i], flash);

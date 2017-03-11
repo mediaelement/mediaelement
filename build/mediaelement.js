@@ -514,6 +514,13 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		// change id
 		t.mediaElement.originalNode.setAttribute('id', id + '_from_mejs');
 
+		// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
+		// only if video/audio tags are detected
+		var tagName = t.mediaElement.originalNode.tagName.toLowerCase();
+		if (['video', 'audio'].includes(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
+			t.mediaElement.originalNode.setAttribute('preload', 'none');
+		}
+
 		// add next to this one
 		t.mediaElement.originalNode.parentNode.insertBefore(t.mediaElement, t.mediaElement.originalNode);
 
@@ -1732,7 +1739,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
 
 		for (i = 0, il = initEvents.length; i < il; i++) {
 			var event = (0, _general.createEvent)(initEvents[i], flash);

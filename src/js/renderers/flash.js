@@ -247,7 +247,7 @@ const FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+		const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
 
 		for (i = 0, il = initEvents.length; i < il; i++) {
 			const event = createEvent(initEvents[i], flash);
