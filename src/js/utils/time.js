@@ -3,6 +3,14 @@
 import mejs from '../core/mejs';
 
 /**
+ * Indicate if FPS is dropFrame (typically non-integer frame rates: 29.976)
+ * @param {Number} fps - Frames per second
+ * @return {Boolean}
+ */
+export function isDropFrame(fps = 25) {
+	return !(fps % 1 === 0);
+}
+/**
  * Format a numeric time in format '00:00:00'
  *
  * @param {Number} time - Ideally a number, but if not or less than zero, is defaulted to zero
@@ -11,26 +19,62 @@ import mejs from '../core/mejs';
  * @param {Number} fps - Frames per second
  * @return {String}
  */
-export function secondsToTimeCode (time, forceHours = false, showFrameCount = false, fps = 25) {
+export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25) {
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
-	const frames = Math.floor(((time % 1) * fps).toFixed(3));
-
 	let
-		hours = Math.floor(time / 3600) % 24,
-		minutes = Math.floor(time / 60) % 60,
-		seconds = Math.floor(time % 60)
-	;
+		dropFrames = Math.round(fps * 0.066666),
+		timeBase = Math.round(fps),
+		framesPer24Hours = Math.round(fps * 3600) * 24,
+		framesPer10Minutes = Math.round(fps * 600),
+		frameSep = isDropFrame(fps) ? ';' : ':',
+		hours,
+		minutes,
+		seconds,
+		frames;
 
+	let f = Math.round(time * fps);
+
+	if (isDropFrame(fps)) {
+
+		if (f < 0) {
+			f = framesPer24Hours + f;
+		}
+
+		f = f % framesPer24Hours;
+
+		let d = Math.floor(f / framesPer10Minutes);
+		let m = f % framesPer10Minutes;
+		f = f + dropFrames * 9 * d;
+		if (m > dropFrames) {
+			f = f + dropFrames * (Math.floor((m - dropFrames) / (Math.round(timeBase * 60 - dropFrames))));
+		}
+
+		let tbdiv = Math.floor(f / timeBase);
+
+		hours = Math.floor(Math.floor(tbdiv / 60) / 60);
+		minutes = Math.floor(tbdiv / 60) % 60;
+		seconds = tbdiv % 60;
+	}
+	else {
+
+		hours = Math.floor(time / 3600) % 24;
+		minutes = Math.floor(time / 60) % 60;
+		seconds = Math.floor(time % 60);
+	}
+	frames = (f % timeBase).toFixed(0); // for  HH:MM:SS:FF don't put in partial frames (fractional decimal)
 	hours = hours <= 0 ? 0 : hours;
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
+	frames = frames <= 0 ? 0 : frames;
 
-	let  result = (forceHours || hours > 0) ? `${(hours < 10 ? `0${hours}` : hours)}:` : '';
+	let result = (forceHours || hours > 0) ? `${(hours < 10 ? `0${hours}` : hours)}:` : '';
 	result += `${(minutes < 10 ? `0${minutes}` : minutes)}:`;
 	result += `${(seconds < 10 ? `0${seconds}` : seconds)}`;
-	result += `${((showFrameCount) ? `:${(frames < 10 ? `0${frames}` : frames)}` : '')}`;
+	if (showFrameCount) {
+		result += (frames < 10) ? `${frameSep}0${frames}` : `${frameSep}${frames}`;
+	}
 
 	return result;
 }
@@ -43,10 +87,14 @@ export function secondsToTimeCode (time, forceHours = false, showFrameCount = fa
  * @param {Number} fps - Frames per second
  * @return {Number}
  */
-export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
+export function timeCodeToSeconds(time, showFrameCount = false, fps = 25) {
 
 	if (typeof time !== 'string') {
 		throw new TypeError('Time must be a string');
+	}
+
+	if (time.indexOf(';') > 0) {
+		time = time.replace(';', ':');
 	}
 
 	if (!time.match(/\d{2}(\:\d{2}){0,3}/)) {
@@ -56,12 +104,18 @@ export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
 	const parts = time.split(':');
 
 	let
-		output,
-		hours = 0,
-		minutes = 0,
-		seconds = 0,
-		frames = 0
-	;
+	output,
+	hours = 0,
+	minutes = 0,
+	seconds = 0,
+	frames = 0,
+	totalMinutes = 0;
+
+	let
+	dropFrames = Math.round(fps * 0.066666),
+	timeBase = Math.round(fps),
+	hFrames = timeBase * 3600,
+	mFrames = timeBase * 60;
 
 	switch (parts.length) {
 		default:
@@ -73,17 +127,27 @@ export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
 			seconds = parseInt(parts[1], 10);
 			break;
 		case 3:
+			hours = parseInt(parts[0], 10);
+			minutes = parseInt(parts[1], 10);
+			seconds = parseInt(parts[2], 10);
+			break;
 		case 4:
 			hours = parseInt(parts[0], 10);
 			minutes = parseInt(parts[1], 10);
 			seconds = parseInt(parts[2], 10);
-			frames = showFrameCount ? parseInt(parts[3]) / fps : 0;
+			frames = parseInt(parts[3], 10);
 			break;
 
 	}
 
-	output = ( hours * 3600 ) + ( minutes * 60 ) + seconds + frames;
-	return parseFloat((output).toFixed(3));
+	if (isDropFrame(fps)) {
+		totalMinutes = (60 * hours) + minutes;
+		output = ((hFrames * hours) + (mFrames * minutes) + (timeBase * seconds) + frames) - (dropFrames * (totalMinutes - (Math.floor(totalMinutes / 10))));
+	} else {
+		output = ( hFrames * hours ) + ( mFrames * minutes  ) + fps * seconds + frames;
+	}
+
+	return parseFloat(output.toFixed(3));
 }
 
 /**
@@ -95,30 +159,31 @@ export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
  * @param {Object} options
  * @param {Number} fps - Frames per second
  */
-export function calculateTimeFormat (time, options, fps = 25) {
+export function calculateTimeFormat(time, options, fps = 25) {
+	let
+	format = options.timeFormat;
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
 	const
-		hours = Math.floor(time / 3600) % 24,
-		minutes = Math.floor(time / 60) % 60,
-		seconds = Math.floor(time % 60),
-		frames = Math.floor(((time % 1) * fps).toFixed(3)),
-		lis = [
-			[frames, 'f'],
-			[seconds, 's'],
-			[minutes, 'm'],
-			[hours, 'h']
-		]
+	hours = Math.floor(time / 3600) % 24,
+	minutes = Math.floor(time / 60) % 60,
+	seconds = Math.floor(time % 60),
+	frames = Math.floor(((time % 1) * fps).toFixed(3)),
+	lis = [
+		[frames, 'f'],
+		[seconds, 's'],
+		[minutes, 'm'],
+		[hours, 'h']
+	]
 	;
 
 	let
-		format = options.timeFormat,
-		firstTwoPlaces = (format[1] === format[0]),
-		separatorIndex = firstTwoPlaces ? 2 : 1,
-		separator = format.length < separatorIndex ? format[separatorIndex] : ':',
-		firstChar = format[0],
-		required = false
+	firstTwoPlaces = (format[1] === format[0]),
+	separatorIndex = firstTwoPlaces ? 2 : 1,
+	separator = format.length < separatorIndex ? format[separatorIndex] : ':',
+	firstChar = format[0],
+	required = false
 	;
 
 	for (let i = 0, len = lis.length; i < len; i++) {
@@ -158,7 +223,7 @@ export function calculateTimeFormat (time, options, fps = 25) {
  * @param {String} SMPTE
  * @return {Number}
  */
-export function convertSMPTEtoSeconds (SMPTE) {
+export function convertSMPTEtoSeconds(SMPTE) {
 
 	if (typeof SMPTE !== 'string') {
 		throw new TypeError('Argument must be a string value');
@@ -169,8 +234,8 @@ export function convertSMPTEtoSeconds (SMPTE) {
 	const decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0;
 
 	let
-		secs = 0,
-		multiplier = 1
+	secs = 0,
+	multiplier = 1
 	;
 
 	SMPTE = SMPTE.split(':').reverse();
