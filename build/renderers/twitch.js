@@ -56,26 +56,24 @@ var twitchApi = {
   */
 	loadIframeApi: function loadIframeApi() {
 		if (!twitchApi.isIframeStarted) {
-			(function () {
 
-				var script = document.createElement('script'),
-				    firstScriptTag = document.getElementsByTagName('script')[0];
+			var script = document.createElement('script'),
+			    firstScriptTag = document.getElementsByTagName('script')[0];
 
-				var done = false;
+			var done = false;
 
-				script.src = '//player.twitch.tv/js/embed/v1.js';
+			script.src = '//player.twitch.tv/js/embed/v1.js';
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!twitchApi.readyState || twitchApi.readyState === undefined || twitchApi.readyState === "loaded" || twitchApi.readyState === "complete")) {
-						done = true;
-						twitchApi.iFrameReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-				twitchApi.isIframeStarted = true;
-			})();
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function () {
+				if (!done && (!twitchApi.readyState || twitchApi.readyState === undefined || twitchApi.readyState === "loaded" || twitchApi.readyState === "complete")) {
+					done = true;
+					twitchApi.iFrameReady();
+					script.onload = script.onreadystatechange = null;
+				}
+			};
+			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+			twitchApi.isIframeStarted = true;
 		}
 	},
 
