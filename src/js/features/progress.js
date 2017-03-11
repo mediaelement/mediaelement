@@ -266,7 +266,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}, false);
 
-		const events = ['mousedown touchstart'];
+		const events = ['mousedown', 'touchstart'];
 
 		for (let i = 0, total = events.length; i < total; i++) {
 			t.slider.addEventListener(events[i], (e) => {
