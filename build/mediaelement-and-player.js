@@ -1823,7 +1823,7 @@ Object.assign(_player2.default.prototype, {
 			}
 		}, false);
 
-		var events = ['mousedown touchstart'];
+		var events = ['mousedown', 'touchstart'];
 
 		for (var i = 0, total = events.length; i < total; i++) {
 			t.slider.addEventListener(events[i], function (e) {
