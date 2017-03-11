@@ -493,6 +493,11 @@ class MediaElementPlayer {
 		return t;
 	}
 
+	recalculateTimeFormat() {
+		const t = this;
+		calculateTimeFormat(0, t.options, t.options.framesPerSecond || 25);
+	}
+
 	showControls (doAnimation) {
 		const t = this;
 
