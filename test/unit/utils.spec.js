@@ -141,8 +141,8 @@ describe('Utilities', () => {
 		it('can show the number of frames multiplying the decimal portion of time by the frames per second indicated', () => {
 
 			expect(time.secondsToTimeCode(36.45, false, true, 32)).to.equal('00:36:14');
-			expect(time.secondsToTimeCode(70.89, true, true, 40)).to.equal('00:01:10:35');
-			expect(time.secondsToTimeCode(3600.234, true, true)).to.equal('01:00:00:05');
+			expect(time.secondsToTimeCode(70.89, true, true, 40)).to.equal('00:01:10:36');
+			expect(time.secondsToTimeCode(3600.234, true, true)).to.equal('01:00:00:06');
 		});
 
 		it('can only accept numeric values for the time; otherwise, turns it to zero', () => {
