@@ -222,7 +222,7 @@ const FacebookRenderer = {
 		 */
 		function sendEvents (events) {
 			for (let i = 0, il = events.length; i < il; i++) {
-				const event = mejs.Utils.mejs.Utils.createEvent(events[i], fbWrapper);
+				const event = mejs.Utils.createEvent(events[i], fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}
 		}

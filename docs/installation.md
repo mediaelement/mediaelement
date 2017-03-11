@@ -8,7 +8,8 @@
     * [Multiple codecs (Optional)](#multi-codecs)
     * [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
     * [Use of Closed Captioning (Optional)](#closed-captioning)
-* [4. Set default language (Optional)](#language)
+* [4. Setup Player](#player)
+* [5. Set default language (Optional)](#language)
     
 
 <a id="mime-types"></a>
@@ -185,8 +186,15 @@ That's why is important to put the caption files **in the same domain as the pla
 
 As a final note, to display closed captioning in iOS, they will need to be transcoded it in the video. To learn more about this topic, please read [The Zencoder guide to closed captioning for web, mobile, and connected TV](http://blog.zencoder.com/2012/07/13/closed-captioning-for-web-mobile-and-tv/).
 
+<a id="player"></a>
+## 4. Setup Player
+
+The easiest way to use the player is adding the `class="mejs__player"` to any <video>, <audio>, or <iframe> tags, and add the `data-mejsoptions` to configure it.
+
+For more details and ways to set the player, please read the [Usage section](usage.md#initialize).
+
 <a id="language"></a>
-## 4. Set default language (Optional)
+## 5. Set default language (Optional)
 
 By default, all the strings in `MediaElementJS` are in English. If you wanna set a different language for them, you need to set the language code via `mejs.i18n.locale.language` before the player instantiation, and specify the language in the media container in the `success` callback.
 
