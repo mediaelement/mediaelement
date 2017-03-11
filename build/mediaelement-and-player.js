@@ -2274,8 +2274,25 @@ Object.assign(_player2.default.prototype, {
 			}
 		}
 
+		player.trackToLoad = -1;
+		player.selectedTrack = null;
+		player.isLoadingTrack = false;
+
+		// add to list
+		for (var _i2 = 0; _i2 < total; _i2++) {
+			var _kind = player.tracks[_i2].kind;
+			if (_kind === 'subtitles' || _kind === 'captions') {
+				player.addTrackButton(player.tracks[_i2].trackId, player.tracks[_i2].srclang, player.tracks[_i2].label);
+			}
+		}
+
+		// start loading tracks
+		player.loadNextTrack();
+
 		var inEvents = ['mouseenter', 'focusin'],
-		    outEvents = ['mouseleave', 'focusout'];
+		    outEvents = ['mouseleave', 'focusout'],
+		    chapterOptions = player.chaptersButton.querySelectorAll('input[type=radio]'),
+		    chapterLabels = player.chaptersButton.getElementsByClassName(t.options.classPrefix + 'chapters-selector-label');
 
 		// if only one language then just make the button a toggle
 		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
@@ -2289,23 +2306,23 @@ Object.assign(_player2.default.prototype, {
 			}, false);
 		} else {
 			var labels = player.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selector-label'),
-			    _radios = player.captionsButton.querySelectorAll('input[type=radio]');
+			    captions = player.captionsButton.querySelectorAll('input[type=radio]');
 			// hover or keyboard focus
-			for (var _i2 = 0, _total = inEvents.length; _i2 < _total; _i2++) {
-				player.captionsButton.addEventListener(inEvents[_i2], function () {
+			for (var _i3 = 0, _total = inEvents.length; _i3 < _total; _i3++) {
+				player.captionsButton.addEventListener(inEvents[_i3], function () {
 					(0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
 				}, false);
 			}
 
-			for (var _i3 = 0, _total2 = outEvents.length; _i3 < _total2; _i3++) {
-				player.captionsButton.addEventListener(outEvents[_i3], function () {
+			for (var _i4 = 0, _total2 = outEvents.length; _i4 < _total2; _i4++) {
+				player.captionsButton.addEventListener(outEvents[_i4], function () {
 					(0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
 				}, false);
 			}
 
 			// handle clicks to the language radio buttons
-			for (var _i4 = 0, _total3 = _radios.length; _i4 < _total3; _i4++) {
-				_radios[_i4].addEventListener('click', function () {
+			for (var _i5 = 0, _total3 = captions.length; _i5 < _total3; _i5++) {
+				captions[_i5].addEventListener('click', function () {
 					// value is trackId, same as the actual id, and we're using it here
 					// because the "none" checkbox doesn't have a trackId
 					// to use, but we want to know when "none" is clicked
@@ -2313,11 +2330,11 @@ Object.assign(_player2.default.prototype, {
 				}, false);
 			}
 
-			for (var _i5 = 0, _total4 = labels.length; _i5 < _total4; _i5++) {
-				labels[_i5].addEventListener('click', function () {
+			for (var _i6 = 0, _total4 = labels.length; _i6 < _total4; _i6++) {
+				labels[_i6].addEventListener('click', function () {
 					var radio = (0, _dom.siblings)(this, function (el) {
-						return el.tagName === 'INPUT' && el.type === 'RADIO';
-					}),
+						return el.tagName === 'INPUT';
+					})[0],
 					    event = (0, _general.createEvent)('click', radio);
 					radio.dispatchEvent(event);
 				}, false);
@@ -2329,24 +2346,22 @@ Object.assign(_player2.default.prototype, {
 			}, false);
 		}
 
-		for (var _i6 = 0, _total5 = inEvents.length; _i6 < _total5; _i6++) {
-			player.chaptersButton.addEventListener(inEvents[_i6], function () {
+		for (var _i7 = 0, _total5 = inEvents.length; _i7 < _total5; _i7++) {
+			player.chaptersButton.addEventListener(inEvents[_i7], function () {
 				if (this.querySelector('.' + t.options.classPrefix + 'chapters-selector-list').childNodes.length) {
 					(0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
 				}
 			}, false);
 		}
 
-		for (var _i7 = 0, _total6 = outEvents.length; _i7 < _total6; _i7++) {
-			player.chaptersButton.addEventListener(outEvents[_i7], function () {
+		for (var _i8 = 0, _total6 = outEvents.length; _i8 < _total6; _i8++) {
+			player.chaptersButton.addEventListener(outEvents[_i8], function () {
 				(0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
 			}, false);
 		}
 
-		var radios = player.chaptersButton.querySelectorAll('input[type=radio]');
-
-		for (var _i8 = 0, _total7 = radios.length; _i8 < _total7; _i8++) {
-			radios[_i8].addEventListener('click', function () {
+		for (var _i9 = 0, _total7 = chapterOptions.length; _i9 < _total7; _i9++) {
+			chapterOptions[_i9].addEventListener('click', function () {
 				var self = this,
 				    listItems = player.chaptersButton.querySelectorAll('li'),
 				    label = (0, _dom.siblings)(self, function (el) {
@@ -2358,8 +2373,8 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(label, t.options.classPrefix + 'chapters-selected');
 				(0, _dom.removeClass)(player.chaptersButton.querySelector('.' + t.options.classPrefix + 'chapters-selected'), t.options.classPrefix + 'chapters-selected');
 
-				for (var _i9 = 0, _total8 = listItems.length; _i9 < _total8; _i9++) {
-					listItems[_i9].setAttribute('aria-checked', false);
+				for (var _i10 = 0, _total8 = listItems.length; _i10 < _total8; _i10++) {
+					listItems[_i10].setAttribute('aria-checked', false);
 				}
 
 				media.setCurrentTime(parseFloat(self.val()));
@@ -2369,13 +2384,15 @@ Object.assign(_player2.default.prototype, {
 			}, false);
 		}
 
-		player.chaptersButton.addEventListener('click', '.' + t.options.classPrefix + 'chapters-selector-label', function () {
-			var radio = (0, _dom.siblings)(this, function (el) {
-				return el.tagName === 'INPUT' && el.type === 'RADIO';
-			}),
-			    event = (0, _general.createEvent)('click', radio);
-			radio.dispatchEvent(event);
-		}, false);
+		for (var _i11 = 0, _total9 = chapterLabels.length; _i11 < _total9; _i11++) {
+			chapterLabels[_i11].addEventListener('click', function () {
+				var radio = (0, _dom.siblings)(this, function (el) {
+					return el.tagName === 'INPUT';
+				})[0],
+				    event = (0, _general.createEvent)('click', radio);
+				radio.dispatchEvent(event);
+			}, false);
+		}
 
 		//Allow up/down arrow to change the selected radio without changing the volume.
 		player.chaptersButton.addEventListener('keydown', function (e) {
@@ -2398,21 +2415,6 @@ Object.assign(_player2.default.prototype, {
 		} else {
 			(0, _dom.addClass)(player.container.querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
 		}
-
-		player.trackToLoad = -1;
-		player.selectedTrack = null;
-		player.isLoadingTrack = false;
-
-		// add to list
-		for (var _i10 = 0; _i10 < total; _i10++) {
-			var _kind = player.tracks[_i10].kind;
-			if (_kind === 'subtitles' || _kind === 'captions') {
-				player.addTrackButton(player.tracks[_i10].trackId, player.tracks[_i10].srclang, player.tracks[_i10].label);
-			}
-		}
-
-		// start loading tracks
-		player.loadNextTrack();
 
 		media.addEventListener('timeupdate', function () {
 			player.displayCaptions();
@@ -2502,16 +2504,16 @@ Object.assign(_player2.default.prototype, {
 			radios[i].checked = false;
 		}
 
-		for (var _i11 = 0, _total9 = captions.length; _i11 < _total9; _i11++) {
-			(0, _dom.removeClass)(captions[_i11], t.options.classPrefix + 'captions-selected');
+		for (var _i12 = 0, _total10 = captions.length; _i12 < _total10; _i12++) {
+			(0, _dom.removeClass)(captions[_i12], t.options.classPrefix + 'captions-selected');
 		}
 
 		track.checked = true;
 		var labels = (0, _dom.siblings)(track, function (el) {
 			return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
 		});
-		for (var _i12 = 0, _total10 = labels.length; _i12 < _total10; _i12++) {
-			(0, _dom.addClass)(labels[_i12], t.options.classPrefix + 'captions-selected');
+		for (var _i13 = 0, _total11 = labels.length; _i13 < _total11; _i13++) {
+			(0, _dom.addClass)(labels[_i13], t.options.classPrefix + 'captions-selected');
 		}
 
 		if (trackId === 'none') {
@@ -2520,8 +2522,8 @@ Object.assign(_player2.default.prototype, {
 			return;
 		}
 
-		for (var _i13 = 0; _i13 < t.tracks.length; _i13++) {
-			var _track = t.tracks[_i13];
+		for (var _i14 = 0; _i14 < t.tracks.length; _i14++) {
+			var _track = t.tracks[_i14];
 			if (_track.trackId === trackId) {
 				if (t.selectedTrack === null) {
 					(0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
@@ -2716,15 +2718,15 @@ Object.assign(_player2.default.prototype, {
 			// Loop the elements and remove anything that contains value="javascript:" or an `on*` attribute
 			// (`onerror`, `onclick`, etc.)
 			var allElements = div.getElementsByTagName('*');
-			for (var _i14 = 0, n = allElements.length; _i14 < n; _i14++) {
-				var attributesObj = allElements[_i14].attributes,
+			for (var _i15 = 0, n = allElements.length; _i15 < n; _i15++) {
+				var attributesObj = allElements[_i15].attributes,
 				    attributes = Array.prototype.slice.call(attributesObj);
 
 				for (var j = 0, total = attributes.length; j < total; j++) {
 					if (attributes[j].name.startsWith('on') || attributes[j].value.startsWith('javascript')) {
-						allElements[_i14].parentNode.removeChild(allElements[_i14]);
+						allElements[_i15].parentNode.removeChild(allElements[_i15]);
 					} else if (attributes[j].name === 'style') {
-						allElements[_i14].removeAttribute(attributes[j].name);
+						allElements[_i15].removeAttribute(attributes[j].name);
 					}
 				}
 			}
@@ -2847,9 +2849,9 @@ Object.assign(_player2.default.prototype, {
 			t.chaptersButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'chapters-selector-list-item" ' + 'role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_chapters" value="' + chapters.entries[i].start + '" disabled>') + ('<label class="' + t.options.classPrefix + 'chapters-selector-label">' + chapters.entries[i].text + '</label>') + '</li>';
 		}
 
-		for (var _i15 = 0, _total11 = radios.length; _i15 < _total11; _i15++) {
-			radios[_i15].disabled = false;
-			radios[_i15].checked = false;
+		for (var _i16 = 0, _total12 = radios.length; _i16 < _total12; _i16++) {
+			radios[_i16].disabled = false;
+			radios[_i16].checked = false;
 		}
 	},
 	/**

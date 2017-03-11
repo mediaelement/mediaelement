@@ -143,9 +143,26 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 
+		player.trackToLoad = -1;
+		player.selectedTrack = null;
+		player.isLoadingTrack = false;
+
+		// add to list
+		for (let i = 0; i < total; i++) {
+			const kind = player.tracks[i].kind;
+			if (kind === 'subtitles' || kind === 'captions') {
+				player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
+			}
+		}
+
+		// start loading tracks
+		player.loadNextTrack();
+
 		const
 			inEvents = ['mouseenter', 'focusin'],
-			outEvents = ['mouseleave', 'focusout']
+			outEvents = ['mouseleave', 'focusout'],
+			chapterOptions = player.chaptersButton.querySelectorAll('input[type=radio]'),
+			chapterLabels = player.chaptersButton.getElementsByClassName(`${t.options.classPrefix}chapters-selector-label`)
 		;
 
 
@@ -162,7 +179,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		} else {
 			const
 				labels = player.captionsButton.querySelectorAll(`.${t.options.classPrefix}captions-selector-label`),
-				radios = player.captionsButton.querySelectorAll('input[type=radio]')
+				captions = player.captionsButton.querySelectorAll('input[type=radio]')
 			;
 			// hover or keyboard focus
 			for (let i = 0, total = inEvents.length; i < total; i++) {
@@ -178,8 +195,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 
 			// handle clicks to the language radio buttons
-			for (let i = 0, total = radios.length; i < total; i++) {
-				radios[i].addEventListener('click',  function () {
+			for (let i = 0, total = captions.length; i < total; i++) {
+				captions[i].addEventListener('click',  function () {
 					// value is trackId, same as the actual id, and we're using it here
 					// because the "none" checkbox doesn't have a trackId
 					// to use, but we want to know when "none" is clicked
@@ -190,7 +207,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			for (let i = 0, total = labels.length; i < total; i++) {
 				labels[i].addEventListener('click',  function () {
 					const
-						radio = siblings(this, (el) => el.tagName === 'INPUT' && el.type === 'RADIO'),
+						radio = siblings(this, (el) => el.tagName === 'INPUT')[0],
 						event = createEvent('click', radio)
 					;
 					radio.dispatchEvent(event);
@@ -217,10 +234,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			}, false);
 		}
 
-		const radios = player.chaptersButton.querySelectorAll('input[type=radio]');
-
-		for (let i = 0, total = radios.length; i < total; i++) {
-			radios[i].addEventListener('click',  function () {
+		for (let i = 0, total = chapterOptions.length; i < total; i++) {
+			chapterOptions[i].addEventListener('click',  function () {
 				const
 					self = this,
 					listItems = player.chaptersButton.querySelectorAll('li'),
@@ -243,14 +258,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			}, false);
 		}
 
-		player.chaptersButton.addEventListener('click', `.${t.options.classPrefix}chapters-selector-label`, function () {
-			const
-				radio = siblings(this, (el) => el.tagName === 'INPUT' && el.type === 'RADIO'),
-				event = createEvent('click', radio)
-			;
-			radio.dispatchEvent(event);
-
-		}, false);
+		for (let i = 0, total = chapterLabels.length; i < total; i++) {
+			chapterLabels[i].addEventListener('click',  function () {
+				const
+					radio = siblings(this, (el) => el.tagName === 'INPUT')[0],
+					event = createEvent('click', radio)
+				;
+				radio.dispatchEvent(event);
+			}, false);
+		}
 
 		//Allow up/down arrow to change the selected radio without changing the volume.
 		player.chaptersButton.addEventListener('keydown', (e) => {
@@ -273,21 +289,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		} else {
 			addClass(player.container.querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
 		}
-
-		player.trackToLoad = -1;
-		player.selectedTrack = null;
-		player.isLoadingTrack = false;
-
-		// add to list
-		for (let i = 0; i < total; i++) {
-			const kind = player.tracks[i].kind;
-			if (kind === 'subtitles' || kind === 'captions') {
-				player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
-			}
-		}
-
-		// start loading tracks
-		player.loadNextTrack();
 
 		media.addEventListener('timeupdate', () => {
 			player.displayCaptions();
