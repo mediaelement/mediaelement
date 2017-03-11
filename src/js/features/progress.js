@@ -121,7 +121,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					// position floating time box
 					if (!IS_IOS && !IS_ANDROID) {
 						t.timefloat.css('left', pos);
-						t.timefloatcurrent.html(secondsToTimeCode(t.newTime, player.options.alwaysShowHours));
+						t.timefloatcurrent.html(secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond));
 						t.timefloat.show();
 					}
 				}
@@ -137,7 +137,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					seconds = media.currentTime,
 					timeSliderText = i18n.t('mejs.time-slider'),
-					time = secondsToTimeCode(seconds, player.options.alwaysShowHours),
+					time = secondsToTimeCode(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond),
 					duration = media.duration
 				;
 
