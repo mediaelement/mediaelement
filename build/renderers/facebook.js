@@ -261,97 +261,95 @@ var FacebookRenderer = {
 				FB.Event.subscribe('xfbml.ready', function (msg) {
 
 					if (msg.type === 'video') {
-						(function () {
 
-							fbApi = msg.instance;
+						fbApi = msg.instance;
 
-							// Set proper size since player dimensions are unknown before this event
-							var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
-							    width = parseInt(window.getComputedStyle(fbIframe, null).width),
-							    height = parseInt(fbIframe.style.height),
-							    events = ['mouseover', 'mouseout'],
-							    assignEvents = function assignEvents(e) {
-								var event = mejs.Utils.createEvent(e.type, fbWrapper);
-								mediaElement.dispatchEvent(event);
-							};
+						// Set proper size since player dimensions are unknown before this event
+						var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
+						    width = parseInt(window.getComputedStyle(fbIframe, null).width),
+						    height = parseInt(fbIframe.style.height),
+						    events = ['mouseover', 'mouseout'],
+						    assignEvents = function assignEvents(e) {
+							var event = mejs.Utils.createEvent(e.type, fbWrapper);
+							mediaElement.dispatchEvent(event);
+						};
 
-							fbWrapper.setSize(width, height);
+						fbWrapper.setSize(width, height);
 
-							for (i = 0, il = events.length; i < il; i++) {
-								fbIframe.addEventListener(events[i], assignEvents, false);
+						for (i = 0, il = events.length; i < il; i++) {
+							fbIframe.addEventListener(events[i], assignEvents, false);
+						}
+
+						// remove previous listeners
+						var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
+						for (i = 0, il = fbEvents.length; i < il; i++) {
+							var event = fbEvents[i],
+							    handler = eventHandler[event];
+							if (handler !== undefined && handler !== null && !mejs.Utils.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+								handler.removeListener(event);
 							}
+						}
 
-							// remove previous listeners
-							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
-							for (i = 0, il = fbEvents.length; i < il; i++) {
-								var event = fbEvents[i],
-								    handler = eventHandler[event];
-								if (handler !== undefined && handler !== null && !mejs.Utils.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
-									handler.removeListener(event);
+						// do call stack
+						if (apiStack.length) {
+							for (i = 0, il = apiStack.length; i < il; i++) {
+
+								var stackItem = apiStack[i];
+
+								if (stackItem.type === 'set') {
+									var propName = stackItem.propName,
+									    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+									fbWrapper['set' + capName](stackItem.value);
+								} else if (stackItem.type === 'call') {
+									fbWrapper[stackItem.methodName]();
 								}
 							}
+						}
 
-							// do call stack
-							if (apiStack.length) {
-								for (i = 0, il = apiStack.length; i < il; i++) {
+						sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
 
-									var stackItem = apiStack[i];
+						var timer = void 0;
 
-									if (stackItem.type === 'set') {
-										var propName = stackItem.propName,
-										    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-										fbWrapper['set' + capName](stackItem.value);
-									} else if (stackItem.type === 'call') {
-										fbWrapper[stackItem.methodName]();
-									}
-								}
+						// Custom Facebook events
+						eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
+							if (!hasStartedPlaying) {
+								hasStartedPlaying = true;
 							}
+							paused = false;
+							ended = false;
+							sendEvents(['play', 'playing', 'timeupdate']);
 
-							sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
+							// Workaround to update progress bar
+							timer = setInterval(function () {
+								fbApi.getCurrentPosition();
+								sendEvents(['timeupdate']);
+							}, 250);
+						});
+						eventHandler.paused = fbApi.subscribe('paused', function () {
+							paused = true;
+							ended = false;
+							sendEvents(['pause']);
+						});
+						eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
+							paused = true;
+							ended = true;
 
-							var timer = void 0;
+							// Workaround to update progress bar one last time and trigger ended event
+							timer = setInterval(function () {
+								fbApi.getCurrentPosition();
+								sendEvents(['timeupdate', 'ended']);
+							}, 250);
 
-							// Custom Facebook events
-							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
-								if (!hasStartedPlaying) {
-									hasStartedPlaying = true;
-								}
-								paused = false;
-								ended = false;
-								sendEvents(['play', 'playing', 'timeupdate']);
-
-								// Workaround to update progress bar
-								timer = setInterval(function () {
-									fbApi.getCurrentPosition();
-									sendEvents(['timeupdate']);
-								}, 250);
-							});
-							eventHandler.paused = fbApi.subscribe('paused', function () {
-								paused = true;
-								ended = false;
-								sendEvents(['pause']);
-							});
-							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
-								paused = true;
-								ended = true;
-
-								// Workaround to update progress bar one last time and trigger ended event
-								timer = setInterval(function () {
-									fbApi.getCurrentPosition();
-									sendEvents(['timeupdate', 'ended']);
-								}, 250);
-
-								clearInterval(timer);
-								timer = null;
-							});
-							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
-								sendEvents(['progress', 'timeupdate']);
-							});
-							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
-								sendEvents(['progress', 'timeupdate']);
-							});
-						})();
+							clearInterval(timer);
+							timer = null;
+						});
+						eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
+							sendEvents(['progress', 'timeupdate']);
+						});
+						eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
+							sendEvents(['progress', 'timeupdate']);
+						});
 					}
 				});
 			};
