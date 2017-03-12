@@ -143,7 +143,7 @@ export function timeCodeToSeconds(time, showFrameCount = false, fps = 25) {
 		totalMinutes = (60 * hours) + minutes;
 		output = ((hFrames * hours) + (mFrames * minutes) + (timeBase * seconds) + frames) - (dropFrames * (totalMinutes - (Math.floor(totalMinutes / 10))));
 	} else {
-		output = ( hFrames * hours ) + ( mFrames * minutes  ) + fps * seconds + frames;
+		output = (( hFrames * hours ) + ( mFrames * minutes  ) + fps * seconds + frames) / fps;
 	}
 
 	return parseFloat(output.toFixed(3));
