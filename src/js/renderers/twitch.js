@@ -141,7 +141,7 @@ const twitchApi = {
 
 		let twitchId = '';
 
-		for (let i = 0, il = parameters.length; i < il; i++) {
+		for (let i = 0, total = parameters.length; i < total; i++) {
 			const paramParts = parameters[i].split('=');
 			if (paramParts[0].includes('channel=')) {
 				twitchId = paramParts[1];
@@ -222,8 +222,6 @@ const TwitchIframeRenderer = {
 		;
 
 		let
-			i,
-			il,
 			twitchPlayer = null,
 			paused = true,
 			ended = false,
@@ -364,7 +362,7 @@ const TwitchIframeRenderer = {
 			}
 		;
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -399,7 +397,7 @@ const TwitchIframeRenderer = {
 			}
 		;
 
-		for (i = 0, il = methods.length; i < il; i++) {
+		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
 		}
 
@@ -410,7 +408,7 @@ const TwitchIframeRenderer = {
 		 * @param {Array} events
 		 */
 		function sendEvents (events) {
-			for (let i = 0, il = events.length; i < il; i++) {
+			for (let i = 0, total = events.length; i < total; i++) {
 				const event = mejs.Utils.createEvent(events[i], twitch);
 				mediaElement.dispatchEvent(event);
 			}
@@ -423,7 +421,7 @@ const TwitchIframeRenderer = {
 
 			// do call stack
 			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
+				for (let i = 0, total = apiStack.length; i < total; i++) {
 
 					const stackItem = apiStack[i];
 
@@ -450,7 +448,7 @@ const TwitchIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
+			for (let i = 0, total = events.length; i < total; i++) {
 				twitchIframe.addEventListener(events[i], assignEvents, false);
 			}
 

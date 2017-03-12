@@ -55,9 +55,7 @@ var FacebookRenderer = {
 		    eventHandler = {},
 		    readyState = 4;
 
-		var i = void 0,
-		    il = void 0,
-		    src = '',
+		var src = '',
 		    paused = true,
 		    ended = false,
 		    hasStartedPlaying = false,
@@ -182,7 +180,7 @@ var FacebookRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -211,8 +209,8 @@ var FacebookRenderer = {
 			};
 		};
 
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
+		for (var _i = 0, _total = methods.length; _i < _total; _i++) {
+			assignMethods(methods[_i]);
 		}
 
 		/**
@@ -222,8 +220,8 @@ var FacebookRenderer = {
    * @param {Array} events
    */
 		function sendEvents(events) {
-			for (var _i = 0, _il = events.length; _i < _il; _i++) {
-				var event = mejs.Utils.createEvent(events[_i], fbWrapper);
+			for (var _i2 = 0, _total2 = events.length; _i2 < _total2; _i2++) {
+				var event = mejs.Utils.createEvent(events[_i2], fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}
 		}
@@ -277,14 +275,14 @@ var FacebookRenderer = {
 
 							fbWrapper.setSize(width, height);
 
-							for (i = 0, il = events.length; i < il; i++) {
-								fbIframe.addEventListener(events[i], assignEvents, false);
+							for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
+								fbIframe.addEventListener(events[_i3], assignEvents, false);
 							}
 
 							// remove previous listeners
 							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
-							for (i = 0, il = fbEvents.length; i < il; i++) {
-								var event = fbEvents[i],
+							for (var _i4 = 0, _total4 = fbEvents.length; _i4 < _total4; _i4++) {
+								var event = fbEvents[_i4],
 								    handler = eventHandler[event];
 								if (handler !== undefined && handler !== null && !mejs.Utils.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
 									handler.removeListener(event);
@@ -293,9 +291,9 @@ var FacebookRenderer = {
 
 							// do call stack
 							if (apiStack.length) {
-								for (i = 0, il = apiStack.length; i < il; i++) {
+								for (var _i5 = 0, _total5 = apiStack.length; _i5 < _total5; _i5++) {
 
-									var stackItem = apiStack[i];
+									var stackItem = apiStack[_i5];
 
 									if (stackItem.type === 'set') {
 										var propName = stackItem.propName,

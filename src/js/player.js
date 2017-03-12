@@ -681,7 +681,7 @@ class MediaElementPlayer {
 			t.featurePosition = {};
 
 			// add user-defined features/controls
-			for (let i = 0, il = t.options.features.length; i < il; i++) {
+			for (let i = 0, total = t.options.features.length; i < total; i++) {
 				const feature = t.options.features[i];
 				if (t[`build${feature}`]) {
 					try {
@@ -1606,7 +1606,7 @@ class MediaElementPlayer {
 
 		if (player.hasFocus && player.options.enableKeyboard) {
 			// find a matching key
-			for (let i = 0, il = player.options.keyActions.length; i < il; i++) {
+			for (let i = 0, total = player.options.keyActions.length; i < total; i++) {
 				const keyAction = player.options.keyActions[i];
 
 				for (let j = 0, jl = keyAction.keys.length; j < jl; j++) {

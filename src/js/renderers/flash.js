@@ -77,7 +77,7 @@ export const PluginDetector = {
 			description = NAV.plugins[pluginName].description;
 			if (description && !(typeof NAV.mimeTypes !== 'undefined' && NAV.mimeTypes[mimeType] && !NAV.mimeTypes[mimeType].enabledPlugin)) {
 				version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
-				for (let i = 0; i < version.length; i++) {
+				for (let i = 0, total = version.length; i < total; i++) {
 					version[i] = parseInt(version[i].match(/\d+/), 10);
 				}
 			}
@@ -128,11 +128,6 @@ const FlashMediaElementRenderer = {
 	create: (mediaElement, options, mediaFiles) => {
 
 		const flash = {};
-
-		let
-			i,
-			il
-		;
 
 		// store main variable
 		flash.options = options;
@@ -205,7 +200,7 @@ const FlashMediaElementRenderer = {
 			}
 		;
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -242,14 +237,14 @@ const FlashMediaElementRenderer = {
 			}
 			;
 		methods.push('stop');
-		for (i = 0, il = methods.length; i < il; i++) {
+		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
 		}
 
 		// give initial events like in others renderers
 		const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
 
-		for (i = 0, il = initEvents.length; i < il; i++) {
+		for (let i = 0, total = initEvents.length; i < total; i++) {
 			const event = createEvent(initEvents[i], flash);
 			mediaElement.dispatchEvent(event);
 		}
@@ -262,7 +257,7 @@ const FlashMediaElementRenderer = {
 
 			// do call stack
 			if (flash.flashApiStack.length) {
-				for (i = 0, il = flash.flashApiStack.length; i < il; i++) {
+				for (let i = 0, total = flash.flashApiStack.length; i < total; i++) {
 
 					const stackItem = flash.flashApiStack[i];
 
@@ -416,7 +411,7 @@ const FlashMediaElementRenderer = {
 
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
+			for (let i = 0, total = mediaFiles.length; i < total; i++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
 					flash.setSrc(mediaFiles[i].src);
 					break;

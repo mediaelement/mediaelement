@@ -161,9 +161,7 @@ var DailyMotionIframeRenderer = {
 		    apiStack = [],
 		    readyState = 4;
 
-		var i = void 0,
-		    il = void 0,
-		    events = void 0,
+		var events = void 0,
 		    dmPlayer = null,
 		    dmIframe = null;
 
@@ -301,7 +299,7 @@ var DailyMotionIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -329,8 +327,8 @@ var DailyMotionIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
+		for (var _i = 0, _total = methods.length; _i < _total; _i++) {
+			assignMethods(methods[_i]);
 		}
 
 		// Initial method to register all DailyMotion events when initializing <iframe>
@@ -340,9 +338,9 @@ var DailyMotionIframeRenderer = {
 
 			// do call stack
 			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
+				for (var _i2 = 0, _total2 = apiStack.length; _i2 < _total2; _i2++) {
 
-					var stackItem = apiStack[i];
+					var stackItem = apiStack[_i2];
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -364,8 +362,8 @@ var DailyMotionIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (var _i = 0, _il = events.length; _i < _il; _i++) {
-				dmIframe.addEventListener(events[_i], assignEvents, false);
+			for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
+				dmIframe.addEventListener(events[_i3], assignEvents, false);
 			}
 
 			// BUBBLE EVENTS up
@@ -383,8 +381,8 @@ var DailyMotionIframeRenderer = {
 				}
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
-				assignNativeEvents(events[i]);
+			for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
+				assignNativeEvents(events[_i4]);
 			}
 
 			// Custom DailyMotion events
@@ -433,8 +431,8 @@ var DailyMotionIframeRenderer = {
 			// give initial events
 			var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
-			for (i = 0, il = initEvents.length; i < il; i++) {
-				var event = mejs.Utils.createEvent(initEvents[i], dm);
+			for (var _i5 = 0, _total5 = initEvents.length; _i5 < _total5; _i5++) {
+				var event = mejs.Utils.createEvent(initEvents[_i5], dm);
 				mediaElement.dispatchEvent(event);
 			}
 		};
