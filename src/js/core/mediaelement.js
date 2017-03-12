@@ -325,7 +325,7 @@ class MediaElement {
 			}
 
 			// remove the specific callback
-			for (let i = 0, total = callbacks.length; i < total; i++) {
+			for (let i = 0; i < callbacks.length; i++) {
 				if (callbacks[i] === callback) {
 					t.mediaElement.events[eventName].splice(i, 1);
 					return true;
@@ -343,7 +343,7 @@ class MediaElement {
 			const callbacks = t.mediaElement.events[event.type];
 
 			if (callbacks) {
-				for (let i = 0, total = callbacks.length; i < total; i++) {
+				for (let i = 0; i < callbacks.length; i++) {
 					callbacks[i].apply(null, [event]);
 				}
 			}
