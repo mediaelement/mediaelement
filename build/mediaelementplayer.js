@@ -2987,7 +2987,7 @@ _mejs2.default.TrackFormatParser = {
 			    identifier = void 0;
 
 			for (var i = 0, total = lines.length; i < total; i++) {
-				timecode = this.pattern_timecode.exec(lines[i]);
+				timecode = this.pattern.exec(lines[i]);
 
 				if (timecode && i < lines.length) {
 					if (i - 1 >= 0 && lines[i - 1] !== '') {
