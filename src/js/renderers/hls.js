@@ -154,7 +154,7 @@ const HlsNativeRenderer = {
 		;
 
 		let
-			hlsPlayer,
+			hlsPlayer = null,
 			node = null
 		;
 

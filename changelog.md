@@ -8,6 +8,7 @@
 * Fixed typo in Facebook renderer @ron666
 * Added missing conditional to avoid issues in Android using Flash @ron666
 * Refactor loop related to dispatch/remove events (https://github.com/johndyer/mediaelement/pull/2127) @bricev
+* Removed unnecessary code from Tracks feature and fixed typo in HLS renderer @ron666
 
 *3.2.3 (2017/03/02)*
 

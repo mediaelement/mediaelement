@@ -2969,7 +2969,7 @@ _mejs2.default.TrackFormatParser = {
 		/**
    * @type {String}
    */
-		pattern_timecode: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
+		pattern: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 		/**
    *
@@ -2977,7 +2977,7 @@ _mejs2.default.TrackFormatParser = {
    * @returns {{text: Array, times: Array}}
    */
 		parse: function parse(trackText) {
-			var lines = _mejs2.default.TrackFormatParser.split2(trackText, /\r?\n/),
+			var lines = trackText.split(/\r?\n/),
 			    entries = [];
 
 			var timecode = void 0,
@@ -2985,7 +2985,7 @@ _mejs2.default.TrackFormatParser = {
 			    identifier = void 0;
 
 			for (var i = 0, total = lines.length; i < total; i++) {
-				timecode = this.pattern_timecode.exec(lines[i]);
+				timecode = this.pattern.exec(lines[i]);
 
 				if (timecode && i < lines.length) {
 					if (i - 1 >= 0 && lines[i - 1] !== '') {
@@ -3078,38 +3078,8 @@ _mejs2.default.TrackFormatParser = {
 			}
 			return entries;
 		}
-	},
-	/**
-  *
-  * @param {String} text
-  * @param {String} regex
-  * @returns {Array}
-  */
-	split2: function split2(text, regex) {
-		// normal version for compliant browsers
-		// see below for IE fix
-		return text.split(regex);
 	}
 };
-
-// test for browsers with bad String.split method.
-if ('x\n\ny'.split(/\n/gi).length !== 3) {
-	// add super slow IE8 and below version
-	_mejs2.default.TrackFormatParser.split2 = function (text, regex) {
-		var parts = [];
-		var chunk = '';
-
-		for (var i = 0; i < text.length; i++) {
-			chunk += text.substring(i, i + 1);
-			if (regex.test(chunk)) {
-				parts.push(chunk.replace(regex, ''));
-				chunk = '';
-			}
-		}
-		parts.push(chunk);
-		return parts;
-	};
-}
 
 },{"16":16,"20":20,"23":23,"4":4,"6":6}],13:[function(_dereq_,module,exports){
 'use strict';

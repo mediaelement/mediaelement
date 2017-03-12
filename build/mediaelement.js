@@ -2478,7 +2478,7 @@ var HlsNativeRenderer = {
 		    preload = originalNode.getAttribute('preload'),
 		    autoplay = originalNode.getAttribute('autoplay');
 
-		var hlsPlayer = void 0,
+		var hlsPlayer = null,
 		    node = null;
 
 		node = originalNode.cloneNode(true);

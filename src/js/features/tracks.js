@@ -834,7 +834,7 @@ mejs.TrackFormatParser = {
 		/**
 		 * @type {String}
 		 */
-		pattern_timecode: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
+		pattern: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 		/**
 		 *
@@ -843,7 +843,7 @@ mejs.TrackFormatParser = {
 		 */
 		parse: function (trackText) {
 			const
-				lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
+				lines = trackText.split(/\r?\n/),
 				entries = []
 			;
 
@@ -854,7 +854,7 @@ mejs.TrackFormatParser = {
 			;
 
 			for (let i = 0, total = lines.length; i < total; i++) {
-				timecode = this.pattern_timecode.exec(lines[i]);
+				timecode = this.pattern.exec(lines[i]);
 
 				if (timecode && i < lines.length) {
 					if ((i - 1) >= 0 && lines[i - 1] !== '') {
@@ -951,35 +951,5 @@ mejs.TrackFormatParser = {
 			}
 			return entries;
 		}
-	},
-	/**
-	 *
-	 * @param {String} text
-	 * @param {String} regex
-	 * @returns {Array}
-	 */
-	split2: function (text, regex) {
-		// normal version for compliant browsers
-		// see below for IE fix
-		return text.split(regex);
 	}
 };
-
-// test for browsers with bad String.split method.
-if ('x\n\ny'.split(/\n/gi).length !== 3) {
-	// add super slow IE8 and below version
-	mejs.TrackFormatParser.split2 = (text, regex) => {
-		const parts = [];
-		let chunk = '';
-
-		for (let i = 0; i < text.length; i++) {
-			chunk += text.substring(i, i + 1);
-			if (regex.test(chunk)) {
-				parts.push(chunk.replace(regex, ''));
-				chunk = '';
-			}
-		}
-		parts.push(chunk);
-		return parts;
-	};
-}
