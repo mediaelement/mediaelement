@@ -1582,7 +1582,7 @@ var PluginDetector = exports.PluginDetector = {
 					version = axDetect(ax);
 				}
 			} catch (e) {
-				console.log(e);
+				
 			}
 		}
 		return version;
@@ -1712,10 +1712,10 @@ var FlashMediaElementRenderer = {
 						try {
 							flash.flashApi['fire_' + methodName]();
 						} catch (e) {
-							console.log(e);
+							
 						}
 					} else {
-						console.log('flash', 'missing method', methodName);
+						
 					}
 				} else {
 					// store for after "READY" event fires
@@ -1835,7 +1835,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = 'rect(0 0 0 0);';
 				} catch (e) {
-					console.log(e);
+					
 				}
 			}
 		};
@@ -1847,7 +1847,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = '';
 				} catch (e) {
-					console.log(e);
+					
 				}
 			}
 		};
@@ -2435,7 +2435,7 @@ var NativeHls = {
   * @return {Hls}
   */
 	createInstance: function createInstance(settings) {
-		console.log(settings.options);
+		
 		var player = new Hls(settings.options);
 		_window2.default['__ready__' + settings.id](player);
 		return player;
@@ -3242,7 +3242,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						default:
-							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
+							
 							break;
 					}
 				} else {
