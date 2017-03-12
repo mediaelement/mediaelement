@@ -150,7 +150,7 @@ var twitchApi = {
 
 		var twitchId = '';
 
-		for (var i = 0, il = parameters.length; i < il; i++) {
+		for (var i = 0, total = parameters.length; i < total; i++) {
 			var paramParts = parameters[i].split('=');
 			if (paramParts[0].includes('channel=')) {
 				twitchId = paramParts[1];
@@ -229,9 +229,7 @@ var TwitchIframeRenderer = {
 		    readyState = 4,
 		    twitchId = twitchApi.getTwitchId(mediaFiles[0].src);
 
-		var i = void 0,
-		    il = void 0,
-		    twitchPlayer = null,
+		var twitchPlayer = null,
 		    paused = true,
 		    ended = false,
 		    twitchIframe = null,
@@ -363,7 +361,7 @@ var TwitchIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -394,8 +392,8 @@ var TwitchIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
+		for (var _i = 0, _total = methods.length; _i < _total; _i++) {
+			assignMethods(methods[_i]);
 		}
 
 		/**
@@ -405,8 +403,8 @@ var TwitchIframeRenderer = {
    * @param {Array} events
    */
 		function sendEvents(events) {
-			for (var _i = 0, _il = events.length; _i < _il; _i++) {
-				var event = mejs.Utils.createEvent(events[_i], twitch);
+			for (var _i2 = 0, _total2 = events.length; _i2 < _total2; _i2++) {
+				var event = mejs.Utils.createEvent(events[_i2], twitch);
 				mediaElement.dispatchEvent(event);
 			}
 		}
@@ -418,9 +416,9 @@ var TwitchIframeRenderer = {
 
 			// do call stack
 			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
+				for (var _i3 = 0, _total3 = apiStack.length; _i3 < _total3; _i3++) {
 
-					var stackItem = apiStack[i];
+					var stackItem = apiStack[_i3];
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -445,8 +443,8 @@ var TwitchIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
-				twitchIframe.addEventListener(events[i], assignEvents, false);
+			for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
+				twitchIframe.addEventListener(events[_i4], assignEvents, false);
 			}
 
 			var timer = void 0;

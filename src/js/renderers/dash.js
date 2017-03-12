@@ -145,8 +145,6 @@ const DashNativeRenderer = {
 		;
 
 		let
-			i,
-			il,
 			node = null,
 			dashPlayer
 		;
@@ -180,7 +178,7 @@ const DashNativeRenderer = {
 			}
 		;
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -211,7 +209,7 @@ const DashNativeRenderer = {
 				}
 			;
 
-			for (i = 0, il = events.length; i < il; i++) {
+			for (let i = 0, total = events.length; i < total; i++) {
 				assignEvents(events[i]);
 			}
 
@@ -240,7 +238,7 @@ const DashNativeRenderer = {
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
+			for (let i = 0, total = mediaFiles.length; i < total; i++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
 					node.setAttribute('src', mediaFiles[i].src);
 					break;
