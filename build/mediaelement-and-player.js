@@ -4897,13 +4897,13 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			if (t.featurePosition[key] !== undefined) {
-				var children = t.controls.querySelector(':eq(' + (t.featurePosition[key] - 1) + ')');
-				children.parentNode.insertAfter(element, children.nextSibling);
+				var child = t.controls.childNodes[t.featurePosition[key] - 1];
+				child.parentNode.insertBefore(element, child.nextSibling);
 			} else {
 				t.controls.appendChild(element);
-				var _children = t.controls.childNodes;
-				for (var i = 0, total = _children.length; i < total; i++) {
-					if (element == _children[i]) {
+				var children = t.controls.childNodes;
+				for (var i = 0, total = children.length; i < total; i++) {
+					if (element == children[i]) {
 						t.featurePosition[key] = i;
 						break;
 					}

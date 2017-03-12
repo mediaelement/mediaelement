@@ -1309,8 +1309,8 @@ class MediaElementPlayer {
 		const t = this;
 
 		if (t.featurePosition[key] !== undefined) {
-			const children = t.controls.querySelector(`:eq(${(t.featurePosition[key] - 1)})`);
-			children.parentNode.insertAfter(element, children.nextSibling);
+			const child = t.controls.childNodes[t.featurePosition[key] - 1];
+			child.parentNode.insertBefore(element, child.nextSibling);
 		} else {
 			t.controls.appendChild(element);
 			const children = t.controls.childNodes;
