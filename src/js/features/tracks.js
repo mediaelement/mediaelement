@@ -160,11 +160,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			inEvents = ['mouseenter', 'focusin'],
-			outEvents = ['mouseleave', 'focusout'],
-			chapterOptions = player.chaptersButton.querySelectorAll('input[type=radio]'),
-			chapterLabels = player.chaptersButton.getElementsByClassName(`${t.options.classPrefix}chapters-selector-label`)
+			outEvents = ['mouseleave', 'focusout']
 		;
-
 
 		// if only one language then just make the button a toggle
 		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
@@ -175,7 +172,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					trackId = player.tracks[0].trackId;
 				}
 				player.setTrack(trackId);
-			}, false);
+			});
 		} else {
 			const
 				labels = player.captionsButton.querySelectorAll(`.${t.options.classPrefix}captions-selector-label`),
@@ -185,13 +182,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			for (let i = 0, total = inEvents.length; i < total; i++) {
 				player.captionsButton.addEventListener(inEvents[i], function () {
 					removeClass(this.querySelector(`.${t.options.classPrefix}captions-selector`), `${t.options.classPrefix}offscreen`);
-				}, false);
+				});
 			}
 
 			for (let i = 0, total = outEvents.length; i < total; i++) {
 				player.captionsButton.addEventListener(outEvents[i], function () {
 					addClass(this.querySelector(`.${t.options.classPrefix}captions-selector`), `${t.options.classPrefix}offscreen`);
-				}, false);
+				});
 			}
 
 			// handle clicks to the language radio buttons
@@ -201,7 +198,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					// because the "none" checkbox doesn't have a trackId
 					// to use, but we want to know when "none" is clicked
 					player.setTrack(this.value);
-				}, false);
+				});
 			}
 
 			for (let i = 0, total = labels.length; i < total; i++) {
@@ -211,13 +208,13 @@ Object.assign(MediaElementPlayer.prototype, {
 						event = createEvent('click', radio)
 					;
 					radio.dispatchEvent(event);
-				}, false);
+				});
 			}
 
 			//Allow up/down arrow to change the selected radio without changing the volume.
 			player.captionsButton.addEventListener('keydown', (e) => {
 				e.stopPropagation();
-			}, false);
+			});
 		}
 
 		for (let i = 0, total = inEvents.length; i < total; i++) {
@@ -225,60 +222,26 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (this.querySelector(`.${t.options.classPrefix}chapters-selector-list`).childNodes.length) {
 					removeClass(this.querySelector(`.${t.options.classPrefix}chapters-selector`), `${t.options.classPrefix}offscreen`);
 				}
-			}, false);
+			});
 		}
 
 		for (let i = 0, total = outEvents.length; i < total; i++) {
 			player.chaptersButton.addEventListener(outEvents[i], function () {
 				addClass(this.querySelector(`.${t.options.classPrefix}chapters-selector`), `${t.options.classPrefix}offscreen`);
-			}, false);
-		}
-
-		for (let i = 0, total = chapterOptions.length; i < total; i++) {
-			chapterOptions[i].addEventListener('click',  function () {
-				const
-					self = this,
-					listItems = player.chaptersButton.querySelectorAll('li'),
-					label = siblings(self, (el) => hasClass(el, `${t.options.classPrefix}chapters-selector-label`))[0]
-				;
-
-				self.checked = true;
-				self.parentNode.setAttribute('aria-checked', true);
-				addClass(label, `${t.options.classPrefix}chapters-selected`);
-				removeClass(player.chaptersButton.querySelector(`.${t.options.classPrefix}chapters-selected`), `${t.options.classPrefix}chapters-selected`);
-
-				for (let i = 0, total = listItems.length; i < total; i++) {
-					listItems[i].setAttribute('aria-checked', false);
-				}
-
-				media.setCurrentTime(parseFloat(self.val()));
-				if (media.paused) {
-					media.play();
-				}
-			}, false);
-		}
-
-		for (let i = 0, total = chapterLabels.length; i < total; i++) {
-			chapterLabels[i].addEventListener('click',  function () {
-				const
-					radio = siblings(this, (el) => el.tagName === 'INPUT')[0],
-					event = createEvent('click', radio)
-				;
-				radio.dispatchEvent(event);
-			}, false);
+			});
 		}
 
 		//Allow up/down arrow to change the selected radio without changing the volume.
 		player.chaptersButton.addEventListener('keydown', (e) => {
 			e.stopPropagation();
-		}, false);
+		});
 
 		if (!player.options.alwaysShowControls) {
 			// move with controls
 			player.container.addEventListener('controlsshown', () => {
 				// push captions above controls
 				addClass(player.container.querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
-			}, false);
+			});
 
 			player.container.addEventListener('controlshidden', () => {
 				if (!media.paused) {
@@ -292,20 +255,20 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		media.addEventListener('timeupdate', () => {
 			player.displayCaptions();
-		}, false);
+		});
 
 		if (player.options.slidesSelector !== '') {
 			player.slidesContainer = document.querySelectorAll(player.options.slidesSelector);
 
 			media.addEventListener('timeupdate', () => {
 				player.displaySlides();
-			}, false);
+			});
 
 		}
 
 		t.container.addEventListener('controlsresize', () => {
 			t.adjustLanguageBox();
-		}, false);
+		});
 	},
 
 	/**
@@ -687,7 +650,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					fadeOut(visible[i], 400);
 				}
 
-			}, false);
+			});
 			t.slides.entries[index].imgs = img = image;
 
 		} else if (!visible(img)) {
@@ -728,8 +691,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	drawChapters: function (chapters) {
 		const
 			t = this,
-			total = chapters.entries.length,
-			radios = t.chaptersButton.querySelectorAll('input[type="radio"]')
+			total = chapters.entries.length
 		;
 
 		if (!total) {
@@ -747,9 +709,45 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</li>`;
 		}
 
+		const
+			radios = t.chaptersButton.querySelectorAll('input[type="radio"]'),
+			labels = t.chaptersButton.querySelectorAll(`.${t.options.classPrefix}chapters-selector-label`)
+		;
+
 		for (let i = 0, total = radios.length; i < total; i++) {
 			radios[i].disabled = false;
 			radios[i].checked = false;
+			radios[i].addEventListener('click',  function () {
+				const
+					self = this,
+					listItems = t.chaptersButton.querySelectorAll('li'),
+					label = siblings(self, (el) => hasClass(el, `${t.options.classPrefix}chapters-selector-label`))[0]
+				;
+
+				self.checked = true;
+				self.parentNode.setAttribute('aria-checked', true);
+				addClass(label, `${t.options.classPrefix}chapters-selected`);
+				removeClass(t.chaptersButton.querySelector(`.${t.options.classPrefix}chapters-selected`), `${t.options.classPrefix}chapters-selected`);
+
+				for (let i = 0, total = listItems.length; i < total; i++) {
+					listItems[i].setAttribute('aria-checked', false);
+				}
+
+				t.media.setCurrentTime(parseFloat(self.value));
+				if (t.media.paused) {
+					t.media.play();
+				}
+			});
+		}
+
+		for (let i = 0, total = labels.length; i < total; i++) {
+			labels[i].addEventListener('click',  function () {
+				const
+					radio = siblings(this, (el) => el.tagName === 'INPUT')[0],
+					event = createEvent('click', radio)
+				;
+				radio.dispatchEvent(event);
+			});
 		}
 	},
 	/**

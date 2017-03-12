@@ -102,7 +102,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			} else {
 				player.enterFullScreen();
 			}
-		}, false);
+		});
 
 		player.fullscreenBtn = fullscreenBtn;
 

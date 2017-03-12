@@ -86,18 +86,18 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		media.addEventListener('play', () => {
 			togglePlayPause('play');
-		}, false);
+		});
 		media.addEventListener('playing', () => {
 			togglePlayPause('play');
-		}, false);
+		});
 
 
 		media.addEventListener('pause', () => {
 			togglePlayPause('pse');
-		}, false);
+		});
 		media.addEventListener('paused', () => {
 			togglePlayPause('pse');
-		}, false);
+		});
 
 		media.addEventListener('ended', () => {
 
@@ -109,7 +109,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				playBtn.setAttribute('aria-label', playTitle);
 			}
 
-		}, false);
+		});
 	}
 });
 

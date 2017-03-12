@@ -209,23 +209,23 @@ Object.assign(MediaElementPlayer.prototype, {
 		mute.addEventListener('mouseenter', () => {
 			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
-		}, false);
+		});
 		mute.addEventListener('focusin', () => {
 			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
-		}, false);
+		});
 		mute.addEventListener('mouseleave', () => {
 			mouseIsOver = false;
 			if (!mouseIsDown && mode === 'vertical') {
 				volumeSlider.style.display = 'none';
 			}
-		}, false);
+		});
 		mute.addEventListener('focusout', () => {
 			mouseIsOver = false;
 			if (!mouseIsDown && mode === 'vertical') {
 				volumeSlider.style.display = 'none';
 			}
-		}, false);
+		});
 
 		let
 			mouseIsDown = false,
@@ -249,27 +249,27 @@ Object.assign(MediaElementPlayer.prototype, {
 		// Events
 		volumeSlider.addEventListener('mouseover', () => {
 			mouseIsOver = true;
-		}, false);
+		});
 		volumeSlider.addEventListener('mousedown', (e) => {
 			handleVolumeMove(e);
 			mouseIsDown = true;
-		}, false);
+		});
 		volumeSlider.addEventListener('mousemove', (e) => {
 			handleVolumeMove(e);
-		}, false);
+		});
 		volumeSlider.addEventListener('mouseup', () => {
 			mouseIsDown = false;
 			volumeSlider.addEventListener('mousemove', () => {
 				if (!mouseIsOver && mode === 'vertical') {
 					volumeSlider.style.display = 'none';
 				}
-			}, false);
+			});
 			volumeSlider.addEventListener('mouseup', () => {
 				if (!mouseIsOver && mode === 'vertical') {
 					volumeSlider.style.display = 'none';
 				}
-			}, false);
-		}, false);
+			});
+		});
 		volumeSlider.addEventListener('keydown', (e) => {
 
 			if (t.options.keyActions.length) {
@@ -293,22 +293,22 @@ Object.assign(MediaElementPlayer.prototype, {
 				media.setVolume(volume);
 				return false;
 			}
-		}, false);
+		});
 
 		// MUTE button
 		button.addEventListener('click', () => {
 			media.setMuted(!media.muted);
-		}, false);
+		});
 		button.addEventListener('focus', () => {
 			if (mode === 'vertical') {
 				volumeSlider.style.display = 'block';
 			}
-		}, false);
+		});
 		button.addEventListener('blur', () => {
 			if (mode === 'vertical') {
 				volumeSlider.style.display = 'none';
 			}
-		}, false);
+		});
 
 		// listen for volume change events from other sources
 		media.addEventListener('volumechange', (e) => {
@@ -324,7 +324,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			}
 			updateVolumeSlider(e);
-		}, false);
+		});
 
 		// mutes the media and sets the volume icon muted if the initial volume is set to 0
 		if (player.options.startVolume === 0) {
@@ -348,7 +348,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				removeClass(mute, `${t.options.classPrefix}unmute`);
 				addClass(mute, `${t.options.classPrefix}mute`);
 			}
-		}, false);
+		});
 	}
 });
 

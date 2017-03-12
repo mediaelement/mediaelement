@@ -396,7 +396,7 @@ class MediaElementPlayer {
 						button.focus();
 					}
 				}
-			}, false);
+			});
 			t.node.parentNode.insertBefore(t.container, t.node);
 
 			// When no elements in controls, hide bar completely
@@ -728,7 +728,7 @@ class MediaElementPlayer {
 								t.showControls(false);
 							}
 						}
-					}, false);
+					});
 
 				} else {
 
@@ -769,7 +769,7 @@ class MediaElementPlayer {
 								t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 							}
 						}
-					}, false);
+					});
 					t.container.addEventListener('mousemove', () => {
 						if (t.controlsEnabled) {
 							if (!t.controlsAreVisible) {
@@ -779,14 +779,14 @@ class MediaElementPlayer {
 								t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 							}
 						}
-					}, false);
+					});
 					t.container.addEventListener('mouseleave', () => {
 						if (t.controlsEnabled) {
 							if (!t.media.paused && !t.options.alwaysShowControls) {
 								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 							}
 						}
-					}, false);
+					});
 				}
 
 				if (t.options.hideVideoControlsOnLoad) {
@@ -809,7 +809,7 @@ class MediaElementPlayer {
 							t.setControlsSize();
 							t.media.setSize(e.target.videoWidth, e.target.videoHeight);
 						}
-					}, false);
+					});
 				}
 			}
 
@@ -831,7 +831,7 @@ class MediaElementPlayer {
 					}
 				}
 
-			}, false);
+			});
 
 			// ended for all
 			t.media.addEventListener('ended', () => {
@@ -867,7 +867,7 @@ class MediaElementPlayer {
 				} else if (!t.options.alwaysShowControls && t.controlsEnabled) {
 					t.showControls();
 				}
-			}, false);
+			});
 
 			// resize on the first play
 			t.media.addEventListener('loadedmetadata', () => {
@@ -885,7 +885,7 @@ class MediaElementPlayer {
 					t.setPlayerSize(t.width, t.height);
 					t.setControlsSize();
 				}
-			}, false);
+			});
 
 			// Only change the time format when necessary
 			let duration = null;
@@ -903,7 +903,7 @@ class MediaElementPlayer {
 					}
 					t.setControlsSize();
 				}
-			}, false);
+			});
 
 			t.container.addEventListener('focusout', debounce(() => {
 				setTimeout(() => {
@@ -1352,7 +1352,7 @@ class MediaElementPlayer {
 					e.preventDefault();
 					e.stopPropagation();
 				}
-			}, false);
+			});
 
 			target.parentNode.insertBefore(layer, target);
 		}
@@ -1476,21 +1476,21 @@ class MediaElementPlayer {
 
 		media.addEventListener('play', () => {
 			poster.style.display = 'none';
-		}, false);
+		});
 
 		media.addEventListener('playing', () => {
 			poster.style.display = 'none';
-		}, false);
+		});
 
 		if (player.options.showPosterWhenEnded && player.options.autoRewind) {
 			media.addEventListener('ended', () => {
 				poster.style.display = 'block';
-			}, false);
+			});
 		}
 
 		media.addEventListener('error', () => {
 			poster.style.display = 'none';
-		}, false);
+		});
 
 		if (player.options.showPosterWhenPaused) {
 			media.addEventListener('pause', () => {
@@ -1499,7 +1499,7 @@ class MediaElementPlayer {
 				if (!media.ended) {
 					poster.style.display = 'block';
 				}
-			}, false);
+			});
 		}
 	}
 
@@ -1550,7 +1550,7 @@ class MediaElementPlayer {
 
 				button.setAttribute('aria-pressed', !!pressed);
 			}
-		}, false);
+		});
 		layers.appendChild(bigPlay);
 
 		if (t.media.rendererName !== null && ((t.media.rendererName.match(/(youtube|facebook)/) && !(player.media.attr('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
@@ -1565,7 +1565,7 @@ class MediaElementPlayer {
 				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'none';
 			}
 			error.style.display = 'none';
-		}, false);
+		});
 
 		media.addEventListener('playing', () => {
 			bigPlay.style.display = 'none';
@@ -1574,34 +1574,34 @@ class MediaElementPlayer {
 				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'none';
 			}
 			error.style.display = 'none';
-		}, false);
+		});
 
 		media.addEventListener('seeking', () => {
 			loading.style.display = 'block';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
 				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'block';
 			}
-		}, false);
+		});
 
 		media.addEventListener('seeked', () => {
 			loading.style.display = 'none';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
 				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'block';
 			}
-		}, false);
+		});
 
 		media.addEventListener('pause', () => {
 			if (!IS_STOCK_ANDROID) {
 				bigPlay.style.display = 'block';
 			}
-		}, false);
+		});
 
 		media.addEventListener('waiting', () => {
 			loading.style.display = 'block';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
 				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'block';
 			}
-		}, false);
+		});
 
 
 		// show/hide loading
@@ -1622,7 +1622,7 @@ class MediaElementPlayer {
 					}
 				}, 300);
 			}
-		}, false);
+		});
 		media.addEventListener('canplay', () => {
 			loading.style.display = 'none';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
@@ -1630,7 +1630,7 @@ class MediaElementPlayer {
 			}
 			// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
 			clearTimeout(media.canplayTimeout);
-		}, false);
+		});
 
 		// error handling
 		media.addEventListener('error', (e) => {
@@ -1639,11 +1639,11 @@ class MediaElementPlayer {
 			bigPlay.style.display = 'none';
 			error.style.display = 'block';
 			error.getElementsByClassName(`${t.options.classPrefix}overlay-error`)[0].innerHTML = e.message;
-		}, false);
+		});
 
 		media.addEventListener('keydown', (e) => {
 			t.onkeydown(player, media, e);
-		}, false);
+		});
 	}
 
 	buildkeyboard (player, controls, layers, media) {

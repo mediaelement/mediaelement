@@ -56,7 +56,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				player.updateCurrent();
 			}
 
-		}, false);
+		});
 	},
 
 	/**
@@ -97,7 +97,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (t.controlsAreVisible) {
 				player.updateDuration();
 			}
-		}, false);
+		});
 	},
 
 	/**

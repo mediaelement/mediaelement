@@ -188,10 +188,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		// Events
 		t.slider.addEventListener('focus', () => {
 			player.options.autoRewind = false;
-		}, false);
+		});
 		t.slider.addEventListener('blur', () => {
 			player.options.autoRewind = autoRewindInitial;
-		}, false);
+		});
 		t.slider.addEventListener('keydown', (e) => {
 
 			if ((new Date() - lastKeyPressTime) >= 1000) {
@@ -264,7 +264,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		}, false);
+		});
 
 		const events = ['mousedown', 'touchstart'];
 
@@ -295,7 +295,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						});
 					}
 				}
-			}, false);
+			});
 		}
 		t.slider.addEventListener('mouseenter', () => {
 			if (media.duration !== Infinity) {
@@ -306,7 +306,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.timefloat.style.display = 'block';
 				}
 			}
-		}, false);
+		});
 		t.slider.addEventListener('mouseleave', () => {
 			if (media.duration !== Infinity) {
 				if (!mouseIsDown) {
@@ -316,7 +316,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 				}
 			}
-		}, false);
+		});
 
 		// loading
 		// If media is does not have a finite duration, remove progress bar interaction
@@ -331,7 +331,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				controls.querySelector(`.${t.options.classPrefix}time-rail`).innerHTML =
 					`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`;
 			}
-		}, false);
+		});
 
 		// current time
 		media.addEventListener('timeupdate', (e) => {
@@ -345,7 +345,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				controls.querySelector(`.${t.options.classPrefix}time-rail`).innerHTML =
 					`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`;
 			}
-		}, false);
+		});
 
 		t.container.addEventListener('controlsresize', (e) => {
 			if (media.duration !== Infinity) {
@@ -354,7 +354,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					player.setCurrentRail(e);
 				}
 			}
-		}, false);
+		});
 	},
 
 	/**
