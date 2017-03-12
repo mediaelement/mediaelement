@@ -151,8 +151,6 @@ const DailyMotionIframeRenderer = {
 		;
 
 		let
-			i,
-			il,
 			events,
 			dmPlayer = null,
 			dmIframe = null
@@ -274,7 +272,7 @@ const DailyMotionIframeRenderer = {
 			}
 		;
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -306,7 +304,7 @@ const DailyMotionIframeRenderer = {
 			}
 		;
 
-		for (i = 0, il = methods.length; i < il; i++) {
+		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
 		}
 
@@ -317,7 +315,7 @@ const DailyMotionIframeRenderer = {
 
 			// do call stack
 			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
+				for (let i = 0, total = apiStack.length; i < total; i++) {
 
 					const stackItem = apiStack[i];
 
@@ -344,7 +342,7 @@ const DailyMotionIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (let i = 0, il = events.length; i < il; i++) {
+			for (let i = 0, total = events.length; i < total; i++) {
 				dmIframe.addEventListener(events[i], assignEvents, false);
 			}
 
@@ -364,7 +362,7 @@ const DailyMotionIframeRenderer = {
 
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
+			for (let i = 0, total = events.length; i < total; i++) {
 				assignNativeEvents(events[i]);
 			}
 
@@ -415,7 +413,7 @@ const DailyMotionIframeRenderer = {
 			// give initial events
 			const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
-			for (i = 0, il = initEvents.length; i < il; i++) {
+			for (let i = 0, total = initEvents.length; i < total; i++) {
 				const event = mejs.Utils.createEvent(initEvents[i], dm);
 				mediaElement.dispatchEvent(event);
 			}

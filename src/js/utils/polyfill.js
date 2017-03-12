@@ -113,7 +113,7 @@ if (typeof Object.assign !== 'function') {
 
 		const to = Object(target);
 
-		for (let index = 1; index < arguments.length; index++) {
+		for (let index = 1, total = arguments.length; index < total; index++) {
 			const nextSource = arguments[index];
 
 			if (nextSource !== null) { // Skip over if undefined or null

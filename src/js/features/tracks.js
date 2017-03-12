@@ -401,7 +401,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		for (let i = 0; i < t.tracks.length; i++) {
+		for (let i = 0, total = t.tracks.length; i < total; i++) {
 			const track = t.tracks[i];
 			if (track.trackId === trackId) {
 				if (t.selectedTrack === null) {
@@ -887,14 +887,13 @@ mejs.TrackFormatParser = {
 			;
 
 			let
-				i = 0,
 				timecode,
 				text,
 				identifier
 			;
 
-			for (; i < lines.length; i++) {
-				timecode = this.pattern.exec(lines[i]);
+			for (let i = 0, total = lines.length; i < total; i++) {
+				timecode = this.pattern_timecode.exec(lines[i]);
 
 				if (timecode && i < lines.length) {
 					if ((i - 1) >= 0 && lines[i - 1] !== '') {
@@ -938,23 +937,20 @@ mejs.TrackFormatParser = {
 				entries = []
 			;
 
-			let
-				styles,
-				i
-			;
+			let styles;
 
 			if (styleNode.length) {
 				styleNode.removeAttribute('id');
 				const attributes = styleNode.attributes;
 				if (attributes.length) {
 					styles = {};
-					for (i = 0; i < attributes.length; i++) {
+					for (let i = 0, total = attributes.length; i < total; i++) {
 						styles[attributes[i].name.split(":")[1]] = attributes[i].value;
 					}
 				}
 			}
 
-			for (i = 0; i < lines.length; i++) {
+			for (let i = 0, total = lines.length; i < total; i++) {
 				let
 					style,
 					_temp = {
@@ -963,7 +959,7 @@ mejs.TrackFormatParser = {
 						style: null,
 						text: null
 					}
-					;
+				;
 
 				if (lines.eq(i).attr('begin')) {
 					_temp.start = convertSMPTEtoSeconds(lines.eq(i).attr('begin'));

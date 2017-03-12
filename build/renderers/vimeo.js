@@ -162,9 +162,7 @@ var vimeoIframeRenderer = {
 		    vimeo = {},
 		    readyState = 4;
 
-		var i = void 0,
-		    il = void 0,
-		    paused = true,
+		var paused = true,
 		    volume = 1,
 		    oldVolume = volume,
 		    currentTime = 0,
@@ -331,7 +329,7 @@ var vimeoIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -360,8 +358,8 @@ var vimeoIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
+		for (var _i = 0, _total = methods.length; _i < _total; _i++) {
+			assignMethods(methods[_i]);
 		}
 
 		// Initial method to register all Vimeo events when initializing <iframe>
@@ -371,9 +369,9 @@ var vimeoIframeRenderer = {
 
 			// do call stack
 			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
+				for (var _i2 = 0, _total2 = apiStack.length; _i2 < _total2; _i2++) {
 
-					var stackItem = apiStack[i];
+					var stackItem = apiStack[_i2];
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -397,8 +395,8 @@ var vimeoIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
-				vimeoIframe.addEventListener(events[i], assignEvents, false);
+			for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
+				vimeoIframe.addEventListener(events[_i3], assignEvents, false);
 			}
 
 			// Vimeo events
@@ -468,8 +466,8 @@ var vimeoIframeRenderer = {
 			// give initial events
 			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
-			for (i = 0, il = events.length; i < il; i++) {
-				var event = mejs.Utils.createEvent(events[i], vimeo);
+			for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
+				var event = mejs.Utils.createEvent(events[_i4], vimeo);
 				mediaElement.dispatchEvent(event);
 			}
 		};
