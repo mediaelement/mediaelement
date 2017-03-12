@@ -4923,7 +4923,7 @@ var MediaElementPlayer = function () {
 
 			var t = this;
 
-			if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !t.container.getElementById(t.media.id + '-iframe-overlay').length) {
+			if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !_document2.default.getElementById(t.media.id + '-iframe-overlay')) {
 
 				var layer = _document2.default.createElement('div'),
 				    target = _document2.default.getElementById(t.media.id + '_' + t.media.rendererName);

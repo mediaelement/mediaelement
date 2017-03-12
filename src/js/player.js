@@ -1332,12 +1332,12 @@ class MediaElementPlayer {
 
 		const t = this;
 
-		if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !t.container.getElementById(`${t.media.id}-iframe-overlay`).length) {
+		if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !document.getElementById(`${t.media.id}-iframe-overlay`)) {
 
 			const
 				layer = document.createElement('div'),
 				target = document.getElementById(`${t.media.id}_${t.media.rendererName}`)
-				;
+			;
 
 			layer.id = `${t.media.id}-iframe-overlay`;
 			layer.className = `${t.options.classPrefix}iframe-overlay`;
