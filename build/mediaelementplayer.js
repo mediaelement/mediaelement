@@ -770,7 +770,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		}
 
 		// remove the specific callback
-		for (var _i2 = 0, _total2 = callbacks.length; _i2 < _total2; _i2++) {
+		for (var _i2 = 0; _i2 < callbacks.length; _i2++) {
 			if (callbacks[_i2] === callback) {
 				t.mediaElement.events[eventName].splice(_i2, 1);
 				return true;
@@ -788,7 +788,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		var callbacks = t.mediaElement.events[event.type];
 
 		if (callbacks) {
-			for (var _i3 = 0, _total3 = callbacks.length; _i3 < _total3; _i3++) {
+			for (var _i3 = 0; _i3 < callbacks.length; _i3++) {
 				callbacks[_i3].apply(null, [event]);
 			}
 		}
