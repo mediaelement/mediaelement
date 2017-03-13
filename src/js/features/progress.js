@@ -87,7 +87,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					totalStyles = getComputedStyle(t.total),
 					offsetStyles = offset(t.total),
-					width = parseInt(totalStyles.width)
+					width = parseFloat(totalStyles.width)
 				;
 
 				let
@@ -436,8 +436,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			// update bar and handle
 			if (t.total && t.handle) {
 				let
-					newWidth = Math.round(parseInt(getComputedStyle(t.total).width) * nTime / t.media.duration),
-					handlePos = newWidth - Math.round(parseInt(getComputedStyle(t.handle).offsetWidth) / 2)
+					newWidth = Math.round(parseFloat(getComputedStyle(t.total).width) * nTime / t.media.duration),
+					handlePos = newWidth - Math.round(t.handle.offsetWidth / 2)
 				;
 
 				newWidth = nTime / t.media.duration * 100;

@@ -205,8 +205,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		addClass(t.container, `${t.options.classPrefix}container-fullscreen`);
 
 		// store sizing
-		t.normalHeight = parseInt(containerStyles.height);
-		t.normalWidth = parseInt(containerStyles.width);
+		t.normalHeight = parseFloat(containerStyles.height);
+		t.normalWidth = parseFloat(containerStyles.width);
 
 		// attempt to do true fullscreen
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {

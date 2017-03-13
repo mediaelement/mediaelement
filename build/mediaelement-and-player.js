@@ -1278,8 +1278,8 @@ Object.assign(_player2.default.prototype, {
 		(0, _dom.addClass)(t.container, t.options.classPrefix + 'container-fullscreen');
 
 		// store sizing
-		t.normalHeight = parseInt(containerStyles.height);
-		t.normalWidth = parseInt(containerStyles.width);
+		t.normalHeight = parseFloat(containerStyles.height);
+		t.normalWidth = parseFloat(containerStyles.width);
 
 		// attempt to do true fullscreen
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
@@ -1641,7 +1641,7 @@ Object.assign(_player2.default.prototype, {
 
 			var totalStyles = getComputedStyle(t.total),
 			    offsetStyles = (0, _dom.offset)(t.total),
-			    width = parseInt(totalStyles.width);
+			    width = parseFloat(totalStyles.width);
 
 			var percentage = 0,
 			    pos = 0,
@@ -1992,8 +1992,8 @@ Object.assign(_player2.default.prototype, {
 
 			// update bar and handle
 			if (t.total && t.handle) {
-				var newWidth = Math.round(parseInt(getComputedStyle(t.total).width) * nTime / t.media.duration),
-				    handlePos = newWidth - Math.round(parseInt(getComputedStyle(t.handle).offsetWidth) / 2);
+				var newWidth = Math.round(parseFloat(getComputedStyle(t.total).width) * nTime / t.media.duration),
+				    handlePos = newWidth - Math.round(t.handle.offsetWidth / 2);
 
 				newWidth = nTime / t.media.duration * 100;
 				t.current.style.width = newWidth + '%';
@@ -3236,12 +3236,12 @@ Object.assign(_player2.default.prototype, {
 				volumeCurrent.style.bottom = 0;
 				volumeCurrent.style.height = volumePercentage;
 				volumeHandle.style.bottom = volumePercentage;
-				volumeHandle.style.marginBottom = -volumeStyles.height / 2 + 'px';
+				volumeHandle.style.marginBottom = -parseFloat(volumeStyles.height) / 2 + 'px';
 			} else {
 				volumeCurrent.style.left = 0;
 				volumeCurrent.style.width = volumePercentage;
 				volumeHandle.style.left = volumePercentage;
-				volumeHandle.style.marginLeft = -volumeStyles.width / 2 + 'px';
+				volumeHandle.style.marginLeft = -parseFloat(volumeStyles.width) / 2 + 'px';
 			}
 		},
 
@@ -3258,7 +3258,7 @@ Object.assign(_player2.default.prototype, {
 			// calculate the new volume based on the most recent position
 			if (mode === 'vertical') {
 
-				var railHeight = parseInt(volumeStyles.height),
+				var railHeight = parseFloat(volumeStyles.height),
 				    newY = e.pageY - totalOffset.top;
 
 				volume = (railHeight - newY) / railHeight;
@@ -3268,7 +3268,7 @@ Object.assign(_player2.default.prototype, {
 					return;
 				}
 			} else {
-				var railWidth = parseInt(volumeStyles.width),
+				var railWidth = parseFloat(volumeStyles.width),
 				    newX = e.pageX - totalOffset.left;
 
 				volume = newX / railWidth;
@@ -4711,10 +4711,10 @@ var MediaElementPlayer = function () {
 
 				return ratio;
 			}(),
-			    parentHeight = parseInt(parentStyles.height);
+			    parentHeight = parseFloat(parentStyles.height);
 
 			var newHeight = void 0,
-			    parentWidth = parseInt(parentStyles.width);
+			    parentWidth = parseFloat(parentStyles.width);
 
 			if (t.isVideo) {
 				// Responsive video is based on width: 100% and height: 100%
@@ -4792,18 +4792,18 @@ var MediaElementPlayer = function () {
 				}
 			}
 
-			if (!parseInt(parentStyles.width)) {
+			if (!parseFloat(parentStyles.width)) {
 				parent.style.width = t.media.offsetWidth + 'px';
 			}
 
-			if (!parseInt(parentStyles.height)) {
+			if (!parseFloat(parentStyles.height)) {
 				parent.style.height = t.media.offsetHeight + 'px';
 			}
 
 			parentStyles = getComputedStyle(parent, null);
 
-			var parentWidth = parseInt(parentStyles.width),
-			    parentHeight = parseInt(parentStyles.height);
+			var parentWidth = parseFloat(parentStyles.width),
+			    parentHeight = parseFloat(parentStyles.height);
 
 			t.setDimensions('100%', '100%');
 

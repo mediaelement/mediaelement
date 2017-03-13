@@ -145,12 +145,12 @@ Object.assign(MediaElementPlayer.prototype, {
 					volumeCurrent.style.bottom = 0;
 					volumeCurrent.style.height = volumePercentage;
 					volumeHandle.style.bottom = volumePercentage;
-					volumeHandle.style.marginBottom = `${(-volumeStyles.height / 2)}px`;
+					volumeHandle.style.marginBottom = `${(-parseFloat(volumeStyles.height) / 2)}px`;
 				} else {
 					volumeCurrent.style.left = 0;
 					volumeCurrent.style.width = volumePercentage;
 					volumeHandle.style.left = volumePercentage;
-					volumeHandle.style.marginLeft = `${(-volumeStyles.width / 2)}px`;
+					volumeHandle.style.marginLeft = `${(-parseFloat(volumeStyles.width) / 2)}px`;
 				}
 			},
 			/**
@@ -169,7 +169,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (mode === 'vertical') {
 
 					const
-						railHeight = parseInt(volumeStyles.height),
+						railHeight = parseFloat(volumeStyles.height),
 						newY = e.pageY - totalOffset.top
 					;
 
@@ -182,7 +182,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				} else {
 					const
-						railWidth = parseInt(volumeStyles.width),
+						railWidth = parseFloat(volumeStyles.width),
 						newX = e.pageX - totalOffset.left
 					;
 

@@ -1114,12 +1114,12 @@ class MediaElementPlayer {
 
 				return ratio;
 			})(),
-			parentHeight = parseInt(parentStyles.height)
+			parentHeight = parseFloat(parentStyles.height)
 		;
 
 		let
 			newHeight,
-			parentWidth = parseInt(parentStyles.width)
+			parentWidth = parseFloat(parentStyles.width)
 		;
 
 		if (t.isVideo) {
@@ -1199,19 +1199,19 @@ class MediaElementPlayer {
 			}
 		}
 
-		if (!parseInt(parentStyles.width)) {
+		if (!parseFloat(parentStyles.width)) {
 			parent.style.width = `${t.media.offsetWidth}px`;
 		}
 
-		if (!parseInt(parentStyles.height)) {
+		if (!parseFloat(parentStyles.height)) {
 			parent.style.height = `${t.media.offsetHeight}px`;
 		}
 
 		parentStyles = getComputedStyle(parent, null);
 
 		const
-			parentWidth = parseInt(parentStyles.width),
-			parentHeight = parseInt(parentStyles.height)
+			parentWidth = parseFloat(parentStyles.width),
+			parentHeight = parseFloat(parentStyles.height)
 		;
 
 		t.setDimensions('100%', '100%');
