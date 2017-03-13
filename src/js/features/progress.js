@@ -125,7 +125,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					// position floating time box
 					if (!IS_IOS && !IS_ANDROID) {
 						t.timefloat.style.left = `${pos}px`;
-						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours);
+						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 						t.timefloat.style.display = 'block';
 					}
 				}
@@ -141,7 +141,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					seconds = media.currentTime,
 					timeSliderText = i18n.t('mejs.time-slider'),
-					time = secondsToTimeCode(seconds, player.options.alwaysShowHours),
+					time = secondsToTimeCode(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength),
 					duration = media.duration
 				;
 

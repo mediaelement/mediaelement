@@ -1677,7 +1677,7 @@ Object.assign(_player2.default.prototype, {
 				// position floating time box
 				if (!_constants.IS_IOS && !_constants.IS_ANDROID) {
 					t.timefloat.style.left = pos + 'px';
-					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours);
+					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 					t.timefloat.style.display = 'block';
 				}
 			}
@@ -1693,7 +1693,7 @@ Object.assign(_player2.default.prototype, {
 
 			var seconds = media.currentTime,
 			    timeSliderText = _i18n2.default.t('mejs.time-slider'),
-			    time = (0, _time.secondsToTimeCode)(seconds, player.options.alwaysShowHours),
+			    time = (0, _time.secondsToTimeCode)(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength),
 			    duration = media.duration;
 
 			t.slider.setAttribute('role', 'slider');
@@ -2057,7 +2057,7 @@ Object.assign(_player2.default.prototype, {
 		time.className = t.options.classPrefix + 'time';
 		time.setAttribute('role', 'timer');
 		time.setAttribute('aria-live', 'off');
-		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond) + '</span>';
+		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength) + '</span>';
 
 		t.addControlElement(time, 'current');
 
@@ -2083,7 +2083,7 @@ Object.assign(_player2.default.prototype, {
 		    currTime = controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime');
 
 		if (currTime) {
-			controls.querySelector('.' + t.options.classPrefix + 'time').innerHTML += t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>');
+			controls.querySelector('.' + t.options.classPrefix + 'time').innerHTML += t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength) + '</span>');
 		} else {
 
 			// add class to current time
@@ -2091,7 +2091,7 @@ Object.assign(_player2.default.prototype, {
 
 			var duration = _document2.default.createElement('div');
 			duration.className = t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container';
-			duration.innerHTML = '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond) + '</span>');
+			duration.innerHTML = '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength) + '</span>');
 
 			t.addControlElement(duration, 'duration');
 		}
@@ -2117,7 +2117,7 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.controls.querySelector('.' + t.options.classPrefix + 'currenttime')) {
-			t.controls.querySelector('.' + t.options.classPrefix + 'currenttime').innerText = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond);
+			t.controls.querySelector('.' + t.options.classPrefix + 'currenttime').innerText = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		}
 	},
 
@@ -2138,13 +2138,15 @@ Object.assign(_player2.default.prototype, {
 			duration = t.options.duration;
 		}
 
-		//Toggle the long video class if the video is longer than an hour
-		if (duration > 3600) {
+		var timecode = (0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+
+		// Toggle long-video class if time code is >5 digits (MM:SS)
+		if (timecode.length > 5) {
 			(0, _dom.toggleClass)(t.container, t.options.classPrefix + 'long-video');
 		}
 
 		if (t.controls.querySelector('.' + t.options.classPrefix + 'duration') && duration > 0) {
-			t.controls.querySelector('.' + t.options.classPrefix + 'duration').innerHTML = (0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond);
+			t.controls.querySelector('.' + t.options.classPrefix + 'duration').innerHTML = timecode;
 		}
 	}
 });
@@ -3721,6 +3723,8 @@ var config = exports.config = {
 	enableKeyboard: true,
 	// When this player starts, it will pause other players
 	pauseOtherPlayers: true,
+	// Number of decimal places to show if frames are shown
+	secondsDecimalLength: 0,
 	// Array of keyboard actions such as play/pause
 	keyActions: [{
 		keys: [32, // SPACE
@@ -7137,6 +7141,7 @@ if (window.Element && !Element.prototype.closest) {
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.isDropFrame = isDropFrame;
 exports.secondsToTimeCode = secondsToTimeCode;
 exports.timeCodeToSeconds = timeCodeToSeconds;
 exports.calculateTimeFormat = calculateTimeFormat;
@@ -7149,28 +7154,81 @@ var _mejs2 = _interopRequireDefault(_mejs);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
+ * Indicate if FPS is dropFrame (typically non-integer frame rates: 29.976)
+ *
+ * @param {Number} fps - Frames per second
+ * @return {Boolean}
+ */
+function isDropFrame() {
+	var fps = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 25;
+
+	return !(fps % 1 === 0);
+}
+/**
  * Format a numeric time in format '00:00:00'
  *
  * @param {Number} time - Ideally a number, but if not or less than zero, is defaulted to zero
  * @param {Boolean} forceHours
  * @param {Boolean} showFrameCount
  * @param {Number} fps - Frames per second
+ * @param {Number} secondsDecimalLength - Number of decimals to display if any
  * @return {String}
  */
 function secondsToTimeCode(time) {
 	var forceHours = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 	var showFrameCount = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 	var fps = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 25;
+	var secondsDecimalLength = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
 
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
-	var frames = Math.floor((time % 1 * fps).toFixed(3));
+	var dropFrames = Math.round(fps * 0.066666),
+	    // Number of drop frames to drop on the minute marks (6%)
+	timeBase = Math.round(fps),
+	    framesPer24Hours = Math.round(fps * 3600) * 24,
+	    framesPer10Minutes = Math.round(fps * 600),
+	    frameSep = isDropFrame(fps) ? ';' : ':',
+	    hours = void 0,
+	    minutes = void 0,
+	    seconds = void 0,
+	    frames = void 0,
+	    f = Math.round(time * fps);
 
-	var hours = Math.floor(time / 3600) % 24,
-	    minutes = Math.floor(time / 60) % 60,
-	    seconds = Math.floor(time % 60);
+	if (isDropFrame(fps)) {
 
+		if (f < 0) {
+			f = framesPer24Hours + f;
+		}
+
+		f = f % framesPer24Hours;
+
+		var d = Math.floor(f / framesPer10Minutes);
+		var m = f % framesPer10Minutes;
+		f = f + dropFrames * 9 * d;
+		if (m > dropFrames) {
+			f = f + dropFrames * Math.floor((m - dropFrames) / Math.round(timeBase * 60 - dropFrames));
+		}
+
+		var timeBaseDivision = Math.floor(f / timeBase);
+
+		hours = Math.floor(Math.floor(timeBaseDivision / 60) / 60);
+		minutes = Math.floor(timeBaseDivision / 60) % 60;
+
+		if (showFrameCount) {
+			seconds = timeBaseDivision % 60;
+		} else {
+			seconds = (f / timeBase % 60).toFixed(secondsDecimalLength);
+		}
+	} else {
+		hours = Math.floor(time / 3600) % 24;
+		minutes = Math.floor(time / 60) % 60;
+		if (showFrameCount) {
+			seconds = Math.floor(time % 60);
+		} else {
+			seconds = (time % 60).toFixed(secondsDecimalLength);
+		}
+	}
 	hours = hours <= 0 ? 0 : hours;
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
@@ -7178,7 +7236,12 @@ function secondsToTimeCode(time) {
 	var result = forceHours || hours > 0 ? (hours < 10 ? '0' + hours : hours) + ':' : '';
 	result += (minutes < 10 ? '0' + minutes : minutes) + ':';
 	result += '' + (seconds < 10 ? '0' + seconds : seconds);
-	result += '' + (showFrameCount ? ':' + (frames < 10 ? '0' + frames : frames) : '');
+
+	if (showFrameCount) {
+		frames = (f % timeBase).toFixed(0);
+		frames = frames <= 0 ? 0 : frames;
+		result += frames < 10 ? frameSep + '0' + frames : '' + frameSep + frames;
+	}
 
 	return result;
 }
@@ -7187,17 +7250,19 @@ function secondsToTimeCode(time) {
  * Convert a '00:00:00' time string into seconds
  *
  * @param {String} time
- * @param {Boolean} showFrameCount
  * @param {Number} fps - Frames per second
  * @return {Number}
  */
 function timeCodeToSeconds(time) {
-	var showFrameCount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-	var fps = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 25;
+	var fps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 25;
 
 
 	if (typeof time !== 'string') {
 		throw new TypeError('Time must be a string');
+	}
+
+	if (time.indexOf(';') > 0) {
+		time = time.replace(';', ':');
 	}
 
 	if (!time.match(/\d{2}(\:\d{2}){0,3}/)) {
@@ -7210,7 +7275,13 @@ function timeCodeToSeconds(time) {
 	    hours = 0,
 	    minutes = 0,
 	    seconds = 0,
-	    frames = 0;
+	    frames = 0,
+	    totalMinutes = 0,
+	    dropFrames = Math.round(fps * 0.066666),
+	    // Number of drop frames to drop on the minute marks (6%)
+	timeBase = Math.round(fps),
+	    hFrames = timeBase * 3600,
+	    mFrames = timeBase * 60;
 
 	switch (parts.length) {
 		default:
@@ -7222,16 +7293,25 @@ function timeCodeToSeconds(time) {
 			seconds = parseInt(parts[1], 10);
 			break;
 		case 3:
+			hours = parseInt(parts[0], 10);
+			minutes = parseInt(parts[1], 10);
+			seconds = parseInt(parts[2], 10);
+			break;
 		case 4:
 			hours = parseInt(parts[0], 10);
 			minutes = parseInt(parts[1], 10);
 			seconds = parseInt(parts[2], 10);
-			frames = showFrameCount ? parseInt(parts[3]) / fps : 0;
+			frames = parseInt(parts[3], 10);
 			break;
-
 	}
 
-	output = hours * 3600 + minutes * 60 + seconds + frames;
+	if (isDropFrame(fps)) {
+		totalMinutes = 60 * hours + minutes;
+		output = hFrames * hours + mFrames * minutes + timeBase * seconds + frames - dropFrames * (totalMinutes - Math.floor(totalMinutes / 10));
+	} else {
+		output = (hFrames * hours + mFrames * minutes + fps * seconds + frames) / fps;
+	}
+
 	return parseFloat(output.toFixed(3));
 }
 
