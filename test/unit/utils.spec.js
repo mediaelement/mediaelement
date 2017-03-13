@@ -121,6 +121,14 @@ describe('Utilities', () => {
 		});
 	});
 
+	describe('#isDropFrame', () => {
+		it('indicate if frames per second is a non-integer frame rates (i.e., 29.976)', () => {
+			expect(time.isDropFrame()).to.equal(false);
+			expect(time.isDropFrame(30)).to.equal(false);
+			expect(time.isDropFrame(3.679)).to.equal(true);
+		});
+	});
+
 	describe('#secondsToTimeCode', () => {
 
 		it('can format a numeric time in format `00:00:00`', () => {
@@ -141,8 +149,8 @@ describe('Utilities', () => {
 		it('can show the number of frames multiplying the decimal portion of time by the frames per second indicated', () => {
 
 			expect(time.secondsToTimeCode(36.45, false, true, 32)).to.equal('00:36:14');
-			expect(time.secondsToTimeCode(70.89, true, true, 40)).to.equal('00:01:10:35');
-			expect(time.secondsToTimeCode(3600.234, true, true)).to.equal('01:00:00:05');
+			expect(time.secondsToTimeCode(70.89, true, true, 40)).to.equal('00:01:10:36');
+			expect(time.secondsToTimeCode(3600.234, true, true)).to.equal('01:00:00:06');
 		});
 
 		it('can only accept numeric values for the time; otherwise, turns it to zero', () => {
@@ -164,9 +172,10 @@ describe('Utilities', () => {
 
 		it('can show the numeric value with decimals of time when frames per second are indicated', () => {
 
-			expect(time.timeCodeToSeconds('00:00:36:14', true, 32)).to.equal(36.438);
-			expect(time.timeCodeToSeconds('00:01:10:35', true, 40)).to.equal(70.875);
-			expect(time.timeCodeToSeconds('01:00:00:05', true)).to.equal(3600.2);
+			expect(time.timeCodeToSeconds('00:00:36:14', 32)).to.equal(36.438);
+			expect(time.timeCodeToSeconds('00:01:10:35', 40)).to.equal(70.875);
+			expect(time.timeCodeToSeconds('01:00:00:05')).to.equal(3600.2);
+			expect(time.timeCodeToSeconds('01:00:00;05')).to.equal(3600.2);
 		});
 
 		it('can only accept a string for the time', () => {

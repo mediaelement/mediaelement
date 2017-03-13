@@ -4,6 +4,7 @@ import mejs from '../core/mejs';
 
 /**
  * Indicate if FPS is dropFrame (typically non-integer frame rates: 29.976)
+ *
  * @param {Number} fps - Frames per second
  * @return {Boolean}
  */
@@ -17,14 +18,15 @@ export function isDropFrame(fps = 25) {
  * @param {Boolean} forceHours
  * @param {Boolean} showFrameCount
  * @param {Number} fps - Frames per second
+ * @param {Number} secondsDecimalLength - Number of decimals to display if any
  * @return {String}
  */
-export function secondsToTimeCode (time, forceHours = false, showFrameCount = false, fps = 25) {
+export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0) {
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
 	let
-		dropFrames = Math.round(fps * 0.066666),
+		dropFrames = Math.round(fps * 0.066666), // Number of drop frames to drop on the minute marks (6%)
 		timeBase = Math.round(fps),
 		framesPer24Hours = Math.round(fps * 3600) * 24,
 		framesPer10Minutes = Math.round(fps * 600),
@@ -44,35 +46,44 @@ export function secondsToTimeCode (time, forceHours = false, showFrameCount = fa
 
 		f = f % framesPer24Hours;
 
-		let d = Math.floor(f / framesPer10Minutes);
-		let m = f % framesPer10Minutes;
+		const d = Math.floor(f / framesPer10Minutes);
+		const m = f % framesPer10Minutes;
 		f = f + dropFrames * 9 * d;
 		if (m > dropFrames) {
 			f = f + dropFrames * (Math.floor((m - dropFrames) / (Math.round(timeBase * 60 - dropFrames))));
 		}
 
-		let tbdiv = Math.floor(f / timeBase);
+		const timeBaseDivision = Math.floor(f / timeBase);
 
-		hours = Math.floor(Math.floor(tbdiv / 60) / 60);
-		minutes = Math.floor(tbdiv / 60) % 60;
-		seconds = tbdiv % 60;
+		hours = Math.floor(Math.floor(timeBaseDivision / 60) / 60);
+		minutes = Math.floor(timeBaseDivision / 60) % 60;
+
+		if (showFrameCount) {
+			seconds = timeBaseDivision % 60;
+		} else {
+			seconds = ((f / timeBase) % 60).toFixed(secondsDecimalLength);
+		}
 	}
 	else {
-
 		hours = Math.floor(time / 3600) % 24;
 		minutes = Math.floor(time / 60) % 60;
-		seconds = Math.floor(time % 60);
+		if (showFrameCount) {
+			seconds = Math.floor(time % 60);
+		} else {
+			seconds = (time % 60).toFixed(secondsDecimalLength);
+		}
 	}
-	frames = (f % timeBase).toFixed(0); // for  HH:MM:SS:FF don't put in partial frames (fractional decimal)
 	hours = hours <= 0 ? 0 : hours;
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
-	frames = frames <= 0 ? 0 : frames;
 
 	let result = (forceHours || hours > 0) ? `${(hours < 10 ? `0${hours}` : hours)}:` : '';
 	result += `${(minutes < 10 ? `0${minutes}` : minutes)}:`;
 	result += `${(seconds < 10 ? `0${seconds}` : seconds)}`;
+
 	if (showFrameCount) {
+		frames = (f % timeBase).toFixed(0);
+		frames = frames <= 0 ? 0 : frames;
 		result += (frames < 10) ? `${frameSep}0${frames}` : `${frameSep}${frames}`;
 	}
 
@@ -83,11 +94,10 @@ export function secondsToTimeCode (time, forceHours = false, showFrameCount = fa
  * Convert a '00:00:00' time string into seconds
  *
  * @param {String} time
- * @param {Boolean} showFrameCount
  * @param {Number} fps - Frames per second
  * @return {Number}
  */
-export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
+export function timeCodeToSeconds (time, fps = 25) {
 
 	if (typeof time !== 'string') {
 		throw new TypeError('Time must be a string');
@@ -110,7 +120,7 @@ export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
 		seconds = 0,
 		frames = 0,
 		totalMinutes = 0,
-		dropFrames = Math.round(fps * 0.066666),
+		dropFrames = Math.round(fps * 0.066666), // Number of drop frames to drop on the minute marks (6%)
 		timeBase = Math.round(fps),
 		hFrames = timeBase * 3600,
 		mFrames = timeBase * 60
@@ -142,7 +152,7 @@ export function timeCodeToSeconds (time, showFrameCount = false, fps = 25) {
 		totalMinutes = (60 * hours) + minutes;
 		output = ((hFrames * hours) + (mFrames * minutes) + (timeBase * seconds) + frames) - (dropFrames * (totalMinutes - (Math.floor(totalMinutes / 10))));
 	} else {
-		output = ( hFrames * hours ) + ( mFrames * minutes  ) + fps * seconds + frames;
+		output = (( hFrames * hours ) + ( mFrames * minutes  ) + fps * seconds + frames) / fps;
 	}
 
 	return parseFloat(output.toFixed(3));

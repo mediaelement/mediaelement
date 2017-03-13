@@ -40,7 +40,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			time = $(`<div class="${t.options.classPrefix}time" role="timer" aria-live="off">` +
-				`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond)}</span>` +
+				`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength)}</span>` +
 			`</div>`)
 		;
 
@@ -71,7 +71,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (controls.children().last().find(`.${t.options.classPrefix}currenttime`).length > 0) {
 			const duration = $(`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>`);
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>`);
 
 			duration.appendTo(controls.find(`.${t.options.classPrefix}time`));
 
@@ -83,7 +83,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			const duration = $(`<div class="${t.options.classPrefix}time ${t.options.classPrefix}duration-container">` +
 				`<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond)}</span>` +
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>` +
 			`</div>`);
 
 			t.addControlElement(duration, 'duration');
@@ -112,7 +112,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.currenttime) {
-			t.currenttime.html(secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond));
+			t.currenttime.html(secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength));
 		}
 	},
 
@@ -132,7 +132,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (t.options.duration > 0) {
 			duration = t.options.duration;
 		}
-		let timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond);
+		let timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		/* Toggle long-video class if time code is >5 digits (MM:SS) */
 		t.container.toggleClass(`${t.options.classPrefix}long-video`, timecode.length > 5);
 
