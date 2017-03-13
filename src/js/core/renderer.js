@@ -56,7 +56,7 @@ class Renderer {
 					/iframe$/,
 				],
 				rendererRanking = (renderer) => {
-					for (let i = 0; i < rendererIndicator.length; i++) {
+					for (let i = 0, total = rendererIndicator.length; i < total; i++) {
 						if (renderer.match(rendererIndicator[i]) !== null) {
 							return i;
 						}
@@ -70,7 +70,7 @@ class Renderer {
 			});
 		}
 
-		for (let i = 0, il = renderers.length; i < il; i++) {
+		for (let i = 0, total = renderers.length; i < total; i++) {
 			const
 				key = renderers[i],
 				renderer = this.renderers[key]

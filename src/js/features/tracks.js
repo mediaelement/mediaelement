@@ -83,14 +83,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			total = player.tracks.length
 		;
 
-		let
-			i,
-			kind
-		;
-
 		// If browser will do native captions, prefer mejs captions, loop through tracks and hide
 		if (t.domNode.textTracks) {
-			for (i = t.domNode.textTracks.length - 1; i >= 0; i--) {
+			for (let i = t.domNode.textTracks.length - 1; i >= 0; i--) {
 				t.domNode.textTracks[i].mode = 'hidden';
 			}
 		}
@@ -133,8 +128,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		let subtitleCount = 0;
 
-		for (i = 0; i < total; i++) {
-			kind = player.tracks[i].kind;
+		for (let i = 0; i < total; i++) {
+			const kind = player.tracks[i].kind;
 			if (kind === 'subtitles' || kind === 'captions') {
 				subtitleCount++;
 			} else if (kind === 'chapters' && !controls.find(`.${t.options.classPrefix}chapter-selector`).length) {
@@ -249,8 +244,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.isLoadingTrack = false;
 
 		// add to list
-		for (i = 0; i < total; i++) {
-			kind = player.tracks[i].kind;
+		for (let i = 0; i < total; i++) {
+			const kind = player.tracks[i].kind;
 			if (kind === 'subtitles' || kind === 'captions') {
 				player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
 			}
@@ -361,7 +356,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		for (let i = 0; i < t.tracks.length; i++) {
+		for (let i = 0, total = t.tracks.length; i < total; i++) {
 			let track = t.tracks[i];
 			if (track.trackId === trackId) {
 				if (t.selectedTrack === null) {
@@ -839,7 +834,7 @@ mejs.TrackFormatParser = {
 		/**
 		 * @type {String}
 		 */
-		pattern_timecode: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
+		pattern: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
 
 		/**
 		 *
@@ -848,19 +843,18 @@ mejs.TrackFormatParser = {
 		 */
 		parse: function (trackText) {
 			const
-				lines = mejs.TrackFormatParser.split2(trackText, /\r?\n/),
+				lines = trackText.split(/\r?\n/),
 				entries = []
 			;
 
 			let
-				i = 0,
 				timecode,
 				text,
 				identifier
 			;
 
-			for (; i < lines.length; i++) {
-				timecode = this.pattern_timecode.exec(lines[i]);
+			for (let i = 0, total = lines.length; i < total; i++) {
+				timecode = this.pattern.exec(lines[i]);
 
 				if (timecode && i < lines.length) {
 					if ((i - 1) >= 0 && lines[i - 1] !== '') {
@@ -904,22 +898,19 @@ mejs.TrackFormatParser = {
 				entries = []
 			;
 
-			let
-				styles,
-				i
-			;
+			let styles;
 
 			if (styleNode.length) {
 				let attributes = styleNode.removeAttr('id').get(0).attributes;
 				if (attributes.length) {
 					styles = {};
-					for (i = 0; i < attributes.length; i++) {
+					for (let i = 0, total = attributes.length; i < total; i++) {
 						styles[attributes[i].name.split(":")[1]] = attributes[i].value;
 					}
 				}
 			}
 
-			for (i = 0; i < lines.length; i++) {
+			for (let i = 0, total = lines.length; i < total; i++) {
 				let
 					style,
 					_temp = {
@@ -928,7 +919,7 @@ mejs.TrackFormatParser = {
 						style: null,
 						text: null
 					}
-					;
+				;
 
 				if (lines.eq(i).attr('begin')) {
 					_temp.start = convertSMPTEtoSeconds(lines.eq(i).attr('begin'));
@@ -960,35 +951,5 @@ mejs.TrackFormatParser = {
 			}
 			return entries;
 		}
-	},
-	/**
-	 *
-	 * @param {String} text
-	 * @param {String} regex
-	 * @returns {Array}
-	 */
-	split2: function (text, regex) {
-		// normal version for compliant browsers
-		// see below for IE fix
-		return text.split(regex);
 	}
 };
-
-// test for browsers with bad String.split method.
-if ('x\n\ny'.split(/\n/gi).length !== 3) {
-	// add super slow IE8 and below version
-	mejs.TrackFormatParser.split2 = (text, regex) => {
-		const parts = [];
-		let chunk = '';
-
-		for (let i = 0; i < text.length; i++) {
-			chunk += text.substring(i, i + 1);
-			if (regex.test(chunk)) {
-				parts.push(chunk.replace(regex, ''));
-				chunk = '';
-			}
-		}
-		parts.push(chunk);
-		return parts;
-	};
-}

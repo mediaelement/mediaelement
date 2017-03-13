@@ -42,7 +42,7 @@ export const SUPPORT_POINTER_EVENTS = (() => {
 const html5Elements = ['source', 'track', 'audio', 'video'];
 let video;
 
-for (let i = 0, il = html5Elements.length; i < il; i++) {
+for (let i = 0, total = html5Elements.length; i < total; i++) {
 	video = document.createElement(html5Elements[i]);
 }
 

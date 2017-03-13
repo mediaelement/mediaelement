@@ -127,8 +127,6 @@ const SoundCloudIframeRenderer = {
 		;
 
 		let
-			i,
-			il,
 			duration = 0,
 			currentTime = 0,
 			bufferedTime = 0,
@@ -257,7 +255,7 @@ const SoundCloudIframeRenderer = {
 			}
 		;
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -290,7 +288,7 @@ const SoundCloudIframeRenderer = {
 			}
 		;
 
-		for (i = 0, il = methods.length; i < il; i++) {
+		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
 		}
 
@@ -301,7 +299,7 @@ const SoundCloudIframeRenderer = {
 
 			// do call stack
 			if (apiStack.length) {
-				for (i = 0, il = apiStack.length; i < il; i++) {
+				for (let i = 0, total = apiStack.length; i < total; i++) {
 
 					const stackItem = apiStack[i];
 
@@ -376,7 +374,7 @@ const SoundCloudIframeRenderer = {
 			// give initial events
 			const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
-			for (let i = 0, il = initEvents.length; i < il; i++) {
+			for (let i = 0, total = initEvents.length; i < total; i++) {
 				const event = mejs.Utils.createEvent(initEvents[i], sc);
 				mediaElement.dispatchEvent(event);
 			}

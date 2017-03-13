@@ -328,7 +328,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.media.addEventListener('click', t.clickToPlayPauseCallback);
 
 				// show the divs that will restore things
-				for (let i = 0, il = hoverDivs.length; i < il; i++) {
+				for (let i = 0, total = hoverDivs.length; i < total; i++) {
 					hoverDivs[i].show();
 				}
 

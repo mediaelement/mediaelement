@@ -44,8 +44,6 @@ const FacebookRenderer = {
 		;
 
 		let
-			i,
-			il,
 			src = '',
 			paused = true,
 			ended = false,
@@ -176,7 +174,7 @@ const FacebookRenderer = {
 			}
 		;
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -209,7 +207,7 @@ const FacebookRenderer = {
 			}
 		;
 
-		for (i = 0, il = methods.length; i < il; i++) {
+		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
 		}
 
@@ -221,7 +219,7 @@ const FacebookRenderer = {
 		 * @param {Array} events
 		 */
 		function sendEvents (events) {
-			for (let i = 0, il = events.length; i < il; i++) {
+			for (let i = 0, total = events.length; i < total; i++) {
 				const event = mejs.Utils.createEvent(events[i], fbWrapper);
 				mediaElement.dispatchEvent(event);
 			}
@@ -277,13 +275,13 @@ const FacebookRenderer = {
 
 						fbWrapper.setSize(width, height);
 						
-						for (i = 0, il = events.length; i < il; i++) {
+						for (let i = 0, total = events.length; i < total; i++) {
 							fbIframe.addEventListener(events[i], assignEvents, false);
 						}
 
 						// remove previous listeners
 						const fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
-						for (i = 0, il = fbEvents.length; i < il; i++) {
+						for (let i = 0, total = fbEvents.length; i < total; i++) {
 							const
 								event = fbEvents[i],
 								handler = eventHandler[event]
@@ -296,7 +294,7 @@ const FacebookRenderer = {
 
 						// do call stack
 						if (apiStack.length) {
-							for (i = 0, il = apiStack.length; i < il; i++) {
+							for (let i = 0, total = apiStack.length; i < total; i++) {
 
 								const stackItem = apiStack[i];
 

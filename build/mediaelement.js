@@ -497,9 +497,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 	t.mediaElement = _document2.default.createElement(options.fakeNodeName);
 	t.mediaElement.options = options;
 
-	var id = idOrNode,
-	    i = void 0,
-	    il = void 0;
+	var id = idOrNode;
 
 	if (typeof idOrNode === 'string') {
 		t.mediaElement.originalNode = _document2.default.getElementById(idOrNode);
@@ -581,7 +579,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		var rendererArray = t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers : _renderer.renderer.order;
 
 		// find the desired renderer in the array of possible ones
-		for (i = 0, il = rendererArray.length; i < il; i++) {
+		for (var i = 0, total = rendererArray.length; i < total; i++) {
 
 			var index = rendererArray[i];
 
@@ -678,7 +676,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 				type: value ? (0, _media.getTypeFromFile)(value) : ''
 			});
 		} else {
-			for (i = 0, il = value.length; i < il; i++) {
+			for (var i = 0, total = value.length; i < total; i++) {
 
 				var src = (0, _media.absolutizeUrl)(value[i].src),
 				    type = value[i].type;
@@ -732,12 +730,12 @@ var MediaElement = function MediaElement(idOrNode, options) {
 	t.mediaElement.getSrc = getSrc;
 	t.mediaElement.setSrc = setSrc;
 
-	for (i = 0, il = props.length; i < il; i++) {
+	for (var i = 0, total = props.length; i < total; i++) {
 		assignGettersSetters(props[i]);
 	}
 
-	for (i = 0, il = methods.length; i < il; i++) {
-		assignMethods(methods[i]);
+	for (var _i = 0, _total = methods.length; _i < _total; _i++) {
+		assignMethods(methods[_i]);
 	}
 
 	// IE && iOS
@@ -772,9 +770,9 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		}
 
 		// remove the specific callback
-		for (var _i = 0, _il = callbacks.length; _i < _il; _i++) {
-			if (callbacks[_i] === callback) {
-				t.mediaElement.events[eventName].splice(_i, 1);
+		for (var _i2 = 0; _i2 < callbacks.length; _i2++) {
+			if (callbacks[_i2] === callback) {
+				t.mediaElement.events[eventName].splice(_i2, 1);
 				return true;
 			}
 		}
@@ -790,8 +788,8 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		var callbacks = t.mediaElement.events[event.type];
 
 		if (callbacks) {
-			for (i = 0, il = callbacks.length; i < il; i++) {
-				callbacks[i].apply(null, [event]);
+			for (var _i3 = 0; _i3 < callbacks.length; _i3++) {
+				callbacks[_i3].apply(null, [event]);
 			}
 		}
 	};
@@ -827,8 +825,8 @@ var MediaElement = function MediaElement(idOrNode, options) {
 				}
 
 				// test <source> types to see if they are usable
-				for (i = 0; i < sources; i++) {
-					n = t.mediaElement.originalNode.childNodes[i];
+				for (var _i4 = 0; _i4 < sources; _i4++) {
+					n = t.mediaElement.originalNode.childNodes[_i4];
 					if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 						src = n.getAttribute('src');
 						type = (0, _media.formatType)(src, n.getAttribute('type'));
@@ -991,7 +989,7 @@ var Renderer = function () {
 				(function () {
 					var rendererIndicator = [/^(html5|native)/, /^flash/, /iframe$/],
 					    rendererRanking = function rendererRanking(renderer) {
-						for (var i = 0; i < rendererIndicator.length; i++) {
+						for (var i = 0, total = rendererIndicator.length; i < total; i++) {
 							if (renderer.match(rendererIndicator[i]) !== null) {
 								return i;
 							}
@@ -1005,7 +1003,7 @@ var Renderer = function () {
 				})();
 			}
 
-			for (var i = 0, il = renderers.length; i < il; i++) {
+			for (var i = 0, total = renderers.length; i < total; i++) {
 				var key = renderers[i],
 				    _renderer = this.renderers[key];
 
@@ -1327,9 +1325,7 @@ var DashNativeRenderer = {
 		    preload = originalNode.getAttribute('preload'),
 		    autoplay = originalNode.getAttribute('autoplay');
 
-		var i = void 0,
-		    il = void 0,
-		    node = null,
+		var node = null,
 		    dashPlayer = void 0;
 
 		node = originalNode.cloneNode(true);
@@ -1360,7 +1356,7 @@ var DashNativeRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -1388,8 +1384,8 @@ var DashNativeRenderer = {
 				});
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
-				assignEvents(events[i]);
+			for (var _i = 0, _total = events.length; _i < _total; _i++) {
+				assignEvents(events[_i]);
 			}
 
 			/**
@@ -1417,9 +1413,9 @@ var DashNativeRenderer = {
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					node.setAttribute('src', mediaFiles[i].src);
+			for (var _i2 = 0, _total2 = mediaFiles.length; _i2 < _total2; _i2++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i2].type)) {
+					node.setAttribute('src', mediaFiles[_i2].src);
 					break;
 				}
 			}
@@ -1574,7 +1570,7 @@ var PluginDetector = exports.PluginDetector = {
 			description = _constants.NAV.plugins[pluginName].description;
 			if (description && !(typeof _constants.NAV.mimeTypes !== 'undefined' && _constants.NAV.mimeTypes[mimeType] && !_constants.NAV.mimeTypes[mimeType].enabledPlugin)) {
 				version = description.replace(pluginName, '').replace(/^\s+/, '').replace(/\sr/gi, '.').split('.');
-				for (var i = 0; i < version.length; i++) {
+				for (var i = 0, total = version.length; i < total; i++) {
 					version[i] = parseInt(version[i].match(/\d+/), 10);
 				}
 			}
@@ -1622,9 +1618,6 @@ var FlashMediaElementRenderer = {
 	create: function create(mediaElement, options, mediaFiles) {
 
 		var flash = {};
-
-		var i = void 0,
-		    il = void 0;
 
 		// store main variable
 		flash.options = options;
@@ -1701,7 +1694,7 @@ var FlashMediaElementRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -1734,15 +1727,15 @@ var FlashMediaElementRenderer = {
 			};
 		};
 		methods.push('stop');
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
+		for (var _i = 0, _total = methods.length; _i < _total; _i++) {
+			assignMethods(methods[_i]);
 		}
 
 		// give initial events like in others renderers
 		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
 
-		for (i = 0, il = initEvents.length; i < il; i++) {
-			var event = (0, _general.createEvent)(initEvents[i], flash);
+		for (var _i2 = 0, _total2 = initEvents.length; _i2 < _total2; _i2++) {
+			var event = (0, _general.createEvent)(initEvents[_i2], flash);
 			mediaElement.dispatchEvent(event);
 		}
 
@@ -1754,9 +1747,9 @@ var FlashMediaElementRenderer = {
 
 			// do call stack
 			if (flash.flashApiStack.length) {
-				for (i = 0, il = flash.flashApiStack.length; i < il; i++) {
+				for (var _i3 = 0, _total3 = flash.flashApiStack.length; _i3 < _total3; _i3++) {
 
-					var stackItem = flash.flashApiStack[i];
+					var stackItem = flash.flashApiStack[_i3];
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
@@ -1872,9 +1865,9 @@ var FlashMediaElementRenderer = {
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					flash.setSrc(mediaFiles[i].src);
+			for (var _i4 = 0, _total4 = mediaFiles.length; _i4 < _total4; _i4++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i4].type)) {
+					flash.setSrc(mediaFiles[_i4].src);
 					break;
 				}
 			}
@@ -2192,9 +2185,7 @@ var FlvNativeRenderer = {
 		var originalNode = mediaElement.originalNode,
 		    id = mediaElement.id + '_' + options.prefix;
 
-		var i = void 0,
-		    il = void 0,
-		    node = null,
+		var node = null,
 		    flvPlayer = void 0;
 
 		node = originalNode.cloneNode(true);
@@ -2224,7 +2215,7 @@ var FlvNativeRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -2251,15 +2242,15 @@ var FlvNativeRenderer = {
 				});
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
-				assignEvents(events[i]);
+			for (var _i = 0, _total = events.length; _i < _total; _i++) {
+				assignEvents(events[_i]);
 			}
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					node.setAttribute('src', mediaFiles[i].src);
+			for (var _i2 = 0, _total2 = mediaFiles.length; _i2 < _total2; _i2++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i2].type)) {
+					node.setAttribute('src', mediaFiles[_i2].src);
 					break;
 				}
 			}
@@ -2487,9 +2478,7 @@ var HlsNativeRenderer = {
 		    preload = originalNode.getAttribute('preload'),
 		    autoplay = originalNode.getAttribute('autoplay');
 
-		var i = void 0,
-		    il = void 0,
-		    hlsPlayer = void 0,
+		var hlsPlayer = null,
 		    node = null;
 
 		node = originalNode.cloneNode(true);
@@ -2532,7 +2521,7 @@ var HlsNativeRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -2568,8 +2557,8 @@ var HlsNativeRenderer = {
 				});
 			};
 
-			for (i = 0, il = events.length; i < il; i++) {
-				assignEvents(events[i]);
+			for (var _i = 0, _total = events.length; _i < _total; _i++) {
+				assignEvents(events[_i]);
 			}
 
 			/**
@@ -2629,9 +2618,9 @@ var HlsNativeRenderer = {
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					node.setAttribute('src', mediaFiles[i].src);
+			for (var _i2 = 0, _total2 = mediaFiles.length; _i2 < _total2; _i2++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i2].type)) {
+					node.setAttribute('src', mediaFiles[_i2].src);
 					break;
 				}
 			}
@@ -2771,9 +2760,7 @@ var HtmlMediaElement = {
 
 		var id = mediaElement.id + '_' + options.prefix;
 
-		var node = null,
-		    i = void 0,
-		    il = void 0;
+		var node = null;
 
 		// CREATE NODE
 		if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
@@ -2801,7 +2788,7 @@ var HtmlMediaElement = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -2817,8 +2804,8 @@ var HtmlMediaElement = {
 			});
 		};
 
-		for (i = 0, il = events.length; i < il; i++) {
-			assignEvents(events[i]);
+		for (var _i = 0, _total = events.length; _i < _total; _i++) {
+			assignEvents(events[_i]);
 		}
 
 		// HELPER METHODS
@@ -2842,9 +2829,9 @@ var HtmlMediaElement = {
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (i = 0, il = mediaFiles.length; i < il; i++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					node.setAttribute('src', mediaFiles[i].src);
+			for (var _i2 = 0, _total2 = mediaFiles.length; _i2 < _total2; _i2++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i2].type)) {
+					node.setAttribute('src', mediaFiles[_i2].src);
 					break;
 				}
 			}
@@ -3011,7 +2998,7 @@ var YouTubeApi = {
 
 		var youTubeId = '';
 
-		for (var i = 0, il = parameters.length; i < il; i++) {
+		for (var i = 0, total = parameters.length; i < total; i++) {
 			var paramParts = parameters[i].split('=');
 			if (paramParts[0] === 'v') {
 				youTubeId = paramParts[1];
@@ -3109,9 +3096,7 @@ var YouTubeIframeRenderer = {
 		    apiStack = [],
 		    readyState = 4;
 
-		var i = void 0,
-		    il = void 0,
-		    youTubeApi = null,
+		var youTubeApi = null,
 		    paused = true,
 		    ended = false,
 		    youTubeIframe = null,
@@ -3259,7 +3244,7 @@ var YouTubeIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (var i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -3290,8 +3275,8 @@ var YouTubeIframeRenderer = {
 			};
 		};
 
-		for (i = 0, il = methods.length; i < il; i++) {
-			assignMethods(methods[i]);
+		for (var _i = 0, _total = methods.length; _i < _total; _i++) {
+			assignMethods(methods[_i]);
 		}
 
 		// CREATE YouTube
@@ -3339,9 +3324,9 @@ var YouTubeIframeRenderer = {
 
 					// do call stack
 					if (apiStack.length) {
-						for (i = 0, il = apiStack.length; i < il; i++) {
+						for (var _i2 = 0, _total2 = apiStack.length; _i2 < _total2; _i2++) {
 
-							var stackItem = apiStack[i];
+							var stackItem = apiStack[_i2];
 
 							if (stackItem.type === 'set') {
 								var propName = stackItem.propName,
@@ -3364,15 +3349,15 @@ var YouTubeIframeRenderer = {
 						mediaElement.dispatchEvent(newEvent);
 					};
 
-					for (i = 0, il = events.length; i < il; i++) {
-						youTubeIframe.addEventListener(events[i], assignEvents, false);
+					for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
+						youTubeIframe.addEventListener(events[_i3], assignEvents, false);
 					}
 
 					// send init events
 					var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
-					for (i = 0, il = initEvents.length; i < il; i++) {
-						var event = (0, _general.createEvent)(initEvents[i], youtube);
+					for (var _i4 = 0, _total4 = initEvents.length; _i4 < _total4; _i4++) {
+						var event = (0, _general.createEvent)(initEvents[_i4], youtube);
 						mediaElement.dispatchEvent(event);
 					}
 				},
@@ -3433,8 +3418,8 @@ var YouTubeIframeRenderer = {
 					}
 
 					// send events up
-					for (i = 0, il = events.length; i < il; i++) {
-						var event = (0, _general.createEvent)(events[i], youtube);
+					for (var _i5 = 0, _total5 = events.length; _i5 < _total5; _i5++) {
+						var event = (0, _general.createEvent)(events[_i5], youtube);
 						mediaElement.dispatchEvent(event);
 					}
 				},
@@ -3572,7 +3557,7 @@ var SUPPORT_POINTER_EVENTS = exports.SUPPORT_POINTER_EVENTS = function () {
 var html5Elements = ['source', 'track', 'audio', 'video'];
 var video = void 0;
 
-for (var i = 0, il = html5Elements.length; i < il; i++) {
+for (var i = 0, total = html5Elements.length; i < total; i++) {
 	video = _document2.default.createElement(html5Elements[i]);
 }
 
@@ -3955,9 +3940,7 @@ function getTypeFromFile(url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	var i = void 0,
-	    il = void 0,
-	    type = void 0;
+	var type = void 0;
 
 	// Validate `typeChecks` array
 	if (!Array.isArray(typeChecks)) {
@@ -3965,7 +3948,7 @@ function getTypeFromFile(url) {
 	}
 
 	if (typeChecks.length) {
-		for (i = 0, il = typeChecks.length; i < il; i++) {
+		for (var i = 0, total = typeChecks.length; i < total; i++) {
 			var _type = typeChecks[i];
 
 			if (typeof _type !== 'function') {
@@ -3975,9 +3958,9 @@ function getTypeFromFile(url) {
 	}
 
 	// do type checks first
-	for (i = 0, il = typeChecks.length; i < il; i++) {
+	for (var _i = 0, _total = typeChecks.length; _i < _total; _i++) {
 
-		type = typeChecks[i](url);
+		type = typeChecks[_i](url);
 
 		if (type !== undefined && type !== null) {
 			return type;
@@ -4180,7 +4163,7 @@ if (typeof Object.assign !== 'function') {
 
 		var to = Object(target);
 
-		for (var index = 1; index < arguments.length; index++) {
+		for (var index = 1, total = arguments.length; index < total; index++) {
 			var nextSource = arguments[index];
 
 			if (nextSource !== null) {

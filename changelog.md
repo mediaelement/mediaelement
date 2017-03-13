@@ -7,6 +7,9 @@
 * Added default `preload` element if not set on `video` or `audio` due to issue described on #2114 @ron666
 * Fixed typo in Facebook renderer @ron666
 * Added missing conditional to avoid issues in Android using Flash @ron666
+* Refactor loop related to dispatch/remove events (https://github.com/johndyer/mediaelement/pull/2127) @bricev
+* Removed unnecessary code from Tracks feature and fixed typo in HLS renderer @ron666
+* Escaped HTML tags in installation.md file (https://github.com/johndyer/mediaelement/pull/2130) @GeorgySerga
 
 *3.2.3 (2017/03/02)*
 

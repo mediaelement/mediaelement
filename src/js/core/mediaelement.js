@@ -47,11 +47,7 @@ class MediaElement {
 		t.mediaElement = document.createElement(options.fakeNodeName);
 		t.mediaElement.options = options;
 
-		let
-			id = idOrNode,
-			i,
-			il
-		;
+		let id = idOrNode;
 
 		if (typeof idOrNode === 'string') {
 			t.mediaElement.originalNode = document.getElementById(idOrNode);
@@ -138,7 +134,7 @@ class MediaElement {
 				renderer.order;
 
 			// find the desired renderer in the array of possible ones
-			for (i = 0, il = rendererArray.length; i < il; i++) {
+			for (let i = 0, total = rendererArray.length; i < total; i++) {
 
 				const index = rendererArray[i];
 
@@ -229,12 +225,12 @@ class MediaElement {
 						type: value ? getTypeFromFile(value) : ''
 					});
 				} else {
-					for (i = 0, il = value.length; i < il; i++) {
+					for (let i = 0, total = value.length; i < total; i++) {
 
 						const
 							src = absolutizeUrl(value[i].src),
 							type = value[i].type
-							;
+						;
 
 						mediaFiles.push({
 							src: src,
@@ -289,11 +285,11 @@ class MediaElement {
 		t.mediaElement.getSrc = getSrc;
 		t.mediaElement.setSrc = setSrc;
 
-		for (i = 0, il = props.length; i < il; i++) {
+		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
 
-		for (i = 0, il = methods.length; i < il; i++) {
+		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
 		}
 
@@ -329,7 +325,7 @@ class MediaElement {
 			}
 
 			// remove the specific callback
-			for (let i = 0, il = callbacks.length; i < il; i++) {
+			for (let i = 0; i < callbacks.length; i++) {
 				if (callbacks[i] === callback) {
 					t.mediaElement.events[eventName].splice(i, 1);
 					return true;
@@ -347,7 +343,7 @@ class MediaElement {
 			const callbacks = t.mediaElement.events[event.type];
 
 			if (callbacks) {
-				for (i = 0, il = callbacks.length; i < il; i++) {
+				for (let i = 0; i < callbacks.length; i++) {
 					callbacks[i].apply(null, [event]);
 				}
 			}
@@ -386,7 +382,7 @@ class MediaElement {
 					}
 
 					// test <source> types to see if they are usable
-					for (i = 0; i < sources; i++) {
+					for (let i = 0; i < sources; i++) {
 						n = t.mediaElement.originalNode.childNodes[i];
 						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 							src = n.getAttribute('src');
