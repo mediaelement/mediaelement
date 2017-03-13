@@ -259,7 +259,7 @@ const HlsNativeRenderer = {
 				mediaElement.dispatchEvent(event);
 
 				if (e === 'hlsError') {
-					console.error(e, data);
+					console.warn(e, data);
 
 					// borrowed from http://dailymotion.github.io/hls.js/demo/
 					if (data.fatal) {

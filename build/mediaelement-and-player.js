@@ -1823,6 +1823,11 @@ Object.assign(_player2.default.prototype, {
 
 		var events = ['mousedown', 'touchstart'];
 
+		// Required to manipulate mouse movements that require drag 'n' drop properly
+		t.slider.addEventListener('dragstart', function () {
+			return false;
+		});
+
 		for (var i = 0, total = events.length; i < total; i++) {
 			t.slider.addEventListener(events[i], function (e) {
 				t.forcedHandlePause = false;
@@ -1837,8 +1842,13 @@ Object.assign(_player2.default.prototype, {
 
 						mouseIsDown = true;
 						handleMouseMove(e);
-						t.globalBind('mousemove.dur touchmove.dur', function (e) {
-							handleMouseMove(e);
+						t.globalBind('mousemove.dur touchmove.dur', function (event) {
+							var target = event.target;
+							if (target === t.slider || closest(target, function (el) {
+								return el === t.slider;
+							})) {
+								handleMouseMove(event);
+							}
 						});
 						t.globalBind('mouseup.dur touchend.dur', function () {
 							handleMouseup();
@@ -1852,10 +1862,15 @@ Object.assign(_player2.default.prototype, {
 				}
 			});
 		}
-		t.slider.addEventListener('mouseenter', function () {
-			if (media.duration !== Infinity) {
-				t.globalBind('mousemove.dur', function (e) {
-					handleMouseMove(e);
+		t.slider.addEventListener('mouseenter', function (e) {
+			if (e.target === t.slider && media.duration !== Infinity) {
+				t.globalBind('mousemove.dur', function (event) {
+					var target = event.target;
+					if (target === t.slider || closest(target, function (el) {
+						return el === t.slider;
+					})) {
+						handleMouseMove(event);
+					}
 				});
 				if (t.timefloat !== undefined && !_constants.IS_IOS && !_constants.IS_ANDROID) {
 					t.timefloat.style.display = 'block';
@@ -6886,7 +6901,7 @@ var HlsNativeRenderer = {
 				mediaElement.dispatchEvent(event);
 
 				if (e === 'hlsError') {
-					console.error(e, data);
+					console.warn(e, data);
 
 					// borrowed from http://dailymotion.github.io/hls.js/demo/
 					if (data.fatal) {

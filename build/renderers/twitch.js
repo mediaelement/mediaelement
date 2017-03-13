@@ -524,7 +524,7 @@ var TwitchIframeRenderer = {
 		};
 		twitch.show = function () {
 			if (twitchIframe) {
-				twitchIframe.style.display = '';
+				twitchIframe.style.display = 'block';
 			}
 		};
 		twitch.destroy = function () {};

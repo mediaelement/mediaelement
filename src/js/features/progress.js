@@ -268,6 +268,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const events = ['mousedown', 'touchstart'];
 
+		// Required to manipulate mouse movements that require drag 'n' drop properly
+		t.slider.addEventListener('dragstart', () => false);
+
 		for (let i = 0, total = events.length; i < total; i++) {
 			t.slider.addEventListener(events[i], (e) => {
 				t.forcedHandlePause = false;
@@ -282,8 +285,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 						mouseIsDown = true;
 						handleMouseMove(e);
-						t.globalBind('mousemove.dur touchmove.dur', (e) => {
-							handleMouseMove(e);
+						t.globalBind('mousemove.dur touchmove.dur', (event) => {
+							const target = event.target;
+							if (target === t.slider || closest(target, (el) => el === t.slider)) {
+								handleMouseMove(event);
+							}
 						});
 						t.globalBind('mouseup.dur touchend.dur', () => {
 							handleMouseup();
@@ -297,10 +303,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			});
 		}
-		t.slider.addEventListener('mouseenter', () => {
-			if (media.duration !== Infinity) {
-				t.globalBind('mousemove.dur', (e) => {
-					handleMouseMove(e);
+		t.slider.addEventListener('mouseenter', (e) => {
+			if (e.target === t.slider && media.duration !== Infinity) {
+				t.globalBind('mousemove.dur', (event) => {
+					const target = event.target;
+					if (target === t.slider || closest(target, (el) => el === t.slider)) {
+						handleMouseMove(event);
+					}
 				});
 				if (t.timefloat !== undefined && !IS_IOS && !IS_ANDROID) {
 					t.timefloat.style.display = 'block';

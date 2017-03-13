@@ -1,5 +1,11 @@
 ### Version History
 
+*4.0.0 (2017/??/??)*
+
+* Removed all dependencies to jQuery in code and added new methods to replace it @ron666
+* Added missing unit tests @ron666
+* Fixed minor issues with Twitch and HLS renderers @ron666
+
 *3.2.4 (2017/03/??)*
 
 * Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @ron666

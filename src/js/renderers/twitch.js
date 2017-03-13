@@ -534,7 +534,7 @@ const TwitchIframeRenderer = {
 		};
 		twitch.show = () => {
 			if (twitchIframe) {
-				twitchIframe.style.display = '';
+				twitchIframe.style.display = 'block';
 			}
 		};
 		twitch.destroy = () => {};

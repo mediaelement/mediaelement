@@ -45,6 +45,10 @@ describe('Renderers', () => {
 		it('can be changed', () => {
 			renderer.renderers = mockRenderer;
 			expect(renderer.renderers).to.deep.equal(mockRenderer);
+
+			expect(() => {
+				renderer.renderers = 'dummy';
+			}).to.throw(Error);
 		});
 
 		it('only accepts an array of objects', () => {
