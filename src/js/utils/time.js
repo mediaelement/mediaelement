@@ -19,20 +19,20 @@ export function isDropFrame(fps = 25) {
  * @param {Number} fps - Frames per second
  * @return {String}
  */
-export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25) {
+export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0) {
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
 	let
-		dropFrames = Math.round(fps * 0.066666),
-		timeBase = Math.round(fps),
-		framesPer24Hours = Math.round(fps * 3600) * 24,
-		framesPer10Minutes = Math.round(fps * 600),
-		frameSep = isDropFrame(fps) ? ';' : ':',
-		hours,
-		minutes,
-		seconds,
-		frames;
+	dropFrames = Math.round(fps * 0.066666),
+	timeBase = Math.round(fps),
+	framesPer24Hours = Math.round(fps * 3600) * 24,
+	framesPer10Minutes = Math.round(fps * 600),
+	frameSep = isDropFrame(fps) ? ';' : ':',
+	hours,
+	minutes,
+	seconds,
+	frames;
 
 	let f = Math.round(time * fps);
 
@@ -55,24 +55,33 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 
 		hours = Math.floor(Math.floor(tbdiv / 60) / 60);
 		minutes = Math.floor(tbdiv / 60) % 60;
-		seconds = tbdiv % 60;
+
+		if (showFrameCount) {
+			seconds = tbdiv % 60;
+		} else {
+			seconds = ((f / timeBase) % 60).toFixed(secondsDecimalLength);
+		}
 	}
 	else {
-
 		hours = Math.floor(time / 3600) % 24;
 		minutes = Math.floor(time / 60) % 60;
-		seconds = Math.floor(time % 60);
+		if (showFrameCount) {
+			seconds = Math.floor(time % 60);
+		} else {
+			seconds = (time % 60).toFixed(secondsDecimalLength);
+		}
 	}
-	frames = (f % timeBase).toFixed(0); // for  HH:MM:SS:FF don't put in partial frames (fractional decimal)
 	hours = hours <= 0 ? 0 : hours;
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
-	frames = frames <= 0 ? 0 : frames;
 
 	let result = (forceHours || hours > 0) ? `${(hours < 10 ? `0${hours}` : hours)}:` : '';
 	result += `${(minutes < 10 ? `0${minutes}` : minutes)}:`;
 	result += `${(seconds < 10 ? `0${seconds}` : seconds)}`;
+
 	if (showFrameCount) {
+		frames = (f % timeBase).toFixed(0);
+		frames = frames <= 0 ? 0 : frames;
 		result += (frames < 10) ? `${frameSep}0${frames}` : `${frameSep}${frames}`;
 	}
 
@@ -143,7 +152,7 @@ export function timeCodeToSeconds(time, showFrameCount = false, fps = 25) {
 		totalMinutes = (60 * hours) + minutes;
 		output = ((hFrames * hours) + (mFrames * minutes) + (timeBase * seconds) + frames) - (dropFrames * (totalMinutes - (Math.floor(totalMinutes / 10))));
 	} else {
-		output = ( hFrames * hours ) + ( mFrames * minutes  ) + fps * seconds + frames;
+		output = (( hFrames * hours ) + ( mFrames * minutes  ) + fps * seconds + frames) / fps;
 	}
 
 	return parseFloat(output.toFixed(3));

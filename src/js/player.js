@@ -115,6 +115,8 @@ export const config = {
 	enableKeyboard: true,
 	// When this player starts, it will pause other players
 	pauseOtherPlayers: true,
+	// Number of decimal places to show if frames are shown
+	secondsDecimalLength: 0,
 	// Array of keyboard actions such as play/pause
 	keyActions: [
 		{
@@ -491,11 +493,6 @@ class MediaElementPlayer {
 		}
 
 		return t;
-	}
-
-	recalculateTimeFormat() {
-		const t = this;
-		calculateTimeFormat(0, t.options, t.options.framesPerSecond || 25);
 	}
 
 	showControls (doAnimation) {
