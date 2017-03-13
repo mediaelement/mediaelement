@@ -189,7 +189,7 @@ As a final note, to display closed captioning in iOS, they will need to be trans
 <a id="player"></a>
 ## 4. Setup Player
 
-The easiest way to use the player is adding the `class="mejs__player"` to any <video>, <audio>, or <iframe> tags, and add the `data-mejsoptions` to configure it.
+The easiest way to use the player is adding the `class="mejs__player"` to any `<video>`, `<audio>`, or `<iframe>` tags, and add the `data-mejsoptions` to configure it.
 
 For more details and ways to set the player, please read the [Usage section](usage.md#initialize).
 
