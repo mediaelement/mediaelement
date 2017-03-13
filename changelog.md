@@ -10,6 +10,7 @@
 * Refactor loop related to dispatch/remove events (https://github.com/johndyer/mediaelement/pull/2127) @bricev
 * Removed unnecessary code from Tracks feature and fixed typo in HLS renderer @ron666
 * Escaped HTML tags in installation.md file (https://github.com/johndyer/mediaelement/pull/2130) @GeorgySerga
+* Integrated Drop Frame Support for Timecode (https://github.com/johndyer/mediaelement/pull/2126) @dmongrel
 
 *3.2.3 (2017/03/02)*
 
