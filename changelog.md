@@ -11,6 +11,7 @@
 * Removed unnecessary code from Tracks feature and fixed typo in HLS renderer @ron666
 * Escaped HTML tags in installation.md file (https://github.com/johndyer/mediaelement/pull/2130) @GeorgySerga
 * Integrated Drop Frame Support for Timecode (https://github.com/johndyer/mediaelement/pull/2126) @dmongrel
+* Added missing workflow to reintegrate slider when switching from live bradcast to regular file @ron666
 
 *3.2.3 (2017/03/02)*
 

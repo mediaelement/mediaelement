@@ -308,27 +308,39 @@ Object.assign(MediaElementPlayer.prototype, {
 		// and indicate that is a live broadcast
 		media.addEventListener('progress', (e) => {
 			if (media.duration !== Infinity) {
+
+				if (controls.find(`.${t.options.classPrefix}broadcast`).length) {
+					t.slider.show();
+					controls.find(`.${t.options.classPrefix}broadcast`).remove();
+				}
+
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
 			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
-				controls.find(`.${t.options.classPrefix}time-rail`).empty()
-					.html(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
+				controls.find(`.${t.options.classPrefix}time-rail`).append(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
+				t.slider.hide();
 			}
 		}, false);
 
 		// current time
 		media.addEventListener('timeupdate', (e) => {
 			if (media.duration !== Infinity ) {
+
+				if (controls.find(`.${t.options.classPrefix}broadcast`).length) {
+					t.slider.show();
+					controls.find(`.${t.options.classPrefix}broadcast`).remove();
+				}
+
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
 				updateSlider(e);
 			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
-				controls.find(`.${t.options.classPrefix}time-rail`).empty()
-					.html(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
+				controls.find(`.${t.options.classPrefix}time-rail`).append(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
+				t.slider.hide();
 			}
 		}, false);
 
