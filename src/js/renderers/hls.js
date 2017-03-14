@@ -328,9 +328,8 @@ const HlsNativeRenderer = {
 
 		// HELPER METHODS
 		node.setSize = (width, height) => {
-			node.style.width = width + 'px';
-			node.style.height = height + 'px';
-
+			node.style.width = `${width}px`;
+			node.style.height = `${height}px`;
 			return node;
 		};
 

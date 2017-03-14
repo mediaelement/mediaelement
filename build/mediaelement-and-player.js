@@ -3592,16 +3592,6 @@ if (typeof jQuery !== 'undefined') {
 	_mejs2.default.$ = _window2.default.jQuery = _window2.default.$ = jQuery;
 } else if (typeof Zepto !== 'undefined') {
 	_mejs2.default.$ = _window2.default.Zepto = _window2.default.$ = Zepto;
-
-	// define `outerWidth` method which has not been realized in Zepto
-	Zepto.fn.outerWidth = function (includeMargin) {
-		var width = $(this).width();
-		if (includeMargin) {
-			width += parseInt($(this).css('margin-right'), 10);
-			width += parseInt($(this).css('margin-left'), 10);
-		}
-		return width;
-	};
 } else if (typeof ender !== 'undefined') {
 	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
 }
@@ -4632,22 +4622,21 @@ var MediaElementPlayer = function () {
 				t.height = height;
 			}
 
-			// @todo: Rewrite this
 			if (typeof FB !== 'undefined' && t.isVideo) {
 				FB.Event.subscribe('xfbml.ready', function () {
-					var target = t.media.children('.fb-video');
+					var target = t.media.firstChild;
 
-					t.width = target.width();
-					t.height = target.height();
+					t.width = parseFloat(target.offsetWidth);
+					t.height = parseFloat(target.offsetHeight);
 					t.setDimensions(t.width, t.height);
 					return false;
 				});
 
-				var target = $(t.media).children('.fb-video');
+				var target = t.media.firstChild;
 
 				if (target.length) {
-					t.width = target.width();
-					t.height = target.height();
+					t.width = target.offsetWidth;
+					t.height = target.offsetHeight;
 				}
 			}
 
@@ -5791,7 +5780,6 @@ var DashNativeRenderer = {
 		node.setSize = function (width, height) {
 			node.style.width = width + 'px';
 			node.style.height = height + 'px';
-
 			return node;
 		};
 
@@ -7009,7 +6997,6 @@ var HlsNativeRenderer = {
 		node.setSize = function (width, height) {
 			node.style.width = width + 'px';
 			node.style.height = height + 'px';
-
 			return node;
 		};
 
@@ -7174,7 +7161,6 @@ var HtmlMediaElement = {
 		node.setSize = function (width, height) {
 			node.style.width = width + 'px';
 			node.style.height = height + 'px';
-
 			return node;
 		};
 

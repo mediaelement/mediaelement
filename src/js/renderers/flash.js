@@ -397,8 +397,8 @@ const FlashMediaElementRenderer = {
 			}
 		};
 		flash.setSize = (width, height) => {
-			flash.flashNode.style.width = width + 'px';
-			flash.flashNode.style.height = height + 'px';
+			flash.flashNode.style.width = `${width}px`;
+			flash.flashNode.style.height = `${height}px`;
 
 			if (flash.flashApi !== null && typeof flash.flashApi.fire_setSize === 'function') {
 				flash.flashApi.fire_setSize(width, height);

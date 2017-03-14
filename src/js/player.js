@@ -1013,22 +1013,21 @@ class MediaElementPlayer {
 			t.height = height;
 		}
 
-		// @todo: Rewrite this
 		if (typeof FB !== 'undefined' && t.isVideo) {
 			FB.Event.subscribe('xfbml.ready', () => {
-				const target = t.media.children('.fb-video');
+				const target = t.media.firstChild;
 
-				t.width = target.width();
-				t.height = target.height();
+				t.width = parseFloat(target.offsetWidth);
+				t.height = parseFloat(target.offsetHeight);
 				t.setDimensions(t.width, t.height);
 				return false;
 			});
 
-			const target = $(t.media).children('.fb-video');
+			const target = t.media.firstChild;
 
 			if (target.length) {
-				t.width = target.width();
-				t.height = target.height();
+				t.width = target.offsetWidth;
+				t.height = target.offsetHeight;
 			}
 		}
 

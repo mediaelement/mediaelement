@@ -1436,7 +1436,6 @@ var DashNativeRenderer = {
 		node.setSize = function (width, height) {
 			node.style.width = width + 'px';
 			node.style.height = height + 'px';
-
 			return node;
 		};
 
@@ -2654,7 +2653,6 @@ var HlsNativeRenderer = {
 		node.setSize = function (width, height) {
 			node.style.width = width + 'px';
 			node.style.height = height + 'px';
-
 			return node;
 		};
 
@@ -2819,7 +2817,6 @@ var HtmlMediaElement = {
 		node.setSize = function (width, height) {
 			node.style.width = width + 'px';
 			node.style.height = height + 'px';
-
 			return node;
 		};
 
