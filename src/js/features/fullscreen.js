@@ -320,17 +320,17 @@ Object.assign(MediaElementPlayer.prototype, {
 		removeClass(t.container, `${t.options.classPrefix}container-fullscreen`);
 
 		if (t.options.setDimensions) {
-			t.container.style.width = t.normalWidth;
-			t.container.style.height = t.normalHeight;
+			t.container.style.width = `${t.normalWidth}px`;
+			t.container.style.height = `${t.normalHeight}px`;
 
 			if (isNative) {
-				t.node.style.width = t.normalWidth;
-				t.node.style.height = t.normalHeight;
+				t.node.style.width = `${t.normalWidth}px`;
+				t.node.style.height = `${t.normalHeight}px`;
 			} else {
 				const elements = t.container.querySelectorAll('iframe, embed, object, video'), total = elements.length;
 				for (let i = 0; i < total; i++) {
-					elements[i].style.width = t.normalWidth;
-					elements[i].style.height = t.normalHeight;
+					elements[i].style.width = `${t.normalWidth}px`;
+					elements[i].style.height = `${t.normalHeight}px`;
 				}
 			}
 
@@ -340,8 +340,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			const layers = t.layers.childNodes, total = layers.length;
 			for (let i = 0; i < total; i++) {
-				layers[i].style.width = t.normalWidth;
-				layers[i].style.height = t.normalHeight;
+				layers[i].style.width = `${t.normalWidth}px`;
+				layers[i].style.height = `${t.normalHeight}px`;
 			}
 		}
 

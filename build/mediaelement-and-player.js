@@ -1388,18 +1388,18 @@ Object.assign(_player2.default.prototype, {
 		(0, _dom.removeClass)(t.container, t.options.classPrefix + 'container-fullscreen');
 
 		if (t.options.setDimensions) {
-			t.container.style.width = t.normalWidth;
-			t.container.style.height = t.normalHeight;
+			t.container.style.width = t.normalWidth + 'px';
+			t.container.style.height = t.normalHeight + 'px';
 
 			if (isNative) {
-				t.node.style.width = t.normalWidth;
-				t.node.style.height = t.normalHeight;
+				t.node.style.width = t.normalWidth + 'px';
+				t.node.style.height = t.normalHeight + 'px';
 			} else {
 				var elements = t.container.querySelectorAll('iframe, embed, object, video'),
 				    _total2 = elements.length;
 				for (var i = 0; i < _total2; i++) {
-					elements[i].style.width = t.normalWidth;
-					elements[i].style.height = t.normalHeight;
+					elements[i].style.width = t.normalWidth + 'px';
+					elements[i].style.height = t.normalHeight + 'px';
 				}
 			}
 
@@ -1410,8 +1410,8 @@ Object.assign(_player2.default.prototype, {
 			var layers = t.layers.childNodes,
 			    total = layers.length;
 			for (var _i2 = 0; _i2 < total; _i2++) {
-				layers[_i2].style.width = t.normalWidth;
-				layers[_i2].style.height = t.normalHeight;
+				layers[_i2].style.width = t.normalWidth + 'px';
+				layers[_i2].style.height = t.normalHeight + 'px';
 			}
 		}
 
