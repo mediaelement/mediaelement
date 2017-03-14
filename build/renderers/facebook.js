@@ -170,7 +170,7 @@ var FacebookRenderer = {
 							break;
 
 						default:
-							console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
+							
 							break;
 					}
 				} else {

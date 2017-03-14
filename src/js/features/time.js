@@ -83,7 +83,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		} else {
 
 			// add class to current time
-			addClass(controls.querySelector(`.${t.options.classPrefix}currenttime`).parentNode, `${t.options.classPrefix}currenttime-container`);
+			if (controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
+				addClass(controls.querySelector(`.${t.options.classPrefix}currenttime`).parentNode, `${t.options.classPrefix}currenttime-container`);
+			}
 
 			const duration = document.createElement('div');
 			duration.className = `${t.options.classPrefix}time ${t.options.classPrefix}duration-container`;

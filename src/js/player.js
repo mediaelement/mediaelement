@@ -1680,7 +1680,6 @@ class MediaElementPlayer {
 				container = document.activeElement.closest(`.${t.options.classPrefix}container`),
 				target = t.media.closest(`.${t.options.classPrefix}container`)
 			;
-			console.log(document.activeElement);
 			t.hasFocus = !!(container && target && container.id === target.id);
 			return t.onkeydown(player, media, event);
 		});

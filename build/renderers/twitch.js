@@ -351,7 +351,7 @@ var TwitchIframeRenderer = {
 							break;
 
 						default:
-							console.log('Twitch ' + twitch.id, propName, 'UNSUPPORTED property');
+							
 							break;
 					}
 				} else {

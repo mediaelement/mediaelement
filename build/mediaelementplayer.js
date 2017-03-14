@@ -874,7 +874,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mejs = {};
 
 // version number
-mejs.version = '3.2.3';
+mejs.version = '3.2.4';
 
 // Basic HTML5 settings
 mejs.html5media = {
@@ -1675,7 +1675,7 @@ Object.assign(_player2.default.prototype, {
 				}
 
 				// position floating time box
-				if (!_constants.IS_IOS && !_constants.IS_ANDROID) {
+				if (!_constants.IS_IOS && !_constants.IS_ANDROID && t.timefloat) {
 					t.timefloat.style.left = pos + 'px';
 					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 					t.timefloat.style.display = 'block';
@@ -1844,16 +1844,14 @@ Object.assign(_player2.default.prototype, {
 						handleMouseMove(e);
 						t.globalBind('mousemove.dur touchmove.dur', function (event) {
 							var target = event.target;
-							if (target === t.slider || closest(target, function (el) {
-								return el === t.slider;
-							})) {
+							if (target === t.slider || target.closest('.' + t.options.classPrefix + 'time-slider')) {
 								handleMouseMove(event);
 							}
 						});
 						t.globalBind('mouseup.dur touchend.dur', function () {
 							handleMouseup();
 							mouseIsDown = false;
-							if (t.timefloat !== undefined) {
+							if (t.timefloat) {
 								t.timefloat.style.display = 'none';
 							}
 							t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
@@ -1866,13 +1864,11 @@ Object.assign(_player2.default.prototype, {
 			if (e.target === t.slider && media.duration !== Infinity) {
 				t.globalBind('mousemove.dur', function (event) {
 					var target = event.target;
-					if (target === t.slider || closest(target, function (el) {
-						return el === t.slider;
-					})) {
+					if (target === t.slider || target.closest('.' + t.options.classPrefix + 'time-slider')) {
 						handleMouseMove(event);
 					}
 				});
-				if (t.timefloat !== undefined && !_constants.IS_IOS && !_constants.IS_ANDROID) {
+				if (t.timefloat && !_constants.IS_IOS && !_constants.IS_ANDROID) {
 					t.timefloat.style.display = 'block';
 				}
 			}
@@ -1881,7 +1877,7 @@ Object.assign(_player2.default.prototype, {
 			if (media.duration !== Infinity) {
 				if (!mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
-					if (t.timefloat !== undefined) {
+					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
 					}
 				}
@@ -1892,26 +1888,45 @@ Object.assign(_player2.default.prototype, {
 		// If media is does not have a finite duration, remove progress bar interaction
 		// and indicate that is a live broadcast
 		media.addEventListener('progress', function (e) {
+			var broadcast = controls.querySelector('.' + t.options.classPrefix + 'broadcast');
 			if (media.duration !== Infinity) {
+				if (broadcast) {
+					t.slider.style.display = 'block';
+					broadcast.parentNode.removeChild(broadcast);
+				}
+
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
-			} else if (!controls.querySelector('.' + t.options.classPrefix + 'broadcast')) {
-				controls.querySelector('.' + t.options.classPrefix + 'time-rail').innerHTML = '<span class="' + t.options.classPrefix + 'broadcast">' + _i18n2.default.t('mejs.live-broadcast') + '</span>';
+			} else if (!broadcast) {
+				var label = _document2.default.createElement('span');
+				label.className = t.options.classPrefix + 'broadcast';
+				label.innerText = _i18n2.default.t('mejs.live-broadcast');
+				t.slider.style.display = 'none';
 			}
 		});
 
 		// current time
 		media.addEventListener('timeupdate', function (e) {
+			var broadcast = controls.querySelector('.' + t.options.classPrefix + 'broadcast');
 			if (media.duration !== Infinity) {
+				if (broadcast) {
+					t.slider.style.display = 'block';
+					broadcast.parentNode.removeChild(broadcast);
+				}
+
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
 				updateSlider(e);
-			} else if (!controls.querySelector('.' + t.options.classPrefix + 'broadcast')) {
-				controls.querySelector('.' + t.options.classPrefix + 'time-rail').innerHTML = '<span class="' + t.options.classPrefix + 'broadcast">' + _i18n2.default.t('mejs.live-broadcast') + '</span>';
+			} else if (!broadcast) {
+				var label = _document2.default.createElement('span');
+				label.className = t.options.classPrefix + 'broadcast';
+				label.innerText = _i18n2.default.t('mejs.live-broadcast');
+				controls.querySelector('.' + t.options.classPrefix + 'time-rail').appendChild(label);
+				t.slider.style.display = 'none';
 			}
 		});
 
@@ -2087,7 +2102,9 @@ Object.assign(_player2.default.prototype, {
 		} else {
 
 			// add class to current time
-			(0, _dom.addClass)(controls.querySelector('.' + t.options.classPrefix + 'currenttime').parentNode, t.options.classPrefix + 'currenttime-container');
+			if (controls.querySelector('.' + t.options.classPrefix + 'currenttime')) {
+				(0, _dom.addClass)(controls.querySelector('.' + t.options.classPrefix + 'currenttime').parentNode, t.options.classPrefix + 'currenttime-container');
+			}
 
 			var duration = _document2.default.createElement('div');
 			duration.className = t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container';
@@ -2609,9 +2626,7 @@ Object.assign(_player2.default.prototype, {
 	removeTrackButton: function removeTrackButton(trackId) {
 
 		var t = this,
-		    element = (0, _dom.closest)(t.captionsButton.querySelector('#' + trackId), function (el) {
-			return el.tagName === 'LI';
-		});
+		    element = t.captionsButton.querySelector('#' + trackId).closest('li');
 
 		if (element) {
 			element.parentNode.removeChild(element);
@@ -4445,7 +4460,7 @@ var MediaElementPlayer = function () {
 									t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 								}, 20);
 							} catch (exp) {
-								console.log(exp);
+								
 							}
 						}
 
@@ -4510,9 +4525,7 @@ var MediaElementPlayer = function () {
 							// Safari triggers focusout multiple times
 							// Firefox does NOT support e.relatedTarget to see which element
 							// just lost focus, so wait to find the next focused element
-							var parent = dom.closest(_document2.default.activeElement, function (el) {
-								return el === t.container;
-							});
+							var parent = _document2.default.activeElement.closest('.' + t.options.classPrefix + 'container');
 
 							if (t.keyboardAction && !parent) {
 								t.keyboardAction = false;
@@ -4549,12 +4562,8 @@ var MediaElementPlayer = function () {
 					t.globalBind('click', function (e) {
 						if (e.target.matches('.' + t.options.classPrefix + 'container')) {
 							dom.addClass(e.target, t.options.classPrefix + 'container-keyboard-inactive');
-						} else if (dom.closest(e.target, function (el) {
-							return el === t.container;
-						})) {
-							dom.addClass(dom.closest(e.target, function (el) {
-								return el === t.container;
-							}), t.options.classPrefix + 'container-keyboard-inactive');
+						} else if (e.target.closest('.' + t.options.classPrefix + 'container')) {
+							dom.addClass(e.target.closest('.' + t.options.classPrefix + 'container'), t.options.classPrefix + 'container-keyboard-inactive');
 						}
 					});
 
@@ -4562,12 +4571,8 @@ var MediaElementPlayer = function () {
 					t.globalBind('keydown', function (e) {
 						if (e.target.matches('.' + t.options.classPrefix + 'container')) {
 							dom.removeClass(e.target, t.options.classPrefix + 'container-keyboard-inactive');
-						} else if (dom.closest(e.target, function (el) {
-							return el === t.container;
-						})) {
-							dom.removeClass(dom.closest(e.target, function (el) {
-								return el === t.container;
-							}), t.options.classPrefix + 'container-keyboard-inactive');
+						} else if (e.target.closest('.' + t.options.classPrefix + 'container')) {
+							dom.removeClass(event.target.closest('.' + t.options.classPrefix + 'container'), t.options.classPrefix + 'container-keyboard-inactive');
 						}
 					});
 				}();
@@ -4684,9 +4689,22 @@ var MediaElementPlayer = function () {
 		key: 'setResponsiveMode',
 		value: function setResponsiveMode() {
 			var t = this,
-			    parent = dom.closest(t.container, function (el) {
-				return el !== t.container && dom.visible(el);
-			}),
+			    parent = function () {
+
+				var parentEl = void 0,
+				    el = t.container;
+
+				// traverse parents to find the closest visible one
+				while (el) {
+					parentEl = el.parentElement;
+					if (parentEl && dom.visible(parentEl)) {
+						return parentEl;
+					}
+					el = parentEl;
+				}
+
+				return null;
+			}(),
 			    parentStyles = getComputedStyle(parent, null),
 			    nativeWidth = function () {
 				if (t.isVideo) {
@@ -5271,24 +5289,15 @@ var MediaElementPlayer = function () {
 
 			// listen for key presses
 			t.globalBind('keydown', function (event) {
-				var container = dom.closest(event.target, function (el) {
-					return el == t.container;
-				}),
-				    target = dom.closest(player.node, function (el) {
-					return el == t.container;
-				});
-				console.log(container);
-				console.log(target);
-				t.hasFocus = container && target && container.length !== 0 && container.id === target.id;
+				var container = _document2.default.activeElement.closest('.' + t.options.classPrefix + 'container'),
+				    target = t.media.closest('.' + t.options.classPrefix + 'container');
+				t.hasFocus = !!(container && target && container.id === target.id);
 				return t.onkeydown(player, media, event);
 			});
 
 			// check if someone clicked outside a player region, then kill its focus
 			t.globalBind('click', function (event) {
-				var insidePlayer = dom.closest(event.target, function (el) {
-					return el == t.container;
-				});
-				player.hasFocus = insidePlayer !== null && insidePlayer.length;
+				t.hasFocus = !!event.target.closest('.' + t.options.classPrefix + 'container');
 			});
 		}
 	}, {
@@ -5299,8 +5308,6 @@ var MediaElementPlayer = function () {
 				// find a matching key
 				for (var i = 0, total = player.options.keyActions.length; i < total; i++) {
 					var keyAction = player.options.keyActions[i];
-
-					console.log(keyAction);
 
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode === keyAction.keys[j]) {
@@ -5331,7 +5338,7 @@ var MediaElementPlayer = function () {
 			try {
 				this.media.pause();
 			} catch (e) {
-				console.log(e);
+				
 			}
 		}
 	}, {
@@ -5627,7 +5634,7 @@ var PluginDetector = exports.PluginDetector = {
 					version = axDetect(ax);
 				}
 			} catch (e) {
-				console.log(e);
+				
 			}
 		}
 		return version;
@@ -5757,10 +5764,10 @@ var FlashMediaElementRenderer = {
 						try {
 							flash.flashApi['fire_' + methodName]();
 						} catch (e) {
-							console.log(e);
+							
 						}
 					} else {
-						console.log('flash', 'missing method', methodName);
+						
 					}
 				} else {
 					// store for after "READY" event fires
@@ -5880,7 +5887,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = 'rect(0 0 0 0);';
 				} catch (e) {
-					console.log(e);
+					
 				}
 			}
 		};
@@ -5892,7 +5899,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = '';
 				} catch (e) {
-					console.log(e);
+					
 				}
 			}
 		};
@@ -6424,7 +6431,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.removeClass = exports.addClass = exports.hasClass = undefined;
 exports.offset = offset;
-exports.closest = closest;
 exports.toggleClass = toggleClass;
 exports.fadeOut = fadeOut;
 exports.fadeIn = fadeIn;
@@ -6451,8 +6457,6 @@ function offset(el) {
 	    scrollLeft = _window2.default.pageXOffset || _document2.default.documentElement.scrollLeft,
 	    scrollTop = _window2.default.pageYOffset || _document2.default.documentElement.scrollTop;
 	return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
-}function closest(el, fn) {
-	return el && (fn(el) ? el : closest(el.parentNode, fn));
 }
 
 var hasClassMethod = void 0,
@@ -6582,7 +6586,6 @@ _mejs2.default.Utils.fadeIn = fadeIn;
 _mejs2.default.Utils.fadeOut = fadeOut;
 _mejs2.default.Utils.siblings = siblings;
 _mejs2.default.Utils.visible = visible;
-_mejs2.default.Utils.closest = closest;
 _mejs2.default.Utils.ajax = ajax;
 
 },{"2":2,"3":3,"6":6}],21:[function(_dereq_,module,exports){

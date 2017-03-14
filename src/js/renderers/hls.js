@@ -105,7 +105,6 @@ const NativeHls = {
 	 * @return {Hls}
 	 */
 	createInstance: (settings) => {
-		console.log(settings.options);
 		const player = new Hls(settings.options);
 		window['__ready__' + settings.id](player);
 		return player;

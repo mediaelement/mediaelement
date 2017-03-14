@@ -123,7 +123,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 
 					// position floating time box
-					if (!IS_IOS && !IS_ANDROID) {
+					if (!IS_IOS && !IS_ANDROID && t.timefloat) {
 						t.timefloat.style.left = `${pos}px`;
 						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 						t.timefloat.style.display = 'block';
@@ -294,7 +294,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						t.globalBind('mouseup.dur touchend.dur', () => {
 							handleMouseup();
 							mouseIsDown = false;
-							if (t.timefloat !== undefined) {
+							if (t.timefloat) {
 								t.timefloat.style.display = 'none';
 							}
 							t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
@@ -311,7 +311,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						handleMouseMove(event);
 					}
 				});
-				if (t.timefloat !== undefined && !IS_IOS && !IS_ANDROID) {
+				if (t.timefloat && !IS_IOS && !IS_ANDROID) {
 					t.timefloat.style.display = 'block';
 				}
 			}
@@ -320,7 +320,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (media.duration !== Infinity) {
 				if (!mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
-					if (t.timefloat !== undefined) {
+					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
 					}
 				}
@@ -331,28 +331,45 @@ Object.assign(MediaElementPlayer.prototype, {
 		// If media is does not have a finite duration, remove progress bar interaction
 		// and indicate that is a live broadcast
 		media.addEventListener('progress', (e) => {
+			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
 			if (media.duration !== Infinity) {
+				if (broadcast) {
+					t.slider.style.display = 'block';
+					broadcast.parentNode.removeChild(broadcast);
+				}
+
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
-			} else if (!controls.querySelector(`.${t.options.classPrefix}broadcast`)) {
-				controls.querySelector(`.${t.options.classPrefix}time-rail`).innerHTML =
-					`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`;
+			} else if (!broadcast) {
+				const label = document.createElement('span');
+				label.className = `${t.options.classPrefix}broadcast`;
+				label.innerText = i18n.t('mejs.live-broadcast');
+				t.slider.style.display = 'none';
 			}
 		});
 
 		// current time
 		media.addEventListener('timeupdate', (e) => {
+			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
 			if (media.duration !== Infinity ) {
+				if (broadcast) {
+					t.slider.style.display = 'block';
+					broadcast.parentNode.removeChild(broadcast);
+				}
+
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
 				updateSlider(e);
-			} else if (!controls.querySelector(`.${t.options.classPrefix}broadcast`)) {
-				controls.querySelector(`.${t.options.classPrefix}time-rail`).innerHTML =
-					`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`;
+			} else if (!broadcast) {
+				const label = document.createElement('span');
+				label.className = `${t.options.classPrefix}broadcast`;
+				label.innerText = i18n.t('mejs.live-broadcast');
+				controls.querySelector(`.${t.options.classPrefix}time-rail`).appendChild(label);
+				t.slider.style.display = 'none';
 			}
 		});
 
