@@ -16,10 +16,6 @@ export function offset (el) {
 	return {top: rect.top + scrollTop, left: rect.left + scrollLeft}
 }
 
-export function closest (el, fn) {
-	return el && (fn(el) ? el : closest(el.parentNode, fn));
-}
-
 let hasClassMethod, addClassMethod, removeClassMethod;
 
 if ('classList' in document.documentElement) {
@@ -129,5 +125,4 @@ mejs.Utils.fadeIn = fadeIn;
 mejs.Utils.fadeOut = fadeOut;
 mejs.Utils.siblings = siblings;
 mejs.Utils.visible = visible;
-mejs.Utils.closest = closest;
 mejs.Utils.ajax = ajax;

@@ -287,7 +287,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						handleMouseMove(e);
 						t.globalBind('mousemove.dur touchmove.dur', (event) => {
 							const target = event.target;
-							if (target === t.slider || closest(target, (el) => el === t.slider)) {
+							if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
 								handleMouseMove(event);
 							}
 						});
@@ -307,7 +307,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (e.target === t.slider && media.duration !== Infinity) {
 				t.globalBind('mousemove.dur', (event) => {
 					const target = event.target;
-					if (target === t.slider || closest(target, (el) => el === t.slider)) {
+					if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
 						handleMouseMove(event);
 					}
 				});

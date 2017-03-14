@@ -912,7 +912,7 @@ class MediaElementPlayer {
 					// Safari triggers focusout multiple times
 					// Firefox does NOT support e.relatedTarget to see which element
 					// just lost focus, so wait to find the next focused element
-					const parent = dom.closest(document.activeElement, (el) => el === t.container);
+					const parent = document.activeElement.closest(`.${t.options.classPrefix}container`);
 
 					if (t.keyboardAction && !parent) {
 						t.keyboardAction = false;
@@ -950,8 +950,8 @@ class MediaElementPlayer {
 			t.globalBind('click', (e) => {
 				if (e.target.matches(`.${t.options.classPrefix}container`)) {
 					dom.addClass(e.target, `${t.options.classPrefix}container-keyboard-inactive`);
-				} else if (dom.closest(e.target, (el) => el === t.container)) {
-					dom.addClass(dom.closest(e.target, (el) => el === t.container), `${t.options.classPrefix}container-keyboard-inactive`);
+				} else if (e.target.closest(`.${t.options.classPrefix}container`)) {
+					dom.addClass(e.target.closest(`.${t.options.classPrefix}container`), `${t.options.classPrefix}container-keyboard-inactive`);
 				}
 			});
 
@@ -959,8 +959,8 @@ class MediaElementPlayer {
 			t.globalBind('keydown', (e) => {
 				if (e.target.matches(`.${t.options.classPrefix}container`)) {
 					dom.removeClass(e.target, `${t.options.classPrefix}container-keyboard-inactive`);
-				} else if (dom.closest(e.target, (el) => el === t.container)) {
-					dom.removeClass(dom.closest(e.target, (el) => el === t.container), `${t.options.classPrefix}container-keyboard-inactive`);
+				} else if (e.target.closest(`.${t.options.classPrefix}container`)) {
+					dom.removeClass(event.target.closest(`.${t.options.classPrefix}container`), `${t.options.classPrefix}container-keyboard-inactive`);
 				}
 			});
 		}
@@ -1070,7 +1070,22 @@ class MediaElementPlayer {
 	setResponsiveMode () {
 		const
 			t = this,
-			parent = dom.closest(t.container, (el) => el !== t.container && dom.visible(el)),
+			parent = (() => {
+
+				let parentEl, el = t.container;
+
+				// traverse parents to find the closest visible one
+				while (el) {
+					parentEl = el.parentElement;
+					if (parentEl && dom.visible(parentEl)) {
+						return parentEl;
+					}
+					el = parentEl;
+				}
+
+				return null;
+
+			})(),
 			parentStyles = getComputedStyle(parent, null),
 			nativeWidth = (() => {
 				if (t.isVideo) {
@@ -1662,20 +1677,18 @@ class MediaElementPlayer {
 		// listen for key presses
 		t.globalBind('keydown', (event) => {
 			const
-				container = dom.closest(event.target, (el) => el == t.container),
-				target = dom.closest(player.node, (el) => el == t.container)
+				container = document.activeElement.closest(`.${t.options.classPrefix}container`),
+				target = t.media.closest(`.${t.options.classPrefix}container`)
 			;
-			console.log(container);
-			console.log(target);
-			t.hasFocus = container && target && container.length !== 0 && container.id === target.id;
+			console.log(document.activeElement);
+			t.hasFocus = !!(container && target && container.id === target.id);
 			return t.onkeydown(player, media, event);
 		});
 
 
 		// check if someone clicked outside a player region, then kill its focus
 		t.globalBind('click', (event) => {
-			const insidePlayer = dom.closest(event.target, (el) => el == t.container);
-			player.hasFocus = (insidePlayer !== null && insidePlayer.length);
+			t.hasFocus = !!(event.target.closest(`.${t.options.classPrefix}container`));
 		});
 
 	}
@@ -1686,8 +1699,6 @@ class MediaElementPlayer {
 			// find a matching key
 			for (let i = 0, total = player.options.keyActions.length; i < total; i++) {
 				const keyAction = player.options.keyActions[i];
-
-				console.log(keyAction);
 
 				for (let j = 0, jl = keyAction.keys.length; j < jl; j++) {
 					if (e.keyCode === keyAction.keys[j]) {

@@ -7,7 +7,7 @@ import {config} from '../player';
 import MediaElementPlayer from '../player';
 import {convertSMPTEtoSeconds} from '../utils/time';
 import {isString, createEvent} from '../utils/general';
-import {addClass, removeClass, hasClass, siblings, ajax, fadeIn, fadeOut, visible, closest} from '../utils/dom';
+import {addClass, removeClass, hasClass, siblings, ajax, fadeIn, fadeOut, visible} from '../utils/dom';
 
 /**
  * Closed Captions (CC) button
@@ -477,7 +477,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			t = this,
-			element = closest(t.captionsButton.querySelector(`#${trackId}`), (el) => el.tagName === 'LI')
+			element = t.captionsButton.querySelector(`#${trackId}`).closest('li')
 		;
 
 		if (element) {
