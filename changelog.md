@@ -1,16 +1,12 @@
 ### Version History
 
-<<<<<<< HEAD
 *4.0.0 (2017/??/??)*
 
-* Removed all dependencies to jQuery in code and added new methods to replace it @ron666
+* Removed all dependencies to jQuery in code and added `utils/dom.js` to mimic jQuery's most used methods @ron666
 * Added missing unit tests @ron666
-* Fixed minor issues with Twitch and HLS renderers @ron666
+* Fixed minor issues with Twitch renderer and some minor improvements to HLS renderer @ron666
 
-*3.2.4 (2017/03/??)*
-=======
 *3.2.4 (2017/03/14)*
->>>>>>> master
 
 * Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @ron666
 * Added error event support in Flash shims (https://github.com/johndyer/mediaelement/pull/2115) @astr0junk
