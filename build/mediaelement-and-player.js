@@ -3288,11 +3288,18 @@ Object.assign(_player2.default.prototype, {
 				media.setMuted(false);
 			}
 			media.setVolume(volume);
+
+			e.preventDefault();
+			e.stopPropagation();
 		};
 
-		mute.addEventListener('mouseenter', function () {
-			volumeSlider.style.display = 'block';
-			mouseIsOver = true;
+		mute.addEventListener('mouseenter', function (e) {
+			if (e.target === mute) {
+				volumeSlider.style.display = 'block';
+				mouseIsOver = true;
+				e.preventDefault();
+				e.stopPropagation();
+			}
 		});
 		mute.addEventListener('focusin', function () {
 			volumeSlider.style.display = 'block';
@@ -3308,6 +3315,32 @@ Object.assign(_player2.default.prototype, {
 			mouseIsOver = false;
 			if (!mouseIsDown && mode === 'vertical') {
 				volumeSlider.style.display = 'none';
+			}
+		});
+		mute.addEventListener('keydown', function (e) {
+
+			if (t.options.keyActions.length) {
+				var keyCode = e.which || e.keyCode || 0,
+				    volume = media.volume;
+				switch (keyCode) {
+					case 38:
+						// Up
+						volume = Math.min(volume + 0.1, 1);
+						break;
+					case 40:
+						// Down
+						volume = Math.max(0, volume - 0.1);
+						break;
+					default:
+						return true;
+				}
+
+				mouseIsDown = false;
+				positionVolumeHandle(volume);
+				media.setVolume(volume);
+
+				e.preventDefault();
+				e.stopPropagation();
 			}
 		});
 
@@ -3330,57 +3363,42 @@ Object.assign(_player2.default.prototype, {
 		};
 
 		// Events
+		volumeSlider.addEventListener('dragstart', function () {
+			return false;
+		});
+
 		volumeSlider.addEventListener('mouseover', function () {
 			mouseIsOver = true;
 		});
 		volumeSlider.addEventListener('mousedown', function (e) {
 			handleVolumeMove(e);
-			mouseIsDown = true;
-		});
-		volumeSlider.addEventListener('mousemove', function (e) {
-			handleVolumeMove(e);
-		});
-		volumeSlider.addEventListener('mouseup', function () {
-			mouseIsDown = false;
-			volumeSlider.addEventListener('mousemove', function () {
-				if (!mouseIsOver && mode === 'vertical') {
-					volumeSlider.style.display = 'none';
+			t.globalBind('mousemove.vol', function (event) {
+				var target = event.target;
+				if (mouseIsDown && (target === volumeSlider || closest(target, function (el) {
+					return el === volumeSlider;
+				}))) {
+					handleVolumeMove(event);
 				}
 			});
-			volumeSlider.addEventListener('mouseup', function () {
-				if (!mouseIsOver && mode === 'vertical') {
-					volumeSlider.style.display = 'none';
-				}
-			});
-		});
-		volumeSlider.addEventListener('keydown', function (e) {
-
-			if (t.options.keyActions.length) {
-				var keyCode = e.which || e.keyCode || 0,
-				    volume = media.volume;
-				switch (keyCode) {
-					case 38:
-						// Up
-						volume = Math.min(volume + 0.1, 1);
-						break;
-					case 40:
-						// Down
-						volume = Math.max(0, volume - 0.1);
-						break;
-					default:
-						return true;
-				}
-
+			t.globalBind('mouseup.vol', function () {
 				mouseIsDown = false;
-				positionVolumeHandle(volume);
-				media.setVolume(volume);
-				return false;
-			}
+				t.globalUnbind('mousemove.vol mouseup.vol');
+
+				if (!mouseIsOver && mode === 'vertical') {
+					volumeSlider.style.display = 'none';
+				}
+			});
+			mouseIsDown = true;
+
+			e.preventDefault();
+			e.stopPropagation();
 		});
 
 		// MUTE button
 		button.addEventListener('click', function () {
 			media.setMuted(!media.muted);
+			var event = (0, _general.createEvent)('volumechange', media);
+			media.dispatchEvent(event);
 		});
 		button.addEventListener('focus', function () {
 			if (mode === 'vertical') {
@@ -4427,7 +4445,7 @@ var MediaElementPlayer = function () {
 									t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 								}, 20);
 							} catch (exp) {
-								
+								console.log(exp);
 							}
 						}
 
@@ -4492,16 +4510,19 @@ var MediaElementPlayer = function () {
 							// Safari triggers focusout multiple times
 							// Firefox does NOT support e.relatedTarget to see which element
 							// just lost focus, so wait to find the next focused element
-
 							var parent = dom.closest(_document2.default.activeElement, function (el) {
-								return el == t.container;
+								return el === t.container;
 							});
-							if (t.keyboardAction && parent && !parent.length) {
+
+							if (t.keyboardAction && !parent) {
 								t.keyboardAction = false;
 								if (t.isVideo && !t.options.alwaysShowControls) {
 									// focus is outside the control; hide controls
 									t.hideControls(true);
 								}
+							} else {
+								t.keyboardAction = true;
+								t.showControls(true);
 							}
 						}, 0);
 					}, 100));
@@ -5253,10 +5274,12 @@ var MediaElementPlayer = function () {
 				var container = dom.closest(event.target, function (el) {
 					return el == t.container;
 				}),
-				    target = dom.closest(player.media, function (el) {
+				    target = dom.closest(player.node, function (el) {
 					return el == t.container;
 				});
-				player.hasFocus = container !== null && container.length !== 0 && container.id === target.id;
+				console.log(container);
+				console.log(target);
+				t.hasFocus = container && target && container.length !== 0 && container.id === target.id;
 				return t.onkeydown(player, media, event);
 			});
 
@@ -5277,10 +5300,13 @@ var MediaElementPlayer = function () {
 				for (var i = 0, total = player.options.keyActions.length; i < total; i++) {
 					var keyAction = player.options.keyActions[i];
 
+					console.log(keyAction);
+
 					for (var j = 0, jl = keyAction.keys.length; j < jl; j++) {
 						if (e.keyCode === keyAction.keys[j]) {
 							keyAction.action(player, media, e.keyCode, e);
-							return false;
+							e.preventDefault();
+							e.stopPropagation();
 						}
 					}
 				}
@@ -5305,7 +5331,7 @@ var MediaElementPlayer = function () {
 			try {
 				this.media.pause();
 			} catch (e) {
-				
+				console.log(e);
 			}
 		}
 	}, {
@@ -5904,7 +5930,7 @@ var PluginDetector = exports.PluginDetector = {
 					version = axDetect(ax);
 				}
 			} catch (e) {
-				
+				console.log(e);
 			}
 		}
 		return version;
@@ -6034,10 +6060,10 @@ var FlashMediaElementRenderer = {
 						try {
 							flash.flashApi['fire_' + methodName]();
 						} catch (e) {
-							
+							console.log(e);
 						}
 					} else {
-						
+						console.log('flash', 'missing method', methodName);
 					}
 				} else {
 					// store for after "READY" event fires
@@ -6157,7 +6183,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = 'rect(0 0 0 0);';
 				} catch (e) {
-					
+					console.log(e);
 				}
 			}
 		};
@@ -6169,7 +6195,7 @@ var FlashMediaElementRenderer = {
 				try {
 					flash.flashNode.style.clip = '';
 				} catch (e) {
-					
+					console.log(e);
 				}
 			}
 		};
@@ -6757,7 +6783,7 @@ var NativeHls = {
   * @return {Hls}
   */
 	createInstance: function createInstance(settings) {
-		
+		console.log(settings.options);
 		var player = new Hls(settings.options);
 		_window2.default['__ready__' + settings.id](player);
 		return player;
@@ -7564,7 +7590,7 @@ var YouTubeIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
@@ -8017,6 +8043,11 @@ _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 },{"2":2,"3":3,"6":6}],24:[function(_dereq_,module,exports){
 'use strict';
 
+/**
+ * Most of the mtehods have been borrowed/adapted from https://plainjs.com/javascript,
+ * except fadeIn/fadeOut (from https://github.com/DimitriMikadze/vanilla-helpers/blob/master/js/vanillaHelpers.js)
+ */
+
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -8049,9 +8080,7 @@ function offset(el) {
 	    scrollLeft = _window2.default.pageXOffset || _document2.default.documentElement.scrollLeft,
 	    scrollTop = _window2.default.pageYOffset || _document2.default.documentElement.scrollTop;
 	return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
-}
-
-function closest(el, fn) {
+}function closest(el, fn) {
 	return el && (fn(el) ? el : closest(el.parentNode, fn));
 }
 
@@ -8096,15 +8125,23 @@ function fadeOut(el) {
 	var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
 	var callback = arguments[2];
 
-	var s = el.style,
-	    step = 25 / (duration || 300);
-	s.opacity = s.opacity || 1;
-	(function fade() {
-		(s.opacity -= step) < 0 ? s.display = "none" : setTimeout(fade, 25);
-	})();
-	if (typeof callback === 'function') {
-		setTimeout(callback, 30);
+	if (!el.style.opacity) {
+		el.style.opacity = 1;
 	}
+
+	var start = null;
+	_window2.default.requestAnimationFrame(function animate(timestamp) {
+		start = start || timestamp;
+		var progress = timestamp - start;
+		el.style.opacity = 1 - progress / duration;
+		if (progress > duration) {
+			if (callback && typeof callback === 'function') {
+				callback();
+			}
+		} else {
+			_window2.default.requestAnimationFrame(animate);
+		}
+	});
 }
 
 // fade out an element from the current state to full transparency in "duration" ms
@@ -8113,16 +8150,23 @@ function fadeIn(el) {
 	var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
 	var callback = arguments[2];
 
-	var s = el.style,
-	    step = 25 / (duration || 300);
-	s.opacity = s.opacity || 0;
-	s.display = "block";
-	(function fade() {
-		(s.opacity = parseFloat(s.opacity) + step) > 1 ? s.opacity = 1 : setTimeout(fade, 25);
-	})();
-	if (typeof callback === 'function') {
-		setTimeout(callback, 30);
+	if (!el.style.opacity) {
+		el.style.opacity = 0;
 	}
+
+	var start = null;
+	_window2.default.requestAnimationFrame(function animate(timestamp) {
+		start = start || timestamp;
+		var progress = timestamp - start;
+		el.style.opacity = progress / duration;
+		if (progress > duration) {
+			if (callback && typeof callback === 'function') {
+				callback();
+			}
+		} else {
+			_window2.default.requestAnimationFrame(animate);
+		}
+	});
 }
 
 function siblings(el, filter) {
@@ -8763,6 +8807,36 @@ if (window.Element && !Element.prototype.closest) {
 		return el;
 	};
 }
+
+// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+
+// requestAnimationFrame polyfill by Erik Möller. fixes from Paul Irish and Tino Zijdel
+
+// MIT license
+
+(function () {
+	var lastTime = 0;
+	var vendors = ['ms', 'moz', 'webkit', 'o'];
+	for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+		window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+		window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+	}
+
+	if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback) {
+		var currTime = new Date().getTime();
+		var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+		var id = window.setTimeout(function () {
+			callback(currTime + timeToCall);
+		}, timeToCall);
+		lastTime = currTime + timeToCall;
+		return id;
+	};
+
+	if (!window.cancelAnimationFrame) window.cancelAnimationFrame = function (id) {
+		clearTimeout(id);
+	};
+})();
 
 },{"2":2}],28:[function(_dereq_,module,exports){
 'use strict';

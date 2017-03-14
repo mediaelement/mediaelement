@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * Most of the mtehods have been borrowed/adapted from https://plainjs.com/javascript,
+ * except fadeIn/fadeOut (from https://github.com/DimitriMikadze/vanilla-helpers/blob/master/js/vanillaHelpers.js)
+ */
+
 import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
@@ -43,28 +48,43 @@ export function toggleClass(el, className) {
 
 // fade an element from the current state to full opacity in "duration" ms
 export function fadeOut (el, duration = 400, callback) {
-	const s = el.style, step = 25 / (duration || 300);
-	s.opacity = s.opacity || 1;
-	(function fade () {
-		(s.opacity -= step) < 0 ? s.display = "none" : setTimeout(fade, 25);
-	})();
-	if (typeof callback === 'function') {
-		setTimeout(callback, 30);
-	}
+	if ( ! el.style.opacity) { el.style.opacity = 1; }
+
+	let start = null;
+	window.requestAnimationFrame(function animate(timestamp) {
+		start = start || timestamp;
+		const progress = timestamp - start;
+		el.style.opacity = 1 - progress / duration;
+		if (progress > duration) {
+			if (callback && typeof(callback) === 'function') {
+				callback();
+			}
+		} else {
+			window.requestAnimationFrame(animate);
+		}
+	});
 }
 
 // fade out an element from the current state to full transparency in "duration" ms
 // display is the display style the element is assigned after the animation is done
 export function fadeIn (el, duration = 400, callback) {
-	const s = el.style, step = 25 / (duration || 300);
-	s.opacity = s.opacity || 0;
-	s.display = "block";
-	(function fade () {
-		(s.opacity = parseFloat(s.opacity) + step) > 1 ? s.opacity = 1 : setTimeout(fade, 25);
-	})();
-	if (typeof callback === 'function') {
-		setTimeout(callback, 30);
+	if (!el.style.opacity) {
+		el.style.opacity = 0;
 	}
+
+	let start = null;
+	window.requestAnimationFrame(function animate(timestamp) {
+		start = start || timestamp;
+		const progress = timestamp - start;
+		el.style.opacity = progress / duration;
+		if (progress > duration) {
+			if (callback && typeof(callback) === 'function') {
+				callback();
+			}
+		} else {
+			window.requestAnimationFrame(animate);
+		}
+	});
 }
 
 export function siblings (el, filter) {

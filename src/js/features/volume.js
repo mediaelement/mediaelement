@@ -5,7 +5,7 @@ import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
 import {IS_ANDROID, IS_IOS} from '../utils/constants';
-import {isString} from '../utils/general';
+import {isString, createEvent} from '../utils/general';
 import {addClass, removeClass, offset} from '../utils/dom';
 
 /**
@@ -138,7 +138,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					volumePercentage = `${(volume * 100)}%`,
 					volumeStyles = getComputedStyle(volumeHandle)
-					;
+				;
 
 				// position slider
 				if (mode === 'vertical') {
@@ -203,12 +203,19 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.setMuted(false);
 				}
 				media.setVolume(volume);
+
+				e.preventDefault();
+				e.stopPropagation();
 			}
 		;
 
-		mute.addEventListener('mouseenter', () => {
-			volumeSlider.style.display = 'block';
-			mouseIsOver = true;
+		mute.addEventListener('mouseenter', (e) => {
+			if (e.target === mute) {
+				volumeSlider.style.display = 'block';
+				mouseIsOver = true;
+				e.preventDefault();
+				e.stopPropagation();
+			}
 		});
 		mute.addEventListener('focusin', () => {
 			volumeSlider.style.display = 'block';
@@ -226,51 +233,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				volumeSlider.style.display = 'none';
 			}
 		});
-
-		let
-			mouseIsDown = false,
-			mouseIsOver = false,
-
-			/**
-			 * @private
-			 */
-			updateVolumeSlider = () => {
-				const volume = Math.floor(media.volume * 100);
-				volumeSlider.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
-				volumeSlider.setAttribute('aria-valuemin', 0);
-				volumeSlider.setAttribute('aria-valuemax', 100);
-				volumeSlider.setAttribute('aria-valuenow', volume);
-				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
-				volumeSlider.setAttribute('role', 'slider');
-				volumeSlider.tabIndex = -1;
-			}
-			;
-
-		// Events
-		volumeSlider.addEventListener('mouseover', () => {
-			mouseIsOver = true;
-		});
-		volumeSlider.addEventListener('mousedown', (e) => {
-			handleVolumeMove(e);
-			mouseIsDown = true;
-		});
-		volumeSlider.addEventListener('mousemove', (e) => {
-			handleVolumeMove(e);
-		});
-		volumeSlider.addEventListener('mouseup', () => {
-			mouseIsDown = false;
-			volumeSlider.addEventListener('mousemove', () => {
-				if (!mouseIsOver && mode === 'vertical') {
-					volumeSlider.style.display = 'none';
-				}
-			});
-			volumeSlider.addEventListener('mouseup', () => {
-				if (!mouseIsOver && mode === 'vertical') {
-					volumeSlider.style.display = 'none';
-				}
-			});
-		});
-		volumeSlider.addEventListener('keydown', (e) => {
+		mute.addEventListener('keydown', (e) => {
 
 			if (t.options.keyActions.length) {
 				let
@@ -291,13 +254,64 @@ Object.assign(MediaElementPlayer.prototype, {
 				mouseIsDown = false;
 				positionVolumeHandle(volume);
 				media.setVolume(volume);
-				return false;
+
+				e.preventDefault();
+				e.stopPropagation();
 			}
+		});
+
+		let
+			mouseIsDown = false,
+			mouseIsOver = false,
+
+			/**
+			 * @private
+			 */
+			updateVolumeSlider = () => {
+				const volume = Math.floor(media.volume * 100);
+				volumeSlider.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
+				volumeSlider.setAttribute('aria-valuemin', 0);
+				volumeSlider.setAttribute('aria-valuemax', 100);
+				volumeSlider.setAttribute('aria-valuenow', volume);
+				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
+				volumeSlider.setAttribute('role', 'slider');
+				volumeSlider.tabIndex = -1;
+			}
+		;
+
+		// Events
+		volumeSlider.addEventListener('dragstart', () => false);
+
+		volumeSlider.addEventListener('mouseover', () => {
+			mouseIsOver = true;
+		});
+		volumeSlider.addEventListener('mousedown', (e) => {
+			handleVolumeMove(e);
+			t.globalBind('mousemove.vol', (event) => {
+				const target = event.target;
+				if (mouseIsDown && (target === volumeSlider || closest(target, (el) => el === volumeSlider))) {
+					handleVolumeMove(event);
+				}
+			});
+			t.globalBind('mouseup.vol', () => {
+				mouseIsDown = false;
+				t.globalUnbind('mousemove.vol mouseup.vol');
+
+				if (!mouseIsOver && mode === 'vertical') {
+					volumeSlider.style.display = 'none';
+				}
+			});
+			mouseIsDown = true;
+
+			e.preventDefault();
+			e.stopPropagation();
 		});
 
 		// MUTE button
 		button.addEventListener('click', () => {
 			media.setMuted(!media.muted);
+			const event = createEvent('volumechange', media);
+			media.dispatchEvent(event);
 		});
 		button.addEventListener('focus', () => {
 			if (mode === 'vertical') {

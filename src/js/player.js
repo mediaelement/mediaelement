@@ -912,14 +912,17 @@ class MediaElementPlayer {
 					// Safari triggers focusout multiple times
 					// Firefox does NOT support e.relatedTarget to see which element
 					// just lost focus, so wait to find the next focused element
+					const parent = dom.closest(document.activeElement, (el) => el === t.container);
 
-					const parent = dom.closest(document.activeElement, (el) => el == t.container);
-					if (t.keyboardAction && parent && !parent.length) {
+					if (t.keyboardAction && !parent) {
 						t.keyboardAction = false;
 						if (t.isVideo && !t.options.alwaysShowControls) {
 							// focus is outside the control; hide controls
 							t.hideControls(true);
 						}
+					} else {
+						t.keyboardAction = true;
+						t.showControls(true);
 					}
 				}, 0);
 			}, 100));
@@ -1517,7 +1520,7 @@ class MediaElementPlayer {
 			error = document.createElement('div'),
 			// this needs to come last so it's on top
 			bigPlay = document.createElement('div')
-			;
+		;
 
 		loading.style.display = 'none'; // start out hidden
 		loading.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer`;
@@ -1660,9 +1663,11 @@ class MediaElementPlayer {
 		t.globalBind('keydown', (event) => {
 			const
 				container = dom.closest(event.target, (el) => el == t.container),
-				target = dom.closest(player.media, (el) => el == t.container)
+				target = dom.closest(player.node, (el) => el == t.container)
 			;
-			player.hasFocus = container !== null && container.length !== 0 && container.id === target.id;
+			console.log(container);
+			console.log(target);
+			t.hasFocus = container && target && container.length !== 0 && container.id === target.id;
 			return t.onkeydown(player, media, event);
 		});
 
@@ -1682,10 +1687,13 @@ class MediaElementPlayer {
 			for (let i = 0, total = player.options.keyActions.length; i < total; i++) {
 				const keyAction = player.options.keyActions[i];
 
+				console.log(keyAction);
+
 				for (let j = 0, jl = keyAction.keys.length; j < jl; j++) {
 					if (e.keyCode === keyAction.keys[j]) {
 						keyAction.action(player, media, e.keyCode, e);
-						return false;
+						e.preventDefault();
+						e.stopPropagation();
 					}
 				}
 			}
