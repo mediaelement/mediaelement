@@ -5,6 +5,8 @@
 * Removed all dependencies to jQuery in code and added `utils/dom.js` to mimic jQuery's most used methods @ron666
 * Added missing unit tests @ron666
 * Fixed minor issues with Twitch renderer and some minor improvements to HLS renderer @ron666
+* Fixed issues in documentation @ron666
+* Fixed issue with `readyState` value in Flash video shim @ron666
 
 *3.2.4 (2017/03/14)*
 
