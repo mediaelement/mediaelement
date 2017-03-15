@@ -2558,7 +2558,7 @@ Object.assign(_player2.default.prototype, {
 		    track = t.tracks[index];
 
 		if (track !== undefined && (track.src !== undefined || track.src !== "")) {
-			(0, _dom.ajax)(track.src, function (d) {
+			(0, _dom.ajax)(track.src, 'text', function (d) {
 
 				// parse the loaded file
 				track.entries = typeof d === 'string' && /<tt\s+xml/ig.exec(d) ? _mejs2.default.TrackFormatParser.dfxp.parse(d) : _mejs2.default.TrackFormatParser.webvtt.parse(d);
@@ -6547,18 +6547,36 @@ function visible(elem) {
 	return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
 }
 
-function ajax(url, success, error) {
+function ajax(url, dataType, success, error) {
 	var xhr = _window2.default.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+	var type = 'text/plain';
+
+	switch (dataType) {
+		case 'html':
+			type = 'text/html';
+			break;
+		case 'json':
+			type = 'application/x-www-form-urlencoded';
+			break;
+	}
+
 	xhr.open('GET', url, true);
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState > 3) {
 			if (xhr.status == 200) {
-				success(xhr.responseText);
+				if (dataType === 'json') {
+					success(JSON.parse(xhr.responseText));
+				} else {
+					success(xhr.responseText);
+				}
 			} else {
 				error(xhr.status);
 			}
 		}
 	};
+
+	xhr.setRequestHeader('Content-Type', type);
 	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	xhr.send();
 	return xhr;

@@ -98,18 +98,36 @@ export function visible (elem) {
 	return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
 }
 
-export function ajax(url, success, error) {
+export function ajax(url, dataType, success, error) {
 	const xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+	let type = 'text/plain';
+
+	switch (dataType) {
+		case 'html':
+			type = 'text/html';
+			break;
+		case 'json':
+			type = 'application/x-www-form-urlencoded';
+			break;
+	}
+
 	xhr.open('GET', url, true);
 	xhr.onreadystatechange = () => {
 		if (xhr.readyState > 3) {
 			if (xhr.status == 200) {
-				success(xhr.responseText);
+				if (dataType === 'json') {
+					success(JSON.parse(xhr.responseText));
+				} else {
+					success(xhr.responseText);
+				}
 			} else {
 				error(xhr.status);
 			}
 		}
 	};
+
+	xhr.setRequestHeader('Content-Type', type);
 	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	xhr.send();
 	return xhr;

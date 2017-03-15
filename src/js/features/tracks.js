@@ -406,7 +406,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		if (track !== undefined && (track.src !== undefined || track.src !== "")) {
-			ajax(track.src, (d) => {
+			ajax(track.src, 'text', (d) => {
 
 				// parse the loaded file
 				track.entries = typeof d === 'string' && (/<tt\s+xml/ig).exec(d) ?
