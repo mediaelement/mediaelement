@@ -268,6 +268,7 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 <style>
 .mejs__overlay-button {
     background: url("/path/to/mejs-controls.svg") no-repeat;
+    background-position: 0 -39px;
 }
 .mejs__overlay-loading-bg-img {
     background: transparent url("/path/to/mejs-controls.svg") -160px -40px no-repeat;
