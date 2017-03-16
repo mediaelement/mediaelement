@@ -1276,8 +1276,6 @@ class MediaElementPlayer {
 		width = `${parseFloat(width)}px`;
 		height = `${parseFloat(height)}px`;
 
-		console.log(width);
-
 		t.container.style.width = width;
 		t.container.style.height = height;
 

@@ -447,6 +447,8 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
+var _general = _dereq_(16);
+
 var _media = _dereq_(17);
 
 var _renderer = _dereq_(7);
@@ -693,12 +695,16 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		    event = void 0;
 
 		// Ensure that the original gets the first source found
+		if (!t.mediaElement.paused) {
+			t.mediaElement.pause();
+			event = (0, _general.createEvent)('pause', t.mediaElement);
+			t.mediaElement.dispatchEvent(event);
+		}
 		t.mediaElement.originalNode.setAttribute('src', mediaFiles[0].src || '');
 
 		// did we find a renderer?
 		if (renderInfo === null) {
-			event = _document2.default.createEvent('HTMLEvents');
-			event.initEvent('error', false, false);
+			event = (0, _general.createEvent)('error', t.mediaElement);
 			event.message = 'No renderer found';
 			t.mediaElement.dispatchEvent(event);
 			return;
@@ -708,9 +714,9 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 		if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-			event = _document2.default.createEvent('HTMLEvents');
-			event.initEvent('error', false, false);
+			event = (0, _general.createEvent)('error', t.mediaElement);
 			event.message = 'Error creating renderer';
+			t.mediaElement.dispatchEvent(event);
 			t.mediaElement.dispatchEvent(event);
 		}
 	},
@@ -857,7 +863,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"17":17,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

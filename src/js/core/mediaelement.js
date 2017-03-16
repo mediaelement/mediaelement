@@ -3,6 +3,7 @@
 import window from 'global/window';
 import document from 'global/document';
 import mejs from './mejs';
+import {createEvent} from '../utils/general';
 import {getTypeFromFile, formatType, absolutizeUrl} from '../utils/media';
 import {renderer} from './renderer';
 
@@ -120,7 +121,7 @@ class MediaElement {
 			let
 				newRenderer = t.mediaElement.renderers[rendererName],
 				newRendererType = null
-				;
+			;
 
 			if (newRenderer !== undefined && newRenderer !== null) {
 				newRenderer.show();
@@ -249,12 +250,16 @@ class MediaElement {
 				;
 
 				// Ensure that the original gets the first source found
+				if (!t.mediaElement.paused) {
+					t.mediaElement.pause();
+					event = createEvent('pause', t.mediaElement);
+					t.mediaElement.dispatchEvent(event);
+				}
 				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
 
 				// did we find a renderer?
 				if (renderInfo === null) {
-					event = document.createEvent('HTMLEvents');
-					event.initEvent('error', false, false);
+					event = createEvent('error', t.mediaElement);
 					event.message = 'No renderer found';
 					t.mediaElement.dispatchEvent(event);
 					return;
@@ -264,9 +269,9 @@ class MediaElement {
 				t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 				if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-					event = document.createEvent('HTMLEvents');
-					event.initEvent('error', false, false);
+					event = createEvent('error', t.mediaElement);
 					event.message = 'Error creating renderer';
+					t.mediaElement.dispatchEvent(event);
 					t.mediaElement.dispatchEvent(event);
 				}
 			},

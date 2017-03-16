@@ -91,7 +91,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			togglePlayPause('play');
 		});
 
-
 		media.addEventListener('pause', () => {
 			togglePlayPause('pse');
 		});
