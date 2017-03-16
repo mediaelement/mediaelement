@@ -4877,8 +4877,10 @@ var MediaElementPlayer = function () {
 		value: function setDimensions(width, height) {
 			var t = this;
 
-			width = typeof width === 'string' ? width : parseInt(width) + 'px';
-			height = typeof height === 'string' ? height : parseInt(height) + 'px';
+			width = parseFloat(width) + 'px';
+			height = parseFloat(height) + 'px';
+
+			
 
 			t.container.style.width = width;
 			t.container.style.height = height;

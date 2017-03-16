@@ -1273,8 +1273,10 @@ class MediaElementPlayer {
 	setDimensions (width, height) {
 		const t = this;
 
-		width = typeof width === 'string' ? width : `${parseInt(width)}px`;
-		height = typeof height === 'string' ? height : `${parseInt(height)}px`;
+		width = `${parseFloat(width)}px`;
+		height = `${parseFloat(height)}px`;
+
+		console.log(width);
 
 		t.container.style.width = width;
 		t.container.style.height = height;
