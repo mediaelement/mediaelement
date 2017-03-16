@@ -232,7 +232,6 @@ var TwitchIframeRenderer = {
 		var twitchPlayer = null,
 		    paused = true,
 		    ended = false,
-		    twitchIframe = null,
 		    hasStartedPlaying = false,
 		    volume = 1,
 		    duration = Infinity,
@@ -518,14 +517,10 @@ var TwitchIframeRenderer = {
 		};
 		twitch.hide = function () {
 			twitch.pause();
-			if (twitchIframe) {
-				twitchIframe.style.display = 'none';
-			}
+			twitchContainer.style.display = 'none';
 		};
 		twitch.show = function () {
-			if (twitchIframe) {
-				twitchIframe.style.display = '';
-			}
+			twitchContainer.style.display = '';
 		};
 		twitch.destroy = function () {};
 
