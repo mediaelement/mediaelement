@@ -356,7 +356,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (media.duration !== Infinity ) {
 				if (broadcast) {
 					t.slider.style.display = '';
-					broadcast.remove()
+					broadcast.remove();
 				}
 
 				player.setProgressRail(e);
