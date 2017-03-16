@@ -1891,7 +1891,7 @@ Object.assign(_player2.default.prototype, {
 			var broadcast = controls.querySelector('.' + t.options.classPrefix + 'broadcast');
 			if (media.duration !== Infinity) {
 				if (broadcast) {
-					t.slider.style.display = 'block';
+					t.slider.style.display = '';
 					broadcast.parentNode.removeChild(broadcast);
 				}
 
@@ -1912,7 +1912,7 @@ Object.assign(_player2.default.prototype, {
 			var broadcast = controls.querySelector('.' + t.options.classPrefix + 'broadcast');
 			if (media.duration !== Infinity) {
 				if (broadcast) {
-					t.slider.style.display = 'block';
+					t.slider.style.display = '';
 					broadcast.parentNode.removeChild(broadcast);
 				}
 
@@ -2681,7 +2681,7 @@ Object.assign(_player2.default.prototype, {
 				}
 			}
 
-			t.captionsButton.style.display = hasSubtitles ? 'block' : 'none';
+			t.captionsButton.style.display = hasSubtitles ? '' : 'none';
 			t.setControlsSize();
 		}
 	},
@@ -2733,7 +2733,7 @@ Object.assign(_player2.default.prototype, {
 				// Set the line before the timecode as a class so the cue can be targeted if needed
 				t.captionsText.innerHTML = sanitize(track.entries[i].text);
 				t.captionsText.className = t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || '');
-				t.captions.style.display = 'block';
+				t.captions.style.display = '';
 				t.captions.style.height = '0px';
 				return; // exit out if one is visible;
 			}
@@ -3310,14 +3310,14 @@ Object.assign(_player2.default.prototype, {
 
 		mute.addEventListener('mouseenter', function (e) {
 			if (e.target === mute) {
-				volumeSlider.style.display = 'block';
+				volumeSlider.style.display = '';
 				mouseIsOver = true;
 				e.preventDefault();
 				e.stopPropagation();
 			}
 		});
 		mute.addEventListener('focusin', function () {
-			volumeSlider.style.display = 'block';
+			volumeSlider.style.display = '';
 			mouseIsOver = true;
 		});
 		mute.addEventListener('mouseleave', function () {
@@ -3417,7 +3417,7 @@ Object.assign(_player2.default.prototype, {
 		});
 		button.addEventListener('focus', function () {
 			if (mode === 'vertical') {
-				volumeSlider.style.display = 'block';
+				volumeSlider.style.display = '';
 			}
 		});
 		button.addEventListener('blur', function () {
@@ -3768,7 +3768,7 @@ var config = exports.config = {
 		action: function action(player, media) {
 
 			if (player.container.querySelector('.' + config.classPrefix + 'volume-button>button').matches(':focus') || player.container.querySelector('.' + config.classPrefix + 'volume-slider').matches(':focus')) {
-				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = 'block';
+				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = '';
 			}
 			if (player.isVideo) {
 				player.showControls();
@@ -3786,7 +3786,7 @@ var config = exports.config = {
 		action: function action(player, media) {
 
 			if (player.container.querySelector('.' + config.classPrefix + 'volume-button>button').matches(':focus') || player.container.querySelector('.' + config.classPrefix + 'volume-slider').matches(':focus')) {
-				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = 'block';
+				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = '';
 			}
 
 			if (player.isVideo) {
@@ -3851,7 +3851,7 @@ var config = exports.config = {
 		keys: [77], // M
 		action: function action(player) {
 
-			player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = 'block';
+			player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = '';
 			if (player.isVideo) {
 				player.showControls();
 				player.startControlsTimer();
@@ -4123,13 +4123,13 @@ var MediaElementPlayer = function () {
 				})();
 			} else {
 				dom.removeClass(t.controls, t.options.classPrefix + 'offscreen');
-				t.controls.style.display = 'block';
+				t.controls.style.display = '';
 
 				// any additional controls people might add and want to hide
 				var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
 				for (var i = 0, total = controls.length; i < total; i++) {
 					dom.removeClass(controls[i], t.options.classPrefix + 'offscreen');
-					controls[i].style.display = 'block';
+					controls[i].style.display = '';
 				}
 
 				var event = (0, _general.createEvent)('controlsshown', t.container);
@@ -4155,7 +4155,7 @@ var MediaElementPlayer = function () {
 					// fade out main controls
 					dom.fadeOut(t.controls, 200, function () {
 						dom.addClass(t.controls, t.options.classPrefix + 'offscreen');
-						t.controls.style.display = 'block';
+						t.controls.style.display = '';
 						var event = (0, _general.createEvent)('controlshidden', t.container);
 						t.container.dispatchEvent(event);
 					});
@@ -4166,7 +4166,7 @@ var MediaElementPlayer = function () {
 					var _loop2 = function _loop2(i, total) {
 						dom.fadeOut(controls[i], 200, function () {
 							dom.addClass(controls[i], t.options.classPrefix + 'offscreen');
-							controls[i].style.display = 'block';
+							controls[i].style.display = '';
 						});
 					};
 
@@ -4178,13 +4178,13 @@ var MediaElementPlayer = function () {
 
 				// hide main controls
 				dom.addClass(t.controls, t.options.classPrefix + 'offscreen');
-				t.controls.style.display = 'block';
+				t.controls.style.display = '';
 
 				// hide others
 				var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
 				for (var i = 0, total = controls.length; i < total; i++) {
 					dom.addClass(controls[i], t.options.classPrefix + 'offscreen');
-					controls[i].style.display = 'block';
+					controls[i].style.display = '';
 				}
 
 				var event = (0, _general.createEvent)('controlshidden', t.container);
@@ -4838,7 +4838,7 @@ var MediaElementPlayer = function () {
 			// This prevents an issue when displaying poster
 			var poster = t.container.querySelector(t.options.classPrefix + 'poster img');
 			if (poster) {
-				poster.style.display = 'block';
+				poster.style.display = '';
 			}
 
 			// calculate new width and height
@@ -5111,7 +5111,7 @@ var MediaElementPlayer = function () {
 
 			if (player.options.showPosterWhenEnded && player.options.autoRewind) {
 				media.addEventListener('ended', function () {
-					poster.style.display = 'block';
+					poster.style.display = '';
 				});
 			}
 
@@ -5124,7 +5124,7 @@ var MediaElementPlayer = function () {
 					// To avoid displaying the poster when video ended, since it
 					// triggers a pause event as well
 					if (!media.ended) {
-						poster.style.display = 'block';
+						poster.style.display = '';
 					}
 				});
 			}
@@ -5199,37 +5199,37 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('seeking', function () {
-				loading.style.display = 'block';
+				loading.style.display = '';
 				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
 				}
 			});
 
 			media.addEventListener('seeked', function () {
 				loading.style.display = 'none';
 				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
 				}
 			});
 
 			media.addEventListener('pause', function () {
 				if (!_constants.IS_STOCK_ANDROID) {
-					bigPlay.style.display = 'block';
+					bigPlay.style.display = '';
 				}
 			});
 
 			media.addEventListener('waiting', function () {
-				loading.style.display = 'block';
+				loading.style.display = '';
 				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
 				}
 			});
 
 			// show/hide loading
 			media.addEventListener('loadeddata', function () {
-				loading.style.display = 'block';
+				loading.style.display = '';
 				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'block';
+					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
 				}
 
 				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
@@ -5258,7 +5258,7 @@ var MediaElementPlayer = function () {
 				t._handleError(e);
 				loading.style.display = 'none';
 				bigPlay.style.display = 'none';
-				error.style.display = 'block';
+				error.style.display = '';
 				error.getElementsByClassName(t.options.classPrefix + 'overlay-error')[0].innerHTML = e.message;
 			});
 

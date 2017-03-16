@@ -538,7 +538,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			}
 
-			t.captionsButton.style.display = hasSubtitles ? 'block' : 'none';
+			t.captionsButton.style.display = hasSubtitles ? '' : 'none';
 			t.setControlsSize();
 		}
 	},
@@ -595,7 +595,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				// Set the line before the timecode as a class so the cue can be targeted if needed
 				t.captionsText.innerHTML = sanitize(track.entries[i].text);
 				t.captionsText.className = `${t.options.classPrefix}captions-text ${(track.entries[i].identifier || '')}`;
-				t.captions.style.display = 'block';
+				t.captions.style.display = '';
 				t.captions.style.height = '0px';
 				return; // exit out if one is visible;
 			}

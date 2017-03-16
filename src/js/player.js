@@ -142,7 +142,7 @@ export const config = {
 
 				if (player.container.querySelector(`.${config.classPrefix}volume-button>button`).matches(':focus') ||
 					player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
-					player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = 'block';
+					player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = '';
 				}
 				if (player.isVideo) {
 					player.showControls();
@@ -163,7 +163,7 @@ export const config = {
 
 				if (player.container.querySelector(`.${config.classPrefix}volume-button>button`).matches(':focus') ||
 					player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
-					player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = 'block';
+					player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = '';
 				}
 
 				if (player.isVideo) {
@@ -235,7 +235,7 @@ export const config = {
 			keys: [77], // M
 			action: (player) => {
 
-				player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = 'block';
+				player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = '';
 				if (player.isVideo) {
 					player.showControls();
 					player.startControlsTimer();
@@ -523,13 +523,13 @@ class MediaElementPlayer {
 			}
 		} else {
 			dom.removeClass(t.controls, `${t.options.classPrefix}offscreen`);
-			t.controls.style.display = 'block';
+			t.controls.style.display = '';
 
 			// any additional controls people might add and want to hide
 			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.removeClass(controls[i], `${t.options.classPrefix}offscreen`);
-				controls[i].style.display = 'block';
+				controls[i].style.display = '';
 			}
 
 			const event = createEvent('controlsshown', t.container);
@@ -558,7 +558,7 @@ class MediaElementPlayer {
 			// fade out main controls
 			dom.fadeOut(t.controls, 200, () => {
 				dom.addClass(t.controls, `${t.options.classPrefix}offscreen`);
-				t.controls.style.display = 'block';
+				t.controls.style.display = '';
 				const event = createEvent('controlshidden', t.container);
 				t.container.dispatchEvent(event);
 			});
@@ -568,20 +568,20 @@ class MediaElementPlayer {
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.fadeOut(controls[i], 200, () => {
 					dom.addClass(controls[i], `${t.options.classPrefix}offscreen`);
-					controls[i].style.display = 'block';
+					controls[i].style.display = '';
 				});
 			}
 		} else {
 
 			// hide main controls
 			dom.addClass(t.controls, `${t.options.classPrefix}offscreen`);
-			t.controls.style.display = 'block';
+			t.controls.style.display = '';
 
 			// hide others
 			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.addClass(controls[i], `${t.options.classPrefix}offscreen`);
-				controls[i].style.display = 'block';
+				controls[i].style.display = '';
 			}
 
 			const event = createEvent('controlshidden', t.container);
@@ -1236,7 +1236,7 @@ class MediaElementPlayer {
 		// This prevents an issue when displaying poster
 		const poster = t.container.querySelector(`${t.options.classPrefix}poster img`);
 		if (poster) {
-			poster.style.display = 'block';
+			poster.style.display = '';
 		}
 
 		// calculate new width and height
@@ -1503,7 +1503,7 @@ class MediaElementPlayer {
 
 		if (player.options.showPosterWhenEnded && player.options.autoRewind) {
 			media.addEventListener('ended', () => {
-				poster.style.display = 'block';
+				poster.style.display = '';
 			});
 		}
 
@@ -1516,7 +1516,7 @@ class MediaElementPlayer {
 				// To avoid displaying the poster when video ended, since it
 				// triggers a pause event as well
 				if (!media.ended) {
-					poster.style.display = 'block';
+					poster.style.display = '';
 				}
 			});
 		}
@@ -1596,38 +1596,38 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeking', () => {
-			loading.style.display = 'block';
+			loading.style.display = '';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'block';
+				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
 			}
 		});
 
 		media.addEventListener('seeked', () => {
 			loading.style.display = 'none';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'block';
+				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
 			}
 		});
 
 		media.addEventListener('pause', () => {
 			if (!IS_STOCK_ANDROID) {
-				bigPlay.style.display = 'block';
+				bigPlay.style.display = '';
 			}
 		});
 
 		media.addEventListener('waiting', () => {
-			loading.style.display = 'block';
+			loading.style.display = '';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'block';
+				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
 			}
 		});
 
 
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
-			loading.style.display = 'block';
+			loading.style.display = '';
 			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'block';
+				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
 			}
 
 			// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
@@ -1656,7 +1656,7 @@ class MediaElementPlayer {
 			t._handleError(e);
 			loading.style.display = 'none';
 			bigPlay.style.display = 'none';
-			error.style.display = 'block';
+			error.style.display = '';
 			error.getElementsByClassName(`${t.options.classPrefix}overlay-error`)[0].innerHTML = e.message;
 		});
 

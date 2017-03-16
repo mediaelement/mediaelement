@@ -334,7 +334,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
 			if (media.duration !== Infinity) {
 				if (broadcast) {
-					t.slider.style.display = 'block';
+					t.slider.style.display = '';
 					broadcast.parentNode.removeChild(broadcast);
 				}
 
@@ -355,7 +355,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
 			if (media.duration !== Infinity ) {
 				if (broadcast) {
-					t.slider.style.display = 'block';
+					t.slider.style.display = '';
 					broadcast.parentNode.removeChild(broadcast);
 				}
 
