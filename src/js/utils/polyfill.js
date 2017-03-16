@@ -9,23 +9,25 @@ import document from 'global/document';
  * of polyfills provided by Babel.
  */
 
-;[Element.prototype, CharacterData.prototype, DocumentType.prototype]
-.forEach((item) => {
-	if (item.hasOwnProperty('remove')) {
-		return;
-	}
-	Object.defineProperty(item, 'remove', {
-		configurable: true,
-		enumerable: true,
-		writable: true,
-		value: function remove() {
-			this.parentNode.removeChild(this);
+// ChildNode.remove polyfill
+// from: https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
+(function (arr) {
+	arr.forEach(function (item) {
+		if (item.hasOwnProperty('remove')) {
+			return;
 		}
+		Object.defineProperty(item, 'remove', {
+			configurable: true,
+			enumerable: true,
+			writable: true,
+			value: function remove() {
+				this.parentNode.removeChild(this);
+			}
+		});
 	});
-});
+})([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
 
-
-// document.createEvent for IE8 or other old browsers that do not implement it
+// document.createEvent polyfill
 // Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
 if (document.createEvent === undefined) {
 	document.createEvent = () => {
@@ -128,9 +130,20 @@ if (!Array.prototype.includes) {
 	});
 }
 
+// String.includes polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
 if (!String.prototype.includes) {
-	String.prototype.includes = function() {
-		return String.prototype.indexOf.apply(this, arguments) !== -1;
+	String.prototype.includes = function(search, start) {
+		'use strict';
+		if (typeof start !== 'number') {
+			start = 0;
+		}
+
+		if (start + search.length > this.length) {
+			return false;
+		} else {
+			return this.indexOf(search, start) !== -1;
+		}
 	};
 }
 
