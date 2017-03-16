@@ -116,7 +116,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					percentage = (pos / width);
 					t.newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
-					// fake seek to where the mouse is 
+					// fake seek to where the mouse is
 					if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 						t.setCurrentRailHandle(t.newTime);
 						t.updateCurrent(t.newTime);
@@ -335,7 +335,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (media.duration !== Infinity) {
 				if (broadcast) {
 					t.slider.style.display = '';
-					broadcast.parentNode.removeChild(broadcast);
+					broadcast.remove();
 				}
 
 				player.setProgressRail(e);
@@ -356,7 +356,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (media.duration !== Infinity ) {
 				if (broadcast) {
 					t.slider.style.display = '';
-					broadcast.parentNode.removeChild(broadcast);
+					broadcast.remove();
 				}
 
 				player.setProgressRail(e);

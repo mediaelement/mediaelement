@@ -406,7 +406,7 @@ const FlashMediaElementRenderer = {
 		};
 
 		flash.destroy = () => {
-			flash.flashNode.parentNode.removeChild(flash.flashNode);
+			flash.flashNode.remove();
 		};
 
 
