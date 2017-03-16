@@ -280,20 +280,19 @@ Object.assign(MediaElementPlayer.prototype, {
 	cleartracks: function (player) {
 		if (player) {
 			if (player.captions) {
-				player.captions.parentNode.removeChild(player.captions);
+				player.captions.remove();
 			}
 			if (player.chapters) {
-				player.chapters.parentNode.removeChild(player.chapters);
+				player.chapters.remove();
 			}
 			if (player.captionsText) {
-				player.captionsText.parentNode.removeChild(player.captionsText);
+				player.captionsText.remove();
 			}
 			if (player.captionsButton) {
-				player.captionsButton.parentNode.removeChild(player.captionsButton);
+				player.captionsButton.remove();
 			}
-
 			if (player.chaptersButton) {
-				player.chaptersButton.parentNode.removeChild(player.chaptersButton);
+				player.chaptersButton.remove();
 			}
 		}
 	},
@@ -483,7 +482,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (element) {
 			const button = element.closest('li');
 			if (button) {
-				button.parentNode.removeChild(button);
+				button.remove();
 			}
 		}
 		t.adjustLanguageBox();
@@ -567,7 +566,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const scripts = div.getElementsByTagName('script');
 				let i = scripts.length;
 				while (i--) {
-					scripts[i].parentNode.removeChild(scripts[i]);
+					scripts[i].remove();
 				}
 
 				// Loop the elements and remove anything that contains value="javascript:" or an `on*` attribute
@@ -581,7 +580,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					for (let j = 0, total = attributes.length; j < total; j++) {
 						if (attributes[j].name.startsWith('on') || attributes[j].value.startsWith('javascript')) {
-							allElements[i].parentNode.removeChild(allElements[i]);
+							allElements[i].remove();
 						} else if (attributes[j].name === 'style') {
 							allElements[i].removeAttribute(attributes[j].name);
 						}
