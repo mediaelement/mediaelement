@@ -9,6 +9,22 @@ import document from 'global/document';
  * of polyfills provided by Babel.
  */
 
+;[Element.prototype, CharacterData.prototype, DocumentType.prototype]
+.forEach((item) => {
+	if (item.hasOwnProperty('remove')) {
+		return;
+	}
+	Object.defineProperty(item, 'remove', {
+		configurable: true,
+		enumerable: true,
+		writable: true,
+		value: function remove() {
+			this.parentNode.removeChild(this);
+		}
+	});
+});
+
+
 // IE6,7,8
 // Production steps of ECMA-262, Edition 5, 15.4.4.14
 // Reference: http://es5.github.io/#x15.4.4.14
