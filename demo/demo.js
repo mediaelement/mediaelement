@@ -100,9 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
-			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen', 'skip-back', 'jump-forward', 'stop', 'speed', 'loop', 'sourcechooser', 'postroll', 'contextmenu', ],
 			pluginPath: '../build/',
-			// markers: [0.12, 2.3],
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 
