@@ -1535,7 +1535,8 @@ class MediaElementPlayer {
 			loading = document.createElement('div'),
 			error = document.createElement('div'),
 			// this needs to come last so it's on top
-			bigPlay = document.createElement('div')
+			bigPlay = document.createElement('div'),
+			buffer = controls.querySelector(`.${t.options.classPrefix}time-buffering`)
 		;
 
 		loading.style.display = 'none'; // start out hidden
@@ -1582,8 +1583,8 @@ class MediaElementPlayer {
 		media.addEventListener('play', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'none';
+			if (buffer) {
+				buffer.style.display = 'none';
 			}
 			error.style.display = 'none';
 		});
@@ -1591,23 +1592,23 @@ class MediaElementPlayer {
 		media.addEventListener('playing', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'none';
+			if (buffer) {
+				buffer.style.display = 'none';
 			}
 			error.style.display = 'none';
 		});
 
 		media.addEventListener('seeking', () => {
 			loading.style.display = '';
-			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
+			if (buffer) {
+				buffer.style.display = '';
 			}
 		});
 
 		media.addEventListener('seeked', () => {
 			loading.style.display = 'none';
-			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
+			if (buffer) {
+				buffer.style.display = '';
 			}
 		});
 
@@ -1619,8 +1620,8 @@ class MediaElementPlayer {
 
 		media.addEventListener('waiting', () => {
 			loading.style.display = '';
-			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
+			if (buffer) {
+				buffer.style.display = '';
 			}
 		});
 
@@ -1628,8 +1629,8 @@ class MediaElementPlayer {
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
 			loading.style.display = '';
-			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = '';
+			if (buffer) {
+				buffer.style.display = '';
 			}
 
 			// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
@@ -1646,8 +1647,8 @@ class MediaElementPlayer {
 		});
 		media.addEventListener('canplay', () => {
 			loading.style.display = 'none';
-			if (controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`).length) {
-				controls.getElementsByClassName(`${t.options.classPrefix}time-buffering`)[0].style.display = 'none';
+			if (buffer) {
+				buffer.style.display = 'none';
 			}
 			// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
 			clearTimeout(media.canplayTimeout);
@@ -1658,8 +1659,8 @@ class MediaElementPlayer {
 			t._handleError(e);
 			loading.style.display = 'none';
 			bigPlay.style.display = 'none';
-			error.style.display = '';
-			error.getElementsByClassName(`${t.options.classPrefix}overlay-error`)[0].innerHTML = e.message;
+			error.style.display = 'block';
+			error.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = e.message;
 		});
 
 		media.addEventListener('keydown', (e) => {

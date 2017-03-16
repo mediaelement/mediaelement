@@ -121,7 +121,7 @@ export function ajax(url, dataType, success, error) {
 				} else {
 					success(xhr.responseText);
 				}
-			} else {
+			} else if (typeof error === 'function') {
 				error(xhr.status);
 			}
 		}

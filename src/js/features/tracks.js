@@ -477,11 +477,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			t = this,
-			element = t.captionsButton.querySelector(`#${trackId}`).closest('li')
+			element = document.getElementById(`${trackId}`)
 		;
 
 		if (element) {
-			element.parentNode.removeChild(element);
+			const button = element.closest('li');
+			if (button) {
+				button.parentNode.removeChild(button);
+			}
 		}
 		t.adjustLanguageBox();
 	},

@@ -2626,10 +2626,13 @@ Object.assign(_player2.default.prototype, {
 	removeTrackButton: function removeTrackButton(trackId) {
 
 		var t = this,
-		    element = t.captionsButton.querySelector('#' + trackId).closest('li');
+		    element = _document2.default.getElementById('' + trackId);
 
 		if (element) {
-			element.parentNode.removeChild(element);
+			var button = element.closest('li');
+			if (button) {
+				button.parentNode.removeChild(button);
+			}
 		}
 		t.adjustLanguageBox();
 	},
@@ -5144,7 +5147,8 @@ var MediaElementPlayer = function () {
 			    error = _document2.default.createElement('div'),
 
 			// this needs to come last so it's on top
-			bigPlay = _document2.default.createElement('div');
+			bigPlay = _document2.default.createElement('div'),
+			    buffer = controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
 
 			loading.style.display = 'none'; // start out hidden
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
@@ -5185,8 +5189,8 @@ var MediaElementPlayer = function () {
 			media.addEventListener('play', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'none';
+				if (buffer) {
+					buffer.style.display = 'none';
 				}
 				error.style.display = 'none';
 			});
@@ -5194,23 +5198,23 @@ var MediaElementPlayer = function () {
 			media.addEventListener('playing', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'none';
+				if (buffer) {
+					buffer.style.display = 'none';
 				}
 				error.style.display = 'none';
 			});
 
 			media.addEventListener('seeking', function () {
 				loading.style.display = '';
-				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
+				if (buffer) {
+					buffer.style.display = '';
 				}
 			});
 
 			media.addEventListener('seeked', function () {
 				loading.style.display = 'none';
-				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
+				if (buffer) {
+					buffer.style.display = '';
 				}
 			});
 
@@ -5222,16 +5226,16 @@ var MediaElementPlayer = function () {
 
 			media.addEventListener('waiting', function () {
 				loading.style.display = '';
-				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
+				if (buffer) {
+					buffer.style.display = '';
 				}
 			});
 
 			// show/hide loading
 			media.addEventListener('loadeddata', function () {
 				loading.style.display = '';
-				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = '';
+				if (buffer) {
+					buffer.style.display = '';
 				}
 
 				// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
@@ -5248,8 +5252,8 @@ var MediaElementPlayer = function () {
 			});
 			media.addEventListener('canplay', function () {
 				loading.style.display = 'none';
-				if (controls.getElementsByClassName(t.options.classPrefix + 'time-buffering').length) {
-					controls.getElementsByClassName(t.options.classPrefix + 'time-buffering')[0].style.display = 'none';
+				if (buffer) {
+					buffer.style.display = 'none';
 				}
 				// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
 				clearTimeout(media.canplayTimeout);
@@ -5260,8 +5264,8 @@ var MediaElementPlayer = function () {
 				t._handleError(e);
 				loading.style.display = 'none';
 				bigPlay.style.display = 'none';
-				error.style.display = '';
-				error.getElementsByClassName(t.options.classPrefix + 'overlay-error')[0].innerHTML = e.message;
+				error.style.display = 'block';
+				error.querySelector('.' + t.options.classPrefix + 'overlay-error').innerHTML = e.message;
 			});
 
 			media.addEventListener('keydown', function (e) {
@@ -8198,7 +8202,7 @@ function ajax(url, dataType, success, error) {
 				} else {
 					success(xhr.responseText);
 				}
-			} else {
+			} else if (typeof error === 'function') {
 				error(xhr.status);
 			}
 		}
