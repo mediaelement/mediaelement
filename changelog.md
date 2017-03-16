@@ -7,6 +7,7 @@
 * Fixed minor issues with Twitch renderer and some minor improvements to HLS renderer @ron666
 * Fixed issues in documentation @ron666
 * Fixed issue with `readyState` value in Flash video shim @ron666
+* Added pause event when changing media sources @ron666
 
 *3.2.4 (2017/03/14)*
 
