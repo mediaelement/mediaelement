@@ -34,7 +34,7 @@ export const SUPPORT_POINTER_EVENTS = (() => {
 	element.style.pointerEvents = 'x';
 	documentElement.appendChild(element);
 	let supports = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
-	documentElement.removeChild(element);
+	element.remove();
 	return !!supports;
 })();
 

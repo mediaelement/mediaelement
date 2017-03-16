@@ -1841,12 +1841,12 @@ class MediaElementPlayer {
 			// If <iframe>, remove overlay
 			if (rendererName.match(/iframe/i) !== null) {
 				const layer = document.getElementById(`${t.media.id}-iframe-overlay`);
-				layer.parentNode.removeChild(layer);
+				layer.remove();
 			}
 
 			const node = t.node.cloneNode(true);
 			t.container.parentNode.insertBefore(node, t.container);
-			t.node.parentNode.removeChild(t.node);
+			t.node.remove();
 			delete t.node;
 		} else {
 			t.container.parentNode.insertBefore(t.node, t.container);
@@ -1862,8 +1862,8 @@ class MediaElementPlayer {
 
 		if (typeof t.container === 'object') {
 			const offscreen = t.container.parentNode.querySelector(`.${t.options.classPrefix}offscreen`);
-			offscreen.parentNode.removeChild(offscreen);
-			t.container.parentNode.removeChild(t.container);
+			offscreen.remove();
+			t.container.remove();
 		}
 		t.globalUnbind();
 

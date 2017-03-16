@@ -63,6 +63,7 @@ var SoundCloudApi = {
 				script.src = '//w.soundcloud.com/player/api.js';
 
 				// Attach handlers for all browsers
+				// Is onload enough now? do IE9 support it?
 				script.onload = script.onreadystatechange = function () {
 					if (!done && (!SoundCloudApi.readyState || SoundCloudApi.readyState === "loaded" || SoundCloudApi.readyState === "complete")) {
 						done = true;
@@ -70,9 +71,7 @@ var SoundCloudApi = {
 
 						// Handle memory leak in IE
 						script.onload = script.onreadystatechange = null;
-						if (head && script.parentNode) {
-							head.removeChild(script);
-						}
+						script.remove();
 					}
 				};
 				head.appendChild(script);

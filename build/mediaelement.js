@@ -1866,7 +1866,7 @@ var FlashMediaElementRenderer = {
 		};
 
 		flash.destroy = function () {
-			flash.flashNode.parentNode.removeChild(flash.flashNode);
+			flash.flashNode.remove();
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
@@ -3559,7 +3559,7 @@ var SUPPORT_POINTER_EVENTS = exports.SUPPORT_POINTER_EVENTS = function () {
 	element.style.pointerEvents = 'x';
 	documentElement.appendChild(element);
 	var supports = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
-	documentElement.removeChild(element);
+	element.remove();
 	return !!supports;
 }();
 
@@ -4074,74 +4074,25 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * of polyfills provided by Babel.
  */
 
-// IE6,7,8
-// Production steps of ECMA-262, Edition 5, 15.4.4.14
-// Reference: http://es5.github.io/#x15.4.4.14
-if (!Array.prototype.indexOf) {
-	Array.prototype.indexOf = function (searchElement, fromIndex) {
-
-		var k = void 0;
-
-		// 1. const O be the result of calling ToObject passing
-		//	   the this value as the argument.
-		if (undefined === undefined || undefined === null) {
-			throw new TypeError('"this" is null or not defined');
+// ChildNode.remove polyfill
+// from: https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
+(function (arr) {
+	arr.forEach(function (item) {
+		if (item.hasOwnProperty('remove')) {
+			return;
 		}
-
-		var O = Object(undefined);
-
-		// 2. const lenValue be the result of calling the Get
-		//	   internal method of O with the argument "length".
-		// 3. const len be ToUint32(lenValue).
-		var len = O.length >>> 0;
-
-		// 4. If len is 0, return -1.
-		if (len === 0) {
-			return -1;
-		}
-
-		// 5. If argument fromIndex was passed const n be
-		//	   ToInteger(fromIndex); else const n be 0.
-		var n = +fromIndex || 0;
-
-		if (Math.abs(n) === Infinity) {
-			n = 0;
-		}
-
-		// 6. If n >= len, return -1.
-		if (n >= len) {
-			return -1;
-		}
-
-		// 7. If n >= 0, then const k be n.
-		// 8. Else, n<0, const k be len - abs(n).
-		//	   If k is less than 0, then const k be 0.
-		k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-		// 9. Repeat, while k < len
-		while (k < len) {
-			// a. const Pk be ToString(k).
-			//   This is implicit for LHS operands of the in operator
-			// b. const kPresent be the result of calling the
-			//	HasProperty internal method of O with argument Pk.
-			//   This step can be combined with c
-			// c. If kPresent is true, then
-			//	i.	const elementK be the result of calling the Get
-			//		internal method of O with the argument ToString(k).
-			//   ii.	const same be the result of applying the
-			//		Strict Equality Comparison Algorithm to
-			//		searchElement and elementK.
-			//  iii.	If same is true, return k.
-			if (k in O && O[k] === searchElement) {
-				return k;
+		Object.defineProperty(item, 'remove', {
+			configurable: true,
+			enumerable: true,
+			writable: true,
+			value: function remove() {
+				this.parentNode.removeChild(this);
 			}
-			k++;
-		}
-		return -1;
-	};
-}
+		});
+	});
+})([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
 
-// document.createEvent for IE8 or other old browsers that do not implement it
+// document.createEvent polyfill
 // Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
 if (_document2.default.createEvent === undefined) {
 	_document2.default.createEvent = function () {
@@ -4247,9 +4198,21 @@ if (!Array.prototype.includes) {
 	});
 }
 
+// String.includes polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
 if (!String.prototype.includes) {
-	String.prototype.includes = function () {
-		return String.prototype.indexOf.apply(this, arguments) !== -1;
+	String.prototype.includes = function (search, start) {
+		'use strict';
+
+		if (typeof start !== 'number') {
+			start = 0;
+		}
+
+		if (start + search.length > this.length) {
+			return false;
+		} else {
+			return this.indexOf(search, start) !== -1;
+		}
 	};
 }
 

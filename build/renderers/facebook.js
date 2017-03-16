@@ -132,7 +132,7 @@ var FacebookRenderer = {
 
 							// Only way is to destroy instance and all the events fired,
 							// and create new one
-							fbDiv.parentNode.removeChild(fbDiv);
+							fbDiv.remove();
 							createFacebookEmbed(url, options.facebook);
 
 							// This method reloads video on-demand
