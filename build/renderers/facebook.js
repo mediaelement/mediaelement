@@ -265,8 +265,8 @@ var FacebookRenderer = {
 
 							// Set proper size since player dimensions are unknown before this event
 							var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
-							    width = parseInt(window.getComputedStyle(fbIframe, null).width),
-							    height = parseInt(fbIframe.style.height),
+							    width = fbIframe.offsetWidth,
+							    height = fbIframe.offsetHeight,
 							    events = ['mouseover', 'mouseout'],
 							    assignEvents = function assignEvents(e) {
 								var event = mejs.Utils.createEvent(e.type, fbWrapper);
@@ -334,12 +334,7 @@ var FacebookRenderer = {
 								paused = true;
 								ended = true;
 
-								// Workaround to update progress bar one last time and trigger ended event
-								timer = setInterval(function () {
-									fbApi.getCurrentPosition();
-									sendEvents(['timeupdate', 'ended']);
-								}, 250);
-
+								sendEvents(['ended']);
 								clearInterval(timer);
 								timer = null;
 							});
@@ -384,8 +379,8 @@ var FacebookRenderer = {
 		};
 		fbWrapper.setSize = function (width, height) {
 			if (fbApi !== null && !isNaN(width) && !isNaN(height)) {
-				fbDiv.setAttribute('width', width);
-				fbDiv.setAttribute('height', height);
+				fbDiv.style.width = width;
+				fbDiv.style.height = height;
 			}
 		};
 		fbWrapper.destroy = function () {};

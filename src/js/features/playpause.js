@@ -84,6 +84,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		togglePlayPause('pse');
 
+		media.addEventListener('loadedmetadata', () => {
+			togglePlayPause('pse');
+		});
+
 		media.addEventListener('play', () => {
 			togglePlayPause('play');
 		});

@@ -4,7 +4,8 @@
 
 * Removed all dependencies to jQuery in code and added `utils/dom.js` to mimic jQuery's most used methods @ron666
 * Added missing unit tests @ron666
-* Fixed minor issues on Twitch, HLS and M(PEG)-DASH renderers @ron666
+* Fixed minor issues on Twitch, Facebook HLS and M(PEG)-DASH renderers @ron666
+* Fixed minor issue with play/pause button not being updated properly when switching to new source and media has ended @ron666
 * Fixed issues in documentation @ron666
 * Fixed issue with `readyState` value in Flash video shim @ron666
 * Added pause event when changing media sources @ron666

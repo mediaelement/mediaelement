@@ -1584,6 +1584,10 @@ Object.assign(_player2.default.prototype, {
 
 		togglePlayPause('pse');
 
+		media.addEventListener('loadedmetadata', function () {
+			togglePlayPause('pse');
+		});
+
 		media.addEventListener('play', function () {
 			togglePlayPause('play');
 		});
