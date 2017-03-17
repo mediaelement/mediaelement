@@ -188,8 +188,8 @@ const DashNativeRenderer = {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setAutoPlay(autoplay);
-			dashPlayer.setScheduleWhilePaused((preload === 'auto'));
+			dashPlayer.setAutoPlay((preload === 'auto' || autoplay));
+			dashPlayer.setScheduleWhilePaused((preload === 'auto' || autoplay));
 
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),

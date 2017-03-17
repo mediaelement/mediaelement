@@ -159,7 +159,7 @@ const HlsNativeRenderer = {
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
-		options.autoStartLoad = (preload === 'auto');
+		options.autoStartLoad = (preload === 'auto' || autoplay);
 
 		// WRAPPERS for PROPs
 		const
@@ -305,13 +305,17 @@ const HlsNativeRenderer = {
 			}
 		}
 
-		if (preload !== 'auto') {
+		if (preload !== 'auto' && !autoplay) {
 			node.addEventListener('play', () => {
-				hlsPlayer.startLoad();
+				if (hlsPlayer !== null) {
+					hlsPlayer.startLoad();
+				}
 			});
 
 			node.addEventListener('pause', () => {
-				hlsPlayer.stopLoad();
+				if (hlsPlayer !== null) {
+					hlsPlayer.stopLoad();
+				}
 			});
 		}
 

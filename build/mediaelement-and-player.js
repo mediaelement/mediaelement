@@ -5787,8 +5787,8 @@ var DashNativeRenderer = {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setAutoPlay(autoplay);
-			dashPlayer.setScheduleWhilePaused(preload === 'auto');
+			dashPlayer.setAutoPlay(preload === 'auto' || autoplay);
+			dashPlayer.setScheduleWhilePaused(preload === 'auto' || autoplay);
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			    dashEvents = dashjs.MediaPlayer.events,
@@ -6906,7 +6906,7 @@ var HlsNativeRenderer = {
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
-		options.autoStartLoad = preload === 'auto';
+		options.autoStartLoad = preload === 'auto' || autoplay;
 
 		// WRAPPERS for PROPs
 		var props = _mejs2.default.html5media.properties,
@@ -7049,13 +7049,17 @@ var HlsNativeRenderer = {
 			}
 		}
 
-		if (preload !== 'auto') {
+		if (preload !== 'auto' && !autoplay) {
 			node.addEventListener('play', function () {
-				hlsPlayer.startLoad();
+				if (hlsPlayer !== null) {
+					hlsPlayer.startLoad();
+				}
 			});
 
 			node.addEventListener('pause', function () {
-				hlsPlayer.stopLoad();
+				if (hlsPlayer !== null) {
+					hlsPlayer.stopLoad();
+				}
 			});
 		}
 
