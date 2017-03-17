@@ -237,7 +237,10 @@ var FacebookRenderer = {
    * @param {Object} config
    */
 		function createFacebookEmbed(url, config) {
+
+			// Append width and height if not detected
 			src = url;
+
 			fbDiv = document.createElement('div');
 			fbDiv.id = fbWrapper.id;
 			fbDiv.className = "fb-video";

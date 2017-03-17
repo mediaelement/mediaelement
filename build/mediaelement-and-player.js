@@ -3373,14 +3373,14 @@ Object.assign(_player2.default.prototype, {
 
 		mute.addEventListener('mouseenter', function (e) {
 			if (e.target === mute) {
-				volumeSlider.style.display = '';
+				volumeSlider.style.display = 'block';
 				mouseIsOver = true;
 				e.preventDefault();
 				e.stopPropagation();
 			}
 		});
 		mute.addEventListener('focusin', function () {
-			volumeSlider.style.display = '';
+			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
 		});
 		mute.addEventListener('mouseleave', function () {
@@ -3480,7 +3480,7 @@ Object.assign(_player2.default.prototype, {
 		});
 		button.addEventListener('focus', function () {
 			if (mode === 'vertical') {
-				volumeSlider.style.display = '';
+				volumeSlider.style.display = 'block';
 			}
 		});
 		button.addEventListener('blur', function () {
@@ -8435,27 +8435,19 @@ function createEvent(eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
-	var namespace = eventName.match(/\[a-z]+\.(\[a-z]+)/);
-	var event = void 0;
+	var eventFrags = eventName.match(/\[a-z]+\.(\[a-z]+)/),
+	    detail = {
+		target: target
+	};
 
-	if (document.createEvent) {
-		event = document.createEvent('Event');
-		event.initEvent(eventName, true, false);
-		if (namespace !== null) {
-			event.namespace = namespace[1];
-		}
-	} else {
-		event = {};
-		event.type = eventName;
-		event.target = target;
-		if (namespace !== null) {
-			event.namespace = namespace[1];
-		}
-		event.canceleable = true;
-		event.bubbable = false;
+	if (eventFrags !== null) {
+		eventName = eventFrags[0];
+		detail.namespace = eventFrags[1];
 	}
 
-	return event;
+	return new CustomEvent(eventName, {
+		detail: detail
+	});
 }
 
 /**
@@ -8703,31 +8695,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 	});
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
 
-// document.createEvent polyfill
-// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
-if (_document2.default.createEvent === undefined) {
-	_document2.default.createEvent = function () {
+// CustomEvent polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+(function () {
 
-		var e = _document2.default.createEventObject();
-		e.timeStamp = new Date().getTime();
-		e.enumerable = true;
-		e.writable = true;
-		e.configurable = true;
-		e.initEvent = function (type, bubbles, cancelable) {
-			undefined.type = type;
-			undefined.bubbles = !!bubbles;
-			undefined.cancelable = !!cancelable;
-			if (!undefined.bubbles) {
-				undefined.stopPropagation = function () {
-					undefined.stoppedPropagation = true;
-					undefined.cancelBubble = true;
-				};
-			}
-		};
+	if (typeof window.CustomEvent === "function") return false;
 
-		return e;
-	};
-}
+	function CustomEvent(event, params) {
+		params = params || { bubbles: false, cancelable: false, detail: undefined };
+		var evt = _document2.default.createEvent('CustomEvent');
+		evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+		return evt;
+	}
+
+	CustomEvent.prototype = window.Event.prototype;
+
+	window.CustomEvent = CustomEvent;
+})();
 
 // Object.assign polyfill
 // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill

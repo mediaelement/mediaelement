@@ -211,14 +211,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		mute.addEventListener('mouseenter', (e) => {
 			if (e.target === mute) {
-				volumeSlider.style.display = '';
+				volumeSlider.style.display = 'block';
 				mouseIsOver = true;
 				e.preventDefault();
 				e.stopPropagation();
 			}
 		});
 		mute.addEventListener('focusin', () => {
-			volumeSlider.style.display = '';
+			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
 		});
 		mute.addEventListener('mouseleave', () => {
@@ -315,7 +315,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 		button.addEventListener('focus', () => {
 			if (mode === 'vertical') {
-				volumeSlider.style.display = '';
+				volumeSlider.style.display = 'block';
 			}
 		});
 		button.addEventListener('blur', () => {

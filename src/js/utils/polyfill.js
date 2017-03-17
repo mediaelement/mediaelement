@@ -27,31 +27,23 @@ import document from 'global/document';
 	});
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
 
-// document.createEvent polyfill
-// Reference: https://github.com/WebReflection/ie8/blob/master/build/ie8.max.js
-if (document.createEvent === undefined) {
-	document.createEvent = () => {
+// CustomEvent polyfill
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+(function () {
 
-		const e = document.createEventObject();
-		e.timeStamp = (new Date()).getTime();
-		e.enumerable = true;
-		e.writable = true;
-		e.configurable = true;
-		e.initEvent = (type, bubbles, cancelable) => {
-			this.type = type;
-			this.bubbles = !!bubbles;
-			this.cancelable = !!cancelable;
-			if (!this.bubbles) {
-				this.stopPropagation = () => {
-					this.stoppedPropagation = true;
-					this.cancelBubble = true;
-				};
-			}
-		};
+	if ( typeof window.CustomEvent === "function" ) return false;
 
-		return e;
-	};
-}
+	function CustomEvent ( event, params ) {
+		params = params || { bubbles: false, cancelable: false, detail: undefined };
+		var evt = document.createEvent( 'CustomEvent' );
+		evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+		return evt;
+	}
+
+	CustomEvent.prototype = window.Event.prototype;
+
+	window.CustomEvent = CustomEvent;
+})();
 
 // Object.assign polyfill
 // Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill

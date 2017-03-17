@@ -236,7 +236,10 @@ const FacebookRenderer = {
 		 * @param {Object} config
 		 */
 		function createFacebookEmbed (url, config) {
+
+			// Append width and height if not detected
 			src = url;
+
 			fbDiv = document.createElement('div');
 			fbDiv.id = fbWrapper.id;
 			fbDiv.className = "fb-video";
@@ -274,7 +277,7 @@ const FacebookRenderer = {
 						;
 
 						fbWrapper.setSize(width, height);
-						
+
 						for (let i = 0, total = events.length; i < total; i++) {
 							fbIframe.addEventListener(events[i], assignEvents, false);
 						}

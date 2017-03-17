@@ -108,27 +108,21 @@ export function createEvent (eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
-	const namespace = eventName.match(/\[a-z]+\.(\[a-z]+)/);
-	let event;
+	const
+		eventFrags = eventName.match(/\[a-z]+\.(\[a-z]+)/),
+		detail = {
+			target: target
+		}
+	;
 
-	if (document.createEvent) {
-		event = document.createEvent('Event');
-		event.initEvent(eventName, true, false);
-		if (namespace !== null) {
-			event.namespace = namespace[1];
-		}
-	} else {
-		event = {};
-		event.type = eventName;
-		event.target = target;
-		if (namespace !== null) {
-			event.namespace = namespace[1];
-		}
-		event.canceleable = true;
-		event.bubbable = false;
+	if (eventFrags !== null) {
+		eventName = eventFrags[0];
+		detail.namespace = eventFrags[1];
 	}
 
-	return event;
+	return new CustomEvent(eventName, {
+		detail: detail
+	});
 }
 
 /**
