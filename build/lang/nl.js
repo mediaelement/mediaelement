@@ -14,6 +14,7 @@
 	if (exports.nl === undefined) {
 		exports.nl = {
 			"mejs.plural-form": 1,			
+			"mejs.download-file": "Bestand downloaden",			
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "Volledig scherm",			
 			"mejs.play": "Afspelen",

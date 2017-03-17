@@ -17,6 +17,9 @@
 		exports.fr = {
 			"mejs.plural-form": 2,
 
+			// core/mediaelement.js
+			"mejs.download-file": "Télécharger le fichier",
+
 			// renderers/flash.js
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",
 

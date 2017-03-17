@@ -9,6 +9,7 @@
 * Fixed issue with `readyState` value in Flash video shim @ron666
 * Added pause event when changing media sources @ron666
 * Integrated `remove()` polyfill to simplify more code (https://github.com/johndyer/mediaelement/pull/2140) @jimmywarting
+* Reintegrated Download File workflow if error happens @ron666
 
 *3.2.4 (2017/03/14)*
 

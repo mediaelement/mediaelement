@@ -15,6 +15,9 @@
 		exports.sv = {
 			"mejs.plural-form": 1,
 
+			// core/mediaelement.js
+			// "mejs.download-file": "Download File",
+
 			// renderers/flash.js
 			"mejs.install-flash": "Du använder en webbläsare som inte har Flash Player aktiverat eller installerad. Aktivera Flash Player eller hämta den senaste versionen från https://get.adobe.com/flashplayer/",
 

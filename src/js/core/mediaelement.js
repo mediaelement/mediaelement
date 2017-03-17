@@ -39,7 +39,12 @@ class MediaElement {
 			 * Flag in `<object>` and `<embed>` to determine whether to use local or CDN
 			 * Possible values: 'always' (CDN version) or 'sameDomain' (local files)
 			 */
-			shimScriptAccess: 'sameDomain'
+			shimScriptAccess: 'sameDomain',
+			/**
+			 * If error happens, set up HTML message
+			 * @type {String}
+			 */
+			customError: ''
 		};
 
 		options = Object.assign(t.defaults, options);
@@ -48,7 +53,10 @@ class MediaElement {
 		t.mediaElement = document.createElement(options.fakeNodeName);
 		t.mediaElement.options = options;
 
-		let id = idOrNode;
+		let
+			id = idOrNode,
+			error = false
+		;
 
 		if (typeof idOrNode === 'string') {
 			t.mediaElement.originalNode = document.getElementById(idOrNode);
@@ -176,6 +184,37 @@ class MediaElement {
 			}
 		};
 
+		t.mediaElement.createErrorMessage = (url) => {
+
+			url = url.trim();
+
+			const errorContainer = document.createElement('div');
+			errorContainer.className = 'me_cannotplay';
+			errorContainer.style.width = '100%';
+			errorContainer.style.height = '100%';
+
+			let errorContent = t.mediaElement.options.customError;
+
+			if (!errorContent) {
+
+				errorContent = url ? `<a href="${url}">` : errorContent;
+
+				const poster = t.mediaElement.originalNode.getAttribute('poster');
+				if (poster) {
+					errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;
+				}
+
+				errorContent += `<span>${mejs.i18n.t('mejs.download-file')}</span>`;
+				errorContent += url ? `</a>` : '';
+			}
+
+			errorContainer.innerHTML = errorContent;
+
+			t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
+			t.mediaElement.originalNode.style.display = 'none';
+			error = true;
+		};
+
 		const
 			props = mejs.html5media.properties,
 			methods = mejs.html5media.methods,
@@ -255,10 +294,17 @@ class MediaElement {
 					event = createEvent('pause', t.mediaElement);
 					t.mediaElement.dispatchEvent(event);
 				}
-				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
+
+				const originalSource = mediaFiles[0].src;
+				t.mediaElement.originalNode.setAttribute('src', (originalSource || ''));
+
+				if (t.mediaElement.querySelector('.me_cannotplay')) {
+					t.mediaElement.querySelector('.me_cannotplay').remove();
+				}
 
 				// did we find a renderer?
 				if (renderInfo === null) {
+					t.mediaElement.createErrorMessage(originalSource);
 					event = createEvent('error', t.mediaElement);
 					event.message = 'No renderer found';
 					t.mediaElement.dispatchEvent(event);
@@ -272,15 +318,22 @@ class MediaElement {
 					event = createEvent('error', t.mediaElement);
 					event.message = 'Error creating renderer';
 					t.mediaElement.dispatchEvent(event);
-					t.mediaElement.dispatchEvent(event);
+					t.mediaElement.createErrorMessage(originalSource);
+					return;
 				}
 			},
 			assignMethods = (methodName) => {
 				// run the method on the current renderer
 				t.mediaElement[methodName] = (...args) => {
-					return (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
-					typeof t.mediaElement.renderer[methodName] === 'function') ?
-						t.mediaElement.renderer[methodName](args) : null;
+					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
+					typeof t.mediaElement.renderer[methodName] === 'function') {
+						try {
+							t.mediaElement.renderer[methodName](args)
+						} catch (e) {
+							t.mediaElement.createErrorMessage();
+						}
+					}
+					return null;
 				};
 
 			};
@@ -407,10 +460,9 @@ class MediaElement {
 			t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
 		}
 
-		// @todo: Verify if this is needed
-		// if (t.mediaElement.options.error) {
-		// 	t.mediaElement.options.error(this.mediaElement, this.mediaElement.originalNode);
-		// }
+		if (error && t.mediaElement.options.error) {
+			t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+		}
 
 		return t.mediaElement;
 	}

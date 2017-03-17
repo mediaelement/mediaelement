@@ -13,6 +13,7 @@
 	if (exports.ko === undefined) {
 		exports.ko = {
 			"mejs.plural-form": 0,			
+			"mejs.download-file": "파일 다운로드",			
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "전체화면",			
 			"mejs.play": "작동",

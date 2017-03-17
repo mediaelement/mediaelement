@@ -16,6 +16,9 @@
 		exports.ru = {
 			"mejs.plural-form": 7,
 
+			// core/mediaelement.js
+			"mejs.download-file": "Скачать файл",
+
 			// renderers/flash.js
 			"mejs.install-flash": "Flash player в вашем браузере не установлен или отключен. Пожалуйста включите ваш Flash player или скачайте последнюю версию с https://get.adobe.com/flashplayer/",
 

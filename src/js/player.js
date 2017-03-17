@@ -541,16 +541,16 @@ class MediaElementPlayer {
 
 	}
 
-	hideControls (doAnimation) {
+	hideControls (doAnimation, forceHide) {
 		const t = this;
 
 		doAnimation = doAnimation === undefined || doAnimation;
 
-		if (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
+		if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
 			(t.media.paused && t.media.readyState === 4 && ((!t.options.hideVideoControlsOnLoad &&
 			t.media.currentTime <= 0) || (!t.options.hideVideoControlsOnPause && t.media.currentTime > 0))) ||
 			(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState) ||
-			t.media.ended) {
+			t.media.ended)) {
 			return;
 		}
 
@@ -620,15 +620,15 @@ class MediaElementPlayer {
 		const t = this;
 
 		t.killControlsTimer();
-		t.hideControls(false);
-		t.controlsEnabled = false;
+		t.controlsEnabled = true;
+		t.hideControls(false, true);
 	}
 
 	enableControls () {
 		const t = this;
 
-		t.showControls(false);
 		t.controlsEnabled = true;
+		t.showControls(false);
 	}
 
 	/**
@@ -646,6 +646,14 @@ class MediaElementPlayer {
 			autoplay = !(autoplayAttr === undefined || autoplayAttr === null || autoplayAttr === 'false'),
 			isNative = media.rendererName !== null && media.rendererName.match(/(native|html5)/) !== null
 		;
+
+		if (t.controls) {
+			t.enableControls();
+		}
+
+		if (t.container.querySelector(`.${t.options.classPrefix}overlay-play`)) {
+			t.container.querySelector(`.${t.options.classPrefix}overlay-play`).style.display = '';
+		}
 
 		// make sure it can't create itself again if a plugin reloads
 		if (t.created) {
@@ -990,6 +998,12 @@ class MediaElementPlayer {
 
 		if (t.controls) {
 			t.disableControls();
+		}
+
+		const play = t.layers.querySelector(`.${t.options.classPrefix}overlay-play`);
+
+		if (play) {
+			play.style.display = 'none';
 		}
 
 		// Tell user that the file cannot be played
@@ -1764,9 +1778,9 @@ class MediaElementPlayer {
 		const
 			t = this,
 			layer = document.getElementById(`${t.media.id}-iframe-overlay`)
-			;
+		;
 
-		if (layer && layer.length) {
+		if (layer) {
 			layer.remove();
 		}
 

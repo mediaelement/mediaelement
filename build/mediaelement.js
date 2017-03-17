@@ -490,7 +490,12 @@ var MediaElement = function MediaElement(idOrNode, options) {
    * Flag in `<object>` and `<embed>` to determine whether to use local or CDN
    * Possible values: 'always' (CDN version) or 'sameDomain' (local files)
    */
-		shimScriptAccess: 'sameDomain'
+		shimScriptAccess: 'sameDomain',
+		/**
+   * If error happens, set up HTML message
+   * @type {String}
+   */
+		customError: ''
 	};
 
 	options = Object.assign(t.defaults, options);
@@ -499,7 +504,8 @@ var MediaElement = function MediaElement(idOrNode, options) {
 	t.mediaElement = _document2.default.createElement(options.fakeNodeName);
 	t.mediaElement.options = options;
 
-	var id = idOrNode;
+	var id = idOrNode,
+	    error = false;
 
 	if (typeof idOrNode === 'string') {
 		t.mediaElement.originalNode = _document2.default.getElementById(idOrNode);
@@ -622,6 +628,37 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		}
 	};
 
+	t.mediaElement.createErrorMessage = function (url) {
+
+		url = url.trim();
+
+		var errorContainer = _document2.default.createElement('div');
+		errorContainer.className = 'me_cannotplay';
+		errorContainer.style.width = '100%';
+		errorContainer.style.height = '100%';
+
+		var errorContent = t.mediaElement.options.customError;
+
+		if (!errorContent) {
+
+			errorContent = url ? '<a href="' + url + '">' : errorContent;
+
+			var poster = t.mediaElement.originalNode.getAttribute('poster');
+			if (poster) {
+				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="' + _mejs2.default.i18n.t('mejs.download-file') + '">';
+			}
+
+			errorContent += '<span>' + _mejs2.default.i18n.t('mejs.download-file') + '</span>';
+			errorContent += url ? '</a>' : '';
+		}
+
+		errorContainer.innerHTML = errorContent;
+
+		t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
+		t.mediaElement.originalNode.style.display = 'none';
+		error = true;
+	};
+
 	var props = _mejs2.default.html5media.properties,
 	    methods = _mejs2.default.html5media.methods,
 	    addProperty = function addProperty(obj, name, onGet, onSet) {
@@ -700,10 +737,17 @@ var MediaElement = function MediaElement(idOrNode, options) {
 			event = (0, _general.createEvent)('pause', t.mediaElement);
 			t.mediaElement.dispatchEvent(event);
 		}
-		t.mediaElement.originalNode.setAttribute('src', mediaFiles[0].src || '');
+
+		var originalSource = mediaFiles[0].src;
+		t.mediaElement.originalNode.setAttribute('src', originalSource || '');
+
+		if (t.mediaElement.querySelector('.me_cannotplay')) {
+			t.mediaElement.querySelector('.me_cannotplay').remove();
+		}
 
 		// did we find a renderer?
 		if (renderInfo === null) {
+			t.mediaElement.createErrorMessage(originalSource);
 			event = (0, _general.createEvent)('error', t.mediaElement);
 			event.message = 'No renderer found';
 			t.mediaElement.dispatchEvent(event);
@@ -717,7 +761,8 @@ var MediaElement = function MediaElement(idOrNode, options) {
 			event = (0, _general.createEvent)('error', t.mediaElement);
 			event.message = 'Error creating renderer';
 			t.mediaElement.dispatchEvent(event);
-			t.mediaElement.dispatchEvent(event);
+			t.mediaElement.createErrorMessage(originalSource);
+			return;
 		}
 	},
 	    assignMethods = function assignMethods(methodName) {
@@ -727,7 +772,14 @@ var MediaElement = function MediaElement(idOrNode, options) {
 				args[_key] = arguments[_key];
 			}
 
-			return t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function' ? t.mediaElement.renderer[methodName](args) : null;
+			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function') {
+				try {
+					t.mediaElement.renderer[methodName](args);
+				} catch (e) {
+					t.mediaElement.createErrorMessage();
+				}
+			}
+			return null;
 		};
 	};
 
@@ -851,10 +903,9 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
 	}
 
-	// @todo: Verify if this is needed
-	// if (t.mediaElement.options.error) {
-	// 	t.mediaElement.options.error(this.mediaElement, this.mediaElement.originalNode);
-	// }
+	if (error && t.mediaElement.options.error) {
+		t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+	}
 
 	return t.mediaElement;
 };
@@ -1085,6 +1136,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 var EN = exports.EN = {
 	"mejs.plural-form": 1,
+
+	// core/mediaelement.js
+	"mejs.download-file": "Download File",
 
 	// renderers/flash.js
 	"mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",

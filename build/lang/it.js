@@ -13,6 +13,7 @@
 	if (exports.it === undefined) {
 		exports.it = {
 			"mejs.plural-form": 1,			
+			"mejs.download-file": "Scaricare il file",			
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "Schermo intero",			
 			"mejs.play": "Eseguire",

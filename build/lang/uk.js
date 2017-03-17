@@ -12,6 +12,7 @@
 	if (exports.uk === undefined) {
 		exports.uk = {
 			"mejs.plural-form": 7,			
+			// "mejs.download-file": "Download File",			
 			"mejs.install-flash": "Flash Player у вашому браузері не встановлений або відключений. Будь ласка включіть Flash Player або скачайте останню версію із https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "Повноекранний режим",			
 			"mejs.play": "Пуск",

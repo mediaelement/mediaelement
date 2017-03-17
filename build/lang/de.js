@@ -13,6 +13,7 @@
 	if (exports.de === undefined) {
 		exports.de = {
 			"mejs.plural-form": 1,			
+			"mejs.download-file": "Datei herunterladen",			
 			"mejs.install-flash": "Ihr Browser unterstützt kein Flash. Bitte aktivieren Sie Flash bzw. laden Sie die aktuellste Flash-Version herunter unter https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "Vollbild",			
 			"mejs.play": "Abspielen",
