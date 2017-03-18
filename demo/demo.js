@@ -100,11 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
-			// features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen', 'vast', 'sourcechooser'],
 			pluginPath: '../build/',
-			// vastAdTagUrl: 'http://search.spotxchange.com/vast/2.0/85394?VPI=MP4&content_page_url=http://powerfulpresentations.com/streams/testme2e.html&cb=6186077913633343&player_width=960&player_height=540',
-			// vastEnableSkip: true,
-			// vastSkipSeconds: 3,
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 
