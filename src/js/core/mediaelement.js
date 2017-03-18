@@ -184,9 +184,13 @@ class MediaElement {
 			}
 		};
 
-		t.mediaElement.createErrorMessage = (url) => {
+		/**
+		 *
+		 * @param {Object[]} urlList
+		 */
+		t.mediaElement.createErrorMessage = (urlList) => {
 
-			url = url.trim();
+			urlList = Array.isArray(urlList) ? urlList : [];
 
 			const errorContainer = document.createElement('div');
 			errorContainer.className = 'me_cannotplay';
@@ -197,15 +201,15 @@ class MediaElement {
 
 			if (!errorContent) {
 
-				errorContent = url ? `<a href="${url}">` : errorContent;
-
 				const poster = t.mediaElement.originalNode.getAttribute('poster');
 				if (poster) {
 					errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;
 				}
 
-				errorContent += `<span>${mejs.i18n.t('mejs.download-file')}</span>`;
-				errorContent += url ? `</a>` : '';
+				for (let i = 0, total = urlList.length; i < total; i++) {
+					const url = urlList[i];
+					errorContent += `<a href="${url.src}" data-type="${url.type}"><span>${mejs.i18n.t('mejs.download-file')}: ${url.src}</span></a>`;
+				}
 			}
 
 			errorContainer.innerHTML = errorContent;
@@ -295,8 +299,7 @@ class MediaElement {
 					t.mediaElement.dispatchEvent(event);
 				}
 
-				const originalSource = mediaFiles[0].src;
-				t.mediaElement.originalNode.setAttribute('src', (originalSource || ''));
+				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
 
 				if (t.mediaElement.querySelector('.me_cannotplay')) {
 					t.mediaElement.querySelector('.me_cannotplay').remove();
@@ -304,7 +307,7 @@ class MediaElement {
 
 				// did we find a renderer?
 				if (renderInfo === null) {
-					t.mediaElement.createErrorMessage(originalSource);
+					t.mediaElement.createErrorMessage(mediaFiles);
 					event = createEvent('error', t.mediaElement);
 					event.message = 'No renderer found';
 					t.mediaElement.dispatchEvent(event);
@@ -318,7 +321,7 @@ class MediaElement {
 					event = createEvent('error', t.mediaElement);
 					event.message = 'Error creating renderer';
 					t.mediaElement.dispatchEvent(event);
-					t.mediaElement.createErrorMessage(originalSource);
+					t.mediaElement.createErrorMessage(mediaFiles);
 					return;
 				}
 			},

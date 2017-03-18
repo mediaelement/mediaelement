@@ -628,9 +628,13 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		}
 	};
 
-	t.mediaElement.createErrorMessage = function (url) {
+	/**
+  *
+  * @param {Object[]} urlList
+  */
+	t.mediaElement.createErrorMessage = function (urlList) {
 
-		url = url.trim();
+		urlList = Array.isArray(urlList) ? urlList : [];
 
 		var errorContainer = _document2.default.createElement('div');
 		errorContainer.className = 'me_cannotplay';
@@ -641,15 +645,15 @@ var MediaElement = function MediaElement(idOrNode, options) {
 
 		if (!errorContent) {
 
-			errorContent = url ? '<a href="' + url + '">' : errorContent;
-
 			var poster = t.mediaElement.originalNode.getAttribute('poster');
 			if (poster) {
 				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="' + _mejs2.default.i18n.t('mejs.download-file') + '">';
 			}
 
-			errorContent += '<span>' + _mejs2.default.i18n.t('mejs.download-file') + '</span>';
-			errorContent += url ? '</a>' : '';
+			for (var i = 0, total = urlList.length; i < total; i++) {
+				var url = urlList[i];
+				errorContent += '<a href="' + url.src + '" data-type="' + url.type + '"><span>' + _mejs2.default.i18n.t('mejs.download-file') + ': ' + url.src + '</span></a>';
+			}
 		}
 
 		errorContainer.innerHTML = errorContent;
@@ -738,8 +742,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 			t.mediaElement.dispatchEvent(event);
 		}
 
-		var originalSource = mediaFiles[0].src;
-		t.mediaElement.originalNode.setAttribute('src', originalSource || '');
+		t.mediaElement.originalNode.setAttribute('src', mediaFiles[0].src || '');
 
 		if (t.mediaElement.querySelector('.me_cannotplay')) {
 			t.mediaElement.querySelector('.me_cannotplay').remove();
@@ -747,7 +750,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 
 		// did we find a renderer?
 		if (renderInfo === null) {
-			t.mediaElement.createErrorMessage(originalSource);
+			t.mediaElement.createErrorMessage(mediaFiles);
 			event = (0, _general.createEvent)('error', t.mediaElement);
 			event.message = 'No renderer found';
 			t.mediaElement.dispatchEvent(event);
@@ -761,7 +764,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 			event = (0, _general.createEvent)('error', t.mediaElement);
 			event.message = 'Error creating renderer';
 			t.mediaElement.dispatchEvent(event);
-			t.mediaElement.createErrorMessage(originalSource);
+			t.mediaElement.createErrorMessage(mediaFiles);
 			return;
 		}
 	},
