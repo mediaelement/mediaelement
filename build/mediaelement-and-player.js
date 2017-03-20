@@ -1283,6 +1283,7 @@ Object.assign(_player2.default.prototype, {
 		}
 	},
 
+
 	/**
   * Detect the type of fullscreen based on browser's capabilities
   *
@@ -1309,6 +1310,7 @@ Object.assign(_player2.default.prototype, {
 		return mode;
 	},
 
+
 	/**
   * Feature destructor.
   *
@@ -1318,6 +1320,7 @@ Object.assign(_player2.default.prototype, {
 	cleanfullscreen: function cleanfullscreen(player) {
 		player.exitFullScreen();
 	},
+
 
 	/**
   *
@@ -1426,6 +1429,7 @@ Object.assign(_player2.default.prototype, {
 		var event = (0, _general.createEvent)('enteredfullscreen', t.container);
 		t.container.dispatchEvent(event);
 	},
+
 
 	/**
   *
@@ -2004,6 +2008,7 @@ Object.assign(_player2.default.prototype, {
 		});
 	},
 
+
 	/**
   * Calculate the progress on the media and update progress bar's width
   *
@@ -2042,6 +2047,7 @@ Object.assign(_player2.default.prototype, {
 			}
 		}
 	},
+
 	/**
   * Update the slider's width depending on the time assigned
   *
@@ -2051,6 +2057,7 @@ Object.assign(_player2.default.prototype, {
 		var t = this;
 		t.setCurrentRailMain(t, fakeTime);
 	},
+
 	/**
   * Update the slider's width depending on the current time
   *
@@ -2059,6 +2066,7 @@ Object.assign(_player2.default.prototype, {
 		var t = this;
 		t.setCurrentRailMain(t);
 	},
+
 	/**
   * Method that handles the calculation of the width of the rail.
   *
@@ -2147,6 +2155,7 @@ Object.assign(_player2.default.prototype, {
 		});
 	},
 
+
 	/**
   * Duration time constructor.
   *
@@ -2184,6 +2193,7 @@ Object.assign(_player2.default.prototype, {
 		});
 	},
 
+
 	/**
   * Update the current time and output it in format 00:00
   *
@@ -2201,6 +2211,7 @@ Object.assign(_player2.default.prototype, {
 			t.controls.querySelector('.' + t.options.classPrefix + 'currenttime').innerText = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		}
 	},
+
 
 	/**
   * Update the duration time and output it in format 00:00
@@ -2493,6 +2504,7 @@ Object.assign(_player2.default.prototype, {
 		});
 	},
 
+
 	/**
   * Feature destructor.
   *
@@ -2518,13 +2530,11 @@ Object.assign(_player2.default.prototype, {
 			}
 		}
 	},
-
 	rebuildtracks: function rebuildtracks() {
 		var t = this;
 		t.findTracks();
 		t.buildtracks(t, t.controls, t.layers, t.media);
 	},
-
 	findTracks: function findTracks() {
 		var t = this,
 		    tracktags = t.node.querySelectorAll('track'),
@@ -2547,6 +2557,7 @@ Object.assign(_player2.default.prototype, {
 			});
 		}
 	},
+
 
 	/**
   *
@@ -2595,6 +2606,7 @@ Object.assign(_player2.default.prototype, {
 		}
 	},
 
+
 	/**
   *
   */
@@ -2611,6 +2623,7 @@ Object.assign(_player2.default.prototype, {
 			t.checkForTracks();
 		}
 	},
+
 
 	/**
   *
@@ -2645,6 +2658,7 @@ Object.assign(_player2.default.prototype, {
 			});
 		}
 	},
+
 
 	/**
   *
@@ -2682,6 +2696,7 @@ Object.assign(_player2.default.prototype, {
 		t.adjustLanguageBox();
 	},
 
+
 	/**
   *
   * @param {String} trackId
@@ -2699,6 +2714,7 @@ Object.assign(_player2.default.prototype, {
 		}
 		t.adjustLanguageBox();
 	},
+
 
 	/**
   *
@@ -2720,6 +2736,7 @@ Object.assign(_player2.default.prototype, {
 		t.adjustLanguageBox();
 	},
 
+
 	/**
   *
   */
@@ -2728,6 +2745,7 @@ Object.assign(_player2.default.prototype, {
 		// adjust the size of the outer box
 		t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector').style.height = parseFloat(t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-list').offsetHeight) + 'px';
 	},
+
 
 	/**
   *
@@ -2751,6 +2769,7 @@ Object.assign(_player2.default.prototype, {
 			t.setControlsSize();
 		}
 	},
+
 
 	/**
   *
@@ -2810,6 +2829,7 @@ Object.assign(_player2.default.prototype, {
 		}
 	},
 
+
 	/**
   *
   * @param {HTMLElement} track
@@ -2821,6 +2841,7 @@ Object.assign(_player2.default.prototype, {
 		t.slides.entries.imgs = [t.slides.entries.length];
 		t.showSlide(0);
 	},
+
 
 	/**
   *
@@ -2871,6 +2892,7 @@ Object.assign(_player2.default.prototype, {
 		}
 	},
 
+
 	/**
   *
   */
@@ -2889,6 +2911,7 @@ Object.assign(_player2.default.prototype, {
 			return; // exit out if one is visible;
 		}
 	},
+
 
 	/**
   *
@@ -2947,6 +2970,7 @@ Object.assign(_player2.default.prototype, {
 			});
 		}
 	},
+
 	/**
   * Perform binary search to look for proper track index
   *
@@ -8272,6 +8296,9 @@ function ajax(url, dataType, success, error) {
 			break;
 		case 'json':
 			type = 'application/x-www-form-urlencoded';
+			break;
+		case 'xml':
+			type = 'application/xml';
 			break;
 	}
 

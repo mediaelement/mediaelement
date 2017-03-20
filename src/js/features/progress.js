@@ -34,7 +34,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildprogress: function (player, controls, layers, media)  {
+	buildprogress (player, controls, layers, media)  {
 
 		let
 			lastKeyPressTime = 0,
@@ -388,7 +388,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {Event} e
 	 */
-	setProgressRail: function (e)  {
+	setProgressRail (e)  {
 
 		let percent = null;
 
@@ -428,7 +428,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {Number} fakeTime
 	 */
-	setCurrentRailHandle: function (fakeTime) {
+	setCurrentRailHandle (fakeTime) {
 		const t = this;
 		t.setCurrentRailMain(t, fakeTime);
 	},
@@ -436,7 +436,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Update the slider's width depending on the current time
 	 *
 	 */
-	setCurrentRail: function () {
+	setCurrentRail () {
 		const t = this;
 		t.setCurrentRailMain(t);
 	},
@@ -446,7 +446,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {MediaElementPlayer} t
 	 * @param {?Number} fakeTime
 	 */
-	setCurrentRailMain: function (t, fakeTime) {
+	setCurrentRailMain (t, fakeTime) {
 		if (t.media.currentTime !== undefined && t.media.duration) {
 			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
 

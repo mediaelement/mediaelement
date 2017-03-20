@@ -72,7 +72,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildtracks: function (player, controls, layers, media) {
+	buildtracks (player, controls, layers, media) {
 		if (player.tracks.length === 0) {
 			return;
 		}
@@ -277,7 +277,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
 	 */
-	cleartracks: function (player) {
+	cleartracks (player) {
 		if (player) {
 			if (player.captions) {
 				player.captions.remove();
@@ -297,13 +297,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 
-	rebuildtracks: function () {
+	rebuildtracks () {
 		const t = this;
 		t.findTracks();
 		t.buildtracks(t, t.controls, t.layers, t.media);
 	},
 
-	findTracks: function () {
+	findTracks () {
 		const
 			t = this,
 			tracktags = t.node.querySelectorAll('track'),
@@ -334,7 +334,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} trackId, or "none" to disable captions
 	 */
-	setTrack: function (trackId) {
+	setTrack (trackId) {
 
 		const
 			t = this,
@@ -380,7 +380,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	loadNextTrack: function () {
+	loadNextTrack () {
 		const t = this;
 
 		t.trackToLoad++;
@@ -398,7 +398,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param index
 	 */
-	loadTrack: function (index) {
+	loadTrack (index) {
 		const
 			t = this,
 			track = t.tracks[index]
@@ -435,7 +435,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} track - The language code
 	 */
-	enableTrackButton: function (track) {
+	enableTrackButton (track) {
 		const
 			t = this,
 			lang = track.srclang,
@@ -472,7 +472,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} trackId
 	 */
-	removeTrackButton: function (trackId) {
+	removeTrackButton (trackId) {
 
 		const
 			t = this,
@@ -494,7 +494,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} lang - The language code
 	 * @param {String} label
 	 */
-	addTrackButton: function (trackId, lang, label) {
+	addTrackButton (trackId, lang, label) {
 		const t = this;
 		if (label === '') {
 			label = i18n.t(mejs.language.codes[lang]) || lang;
@@ -515,7 +515,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	adjustLanguageBox: function () {
+	adjustLanguageBox () {
 		const t = this;
 		// adjust the size of the outer box
 		t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector`).style.height =
@@ -525,7 +525,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	checkForTracks: function () {
+	checkForTracks () {
 		const t = this;
 
 		let hasSubtitles = false;
@@ -548,7 +548,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	displayCaptions: function () {
+	displayCaptions () {
 
 		if (this.tracks === undefined) {
 			return;
@@ -612,7 +612,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {HTMLElement} track
 	 */
-	setupSlides: function (track) {
+	setupSlides (track) {
 		const t = this;
 
 		t.slides = track;
@@ -624,7 +624,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {Number} index
 	 */
-	showSlide: function (index) {
+	showSlide (index) {
 
 		const t = this;
 
@@ -668,7 +668,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	displaySlides: function () {
+	displaySlides () {
 		const t = this;
 
 		if (this.slides === undefined) {
@@ -690,7 +690,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {Object} chapters
 	 */
-	drawChapters: function (chapters) {
+	drawChapters (chapters) {
 		const
 			t = this,
 			total = chapters.entries.length
@@ -759,7 +759,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {Number} currentTime
 	 * @return {Number}
 	 */
-	searchTrackPosition: function (tracks, currentTime) {
+	searchTrackPosition (tracks, currentTime) {
 		let
 			lo = 0,
 			hi = tracks.length - 1,
@@ -880,7 +880,7 @@ mejs.TrackFormatParser = {
 		 * @param {String} trackText
 		 * @returns {{text: Array, times: Array}}
 		 */
-		parse: function (trackText) {
+		parse (trackText) {
 			const
 				lines = trackText.split(/\r?\n/),
 				entries = []
@@ -928,7 +928,7 @@ mejs.TrackFormatParser = {
 		 * @param {String} trackText
 		 * @returns {{text: Array, times: Array}}
 		 */
-		parse: function (trackText) {
+		parse (trackText) {
 			trackText = $(trackText).filter('tt');
 			const
 				container = trackText.firstChild,

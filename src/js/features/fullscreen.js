@@ -70,7 +70,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildfullscreen: function (player, controls, layers, media)  {
+	buildfullscreen (player, controls, layers, media)  {
 
 		if (!player.isVideo) {
 			return;
@@ -151,7 +151,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @return {String}
 	 */
-	detectFullscreenMode: function ()  {
+	detectFullscreenMode ()  {
 
 		const
 			t = this,
@@ -180,14 +180,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in features list
 	 * @param {MediaElementPlayer} player
 	 */
-	cleanfullscreen: function (player)  {
+	cleanfullscreen (player)  {
 		player.exitFullScreen();
 	},
 
 	/**
 	 *
 	 */
-	enterFullScreen: function ()  {
+	enterFullScreen ()  {
 
 		const
 			t = this,
@@ -300,7 +300,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	exitFullScreen: function ()  {
+	exitFullScreen ()  {
 
 		const
 			t = this,

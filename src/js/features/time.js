@@ -38,7 +38,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildcurrent: function (player, controls, layers, media)  {
+	buildcurrent (player, controls, layers, media)  {
 		const
 			t = this,
 			time = document.createElement('div')
@@ -68,7 +68,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildduration: function (player, controls, layers, media)  {
+	buildduration (player, controls, layers, media)  {
 
 		const
 			t = this,
@@ -106,7 +106,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Update the current time and output it in format 00:00
 	 *
 	 */
-	updateCurrent: function ()  {
+	updateCurrent ()  {
 		const t = this;
 
 		let currentTime = t.media.currentTime;
@@ -124,7 +124,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Update the duration time and output it in format 00:00
 	 *
 	 */
-	updateDuration: function ()  {
+	updateDuration ()  {
 		const t = this;
 
 		let duration = t.media.duration;

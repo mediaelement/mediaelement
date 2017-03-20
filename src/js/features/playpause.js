@@ -38,7 +38,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 * @public
 	 */
-	buildplaypause: function (player, controls, layers, media)  {
+	buildplaypause (player, controls, layers, media)  {
 
 		const
 			t = this,

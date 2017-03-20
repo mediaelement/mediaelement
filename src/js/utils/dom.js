@@ -110,6 +110,9 @@ export function ajax(url, dataType, success, error) {
 		case 'json':
 			type = 'application/x-www-form-urlencoded';
 			break;
+		case 'xml':
+			type = 'application/xml';
+			break;
 	}
 
 	xhr.open('GET', url, true);
