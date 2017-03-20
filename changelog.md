@@ -1,8 +1,8 @@
 ### Version History
 
-*4.0.0 (2017/??/??)*
+*4.0.0 (2017/03/??)*
 
-* Removed all dependencies to jQuery in code and added `utils/dom.js` to mimic jQuery's most used methods @ron666
+* Removed all dependencies to jQuery in code and created `utils/dom.js` to mimic jQuery's most used methods @ron666
 * Added missing unit tests @ron666
 * Fixed minor issues on Twitch, Facebook HLS and M(PEG)-DASH renderers @ron666
 * Fixed minor issue with play/pause button not being updated properly when switching to new source and media has ended @ron666
@@ -10,7 +10,7 @@
 * Fixed issue with `readyState` value in Flash video shim @ron666
 * Added pause event when changing media sources @ron666
 * Integrated `remove()` polyfill to simplify more code (https://github.com/johndyer/mediaelement/pull/2140) @jimmywarting
-* Reintegrated Download File workflow if error happens @ron666
+* Reintegrated and improved Download File workflow if error happens while attempting to play media @ron666
 
 *3.2.4 (2017/03/14)*
 
