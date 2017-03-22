@@ -1,5 +1,9 @@
 ### Version History
 
+*4.0.1 (2017/03/22)*
+
+* Fixed major issues with iOS that prevent the player to be built @ron666 
+
 *4.0.0 (2017/03/22)*
 
 * Removed all dependencies to jQuery in code and created `utils/dom.js` to mimic jQuery's most used methods @ron666

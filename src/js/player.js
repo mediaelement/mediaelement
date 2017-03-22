@@ -418,15 +418,20 @@ class MediaElementPlayer {
 			}
 
 			// add classes for user and content
-			const mediaClasses = (
-				(IS_ANDROID ? `${t.options.classPrefix}android ` : '') +
-				(IS_IOS ? `${t.options.classPrefix}ios ` : '') +
-				(IS_IPAD ? `${t.options.classPrefix}ipad ` : '') +
-				(IS_IPHONE ? `${t.options.classPrefix}iphone ` : '') +
-				(t.isVideo ? `${t.options.classPrefix}video` : `${t.options.classPrefix}audio`)
-			);
+			if (IS_ANDROID) {
+				dom.addClass(t.container, `${t.options.classPrefix}android`);
+			}
+			if (IS_IOS) {
+				dom.addClass(t.container, `${t.options.classPrefix}ios`);
+			}
+			if (IS_IPAD) {
+				dom.addClass(t.container, `${t.options.classPrefix}ipad`);
+			}
+			if (IS_IPHONE) {
+				dom.addClass(t.container, `${t.options.classPrefix}iphone`);
+			}
+			dom.addClass(t.container, (t.isVideo ? `${t.options.classPrefix}video` : `${t.options.classPrefix}audio`));
 
-			dom.addClass(t.container, mediaClasses);
 			// move the <video/video> tag into the right spot
 			t.container.querySelector(`.${t.options.classPrefix}mediaelement`).appendChild(t.node);
 

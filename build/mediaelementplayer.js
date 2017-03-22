@@ -934,7 +934,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mejs = {};
 
 // version number
-mejs.version = '4.0.0';
+mejs.version = '4.0.1';
 
 // Basic HTML5 settings
 mejs.html5media = {
@@ -4111,9 +4111,20 @@ var MediaElementPlayer = function () {
 			}
 
 			// add classes for user and content
-			var mediaClasses = (_constants.IS_ANDROID ? t.options.classPrefix + 'android ' : '') + (_constants.IS_IOS ? t.options.classPrefix + 'ios ' : '') + (_constants.IS_IPAD ? t.options.classPrefix + 'ipad ' : '') + (_constants.IS_IPHONE ? t.options.classPrefix + 'iphone ' : '') + (t.isVideo ? t.options.classPrefix + 'video' : t.options.classPrefix + 'audio');
+			if (_constants.IS_ANDROID) {
+				dom.addClass(t.container, t.options.classPrefix + 'android');
+			}
+			if (_constants.IS_IOS) {
+				dom.addClass(t.container, t.options.classPrefix + 'ios');
+			}
+			if (_constants.IS_IPAD) {
+				dom.addClass(t.container, t.options.classPrefix + 'ipad');
+			}
+			if (_constants.IS_IPHONE) {
+				dom.addClass(t.container, t.options.classPrefix + 'iphone');
+			}
+			dom.addClass(t.container, t.isVideo ? t.options.classPrefix + 'video' : t.options.classPrefix + 'audio');
 
-			dom.addClass(t.container, mediaClasses);
 			// move the <video/video> tag into the right spot
 			t.container.querySelector('.' + t.options.classPrefix + 'mediaelement').appendChild(t.node);
 

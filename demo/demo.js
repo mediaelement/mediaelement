@@ -77,10 +77,18 @@ for (var i = 0; i < sourcesTotal; i++) {
 	// These media types cannot play at all on iOS, so disabling them
 	if (mejs.Features.isiOS) {
 		sourcesSelector[i].querySelector('option[value^="rtmp"]').disabled = true;
-		sourcesSelector[i].querySelector('option[value$="webm"]').disabled = true;
-		sourcesSelector[i].querySelector('option[value$=".mpd"]').disabled = true;
-		sourcesSelector[i].querySelector('option[value$=".ogg"]').disabled = true;
-		sourcesSelector[i].querySelector('option[value*=".flv"]').disabled = true;
+		if (sourcesSelector[i].querySelector('option[value$="webm"]')) {
+			sourcesSelector[i].querySelector('option[value$="webm"]').disabled = true;
+		}
+		if (sourcesSelector[i].querySelector('option[value$=".mpd"]')) {
+			sourcesSelector[i].querySelector('option[value$=".mpd"]').disabled = true;
+		}
+		if (sourcesSelector[i].querySelector('option[value$=".ogg"]')) {
+			sourcesSelector[i].querySelector('option[value$=".ogg"]').disabled = true;
+		}
+		if (sourcesSelector[i].querySelector('option[value$=".flv"]')) {
+			sourcesSelector[i].querySelector('option[value*=".flv"]').disabled = true;
+		}
 	}
 }
 
