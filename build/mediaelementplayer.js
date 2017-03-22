@@ -5111,7 +5111,7 @@ var MediaElementPlayer = function () {
 
 			var posterImg = posterDiv.querySelector('img');
 
-			if (posterImg.length === 0) {
+			if (!posterImg) {
 				posterImg = _document2.default.createElement('img');
 				posterImg.className = t.options.classPrefix + 'poster-img';
 				posterImg.width = '100%';

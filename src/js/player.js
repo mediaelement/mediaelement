@@ -1408,7 +1408,7 @@ class MediaElementPlayer {
 
 		let posterImg = posterDiv.querySelector('img');
 
-		if (posterImg.length === 0) {
+		if (!posterImg) {
 			posterImg = document.createElement('img');
 			posterImg.className = `${t.options.classPrefix}poster-img`;
 			posterImg.width = '100%';

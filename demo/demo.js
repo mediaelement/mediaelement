@@ -1,7 +1,3 @@
-function closest (el, fn) {
-	return el && (fn(el) ? el : closest(el.parentNode, fn));
-}
-
 function getQueryStringValue (key) {
 	return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
 }
@@ -49,37 +45,34 @@ var
 	stretchingSelector = document.querySelector('select[name=stretching]'),
 	sourcesSelector = document.querySelectorAll('select[name=sources]'),
 	sourcesTotal = sourcesSelector.length
-	;
+;
 
 languageSelector.value = lang;
 languageSelector.addEventListener('change', function () {
 	window.location.href = updateUrlParameter(window.location.href, 'lang', languageSelector.value);
-}, false);
+});
 stretchingSelector.value = stretching;
 stretchingSelector.addEventListener('change', function () {
 	window.location.href = updateUrlParameter(window.location.href, 'stretching', stretchingSelector.value);
-}, false);
+});
 
 for (var i = 0; i < sourcesTotal; i++) {
-	sourcesSelector[i].addEventListener('change', function (e) {
+	sourcesSelector[i].addEventListener('change', function () {
 
 		var
-			_this = e.target,
-			media = closest(this, function(el) {
-					return el.className === 'players';
-				}).querySelector('.mejs__container').id,
+			media = this.closest('.players').querySelector('.mejs__container').id,
 			player = mejs.players[media]
 		;
 
-		player.setSrc(_this.value.replace('&amp;', '&'));
+		player.setSrc(this.value.replace('&amp;', '&'));
 		player.load();
 
 		var renderer = document.getElementById(player.media.id + '-rendername');
-		renderer.querySelector('.src').innerHTML = '<a href="' + _this.value + '" target="_blank">' + _this.value + '</a>';
+		renderer.querySelector('.src').innerHTML = '<a href="' + this.value + '" target="_blank">' + this.value + '</a>';
 		renderer.querySelector('.renderer').innerHTML = player.media.rendererName;
 		renderer.querySelector('.error').innerHTML = '';
 
-	}, false);
+	});
 
 	// These media types cannot play at all on iOS, so disabling them
 	if (mejs.Features.isiOS) {
@@ -111,13 +104,13 @@ document.addEventListener('DOMContentLoaded', function () {
 						renderer.querySelector('.renderer').innerHTML = media.rendererName;
 						renderer.querySelector('.error').innerHTML = '';
 					}
-				}, false);
+				});
 
 				media.addEventListener('error', function (e) {
 					renderer.querySelector('.error').innerHTML = '<strong>Error</strong>: ' + e.message;
-				}, false);
+				});
 			}
 		});
 	}
 
-}, false);
+});
