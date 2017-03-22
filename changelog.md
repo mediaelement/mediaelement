@@ -1,6 +1,6 @@
 ### Version History
 
-*4.0.0 (2017/03/??)*
+*4.0.0 (2017/03/22)*
 
 * Removed all dependencies to jQuery in code and created `utils/dom.js` to mimic jQuery's most used methods @ron666
 * Added missing unit tests @ron666
@@ -13,6 +13,7 @@
 * Reintegrated and improved `Download File` workflow if error happens while attempting to play media @ron666
 * Fixed workflow for `autoplay` property in all renderers @ron666
 * Integrated [Mocha JSDOM](https://github.com/rstacruz/mocha-jsdom) package to add more unit tests @ron666 
+* Created `utils.md` file to describe the utilities/features available @ron666 
 
 *3.2.4 (2017/03/14)*
 

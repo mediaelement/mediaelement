@@ -5,10 +5,10 @@
   "main": "full.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/johndyer/mediaelement.git"
+    "url": "https://github.com/mediaelement/mediaelement.git"
   },
   "bugs": {
-    "url": "https://github.com/johndyer/mediaelement/issues?q=is%3Aissue+is%3Aopen+label%3ABug"
+    "url": "https://github.com/mediaelement/mediaelement/issues?q=is%3Aissue+is%3Aopen+label%3ABug"
   },
   "private": false,
   "devDependencies": {
