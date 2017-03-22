@@ -5283,7 +5283,7 @@ var MediaElementPlayer = function () {
 			});
 			layers.appendChild(bigPlay);
 
-			if (t.media.rendererName !== null && (t.media.rendererName.match(/(youtube|facebook)/) && !(player.media.attr('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
+			if (t.media.rendererName !== null && (t.media.rendererName.match(/(youtube|facebook)/) && !(player.media.originalNode.getAttribute('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
 				bigPlay.style.display = 'none';
 			}
 
@@ -5929,7 +5929,7 @@ var FlashMediaElementRenderer = {
 			flash.options.shimScriptAccess = 'sameDomain';
 		}
 
-		var autoplay = !!mediaElement.getAttribute('autoplay'),
+		var autoplay = mediaElement.originalNode.autoplay,
 		    flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay, 'allowScriptAccess=' + flash.options.shimScriptAccess],
 		    isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 		    flashHeight = isVideo ? mediaElement.originalNode.height : 1,
@@ -6835,7 +6835,7 @@ function createEvent(eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
-	var eventFrags = eventName.match(/\[a-z]+\.(\[a-z]+)/),
+	var eventFrags = eventName.match(/[a-z]+\.([a-z]+)/),
 	    detail = {
 		target: target
 	};
@@ -6845,7 +6845,7 @@ function createEvent(eventName, target) {
 		detail.namespace = eventFrags[1];
 	}
 
-	return new CustomEvent(eventName, {
+	return new window.CustomEvent(eventName, {
 		detail: detail
 	});
 }
@@ -6960,30 +6960,13 @@ function getTypeFromFile(url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	var type = void 0;
+	for (var i = 0, total = typeChecks.length; i < total; i++) {
+		if (typeof typeChecks[i] === 'function') {
+			var type = typeChecks[i](url);
 
-	// Validate `typeChecks` array
-	if (!Array.isArray(typeChecks)) {
-		throw new Error('`typeChecks` must be an array');
-	}
-
-	if (typeChecks.length) {
-		for (var i = 0, total = typeChecks.length; i < total; i++) {
-			var _type = typeChecks[i];
-
-			if (typeof _type !== 'function') {
-				throw new Error('Element in array must be a function');
+			if (type !== undefined && type !== null) {
+				return type;
 			}
-		}
-	}
-
-	// do type checks first
-	for (var _i = 0, _total = typeChecks.length; _i < _total; _i++) {
-
-		type = typeChecks[_i](url);
-
-		if (type !== undefined && type !== null) {
-			return type;
 		}
 	}
 

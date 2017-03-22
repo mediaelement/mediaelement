@@ -135,7 +135,8 @@ var SoundCloudIframeRenderer = {
 		// create our fake element that allows events and such to work
 		var sc = {},
 		    apiStack = [],
-		    readyState = 4;
+		    readyState = 4,
+		    autoplay = mediaElement.originalNode.autoplay;
 
 		var duration = 0,
 		    currentTime = 0,
@@ -218,6 +219,10 @@ var SoundCloudIframeRenderer = {
 							var url = typeof value === 'string' ? value : value[0].src;
 
 							scPlayer.load(url);
+
+							if (autoplay) {
+								scPlayer.play();
+							}
 							break;
 
 						case 'currentTime':
@@ -297,6 +302,10 @@ var SoundCloudIframeRenderer = {
 		window['__ready__' + sc.id] = function (_scPlayer) {
 
 			mediaElement.scPlayer = scPlayer = _scPlayer;
+
+			if (autoplay) {
+				scPlayer.play();
+			}
 
 			// do call stack
 			if (apiStack.length) {

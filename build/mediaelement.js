@@ -1386,7 +1386,7 @@ var DashNativeRenderer = {
 		var originalNode = mediaElement.originalNode,
 		    id = mediaElement.id + '_' + options.prefix,
 		    preload = originalNode.getAttribute('preload'),
-		    autoplay = originalNode.getAttribute('autoplay');
+		    autoplay = originalNode.autoplay;
 
 		var node = null,
 		    dashPlayer = null;
@@ -1429,8 +1429,8 @@ var DashNativeRenderer = {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setAutoPlay(preload === 'auto' || autoplay);
-			dashPlayer.setScheduleWhilePaused(preload === 'auto' || autoplay);
+			dashPlayer.setAutoPlay(preload && preload === 'auto' || autoplay);
+			dashPlayer.setScheduleWhilePaused(preload && preload === 'auto' || autoplay);
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			    dashEvents = dashjs.MediaPlayer.events,
@@ -1487,7 +1487,7 @@ var DashNativeRenderer = {
 		node.setAttribute('id', id);
 
 		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
+		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
 		NativeDash.prepareSettings({
@@ -1842,7 +1842,7 @@ var FlashMediaElementRenderer = {
 			flash.options.shimScriptAccess = 'sameDomain';
 		}
 
-		var autoplay = !!mediaElement.getAttribute('autoplay'),
+		var autoplay = mediaElement.originalNode.autoplay,
 		    flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay, 'allowScriptAccess=' + flash.options.shimScriptAccess],
 		    isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 		    flashHeight = isVideo ? mediaElement.originalNode.height : 1,
@@ -2321,7 +2321,7 @@ var FlvNativeRenderer = {
 		node.setAttribute('id', id);
 
 		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
+		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
 		// Options that cannot be overridden
@@ -2541,14 +2541,14 @@ var HlsNativeRenderer = {
 		var originalNode = mediaElement.originalNode,
 		    id = mediaElement.id + '_' + options.prefix,
 		    preload = originalNode.getAttribute('preload'),
-		    autoplay = originalNode.getAttribute('autoplay');
+		    autoplay = originalNode.autoplay;
 
 		var hlsPlayer = null,
 		    node = null;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
-		options.autoStartLoad = preload === 'auto' || autoplay;
+		options.hls.autoStartLoad = preload && preload !== 'none' || autoplay;
 
 		// WRAPPERS for PROPs
 		var props = _mejs2.default.html5media.properties,
@@ -2572,14 +2572,8 @@ var HlsNativeRenderer = {
 								id: id
 							});
 
-							hlsPlayer.attachMedia(node);
 							hlsPlayer.loadSource(value);
-
-							if (autoplay) {
-								hlsPlayer.on(hlsEvents.MANIFEST_PARSED, function () {
-									node.play();
-								});
-							}
+							hlsPlayer.attachMedia(node);
 						}
 					}
 				}
@@ -2605,13 +2599,8 @@ var HlsNativeRenderer = {
 
 					var url = node.src;
 
-					hlsPlayer.attachMedia(node);
 					hlsPlayer.loadSource(url);
-					if (autoplay) {
-						hlsPlayer.on(hlsEvents.MANIFEST_PARSED, function () {
-							node.play();
-						});
-					}
+					hlsPlayer.attachMedia(node);
 				}
 
 				node.addEventListener(eventName, function (e) {
@@ -2708,7 +2697,7 @@ var HlsNativeRenderer = {
 		node.setAttribute('id', id);
 
 		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
+		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
 		NativeHls.prepareSettings({
@@ -3268,7 +3257,7 @@ var YouTubeIframeRenderer = {
 							var url = typeof value === 'string' ? value : value[0].src,
 							    _videoId = YouTubeApi.getYouTubeId(url);
 
-							if (mediaElement.getAttribute('autoplay')) {
+							if (mediaElement.originalNode.autoplay) {
 								youTubeApi.loadVideoById(_videoId);
 							} else {
 								youTubeApi.cueVideoById(_videoId);
@@ -3885,7 +3874,7 @@ function createEvent(eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
-	var eventFrags = eventName.match(/\[a-z]+\.(\[a-z]+)/),
+	var eventFrags = eventName.match(/[a-z]+\.([a-z]+)/),
 	    detail = {
 		target: target
 	};
@@ -3895,7 +3884,7 @@ function createEvent(eventName, target) {
 		detail.namespace = eventFrags[1];
 	}
 
-	return new CustomEvent(eventName, {
+	return new window.CustomEvent(eventName, {
 		detail: detail
 	});
 }
@@ -4010,30 +3999,13 @@ function getTypeFromFile(url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	var type = void 0;
+	for (var i = 0, total = typeChecks.length; i < total; i++) {
+		if (typeof typeChecks[i] === 'function') {
+			var type = typeChecks[i](url);
 
-	// Validate `typeChecks` array
-	if (!Array.isArray(typeChecks)) {
-		throw new Error('`typeChecks` must be an array');
-	}
-
-	if (typeChecks.length) {
-		for (var i = 0, total = typeChecks.length; i < total; i++) {
-			var _type = typeChecks[i];
-
-			if (typeof _type !== 'function') {
-				throw new Error('Element in array must be a function');
+			if (type !== undefined && type !== null) {
+				return type;
 			}
-		}
-	}
-
-	// do type checks first
-	for (var _i = 0, _total = typeChecks.length; _i < _total; _i++) {
-
-		type = typeChecks[_i](url);
-
-		if (type !== undefined && type !== null) {
-			return type;
 		}
 	}
 

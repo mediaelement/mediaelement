@@ -53,7 +53,8 @@ var FacebookRenderer = {
 		var fbWrapper = {},
 		    apiStack = [],
 		    eventHandler = {},
-		    readyState = 4;
+		    readyState = 4,
+		    autoplay = mediaElement.originalNode.autoplay;
 
 		var src = '',
 		    paused = true,
@@ -137,6 +138,10 @@ var FacebookRenderer = {
 
 							// This method reloads video on-demand
 							FB.XFBML.parse();
+
+							if (autoplay) {
+								fbApi.play();
+							}
 
 							break;
 
@@ -277,6 +282,10 @@ var FacebookRenderer = {
 							};
 
 							fbWrapper.setSize(width, height);
+
+							if (autoplay) {
+								fbApi.play();
+							}
 
 							for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
 								fbIframe.addEventListener(events[_i3], assignEvents, false);

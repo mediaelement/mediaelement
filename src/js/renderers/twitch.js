@@ -504,7 +504,7 @@ const TwitchIframeRenderer = {
 				width: width,
 				height: height,
 				playsinline: false,
-				autoplay: false
+				autoplay: mediaElement.originalNode.autoplay
 			}
 		;
 
@@ -515,6 +515,7 @@ const TwitchIframeRenderer = {
 
 		mediaElement.originalNode.parentNode.insertBefore(twitchContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
+		mediaElement.originalNode.autoplay = false;
 
 		// send it off for async loading and creation
 		twitchApi.enqueueIframe(twitchSettings);

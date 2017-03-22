@@ -225,7 +225,7 @@ const FlvNativeRenderer = {
 		node.setAttribute('id', id);
 
 		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
+		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
 		// Options that cannot be overridden

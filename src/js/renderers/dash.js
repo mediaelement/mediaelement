@@ -141,7 +141,7 @@ const DashNativeRenderer = {
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
 			preload = originalNode.getAttribute('preload'),
-			autoplay = originalNode.getAttribute('autoplay')
+			autoplay = originalNode.autoplay
 		;
 
 		let
@@ -188,8 +188,8 @@ const DashNativeRenderer = {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setAutoPlay((preload === 'auto' || autoplay));
-			dashPlayer.setScheduleWhilePaused((preload === 'auto' || autoplay));
+			dashPlayer.setAutoPlay(((preload && preload === 'auto') || autoplay));
+			dashPlayer.setScheduleWhilePaused(((preload && preload === 'auto') || autoplay));
 
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
@@ -249,7 +249,7 @@ const DashNativeRenderer = {
 		node.setAttribute('id', id);
 
 		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
+		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
 		NativeDash.prepareSettings({

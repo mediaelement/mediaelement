@@ -40,7 +40,8 @@ const FacebookRenderer = {
 			fbWrapper = {},
 			apiStack = [],
 			eventHandler = {},
-			readyState = 4
+			readyState = 4,
+			autoplay = mediaElement.originalNode.autoplay
 		;
 
 		let
@@ -128,6 +129,10 @@ const FacebookRenderer = {
 
 								// This method reloads video on-demand
 								FB.XFBML.parse();
+
+								if (autoplay) {
+									fbApi.play();
+								}
 
 								break;
 
@@ -277,6 +282,10 @@ const FacebookRenderer = {
 						;
 
 						fbWrapper.setSize(width, height);
+
+						if (autoplay) {
+							fbApi.play();
+						}
 
 						for (let i = 0, total = events.length; i < total; i++) {
 							fbIframe.addEventListener(events[i], assignEvents, false);

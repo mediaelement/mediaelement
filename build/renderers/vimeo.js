@@ -253,7 +253,7 @@ var vimeoIframeRenderer = {
 							    videoId = vimeoApi.getVimeoId(_url2);
 
 							vimeoPlayer.loadVideo(videoId).then(function () {
-								if (mediaElement.getAttribute('autoplay')) {
+								if (mediaElement.originalNode.autoplay) {
 									vimeoPlayer.play();
 								}
 							})['catch'](function (error) {

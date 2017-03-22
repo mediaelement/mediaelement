@@ -293,7 +293,7 @@ const FlashMediaElementRenderer = {
 		}
 
 		const
-			autoplay = !!mediaElement.getAttribute('autoplay'),
+			autoplay = mediaElement.originalNode.autoplay,
 			flashVars = [`uid=${flash.id}`, `autoplay=${autoplay}`, `allowScriptAccess=${flash.options.shimScriptAccess}`],
 			isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 			flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,

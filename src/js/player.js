@@ -1587,7 +1587,8 @@ class MediaElementPlayer {
 		});
 		layers.appendChild(bigPlay);
 
-		if (t.media.rendererName !== null && ((t.media.rendererName.match(/(youtube|facebook)/) && !(player.media.attr('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
+		if (t.media.rendererName !== null && ((t.media.rendererName.match(/(youtube|facebook)/) &&
+			!(player.media.originalNode.getAttribute('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
 			bigPlay.style.display = 'none';
 		}
 

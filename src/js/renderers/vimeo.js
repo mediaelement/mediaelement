@@ -245,7 +245,7 @@ const vimeoIframeRenderer = {
 									videoId = vimeoApi.getVimeoId(url);
 
 								vimeoPlayer.loadVideo(videoId).then(() => {
-									if (mediaElement.getAttribute('autoplay')) {
+									if (mediaElement.originalNode.autoplay) {
 										vimeoPlayer.play();
 									}
 
