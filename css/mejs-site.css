@@ -60,9 +60,10 @@ h1, h2, h3, h4 {
 }
 h2 {
 	font-family: "Montserrat", Arial, Helvetica, sans-serif;
-	font-size: 2em;
+	font-size: 1.5em;
 	text-align: center;
 	margin: 1em 0;
+	font-weight: 700;
 }
 
 code {
@@ -103,17 +104,17 @@ select {
     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'> \
       <polygon points='0,0 60,0 30,40' style='fill:black;'/> \
     </svg>");
-	font-size: 0.9em;
 	text-transform: capitalize;
 	border: none;
 	background-color: transparent;
 	font-weight: 200;
 	width: 165px;
+	font-size: 0.8em;
 }
 
 /* menu */
 header {
-	padding: 1.5em;	
+	padding: 0;
 	background: #fff;
 	color: #FA7D18;
 	overflow: hidden;
@@ -134,11 +135,9 @@ header .container {
 }
 
 .logo {
-	position: absolute;
-	left: 50%;
-	margin-left: -25px !important;
+	position: relative;
 	width: 50px;
-	top: 1em;
+	margin: 0.5em auto;
 }
 
 .logo img {
@@ -146,17 +145,19 @@ header .container {
 }
 
 .brand {
-	float: left;
-	font-size: 1.5em;
+	text-align: center;
+	float: none;
+	margin: 1em 0;
 }
 
 .brand img {
 	max-height: 25px;
-	max-width: 100%;
 }
 
 .menu {
-	float: right;
+	clear: both;
+	float: none;
+	text-align: center;
 }
 
 .menu ul {
@@ -166,11 +167,15 @@ header .container {
 }
 
 .menu li {
-	list-style: none;
-	margin: 0 0 0 0.5em;
-	padding: 0;
-	display: inline-block;
+	display: block;
+	padding: 1em;
+	border-bottom: 1px solid #ccc;
+	text-transform: uppercase;
 }
+.menu li:last-child {
+	border: none;
+}
+
 .menu a {
 	padding: 0.5em 0.75em;
 	text-decoration: none;
@@ -179,40 +184,7 @@ header .container {
 
 .container {
 	max-width: 760px;
-	margin: 0 auto;
-}
-@media (max-width: 600px) {
-	.container {
-		margin: 0 1em;
-	}
-	header {
-		padding: 0;
-	}
-	.logo {
-		position: relative;	
-		margin: 0.5em auto;
-	}
-	
-	.brand {
-		text-align: center;
-		float: none;
-		margin: 1em 0 ;
-	}
-	
-	.menu {
-		clear: both;
-		float: none;
-		text-align: center;
-	}
-
-	
-	.menu li {
-		display: block;
-		padding: 1em;
-		border-bottom: 1px solid #ccc;
-		text-transform: uppercase;		
-	}
-	
+	margin: 0 1em;
 }
 
 a.button {
@@ -266,7 +238,7 @@ h2.main {
 /* audio and video  */
 .players {
 	background: #F4F4F4;
-	padding: 3em 0;
+	padding: 0;
 }
 
 .players .container {
@@ -311,13 +283,15 @@ h2.main {
 
 .title {
 	float: left;
+	font-size: 0.8em;
 }
 .clearfix {
 	overflow: auto;
 }
+
 /* list of logos  */
 .sitesusing {
-	padding: 3em 0;
+	padding: 0;
 }
 
 .site-logos {
@@ -327,7 +301,7 @@ h2.main {
 }
 
 .site-logos .site-logo {
-	width: 18%;
+	width: 40%;
 	padding: 0.5em;
 	display: inline-block;
 	box-sizing: border-box;
@@ -339,11 +313,15 @@ h2.main {
 
 /* what's new  */
 .features {
-	padding: 3em 0;
+	padding: 1.5em 0;
 	background-color: #3224AE;
 	background-image: -webkit-linear-gradient(left, #3224AE, #C56CD6);
 	background-image:         linear-gradient(to right, #3224AE, #C56CD6);
 	color: #fff;
+}
+
+.features p {
+	text-align: center;
 }
 
 .heart {
@@ -357,11 +335,14 @@ h2.main {
 
 .flash {
 	background: url("../images/flash.jpg") no-repeat;
-	width: 42px;
-	height: 42px;
-	background-size: 42px 42px;
+	width: 30px;
+	height: 30px;
+	background-size: 30px 30px;
 	text-indent: -9999px;
 	display: inline-block;
+}
+.line {
+	display: block;
 }
 
 .features .container ul {
@@ -371,33 +352,6 @@ h2.main {
 	border: 1px solid #fff;
 	color: #fff;
 	margin-bottom: 10px;
-}
-
-/* getting started */
-.get-started {
-	padding: 3em 0;
-}
-
-
-.get-started h2 {
-	color: #FA7D18;
-}
-
-.get-started .button {
-	background: #FA7D18;
-	color: #fff;
-	text-align: center;
-	padding: 0.5em 0.75em;;
-	display: block;
-	text-decoration: none;
-	margin: 0.5em auto;
-	width: 10em;
-}
-
-.get-started h3 {
-	font-weight: bold;
-	font-size: 1.5em;
-	margin: 1.5em 0 0.5em;
 }
 
 
@@ -412,18 +366,24 @@ footer {
 }
 
 .footer-container {
-	margin: 0 20px;
+	margin: -20px 10px;
 	font-size: 0.8em;
 	overflow: auto;
 	zoom: 1;
 }
 
-.footer-container .left {
-	float: left;
+.footer-container .left, .footer-container .right {
+	width: 100%;
+	display: block;
 }
 
+.footer-container .left {
+	float: left;
+	margin-bottom: 10px;
+}
 .footer-container .right {
 	float: right;
+	padding-bottom: 10px;
 }
 
 footer a {
@@ -431,18 +391,90 @@ footer a {
 	font-weight: bold;
 }
 
-@media (max-width: 800px) {
+@media (min-width: 600px) {
+
+	header {
+		padding: 1.5em;
+	}
+
+	h2 {
+		font-size: 2em;
+	}
+
+	.title {
+		font-size: 1em;
+	}
+
+	.site-logos .site-logo {
+		width: 18%;
+	}
+	.line {
+		display: inline;
+	}
+	.flash {
+		width: 42px;
+		height: 42px;
+		background-size: 42px 42px;
+	}
+	.features p {
+		text-align: left;
+	}
+
+	.players, .sitesusing, .features {
+		padding: 3em 0;
+	}
+
+	.logo {
+		position: absolute;
+		margin: 0 auto;
+		margin-left: -25px !important;
+		left: 50%;
+		top: 1em;
+	}
+
+	.brand {
+		text-align: left;
+		float: left;
+		font-size: 1.5em;
+		margin: auto;
+	}
+	.brand img {
+		max-width: 100%;
+	}
+
+	.menu {
+		float: right;
+		clear: none;
+	}
+
+	.menu li {
+		border: none;
+		text-transform: none;
+		margin: 0 0 0 0.5em;
+		padding: 0;
+		display: inline-block;
+	}
+}
+
+@media (min-width: 800px) {
+	.container {
+		margin: 0 auto;
+	}
+	select {
+		font-size: 0.9em;
+	}
 	.footer-container {
-		margin: -20px 10px;
+		margin: 0 20px;
 	}
 	.footer-container .left, .footer-container .right {
-		width: 100%;
-		display: block;
+		display: inline;
+		width: auto;
 	}
 	.footer-container .left {
-		margin-bottom: 10px;
+		margin-bottom: 0;
 	}
+
 	.footer-container .right {
-		padding-bottom: 10px;
+		padding-bottom: 0;
 	}
 }
