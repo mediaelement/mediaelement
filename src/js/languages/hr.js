@@ -15,6 +15,9 @@
 		exports.hr = {
 			"mejs.plural-form": 7,
 
+			// core/mediaelement.js
+			"mejs.download-file": "Preuzmi datoteku",
+
 			// renderers/flash.js
 			"mejs.install-flash": "Koristite preglednik koji nema omogućen ili instaliran Flash preglednik. Molimo Vas uključite Flash dodatak ili preuzmite najnoviju verziju s https://get.adobe.com/flashplayer/",
 

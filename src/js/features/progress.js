@@ -1,10 +1,12 @@
 'use strict';
 
+import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
 import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
+import {offset} from '../utils/dom';
 
 /**
  * Progress/loaded bar
@@ -32,7 +34,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildprogress: function (player, controls, layers, media)  {
+	buildprogress (player, controls, layers, media)  {
 
 		let
 			lastKeyPressTime = 0,
@@ -48,29 +50,30 @@ Object.assign(MediaElementPlayer.prototype, {
 					`<span class="${t.options.classPrefix}time-float-current">00:00</span>` +
 					`<span class="${t.options.classPrefix}time-float-corner"></span>` +
 				`</span>` : "",
-			rail = $(`<div class="${t.options.classPrefix}time-rail">` +
-				`<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
-					`<span class="${t.options.classPrefix}time-buffering"></span>` +
-					`<span class="${t.options.classPrefix}time-loaded"></span>` +
-					`<span class="${t.options.classPrefix}time-current"></span>` +
-					`<span class="${t.options.classPrefix}time-handle"></span>` +
-					`${tooltip}` +
-				`</span>` +
-			`</div>`)
+			rail = document.createElement('div')
 		;
+
+		rail.className = `${t.options.classPrefix}time-rail`;
+		rail.innerHTML = `<span class="${t.options.classPrefix}time-total ${t.options.classPrefix}time-slider">` +
+			`<span class="${t.options.classPrefix}time-buffering"></span>` +
+			`<span class="${t.options.classPrefix}time-loaded"></span>` +
+			`<span class="${t.options.classPrefix}time-current"></span>` +
+			`<span class="${t.options.classPrefix}time-handle"></span>` +
+			`${tooltip}` +
+		`</span>`;
 
 		t.addControlElement(rail, 'progress');
 
-		controls.find(`.${t.options.classPrefix}time-buffering`).hide();
+		controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'none';
 
-		t.rail = controls.find(`.${t.options.classPrefix}time-rail`);
-		t.total = controls.find(`.${t.options.classPrefix}time-total`);
-		t.loaded = controls.find(`.${t.options.classPrefix}time-loaded`);
-		t.current = controls.find(`.${t.options.classPrefix}time-current`);
-		t.handle = controls.find(`.${t.options.classPrefix}time-handle`);
-		t.timefloat = controls.find(`.${t.options.classPrefix}time-float`);
-		t.timefloatcurrent = controls.find(`.${t.options.classPrefix}time-float-current`);
-		t.slider = controls.find(`.${t.options.classPrefix}time-slider`);
+		t.rail = controls.querySelector(`.${t.options.classPrefix}time-rail`);
+		t.total = controls.querySelector(`.${t.options.classPrefix}time-total`);
+		t.loaded = controls.querySelector(`.${t.options.classPrefix}time-loaded`);
+		t.current = controls.querySelector(`.${t.options.classPrefix}time-current`);
+		t.handle = controls.querySelector(`.${t.options.classPrefix}time-handle`);
+		t.timefloat = controls.querySelector(`.${t.options.classPrefix}time-float`);
+		t.timefloatcurrent = controls.querySelector(`.${t.options.classPrefix}time-float-current`);
+		t.slider = controls.querySelector(`.${t.options.classPrefix}time-slider`);
 		t.newTime = 0;
 		t.forcedHandlePause = false;
 
@@ -82,8 +85,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		let handleMouseMove = (e) => {
 
 				const
-					offset = t.total.offset(),
-					width = t.total.width()
+					totalStyles = getComputedStyle(t.total),
+					offsetStyles = offset(t.total),
+					width = parseFloat(totalStyles.width)
 				;
 
 				let
@@ -102,27 +106,27 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 
 				if (media.duration) {
-					if (x < offset.left) {
-						x = offset.left;
-					} else if (x > width + offset.left) {
-						x = width + offset.left;
+					if (x < offsetStyles.left) {
+						x = offsetStyles.left;
+					} else if (x > width + offsetStyles.left) {
+						x = width + offsetStyles.left;
 					}
 
-					pos = x - offset.left;
+					pos = x - offsetStyles.left;
 					percentage = (pos / width);
 					t.newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
 
-					// fake seek to where the mouse is 
+					// fake seek to where the mouse is
 					if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 						t.setCurrentRailHandle(t.newTime);
 						t.updateCurrent(t.newTime);
 					}
 
 					// position floating time box
-					if (!IS_IOS && !IS_ANDROID) {
-						t.timefloat.css('left', pos);
-						t.timefloatcurrent.html(secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength));
-						t.timefloat.show();
+					if (!IS_IOS && !IS_ANDROID && t.timefloat) {
+						t.timefloat.style.left = `${pos}px`;
+						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
+						t.timefloat.style.display = 'block';
 					}
 				}
 			},
@@ -141,20 +145,21 @@ Object.assign(MediaElementPlayer.prototype, {
 					duration = media.duration
 				;
 
-				t.slider.attr({
-					'role': 'slider',
-					'tabindex': 0
-				});
+				t.slider.setAttribute('role', 'slider');
+				t.slider.tabIndex = 0;
+
 				if (media.paused) {
-					t.slider.attr({
-						'aria-label': timeSliderText,
-						'aria-valuemin': 0,
-						'aria-valuemax': duration,
-						'aria-valuenow': seconds,
-						'aria-valuetext': time
-					});
+					t.slider.setAttribute('aria-label', timeSliderText);
+					t.slider.setAttribute('aria-valuemin', 0);
+					t.slider.setAttribute('aria-valuemax', duration);
+					t.slider.setAttribute('aria-valuenow', seconds);
+					t.slider.setAttribute('aria-valuetext', time);
 				} else {
-					t.slider.removeAttr('aria-label aria-valuemin aria-valuemax aria-valuenow aria-valuetext');
+					t.slider.removeAttribute('aria-label');
+					t.slider.removeAttribute('aria-valuemin');
+					t.slider.removeAttribute('aria-valuemax');
+					t.slider.removeAttribute('aria-valuenow');
+					t.slider.removeAttribute('aria-valuetext');
 				}
 			},
 			/**
@@ -169,7 +174,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			},
 			handleMouseup = () => {
 
-				if (mouseIsDown && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+				if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 					media.setCurrentTime(t.newTime);
 					player.setCurrentRail();
 					t.updateCurrent(t.newTime);
@@ -181,11 +186,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			};
 
 		// Events
-		t.slider.on('focus', () => {
+		t.slider.addEventListener('focus', () => {
 			player.options.autoRewind = false;
-		}).on('blur', () => {
+		});
+		t.slider.addEventListener('blur', () => {
 			player.options.autoRewind = autoRewindInitial;
-		}).on('keydown', (e) => {
+		});
+		t.slider.addEventListener('keydown', (e) => {
 
 			if ((new Date() - lastKeyPressTime) >= 1000) {
 				startedPaused = media.paused;
@@ -257,47 +264,64 @@ Object.assign(MediaElementPlayer.prototype, {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		}).on('mousedown touchstart', (e) => {
-			t.forcedHandlePause = false;
-			if (media.duration !== Infinity) {
-				// only handle left clicks or touch
-				if (e.which === 1 || e.which === 0) {
+		});
 
-					if (!media.paused) {
-						t.media.pause();
-						t.forcedHandlePause = true;
-					}
+		const events = ['mousedown', 'touchstart'];
 
-					mouseIsDown = true;
-					handleMouseMove(e);
-					t.globalBind('mousemove.dur touchmove.dur', (e) => {
-						handleMouseMove(e);
-					});
-					t.globalBind('mouseup.dur touchend.dur', () => {
-						handleMouseup();
-						mouseIsDown = false;
-						if (t.timefloat !== undefined) {
-							t.timefloat.hide();
+		// Required to manipulate mouse movements that require drag 'n' drop properly
+		t.slider.addEventListener('dragstart', () => false);
+
+		for (let i = 0, total = events.length; i < total; i++) {
+			t.slider.addEventListener(events[i], (e) => {
+				t.forcedHandlePause = false;
+				if (media.duration !== Infinity) {
+					// only handle left clicks or touch
+					if (e.which === 1 || e.which === 0) {
+
+						if (!media.paused) {
+							t.media.pause();
+							t.forcedHandlePause = true;
 						}
-						t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
-					});
+
+						mouseIsDown = true;
+						handleMouseMove(e);
+						t.globalBind('mousemove.dur touchmove.dur', (event) => {
+							const target = event.target;
+							if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
+								handleMouseMove(event);
+							}
+						});
+						t.globalBind('mouseup.dur touchend.dur', () => {
+							handleMouseup();
+							mouseIsDown = false;
+							if (t.timefloat) {
+								t.timefloat.style.display = 'none';
+							}
+							t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
+						});
+					}
 				}
-			}
-		}).on('mouseenter', () => {
-			if (media.duration !== Infinity) {
-				t.globalBind('mousemove.dur', (e) => {
-					handleMouseMove(e);
+			});
+		}
+		t.slider.addEventListener('mouseenter', (e) => {
+			if (e.target === t.slider && media.duration !== Infinity) {
+				t.globalBind('mousemove.dur', (event) => {
+					const target = event.target;
+					if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
+						handleMouseMove(event);
+					}
 				});
-				if (t.timefloat !== undefined && !IS_IOS && !IS_ANDROID) {
-					t.timefloat.show();
+				if (t.timefloat && !IS_IOS && !IS_ANDROID) {
+					t.timefloat.style.display = 'block';
 				}
 			}
-		}).on('mouseleave', () => {
+		});
+		t.slider.addEventListener('mouseleave', () => {
 			if (media.duration !== Infinity) {
 				if (!mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
-					if (t.timefloat !== undefined) {
-						t.timefloat.hide();
+					if (t.timefloat) {
+						t.timefloat.style.display = 'none';
 					}
 				}
 			}
@@ -307,30 +331,32 @@ Object.assign(MediaElementPlayer.prototype, {
 		// If media is does not have a finite duration, remove progress bar interaction
 		// and indicate that is a live broadcast
 		media.addEventListener('progress', (e) => {
+			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
 			if (media.duration !== Infinity) {
-
-				if (controls.find(`.${t.options.classPrefix}broadcast`).length) {
-					t.slider.show();
-					controls.find(`.${t.options.classPrefix}broadcast`).remove();
+				if (broadcast) {
+					t.slider.style.display = '';
+					broadcast.remove();
 				}
 
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
-			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
-				controls.find(`.${t.options.classPrefix}time-rail`).append(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
-				t.slider.hide();
+			} else if (!broadcast) {
+				const label = document.createElement('span');
+				label.className = `${t.options.classPrefix}broadcast`;
+				label.innerText = i18n.t('mejs.live-broadcast');
+				t.slider.style.display = 'none';
 			}
-		}, false);
+		});
 
 		// current time
 		media.addEventListener('timeupdate', (e) => {
+			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
 			if (media.duration !== Infinity ) {
-
-				if (controls.find(`.${t.options.classPrefix}broadcast`).length) {
-					t.slider.show();
-					controls.find(`.${t.options.classPrefix}broadcast`).remove();
+				if (broadcast) {
+					t.slider.style.display = '';
+					broadcast.remove();
 				}
 
 				player.setProgressRail(e);
@@ -338,13 +364,16 @@ Object.assign(MediaElementPlayer.prototype, {
 					player.setCurrentRail(e);
 				}
 				updateSlider(e);
-			} else if (!controls.find(`.${t.options.classPrefix}broadcast`).length) {
-				controls.find(`.${t.options.classPrefix}time-rail`).append(`<span class="${t.options.classPrefix}broadcast">${i18n.t('mejs.live-broadcast')}</span>`);
-				t.slider.hide();
+			} else if (!broadcast) {
+				const label = document.createElement('span');
+				label.className = `${t.options.classPrefix}broadcast`;
+				label.innerText = i18n.t('mejs.live-broadcast');
+				controls.querySelector(`.${t.options.classPrefix}time-rail`).appendChild(label);
+				t.slider.style.display = 'none';
 			}
-		}, false);
+		});
 
-		t.container.on('controlsresize', (e) => {
+		t.container.addEventListener('controlsresize', (e) => {
 			if (media.duration !== Infinity) {
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
@@ -359,7 +388,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {Event} e
 	 */
-	setProgressRail: function (e)  {
+	setProgressRail (e)  {
 
 		let percent = null;
 
@@ -390,7 +419,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
 			if (t.loaded && t.total) {
-				t.loaded.width(`${(percent * 100)}%`);
+				t.loaded.style.width = `${(percent * 100)}%`;
 			}
 		}
 	},
@@ -399,7 +428,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {Number} fakeTime
 	 */
-	setCurrentRailHandle: function (fakeTime) {
+	setCurrentRailHandle (fakeTime) {
 		const t = this;
 		t.setCurrentRailMain(t, fakeTime);
 	},
@@ -407,7 +436,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Update the slider's width depending on the current time
 	 *
 	 */
-	setCurrentRail: function () {
+	setCurrentRail () {
 		const t = this;
 		t.setCurrentRailMain(t);
 	},
@@ -417,20 +446,20 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {MediaElementPlayer} t
 	 * @param {?Number} fakeTime
 	 */
-	setCurrentRailMain: function (t, fakeTime) {
+	setCurrentRailMain (t, fakeTime) {
 		if (t.media.currentTime !== undefined && t.media.duration) {
 			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
 
 			// update bar and handle
 			if (t.total && t.handle) {
 				let
-					newWidth = Math.round(t.total.width() * nTime / t.media.duration),
-					handlePos = newWidth - Math.round(t.handle.outerWidth(true) / 2)
+					newWidth = Math.round(parseFloat(getComputedStyle(t.total).width) * nTime / t.media.duration),
+					handlePos = newWidth - Math.round(t.handle.offsetWidth / 2)
 				;
 
 				newWidth = nTime / t.media.duration * 100;
-				t.current.width(newWidth + '%');
-				t.handle.css('left', handlePos);
+				t.current.style.width = `${newWidth}%`;
+				t.handle.style.left = `${handlePos}px`;
 			}
 		}
 	}

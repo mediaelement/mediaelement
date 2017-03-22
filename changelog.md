@@ -1,5 +1,20 @@
 ### Version History
 
+*4.0.0 (2017/03/22)*
+
+* Removed all dependencies to jQuery in code and created `utils/dom.js` to mimic jQuery's most used methods @ron666
+* Added missing unit tests @ron666
+* Fixed minor issues on Twitch, Facebook HLS and M(PEG)-DASH renderers @ron666
+* Fixed minor issue with play/pause button not being updated properly when switching to new source and media has ended @ron666
+* Fixed issues in documentation @ron666
+* Fixed issue with `readyState` value in Flash video shim @ron666
+* Added pause event when changing media sources @ron666
+* Integrated `remove()` polyfill to simplify more code (https://github.com/johndyer/mediaelement/pull/2140) @jimmywarting
+* Reintegrated and improved `Download File` workflow if error happens while attempting to play media @ron666
+* Fixed workflow for `autoplay` property in all renderers @ron666
+* Integrated [Mocha JSDOM](https://github.com/rstacruz/mocha-jsdom) package to add more unit tests @ron666 
+* Created `utils.md` file to describe the utilities/features available @ron666 
+
 *3.2.4 (2017/03/14)*
 
 * Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @ron666

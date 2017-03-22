@@ -13,6 +13,7 @@
 	if (exports.ja === undefined) {
 		exports.ja = {
 			"mejs.plural-form": 0,			
+			"mejs.download-file": "ファイルをダウンロードする",			
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "全画面",			
 			"mejs.play": "再生",

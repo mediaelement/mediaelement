@@ -3,6 +3,7 @@
 import window from 'global/window';
 import document from 'global/document';
 import mejs from './mejs';
+import {createEvent} from '../utils/general';
 import {getTypeFromFile, formatType, absolutizeUrl} from '../utils/media';
 import {renderer} from './renderer';
 
@@ -38,7 +39,12 @@ class MediaElement {
 			 * Flag in `<object>` and `<embed>` to determine whether to use local or CDN
 			 * Possible values: 'always' (CDN version) or 'sameDomain' (local files)
 			 */
-			shimScriptAccess: 'sameDomain'
+			shimScriptAccess: 'sameDomain',
+			/**
+			 * If error happens, set up HTML message
+			 * @type {String}
+			 */
+			customError: ''
 		};
 
 		options = Object.assign(t.defaults, options);
@@ -47,7 +53,10 @@ class MediaElement {
 		t.mediaElement = document.createElement(options.fakeNodeName);
 		t.mediaElement.options = options;
 
-		let id = idOrNode;
+		let
+			id = idOrNode,
+			error = false
+		;
 
 		if (typeof idOrNode === 'string') {
 			t.mediaElement.originalNode = document.getElementById(idOrNode);
@@ -120,7 +129,7 @@ class MediaElement {
 			let
 				newRenderer = t.mediaElement.renderers[rendererName],
 				newRendererType = null
-				;
+			;
 
 			if (newRenderer !== undefined && newRenderer !== null) {
 				newRenderer.show();
@@ -173,6 +182,41 @@ class MediaElement {
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
 				t.mediaElement.renderer.setSize(width, height);
 			}
+		};
+
+		/**
+		 *
+		 * @param {Object[]} urlList
+		 */
+		t.mediaElement.createErrorMessage = (urlList) => {
+
+			urlList = Array.isArray(urlList) ? urlList : [];
+
+			const errorContainer = document.createElement('div');
+			errorContainer.className = 'me_cannotplay';
+			errorContainer.style.width = '100%';
+			errorContainer.style.height = '100%';
+
+			let errorContent = t.mediaElement.options.customError;
+
+			if (!errorContent) {
+
+				const poster = t.mediaElement.originalNode.getAttribute('poster');
+				if (poster) {
+					errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;
+				}
+
+				for (let i = 0, total = urlList.length; i < total; i++) {
+					const url = urlList[i];
+					errorContent += `<a href="${url.src}" data-type="${url.type}"><span>${mejs.i18n.t('mejs.download-file')}: ${url.src}</span></a>`;
+				}
+			}
+
+			errorContainer.innerHTML = errorContent;
+
+			t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
+			t.mediaElement.originalNode.style.display = 'none';
+			error = true;
 		};
 
 		const
@@ -249,12 +293,22 @@ class MediaElement {
 				;
 
 				// Ensure that the original gets the first source found
+				if (!t.mediaElement.paused) {
+					t.mediaElement.pause();
+					event = createEvent('pause', t.mediaElement);
+					t.mediaElement.dispatchEvent(event);
+				}
+
 				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
+
+				if (t.mediaElement.querySelector('.me_cannotplay')) {
+					t.mediaElement.querySelector('.me_cannotplay').remove();
+				}
 
 				// did we find a renderer?
 				if (renderInfo === null) {
-					event = document.createEvent('HTMLEvents');
-					event.initEvent('error', false, false);
+					t.mediaElement.createErrorMessage(mediaFiles);
+					event = createEvent('error', t.mediaElement);
 					event.message = 'No renderer found';
 					t.mediaElement.dispatchEvent(event);
 					return;
@@ -264,18 +318,25 @@ class MediaElement {
 				t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 				if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-					event = document.createEvent('HTMLEvents');
-					event.initEvent('error', false, false);
+					event = createEvent('error', t.mediaElement);
 					event.message = 'Error creating renderer';
 					t.mediaElement.dispatchEvent(event);
+					t.mediaElement.createErrorMessage(mediaFiles);
+					return;
 				}
 			},
 			assignMethods = (methodName) => {
 				// run the method on the current renderer
 				t.mediaElement[methodName] = (...args) => {
-					return (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
-					typeof t.mediaElement.renderer[methodName] === 'function') ?
-						t.mediaElement.renderer[methodName](args) : null;
+					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
+					typeof t.mediaElement.renderer[methodName] === 'function') {
+						try {
+							t.mediaElement.renderer[methodName](args)
+						} catch (e) {
+							t.mediaElement.createErrorMessage();
+						}
+					}
+					return null;
 				};
 
 			};
@@ -402,10 +463,9 @@ class MediaElement {
 			t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
 		}
 
-		// @todo: Verify if this is needed
-		// if (t.mediaElement.options.error) {
-		// 	t.mediaElement.options.error(this.mediaElement, this.mediaElement.originalNode);
-		// }
+		if (error && t.mediaElement.options.error) {
+			t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+		}
 
 		return t.mediaElement;
 	}

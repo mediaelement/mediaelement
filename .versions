@@ -1,6 +1,4 @@
-johndyer:mediaelement@3.2.4
-jquery@1.11.10
+johndyer:mediaelement@4.0.0
 meteor@1.6.1
 modules@0.7.9
 modules-runtime@0.7.9
-underscore@1.0.10

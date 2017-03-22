@@ -1,8 +1,10 @@
 'use strict';
 
+import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import {secondsToTimeCode} from '../utils/time';
+import {addClass, toggleClass} from '../utils/dom';
 
 /**
  * Current/duration times
@@ -36,24 +38,25 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildcurrent: function (player, controls, layers, media)  {
+	buildcurrent (player, controls, layers, media)  {
 		const
 			t = this,
-			time = $(`<div class="${t.options.classPrefix}time" role="timer" aria-live="off">` +
-				`<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength)}</span>` +
-			`</div>`)
+			time = document.createElement('div')
 		;
 
-		t.addControlElement(time, 'current');
+		time.className = `${t.options.classPrefix}time`;
+		time.setAttribute('role', 'timer');
+		time.setAttribute('aria-live', 'off');
+		time.innerHTML = `<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength)}</span>`;
 
-		t.currenttime = t.controls.find(`.${t.options.classPrefix}currenttime`);
+		t.addControlElement(time, 'current');
 
 		media.addEventListener('timeupdate', () => {
 			if (t.controlsAreVisible) {
 				player.updateCurrent();
 			}
 
-		}, false);
+		});
 	},
 
 	/**
@@ -65,44 +68,45 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildduration: function (player, controls, layers, media)  {
+	buildduration (player, controls, layers, media)  {
 
-		const t = this;
+		const
+			t = this,
+			currTime = controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime')
+		;
 
-		if (controls.children().last().find(`.${t.options.classPrefix}currenttime`).length > 0) {
-			const duration = $(`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>`);
-
-			duration.appendTo(controls.find(`.${t.options.classPrefix}time`));
+		if (currTime) {
+			controls.querySelector(`.${t.options.classPrefix}time`).innerHTML +=
+				`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>`;
 
 		} else {
 
 			// add class to current time
-			controls.find(`.${t.options.classPrefix}currenttime`).parent()
-				.addClass(`${t.options.classPrefix}currenttime-container`);
+			if (controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
+				addClass(controls.querySelector(`.${t.options.classPrefix}currenttime`).parentNode, `${t.options.classPrefix}currenttime-container`);
+			}
 
-			const duration = $(`<div class="${t.options.classPrefix}time ${t.options.classPrefix}duration-container">` +
-				`<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>` +
-			`</div>`);
+			const duration = document.createElement('div');
+			duration.className = `${t.options.classPrefix}time ${t.options.classPrefix}duration-container`;
+			duration.innerHTML = `<span class="${t.options.classPrefix}duration">` +
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>`;
 
 			t.addControlElement(duration, 'duration');
 		}
-
-		t.durationD = t.controls.find(`.${t.options.classPrefix}duration`);
 
 		media.addEventListener('timeupdate', () => {
 			if (t.controlsAreVisible) {
 				player.updateDuration();
 			}
-		}, false);
+		});
 	},
 
 	/**
 	 * Update the current time and output it in format 00:00
 	 *
 	 */
-	updateCurrent: function ()  {
+	updateCurrent ()  {
 		const t = this;
 
 		let currentTime = t.media.currentTime;
@@ -111,8 +115,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			currentTime = 0;
 		}
 
-		if (t.currenttime) {
-			t.currenttime.html(secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength));
+		if (t.controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
+			t.controls.querySelector(`.${t.options.classPrefix}currenttime`).innerText = secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		}
 	},
 
@@ -120,7 +124,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Update the duration time and output it in format 00:00
 	 *
 	 */
-	updateDuration: function ()  {
+	updateDuration ()  {
 		const t = this;
 
 		let duration = t.media.duration;
@@ -132,12 +136,16 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (t.options.duration > 0) {
 			duration = t.options.duration;
 		}
-		let timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
-		/* Toggle long-video class if time code is >5 digits (MM:SS) */
-		t.container.toggleClass(`${t.options.classPrefix}long-video`, timecode.length > 5);
 
-		if (t.durationD && duration > 0) {
-			t.durationD.html(timecode);
+		const timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+
+		// Toggle long-video class if time code is >5 digits (MM:SS)
+		if (timecode.length > 5) {
+			toggleClass(t.container, `${t.options.classPrefix}long-video`);
+		}
+
+		if (t.controls.querySelector(`.${t.options.classPrefix}duration`) && duration > 0) {
+			t.controls.querySelector(`.${t.options.classPrefix}duration`).innerHTML = timecode;
 		}
 	}
 });

@@ -13,6 +13,7 @@
 	if (exports['zh-CN'] === undefined) {
 		exports['zh-CN'] = {
 			"mejs.plural-form": 0,			
+			"mejs.download-file": "下载文件",			
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "全屏",			
 			"mejs.play": "播放",

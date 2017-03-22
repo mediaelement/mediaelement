@@ -84,6 +84,8 @@ Additional features can be found at https://github.com/johndyer/mediaelement-plu
    
 `MediaElement.js` has many options that you can take advantage from. Visit [API and Configuration](docs/api.md) for more details.
 
+Also, a `Utilities/Features` guide is available for development. Visit [Utilities/Features](docs/utils.md) for more details.
+
 <a id="guidelines"></a>
 ## Guidelines for Contributors
 

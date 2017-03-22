@@ -53,7 +53,8 @@ var FacebookRenderer = {
 		var fbWrapper = {},
 		    apiStack = [],
 		    eventHandler = {},
-		    readyState = 4;
+		    readyState = 4,
+		    autoplay = mediaElement.originalNode.autoplay;
 
 		var src = '',
 		    paused = true,
@@ -132,11 +133,15 @@ var FacebookRenderer = {
 
 							// Only way is to destroy instance and all the events fired,
 							// and create new one
-							fbDiv.parentNode.removeChild(fbDiv);
+							fbDiv.remove();
 							createFacebookEmbed(url, options.facebook);
 
 							// This method reloads video on-demand
 							FB.XFBML.parse();
+
+							if (autoplay) {
+								fbApi.play();
+							}
 
 							break;
 
@@ -237,7 +242,10 @@ var FacebookRenderer = {
    * @param {Object} config
    */
 		function createFacebookEmbed(url, config) {
+
+			// Append width and height if not detected
 			src = url;
+
 			fbDiv = document.createElement('div');
 			fbDiv.id = fbWrapper.id;
 			fbDiv.className = "fb-video";
@@ -265,8 +273,8 @@ var FacebookRenderer = {
 
 							// Set proper size since player dimensions are unknown before this event
 							var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
-							    width = parseInt(window.getComputedStyle(fbIframe, null).width),
-							    height = parseInt(fbIframe.style.height),
+							    width = fbIframe.offsetWidth,
+							    height = fbIframe.offsetHeight,
 							    events = ['mouseover', 'mouseout'],
 							    assignEvents = function assignEvents(e) {
 								var event = mejs.Utils.createEvent(e.type, fbWrapper);
@@ -274,6 +282,10 @@ var FacebookRenderer = {
 							};
 
 							fbWrapper.setSize(width, height);
+
+							if (autoplay) {
+								fbApi.play();
+							}
 
 							for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
 								fbIframe.addEventListener(events[_i3], assignEvents, false);
@@ -334,12 +346,7 @@ var FacebookRenderer = {
 								paused = true;
 								ended = true;
 
-								// Workaround to update progress bar one last time and trigger ended event
-								timer = setInterval(function () {
-									fbApi.getCurrentPosition();
-									sendEvents(['timeupdate', 'ended']);
-								}, 250);
-
+								sendEvents(['ended']);
 								clearInterval(timer);
 								timer = null;
 							});
@@ -384,8 +391,8 @@ var FacebookRenderer = {
 		};
 		fbWrapper.setSize = function (width, height) {
 			if (fbApi !== null && !isNaN(width) && !isNaN(height)) {
-				fbDiv.setAttribute('width', width);
-				fbDiv.setAttribute('height', height);
+				fbDiv.style.width = width;
+				fbDiv.style.height = height;
 			}
 		};
 		fbWrapper.destroy = function () {};

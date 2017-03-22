@@ -13,6 +13,7 @@
 	if (exports.cs === undefined) {
 		exports.cs = {
 			"mejs.plural-form": 8,			
+			"mejs.download-file": "Stáhnout soubor",			
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "Celá obrazovka",			
 			"mejs.play": "Přehrát",

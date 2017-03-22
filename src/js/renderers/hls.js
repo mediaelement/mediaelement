@@ -105,7 +105,6 @@ const NativeHls = {
 	 * @return {Hls}
 	 */
 	createInstance: (settings) => {
-		console.log(settings.options);
 		const player = new Hls(settings.options);
 		window['__ready__' + settings.id](player);
 		return player;
@@ -150,7 +149,7 @@ const HlsNativeRenderer = {
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
 			preload = originalNode.getAttribute('preload'),
-			autoplay = originalNode.getAttribute('autoplay')
+			autoplay = originalNode.autoplay
 		;
 
 		let
@@ -160,7 +159,7 @@ const HlsNativeRenderer = {
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
-		options.autoStartLoad = (preload === 'auto');
+		options.hls.autoStartLoad = ((preload && preload !== 'none') || autoplay);
 
 		// WRAPPERS for PROPs
 		const
@@ -183,14 +182,8 @@ const HlsNativeRenderer = {
 									id: id
 								});
 
-								hlsPlayer.attachMedia(node);
 								hlsPlayer.loadSource(value);
-
-								if (autoplay) {
-									hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
-										node.play();
-									});
-								}
+								hlsPlayer.attachMedia(node);
 							}
 						}
 					}
@@ -219,13 +212,8 @@ const HlsNativeRenderer = {
 
 						const url = node.src;
 
-						hlsPlayer.attachMedia(node);
 						hlsPlayer.loadSource(url);
-						if (autoplay) {
-							hlsPlayer.on(hlsEvents.MANIFEST_PARSED, () => {
-								node.play();
-							});
-						}
+						hlsPlayer.attachMedia(node);
 					}
 
 					node.addEventListener(eventName, (e) => {
@@ -259,7 +247,7 @@ const HlsNativeRenderer = {
 				mediaElement.dispatchEvent(event);
 
 				if (e === 'hlsError') {
-					console.error(e, data);
+					console.warn(e, data);
 
 					// borrowed from http://dailymotion.github.io/hls.js/demo/
 					if (data.fatal) {
@@ -306,20 +294,24 @@ const HlsNativeRenderer = {
 			}
 		}
 
-		if (preload !== 'auto') {
+		if (preload !== 'auto' && !autoplay) {
 			node.addEventListener('play', () => {
-				hlsPlayer.startLoad();
-			}, false);
+				if (hlsPlayer !== null) {
+					hlsPlayer.startLoad();
+				}
+			});
 
 			node.addEventListener('pause', () => {
-				hlsPlayer.stopLoad();
-			}, false);
+				if (hlsPlayer !== null) {
+					hlsPlayer.stopLoad();
+				}
+			});
 		}
 
 		node.setAttribute('id', id);
 
 		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
+		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
 		NativeHls.prepareSettings({
@@ -329,9 +321,8 @@ const HlsNativeRenderer = {
 
 		// HELPER METHODS
 		node.setSize = (width, height) => {
-			node.style.width = width + 'px';
-			node.style.height = height + 'px';
-
+			node.style.width = `${width}px`;
+			node.style.height = `${height}px`;
 			return node;
 		};
 
@@ -347,11 +338,15 @@ const HlsNativeRenderer = {
 		};
 
 		node.destroy = () => {
-			hlsPlayer.destroy();
+			if (hlsPlayer !== null) {
+				hlsPlayer.destroy();
+			}
 		};
 
 		node.stop = () => {
-			hlsPlayer.stopLoad();
+			if (hlsPlayer !== null) {
+				hlsPlayer.stopLoad();
+			}
 		};
 
 		const event = createEvent('rendererready', node);

@@ -147,7 +147,7 @@ const FlvNativeRenderer = {
 
 		let
 			node = null,
-			flvPlayer
+			flvPlayer = null
 		;
 
 		node = originalNode.cloneNode(true);
@@ -225,7 +225,7 @@ const FlvNativeRenderer = {
 		node.setAttribute('id', id);
 
 		originalNode.parentNode.insertBefore(node, originalNode);
-		originalNode.removeAttribute('autoplay');
+		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
 		// Options that cannot be overridden
@@ -239,13 +239,15 @@ const FlvNativeRenderer = {
 
 		// HELPER METHODS
 		node.setSize = (width, height) => {
-			node.style.width = width + 'px';
-			node.style.height = height + 'px';
+			node.style.width = `${width}px`;
+			node.style.height = `${height}px`;
 			return node;
 		};
 
 		node.hide = () => {
-			flvPlayer.pause();
+			if (flvPlayer !== null) {
+				flvPlayer.pause();
+			}
 			node.style.display = 'none';
 			return node;
 		};
@@ -256,7 +258,9 @@ const FlvNativeRenderer = {
 		};
 
 		node.destroy = () => {
-			flvPlayer.destroy();
+			if (flvPlayer !== null) {
+				flvPlayer.destroy();
+			}
 		};
 
 		const event = createEvent('rendererready', node);

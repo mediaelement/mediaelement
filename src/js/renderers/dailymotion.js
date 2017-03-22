@@ -434,7 +434,7 @@ const DailyMotionIframeRenderer = {
 				id: dm.id,
 				container: dmContainer,
 				videoId: videoId,
-				autoplay: !!(mediaElement.originalNode.getAttribute('autoplay'))
+				autoplay: mediaElement.originalNode.autoplay
 			}, dm.options.dailymotion);
 
 		DailyMotionApi.enqueueIframe(dmSettings);

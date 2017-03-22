@@ -293,7 +293,7 @@ const FlashMediaElementRenderer = {
 		}
 
 		const
-			autoplay = !!mediaElement.getAttribute('autoplay'),
+			autoplay = mediaElement.originalNode.autoplay,
 			flashVars = [`uid=${flash.id}`, `autoplay=${autoplay}`, `allowScriptAccess=${flash.options.shimScriptAccess}`],
 			isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 			flashHeight = (isVideo) ? mediaElement.originalNode.height : 1,
@@ -397,8 +397,8 @@ const FlashMediaElementRenderer = {
 			}
 		};
 		flash.setSize = (width, height) => {
-			flash.flashNode.style.width = width + 'px';
-			flash.flashNode.style.height = height + 'px';
+			flash.flashNode.style.width = `${width}px`;
+			flash.flashNode.style.height = `${height}px`;
 
 			if (flash.flashApi !== null && typeof flash.flashApi.fire_setSize === 'function') {
 				flash.flashApi.fire_setSize(width, height);
@@ -406,7 +406,7 @@ const FlashMediaElementRenderer = {
 		};
 
 		flash.destroy = () => {
-			flash.flashNode.parentNode.removeChild(flash.flashNode);
+			flash.flashNode.remove();
 		};
 
 

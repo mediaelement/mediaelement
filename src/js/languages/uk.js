@@ -15,6 +15,9 @@
 		exports.uk = {
 			"mejs.plural-form": 7,
 
+			// core/mediaelement.js
+			// "mejs.download-file": "Download File",
+
 			// renderers/flash.js
 			"mejs.install-flash": "Flash Player у вашому браузері не встановлений або відключений. Будь ласка включіть Flash Player або скачайте останню версію із https://get.adobe.com/flashplayer/",
 

@@ -459,7 +459,7 @@ const TwitchIframeRenderer = {
 				ended = false;
 				sendEvents(['rendererready', 'loadedmetadata', 'loadeddata', 'canplay']);
 
-			}, false);
+			});
 			twitchPlayer.addEventListener('play', () => {
 				if (!hasStartedPlaying) {
 					hasStartedPlaying = true;
@@ -474,7 +474,7 @@ const TwitchIframeRenderer = {
 					sendEvents(['timeupdate']);
 				}, 250);
 
-			}, false);
+			});
 			twitchPlayer.addEventListener('pause', () => {
 				paused = true;
 				ended = false;
@@ -482,7 +482,7 @@ const TwitchIframeRenderer = {
 					sendEvents(['pause']);
 				}
 
-			}, false);
+			});
 			twitchPlayer.addEventListener('ended', () => {
 				paused = true;
 				ended = true;
@@ -490,7 +490,7 @@ const TwitchIframeRenderer = {
 				clearInterval(timer);
 				hasStartedPlaying = false;
 				timer = null;
-			}, false);
+			});
 		};
 
 		// CREATE Twitch
@@ -504,7 +504,7 @@ const TwitchIframeRenderer = {
 				width: width,
 				height: height,
 				playsinline: false,
-				autoplay: false
+				autoplay: mediaElement.originalNode.autoplay
 			}
 		;
 
@@ -515,6 +515,7 @@ const TwitchIframeRenderer = {
 
 		mediaElement.originalNode.parentNode.insertBefore(twitchContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
+		mediaElement.originalNode.autoplay = false;
 
 		// send it off for async loading and creation
 		twitchApi.enqueueIframe(twitchSettings);

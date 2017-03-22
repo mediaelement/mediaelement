@@ -61,30 +61,13 @@ export function getTypeFromFile (url) {
 		throw new Error('`url` argument must be a string');
 	}
 
-	let type;
-
-	// Validate `typeChecks` array
-	if (!Array.isArray(typeChecks)) {
-		throw new Error('`typeChecks` must be an array');
-	}
-
-	if (typeChecks.length) {
-		for (let i = 0, total = typeChecks.length; i < total; i++) {
-			const type = typeChecks[i];
-
-			if (typeof type !== 'function') {
-				throw new Error('Element in array must be a function');
-			}
-		}
-	}
-
-	// do type checks first
 	for (let i = 0, total = typeChecks.length; i < total; i++) {
+		if (typeof typeChecks[i] === 'function') {
+			const type = typeChecks[i](url);
 
-		type = typeChecks[i](url);
-
-		if (type !== undefined && type !== null) {
-			return type;
+			if (type !== undefined && type !== null) {
+				return type;
+			}
 		}
 	}
 

@@ -314,7 +314,7 @@ const YouTubeIframeRenderer = {
 								const url = typeof value === 'string' ? value : value[0].src,
 									videoId = YouTubeApi.getYouTubeId(url);
 
-								if (mediaElement.getAttribute('autoplay')) {
+								if (mediaElement.originalNode.autoplay) {
 									youTubeApi.loadVideoById(videoId);
 								} else {
 									youTubeApi.cueVideoById(videoId);
