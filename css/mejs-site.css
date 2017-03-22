@@ -50,18 +50,16 @@ table {
 
 /* MEJS site */
 body {
-	font-family: "Lato", Arial, Helvetica, sans-serif;
-	font-size: 16px;
+	font: normal 16px "Lato", Arial, Helvetica, sans-serif;
 }
 body, section {
 	overflow-x: hidden;
 }
-h1, h2, h3, h4, {
+h1, h2, h3, h4 {
 	font-family: "Montserrat", Arial, Helvetica, sans-serif;
 }
 h2 {
 	font-family: "Montserrat", Arial, Helvetica, sans-serif;
-	text-transform: uppercase;
 	font-size: 2em;
 	text-align: center;
 	margin: 1em 0;
@@ -91,6 +89,26 @@ li {
 }
 p, li {
 	line-height: 1.4;
+}
+select {
+	float: right;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	background-repeat: no-repeat;
+	background-size: 1em auto;
+	background-position: right 0.25em center;
+	padding: 0 1.2em 0 0.5em;
+	background-image: url("data:image/svg+xml;charset=utf-8, \
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 40'> \
+      <polygon points='0,0 60,0 30,40' style='fill:black;'/> \
+    </svg>");
+	font-size: 0.9em;
+	text-transform: capitalize;
+	border: none;
+	background-color: transparent;
+	font-weight: 200;
+	width: 165px;
 }
 
 /* menu */
@@ -197,43 +215,57 @@ header .container {
 	
 }
 
+a.button {
+	border-radius: 16px;
+	margin: 0 0 0 0.5em;
+	padding: 0.5em 0.75em;
+	text-decoration: none;
+	display: inline-block;
+}
+
 /* first section */
 .overview {
-	background: #286E98;
+	background-color: #EB5802;
+	background-image: -webkit-linear-gradient(top, #EB5802, #F3AD39); /* Chrome 10-25, iOS 5+, Safari 5.1+ */
+	background-image:         linear-gradient(to bottom, #EB5802, #F3AD39);
 	padding: 2em;
 	color: #fff;
 }
 
 .center {
 	text-align: center;
-	margin: 0 auto;
+	margin: 0 auto 30px;
 }
 
 a.download {
-	margin: 0 0 0 0.5em;
-	padding: 0.5em 0.75em;
-	text-decoration: none;
-	display: inline-block;
-	color: #fff;
-	background: #FA7D18;
-	border-radius: 4px;
+	color: #F3AD39;
+	background: #fff;
 }
 
 .overview p {
 	line-height: 1.5;
 	max-width: 650px;
-	margin: 1em auto;
+	margin: 0.5em auto 1em;
 	text-align: center;
+	font-weight: 200;
 }
 
 .overview-links {
 	text-align: center;
+	margin-bottom: 50px;
 }
 
+h2.main {
+	margin: 1em 0 0.5em;
+	font-style: italic;
+	font-family: "Lato", Arial, Helvetica, sans-serif;
+	text-transform: none;
+	font-weight: 700;
+}
 
 /* audio and video  */
 .players {
-	background: #333;
+	background: #F4F4F4;
 	padding: 3em 0;
 }
 
@@ -241,11 +273,22 @@ a.download {
 	max-width: 750px;
 }
 
+.players h2 {
+	font-weight: 700;
+	font-size: 1.5em;
+	margin: 1em 0 0;
+}
+
 .players h4 {
-	color: #fff;
+	font-weight: 700;
 	font-size: 1.5em;
 	margin: 1em 0;
 	text-align: center;
+}
+
+.players p {
+	text-align: center;
+	font-weight: 200;
 }
 
 .player-selector {
@@ -262,7 +305,16 @@ a.download {
 .player {
 	visibility: hidden;
 }
+.player:first-of-type {
+	margin-bottom: 50px;
+}
 
+.title {
+	float: left;
+}
+.clearfix {
+	overflow: auto;
+}
 /* list of logos  */
 .sitesusing {
 	padding: 3em 0;
@@ -287,17 +339,39 @@ a.download {
 
 /* what's new  */
 .features {
-	padding: 3em 0;	
-	background: #4B9303;
+	padding: 3em 0;
+	background-color: #3224AE;
+	background-image: -webkit-linear-gradient(left, #3224AE, #C56CD6);
+	background-image:         linear-gradient(to right, #3224AE, #C56CD6);
 	color: #fff;
 }
+
+.heart {
+	background: url("../images/heart.svg") no-repeat;
+	width: 30px;
+	height: 30px;
+	background-size: 30px 30px;
+	text-indent: -9999px;
+	display: inline-block;
+}
+
+.flash {
+	background: url("../images/flash.jpg") no-repeat;
+	width: 42px;
+	height: 42px;
+	background-size: 42px 42px;
+	text-indent: -9999px;
+	display: inline-block;
+}
+
 .features .container ul {
 	margin: 0 20px 10px;
 }
-.features a {
-	color: #084468;
+.features .button {
+	border: 1px solid #fff;
+	color: #fff;
+	margin-bottom: 10px;
 }
-
 
 /* getting started */
 .get-started {
@@ -329,7 +403,7 @@ a.download {
 
 /* bottom  */
 footer {
-	background: #333;
+	background: #000;
 	color: #fff;
 	padding: 2em 0;
 	text-align: center;
