@@ -279,6 +279,21 @@ describe('Utilities', () => {
 
 	});
 
+	describe('#absolutizeUrl', () => {
+
+		jsdom({url: "http://localhost"});
+		
+		it ('returns the full URL for a relative URL', () => {
+			expect(media.absolutizeUrl('/media/demo.html')).to.equal('http://localhost/media/demo.html');
+		});
+
+		it('accepts only strings', () => {
+			expect(() => {
+				media.absolutizeUrl(82618);
+			}).to.throw(Error);
+		});
+	});
+
 	describe('#formatType', () => {
 
 		it('returns the format of a specific media using ONLY a URL', () => {
