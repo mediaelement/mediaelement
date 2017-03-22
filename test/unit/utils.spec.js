@@ -4,6 +4,7 @@ import * as general from '../../src/js/utils/general';
 import * as time from '../../src/js/utils/time';
 import * as media from '../../src/js/utils/media';
 import {expect} from 'chai';
+import jsdom from 'mocha-jsdom';
 
 describe('Utilities', () => {
 	
@@ -76,16 +77,6 @@ describe('Utilities', () => {
 
 	});
 
-	describe('#isString', () => {
-
-		it('checks effectively that an argument is a string', () => {
-
-			expect(general.isString('1234')).to.equal(true);
-			expect(general.isString(1234)).to.equal(false);
-			expect(general.isString({})).to.equal(false);
-		});
-	});
-
 	describe('#splitEvents', () => {
 
 		it('separates and group events depending their format', () => {
@@ -99,6 +90,39 @@ describe('Utilities', () => {
 			expect(result.d).to.equal('.mouseup.mep_0 .volumechange.test.mep_0');
 			expect(typeof result.w).to.equal('string');
 			expect(result.w).to.equal('beforeunload.mep_0 hashchange.mep_0 message.mep_0 resize.mep_0 storage.mep_0 .mouseup.mep_0 .volumechange.test.mep_0');
+		});
+	});
+
+	describe('#createEvent', () => {
+
+		jsdom();
+
+		it('create a custom event', () => {
+
+			const target = {};
+
+			const event = general.createEvent('customevent.namespace', target);
+			expect(event.detail.target).to.equal(target);
+			expect(event.detail.namespace).to.equal('namespace');
+			expect(event instanceof window.CustomEvent).to.equal(true);
+		});
+
+		it('only accepts strings as a first argument', () => {
+
+			expect(() => {
+				general.createEvent(12345);
+			}).to.throw(Error);
+
+		});
+	});
+
+	describe('#isString', () => {
+
+		it('checks effectively that an argument is a string', () => {
+
+			expect(general.isString('1234')).to.equal(true);
+			expect(general.isString(1234)).to.equal(false);
+			expect(general.isString({})).to.equal(false);
 		});
 	});
 
@@ -122,7 +146,7 @@ describe('Utilities', () => {
 	});
 
 	describe('#isDropFrame', () => {
-		it('indicate if frames per second is a non-integer frame rates (i.e., 29.976)', () => {
+		it('indicates if frames per second is a non-integer frame rates (i.e., 29.976)', () => {
 			expect(time.isDropFrame()).to.equal(false);
 			expect(time.isDropFrame(30)).to.equal(false);
 			expect(time.isDropFrame(3.679)).to.equal(true);
@@ -153,6 +177,12 @@ describe('Utilities', () => {
 			expect(time.secondsToTimeCode(3600.234, true, true)).to.equal('01:00:00:06');
 		});
 
+		it('checks if frames per second has decimals and adjust the time code', () => {
+			expect(time.secondsToTimeCode(36.45, false, true, 32.46)).to.equal('00:36;31');
+			expect(time.secondsToTimeCode(70.87465, false, true, 32.6891, 3)).to.equal('01:10;09');
+			expect(time.secondsToTimeCode(0.378, false, true, 300.2, 3)).to.equal('00:00;113');
+		});
+
 		it('can only accept numeric values for the time; otherwise, turns it to zero', () => {
 			expect(time.secondsToTimeCode({})).to.equal('00:00');
 			expect(time.secondsToTimeCode(undefined)).to.equal('00:00');
@@ -168,12 +198,13 @@ describe('Utilities', () => {
 			expect(time.timeCodeToSeconds('00:36')).to.equal(36);
 			expect(time.timeCodeToSeconds('01:10')).to.equal(70);
 			expect(time.timeCodeToSeconds('01:00:00')).to.equal(3600);
+			expect(time.timeCodeToSeconds('00:36;45')).to.equal(2205);
 		});
 
 		it('can show the numeric value with decimals of time when frames per second are indicated', () => {
-
 			expect(time.timeCodeToSeconds('00:00:36:14', 32)).to.equal(36.438);
 			expect(time.timeCodeToSeconds('00:01:10:35', 40)).to.equal(70.875);
+			expect(time.timeCodeToSeconds('00:01:10:35', 15.77)).to.equal(1154);
 			expect(time.timeCodeToSeconds('01:00:00:05')).to.equal(3600.2);
 			expect(time.timeCodeToSeconds('01:00:00;05')).to.equal(3600.2);
 		});
@@ -327,7 +358,9 @@ describe('Utilities', () => {
 			media.typeChecks = typeChecks;
 
 			expect(media.getTypeFromFile('http://example.com/media.mp4')).to.equal('video/mp4');
+			expect(media.getTypeFromFile('http://example.com/media2.mp4?x=1&y=2')).to.equal('video/mp4');
 			expect(media.getTypeFromFile('http://example.com/media.mp3')).to.equal('audio/mp3');
+			expect(media.getTypeFromFile('http://example.com/media2.mp3?x=1&y=2')).to.equal('audio/mp3');
 
 		});
 

@@ -109,7 +109,7 @@ export function createEvent (eventName, target) {
 	}
 
 	const
-		eventFrags = eventName.match(/\[a-z]+\.(\[a-z]+)/),
+		eventFrags = eventName.match(/[a-z]+\.([a-z]+)/),
 		detail = {
 			target: target
 		}
@@ -120,7 +120,7 @@ export function createEvent (eventName, target) {
 		detail.namespace = eventFrags[1];
 	}
 
-	return new CustomEvent(eventName, {
+	return new window.CustomEvent(eventName, {
 		detail: detail
 	});
 }
