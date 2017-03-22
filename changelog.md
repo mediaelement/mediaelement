@@ -10,7 +10,7 @@
 * Fixed issue with `readyState` value in Flash video shim @ron666
 * Added pause event when changing media sources @ron666
 * Integrated `remove()` polyfill to simplify more code (https://github.com/johndyer/mediaelement/pull/2140) @jimmywarting
-* Reintegrated and improved Download File workflow if error happens while attempting to play media @ron666
+* Reintegrated and improved `Download File` workflow if error happens while attempting to play media @ron666
 * Fixed workflow for `autoplay` property in all renderers @ron666
 
 *3.2.4 (2017/03/14)*
