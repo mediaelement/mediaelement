@@ -62,16 +62,12 @@ export function getTypeFromFile (url) {
 	}
 
 	for (let i = 0, total = typeChecks.length; i < total; i++) {
-		const type = typeChecks[i];
+		if (typeof typeChecks[i] === 'function') {
+			const type = typeChecks[i](url);
 
-		if (typeof type !== 'function') {
-			throw new Error('Element in array must be a function');
-		}
-
-		const callback = type(url);
-
-		if (callback !== undefined && callback !== null) {
-			return callback;
+			if (type !== undefined && type !== null) {
+				return type;
+			}
 		}
 	}
 

@@ -357,7 +357,7 @@ describe('Utilities', () => {
 
 		it('returns the type of media based on URL structure', () => {
 
-			const typeChecks = [
+			media.typeChecks =  [
 				(url) => {
 					if (url.match(/.mp4/)) {
 						return 'video/mp4';
@@ -370,7 +370,6 @@ describe('Utilities', () => {
 				}
 
 			];
-			media.typeChecks = typeChecks;
 
 			expect(media.getTypeFromFile('http://example.com/media.mp4')).to.equal('video/mp4');
 			expect(media.getTypeFromFile('http://example.com/media2.mp4?x=1&y=2')).to.equal('video/mp4');
@@ -380,13 +379,9 @@ describe('Utilities', () => {
 		});
 
 		it('can only accept strings', () => {
-
-			const
-				type = {},
-				test = () => {
-					media.getTypeFromFile(type);
-				};
-			expect(test).to.throw(Error);
+			expect(() => {
+				media.getTypeFromFile({});
+			}).to.throw(Error);
 		});
 	});
 
