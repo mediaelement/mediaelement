@@ -31,12 +31,16 @@ One file. Any browser. Same UI.
 
 _MediaElementPlayer: HTML5 `<video>` and `<audio>` player_
 
-A complete HTML/CSS audio/video player built on top `MediaElement.js` and `jQuery`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
+A complete HTML/CSS audio/video player built on top `MediaElement.js`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
 
 `MediaElement.js` is a set of custom Flash plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) on all browsers.
 
 In general, `MediaElement.js` supports **IE9+, MS Edge, Chrome, Firefox, Safari, iOS 8+** and **Android 4.0+**.
+
+## * IMPORTANT NOTE ABOUT `4.x` VERSION
+
+`jQuery` has been completely removed from the code base, with the only exception of converting `MediaElementPlayer` into a `jQuery` plugin.
 
 <a id="migration"></a>
 ## * IMPORTANT: Migrating from `2.x` to `3.x` version
