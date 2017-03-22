@@ -61,11 +61,11 @@ For more information about how to set up a server to serve media properly and ot
  
 To get the default installation there are several different ways.
  
-1. Download the package from https://github.com/johndyer/mediaelement 
+1. Download the package from https://github.com/mediaelement/mediaelement 
 
 2. Use a CDN reference; the most popular ones are [jsDelivr](http://www.jsdelivr.com/projects/mediaelement) and [cdnjs](https://cdnjs.com/libraries/mediaelement). 
 
-3. Through GIT: `git clone https://github.com/johndyer/mediaelement.git`
+3. Through GIT: `git clone https://github.com/mediaelement/mediaelement.git`
 
 4. Through NPM: `npm install mediaelement`
 
@@ -86,7 +86,7 @@ However, if you want to bring the latest version and support the `Embeds` functi
 
 1. Just remove the entire content of the folder and Paste the content of the `build` folder from the latest version of `MediaElementJS` inside of it. 
 
-2. Download the [wp-mediaelement.zip](https://github.com/johndyer/mediaelement/files/842296/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
+2. Download the [wp-mediaelement.zip](https://github.com/mediaelement/mediaelement/files/842296/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
 
 <a id="wp-functions"></a>
 #### `wp-includes/functions.php`
@@ -250,7 +250,7 @@ $styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-
 <a id="plugins"></a>
 ### Additional plugins
 
-If you want to install any of them, refer to the new plugins repository clicking [here](https://github.com/johndyer/mediaelement-plugins) for more information.
+If you want to install any of them, refer to the new plugins repository clicking [here](https://github.com/mediaelement/mediaelement-plugins) for more information.
 
 <a id="script-and-stylesheet"></a>
 ## 2. Add Script and Stylesheet

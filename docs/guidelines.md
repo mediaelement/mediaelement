@@ -16,7 +16,7 @@
 
 * Tab size is **8** for indentation.
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
-* Make sure you download the necessary media files from https://github.com/johndyer/mediaelement-files and place them inside the `/media/` directory.
+* Make sure you download the necessary media files from https://github.com/mediaelement/mediaelement-files and place them inside the `/media/` directory.
 * Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product. 
 
 <a id="features"></a>
@@ -409,7 +409,7 @@ if (mejs.i18n.[lang] === undefined) {
 
 **IMPORTANT**: You will also need to add the language in the `MediaElement Plugins` repository. 
 
-For more information about this, read the [Template for Translations](https://github.com/johndyer/mediaelement-plugins#translations) documentation.
+For more information about this, read the [Template for Translations](https://github.com/mediaelement/mediaelement-plugins#translations) documentation.
 
 <a id="es6"></a>
 ### A word on `ES6` for Renderers

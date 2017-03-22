@@ -4,16 +4,16 @@ One file. Any browser. Same UI.
 
 * Author: John Dyer [http://j.hn/](http://j.hn/)
 * Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
-* License: [MIT](http://johndyer.mit-license.org/)
+* License: [MIT](http://mediaelement.mit-license.org/)
 * Meaning: Use everywhere, keep copyright, it'd be swell if you'd link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
-* Contributors: [all contributors](https://github.com/johndyer/mediaelement/graphs/contributors)
+* Contributors: [all contributors](https://github.com/mediaelement/mediaelement/graphs/contributors)
 * Currently maintained by Rafael Miranda (@ron666)
 
-[![GitHub Version](https://img.shields.io/npm/v/mediaelement.svg)](https://github.com/johndyer/mediaelement)
-[![Build Status](https://img.shields.io/travis/johndyer/mediaelement.svg)](https://travis-ci.org/johndyer/mediaelement)
-[![Coverage Status](https://img.shields.io/coveralls/johndyer/mediaelement.svg)](https://coveralls.io/github/johndyer/mediaelement)
-[![MIT License](https://img.shields.io/npm/l/mediaelement.svg)](https://johndyer.mit-license.org/)
+[![GitHub Version](https://img.shields.io/npm/v/mediaelement.svg)](https://github.com/mediaelement/mediaelement)
+[![Build Status](https://img.shields.io/travis/mediaelement/mediaelement.svg)](https://travis-ci.org/mediaelement/mediaelement)
+[![Coverage Status](https://img.shields.io/coveralls/mediaelement/mediaelement.svg)](https://coveralls.io/github/mediaelement/mediaelement)
+[![MIT License](https://img.shields.io/npm/l/mediaelement.svg)](https://mediaelement.mit-license.org/)
 [![CDNJS](https://img.shields.io/cdnjs/v/mediaelement.svg)](https://cdnjs.com/libraries/mediaelement)
 
 # Table of Contents
@@ -81,7 +81,7 @@ The full documentation on how to install `MediaElement.js` is available at [Inst
 
 A brief guide on how to create and use instances of `MediaElement` available at [Usage](docs/usage.md).
 
-Additional features can be found at https://github.com/johndyer/mediaelement-plugins
+Additional features can be found at https://github.com/mediaelement/mediaelement-plugins
 
 <a id="api"></a>
 ## API and Configuration
