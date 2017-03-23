@@ -3847,7 +3847,7 @@ function splitEvents(events, id) {
 	// add player ID as an event namespace so it's easier to unbind them all later
 	var ret = { d: [], w: [] };
 	(events || '').split(' ').forEach(function (v) {
-		var eventName = v + '.' + id;
+		var eventName = '' + v + (id ? '.' + id : '');
 
 		if (eventName.startsWith('.')) {
 			ret.d.push(eventName);
@@ -3895,7 +3895,9 @@ function createEvent(eventName, target) {
  * @param {HTMLElement} targetNode - the node to compare against sourceNode
  */
 function isNodeAfter(sourceNode, targetNode) {
-	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
+
+	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) & 2 // 2 : Node.DOCUMENT_POSITION_PRECEDING
+	);
 }
 
 /**
@@ -4000,12 +4002,10 @@ function getTypeFromFile(url) {
 	}
 
 	for (var i = 0, total = typeChecks.length; i < total; i++) {
-		if (typeof typeChecks[i] === 'function') {
-			var type = typeChecks[i](url);
+		var type = typeChecks[i](url);
 
-			if (type !== undefined && type !== null) {
-				return type;
-			}
+		if (type) {
+			return type;
 		}
 	}
 

@@ -4100,7 +4100,7 @@ var MediaElementPlayer = function () {
 				t.container.querySelector('.' + t.options.classPrefix + 'controls').style.display = 'none';
 			}
 
-			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, '.' + t.options.classPrefix + 'fill-container')) {
+			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, t.options.classPrefix + 'fill-container')) {
 				// outer container
 				t.outerContainer = t.media.parentNode;
 
@@ -4622,25 +4622,19 @@ var MediaElementPlayer = function () {
 						}
 					});
 
-					t.container.addEventListener('focusout', (0, _general.debounce)(function () {
+					t.container.addEventListener('focusout', function (e) {
 						setTimeout(function () {
-							// Safari triggers focusout multiple times
-							// Firefox does NOT support e.relatedTarget to see which element
-							// just lost focus, so wait to find the next focused element
-							var parent = _document2.default.activeElement.closest('.' + t.options.classPrefix + 'container');
-
-							if (t.keyboardAction && !parent) {
-								t.keyboardAction = false;
-								if (t.isVideo && !t.options.alwaysShowControls) {
-									// focus is outside the control; hide controls
-									t.hideControls(true);
+							//FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
+							if (e.relatedTarget) {
+								if (t.keyboardAction && !e.relatedTarget.closest('.mejs-container')) {
+									t.keyboardAction = false;
+									if (t.isVideo && !t.options.alwaysShowControls) {
+										t.hideControls(true);
+									}
 								}
-							} else {
-								t.keyboardAction = true;
-								t.showControls(true);
 							}
 						}, 0);
-					}, 100));
+					});
 
 					// webkit has trouble doing this without a delay
 					setTimeout(function () {
@@ -4912,7 +4906,7 @@ var MediaElementPlayer = function () {
 			var t = this,
 			    parent = t.outerContainer;
 
-			var parentStyles = getComputedStyle(parent, null);
+			var parentStyles = getComputedStyle(parent);
 
 			// Remove the responsive attributes in the event they are there
 			if (t.node.style.height !== 'none' && t.node.style.height !== t.height) {
@@ -4946,7 +4940,7 @@ var MediaElementPlayer = function () {
 				parent.style.height = t.media.offsetHeight + 'px';
 			}
 
-			parentStyles = getComputedStyle(parent, null);
+			parentStyles = getComputedStyle(parent);
 
 			var parentWidth = parseFloat(parentStyles.width),
 			    parentHeight = parseFloat(parentStyles.height);
@@ -4995,8 +4989,8 @@ var MediaElementPlayer = function () {
 		value: function setDimensions(width, height) {
 			var t = this;
 
-			width = parseFloat(width) + 'px';
-			height = parseFloat(height) + 'px';
+			width = (0, _general.isString)(width) && width.includes('%') ? width : parseFloat(width) + 'px';
+			height = (0, _general.isString)(height) && height.includes('%') ? height : parseFloat(height) + 'px';
 
 			t.container.style.width = width;
 			t.container.style.height = height;
@@ -6819,7 +6813,7 @@ function splitEvents(events, id) {
 	// add player ID as an event namespace so it's easier to unbind them all later
 	var ret = { d: [], w: [] };
 	(events || '').split(' ').forEach(function (v) {
-		var eventName = v + '.' + id;
+		var eventName = '' + v + (id ? '.' + id : '');
 
 		if (eventName.startsWith('.')) {
 			ret.d.push(eventName);
@@ -6867,7 +6861,9 @@ function createEvent(eventName, target) {
  * @param {HTMLElement} targetNode - the node to compare against sourceNode
  */
 function isNodeAfter(sourceNode, targetNode) {
-	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING);
+
+	return !!(sourceNode && targetNode && sourceNode.compareDocumentPosition(targetNode) & 2 // 2 : Node.DOCUMENT_POSITION_PRECEDING
+	);
 }
 
 /**
@@ -6972,12 +6968,10 @@ function getTypeFromFile(url) {
 	}
 
 	for (var i = 0, total = typeChecks.length; i < total; i++) {
-		if (typeof typeChecks[i] === 'function') {
-			var type = typeChecks[i](url);
+		var type = typeChecks[i](url);
 
-			if (type !== undefined && type !== null) {
-				return type;
-			}
+		if (type) {
+			return type;
 		}
 	}
 

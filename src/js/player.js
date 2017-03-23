@@ -15,7 +15,7 @@ import {
 	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
-import {splitEvents, debounce, isNodeAfter, createEvent} from './utils/general';
+import {splitEvents, isNodeAfter, createEvent, isString} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
 import {getTypeFromFile} from './utils/media';
 import * as dom from './utils/dom';
@@ -407,7 +407,7 @@ class MediaElementPlayer {
 				t.container.querySelector(`.${t.options.classPrefix}controls`).style.display = 'none';
 			}
 
-			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, `.${t.options.classPrefix}fill-container`)) {
+			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, `${t.options.classPrefix}fill-container`)) {
 				// outer container
 				t.outerContainer = t.media.parentNode;
 
@@ -920,25 +920,19 @@ class MediaElementPlayer {
 				}
 			});
 
-			t.container.addEventListener('focusout', debounce(() => {
+			t.container.addEventListener('focusout', (e) => {
 				setTimeout(() => {
-					// Safari triggers focusout multiple times
-					// Firefox does NOT support e.relatedTarget to see which element
-					// just lost focus, so wait to find the next focused element
-					const parent = document.activeElement.closest(`.${t.options.classPrefix}container`);
-
-					if (t.keyboardAction && !parent) {
-						t.keyboardAction = false;
-						if (t.isVideo && !t.options.alwaysShowControls) {
-							// focus is outside the control; hide controls
-							t.hideControls(true);
+					//FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
+					if (e.relatedTarget) {
+						if (t.keyboardAction && !e.relatedTarget.closest('.mejs-container')) {
+							t.keyboardAction = false;
+							if (t.isVideo && !t.options.alwaysShowControls) {
+								t.hideControls(true);
+							}
 						}
-					} else {
-						t.keyboardAction = true;
-						t.showControls(true);
 					}
 				}, 0);
-			}, 100));
+			});
 
 			// webkit has trouble doing this without a delay
 			setTimeout(() => {
@@ -1209,7 +1203,7 @@ class MediaElementPlayer {
 			parent = t.outerContainer
 		;
 
-		let parentStyles = getComputedStyle(parent, null);
+		let parentStyles = getComputedStyle(parent);
 
 		// Remove the responsive attributes in the event they are there
 		if (t.node.style.height !== 'none' && t.node.style.height !== t.height) {
@@ -1243,7 +1237,7 @@ class MediaElementPlayer {
 			parent.style.height = `${t.media.offsetHeight}px`;
 		}
 
-		parentStyles = getComputedStyle(parent, null);
+		parentStyles = getComputedStyle(parent);
 
 		const
 			parentWidth = parseFloat(parentStyles.width),
@@ -1275,7 +1269,7 @@ class MediaElementPlayer {
 			finalHeight = bScaleOnWidth ? Math.floor(scaleY1) : Math.floor(scaleY2),
 			width = bScaleOnWidth ? `${parentWidth}px` : `${finalWidth}px`,
 			height = bScaleOnWidth ? `${finalHeight}px` : `${parentHeight}px`
-			;
+		;
 
 		for (let i = 0, total = targetElement.length; i < total; i++) {
 			targetElement[i].style.height = height;
@@ -1292,8 +1286,8 @@ class MediaElementPlayer {
 	setDimensions (width, height) {
 		const t = this;
 
-		width = `${parseFloat(width)}px`;
-		height = `${parseFloat(height)}px`;
+		width = isString(width) && width.includes('%') ? width : `${parseFloat(width)}px`;
+		height = isString(height) && height.includes('%') ? height : `${parseFloat(height)}px`;
 
 		t.container.style.width = width;
 		t.container.style.height = height;
