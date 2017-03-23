@@ -5,7 +5,8 @@ import {expect} from 'chai';
 
 describe('Renderers', () => {
 
-	let renderers,
+	let
+		renderers,
 		mockRenderer = {
 			name: 'mock',
 			options: {
@@ -15,7 +16,9 @@ describe('Renderers', () => {
 				let validMedia = ['video/mime-3'];
 				return validMedia.indexOf(type) > -1;
 			}
-		};
+		},
+		empty = null
+	;
 
 	describe('#order', () => {
 
@@ -52,16 +55,18 @@ describe('Renderers', () => {
 		});
 
 		it('only accepts an array of objects', () => {
-			let a = () => {
+
+			expect(() => {
 				renderer.renderers = 'foo';
-			};
-			expect(a).to.throw(Error);
+			}).to.throw(Error);
 
-			let b = () => {
+			expect(() => {
+				renderer.renderers = undefined;
+			}).to.throw(TypeError);
+
+			expect(() => {
 				renderer.renderers = mockRenderer;
-			};
-
-			expect(b).to.not.throw(Error);
+			}).to.not.throw(Error);
 		});
 	});
 

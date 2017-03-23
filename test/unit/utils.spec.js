@@ -91,13 +91,29 @@ describe('Utilities', () => {
 			expect(typeof result.w).to.equal('string');
 			expect(result.w).to.equal('beforeunload.mep_0 hashchange.mep_0 message.mep_0 resize.mep_0 storage.mep_0 .mouseup.mep_0 .volumechange.test.mep_0');
 		});
+
+		it('return an empty string if no arguments passed', () => {
+			const result = general.splitEvents();
+			expect(result.d).to.equal('');
+			expect(result.w).to.equal('');
+
+		});
 	});
 
 	describe('#createEvent', () => {
 
 		jsdom();
 
-		it('create a custom event', () => {
+		it('create a custom generic event', () => {
+
+			const target = {};
+
+			const event = general.createEvent('customevent', target);
+			expect(event.detail.target).to.equal(target);
+			expect(event instanceof window.CustomEvent).to.equal(true);
+		});
+
+		it('create a custom event with namespace', () => {
 
 			const target = {};
 
@@ -395,6 +411,15 @@ describe('Utilities', () => {
 			expect(media.getTypeFromFile('http://example.com/media2.mp4?x=1&y=2')).to.equal('video/mp4');
 			expect(media.getTypeFromFile('http://example.com/media.mp3')).to.equal('audio/mp3');
 			expect(media.getTypeFromFile('http://example.com/media2.mp3?x=1&y=2')).to.equal('audio/mp3');
+
+			media.typeChecks =  [
+				12345,
+				'abcde',
+				{}
+			];
+
+			expect(media.getTypeFromFile('http://example.com/media.m4v')).to.equal('video/mp4');
+			expect(media.getTypeFromFile('http://example.com/media.midi')).to.equal('audio/midi');
 
 		});
 

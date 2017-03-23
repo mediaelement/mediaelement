@@ -79,7 +79,7 @@ export function splitEvents (events, id) {
 	// add player ID as an event namespace so it's easier to unbind them all later
 	const ret = {d: [], w: []};
 	(events || '').split(' ').forEach((v) => {
-		const eventName = v + '.' + id;
+		const eventName = `${v}${(id ? `.${id}` : '')}`;
 
 		if (eventName.startsWith('.')) {
 			ret.d.push(eventName);

@@ -62,12 +62,10 @@ export function getTypeFromFile (url) {
 	}
 
 	for (let i = 0, total = typeChecks.length; i < total; i++) {
-		if (typeof typeChecks[i] === 'function') {
-			const type = typeChecks[i](url);
+		const type = typeChecks[i](url);
 
-			if (type !== undefined && type !== null) {
-				return type;
-			}
+		if (type) {
+			return type;
 		}
 	}
 
