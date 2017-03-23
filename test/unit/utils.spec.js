@@ -126,6 +126,26 @@ describe('Utilities', () => {
 		});
 	});
 
+	describe('#isNodeAfter', () => {
+
+		jsdom();
+
+		it('checks position of element compared with another', () => {
+
+			const parent = document.createElement('div');
+			parent.innerHTML = '<div id="node1"></div><div id="node2"></div>';
+			document.body.appendChild(parent);
+
+			const
+				node1 = parent.querySelector('#node1'),
+				node2 = parent.querySelector('#node2')
+			;
+
+			expect(general.isNodeAfter(node1, node2)).to.equal(false);
+			expect(general.isNodeAfter(node2, node1)).to.equal(true);
+		});
+	});
+
 	describe('#escapeHTML', () => {
 
 		it('can escape `<`, `"`, `&` and `>` symbols', () => {

@@ -131,10 +131,11 @@ export function createEvent (eventName, target) {
  * @param {HTMLElement} targetNode - the node to compare against sourceNode
  */
 export function isNodeAfter (sourceNode, targetNode) {
+
 	return !!(
 		sourceNode &&
 		targetNode &&
-		sourceNode.compareDocumentPosition(targetNode) && Node.DOCUMENT_POSITION_PRECEDING
+		sourceNode.compareDocumentPosition(targetNode) & 2 // 2 : Node.DOCUMENT_POSITION_PRECEDING
 	);
 }
 
