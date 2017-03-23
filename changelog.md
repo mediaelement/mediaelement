@@ -1,5 +1,9 @@
 ### Version History
 
+*4.0.2 (2017/??/??)*
+
+* Added new unit tests to increase code coverage @ron666
+
 *4.0.1 (2017/03/22)*
 
 * Fixed major issues with iOS that prevent the player to be built @ron666 
