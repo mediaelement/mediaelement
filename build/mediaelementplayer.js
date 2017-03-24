@@ -3301,10 +3301,10 @@ Object.assign(_player2.default.prototype, {
 			mute.parentNode.insertBefore(anchor, mute.nextSibling);
 		}
 
-		var volumeSlider = t.container.querySelector('.' + t.options.classPrefix + 'volume-slider, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-slider'),
-		    volumeTotal = t.container.querySelector('.' + t.options.classPrefix + 'volume-total, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-total'),
-		    volumeCurrent = t.container.querySelector('.' + t.options.classPrefix + 'volume-current, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-current'),
-		    volumeHandle = t.container.querySelector('.' + t.options.classPrefix + 'volume-handle, \n\t\t\t\t.' + t.options.classPrefix + 'horizontal-volume-handle'),
+		var volumeSlider = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-slider') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-slider'),
+		    volumeTotal = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-total') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-total'),
+		    volumeCurrent = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-current') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-current'),
+		    volumeHandle = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-handle') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-handle'),
 		    button = mute.firstElementChild,
 
 
@@ -3479,9 +3479,7 @@ Object.assign(_player2.default.prototype, {
 			handleVolumeMove(e);
 			t.globalBind('mousemove.vol', function (event) {
 				var target = event.target;
-				if (mouseIsDown && (target === volumeSlider || closest(target, function (el) {
-					return el === volumeSlider;
-				}))) {
+				if (mouseIsDown && (target === volumeSlider || target.closest(mode === 'vertical' ? '.' + t.options.classPrefix + 'volume-slider' : '.' + t.options.classPrefix + 'horizontal-volume-slider'))) {
 					handleVolumeMove(event);
 				}
 			});
@@ -5029,7 +5027,8 @@ var MediaElementPlayer = function () {
 			siblingsWidth += totalMargin + (totalMargin === 0 ? railMargin * 2 : railMargin) + 1;
 
 			// Substract the width of the feature siblings from time rail
-			t.rail.style.width = parseFloat(t.controls.offsetWidth) - siblingsWidth + 'px';
+			var controlsWidth = parseFloat(t.controls.offsetWidth);
+			t.rail.style.width = (siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth) + 'px';
 
 			var event = (0, _general.createEvent)('controlsresize', t.container);
 			t.container.dispatchEvent(event);

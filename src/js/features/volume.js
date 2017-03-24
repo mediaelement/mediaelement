@@ -100,14 +100,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		const
-			volumeSlider = t.container.querySelector(`.${t.options.classPrefix}volume-slider, 
-				.${t.options.classPrefix}horizontal-volume-slider`),
-			volumeTotal = t.container.querySelector(`.${t.options.classPrefix}volume-total, 
-				.${t.options.classPrefix}horizontal-volume-total`),
-			volumeCurrent = t.container.querySelector(`.${t.options.classPrefix}volume-current, 
-				.${t.options.classPrefix}horizontal-volume-current`),
-			volumeHandle = t.container.querySelector(`.${t.options.classPrefix}volume-handle, 
-				.${t.options.classPrefix}horizontal-volume-handle`),
+			volumeSlider = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-slider`) :
+				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-slider`),
+			volumeTotal = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-total`) :
+				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-total`),
+			volumeCurrent = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-current`) :
+				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-current`),
+			volumeHandle = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-handle`) :
+				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-handle`),
 			button = mute.firstElementChild,
 
 			/**
@@ -289,7 +289,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			handleVolumeMove(e);
 			t.globalBind('mousemove.vol', (event) => {
 				const target = event.target;
-				if (mouseIsDown && (target === volumeSlider || closest(target, (el) => el === volumeSlider))) {
+				if (mouseIsDown && (target === volumeSlider ||
+					target.closest((mode === 'vertical' ? `.${t.options.classPrefix}volume-slider` :
+					`.${t.options.classPrefix}horizontal-volume-slider`)))) {
 					handleVolumeMove(event);
 				}
 			});

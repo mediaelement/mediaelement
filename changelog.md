@@ -1,8 +1,11 @@
 ### Version History
 
-*4.0.2 (2017/??/??)*
+*4.0.2 (2017/03/23)*
 
 * Added new unit tests to increase code coverage @ron666
+* Fixed issue with `setFill()` method and reintroduced old workflow in focusout event @ron666
+* Added default media dimensions to avoid breaking control bar when player is in small container @ron666 
+* Fixed issue with volume slider and rail width calculation @ron666
 
 *4.0.1 (2017/03/22)*
 

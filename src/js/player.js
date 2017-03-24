@@ -1324,7 +1324,8 @@ class MediaElementPlayer {
 		siblingsWidth += totalMargin + ((totalMargin === 0) ?  (railMargin * 2) : railMargin) + 1;
 
 		// Substract the width of the feature siblings from time rail
-		t.rail.style.width = `${(parseFloat(t.controls.offsetWidth) - siblingsWidth)}px`;
+		const controlsWidth = parseFloat(t.controls.offsetWidth);
+		t.rail.style.width = `${(siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth)}px`;
 
 		const event = createEvent('controlsresize', t.container);
 		t.container.dispatchEvent(event);
