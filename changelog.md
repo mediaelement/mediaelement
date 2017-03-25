@@ -1,5 +1,9 @@
 ### Version History
 
+*4.0.3 (2017/??/??)*
+
+* Fixed typo when detecting dimensions for stretching: `auto` @ron666
+
 *4.0.2 (2017/03/23)*
 
 * Added new unit tests to increase code coverage @ron666
