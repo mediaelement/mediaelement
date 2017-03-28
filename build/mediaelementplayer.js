@@ -2362,9 +2362,11 @@ Object.assign(_player2.default.prototype, {
 
 		player.captionsButton = _document2.default.createElement('div');
 		player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
-		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked">' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
+		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
 
 		t.addControlElement(player.captionsButton, 'tracks');
+
+		player.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-list-item').disabled = false;
 
 		player.chaptersButton = _document2.default.createElement('div');
 		player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
@@ -2589,21 +2591,24 @@ Object.assign(_player2.default.prototype, {
 		if (trackId === 'none') {
 			t.selectedTrack = null;
 			(0, _dom.removeClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
-			return;
-		}
-
-		for (var _i11 = 0, _total9 = t.tracks.length; _i11 < _total9; _i11++) {
-			var _track = t.tracks[_i11];
-			if (_track.trackId === trackId) {
-				if (t.selectedTrack === null) {
-					(0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+		} else {
+			for (var _i11 = 0, _total9 = t.tracks.length; _i11 < _total9; _i11++) {
+				var _track = t.tracks[_i11];
+				if (_track.trackId === trackId) {
+					if (t.selectedTrack === null) {
+						(0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+					}
+					t.selectedTrack = _track;
+					t.captions.setAttribute('lang', t.selectedTrack.srclang);
+					t.displayCaptions();
+					break;
 				}
-				t.selectedTrack = _track;
-				t.captions.setAttribute('lang', t.selectedTrack.srclang);
-				t.displayCaptions();
-				break;
 			}
 		}
+
+		var event = (0, _general.createEvent)('captionschange', t.media);
+		event.detail.caption = t.selectedTrack;
+		t.media.dispatchEvent(event);
 	},
 
 

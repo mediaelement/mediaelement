@@ -3,6 +3,7 @@
 *4.0.3 (2017/??/??)*
 
 * Fixed typo when detecting dimensions for stretching: `auto` @ron666
+* Added `captionschange` event and fixed minor issue for `None` caption @ron666
 
 *4.0.2 (2017/03/23)*
 
