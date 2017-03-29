@@ -2741,9 +2741,10 @@ Object.assign(_player2.default.prototype, {
   *
   */
 	adjustLanguageBox: function adjustLanguageBox() {
-		var t = this;
+		// const t = this;
 		// adjust the size of the outer box
-		t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector').style.height = parseFloat(t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-list').offsetHeight) + 'px';
+		// t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector`).style.height =
+		// 	`${parseFloat(t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector-list`).offsetHeight)}px`;
 	},
 
 
