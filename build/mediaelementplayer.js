@@ -6662,39 +6662,67 @@ function visible(elem) {
 function ajax(url, dataType, success, error) {
 	var xhr = _window2.default.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
-	var type = 'text/plain';
+	var type = 'application/x-www-form-urlencoded; charset=UTF-8',
+	    completed = false,
+	    accept = '*/'.concat('*');
 
 	switch (dataType) {
+		case 'text':
+			type = 'text/plain';
+			break;
+		case 'json':
+			type = 'application/json, text/javascript';
+			break;
 		case 'html':
 			type = 'text/html';
 			break;
-		case 'json':
-			type = 'application/x-www-form-urlencoded';
-			break;
 		case 'xml':
-			type = 'application/xml';
+			type = 'application/xml, text/xml';
 			break;
 	}
 
-	xhr.open('GET', url, true);
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState > 3) {
-			if (xhr.status == 200) {
-				if (dataType === 'json') {
-					success(JSON.parse(xhr.responseText));
-				} else {
-					success(xhr.responseText);
-				}
-			} else if (typeof error === 'function') {
-				error(xhr.status);
-			}
-		}
-	};
+	if (!type.includes('application/x-www-form-urlencoded')) {
+		accept = type + ', */*; q=0.01';
+	}
 
-	xhr.setRequestHeader('Content-Type', type);
-	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-	xhr.send();
-	return xhr;
+	if (xhr) {
+		xhr.open('GET', url, true);
+		xhr.setRequestHeader('Accept', accept);
+		xhr.onreadystatechange = function () {
+
+			// Ignore repeat invocations
+			if (completed) {
+				return;
+			}
+
+			if (xhr.readyState === 4) {
+				if (xhr.status === 200) {
+
+					completed = true;
+
+					var data = void 0;
+
+					switch (dataType) {
+						case 'json':
+							data = JSON.parse(xhr.responseText);
+							break;
+						case 'xml':
+							data = xhr.responseXML;
+							break;
+						default:
+							data = xhr.responseText;
+							break;
+					}
+
+					success(data);
+				} else if (typeof error === 'function') {
+					error(xhr.status);
+				}
+			}
+		};
+
+		xhr.send();
+	}
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};
