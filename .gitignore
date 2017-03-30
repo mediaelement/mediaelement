@@ -7,3 +7,14 @@ build/SilverlightMediaElement.pdb
 build/SilverlightMediaElement.dll
 tests/*
 newfeatures/*
+/mejs3/
+node_modules
+local-build
+# PhpStorm/WebStorm configuration
+.idea
+media/*
+!media/README
+src/flash/flex_sdk_*
+coverage
+npm-debug.log
+tmp

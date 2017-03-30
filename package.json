@@ -1,0 +1,67 @@
+{
+  "name": "mediaelement",
+  "license": "MIT",
+  "version": "4.0.2",
+  "main": "full.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mediaelement/mediaelement.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mediaelement/mediaelement/issues?q=is%3Aissue+is%3Aopen+label%3ABug"
+  },
+  "private": false,
+  "devDependencies": {
+    "autoprefixer": "^6.5.1",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.1",
+    "browserify-derequire": "^0.9.4",
+    "bundle-collapser": "^1.2.1",
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.15",
+    "cssnano": "^3.8.0",
+    "grunt": "^0.4.5",
+    "grunt-babel": "^6.0.0",
+    "grunt-browserify": "^5.0.0",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-eslint": "^19.0.0",
+    "grunt-postcss": "^0.8.0",
+    "grunt-remove-logging": "~0.2.0",
+    "grunt-shell": "~1.1.1",
+    "grunt-text-replace": "~0.3.12",
+    "istanbul": "^1.0.0-alpha.2",
+    "jsdom": "^9.12.0",
+    "mocha": "^3.2.0",
+    "mocha-jsdom": "^1.1.0",
+    "uglify-js": "^2.4.21"
+  },
+  "dependencies": {
+    "global": "^4.3.1"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register --require babel-polyfill --recursive test/unit",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+  },
+  "browserify": {
+    "extensions": [
+      ".js"
+    ],
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": "es2015",
+          "sourceMapsAbsolute": true
+        }
+      ]
+    ]
+  }
+}
