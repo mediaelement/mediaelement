@@ -468,10 +468,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	removeTrackButton (trackId) {
 
-		const
-			t = this,
-			element = document.getElementById(`${trackId}`)
-		;
+		const element = document.getElementById(`${trackId}`);
 
 		if (element) {
 			const button = element.closest('li');

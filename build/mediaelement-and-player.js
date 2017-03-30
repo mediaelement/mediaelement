@@ -2498,10 +2498,6 @@ Object.assign(_player2.default.prototype, {
 				player.displaySlides();
 			});
 		}
-
-		t.container.addEventListener('controlsresize', function () {
-			t.adjustLanguageBox();
-		});
 	},
 
 
@@ -2692,8 +2688,6 @@ Object.assign(_player2.default.prototype, {
 			var event = (0, _general.createEvent)('click', target);
 			target.dispatchEvent(event);
 		}
-
-		t.adjustLanguageBox();
 	},
 
 
@@ -2703,8 +2697,7 @@ Object.assign(_player2.default.prototype, {
   */
 	removeTrackButton: function removeTrackButton(trackId) {
 
-		var t = this,
-		    element = _document2.default.getElementById('' + trackId);
+		var element = _document2.default.getElementById('' + trackId);
 
 		if (element) {
 			var button = element.closest('li');
@@ -2712,7 +2705,6 @@ Object.assign(_player2.default.prototype, {
 				button.remove();
 			}
 		}
-		t.adjustLanguageBox();
 	},
 
 
@@ -2732,19 +2724,6 @@ Object.assign(_player2.default.prototype, {
 		// caption option doesn't have a trackId but we need to be able
 		// to set it, too
 		t.captionsButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'captions-selector-list-item">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled>') + ('<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)</label>') + '</li>';
-
-		t.adjustLanguageBox();
-	},
-
-
-	/**
-  *
-  */
-	adjustLanguageBox: function adjustLanguageBox() {
-		// const t = this;
-		// adjust the size of the outer box
-		// t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector`).style.height =
-		// 	`${parseFloat(t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector-list`).offsetHeight)}px`;
 	},
 
 
@@ -4441,7 +4420,7 @@ var MediaElementPlayer = function () {
 							// for touch devices (iOS, Android)
 							// show/hide without animation on touch
 
-							t.node.addEventListener('touchstart', function () {
+							t.media.addEventListener('touchstart', function () {
 
 								// toggle controls
 								if (t.controlsAreVisible) {

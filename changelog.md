@@ -5,6 +5,7 @@
 * Fixed typo when detecting dimensions for stretching: `auto` @ron666
 * Perform improvements to AJAX method to prevent "pre-flight" requests @ron666
 * Removed Captions menu height adjustment considered unnecessary @ron666
+* Fixed typo with event specific to Android and iOS @ron666
 
 *4.0.2 (2017/03/23)*
 
