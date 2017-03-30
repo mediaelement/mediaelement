@@ -4420,7 +4420,7 @@ var MediaElementPlayer = function () {
 							// for touch devices (iOS, Android)
 							// show/hide without animation on touch
 
-							t.media.addEventListener('touchstart', function () {
+							t.node.addEventListener('touchstart', function () {
 
 								// toggle controls
 								if (t.controlsAreVisible) {

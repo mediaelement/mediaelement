@@ -733,7 +733,7 @@ class MediaElementPlayer {
 					// for touch devices (iOS, Android)
 					// show/hide without animation on touch
 
-					t.media.addEventListener('touchstart', () => {
+					t.node.addEventListener('touchstart', () => {
 
 						// toggle controls
 						if (t.controlsAreVisible) {
