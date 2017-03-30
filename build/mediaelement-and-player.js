@@ -4415,11 +4415,35 @@ var MediaElementPlayer = function () {
 					// controls fade
 					if (t.isVideo) {
 
+						// create callback here since it needs access to current
+						// MediaElement object
+						t.clickToPlayPauseCallback = function () {
+
+							if (t.options.clickToPlayPause) {
+								var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
+								    pressed = button.getAttribute('aria-pressed');
+
+								if (t.media.paused && pressed) {
+									t.pause();
+								} else if (t.media.paused) {
+									t.play();
+								} else {
+									t.pause();
+								}
+
+								button.setAttribute('aria-pressed', !pressed);
+							}
+						};
+
+						t.createIframeLayer();
+
+						// click to play/pause
+						t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
 						if ((_constants.IS_ANDROID || _constants.IS_IOS) && !t.options.alwaysShowControls) {
 
 							// for touch devices (iOS, Android)
 							// show/hide without animation on touch
-
 							t.node.addEventListener('touchstart', function () {
 
 								// toggle controls
@@ -4432,31 +4456,6 @@ var MediaElementPlayer = function () {
 								}
 							});
 						} else {
-
-							t.createIframeLayer();
-
-							// create callback here since it needs access to current
-							// MediaElement object
-							t.clickToPlayPauseCallback = function () {
-
-								if (t.options.clickToPlayPause) {
-									var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
-									    pressed = button.getAttribute('aria-pressed');
-
-									if (t.media.paused && pressed) {
-										t.pause();
-									} else if (t.media.paused) {
-										t.play();
-									} else {
-										t.pause();
-									}
-
-									button.setAttribute('aria-pressed', !pressed);
-								}
-							};
-
-							// click to play/pause
-							t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 							// show/hide controls
 							t.container.addEventListener('mouseenter', function () {

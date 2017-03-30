@@ -120,5 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
+});
 
+document.addEventListener('click', function(e) {
+	console.log(e.target);
 });
