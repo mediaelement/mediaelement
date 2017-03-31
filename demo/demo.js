@@ -102,6 +102,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
 			pluginPath: '../build/',
+			hls: {
+				debug: true
+			},
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 
@@ -120,8 +123,4 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
-});
-
-document.addEventListener('click', function(e) {
-	console.log(e.target);
 });
