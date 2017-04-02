@@ -120,5 +120,4 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
-
 });

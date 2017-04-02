@@ -728,11 +728,38 @@ class MediaElementPlayer {
 			// controls fade
 			if (t.isVideo) {
 
+				// create callback here since it needs access to current
+				// MediaElement object
+				t.clickToPlayPauseCallback = () => {
+
+					if (t.options.clickToPlayPause) {
+						const
+							button = t.container
+							.querySelector(`.${t.options.classPrefix}overlay-button`),
+							pressed = button.getAttribute('aria-pressed')
+						;
+
+						if (t.media.paused && pressed) {
+							t.pause();
+						} else if (t.media.paused) {
+							t.play();
+						} else {
+							t.pause();
+						}
+
+						button.setAttribute('aria-pressed', !(pressed));
+					}
+				};
+
+				t.createIframeLayer();
+
+				// click to play/pause
+				t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
 				if ((IS_ANDROID || IS_IOS) && !t.options.alwaysShowControls) {
 
 					// for touch devices (iOS, Android)
 					// show/hide without animation on touch
-
 					t.node.addEventListener('touchstart', () => {
 
 						// toggle controls
@@ -746,34 +773,6 @@ class MediaElementPlayer {
 					});
 
 				} else {
-
-					t.createIframeLayer();
-
-					// create callback here since it needs access to current
-					// MediaElement object
-					t.clickToPlayPauseCallback = () => {
-
-						if (t.options.clickToPlayPause) {
-							const
-								button = t.container
-									.querySelector(`.${t.options.classPrefix}overlay-button`),
-								pressed = button.getAttribute('aria-pressed')
-							;
-
-							if (t.media.paused && pressed) {
-								t.pause();
-							} else if (t.media.paused) {
-								t.play();
-							} else {
-								t.pause();
-							}
-
-							button.setAttribute('aria-pressed', !(pressed));
-						}
-					};
-
-					// click to play/pause
-					t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 					// show/hide controls
 					t.container.addEventListener('mouseenter', () => {

@@ -267,10 +267,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 
 		}
-
-		t.container.addEventListener('controlsresize', () => {
-			t.adjustLanguageBox();
-		});
 	},
 
 	/**
@@ -469,8 +465,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			target.dispatchEvent(event);
 		}
 
-		t.adjustLanguageBox();
-
 	},
 
 	/**
@@ -479,10 +473,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	removeTrackButton (trackId) {
 
-		const
-			t = this,
-			element = document.getElementById(`${trackId}`)
-		;
+		const element = document.getElementById(`${trackId}`);
 
 		if (element) {
 			const button = element.closest('li');
@@ -490,7 +481,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				button.remove();
 			}
 		}
-		t.adjustLanguageBox();
 	},
 
 	/**
@@ -513,18 +503,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				`name="${t.id}_captions" id="${trackId}" value="${trackId}" disabled>` +
 			`<label class="${t.options.classPrefix}captions-selector-label">${label} (loading)</label>` +
 		`</li>`;
-
-		t.adjustLanguageBox();
-	},
-
-	/**
-	 *
-	 */
-	adjustLanguageBox () {
-		const t = this;
-		// adjust the size of the outer box
-		t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector`).style.height =
-			`${parseFloat(t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector-list`).offsetHeight)}px`;
 	},
 
 	/**
