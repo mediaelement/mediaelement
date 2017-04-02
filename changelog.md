@@ -8,6 +8,7 @@
 * Fixed typo with event specific to Android and iOS @ron666
 * Fixed issue with Android not being able to play video when touching video area @ron666
 * Added `captionschange` event and fixed minor issue for `None` caption @ron666
+* Fixed show/hide of play, loading and buffer elements in various events @ron666
 
 *4.0.2 (2017/03/23)*
 

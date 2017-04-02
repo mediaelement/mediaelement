@@ -1611,6 +1611,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeking', () => {
+			bigPlay.style.display = 'none';
 			loading.style.display = '';
 			if (buffer) {
 				buffer.style.display = '';
@@ -1618,6 +1619,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeked', () => {
+			bigPlay.style.display = '';
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = '';
@@ -1625,8 +1627,12 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('pause', () => {
+			loading.style.display = 'none';
 			if (!IS_STOCK_ANDROID) {
 				bigPlay.style.display = '';
+			}
+			if (buffer) {
+				buffer.style.display = 'none';
 			}
 		});
 
@@ -1671,6 +1677,9 @@ class MediaElementPlayer {
 			t._handleError(e);
 			loading.style.display = 'none';
 			bigPlay.style.display = 'none';
+			if (buffer) {
+				buffer.style.display = 'none';
+			}
 			error.style.display = 'block';
 			error.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = e.message;
 		});
