@@ -208,10 +208,8 @@ const HlsNativeRenderer = {
 
 					if (eventName === 'loadedmetadata') {
 
+						const url = mediaElement.originalNode.src;
 						hlsPlayer.detachMedia();
-
-						const url = node.src;
-
 						hlsPlayer.loadSource(url);
 						hlsPlayer.attachMedia(node);
 					}
