@@ -2362,9 +2362,11 @@ Object.assign(_player2.default.prototype, {
 
 		player.captionsButton = _document2.default.createElement('div');
 		player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
-		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked="checked">' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
+		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
 
 		t.addControlElement(player.captionsButton, 'tracks');
+
+		player.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-list-item').disabled = false;
 
 		player.chaptersButton = _document2.default.createElement('div');
 		player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
@@ -2498,10 +2500,6 @@ Object.assign(_player2.default.prototype, {
 				player.displaySlides();
 			});
 		}
-
-		t.container.addEventListener('controlsresize', function () {
-			t.adjustLanguageBox();
-		});
 	},
 
 
@@ -2589,21 +2587,24 @@ Object.assign(_player2.default.prototype, {
 		if (trackId === 'none') {
 			t.selectedTrack = null;
 			(0, _dom.removeClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
-			return;
-		}
-
-		for (var _i11 = 0, _total9 = t.tracks.length; _i11 < _total9; _i11++) {
-			var _track = t.tracks[_i11];
-			if (_track.trackId === trackId) {
-				if (t.selectedTrack === null) {
-					(0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+		} else {
+			for (var _i11 = 0, _total9 = t.tracks.length; _i11 < _total9; _i11++) {
+				var _track = t.tracks[_i11];
+				if (_track.trackId === trackId) {
+					if (t.selectedTrack === null) {
+						(0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+					}
+					t.selectedTrack = _track;
+					t.captions.setAttribute('lang', t.selectedTrack.srclang);
+					t.displayCaptions();
+					break;
 				}
-				t.selectedTrack = _track;
-				t.captions.setAttribute('lang', t.selectedTrack.srclang);
-				t.displayCaptions();
-				break;
 			}
 		}
+
+		var event = (0, _general.createEvent)('captionschange', t.media);
+		event.detail.caption = t.selectedTrack;
+		t.media.dispatchEvent(event);
 	},
 
 
@@ -2692,8 +2693,6 @@ Object.assign(_player2.default.prototype, {
 			var event = (0, _general.createEvent)('click', target);
 			target.dispatchEvent(event);
 		}
-
-		t.adjustLanguageBox();
 	},
 
 
@@ -2703,8 +2702,7 @@ Object.assign(_player2.default.prototype, {
   */
 	removeTrackButton: function removeTrackButton(trackId) {
 
-		var t = this,
-		    element = _document2.default.getElementById('' + trackId);
+		var element = _document2.default.getElementById('' + trackId);
 
 		if (element) {
 			var button = element.closest('li');
@@ -2712,7 +2710,6 @@ Object.assign(_player2.default.prototype, {
 				button.remove();
 			}
 		}
-		t.adjustLanguageBox();
 	},
 
 
@@ -2732,18 +2729,6 @@ Object.assign(_player2.default.prototype, {
 		// caption option doesn't have a trackId but we need to be able
 		// to set it, too
 		t.captionsButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'captions-selector-list-item">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled>') + ('<label class="' + t.options.classPrefix + 'captions-selector-label">' + label + ' (loading)</label>') + '</li>';
-
-		t.adjustLanguageBox();
-	},
-
-
-	/**
-  *
-  */
-	adjustLanguageBox: function adjustLanguageBox() {
-		var t = this;
-		// adjust the size of the outer box
-		t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector').style.height = parseFloat(t.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-list').offsetHeight) + 'px';
 	},
 
 
@@ -4435,11 +4420,35 @@ var MediaElementPlayer = function () {
 					// controls fade
 					if (t.isVideo) {
 
+						// create callback here since it needs access to current
+						// MediaElement object
+						t.clickToPlayPauseCallback = function () {
+
+							if (t.options.clickToPlayPause) {
+								var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
+								    pressed = button.getAttribute('aria-pressed');
+
+								if (t.media.paused && pressed) {
+									t.pause();
+								} else if (t.media.paused) {
+									t.play();
+								} else {
+									t.pause();
+								}
+
+								button.setAttribute('aria-pressed', !pressed);
+							}
+						};
+
+						t.createIframeLayer();
+
+						// click to play/pause
+						t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
 						if ((_constants.IS_ANDROID || _constants.IS_IOS) && !t.options.alwaysShowControls) {
 
 							// for touch devices (iOS, Android)
 							// show/hide without animation on touch
-
 							t.node.addEventListener('touchstart', function () {
 
 								// toggle controls
@@ -4452,31 +4461,6 @@ var MediaElementPlayer = function () {
 								}
 							});
 						} else {
-
-							t.createIframeLayer();
-
-							// create callback here since it needs access to current
-							// MediaElement object
-							t.clickToPlayPauseCallback = function () {
-
-								if (t.options.clickToPlayPause) {
-									var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
-									    pressed = button.getAttribute('aria-pressed');
-
-									if (t.media.paused && pressed) {
-										t.pause();
-									} else if (t.media.paused) {
-										t.play();
-									} else {
-										t.pause();
-									}
-
-									button.setAttribute('aria-pressed', !pressed);
-								}
-							};
-
-							// click to play/pause
-							t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 							// show/hide controls
 							t.container.addEventListener('mouseenter', function () {
@@ -5311,6 +5295,7 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('seeking', function () {
+				bigPlay.style.display = 'none';
 				loading.style.display = '';
 				if (buffer) {
 					buffer.style.display = '';
@@ -5318,6 +5303,7 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('seeked', function () {
+				bigPlay.style.display = '';
 				loading.style.display = 'none';
 				if (buffer) {
 					buffer.style.display = '';
@@ -5325,8 +5311,12 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('pause', function () {
+				loading.style.display = 'none';
 				if (!_constants.IS_STOCK_ANDROID) {
 					bigPlay.style.display = '';
+				}
+				if (buffer) {
+					buffer.style.display = 'none';
 				}
 			});
 
@@ -5370,6 +5360,9 @@ var MediaElementPlayer = function () {
 				t._handleError(e);
 				loading.style.display = 'none';
 				bigPlay.style.display = 'none';
+				if (buffer) {
+					buffer.style.display = 'none';
+				}
 				error.style.display = 'block';
 				error.querySelector('.' + t.options.classPrefix + 'overlay-error').innerHTML = e.message;
 			});
@@ -6662,39 +6655,67 @@ function visible(elem) {
 function ajax(url, dataType, success, error) {
 	var xhr = _window2.default.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
-	var type = 'text/plain';
+	var type = 'application/x-www-form-urlencoded; charset=UTF-8',
+	    completed = false,
+	    accept = '*/'.concat('*');
 
 	switch (dataType) {
+		case 'text':
+			type = 'text/plain';
+			break;
+		case 'json':
+			type = 'application/json, text/javascript';
+			break;
 		case 'html':
 			type = 'text/html';
 			break;
-		case 'json':
-			type = 'application/x-www-form-urlencoded';
-			break;
 		case 'xml':
-			type = 'application/xml';
+			type = 'application/xml, text/xml';
 			break;
 	}
 
-	xhr.open('GET', url, true);
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState > 3) {
-			if (xhr.status == 200) {
-				if (dataType === 'json') {
-					success(JSON.parse(xhr.responseText));
-				} else {
-					success(xhr.responseText);
-				}
-			} else if (typeof error === 'function') {
-				error(xhr.status);
-			}
-		}
-	};
+	if (!type.includes('application/x-www-form-urlencoded')) {
+		accept = type + ', */*; q=0.01';
+	}
 
-	xhr.setRequestHeader('Content-Type', type);
-	xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-	xhr.send();
-	return xhr;
+	if (xhr) {
+		xhr.open('GET', url, true);
+		xhr.setRequestHeader('Accept', accept);
+		xhr.onreadystatechange = function () {
+
+			// Ignore repeat invocations
+			if (completed) {
+				return;
+			}
+
+			if (xhr.readyState === 4) {
+				if (xhr.status === 200) {
+
+					completed = true;
+
+					var data = void 0;
+
+					switch (dataType) {
+						case 'json':
+							data = JSON.parse(xhr.responseText);
+							break;
+						case 'xml':
+							data = xhr.responseXML;
+							break;
+						default:
+							data = xhr.responseText;
+							break;
+					}
+
+					success(data);
+				} else if (typeof error === 'function') {
+					error(xhr.status);
+				}
+			}
+		};
+
+		xhr.send();
+	}
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};

@@ -728,11 +728,38 @@ class MediaElementPlayer {
 			// controls fade
 			if (t.isVideo) {
 
+				// create callback here since it needs access to current
+				// MediaElement object
+				t.clickToPlayPauseCallback = () => {
+
+					if (t.options.clickToPlayPause) {
+						const
+							button = t.container
+							.querySelector(`.${t.options.classPrefix}overlay-button`),
+							pressed = button.getAttribute('aria-pressed')
+						;
+
+						if (t.media.paused && pressed) {
+							t.pause();
+						} else if (t.media.paused) {
+							t.play();
+						} else {
+							t.pause();
+						}
+
+						button.setAttribute('aria-pressed', !(pressed));
+					}
+				};
+
+				t.createIframeLayer();
+
+				// click to play/pause
+				t.media.addEventListener('click', t.clickToPlayPauseCallback);
+
 				if ((IS_ANDROID || IS_IOS) && !t.options.alwaysShowControls) {
 
 					// for touch devices (iOS, Android)
 					// show/hide without animation on touch
-
 					t.node.addEventListener('touchstart', () => {
 
 						// toggle controls
@@ -746,34 +773,6 @@ class MediaElementPlayer {
 					});
 
 				} else {
-
-					t.createIframeLayer();
-
-					// create callback here since it needs access to current
-					// MediaElement object
-					t.clickToPlayPauseCallback = () => {
-
-						if (t.options.clickToPlayPause) {
-							const
-								button = t.container
-									.querySelector(`.${t.options.classPrefix}overlay-button`),
-								pressed = button.getAttribute('aria-pressed')
-							;
-
-							if (t.media.paused && pressed) {
-								t.pause();
-							} else if (t.media.paused) {
-								t.play();
-							} else {
-								t.pause();
-							}
-
-							button.setAttribute('aria-pressed', !(pressed));
-						}
-					};
-
-					// click to play/pause
-					t.media.addEventListener('click', t.clickToPlayPauseCallback, false);
 
 					// show/hide controls
 					t.container.addEventListener('mouseenter', () => {
@@ -1612,6 +1611,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeking', () => {
+			bigPlay.style.display = 'none';
 			loading.style.display = '';
 			if (buffer) {
 				buffer.style.display = '';
@@ -1619,6 +1619,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeked', () => {
+			bigPlay.style.display = '';
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = '';
@@ -1626,8 +1627,12 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('pause', () => {
+			loading.style.display = 'none';
 			if (!IS_STOCK_ANDROID) {
 				bigPlay.style.display = '';
+			}
+			if (buffer) {
+				buffer.style.display = 'none';
 			}
 		});
 
@@ -1672,6 +1677,9 @@ class MediaElementPlayer {
 			t._handleError(e);
 			loading.style.display = 'none';
 			bigPlay.style.display = 'none';
+			if (buffer) {
+				buffer.style.display = 'none';
+			}
 			error.style.display = 'block';
 			error.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = e.message;
 		});

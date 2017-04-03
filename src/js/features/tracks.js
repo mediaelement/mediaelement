@@ -113,7 +113,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					`<li class="${t.options.classPrefix}captions-selector-list-item">` +
 						`<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
 							`name="${player.id}_captions" id="${player.id}_captions_none" ` +
-							`value="none" checked="checked">` +
+							`value="none" checked disabled>` +
 						`<label class="${t.options.classPrefix}captions-selector-label ` +
 							`${t.options.classPrefix}captions-selected" ` +
 							`for="${player.id}_captions_none">${i18n.t('mejs.none')}</label>` +
@@ -122,6 +122,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>`;
 
 		t.addControlElement(player.captionsButton, 'tracks');
+
+		player.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector-list-item`).disabled = false;
 
 		player.chaptersButton = document.createElement('div');
 		player.chaptersButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}chapters-button`;
@@ -265,10 +267,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 
 		}
-
-		t.container.addEventListener('controlsresize', () => {
-			t.adjustLanguageBox();
-		});
 	},
 
 	/**
@@ -360,21 +358,24 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (trackId === 'none') {
 			t.selectedTrack = null;
 			removeClass(t.captionsButton, `${t.options.classPrefix}captions-enabled`);
-			return;
-		}
-
-		for (let i = 0, total = t.tracks.length; i < total; i++) {
-			const track = t.tracks[i];
-			if (track.trackId === trackId) {
-				if (t.selectedTrack === null) {
-					addClass(t.captionsButton, `${t.options.classPrefix}captions-enabled`);
+		} else {
+			for (let i = 0, total = t.tracks.length; i < total; i++) {
+				const track = t.tracks[i];
+				if (track.trackId === trackId) {
+					if (t.selectedTrack === null) {
+						addClass(t.captionsButton, `${t.options.classPrefix}captions-enabled`);
+					}
+					t.selectedTrack = track;
+					t.captions.setAttribute('lang', t.selectedTrack.srclang);
+					t.displayCaptions();
+					break;
 				}
-				t.selectedTrack = track;
-				t.captions.setAttribute('lang', t.selectedTrack.srclang);
-				t.displayCaptions();
-				break;
 			}
 		}
+
+		const event = createEvent('captionschange', t.media);
+		event.detail.caption = t.selectedTrack;
+		t.media.dispatchEvent(event);
 	},
 
 	/**
@@ -464,8 +465,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			target.dispatchEvent(event);
 		}
 
-		t.adjustLanguageBox();
-
 	},
 
 	/**
@@ -474,10 +473,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	removeTrackButton (trackId) {
 
-		const
-			t = this,
-			element = document.getElementById(`${trackId}`)
-		;
+		const element = document.getElementById(`${trackId}`);
 
 		if (element) {
 			const button = element.closest('li');
@@ -485,7 +481,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				button.remove();
 			}
 		}
-		t.adjustLanguageBox();
 	},
 
 	/**
@@ -508,18 +503,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				`name="${t.id}_captions" id="${trackId}" value="${trackId}" disabled>` +
 			`<label class="${t.options.classPrefix}captions-selector-label">${label} (loading)</label>` +
 		`</li>`;
-
-		t.adjustLanguageBox();
-	},
-
-	/**
-	 *
-	 */
-	adjustLanguageBox () {
-		const t = this;
-		// adjust the size of the outer box
-		t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector`).style.height =
-			`${parseFloat(t.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector-list`).offsetHeight)}px`;
 	},
 
 	/**
