@@ -11,6 +11,7 @@
 * Fixed show/hide of play, loading and buffer elements in various events @ron666
 * Fixed issues with setting source for `hls` renderer due to latest changes on library @ron666
 * Added documentation about how to use `MediaElement` with [React](https://facebook.github.io/react/) @ron666
+* Standardized way to create events for all native renderers @ron666
 
 *4.0.2 (2017/03/23)*
 

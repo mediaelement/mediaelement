@@ -94,8 +94,7 @@ const HtmlMediaElement = {
 				node.addEventListener(eventName, (e) => {
 					// copy event
 
-					const event = document.createEvent('HTMLEvents');
-					event.initEvent(e.type, e.bubbles, e.cancelable);
+					const event = createEvent(e.type, mediaElement);
 					mediaElement.dispatchEvent(event);
 				});
 

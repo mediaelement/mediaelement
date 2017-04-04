@@ -201,8 +201,7 @@ const DashNativeRenderer = {
 					}
 
 					node.addEventListener(eventName, (e) => {
-						const event = document.createEvent('HTMLEvents');
-						event.initEvent(e.type, e.bubbles, e.cancelable);
+						const event = createEvent(e.type, mediaElement);
 						mediaElement.dispatchEvent(event);
 					});
 
