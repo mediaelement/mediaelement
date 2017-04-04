@@ -4892,25 +4892,25 @@ var MediaElementPlayer = function () {
 
 			// Remove the responsive attributes in the event they are there
 			if (t.node.style.height !== 'none' && t.node.style.height !== t.height) {
-				t.node.style.height = '';
+				t.node.style.height = 'auto';
 			}
 			if (t.node.style.maxWidth !== 'none' && t.node.style.maxWidth !== t.width) {
-				t.node.style.maxWidth = '';
+				t.node.style.maxWidth = 'none';
 			}
 
 			if (t.node.style.maxHeight !== 'none' && t.node.style.maxHeight !== t.height) {
-				t.node.style.maxHeight = '';
+				t.node.style.maxHeight = 'none';
 			}
 
 			if (t.node.currentStyle) {
 				if (t.node.currentStyle.height === '100%') {
-					t.node.currentStyle.height = '';
+					t.node.currentStyle.height = 'auto';
 				}
 				if (t.node.currentStyle.maxWidth === '100%') {
-					t.node.currentStyle.maxWidth = '';
+					t.node.currentStyle.maxWidth = 'none';
 				}
 				if (t.node.currentStyle.maxHeight === '100%') {
-					t.node.currentStyle.maxHeight = '';
+					t.node.currentStyle.maxHeight = 'none';
 				}
 			}
 
