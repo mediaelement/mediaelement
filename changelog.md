@@ -1,6 +1,6 @@
 ### Version History
 
-*4.0.3 (2017/04/??)*
+*4.0.3 (2017/04/04)*
 
 * Fixed typo when detecting dimensions for stretching: `auto` @ron666
 * Perform improvements to AJAX method to prevent "pre-flight" requests @ron666
