@@ -1680,8 +1680,10 @@ class MediaElementPlayer {
 			if (buffer) {
 				buffer.style.display = 'none';
 			}
-			error.style.display = 'block';
-			error.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = e.message;
+			if (e.message) {
+				error.style.display = 'block';
+				error.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = e.message;
+			}
 		});
 
 		media.addEventListener('keydown', (e) => {

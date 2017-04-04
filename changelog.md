@@ -1,5 +1,9 @@
 ### Version History
 
+*4.0.4 (2017/??/??)*
+
+* Added missing conditional to display error message only if `message` is set on event @ron666
+
 *4.0.3 (2017/04/04)*
 
 * Fixed typo when detecting dimensions for stretching: `auto` @ron666
