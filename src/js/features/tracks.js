@@ -74,7 +74,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	buildtracks (player, controls, layers, media) {
 
-		if (!player.trackFiles || !player.trackFiles.length === 0) {
+		if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
 			return;
 		}
 
@@ -83,7 +83,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
 			tracksTitle = isString(t.options.tracksText) ? t.options.tracksText : i18n.t('mejs.captions-subtitles'),
 			chaptersTitle = isString(t.options.chaptersText) ? t.options.chaptersText : i18n.t('mejs.captions-chapters'),
-			total = player.trackFiles.length
+			total = player.trackFiles === null ? player.tracks.length : player.trackFiles.length
 		;
 
 		// If browser will do native captions, prefer mejs captions, loop through tracks and hide
@@ -306,17 +306,13 @@ Object.assign(MediaElementPlayer.prototype, {
 	findTracks () {
 		const
 			t = this,
-			tracktags = t.trackFiles
+			tracktags = t.trackFiles === null ? t.node.querySelectorAll('track') : t.trackFiles,
+			total = tracktags.length
 		;
 
 		// store for use by plugins
 		t.tracks = [];
-
-		if (!t.trackFiles) {
-			return;
-		}
-
-		for (let i = 0, total = tracktags.length; i < total; i++) {
+		for (let i = 0; i < total; i++) {
 			const
 				track = tracktags[i],
 				srclang = track.getAttribute('srclang').toLowerCase() || '',

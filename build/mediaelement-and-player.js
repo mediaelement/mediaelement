@@ -2348,7 +2348,7 @@ Object.assign(_player2.default.prototype, {
   */
 	buildtracks: function buildtracks(player, controls, layers, media) {
 
-		if (!player.trackFiles || !player.trackFiles.length === 0) {
+		if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
 			return;
 		}
 
@@ -2356,7 +2356,7 @@ Object.assign(_player2.default.prototype, {
 		    attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
 		    tracksTitle = (0, _general.isString)(t.options.tracksText) ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
 		    chaptersTitle = (0, _general.isString)(t.options.chaptersText) ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters'),
-		    total = player.trackFiles.length;
+		    total = player.trackFiles === null ? player.tracks.length : player.trackFiles.length;
 
 		// If browser will do native captions, prefer mejs captions, loop through tracks and hide
 		if (t.domNode.textTracks) {
@@ -2551,16 +2551,12 @@ Object.assign(_player2.default.prototype, {
 	},
 	findTracks: function findTracks() {
 		var t = this,
-		    tracktags = t.trackFiles;
+		    tracktags = t.trackFiles === null ? t.node.querySelectorAll('track') : t.trackFiles,
+		    total = tracktags.length;
 
 		// store for use by plugins
 		t.tracks = [];
-
-		if (!t.trackFiles) {
-			return;
-		}
-
-		for (var i = 0, total = tracktags.length; i < total; i++) {
+		for (var i = 0; i < total; i++) {
 			var track = tracktags[i],
 			    srclang = track.getAttribute('srclang').toLowerCase() || '',
 			    trackId = t.id + '_track_' + i + '_' + track.getAttribute('kind') + '_' + srclang;
@@ -4135,6 +4131,7 @@ var MediaElementPlayer = function () {
 			// This ensure full compatibility when using keyboard, since Safari creates a keyboard trap when appending
 			// video/audio elements with children
 			if (!_constants.IS_ANDROID && !_constants.IS_IOS && !_constants.IS_IPAD && !_constants.IS_IPHONE) {
+
 				var cloneNode = t.node.cloneNode(),
 				    children = t.node.childNodes,
 				    mediaFiles = [],

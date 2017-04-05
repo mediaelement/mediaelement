@@ -439,6 +439,7 @@ class MediaElementPlayer {
 			// This ensure full compatibility when using keyboard, since Safari creates a keyboard trap when appending
 			// video/audio elements with children
 			if (!IS_ANDROID && !IS_IOS && !IS_IPAD && !IS_IPHONE) {
+
 				const
 					cloneNode = t.node.cloneNode(),
 					children = t.node.childNodes,
