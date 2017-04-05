@@ -377,9 +377,9 @@ class MediaElementPlayer {
 			t.container.setAttribute('role', 'application');
 			t.container.setAttribute('aria-label', videoPlayerTitle);
 			t.container.innerHTML = `<div class="${t.options.classPrefix}inner">` +
+				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
-				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}clear"></div>` +
 			`</div>`;
 			t.container.addEventListener('focus', (e) => {
@@ -1938,7 +1938,7 @@ class MediaElementPlayer {
 					node.appendChild(t.otherFiles[i]);
 				}
 			}
-			
+
 			delete t.node;
 			delete t.mediaFiles;
 			delete t.trackFiles;

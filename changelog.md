@@ -1,9 +1,10 @@
 ### Version History
 
-*4.0.4 (2017/??/??)*
+*4.0.4 (2017/04/??)*
 
 * Added missing conditional to display error message only if `message` is set on event @ron666
 * Fixed issue with old versions of IE not unsetting CSS values properly for `fill` mode @ron666
+* Fixed issue with keyboard navigation trap created by Safari due to `video`/`audio` children while appended @ron666
 
 *4.0.3 (2017/04/04)*
 
