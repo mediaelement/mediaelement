@@ -4131,49 +4131,51 @@ var MediaElementPlayer = function () {
 			}
 			dom.addClass(t.container, t.isVideo ? t.options.classPrefix + 'video' : t.options.classPrefix + 'audio');
 
-			// Workflow: "clone" element and remove children, but save them to check sources, captions, etc.
+			// Workflow for desktop: "clone" element and remove children, but save them to check sources, captions, etc.
 			// This ensure full compatibility when using keyboard, since Safari creates a keyboard trap when appending
 			// video/audio elements with children
-			var cloneNode = t.node.cloneNode(),
-			    children = t.node.childNodes,
-			    mediaFiles = [],
-			    tracks = [],
-			    others = [];
+			if (!_constants.IS_ANDROID && !_constants.IS_IOS && !_constants.IS_IPAD && !_constants.IS_IPHONE) {
+				var cloneNode = t.node.cloneNode(),
+				    children = t.node.childNodes,
+				    mediaFiles = [],
+				    tracks = [],
+				    others = [];
 
-			for (var i = 0, total = children.length; i < total; i++) {
-				var childNode = children[i];
+				for (var i = 0, total = children.length; i < total; i++) {
+					var childNode = children[i];
 
-				if (childNode.nodeType !== Node.TEXT_NODE) {
-					switch (childNode.tagName.toLowerCase()) {
-						case 'source':
-							var src = childNode.getAttribute('src');
-							mediaFiles.push({
-								type: (0, _media.formatType)(src, childNode.getAttribute('type')),
-								src: src
-							});
-							break;
-						case 'track':
-							childNode.mode = 'hidden';
-							tracks.push(childNode);
-							break;
-						default:
-							others.push(childNode);
-							break;
+					if (childNode.nodeType !== Node.TEXT_NODE) {
+						switch (childNode.tagName.toLowerCase()) {
+							case 'source':
+								var src = childNode.getAttribute('src');
+								mediaFiles.push({
+									type: (0, _media.formatType)(src, childNode.getAttribute('type')),
+									src: src
+								});
+								break;
+							case 'track':
+								childNode.mode = 'hidden';
+								tracks.push(childNode);
+								break;
+							default:
+								others.push(childNode);
+								break;
+						}
 					}
 				}
-			}
 
-			t.node.remove();
-			t.node = t.media = cloneNode;
+				t.node.remove();
+				t.node = t.media = cloneNode;
 
-			if (mediaFiles.length) {
-				t.mediaFiles = mediaFiles;
-			}
-			if (tracks.length) {
-				t.trackFiles = tracks;
-			}
-			if (others.length) {
-				t.otherFiles = others;
+				if (mediaFiles.length) {
+					t.mediaFiles = mediaFiles;
+				}
+				if (tracks.length) {
+					t.trackFiles = tracks;
+				}
+				if (others.length) {
+					t.otherFiles = others;
+				}
 			}
 
 			// move the `video`/`audio` tag into the right spot
