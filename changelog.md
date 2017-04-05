@@ -8,232 +8,232 @@
 
 *4.0.3 (2017/04/04)*
 
-* Fixed typo when detecting dimensions for stretching: `auto` @ron666
-* Perform improvements to AJAX method to prevent "pre-flight" requests @ron666
-* Removed Captions menu height adjustment considered unnecessary @ron666
-* Fixed typo with event specific to Android and iOS @ron666
-* Fixed issue with Android not being able to play video when touching video area @ron666
-* Added `captionschange` event and fixed minor issue for `None` caption @ron666
-* Fixed show/hide of play, loading and buffer elements in various events @ron666
-* Fixed issues with setting source for `hls` renderer due to latest changes on library @ron666
-* Added documentation about how to use `MediaElement` with [React](https://facebook.github.io/react/) @ron666
-* Standardized way to create events for all native renderers @ron666
-* Fixed documentation in `utils.md` to indicate methods in `Features` section @ron666
+* Fixed typo when detecting dimensions for stretching: `auto` @rafa8626
+* Perform improvements to AJAX method to prevent "pre-flight" requests @rafa8626
+* Removed Captions menu height adjustment considered unnecessary @rafa8626
+* Fixed typo with event specific to Android and iOS @rafa8626
+* Fixed issue with Android not being able to play video when touching video area @rafa8626
+* Added `captionschange` event and fixed minor issue for `None` caption @rafa8626
+* Fixed show/hide of play, loading and buffer elements in various events @rafa8626
+* Fixed issues with setting source for `hls` renderer due to latest changes on library @rafa8626
+* Added documentation about how to use `MediaElement` with [React](https://facebook.github.io/react/) @rafa8626
+* Standardized way to create events for all native renderers @rafa8626
+* Fixed documentation in `utils.md` to indicate methods in `Features` section @rafa8626
 
 *4.0.2 (2017/03/23)*
 
-* Added new unit tests to increase code coverage @ron666
-* Fixed issue with `setFill()` method and reintroduced old workflow in focusout event @ron666
-* Added default media dimensions to avoid breaking control bar when player is in small container @ron666 
-* Fixed issue with volume slider and rail width calculation @ron666
+* Added new unit tests to increase code coverage @rafa8626
+* Fixed issue with `setFill()` method and reintroduced old workflow in focusout event @rafa8626
+* Added default media dimensions to avoid breaking control bar when player is in small container @rafa8626 
+* Fixed issue with volume slider and rail width calculation @rafa8626
 
 *4.0.1 (2017/03/22)*
 
-* Fixed major issues with iOS that prevent the player to be built @ron666 
+* Fixed major issues with iOS that prevent the player to be built @rafa8626 
 
 *4.0.0 (2017/03/22)*
 
-* Removed all dependencies to jQuery in code and created `utils/dom.js` to mimic jQuery's most used methods @ron666
-* Added missing unit tests @ron666
-* Fixed minor issues on Twitch, Facebook HLS and M(PEG)-DASH renderers @ron666
-* Fixed minor issue with play/pause button not being updated properly when switching to new source and media has ended @ron666
-* Fixed issues in documentation @ron666
-* Fixed issue with `readyState` value in Flash video shim @ron666
-* Added pause event when changing media sources @ron666
+* Removed all dependencies to jQuery in code and created `utils/dom.js` to mimic jQuery's most used methods @rafa8626
+* Added missing unit tests @rafa8626
+* Fixed minor issues on Twitch, Facebook HLS and M(PEG)-DASH renderers @rafa8626
+* Fixed minor issue with play/pause button not being updated properly when switching to new source and media has ended @rafa8626
+* Fixed issues in documentation @rafa8626
+* Fixed issue with `readyState` value in Flash video shim @rafa8626
+* Added pause event when changing media sources @rafa8626
 * Integrated `remove()` polyfill to simplify more code (https://github.com/mediaelement/mediaelement/pull/2140) @jimmywarting
-* Reintegrated and improved `Download File` workflow if error happens while attempting to play media @ron666
-* Fixed workflow for `autoplay` property in all renderers @ron666
-* Integrated [Mocha JSDOM](https://github.com/rstacruz/mocha-jsdom) package to add more unit tests @ron666 
-* Created `utils.md` file to describe the utilities/features available @ron666  
+* Reintegrated and improved `Download File` workflow if error happens while attempting to play media @rafa8626
+* Fixed workflow for `autoplay` property in all renderers @rafa8626
+* Integrated [Mocha JSDOM](https://github.com/rstacruz/mocha-jsdom) package to add more unit tests @rafa8626 
+* Created `utils.md` file to describe the utilities/features available @rafa8626  
 
 *3.2.4 (2017/03/14)*
 
-* Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @ron666
+* Removed conditional on MS Edge to bypass Flash detection due to error on Browserstack @rafa8626
 * Added error event support in Flash shims (https://github.com/mediaelement/mediaelement/pull/2115) @astr0junk
-* Added default `preload` element if not set on `video` or `audio` due to issue described on #2114 @ron666
-* Fixed typo in Facebook renderer @ron666
-* Added missing conditional to avoid issues in Android using Flash @ron666
+* Added default `preload` element if not set on `video` or `audio` due to issue described on #2114 @rafa8626
+* Fixed typo in Facebook renderer @rafa8626
+* Added missing conditional to avoid issues in Android using Flash @rafa8626
 * Refactor loop related to dispatch/remove events (https://github.com/mediaelement/mediaelement/pull/2127) @bricev
-* Removed unnecessary code from Tracks feature and fixed typo in HLS renderer @ron666
+* Removed unnecessary code from Tracks feature and fixed typo in HLS renderer @rafa8626
 * Escaped HTML tags in installation.md file (https://github.com/mediaelement/mediaelement/pull/2130) @GeorgySerga
 * Integrated Drop Frame Support for Timecode (https://github.com/mediaelement/mediaelement/pull/2126) @dmongrel
-* Added missing workflow to reintegrate slider when switching from live broadcast to regular file @ron666
-* Added documentation to install plugin in WordPress @ron666
+* Added missing workflow to reintegrate slider when switching from live broadcast to regular file @rafa8626
+* Added documentation to install plugin in WordPress @rafa8626
 
 *3.2.3 (2017/03/02)*
 
-* Brought missing fix for HLS @ron666
+* Brought missing fix for HLS @rafa8626
 
 *3.2.2 (2017/03/02)*
 
-* Fixed issue with renderers order by sorting them when user does not specify any order for them @ron666
-* Added `addControlElement()` to preserve order of control elements when certain features are reset @ron666
-* Fixed issue with native HLS when processing errors @ron666
-* Fixed issue when no dimensions are being set in `<video>` tag for `<iframe>` renderers @ron666
-* Fixed issues with HLS and M(PEG)-DASH renderers to avoid downloading fragments before playing media @ron666
-* Cleaned code on native renderers @ron666
+* Fixed issue with renderers order by sorting them when user does not specify any order for them @rafa8626
+* Added `addControlElement()` to preserve order of control elements when certain features are reset @rafa8626
+* Fixed issue with native HLS when processing errors @rafa8626
+* Fixed issue when no dimensions are being set in `<video>` tag for `<iframe>` renderers @rafa8626
+* Fixed issues with HLS and M(PEG)-DASH renderers to avoid downloading fragments before playing media @rafa8626
+* Cleaned code on native renderers @rafa8626
 
 *3.2.1 (2017/02/28)*
 
-* Added missing documentation for NPM given latest changes @ron666
+* Added missing documentation for NPM given latest changes @rafa8626
 
 *3.2.0 (2017/02/28)*
 
-* Fixed typo in header file @ron666
+* Fixed typo in header file @rafa8626
 * Added Ukrainian translation (https://github.com/mediaelement/mediaelement/pull/2100) @DmitryKrekota
 * Added Swedish translation (https://github.com/mediaelement/mediaelement/pull/2101) @xpetter
-* Fixed issue with poster image not being shown up on YouTube on mobile devices @ron666
+* Fixed issue with poster image not being shown up on YouTube on mobile devices @rafa8626
 * Removed hacks for old browsers (https://github.com/mediaelement/mediaelement/pull/2102) @jimmywarting
-* Fixed issue with Win8 Safari not detecting `src` attribute properly @ron666
+* Fixed issue with Win8 Safari not detecting `src` attribute properly @rafa8626
 * Fixed `secondsToTimeCode` method not being called with all parameters (https://github.com/mediaelement/mediaelement/pull/2103) @dmongrel
 * Added workflow to set WARIA text elements, added `isString` method (https://github.com/mediaelement/mediaelement/pull/2105) @DmitryKrekota
-* Added new `resources` section in documentation @ron666 
-* Cleaned up translation files and move others to `mediaelement-plugins` repo @ron666
+* Added new `resources` section in documentation @rafa8626 
+* Cleaned up translation files and move others to `mediaelement-plugins` repo @rafa8626
 * Fixed wrong link in documentation (https://github.com/mediaelement/mediaelement/pull/2106) @7huo
-* Added fix to avoid `jQuery.noConflict()` issues @ron666
-* Reorganized renderers and created `build/renderers` folder to keep bundles' size low @ron666
-* Integrated Twitch renderer @ron666
+* Added fix to avoid `jQuery.noConflict()` issues @rafa8626
+* Reorganized renderers and created `build/renderers` folder to keep bundles' size low @rafa8626
+* Integrated Twitch renderer @rafa8626
 
 *3.1.3 (2017/02/23)*
 
 * Fixed typo in `usage.md` in regards of Automatic start (https://github.com/mediaelement/mediaelement/pull/2071) @SvenJuergens
 * Added translation for Polish language (https://github.com/mediaelement/mediaelement/pull/2074) @greg-dev
 * Added translation for Russian language (https://github.com/mediaelement/mediaelement/pull/2073) @Globulopolis
-* Added overlay on `iframe` renderers to allow triggering mouse/click events properly @ron666 
-* Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @ron666
-* Fixed minor issues with FLV native renderer @ron666
-* Fixed typo in `pause` event not being triggered on Facebook and YouTube renderers @ron666
-* Fixed issue on `progress` feature that caused multiple events being fired incorrectly when clicking on rail @ron666
+* Added overlay on `iframe` renderers to allow triggering mouse/click events properly @rafa8626 
+* Fixed issue with inconsistency between `MediaElementPlayer` and `MediaElement` instantiations @rafa8626
+* Fixed minor issues with FLV native renderer @rafa8626
+* Fixed typo in `pause` event not being triggered on Facebook and YouTube renderers @rafa8626
+* Fixed issue on `progress` feature that caused multiple events being fired incorrectly when clicking on rail @rafa8626
 * Corrected typo in `full.js` file (https://github.com/mediaelement/mediaelement/pull/2081) @helmetroo
 * Several fixes for YouTube renderer (https://github.com/mediaelement/mediaelement/pull/2082) @anomaly-stalker
-* Integrated ESLint to verify/fix code with more strict standards @ron666
+* Integrated ESLint to verify/fix code with more strict standards @rafa8626
 * Fixed issue with mute/unmute ARIA text (https://github.com/mediaelement/mediaelement/pull/2091) @DmitryKrekota
-* Fixed issue with obfuscated URLs or URLs without extension detected in #2087 @ron666
-* Fixed accessibility issue related to use keyboard in Safari @ron666 
-* Fixed typo in `demo` file related to switching to Chinese language and added conditional to disable media URLs on iOS @ron666
+* Fixed issue with obfuscated URLs or URLs without extension detected in #2087 @rafa8626
+* Fixed accessibility issue related to use keyboard in Safari @rafa8626 
+* Fixed typo in `demo` file related to switching to Chinese language and added conditional to disable media URLs on iOS @rafa8626
 * Removed IE8 hacks (https://github.com/mediaelement/mediaelement/pull/2095) @jimmywarting
-* Cleaned unnecessary code and fixed issue with Vimeo renderer @ron666
-* Fixed security issue with Flash by introducing `shimScriptAccess` configuration element and reading `allowScriptAccess` flag @ron666
-* Added documentation about use of MediaElement with a responsive grid plugin effectively, thanks to @DeysonOrtiz, and other updates on it @ron666
+* Cleaned unnecessary code and fixed issue with Vimeo renderer @rafa8626
+* Fixed security issue with Flash by introducing `shimScriptAccess` configuration element and reading `allowScriptAccess` flag @rafa8626
+* Added documentation about use of MediaElement with a responsive grid plugin effectively, thanks to @DeysonOrtiz, and other updates on it @rafa8626
 
 *3.1.2 (2017/02/10)*
 
-* Expanded workflow to stop media loading completely when removing player @ron666
+* Expanded workflow to stop media loading completely when removing player @rafa8626
 * Added more fixes to Flash audio shim (https://github.com/mediaelement/mediaelement/pull/2054) @an1rk4
-* Added security statements on almost all shims to allow to be played cross-domain @ron666
-* Removed HAS_TOUCH flag considered unnecessary @ron666
-* Fixed workflow to detect if libraries on HLS, DASH and FLV renderers were already loaded @ron666
+* Added security statements on almost all shims to allow to be played cross-domain @rafa8626
+* Removed HAS_TOUCH flag considered unnecessary @rafa8626
+* Fixed workflow to detect if libraries on HLS, DASH and FLV renderers were already loaded @rafa8626
 * Reintegrated workflow to load source using flashvar `src` in audio (https://github.com/mediaelement/mediaelement/pull/2059) @astr0junk
-* Improved documentation for Installation and API @ron666
-* Added workflow to sanitize HTML for captions due to potential XSS vulnerability @ron666 
+* Improved documentation for Installation and API @rafa8626
+* Added workflow to sanitize HTML for captions due to potential XSS vulnerability @rafa8626 
 * Added muted workflow for audio Flash shim (https://github.com/mediaelement/mediaelement/pull/2063) @an1rk4
-* Added CDNjs badge for README @ron666
-* Added validation to avoid Flash check on MS Edge due to issues with `plugins` element @ron666
+* Added CDNjs badge for README @rafa8626
+* Added validation to avoid Flash check on MS Edge due to issues with `plugins` element @rafa8626
 * Added reference to "mediaelement/mediaelement-plugins" (https://github.com/mediaelement/mediaelement/pull/2067) @isantolin
-* Standardized way to display chapters tracks using button and menu @ron666
+* Standardized way to display chapters tracks using button and menu @rafa8626
 
 *3.1.1 (2017/02/02)*
 
 * Added patch in Flash audio shim to load new source correctly @an1rk4
-* Fixed issues when removing player, specially when using any Flash shim @ron666
+* Fixed issues when removing player, specially when using any Flash shim @rafa8626
 
 *3.1.0 (2017/02/02)*
 
-* Updated documentation about how to use custom player (HLS, DASH, FLV, etc.) correctly @ron666
-* Expanded Renderers List table and other documentation tweaks @ron666
+* Updated documentation about how to use custom player (HLS, DASH, FLV, etc.) correctly @rafa8626
+* Expanded Renderers List table and other documentation tweaks @rafa8626
 * Updated German translations (https://github.com/mediaelement/mediaelement/pull/2031) @SoftCreatR
-* Added `hideVideoControlsOnPause` configuration element to hide controls when media is paused @ron666
-* Added `showPosterWhenPaused` option and updated documentation @ron666
-* Added new media to demo file to match main website and reformatted `demo/demo.js` @ron666
-* Added missing method call when removing media through `remove()` method and documented workflow to remove player @ron666
-* Added new array element to map all read-only properties to avoid `TypeError` on certain properties @ron666
-* Added workflow to use YouTube as an audio player @ron666
+* Added `hideVideoControlsOnPause` configuration element to hide controls when media is paused @rafa8626
+* Added `showPosterWhenPaused` option and updated documentation @rafa8626
+* Added new media to demo file to match main website and reformatted `demo/demo.js` @rafa8626
+* Added missing method call when removing media through `remove()` method and documented workflow to remove player @rafa8626
+* Added new array element to map all read-only properties to avoid `TypeError` on certain properties @rafa8626
+* Added workflow to use YouTube as an audio player @rafa8626
 * Updated usage.md file (https://github.com/mediaelement/mediaelement/pull/2043) @theomathieubhvr
-* Added workflow to pause media when sliding rail to improve memory performance (https://github.com/mediaelement/mediaelement/pull/2041) @ricking06 and @ron666
-* Changed name of NPM file `all.js` to `full.js` for clarity purposes @ron666
-* Added missing elements on `mediaelementplayer.js` bundle @ron666
-* Fixed issues when using audio shim @ron666
+* Added workflow to pause media when sliding rail to improve memory performance (https://github.com/mediaelement/mediaelement/pull/2041) @ricking06 and @rafa8626
+* Changed name of NPM file `all.js` to `full.js` for clarity purposes @rafa8626
+* Added missing elements on `mediaelementplayer.js` bundle @rafa8626
+* Fixed issues when using audio shim @rafa8626
 
 *3.0.2 (2017/01/27)*
 
-* Fixed issues related to volume in YouTube renderer @ron666
-* Removed must of features and moved them to new repository (https://github.com/mediaelement/mediaelement-plugins) @ron666 
-* Updated/cleaned documentation in terms on Guidelines and Usage @ron666
-* Cleaned up CSS stylesheets @ron666
-* Removed `—features` option from Grunt file @ron666
-* Fixed issue with Vimeo renderer when playing/pausing video causing unexpected behavior @ron666
+* Fixed issues related to volume in YouTube renderer @rafa8626
+* Removed must of features and moved them to new repository (https://github.com/mediaelement/mediaelement-plugins) @rafa8626 
+* Updated/cleaned documentation in terms on Guidelines and Usage @rafa8626
+* Cleaned up CSS stylesheets @rafa8626
+* Removed `—features` option from Grunt file @rafa8626
+* Fixed issue with Vimeo renderer when playing/pausing video causing unexpected behavior @rafa8626
 * Fixed npm installation command reference in main site (https://github.com/mediaelement/mediaelement/pull/2018) @pra85
 * Fixed minor typo in documentation (https://github.com/mediaelement/mediaelement/pull/2019) @denismosolov
 * Fixed class reference in the jQuery usage documentation (https://github.com/mediaelement/mediaelement/pull/2020) @vrozkovec
 * Updated Russian translation file (https://github.com/mediaelement/mediaelement/pull/2023) @Globulopolis
-* Added workflow in Vimeo renderer to allow query arguments passed through the media URL @ron666
-* Added missing global variables when jQuery, Zepto or Ender libraries are detected in `src/js/library.js` file @ron666
-* Fixed issue with `iframe` renderers (YouTube, Vimeo, Facebook, SoundCloud and Dailymotion) not hiding controls properly @ron666
-* Added new logo in README file @ron666
+* Added workflow in Vimeo renderer to allow query arguments passed through the media URL @rafa8626
+* Added missing global variables when jQuery, Zepto or Ender libraries are detected in `src/js/library.js` file @rafa8626
+* Fixed issue with `iframe` renderers (YouTube, Vimeo, Facebook, SoundCloud and Dailymotion) not hiding controls properly @rafa8626
+* Added new logo in README file @rafa8626
 
 *3.0.1 (2017/01/20)*
 
-* Fixed several issues in terms of using Meteor/NPM package and added new files to link `build/mediaelement.js` and `build/mediaelement-and-player.js` for NPM @ron666
-* Added image to README file, as well as `favicon` for demo and test files @ron666
+* Fixed several issues in terms of using Meteor/NPM package and added new files to link `build/mediaelement.js` and `build/mediaelement-and-player.js` for NPM @rafa8626
+* Added image to README file, as well as `favicon` for demo and test files @rafa8626
 * Enabled external builds using Browserify (https://github.com/mediaelement/mediaelement/pull/2000) @neonaut
-* Added missing conditionals to avoid issues with non-existing renderers bundle @ron666
-* Fixed conditional to target browsers/devices that support HLS natively and caused issues with other media types @ron666
+* Added missing conditionals to avoid issues with non-existing renderers bundle @rafa8626
+* Fixed conditional to target browsers/devices that support HLS natively and caused issues with other media types @rafa8626
 * New logo and layout for http://mediaelementjs.com website @mediaelement
-* Added missing documentation about importing MEJS and using RequireJS @ron666
-* Updated RTMP sources since prior one expired @ron666
-* Fixed issue with controls not hiding on `mouseleave` when video is not playing (#1995) @ron666
+* Added missing documentation about importing MEJS and using RequireJS @rafa8626
+* Updated RTMP sources since prior one expired @rafa8626
+* Fixed issue with controls not hiding on `mouseleave` when video is not playing (#1995) @rafa8626
 * Added missing reference to FLV in main website (https://github.com/mediaelement/mediaelement/pull/2006) @isantolin
-* Removed Browserify option to reduce size of unminified bundles @ron666
+* Removed Browserify option to reduce size of unminified bundles @rafa8626
 
 *3.0.0 (2017/01/16)*
 
 * Introduction of `Renderers`, pluggable code that allows the introduction of new media formats in an easier way @mediaelement
-* Code refactor in `ECMAScript® 2015` language specification (`ES6`) @ron666
-* Integration of unit tests and browser test with [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), and enhancements to [Travis CI](https://travis-ci.org/) and [Coveralls](https://coveralls.io/) platforms @ron666
+* Code refactor in `ECMAScript® 2015` language specification (`ES6`) @rafa8626
+* Integration of unit tests and browser test with [mocha](https://mochajs.org/) and [chai](http://chaijs.com/), and enhancements to [Travis CI](https://travis-ci.org/) and [Coveralls](https://coveralls.io/) platforms @rafa8626
 * Ability to play Facebook, SoundCloud and YouTube @mediaelement
-* Ability to play M(PEG)-DASH formats using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback @ron666
-* Increased test suite by adding a file per renderer @mediaelement and @ron666
-* Code completely documented using [JSDoc](http://usejsdoc.org/) notation @ron666
-* Renamed `src` files to increase readability @mediaelement and @ron666
-* Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library @ron666
-* Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js) @ron666
-* Addition of Catalan translation @ron666
-* Added support for Meteor @ron666
-* Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development @ron666
-* Reduced size of repository as a whole @ron666
+* Ability to play M(PEG)-DASH formats using [dash.js](https://github.com/Dash-Industry-Forum/dash.js) for native support and [dash.as](https://github.com/castlabs/dashas) for Flash fallback @rafa8626
+* Increased test suite by adding a file per renderer @mediaelement and @rafa8626
+* Code completely documented using [JSDoc](http://usejsdoc.org/) notation @rafa8626
+* Renamed `src` files to increase readability @mediaelement and @rafa8626
+* Addition of native HLS using [hls.js](https://github.com/dailymotion/hls.js) library @rafa8626
+* Updated player for Vimeo by removing the use of `Froogaloop` and integrating the new [Player API](https://github.com/vimeo/player.js) @rafa8626
+* Addition of Catalan translation @rafa8626
+* Added support for Meteor @rafa8626
+* Integration of [JSLint](https://github.com/douglascrockford/JSLint) to ensure code quality and better error checking for development @rafa8626
+* Reduced size of repository as a whole @rafa8626
 * Removal of themes and introduction of simple player for testing @mediaelement
-* Modifications in `Gruntfile` @ron666
-* Introduction of new demo and cleaned `demo` folder @ron666
+* Modifications in `Gruntfile` @rafa8626
+* Introduction of new demo and cleaned `demo` folder @rafa8626
 * Removed support for Silverlight @mediaelement
-* Updates in documentation to reflect new features in 3.0 version @ron666
-* Introduced missing translation elements and translated them in Spanish @ron666
-* Removed big Play button for iPhone and YouTube and Facebook renderers @ron666
+* Updates in documentation to reflect new features in 3.0 version @rafa8626
+* Introduced missing translation elements and translated them in Spanish @rafa8626
+* Removed big Play button for iPhone and YouTube and Facebook renderers @rafa8626
 * CSS specificity reduction (https://github.com/mediaelement/mediaelement/pull/1890) (https://github.com/mediaelement/mediaelement/pull/1909) @albell
 * Fix for fullscreen behavior when `setDimensions` attribute is `false` (https://github.com/mediaelement/mediaelement/pull/1899) @ale-grosselle
 * Added `blur` handler to hide the volumeSlider (https://github.com/mediaelement/mediaelement/pull/1901) @peterh-capella
 * CSS SVG cleanup (https://github.com/mediaelement/mediaelement/pull/1906) @albell
-* Fixed issues with progress bar causing glitches during resizing/fullscreen events (#1905 and #1939) @ron666
-* Fixed workflow to stop streaming on HTML5 (#613 and #1914) @ron666
-* Fixed issue when setting current time and then playing media (#1924) @ron666
-* Fixed issues with dimensions and resizing on Flash shims (https://github.com/mediaelement/mediaelement/pull/1934) @ale-grosselle and @ron666
+* Fixed issues with progress bar causing glitches during resizing/fullscreen events (#1905 and #1939) @rafa8626
+* Fixed workflow to stop streaming on HTML5 (#613 and #1914) @rafa8626
+* Fixed issue when setting current time and then playing media (#1924) @rafa8626
+* Fixed issues with dimensions and resizing on Flash shims (https://github.com/mediaelement/mediaelement/pull/1934) @ale-grosselle and @rafa8626
 * Fixed issues with accessibility related to Closed Captioning (#438) (https://github.com/mediaelement/mediaelement/pull/1921) @marmite22
 * Fixed removal of MediaElement when native controls are used (https://github.com/mediaelement/mediaelement/pull/1937) @lucash
-* Refactored Speed feature to make it accessible and fixed minor issue with Closed Captioning using mouse @ron666
-* Added better handle of focus outline per @albell suggestions in #1911 @ron666
-* Added missing workflow to pause/play media when clicking on progress bar indicated in #1947 @ron666
-* Integrated native FLV support using [flv.js](https://github.com/Bilibili/flv.js) library @ron666
+* Refactored Speed feature to make it accessible and fixed minor issue with Closed Captioning using mouse @rafa8626
+* Added better handle of focus outline per @albell suggestions in #1911 @rafa8626
+* Added missing workflow to pause/play media when clicking on progress bar indicated in #1947 @rafa8626
+* Integrated native FLV support using [flv.js](https://github.com/Bilibili/flv.js) library @rafa8626
 * Simplified volume control position calculation (https://github.com/mediaelement/mediaelement/pull/1952) @marjune163
-* Integrated BEM naming convention and backward compatibility (https://github.com/mediaelement/mediaelement/pull/1961) @albell and @ron666
-* Integrated support for multiple tracks with same language code and fixed issues with translations for `<track>` labels (https://github.com/mediaelement/mediaelement/pull/1957) @laupow and @ron666
+* Integrated BEM naming convention and backward compatibility (https://github.com/mediaelement/mediaelement/pull/1961) @albell and @rafa8626
+* Integrated support for multiple tracks with same language code and fixed issues with translations for `<track>` labels (https://github.com/mediaelement/mediaelement/pull/1957) @laupow and @rafa8626
 * Updated control bar styles (https://github.com/mediaelement/mediaelement/pull/1965) @mediaelement
-* Added replay button once video finishes and does not loop to solve #1067 @ron666
+* Added replay button once video finishes and does not loop to solve #1067 @rafa8626
 * Added Croatian translation (https://github.com/mediaelement/mediaelement/pull/1986) @hrvoj3e
-* Added workflow to indicate 'Live Broadcast' if duration of media is infinite @ron666
+* Added workflow to indicate 'Live Broadcast' if duration of media is infinite @rafa8626
 * Updated Polish translation (https://github.com/mediaelement/mediaelement/pull/1989) @greg-dev
 
 *2.23.5 (2017/01/06)*
 
-* Fixed typo that caused Wordpress support for translations to be broken (#1984) @ron666
+* Fixed typo that caused Wordpress support for translations to be broken (#1984) @rafa8626
 
 *2.23.4 (2016/10/21)*
 
@@ -243,52 +243,52 @@
 *2.23.3 (2016/10/13)*
 
 * Added Dutch translation for MediaElement (https://github.com/mediaelement/mediaelement/pull/1863) @leonardder
-* Added new translation to demo file @ron666
+* Added new translation to demo file @rafa8626
 * Integrated fix for Drupal 7 running with `jQuery.noConflict()` (https://github.com/mediaelement/mediaelement/pull/1857) @CaineThanatos
-* Fixed minor issue with Skip Back button @ron666
+* Fixed minor issue with Skip Back button @rafa8626
 * Fixed declaration of Brazilian Portuguese translation file (https://github.com/mediaelement/mediaelement/pull/1872) @OlivierJaquemet 
-* Refactored `mejs.i18n` and expanded to allow pluralization (https://github.com/mediaelement/mediaelement/pull/1867) @ron666
+* Refactored `mejs.i18n` and expanded to allow pluralization (https://github.com/mediaelement/mediaelement/pull/1867) @rafa8626
 * Updated `me-i18n-locale-de.js` to accept plurals (https://github.com/mediaelement/mediaelement/pull/1879) @SoftCreatR
 * Send focus to correct control based on location to improve Accessibility (https://github.com/mediaelement/mediaelement/pull/1818) @astephenb
 * Standardized language files and cleaned with JSLint (https://github.com/mediaelement/mediaelement/pull/1883) @SoftCreatR
 
 *2.23.2 (2016/10/01)*
 
-* Added fix for time rail width described on #1356 @ron666
+* Added fix for time rail width described on #1356 @rafa8626
 * Integrated markers feature (https://github.com/mediaelement/mediaelement/pull/1814) @hkasera
 * Added French translation for Source Chooser feature (https://github.com/mediaelement/mediaelement/pull/1850) @OlivierJaquemet
 * Fixed German translation file (https://github.com/mediaelement/mediaelement/pull/1852) @SoftCreatR
 * Add complete list of supported language in translation demo file (https://github.com/mediaelement/mediaelement/pull/1853) @OlivierJaquemet
-* Fix for controls when no features are set in the configuration (https://github.com/mediaelement/mediaelement/pull/1797) @ron666
-* Fixed issues with translatable elements in several features files that were not being translated properly and fixed typo in Spanish translation @ron666
-* Fixed YouTube loop issue according to @michaelbucklin recommendation @ron666
+* Fix for controls when no features are set in the configuration (https://github.com/mediaelement/mediaelement/pull/1797) @rafa8626
+* Fixed issues with translatable elements in several features files that were not being translated properly and fixed typo in Spanish translation @rafa8626
+* Fixed YouTube loop issue according to @michaelbucklin recommendation @rafa8626
 * Fixed compilation error when using YUICompressor on i18n file (https://github.com/mediaelement/mediaelement/pull/1861) @OlivierJaquemet
 
 *2.23.1 (2016/09/26)*
 
 * Fix documentation in regards of control icons with CSS in different path (https://github.com/mediaelement/mediaelement/pull/1837) @jangrewe
-* Added a new element to customize YouTube iframe, to solve #1840 (https://github.com/mediaelement/mediaelement/pull/1842) @ron666
-* Fix issues with Chromium not playing audio files properly (https://github.com/mediaelement/mediaelement/pull/1843) @ron666
-* Fix for issue related to space bar and Firefox triggering click event, causing issues in Accessibility (https://github.com/mediaelement/mediaelement/pull/1848) @ron666
+* Added a new element to customize YouTube iframe, to solve #1840 (https://github.com/mediaelement/mediaelement/pull/1842) @rafa8626
+* Fix issues with Chromium not playing audio files properly (https://github.com/mediaelement/mediaelement/pull/1843) @rafa8626
+* Fix for issue related to space bar and Firefox triggering click event, causing issues in Accessibility (https://github.com/mediaelement/mediaelement/pull/1848) @rafa8626
 * Update I18N to use unique id instead of strings (https://github.com/mediaelement/mediaelement/pull/1845) @OlivierJaquemet
 * Make the sourcechooser feature keyboard-friendly for Accessibility purposes (https://github.com/mediaelement/mediaelement/pull/1841) @tennety
-* Integration of `grunt` task to set translation files inside `/build/` folder (https://github.com/mediaelement/mediaelement/pull/1834) @ron666
+* Integration of `grunt` task to set translation files inside `/build/` folder (https://github.com/mediaelement/mediaelement/pull/1834) @rafa8626
 
 *2.23.0 (2016/09/06)*
 
 * Changed way to detect fullscreen method by using _onloadstart_ event (https://github.com/mediaelement/mediaelement/pull/1815) @ale-grosselle
-* Preserve volume muted when resizing player (https://github.com/mediaelement/mediaelement/pull/1813) @ron666
-* Allow double lines of captions, added missing _captions_ type in tracks workflow and minor typo fix (https://github.com/mediaelement/mediaelement/pull/1800) @ron666
-* Touch devices controls fix for #1820 (https://github.com/mediaelement/mediaelement/issues/603) @ron666
-* Show controls when video is paused or ended (https://github.com/mediaelement/mediaelement/pull/1786) @ron666
-* Progress bar variables set properly to fix #1600 (https://github.com/mediaelement/mediaelement/pull/1824) @ron666
-* Configurable controls visibility time (https://github.com/mediaelement/mediaelement/pull/1787) @ron666
+* Preserve volume muted when resizing player (https://github.com/mediaelement/mediaelement/pull/1813) @rafa8626
+* Allow double lines of captions, added missing _captions_ type in tracks workflow and minor typo fix (https://github.com/mediaelement/mediaelement/pull/1800) @rafa8626
+* Touch devices controls fix for #1820 (https://github.com/mediaelement/mediaelement/issues/603) @rafa8626
+* Show controls when video is paused or ended (https://github.com/mediaelement/mediaelement/pull/1786) @rafa8626
+* Progress bar variables set properly to fix #1600 (https://github.com/mediaelement/mediaelement/pull/1824) @rafa8626
+* Configurable controls visibility time (https://github.com/mediaelement/mediaelement/pull/1787) @rafa8626
 * Added delay when hovering out of control button (https://github.com/mediaelement/mediaelement/pull/1615) @schrolli
 * Added new Grunt task to compile all html5 elements including console messages (https://github.com/mediaelement/mediaelement/pull/1614) @schrolli
-* Added call to format time properly when metadata has been loaded (https://github.com/mediaelement/mediaelement/pull/1826) @ron666
-* Added time tracker tooltip configuration to enable/disable it (#1692) (https://github.com/mediaelement/mediaelement/pull/1830) @ron666
-* Set source properly on YouTube videos properly per @dazweeja's comments (https://github.com/mediaelement/mediaelement/pull/1829) @ron666
-* Documentation improvements and addition of TODO list (https://github.com/mediaelement/mediaelement/pull/1805) @ron666
+* Added call to format time properly when metadata has been loaded (https://github.com/mediaelement/mediaelement/pull/1826) @rafa8626
+* Added time tracker tooltip configuration to enable/disable it (#1692) (https://github.com/mediaelement/mediaelement/pull/1830) @rafa8626
+* Set source properly on YouTube videos properly per @dazweeja's comments (https://github.com/mediaelement/mediaelement/pull/1829) @rafa8626
+* Documentation improvements and addition of TODO list (https://github.com/mediaelement/mediaelement/pull/1805) @rafa8626
 * Added missing error message configuration in documentation and in player settings
 
 *2.22.1 (2016/08/18)*
@@ -298,15 +298,15 @@
 * Add missing string to the English locale template https://github.com/mediaelement/mediaelement/pull/1782 @ocean90 
 * Fix for aspect ratio when playing Hls Flash video if m3u8 does not have a resolution indicated (#1790) (https://github.com/mediaelement/mediaelement/pull/1791) @ale-grosselle
 * Only focus the play button when the control bar is not hidden (https://github.com/mediaelement/mediaelement/pull/1798) @schrolli
-* Avoid hiding audio controls when tabbing (#1668) (https://github.com/mediaelement/mediaelement/pull/1804) @ron666
-* Stylesheet minor fixes (https://github.com/mediaelement/mediaelement/pull/1808) @ron666
-* Time update on rail only when controls are visible (#1683) (https://github.com/mediaelement/mediaelement/pull/1801) @ron666
-* ARIA attributes for big play button to continue improving player accessibility (https://github.com/mediaelement/mediaelement/pull/1803) @ron666
+* Avoid hiding audio controls when tabbing (#1668) (https://github.com/mediaelement/mediaelement/pull/1804) @rafa8626
+* Stylesheet minor fixes (https://github.com/mediaelement/mediaelement/pull/1808) @rafa8626
+* Time update on rail only when controls are visible (#1683) (https://github.com/mediaelement/mediaelement/pull/1801) @rafa8626
+* ARIA attributes for big play button to continue improving player accessibility (https://github.com/mediaelement/mediaelement/pull/1803) @rafa8626
 
 *2.22.0 (2016/07/17)*
 
-* Introduce new stretching models (stretching: 'fill','responsive') (https://github.com/mediaelement/mediaelement/pull/1760) @ron666
-* Fix for IE9-10 fullscreen control hover issues (https://github.com/mediaelement/mediaelement/pull/1760) @ron666
+* Introduce new stretching models (stretching: 'fill','responsive') (https://github.com/mediaelement/mediaelement/pull/1760) @rafa8626
+* Fix for IE9-10 fullscreen control hover issues (https://github.com/mediaelement/mediaelement/pull/1760) @rafa8626
 * Update Flash HLS to v0.4.4.21 (https://github.com/mediaelement/mediaelement/pull/1762) @ale-grosselle
 * Update Flash HLS to accept audio (https://github.com/mediaelement/mediaelement/pull/1763) @ale-grosselle
 * Updated Korean translation (#1743) @Jinkwon 
