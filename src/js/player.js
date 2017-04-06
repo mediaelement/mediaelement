@@ -344,7 +344,6 @@ class MediaElementPlayer {
 		t.isVideo = (t.isDynamic) ? t.options.isVideo : (tagName !== 'audio' && t.options.isVideo);
 		t.mediaFiles = null;
 		t.trackFiles = null;
-		t.otherFiles = null;
 
 		// use native controls in iPad, iPhone, and Android
 		if ((IS_IPAD && t.options.iPadUseNativeControls) || (IS_IPHONE && t.options.iPhoneUseNativeControls)) {
@@ -445,14 +444,13 @@ class MediaElementPlayer {
 					cloneNode = t.node.cloneNode(),
 					children = t.node.childNodes,
 					mediaFiles = [],
-					tracks = [],
-					others = []
+					tracks = []
 				;
 
 				for (let i = 0, total = children.length; i < total; i++) {
 					const childNode = children[i];
 
-					if (childNode.nodeType !== Node.TEXT_NODE) {
+					if (childNode && childNode.nodeType !== Node.TEXT_NODE) {
 						switch (childNode.tagName.toLowerCase()) {
 							case 'source':
 								const src = childNode.getAttribute('src');
@@ -466,7 +464,7 @@ class MediaElementPlayer {
 								tracks.push(childNode);
 								break;
 							default:
-								others.push(childNode);
+								cloneNode.appendChild(childNode);
 								break;
 						}
 					}
@@ -480,9 +478,6 @@ class MediaElementPlayer {
 				}
 				if (tracks.length) {
 					t.trackFiles = tracks;
-				}
-				if (others.length) {
-					t.otherFiles = others;
 				}
 			}
 
@@ -1939,16 +1934,9 @@ class MediaElementPlayer {
 				}
 			}
 
-			if (t.otherFiles) {
-				for (let i = 0, total = t.otherFiles.length; i < total; i++) {
-					node.appendChild(t.otherFiles[i]);
-				}
-			}
-
 			delete t.node;
 			delete t.mediaFiles;
 			delete t.trackFiles;
-			delete t.otherFiles;
 
 		} else {
 			t.container.parentNode.insertBefore(t.node, t.container);

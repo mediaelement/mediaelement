@@ -4042,7 +4042,6 @@ var MediaElementPlayer = function () {
 		t.isVideo = t.isDynamic ? t.options.isVideo : tagName !== 'audio' && t.options.isVideo;
 		t.mediaFiles = null;
 		t.trackFiles = null;
-		t.otherFiles = null;
 
 		// use native controls in iPad, iPhone, and Android
 		if (_constants.IS_IPAD && t.options.iPadUseNativeControls || _constants.IS_IPHONE && t.options.iPhoneUseNativeControls) {
@@ -4132,13 +4131,12 @@ var MediaElementPlayer = function () {
 				var cloneNode = t.node.cloneNode(),
 				    children = t.node.childNodes,
 				    mediaFiles = [],
-				    tracks = [],
-				    others = [];
+				    tracks = [];
 
 				for (var i = 0, total = children.length; i < total; i++) {
 					var childNode = children[i];
 
-					if (childNode.nodeType !== Node.TEXT_NODE) {
+					if (childNode && childNode.nodeType !== Node.TEXT_NODE) {
 						switch (childNode.tagName.toLowerCase()) {
 							case 'source':
 								var src = childNode.getAttribute('src');
@@ -4152,7 +4150,7 @@ var MediaElementPlayer = function () {
 								tracks.push(childNode);
 								break;
 							default:
-								others.push(childNode);
+								cloneNode.appendChild(childNode);
 								break;
 						}
 					}
@@ -4166,9 +4164,6 @@ var MediaElementPlayer = function () {
 				}
 				if (tracks.length) {
 					t.trackFiles = tracks;
-				}
-				if (others.length) {
-					t.otherFiles = others;
 				}
 			}
 
@@ -5639,16 +5634,9 @@ var MediaElementPlayer = function () {
 						}
 					}
 
-					if (t.otherFiles) {
-						for (var _i4 = 0, _total4 = t.otherFiles.length; _i4 < _total4; _i4++) {
-							node.appendChild(t.otherFiles[_i4]);
-						}
-					}
-
 					delete t.node;
 					delete t.mediaFiles;
 					delete t.trackFiles;
-					delete t.otherFiles;
 				})();
 			} else {
 				t.container.parentNode.insertBefore(t.node, t.container);
