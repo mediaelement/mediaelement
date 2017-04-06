@@ -2,9 +2,12 @@
 
 *4.0.4 (2017/04/??)*
 
-* Added missing conditional to display error message only if `message` is set on event @ron666
-* Fixed issue with old versions of IE not unsetting CSS values properly for `fill` mode @ron666
-* Fixed issue with keyboard navigation trap created by Safari due to `video`/`audio` children while being appended @ron666
+* Added missing conditional to display error message only if `message` is set on event @rafa8626
+* Fixed issue with old versions of IE not unsetting CSS values properly for `fill` mode @rafa8626
+* Added workflow from Flash audio shim into video shim and removed several duplicated events @rafa8626
+* Fixed issues with play/pause toggle and `fadeIn` and `fadeOut` effects @rafa8626
+* Updated HLS shim library to latest version @rafa8626
+* Fixed issue with keyboard trap in Safari desktop due to media's children element(s) being moved from original position @rafa8626
 
 *4.0.3 (2017/04/04)*
 

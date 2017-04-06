@@ -7,6 +7,7 @@ import MediaElement from './core/mediaelement';
 import i18n from './core/i18n';
 import {
 	IS_FIREFOX,
+	IS_SAFARI,
 	IS_IPAD,
 	IS_IPHONE,
 	IS_ANDROID,
@@ -435,10 +436,10 @@ class MediaElementPlayer {
 			}
 			dom.addClass(t.container, (t.isVideo ? `${t.options.classPrefix}video` : `${t.options.classPrefix}audio`));
 
-			// Workflow for desktop: "clone" element and remove children, but save them to check sources, captions, etc.
+			// Workflow for Safari desktop: "clone" element and remove children, but save them to check sources, captions, etc.
 			// This ensure full compatibility when using keyboard, since Safari creates a keyboard trap when appending
 			// video/audio elements with children
-			if (!IS_ANDROID && !IS_IOS && !IS_IPAD && !IS_IPHONE) {
+			if (IS_SAFARI && !IS_IOS) {
 
 				const
 					cloneNode = t.node.cloneNode(),
@@ -1654,7 +1655,9 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeked', () => {
-			bigPlay.style.display = '';
+			if (media.paused) {
+				bigPlay.style.display = '';
+			}
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = '';
