@@ -8,6 +8,7 @@
 * Fixed issues with play/pause toggle and `fadeIn` and `fadeOut` effects @rafa8626
 * Updated HLS shim library to latest version @rafa8626
 * Fixed issue with keyboard trap in Safari desktop due to media's children element(s) being moved from original position @rafa8626
+* Added missing style to hide native cues when using Safari desktop due to new workflow implemented @ron666 
 
 *4.0.3 (2017/04/04)*
 

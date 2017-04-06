@@ -4128,6 +4128,8 @@ var MediaElementPlayer = function () {
 			// video/audio elements with children
 			if (_constants.IS_SAFARI && !_constants.IS_IOS) {
 
+				dom.addClass(t.container, t.options.classPrefix + 'hide-cues');
+
 				var cloneNode = t.node.cloneNode(),
 				    children = t.node.childNodes,
 				    mediaFiles = [],

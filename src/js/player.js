@@ -440,6 +440,8 @@ class MediaElementPlayer {
 			// video/audio elements with children
 			if (IS_SAFARI && !IS_IOS) {
 
+				dom.addClass(t.container, `${t.options.classPrefix}hide-cues`);
+
 				const
 					cloneNode = t.node.cloneNode(),
 					children = t.node.childNodes,
