@@ -1592,23 +1592,20 @@ Object.assign(_player2.default.prototype, {
 		togglePlayPause('pse');
 
 		media.addEventListener('loadedmetadata', function () {
-			togglePlayPause('pse');
+			// `loadedmetadata` in Flash is executed simultaneously with `play`, so avoid it
+			if (media.rendererName.match(/flash/) === null) {
+				togglePlayPause('pse');
+			}
 		});
-
 		media.addEventListener('play', function () {
 			togglePlayPause('play');
 		});
 		media.addEventListener('playing', function () {
 			togglePlayPause('play');
 		});
-
 		media.addEventListener('pause', function () {
 			togglePlayPause('pse');
 		});
-		media.addEventListener('paused', function () {
-			togglePlayPause('pse');
-		});
-
 		media.addEventListener('ended', function () {
 
 			if (!player.options.loop) {
@@ -5303,7 +5300,9 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('seeked', function () {
-				bigPlay.style.display = '';
+				if (media.paused) {
+					bigPlay.style.display = '';
+				}
 				loading.style.display = 'none';
 				if (buffer) {
 					buffer.style.display = '';
@@ -5880,7 +5879,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
+		var initEvents = ['rendererready'];
 
 		for (var _i2 = 0, _total2 = initEvents.length; _i2 < _total2; _i2++) {
 			var event = (0, _general.createEvent)(initEvents[_i2], flash);
@@ -5977,26 +5976,12 @@ var FlashMediaElementRenderer = {
 
 		flash.hide = function () {
 			if (isVideo) {
-				flash.flashNode.style.position = 'absolute';
-				flash.flashNode.style.width = '1px';
-				flash.flashNode.style.height = '1px';
-				try {
-					flash.flashNode.style.clip = 'rect(0 0 0 0);';
-				} catch (e) {
-					
-				}
+				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = function () {
 			if (isVideo) {
-				flash.flashNode.style.position = '';
-				flash.flashNode.style.width = '';
-				flash.flashNode.style.height = '';
-				try {
-					flash.flashNode.style.clip = '';
-				} catch (e) {
-					
-				}
+				flash.flashNode.style.display = '';
 			}
 		};
 		flash.setSize = function (width, height) {
@@ -6602,7 +6587,8 @@ function fadeOut(el) {
 	_window2.default.requestAnimationFrame(function animate(timestamp) {
 		start = start || timestamp;
 		var progress = timestamp - start;
-		el.style.opacity = parseFloat(1 - progress / duration, 2);
+		var opacity = parseFloat(1 - progress / duration, 2);
+		el.style.opacity = opacity < 0 ? 0 : opacity;
 		if (progress > duration) {
 			if (callback && typeof callback === 'function') {
 				callback();
@@ -6627,7 +6613,8 @@ function fadeIn(el) {
 	_window2.default.requestAnimationFrame(function animate(timestamp) {
 		start = start || timestamp;
 		var progress = timestamp - start;
-		el.style.opacity = parseFloat(progress / duration, 2);
+		var opacity = parseFloat(progress / duration, 2);
+		el.style.opacity = opacity > 1 ? 1 : opacity;
 		if (progress > duration) {
 			if (callback && typeof callback === 'function') {
 				callback();

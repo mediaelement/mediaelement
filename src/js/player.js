@@ -1619,7 +1619,9 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeked', () => {
-			bigPlay.style.display = '';
+			if (media.paused) {
+				bigPlay.style.display = '';
+			}
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = '';

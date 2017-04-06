@@ -1793,7 +1793,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
+		var initEvents = ['rendererready'];
 
 		for (var _i2 = 0, _total2 = initEvents.length; _i2 < _total2; _i2++) {
 			var event = (0, _general.createEvent)(initEvents[_i2], flash);
@@ -1890,26 +1890,12 @@ var FlashMediaElementRenderer = {
 
 		flash.hide = function () {
 			if (isVideo) {
-				flash.flashNode.style.position = 'absolute';
-				flash.flashNode.style.width = '1px';
-				flash.flashNode.style.height = '1px';
-				try {
-					flash.flashNode.style.clip = 'rect(0 0 0 0);';
-				} catch (e) {
-					
-				}
+				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = function () {
 			if (isVideo) {
-				flash.flashNode.style.position = '';
-				flash.flashNode.style.width = '';
-				flash.flashNode.style.height = '';
-				try {
-					flash.flashNode.style.clip = '';
-				} catch (e) {
-					
-				}
+				flash.flashNode.style.display = '';
 			}
 		};
 		flash.setSize = function (width, height) {

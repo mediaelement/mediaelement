@@ -50,7 +50,8 @@ export function fadeOut (el, duration = 400, callback) {
 	window.requestAnimationFrame(function animate(timestamp) {
 		start = start || timestamp;
 		const progress = timestamp - start;
-		el.style.opacity = parseFloat(1 - progress / duration, 2);
+		const opacity = parseFloat(1 - progress / duration, 2);
+		el.style.opacity = opacity < 0 ? 0 : opacity;
 		if (progress > duration) {
 			if (callback && typeof(callback) === 'function') {
 				callback();
@@ -72,7 +73,8 @@ export function fadeIn (el, duration = 400, callback) {
 	window.requestAnimationFrame(function animate(timestamp) {
 		start = start || timestamp;
 		const progress = timestamp - start;
-		el.style.opacity = parseFloat(progress / duration, 2);
+		const opacity = parseFloat(progress / duration, 2);
+		el.style.opacity = opacity > 1 ? 1 : opacity;
 		if (progress > duration) {
 			if (callback && typeof(callback) === 'function') {
 				callback();

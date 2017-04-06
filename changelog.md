@@ -4,6 +4,8 @@
 
 * Added missing conditional to display error message only if `message` is set on event @rafa8626
 * Fixed issue with old versions of IE not unsetting CSS values properly for `fill` mode @rafa8626
+* Added workflow from Flash audio shim into video shim and removed several duplicated events @ron666
+* Fixed issues with play/pause toggle and `fadeIn` and `fadeOut` effects @ron666
 
 *4.0.3 (2017/04/04)*
 
