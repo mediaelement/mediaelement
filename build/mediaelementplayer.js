@@ -5346,9 +5346,7 @@ var MediaElementPlayer = function () {
 			});
 
 			media.addEventListener('seeked', function () {
-				if (media.paused) {
-					bigPlay.style.display = '';
-				}
+				bigPlay.style.display = media.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
 				loading.style.display = 'none';
 				if (buffer) {
 					buffer.style.display = '';

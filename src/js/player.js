@@ -1652,9 +1652,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeked', () => {
-			if (media.paused) {
-				bigPlay.style.display = '';
-			}
+			bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = '';
