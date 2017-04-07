@@ -438,7 +438,7 @@ Mode |  Setup
 auto | Mode by default, this mode checks if there are any elements in the `video`/`audio` tag to turn the _responsive_ mode; if not, will set it up in _none_ mode.
 responsive | Can be turned on by setting `max-width: 100%` style (inline, or in the stylesheet), or `width="100%" height="100%"` attributes in the `video`/`audio` tag. In Javascript, set in the player's configuration `stretching: 'responsive'` (preferred) or `videoWidth: '100%' videoHeight: '100%'`.
 fill | This mode will crop the video to adapt it to the dimensions of the parent container by only setting up `stretching: 'fill'`. It is encouraged to set up the parent's `height` to `100%` to make it work as expected.
-none | Use `width` and `height` attributes specified in the `video`/`audio` tags.
+none | Use `width` and `height` attributes specified in the `video`/`audio` tags and no `max-width: 100%` or `width="100%" height="100%"` attributes; otherwise, use the `stretching: 'none'` configuration element to achieve this.
 
 
 <a id="grid"></a>
