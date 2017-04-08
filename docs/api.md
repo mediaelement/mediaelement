@@ -1,5 +1,6 @@
 # API and Configuration
 
+* [Attributes](#attributes)
 * [Configuration](#development)
     * [Standalone](#standalone)
     * [MediaElementPlayer](#player)
@@ -8,6 +9,37 @@
     * [Methods](#methods)
     * [Events](#events)
 
+
+<a id="attributes"></a>
+## Attributes
+
+`MediaElement` supports the following `video`/`audio` tag attributes:
+
+Attribute | Description
+-------- | ------------
+autoplay |	Specifies that the video will start playing as soon as it is ready
+class | Specifies one or more class names for an element (refers to a class in a style sheet)
+controls | Specifies that video controls should be displayed (such as a play/pause button etc).
+id | Specifies a unique id for an element; if not specified, the plugin will create one automatically
+height | Sets the height of the video player in pixels; you can also indicate percentages
+loop |	Specifies that the video will start over again, every time it is finished
+muted |	Specifies that the audio output of the video should be muted
+poster | Specifies an image to be shown while the video is downloading, or until the user hits the play button. Generally, a PNG or JPEG image. If not specified, the player will use the background color specified in the style sheet
+preload	| Specifies if and how the author thinks the video should be loaded when the page loads; possible values: `auto`, `metadata` or `none` (recommended)	
+src	| Specifies the URL of the video file; this value can also be indicated with `source` tags (refer to the [Multiple Codecs](installation.md#multi-codecs) section for more information)
+style | Specifies an inline CSS style for an element
+tabindex | Specifies the tabbing order of an element. To avoid the keyboard to focus on this element, use `-1`; otherwise, `0`
+title | Specifies extra information about an element
+width | Sets the width of the video player in pixels; you can also indicate percentages
+
+The following markup displays all the attributes listed above for more clarity:
+```html
+<video autoplay controls class="player" id="player1" height="360" 
+    width="100%" loop muted poster="/path/to/poster.jpg" 
+    preload="none" src="/path/to/media.mp4" 
+    style="max-width: 100%" tabindex="0" title="MediaElement">
+</video>
+```
 
 <a id="configuration"></a>
 ## Configuration

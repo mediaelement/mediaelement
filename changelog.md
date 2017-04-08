@@ -9,7 +9,7 @@
 * Updated HLS shim library to latest version @rafa8626
 * Fixed issue with keyboard trap in Safari desktop due to media's children element(s) being moved from original position @rafa8626
 * Added missing style to hide native cues when using Safari desktop due to new workflow implemented @rafa8626 
-* Added documentation about setting new captions and using `stretching` modes @rafa8626
+* Added documentation about setting new captions, media tag attributes and using `stretching` modes @rafa8626
 
 *4.0.3 (2017/04/04)*
 
