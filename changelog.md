@@ -10,6 +10,7 @@
 * Fixed issue with keyboard trap in Safari desktop due to media's children element(s) being moved from original position @rafa8626
 * Added missing style to hide native cues when using Safari desktop due to new workflow implemented @rafa8626 
 * Added documentation about setting new captions, media tag attributes and using `stretching` modes @rafa8626
+* Added missing translations (https://github.com/mediaelement/mediaelement/pull/2161) @kloh-fr
 
 *4.0.3 (2017/04/04)*
 

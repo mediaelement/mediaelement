@@ -30,7 +30,7 @@
 			"mejs.audio-player": "Lecteur Audio",
 			"mejs.captions-subtitles": "Sous-titres",
 			"mejs.captions-chapters": "Chapitres",
-			"mejs.none": "Aucun"
+			"mejs.none": "Aucun",
 			"mejs.afrikaans": "Afrikaans",
 			"mejs.albanian": "Albanais",
 			"mejs.arabic": "Arabe",
