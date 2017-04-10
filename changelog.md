@@ -11,6 +11,7 @@
 * Added missing style to hide native cues when using Safari desktop due to new workflow implemented @rafa8626 
 * Added documentation about setting new captions, media tag attributes and using `stretching` modes @rafa8626
 * Added missing translations (https://github.com/mediaelement/mediaelement/pull/2161) @kloh-fr
+* Cleaned SVG sprite and separate plugin icons in new sprite (https://github.com/mediaelement/mediaelement/pull/2157) @johndyer
 
 *4.0.3 (2017/04/04)*
 
