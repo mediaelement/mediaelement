@@ -296,6 +296,12 @@ $('video, audio').mediaelementplayer({
 	// more configuration
 });
 ```
+
+Check the content of `mediaelementplayer.min.css` (or if you decided to use the old styles, `mediaelementplayer-legacy.min.css`) to customize any CSS related to the player. 
+
+Also, as an example, visit [this section](resources.md#styles) to have an idea on how can you customize the look-and-feel of the player. 
+
+
 <a id="tags"></a>
 ## 3. Add `<video>` or `<audio>` tags
 
@@ -313,9 +319,11 @@ or
     <source type="video/mp4" src="myvideo.mp4" />
 </video>
 ```
-All the formats listed in [Browser and Device support](../README.md#browser-support) can be instantiated using this setup. 
 
-**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display errors in regards of unknown/custom MIME types. But they don't prevent the plugin to work properly. 
+All the formats supported are listed in [this table](usage.md#renderers-list). Besides that, there are some additional attributes that can be added in the `video`/`audio` tag. 
+Visit the [Attributes](api.md#attributes) section for more information.
+
+**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display warnings in regards of unknown/custom MIME types. But they do not prevent the plugin to work properly. 
 
 <a id="multi-codecs"></a>
 ### Multiple codecs (Optional)

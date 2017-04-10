@@ -7,6 +7,7 @@ import MediaElement from './core/mediaelement';
 import i18n from './core/i18n';
 import {
 	IS_FIREFOX,
+	IS_SAFARI,
 	IS_IPAD,
 	IS_IPHONE,
 	IS_ANDROID,
@@ -17,7 +18,7 @@ import {
 } from './utils/constants';
 import {splitEvents, isNodeAfter, createEvent, isString} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
-import {getTypeFromFile} from './utils/media';
+import {getTypeFromFile, formatType} from './utils/media';
 import * as dom from './utils/dom';
 
 mejs.mepIndex = 0;
@@ -341,6 +342,8 @@ class MediaElementPlayer {
 		// get video from src or href?
 		t.isDynamic = (tagName !== 'audio' && tagName !== 'video');
 		t.isVideo = (t.isDynamic) ? t.options.isVideo : (tagName !== 'audio' && t.options.isVideo);
+		t.mediaFiles = null;
+		t.trackFiles = null;
 
 		// use native controls in iPad, iPhone, and Android
 		if ((IS_IPAD && t.options.iPadUseNativeControls) || (IS_IPHONE && t.options.iPhoneUseNativeControls)) {
@@ -374,9 +377,9 @@ class MediaElementPlayer {
 			t.container.setAttribute('role', 'application');
 			t.container.setAttribute('aria-label', videoPlayerTitle);
 			t.container.innerHTML = `<div class="${t.options.classPrefix}inner">` +
+				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
-				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}clear"></div>` +
 			`</div>`;
 			t.container.addEventListener('focus', (e) => {
@@ -432,7 +435,55 @@ class MediaElementPlayer {
 			}
 			dom.addClass(t.container, (t.isVideo ? `${t.options.classPrefix}video` : `${t.options.classPrefix}audio`));
 
-			// move the <video/video> tag into the right spot
+			// Workflow for Safari desktop: "clone" element and remove children, but save them to check sources, captions, etc.
+			// This ensure full compatibility when using keyboard, since Safari creates a keyboard trap when appending
+			// video/audio elements with children
+			if (IS_SAFARI && !IS_IOS) {
+
+				dom.addClass(t.container, `${t.options.classPrefix}hide-cues`);
+
+				const
+					cloneNode = t.node.cloneNode(),
+					children = t.node.childNodes,
+					mediaFiles = [],
+					tracks = []
+				;
+
+				for (let i = 0, total = children.length; i < total; i++) {
+					const childNode = children[i];
+
+					if (childNode && childNode.nodeType !== Node.TEXT_NODE) {
+						switch (childNode.tagName.toLowerCase()) {
+							case 'source':
+								const src = childNode.getAttribute('src');
+								mediaFiles.push({
+									type: formatType(src, childNode.getAttribute('type')),
+									src: src
+								});
+								break;
+							case 'track':
+								childNode.mode = 'hidden';
+								tracks.push(childNode);
+								break;
+							default:
+								cloneNode.appendChild(childNode);
+								break;
+						}
+					}
+				}
+
+				t.node.remove();
+				t.node = t.media = cloneNode;
+
+				if (mediaFiles.length) {
+					t.mediaFiles = mediaFiles;
+				}
+				if (tracks.length) {
+					t.trackFiles = tracks;
+				}
+			}
+
+			// move the `video`/`audio` tag into the right spot
 			t.container.querySelector(`.${t.options.classPrefix}mediaelement`).appendChild(t.node);
 
 			// needs to be assigned here, after iOS remap
@@ -492,7 +543,7 @@ class MediaElementPlayer {
 		}
 
 		// create MediaElement shim
-		new MediaElement(t.media, meOptions);
+		new MediaElement(t.media, meOptions, t.mediaFiles);
 
 		if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
 			// controls are shown when loaded
@@ -1025,24 +1076,6 @@ class MediaElementPlayer {
 			t.height = height;
 		}
 
-		if (typeof FB !== 'undefined' && t.isVideo) {
-			FB.Event.subscribe('xfbml.ready', () => {
-				const target = t.media.firstChild;
-
-				t.width = parseFloat(target.offsetWidth);
-				t.height = parseFloat(target.offsetHeight);
-				t.setDimensions(t.width, t.height);
-				return false;
-			});
-
-			const target = t.media.firstChild;
-
-			if (target.length) {
-				t.width = target.offsetWidth;
-				t.height = target.offsetHeight;
-			}
-		}
-
 		// check stretching modes
 		switch (t.options.stretching) {
 			case 'fill':
@@ -1074,8 +1107,8 @@ class MediaElementPlayer {
 		const t = this;
 
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-		return (t.height.toString().includes('%') || (t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
-			t.node.style.maxWidth !== t.width) || (t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
+		return (t.height.toString().includes('%') || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
+			t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
 	}
 
 	setResponsiveMode () {
@@ -1206,25 +1239,25 @@ class MediaElementPlayer {
 
 		// Remove the responsive attributes in the event they are there
 		if (t.node.style.height !== 'none' && t.node.style.height !== t.height) {
-			t.node.style.height = '';
+			t.node.style.height = 'auto';
 		}
 		if (t.node.style.maxWidth !== 'none' && t.node.style.maxWidth !== t.width) {
-			t.node.style.maxWidth = '';
+			t.node.style.maxWidth = 'none';
 		}
 
 		if (t.node.style.maxHeight !== 'none' && t.node.style.maxHeight !== t.height) {
-			t.node.style.maxHeight = '';
+			t.node.style.maxHeight = 'none';
 		}
 
 		if (t.node.currentStyle) {
 			if (t.node.currentStyle.height === '100%') {
-				t.node.currentStyle.height = '';
+				t.node.currentStyle.height = 'auto';
 			}
 			if (t.node.currentStyle.maxWidth === '100%') {
-				t.node.currentStyle.maxWidth = '';
+				t.node.currentStyle.maxWidth = 'none';
 			}
 			if (t.node.currentStyle.maxHeight === '100%') {
-				t.node.currentStyle.maxHeight = '';
+				t.node.currentStyle.maxHeight = 'none';
 			}
 		}
 
@@ -1619,7 +1652,7 @@ class MediaElementPlayer {
 		});
 
 		media.addEventListener('seeked', () => {
-			bigPlay.style.display = '';
+			bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
 			if (buffer) {
 				buffer.style.display = '';
@@ -1812,7 +1845,7 @@ class MediaElementPlayer {
 			t.media.pause();
 		}
 
-		const src = t.media.originalNode.getAttribute('src');
+		const src = t.media.getSrc();
 		t.media.setSrc('');
 
 		// invoke features cleanup
@@ -1859,7 +1892,7 @@ class MediaElementPlayer {
 			delete t.node.autoplay;
 
 			// Reintegrate file if it can be played
-			if (t.media.canPlayType(getTypeFromFile(src))) {
+			if (t.media.canPlayType(getTypeFromFile(src)) !== '') {
 				t.node.setAttribute('src', src);
 			}
 
@@ -1869,10 +1902,42 @@ class MediaElementPlayer {
 				layer.remove();
 			}
 
-			const node = t.node.cloneNode(true);
+			const node = t.node.cloneNode();
+			node.style.display = '';
 			t.container.parentNode.insertBefore(node, t.container);
 			t.node.remove();
+			
+			// Add children
+			if (t.mediaFiles) {
+				for (let i = 0, total = t.mediaFiles.length; i < total; i++) {
+					const source = document.createElement('source');
+					source.setAttribute('src', t.mediaFiles[i].src);
+					source.setAttribute('type', t.mediaFiles[i].type);
+					node.appendChild(source);
+				}
+			}
+			if (t.trackFiles) {
+				// Load captions properly
+				for (let i = 0, total = t.trackFiles.length; i < total; i++) {
+					const track = t.trackFiles[i];
+					const newTrack = document.createElement('track');
+					newTrack.kind = track.kind;
+					newTrack.label = track.label;
+					newTrack.srclang = track.srclang;
+					newTrack.src = track.src;
+
+					node.appendChild(newTrack);
+					newTrack.addEventListener('load', function () {
+						this.mode = 'showing';
+						node.textTracks[i].mode = 'showing';
+					});
+				}
+			}
+
 			delete t.node;
+			delete t.mediaFiles;
+			delete t.trackFiles;
+
 		} else {
 			t.container.parentNode.insertBefore(t.node, t.container);
 		}

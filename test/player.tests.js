@@ -56,13 +56,6 @@ describe('MediaElement Player - Test Results', function () {
 	// 	expect($(document.documentElement).hasClass('mejs__fullscreen')).to.equal(false);
 	// });
 
-	it('Can handle different media types properly (i.e., HLS)', function () {
-		setMedia(player, 'http://www.streambox.fr/playlists/test_001/stream.m3u8');
-		expect(player.media.originalNode.getAttribute('src')).to.equal('http://www.streambox.fr/playlists/test_001/stream.m3u8');
-		setMedia(player, 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
-		expect(player.media.originalNode.getAttribute('src')).to.equal('http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
-	});
-
 	it('Should set custom play text', function () {
 		expect(container.querySelector('.mejs__play>button').getAttribute('title')).to.equal('Play track');
 	});
@@ -79,17 +72,24 @@ describe('MediaElement Player - Test Results', function () {
 	// 	expect(container.querySelector('.mejs__fullscreen-button>button').getAttribute('title')).to.equal('Fullscreen video');
 	// });
 	//
-	// it('Should set custom mute text', function () {
-	// 	expect(container.querySelector('.mejs__mute>button').getAttribute('title')).to.equal('Mute volume');
-	// });
-	//
-	// it('Should set custom unmute text', function (done) {
-	// 	container.querySelector('.mejs__mute>button').click();
-	// 	var listener = function () {
-	// 		expect(container.querySelector('.mejs__unmute>button').getAttribute('title')).to.equal('Unmute volume');
-	// 		player.media.removeEventListener('volumechange', listener, false);
-	// 		done();
-	// 	};
-	// 	player.media.addEventListener('volumechange', listener, false);
-	// });
+	it('Should set custom mute text', function () {
+		expect(container.querySelector('.mejs__mute>button').getAttribute('title')).to.equal('Mute volume');
+	});
+
+	it('Should set custom unmute text', function (done) {
+		container.querySelector('.mejs__mute>button').click();
+		var listener = function () {
+			expect(container.querySelector('.mejs__unmute>button').getAttribute('title')).to.equal('Unmute volume');
+			player.media.removeEventListener('volumechange', listener, false);
+			done();
+		};
+		player.media.addEventListener('volumechange', listener, false);
+	});
+
+	it('Can handle different media types properly (i.e., HLS)', function () {
+		setMedia(player, 'http://www.streambox.fr/playlists/test_001/stream.m3u8');
+		expect(player.media.originalNode.getAttribute('src')).to.equal('http://www.streambox.fr/playlists/test_001/stream.m3u8');
+		setMedia(player, 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
+		expect(player.media.originalNode.getAttribute('src')).to.equal('http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4');
+	});
 });

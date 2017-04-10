@@ -15,9 +15,18 @@ import {renderer} from './renderer';
  */
 class MediaElement {
 
-	constructor (idOrNode, options) {
+	/**
+	 *
+	 * @param {String|Node} idOrNode
+	 * @param {Object} options
+	 * @param {Object[]} sources
+	 * @returns {Element|*}
+	 */
+	constructor (idOrNode, options, sources) {
 
 		const t = this;
+
+		sources = Array.isArray(sources) ? sources : null;
 
 		t.defaults = {
 			/**
@@ -67,8 +76,7 @@ class MediaElement {
 
 		id = id || `mejs_${(Math.random().toString().slice(2))}`;
 
-		if (t.mediaElement.originalNode !== undefined && t.mediaElement.originalNode !== null &&
-			t.mediaElement.appendChild) {
+		if (t.mediaElement.originalNode !== undefined && t.mediaElement.originalNode !== null && t.mediaElement.appendChild) {
 			// change id
 			t.mediaElement.originalNode.setAttribute('id', `${id}_from_mejs`);
 
@@ -410,8 +418,13 @@ class MediaElement {
 			}
 		};
 
-		if (t.mediaElement.originalNode !== null) {
-			const mediaFiles = [];
+		let mediaFiles;
+
+		if (sources !== null) {
+			mediaFiles = sources;
+		} else if (t.mediaElement.originalNode !== null) {
+
+			mediaFiles = [];
 
 			switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
 
@@ -425,13 +438,10 @@ class MediaElement {
 
 				case 'audio':
 				case 'video':
-					let
-						n,
-						src,
-						type,
+					const
 						sources = t.mediaElement.originalNode.childNodes.length,
 						nodeSource = t.mediaElement.originalNode.getAttribute('src')
-						;
+					;
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
@@ -444,19 +454,22 @@ class MediaElement {
 
 					// test <source> types to see if they are usable
 					for (let i = 0; i < sources; i++) {
-						n = t.mediaElement.originalNode.childNodes[i];
+						const n = t.mediaElement.originalNode.childNodes[i];
 						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
-							src = n.getAttribute('src');
-							type = formatType(src, n.getAttribute('type'));
+							const
+								src = n.getAttribute('src'),
+								type = formatType(src, n.getAttribute('type'))
+							;
 							mediaFiles.push({type: type, src: src});
 						}
 					}
 					break;
 			}
+		}
 
-			if (mediaFiles.length > 0) {
-				t.mediaElement.src = mediaFiles;
-			}
+		// Set the best match based on renderers
+		if (mediaFiles.length) {
+			t.mediaElement.src = mediaFiles;
 		}
 
 		if (t.mediaElement.options.success) {

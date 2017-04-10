@@ -463,12 +463,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * This class is the foundation to create/render different media formats.
  * @class MediaElement
  */
-var MediaElement = function MediaElement(idOrNode, options) {
+var MediaElement =
+
+/**
+ *
+ * @param {String|Node} idOrNode
+ * @param {Object} options
+ * @param {Object[]} sources
+ * @returns {Element|*}
+ */
+function MediaElement(idOrNode, options, sources) {
 	var _this = this;
 
 	_classCallCheck(this, MediaElement);
 
 	var t = this;
+
+	sources = Array.isArray(sources) ? sources : null;
 
 	t.defaults = {
 		/**
@@ -855,8 +866,13 @@ var MediaElement = function MediaElement(idOrNode, options) {
 		}
 	};
 
-	if (t.mediaElement.originalNode !== null) {
-		var mediaFiles = [];
+	var mediaFiles = void 0;
+
+	if (sources !== null) {
+		mediaFiles = sources;
+	} else if (t.mediaElement.originalNode !== null) {
+
+		mediaFiles = [];
 
 		switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
 
@@ -870,10 +886,7 @@ var MediaElement = function MediaElement(idOrNode, options) {
 
 			case 'audio':
 			case 'video':
-				var n = void 0,
-				    src = void 0,
-				    type = void 0,
-				    sources = t.mediaElement.originalNode.childNodes.length,
+				var _sources = t.mediaElement.originalNode.childNodes.length,
 				    nodeSource = t.mediaElement.originalNode.getAttribute('src');
 
 				// Consider if node contains the `src` and `type` attributes
@@ -886,20 +899,21 @@ var MediaElement = function MediaElement(idOrNode, options) {
 				}
 
 				// test <source> types to see if they are usable
-				for (var _i4 = 0; _i4 < sources; _i4++) {
-					n = t.mediaElement.originalNode.childNodes[_i4];
+				for (var _i4 = 0; _i4 < _sources; _i4++) {
+					var n = t.mediaElement.originalNode.childNodes[_i4];
 					if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
-						src = n.getAttribute('src');
-						type = (0, _media.formatType)(src, n.getAttribute('type'));
+						var src = n.getAttribute('src'),
+						    type = (0, _media.formatType)(src, n.getAttribute('type'));
 						mediaFiles.push({ type: type, src: src });
 					}
 				}
 				break;
 		}
+	}
 
-		if (mediaFiles.length > 0) {
-			t.mediaElement.src = mediaFiles;
-		}
+	// Set the best match based on renderers
+	if (mediaFiles.length) {
+		t.mediaElement.src = mediaFiles;
 	}
 
 	if (t.mediaElement.options.success) {
@@ -1793,7 +1807,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
+		var initEvents = ['rendererready'];
 
 		for (var _i2 = 0, _total2 = initEvents.length; _i2 < _total2; _i2++) {
 			var event = (0, _general.createEvent)(initEvents[_i2], flash);
@@ -1890,26 +1904,12 @@ var FlashMediaElementRenderer = {
 
 		flash.hide = function () {
 			if (isVideo) {
-				flash.flashNode.style.position = 'absolute';
-				flash.flashNode.style.width = '1px';
-				flash.flashNode.style.height = '1px';
-				try {
-					flash.flashNode.style.clip = 'rect(0 0 0 0);';
-				} catch (e) {
-					
-				}
+				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = function () {
 			if (isVideo) {
-				flash.flashNode.style.position = '';
-				flash.flashNode.style.width = '';
-				flash.flashNode.style.height = '';
-				try {
-					flash.flashNode.style.clip = '';
-				} catch (e) {
-					
-				}
+				flash.flashNode.style.display = '';
 			}
 		};
 		flash.setSize = function (width, height) {

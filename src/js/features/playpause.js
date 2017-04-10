@@ -85,23 +85,20 @@ Object.assign(MediaElementPlayer.prototype, {
 		togglePlayPause('pse');
 
 		media.addEventListener('loadedmetadata', () => {
-			togglePlayPause('pse');
+			// `loadedmetadata` in Flash is executed simultaneously with `play`, so avoid it
+			if (media.rendererName.match(/flash/) === null) {
+				togglePlayPause('pse');
+			}
 		});
-
 		media.addEventListener('play', () => {
 			togglePlayPause('play');
 		});
 		media.addEventListener('playing', () => {
 			togglePlayPause('play');
 		});
-
 		media.addEventListener('pause', () => {
 			togglePlayPause('pse');
 		});
-		media.addEventListener('paused', () => {
-			togglePlayPause('pse');
-		});
-
 		media.addEventListener('ended', () => {
 
 			if (!player.options.loop) {

@@ -652,6 +652,10 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     box-shadow: 5px 0 0 rgba(20, 20, 20, 0.5), -5px 0 0 rgba(20, 20, 20, 0.5);
 }
 
+.mejs-container.mejs-hide-cues video::-webkit-media-text-track-container {
+    display: none;
+}
+
 /* End: Track (Captions and Chapters) */
 
 /* Start: Error */

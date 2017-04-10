@@ -242,7 +242,7 @@ const FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
+		const initEvents = ['rendererready'];
 
 		for (let i = 0, total = initEvents.length; i < total; i++) {
 			const event = createEvent(initEvents[i], flash);
@@ -374,26 +374,12 @@ const FlashMediaElementRenderer = {
 
 		flash.hide = () => {
 			if (isVideo) {
-				flash.flashNode.style.position = 'absolute';
-				flash.flashNode.style.width = '1px';
-				flash.flashNode.style.height = '1px';
-				try {
-					flash.flashNode.style.clip = 'rect(0 0 0 0);';
-				} catch (e) {
-					console.log(e);
-				}
+				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = () => {
 			if (isVideo) {
-				flash.flashNode.style.position = '';
-				flash.flashNode.style.width = '';
-				flash.flashNode.style.height = '';
-				try {
-					flash.flashNode.style.clip = '';
-				} catch (e) {
-					console.log(e);
-				}
+				flash.flashNode.style.display = '';
 			}
 		};
 		flash.setSize = (width, height) => {
