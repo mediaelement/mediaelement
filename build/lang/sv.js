@@ -12,7 +12,7 @@
 	if (exports.sv === undefined) {
 		exports.sv = {
 			"mejs.plural-form": 1,			
-			 "mejs.download-file": "Ladda ner fil",			
+			"mejs.download-file": "Ladda ner fil",			
 			"mejs.install-flash": "Du använder en webbläsare som inte har Flash Player aktiverat eller installerad. Aktivera Flash Player eller hämta den senaste versionen från https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "Fullskärm",			
 			"mejs.play": "Spela",

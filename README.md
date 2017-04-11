@@ -95,6 +95,9 @@ Also, a `Utilities/Features` guide is available for development. Visit [Utilitie
 
 If you want to contribute to improve this package, please read [Guidelines](docs/guidelines.md).
 
+**NOTE**: If you would like to contribute with translations, make sure that you also check https://github.com/mediaelement/mediaelement-plugins, and perform the
+translations for the files suffixed as `-i18n`.
+
 <a id="sources"></a>
 ## Useful resources
 

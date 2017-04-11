@@ -1,6 +1,6 @@
 ### Version History
 
-*4.0.4 (2017/04/??)*
+*4.0.4 (2017/04/11)*
 
 * Added missing conditional to display error message only if `message` is set on event @rafa8626
 * Fixed issue with old versions of IE not unsetting CSS values properly for `fill` mode @rafa8626
