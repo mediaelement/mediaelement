@@ -124,7 +124,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.captionsButton, 'tracks');
 
-		player.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector-list-item`).disabled = false;
+		player.captionsButton.querySelector(`.${t.options.classPrefix}captions-selector-input`).disabled = false;
 
 		player.chaptersButton = document.createElement('div');
 		player.chaptersButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}chapters-button`;
