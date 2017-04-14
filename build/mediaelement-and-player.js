@@ -948,7 +948,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mejs = {};
 
 // version number
-mejs.version = '4.0.4';
+mejs.version = '4.0.5';
 
 // Basic HTML5 settings
 mejs.html5media = {

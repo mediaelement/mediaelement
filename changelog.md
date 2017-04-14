@@ -1,6 +1,6 @@
 ### Version History
 
-*4.0.5 (2017/??/??)*
+*4.0.5 (2017/04/14)*
 
 * Fixed typo to allow `None` caption to be unchecked @rafa8626
 
