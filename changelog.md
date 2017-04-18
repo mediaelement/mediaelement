@@ -1,5 +1,9 @@
 ### Version History
 
+*4.0.6 (2017/??/??)*
+
+* Remove loading overlay only if it exists instead of failing (https://github.com/mediaelement/mediaelement/pull/2167) @kozze89
+
 *4.0.5 (2017/04/14)*
 
 * Fixed typo to allow `None` caption to be unchecked @rafa8626

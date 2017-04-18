@@ -906,8 +906,7 @@ class MediaElementPlayer {
 						// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after
 						// ending the video and jumping to the beginning
 						setTimeout(() => {
-							const loadingElement = t.container
-								.querySelector(`.${t.options.classPrefix}overlay-loading`);
+							const loadingElement = t.container.querySelector(`.${t.options.classPrefix}overlay-loading`);
 							if (loadingElement && loadingElement.parentNode) {
 								loadingElement.parentNode.style.display = 'none';
 							}
