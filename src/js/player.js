@@ -906,8 +906,11 @@ class MediaElementPlayer {
 						// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after
 						// ending the video and jumping to the beginning
 						setTimeout(() => {
-							t.container.querySelector(`.${t.options.classPrefix}overlay-loading`)
-								.parentNode.style.display = 'none';
+							const loadingElement = t.container
+								.querySelector(`.${t.options.classPrefix}overlay-loading`);
+							if (loadingElement && loadingElement.parentNode) {
+								loadingElement.parentNode.style.display = 'none';
+							}
 						}, 20);
 					} catch (exp) {
 						console.log(exp);
@@ -1906,7 +1909,7 @@ class MediaElementPlayer {
 			node.style.display = '';
 			t.container.parentNode.insertBefore(node, t.container);
 			t.node.remove();
-			
+
 			// Add children
 			if (t.mediaFiles) {
 				for (let i = 0, total = t.mediaFiles.length; i < total; i++) {
