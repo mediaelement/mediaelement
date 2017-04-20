@@ -212,3 +212,13 @@ if (window.Element && !Element.prototype.closest) {
 			clearTimeout(id);
 		};
 }());
+
+// Javascript workaround for FF iframe `getComputedStyle` bug
+// Reference: https://stackoverflow.com/questions/32659801/javascript-workaround-for-firefox-iframe-getcomputedstyle-bug/32660009#32660009
+if (/firefox/i.test(navigator.userAgent)) {
+	window.oldGetComputedStyle = window.getComputedStyle;
+	window.getComputedStyle = (el, pseudoEl) => {
+		const t = window.oldGetComputedStyle(el, pseudoEl);
+		return (t === null) ? {getPropertyValue: function () {}} : t;
+	}
+}
