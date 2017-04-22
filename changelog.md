@@ -1,5 +1,9 @@
 ### Version History
 
+*4.??.?? (2017/??/??)*
+
+* Fixed issues with setting media dimensions properly on hidden iframe @rafa8626
+
 *4.0.6 (2017/04/20)*
 
 * Remove loading overlay only if it exists instead of failing (https://github.com/mediaelement/mediaelement/pull/2167) @kozze89

@@ -4825,7 +4825,16 @@ var MediaElementPlayer = function () {
 
 				// traverse parents to find the closest visible one
 				while (el) {
-					parentEl = el.parentElement;
+					try {
+						if (_window2.default.self !== _window2.default.top) {
+							return _window2.default.frameElement;
+						} else {
+							parentEl = el.parentElement;
+						}
+					} catch (e) {
+						parentEl = el.parentElement;
+					}
+
 					if (parentEl && dom.visible(parentEl)) {
 						return parentEl;
 					}
@@ -4931,8 +4940,19 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'setFillMode',
 		value: function setFillMode() {
-			var t = this,
-			    parent = t.outerContainer;
+			var t = this;
+
+			var parent = void 0;
+
+			try {
+				if (_window2.default.self !== _window2.default.top) {
+					parent = _window2.default.frameElement.parentNode;
+				} else {
+					parent = t.outerContainer;
+				}
+			} catch (e) {
+				parent = t.outerContainer;
+			}
 
 			var parentStyles = getComputedStyle(parent);
 
