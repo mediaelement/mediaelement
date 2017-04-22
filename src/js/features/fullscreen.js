@@ -79,7 +79,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.isInIframe = (window.location !== window.parent.location);
 
 		// detect on start
-		media.addEventListener('loadstart', () => {
+		media.addEventListener('loadedmetadata', () => {
 			player.detectFullscreenMode();
 		});
 

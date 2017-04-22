@@ -1233,7 +1233,7 @@ Object.assign(_player2.default.prototype, {
 		player.isInIframe = _window2.default.location !== _window2.default.parent.location;
 
 		// detect on start
-		media.addEventListener('loadstart', function () {
+		media.addEventListener('loadedmetadata', function () {
 			player.detectFullscreenMode();
 		});
 
