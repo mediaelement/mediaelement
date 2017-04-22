@@ -1224,7 +1224,7 @@ Object.assign(_player2.default.prototype, {
   * @param {$} layers
   * @param {HTMLElement} media
   */
-	buildfullscreen: function buildfullscreen(player, controls, layers, media) {
+	buildfullscreen: function buildfullscreen(player) {
 
 		if (!player.isVideo) {
 			return;
@@ -1232,10 +1232,7 @@ Object.assign(_player2.default.prototype, {
 
 		player.isInIframe = _window2.default.location !== _window2.default.parent.location;
 
-		// detect on start
-		media.addEventListener('loadedmetadata', function () {
-			player.detectFullscreenMode();
-		});
+		player.detectFullscreenMode();
 
 		var t = this,
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
@@ -1345,8 +1342,12 @@ Object.assign(_player2.default.prototype, {
 		    isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/) !== null,
 		    containerStyles = getComputedStyle(t.container);
 
-		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN && typeof t.media.webkitEnterFullscreen === 'function') {
-			t.media.webkitEnterFullscreen();
+		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN) {
+			if (typeof t.media.webkitEnterFullscreen === 'function') {
+				t.media.webkitEnterFullscreen();
+			} else {
+				t.media.originalNode.webkitEnterFullscreen();
+			}
 			return;
 		}
 

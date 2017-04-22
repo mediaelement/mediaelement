@@ -70,7 +70,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildfullscreen (player, controls, layers, media)  {
+	buildfullscreen (player)  {
 
 		if (!player.isVideo) {
 			return;
@@ -78,10 +78,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.isInIframe = (window.location !== window.parent.location);
 
-		// detect on start
-		media.addEventListener('loadedmetadata', () => {
-			player.detectFullscreenMode();
-		});
+		player.detectFullscreenMode();
 
 		const
 			t = this,
@@ -195,8 +192,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			containerStyles = getComputedStyle(t.container)
 		;
 
-		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN && typeof t.media.webkitEnterFullscreen === 'function') {
-			t.media.webkitEnterFullscreen();
+		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN) {
+			if (typeof t.media.webkitEnterFullscreen === 'function') {
+				t.media.webkitEnterFullscreen();
+			} else {
+				t.media.originalNode.webkitEnterFullscreen();
+			}
 			return;
 		}
 
