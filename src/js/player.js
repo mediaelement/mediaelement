@@ -1125,7 +1125,11 @@ class MediaElementPlayer {
 				while (el) {
 					try {
 						if (window.self !== window.top) {
-							return window.frameElement;
+							if (window.frameElement !== null) {
+								return window.frameElement;
+							} else {
+								parentEl = window.frameElement.parentNode;
+							}
 						} else {
 							parentEl = el.parentElement;
 						}

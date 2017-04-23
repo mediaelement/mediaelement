@@ -2,7 +2,7 @@
 
 *4.??.?? (2017/??/??)*
 
-* Fixed issues with setting media dimensions properly on hidden iframe @rafa8626
+* Fixed issues when using `MediaElement` inside an iframe @rafa8626
 * Fixed way to detect fullscreen mode properly for all renderers and fixed fullscreen for iOS @rafa8626
 * Fixed workflow when using `data-mejsoptions` attribute @rafa8626
 

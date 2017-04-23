@@ -4829,7 +4829,11 @@ var MediaElementPlayer = function () {
 				while (el) {
 					try {
 						if (_window2.default.self !== _window2.default.top) {
-							return _window2.default.frameElement;
+							if (_window2.default.frameElement !== null) {
+								return _window2.default.frameElement;
+							} else {
+								parentEl = _window2.default.frameElement.parentNode;
+							}
 						} else {
 							parentEl = el.parentElement;
 						}
