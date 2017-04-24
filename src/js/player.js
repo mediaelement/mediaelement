@@ -1146,7 +1146,7 @@ class MediaElementPlayer {
 				return null;
 
 			})(),
-			parentStyles = getComputedStyle(parent, null),
+			parentStyles = parent ? getComputedStyle(parent, null) : getComputedStyle(document.body, null),
 			nativeWidth = (() => {
 				if (t.isVideo) {
 					if (t.media.videoWidth && t.media.videoWidth > 0) {

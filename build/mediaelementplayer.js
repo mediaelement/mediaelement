@@ -4849,7 +4849,7 @@ var MediaElementPlayer = function () {
 
 				return null;
 			}(),
-			    parentStyles = getComputedStyle(parent, null),
+			    parentStyles = parent ? getComputedStyle(parent, null) : getComputedStyle(_document2.default.body, null),
 			    nativeWidth = function () {
 				if (t.isVideo) {
 					if (t.media.videoWidth && t.media.videoWidth > 0) {
