@@ -5,6 +5,7 @@
 * Fixed issues when using `MediaElement` inside an iframe (cross and non cross-domain) @rafa8626
 * Fixed way to detect fullscreen mode properly for all renderers and fixed fullscreen for iOS @rafa8626
 * Fixed workflow when using `data-mejsoptions` attribute @rafa8626
+* Updated flv.js library (https://github.com/mediaelement/mediaelement/pull/2180) @isantolin
 
 *4.0.6 (2017/04/20)*
 
