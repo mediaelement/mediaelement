@@ -1,6 +1,6 @@
 ### Version History
 
-*4.??.?? (2017/??/??)*
+*4.0.7 (2017/04/25)*
 
 * Fixed issues when using `MediaElement` inside an iframe (cross and non cross-domain) @rafa8626
 * Fixed way to detect fullscreen mode properly for all renderers and fixed fullscreen for iOS @rafa8626
