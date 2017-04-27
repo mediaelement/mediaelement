@@ -53,30 +53,28 @@ var SoundCloudApi = {
   */
 	loadIframeApi: function loadIframeApi() {
 		if (!SoundCloudApi.isSDKStarted) {
-			(function () {
 
-				var head = document.getElementsByTagName("head")[0] || document.documentElement,
-				    script = document.createElement("script");
+			var head = document.getElementsByTagName("head")[0] || document.documentElement,
+			    script = document.createElement("script");
 
-				var done = false;
+			var done = false;
 
-				script.src = '//w.soundcloud.com/player/api.js';
+			script.src = '//w.soundcloud.com/player/api.js';
 
-				// Attach handlers for all browsers
-				// Is onload enough now? do IE9 support it?
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!SoundCloudApi.readyState || SoundCloudApi.readyState === "loaded" || SoundCloudApi.readyState === "complete")) {
-						done = true;
-						SoundCloudApi.apiReady();
+			// Attach handlers for all browsers
+			// Is onload enough now? do IE9 support it?
+			script.onload = script.onreadystatechange = function () {
+				if (!done && (!SoundCloudApi.readyState || SoundCloudApi.readyState === "loaded" || SoundCloudApi.readyState === "complete")) {
+					done = true;
+					SoundCloudApi.apiReady();
 
-						// Handle memory leak in IE
-						script.onload = script.onreadystatechange = null;
-						script.remove();
-					}
-				};
-				head.appendChild(script);
-				SoundCloudApi.isSDKStarted = true;
-			})();
+					// Handle memory leak in IE
+					script.onload = script.onreadystatechange = null;
+					script.remove();
+				}
+			};
+			head.appendChild(script);
+			SoundCloudApi.isSDKStarted = true;
 		}
 	},
 

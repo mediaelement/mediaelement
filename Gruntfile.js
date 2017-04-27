@@ -12,6 +12,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-serve');
+
 
 	var rendererSources;
 
@@ -30,18 +32,22 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-
+		serve: {
+				options : {
+						port: 3000,
+						base: './'
+				}
+    },
 		watch: {
-			scripts: {
-				files: ['src/js/**/*.js', 'test/core/*.js'],
-				tasks: ['eslint', 'browserify', 'concat', 'uglify', 'copy:translation']
-			},
-			stylesheet: {
-				files: ['src/css/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg', 'src/css/**/*.gif'],
-				tasks: ['postcss', 'copy:build']
-			}
-		},
-
+    css: {
+        files: ['src/css/*.css'],
+				tasks: ['postcss:main','postcss:legacy','copy:build']
+      },
+      js: {
+        files: ['src/js/**/*.js','src/js/*.js'],
+        tasks: ['browserify:dist','uglify:build','copy:build']
+      }
+    },
 		eslint: {
 			target: [
 				'Gruntfile.js',

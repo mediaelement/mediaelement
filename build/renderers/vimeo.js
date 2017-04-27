@@ -60,26 +60,24 @@ var vimeoApi = {
 	loadIframeApi: function loadIframeApi() {
 
 		if (!vimeoApi.isIframeStarted) {
-			(function () {
 
-				var script = document.createElement('script'),
-				    firstScriptTag = document.getElementsByTagName('script')[0];
+			var script = document.createElement('script'),
+			    firstScriptTag = document.getElementsByTagName('script')[0];
 
-				var done = false;
+			var done = false;
 
-				script.src = '//player.vimeo.com/api/player.js';
+			script.src = '//player.vimeo.com/api/player.js';
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!vimeoApi.readyState || vimeoApi.readyState === undefined || vimeoApi.readyState === "loaded" || vimeoApi.readyState === "complete")) {
-						done = true;
-						vimeoApi.iFrameReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-				vimeoApi.isIframeStarted = true;
-			})();
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function () {
+				if (!done && (!vimeoApi.readyState || vimeoApi.readyState === undefined || vimeoApi.readyState === "loaded" || vimeoApi.readyState === "complete")) {
+					done = true;
+					vimeoApi.iFrameReady();
+					script.onload = script.onreadystatechange = null;
+				}
+			};
+			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+			vimeoApi.isIframeStarted = true;
 		}
 	},
 

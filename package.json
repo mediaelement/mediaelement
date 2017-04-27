@@ -5,7 +5,7 @@
   "main": "full.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mediaelement/mediaelement.git"
+    "url": "https://github.com/darkphy/mediaelement.git"
   },
   "bugs": {
     "url": "https://github.com/mediaelement/mediaelement/issues?q=is%3Aissue+is%3Aopen+label%3ABug"
@@ -31,11 +31,13 @@
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0",
     "grunt-postcss": "^0.8.0",
     "grunt-remove-logging": "~0.2.0",
+    "grunt-serve": "^0.1.6",
     "grunt-shell": "~1.1.1",
     "grunt-text-replace": "~0.3.12",
     "istanbul": "^1.0.0-alpha.2",
