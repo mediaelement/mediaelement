@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 		watch: {
 			scripts: {
 				files: ['src/js/**/*.js', 'test/core/*.js'],
-				tasks: ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'copy:translation']
+				tasks: ['eslint', 'browserify', 'concat', 'uglify', 'copy:translation']
 			},
 			stylesheet: {
 				files: ['src/css/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg', 'src/css/**/*.gif'],

@@ -285,12 +285,16 @@ Object.assign(MediaElementPlayer.prototype, {
 
 						mouseIsDown = true;
 						handleMouseMove(e);
-						t.globalBind('mousemove.dur touchmove.dur', (event) => {
-							const target = event.target;
-							if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
-								handleMouseMove(event);
-							}
-						});
+						const endEvents = ['mouseup', 'touchend'];
+
+						for (let j = 0, totalEvents = endEvents.length; j < totalEvents; j++) {
+							t.container.addEventListener(endEvents[j], (event) => {
+								const target = event.target;
+								if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
+									handleMouseMove(event);
+								}
+							});
+						}
 						t.globalBind('mouseup.dur touchend.dur', () => {
 							handleMouseup();
 							mouseIsDown = false;
@@ -305,7 +309,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 		t.slider.addEventListener('mouseenter', (e) => {
 			if (e.target === t.slider && media.duration !== Infinity) {
-				t.globalBind('mousemove.dur', (event) => {
+				t.container.addEventListener('mousemove', (event) => {
 					const target = event.target;
 					if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
 						handleMouseMove(event);

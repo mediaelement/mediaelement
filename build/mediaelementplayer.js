@@ -1922,12 +1922,16 @@ Object.assign(_player2.default.prototype, {
 
 						mouseIsDown = true;
 						handleMouseMove(e);
-						t.globalBind('mousemove.dur touchmove.dur', function (event) {
-							var target = event.target;
-							if (target === t.slider || target.closest('.' + t.options.classPrefix + 'time-slider')) {
-								handleMouseMove(event);
-							}
-						});
+						var endEvents = ['mouseup', 'touchend'];
+
+						for (var j = 0, totalEvents = endEvents.length; j < totalEvents; j++) {
+							t.container.addEventListener(endEvents[j], function (event) {
+								var target = event.target;
+								if (target === t.slider || target.closest('.' + t.options.classPrefix + 'time-slider')) {
+									handleMouseMove(event);
+								}
+							});
+						}
 						t.globalBind('mouseup.dur touchend.dur', function () {
 							handleMouseup();
 							mouseIsDown = false;
@@ -1942,7 +1946,7 @@ Object.assign(_player2.default.prototype, {
 		}
 		t.slider.addEventListener('mouseenter', function (e) {
 			if (e.target === t.slider && media.duration !== Infinity) {
-				t.globalBind('mousemove.dur', function (event) {
+				t.container.addEventListener('mousemove', function (event) {
 					var target = event.target;
 					if (target === t.slider || target.closest('.' + t.options.classPrefix + 'time-slider')) {
 						handleMouseMove(event);
