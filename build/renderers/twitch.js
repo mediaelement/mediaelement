@@ -1,14 +1,4 @@
-/*!
- * MediaElement.js
- * http://www.mediaelementjs.com/
- *
- * Wrapper that mimics native HTML5 MediaElement (audio and video)
- * using a variety of technologies (pure JavaScript, Flash, iframe)
- *
- * Copyright 2010-2017, John Dyer (http://j.hn/)
- * License: MIT
- *
- */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -56,26 +46,24 @@ var twitchApi = {
   */
 	loadIframeApi: function loadIframeApi() {
 		if (!twitchApi.isIframeStarted) {
-			(function () {
 
-				var script = document.createElement('script'),
-				    firstScriptTag = document.getElementsByTagName('script')[0];
+			var script = document.createElement('script'),
+			    firstScriptTag = document.getElementsByTagName('script')[0];
 
-				var done = false;
+			var done = false;
 
-				script.src = '//player.twitch.tv/js/embed/v1.js';
+			script.src = '//player.twitch.tv/js/embed/v1.js';
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!twitchApi.readyState || twitchApi.readyState === undefined || twitchApi.readyState === "loaded" || twitchApi.readyState === "complete")) {
-						done = true;
-						twitchApi.iFrameReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-				twitchApi.isIframeStarted = true;
-			})();
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function () {
+				if (!done && (!twitchApi.readyState || twitchApi.readyState === undefined || twitchApi.readyState === "loaded" || twitchApi.readyState === "complete")) {
+					done = true;
+					twitchApi.iFrameReady();
+					script.onload = script.onreadystatechange = null;
+				}
+			};
+			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+			twitchApi.isIframeStarted = true;
 		}
 	},
 
@@ -350,7 +338,7 @@ var TwitchIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('Twitch ' + twitch.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {

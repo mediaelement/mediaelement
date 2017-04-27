@@ -304,6 +304,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__time-buffering,
 .mejs__time-loaded,
 .mejs__time-current,
+.mejs__time-hovered,
 .mejs__time-handle,
 .mejs__time-float,
 .mejs__time-float-current,
@@ -340,27 +341,52 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__time-loaded {
     background: rgba(255, 255, 255, .3);
-    width: 0;
 }
 
-.mejs__time-current {
+.mejs__time-current,.mejs__time-handle-baby{
     background: rgba(255, 255, 255, 0.9);
-    width: 0;
 }
-
-.mejs__time-handle {
-    display: none;
+.mejs__time-hovered {
+  background: rgba(255,255,255,.5);
+  background: rgba(98, 210, 53, 0.5);
+  z-index: 10;
+}
+.mejs__time-hovered.negativehover{
+    background: rgba(28, 51, 150, 0.5);
+}
+.mejs__time-current,.mejs__time-buffering,.mejs__time-loaded,.mejs__time-hovered{
+	  width: 100%;
+    left: 0;
+    transform-origin: 0 0;
+    transition: .15s ease-in all;
+    transform:scaleX(0);
+}
+.mejs__time-hovered{
+	transition:height .1s cubic-bezier(0.44,0.0,1,1);
+}
+.mejs__time-hovered.nohver {
+    transform: scaleX(0)!important;
+}
+.mejs__time-handle,.mejs__time-handle-baby{
     position: absolute;
-    margin: 0;
-    width: 10px;
-    background: #fff;
-    border-radius: 5px;
     cursor: pointer;
-    border: solid 2px #333;
-    top: -2px;
-    text-align: center;
+    width: 20px;
+    height: 20px;
+    border: 4px solid transparent;
+    z-index: 11;
+    left: 0;
+    transform: translateX(0px);
 }
-
+.mejs__time-handle-baby{
+    left: -4px;
+    border: 4px solid #f12c35;
+    transform:scale(0);
+    top:-8px;
+    border-radius: 50%;
+}
+.mejs__time-rail:hover .mejs__time-handle-baby,.mejs__time-rail .mejs__time-handle-baby:focus,.mejs__time-rail .mejs__time-handle-baby:active{
+    transform: scale(1);
+}
 .mejs__time-float {
     position: absolute;
     display: none;

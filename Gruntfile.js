@@ -11,6 +11,9 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-remove-logging");
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-serve');
+
 
 	var rendererSources;
 
@@ -29,6 +32,22 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		serve: {
+				options : {
+						port: 3000,
+						base: './'
+				}
+    },
+		watch: {
+    css: {
+        files: ['src/css/*.css'],
+				tasks: ['postcss:main','postcss:legacy','copy:build']
+      },
+      js: {
+        files: ['src/js/**/*.js','src/js/*.js'],
+        tasks: ['browserify:dist','uglify:build','copy:build']
+      }
+    },
 		eslint: {
 			target: [
 				'Gruntfile.js',

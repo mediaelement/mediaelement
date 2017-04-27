@@ -1,14 +1,4 @@
-/*!
- * MediaElement.js
- * http://www.mediaelementjs.com/
- *
- * Wrapper that mimics native HTML5 MediaElement (audio and video)
- * using a variety of technologies (pure JavaScript, Flash, iframe)
- *
- * Copyright 2010-2017, John Dyer (http://j.hn/)
- * License: MIT
- *
- */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -60,26 +50,24 @@ var vimeoApi = {
 	loadIframeApi: function loadIframeApi() {
 
 		if (!vimeoApi.isIframeStarted) {
-			(function () {
 
-				var script = document.createElement('script'),
-				    firstScriptTag = document.getElementsByTagName('script')[0];
+			var script = document.createElement('script'),
+			    firstScriptTag = document.getElementsByTagName('script')[0];
 
-				var done = false;
+			var done = false;
 
-				script.src = '//player.vimeo.com/api/player.js';
+			script.src = '//player.vimeo.com/api/player.js';
 
-				// Attach handlers for all browsers
-				script.onload = script.onreadystatechange = function () {
-					if (!done && (!vimeoApi.readyState || vimeoApi.readyState === undefined || vimeoApi.readyState === "loaded" || vimeoApi.readyState === "complete")) {
-						done = true;
-						vimeoApi.iFrameReady();
-						script.onload = script.onreadystatechange = null;
-					}
-				};
-				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-				vimeoApi.isIframeStarted = true;
-			})();
+			// Attach handlers for all browsers
+			script.onload = script.onreadystatechange = function () {
+				if (!done && (!vimeoApi.readyState || vimeoApi.readyState === undefined || vimeoApi.readyState === "loaded" || vimeoApi.readyState === "complete")) {
+					done = true;
+					vimeoApi.iFrameReady();
+					script.onload = script.onreadystatechange = null;
+				}
+			};
+			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+			vimeoApi.isIframeStarted = true;
 		}
 	},
 
@@ -319,7 +307,7 @@ var vimeoIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							
+							console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {

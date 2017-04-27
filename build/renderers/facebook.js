@@ -1,14 +1,4 @@
-/*!
- * MediaElement.js
- * http://www.mediaelementjs.com/
- *
- * Wrapper that mimics native HTML5 MediaElement (audio and video)
- * using a variety of technologies (pure JavaScript, Flash, iframe)
- *
- * Copyright 2010-2017, John Dyer (http://j.hn/)
- * License: MIT
- *
- */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -175,7 +165,7 @@ var FacebookRenderer = {
 							break;
 
 						default:
-							
+							console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
@@ -267,96 +257,94 @@ var FacebookRenderer = {
 				FB.Event.subscribe('xfbml.ready', function (msg) {
 
 					if (msg.type === 'video') {
-						(function () {
 
-							fbApi = msg.instance;
+						fbApi = msg.instance;
 
-							// Set proper size since player dimensions are unknown before this event
-							var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
-							    width = fbIframe.offsetWidth,
-							    height = fbIframe.offsetHeight,
-							    events = ['mouseover', 'mouseout'],
-							    assignEvents = function assignEvents(e) {
-								var event = mejs.Utils.createEvent(e.type, fbWrapper);
-								mediaElement.dispatchEvent(event);
-							};
+						// Set proper size since player dimensions are unknown before this event
+						var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
+						    width = fbIframe.offsetWidth,
+						    height = fbIframe.offsetHeight,
+						    events = ['mouseover', 'mouseout'],
+						    assignEvents = function assignEvents(e) {
+							var event = mejs.Utils.createEvent(e.type, fbWrapper);
+							mediaElement.dispatchEvent(event);
+						};
 
-							fbWrapper.setSize(width, height);
+						fbWrapper.setSize(width, height);
 
-							if (autoplay) {
-								fbApi.play();
+						if (autoplay) {
+							fbApi.play();
+						}
+
+						for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
+							fbIframe.addEventListener(events[_i3], assignEvents, false);
+						}
+
+						// remove previous listeners
+						var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
+						for (var _i4 = 0, _total4 = fbEvents.length; _i4 < _total4; _i4++) {
+							var event = fbEvents[_i4],
+							    handler = eventHandler[event];
+							if (handler !== undefined && handler !== null && !mejs.Utils.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
+								handler.removeListener(event);
 							}
+						}
 
-							for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
-								fbIframe.addEventListener(events[_i3], assignEvents, false);
-							}
+						// do call stack
+						if (apiStack.length) {
+							for (var _i5 = 0, _total5 = apiStack.length; _i5 < _total5; _i5++) {
 
-							// remove previous listeners
-							var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
-							for (var _i4 = 0, _total4 = fbEvents.length; _i4 < _total4; _i4++) {
-								var event = fbEvents[_i4],
-								    handler = eventHandler[event];
-								if (handler !== undefined && handler !== null && !mejs.Utils.isObjectEmpty(handler) && typeof handler.removeListener === 'function') {
-									handler.removeListener(event);
+								var stackItem = apiStack[_i5];
+
+								if (stackItem.type === 'set') {
+									var propName = stackItem.propName,
+									    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+									fbWrapper['set' + capName](stackItem.value);
+								} else if (stackItem.type === 'call') {
+									fbWrapper[stackItem.methodName]();
 								}
 							}
+						}
 
-							// do call stack
-							if (apiStack.length) {
-								for (var _i5 = 0, _total5 = apiStack.length; _i5 < _total5; _i5++) {
+						sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
 
-									var stackItem = apiStack[_i5];
+						var timer = void 0;
 
-									if (stackItem.type === 'set') {
-										var propName = stackItem.propName,
-										    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-										fbWrapper['set' + capName](stackItem.value);
-									} else if (stackItem.type === 'call') {
-										fbWrapper[stackItem.methodName]();
-									}
-								}
+						// Custom Facebook events
+						eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
+							if (!hasStartedPlaying) {
+								hasStartedPlaying = true;
 							}
+							paused = false;
+							ended = false;
+							sendEvents(['play', 'playing', 'timeupdate']);
 
-							sendEvents(['rendererready', 'loadeddata', 'canplay', 'progress', 'loadedmetadata', 'timeupdate']);
+							// Workaround to update progress bar
+							timer = setInterval(function () {
+								fbApi.getCurrentPosition();
+								sendEvents(['timeupdate']);
+							}, 250);
+						});
+						eventHandler.paused = fbApi.subscribe('paused', function () {
+							paused = true;
+							ended = false;
+							sendEvents(['pause']);
+						});
+						eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
+							paused = true;
+							ended = true;
 
-							var timer = void 0;
-
-							// Custom Facebook events
-							eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
-								if (!hasStartedPlaying) {
-									hasStartedPlaying = true;
-								}
-								paused = false;
-								ended = false;
-								sendEvents(['play', 'playing', 'timeupdate']);
-
-								// Workaround to update progress bar
-								timer = setInterval(function () {
-									fbApi.getCurrentPosition();
-									sendEvents(['timeupdate']);
-								}, 250);
-							});
-							eventHandler.paused = fbApi.subscribe('paused', function () {
-								paused = true;
-								ended = false;
-								sendEvents(['pause']);
-							});
-							eventHandler.finishedPlaying = fbApi.subscribe('finishedPlaying', function () {
-								paused = true;
-								ended = true;
-
-								sendEvents(['ended']);
-								clearInterval(timer);
-								timer = null;
-							});
-							eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
-								sendEvents(['progress', 'timeupdate']);
-							});
-							eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
-								sendEvents(['progress', 'timeupdate']);
-							});
-						})();
+							sendEvents(['ended']);
+							clearInterval(timer);
+							timer = null;
+						});
+						eventHandler.startedBuffering = fbApi.subscribe('startedBuffering', function () {
+							sendEvents(['progress', 'timeupdate']);
+						});
+						eventHandler.finishedBuffering = fbApi.subscribe('finishedBuffering', function () {
+							sendEvents(['progress', 'timeupdate']);
+						});
 					}
 				});
 			};
