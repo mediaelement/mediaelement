@@ -1,5 +1,9 @@
 ### Version History
 
+*4.0.8 (2017/??/??)*
+
+* Added `grunt watch` and tasks depending on files modified @rafa8626
+
 *4.0.7 (2017/04/25)*
 
 * Fixed issues when using `MediaElement` inside an iframe (cross and non cross-domain) @rafa8626
