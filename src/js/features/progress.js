@@ -58,7 +58,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			`<span class="${t.options.classPrefix}time-buffering"></span>` +
 			`<span class="${t.options.classPrefix}time-loaded"></span>` +
 			`<span class="${t.options.classPrefix}time-current"></span>` +
-			`<span class="${t.options.classPrefix}time-handle"></span>` +
+			`<span class="${t.options.classPrefix}time-hovered"></span>` +
+			`<span class="${t.options.classPrefix}time-handle"><span class="${t.options.classPrefix}time-handle-baby"></span></span>` +
 			`${tooltip}` +
 		`</span>`;
 
@@ -74,6 +75,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.timefloat = controls.querySelector(`.${t.options.classPrefix}time-float`);
 		t.timefloatcurrent = controls.querySelector(`.${t.options.classPrefix}time-float-current`);
 		t.slider = controls.querySelector(`.${t.options.classPrefix}time-slider`);
+		t.hovered = controls.querySelector(`.${t.options.classPrefix}time-hovered`);
 		t.newTime = 0;
 		t.forcedHandlePause = false;
 
@@ -124,6 +126,23 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// position floating time box
 					if (!IS_IOS && !IS_ANDROID && t.timefloat) {
+						if(pos < 0){
+							pos = 0;
+						}
+						let matrix = new WebKitCSSMatrix( (window.getComputedStyle(t.handle)) .webkitTransform);
+						let handleLocation = matrix.m41;
+						let hoverScaleX = pos/parseFloat(getComputedStyle(t.total).width) - handleLocation/parseFloat(getComputedStyle(t.total).width);
+
+						t.hovered.style.left = `${handleLocation}px`;
+						t.hovered.style.transform = `scaleX(${hoverScaleX})`;
+						t.hovered.setAttribute("pos",pos);
+
+						if(hoverScaleX >= 0){
+							t.hovered.classList.remove("negativehover");
+						}else{
+							t.hovered.classList.add("negativehover");
+						}
+
 						t.timefloat.style.left = `${pos}px`;
 						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 						t.timefloat.style.display = 'block';
@@ -318,6 +337,9 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (t.timefloat && !IS_IOS && !IS_ANDROID) {
 					t.timefloat.style.display = 'block';
 				}
+				if(t.hovered && !IS_IOS && !IS_ANDROID){
+					t.hovered.classList.remove("nohver");
+				}
 			}
 		});
 		t.slider.addEventListener('mouseleave', () => {
@@ -326,6 +348,9 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.globalUnbind('mousemove.dur');
 					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
+					}
+					if(t.hovered){
+						t.hovered.classList.add("nohver");
 					}
 				}
 			}
@@ -423,7 +448,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
 			if (t.loaded && t.total) {
-				t.loaded.style.width = `${(percent * 100)}%`;
+				t.loaded.style.transform = `scaleX(${percent})`;
 			}
 		}
 	},
@@ -454,18 +479,37 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (t.media.currentTime !== undefined && t.media.duration) {
 			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
 
+
 			// update bar and handle
 			if (t.total && t.handle) {
+				let tW = parseFloat(getComputedStyle(t.total).width);
 				let
-					newWidth = Math.round(parseFloat(getComputedStyle(t.total).width) * nTime / t.media.duration),
+					newWidth = Math.round(parseFloat(tW) * nTime / t.media.duration),
 					handlePos = newWidth - Math.round(t.handle.offsetWidth / 2)
 				;
+				handlePos = (handlePos < 0) ? 0 : handlePos;
 
-				newWidth = nTime / t.media.duration * 100;
-				t.current.style.width = `${newWidth}%`;
-				t.handle.style.left = `${handlePos}px`;
+				//newWidth = nTime / t.media.duration * 100;
+				t.current.style.transform = `scaleX(${newWidth/tW})`;
+				t.handle.style.transform = `translateX(${handlePos}px)`;
+
+
+				if(!t.hovered.classList.contains('nohver')){
+					let pos = parseInt(t.hovered.getAttribute("pos"));
+							pos = (isNaN(pos)) ? 0 : pos;
+					let hoverScaleX = pos/tW - handlePos/tW;
+
+					t.hovered.style.left = `${handlePos}px`;
+					t.hovered.style.transform = `scaleX(${hoverScaleX})`;
+
+					if(hoverScaleX >= 0){
+						t.hovered.classList.remove("negativehover");
+					}else{
+						t.hovered.classList.add("negativehover");
+					}
+				}
+
 			}
 		}
 	}
 });
-
