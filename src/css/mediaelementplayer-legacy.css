@@ -306,6 +306,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-time-loaded,
 .mejs-time-current,
 .mejs-time-float,
+.mejs-time-hovered,
 .mejs-time-float-current,
 .mejs-time-float-corner,
 .mejs-time-marker {
