@@ -1751,12 +1751,12 @@ Object.assign(_player2.default.prototype, {
 					return 'transform';
 				}
 			}(),
-			    matrix = function () {
-				if (totalStyles.WebKitCSSMatrix !== undefined) {
+			    cssMatrix = function () {
+				if ('WebKitCSSMatrix' in window) {
 					return 'WebKitCSSMatrix';
-				} else if (totalStyles.MSCSSMatrix !== undefined) {
+				} else if ('MSCSSMatrix' in window) {
 					return 'MSCSSMatrix';
-				} else {
+				} else if ('CSSMatrix' in window) {
 					return 'CSSMatrix';
 				}
 			}();
@@ -1797,12 +1797,9 @@ Object.assign(_player2.default.prototype, {
 					if (pos < 0) {
 						pos = 0;
 					}
-					if (t.options.useSmoothHover && typeof window[matrix] !== 'undefined') {
-
-						
-
-						var _matrix = new window[_matrix](getComputedStyle(t.handle)[transform]),
-						    handleLocation = _matrix.m41,
+					if (t.options.useSmoothHover && cssMatrix !== null && typeof window[cssMatrix] !== 'undefined') {
+						var matrix = new window[cssMatrix](getComputedStyle(t.handle)[transform]),
+						    handleLocation = matrix.m41,
 						    hoverScaleX = pos / parseFloat(getComputedStyle(t.total).width) - handleLocation / parseFloat(getComputedStyle(t.total).width);
 
 						t.hovered.style.left = handleLocation + 'px';
