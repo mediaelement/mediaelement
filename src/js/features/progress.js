@@ -1,14 +1,13 @@
 'use strict';
 
+// import window from 'global/window';
 import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
-import {IS_CHROME, IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
+import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
-import {offset} from '../utils/dom';
-
-var CAN_HOVER_FEATURE = (IS_CHROME || IS_FIREFOX) ? true : false;
+import {offset, addClass, removeClass, hasClass} from '../utils/dom';
 
 /**
  * Progress/loaded bar
@@ -22,7 +21,13 @@ Object.assign(config, {
 	 * Enable tooltip that shows time in progress bar
 	 * @type {Boolean}
 	 */
-	enableProgressTooltip: true
+	enableProgressTooltip: true,
+
+	/**
+	 * Enable smooth behavior when hovering progress bar
+	 * @type {Boolean}
+	 */
+	useSmoothHover: true
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -61,7 +66,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`<span class="${t.options.classPrefix}time-loaded"></span>` +
 			`<span class="${t.options.classPrefix}time-current"></span>` +
 			`<span class="${t.options.classPrefix}time-hovered"></span>` +
-			`<span class="${t.options.classPrefix}time-handle"><span class="${t.options.classPrefix}time-handle-baby"></span></span>` +
+			`<span class="${t.options.classPrefix}time-handle"><span class="${t.options.classPrefix}time-handle-content"></span></span>` +
 			`${tooltip}` +
 		`</span>`;
 
@@ -80,6 +85,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.hovered = controls.querySelector(`.${t.options.classPrefix}time-hovered`);
 		t.newTime = 0;
 		t.forcedHandlePause = false;
+		t.setTransformStyle = (element, value) => {
+			element.style.transform = value;
+			element.style.webkitTransform = value;
+			element.style.MozTransform = value;
+			element.style.msTransform = value;
+			element.style.OTransform = value;
+		};
 
 		/**
 		 *
@@ -91,7 +103,29 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					totalStyles = getComputedStyle(t.total),
 					offsetStyles = offset(t.total),
-					width = parseFloat(totalStyles.width)
+					width = parseFloat(totalStyles.width),
+					transform = (() => {
+						if (totalStyles.webkitTransform !== undefined) {
+							return 'webkitTransform';
+						} else if (totalStyles.mozTransform !== undefined) {
+							return 'mozTransform ';
+						} else if (totalStyles.oTransform !== undefined) {
+							return 'oTransform';
+						} else if (totalStyles.msTransform !== undefined) {
+							return 'msTransform';
+						} else {
+							return 'transform';
+						}
+					})(),
+					matrix = (() => {
+						if (totalStyles.WebKitCSSMatrix !== undefined) {
+							return 'WebKitCSSMatrix';
+						} else if (totalStyles.MSCSSMatrix !== undefined) {
+							return 'MSCSSMatrix';
+						} else {
+							return 'CSSMatrix';
+						}
+					})()
 				;
 
 				let
@@ -128,23 +162,28 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// position floating time box
 					if (!IS_IOS && !IS_ANDROID && t.timefloat) {
-						if(pos < 0){
+						if (pos < 0){
 							pos = 0;
 						}
-						if(CAN_HOVER_FEATURE){						
-							let matrix = new WebKitCSSMatrix( (window.getComputedStyle(t.handle)) .webkitTransform);
-							let handleLocation = matrix.m41;
-							let hoverScaleX = pos/parseFloat(getComputedStyle(t.total).width) - handleLocation/parseFloat(getComputedStyle(t.total).width);
+						if (t.options.useSmoothHover && typeof window[matrix] !== 'undefined') {
+
+							console.log(matrix)
+
+							const
+								matrix = new window[matrix](getComputedStyle(t.handle)[transform]),
+								handleLocation = matrix.m41,
+								hoverScaleX = pos/parseFloat(getComputedStyle(t.total).width) - handleLocation/parseFloat(getComputedStyle(t.total).width)
+							;
 
 						
 							t.hovered.style.left = `${handleLocation}px`;
-							t.setTransforms(t.hovered,`scaleX(${hoverScaleX})`); 
-							t.hovered.setAttribute("pos",pos);
+							t.setTransformStyle(t.hovered,`scaleX(${hoverScaleX})`);
+							t.hovered.setAttribute('pos', pos);
 
-							if(hoverScaleX >= 0){
-								t.hovered.classList.remove("negativehover");
-							}else{
-								t.hovered.classList.add("negativehover");
+							if (hoverScaleX >= 0) {
+								removeClass(t.hovered, 'negative');
+							} else {
+								addClass(t.hovered, 'negative');
 							}
 						}
 
@@ -160,13 +199,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * This is to avoid attempts to repeat the time over and over again when media is playing.
 			 * @private
 			 */
-			setTransforms(element,value){
-    			element.style.transform = value;
-    			element.style.webkitTransform = value;
-    			element.style.MozTransform = value;
-    			element.style.msTransform = value;
-    			element.style.OTransform = value;				
-			}
 			updateSlider = () => {
 
 				const
@@ -349,8 +381,8 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (t.timefloat && !IS_IOS && !IS_ANDROID) {
 					t.timefloat.style.display = 'block';
 				}
-				if(t.hovered && !IS_IOS && !IS_ANDROID && CAN_HOVER_FEATURE){
-					t.hovered.classList.remove("nohver");
+				if (t.hovered && !IS_IOS && !IS_ANDROID && t.options.useSmoothHover) {
+					removeClass(t.hovered, 'no-hover');
 				}
 			}
 		});
@@ -361,8 +393,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
 					}
-					if(t.hovered && CAN_HOVER_FEATURE){
-						t.hovered.classList.add("nohver");
+					if (t.hovered && t.options.useSmoothHover) {
+						addClass(t.hovered, 'no-hover');
 					}
 				}
 			}
@@ -460,7 +492,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
 			if (t.loaded && t.total) {
-				t.setTransforms(t.loaded,`scaleX(${percent})`); 
+				t.setTransformStyle(t.loaded,`scaleX(${percent})`);
 			}
 		}
 	},
@@ -494,30 +526,31 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			// update bar and handle
 			if (t.total && t.handle) {
-				let tW = parseFloat(getComputedStyle(t.total).width);
+
+				const tW = parseFloat(getComputedStyle(t.total).width);
+
 				let
-					newWidth = Math.round(parseFloat(tW) * nTime / t.media.duration),
+					newWidth = Math.round(tW * nTime / t.media.duration),
 					handlePos = newWidth - Math.round(t.handle.offsetWidth / 2)
 				;
+
 				handlePos = (handlePos < 0) ? 0 : handlePos;
+				t.setTransformStyle(t.current,`scaleX(${newWidth/tW})`);
+				t.setTransformStyle(t.handle,`translateX(${handlePos}px)`);
 
-				//newWidth = nTime / t.media.duration * 100;
-				t.setTransforms(t.current,`scaleX(${newWidth/tW})`);
-				t.setTransforms(t.handle,`translateX(${handlePos}px)`); 
+				if (t.options.useSmoothHover && !hasClass(t.hovered, 'no-hover')) {
+					let pos = parseInt(t.hovered.getAttribute('pos'));
+					pos = (isNaN(pos)) ? 0 : pos;
 
-
-				if(CAN_HOVER_FEATURE && !t.hovered.classList.contains('nohver')){
-					let pos = parseInt(t.hovered.getAttribute("pos"));
-							pos = (isNaN(pos)) ? 0 : pos;
-					let hoverScaleX = pos/tW - handlePos/tW;
+					const hoverScaleX = pos/tW - handlePos/tW;
 
 					t.hovered.style.left = `${handlePos}px`;
-					t.setTransforms(t.hovered,`scaleX(${hoverScaleX})`); 
+					t.setTransformStyle(t.hovered,`scaleX(${hoverScaleX})`); 
 
-					if(hoverScaleX >= 0){
-						t.hovered.classList.remove("negativehover");
-					}else{
-						t.hovered.classList.add("negativehover");
+					if (hoverScaleX >= 0) {
+						removeClass(t.hovered, 'negative');
+					} else {
+						addClass(t.hovered, 'negative');
 					}
 				}
 

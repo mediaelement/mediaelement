@@ -1637,6 +1637,8 @@ Object.assign(_player2.default.prototype, {
 },{"16":16,"2":2,"24":24,"25":25,"4":4}],10:[function(_dereq_,module,exports){
 'use strict';
 
+// import window from 'global/window';
+
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
@@ -1669,7 +1671,13 @@ Object.assign(_player.config, {
   * Enable tooltip that shows time in progress bar
   * @type {Boolean}
   */
-	enableProgressTooltip: true
+	enableProgressTooltip: true,
+
+	/**
+  * Enable smooth behavior when hovering progress bar
+  * @type {Boolean}
+  */
+	useSmoothHover: true
 });
 
 Object.assign(_player2.default.prototype, {
@@ -1695,7 +1703,7 @@ Object.assign(_player2.default.prototype, {
 		    rail = _document2.default.createElement('div');
 
 		rail.className = t.options.classPrefix + 'time-rail';
-		rail.innerHTML = '<span class="' + t.options.classPrefix + 'time-total ' + t.options.classPrefix + 'time-slider">' + ('<span class="' + t.options.classPrefix + 'time-buffering"></span>') + ('<span class="' + t.options.classPrefix + 'time-loaded"></span>') + ('<span class="' + t.options.classPrefix + 'time-current"></span>') + ('<span class="' + t.options.classPrefix + 'time-handle"></span>') + ('' + tooltip) + '</span>';
+		rail.innerHTML = '<span class="' + t.options.classPrefix + 'time-total ' + t.options.classPrefix + 'time-slider">' + ('<span class="' + t.options.classPrefix + 'time-buffering"></span>') + ('<span class="' + t.options.classPrefix + 'time-loaded"></span>') + ('<span class="' + t.options.classPrefix + 'time-current"></span>') + ('<span class="' + t.options.classPrefix + 'time-hovered"></span>') + ('<span class="' + t.options.classPrefix + 'time-handle"><span class="' + t.options.classPrefix + 'time-handle-content"></span></span>') + ('' + tooltip) + '</span>';
 
 		t.addControlElement(rail, 'progress');
 
@@ -1709,8 +1717,16 @@ Object.assign(_player2.default.prototype, {
 		t.timefloat = controls.querySelector('.' + t.options.classPrefix + 'time-float');
 		t.timefloatcurrent = controls.querySelector('.' + t.options.classPrefix + 'time-float-current');
 		t.slider = controls.querySelector('.' + t.options.classPrefix + 'time-slider');
+		t.hovered = controls.querySelector('.' + t.options.classPrefix + 'time-hovered');
 		t.newTime = 0;
 		t.forcedHandlePause = false;
+		t.setTransformStyle = function (element, value) {
+			element.style.transform = value;
+			element.style.webkitTransform = value;
+			element.style.MozTransform = value;
+			element.style.msTransform = value;
+			element.style.OTransform = value;
+		};
 
 		/**
    *
@@ -1721,7 +1737,29 @@ Object.assign(_player2.default.prototype, {
 
 			var totalStyles = getComputedStyle(t.total),
 			    offsetStyles = (0, _dom.offset)(t.total),
-			    width = parseFloat(totalStyles.width);
+			    width = parseFloat(totalStyles.width),
+			    transform = function () {
+				if (totalStyles.webkitTransform !== undefined) {
+					return 'webkitTransform';
+				} else if (totalStyles.mozTransform !== undefined) {
+					return 'mozTransform ';
+				} else if (totalStyles.oTransform !== undefined) {
+					return 'oTransform';
+				} else if (totalStyles.msTransform !== undefined) {
+					return 'msTransform';
+				} else {
+					return 'transform';
+				}
+			}(),
+			    matrix = function () {
+				if (totalStyles.WebKitCSSMatrix !== undefined) {
+					return 'WebKitCSSMatrix';
+				} else if (totalStyles.MSCSSMatrix !== undefined) {
+					return 'MSCSSMatrix';
+				} else {
+					return 'CSSMatrix';
+				}
+			}();
 
 			var percentage = 0,
 			    pos = 0,
@@ -1756,6 +1794,28 @@ Object.assign(_player2.default.prototype, {
 
 				// position floating time box
 				if (!_constants.IS_IOS && !_constants.IS_ANDROID && t.timefloat) {
+					if (pos < 0) {
+						pos = 0;
+					}
+					if (t.options.useSmoothHover && typeof window[matrix] !== 'undefined') {
+
+						
+
+						var _matrix = new window[_matrix](getComputedStyle(t.handle)[transform]),
+						    handleLocation = _matrix.m41,
+						    hoverScaleX = pos / parseFloat(getComputedStyle(t.total).width) - handleLocation / parseFloat(getComputedStyle(t.total).width);
+
+						t.hovered.style.left = handleLocation + 'px';
+						t.setTransformStyle(t.hovered, 'scaleX(' + hoverScaleX + ')');
+						t.hovered.setAttribute('pos', pos);
+
+						if (hoverScaleX >= 0) {
+							(0, _dom.removeClass)(t.hovered, 'negative');
+						} else {
+							(0, _dom.addClass)(t.hovered, 'negative');
+						}
+					}
+
 					t.timefloat.style.left = pos + 'px';
 					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 					t.timefloat.style.display = 'block';
@@ -1955,6 +2015,9 @@ Object.assign(_player2.default.prototype, {
 				if (t.timefloat && !_constants.IS_IOS && !_constants.IS_ANDROID) {
 					t.timefloat.style.display = 'block';
 				}
+				if (t.hovered && !_constants.IS_IOS && !_constants.IS_ANDROID && t.options.useSmoothHover) {
+					(0, _dom.removeClass)(t.hovered, 'no-hover');
+				}
 			}
 		});
 		t.slider.addEventListener('mouseleave', function () {
@@ -1963,6 +2026,9 @@ Object.assign(_player2.default.prototype, {
 					t.globalUnbind('mousemove.dur');
 					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
+					}
+					if (t.hovered && t.options.useSmoothHover) {
+						(0, _dom.addClass)(t.hovered, 'no-hover');
 					}
 				}
 			}
@@ -2059,7 +2125,7 @@ Object.assign(_player2.default.prototype, {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
 			if (t.loaded && t.total) {
-				t.loaded.style.width = percent * 100 + '%';
+				t.setTransformStyle(t.loaded, 'scaleX(' + percent + ')');
 			}
 		}
 	},
@@ -2095,12 +2161,31 @@ Object.assign(_player2.default.prototype, {
 
 			// update bar and handle
 			if (t.total && t.handle) {
-				var newWidth = Math.round(parseFloat(getComputedStyle(t.total).width) * nTime / t.media.duration),
+
+				var tW = parseFloat(getComputedStyle(t.total).width);
+
+				var newWidth = Math.round(tW * nTime / t.media.duration),
 				    handlePos = newWidth - Math.round(t.handle.offsetWidth / 2);
 
-				newWidth = nTime / t.media.duration * 100;
-				t.current.style.width = newWidth + '%';
-				t.handle.style.left = handlePos + 'px';
+				handlePos = handlePos < 0 ? 0 : handlePos;
+				t.setTransformStyle(t.current, 'scaleX(' + newWidth / tW + ')');
+				t.setTransformStyle(t.handle, 'translateX(' + handlePos + 'px)');
+
+				if (t.options.useSmoothHover && !(0, _dom.hasClass)(t.hovered, 'no-hover')) {
+					var pos = parseInt(t.hovered.getAttribute('pos'));
+					pos = isNaN(pos) ? 0 : pos;
+
+					var hoverScaleX = pos / tW - handlePos / tW;
+
+					t.hovered.style.left = handlePos + 'px';
+					t.setTransformStyle(t.hovered, 'scaleX(' + hoverScaleX + ')');
+
+					if (hoverScaleX >= 0) {
+						(0, _dom.removeClass)(t.hovered, 'negative');
+					} else {
+						(0, _dom.addClass)(t.hovered, 'negative');
+					}
+				}
 			}
 		}
 	}
