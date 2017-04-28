@@ -117,12 +117,12 @@ Object.assign(MediaElementPlayer.prototype, {
 							return 'transform';
 						}
 					})(),
-					matrix = (() => {
-						if (totalStyles.WebKitCSSMatrix !== undefined) {
+					cssMatrix = (() => {
+						if ('WebKitCSSMatrix' in window) {
 							return 'WebKitCSSMatrix';
-						} else if (totalStyles.MSCSSMatrix !== undefined) {
+						} else if ('MSCSSMatrix' in window) {
 							return 'MSCSSMatrix';
-						} else {
+						} else if ('CSSMatrix' in window) {
 							return 'CSSMatrix';
 						}
 					})()
@@ -165,17 +165,13 @@ Object.assign(MediaElementPlayer.prototype, {
 						if (pos < 0){
 							pos = 0;
 						}
-						if (t.options.useSmoothHover && typeof window[matrix] !== 'undefined') {
-
-							console.log(matrix)
-
+						if (t.options.useSmoothHover && cssMatrix !== null && typeof window[cssMatrix] !== 'undefined') {
 							const
-								matrix = new window[matrix](getComputedStyle(t.handle)[transform]),
+								matrix = new window[cssMatrix](getComputedStyle(t.handle)[transform]),
 								handleLocation = matrix.m41,
 								hoverScaleX = pos/parseFloat(getComputedStyle(t.total).width) - handleLocation/parseFloat(getComputedStyle(t.total).width)
 							;
-
-						
+							
 							t.hovered.style.left = `${handleLocation}px`;
 							t.setTransformStyle(t.hovered,`scaleX(${hoverScaleX})`);
 							t.hovered.setAttribute('pos', pos);
