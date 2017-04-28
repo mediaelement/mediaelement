@@ -4235,7 +4235,8 @@ var MediaElementPlayer = function () {
 								var src = childNode.getAttribute('src');
 								mediaFiles.push({
 									type: (0, _media.formatType)(src, childNode.getAttribute('type')),
-									src: src
+									src: src,
+									title: childNode.getAttribute('title')
 								});
 								break;
 							case 'track':

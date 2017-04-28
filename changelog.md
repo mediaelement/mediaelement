@@ -5,6 +5,7 @@
 * Added `grunt watch` and tasks depending on files modified @rafa8626
 * Fixed typo for documentation about `features` configuration element (https://github.com/mediaelement/mediaelement/pull/2189) @abumalick
 * Fixed issue related to time tooltip appearing on all player instances when hovering over one player's progress bar @rafa8626
+* Added `title` element for `mediaFiles` list in favor of `Source Chooser` plugin @rafa8626 
 
 *4.0.7 (2017/04/25)*
 
