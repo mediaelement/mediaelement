@@ -4,9 +4,11 @@ import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
-import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
+import {IS_CHROME, IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
 import {offset} from '../utils/dom';
+
+var CAN_HOVER_FEATURE = (IS_CHROME || IS_FIREFOX) ? true : false;
 
 /**
  * Progress/loaded bar
@@ -129,18 +131,21 @@ Object.assign(MediaElementPlayer.prototype, {
 						if(pos < 0){
 							pos = 0;
 						}
-						let matrix = new WebKitCSSMatrix( (window.getComputedStyle(t.handle)) .webkitTransform);
-						let handleLocation = matrix.m41;
-						let hoverScaleX = pos/parseFloat(getComputedStyle(t.total).width) - handleLocation/parseFloat(getComputedStyle(t.total).width);
+						if(CAN_HOVER_FEATURE){						
+							let matrix = new WebKitCSSMatrix( (window.getComputedStyle(t.handle)) .webkitTransform);
+							let handleLocation = matrix.m41;
+							let hoverScaleX = pos/parseFloat(getComputedStyle(t.total).width) - handleLocation/parseFloat(getComputedStyle(t.total).width);
 
-						t.hovered.style.left = `${handleLocation}px`;
-						t.hovered.style.transform = `scaleX(${hoverScaleX})`;
-						t.hovered.setAttribute("pos",pos);
+						
+							t.hovered.style.left = `${handleLocation}px`;
+							t.setTransforms(t.hovered,`scaleX(${hoverScaleX})`); 
+							t.hovered.setAttribute("pos",pos);
 
-						if(hoverScaleX >= 0){
-							t.hovered.classList.remove("negativehover");
-						}else{
-							t.hovered.classList.add("negativehover");
+							if(hoverScaleX >= 0){
+								t.hovered.classList.remove("negativehover");
+							}else{
+								t.hovered.classList.add("negativehover");
+							}
 						}
 
 						t.timefloat.style.left = `${pos}px`;
@@ -155,6 +160,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * This is to avoid attempts to repeat the time over and over again when media is playing.
 			 * @private
 			 */
+			setTransforms(element,value){
+    			element.style.transform = value;
+    			element.style.webkitTransform = value;
+    			element.style.MozTransform = value;
+    			element.style.msTransform = value;
+    			element.style.OTransform = value;				
+			}
 			updateSlider = () => {
 
 				const
@@ -337,7 +349,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (t.timefloat && !IS_IOS && !IS_ANDROID) {
 					t.timefloat.style.display = 'block';
 				}
-				if(t.hovered && !IS_IOS && !IS_ANDROID){
+				if(t.hovered && !IS_IOS && !IS_ANDROID && CAN_HOVER_FEATURE){
 					t.hovered.classList.remove("nohver");
 				}
 			}
@@ -349,7 +361,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
 					}
-					if(t.hovered){
+					if(t.hovered && CAN_HOVER_FEATURE){
 						t.hovered.classList.add("nohver");
 					}
 				}
@@ -448,7 +460,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
 			if (t.loaded && t.total) {
-				t.loaded.style.transform = `scaleX(${percent})`;
+				t.setTransforms(t.loaded,`scaleX(${percent})`); 
 			}
 		}
 	},
@@ -490,17 +502,17 @@ Object.assign(MediaElementPlayer.prototype, {
 				handlePos = (handlePos < 0) ? 0 : handlePos;
 
 				//newWidth = nTime / t.media.duration * 100;
-				t.current.style.transform = `scaleX(${newWidth/tW})`;
-				t.handle.style.transform = `translateX(${handlePos}px)`;
+				t.setTransforms(t.current,`scaleX(${newWidth/tW})`);
+				t.setTransforms(t.handle,`translateX(${handlePos}px)`); 
 
 
-				if(!t.hovered.classList.contains('nohver')){
+				if(CAN_HOVER_FEATURE && !t.hovered.classList.contains('nohver')){
 					let pos = parseInt(t.hovered.getAttribute("pos"));
 							pos = (isNaN(pos)) ? 0 : pos;
 					let hoverScaleX = pos/tW - handlePos/tW;
 
 					t.hovered.style.left = `${handlePos}px`;
-					t.hovered.style.transform = `scaleX(${hoverScaleX})`;
+					t.setTransforms(t.hovered,`scaleX(${hoverScaleX})`); 
 
 					if(hoverScaleX >= 0){
 						t.hovered.classList.remove("negativehover");
