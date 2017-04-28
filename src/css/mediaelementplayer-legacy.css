@@ -132,6 +132,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     left: 0;
     z-index: 1;
 }
+
 .mejs-layer {
     z-index: 1;
 }
@@ -304,8 +305,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-time-buffering,
 .mejs-time-loaded,
 .mejs-time-current,
-.mejs-time-handle,
 .mejs-time-float,
+.mejs-time-hovered,
 .mejs-time-float-current,
 .mejs-time-float-corner,
 .mejs-time-marker {
@@ -340,25 +341,64 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-time-loaded {
     background: rgba(255, 255, 255, .3);
-    width: 0;
 }
 
-.mejs-time-current {
+.mejs-time-current, .mejs-time-handle-content {
     background: rgba(255, 255, 255, 0.9);
-    width: 0;
 }
 
-.mejs-time-handle {
-    display: none;
+.mejs-time-hovered {
+    background: rgba(255, 255, 255, .5);
+    z-index: 10;
+}
+
+.mejs-time-hovered.negative {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.mejs-time-current, .mejs-time-buffering, .mejs-time-loaded, .mejs-time-hovered {
+    width: 100%;
+    left: 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -ms-transform: scaleX(0);
+    transform: scaleX(0);
+    transition: .15s ease-in all;
+}
+
+.mejs-time-hovered {
+    transition: height .1s cubic-bezier(0.44, 0.0, 1, 1);
+}
+
+.mejs-time-hovered.no-hover {
+    -ms-transform: scaleX(0) !important;
+    transform: scaleX(0) !important;
+}
+
+.mejs-time-handle, .mejs-time-handle-baby {
     position: absolute;
-    margin: 0;
-    width: 10px;
-    background: #fff;
-    border-radius: 5px;
     cursor: pointer;
-    border: solid 2px #333;
-    top: -2px;
-    text-align: center;
+    width: 20px;
+    height: 20px;
+    border: 4px solid transparent;
+    z-index: 11;
+    left: 0;
+    -ms-transform: translateX(0px);
+    transform: translateX(0px);
+}
+
+.mejs-time-handle-baby {
+    left: -4px;
+    border: 4px solid rgba(255, 255, 255, 0.9);
+    -ms-transform: scale(0);
+    transform: scale(0);
+    top: -8px;
+    border-radius: 50%;
+}
+
+.mejs-time-rail:hover .mejs-time-handle-baby, .mejs-time-rail .mejs-time-handle-baby:focus, .mejs-time-rail .mejs-time-handle-baby:active {
+    -ms-transform: scale(1);
+    transform: scale(1);
 }
 
 .mejs-time-float {
@@ -396,11 +436,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-long-video .mejs-time-float {
-    width: 48px;
+    width: 64px;
+    margin-left: -23px;
 }
 
 .mejs-long-video .mejs-time-float-current {
-    width: 44px;
+    width: 60px;
 }
 
 .mejs-long-video .mejs-time-float-corner {
@@ -671,4 +712,5 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     padding: 15px;
     display: block;
 }
+
 /* End: Error */
