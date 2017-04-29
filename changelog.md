@@ -7,6 +7,7 @@
 * Fixed issue related to time tooltip appearing on all player instances when hovering over one player's progress bar @rafa8626
 * Added `title` element for `mediaFiles` list in favor of `Source Chooser` plugin @rafa8626 
 * Added improvements and hover behavior to player slider (https://github.com/mediaelement/mediaelement/pull/2191) @ricking06 and @rafa8626
+* Added `babel-preset-env` to optimize bundles based on supported browsers @rafa8626
 
 *4.0.7 (2017/04/25)*
 

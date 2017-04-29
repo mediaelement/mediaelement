@@ -19,8 +19,6 @@
  *
  */
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var DailyMotionApi = {
 	/**
   * @type {Boolean}
@@ -182,66 +180,44 @@ var DailyMotionIframeRenderer = {
 					var value = null;
 
 					// figure out how to get dm dta here
+					switch (propName) {
+						case 'currentTime':
+							return dmPlayer.currentTime;
 
-					var _ret = function () {
-						switch (propName) {
-							case 'currentTime':
-								return {
-									v: dmPlayer.currentTime
-								};
+						case 'duration':
+							return isNaN(dmPlayer.duration) ? 0 : dmPlayer.duration;
 
-							case 'duration':
-								return {
-									v: isNaN(dmPlayer.duration) ? 0 : dmPlayer.duration
-								};
+						case 'volume':
+							return dmPlayer.volume;
 
-							case 'volume':
-								return {
-									v: dmPlayer.volume
-								};
+						case 'paused':
+							return dmPlayer.paused;
 
-							case 'paused':
-								return {
-									v: dmPlayer.paused
-								};
+						case 'ended':
+							return dmPlayer.ended;
 
-							case 'ended':
-								return {
-									v: dmPlayer.ended
-								};
+						case 'muted':
+							return dmPlayer.muted;
 
-							case 'muted':
-								return {
-									v: dmPlayer.muted
-								};
+						case 'buffered':
+							var percentLoaded = dmPlayer.bufferedTime,
+							    duration = dmPlayer.duration;
+							return {
+								start: function start() {
+									return 0;
+								},
+								end: function end() {
+									return percentLoaded / duration;
+								},
+								length: 1
+							};
+						case 'src':
+							return mediaElement.originalNode.getAttribute('src');
 
-							case 'buffered':
-								var percentLoaded = dmPlayer.bufferedTime,
-								    duration = dmPlayer.duration;
-								return {
-									v: {
-										start: function start() {
-											return 0;
-										},
-										end: function end() {
-											return percentLoaded / duration;
-										},
-										length: 1
-									}
-								};
-							case 'src':
-								return {
-									v: mediaElement.originalNode.getAttribute('src')
-								};
+						case 'readyState':
+							return readyState;
+					}
 
-							case 'readyState':
-								return {
-									v: readyState
-								};
-						}
-					}();
-
-					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 					return value;
 				} else {
 					return null;
