@@ -65,7 +65,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`<span class="${t.options.classPrefix}time-buffering"></span>` +
 			`<span class="${t.options.classPrefix}time-loaded"></span>` +
 			`<span class="${t.options.classPrefix}time-current"></span>` +
-			`<span class="${t.options.classPrefix}time-hovered"></span>` +
+			`<span class="${t.options.classPrefix}time-hovered no-hover"></span>` +
 			`<span class="${t.options.classPrefix}time-handle"><span class="${t.options.classPrefix}time-handle-content"></span></span>` +
 			`${tooltip}` +
 		`</span>`;
