@@ -66,7 +66,7 @@ var twitchApi = {
 
 			// Attach handlers for all browsers
 			script.onload = script.onreadystatechange = function () {
-				if (!done && (!twitchApi.readyState || twitchApi.readyState === undefined || twitchApi.readyState === "loaded" || twitchApi.readyState === "complete")) {
+				if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
 					done = true;
 					twitchApi.iFrameReady();
 					script.onload = script.onreadystatechange = null;
