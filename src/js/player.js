@@ -456,12 +456,13 @@ class MediaElementPlayer {
 					if (childNode && childNode.nodeType !== Node.TEXT_NODE) {
 						switch (childNode.tagName.toLowerCase()) {
 							case 'source':
-								const src = childNode.getAttribute('src');
-								mediaFiles.push({
-									type: formatType(src, childNode.getAttribute('type')),
-									src: src,
-									title: childNode.getAttribute('title')
+								const elements = {};
+								Array.prototype.slice.call(childNode.attributes).forEach((item) => {
+									elements[item.name] = item.value;
 								});
+
+								elements.type = formatType(elements.src, elements.type);
+								mediaFiles.push(elements);
 								break;
 							case 'track':
 								childNode.mode = 'hidden';
