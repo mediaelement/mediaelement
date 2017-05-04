@@ -1,6 +1,6 @@
 ### Version History
 
-*4.1.0 (2017/??/??)*
+*4.1.0 (2017/05/04)*
 
 * Added `grunt watch` and tasks depending on files modified @rafa8626
 * Fixed typo for documentation about `features` configuration element (https://github.com/mediaelement/mediaelement/pull/2189) @abumalick
