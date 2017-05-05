@@ -1,5 +1,9 @@
 ### Version History
 
+*4.1.1 (2017/??/??)*
+
+* Added missing conditional to reuse `exitFullscreen` method @rafa8626
+
 *4.1.0 (2017/05/04)*
 
 * Added `grunt watch` and tasks depending on files modified @rafa8626

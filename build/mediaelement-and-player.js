@@ -1490,8 +1490,10 @@ Object.assign(_player2.default.prototype, {
 			}
 		}
 
-		(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
-		(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
+		if (t.fullscreenBtn) {
+			(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
+			(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
+		}
 
 		t.setControlsSize();
 		t.isFullScreen = false;

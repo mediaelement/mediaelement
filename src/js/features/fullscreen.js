@@ -104,7 +104,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.fullscreenBtn = fullscreenBtn;
 
 		t.globalBind('keydown', (e) => {
-			let key = e.which || e.keyCode || 0;
+			const key = e.which || e.keyCode || 0;
 			if (key === 27 && ((Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || t.isFullScreen)) {
 				player.exitFullScreen();
 			}
@@ -346,8 +346,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 
-		removeClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
-		addClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+		if (t.fullscreenBtn) {
+			removeClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
+			addClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+		}
 
 		t.setControlsSize();
 		t.isFullScreen = false;
