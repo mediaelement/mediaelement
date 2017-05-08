@@ -21,4 +21,5 @@ The following resources talk about a variety of topics that users of `MediaEleme
 <a id="gists"></a>
 ## Code snippets
 
-* https://gist.github.com/rafa8626/2ce220b30b7e2ef2dc2e277df6a697ce
+* [MediaElement.js: Skip to next source if previous cannot be played](https://gist.github.com/rafa8626/2ce220b30b7e2ef2dc2e277df6a697ce)
+* [MediaElementPlayer.js: use `AudioContext.decodeAudioData()`](https://gist.github.com/rafa8626/e6afe41dd00742a75c4d25cc387a7d61)

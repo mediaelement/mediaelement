@@ -3,6 +3,7 @@
 *4.1.1 (2017/??/??)*
 
 * Added missing conditional to reuse `exitFullscreen` method @rafa8626
+* Added new code snippet to use player with `AudioContext.decodeAudioData()` @rafa8626
 
 *4.1.0 (2017/05/04)*
 
