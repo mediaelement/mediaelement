@@ -1126,7 +1126,8 @@ class MediaElementPlayer {
 				// traverse parents to find the closest visible one
 				while (el) {
 					try {
-						if (window.self !== window.top) {
+						// Firefox has an issue calculating dimensions on hidden iframes
+						if (IS_FIREFOX && window.self !== window.top) {
 							if (window.frameElement !== null) {
 								return window.frameElement;
 							} else {
@@ -1253,7 +1254,7 @@ class MediaElementPlayer {
 		let parent;
 
 		try {
-			if (window.self !== window.top) {
+			if (IS_FIREFOX && window.self !== window.top) {
 				parent = window.frameElement.parentNode;
 			} else {
 				parent = t.outerContainer;

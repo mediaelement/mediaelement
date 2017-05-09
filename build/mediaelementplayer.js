@@ -4906,7 +4906,8 @@ var MediaElementPlayer = function () {
 				// traverse parents to find the closest visible one
 				while (el) {
 					try {
-						if (_window2.default.self !== _window2.default.top) {
+						// Firefox has an issue calculating dimensions on hidden iframes
+						if (_constants.IS_FIREFOX && _window2.default.self !== _window2.default.top) {
 							if (_window2.default.frameElement !== null) {
 								return _window2.default.frameElement;
 							} else {
@@ -5029,7 +5030,7 @@ var MediaElementPlayer = function () {
 			var parent = void 0;
 
 			try {
-				if (_window2.default.self !== _window2.default.top) {
+				if (_constants.IS_FIREFOX && _window2.default.self !== _window2.default.top) {
 					parent = _window2.default.frameElement.parentNode;
 				} else {
 					parent = t.outerContainer;
