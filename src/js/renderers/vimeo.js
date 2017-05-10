@@ -59,7 +59,7 @@ const vimeoApi = {
 			script.src = '//player.vimeo.com/api/player.js';
 
 			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = () => {
+			script.onload = script.onreadystatechange = function() {
 				if (!done && (!this.readyState || this.readyState === undefined ||
 					this.readyState === 'loaded' || this.readyState === 'complete')) {
 					done = true;

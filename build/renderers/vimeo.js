@@ -70,7 +70,7 @@ var vimeoApi = {
 
 			// Attach handlers for all browsers
 			script.onload = script.onreadystatechange = function () {
-				if (!done && (!undefined.readyState || undefined.readyState === undefined || undefined.readyState === 'loaded' || undefined.readyState === 'complete')) {
+				if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
 					done = true;
 					vimeoApi.iFrameReady();
 					script.onload = script.onreadystatechange = null;
