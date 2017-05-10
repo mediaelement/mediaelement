@@ -6,6 +6,7 @@ import mejs from './mejs';
 import {createEvent} from '../utils/general';
 import {getTypeFromFile, formatType, absolutizeUrl} from '../utils/media';
 import {renderer} from './renderer';
+import {IS_IOS} from '../utils/constants';
 
 /**
  * Media Core
@@ -418,6 +419,35 @@ class MediaElement {
 			}
 		};
 
+		/**
+		 * Convert a URL to BLOB to avoid issues with regular media types playing under a HTTPS website
+		 * @see https://poodll.com/ios-10-and-html5-video-and-html5-audio-on-https-sites/
+		 * @private
+		 */
+		const processURL = (url, type) => {
+
+			if (mejs.html5media.mediaTypes.includes(type) && window.location.protocol === 'https:' &&
+				IS_IOS && !window.MSStream){
+				const xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if (this.readyState === 4 && this.status === 200) {
+						const
+							url = window.URL || window.webkitURL,
+							blobUrl = url.createObjectURL(this.response)
+						;
+						t.mediaElement.originalNode.setAttribute('src', blobUrl);
+						return blobUrl;
+					}
+					return url;
+				};
+				xhr.open('GET', url);
+				xhr.responseType = 'blob';
+				xhr.send();
+			}
+
+			return url;
+		};
+
 		let mediaFiles;
 
 		if (sources !== null) {
@@ -445,10 +475,13 @@ class MediaElement {
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
-						const node = t.mediaElement.originalNode;
+						const
+							node = t.mediaElement.originalNode,
+							type = formatType(nodeSource, node.getAttribute('type'))
+						;
 						mediaFiles.push({
-							type: formatType(nodeSource, node.getAttribute('type')),
-							src: nodeSource
+							type: type,
+							src: processURL(nodeSource, type)
 						});
 					}
 
@@ -460,7 +493,7 @@ class MediaElement {
 								src = n.getAttribute('src'),
 								type = formatType(src, n.getAttribute('type'))
 							;
-							mediaFiles.push({type: type, src: src});
+							mediaFiles.push({type: type, src: processURL(src, type)});
 						}
 					}
 					break;

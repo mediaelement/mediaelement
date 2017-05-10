@@ -453,6 +453,8 @@ var _media = _dereq_(17);
 
 var _renderer = _dereq_(7);
 
+var _constants = _dereq_(15);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -864,6 +866,32 @@ function MediaElement(idOrNode, options, sources) {
 		}
 	};
 
+	/**
+  * Convert a URL to BLOB to avoid issues with regular media types playing under a HTTPS website
+  * @see https://poodll.com/ios-10-and-html5-video-and-html5-audio-on-https-sites/
+  * @private
+  */
+	var processURL = function processURL(url, type) {
+
+		if (_mejs2.default.html5media.mediaTypes.includes(type) && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function () {
+				if (this.readyState === 4 && this.status === 200) {
+					var _url = _window2.default.URL || _window2.default.webkitURL,
+					    blobUrl = _url.createObjectURL(this.response);
+					t.mediaElement.originalNode.setAttribute('src', blobUrl);
+					return blobUrl;
+				}
+				return url;
+			};
+			xhr.open('GET', url);
+			xhr.responseType = 'blob';
+			xhr.send();
+		}
+
+		return url;
+	};
+
 	var mediaFiles = void 0;
 
 	if (sources !== null) {
@@ -889,10 +917,11 @@ function MediaElement(idOrNode, options, sources) {
 
 				// Consider if node contains the `src` and `type` attributes
 				if (nodeSource) {
-					var node = t.mediaElement.originalNode;
+					var node = t.mediaElement.originalNode,
+					    type = (0, _media.formatType)(nodeSource, node.getAttribute('type'));
 					mediaFiles.push({
-						type: (0, _media.formatType)(nodeSource, node.getAttribute('type')),
-						src: nodeSource
+						type: type,
+						src: processURL(nodeSource, type)
 					});
 				}
 
@@ -901,8 +930,8 @@ function MediaElement(idOrNode, options, sources) {
 					var n = t.mediaElement.originalNode.childNodes[_i4];
 					if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 						var src = n.getAttribute('src'),
-						    type = (0, _media.formatType)(src, n.getAttribute('type'));
-						mediaFiles.push({ type: type, src: src });
+						    _type = (0, _media.formatType)(src, n.getAttribute('type'));
+						mediaFiles.push({ type: _type, src: processURL(src, _type) });
 					}
 				}
 				break;
@@ -929,7 +958,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -974,7 +1003,7 @@ mejs.html5media = {
 	/**
   * @type {String[]}
   */
-	mediaTypes: ['audio/mp3', 'audio/ogg', 'audio/oga', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav', 'audio/mpeg', 'audio/mp4', 'video/mp4', 'video/webm', 'video/ogg']
+	mediaTypes: ['audio/mp3', 'audio/ogg', 'audio/oga', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav', 'audio/mpeg', 'audio/mp4', 'video/mp4', 'video/webm', 'video/ogg', 'video/ogv']
 };
 
 _window2.default.mejs = mejs;

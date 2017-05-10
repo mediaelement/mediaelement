@@ -6,6 +6,7 @@
 * Added new code snippet to use player with `AudioContext.decodeAudioData()` @rafa8626
 * Added missing conditional for bug with hidden iframes in Firefox @rafa8626
 * Fixed typo in `Vimeo` renderer @rafa8626
+* Added workflow to solve issue with iOS and HTTPS playing media @rafa8626
 
 *4.1.0 (2017/05/04)*
 
