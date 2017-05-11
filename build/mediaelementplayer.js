@@ -4936,12 +4936,8 @@ var MediaElementPlayer = function () {
 				while (el) {
 					try {
 						// Firefox has an issue calculating dimensions on hidden iframes
-						if (_constants.IS_FIREFOX && _window2.default.self !== _window2.default.top) {
-							if (_window2.default.frameElement !== null) {
-								return _window2.default.frameElement;
-							} else {
-								parentEl = _window2.default.frameElement.parentNode;
-							}
+						if (_constants.IS_FIREFOX && el.tagName.toLowerCase() === 'html' && _window2.default.self !== _window2.default.top && _window2.default.frameElement !== null) {
+							return _window2.default.frameElement;
 						} else {
 							parentEl = el.parentElement;
 						}
@@ -7417,9 +7413,9 @@ if (window.Element && !Element.prototype.closest) {
 // Javascript workaround for FF iframe `getComputedStyle` bug
 // Reference: https://stackoverflow.com/questions/32659801/javascript-workaround-for-firefox-iframe-getcomputedstyle-bug/32660009#32660009
 if (/firefox/i.test(navigator.userAgent)) {
-	window.oldGetComputedStyle = window.getComputedStyle;
+	window.mediaElementJsOldGetComputedStyle = window.getComputedStyle;
 	window.getComputedStyle = function (el, pseudoEl) {
-		var t = window.oldGetComputedStyle(el, pseudoEl);
+		var t = window.mediaElementJsOldGetComputedStyle(el, pseudoEl);
 		return t === null ? { getPropertyValue: function getPropertyValue() {} } : t;
 	};
 }
