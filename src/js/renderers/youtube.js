@@ -169,7 +169,7 @@ const YouTubeApi = {
 	 * @return {?String}
 	 */
 	getYouTubeNoCookieUrl: (url) => {
-		if (url === undefined || url === null || !url.trim().length || !url.includes('//www.youtube')) {
+		if (url === undefined || url === null || !url.trim().length || url.indexOf('//www.youtube') === -1) {
 			return url;
 		}
 
@@ -213,7 +213,7 @@ const YouTubeIframeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => ['video/youtube', 'video/x-youtube'].includes(type),
+	canPlayType: (type) => ~['video/youtube', 'video/x-youtube'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -618,10 +618,7 @@ if (window.postMessage && typeof window.addEventListener) {
 		YouTubeApi.iFrameReady();
 	};
 
-	typeChecks.push((url) => {
-		url = url.toLowerCase();
-		return (url.includes('//www.youtube') || url.includes('//youtu.be')) ? 'video/x-youtube' : null;
-	});
+	typeChecks.push((url) => /\/\/(www\.youtube|youtu\.be)/i.test(url) ? 'video/x-youtube' : null);
 
 	renderer.add(YouTubeIframeRenderer);
 }

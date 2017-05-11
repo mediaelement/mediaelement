@@ -348,7 +348,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
-		const isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null;
+		const isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName);
 
 		if (isNative) {
 			media.setVolume(player.options.startVolume);

@@ -125,7 +125,7 @@ const DashNativeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => HAS_MSE && ['application/dash+xml'].includes(type),
+	canPlayType: (type) => HAS_MSE && ~['application/dash+xml'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -160,7 +160,7 @@ const DashNativeRenderer = {
 				node[`get${capName}`] = () => (dashPlayer !== null) ? node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
 						if (dashPlayer !== null) {
 							if (propName === 'src') {
 
@@ -285,9 +285,6 @@ const DashNativeRenderer = {
  * Register Native M(PEG)-Dash type based on URL structure
  *
  */
-typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('.mpd') ? 'application/dash+xml' : null;
-});
+typeChecks.push((url) => ~(url.toLowerCase()).indexOf('.mpd') ? 'application/dash+xml' : null);
 
 renderer.add(DashNativeRenderer);

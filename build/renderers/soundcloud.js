@@ -117,7 +117,7 @@ var SoundCloudIframeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return ['video/soundcloud', 'video/x-soundcloud'].includes(type);
+		return ~['video/soundcloud', 'video/x-soundcloud'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -433,8 +433,8 @@ var SoundCloudIframeRenderer = {
  *
  */
 mejs.Utils.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//soundcloud.com') || url.includes('//w.soundcloud.com') ? 'video/x-soundcloud' : null;
+	return (/\/\/(w\.)?soundcloud.com/i.test(url) ? 'video/x-soundcloud' : null
+	);
 });
 
 mejs.Renderers.add(SoundCloudIframeRenderer);

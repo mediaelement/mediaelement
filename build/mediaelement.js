@@ -536,7 +536,7 @@ function MediaElement(idOrNode, options, sources) {
 		// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
 		// only if video/audio tags are detected
 		var tagName = t.mediaElement.originalNode.tagName.toLowerCase();
-		if (['video', 'audio'].includes(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
+		if (~['video', 'audio'].indexOf(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
 			t.mediaElement.originalNode.setAttribute('preload', 'none');
 		}
 
@@ -873,7 +873,7 @@ function MediaElement(idOrNode, options, sources) {
   */
 	var processURL = function processURL(url, type) {
 
-		if (_mejs2.default.html5media.mediaTypes.includes(type) && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
+		if (~_mejs2.default.html5media.mediaTypes.indexOf(type) && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
 				if (this.readyState === 4 && this.status === 200) {
@@ -1087,10 +1087,10 @@ var Renderer = function () {
 			// 2) Flash shims (RTMP, FLV, HLS, M(PEG)-DASH, MP3, OGG)
 			// 3) Iframe renderers (YouTube, SoundCloud, Facebook. etc.)
 			if (!renderersLength) {
-				var rendererIndicator = [/^(html5|native)/, /^flash/, /iframe$/],
+				var rendererIndicator = [/^(html5|native)/i, /^flash/i, /iframe$/i],
 				    rendererRanking = function rendererRanking(renderer) {
 					for (var i = 0, total = rendererIndicator.length; i < total; i++) {
-						if (renderer.match(rendererIndicator[i]) !== null) {
+						if (rendererIndicator[i].test(renderer)) {
 							return i;
 						}
 					}
@@ -1407,7 +1407,7 @@ var DashNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ['application/dash+xml'].includes(type);
+		return _constants.HAS_MSE && ~['application/dash+xml'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -1440,7 +1440,7 @@ var DashNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				if (!_mejs2.default.html5media.readOnlyProperties.includes(propName)) {
+				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
 					if (dashPlayer !== null) {
 						if (propName === 'src') {
 
@@ -1561,8 +1561,7 @@ var DashNativeRenderer = {
  *
  */
 _media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('.mpd') ? 'application/dash+xml' : null;
+	return ~url.toLowerCase().indexOf('.mpd') ? 'application/dash+xml' : null;
 });
 
 _renderer.renderer.add(DashNativeRenderer);
@@ -1866,7 +1865,7 @@ var FlashMediaElementRenderer = {
 		flash.flashWrapper = _document2.default.createElement('div');
 
 		// If the access script flag does not have any of the valid values, set to `sameDomain` by default
-		if (!['always', 'sameDomain'].includes(flash.options.shimScriptAccess)) {
+		if (['always', 'sameDomain'].indexOf(flash.options.shimScriptAccess) === -1) {
 			flash.options.shimScriptAccess = 'sameDomain';
 		}
 
@@ -1966,18 +1965,18 @@ if (hasFlash) {
 		url = url.toLowerCase();
 
 		if (url.startsWith('rtmp')) {
-			if (url.includes('.mp3')) {
+			if (~url.indexOf('.mp3')) {
 				return 'audio/rtmp';
 			} else {
 				return 'video/rtmp';
 			}
-		} else if (url.includes('.oga') || url.includes('.ogg')) {
+		} else if (/\.og(a|g)/i.test(url)) {
 			return 'audio/ogg';
-		} else if (url.includes('.m3u8')) {
+		} else if (~url.indexOf('.m3u8')) {
 			return 'application/x-mpegURL';
-		} else if (url.includes('.mpd')) {
+		} else if (~url.indexOf('.mpd')) {
 			return 'application/dash+xml';
-		} else if (url.includes('.flv')) {
+		} else if (~url.indexOf('.flv')) {
 			return 'video/flv';
 		} else {
 			return null;
@@ -2004,7 +2003,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv', 'video/x-flv'].includes(type.toLowerCase());
+			return ~['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv', 'video/x-flv'].indexOf(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -2027,7 +2026,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase());
+			return ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].indexOf(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -2049,7 +2048,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return ['application/dash+xml'].includes(type.toLowerCase());
+			return ~['application/dash+xml'].indexOf(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -2071,7 +2070,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return ['audio/mp3'].includes(type.toLowerCase());
+			return ~['audio/mp3'].indexOf(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -2093,7 +2092,7 @@ if (hasFlash) {
    * @return {Boolean}
    */
 		canPlayType: function canPlayType(type) {
-			return ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type.toLowerCase());
+			return ~['audio/ogg', 'audio/oga', 'audio/ogv'].indexOf(type.toLowerCase());
 		},
 
 		create: FlashMediaElementRenderer.create
@@ -2243,7 +2242,7 @@ var FlvNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ['video/x-flv', 'video/flv'].includes(type);
+		return _constants.HAS_MSE && ~['video/x-flv', 'video/flv'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -2274,7 +2273,7 @@ var FlvNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				if (!_mejs2.default.html5media.readOnlyProperties.includes(propName)) {
+				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
 					if (flvPlayer !== null) {
 						node[propName] = value;
 
@@ -2382,8 +2381,7 @@ var FlvNativeRenderer = {
  *
  */
 _media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('.flv') ? 'video/flv' : null;
+	return ~url.toLowerCase().indexOf('.flv') ? 'video/flv' : null;
 });
 
 _renderer.renderer.add(FlvNativeRenderer);
@@ -2534,7 +2532,7 @@ var HlsNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase());
+		return _constants.HAS_MSE && ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -2569,7 +2567,7 @@ var HlsNativeRenderer = {
 			};
 
 			node['set' + capName] = function (value) {
-				if (!_mejs2.default.html5media.readOnlyProperties.includes(propName)) {
+				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
 					if (hlsPlayer !== null) {
 						node[propName] = value;
 
@@ -2753,8 +2751,7 @@ var HlsNativeRenderer = {
  *
  */
 _media.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('.m3u8') ? 'application/x-mpegURL' : null;
+	return ~url.toLowerCase().indexOf('.m3u8') ? 'application/x-mpegURL' : null;
 });
 
 _renderer.renderer.add(HlsNativeRenderer);
@@ -2807,10 +2804,10 @@ var HtmlMediaElement = {
 
 		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS;
 		// also consider URLs that might have obfuscated URLs
-		if (_constants.IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null || ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].includes(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
+		if (_constants.IS_ANDROID && /\/mp(3|4)$/i.test(type) || ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].indexOf(type.toLowerCase()) && _constants.SUPPORTS_NATIVE_HLS) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
-			return mediaElement.canPlayType(type).replace(/no/, '');
+			return mediaElement.canPlayType(type.toLowerCase()).replace(/no/, '');
 		} else {
 			return '';
 		}
@@ -2849,7 +2846,7 @@ var HtmlMediaElement = {
 			};
 
 			node['set' + capName] = function (value) {
-				if (!_mejs2.default.html5media.readOnlyProperties.includes(propName)) {
+				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
 					node[propName] = value;
 				}
 			};
@@ -3098,7 +3095,7 @@ var YouTubeApi = {
   * @return {?String}
   */
 	getYouTubeNoCookieUrl: function getYouTubeNoCookieUrl(url) {
-		if (url === undefined || url === null || !url.trim().length || !url.includes('//www.youtube')) {
+		if (url === undefined || url === null || !url.trim().length || url.indexOf('//www.youtube') === -1) {
 			return url;
 		}
 
@@ -3143,7 +3140,7 @@ var YouTubeIframeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return ['video/youtube', 'video/x-youtube'].includes(type);
+		return ~['video/youtube', 'video/x-youtube'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -3535,8 +3532,8 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	};
 
 	_media.typeChecks.push(function (url) {
-		url = url.toLowerCase();
-		return url.includes('//www.youtube') || url.includes('//youtu.be') ? 'video/x-youtube' : null;
+		return (/\/\/(www\.youtube|youtu\.be)/i.test(url) ? 'video/x-youtube' : null
+		);
 	});
 
 	_renderer.renderer.add(YouTubeIframeRenderer);
@@ -3567,16 +3564,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var NAV = exports.NAV = _window2.default.navigator;
 var UA = exports.UA = NAV.userAgent.toLowerCase();
 
-var IS_IPAD = exports.IS_IPAD = UA.match(/ipad/i) !== null;
-var IS_IPHONE = exports.IS_IPHONE = UA.match(/iphone/i) !== null;
+var IS_IPAD = exports.IS_IPAD = /ipad/i.test(UA);
+var IS_IPHONE = exports.IS_IPHONE = /iphone/i.test(UA);
 var IS_IOS = exports.IS_IOS = IS_IPHONE || IS_IPAD;
-var IS_ANDROID = exports.IS_ANDROID = UA.match(/android/i) !== null;
-var IS_IE = exports.IS_IE = NAV.appName.toLowerCase().includes('microsoft') || NAV.appName.toLowerCase().match(/trident/gi) !== null;
+var IS_ANDROID = exports.IS_ANDROID = /android/i.test(UA);
+var IS_IE = exports.IS_IE = /(trident|microsoft)/i.test(NAV.appName);
 var IS_EDGE = exports.IS_EDGE = 'msLaunchUri' in NAV && !('documentMode' in _document2.default);
-var IS_CHROME = exports.IS_CHROME = UA.match(/chrome/gi) !== null;
-var IS_FIREFOX = exports.IS_FIREFOX = UA.match(/firefox/gi) !== null;
-var IS_SAFARI = exports.IS_SAFARI = UA.match(/safari/gi) !== null && !IS_CHROME;
-var IS_STOCK_ANDROID = exports.IS_STOCK_ANDROID = UA.match(/^mozilla\/\d+\.\d+\s\(linux;\su;/gi) !== null;
+var IS_CHROME = exports.IS_CHROME = /chrome/i.test(UA);
+var IS_FIREFOX = exports.IS_FIREFOX = /firefox/i.test(UA);
+var IS_SAFARI = exports.IS_SAFARI = /safari/i.test(UA) && !IS_CHROME;
+var IS_STOCK_ANDROID = exports.IS_STOCK_ANDROID = /^mozilla\/\d+\.\d+\s\(linux;\su;/i.test(UA);
 
 var HAS_MSE = exports.HAS_MSE = 'MediaSource' in _window2.default;
 var SUPPORT_POINTER_EVENTS = exports.SUPPORT_POINTER_EVENTS = function () {
@@ -3605,7 +3602,7 @@ for (var i = 0, total = html5Elements.length; i < total; i++) {
 }
 
 // Test if browsers support HLS natively (right now Safari, Android's Chrome and Stock browsers, and MS Edge)
-var SUPPORTS_NATIVE_HLS = exports.SUPPORTS_NATIVE_HLS = IS_SAFARI || IS_ANDROID && (IS_CHROME || IS_STOCK_ANDROID) || IS_IE && UA.match(/edge/gi) !== null;
+var SUPPORTS_NATIVE_HLS = exports.SUPPORTS_NATIVE_HLS = IS_SAFARI || IS_ANDROID && (IS_CHROME || IS_STOCK_ANDROID) || IS_IE && /edge/i.test(UA);
 
 // Detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 
@@ -3616,7 +3613,7 @@ var hasiOSFullScreen = video.webkitEnterFullscreen !== undefined;
 var hasNativeFullscreen = video.requestFullscreen !== undefined;
 
 // OS X 10.5 can't do this even if it says it can :(
-if (hasiOSFullScreen && UA.match(/mac os x 10_5/i)) {
+if (hasiOSFullScreen && /mac os x 10_5/i.test(UA)) {
 	hasNativeFullscreen = false;
 	hasiOSFullScreen = false;
 }
@@ -3857,7 +3854,7 @@ function createEvent(eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
-	var eventFrags = eventName.match(/[a-z]+\.([a-z]+)/),
+	var eventFrags = eventName.match(/[a-z]+\.([a-z]+)/ig),
 	    detail = {
 		target: target
 	};
@@ -4000,9 +3997,9 @@ function getTypeFromFile(url) {
 
 	// Obtain correct MIME types
 	if (normalizedExt) {
-		if (['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].includes(normalizedExt)) {
+		if (~['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].indexOf(normalizedExt)) {
 			mime = 'video/' + normalizedExt;
-		} else if (['mp3', 'oga', 'wav', 'mid', 'midi'].includes(normalizedExt)) {
+		} else if (~['mp3', 'oga', 'wav', 'mid', 'midi'].indexOf(normalizedExt)) {
 			mime = 'audio/' + normalizedExt;
 		}
 	}
@@ -4025,7 +4022,7 @@ function getExtension(url) {
 	var baseUrl = url.split('?')[0],
 	    baseName = baseUrl.split('\\').pop().split('/').pop();
 
-	return baseName.indexOf('.') > -1 ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
+	return ~baseName.indexOf('.') ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
 }
 
 /**
@@ -4078,7 +4075,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Polyfill
  *
- * Mimics the missing methods like Object.assign, Array.includes, etc., as a way to avoid including the whole list
+ * Mimics the missing methods like Object.assign, CustomEvent, etc., as a way to avoid including the whole list
  * of polyfills provided by Babel.
  */
 
@@ -4145,74 +4142,6 @@ if (typeof Object.assign !== 'function') {
 			}
 		}
 		return to;
-	};
-}
-
-// Array.includes polyfill
-// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
-if (!Array.prototype.includes) {
-	Object.defineProperty(Array.prototype, 'includes', {
-		value: function value(searchElement, fromIndex) {
-
-			// 1. const O be ? ToObject(this value).
-			if (this === null || this === undefined) {
-				throw new TypeError('"this" is null or not defined');
-			}
-
-			var o = Object(this);
-
-			// 2. const len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
-
-			// 3. If len is 0, return false.
-			if (len === 0) {
-				return false;
-			}
-
-			// 4. const n be ? ToInteger(fromIndex).
-			//    (If fromIndex is undefined, this step produces the value 0.)
-			var n = fromIndex | 0;
-
-			// 5. If n ≥ 0, then
-			//  a. const k be n.
-			// 6. Else n < 0,
-			//  a. const k be len + n.
-			//  b. If k < 0, const k be 0.
-			var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
-
-			// 7. Repeat, while k < len
-			while (k < len) {
-				// a. const elementK be the result of ? Get(O, ! ToString(k)).
-				// b. If SameValueZero(searchElement, elementK) is true, return true.
-				// c. Increase k by 1.
-				// NOTE: === provides the correct "SameValueZero" comparison needed here.
-				if (o[k] === searchElement) {
-					return true;
-				}
-				k++;
-			}
-
-			// 8. Return false
-			return false;
-		}
-	});
-}
-
-// String.includes polyfill
-// Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
-if (!String.prototype.includes) {
-	String.prototype.includes = function (search, start) {
-		'use strict';
-
-		if (typeof start !== 'number') {
-			start = 0;
-		}
-
-		if (start + search.length > this.length) {
-			return false;
-		} else {
-			return this.indexOf(search, start) !== -1;
-		}
 	};
 }
 

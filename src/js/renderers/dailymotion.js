@@ -132,7 +132,7 @@ const DailyMotionIframeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => ['video/dailymotion', 'video/x-dailymotion'].includes(type),
+	canPlayType: (type) => ~['video/dailymotion', 'video/x-dailymotion'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -483,10 +483,7 @@ const DailyMotionIframeRenderer = {
  * Register DailyMotion event globally
  *
  */
-mejs.Utils.typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return (url.includes('//dailymotion.com') || url.includes('www.dailymotion.com') || url.includes('//dai.ly')) ? 'video/x-dailymotion' : null;
-});
+mejs.Utils.typeChecks.push((url) => /\/\/((www\.)?dailymotion\.com|dai\.ly)/i.test(url) ? 'video/x-dailymotion' : null);
 
 window.dmAsyncInit = () => {
 	DailyMotionApi.apiReady();

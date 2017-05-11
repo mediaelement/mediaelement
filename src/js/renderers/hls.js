@@ -132,8 +132,8 @@ const HlsNativeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => HAS_MSE && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-		'video/hls'].includes(type.toLowerCase()),
+	canPlayType: (type) => HAS_MSE && ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+		'video/hls'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -170,7 +170,7 @@ const HlsNativeRenderer = {
 				node[`get${capName}`] = () => hlsPlayer !== null ? node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
 						if (hlsPlayer !== null) {
 							node[propName] = value;
 
@@ -357,9 +357,6 @@ const HlsNativeRenderer = {
  * Register Native HLS type based on URL structure
  *
  */
-typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('.m3u8') ? 'application/x-mpegURL' : null;
-});
+typeChecks.push((url) => ~(url.toLowerCase()).indexOf('.m3u8') ? 'application/x-mpegURL' : null);
 
 renderer.add(HlsNativeRenderer);

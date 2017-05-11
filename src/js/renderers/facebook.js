@@ -24,7 +24,7 @@ const FacebookRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type)  => ['video/facebook', 'video/x-facebook'].includes(type),
+	canPlayType: (type)  => ~['video/facebook', 'video/x-facebook'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -427,9 +427,6 @@ const FacebookRenderer = {
  * Register Facebook type based on URL structure
  *
  */
-mejs.Utils.typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('//www.facebook') ? 'video/x-facebook' : null;
-});
+mejs.Utils.typeChecks.push((url) => ~(url.toLowerCase()).indexOf('//www.facebook') ? 'video/x-facebook' : null);
 
 mejs.Renderers.add(FacebookRenderer);

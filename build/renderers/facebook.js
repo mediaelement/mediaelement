@@ -37,7 +37,7 @@ var FacebookRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return ['video/facebook', 'video/x-facebook'].includes(type);
+		return ~['video/facebook', 'video/x-facebook'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -418,8 +418,7 @@ var FacebookRenderer = {
  *
  */
 mejs.Utils.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//www.facebook') ? 'video/x-facebook' : null;
+	return ~url.toLowerCase().indexOf('//www.facebook') ? 'video/x-facebook' : null;
 });
 
 mejs.Renderers.add(FacebookRenderer);

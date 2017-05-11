@@ -142,7 +142,7 @@ var DailyMotionIframeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return ['video/dailymotion', 'video/x-dailymotion'].includes(type);
+		return ~['video/dailymotion', 'video/x-dailymotion'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -476,8 +476,8 @@ var DailyMotionIframeRenderer = {
  *
  */
 mejs.Utils.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//dailymotion.com') || url.includes('www.dailymotion.com') || url.includes('//dai.ly') ? 'video/x-dailymotion' : null;
+	return (/\/\/((www\.)?dailymotion\.com|dai\.ly)/i.test(url) ? 'video/x-dailymotion' : null
+	);
 });
 
 window.dmAsyncInit = function () {

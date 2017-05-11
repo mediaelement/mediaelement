@@ -288,7 +288,7 @@ const FlashMediaElementRenderer = {
 		flash.flashWrapper = document.createElement('div');
 
 		// If the access script flag does not have any of the valid values, set to `sameDomain` by default
-		if (!['always', 'sameDomain'].includes(flash.options.shimScriptAccess)) {
+		if (['always', 'sameDomain'].indexOf(flash.options.shimScriptAccess) === -1) {
 			flash.options.shimScriptAccess = 'sameDomain';
 		}
 
@@ -422,18 +422,18 @@ if (hasFlash) {
 		url = url.toLowerCase();
 
 		if (url.startsWith('rtmp')) {
-			if (url.includes('.mp3')) {
+			if (~url.indexOf('.mp3')) {
 				return 'audio/rtmp';
 			} else {
 				return 'video/rtmp';
 			}
-		} else if (url.includes('.oga') || url.includes('.ogg')) {
+		} else if (/\.og(a|g)/i.test(url)) {
 			return 'audio/ogg';
-		} else if (url.includes('.m3u8')) {
+		} else if (~url.indexOf('.m3u8')) {
 			return 'application/x-mpegURL';
-		} else if (url.includes('.mpd')) {
+		} else if (~url.indexOf('.mpd')) {
 			return 'application/dash+xml';
-		} else if (url.includes('.flv')) {
+		} else if (~url.indexOf('.flv')) {
 			return 'video/flv';
 		}else {
 			return null;
@@ -460,8 +460,8 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv',
-			'video/x-flv'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv',
+			'video/x-flv'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 
@@ -482,8 +482,8 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-			'video/hls'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+			'video/hls'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -503,7 +503,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['application/dash+xml'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['application/dash+xml'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -523,7 +523,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['audio/mp3'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['audio/mp3'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -543,7 +543,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['audio/ogg', 'audio/oga', 'audio/ogv'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};

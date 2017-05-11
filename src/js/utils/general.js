@@ -109,7 +109,7 @@ export function createEvent (eventName, target) {
 	}
 
 	const
-		eventFrags = eventName.match(/[a-z]+\.([a-z]+)/),
+		eventFrags = eventName.match(/[a-z]+\.([a-z]+)/ig),
 		detail = {
 			target: target
 		}

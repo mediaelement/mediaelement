@@ -86,7 +86,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		media.addEventListener('loadedmetadata', () => {
 			// `loadedmetadata` in Flash is executed simultaneously with `play`, so avoid it
-			if (media.rendererName.match(/flash/) === null) {
+			if (media.rendererName.indexOf('flash') === -1) {
 				togglePlayPause('pse');
 			}
 		});

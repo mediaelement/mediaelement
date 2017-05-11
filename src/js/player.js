@@ -511,7 +511,7 @@ class MediaElementPlayer {
 			;
 
 
-			if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
+			if (t.options[tagType + 'Width'] > 0 || ~t.options[tagType + 'Width'].toString().indexOf('%')) {
 				t.width = t.options[tagType + 'Width'];
 			} else if (t.node.style.width !== '' && t.node.style.width !== null) {
 				t.width = t.node.style.width;
@@ -521,7 +521,7 @@ class MediaElementPlayer {
 				t.width = t.options['default' + capsTagName + 'Width'];
 			}
 
-			if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
+			if (t.options[tagType + 'Height'] > 0 || ~t.options[tagType + 'Height'].toString().indexOf('%')) {
 				t.height = t.options[tagType + 'Height'];
 			} else if (t.node.style.height !== '' && t.node.style.height !== null) {
 				t.height = t.node.style.height;
@@ -703,7 +703,7 @@ class MediaElementPlayer {
 			t = this,
 			autoplayAttr = domNode.getAttribute('autoplay'),
 			autoplay = !(autoplayAttr === undefined || autoplayAttr === null || autoplayAttr === 'false'),
-			isNative = media.rendererName !== null && media.rendererName.match(/(native|html5)/) !== null
+			isNative = media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
 
 		if (t.controls) {
@@ -1112,7 +1112,7 @@ class MediaElementPlayer {
 		const t = this;
 
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-		return (t.height.toString().includes('%') || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
+		return (~t.height.toString().indexOf('%') || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
 			t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
 	}
 
@@ -1346,8 +1346,8 @@ class MediaElementPlayer {
 	setDimensions (width, height) {
 		const t = this;
 
-		width = isString(width) && width.includes('%') ? width : `${parseFloat(width)}px`;
-		height = isString(height) && height.includes('%') ? height : `${parseFloat(height)}px`;
+		width = isString(width) && ~width.indexOf('%') ? width : `${parseFloat(width)}px`;
+		height = isString(height) && ~height.indexOf('%') ? height : `${parseFloat(height)}px`;
 
 		t.container.style.width = width;
 		t.container.style.height = height;
@@ -1425,7 +1425,7 @@ class MediaElementPlayer {
 
 		const t = this;
 
-		if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.match(/iframe/i) !== null && !document.getElementById(`${t.media.id}-iframe-overlay`)) {
+		if (t.isVideo && t.media.rendererName !== null && ~t.media.rendererName.indexOf('iframe') && !document.getElementById(`${t.media.id}-iframe-overlay`)) {
 
 			const
 				layer = document.createElement('div'),
@@ -1647,7 +1647,7 @@ class MediaElementPlayer {
 		});
 		layers.appendChild(bigPlay);
 
-		if (t.media.rendererName !== null && ((t.media.rendererName.match(/(youtube|facebook)/) &&
+		if (t.media.rendererName !== null && ((/(youtube|facebook)/i.test(t.media.rendererName) &&
 			!(player.media.originalNode.getAttribute('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
 			bigPlay.style.display = 'none';
 		}
@@ -1895,14 +1895,14 @@ class MediaElementPlayer {
 			nativeHeight = t.node.getAttribute('height')
 		;
 		if (nativeWidth) {
-			if (nativeWidth.match('%') === null) {
+			if (nativeWidth.indexOf('%') === -1) {
 				nativeWidth = `${nativeWidth}px`;
 			}
 		} else {
 			nativeWidth = 'auto';
 		}
 		if (nativeHeight) {
-			if (nativeHeight.match('%') === null) {
+			if (nativeHeight.indexOf('%') === -1) {
 				nativeHeight = `${nativeHeight}px`;
 			}
 		} else {
@@ -1925,7 +1925,7 @@ class MediaElementPlayer {
 			}
 
 			// If <iframe>, remove overlay
-			if (rendererName.match(/iframe/i) !== null) {
+			if (~rendererName.indexOf('iframe')) {
 				const layer = document.getElementById(`${t.media.id}-iframe-overlay`);
 				layer.remove();
 			}

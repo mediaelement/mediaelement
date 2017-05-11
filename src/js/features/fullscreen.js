@@ -152,7 +152,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			t = this,
-			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
+			isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
 
 		let mode = '';
@@ -188,7 +188,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			t = this,
-			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/) !== null,
+			isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName),
 			containerStyles = getComputedStyle(t.container)
 		;
 
@@ -305,7 +305,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			t = this,
-			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
+			isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
 
 		// Prevent container from attempting to stretch a second time

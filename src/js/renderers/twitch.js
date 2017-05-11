@@ -143,10 +143,10 @@ const twitchApi = {
 
 		for (let i = 0, total = parameters.length; i < total; i++) {
 			const paramParts = parameters[i].split('=');
-			if (paramParts[0].includes('channel=')) {
+			if (~paramParts[0].indexOf('channel=')) {
 				twitchId = paramParts[1];
 				break;
-			} else if (paramParts[0].includes('video=')) {
+			} else if (~paramParts[0].indexOf('video=')) {
 				twitchId = `v${paramParts[1]}`;
 				break;
 			}
@@ -173,7 +173,7 @@ const twitchApi = {
 		const parts = url.split('?');
 		url = parts[0];
 		const id = url.substring(url.lastIndexOf('/') + 1);
-		return id.match(/^\d+$/i) !== null ? 'v' + id : id;
+		return /^\d+$/i.test(id) !== null ? 'v' + id : id;
 	},
 
 	/**
@@ -184,7 +184,7 @@ const twitchApi = {
 	 * @returns {String}
 	 */
 	getTwitchType: (id) => {
-		return id.match(/^v\d+/i) !== null ? 'video' : 'channel';
+		return /^v\d+/i.test(id) !== null ? 'video' : 'channel';
 	}
 };
 
@@ -201,7 +201,7 @@ const TwitchIframeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => ['video/twitch', 'video/x-twitch'].includes(type),
+	canPlayType: (type) => ~['video/twitch', 'video/x-twitch'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -539,9 +539,6 @@ const TwitchIframeRenderer = {
 	}
 };
 
-mejs.Utils.typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return (url.includes('//www.twitch.tv') || url.includes('//player.twitch.tv')) ? 'video/x-twitch' : null;
-});
+mejs.Utils.typeChecks.push((url) => /\/\/(www|player).twitch.tv/i.test(url) ? 'video/x-twitch' : null);
 
 mejs.Renderers.add(TwitchIframeRenderer);

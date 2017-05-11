@@ -150,10 +150,10 @@ var twitchApi = {
 
 		for (var i = 0, total = parameters.length; i < total; i++) {
 			var paramParts = parameters[i].split('=');
-			if (paramParts[0].includes('channel=')) {
+			if (~paramParts[0].indexOf('channel=')) {
 				twitchId = paramParts[1];
 				break;
-			} else if (paramParts[0].includes('video=')) {
+			} else if (~paramParts[0].indexOf('video=')) {
 				twitchId = 'v' + paramParts[1];
 				break;
 			}
@@ -179,7 +179,8 @@ var twitchApi = {
 		var parts = url.split('?');
 		url = parts[0];
 		var id = url.substring(url.lastIndexOf('/') + 1);
-		return id.match(/^\d+$/i) !== null ? 'v' + id : id;
+		return (/^\d+$/i.test(id) !== null ? 'v' + id : id
+		);
 	},
 
 	/**
@@ -190,7 +191,8 @@ var twitchApi = {
   * @returns {String}
   */
 	getTwitchType: function getTwitchType(id) {
-		return id.match(/^v\d+/i) !== null ? 'video' : 'channel';
+		return (/^v\d+/i.test(id) !== null ? 'video' : 'channel'
+		);
 	}
 };
 
@@ -208,7 +210,7 @@ var TwitchIframeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return ['video/twitch', 'video/x-twitch'].includes(type);
+		return ~['video/twitch', 'video/x-twitch'].indexOf(type.toLowerCase());
 	},
 
 	/**
@@ -528,8 +530,8 @@ var TwitchIframeRenderer = {
 };
 
 mejs.Utils.typeChecks.push(function (url) {
-	url = url.toLowerCase();
-	return url.includes('//www.twitch.tv') || url.includes('//player.twitch.tv') ? 'video/x-twitch' : null;
+	return (/\/\/(www|player).twitch.tv/i.test(url) ? 'video/x-twitch' : null
+	);
 });
 
 mejs.Renderers.add(TwitchIframeRenderer);

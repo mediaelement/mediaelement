@@ -106,7 +106,7 @@ const SoundCloudIframeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => ['video/soundcloud', 'video/x-soundcloud'].includes(type),
+	canPlayType: (type) => ~['video/soundcloud', 'video/x-soundcloud'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -432,9 +432,6 @@ const SoundCloudIframeRenderer = {
  * Register SoundCloud type based on URL structure
  *
  */
-mejs.Utils.typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return (url.includes('//soundcloud.com') || url.includes('//w.soundcloud.com')) ? 'video/x-soundcloud' : null;
-});
+mejs.Utils.typeChecks.push((url) => /\/\/(w\.)?soundcloud.com/i.test(url) ? 'video/x-soundcloud' : null);
 
 mejs.Renderers.add(SoundCloudIframeRenderer);

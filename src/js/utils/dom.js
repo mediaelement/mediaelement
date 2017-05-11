@@ -124,8 +124,8 @@ export function ajax(url, dataType, success, error) {
 			break;
 	}
 
-	if (!type.includes('application/x-www-form-urlencoded')) {
-		accept = type + ', */*; q=0.01';
+	if (type !== 'application/x-www-form-urlencoded') {
+		accept = `${type}, */*; q=0.01`;
 	}
 
 	if (xhr) {

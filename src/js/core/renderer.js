@@ -51,13 +51,13 @@ class Renderer {
 		if (!renderersLength) {
 			const
 				rendererIndicator = [
-					/^(html5|native)/,
-					/^flash/,
-					/iframe$/,
+					/^(html5|native)/i,
+					/^flash/i,
+					/iframe$/i,
 				],
 				rendererRanking = (renderer) => {
 					for (let i = 0, total = rendererIndicator.length; i < total; i++) {
-						if (renderer.match(rendererIndicator[i]) !== null) {
+						if (rendererIndicator[i].test(renderer)) {
 							return i;
 						}
 					}

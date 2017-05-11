@@ -32,12 +32,12 @@ const HtmlMediaElement = {
 
 		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS;
 		// also consider URLs that might have obfuscated URLs
-		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
-			(['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-			'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
+		if ((IS_ANDROID && /\/mp(3|4)$/i.test(type)) ||
+			(~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+			'video/hls'].indexOf(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
-			return mediaElement.canPlayType(type).replace(/no/, '');
+			return mediaElement.canPlayType(type.toLowerCase()).replace(/no/, '');
 		} else {
 			return '';
 		}
@@ -76,7 +76,7 @@ const HtmlMediaElement = {
 				node[`get${capName}`] = () => node[propName];
 
 				node[`set${capName}`] = (value) => {
-					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
 						node[propName] = value;
 					}
 				};

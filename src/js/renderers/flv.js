@@ -128,7 +128,7 @@ const FlvNativeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => HAS_MSE && ['video/x-flv', 'video/flv'].includes(type),
+	canPlayType: (type) => HAS_MSE && ~['video/x-flv', 'video/flv'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -161,7 +161,7 @@ const FlvNativeRenderer = {
 				node[`get${capName}`] = () => flvPlayer !== null ? node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
 						if (flvPlayer !== null) {
 							node[propName] = value;
 
@@ -273,9 +273,6 @@ const FlvNativeRenderer = {
  * Register Native FLV type based on URL structure
  *
  */
-typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('.flv') ? 'video/flv' : null;
-});
+typeChecks.push((url) => ~(url.toLowerCase()).indexOf('.flv') ? 'video/flv' : null);
 
 renderer.add(FlvNativeRenderer);

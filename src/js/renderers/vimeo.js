@@ -132,7 +132,7 @@ const vimeoIframeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => ['video/vimeo', 'video/x-vimeo'].includes(type),
+	canPlayType: (type) => ~['video/vimeo', 'video/x-vimeo'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -479,7 +479,7 @@ const vimeoIframeRenderer = {
 			width = mediaElement.originalNode.width,
 			vimeoContainer = document.createElement('iframe'),
 			standardUrl = `//player.vimeo.com/video/${vimeoApi.getVimeoId(mediaFiles[0].src)}`,
-			queryArgs = mediaFiles[0].src.includes('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : ''
+			queryArgs = ~mediaFiles[0].src.indexOf('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : ''
 		;
 
 		// Create Vimeo <iframe> markup
@@ -525,9 +525,6 @@ const vimeoIframeRenderer = {
  * Register Vimeo type based on URL structure
  *
  */
-mejs.Utils.typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('//player.vimeo') || url.includes('vimeo.com') ? 'video/x-vimeo' : null;
-});
+mejs.Utils.typeChecks.push((url) => /(\/\/player\.vimeo|vimeo\.com)/i.test(url) ? 'video/x-vimeo' : null);
 
 mejs.Renderers.add(vimeoIframeRenderer);

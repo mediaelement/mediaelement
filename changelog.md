@@ -7,6 +7,7 @@
 * Added missing conditional for bug with hidden iframes in Firefox @rafa8626
 * Fixed typo in `Vimeo` renderer @rafa8626
 * Added workflow to solve issue with iOS and HTTPS playing media @rafa8626
+* Changed `match` to `test` and `includes` to `indexOf` to improve performance @rafa8626
 
 *4.1.0 (2017/05/04)*
 

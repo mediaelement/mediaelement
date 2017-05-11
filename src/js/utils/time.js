@@ -107,7 +107,7 @@ export function timeCodeToSeconds (time, fps = 25) {
 		time = time.replace(';', ':');
 	}
 
-	if (!time.match(/\d{2}(\:\d{2}){0,3}/)) {
+	if (!/\d{2}(\:\d{2}){0,3}/i.test(time)) {
 		throw new TypeError('Time code must have the format `00:00:00`');
 	}
 
@@ -194,7 +194,7 @@ export function calculateTimeFormat (time, options, fps = 25) {
 	;
 
 	for (let i = 0, len = lis.length; i < len; i++) {
-		if (format.indexOf(lis[i][1]) > -1) {
+		if (~format.indexOf(lis[i][1])) {
 			required = true;
 		}
 		else if (required) {
@@ -238,7 +238,7 @@ export function convertSMPTEtoSeconds (SMPTE) {
 
 	SMPTE = SMPTE.replace(',', '.');
 
-	const decimalLen = (SMPTE.indexOf('.') > -1) ? SMPTE.split('.')[1].length : 0;
+	const decimalLen = ~SMPTE.indexOf('.') ? SMPTE.split('.')[1].length : 0;
 
 	let
 		secs = 0,
