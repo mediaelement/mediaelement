@@ -1127,7 +1127,7 @@ class MediaElementPlayer {
 				while (el) {
 					try {
 						// Firefox has an issue calculating dimensions on hidden iframes
-						if (IS_FIREFOX && window.self !== window.top) {
+						if (IS_FIREFOX && el.tagName.toLowerCase() === 'html' && window.self !== window.top) {
 							if (window.frameElement !== null) {
 								return window.frameElement;
 							} else {
