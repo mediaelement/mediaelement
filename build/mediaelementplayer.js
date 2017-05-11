@@ -86,7 +86,7 @@ i18n.language = function () {
 			throw new TypeError('Language code must be a string value');
 		}
 
-		if (!args[0].match(/^[a-z]{2}(\-[a-z]{2})?$/i)) {
+		if (!/^[a-z]{2}(\-[a-z]{2})?$/i.test(args[0])) {
 			throw new TypeError('Language code must have format `xx` or `xx-xx`');
 		}
 
@@ -7058,14 +7058,14 @@ function createEvent(eventName, target) {
 		throw new Error('Event name must be a string');
 	}
 
-	var eventFrags = eventName.match(/[a-z]+\.([a-z]+)/ig),
+	var eventFrags = eventName.match(/([a-z]+\.([a-z]+))/i),
 	    detail = {
 		target: target
 	};
 
 	if (eventFrags !== null) {
-		eventName = eventFrags[0];
-		detail.namespace = eventFrags[1];
+		eventName = eventFrags[1];
+		detail.namespace = eventFrags[2];
 	}
 
 	return new window.CustomEvent(eventName, {
