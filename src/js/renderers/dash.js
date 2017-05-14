@@ -54,7 +54,7 @@ const NativeDash = {
 		} else if (!NativeDash.isScriptLoaded) {
 
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 			const
 				script = document.createElement('script'),

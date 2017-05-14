@@ -58,7 +58,7 @@ const NativeFlv = {
 		} else if (!NativeFlv.isMediaStarted) {
 
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
+				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
 
 			const
 				script = document.createElement('script'),
