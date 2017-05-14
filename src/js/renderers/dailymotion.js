@@ -44,7 +44,7 @@ const DailyMotionApi = {
 		if (!DailyMotionApi.isSDKStarted) {
 			const e = document.createElement('script');
 			e.async = true;
-			e.src = '//api.dmcdn.net/all.js';
+			e.src = 'https://api.dmcdn.net/all.js';
 			const s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(e, s);
 			DailyMotionApi.isSDKStarted = true;
