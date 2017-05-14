@@ -58,7 +58,7 @@ const NativeHls = {
 		} else if (!NativeHls.isMediaStarted) {
 
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+				settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
 			const
 				script = document.createElement('script'),
