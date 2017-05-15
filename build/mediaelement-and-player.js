@@ -5900,7 +5900,7 @@ var NativeDash = {
 			NativeDash.createInstance(settings);
 		} else if (!NativeDash.isScriptLoaded) {
 
-			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 			var script = _document2.default.createElement('script'),
 			    firstScriptTag = _document2.default.getElementsByTagName('script')[0];
@@ -5958,7 +5958,7 @@ var DashNativeRenderer = {
 		prefix: 'native_dash',
 		dash: {
 			// Special config: used to set the local path/URL of dash.js player library
-			path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
+			path: 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js',
 			debug: false
 		}
 	},
@@ -6736,7 +6736,7 @@ var NativeFlv = {
 			NativeFlv.createInstance(settings);
 		} else if (!NativeFlv.isMediaStarted) {
 
-			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
+			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
 
 			var script = _document2.default.createElement('script'),
 			    firstScriptTag = _document2.default.getElementsByTagName('script')[0];
@@ -6791,7 +6791,7 @@ var FlvNativeRenderer = {
 		prefix: 'native_flv',
 		flv: {
 			// Special config: used to set the local path/URL of flv.js library
-			path: '//cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js',
+			path: 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js',
 			// To modify more elements from FLV player,
 			// see https://github.com/Bilibili/flv.js/blob/master/docs/api.md#config
 			cors: true
@@ -7022,7 +7022,7 @@ var NativeHls = {
 			NativeHls.createInstance(settings);
 		} else if (!NativeHls.isMediaStarted) {
 
-			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
 			var script = _document2.default.createElement('script'),
 			    firstScriptTag = _document2.default.getElementsByTagName('script')[0];
@@ -7079,7 +7079,7 @@ var HlsNativeRenderer = {
 		prefix: 'native_hls',
 		hls: {
 			// Special config: used to set the local path/URL of hls.js library
-			path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
+			path: 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js',
 			// To modify more elements from hls.js,
 			// see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
 			autoStartLoad: false,
@@ -7544,7 +7544,7 @@ var YouTubeApi = {
 	loadIframeApi: function loadIframeApi() {
 		if (!YouTubeApi.isIframeStarted) {
 			var tag = _document2.default.createElement('script');
-			tag.src = '//www.youtube.com/player_api';
+			tag.src = 'https://www.youtube.com/player_api';
 			var firstScriptTag = _document2.default.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 			YouTubeApi.isIframeStarted = true;

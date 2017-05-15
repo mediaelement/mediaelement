@@ -10,6 +10,7 @@
 * Changed `match` to `test` and `includes` to `indexOf` to improve performance @rafa8626
 * Fixed responsive mode within iframe (https://github.com/mediaelement/mediaelement/pull/2207) @lucash
 * Updated German translation (https://github.com/mediaelement/mediaelement/pull/2210) @SoftCreatR 
+* Enforced https protocol on external libraries (https://github.com/mediaelement/mediaelement/pull/2212) @jimmywarting
 
 *4.1.0 (2017/05/04)*
 

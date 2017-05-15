@@ -62,7 +62,7 @@ var twitchApi = {
 
 			var done = false;
 
-			script.src = '//player.twitch.tv/js/embed/v1.js';
+			script.src = 'https://player.twitch.tv/js/embed/v1.js';
 
 			// Attach handlers for all browsers
 			script.onload = script.onreadystatechange = function () {

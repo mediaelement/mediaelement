@@ -59,7 +59,7 @@ var SoundCloudApi = {
 
 			var done = false;
 
-			script.src = '//w.soundcloud.com/player/api.js';
+			script.src = 'https://w.soundcloud.com/player/api.js';
 
 			// Attach handlers for all browsers
 			// Is onload enough now? do IE9 support it?
