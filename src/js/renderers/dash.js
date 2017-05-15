@@ -54,7 +54,7 @@ const NativeDash = {
 		} else if (!NativeDash.isScriptLoaded) {
 
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
 			const
 				script = document.createElement('script'),
@@ -115,7 +115,7 @@ const DashNativeRenderer = {
 		prefix: 'native_dash',
 		dash: {
 			// Special config: used to set the local path/URL of dash.js player library
-			path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
+			path: 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js',
 			debug: false
 		}
 	},

@@ -58,7 +58,7 @@ const NativeHls = {
 		} else if (!NativeHls.isMediaStarted) {
 
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : '//cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+				settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
 			const
 				script = document.createElement('script'),
@@ -118,7 +118,7 @@ const HlsNativeRenderer = {
 		prefix: 'native_hls',
 		hls: {
 			// Special config: used to set the local path/URL of hls.js library
-			path: '//cdn.jsdelivr.net/hls.js/latest/hls.min.js',
+			path: 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js',
 			// To modify more elements from hls.js,
 			// see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
 			autoStartLoad: false,
