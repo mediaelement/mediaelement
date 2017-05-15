@@ -417,8 +417,8 @@ const YouTubeIframeRenderer = {
 
 		const
 			isAudio = mediaElement.originalNode.tagName.toLowerCase() === 'audio',
-			height = isAudio ? '0' : mediaElement.originalNode.height,
-			width = isAudio ? '0' : mediaElement.originalNode.width,
+			height = isAudio ? '1' : mediaElement.originalNode.height,
+			width = isAudio ? '1' : mediaElement.originalNode.width,
 			videoId = YouTubeApi.getYouTubeId(mediaFiles[0].src),
 			youtubeSettings = {
 				id: youtube.id,
