@@ -8,10 +8,11 @@
 * Fixed typo in `Vimeo` renderer @rafa8626
 * Added workflow to solve issue with iOS and HTTPS playing media @rafa8626
 * Changed `match` to `test` and `includes` to `indexOf` to improve performance @rafa8626
-* Fixed responsive mode within iframe (https://github.com/mediaelement/mediaelement/pull/2207) @lucash
+* Fixed `responsive` mode within iframe (https://github.com/mediaelement/mediaelement/pull/2207) @lucash
 * Updated German translation (https://github.com/mediaelement/mediaelement/pull/2210) @SoftCreatR 
 * Enforced https protocol on external libraries (https://github.com/mediaelement/mediaelement/pull/2212) @jimmywarting
 * Fixed issue when using YouTube in audio tag triggering double buffering/play events when starting media @rafa8626
+* Fixed `fill` mode within iframe @rafa8626
 
 *4.1.0 (2017/05/04)*
 

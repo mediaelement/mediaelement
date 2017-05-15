@@ -1247,11 +1247,15 @@ class MediaElementPlayer {
 	setFillMode () {
 		const t = this;
 
-		let parent;
+		let
+			parent,
+			isIframe = false
+		;
 
 		try {
-			if (IS_FIREFOX && window.self !== window.top) {
-				parent = window.frameElement.parentNode;
+			if (window.self !== window.top) {
+				isIframe = true;
+				parent = window.frameElement;
 			} else {
 				parent = t.outerContainer;
 			}
@@ -1285,11 +1289,12 @@ class MediaElementPlayer {
 			}
 		}
 
-		if (!parseFloat(parentStyles.width)) {
+		// Avoid overriding width/height if element is inside an iframe
+		if (!isIframe && !parseFloat(parentStyles.width)) {
 			parent.style.width = `${t.media.offsetWidth}px`;
 		}
 
-		if (!parseFloat(parentStyles.height)) {
+		if (!isIframe && !parseFloat(parentStyles.height)) {
 			parent.style.height = `${t.media.offsetHeight}px`;
 		}
 

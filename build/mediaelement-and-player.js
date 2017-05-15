@@ -5052,11 +5052,13 @@ var MediaElementPlayer = function () {
 		value: function setFillMode() {
 			var t = this;
 
-			var parent = void 0;
+			var parent = void 0,
+			    isIframe = false;
 
 			try {
-				if (_constants.IS_FIREFOX && _window2.default.self !== _window2.default.top) {
-					parent = _window2.default.frameElement.parentNode;
+				if (_window2.default.self !== _window2.default.top) {
+					isIframe = true;
+					parent = _window2.default.frameElement;
 				} else {
 					parent = t.outerContainer;
 				}
@@ -5090,11 +5092,11 @@ var MediaElementPlayer = function () {
 				}
 			}
 
-			if (!parseFloat(parentStyles.width)) {
+			if (!isIframe && !parseFloat(parentStyles.width)) {
 				parent.style.width = t.media.offsetWidth + 'px';
 			}
 
-			if (!parseFloat(parentStyles.height)) {
+			if (!isIframe && !parseFloat(parentStyles.height)) {
 				parent.style.height = t.media.offsetHeight + 'px';
 			}
 
