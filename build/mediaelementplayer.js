@@ -5449,7 +5449,7 @@ var MediaElementPlayer = function () {
 			bigPlay.addEventListener('keydown', function (e) {
 				var keyPressed = e.keyCode || e.which || 0;
 				// On Enter, play media
-				if (keyPressed === 13) {
+				if (keyPressed === 13 || _constants.IS_FIREFOX && keyPressed === 32) {
 					var event = (0, _general.createEvent)('click', bigPlay);
 					bigPlay.dispatchEvent(event);
 					return false;

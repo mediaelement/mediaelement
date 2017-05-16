@@ -1647,7 +1647,7 @@ class MediaElementPlayer {
 		bigPlay.addEventListener('keydown', function (e) {
 			const keyPressed = e.keyCode || e.which || 0;
 			// On Enter, play media
-			if (keyPressed === 13) {
+			if (keyPressed === 13 || (IS_FIREFOX && keyPressed === 32)) {
 				const event = createEvent('click', bigPlay);
 				bigPlay.dispatchEvent(event);
 				return false;
