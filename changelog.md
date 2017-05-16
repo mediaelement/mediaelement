@@ -1,5 +1,9 @@
 ### Version History
 
+*4.1.2 (2017/??/??)*
+
+* Fixed issues with Accessibility in Chapters/Captions and Volume slider @rafa8626 
+
 *4.1.1 (2017/05/16)*
 
 * Added missing conditional to reuse `exitFullscreen` method @rafa8626

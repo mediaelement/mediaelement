@@ -70,19 +70,19 @@ Object.assign(MediaElementPlayer.prototype, {
 			unmuteText = isString(t.options.unmuteText) ? t.options.unmuteText : i18n.t('mejs.unmute'),
 			volumeControlText = isString(t.options.allyVolumeControlText) ? t.options.allyVolumeControlText : i18n.t('mejs.volume-help-text'),
 			mute = document.createElement('div')
-			;
+		;
 
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
-			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider" tabindex="0" ` +
-				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider"` +
+			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider" ` +
+				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
 				`aria-orientation="vertical">` +
 				`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}volume-total">` +
 					`<div class="${t.options.classPrefix}volume-current"></div>` +
-					`<div class="${t.options.classPrefix}volume-handle" tabindex="0"></div>` +
+					`<div class="${t.options.classPrefix}volume-handle"></div>` +
 				`</div>` +
 			`</a>`;
 
@@ -93,7 +93,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			const anchor = document.createElement('a');
 			anchor.className = `${t.options.classPrefix}horizontal-volume-slider`;
 			anchor.href = 'javascript:void(0);';
-			anchor.tabIndex = 0;
 			anchor.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
 			anchor.setAttribute('aria-valuemin', 0);
 			anchor.setAttribute('aria-valuemax', 100);
@@ -101,7 +100,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			anchor.innerHTML += `<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}horizontal-volume-total">` +
 				`<div class="${t.options.classPrefix}horizontal-volume-current"></div>` +
-				`<div class="${t.options.classPrefix}horizontal-volume-handle" tabindex="0"></div>` +
+				`<div class="${t.options.classPrefix}horizontal-volume-handle"></div>` +
 				`</div>`;
 			mute.parentNode.insertBefore(anchor, mute.nextSibling);
 		}
@@ -115,7 +114,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-current`),
 			volumeHandle = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-handle`) :
 				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-handle`),
-			button = mute.firstElementChild,
 
 			/**
 			 * @private
@@ -216,6 +214,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		;
 
+		mute.addEventListener('click', () => {
+			media.setMuted(!media.muted);
+			const event = createEvent('volumechange', media);
+			media.dispatchEvent(event);
+		});
 		mute.addEventListener('mouseenter', (e) => {
 			if (e.target === mute) {
 				volumeSlider.style.display = 'block';
@@ -228,6 +231,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
 		});
+
+		mute.addEventListener('focusout', (e) => {
+			if (!e.relatedTarget.matches(`.${t.options.classPrefix}volume-slider`) && mode === 'vertical') {
+				volumeSlider.style.display = 'none';
+			}
+		});
 		mute.addEventListener('mouseleave', () => {
 			mouseIsOver = false;
 			if (!mouseIsDown && mode === 'vertical') {
@@ -236,9 +245,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 		mute.addEventListener('focusout', () => {
 			mouseIsOver = false;
-			if (!mouseIsDown && mode === 'vertical') {
-				volumeSlider.style.display = 'none';
-			}
 		});
 		mute.addEventListener('keydown', (e) => {
 
@@ -287,6 +293,16 @@ Object.assign(MediaElementPlayer.prototype, {
 		volumeSlider.addEventListener('mouseover', () => {
 			mouseIsOver = true;
 		});
+		volumeSlider.addEventListener('focusin', () => {
+			volumeSlider.style.display = 'block';
+			mouseIsOver = true;
+		});
+		volumeSlider.addEventListener('focusout', () => {
+			mouseIsOver = false;
+			if (!mouseIsDown && mode === 'vertical') {
+				volumeSlider.style.display = 'none';
+			}
+		});
 		volumeSlider.addEventListener('mousedown', (e) => {
 			handleVolumeMove(e);
 			t.globalBind('mousemove.vol', (event) => {
@@ -309,23 +325,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			e.preventDefault();
 			e.stopPropagation();
-		});
-
-		// MUTE button
-		button.addEventListener('click', () => {
-			media.setMuted(!media.muted);
-			const event = createEvent('volumechange', media);
-			media.dispatchEvent(event);
-		});
-		button.addEventListener('focus', () => {
-			if (mode === 'vertical') {
-				volumeSlider.style.display = 'block';
-			}
-		});
-		button.addEventListener('blur', () => {
-			if (mode === 'vertical') {
-				volumeSlider.style.display = 'none';
-			}
 		});
 
 		// listen for volume change events from other sources
