@@ -977,6 +977,19 @@ class MediaElementPlayer {
 				}
 			});
 
+			// Disable focus outline to improve look-and-feel for regular users
+			t.container.addEventListener('click', function (e) {
+				dom.addClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
+			});
+
+			// Enable focus outline for Accessibility purposes
+			t.container.addEventListener('focusin', function (e) {
+				dom.removeClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
+				if (t.controlsEnabled && !t.options.alwaysShowControls) {
+					t.showControls(false);
+				}
+			});
+
 			t.container.addEventListener('focusout', (e) => {
 				setTimeout(() => {
 					//FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
@@ -1008,33 +1021,6 @@ class MediaElementPlayer {
 
 				// always adjust controls
 				t.setControlsSize();
-			});
-
-			// Disable focus outline to improve look-and-feel for regular users
-			t.globalBind('click', (e) => {
-				if (e.target.matches(`.${t.options.classPrefix}container`)) {
-					dom.addClass(e.target, `${t.options.classPrefix}container-keyboard-inactive`);
-				} else if (e.target.closest(`.${t.options.classPrefix}container`)) {
-					dom.addClass(e.target.closest(`.${t.options.classPrefix}container`), `${t.options.classPrefix}container-keyboard-inactive`);
-				}
-			});
-
-			// Enable focus outline for Accessibility purposes
-			t.globalBind('keydown', (e) => {
-				if (e.target.matches(`.${t.options.classPrefix}container`)) {
-					dom.removeClass(e.target, `${t.options.classPrefix}container-keyboard-inactive`);
-
-					if (t.controlsEnabled && !t.options.alwaysShowControls) {
-						t.showControls(false);
-					}
-
-				} else if (e.target.closest(`.${t.options.classPrefix}container`)) {
-					dom.removeClass(event.target.closest(`.${t.options.classPrefix}container`), `${t.options.classPrefix}container-keyboard-inactive`);
-
-					if (t.controlsEnabled && !t.options.alwaysShowControls) {
-						t.showControls(false);
-					}
-				}
 			});
 		}
 
@@ -1657,6 +1643,17 @@ class MediaElementPlayer {
 				button.setAttribute('aria-pressed', !!pressed);
 			}
 		});
+		// Allow keyboard to execute action on play button
+		bigPlay.addEventListener('keydown', function (e) {
+			const keyPressed = e.keyCode || e.which || 0;
+			// On Enter, play media
+			if (keyPressed === 13) {
+				const event = createEvent('click', bigPlay);
+				bigPlay.dispatchEvent(event);
+				return false;
+			}
+		});
+
 		layers.appendChild(bigPlay);
 
 		if (t.media.rendererName !== null && ((/(youtube|facebook)/i.test(t.media.rendererName) &&
