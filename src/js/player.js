@@ -562,7 +562,7 @@ class MediaElementPlayer {
 
 		doAnimation = doAnimation === undefined || doAnimation;
 
-		if (t.controlsAreVisible) {
+		if (t.controlsAreVisible || !t.isVideo) {
 			return;
 		}
 
@@ -583,6 +583,7 @@ class MediaElementPlayer {
 		} else {
 			dom.removeClass(t.controls, `${t.options.classPrefix}offscreen`);
 			t.controls.style.display = '';
+			t.controls.style.opacity = 1;
 
 			// any additional controls people might add and want to hide
 			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
@@ -635,6 +636,7 @@ class MediaElementPlayer {
 			// hide main controls
 			dom.addClass(t.controls, `${t.options.classPrefix}offscreen`);
 			t.controls.style.display = '';
+			t.controls.style.opacity = 0;
 
 			// hide others
 			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
@@ -979,7 +981,7 @@ class MediaElementPlayer {
 				setTimeout(() => {
 					//FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
 					if (e.relatedTarget) {
-						if (t.keyboardAction && !e.relatedTarget.closest('.mejs-container')) {
+						if (t.keyboardAction && !e.relatedTarget.closest(`.${t.options.classPrefix}container`)) {
 							t.keyboardAction = false;
 							if (t.isVideo && !t.options.alwaysShowControls) {
 								t.hideControls(true);
@@ -1021,8 +1023,17 @@ class MediaElementPlayer {
 			t.globalBind('keydown', (e) => {
 				if (e.target.matches(`.${t.options.classPrefix}container`)) {
 					dom.removeClass(e.target, `${t.options.classPrefix}container-keyboard-inactive`);
+
+					if (t.controlsEnabled && !t.options.alwaysShowControls) {
+						t.showControls(false);
+					}
+
 				} else if (e.target.closest(`.${t.options.classPrefix}container`)) {
 					dom.removeClass(event.target.closest(`.${t.options.classPrefix}container`), `${t.options.classPrefix}container-keyboard-inactive`);
+
+					if (t.controlsEnabled && !t.options.alwaysShowControls) {
+						t.showControls(false);
+					}
 				}
 			});
 		}

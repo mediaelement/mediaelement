@@ -375,11 +375,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     transform: scaleX(0) !important;
 }
 
-.mejs-time-handle, .mejs-time-handle-baby {
+.mejs-time-handle, .mejs-time-handle-content {
     position: absolute;
     cursor: pointer;
-    width: 20px;
-    height: 20px;
+    width: 10px;
+    height: 10px;
     border: 4px solid transparent;
     z-index: 11;
     left: 0;
@@ -387,16 +387,16 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     transform: translateX(0px);
 }
 
-.mejs-time-handle-baby {
+.mejs-time-handle-content {
     left: -4px;
     border: 4px solid rgba(255, 255, 255, 0.9);
     -ms-transform: scale(0);
     transform: scale(0);
-    top: -8px;
+    top: -4px;
     border-radius: 50%;
 }
 
-.mejs-time-rail:hover .mejs-time-handle-baby, .mejs-time-rail .mejs-time-handle-baby:focus, .mejs-time-rail .mejs-time-handle-baby:active {
+.mejs-time-rail:hover .mejs-time-handle-content, .mejs-time-rail .mejs-time-handle-content:focus, .mejs-time-rail .mejs-time-handle-content:active {
     -ms-transform: scale(1);
     transform: scale(1);
 }

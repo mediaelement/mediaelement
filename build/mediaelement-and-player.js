@@ -4359,7 +4359,7 @@ var MediaElementPlayer = function () {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (t.controlsAreVisible) {
+			if (t.controlsAreVisible || !t.isVideo) {
 				return;
 			}
 
@@ -4387,6 +4387,7 @@ var MediaElementPlayer = function () {
 			} else {
 				dom.removeClass(t.controls, t.options.classPrefix + 'offscreen');
 				t.controls.style.display = '';
+				t.controls.style.opacity = 1;
 
 				// any additional controls people might add and want to hide
 				var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
@@ -4442,6 +4443,7 @@ var MediaElementPlayer = function () {
 				// hide main controls
 				dom.addClass(t.controls, t.options.classPrefix + 'offscreen');
 				t.controls.style.display = '';
+				t.controls.style.opacity = 0;
 
 				// hide others
 				var controls = t.container.querySelectorAll('.' + t.options.classPrefix + 'control');
@@ -4784,7 +4786,7 @@ var MediaElementPlayer = function () {
 					setTimeout(function () {
 						//FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
 						if (e.relatedTarget) {
-							if (t.keyboardAction && !e.relatedTarget.closest('.mejs-container')) {
+							if (t.keyboardAction && !e.relatedTarget.closest('.' + t.options.classPrefix + 'container')) {
 								t.keyboardAction = false;
 								if (t.isVideo && !t.options.alwaysShowControls) {
 									t.hideControls(true);
@@ -4825,8 +4827,16 @@ var MediaElementPlayer = function () {
 				t.globalBind('keydown', function (e) {
 					if (e.target.matches('.' + t.options.classPrefix + 'container')) {
 						dom.removeClass(e.target, t.options.classPrefix + 'container-keyboard-inactive');
+
+						if (t.controlsEnabled && !t.options.alwaysShowControls) {
+							t.showControls(false);
+						}
 					} else if (e.target.closest('.' + t.options.classPrefix + 'container')) {
 						dom.removeClass(event.target.closest('.' + t.options.classPrefix + 'container'), t.options.classPrefix + 'container-keyboard-inactive');
+
+						if (t.controlsEnabled && !t.options.alwaysShowControls) {
+							t.showControls(false);
+						}
 					}
 				});
 			}
@@ -5092,6 +5102,7 @@ var MediaElementPlayer = function () {
 				}
 			}
 
+			// Avoid overriding width/height if element is inside an iframe
 			if (!isIframe && !parseFloat(parentStyles.width)) {
 				parent.style.width = t.media.offsetWidth + 'px';
 			}

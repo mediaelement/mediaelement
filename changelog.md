@@ -13,6 +13,7 @@
 * Enforced https protocol on external libraries (https://github.com/mediaelement/mediaelement/pull/2212) @jimmywarting
 * Fixed issue when using YouTube in audio tag triggering double buffering/play events when starting media @rafa8626
 * Fixed `fill` mode within iframe @rafa8626
+* Fixed player accessibility using Tab key and avoid hidding controls on audio element @rafa8626 
 
 *4.1.0 (2017/05/04)*
 
