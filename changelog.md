@@ -1,6 +1,6 @@
 ### Version History
 
-*4.1.1 (2017/??/??)*
+*4.1.1 (2017/05/16)*
 
 * Added missing conditional to reuse `exitFullscreen` method @rafa8626
 * Added new code snippet to use player with `AudioContext.decodeAudioData()` @rafa8626
