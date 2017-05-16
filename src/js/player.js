@@ -712,7 +712,7 @@ class MediaElementPlayer {
 			t.enableControls();
 		}
 
-		if (t.container.querySelector(`.${t.options.classPrefix}overlay-play`)) {
+		if (t.container && t.container.querySelector(`.${t.options.classPrefix}overlay-play`)) {
 			t.container.querySelector(`.${t.options.classPrefix}overlay-play`).style.display = '';
 		}
 
