@@ -503,7 +503,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.captionsButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}captions-selector-list-item">` +
 			`<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
 				`name="${t.id}_captions" id="${trackId}" value="${trackId}" disabled>` +
-			`<label class="${t.options.classPrefix}captions-selector-label">${label} (loading)</label>` +
+			`<label class="${t.options.classPrefix}captions-selector-label"` +
+				`for="${trackId}">${label} (loading)</label>` +
 		`</li>`;
 	},
 
@@ -691,8 +692,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.chaptersButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}chapters-selector-list-item" ` +
 				`role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">` +
 				`<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
-					`name="${t.id}_chapters" value="${chapters.entries[i].start}" disabled>` +
-				`<label class="${t.options.classPrefix}chapters-selector-label">${chapters.entries[i].text}</label>` +
+					`name="${t.id}_chapters" id="${t.id}_chapters_${i}" value="${chapters.entries[i].start}" disabled>` +
+				`<label class="${t.options.classPrefix}chapters-selector-label"`+
+					`for="${t.id}_chapters_${i}">${chapters.entries[i].text}</label>` +
 			`</li>`;
 		}
 

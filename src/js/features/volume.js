@@ -76,11 +76,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		mute.innerHTML = mode === 'horizontal' ?
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
-			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider">` +
+			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider" tabindex="0" ` +
+				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider"` +
+				`aria-orientation="vertical">` +
 				`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}volume-total">` +
 					`<div class="${t.options.classPrefix}volume-current"></div>` +
-					`<div class="${t.options.classPrefix}volume-handle"></div>` +
+					`<div class="${t.options.classPrefix}volume-handle" tabindex="0"></div>` +
 				`</div>` +
 			`</a>`;
 
@@ -91,10 +93,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			const anchor = document.createElement('a');
 			anchor.className = `${t.options.classPrefix}horizontal-volume-slider`;
 			anchor.href = 'javascript:void(0);';
+			anchor.tabIndex = 0;
+			anchor.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
+			anchor.setAttribute('aria-valuemin', 0);
+			anchor.setAttribute('aria-valuemax', 100);
+			anchor.setAttribute('role', 'slider');
 			anchor.innerHTML += `<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}horizontal-volume-total">` +
 				`<div class="${t.options.classPrefix}horizontal-volume-current"></div>` +
-				`<div class="${t.options.classPrefix}horizontal-volume-handle"></div>` +
+				`<div class="${t.options.classPrefix}horizontal-volume-handle" tabindex="0"></div>` +
 				`</div>`;
 			mute.parentNode.insertBefore(anchor, mute.nextSibling);
 		}
@@ -269,13 +276,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			 */
 			updateVolumeSlider = () => {
 				const volume = Math.floor(media.volume * 100);
-				volumeSlider.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
-				volumeSlider.setAttribute('aria-valuemin', 0);
-				volumeSlider.setAttribute('aria-valuemax', 100);
 				volumeSlider.setAttribute('aria-valuenow', volume);
 				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
-				volumeSlider.setAttribute('role', 'slider');
-				volumeSlider.tabIndex = -1;
 			}
 		;
 
