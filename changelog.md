@@ -3,6 +3,7 @@
 *4.1.2 (2017/??/??)*
 
 * Fixed issues with Accessibility in Chapters/Captions and Volume slider @rafa8626 
+* Added new resource to documentation @rafa8626
 
 *4.1.1 (2017/05/16)*
 
