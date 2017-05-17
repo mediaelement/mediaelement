@@ -4,6 +4,7 @@
 
 * Fixed issues with Accessibility in Chapters/Captions and Volume slider @rafa8626 
 * Added new resource to documentation @rafa8626
+* Fixed MD broken link (https://github.com/mediaelement/mediaelement/pull/2223) @Mackiovello
 
 *4.1.1 (2017/05/16)*
 
