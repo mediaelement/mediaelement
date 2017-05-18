@@ -86,10 +86,12 @@ However, if you want to bring the latest version and support the `Embeds` functi
 
 1. Just remove the entire content of the folder and Paste the content of the `build` folder from the latest version of `MediaElementJS` inside of it. 
 
-2. Download the [wp-mediaelement.zip](https://github.com/mediaelement/mediaelement/files/842296/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
+2. Download the [wp-mediaelement.zip](https://github.com/mediaelement/mediaelement/files/1009558/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
 
 <a id="wp-functions"></a>
 #### `wp-includes/functions.php`
+
+**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
 
 1. In the `wp_check_filetype()` method, add the following condition inside this loop:    
 ```
@@ -113,6 +115,8 @@ foreach ( $mimes as $ext_preg => $mime_match ) {
 
 <a id="wp-media"></a>
 #### `wp-includes/media.php`
+
+**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
 
 1. In the `wp_get_audio_extensions()` method, add the following extension:
 ```
@@ -144,7 +148,7 @@ $scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-pl
 ```
 and replace all of that until you reach the end of the translations, with this:
 ```
-$scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-player.min.js", array('jquery'), '3.2.4', 1 );
+$scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-player.min.js", array('jquery'), 'X.X.X', 1 );
 did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
     'language' => get_bloginfo( 'language' ),
     'strings'  => array(
@@ -234,7 +238,14 @@ did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
            'mejs.yiddish'             => __( 'Yiddish' ),
     ),
 ) );
+$scripts->add( 'wp-mediaelement', "/wp-includes/js/mediaelement/wp-mediaelement$suffix.js", array('mediaelement'), false, 1 );
+$mejs_settings = array(
+	'pluginPath' => includes_url( 'js/mediaelement/', 'relative' ),
+        'classPrefix' => 'mejs-',
+        'stretching' => 'responsive',
+);
 ```
+being `X.X.X` the latest version you want to install.
 
 2. Remove `$scripts->add( 'froogaloop',  "/wp-includes/js/mediaelement/froogaloop.min.js", array(), '2.0' );` 
    
@@ -244,8 +255,9 @@ $styles->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelementplayer.m
 ```
 with: 
 ```
-$styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css", array(), '3.2.4' );
+$styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css", array(), 'X.X.X' );
 ```   
+being `X.X.X` the latest version you want to install.
 
 <a id="plugins"></a>
 ### Additional plugins
