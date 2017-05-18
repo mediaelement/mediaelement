@@ -1199,9 +1199,9 @@ class MediaElementPlayer {
 		if (t.isVideo) {
 			// Responsive video is based on width: 100% and height: 100%
 			if (t.height === '100%') {
-				newHeight = parseInt(parentWidth * nativeHeight / nativeWidth, 10);
+				newHeight = parseFloat(parentWidth * nativeHeight / nativeWidth, 10);
 			} else {
-				newHeight = t.height >= t.width ? parseInt(parentWidth / aspectRatio, 10) : parseInt(parentWidth * aspectRatio, 10);
+				newHeight = t.height >= t.width ? parseFloat(parentWidth / aspectRatio, 10) : parseFloat(parentWidth * aspectRatio, 10);
 			}
 		} else {
 			newHeight = nativeHeight;
