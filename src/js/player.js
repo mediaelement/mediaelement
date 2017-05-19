@@ -1109,7 +1109,7 @@ class MediaElementPlayer {
 		const t = this;
 
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-		return (~t.height.toString().indexOf('%') || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
+		return (t.height.toString().indexOf('%') !== -1 || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
 			t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
 	}
 
