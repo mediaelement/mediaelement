@@ -6,7 +6,7 @@
 * Added new resource to documentation @rafa8626
 * Fixed MD broken link (https://github.com/mediaelement/mediaelement/pull/2223) @Mackiovello
 * Changed calculation to avoid higher dimensions than expected using `parseFloat` on responsive mode @rafa8626 
-* Updated `installation.md` file for WordPress upgrades @rafa8626 
+* Updated `installation.md` file for WordPress upgrades, and fixed README file @rafa8626 
 * Fixed `hasFluidMode()` method to return proper result (https://github.com/mediaelement/mediaelement/pull/2224) @lucash
 * Fixed issue with logical operators and `~` symbol @rafa8626
 

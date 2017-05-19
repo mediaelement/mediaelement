@@ -63,9 +63,9 @@ In order to successfully install `3.x` in an existing setup, you must consider t
 $('video, audio').mediaelementplayer({
         // Configuration
         success: function(media) {
-                var isNative = media.rendererName.match(/html5|native/);
+                var isNative = /html5|native/i.test(media.rendererName);
                 
-                var isYoutube = media.rendererName.match(/youtube/);
+                var isYoutube = ~media.rendererName.indexOf('youtube');
                 
                 // etc.
         }
