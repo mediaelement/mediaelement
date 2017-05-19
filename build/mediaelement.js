@@ -536,7 +536,7 @@ function MediaElement(idOrNode, options, sources) {
 		// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
 		// only if video/audio tags are detected
 		var tagName = t.mediaElement.originalNode.tagName.toLowerCase();
-		if (~['video', 'audio'].indexOf(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
+		if (['video', 'audio'].indexOf(tagName) > -1 && !t.mediaElement.originalNode.getAttribute('preload')) {
 			t.mediaElement.originalNode.setAttribute('preload', 'none');
 		}
 
@@ -873,7 +873,7 @@ function MediaElement(idOrNode, options, sources) {
   */
 	var processURL = function processURL(url, type) {
 
-		if (~_mejs2.default.html5media.mediaTypes.indexOf(type) && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
+		if (_mejs2.default.html5media.mediaTypes.indexOf(type) > -1 && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
 				if (this.readyState === 4 && this.status === 200) {
@@ -1407,7 +1407,7 @@ var DashNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ~['application/dash+xml'].indexOf(type.toLowerCase());
+		return _constants.HAS_MSE && ['application/dash+xml'].indexOf(type.toLowerCase()) > -1;
 	},
 
 	/**
@@ -2242,7 +2242,7 @@ var FlvNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ~['video/x-flv', 'video/flv'].indexOf(type.toLowerCase());
+		return _constants.HAS_MSE && ['video/x-flv', 'video/flv'].indexOf(type.toLowerCase()) > -1;
 	},
 
 	/**
@@ -2532,7 +2532,7 @@ var HlsNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].indexOf(type.toLowerCase());
+		return _constants.HAS_MSE && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].indexOf(type.toLowerCase()) > -1;
 	},
 
 	/**
@@ -3966,7 +3966,7 @@ function getMimeFromType(type) {
 		throw new Error('`type` argument must be a string');
 	}
 
-	return type && ~type.indexOf(';') ? type.substr(0, type.indexOf(';')) : type;
+	return type && type.indexOf(';') > -1 ? type.substr(0, type.indexOf(';')) : type;
 }
 
 /**

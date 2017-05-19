@@ -536,7 +536,7 @@ function MediaElement(idOrNode, options, sources) {
 		// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
 		// only if video/audio tags are detected
 		var tagName = t.mediaElement.originalNode.tagName.toLowerCase();
-		if (~['video', 'audio'].indexOf(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
+		if (['video', 'audio'].indexOf(tagName) > -1 && !t.mediaElement.originalNode.getAttribute('preload')) {
 			t.mediaElement.originalNode.setAttribute('preload', 'none');
 		}
 
@@ -873,7 +873,7 @@ function MediaElement(idOrNode, options, sources) {
   */
 	var processURL = function processURL(url, type) {
 
-		if (~_mejs2.default.html5media.mediaTypes.indexOf(type) && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
+		if (_mejs2.default.html5media.mediaTypes.indexOf(type) > -1 && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
 				if (this.readyState === 4 && this.status === 200) {
@@ -4305,7 +4305,7 @@ var MediaElementPlayer = function () {
 			var tagType = t.isVideo ? 'video' : 'audio',
 			    capsTagName = tagType.substring(0, 1).toUpperCase() + tagType.substring(1);
 
-			if (t.options[tagType + 'Width'] > 0 || ~t.options[tagType + 'Width'].toString().indexOf('%')) {
+			if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
 				t.width = t.options[tagType + 'Width'];
 			} else if (t.node.style.width !== '' && t.node.style.width !== null) {
 				t.width = t.node.style.width;
@@ -4315,7 +4315,7 @@ var MediaElementPlayer = function () {
 				t.width = t.options['default' + capsTagName + 'Width'];
 			}
 
-			if (t.options[tagType + 'Height'] > 0 || ~t.options[tagType + 'Height'].toString().indexOf('%')) {
+			if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
 				t.height = t.options[tagType + 'Height'];
 			} else if (t.node.style.height !== '' && t.node.style.height !== null) {
 				t.height = t.node.style.height;
@@ -4917,7 +4917,7 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-			return ~t.height.toString().indexOf('%') || t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' && t.node.style.maxWidth !== t.width || t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%';
+			return t.height.toString().indexOf('%') !== -1 || t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' && t.node.style.maxWidth !== t.width || t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%';
 		}
 	}, {
 		key: 'setResponsiveMode',
@@ -5146,8 +5146,8 @@ var MediaElementPlayer = function () {
 		value: function setDimensions(width, height) {
 			var t = this;
 
-			width = (0, _general.isString)(width) && ~width.indexOf('%') ? width : parseFloat(width) + 'px';
-			height = (0, _general.isString)(height) && ~height.indexOf('%') ? height : parseFloat(height) + 'px';
+			width = (0, _general.isString)(width) && width.indexOf('%') > -1 ? width : parseFloat(width) + 'px';
+			height = (0, _general.isString)(height) && height.indexOf('%') > -1 ? height : parseFloat(height) + 'px';
 
 			t.container.style.width = width;
 			t.container.style.height = height;
@@ -5233,7 +5233,7 @@ var MediaElementPlayer = function () {
 
 			var t = this;
 
-			if (t.isVideo && t.media.rendererName !== null && ~t.media.rendererName.indexOf('iframe') && !_document2.default.getElementById(t.media.id + '-iframe-overlay')) {
+			if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.indexOf('iframe') > -1 && !_document2.default.getElementById(t.media.id + '-iframe-overlay')) {
 
 				var layer = _document2.default.createElement('div'),
 				    target = _document2.default.getElementById(t.media.id + '_' + t.media.rendererName);
@@ -5979,7 +5979,7 @@ var DashNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ~['application/dash+xml'].indexOf(type.toLowerCase());
+		return _constants.HAS_MSE && ['application/dash+xml'].indexOf(type.toLowerCase()) > -1;
 	},
 
 	/**
@@ -6814,7 +6814,7 @@ var FlvNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ~['video/x-flv', 'video/flv'].indexOf(type.toLowerCase());
+		return _constants.HAS_MSE && ['video/x-flv', 'video/flv'].indexOf(type.toLowerCase()) > -1;
 	},
 
 	/**
@@ -7104,7 +7104,7 @@ var HlsNativeRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return _constants.HAS_MSE && ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].indexOf(type.toLowerCase());
+		return _constants.HAS_MSE && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls', 'video/hls'].indexOf(type.toLowerCase()) > -1;
 	},
 
 	/**
@@ -8759,7 +8759,7 @@ function getMimeFromType(type) {
 		throw new Error('`type` argument must be a string');
 	}
 
-	return type && ~type.indexOf(';') ? type.substr(0, type.indexOf(';')) : type;
+	return type && type.indexOf(';') > -1 ? type.substr(0, type.indexOf(';')) : type;
 }
 
 /**

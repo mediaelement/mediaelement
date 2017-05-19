@@ -132,8 +132,8 @@ const HlsNativeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => HAS_MSE && ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-		'video/hls'].indexOf(type.toLowerCase()),
+	canPlayType: (type) => HAS_MSE && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+		'video/hls'].indexOf(type.toLowerCase()) > -1,
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
