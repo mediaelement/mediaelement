@@ -7,6 +7,9 @@ import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 import {HAS_MSE} from '../utils/constants';
+import {loadScript} from '../utils/dom';
+
+let scriptPromise;
 
 /**
  * Native M(PEG)-Dash renderer
@@ -22,77 +25,25 @@ const NativeDash = {
 	 * @type {Boolean}
 	 */
 	isMediaLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	creationQueue: [],
 
 	/**
 	 * Create a queue to prepare the loading of an DASH source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an DASH player instance
 	 */
-	prepareSettings: (settings) => {
-		if (NativeDash.isLoaded) {
-			NativeDash.createInstance(settings);
-		} else {
-			NativeDash.loadScript(settings);
-			NativeDash.creationQueue.push(settings);
-		}
-	},
-
-	/**
-	 * Load dash.mediaplayer.js script on the header of the document
-	 *
-	 * @param {Object} settings - an object with settings needed to load an DASH player instance
-	 */
-	loadScript: (settings) => {
-
-		// Skip script loading since it is already loaded
+	prepareSettings(settings) {
 		if (typeof dashjs !== 'undefined') {
 			NativeDash.createInstance(settings);
-		} else if (!NativeDash.isScriptLoaded) {
-
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-			const
-				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0]
-			;
-
-			let done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined ||
-					this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeDash.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-
-			NativeDash.isScriptLoaded = true;
-		}
-	},
-
-	/**
-	 * Process queue of DASH player creation
-	 *
-	 */
-	mediaReady: () => {
-
-		NativeDash.isLoaded = true;
-		NativeDash.isScriptLoaded = true;
-
-		while (NativeDash.creationQueue.length > 0) {
-			const settings = NativeDash.creationQueue.pop();
-			NativeDash.createInstance(settings);
+			scriptPromise = scriptPromise || loadScript(settings.options.path);
+			scriptPromise.then(() => {
+				NativeDash.isLoaded = true;
+				NativeDash.isMediaLoaded = true;
+				NativeDash.createInstance(settings);
+			});
 		}
 	},
 

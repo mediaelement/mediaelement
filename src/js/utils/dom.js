@@ -9,6 +9,25 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 
+
+// Cuz ie sucks
+const TinyPromise = (h,f=[],b=-1,g,c,l) => (
+	l=d=>{for(g=d;c=f.shift();)c[b]&&c[b](d)},
+	h(d=>l(d,b=0),d=>l(d,b=1)),
+	{then(...d){~b?d[b]&&d[b](g):f.push(d)}}
+)
+
+export function loadScript (url, callback) {
+	return TinyPromise((resolve, reject) => {
+		const script = document.createElement('script');
+		script.src = url;
+		script.async = true;
+		script.onload = () => script.remove(resolve())
+		script.onerror = () => reject()
+		document.head.appendChild(script);
+	})
+}
+
 export function offset (el) {
 	var rect = el.getBoundingClientRect(),
 		scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,

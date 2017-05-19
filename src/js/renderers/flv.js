@@ -7,6 +7,9 @@ import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {HAS_MSE} from '../utils/constants';
 import {typeChecks} from '../utils/media';
+import {loadScript} from '../utils/dom';
+
+let scriptPromise;
 
 /**
  * Native FLV renderer
@@ -27,74 +30,24 @@ const NativeFlv = {
 	 * @type {Boolean}
 	 */
 	isMediaLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	creationQueue: [],
 
 	/**
 	 * Create a queue to prepare the loading of an FLV source
 	 * @param {Object} settings - an object with settings needed to load an FLV player instance
 	 */
 	prepareSettings: (settings) => {
-		if (NativeFlv.isLoaded) {
-			NativeFlv.createInstance(settings);
-		} else {
-			NativeFlv.loadScript(settings);
-			NativeFlv.creationQueue.push(settings);
-		}
-	},
-
-	/**
-	 * Load flv.js script on the header of the document
-	 *
-	 * @param {Object} settings - an object with settings needed to load an FLV player instance
-	 */
-	loadScript: (settings) => {
-
-		// Skip script loading since it is already loaded
 		if (typeof flvjs !== 'undefined') {
-			NativeFlv.createInstance(settings);
-		} else if (!NativeFlv.isMediaStarted) {
-
+			NativeDash.createInstance(settings);
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
 
-			const
-				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0]
-			;
-
-			let done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined ||
-					this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeFlv.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			NativeFlv.isMediaStarted = true;
-		}
-	},
-
-	/**
-	 * Process queue of FLV player creation
-	 *
-	 */
-	mediaReady: () => {
-		NativeFlv.isLoaded = true;
-		NativeFlv.isMediaLoaded = true;
-
-		while (NativeFlv.creationQueue.length > 0) {
-			const settings = NativeFlv.creationQueue.pop();
-			NativeFlv.createInstance(settings);
+			scriptPromise = scriptPromise || loadScript(settings.options.path);
+			scriptPromise.then(() => {
+				NativeFlv.isLoaded = true;
+				NativeFlv.isMediaLoaded = true;
+				NativeFlv.createInstance(settings);
+			});
 		}
 	},
 
