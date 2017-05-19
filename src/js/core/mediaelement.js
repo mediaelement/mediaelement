@@ -84,7 +84,7 @@ class MediaElement {
 			// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
 			// only if video/audio tags are detected
 			const tagName = t.mediaElement.originalNode.tagName.toLowerCase();
-			if (~['video', 'audio'].indexOf(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
+			if (['video', 'audio'].indexOf(tagName) > -1 && !t.mediaElement.originalNode.getAttribute('preload')) {
 				t.mediaElement.originalNode.setAttribute('preload', 'none');
 			}
 
@@ -426,7 +426,7 @@ class MediaElement {
 		 */
 		const processURL = (url, type) => {
 
-			if (~mejs.html5media.mediaTypes.indexOf(type) && window.location.protocol === 'https:' &&
+			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' &&
 				IS_IOS && !window.MSStream){
 				const xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = function() {

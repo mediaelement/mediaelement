@@ -46,7 +46,7 @@ export function getMimeFromType (type) {
 		throw new Error('`type` argument must be a string');
 	}
 
-	return (type && ~type.indexOf(';')) ? type.substr(0, type.indexOf(';')) : type;
+	return (type && type.indexOf(';') > -1) ? type.substr(0, type.indexOf(';')) : type;
 }
 
 /**

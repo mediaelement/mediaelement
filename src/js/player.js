@@ -511,7 +511,7 @@ class MediaElementPlayer {
 			;
 
 
-			if (t.options[tagType + 'Width'] > 0 || ~t.options[tagType + 'Width'].toString().indexOf('%')) {
+			if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
 				t.width = t.options[tagType + 'Width'];
 			} else if (t.node.style.width !== '' && t.node.style.width !== null) {
 				t.width = t.node.style.width;
@@ -521,7 +521,7 @@ class MediaElementPlayer {
 				t.width = t.options['default' + capsTagName + 'Width'];
 			}
 
-			if (t.options[tagType + 'Height'] > 0 || ~t.options[tagType + 'Height'].toString().indexOf('%')) {
+			if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
 				t.height = t.options[tagType + 'Height'];
 			} else if (t.node.style.height !== '' && t.node.style.height !== null) {
 				t.height = t.node.style.height;
@@ -1109,7 +1109,7 @@ class MediaElementPlayer {
 		const t = this;
 
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
-		return (~t.height.toString().indexOf('%') || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
+		return (t.height.toString().indexOf('%') !== -1 || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
 			t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
 	}
 
@@ -1344,8 +1344,8 @@ class MediaElementPlayer {
 	setDimensions (width, height) {
 		const t = this;
 
-		width = isString(width) && ~width.indexOf('%') ? width : `${parseFloat(width)}px`;
-		height = isString(height) && ~height.indexOf('%') ? height : `${parseFloat(height)}px`;
+		width = isString(width) && width.indexOf('%') > -1 ? width : `${parseFloat(width)}px`;
+		height = isString(height) && height.indexOf('%') > -1 ? height : `${parseFloat(height)}px`;
 
 		t.container.style.width = width;
 		t.container.style.height = height;
@@ -1423,7 +1423,7 @@ class MediaElementPlayer {
 
 		const t = this;
 
-		if (t.isVideo && t.media.rendererName !== null && ~t.media.rendererName.indexOf('iframe') && !document.getElementById(`${t.media.id}-iframe-overlay`)) {
+		if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.indexOf('iframe') > -1 && !document.getElementById(`${t.media.id}-iframe-overlay`)) {
 
 			const
 				layer = document.createElement('div'),

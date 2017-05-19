@@ -128,7 +128,7 @@ const FlvNativeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => HAS_MSE && ~['video/x-flv', 'video/flv'].indexOf(type.toLowerCase()),
+	canPlayType: (type) => HAS_MSE && ['video/x-flv', 'video/flv'].indexOf(type.toLowerCase()) > -1,
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
