@@ -10,12 +10,29 @@ import document from 'global/document';
 import mejs from '../core/mejs';
 
 
-// Cuz ie sucks
-const TinyPromise = (h,f=[],b=-1,g,c,l) => (
-	l=d=>{for(g=d;c=f.shift();)c[b]&&c[b](d)},
-	h(d=>l(d,b=0),d=>l(d,b=1)),
-	{then(...d){~b?d[b]&&d[b](g):f.push(d)}}
-)
+function TinyPromise(handler) {
+	const thens = [];
+	let state = -1;
+	let result;
+	let then;
+
+	function done(value) {
+		for (result = value; then = thens.shift();) {
+			then[state] && then[state](result);
+		}
+	}
+
+	handler(
+		value => done(value, state = 0),
+		value => done(value, state = 1)
+	);
+
+	return {
+    then(...args) {
+      ~state ? args[state] && args[state](result) : thens.push(args)
+    }
+  }
+}
 
 export function loadScript (url) {
 	return TinyPromise((resolve, reject) => {
