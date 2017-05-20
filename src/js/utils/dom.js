@@ -39,10 +39,10 @@ export function loadScript (url) {
 		const script = document.createElement('script');
 		script.src = url;
 		script.async = true;
-		script.onload = () => script.remove(resolve());
-		script.onerror = () => script.remove(reject());
+		script.onload = () => { script.remove(); resolve(); }
+		script.onerror = () => { script.remove(); reject(); }
 		document.head.appendChild(script);
-	})
+	});
 }
 
 export function offset (el) {
