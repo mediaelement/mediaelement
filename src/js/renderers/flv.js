@@ -1,15 +1,12 @@
 'use strict';
 
 import window from 'global/window';
-import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {HAS_MSE} from '../utils/constants';
 import {typeChecks} from '../utils/media';
 import {loadScript} from '../utils/dom';
-
-let scriptPromise;
 
 /**
  * Native FLV renderer
@@ -22,31 +19,23 @@ let scriptPromise;
  *
  */
 const NativeFlv = {
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaStarted: false,
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaLoaded: false,
+
+	promise: null,
 
 	/**
 	 * Create a queue to prepare the loading of an FLV source
 	 * @param {Object} settings - an object with settings needed to load an FLV player instance
 	 */
-	prepareSettings: (settings) => {
+	load: (settings) => {
 		if (typeof flvjs !== 'undefined') {
-			NativeDash.createInstance(settings);
+			NativeFlv._createPlayer(settings);
 		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
 
-			scriptPromise = scriptPromise || loadScript(settings.options.path);
-			scriptPromise.then(() => {
-				NativeFlv.isLoaded = true;
-				NativeFlv.isMediaLoaded = true;
-				NativeFlv.createInstance(settings);
+			NativeFlv.promise = NativeFlv.promise || loadScript(settings.options.path);
+			NativeFlv.promise.then(() => {
+				NativeFlv._createPlayer(settings);
 			});
 		}
 	},
@@ -56,7 +45,7 @@ const NativeFlv = {
 	 *
 	 * @param {Object} settings - an object with settings needed to instantiate FLV object
 	 */
-	createInstance: (settings) => {
+	_createPlayer: (settings) => {
 		const player = flvjs.createPlayer(settings.options);
 		window[`__ready__${settings.id}`](player);
 	}
@@ -129,7 +118,7 @@ const FlvNativeRenderer = {
 				};
 
 			}
-			;
+		;
 
 		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
@@ -184,7 +173,7 @@ const FlvNativeRenderer = {
 		options.flv.type = 'flv';
 		options.flv.url = node.getAttribute('src');
 
-		NativeFlv.prepareSettings({
+		NativeFlv.load({
 			options: options.flv,
 			id: id
 		});

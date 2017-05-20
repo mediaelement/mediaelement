@@ -57,7 +57,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(8);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -428,7 +428,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"16":16,"6":6,"8":8}],5:[function(_dereq_,module,exports){
+},{"17":17,"6":6,"8":8}],5:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -447,9 +447,9 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
-var _media = _dereq_(17);
+var _media = _dereq_(18);
 
 var _renderer = _dereq_(7);
 
@@ -958,7 +958,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
+},{"15":15,"17":17,"18":18,"2":2,"3":3,"6":6,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1275,21 +1275,19 @@ var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
 
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
-
 var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
-var _media = _dereq_(17);
+var _media = _dereq_(18);
 
 var _constants = _dereq_(15);
+
+var _dom = _dereq_(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1303,87 +1301,34 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  */
 var NativeDash = {
-	/**
-  * @type {Boolean}
-  */
-	isMediaLoaded: false,
-	/**
-  * @type {Array}
-  */
-	creationQueue: [],
+
+	promise: null,
 
 	/**
   * Create a queue to prepare the loading of an DASH source
   *
   * @param {Object} settings - an object with settings needed to load an DASH player instance
   */
-	prepareSettings: function prepareSettings(settings) {
-		if (NativeDash.isLoaded) {
-			NativeDash.createInstance(settings);
-		} else {
-			NativeDash.loadScript(settings);
-			NativeDash.creationQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load dash.mediaplayer.js script on the header of the document
-  *
-  * @param {Object} settings - an object with settings needed to load an DASH player instance
-  */
-	loadScript: function loadScript(settings) {
-
-		// Skip script loading since it is already loaded
+	load: function load(settings) {
 		if (typeof dashjs !== 'undefined') {
-			NativeDash.createInstance(settings);
-		} else if (!NativeDash.isScriptLoaded) {
-
+			NativeDash._createPlayer(settings);
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-			var script = _document2.default.createElement('script'),
-			    firstScriptTag = _document2.default.getElementsByTagName('script')[0];
-
-			var done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeDash.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-
-			NativeDash.isScriptLoaded = true;
+			NativeDash.promise = NativeDash.promise || (0, _dom.loadScript)(settings.options.path);
+			NativeDash.promise.then(function () {
+				NativeDash._createPlayer(settings);
+			});
 		}
 	},
 
-	/**
-  * Process queue of DASH player creation
-  *
-  */
-	mediaReady: function mediaReady() {
-
-		NativeDash.isLoaded = true;
-		NativeDash.isScriptLoaded = true;
-
-		while (NativeDash.creationQueue.length > 0) {
-			var settings = NativeDash.creationQueue.pop();
-			NativeDash.createInstance(settings);
-		}
-	},
 
 	/**
   * Create a new instance of DASH player and trigger a custom event to initialize it
   *
   * @param {Object} settings - an object with settings needed to instantiate DASH object
   */
-	createInstance: function createInstance(settings) {
-
+	_createPlayer: function _createPlayer(settings) {
 		var player = dashjs.MediaPlayer().create();
 		_window2.default['__ready__' + settings.id](player);
 	}
@@ -1526,7 +1471,7 @@ var DashNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		NativeDash.prepareSettings({
+		NativeDash.load({
 			options: options.dash,
 			id: id
 		});
@@ -1566,7 +1511,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],10:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"18":18,"3":3,"6":6,"7":7}],10:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1594,11 +1539,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
 var _constants = _dereq_(15);
 
-var _media = _dereq_(17);
+var _media = _dereq_(18);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2100,16 +2045,12 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"15":15,"16":16,"17":17,"2":2,"3":3,"4":4,"6":6,"7":7}],11:[function(_dereq_,module,exports){
+},{"15":15,"17":17,"18":18,"2":2,"3":3,"4":4,"6":6,"7":7}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
 
 var _mejs = _dereq_(6);
 
@@ -2117,11 +2058,13 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
 var _constants = _dereq_(15);
 
-var _media = _dereq_(17);
+var _media = _dereq_(18);
+
+var _dom = _dereq_(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2136,78 +2079,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  */
 var NativeFlv = {
-	/**
-  * @type {Boolean}
-  */
-	isMediaStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isMediaLoaded: false,
-	/**
-  * @type {Array}
-  */
-	creationQueue: [],
+
+	promise: null,
 
 	/**
   * Create a queue to prepare the loading of an FLV source
   * @param {Object} settings - an object with settings needed to load an FLV player instance
   */
-	prepareSettings: function prepareSettings(settings) {
-		if (NativeFlv.isLoaded) {
-			NativeFlv.createInstance(settings);
-		} else {
-			NativeFlv.loadScript(settings);
-			NativeFlv.creationQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load flv.js script on the header of the document
-  *
-  * @param {Object} settings - an object with settings needed to load an FLV player instance
-  */
-	loadScript: function loadScript(settings) {
-
-		// Skip script loading since it is already loaded
+	load: function load(settings) {
 		if (typeof flvjs !== 'undefined') {
-			NativeFlv.createInstance(settings);
-		} else if (!NativeFlv.isMediaStarted) {
-
+			NativeFlv._createPlayer(settings);
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
 
-			var script = _document2.default.createElement('script'),
-			    firstScriptTag = _document2.default.getElementsByTagName('script')[0];
-
-			var done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeFlv.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			NativeFlv.isMediaStarted = true;
-		}
-	},
-
-	/**
-  * Process queue of FLV player creation
-  *
-  */
-	mediaReady: function mediaReady() {
-		NativeFlv.isLoaded = true;
-		NativeFlv.isMediaLoaded = true;
-
-		while (NativeFlv.creationQueue.length > 0) {
-			var settings = NativeFlv.creationQueue.pop();
-			NativeFlv.createInstance(settings);
+			NativeFlv.promise = NativeFlv.promise || (0, _dom.loadScript)(settings.options.path);
+			NativeFlv.promise.then(function () {
+				NativeFlv._createPlayer(settings);
+			});
 		}
 	},
 
@@ -2216,7 +2104,7 @@ var NativeFlv = {
   *
   * @param {Object} settings - an object with settings needed to instantiate FLV object
   */
-	createInstance: function createInstance(settings) {
+	_createPlayer: function _createPlayer(settings) {
 		var player = flvjs.createPlayer(settings.options);
 		_window2.default['__ready__' + settings.id](player);
 	}
@@ -2338,7 +2226,7 @@ var FlvNativeRenderer = {
 		options.flv.type = 'flv';
 		options.flv.url = node.getAttribute('src');
 
-		NativeFlv.prepareSettings({
+		NativeFlv.load({
 			options: options.flv,
 			id: id
 		});
@@ -2386,16 +2274,12 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],12:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"18":18,"3":3,"6":6,"7":7}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
-
-var _document = _dereq_(2);
-
-var _document2 = _interopRequireDefault(_document);
 
 var _mejs = _dereq_(6);
 
@@ -2403,11 +2287,13 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
 var _constants = _dereq_(15);
 
-var _media = _dereq_(17);
+var _media = _dereq_(18);
+
+var _dom = _dereq_(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2421,81 +2307,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  */
 var NativeHls = {
-	/**
-  * @type {Boolean}
-  */
-	isMediaStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isMediaLoaded: false,
-	/**
-  * @type {Array}
-  */
-	creationQueue: [],
+
+	promise: null,
 
 	/**
   * Create a queue to prepare the loading of an HLS source
   *
   * @param {Object} settings - an object with settings needed to load an HLS player instance
   */
-	prepareSettings: function prepareSettings(settings) {
-		if (NativeHls.isLoaded) {
-			NativeHls.createInstance(settings);
-		} else {
-			NativeHls.loadScript(settings);
-			NativeHls.creationQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load hls.js script on the header of the document
-  *
-  * @param {Object} settings - an object with settings needed to load an HLS player instance
-  */
-	loadScript: function loadScript(settings) {
-
-		// Skip script loading since it is already loaded
+	load: function load(settings) {
 		if (typeof Hls !== 'undefined') {
-			NativeHls.createInstance(settings);
-		} else if (!NativeHls.isMediaStarted) {
-
+			NativeHls._createPlayer(settings);
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
-			var script = _document2.default.createElement('script'),
-			    firstScriptTag = _document2.default.getElementsByTagName('script')[0];
-
-			var done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeHls.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			NativeHls.isMediaStarted = true;
+			NativeHls.promise = NativeHls.promise || (0, _dom.loadScript)(settings.options.path);
+			NativeHls.promise.then(function () {
+				NativeHls._createPlayer(settings);
+			});
 		}
 	},
 
-	/**
-  * Process queue of HLS player creation
-  *
-  */
-	mediaReady: function mediaReady() {
-		NativeHls.isLoaded = true;
-		NativeHls.isMediaLoaded = true;
-
-		while (NativeHls.creationQueue.length > 0) {
-			var settings = NativeHls.creationQueue.pop();
-			NativeHls.createInstance(settings);
-		}
-	},
 
 	/**
   * Create a new instance of HLS player and trigger a custom event to initialize it
@@ -2503,7 +2335,7 @@ var NativeHls = {
   * @param {Object} settings - an object with settings needed to instantiate HLS object
   * @return {Hls}
   */
-	createInstance: function createInstance(settings) {
+	_createPlayer: function _createPlayer(settings) {
 		var player = new Hls(settings.options);
 		_window2.default['__ready__' + settings.id](player);
 		return player;
@@ -2574,7 +2406,7 @@ var HlsNativeRenderer = {
 						if (propName === 'src') {
 
 							hlsPlayer.destroy();
-							hlsPlayer = NativeHls.createInstance({
+							hlsPlayer = NativeHls._createPlayer({
 								options: options.hls,
 								id: id
 							});
@@ -2704,7 +2536,7 @@ var HlsNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		NativeHls.prepareSettings({
+		NativeHls.load({
 			options: options.hls,
 			id: id
 		});
@@ -2756,7 +2588,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"15":15,"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],13:[function(_dereq_,module,exports){
+},{"15":15,"16":16,"17":17,"18":18,"3":3,"6":6,"7":7}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -2773,7 +2605,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
 var _constants = _dereq_(15);
 
@@ -2910,7 +2742,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"15":15,"16":16,"2":2,"3":3,"6":6,"7":7}],14:[function(_dereq_,module,exports){
+},{"15":15,"17":17,"2":2,"3":3,"6":6,"7":7}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -2929,9 +2761,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(7);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
-var _media = _dereq_(17);
+var _media = _dereq_(18);
+
+var _dom = _dereq_(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2981,10 +2815,7 @@ var YouTubeApi = {
   */
 	loadIframeApi: function loadIframeApi() {
 		if (!YouTubeApi.isIframeStarted) {
-			var tag = _document2.default.createElement('script');
-			tag.src = 'https://www.youtube.com/player_api';
-			var firstScriptTag = _document2.default.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			(0, _dom.loadScript)('https://www.youtube.com/player_api');
 			YouTubeApi.isIframeStarted = true;
 		}
 	},
@@ -3539,7 +3370,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	_renderer.renderer.add(YouTubeIframeRenderer);
 }
 
-},{"16":16,"17":17,"2":2,"3":3,"6":6,"7":7}],15:[function(_dereq_,module,exports){
+},{"16":16,"17":17,"18":18,"2":2,"3":3,"6":6,"7":7}],15:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3727,6 +3558,273 @@ _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 },{"2":2,"3":3,"6":6}],16:[function(_dereq_,module,exports){
 'use strict';
 
+/**
+ * Most of the mtehods have been borrowed/adapted from https://plainjs.com/javascript,
+ * except fadeIn/fadeOut (from https://github.com/DimitriMikadze/vanilla-helpers/blob/master/js/vanillaHelpers.js)
+ */
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.removeClass = exports.addClass = exports.hasClass = undefined;
+exports.loadScript = loadScript;
+exports.offset = offset;
+exports.toggleClass = toggleClass;
+exports.fadeOut = fadeOut;
+exports.fadeIn = fadeIn;
+exports.siblings = siblings;
+exports.visible = visible;
+exports.ajax = ajax;
+
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+var _document = _dereq_(2);
+
+var _document2 = _interopRequireDefault(_document);
+
+var _mejs = _dereq_(6);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function TinyPromise(handler) {
+	var thens = [];
+	var state = -1;
+	var result = void 0;
+	var then = void 0;
+
+	function done(value) {
+		for (result = value; then = thens.shift();) {
+			then[state] && then[state](result);
+		}
+	}
+
+	handler(function (value) {
+		return done(value, state = 0);
+	}, function (value) {
+		return done(value, state = 1);
+	});
+
+	return {
+		then: function then() {
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			~state ? args[state] && args[state](result) : thens.push(args);
+		}
+	};
+}function loadScript(url) {
+	return TinyPromise(function (resolve, reject) {
+		var script = _document2.default.createElement('script');
+		script.src = url;
+		script.async = true;
+		script.onload = function () {
+			script.remove();
+			resolve();
+		};
+		script.onerror = function () {
+			script.remove();
+			reject();
+		};
+		_document2.default.head.appendChild(script);
+	});
+}
+
+function offset(el) {
+	var rect = el.getBoundingClientRect(),
+	    scrollLeft = _window2.default.pageXOffset || _document2.default.documentElement.scrollLeft,
+	    scrollTop = _window2.default.pageYOffset || _document2.default.documentElement.scrollTop;
+	return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
+}
+
+var hasClassMethod = void 0,
+    addClassMethod = void 0,
+    removeClassMethod = void 0;
+
+if ('classList' in _document2.default.documentElement) {
+	hasClassMethod = function hasClassMethod(el, className) {
+		return el.classList !== undefined && el.classList.contains(className);
+	};
+	addClassMethod = function addClassMethod(el, className) {
+		return el.classList.add(className);
+	};
+	removeClassMethod = function removeClassMethod(el, className) {
+		return el.classList.remove(className);
+	};
+} else {
+	hasClassMethod = function hasClassMethod(el, className) {
+		return new RegExp('\\b' + className + '\\b').test(el.className);
+	};
+	addClassMethod = function addClassMethod(el, className) {
+		if (!hasClass(el, className)) {
+			el.className += ' ' + className;
+		}
+	};
+	removeClassMethod = function removeClassMethod(el, className) {
+		el.className = el.className.replace(new RegExp('\\b' + className + '\\b', 'g'), '');
+	};
+}
+
+var hasClass = exports.hasClass = hasClassMethod;
+var addClass = exports.addClass = addClassMethod;
+var removeClass = exports.removeClass = removeClassMethod;
+
+function toggleClass(el, className) {
+	hasClass(el, className) ? removeClass(el, className) : addClass(el, className);
+}
+
+// fade an element from the current state to full opacity in "duration" ms
+function fadeOut(el) {
+	var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
+	var callback = arguments[2];
+
+	if (!el.style.opacity) {
+		el.style.opacity = 1;
+	}
+
+	var start = null;
+	_window2.default.requestAnimationFrame(function animate(timestamp) {
+		start = start || timestamp;
+		var progress = timestamp - start;
+		var opacity = parseFloat(1 - progress / duration, 2);
+		el.style.opacity = opacity < 0 ? 0 : opacity;
+		if (progress > duration) {
+			if (callback && typeof callback === 'function') {
+				callback();
+			}
+		} else {
+			_window2.default.requestAnimationFrame(animate);
+		}
+	});
+}
+
+// fade out an element from the current state to full transparency in "duration" ms
+// display is the display style the element is assigned after the animation is done
+function fadeIn(el) {
+	var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 400;
+	var callback = arguments[2];
+
+	if (!el.style.opacity) {
+		el.style.opacity = 0;
+	}
+
+	var start = null;
+	_window2.default.requestAnimationFrame(function animate(timestamp) {
+		start = start || timestamp;
+		var progress = timestamp - start;
+		var opacity = parseFloat(progress / duration, 2);
+		el.style.opacity = opacity > 1 ? 1 : opacity;
+		if (progress > duration) {
+			if (callback && typeof callback === 'function') {
+				callback();
+			}
+		} else {
+			_window2.default.requestAnimationFrame(animate);
+		}
+	});
+}
+
+function siblings(el, filter) {
+	var siblings = [];
+	el = el.parentNode.firstChild;
+	do {
+		if (!filter || filter(el)) {
+			siblings.push(el);
+		}
+	} while (el = el.nextSibling);
+	return siblings;
+}
+
+function visible(elem) {
+	return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+}
+
+function ajax(url, dataType, success, error) {
+	var xhr = _window2.default.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+
+	var type = 'application/x-www-form-urlencoded; charset=UTF-8',
+	    completed = false,
+	    accept = '*/'.concat('*');
+
+	switch (dataType) {
+		case 'text':
+			type = 'text/plain';
+			break;
+		case 'json':
+			type = 'application/json, text/javascript';
+			break;
+		case 'html':
+			type = 'text/html';
+			break;
+		case 'xml':
+			type = 'application/xml, text/xml';
+			break;
+	}
+
+	if (type !== 'application/x-www-form-urlencoded') {
+		accept = type + ', */*; q=0.01';
+	}
+
+	if (xhr) {
+		xhr.open('GET', url, true);
+		xhr.setRequestHeader('Accept', accept);
+		xhr.onreadystatechange = function () {
+
+			// Ignore repeat invocations
+			if (completed) {
+				return;
+			}
+
+			if (xhr.readyState === 4) {
+				if (xhr.status === 200) {
+
+					completed = true;
+
+					var data = void 0;
+
+					switch (dataType) {
+						case 'json':
+							data = JSON.parse(xhr.responseText);
+							break;
+						case 'xml':
+							data = xhr.responseXML;
+							break;
+						default:
+							data = xhr.responseText;
+							break;
+					}
+
+					success(data);
+				} else if (typeof error === 'function') {
+					error(xhr.status);
+				}
+			}
+		};
+
+		xhr.send();
+	}
+}
+
+_mejs2.default.Utils = _mejs2.default.Utils || {};
+_mejs2.default.Utils.offset = offset;
+_mejs2.default.Utils.hasClass = hasClass;
+_mejs2.default.Utils.addClass = addClass;
+_mejs2.default.Utils.removeClass = removeClass;
+_mejs2.default.Utils.toggleClass = toggleClass;
+_mejs2.default.Utils.fadeIn = fadeIn;
+_mejs2.default.Utils.fadeOut = fadeOut;
+_mejs2.default.Utils.siblings = siblings;
+_mejs2.default.Utils.visible = visible;
+_mejs2.default.Utils.ajax = ajax;
+_mejs2.default.Utils.loadScript = loadScript;
+
+},{"2":2,"3":3,"6":6}],17:[function(_dereq_,module,exports){
+'use strict';
+
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -3899,7 +3997,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 _mejs2.default.Utils.isString = isString;
 
-},{"6":6}],17:[function(_dereq_,module,exports){
+},{"6":6}],18:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3917,7 +4015,7 @@ var _mejs = _dereq_(6);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(16);
+var _general = _dereq_(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4063,7 +4161,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"16":16,"6":6}],18:[function(_dereq_,module,exports){
+},{"17":17,"6":6}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -4220,4 +4318,4 @@ if (/firefox/i.test(navigator.userAgent)) {
 	};
 }
 
-},{"2":2}]},{},[18,5,4,8,13,10,9,11,12,14]);
+},{"2":2}]},{},[19,5,4,8,13,10,9,11,12,14]);

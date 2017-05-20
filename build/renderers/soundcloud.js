@@ -19,76 +19,23 @@
  */
 
 var SoundCloudApi = {
-	/**
-  * @type {Boolean}
-  */
-	isSDKStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isSDKLoaded: false,
-	/**
-  * @type {Array}
-  */
-	iframeQueue: [],
+
+	promise: null,
 
 	/**
   * Create a queue to prepare the creation of <iframe>
   *
   * @param {Object} settings - an object with settings needed to create <iframe>
   */
-	enqueueIframe: function enqueueIframe(settings) {
+	load: function load(settings) {
 
-		if (SoundCloudApi.isLoaded) {
-			SoundCloudApi.createIframe(settings);
+		if (typeof SC !== 'undefined') {
+			SoundCloudApi._createPlayer(settings);
 		} else {
-			SoundCloudApi.loadIframeApi();
-			SoundCloudApi.iframeQueue.push(settings);
-		}
-	},
-
-	/**
-  * Load SoundCloud API script on the header of the document
-  *
-  */
-	loadIframeApi: function loadIframeApi() {
-		if (!SoundCloudApi.isSDKStarted) {
-
-			var head = document.getElementsByTagName("head")[0] || document.documentElement,
-			    script = document.createElement("script");
-
-			var done = false;
-
-			script.src = 'https://w.soundcloud.com/player/api.js';
-
-			// Attach handlers for all browsers
-			// Is onload enough now? do IE9 support it?
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!SoundCloudApi.readyState || SoundCloudApi.readyState === "loaded" || SoundCloudApi.readyState === "complete")) {
-					done = true;
-					SoundCloudApi.apiReady();
-
-					// Handle memory leak in IE
-					script.onload = script.onreadystatechange = null;
-					script.remove();
-				}
-			};
-			head.appendChild(script);
-			SoundCloudApi.isSDKStarted = true;
-		}
-	},
-
-	/**
-  * Process queue of SoundCloud <iframe> element creation
-  *
-  */
-	apiReady: function apiReady() {
-		SoundCloudApi.isLoaded = true;
-		SoundCloudApi.isSDKLoaded = true;
-
-		while (SoundCloudApi.iframeQueue.length > 0) {
-			var settings = SoundCloudApi.iframeQueue.pop();
-			SoundCloudApi.createIframe(settings);
+			SoundCloudApi.promise = SoundCloudApi.promise || mejs.Utils.loadScript('https://w.soundcloud.com/player/api.js');
+			SoundCloudApi.promise.then(function () {
+				SoundCloudApi._createPlayer(settings);
+			});
 		}
 	},
 
@@ -97,7 +44,7 @@ var SoundCloudApi = {
   *
   * @param {Object} settings - an object with settings needed to create <iframe>
   */
-	createIframe: function createIframe(settings) {
+	_createPlayer: function _createPlayer(settings) {
 		var player = SC.Widget(settings.iframe);
 		window['__ready__' + settings.id](player);
 	}
@@ -157,9 +104,9 @@ var SoundCloudIframeRenderer = {
 
 			// add to flash state that we will store
 
-			var capName = "" + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
-			sc["get" + capName] = function () {
+			sc['get' + capName] = function () {
 				if (scPlayer !== null) {
 					var value = null;
 
@@ -206,7 +153,7 @@ var SoundCloudIframeRenderer = {
 				}
 			};
 
-			sc["set" + capName] = function (value) {
+			sc['set' + capName] = function (value) {
 
 				if (scPlayer !== null) {
 
@@ -313,9 +260,9 @@ var SoundCloudIframeRenderer = {
 
 					if (stackItem.type === 'set') {
 						var propName = stackItem.propName,
-						    capName = "" + propName.substring(0, 1).toUpperCase() + propName.substring(1);
+						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
-						sc["set" + capName](stackItem.value);
+						sc['set' + capName](stackItem.value);
 					} else if (stackItem.type === 'call') {
 						sc[stackItem.methodName]();
 					}
@@ -406,7 +353,7 @@ var SoundCloudIframeRenderer = {
 			id: sc.id
 		};
 
-		SoundCloudApi.enqueueIframe(scSettings);
+		SoundCloudApi.load(scSettings);
 
 		sc.setSize = function () {};
 		sc.hide = function () {

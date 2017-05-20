@@ -1,15 +1,12 @@
 'use strict';
 
 import window from 'global/window';
-import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 import {HAS_MSE} from '../utils/constants';
 import {loadScript} from '../utils/dom';
-
-let scriptPromise;
 
 /**
  * Native M(PEG)-Dash renderer
@@ -21,28 +18,24 @@ let scriptPromise;
  *
  */
 const NativeDash = {
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaLoaded: false,
+
+	promise: null,
 
 	/**
 	 * Create a queue to prepare the loading of an DASH source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an DASH player instance
 	 */
-	prepareSettings(settings) {
+	load(settings) {
 		if (typeof dashjs !== 'undefined') {
-			NativeDash.createInstance(settings);
+			NativeDash._createPlayer(settings);
 		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
 
-			scriptPromise = scriptPromise || loadScript(settings.options.path);
-			scriptPromise.then(() => {
-				NativeDash.isLoaded = true;
-				NativeDash.isMediaLoaded = true;
-				NativeDash.createInstance(settings);
+			NativeDash.promise = NativeDash.promise || loadScript(settings.options.path);
+			NativeDash.promise.then(() => {
+				NativeDash._createPlayer(settings);
 			});
 		}
 	},
@@ -52,8 +45,7 @@ const NativeDash = {
 	 *
 	 * @param {Object} settings - an object with settings needed to instantiate DASH object
 	 */
-	createInstance: (settings) => {
-
+	_createPlayer: (settings) => {
 		const player = dashjs.MediaPlayer().create();
 		window['__ready__' + settings.id](player);
 	}
@@ -202,7 +194,7 @@ const DashNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		NativeDash.prepareSettings({
+		NativeDash.load({
 			options: options.dash,
 			id: id
 		});

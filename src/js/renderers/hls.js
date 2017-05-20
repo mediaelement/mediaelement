@@ -1,15 +1,12 @@
 'use strict';
 
 import window from 'global/window';
-import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {HAS_MSE} from '../utils/constants';
 import {typeChecks} from '../utils/media';
 import {loadScript} from '../utils/dom';
-
-let scriptPromise;
 
 /**
  * Native HLS renderer
@@ -21,35 +18,27 @@ let scriptPromise;
  *
  */
 const NativeHls = {
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaStarted: false,
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaLoaded: false,
+
+	promise: null,
 
 	/**
 	 * Create a queue to prepare the loading of an HLS source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an HLS player instance
 	 */
-	 prepareSettings(settings) {
- 		if (typeof dashjs !== 'undefined') {
- 			NativeDash.createInstance(settings);
- 		} else {
- 			settings.options.path = typeof settings.options.path === 'string' ?
- 				settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
+	load(settings) {
+		if (typeof Hls !== 'undefined') {
+			NativeHls._createPlayer(settings);
+		} else {
+			settings.options.path = typeof settings.options.path === 'string' ?
+				settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
- 			scriptPromise = scriptPromise || loadScript(settings.options.path);
- 			scriptPromise.then(() => {
-				NativeHls.isLoaded = true;
-				NativeHls.isMediaLoaded = true;
-				NativeHls.createInstance(settings);
- 			});
- 		}
- 	},
+			NativeHls.promise = NativeHls.promise || loadScript(settings.options.path);
+			NativeHls.promise.then(() => {
+				NativeHls._createPlayer(settings);
+			});
+		}
+	},
 
 	/**
 	 * Create a new instance of HLS player and trigger a custom event to initialize it
@@ -57,7 +46,7 @@ const NativeHls = {
 	 * @param {Object} settings - an object with settings needed to instantiate HLS object
 	 * @return {Hls}
 	 */
-	createInstance: (settings) => {
+	_createPlayer: (settings) => {
 		const player = new Hls(settings.options);
 		window['__ready__' + settings.id](player);
 		return player;
@@ -130,7 +119,7 @@ const HlsNativeRenderer = {
 							if (propName === 'src') {
 
 								hlsPlayer.destroy();
-								hlsPlayer = NativeHls.createInstance({
+								hlsPlayer = NativeHls._createPlayer({
 									options: options.hls,
 									id: id
 								});
@@ -264,7 +253,7 @@ const HlsNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		NativeHls.prepareSettings({
+		NativeHls.load({
 			options: options.hls,
 			id: id
 		});

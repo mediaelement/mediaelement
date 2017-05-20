@@ -42,11 +42,7 @@ const DailyMotionApi = {
 	 */
 	loadIframeApi: () => {
 		if (!DailyMotionApi.isSDKStarted) {
-			const e = document.createElement('script');
-			e.async = true;
-			e.src = 'https://api.dmcdn.net/all.js';
-			const s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(e, s);
+			mejs.Utils.loadScript('https://api.dmcdn.net/all.js');
 			DailyMotionApi.isSDKStarted = true;
 		}
 	},
@@ -323,7 +319,7 @@ const DailyMotionIframeRenderer = {
 						const
 							propName = stackItem.propName,
 							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`
-							;
+						;
 
 						dm[`set${capName}`](stackItem.value);
 

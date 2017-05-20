@@ -54,11 +54,7 @@ var DailyMotionApi = {
   */
 	loadIframeApi: function loadIframeApi() {
 		if (!DailyMotionApi.isSDKStarted) {
-			var e = document.createElement('script');
-			e.async = true;
-			e.src = 'https://api.dmcdn.net/all.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(e, s);
+			mejs.Utils.loadScript('https://api.dmcdn.net/all.js');
 			DailyMotionApi.isSDKStarted = true;
 		}
 	},

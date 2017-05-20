@@ -10,14 +10,14 @@ import document from 'global/document';
 import mejs from '../core/mejs';
 
 
-function TinyPromise(handler) {
+function TinyPromise (handler) {
 	const thens = [];
 	let state = -1;
 	let result;
 	let then;
 
-	function done(value) {
-		for (result = value; then = thens.shift();) {
+	function done (value) {
+		for (result = value; (then = thens.shift());) {
 			then[state] && then[state](result);
 		}
 	}
@@ -39,8 +39,14 @@ export function loadScript (url) {
 		const script = document.createElement('script');
 		script.src = url;
 		script.async = true;
-		script.onload = () => { script.remove(); resolve(); }
-		script.onerror = () => { script.remove(); reject(); }
+		script.onload = () => {
+			script.remove();
+			resolve();
+		};
+		script.onerror = () => {
+			script.remove();
+			reject();
+		};
 		document.head.appendChild(script);
 	});
 }
@@ -74,16 +80,18 @@ export const hasClass = hasClassMethod;
 export const addClass = addClassMethod;
 export const removeClass = removeClassMethod;
 
-export function toggleClass(el, className) {
+export function toggleClass (el, className) {
 	hasClass(el, className) ? removeClass(el, className) : addClass(el, className);
 }
 
 // fade an element from the current state to full opacity in "duration" ms
 export function fadeOut (el, duration = 400, callback) {
-	if ( ! el.style.opacity) { el.style.opacity = 1; }
+	if (!el.style.opacity) {
+		el.style.opacity = 1;
+	}
 
 	let start = null;
-	window.requestAnimationFrame(function animate(timestamp) {
+	window.requestAnimationFrame(function animate (timestamp) {
 		start = start || timestamp;
 		const progress = timestamp - start;
 		const opacity = parseFloat(1 - progress / duration, 2);
@@ -106,7 +114,7 @@ export function fadeIn (el, duration = 400, callback) {
 	}
 
 	let start = null;
-	window.requestAnimationFrame(function animate(timestamp) {
+	window.requestAnimationFrame(function animate (timestamp) {
 		start = start || timestamp;
 		const progress = timestamp - start;
 		const opacity = parseFloat(progress / duration, 2);
@@ -136,7 +144,7 @@ export function visible (elem) {
 	return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
 }
 
-export function ajax(url, dataType, success, error) {
+export function ajax (url, dataType, success, error) {
 	const xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
 	let
@@ -150,7 +158,7 @@ export function ajax(url, dataType, success, error) {
 			type = 'text/plain';
 			break;
 		case 'json':
-			type= 'application/json, text/javascript';
+			type = 'application/json, text/javascript';
 			break;
 		case 'html':
 			type = 'text/html';
@@ -167,7 +175,7 @@ export function ajax(url, dataType, success, error) {
 	if (xhr) {
 		xhr.open('GET', url, true);
 		xhr.setRequestHeader('Accept', accept);
-		xhr.onreadystatechange = function() {
+		xhr.onreadystatechange = function () {
 
 			// Ignore repeat invocations
 			if (completed) {
@@ -216,3 +224,4 @@ mejs.Utils.fadeOut = fadeOut;
 mejs.Utils.siblings = siblings;
 mejs.Utils.visible = visible;
 mejs.Utils.ajax = ajax;
+mejs.Utils.loadScript = loadScript;

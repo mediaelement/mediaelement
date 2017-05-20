@@ -6725,6 +6725,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.removeClass = exports.addClass = exports.hasClass = undefined;
+exports.loadScript = loadScript;
 exports.offset = offset;
 exports.toggleClass = toggleClass;
 exports.fadeOut = fadeOut;
@@ -6746,6 +6747,50 @@ var _mejs = _dereq_(6);
 var _mejs2 = _interopRequireDefault(_mejs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function TinyPromise(handler) {
+	var thens = [];
+	var state = -1;
+	var result = void 0;
+	var then = void 0;
+
+	function done(value) {
+		for (result = value; then = thens.shift();) {
+			then[state] && then[state](result);
+		}
+	}
+
+	handler(function (value) {
+		return done(value, state = 0);
+	}, function (value) {
+		return done(value, state = 1);
+	});
+
+	return {
+		then: function then() {
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			~state ? args[state] && args[state](result) : thens.push(args);
+		}
+	};
+}function loadScript(url) {
+	return TinyPromise(function (resolve, reject) {
+		var script = _document2.default.createElement('script');
+		script.src = url;
+		script.async = true;
+		script.onload = function () {
+			script.remove();
+			resolve();
+		};
+		script.onerror = function () {
+			script.remove();
+			reject();
+		};
+		_document2.default.head.appendChild(script);
+	});
+}
 
 function offset(el) {
 	var rect = el.getBoundingClientRect(),
@@ -6933,6 +6978,7 @@ _mejs2.default.Utils.fadeOut = fadeOut;
 _mejs2.default.Utils.siblings = siblings;
 _mejs2.default.Utils.visible = visible;
 _mejs2.default.Utils.ajax = ajax;
+_mejs2.default.Utils.loadScript = loadScript;
 
 },{"2":2,"3":3,"6":6}],21:[function(_dereq_,module,exports){
 'use strict';

@@ -7,78 +7,23 @@
  * @see https://developers.soundcloud.com/docs/api/html5-widget
  */
 const SoundCloudApi = {
-	/**
-	 * @type {Boolean}
-	 */
-	isSDKStarted: false,
-	/**
-	 * @type {Boolean}
-	 */
-	isSDKLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	iframeQueue: [],
+
+	promise: null,
 
 	/**
 	 * Create a queue to prepare the creation of <iframe>
 	 *
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
-	enqueueIframe: (settings) => {
+	load: (settings) => {
 
-		if (SoundCloudApi.isLoaded) {
-			SoundCloudApi.createIframe(settings);
+		if (typeof SC !== 'undefined') {
+			SoundCloudApi._createPlayer(settings);
 		} else {
-			SoundCloudApi.loadIframeApi();
-			SoundCloudApi.iframeQueue.push(settings);
-		}
-	},
-
-	/**
-	 * Load SoundCloud API script on the header of the document
-	 *
-	 */
-	loadIframeApi: () => {
-		if (!SoundCloudApi.isSDKStarted) {
-
-			const
-				head = document.getElementsByTagName("head")[0] || document.documentElement,
-				script = document.createElement("script")
-			;
-
-			let done = false;
-
-			script.src = 'https://w.soundcloud.com/player/api.js';
-
-			// Attach handlers for all browsers
-			// Is onload enough now? do IE9 support it?
-			script.onload = script.onreadystatechange = () => {
-				if (!done && (!SoundCloudApi.readyState || SoundCloudApi.readyState === "loaded" || SoundCloudApi.readyState === "complete")) {
-					done = true;
-					SoundCloudApi.apiReady();
-
-					// Handle memory leak in IE
-					script.onload = script.onreadystatechange = null;
-					script.remove();
-				}
-			};
-			head.appendChild(script);
-			SoundCloudApi.isSDKStarted = true;
-		}
-	},
-
-	/**
-	 * Process queue of SoundCloud <iframe> element creation
-	 *
-	 */
-	apiReady: () => {
-		SoundCloudApi.isLoaded = true;
-		SoundCloudApi.isSDKLoaded = true;
-
-		while (SoundCloudApi.iframeQueue.length > 0) {
-			const settings = SoundCloudApi.iframeQueue.pop();
-			SoundCloudApi.createIframe(settings);
+			SoundCloudApi.promise = SoundCloudApi.promise || mejs.Utils.loadScript('https://w.soundcloud.com/player/api.js');
+			SoundCloudApi.promise.then(() => {
+				SoundCloudApi._createPlayer(settings);
+			});
 		}
 	},
 
@@ -87,7 +32,7 @@ const SoundCloudApi = {
 	 *
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
-	createIframe: (settings) => {
+	_createPlayer: (settings) => {
 		const player = SC.Widget(settings.iframe);
 		window['__ready__' + settings.id](player);
 	}
@@ -406,9 +351,10 @@ const SoundCloudIframeRenderer = {
 			id: sc.id
 		};
 
-		SoundCloudApi.enqueueIframe(scSettings);
+		SoundCloudApi.load(scSettings);
 
-		sc.setSize = () => {};
+		sc.setSize = () => {
+		};
 		sc.hide = () => {
 			sc.pause();
 			if (scIframe) {

@@ -11,79 +11,24 @@
  * @see https://github.com/vimeo/player.js
  *
  */
-const vimeoApi = {
+const VimeoApi = {
 
-	/**
-	 * @type {Boolean}
-	 */
-	isIframeStarted: false,
-	/**
-	 * @type {Boolean}
-	 */
-	isIframeLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	iframeQueue: [],
+	promise: null,
 
 	/**
 	 * Create a queue to prepare the creation of <iframe>
 	 *
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
-	enqueueIframe: (settings) => {
+	load: (settings) => {
 
-		if (vimeoApi.isLoaded) {
-			vimeoApi.createIframe(settings);
+		if (typeof Vimeo !== 'undefined') {
+			VimeoApi._createPlayer(settings);
 		} else {
-			vimeoApi.loadIframeApi();
-			vimeoApi.iframeQueue.push(settings);
-		}
-	},
-
-	/**
-	 * Load Vimeo API script on the header of the document
-	 *
-	 */
-	loadIframeApi: () => {
-
-		if (!vimeoApi.isIframeStarted) {
-
-			const
-				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0]
-			;
-
-			let done = false;
-
-			script.src = 'https://player.vimeo.com/api/player.js';
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function() {
-				if (!done && (!this.readyState || this.readyState === undefined ||
-					this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					vimeoApi.iFrameReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			vimeoApi.isIframeStarted = true;
-		}
-	},
-
-	/**
-	 * Process queue of Vimeo <iframe> element creation
-	 *
-	 */
-	iFrameReady: () => {
-
-		vimeoApi.isLoaded = true;
-		vimeoApi.isIframeLoaded = true;
-
-		while (vimeoApi.iframeQueue.length > 0) {
-			const settings = vimeoApi.iframeQueue.pop();
-			vimeoApi.createIframe(settings);
+			VimeoApi.promise = VimeoApi.promise || mejs.Utils.loadScript('https://player.vimeo.com/api/player.js');
+			VimeoApi.promise.then(() => {
+				VimeoApi._createPlayer(settings);
+			});
 		}
 	},
 
@@ -92,7 +37,7 @@ const vimeoApi = {
 	 *
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
-	createIframe: (settings) => {
+	_createPlayer: (settings) => {
 		const player = new Vimeo.Player(settings.iframe);
 		window['__ready__' + settings.id](player);
 	},
@@ -242,7 +187,7 @@ const vimeoIframeRenderer = {
 
 							case 'src':
 								const url = typeof value === 'string' ? value : value[0].src,
-									videoId = vimeoApi.getVimeoId(url);
+									videoId = VimeoApi.getVimeoId(url);
 
 								vimeoPlayer.loadVideo(videoId).then(() => {
 									if (mediaElement.originalNode.autoplay) {
@@ -478,7 +423,7 @@ const vimeoIframeRenderer = {
 			height = mediaElement.originalNode.height,
 			width = mediaElement.originalNode.width,
 			vimeoContainer = document.createElement('iframe'),
-			standardUrl = `//player.vimeo.com/video/${vimeoApi.getVimeoId(mediaFiles[0].src)}`,
+			standardUrl = `//player.vimeo.com/video/${VimeoApi.getVimeoId(mediaFiles[0].src)}`,
 			queryArgs = ~mediaFiles[0].src.indexOf('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : ''
 		;
 
@@ -495,7 +440,7 @@ const vimeoIframeRenderer = {
 		mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 
-		vimeoApi.enqueueIframe({
+		VimeoApi.load({
 			iframe: vimeoContainer,
 			id: vimeo.id
 		});

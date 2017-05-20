@@ -8,8 +8,6 @@ import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 import {loadScript} from '../utils/dom';
 
-let scriptPromise;
-
 /**
  * YouTube renderer
  *
@@ -56,7 +54,7 @@ const YouTubeApi = {
 	 */
 	loadIframeApi: () => {
 		if (!YouTubeApi.isIframeStarted) {
-			loadScript('https://www.youtube.com/player_api')
+			loadScript('https://www.youtube.com/player_api');
 			YouTubeApi.isIframeStarted = true;
 		}
 	},
