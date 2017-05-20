@@ -7,6 +7,9 @@ import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {HAS_MSE} from '../utils/constants';
 import {typeChecks} from '../utils/media';
+import {loadScript} from '../utils/dom';
+
+let scriptPromise;
 
 /**
  * Native HLS renderer
@@ -26,77 +29,27 @@ const NativeHls = {
 	 * @type {Boolean}
 	 */
 	isMediaLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	creationQueue: [],
 
 	/**
 	 * Create a queue to prepare the loading of an HLS source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an HLS player instance
 	 */
-	prepareSettings: (settings) => {
-		if (NativeHls.isLoaded) {
-			NativeHls.createInstance(settings);
-		} else {
-			NativeHls.loadScript(settings);
-			NativeHls.creationQueue.push(settings);
-		}
-	},
+	 prepareSettings(settings) {
+ 		if (typeof dashjs !== 'undefined') {
+ 			NativeDash.createInstance(settings);
+ 		} else {
+ 			settings.options.path = typeof settings.options.path === 'string' ?
+ 				settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
-	/**
-	 * Load hls.js script on the header of the document
-	 *
-	 * @param {Object} settings - an object with settings needed to load an HLS player instance
-	 */
-	loadScript: (settings) => {
-
-		// Skip script loading since it is already loaded
-		if (typeof Hls !== 'undefined') {
-			NativeHls.createInstance(settings);
-		} else if (!NativeHls.isMediaStarted) {
-
-			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
-
-			const
-				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0]
-			;
-
-			let done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined ||
-					this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeHls.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			NativeHls.isMediaStarted = true;
-		}
-	},
-
-	/**
-	 * Process queue of HLS player creation
-	 *
-	 */
-	mediaReady: () => {
-		NativeHls.isLoaded = true;
-		NativeHls.isMediaLoaded = true;
-
-		while (NativeHls.creationQueue.length > 0) {
-			const settings = NativeHls.creationQueue.pop();
-			NativeHls.createInstance(settings);
-		}
-	},
+ 			scriptPromise = scriptPromise || loadScript(settings.options.path);
+ 			scriptPromise.then(() => {
+				NativeHls.isLoaded = true;
+				NativeHls.isMediaLoaded = true;
+				NativeHls.createInstance(settings);
+ 			});
+ 		}
+ 	},
 
 	/**
 	 * Create a new instance of HLS player and trigger a custom event to initialize it

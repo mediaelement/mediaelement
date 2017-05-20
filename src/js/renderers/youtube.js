@@ -6,6 +6,9 @@ import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
+import {loadScript} from '../utils/dom';
+
+let scriptPromise;
 
 /**
  * YouTube renderer
@@ -53,10 +56,7 @@ const YouTubeApi = {
 	 */
 	loadIframeApi: () => {
 		if (!YouTubeApi.isIframeStarted) {
-			const tag = document.createElement('script');
-			tag.src = 'https://www.youtube.com/player_api';
-			const firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			loadScript('https://www.youtube.com/player_api')
 			YouTubeApi.isIframeStarted = true;
 		}
 	},

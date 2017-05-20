@@ -9,6 +9,42 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 
+
+function TinyPromise(handler) {
+	const thens = [];
+	let state = -1;
+	let result;
+	let then;
+
+	function done(value) {
+		for (result = value; then = thens.shift();) {
+			then[state] && then[state](result);
+		}
+	}
+
+	handler(
+		value => done(value, state = 0),
+		value => done(value, state = 1)
+	);
+
+	return {
+    then(...args) {
+      ~state ? args[state] && args[state](result) : thens.push(args)
+    }
+  }
+}
+
+export function loadScript (url) {
+	return TinyPromise((resolve, reject) => {
+		const script = document.createElement('script');
+		script.src = url;
+		script.async = true;
+		script.onload = () => script.remove(resolve());
+		script.onerror = () => script.remove(reject());
+		document.head.appendChild(script);
+	})
+}
+
 export function offset (el) {
 	var rect = el.getBoundingClientRect(),
 		scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
