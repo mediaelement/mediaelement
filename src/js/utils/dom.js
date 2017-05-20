@@ -28,10 +28,10 @@ function TinyPromise(handler) {
 	);
 
 	return {
-    then(...args) {
-      ~state ? args[state] && args[state](result) : thens.push(args)
-    }
-  }
+		then(...args) {
+			~state ? args[state] && args[state](result) : thens.push(args)
+		}
+	}
 }
 
 export function loadScript (url) {
@@ -39,10 +39,10 @@ export function loadScript (url) {
 		const script = document.createElement('script');
 		script.src = url;
 		script.async = true;
-		script.onload = () => script.remove(resolve());
-		script.onerror = () => script.remove(reject());
+		script.onload = () => { script.remove(); resolve(); }
+		script.onerror = () => { script.remove(); reject(); }
 		document.head.appendChild(script);
-	})
+	});
 }
 
 export function offset (el) {
