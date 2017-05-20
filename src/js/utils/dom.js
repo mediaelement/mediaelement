@@ -17,13 +17,13 @@ const TinyPromise = (h,f=[],b=-1,g,c,l) => (
 	{then(...d){~b?d[b]&&d[b](g):f.push(d)}}
 )
 
-export function loadScript (url, callback) {
+export function loadScript (url) {
 	return TinyPromise((resolve, reject) => {
 		const script = document.createElement('script');
 		script.src = url;
 		script.async = true;
-		script.onload = () => script.remove(resolve())
-		script.onerror = () => reject()
+		script.onload = () => script.remove(resolve());
+		script.onerror = () => script.remove(reject());
 		document.head.appendChild(script);
 	})
 }
