@@ -28,10 +28,10 @@ function TinyPromise(handler) {
 	);
 
 	return {
-    then(...args) {
-      ~state ? args[state] && args[state](result) : thens.push(args)
-    }
-  }
+		then(...args) {
+			~state ? args[state] && args[state](result) : thens.push(args)
+		}
+	}
 }
 
 export function loadScript (url) {
