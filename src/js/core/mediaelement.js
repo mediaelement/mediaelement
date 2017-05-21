@@ -157,8 +157,6 @@ class MediaElement {
 				const index = rendererArray[i];
 
 				if (index === rendererName) {
-
-					// create the renderer
 					const rendererList = renderer.renderers;
 					newRendererType = rendererList[index];
 
@@ -268,7 +266,6 @@ class MediaElement {
 			// based on the media files detected
 			getSrc = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer.getSrc() : null,
 			setSrc = (value) => {
-
 				const mediaFiles = [];
 
 				// clean up URLs
@@ -290,7 +287,6 @@ class MediaElement {
 							type: (type === '' || type === null || type === undefined) && src ?
 								getTypeFromFile(src) : type
 						});
-
 					}
 				}
 
@@ -331,7 +327,6 @@ class MediaElement {
 					event.message = 'Error creating renderer';
 					t.mediaElement.dispatchEvent(event);
 					t.mediaElement.createErrorMessage(mediaFiles);
-					return;
 				}
 			},
 			assignMethods = (methodName) => {
@@ -457,7 +452,6 @@ class MediaElement {
 			mediaFiles = [];
 
 			switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
-
 				case 'iframe':
 					mediaFiles.push({
 						type: '',
@@ -465,7 +459,6 @@ class MediaElement {
 					});
 
 					break;
-
 				case 'audio':
 				case 'video':
 					const

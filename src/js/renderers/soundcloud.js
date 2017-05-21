@@ -40,7 +40,6 @@ const SoundCloudApi = {
 
 const SoundCloudIframeRenderer = {
 	name: 'soundcloud_iframe',
-
 	options: {
 		prefix: 'soundcloud_iframe'
 	},
@@ -83,18 +82,13 @@ const SoundCloudIframeRenderer = {
 			scIframe = null
 		;
 
-		// store main variable
 		sc.options = options;
 		sc.id = mediaElement.id + '_' + options.prefix;
 		sc.mediaElement = mediaElement;
 
-		// wrappers for get/set
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
-
-				// add to flash state that we will store
-
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 				sc[`get${capName}`] = () => {
@@ -105,22 +99,16 @@ const SoundCloudIframeRenderer = {
 						switch (propName) {
 							case 'currentTime':
 								return currentTime;
-
 							case 'duration':
 								return duration;
-
 							case 'volume':
 								return volume;
-
 							case 'paused':
 								return paused;
-
 							case 'ended':
 								return ended;
-
 							case 'muted':
-								return muted; // ?
-
+								return muted;
 							case 'buffered':
 								return {
 									start: () => {
@@ -133,11 +121,9 @@ const SoundCloudIframeRenderer = {
 								};
 							case 'src':
 								return (scIframe) ? scIframe.src : '';
-
 							case 'readyState':
 								return readyState;
 						}
-
 						return value;
 					} else {
 						return null;
@@ -145,26 +131,18 @@ const SoundCloudIframeRenderer = {
 				};
 
 				sc[`set${capName}`] = (value) => {
-
 					if (scPlayer !== null) {
-
-						// do something
 						switch (propName) {
-
 							case 'src':
 								const url = typeof value === 'string' ? value : value[0].src;
-
 								scPlayer.load(url);
-
 								if (autoplay) {
 									scPlayer.play();
 								}
 								break;
-
 							case 'currentTime':
 								scPlayer.seekTo(value * 1000);
 								break;
-
 							case 'muted':
 								if (value) {
 									scPlayer.setVolume(0); // ?
@@ -176,7 +154,6 @@ const SoundCloudIframeRenderer = {
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'volume':
 								scPlayer.setVolume(value);
 								setTimeout(() => {
@@ -184,7 +161,6 @@ const SoundCloudIframeRenderer = {
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'readyState':
 								const event = mejs.Utils.createEvent('canplay', sc);
 								mediaElement.dispatchEvent(event);
@@ -194,13 +170,11 @@ const SoundCloudIframeRenderer = {
 								console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
 								break;
 						}
-
 					} else {
 						// store for after "READY" event fires
 						apiStack.push({type: 'set', propName: propName, value: value});
 					}
 				};
-
 			}
 		;
 
@@ -208,17 +182,11 @@ const SoundCloudIframeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add wrappers for native methods
 		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
-
-				// run the method on the Soundcloud API
 				sc[methodName] = () => {
-
 					if (scPlayer !== null) {
-
-						// DO method
 						switch (methodName) {
 							case 'play':
 								return scPlayer.play();
@@ -226,14 +194,11 @@ const SoundCloudIframeRenderer = {
 								return scPlayer.pause();
 							case 'load':
 								return null;
-
 						}
-
 					} else {
 						apiStack.push({type: 'call', methodName: methodName});
 					}
 				};
-
 			}
 		;
 
@@ -241,7 +206,6 @@ const SoundCloudIframeRenderer = {
 			assignMethods(methods[i]);
 		}
 
-		// add a ready method that SC can fire
 		window['__ready__' + sc.id] = (_scPlayer) => {
 
 			mediaElement.scPlayer = scPlayer = _scPlayer;
@@ -250,7 +214,6 @@ const SoundCloudIframeRenderer = {
 				scPlayer.play();
 			}
 
-			// do call stack
 			if (apiStack.length) {
 				for (let i = 0, total = apiStack.length; i < total; i++) {
 
@@ -271,38 +234,32 @@ const SoundCloudIframeRenderer = {
 			scPlayer.bind(SC.Widget.Events.PLAY_PROGRESS, () => {
 				paused = false;
 				ended = false;
-
 				scPlayer.getPosition((_currentTime) => {
 					currentTime = _currentTime / 1000;
 					const event = mejs.Utils.createEvent('timeupdate', sc);
 					mediaElement.dispatchEvent(event);
 				});
 			});
-
 			scPlayer.bind(SC.Widget.Events.PAUSE, () => {
 				paused = true;
-
 				const event = mejs.Utils.createEvent('pause', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.PLAY, () => {
 				paused = false;
 				ended = false;
-
 				const event = mejs.Utils.createEvent('play', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.FINISHED, () => {
 				paused = false;
 				ended = true;
-
 				const event = mejs.Utils.createEvent('ended', sc);
 				mediaElement.dispatchEvent(event);
 			});
 			scPlayer.bind(SC.Widget.Events.READY, () => {
 				scPlayer.getDuration((_duration) => {
 					duration = _duration / 1000;
-
 					const event = mejs.Utils.createEvent('loadedmetadata', sc);
 					mediaElement.dispatchEvent(event);
 				});
@@ -311,7 +268,6 @@ const SoundCloudIframeRenderer = {
 				scPlayer.getDuration((loadProgress) => {
 					if (duration > 0) {
 						bufferedTime = duration * loadProgress;
-
 						const event = mejs.Utils.createEvent('progress', sc);
 						mediaElement.dispatchEvent(event);
 					}
@@ -326,7 +282,6 @@ const SoundCloudIframeRenderer = {
 
 			// give initial events
 			const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-
 			for (let i = 0, total = initEvents.length; i < total; i++) {
 				const event = mejs.Utils.createEvent(initEvents[i], sc);
 				mediaElement.dispatchEvent(event);
@@ -353,8 +308,7 @@ const SoundCloudIframeRenderer = {
 
 		SoundCloudApi.load(scSettings);
 
-		sc.setSize = () => {
-		};
+		sc.setSize = () => {};
 		sc.hide = () => {
 			sc.pause();
 			if (scIframe) {

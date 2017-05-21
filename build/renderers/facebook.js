@@ -11,16 +11,8 @@
  */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-/**
- * Facebook renderer
- *
- * It creates an <iframe> from a <div> with specific configuration.
- * @see https://developers.facebook.com/docs/plugins/embedded-video-player
- */
-
 var FacebookRenderer = {
 	name: 'facebook',
-
 	options: {
 		prefix: 'facebook',
 		facebook: {
@@ -30,24 +22,10 @@ var FacebookRenderer = {
 		}
 	},
 
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
 	canPlayType: function canPlayType(type) {
 		return ~['video/facebook', 'video/x-facebook'].indexOf(type.toLowerCase());
 	},
 
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
 	create: function create(mediaElement, options, mediaFiles) {
 
 		var fbWrapper = {},
@@ -68,7 +46,6 @@ var FacebookRenderer = {
 		fbWrapper.id = mediaElement.id + '_' + options.prefix;
 		fbWrapper.mediaElement = mediaElement;
 
-		// wrappers for get/set
 		var props = mejs.html5media.properties,
 		    assignGettersSetters = function assignGettersSetters(propName) {
 
@@ -79,26 +56,19 @@ var FacebookRenderer = {
 				if (fbApi !== null) {
 					var value = null;
 
-					// figure out how to get youtube dta here
 					switch (propName) {
 						case 'currentTime':
 							return fbApi.getCurrentPosition();
-
 						case 'duration':
 							return fbApi.getDuration();
-
 						case 'volume':
 							return fbApi.getVolume();
-
 						case 'paused':
 							return paused;
-
 						case 'ended':
 							return ended;
-
 						case 'muted':
 							return fbApi.isMuted();
-
 						case 'buffered':
 							return {
 								start: function start() {
@@ -111,7 +81,6 @@ var FacebookRenderer = {
 							};
 						case 'src':
 							return src;
-
 						case 'readyState':
 							return readyState;
 					}
@@ -127,16 +96,12 @@ var FacebookRenderer = {
 				if (fbApi !== null) {
 
 					switch (propName) {
-
 						case 'src':
 							var url = typeof value === 'string' ? value : value[0].src;
 
-							// Only way is to destroy instance and all the events fired,
-							// and create new one
 							fbDiv.remove();
 							createFacebookEmbed(url, options.facebook);
 
-							// This method reloads video on-demand
 							FB.XFBML.parse();
 
 							if (autoplay) {
@@ -144,11 +109,9 @@ var FacebookRenderer = {
 							}
 
 							break;
-
 						case 'currentTime':
 							fbApi.seek(value);
 							break;
-
 						case 'muted':
 							if (value) {
 								fbApi.mute();
@@ -160,7 +123,6 @@ var FacebookRenderer = {
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
-
 						case 'volume':
 							fbApi.setVolume(value);
 							setTimeout(function () {
@@ -168,18 +130,15 @@ var FacebookRenderer = {
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
-
 						case 'readyState':
 							var event = mejs.Utils.createEvent('canplay', fbWrapper);
 							mediaElement.dispatchEvent(event);
 							break;
-
 						default:
 							
 							break;
 					}
 				} else {
-					// store for after "READY" event fires
 					apiStack.push({ type: 'set', propName: propName, value: value });
 				}
 			};
@@ -189,16 +148,10 @@ var FacebookRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add wrappers for native methods
 		var methods = mejs.html5media.methods,
 		    assignMethods = function assignMethods(methodName) {
-
-			// run the method on the native HTMLMediaElement
 			fbWrapper[methodName] = function () {
-
 				if (fbApi !== null) {
-
-					// DO method
 					switch (methodName) {
 						case 'play':
 							return fbApi.play();
@@ -206,7 +159,6 @@ var FacebookRenderer = {
 							return fbApi.pause();
 						case 'load':
 							return null;
-
 					}
 				} else {
 					apiStack.push({ type: 'call', methodName: methodName });
@@ -218,12 +170,6 @@ var FacebookRenderer = {
 			assignMethods(methods[_i]);
 		}
 
-		/**
-   * Dispatch a list of events
-   *
-   * @private
-   * @param {Array} events
-   */
 		function sendEvents(events) {
 			for (var _i2 = 0, _total2 = events.length; _i2 < _total2; _i2++) {
 				var event = mejs.Utils.createEvent(events[_i2], fbWrapper);
@@ -231,19 +177,7 @@ var FacebookRenderer = {
 			}
 		}
 
-		/**
-   * Create a new Facebook player and attach all its events
-   *
-   * This method creates a <div> element that, once the API is available, will generate an <iframe>.
-   * Valid URL format(s):
-   *  - https://www.facebook.com/johndyer/videos/10107816243681884/
-   *
-   * @param {String} url
-   * @param {Object} config
-   */
 		function createFacebookEmbed(url, config) {
-
-			// Append width and height if not detected
 			src = url;
 
 			fbDiv = document.createElement('div');
@@ -256,10 +190,6 @@ var FacebookRenderer = {
 			mediaElement.originalNode.parentNode.insertBefore(fbDiv, mediaElement.originalNode);
 			mediaElement.originalNode.style.display = 'none';
 
-			/*
-    * Register Facebook API event globally
-    *
-    */
 			window.fbAsyncInit = function () {
 
 				FB.init(config);
@@ -270,7 +200,6 @@ var FacebookRenderer = {
 
 						fbApi = msg.instance;
 
-						// Set proper size since player dimensions are unknown before this event
 						var fbIframe = fbDiv.getElementsByTagName('iframe')[0],
 						    width = fbIframe.offsetWidth,
 						    height = fbIframe.offsetHeight,
@@ -290,7 +219,6 @@ var FacebookRenderer = {
 							fbIframe.addEventListener(events[_i3], assignEvents, false);
 						}
 
-						// remove previous listeners
 						var fbEvents = ['startedPlaying', 'paused', 'finishedPlaying', 'startedBuffering', 'finishedBuffering'];
 						for (var _i4 = 0, _total4 = fbEvents.length; _i4 < _total4; _i4++) {
 							var event = fbEvents[_i4],
@@ -300,7 +228,6 @@ var FacebookRenderer = {
 							}
 						}
 
-						// do call stack
 						if (apiStack.length) {
 							for (var _i5 = 0, _total5 = apiStack.length; _i5 < _total5; _i5++) {
 
@@ -321,7 +248,6 @@ var FacebookRenderer = {
 
 						var timer = void 0;
 
-						// Custom Facebook events
 						eventHandler.startedPlaying = fbApi.subscribe('startedPlaying', function () {
 							if (!hasStartedPlaying) {
 								hasStartedPlaying = true;
@@ -330,7 +256,6 @@ var FacebookRenderer = {
 							ended = false;
 							sendEvents(['play', 'playing', 'timeupdate']);
 
-							// Workaround to update progress bar
 							timer = setInterval(function () {
 								fbApi.getCurrentPosition();
 								sendEvents(['timeupdate']);
@@ -359,16 +284,7 @@ var FacebookRenderer = {
 				});
 			};
 
-			(function (d, s, id) {
-				var fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) {
-					return;
-				}
-				var js = d.createElement(s);
-				js.id = id;
-				js.src = 'https://connect.facebook.net/en_US/sdk.js';
-				fjs.parentNode.insertBefore(js, fjs);
-			})(document, 'script', 'facebook-jssdk');
+			mejs.Utils.loadScript('https://connect.facebook.net/en_US/sdk.js');
 		}
 
 		if (mediaFiles.length > 0) {
@@ -397,7 +313,6 @@ var FacebookRenderer = {
 		fbWrapper.interval = null;
 
 		fbWrapper.startInterval = function () {
-			// create timer
 			fbWrapper.interval = setInterval(function () {
 				var event = mejs.Utils.createEvent('timeupdate', fbWrapper);
 				mediaElement.dispatchEvent(event);
@@ -413,10 +328,6 @@ var FacebookRenderer = {
 	}
 };
 
-/**
- * Register Facebook type based on URL structure
- *
- */
 mejs.Utils.typeChecks.push(function (url) {
 	return ~url.toLowerCase().indexOf('//www.facebook') ? 'video/x-facebook' : null;
 });

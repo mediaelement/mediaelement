@@ -13,7 +13,6 @@ import {
 	IS_ANDROID,
 	IS_IOS,
 	IS_STOCK_ANDROID,
-	HAS_MS_NATIVE_FULLSCREEN,
 	HAS_TRUE_NATIVE_FULLSCREEN
 } from './utils/constants';
 import {splitEvents, isNodeAfter, createEvent, isString} from './utils/general';
@@ -297,7 +296,6 @@ class MediaElementPlayer {
 			return t.media.player;
 		}
 
-
 		// try to get options from data-mejsoptions
 		if (o === undefined) {
 			const options = t.node.getAttribute('data-mejsoptions');
@@ -328,7 +326,6 @@ class MediaElementPlayer {
 
 		// start up
 		const
-
 			meOptions = Object.assign({}, t.options, {
 				success: (media, domNode) => {
 					t._meReady(media, domNode);
@@ -386,21 +383,17 @@ class MediaElementPlayer {
 			t.container.addEventListener('focus', (e) => {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
-					// In versions older than IE11, the focus causes the playbar to be displayed
-					// if user clicks on the Play/Pause button in the control bar once it attempts
-					// to hide it
-					if (!HAS_MS_NATIVE_FULLSCREEN) {
-						// If e.relatedTarget appears before container, send focus to play button,
-						// else send focus to last control button.
-						const
-							btnSelector = isNodeAfter(e.relatedTarget, t.container) ?
-								`.${t.options.classPrefix}controls .${t.options.classPrefix}button:last-child > button` :
-								`.${t.options.classPrefix}playpause-button > button`,
-							button = t.container.querySelector(btnSelector)
-						;
 
-						button.focus();
-					}
+					// If e.relatedTarget appears before container, send focus to play button,
+					// else send focus to last control button.
+					const
+						btnSelector = isNodeAfter(e.relatedTarget, t.container) ?
+							`.${t.options.classPrefix}controls .${t.options.classPrefix}button:last-child > button` :
+							`.${t.options.classPrefix}playpause-button > button`,
+						button = t.container.querySelector(btnSelector)
+					;
+
+					button.focus();
 				}
 			});
 			t.node.parentNode.insertBefore(t.container, t.node);
@@ -460,7 +453,6 @@ class MediaElementPlayer {
 								Array.prototype.slice.call(childNode.attributes).forEach((item) => {
 									elements[item.name] = item.value;
 								});
-
 								elements.type = formatType(elements.src, elements.type);
 								mediaFiles.push(elements);
 								break;
@@ -509,7 +501,6 @@ class MediaElementPlayer {
 				tagType = (t.isVideo ? 'video' : 'audio'),
 				capsTagName = tagType.substring(0, 1).toUpperCase() + tagType.substring(1)
 			;
-
 
 			if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
 				t.width = t.options[tagType + 'Width'];
@@ -598,7 +589,6 @@ class MediaElementPlayer {
 
 		t.controlsAreVisible = true;
 		t.setControlsSize();
-
 	}
 
 	hideControls (doAnimation, forceHide) {
@@ -653,7 +643,6 @@ class MediaElementPlayer {
 	}
 
 	startControlsTimer (timeout) {
-
 		const t = this;
 
 		timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
@@ -667,7 +656,6 @@ class MediaElementPlayer {
 	}
 
 	killControlsTimer () {
-
 		const t = this;
 
 		if (t.controlsTimer !== null) {
@@ -700,7 +688,6 @@ class MediaElementPlayer {
 	 * @private
 	 */
 	_meReady (media, domNode) {
-
 		const
 			t = this,
 			autoplayAttr = domNode.getAttribute('autoplay'),
@@ -731,12 +718,10 @@ class MediaElementPlayer {
 			// create only MediaElement instance rather than
 			// doing all the work to create a full player
 			if (!t.isVideo && !t.options.features.length) {
-
 				// force autoplay for HTML5
 				if (autoplay && isNative) {
 					t.play();
 				}
-
 
 				if (t.options.success) {
 
@@ -827,9 +812,7 @@ class MediaElementPlayer {
 							}
 						}
 					});
-
 				} else {
-
 					// show/hide controls
 					t.container.addEventListener('mouseenter', () => {
 						if (t.controlsEnabled) {
@@ -900,7 +883,6 @@ class MediaElementPlayer {
 						}
 					}
 				}
-
 			});
 
 			// ended for all
@@ -1310,7 +1292,6 @@ class MediaElementPlayer {
 			poster.style.display = '';
 		}
 
-		// calculate new width and height
 		const
 			targetElement = t.container.querySelectorAll('object, embed, iframe, video'),
 			initHeight = t.height,
@@ -1420,7 +1401,6 @@ class MediaElementPlayer {
 	 * This allows the user to trigger events properly given that mouse/click don't get lost in the `<iframe>`.
 	 */
 	createIframeLayer () {
-
 		const t = this;
 
 		if (t.isVideo && t.media.rendererName !== null && t.media.rendererName.indexOf('iframe') > -1 && !document.getElementById(`${t.media.id}-iframe-overlay`)) {
@@ -1462,7 +1442,7 @@ class MediaElementPlayer {
 		const
 			t = this,
 			posterDiv = t.container.querySelector(`.${t.options.classPrefix}poster`)
-			;
+		;
 
 		let posterImg = posterDiv.querySelector('img');
 
@@ -1514,7 +1494,6 @@ class MediaElementPlayer {
 	}
 
 	globalUnbind (events, callback) {
-
 		const
 			t = this,
 			doc = t.node ? t.node.ownerDocument : document
@@ -1542,11 +1521,10 @@ class MediaElementPlayer {
 	}
 
 	buildposter (player, controls, layers, media) {
-
 		const
 			t = this,
 			poster = document.createElement('div')
-			;
+		;
 
 		poster.className = `${t.options.classPrefix}poster ${t.options.classPrefix}layer`;
 		layers.appendChild(poster);
@@ -1660,7 +1638,6 @@ class MediaElementPlayer {
 			!(player.media.originalNode.getAttribute('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
 			bigPlay.style.display = 'none';
 		}
-
 		// show/hide big play button
 		media.addEventListener('play', () => {
 			bigPlay.style.display = 'none';
@@ -1670,7 +1647,6 @@ class MediaElementPlayer {
 			}
 			error.style.display = 'none';
 		});
-
 		media.addEventListener('playing', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
@@ -1679,7 +1655,6 @@ class MediaElementPlayer {
 			}
 			error.style.display = 'none';
 		});
-
 		media.addEventListener('seeking', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = '';
@@ -1687,7 +1662,6 @@ class MediaElementPlayer {
 				buffer.style.display = '';
 			}
 		});
-
 		media.addEventListener('seeked', () => {
 			bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
@@ -1695,7 +1669,6 @@ class MediaElementPlayer {
 				buffer.style.display = '';
 			}
 		});
-
 		media.addEventListener('pause', () => {
 			loading.style.display = 'none';
 			if (!IS_STOCK_ANDROID) {
@@ -1705,14 +1678,12 @@ class MediaElementPlayer {
 				buffer.style.display = 'none';
 			}
 		});
-
 		media.addEventListener('waiting', () => {
 			loading.style.display = '';
 			if (buffer) {
 				buffer.style.display = '';
 			}
 		});
-
 
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
@@ -1866,12 +1837,10 @@ class MediaElementPlayer {
 		}
 
 		t.media.setSrc(src);
-
 		t.createIframeLayer();
 	}
 
 	remove () {
-
 		const
 			t = this,
 			rendererName = t.media.rendererName
@@ -1903,6 +1872,7 @@ class MediaElementPlayer {
 			nativeWidth = t.node.getAttribute('width'),
 			nativeHeight = t.node.getAttribute('height')
 		;
+
 		if (nativeWidth) {
 			if (nativeWidth.indexOf('%') === -1) {
 				nativeWidth = `${nativeWidth}px`;
@@ -1910,6 +1880,7 @@ class MediaElementPlayer {
 		} else {
 			nativeWidth = 'auto';
 		}
+
 		if (nativeHeight) {
 			if (nativeHeight.indexOf('%') === -1) {
 				nativeHeight = `${nativeHeight}px`;
@@ -1917,6 +1888,7 @@ class MediaElementPlayer {
 		} else {
 			nativeHeight = 'auto';
 		}
+
 		t.node.style.width = nativeWidth;
 		t.node.style.height = nativeHeight;
 

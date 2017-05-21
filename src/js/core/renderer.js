@@ -21,7 +21,6 @@ class Renderer {
 	 * @method add
 	 */
 	add (renderer) {
-
 		if (renderer.name === undefined) {
 			throw new TypeError('renderer must contain at least `name` property');
 		}
@@ -39,7 +38,6 @@ class Renderer {
 	 * @method select
 	 */
 	select (mediaFiles, renderers = []) {
-
 		const renderersLength = renderers.length;
 
 		renderers = renderers.length ? renderers: this.order;
@@ -95,7 +93,6 @@ class Renderer {
 	// Setters/getters
 
 	set order(order) {
-
 		if (!Array.isArray(order)) {
 			throw new TypeError('order must be an array of strings.');
 		}
@@ -104,7 +101,6 @@ class Renderer {
 	}
 
 	set renderers(renderers) {
-
 		if (renderers !== null && typeof renderers !== 'object') {
 			throw new TypeError('renderers must be an array of objects.');
 		}

@@ -69,7 +69,6 @@ export function getTypeFromFile (url) {
 		}
 	}
 
-	// the do standard extension check
 	const
 		ext = getExtension(url),
 		normalizedExt = normalizeExtension(ext)
@@ -87,7 +86,6 @@ export function getTypeFromFile (url) {
 	}
 
 	return mime;
-
 }
 
 /**
@@ -103,7 +101,6 @@ export function getExtension (url) {
 	}
 
 	const baseUrl = url.split('?')[0], baseName = baseUrl.split('\\').pop().split('/').pop();
-
 	return ~baseName.indexOf('.') ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
 }
 

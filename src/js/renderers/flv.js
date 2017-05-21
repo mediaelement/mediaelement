@@ -53,7 +53,6 @@ const NativeFlv = {
 
 const FlvNativeRenderer = {
 	name: 'native_flv',
-
 	options: {
 		prefix: 'native_flv',
 		flv: {
@@ -116,7 +115,6 @@ const FlvNativeRenderer = {
 						}
 					}
 				};
-
 			}
 		;
 
@@ -124,7 +122,6 @@ const FlvNativeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// Initial method to register all FLV events
 		window['__ready__' + id] = (_flvPlayer) => {
 
 			mediaElement.flvPlayer = flvPlayer = _flvPlayer;
@@ -132,9 +129,7 @@ const FlvNativeRenderer = {
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				assignEvents = (eventName) => {
-
 					if (eventName === 'loadedmetadata') {
-
 						flvPlayer.unload();
 						flvPlayer.detachMediaElement();
 						flvPlayer.attachMediaElement(node);
@@ -145,7 +140,6 @@ const FlvNativeRenderer = {
 						const event = createEvent(e.type, mediaElement);
 						mediaElement.dispatchEvent(event);
 					});
-
 				}
 			;
 
@@ -178,7 +172,6 @@ const FlvNativeRenderer = {
 			id: id
 		});
 
-		// HELPER METHODS
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
 			node.style.height = `${height}px`;

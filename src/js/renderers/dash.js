@@ -53,7 +53,6 @@ const NativeDash = {
 
 const DashNativeRenderer = {
 	name: 'native_dash',
-
 	options: {
 		prefix: 'native_dash',
 		dash: {
@@ -106,7 +105,6 @@ const DashNativeRenderer = {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
 						if (dashPlayer !== null) {
 							if (propName === 'src') {
-
 								dashPlayer.attachSource(value);
 								if (autoplay) {
 									node.play();
@@ -125,7 +123,7 @@ const DashNativeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// Initial method to register all M-Dash events
+		// Initial method to register all M(PEG)-DASH events
 		window['__ready__' + id] = (_dashPlayer) => {
 
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
@@ -138,7 +136,6 @@ const DashNativeRenderer = {
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
-
 					if (eventName === 'loadedmetadata') {
 						dashPlayer.initialize(node, node.src, false);
 					}
@@ -199,7 +196,6 @@ const DashNativeRenderer = {
 			id: id
 		});
 
-		// HELPER METHODS
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
 			node.style.height = `${height}px`;
