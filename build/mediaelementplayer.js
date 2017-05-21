@@ -2816,11 +2816,7 @@ Object.assign(_player2.default.prototype, {
 			media.setMuted(true);
 		}
 
-		var isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName);
-
-		if (isNative) {
-			media.setVolume(player.options.startVolume);
-		}
+		media.setVolume(player.options.startVolume);
 
 		t.container.addEventListener('controlsresize', function () {
 			if (media.muted) {
