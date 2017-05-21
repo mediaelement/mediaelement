@@ -11,6 +11,7 @@
 * Fixed issue with logical operators and `~` symbol @rafa8626
 * Integrated `loadScript()` method to optimize way to load external libraries (https://github.com/mediaelement/mediaelement/pull/2226) @jimmywarting
 * Removed unnecessary whitespaces, upgraded packages and removed comments on bundles @rafa8626
+* Fixed issue with `startVolume` not being picked by non-native renderers @rafa8626
 
 *4.1.1 (2017/05/16)*
 
