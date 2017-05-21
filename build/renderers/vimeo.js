@@ -11,119 +11,34 @@
  */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-/**
- * Vimeo renderer
- *
- * Uses <iframe> approach and uses Vimeo API to manipulate it.
- * All Vimeo calls return a Promise so this renderer accounts for that
- * to update all the necessary values to interact with MediaElement player.
- * Note: IE8 implements ECMAScript 3 that does not allow bare keywords in dot notation;
- * that's why instead of using .catch ['catch'] is being used.
- * @see https://github.com/vimeo/player.js
- *
- */
+var VimeoApi = {
 
-var vimeoApi = {
+	promise: null,
 
-	/**
-  * @type {Boolean}
-  */
-	isIframeStarted: false,
-	/**
-  * @type {Boolean}
-  */
-	isIframeLoaded: false,
-	/**
-  * @type {Array}
-  */
-	iframeQueue: [],
+	load: function load(settings) {
 
-	/**
-  * Create a queue to prepare the creation of <iframe>
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	enqueueIframe: function enqueueIframe(settings) {
-
-		if (vimeoApi.isLoaded) {
-			vimeoApi.createIframe(settings);
+		if (typeof Vimeo !== 'undefined') {
+			VimeoApi._createPlayer(settings);
 		} else {
-			vimeoApi.loadIframeApi();
-			vimeoApi.iframeQueue.push(settings);
+			VimeoApi.promise = VimeoApi.promise || mejs.Utils.loadScript('https://player.vimeo.com/api/player.js');
+			VimeoApi.promise.then(function () {
+				VimeoApi._createPlayer(settings);
+			});
 		}
 	},
 
-	/**
-  * Load Vimeo API script on the header of the document
-  *
-  */
-	loadIframeApi: function loadIframeApi() {
-
-		if (!vimeoApi.isIframeStarted) {
-
-			var script = document.createElement('script'),
-			    firstScriptTag = document.getElementsByTagName('script')[0];
-
-			var done = false;
-
-			script.src = 'https://player.vimeo.com/api/player.js';
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined || this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					vimeoApi.iFrameReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			vimeoApi.isIframeStarted = true;
-		}
-	},
-
-	/**
-  * Process queue of Vimeo <iframe> element creation
-  *
-  */
-	iFrameReady: function iFrameReady() {
-
-		vimeoApi.isLoaded = true;
-		vimeoApi.isIframeLoaded = true;
-
-		while (vimeoApi.iframeQueue.length > 0) {
-			var settings = vimeoApi.iframeQueue.pop();
-			vimeoApi.createIframe(settings);
-		}
-	},
-
-	/**
-  * Create a new instance of Vimeo API player and trigger a custom event to initialize it
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
-	createIframe: function createIframe(settings) {
+	_createPlayer: function _createPlayer(settings) {
 		var player = new Vimeo.Player(settings.iframe);
 		window['__ready__' + settings.id](player);
 	},
 
-	/**
-  * Extract numeric value from Vimeo to be loaded through API
-  * Valid URL format(s):
-  *  - https://player.vimeo.com/video/59777392
-  *  - https://vimeo.com/59777392
-  *
-  * @param {String} url - Vimeo full URL to grab the number Id of the source
-  * @return {int}
-  */
 	getVimeoId: function getVimeoId(url) {
 		if (url === undefined || url === null) {
 			return null;
 		}
 
 		var parts = url.split('?');
-
 		url = parts[0];
-
 		return parseInt(url.substring(url.lastIndexOf('/') + 1));
 	}
 };
@@ -131,31 +46,15 @@ var vimeoApi = {
 var vimeoIframeRenderer = {
 
 	name: 'vimeo_iframe',
-
 	options: {
 		prefix: 'vimeo_iframe'
 	},
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
+
 	canPlayType: function canPlayType(type) {
 		return ~['video/vimeo', 'video/x-vimeo'].indexOf(type.toLowerCase());
 	},
 
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
 	create: function create(mediaElement, options, mediaFiles) {
-
-		// exposed object
 		var apiStack = [],
 		    vimeo = {},
 		    readyState = 4;
@@ -174,20 +73,12 @@ var vimeoIframeRenderer = {
 		vimeo.id = mediaElement.id + '_' + options.prefix;
 		vimeo.mediaElement = mediaElement;
 
-		/**
-   * Generate custom errors for Vimeo based on the API specifications
-   *
-   * @see https://github.com/vimeo/player.js#error
-   * @param {Object} error
-   * @param {Object} target
-   */
 		var errorHandler = function errorHandler(error, target) {
 			var event = mejs.Utils.createEvent('error', target);
 			event.message = error.name + ': ' + error.message;
 			mediaElement.dispatchEvent(event);
 		};
 
-		// wrappers for get/set
 		var props = mejs.html5media.properties,
 		    assignGettersSetters = function assignGettersSetters(propName) {
 
@@ -232,7 +123,6 @@ var vimeoIframeRenderer = {
 						case 'readyState':
 							return readyState;
 					}
-
 					return value;
 				} else {
 					return null;
@@ -240,25 +130,20 @@ var vimeoIframeRenderer = {
 			};
 
 			vimeo['set' + capName] = function (value) {
-
 				if (vimeoPlayer !== null) {
-
-					// do something
 					switch (propName) {
-
 						case 'src':
 							var _url2 = typeof value === 'string' ? value : value[0].src,
-							    videoId = vimeoApi.getVimeoId(_url2);
+							    videoId = VimeoApi.getVimeoId(_url2);
 
 							vimeoPlayer.loadVideo(videoId).then(function () {
 								if (mediaElement.originalNode.autoplay) {
 									vimeoPlayer.play();
 								}
-							})['catch'](function (error) {
+							}).catch(function (error) {
 								errorHandler(error, vimeo);
 							});
 							break;
-
 						case 'currentTime':
 							vimeoPlayer.setCurrentTime(value).then(function () {
 								currentTime = value;
@@ -266,11 +151,10 @@ var vimeoIframeRenderer = {
 									var event = mejs.Utils.createEvent('timeupdate', vimeo);
 									mediaElement.dispatchEvent(event);
 								}, 50);
-							})['catch'](function (error) {
+							}).catch(function (error) {
 								errorHandler(error, vimeo);
 							});
 							break;
-
 						case 'volume':
 							vimeoPlayer.setVolume(value).then(function () {
 								volume = value;
@@ -279,13 +163,12 @@ var vimeoIframeRenderer = {
 									var event = mejs.Utils.createEvent('volumechange', vimeo);
 									mediaElement.dispatchEvent(event);
 								}, 50);
-							})['catch'](function (error) {
+							}).catch(function (error) {
 								errorHandler(error, vimeo);
 							});
 							break;
-
 						case 'loop':
-							vimeoPlayer.setLoop(value)['catch'](function (error) {
+							vimeoPlayer.setLoop(value).catch(function (error) {
 								errorHandler(error, vimeo);
 							});
 							break;
@@ -297,7 +180,7 @@ var vimeoIframeRenderer = {
 										var event = mejs.Utils.createEvent('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
-								})['catch'](function (error) {
+								}).catch(function (error) {
 									errorHandler(error, vimeo);
 								});
 							} else {
@@ -307,7 +190,7 @@ var vimeoIframeRenderer = {
 										var event = mejs.Utils.createEvent('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
-								})['catch'](function (error) {
+								}).catch(function (error) {
 									errorHandler(error, vimeo);
 								});
 							}
@@ -321,7 +204,6 @@ var vimeoIframeRenderer = {
 							break;
 					}
 				} else {
-					// store for after "READY" event fires
 					apiStack.push({ type: 'set', propName: propName, value: value });
 				}
 			};
@@ -331,14 +213,10 @@ var vimeoIframeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add wrappers for native methods
 		var methods = mejs.html5media.methods,
 		    assignMethods = function assignMethods(methodName) {
 			vimeo[methodName] = function () {
-
 				if (vimeoPlayer !== null) {
-
-					// DO method
 					switch (methodName) {
 						case 'play':
 							paused = false;
@@ -348,7 +226,6 @@ var vimeoIframeRenderer = {
 							return vimeoPlayer.pause();
 						case 'load':
 							return null;
-
 					}
 				} else {
 					apiStack.push({ type: 'call', methodName: methodName });
@@ -360,15 +237,12 @@ var vimeoIframeRenderer = {
 			assignMethods(methods[_i]);
 		}
 
-		// Initial method to register all Vimeo events when initializing <iframe>
 		window['__ready__' + vimeo.id] = function (_vimeoPlayer) {
 
 			mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
 
-			// do call stack
 			if (apiStack.length) {
 				for (var _i2 = 0, _total2 = apiStack.length; _i2 < _total2; _i2++) {
-
 					var stackItem = apiStack[_i2];
 
 					if (stackItem.type === 'set') {
@@ -385,7 +259,6 @@ var vimeoIframeRenderer = {
 			var vimeoIframe = document.getElementById(vimeo.id);
 			var events = void 0;
 
-			// a few more events
 			events = ['mouseover', 'mouseout'];
 
 			var assignEvents = function assignEvents(e) {
@@ -397,11 +270,8 @@ var vimeoIframeRenderer = {
 				vimeoIframe.addEventListener(events[_i3], assignEvents, false);
 			}
 
-			// Vimeo events
 			vimeoPlayer.on('loaded', function () {
-
 				vimeoPlayer.getDuration().then(function (loadProgress) {
-
 					duration = loadProgress;
 
 					if (duration > 0) {
@@ -410,14 +280,12 @@ var vimeoIframeRenderer = {
 
 					var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
 					mediaElement.dispatchEvent(event);
-				})['catch'](function (error) {
+				}).catch(function (error) {
 					errorHandler(error, vimeo);
 				});
 			});
-
 			vimeoPlayer.on('progress', function () {
 				vimeoPlayer.getDuration().then(function (loadProgress) {
-
 					duration = loadProgress;
 
 					if (duration > 0) {
@@ -426,7 +294,7 @@ var vimeoIframeRenderer = {
 
 					var event = mejs.Utils.createEvent('progress', vimeo);
 					mediaElement.dispatchEvent(event);
-				})['catch'](function (error) {
+				}).catch(function (error) {
 					errorHandler(error, vimeo);
 				});
 			});
@@ -436,7 +304,7 @@ var vimeoIframeRenderer = {
 
 					var event = mejs.Utils.createEvent('timeupdate', vimeo);
 					mediaElement.dispatchEvent(event);
-				})['catch'](function (error) {
+				}).catch(function (error) {
 					errorHandler(error, vimeo);
 				});
 			});
@@ -461,7 +329,6 @@ var vimeoIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			});
 
-			// give initial events
 			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
@@ -473,10 +340,9 @@ var vimeoIframeRenderer = {
 		var height = mediaElement.originalNode.height,
 		    width = mediaElement.originalNode.width,
 		    vimeoContainer = document.createElement('iframe'),
-		    standardUrl = '//player.vimeo.com/video/' + vimeoApi.getVimeoId(mediaFiles[0].src),
+		    standardUrl = '//player.vimeo.com/video/' + VimeoApi.getVimeoId(mediaFiles[0].src),
 		    queryArgs = ~mediaFiles[0].src.indexOf('?') ? '?' + mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1) : '';
 
-		// Create Vimeo <iframe> markup
 		vimeoContainer.setAttribute('id', vimeo.id);
 		vimeoContainer.setAttribute('width', width);
 		vimeoContainer.setAttribute('height', height);
@@ -489,7 +355,7 @@ var vimeoIframeRenderer = {
 		mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 
-		vimeoApi.enqueueIframe({
+		VimeoApi.load({
 			iframe: vimeoContainer,
 			id: vimeo.id
 		});
@@ -512,13 +378,8 @@ var vimeoIframeRenderer = {
 
 		return vimeo;
 	}
-
 };
 
-/**
- * Register Vimeo type based on URL structure
- *
- */
 mejs.Utils.typeChecks.push(function (url) {
 	return (/(\/\/player\.vimeo|vimeo\.com)/i.test(url) ? 'video/x-vimeo' : null
 	);

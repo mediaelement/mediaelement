@@ -1,6 +1,5 @@
 'use strict';
 
-// import window from 'global/window';
 import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
@@ -31,7 +30,6 @@ Object.assign(config, {
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-
 	/**
 	 * Feature constructor.
 	 *
@@ -56,7 +54,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				`<span class="${t.options.classPrefix}time-float">` +
 					`<span class="${t.options.classPrefix}time-float-current">00:00</span>` +
 					`<span class="${t.options.classPrefix}time-float-corner"></span>` +
-				`</span>` : "",
+				`</span>` : '',
 			rail = document.createElement('div')
 		;
 
@@ -98,8 +96,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		 * @private
 		 * @param {Event} e
 		 */
-		let handleMouseMove = (e) => {
-
+		let
+			handleMouseMove = (e) => {
 				const
 					totalStyles = getComputedStyle(t.total),
 					offsetStyles = offset(t.total),
@@ -171,7 +169,7 @@ Object.assign(MediaElementPlayer.prototype, {
 								handleLocation = matrix.m41,
 								hoverScaleX = pos/parseFloat(getComputedStyle(t.total).width) - handleLocation/parseFloat(getComputedStyle(t.total).width)
 							;
-							
+
 							t.hovered.style.left = `${handleLocation}px`;
 							t.setTransformStyle(t.hovered,`scaleX(${hoverScaleX})`);
 							t.hovered.setAttribute('pos', pos);
@@ -196,7 +194,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * @private
 			 */
 			updateSlider = () => {
-
 				const
 					seconds = media.currentTime,
 					timeSliderText = i18n.t('mejs.time-slider'),
@@ -226,13 +223,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * @private
 			 */
 			restartPlayer = () => {
-				let now = new Date();
-				if (now - lastKeyPressTime >= 1000) {
+				if (new Date() - lastKeyPressTime >= 1000) {
 					media.play();
 				}
 			},
 			handleMouseup = () => {
-
 				if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
 					media.setCurrentTime(t.newTime);
 					player.setCurrentRail();
@@ -242,7 +237,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.media.play();
 				}
 				t.forcedHandlePause = false;
-			};
+			}
+		;
 
 		// Events
 		t.slider.addEventListener('focus', () => {
@@ -252,7 +248,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.options.autoRewind = autoRewindInitial;
 		});
 		t.slider.addEventListener('keydown', (e) => {
-
 			if ((new Date() - lastKeyPressTime) >= 1000) {
 				startedPaused = media.paused;
 			}
@@ -307,7 +302,6 @@ Object.assign(MediaElementPlayer.prototype, {
 						return;
 				}
 
-
 				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
 				lastKeyPressTime = new Date();
 				if (!startedPaused) {
@@ -336,7 +330,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (media.duration !== Infinity) {
 					// only handle left clicks or touch
 					if (e.which === 1 || e.which === 0) {
-
 						if (!media.paused) {
 							t.media.pause();
 							t.forcedHandlePause = true;
@@ -458,13 +451,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {Event} e
 	 */
 	setProgressRail (e)  {
-
-		let percent = null;
-
 		const
 			t = this,
 			target = (e !== undefined) ? e.target : t.media
 		;
+
+		let percent = null;
 
 		// newest HTML5 spec has buffered array (FF4, Webkit)
 		if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
@@ -519,10 +511,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (t.media.currentTime !== undefined && t.media.duration) {
 			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
 
-
 			// update bar and handle
 			if (t.total && t.handle) {
-
 				const tW = parseFloat(getComputedStyle(t.total).width);
 
 				let
@@ -549,7 +539,6 @@ Object.assign(MediaElementPlayer.prototype, {
 						addClass(t.hovered, 'negative');
 					}
 				}
-
 			}
 		}
 	}

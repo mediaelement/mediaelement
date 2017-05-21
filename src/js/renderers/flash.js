@@ -81,7 +81,7 @@ export const PluginDetector = {
 					version[i] = parseInt(version[i].match(/\d+/), 10);
 				}
 			}
-			// Internet Explorer / ActiveX
+		// Internet Explorer / ActiveX
 		} else if (window.ActiveXObject !== undefined) {
 			try {
 				ax = new ActiveXObject(activeX);
@@ -129,17 +129,13 @@ const FlashMediaElementRenderer = {
 
 		const flash = {};
 
-		// store main variable
 		flash.options = options;
 		flash.id = mediaElement.id + '_' + flash.options.prefix;
 		flash.mediaElement = mediaElement;
-
-		// insert data
 		flash.flashState = {};
 		flash.flashApi = null;
 		flash.flashApiStack = [];
 
-		// mediaElements for get/set
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
@@ -156,7 +152,6 @@ const FlashMediaElementRenderer = {
 						if (flash.flashApi['get_' + propName] !== undefined) {
 							const value = flash.flashApi['get_' + propName]();
 
-							// special case for buffered to conform to HTML5's newest
 							if (propName === 'buffered') {
 								return {
 									start: () => {
@@ -196,7 +191,6 @@ const FlashMediaElementRenderer = {
 						});
 					}
 				};
-
 			}
 		;
 
@@ -204,14 +198,10 @@ const FlashMediaElementRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add mediaElements for native methods
 		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
-
-				// run the method on the native HTMLMediaElement
 				flash[methodName] = () => {
-
 					if (flash.flashApi !== null) {
 
 						// send call up to Flash ExternalInterface API
@@ -258,7 +248,6 @@ const FlashMediaElementRenderer = {
 			// do call stack
 			if (flash.flashApiStack.length) {
 				for (let i = 0, total = flash.flashApiStack.length; i < total; i++) {
-
 					const stackItem = flash.flashApiStack[i];
 
 					if (stackItem.type === 'set') {
@@ -276,7 +265,6 @@ const FlashMediaElementRenderer = {
 		};
 
 		window[`__event__${flash.id}`] = (eventName, message) => {
-
 			const event = createEvent(eventName, flash);
 			event.message = message || '';
 
@@ -395,7 +383,6 @@ const FlashMediaElementRenderer = {
 			flash.flashNode.remove();
 		};
 
-
 		if (mediaFiles && mediaFiles.length > 0) {
 			for (let i = 0, total = mediaFiles.length; i < total; i++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
@@ -418,7 +405,6 @@ if (hasFlash) {
 	 *
 	 */
 	typeChecks.push((url) => {
-
 		url = url.toLowerCase();
 
 		if (url.startsWith('rtmp')) {
@@ -435,16 +421,14 @@ if (hasFlash) {
 			return 'application/dash+xml';
 		} else if (~url.indexOf('.flv')) {
 			return 'video/flv';
-		}else {
+		} else {
 			return null;
 		}
-
 	});
 
 	// VIDEO
 	const FlashMediaElementVideoRenderer = {
 		name: 'flash_video',
-
 		options: {
 			prefix: 'flash_video',
 			filename: 'mediaelement-flash-video.swf',
@@ -471,7 +455,6 @@ if (hasFlash) {
 	// HLS
 	const FlashMediaElementHlsVideoRenderer = {
 		name: 'flash_hls',
-
 		options: {
 			prefix: 'flash_hls',
 			filename: 'mediaelement-flash-video-hls.swf'
@@ -492,7 +475,6 @@ if (hasFlash) {
 	// M(PEG)-DASH
 	const FlashMediaElementMdashVideoRenderer = {
 		name: 'flash_dash',
-
 		options: {
 			prefix: 'flash_dash',
 			filename: 'mediaelement-flash-video-mdash.swf'
@@ -512,7 +494,6 @@ if (hasFlash) {
 	// AUDIO
 	const FlashMediaElementAudioRenderer = {
 		name: 'flash_audio',
-
 		options: {
 			prefix: 'flash_audio',
 			filename: 'mediaelement-flash-audio.swf'
@@ -532,7 +513,6 @@ if (hasFlash) {
 	// AUDIO - ogg
 	const FlashMediaElementAudioOggRenderer = {
 		name: 'flash_audio_ogg',
-
 		options: {
 			prefix: 'flash_audio_ogg',
 			filename: 'mediaelement-flash-audio-ogg.swf'

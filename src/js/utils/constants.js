@@ -6,7 +6,6 @@ import mejs from '../core/mejs';
 
 export const NAV = window.navigator;
 export const UA = NAV.userAgent.toLowerCase();
-
 export const IS_IPAD = /ipad/i.test(UA);
 export const IS_IPHONE = /iphone/i.test(UA);
 export const IS_IOS = IS_IPHONE || IS_IPAD;
@@ -17,7 +16,6 @@ export const IS_CHROME = /chrome/i.test(UA);
 export const IS_FIREFOX = /firefox/i.test(UA);
 export const IS_SAFARI = /safari/i.test(UA) && !IS_CHROME;
 export const IS_STOCK_ANDROID = /^mozilla\/\d+\.\d+\s\(linux;\su;/i.test(UA);
-
 export const HAS_MSE = ('MediaSource' in window);
 export const SUPPORT_POINTER_EVENTS = (() => {
 	const
@@ -67,7 +65,6 @@ if (hasiOSFullScreen && /mac os x 10_5/i.test(UA)) {
 const hasWebkitNativeFullScreen = (video.webkitRequestFullScreen !== undefined);
 const hasMozNativeFullScreen = (video.mozRequestFullScreen !== undefined);
 const hasMsNativeFullScreen = (video.msRequestFullscreen !== undefined);
-
 const hasTrueNativeFullScreen = (hasWebkitNativeFullScreen || hasMozNativeFullScreen || hasMsNativeFullScreen);
 let nativeFullScreenEnabled = hasTrueNativeFullScreen;
 let fullScreenEventName = '';
@@ -85,7 +82,6 @@ if (IS_CHROME) {
 }
 
 if (hasTrueNativeFullScreen) {
-
 	if (hasWebkitNativeFullScreen) {
 		fullScreenEventName = 'webkitfullscreenchange';
 	} else if (hasMozNativeFullScreen) {
@@ -107,7 +103,6 @@ if (hasTrueNativeFullScreen) {
 	};
 
 	requestFullScreen = (el) => {
-
 		if (hasWebkitNativeFullScreen) {
 			el.webkitRequestFullScreen();
 		} else if (hasMozNativeFullScreen) {
@@ -139,7 +134,6 @@ export const HAS_IOS_FULLSCREEN = hasiOSFullScreen;
 export const HAS_TRUE_NATIVE_FULLSCREEN = hasTrueNativeFullScreen;
 export const HAS_NATIVE_FULLSCREEN_ENABLED = nativeFullScreenEnabled;
 export const FULLSCREEN_EVENT_NAME = fullScreenEventName;
-
 export {isFullScreen, requestFullScreen, cancelFullScreen};
 
 mejs.Features = mejs.Features || {};
@@ -155,7 +149,6 @@ mejs.Features.isSafari = IS_SAFARI;
 mejs.Features.isStockAndroid = IS_STOCK_ANDROID;
 mejs.Features.hasMSE = HAS_MSE;
 mejs.Features.supportsNativeHLS = SUPPORTS_NATIVE_HLS;
-
 mejs.Features.supportsPointerEvents = SUPPORT_POINTER_EVENTS;
 mejs.Features.hasiOSFullScreen = HAS_IOS_FULLSCREEN;
 mejs.Features.hasNativeFullscreen = HAS_NATIVE_FULLSCREEN;

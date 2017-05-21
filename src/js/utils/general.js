@@ -90,7 +90,6 @@ export function splitEvents (events, id) {
 		}
 	});
 
-
 	ret.d = ret.d.join(' ');
 	ret.w = ret.w.join(' ');
 	return ret;

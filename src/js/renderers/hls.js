@@ -1,12 +1,12 @@
 'use strict';
 
 import window from 'global/window';
-import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {HAS_MSE} from '../utils/constants';
 import {typeChecks} from '../utils/media';
+import {loadScript} from '../utils/dom';
 
 /**
  * Native HLS renderer
@@ -18,83 +18,25 @@ import {typeChecks} from '../utils/media';
  *
  */
 const NativeHls = {
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaStarted: false,
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	creationQueue: [],
+
+	promise: null,
 
 	/**
 	 * Create a queue to prepare the loading of an HLS source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an HLS player instance
 	 */
-	prepareSettings: (settings) => {
-		if (NativeHls.isLoaded) {
-			NativeHls.createInstance(settings);
-		} else {
-			NativeHls.loadScript(settings);
-			NativeHls.creationQueue.push(settings);
-		}
-	},
-
-	/**
-	 * Load hls.js script on the header of the document
-	 *
-	 * @param {Object} settings - an object with settings needed to load an HLS player instance
-	 */
-	loadScript: (settings) => {
-
-		// Skip script loading since it is already loaded
+	load(settings) {
 		if (typeof Hls !== 'undefined') {
-			NativeHls.createInstance(settings);
-		} else if (!NativeHls.isMediaStarted) {
-
+			NativeHls._createPlayer(settings);
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdn.jsdelivr.net/hls.js/latest/hls.min.js';
 
-			const
-				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0]
-			;
-
-			let done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined ||
-					this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeHls.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-			NativeHls.isMediaStarted = true;
-		}
-	},
-
-	/**
-	 * Process queue of HLS player creation
-	 *
-	 */
-	mediaReady: () => {
-		NativeHls.isLoaded = true;
-		NativeHls.isMediaLoaded = true;
-
-		while (NativeHls.creationQueue.length > 0) {
-			const settings = NativeHls.creationQueue.pop();
-			NativeHls.createInstance(settings);
+			NativeHls.promise = NativeHls.promise || loadScript(settings.options.path);
+			NativeHls.promise.then(() => {
+				NativeHls._createPlayer(settings);
+			});
 		}
 	},
 
@@ -104,7 +46,7 @@ const NativeHls = {
 	 * @param {Object} settings - an object with settings needed to instantiate HLS object
 	 * @return {Hls}
 	 */
-	createInstance: (settings) => {
+	_createPlayer: (settings) => {
 		const player = new Hls(settings.options);
 		window['__ready__' + settings.id](player);
 		return player;
@@ -113,7 +55,6 @@ const NativeHls = {
 
 const HlsNativeRenderer = {
 	name: 'native_hls',
-
 	options: {
 		prefix: 'native_hls',
 		hls: {
@@ -161,7 +102,6 @@ const HlsNativeRenderer = {
 		options = Object.assign(options, mediaElement.options);
 		options.hls.autoStartLoad = ((preload && preload !== 'none') || autoplay);
 
-		// WRAPPERS for PROPs
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
@@ -177,7 +117,7 @@ const HlsNativeRenderer = {
 							if (propName === 'src') {
 
 								hlsPlayer.destroy();
-								hlsPlayer = NativeHls.createInstance({
+								hlsPlayer = NativeHls._createPlayer({
 									options: options.hls,
 									id: id
 								});
@@ -188,7 +128,6 @@ const HlsNativeRenderer = {
 						}
 					}
 				};
-
 			}
 		;
 
@@ -196,7 +135,6 @@ const HlsNativeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// Initial method to register all HLS events
 		window['__ready__' + id] = (_hlsPlayer) => {
 
 			mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
@@ -205,9 +143,7 @@ const HlsNativeRenderer = {
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				hlsEvents = Hls.Events,
 				assignEvents = (eventName) => {
-
 					if (eventName === 'loadedmetadata') {
-
 						const url = mediaElement.originalNode.src;
 						hlsPlayer.detachMedia();
 						hlsPlayer.loadSource(url);
@@ -215,7 +151,6 @@ const HlsNativeRenderer = {
 					}
 
 					node.addEventListener(eventName, (e) => {
-						// copy event
 						const event = createEvent(e.type, mediaElement);
 						mediaElement.dispatchEvent(event);
 					});
@@ -269,7 +204,6 @@ const HlsNativeRenderer = {
 							default:
 								hlsPlayer.destroy();
 								break;
-
 						}
 					}
 				}
@@ -311,12 +245,12 @@ const HlsNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		NativeHls.prepareSettings({
+		NativeHls.load({
 			options: options.hls,
 			id: id
 		});
 
-		// HELPER METHODS
+
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
 			node.style.height = `${height}px`;
