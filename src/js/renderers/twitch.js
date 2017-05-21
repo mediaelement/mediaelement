@@ -96,7 +96,6 @@ const TwitchApi = {
 			}
 		}
 
-
 		return twitchId;
 	},
 

@@ -11,22 +11,10 @@
  */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-/**
- * Twitch renderer
- *
- * Uses <iframe> approach and uses Twitch API to manipulate it.
- * @see https://github.com/justintv/Twitch-API/blob/master/embed-video.md
- */
-
 var TwitchApi = {
 
 	promise: null,
 
-	/**
-  * Create a queue to prepare the creation of <iframe>
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
 	load: function load(settings) {
 
 		if (typeof Twitch !== 'undefined') {
@@ -39,27 +27,11 @@ var TwitchApi = {
 		}
 	},
 
-	/**
-  * Create a new instance of Twitch API player and trigger a custom event to initialize it
-  *
-  * @param {Object} settings - an object with settings needed to create <iframe>
-  */
 	_createPlayer: function _createPlayer(settings) {
 		var player = new Twitch.Player(settings.id, settings);
 		window['__ready__' + settings.id](player);
 	},
 
-	/**
-  * Extract ID from Twitch to be loaded through API
-  * Valid URL format(s):
-  *  - https://player.twitch.tv/?video=40464143
-  *  - https://www.twitch.tv/40464143
-  *  - https://player.twitch.tv/?channel=monserrat
-  *  - https://www.twitch.tv/monserrat
-  *
-  * @param {String} url - Twitch full URL to grab the number Id of the source
-  * @return {int}
-  */
 	getTwitchId: function getTwitchId(url) {
 
 		var twitchId = '';
@@ -76,14 +48,6 @@ var TwitchApi = {
 		return twitchId;
 	},
 
-	/**
-  * Get ID from URL with format:
-  *  - https://player.twitch.tv/?channel=monserrat
-  *  - https://player.twitch.tv/?video=40464143
-  *
-  * @param {String} url
-  * @returns {string}
-  */
 	getTwitchIdFromParam: function getTwitchIdFromParam(url) {
 
 		if (url === undefined || url === null || !url.trim().length) {
@@ -109,14 +73,6 @@ var TwitchApi = {
 		return twitchId;
 	},
 
-	/**
-  * Get ID from URL with formats:
-  *  - https://www.twitch.tv/40464143
-  *  - https://www.twitch.tv/monserrat
-  *
-  * @param {String} url
-  * @return {?String}
-  */
 	getTwitchIdFromUrl: function getTwitchIdFromUrl(url) {
 
 		if (url === undefined || url === null || !url.trim().length) {
@@ -130,13 +86,6 @@ var TwitchApi = {
 		);
 	},
 
-	/**
-  * Determine whether media is channel or video based on Twitch ID
-  *
-  * @see getTwitchId()
-  * @param {String} id
-  * @returns {String}
-  */
 	getTwitchType: function getTwitchType(id) {
 		return (/^v\d+/i.test(id) !== null ? 'video' : 'channel'
 		);
@@ -150,27 +99,11 @@ var TwitchIframeRenderer = {
 		prefix: 'twitch_iframe'
 	},
 
-	/**
-  * Determine if a specific element type can be played with this render
-  *
-  * @param {String} type
-  * @return {Boolean}
-  */
 	canPlayType: function canPlayType(type) {
 		return ~['video/twitch', 'video/x-twitch'].indexOf(type.toLowerCase());
 	},
 
-	/**
-  * Create the player instance and add all native events/methods/properties as possible
-  *
-  * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-  * @param {Object} options All the player configuration options passed through constructor
-  * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-  * @return {Object}
-  */
 	create: function create(mediaElement, options, mediaFiles) {
-
-		// API objects
 		var twitch = {},
 		    apiStack = [],
 		    readyState = 4,
@@ -188,11 +121,8 @@ var TwitchIframeRenderer = {
 		twitch.id = mediaElement.id + '_' + options.prefix;
 		twitch.mediaElement = mediaElement;
 
-		// wrappers for get/set
 		var props = mejs.html5media.properties,
 		    assignGettersSetters = function assignGettersSetters(propName) {
-
-			// add to flash state that we will store
 
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
@@ -200,7 +130,6 @@ var TwitchIframeRenderer = {
 				if (twitchPlayer !== null) {
 					var value = null;
 
-					// figure out how to get Twitch dta here
 					switch (propName) {
 						case 'currentTime':
 							time = twitchPlayer.getCurrentTime();
@@ -252,8 +181,6 @@ var TwitchIframeRenderer = {
 			twitch['set' + capName] = function (value) {
 
 				if (twitchPlayer !== null) {
-
-					// do something
 					switch (propName) {
 
 						case 'src':
@@ -301,7 +228,6 @@ var TwitchIframeRenderer = {
 							break;
 					}
 				} else {
-					// store for after "READY" event fires
 					apiStack.push({ type: 'set', propName: propName, value: value });
 				}
 			};
@@ -311,16 +237,11 @@ var TwitchIframeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add wrappers for native methods
 		var methods = mejs.html5media.methods,
 		    assignMethods = function assignMethods(methodName) {
-
-			// run the method on the native HTMLMediaElement
 			twitch[methodName] = function () {
 
 				if (twitchPlayer !== null) {
-
-					// DO method
 					switch (methodName) {
 						case 'play':
 							paused = false;
@@ -342,12 +263,6 @@ var TwitchIframeRenderer = {
 			assignMethods(methods[_i]);
 		}
 
-		/**
-   * Dispatch a list of events
-   *
-   * @private
-   * @param {Array} events
-   */
 		function sendEvents(events) {
 			for (var _i2 = 0, _total2 = events.length; _i2 < _total2; _i2++) {
 				var event = mejs.Utils.createEvent(events[_i2], twitch);
@@ -355,12 +270,10 @@ var TwitchIframeRenderer = {
 			}
 		}
 
-		// Initial method to register all Twitch events when initializing <iframe>
 		window['__ready__' + twitch.id] = function (_twitchPlayer) {
 
 			mediaElement.twitchPlayer = twitchPlayer = _twitchPlayer;
 
-			// do call stack
 			if (apiStack.length) {
 				for (var _i3 = 0, _total3 = apiStack.length; _i3 < _total3; _i3++) {
 
@@ -381,7 +294,6 @@ var TwitchIframeRenderer = {
 			twitchIframe.style.width = '100%';
 			twitchIframe.style.height = '100%';
 
-			// a few more events
 			var events = ['mouseover', 'mouseout'];
 
 			var assignEvents = function assignEvents(e) {
@@ -395,7 +307,6 @@ var TwitchIframeRenderer = {
 
 			var timer = void 0;
 
-			// Twitch events
 			twitchPlayer.addEventListener('ready', function () {
 				paused = false;
 				ended = false;
@@ -409,7 +320,6 @@ var TwitchIframeRenderer = {
 				ended = false;
 				sendEvents(['play', 'playing', 'progress']);
 
-				// Workaround to update progress bar
 				timer = setInterval(function () {
 					twitchPlayer.getCurrentTime();
 					sendEvents(['timeupdate']);
@@ -432,7 +342,6 @@ var TwitchIframeRenderer = {
 			});
 		};
 
-		// CREATE Twitch
 		var height = mediaElement.originalNode.height,
 		    width = mediaElement.originalNode.width,
 		    twitchContainer = document.createElement('div'),
@@ -454,7 +363,6 @@ var TwitchIframeRenderer = {
 		mediaElement.originalNode.style.display = 'none';
 		mediaElement.originalNode.autoplay = false;
 
-		// send it off for async loading and creation
 		TwitchApi.load(twitchSettings);
 
 		twitch.setSize = function (width, height) {

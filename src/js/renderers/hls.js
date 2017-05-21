@@ -55,7 +55,6 @@ const NativeHls = {
 
 const HlsNativeRenderer = {
 	name: 'native_hls',
-
 	options: {
 		prefix: 'native_hls',
 		hls: {
@@ -103,7 +102,6 @@ const HlsNativeRenderer = {
 		options = Object.assign(options, mediaElement.options);
 		options.hls.autoStartLoad = ((preload && preload !== 'none') || autoplay);
 
-		// WRAPPERS for PROPs
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
@@ -130,7 +128,6 @@ const HlsNativeRenderer = {
 						}
 					}
 				};
-
 			}
 		;
 
@@ -138,7 +135,6 @@ const HlsNativeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// Initial method to register all HLS events
 		window['__ready__' + id] = (_hlsPlayer) => {
 
 			mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
@@ -147,9 +143,7 @@ const HlsNativeRenderer = {
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				hlsEvents = Hls.Events,
 				assignEvents = (eventName) => {
-
 					if (eventName === 'loadedmetadata') {
-
 						const url = mediaElement.originalNode.src;
 						hlsPlayer.detachMedia();
 						hlsPlayer.loadSource(url);
@@ -157,7 +151,6 @@ const HlsNativeRenderer = {
 					}
 
 					node.addEventListener(eventName, (e) => {
-						// copy event
 						const event = createEvent(e.type, mediaElement);
 						mediaElement.dispatchEvent(event);
 					});
@@ -211,7 +204,6 @@ const HlsNativeRenderer = {
 							default:
 								hlsPlayer.destroy();
 								break;
-
 						}
 					}
 				}
@@ -258,7 +250,7 @@ const HlsNativeRenderer = {
 			id: id
 		});
 
-		// HELPER METHODS
+
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
 			node.style.height = `${height}px`;

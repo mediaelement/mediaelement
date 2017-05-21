@@ -148,19 +148,16 @@ module.exports = function (grunt) {
 			}
 		},
 		uglify: {
-
-			options: {
-				// Preserve comments that start with a bang (like the file header)
-				preserveComments: "some",
-				banner: grunt.file.read('src/js/header.js'),
-				screwIE8: true
-			},
 			build: {
 				files: [{
 					expand: true,
 					src: ['build/**/*.js', '!build/lang/*.js', '!build/jquery.js', '!build/**/*.min.js'],
 					ext: '.min.js'
 				}]
+			},
+			options: {
+				output: {comments: false},
+				banner: grunt.file.read('src/js/header.js')
 			}
 		},
 		postcss: {

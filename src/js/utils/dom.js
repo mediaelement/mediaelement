@@ -184,11 +184,8 @@ export function ajax (url, dataType, success, error) {
 
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-
 					completed = true;
-
 					let data;
-
 					switch (dataType) {
 						case 'json':
 							data = JSON.parse(xhr.responseText);
@@ -200,9 +197,7 @@ export function ajax (url, dataType, success, error) {
 							data = xhr.responseText;
 							break;
 					}
-
 					success(data);
-
 				} else if (typeof error === 'function') {
 					error(xhr.status);
 				}

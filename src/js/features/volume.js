@@ -15,7 +15,6 @@ import {addClass, removeClass, offset} from '../utils/dom';
  * events, such as sliding up/down (or left/right, if vertical), muting/unmuting media, etc.
  */
 
-
 // Feature configuration
 Object.assign(config, {
 	/**
@@ -45,7 +44,6 @@ Object.assign(config, {
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-
 	/**
 	 * Feature constructor.
 	 *
@@ -54,7 +52,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} controls
 	 * @param {$} layers
 	 * @param {HTMLElement} media
-	 * @public
 	 */
 	buildvolume (player, controls, layers, media) {
 
@@ -120,7 +117,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * @param {Number} volume
 			 */
 			positionVolumeHandle = (volume) => {
-
 				// correct to 0-1
 				volume = Math.max(0, volume);
 				volume = Math.min(volume, 1);
@@ -162,7 +158,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * @private
 			 */
 			handleVolumeMove = (e) => {
-
 				const
 					totalOffset = offset(volumeTotal),
 					volumeStyles = getComputedStyle(volumeTotal)
@@ -172,7 +167,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				// calculate the new volume based on the most recent position
 				if (mode === 'vertical') {
-
 					const
 						railHeight = parseFloat(volumeStyles.height),
 						newY = e.pageY - totalOffset.top
@@ -247,12 +241,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			mouseIsOver = false;
 		});
 		mute.addEventListener('keydown', (e) => {
-
 			if (t.options.keyActions.length) {
 				let
 					keyCode = e.which || e.keyCode || 0,
 					volume = media.volume
-					;
+				;
+
 				switch (keyCode) {
 					case 38: // Up
 						volume = Math.min(volume + 0.1, 1);
@@ -322,7 +316,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			});
 			mouseIsDown = true;
-
 			e.preventDefault();
 			e.stopPropagation();
 		});
@@ -368,5 +361,3 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	}
 });
-
-

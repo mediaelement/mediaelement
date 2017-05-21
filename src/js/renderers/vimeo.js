@@ -7,7 +7,7 @@
  * All Vimeo calls return a Promise so this renderer accounts for that
  * to update all the necessary values to interact with MediaElement player.
  * Note: IE8 implements ECMAScript 3 that does not allow bare keywords in dot notation;
- * that's why instead of using .catch ['catch'] is being used.
+ * that's why instead of using .catch .catch is being used.
  * @see https://github.com/vimeo/player.js
  *
  */
@@ -57,9 +57,7 @@ const VimeoApi = {
 		}
 
 		const parts = url.split('?');
-
 		url = parts[0];
-
 		return parseInt(url.substring(url.lastIndexOf('/') + 1));
 	}
 };
@@ -67,7 +65,6 @@ const VimeoApi = {
 const vimeoIframeRenderer = {
 
 	name: 'vimeo_iframe',
-
 	options: {
 		prefix: 'vimeo_iframe'
 	},
@@ -88,8 +85,6 @@ const vimeoIframeRenderer = {
 	 * @return {Object}
 	 */
 	create: (mediaElement, options, mediaFiles) => {
-
-		// exposed object
 		const
 			apiStack = [],
 			vimeo = {},
@@ -171,7 +166,6 @@ const vimeoIframeRenderer = {
 							case 'readyState':
 								return readyState;
 						}
-
 						return value;
 					} else {
 						return null;
@@ -179,12 +173,8 @@ const vimeoIframeRenderer = {
 				};
 
 				vimeo[`set${capName}`] = (value) => {
-
 					if (vimeoPlayer !== null) {
-
-						// do something
 						switch (propName) {
-
 							case 'src':
 								const url = typeof value === 'string' ? value : value[0].src,
 									videoId = VimeoApi.getVimeoId(url);
@@ -194,11 +184,10 @@ const vimeoIframeRenderer = {
 										vimeoPlayer.play();
 									}
 
-								})['catch']((error) => {
+								}).catch((error) => {
 									errorHandler(error, vimeo);
 								});
 								break;
-
 							case 'currentTime':
 								vimeoPlayer.setCurrentTime(value).then(() => {
 									currentTime = value;
@@ -206,11 +195,10 @@ const vimeoIframeRenderer = {
 										const event = mejs.Utils.createEvent('timeupdate', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
-								})['catch']((error) => {
+								}).catch((error) => {
 									errorHandler(error, vimeo);
 								});
 								break;
-
 							case 'volume':
 								vimeoPlayer.setVolume(value).then(() => {
 									volume = value;
@@ -219,13 +207,12 @@ const vimeoIframeRenderer = {
 										const event = mejs.Utils.createEvent('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
-								})['catch']((error) => {
+								}).catch((error) => {
 									errorHandler(error, vimeo);
 								});
-								break;
-
+								break
 							case 'loop':
-								vimeoPlayer.setLoop(value)['catch']((error) => {
+								vimeoPlayer.setLoop(value).catch((error) => {
 									errorHandler(error, vimeo);
 								});
 								break;
@@ -237,7 +224,7 @@ const vimeoIframeRenderer = {
 											const event = mejs.Utils.createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
-									})['catch']((error) => {
+									}).catch((error) => {
 										errorHandler(error, vimeo);
 									});
 								} else {
@@ -247,7 +234,7 @@ const vimeoIframeRenderer = {
 											const event = mejs.Utils.createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
-									})['catch']((error) => {
+									}).catch((error) => {
 										errorHandler(error, vimeo);
 									});
 								}
@@ -260,9 +247,7 @@ const vimeoIframeRenderer = {
 								console.log('vimeo ' + vimeo.id, propName, 'UNSUPPORTED property');
 								break;
 						}
-
 					} else {
-						// store for after "READY" event fires
 						apiStack.push({type: 'set', propName: propName, value: value});
 					}
 				};
@@ -274,15 +259,11 @@ const vimeoIframeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add wrappers for native methods
 		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 				vimeo[methodName] = () => {
-
 					if (vimeoPlayer !== null) {
-
-						// DO method
 						switch (methodName) {
 							case 'play':
 								paused = false;
@@ -292,14 +273,11 @@ const vimeoIframeRenderer = {
 								return vimeoPlayer.pause();
 							case 'load':
 								return null;
-
 						}
-
 					} else {
 						apiStack.push({type: 'call', methodName: methodName});
 					}
 				};
-
 			}
 		;
 
@@ -307,7 +285,6 @@ const vimeoIframeRenderer = {
 			assignMethods(methods[i]);
 		}
 
-		// Initial method to register all Vimeo events when initializing <iframe>
 		window['__ready__' + vimeo.id] = (_vimeoPlayer) => {
 
 			mediaElement.vimeoPlayer = vimeoPlayer = _vimeoPlayer;
@@ -315,7 +292,6 @@ const vimeoIframeRenderer = {
 			// do call stack
 			if (apiStack.length) {
 				for (let i = 0, total = apiStack.length; i < total; i++) {
-
 					const stackItem = apiStack[i];
 
 					if (stackItem.type === 'set') {
@@ -346,9 +322,7 @@ const vimeoIframeRenderer = {
 
 			// Vimeo events
 			vimeoPlayer.on('loaded', () => {
-
 				vimeoPlayer.getDuration().then((loadProgress) => {
-
 					duration = loadProgress;
 
 					if (duration > 0) {
@@ -358,14 +332,12 @@ const vimeoIframeRenderer = {
 					const event = mejs.Utils.createEvent('loadedmetadata', vimeo);
 					mediaElement.dispatchEvent(event);
 
-				})['catch']((error) => {
+				}).catch((error) => {
 					errorHandler(error, vimeo);
 				});
 			});
-
 			vimeoPlayer.on('progress', () => {
 				vimeoPlayer.getDuration().then((loadProgress) => {
-
 					duration = loadProgress;
 
 					if (duration > 0) {
@@ -375,7 +347,7 @@ const vimeoIframeRenderer = {
 					const event = mejs.Utils.createEvent('progress', vimeo);
 					mediaElement.dispatchEvent(event);
 
-				})['catch']((error) => {
+				}).catch((error) => {
 					errorHandler(error, vimeo);
 				});
 			});
@@ -385,7 +357,7 @@ const vimeoIframeRenderer = {
 
 					const event = mejs.Utils.createEvent('timeupdate', vimeo);
 					mediaElement.dispatchEvent(event);
-				})['catch']((error) => {
+				}).catch((error) => {
 					errorHandler(error, vimeo);
 				});
 			});
@@ -410,7 +382,6 @@ const vimeoIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			});
 
-			// give initial events
 			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 
 			for (let i = 0, total = events.length; i < total; i++) {
@@ -463,7 +434,6 @@ const vimeoIframeRenderer = {
 
 		return vimeo;
 	}
-
 };
 
 /**
