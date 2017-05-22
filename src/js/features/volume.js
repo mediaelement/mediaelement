@@ -105,6 +105,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		let
 			mouseIsDown = false,
 			mouseIsOver = false,
+			modified = false,
 
 			/**
 			 * @private
@@ -176,6 +177,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					totalOffset = offset(volumeTotal),
 					volumeStyles = getComputedStyle(volumeTotal)
 				;
+
+				modified = true;
 
 				let volume = null;
 
@@ -334,6 +337,15 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			}
 			updateVolumeSlider(e);
+		});
+
+		media.addEventListener('loadedmetadata', () => {
+			if (!modified) {
+				if (player.options.startVolume === 0) {
+					this.setMuted(true);
+				}
+				this.setVolume(player.options.startVolume);
+			}
 		});
 
 		// mutes the media and sets the volume icon muted if the initial volume is set to 0

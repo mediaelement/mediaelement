@@ -14,6 +14,7 @@
 * Fixed issue with `startVolume` not being picked by non-native renderers @rafa8626
 * Added `getDuration()` and used methods vs property access to allow `MediaElementPlayer` to be extended (https://github.com/mediaelement/mediaelement/pull/2228) @jhutchins
 * Added player min-width based on elements visible on control bar @rafa8626
+* Added missing event to set `startVolume` properly when loading new data @rafa8626
 
 *4.1.1 (2017/05/16)*
 

@@ -2591,6 +2591,8 @@ Object.assign(_player.config, {
 
 Object.assign(_player2.default.prototype, {
 	buildvolume: function buildvolume(player, controls, layers, media) {
+		var _this = this;
+
 		if ((_constants.IS_ANDROID || _constants.IS_IOS) && this.options.hideVolumeOnTouchDevices) {
 			return;
 		}
@@ -2621,6 +2623,7 @@ Object.assign(_player2.default.prototype, {
 
 		var mouseIsDown = false,
 		    mouseIsOver = false,
+		    modified = false,
 		    updateVolumeSlider = function updateVolumeSlider() {
 			var volume = Math.floor(media.volume * 100);
 			volumeSlider.setAttribute('aria-valuenow', volume);
@@ -2667,6 +2670,8 @@ Object.assign(_player2.default.prototype, {
 		    handleVolumeMove = function handleVolumeMove(e) {
 			var totalOffset = (0, _dom.offset)(volumeTotal),
 			    volumeStyles = getComputedStyle(volumeTotal);
+
+			modified = true;
 
 			var volume = null;
 
@@ -2810,6 +2815,15 @@ Object.assign(_player2.default.prototype, {
 				}
 			}
 			updateVolumeSlider(e);
+		});
+
+		media.addEventListener('loadedmetadata', function () {
+			if (!modified) {
+				if (player.options.startVolume === 0) {
+					_this.setMuted(true);
+				}
+				_this.setVolume(player.options.startVolume);
+			}
 		});
 
 		if (player.options.startVolume === 0) {
