@@ -2619,6 +2619,14 @@ Object.assign(_player2.default.prototype, {
 			mute.parentNode.insertBefore(anchor, mute.nextSibling);
 		}
 
+		var mouseIsDown = false,
+		    mouseIsOver = false,
+		    updateVolumeSlider = function updateVolumeSlider() {
+			var volume = Math.floor(media.volume * 100);
+			volumeSlider.setAttribute('aria-valuenow', volume);
+			volumeSlider.setAttribute('aria-valuetext', volume + '%');
+		};
+
 		var volumeSlider = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-slider') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-slider'),
 		    volumeTotal = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-total') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-total'),
 		    volumeCurrent = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-current') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-current'),
@@ -2694,11 +2702,6 @@ Object.assign(_player2.default.prototype, {
 			e.stopPropagation();
 		};
 
-		mute.addEventListener('click', function () {
-			media.setMuted(!media.muted);
-			var event = (0, _general.createEvent)('volumechange', media);
-			media.dispatchEvent(event);
-		});
 		mute.addEventListener('mouseenter', function (e) {
 			if (e.target === mute) {
 				volumeSlider.style.display = 'block';
@@ -2750,14 +2753,11 @@ Object.assign(_player2.default.prototype, {
 				e.stopPropagation();
 			}
 		});
-
-		var mouseIsDown = false,
-		    mouseIsOver = false,
-		    updateVolumeSlider = function updateVolumeSlider() {
-			var volume = Math.floor(media.volume * 100);
-			volumeSlider.setAttribute('aria-valuenow', volume);
-			volumeSlider.setAttribute('aria-valuetext', volume + '%');
-		};
+		mute.querySelector('button').addEventListener('click', function () {
+			media.setMuted(!media.muted);
+			var event = (0, _general.createEvent)('volumechange', media);
+			media.dispatchEvent(event);
+		});
 
 		volumeSlider.addEventListener('dragstart', function () {
 			return false;

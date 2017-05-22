@@ -102,6 +102,20 @@ Object.assign(MediaElementPlayer.prototype, {
 			mute.parentNode.insertBefore(anchor, mute.nextSibling);
 		}
 
+		let
+			mouseIsDown = false,
+			mouseIsOver = false,
+
+			/**
+			 * @private
+			 */
+			updateVolumeSlider = () => {
+				const volume = Math.floor(media.volume * 100);
+				volumeSlider.setAttribute('aria-valuenow', volume);
+				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
+			}
+		;
+
 		const
 			volumeSlider = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-slider`) :
 				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-slider`),
@@ -208,11 +222,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		;
 
-		mute.addEventListener('click', () => {
-			media.setMuted(!media.muted);
-			const event = createEvent('volumechange', media);
-			media.dispatchEvent(event);
-		});
 		mute.addEventListener('mouseenter', (e) => {
 			if (e.target === mute) {
 				volumeSlider.style.display = 'block';
@@ -266,20 +275,11 @@ Object.assign(MediaElementPlayer.prototype, {
 				e.stopPropagation();
 			}
 		});
-
-		let
-			mouseIsDown = false,
-			mouseIsOver = false,
-
-			/**
-			 * @private
-			 */
-			updateVolumeSlider = () => {
-				const volume = Math.floor(media.volume * 100);
-				volumeSlider.setAttribute('aria-valuenow', volume);
-				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
-			}
-		;
+		mute.querySelector('button').addEventListener('click', () => {
+			media.setMuted(!media.muted);
+			const event = createEvent('volumechange', media);
+			media.dispatchEvent(event);
+		});
 
 		// Events
 		volumeSlider.addEventListener('dragstart', () => false);
