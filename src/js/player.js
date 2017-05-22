@@ -1342,7 +1342,7 @@ class MediaElementPlayer {
 		const t = this;
 
 		// skip calculation if hidden
-		if (!dom.visible(t.container) || !t.rail || !dom.visible(t.rail)) {
+		if (!dom.visible(t.container)) {
 			return;
 		}
 
@@ -1362,12 +1362,16 @@ class MediaElementPlayer {
 
 		siblingsWidth += totalMargin + ((totalMargin === 0) ?  (railMargin * 2) : railMargin) + 1;
 
-		// Substract the width of the feature siblings from time rail
-		const controlsWidth = parseFloat(t.controls.offsetWidth);
-		t.rail.style.width = `${(siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth)}px`;
+		t.container.style.minWidth = `${siblingsWidth}px`;
 
-		const event = createEvent('controlsresize', t.container);
-		t.container.dispatchEvent(event);
+		if (t.rail && dom.visible(t.rail)) {
+			// Substract the width of the feature siblings from time rail
+			const controlsWidth = parseFloat(t.controls.offsetWidth);
+			t.rail.style.width = `${(siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth)}px`;
+
+			const event = createEvent('controlsresize', t.container);
+			t.container.dispatchEvent(event);
+		}
 	}
 
 	/**
