@@ -1348,7 +1348,7 @@ class MediaElementPlayer {
 
 		if (t.rail && dom.visible(t.rail)) {
 			const
-				totalStyles = getComputedStyle(t.total, null),
+				totalStyles = t.total ? getComputedStyle(t.total, null) : null,
 				totalMargin = totalStyles ? parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) : 0,
 				railStyles = getComputedStyle(t.rail),
 				railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight)
