@@ -141,7 +141,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					x = e.pageX;
 				}
 
-				if (media.duration) {
+				if (t.getDuration()) {
 					if (x < offsetStyles.left) {
 						x = offsetStyles.left;
 					} else if (x > width + offsetStyles.left) {
@@ -150,10 +150,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					pos = x - offsetStyles.left;
 					percentage = (pos / width);
-					t.newTime = (percentage <= 0.02) ? 0 : percentage * media.duration;
+					t.newTime = (percentage <= 0.02) ? 0 : percentage * t.getDuration();
 
 					// fake seek to where the mouse is
-					if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
+					if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
 						t.setCurrentRailHandle(t.newTime);
 						t.updateCurrent(t.newTime);
 					}
@@ -195,10 +195,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			 */
 			updateSlider = () => {
 				const
-					seconds = media.currentTime,
+					seconds = t.getCurrentTime(),
 					timeSliderText = i18n.t('mejs.time-slider'),
 					time = secondsToTimeCode(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength),
-					duration = media.duration
+					duration = t.getDuration()
 				;
 
 				t.slider.setAttribute('role', 'slider');
@@ -228,8 +228,8 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			},
 			handleMouseup = () => {
-				if (mouseIsDown && media.currentTime !== null && t.newTime.toFixed(4) !== media.currentTime.toFixed(4)) {
-					media.setCurrentTime(t.newTime);
+				if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
+					t.setCurrentTime(t.newTime);
 					player.setCurrentRail();
 					t.updateCurrent(t.newTime);
 				}
@@ -256,23 +256,23 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				const
 					keyCode = e.which || e.keyCode || 0,
-					duration = media.duration,
+					duration = t.getDuration(),
 					seekForward = player.options.defaultSeekForwardInterval(media),
 					seekBackward = player.options.defaultSeekBackwardInterval(media)
 				;
 
-				let seekTime = media.currentTime;
+				let seekTime = t.getCurrentTime();
 
 				switch (keyCode) {
 					case 37: // left
 					case 40: // Down
-						if (media.duration !== Infinity) {
+						if (t.getDuration() !== Infinity) {
 							seekTime -= seekBackward;
 						}
 						break;
 					case 39: // Right
 					case 38: // Up
-						if (media.duration !== Infinity) {
+						if (t.getDuration() !== Infinity) {
 							seekTime += seekForward;
 						}
 						break;
@@ -308,11 +308,11 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.pause();
 				}
 
-				if (seekTime < media.duration && !startedPaused) {
+				if (seekTime < t.getDuration() && !startedPaused) {
 					setTimeout(restartPlayer, 1100);
 				}
 
-				media.setCurrentTime(seekTime);
+				t.setCurrentTime(seekTime);
 
 				e.preventDefault();
 				e.stopPropagation();
@@ -327,7 +327,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let i = 0, total = events.length; i < total; i++) {
 			t.slider.addEventListener(events[i], (e) => {
 				t.forcedHandlePause = false;
-				if (media.duration !== Infinity) {
+				if (t.getDuration() !== Infinity) {
 					// only handle left clicks or touch
 					if (e.which === 1 || e.which === 0) {
 						if (!media.paused) {
@@ -360,7 +360,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 		}
 		t.slider.addEventListener('mouseenter', (e) => {
-			if (e.target === t.slider && media.duration !== Infinity) {
+			if (e.target === t.slider && t.getDuration() !== Infinity) {
 				t.container.addEventListener('mousemove', (event) => {
 					const target = event.target;
 					if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
@@ -376,7 +376,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 		t.slider.addEventListener('mouseleave', () => {
-			if (media.duration !== Infinity) {
+			if (t.getDuration() !== Infinity) {
 				if (!mouseIsDown) {
 					t.globalUnbind('mousemove.dur');
 					if (t.timefloat) {
@@ -394,7 +394,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// and indicate that is a live broadcast
 		media.addEventListener('progress', (e) => {
 			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
-			if (media.duration !== Infinity) {
+			if (t.getDuration() !== Infinity) {
 				if (broadcast) {
 					t.slider.style.display = '';
 					broadcast.remove();
@@ -415,7 +415,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// current time
 		media.addEventListener('timeupdate', (e) => {
 			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
-			if (media.duration !== Infinity ) {
+			if (t.getDuration() !== Infinity ) {
 				if (broadcast) {
 					t.slider.style.display = '';
 					broadcast.remove();
@@ -436,7 +436,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		t.container.addEventListener('controlsresize', (e) => {
-			if (media.duration !== Infinity) {
+			if (t.getDuration() !== Infinity) {
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
@@ -459,9 +459,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		let percent = null;
 
 		// newest HTML5 spec has buffered array (FF4, Webkit)
-		if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && target.duration) {
+		if (target && target.buffered && target.buffered.length > 0 && target.buffered.end && t.getDuration()) {
 			// account for a real array with multiple values - always read the end of the last buffer
-			percent = target.buffered.end(target.buffered.length - 1) / target.duration;
+			percent = target.buffered.end(target.buffered.length - 1) / t.getDuration();
 		}
 		// Some browsers (e.g., FF3.6 and Safari 5) cannot calculate target.bufferered.end()
 		// to be anything other than 0. If the byte count is available we use this instead.
@@ -508,15 +508,15 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {?Number} fakeTime
 	 */
 	setCurrentRailMain (t, fakeTime) {
-		if (t.media.currentTime !== undefined && t.media.duration) {
-			const nTime = (typeof fakeTime === 'undefined') ? t.media.currentTime : fakeTime;
+		if (t.getCurrentTime() !== undefined && t.getDuration()) {
+			const nTime = (typeof fakeTime === 'undefined') ? t.getCurrentTime() : fakeTime;
 
 			// update bar and handle
 			if (t.total && t.handle) {
 				const tW = parseFloat(getComputedStyle(t.total).width);
 
 				let
-					newWidth = Math.round(tW * nTime / t.media.duration),
+					newWidth = Math.round(tW * nTime / t.getDuration()),
 					handlePos = newWidth - Math.round(t.handle.offsetWidth / 2)
 				;
 
@@ -531,7 +531,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					const hoverScaleX = pos/tW - handlePos/tW;
 
 					t.hovered.style.left = `${handlePos}px`;
-					t.setTransformStyle(t.hovered,`scaleX(${hoverScaleX})`); 
+					t.setTransformStyle(t.hovered,`scaleX(${hoverScaleX})`);
 
 					if (hoverScaleX >= 0) {
 						removeClass(t.hovered, 'negative');
