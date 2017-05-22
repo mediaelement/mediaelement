@@ -4135,31 +4135,40 @@ var MediaElementPlayer = function () {
 				return;
 			}
 
-			var railStyles = getComputedStyle(t.rail),
-			    totalStyles = getComputedStyle(t.total),
-			    railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight),
-			    totalMargin = parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) || 0;
-
-			var siblingsWidth = 0;
-
-			var siblings = dom.siblings(t.rail, function (el) {
-				return el !== t.rail;
-			}),
-			    total = siblings.length;
-			for (var i = 0; i < total; i++) {
-				siblingsWidth += siblings[i].offsetWidth;
-			}
-
-			siblingsWidth += totalMargin + (totalMargin === 0 ? railMargin * 2 : railMargin) + 1;
-
-			t.container.style.minWidth = siblingsWidth + 'px';
-
 			if (t.rail && dom.visible(t.rail)) {
+				var totalStyles = getComputedStyle(t.total, null),
+				    totalMargin = totalStyles ? parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) : 0,
+				    railStyles = getComputedStyle(t.rail),
+				    railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight);
+
+				var siblingsWidth = 0;
+
+				var siblings = dom.siblings(t.rail, function (el) {
+					return el !== t.rail;
+				}),
+				    total = siblings.length;
+				for (var i = 0; i < total; i++) {
+					siblingsWidth += siblings[i].offsetWidth;
+				}
+
+				siblingsWidth += totalMargin + (totalMargin === 0 ? railMargin * 2 : railMargin) + 1;
+
+				t.container.style.minWidth = siblingsWidth + 'px';
+
 				var controlsWidth = parseFloat(t.controls.offsetWidth);
 				t.rail.style.width = (siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth) + 'px';
 
 				var event = (0, _general.createEvent)('controlsresize', t.container);
 				t.container.dispatchEvent(event);
+			} else {
+				var children = t.controls.childNodes;
+				var minWidth = 0;
+
+				for (var _i = 0, _total = children.length; _i < _total; _i++) {
+					minWidth += children[_i].offsetWidth;
+				}
+
+				t.container.style.minWidth = minWidth + 'px';
 			}
 		}
 	}, {
@@ -4266,8 +4275,8 @@ var MediaElementPlayer = function () {
 			}
 			if (events.w) {
 				var _eventList = events.w.split(' ');
-				for (var _i = 0, _total = _eventList.length; _i < _total; _i++) {
-					_eventList[_i].split('.').reduce(function (part, e) {
+				for (var _i2 = 0, _total2 = _eventList.length; _i2 < _total2; _i2++) {
+					_eventList[_i2].split('.').reduce(function (part, e) {
 						_window2.default.addEventListener(e, callback, false);
 						return e;
 					}, '');
@@ -4292,8 +4301,8 @@ var MediaElementPlayer = function () {
 			}
 			if (events.w) {
 				var _eventList2 = events.d.split(' ');
-				for (var _i2 = 0, _total2 = _eventList2.length; _i2 < _total2; _i2++) {
-					_eventList2[_i2].split('.').reduce(function (part, e) {
+				for (var _i3 = 0, _total3 = _eventList2.length; _i3 < _total3; _i3++) {
+					_eventList2[_i3].split('.').reduce(function (part, e) {
 						_window2.default.removeEventListener(e, callback, false);
 						return e;
 					}, '');
@@ -4683,8 +4692,8 @@ var MediaElementPlayer = function () {
 						}
 					}
 					if (t.trackFiles) {
-						var _loop3 = function _loop3(_i3, _total3) {
-							var track = t.trackFiles[_i3];
+						var _loop3 = function _loop3(_i4, _total4) {
+							var track = t.trackFiles[_i4];
 							var newTrack = _document2.default.createElement('track');
 							newTrack.kind = track.kind;
 							newTrack.label = track.label;
@@ -4694,12 +4703,12 @@ var MediaElementPlayer = function () {
 							node.appendChild(newTrack);
 							newTrack.addEventListener('load', function () {
 								this.mode = 'showing';
-								node.textTracks[_i3].mode = 'showing';
+								node.textTracks[_i4].mode = 'showing';
 							});
 						};
 
-						for (var _i3 = 0, _total3 = t.trackFiles.length; _i3 < _total3; _i3++) {
-							_loop3(_i3, _total3);
+						for (var _i4 = 0, _total4 = t.trackFiles.length; _i4 < _total4; _i4++) {
+							_loop3(_i4, _total4);
 						}
 					}
 

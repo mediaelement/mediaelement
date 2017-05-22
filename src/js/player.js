@@ -1346,31 +1346,41 @@ class MediaElementPlayer {
 			return;
 		}
 
-		const
-			railStyles = getComputedStyle(t.rail),
-			totalStyles = getComputedStyle(t.total),
-			railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight),
-			totalMargin = parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) || 0
-		;
-
-		let siblingsWidth = 0;
-
-		const siblings = dom.siblings(t.rail, (el) => el !== t.rail), total = siblings.length;
-		for (let i = 0; i < total; i++) {
-			siblingsWidth += siblings[i].offsetWidth;
-		}
-
-		siblingsWidth += totalMargin + ((totalMargin === 0) ?  (railMargin * 2) : railMargin) + 1;
-
-		t.container.style.minWidth = `${siblingsWidth}px`;
-
 		if (t.rail && dom.visible(t.rail)) {
+			const
+				totalStyles = getComputedStyle(t.total, null),
+				totalMargin = totalStyles ? parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) : 0,
+				railStyles = getComputedStyle(t.rail),
+				railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight)
+			;
+
+			let siblingsWidth = 0;
+
+			const siblings = dom.siblings(t.rail, (el) => el !== t.rail), total = siblings.length;
+			for (let i = 0; i < total; i++) {
+				siblingsWidth += siblings[i].offsetWidth;
+			}
+
+			siblingsWidth += totalMargin + ((totalMargin === 0) ?  (railMargin * 2) : railMargin) + 1;
+
+			t.container.style.minWidth = `${siblingsWidth}px`;
+
+
 			// Substract the width of the feature siblings from time rail
 			const controlsWidth = parseFloat(t.controls.offsetWidth);
 			t.rail.style.width = `${(siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth)}px`;
 
 			const event = createEvent('controlsresize', t.container);
 			t.container.dispatchEvent(event);
+		} else {
+			const children = t.controls.childNodes;
+			let minWidth = 0;
+
+			for (let i = 0, total = children.length; i < total; i++) {
+				minWidth += children[i].offsetWidth;
+			}
+
+			t.container.style.minWidth = `${minWidth}px`;
 		}
 	}
 
