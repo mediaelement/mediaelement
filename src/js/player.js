@@ -1818,6 +1818,10 @@ class MediaElementPlayer {
 		return this.media.currentTime;
 	}
 
+	getDuration () {
+		return this.media.duration;
+	}
+
 	setVolume (volume) {
 		this.media.setVolume(volume);
 	}

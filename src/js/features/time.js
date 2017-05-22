@@ -103,7 +103,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	updateCurrent ()  {
 		const t = this;
 
-		let currentTime = t.media.currentTime;
+		let currentTime = t.getCurrentTime();
 
 		if (isNaN(currentTime)) {
 			currentTime = 0;
@@ -121,7 +121,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	updateDuration ()  {
 		const t = this;
 
-		let duration = t.media.duration;
+		let duration = t.getDuration();
 
 		if (isNaN(duration) || duration === Infinity || duration < 0) {
 			t.media.duration = t.options.duration = duration = 0;
