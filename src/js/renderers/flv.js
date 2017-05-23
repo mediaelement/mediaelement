@@ -46,6 +46,8 @@ const NativeFlv = {
 	 * @param {Object} settings - an object with settings needed to instantiate FLV object
 	 */
 	_createPlayer: (settings) => {
+		flvjs.LoggingControl.enableDebug = settings.options.debug;
+		flvjs.LoggingControl.enableVerbose = settings.options.debug;
 		const player = flvjs.createPlayer(settings.options);
 		window[`__ready__${settings.id}`](player);
 	}
@@ -60,7 +62,8 @@ const FlvNativeRenderer = {
 			path: 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js',
 			// To modify more elements from FLV player,
 			// see https://github.com/Bilibili/flv.js/blob/master/docs/api.md#config
-			cors: true
+			cors: true,
+			debug: false
 		}
 	},
 	/**
@@ -123,7 +126,6 @@ const FlvNativeRenderer = {
 		}
 
 		window['__ready__' + id] = (_flvPlayer) => {
-
 			mediaElement.flvPlayer = flvPlayer = _flvPlayer;
 
 			const
@@ -134,6 +136,7 @@ const FlvNativeRenderer = {
 						flvPlayer.detachMediaElement();
 						flvPlayer.attachMediaElement(node);
 						flvPlayer.load();
+						node.setVolume(mediaElement.originalNode.volume);
 					}
 
 					node.addEventListener(eventName, (e) => {

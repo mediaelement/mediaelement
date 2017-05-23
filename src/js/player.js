@@ -45,17 +45,15 @@ export const config = {
 	// Default if the user doesn't specify
 	defaultAudioHeight: 40,
 	// Default amount to move back when back key is pressed
-	defaultSeekBackwardInterval: (media) => media.duration * 0.05,
+	defaultSeekBackwardInterval: (media) => media.getDuration() * 0.05,
 	// Default amount to move forward when forward key is pressed
-	defaultSeekForwardInterval: (media) => media.duration * 0.05,
+	defaultSeekForwardInterval: (media) => media.getDuration() * 0.05,
 	// Set dimensions via JS instead of CSS
 	setDimensions: true,
 	// Width of audio player
 	audioWidth: -1,
 	// Height of audio player
 	audioHeight: -1,
-	// Initial volume when the player starts (overridden by user cookie)
-	startVolume: 0.8,
 	// Useful for <audio> player loops
 	loop: false,
 	// Rewind to beginning when media ends
@@ -558,8 +556,8 @@ class MediaElementPlayer {
 		}
 
 		if (doAnimation) {
-			dom.removeClass(t.controls, `${t.options.classPrefix}offscreen`);
 			dom.fadeIn(t.controls, 200, () => {
+				dom.removeClass(t.controls, `${t.options.classPrefix}offscreen`);
 				const event = createEvent('controlsshown', t.container);
 				t.container.dispatchEvent(event);
 			});
@@ -944,8 +942,8 @@ class MediaElementPlayer {
 			// Only change the time format when necessary
 			let duration = null;
 			t.media.addEventListener('timeupdate', () => {
-				if (duration !== t.media.duration) {
-					duration = t.media.duration;
+				if (!isNaN(t.media.getDuration()) && duration !== t.media.getDuration()) {
+					duration = t.media.getDuration();
 					calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
 
 					// make sure to fill in and resize the controls (e.g., 00:00 => 01:13:15
@@ -955,6 +953,7 @@ class MediaElementPlayer {
 					if (t.updateCurrent) {
 						t.updateCurrent();
 					}
+
 					t.setControlsSize();
 				}
 			});

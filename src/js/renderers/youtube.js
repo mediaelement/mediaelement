@@ -450,13 +450,8 @@ const YouTubeIframeRenderer = {
 							youTubeIframe.addEventListener(events[i], assignEvents, false);
 						}
 
-						// send init events
-						const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-
-						for (let i = 0, total = initEvents.length; i < total; i++) {
-							const event = createEvent(initEvents[i], youtube);
-							mediaElement.dispatchEvent(event);
-						}
+						const event = createEvent('rendererready', youtube);
+						mediaElement.dispatchEvent(event);
 					},
 					onStateChange: (e) => {
 						let events = [];

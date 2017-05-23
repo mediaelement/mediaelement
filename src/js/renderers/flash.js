@@ -146,10 +146,8 @@ const FlashMediaElementRenderer = {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 				flash[`get${capName}`] = () => {
-
 					if (flash.flashApi !== null) {
-
-						if (flash.flashApi['get_' + propName] !== undefined) {
+						if (typeof flash.flashApi['get_' + propName] === 'function') {
 							const value = flash.flashApi['get_' + propName]();
 
 							if (propName === 'buffered') {
@@ -163,12 +161,10 @@ const FlashMediaElementRenderer = {
 									length: 1
 								};
 							}
-
 							return value;
 						} else {
 							return null;
 						}
-
 					} else {
 						return null;
 					}
@@ -181,7 +177,11 @@ const FlashMediaElementRenderer = {
 
 					// send value to Flash
 					if (flash.flashApi !== null && flash.flashApi['set_' + propName] !== undefined) {
-						flash.flashApi['set_' + propName](value);
+						try {
+							flash.flashApi['set_' + propName](value);
+						} catch (e) {
+							console.log(e);
+						}
 					} else {
 						// store for after "READY" event fires
 						flash.flashApiStack.push({
@@ -257,6 +257,9 @@ const FlashMediaElementRenderer = {
 						;
 
 						flash[`set${capName}`](stackItem.value);
+						if (propName === 'src') {
+							flash['setVolume'](mediaElement.originalNode.volume);
+						}
 					} else if (stackItem.type === 'call') {
 						flash[stackItem.methodName]();
 					}

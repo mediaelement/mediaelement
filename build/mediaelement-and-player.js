@@ -515,10 +515,10 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1),
 			    getFn = function getFn() {
-				return t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null ? t.mediaElement.renderer['get' + capName]() : null;
+				return t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer['get' + capName] === 'function' ? t.mediaElement.renderer['get' + capName]() : null;
 			},
 			    setFn = function setFn(value) {
-				if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
+				if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer['set' + capName] === 'function') {
 					t.mediaElement.renderer['set' + capName](value);
 				}
 			};
@@ -2576,6 +2576,8 @@ var _dom = _dereq_(24);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Object.assign(_player.config, {
+	startVolume: 0.8,
+
 	muteText: null,
 
 	unmuteText: null,
@@ -2591,8 +2593,6 @@ Object.assign(_player.config, {
 
 Object.assign(_player2.default.prototype, {
 	buildvolume: function buildvolume(player, controls, layers, media) {
-		var _this = this;
-
 		if ((_constants.IS_ANDROID || _constants.IS_IOS) && this.options.hideVolumeOnTouchDevices) {
 			return;
 		}
@@ -2635,6 +2635,11 @@ Object.assign(_player2.default.prototype, {
 		    volumeCurrent = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-current') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-current'),
 		    volumeHandle = mode === 'vertical' ? t.container.querySelector('.' + t.options.classPrefix + 'volume-handle') : t.container.querySelector('.' + t.options.classPrefix + 'horizontal-volume-handle'),
 		    positionVolumeHandle = function positionVolumeHandle(volume) {
+
+			if (volume === null || isNaN(volume) || volume === undefined) {
+				return;
+			}
+
 			volume = Math.max(0, volume);
 			volume = Math.min(volume, 1);
 
@@ -2696,11 +2701,7 @@ Object.assign(_player2.default.prototype, {
 
 			positionVolumeHandle(volume);
 
-			if (volume === 0) {
-				media.setMuted(true);
-			} else {
-				media.setMuted(false);
-			}
+			media.setMuted(volume === 0);
 			media.setVolume(volume);
 
 			e.preventDefault();
@@ -2721,7 +2722,7 @@ Object.assign(_player2.default.prototype, {
 		});
 
 		mute.addEventListener('focusout', function (e) {
-			if (!e.relatedTarget.matches('.' + t.options.classPrefix + 'volume-slider') && mode === 'vertical') {
+			if ((!e.relatedTarget || e.relatedTarget && !e.relatedTarget.matches('.' + t.options.classPrefix + 'volume-slider')) && mode === 'vertical') {
 				volumeSlider.style.display = 'none';
 			}
 		});
@@ -2817,12 +2818,14 @@ Object.assign(_player2.default.prototype, {
 			updateVolumeSlider(e);
 		});
 
-		media.addEventListener('loadedmetadata', function () {
+		media.addEventListener('rendererready', function () {
 			if (!modified) {
 				if (player.options.startVolume === 0) {
-					_this.setMuted(true);
+					media.setMuted(true);
 				}
-				_this.setVolume(player.options.startVolume);
+				media.setVolume(player.options.startVolume);
+				var event = (0, _general.createEvent)('volumechange', media);
+				media.dispatchEvent(event);
 			}
 		});
 
@@ -3031,11 +3034,11 @@ var config = exports.config = {
 	defaultAudioHeight: 40,
 
 	defaultSeekBackwardInterval: function defaultSeekBackwardInterval(media) {
-		return media.duration * 0.05;
+		return media.getDuration() * 0.05;
 	},
 
 	defaultSeekForwardInterval: function defaultSeekForwardInterval(media) {
-		return media.duration * 0.05;
+		return media.getDuration() * 0.05;
 	},
 
 	setDimensions: true,
@@ -3043,8 +3046,6 @@ var config = exports.config = {
 	audioWidth: -1,
 
 	audioHeight: -1,
-
-	startVolume: 0.8,
 
 	loop: false,
 
@@ -3442,8 +3443,8 @@ var MediaElementPlayer = function () {
 
 			if (doAnimation) {
 				(function () {
-					dom.removeClass(t.controls, t.options.classPrefix + 'offscreen');
 					dom.fadeIn(t.controls, 200, function () {
+						dom.removeClass(t.controls, t.options.classPrefix + 'offscreen');
 						var event = (0, _general.createEvent)('controlsshown', t.container);
 						t.container.dispatchEvent(event);
 					});
@@ -3788,8 +3789,8 @@ var MediaElementPlayer = function () {
 
 				var duration = null;
 				t.media.addEventListener('timeupdate', function () {
-					if (duration !== t.media.duration) {
-						duration = t.media.duration;
+					if (!isNaN(t.media.getDuration()) && duration !== t.media.getDuration()) {
+						duration = t.media.getDuration();
 						(0, _time.calculateTimeFormat)(duration, t.options, t.options.framesPerSecond || 25);
 
 						if (t.updateDuration) {
@@ -3798,6 +3799,7 @@ var MediaElementPlayer = function () {
 						if (t.updateCurrent) {
 							t.updateCurrent();
 						}
+
 						t.setControlsSize();
 					}
 				});
@@ -4867,6 +4869,9 @@ var DashNativeRenderer = {
 
 			node['set' + capName] = function (value) {
 				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
+
+					node[propName] = value;
+
 					if (dashPlayer !== null) {
 						if (propName === 'src') {
 							dashPlayer.attachSource(value);
@@ -4874,8 +4879,6 @@ var DashNativeRenderer = {
 								node.play();
 							}
 						}
-
-						node[propName] = value;
 					}
 				}
 			};
@@ -4886,7 +4889,6 @@ var DashNativeRenderer = {
 		}
 
 		_window2.default['__ready__' + id] = function (_dashPlayer) {
-
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
@@ -4898,6 +4900,7 @@ var DashNativeRenderer = {
 			    assignEvents = function assignEvents(eventName) {
 				if (eventName === 'loadedmetadata') {
 					dashPlayer.initialize(node, node.src, false);
+					node.setVolume(mediaElement.originalNode.volume);
 				}
 
 				node.addEventListener(eventName, function (e) {
@@ -5085,10 +5088,8 @@ var FlashMediaElementRenderer = {
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 			flash['get' + capName] = function () {
-
 				if (flash.flashApi !== null) {
-
-					if (flash.flashApi['get_' + propName] !== undefined) {
+					if (typeof flash.flashApi['get_' + propName] === 'function') {
 						var value = flash.flashApi['get_' + propName]();
 
 						if (propName === 'buffered') {
@@ -5102,7 +5103,6 @@ var FlashMediaElementRenderer = {
 								length: 1
 							};
 						}
-
 						return value;
 					} else {
 						return null;
@@ -5118,7 +5118,11 @@ var FlashMediaElementRenderer = {
 				}
 
 				if (flash.flashApi !== null && flash.flashApi['set_' + propName] !== undefined) {
-					flash.flashApi['set_' + propName](value);
+					try {
+						flash.flashApi['set_' + propName](value);
+					} catch (e) {
+						
+					}
 				} else {
 					flash.flashApiStack.push({
 						type: 'set',
@@ -5180,6 +5184,9 @@ var FlashMediaElementRenderer = {
 						    capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 						flash['set' + capName](stackItem.value);
+						if (propName === 'src') {
+							flash['setVolume'](mediaElement.originalNode.volume);
+						}
 					} else if (stackItem.type === 'call') {
 						flash[stackItem.methodName]();
 					}
@@ -5431,6 +5438,8 @@ var NativeFlv = {
 	},
 
 	_createPlayer: function _createPlayer(settings) {
+		flvjs.LoggingControl.enableDebug = settings.options.debug;
+		flvjs.LoggingControl.enableVerbose = settings.options.debug;
 		var player = flvjs.createPlayer(settings.options);
 		_window2.default['__ready__' + settings.id](player);
 	}
@@ -5443,7 +5452,8 @@ var FlvNativeRenderer = {
 		flv: {
 			path: 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js',
 
-			cors: true
+			cors: true,
+			debug: false
 		}
 	},
 
@@ -5491,7 +5501,6 @@ var FlvNativeRenderer = {
 		}
 
 		_window2.default['__ready__' + id] = function (_flvPlayer) {
-
 			mediaElement.flvPlayer = flvPlayer = _flvPlayer;
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
@@ -5501,6 +5510,7 @@ var FlvNativeRenderer = {
 					flvPlayer.detachMediaElement();
 					flvPlayer.attachMediaElement(node);
 					flvPlayer.load();
+					node.setVolume(mediaElement.originalNode.volume);
 				}
 
 				node.addEventListener(eventName, function (e) {
@@ -5662,9 +5672,10 @@ var HlsNativeRenderer = {
 
 			node['set' + capName] = function (value) {
 				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
-					if (hlsPlayer !== null) {
-						node[propName] = value;
 
+					node[propName] = value;
+
+					if (hlsPlayer !== null) {
 						if (propName === 'src') {
 
 							hlsPlayer.destroy();
@@ -5686,7 +5697,6 @@ var HlsNativeRenderer = {
 		}
 
 		_window2.default['__ready__' + id] = function (_hlsPlayer) {
-
 			mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
@@ -5697,6 +5707,7 @@ var HlsNativeRenderer = {
 					hlsPlayer.detachMedia();
 					hlsPlayer.loadSource(url);
 					hlsPlayer.attachMedia(node);
+					node.setVolume(mediaElement.originalNode.volume);
 				}
 
 				node.addEventListener(eventName, function (e) {
@@ -6320,12 +6331,8 @@ var YouTubeIframeRenderer = {
 						youTubeIframe.addEventListener(events[_i3], assignEvents, false);
 					}
 
-					var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
-
-					for (var _i4 = 0, _total4 = initEvents.length; _i4 < _total4; _i4++) {
-						var event = (0, _general.createEvent)(initEvents[_i4], youtube);
-						mediaElement.dispatchEvent(event);
-					}
+					var event = (0, _general.createEvent)('rendererready', youtube);
+					mediaElement.dispatchEvent(event);
 				},
 				onStateChange: function onStateChange(e) {
 					var events = [];
@@ -6365,8 +6372,8 @@ var YouTubeIframeRenderer = {
 							break;
 					}
 
-					for (var _i5 = 0, _total5 = events.length; _i5 < _total5; _i5++) {
-						var event = (0, _general.createEvent)(events[_i5], youtube);
+					for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
+						var event = (0, _general.createEvent)(events[_i4], youtube);
 						mediaElement.dispatchEvent(event);
 					}
 				},

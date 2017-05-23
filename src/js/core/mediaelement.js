@@ -250,9 +250,11 @@ class MediaElement {
 
 					const
 						capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`,
-						getFn = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer[`get${capName}`]() : null,
+						getFn = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
+							typeof t.mediaElement.renderer[`get${capName}`] === 'function') ? t.mediaElement.renderer[`get${capName}`]() : null,
 						setFn = (value) => {
-							if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
+							if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
+								typeof t.mediaElement.renderer[`set${capName}`] === 'function') {
 								t.mediaElement.renderer[`set${capName}`](value);
 							}
 						};

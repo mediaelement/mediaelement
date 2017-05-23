@@ -103,6 +103,9 @@ const DashNativeRenderer = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
+
+						node[propName] = value;
+
 						if (dashPlayer !== null) {
 							if (propName === 'src') {
 								dashPlayer.attachSource(value);
@@ -110,8 +113,6 @@ const DashNativeRenderer = {
 									node.play();
 								}
 							}
-
-							node[propName] = value;
 						}
 					}
 				};
@@ -125,7 +126,6 @@ const DashNativeRenderer = {
 
 		// Initial method to register all M(PEG)-DASH events
 		window['__ready__' + id] = (_dashPlayer) => {
-
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
@@ -138,13 +138,13 @@ const DashNativeRenderer = {
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
 						dashPlayer.initialize(node, node.src, false);
+						node.setVolume(mediaElement.originalNode.volume);
 					}
 
 					node.addEventListener(eventName, (e) => {
 						const event = createEvent(e.type, mediaElement);
 						mediaElement.dispatchEvent(event);
 					});
-
 				}
 			;
 

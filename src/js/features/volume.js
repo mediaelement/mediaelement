@@ -18,6 +18,11 @@ import {addClass, removeClass, offset} from '../utils/dom';
 // Feature configuration
 Object.assign(config, {
 	/**
+	 * Initial volume when the player starts (overridden by user cookie)
+	 * @ty
+	 */
+	startVolume: 0.8,
+	/**
 	 * @type {?String}
 	 */
 	muteText: null,
@@ -132,6 +137,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * @param {Number} volume
 			 */
 			positionVolumeHandle = (volume) => {
+
+				if (volume === null || isNaN(volume) || volume === undefined) {
+					return;
+				}
+
 				// correct to 0-1
 				volume = Math.max(0, volume);
 				volume = Math.min(volume, 1);
@@ -212,12 +222,8 @@ Object.assign(MediaElementPlayer.prototype, {
 				// position the slider and handle
 				positionVolumeHandle(volume);
 
-				// set the media object (this will trigger the `volumechanged` event)
-				if (volume === 0) {
-					media.setMuted(true);
-				} else {
-					media.setMuted(false);
-				}
+				// set the media object (this will trigger the `volumechange` event)
+				media.setMuted((volume === 0));
 				media.setVolume(volume);
 
 				e.preventDefault();
@@ -239,7 +245,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		mute.addEventListener('focusout', (e) => {
-			if (!e.relatedTarget.matches(`.${t.options.classPrefix}volume-slider`) && mode === 'vertical') {
+			if ((!e.relatedTarget || (e.relatedTarget && !e.relatedTarget.matches(`.${t.options.classPrefix}volume-slider`))) &&
+				mode === 'vertical') {
 				volumeSlider.style.display = 'none';
 			}
 		});
@@ -339,12 +346,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			updateVolumeSlider(e);
 		});
 
-		media.addEventListener('loadedmetadata', () => {
+		media.addEventListener('rendererready', () => {
 			if (!modified) {
 				if (player.options.startVolume === 0) {
-					this.setMuted(true);
+					media.setMuted(true);
 				}
-				this.setVolume(player.options.startVolume);
+				media.setVolume(player.options.startVolume);
+				const event = createEvent('volumechange', media);
+				media.dispatchEvent(event);
+
 			}
 		});
 
