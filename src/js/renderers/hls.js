@@ -111,10 +111,9 @@ const HlsNativeRenderer = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
-
-						node[propName] = value;
-
 						if (hlsPlayer !== null) {
+							node[propName] = value;
+
 							if (propName === 'src') {
 
 								hlsPlayer.destroy();

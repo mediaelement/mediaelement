@@ -4869,10 +4869,9 @@ var DashNativeRenderer = {
 
 			node['set' + capName] = function (value) {
 				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
-
-					node[propName] = value;
-
 					if (dashPlayer !== null) {
+						node[propName] = value;
+
 						if (propName === 'src') {
 							dashPlayer.attachSource(value);
 							if (autoplay) {
@@ -5672,10 +5671,9 @@ var HlsNativeRenderer = {
 
 			node['set' + capName] = function (value) {
 				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
-
-					node[propName] = value;
-
 					if (hlsPlayer !== null) {
+						node[propName] = value;
+
 						if (propName === 'src') {
 
 							hlsPlayer.destroy();
