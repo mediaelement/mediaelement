@@ -2518,8 +2518,12 @@ var YouTubeIframeRenderer = {
 						youTubeIframe.addEventListener(events[_i3], assignEvents, false);
 					}
 
-					var event = (0, _general.createEvent)('rendererready', youtube);
-					mediaElement.dispatchEvent(event);
+					var initEvents = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
+
+					for (var _i4 = 0, _total4 = initEvents.length; _i4 < _total4; _i4++) {
+						var event = (0, _general.createEvent)(initEvents[_i4], youtube);
+						mediaElement.dispatchEvent(event);
+					}
 				},
 				onStateChange: function onStateChange(e) {
 					var events = [];
@@ -2559,8 +2563,8 @@ var YouTubeIframeRenderer = {
 							break;
 					}
 
-					for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
-						var event = (0, _general.createEvent)(events[_i4], youtube);
+					for (var _i5 = 0, _total5 = events.length; _i5 < _total5; _i5++) {
+						var event = (0, _general.createEvent)(events[_i5], youtube);
 						mediaElement.dispatchEvent(event);
 					}
 				},

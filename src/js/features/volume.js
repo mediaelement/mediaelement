@@ -18,11 +18,6 @@ import {addClass, removeClass, offset} from '../utils/dom';
 // Feature configuration
 Object.assign(config, {
 	/**
-	 * Initial volume when the player starts (overridden by user cookie)
-	 * @ty
-	 */
-	startVolume: 0.8,
-	/**
 	 * @type {?String}
 	 */
 	muteText: null,
@@ -45,7 +40,12 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	videoVolume: 'vertical'
+	videoVolume: 'vertical',
+	/**
+	 * Initial volume when the player starts (overridden by user cookie)
+	 * @type {Number}
+	 */
+	startVolume: 0.8
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -346,16 +346,31 @@ Object.assign(MediaElementPlayer.prototype, {
 			updateVolumeSlider(e);
 		});
 
-		media.addEventListener('rendererready', () => {
+		let rendered = false;
+		media.addEventListener('rendererready', function () {
 			if (!modified) {
-				if (player.options.startVolume === 0) {
-					media.setMuted(true);
-				}
-				media.setVolume(player.options.startVolume);
-				const event = createEvent('volumechange', media);
-				media.dispatchEvent(event);
-
+				setTimeout(() => {
+					rendered = true;
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}, 250);
 			}
+		});
+
+		media.addEventListener('loadedmetadata', function () {
+			setTimeout(() => {
+				if (!modified && !rendered) {
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}
+				rendered = false;
+			}, 250);
 		});
 
 		// mutes the media and sets the volume icon muted if the initial volume is set to 0

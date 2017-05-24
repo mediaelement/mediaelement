@@ -2576,8 +2576,6 @@ var _dom = _dereq_(24);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Object.assign(_player.config, {
-	startVolume: 0.8,
-
 	muteText: null,
 
 	unmuteText: null,
@@ -2588,7 +2586,9 @@ Object.assign(_player.config, {
 
 	audioVolume: 'horizontal',
 
-	videoVolume: 'vertical'
+	videoVolume: 'vertical',
+
+	startVolume: 0.8
 });
 
 Object.assign(_player2.default.prototype, {
@@ -2818,15 +2818,31 @@ Object.assign(_player2.default.prototype, {
 			updateVolumeSlider(e);
 		});
 
+		var rendered = false;
 		media.addEventListener('rendererready', function () {
 			if (!modified) {
-				if (player.options.startVolume === 0) {
-					media.setMuted(true);
-				}
-				media.setVolume(player.options.startVolume);
-				var event = (0, _general.createEvent)('volumechange', media);
-				media.dispatchEvent(event);
+				setTimeout(function () {
+					rendered = true;
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}, 250);
 			}
+		});
+
+		media.addEventListener('loadedmetadata', function () {
+			setTimeout(function () {
+				if (!modified && !rendered) {
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}
+				rendered = false;
+			}, 250);
 		});
 
 		if (player.options.startVolume === 0) {
@@ -6329,8 +6345,12 @@ var YouTubeIframeRenderer = {
 						youTubeIframe.addEventListener(events[_i3], assignEvents, false);
 					}
 
-					var event = (0, _general.createEvent)('rendererready', youtube);
-					mediaElement.dispatchEvent(event);
+					var initEvents = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
+
+					for (var _i4 = 0, _total4 = initEvents.length; _i4 < _total4; _i4++) {
+						var event = (0, _general.createEvent)(initEvents[_i4], youtube);
+						mediaElement.dispatchEvent(event);
+					}
 				},
 				onStateChange: function onStateChange(e) {
 					var events = [];
@@ -6370,8 +6390,8 @@ var YouTubeIframeRenderer = {
 							break;
 					}
 
-					for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
-						var event = (0, _general.createEvent)(events[_i4], youtube);
+					for (var _i5 = 0, _total5 = events.length; _i5 < _total5; _i5++) {
+						var event = (0, _general.createEvent)(events[_i5], youtube);
 						mediaElement.dispatchEvent(event);
 					}
 				},

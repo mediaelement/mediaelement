@@ -2576,8 +2576,6 @@ var _dom = _dereq_(20);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Object.assign(_player.config, {
-	startVolume: 0.8,
-
 	muteText: null,
 
 	unmuteText: null,
@@ -2588,7 +2586,9 @@ Object.assign(_player.config, {
 
 	audioVolume: 'horizontal',
 
-	videoVolume: 'vertical'
+	videoVolume: 'vertical',
+
+	startVolume: 0.8
 });
 
 Object.assign(_player2.default.prototype, {
@@ -2818,15 +2818,31 @@ Object.assign(_player2.default.prototype, {
 			updateVolumeSlider(e);
 		});
 
+		var rendered = false;
 		media.addEventListener('rendererready', function () {
 			if (!modified) {
-				if (player.options.startVolume === 0) {
-					media.setMuted(true);
-				}
-				media.setVolume(player.options.startVolume);
-				var event = (0, _general.createEvent)('volumechange', media);
-				media.dispatchEvent(event);
+				setTimeout(function () {
+					rendered = true;
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}, 250);
 			}
+		});
+
+		media.addEventListener('loadedmetadata', function () {
+			setTimeout(function () {
+				if (!modified && !rendered) {
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}
+				rendered = false;
+			}, 250);
 		});
 
 		if (player.options.startVolume === 0) {
