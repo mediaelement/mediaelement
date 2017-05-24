@@ -4834,7 +4834,7 @@ var NativeDash = {
 		if (typeof dashjs !== 'undefined') {
 			NativeDash._createPlayer(settings);
 		} else {
-			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdn.dashjs.org/latest/dash.all.min.js';
 
 			NativeDash.promise = NativeDash.promise || (0, _dom.loadScript)(settings.options.path);
 			NativeDash.promise.then(function () {
@@ -4854,8 +4854,9 @@ var DashNativeRenderer = {
 	options: {
 		prefix: 'native_dash',
 		dash: {
-			path: 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js',
-			debug: false
+			path: 'https://cdn.dashjs.org/latest/dash.all.min.js',
+			debug: false,
+			drm: {}
 		}
 	},
 
@@ -4906,16 +4907,20 @@ var DashNativeRenderer = {
 
 		_window2.default['__ready__' + id] = function (_dashPlayer) {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setAutoPlay(preload && preload === 'auto' || autoplay);
 			dashPlayer.setScheduleWhilePaused(preload && preload === 'auto' || autoplay);
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			    dashEvents = dashjs.MediaPlayer.events,
 			    assignEvents = function assignEvents(eventName) {
 				if (eventName === 'loadedmetadata') {
-					dashPlayer.initialize(node, node.src, false);
+					dashPlayer.initialize(node, null, preload && preload === 'auto' || autoplay);
+					dashPlayer.setFastSwitchEnabled(true);
+
+					if (!_mejs2.default.Utils.isObjectEmpty(options.dash.drm)) {
+						dashPlayer.setProtectionData(options.dash.drm);
+					}
+					dashPlayer.attachSource(node.src);
 				}
 
 				node.addEventListener(eventName, function (e) {

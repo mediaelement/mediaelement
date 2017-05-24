@@ -31,7 +31,7 @@ const NativeDash = {
 			NativeDash._createPlayer(settings);
 		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				settings.options.path : 'https://cdn.dashjs.org/latest/dash.all.min.js';
 
 			NativeDash.promise = NativeDash.promise || loadScript(settings.options.path);
 			NativeDash.promise.then(() => {
@@ -57,8 +57,9 @@ const DashNativeRenderer = {
 		prefix: 'native_dash',
 		dash: {
 			// Special config: used to set the local path/URL of dash.js player library
-			path: 'https://cdn.dashjs.org/latest/dash.mediaplayer.min.js',
-			debug: false
+			path: 'https://cdn.dashjs.org/latest/dash.all.min.js',
+			debug: false,
+			drm: {}
 		}
 	},
 	/**
@@ -126,9 +127,7 @@ const DashNativeRenderer = {
 		// Initial method to register all M(PEG)-DASH events
 		window['__ready__' + id] = (_dashPlayer) => {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setAutoPlay(((preload && preload === 'auto') || autoplay));
 			dashPlayer.setScheduleWhilePaused(((preload && preload === 'auto') || autoplay));
 
 			const
@@ -136,7 +135,14 @@ const DashNativeRenderer = {
 				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
-						dashPlayer.initialize(node, node.src, false);
+						dashPlayer.initialize(node, null, (preload && preload === 'auto') || autoplay);
+						dashPlayer.setFastSwitchEnabled(true);
+
+						// If DRM is set, load protection data
+						if (!mejs.Utils.isObjectEmpty(options.dash.drm)) {
+							dashPlayer.setProtectionData(options.dash.drm);
+						}
+						dashPlayer.attachSource(node.src);
 					}
 
 					node.addEventListener(eventName, (e) => {
