@@ -24,7 +24,7 @@
         }
 
         #player2-container .mejs__time-buffering, #player2-container .mejs__time-current, #player2-container .mejs__time-handle,
-        #player2-container .mejs__time-loaded, #player2-container .mejs__time-marker, #player2-container .mejs__time-total {
+        #player2-container .mejs__time-loaded, #player2-container .mejs__time-hovered, #player2-container .mejs__time-marker, #player2-container .mejs__time-total {
             height: 2px;
         }
 
@@ -32,7 +32,7 @@
             margin-top: 9px;
         }
         #player2-container .mejs__time-handle {
-            left: -10px;
+            left: -5px;
             width: 12px;
             height: 12px;
             border-radius: 50%;
@@ -41,10 +41,15 @@
             cursor: pointer;
             display: block;
             position: absolute;
-            z-index: 1;
+            z-index: 2;
             border: none;
         }
-
+        #player2-container .mejs__time-handle-content {
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+        }
     </style>
 </head>
 
@@ -155,7 +160,8 @@
             <pre><code>
         #player2-container .mejs__time-buffering, #player2-container .mejs__time-current,
         #player2-container .mejs__time-handle, #player2-container .mejs__time-loaded,
-        #player2-container .mejs__time-marker, #player2-container .mejs__time-total {
+        #player2-container .mejs__time-marker, #player2-container .mejs__time-total,
+        #player2-container .mejs__time-hovered {
             height: 2px;
         }
 
@@ -163,7 +169,7 @@
             margin-top: 9px;
         }
         #player2-container .mejs__time-handle {
-            left: -10px;
+            left: -5px;
             width: 12px;
             height: 12px;
             border-radius: 50%;
@@ -172,8 +178,14 @@
             cursor: pointer;
             display: block;
             position: absolute;
-            z-index: 1;
+            z-index: 2;
             border: none;
+        }
+        #player2-container .mejs__time-handle-content {
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
         }
             </code></pre>
 

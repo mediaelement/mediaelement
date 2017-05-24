@@ -8,7 +8,6 @@
  */
 const FacebookRenderer = {
 	name: 'facebook',
-
 	options: {
 		prefix: 'facebook',
 		facebook: {
@@ -24,7 +23,7 @@ const FacebookRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type)  => ['video/facebook', 'video/x-facebook'].includes(type),
+	canPlayType: (type)  => ~['video/facebook', 'video/x-facebook'].indexOf(type.toLowerCase()),
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -74,22 +73,16 @@ const FacebookRenderer = {
 						switch (propName) {
 							case 'currentTime':
 								return fbApi.getCurrentPosition();
-
 							case 'duration':
 								return fbApi.getDuration();
-
 							case 'volume':
 								return fbApi.getVolume();
-
 							case 'paused':
 								return paused;
-
 							case 'ended':
 								return ended;
-
 							case 'muted':
 								return fbApi.isMuted();
-
 							case 'buffered':
 								return {
 									start: () => {
@@ -102,7 +95,6 @@ const FacebookRenderer = {
 								};
 							case 'src':
 								return src;
-
 							case 'readyState':
 								return readyState;
 						}
@@ -118,7 +110,6 @@ const FacebookRenderer = {
 					if (fbApi !== null) {
 
 						switch (propName) {
-
 							case 'src':
 								const url = typeof value === 'string' ? value : value[0].src;
 
@@ -135,11 +126,9 @@ const FacebookRenderer = {
 								}
 
 								break;
-
 							case 'currentTime':
 								fbApi.seek(value);
 								break;
-
 							case 'muted':
 								if (value) {
 									fbApi.mute();
@@ -151,7 +140,6 @@ const FacebookRenderer = {
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'volume':
 								fbApi.setVolume(value);
 								setTimeout(() => {
@@ -159,17 +147,14 @@ const FacebookRenderer = {
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'readyState':
 								const event = mejs.Utils.createEvent('canplay', fbWrapper);
 								mediaElement.dispatchEvent(event);
 								break;
-
 							default:
 								console.log('facebook ' + fbWrapper.id, propName, 'UNSUPPORTED property');
 								break;
 						}
-
 					} else {
 						// store for after "READY" event fires
 						apiStack.push({type: 'set', propName: propName, value: value});
@@ -183,17 +168,11 @@ const FacebookRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add wrappers for native methods
 		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName)  => {
-
-				// run the method on the native HTMLMediaElement
 				fbWrapper[methodName] = () => {
-
 					if (fbApi !== null) {
-
-						// DO method
 						switch (methodName) {
 							case 'play':
 								return fbApi.play();
@@ -201,14 +180,11 @@ const FacebookRenderer = {
 								return fbApi.pause();
 							case 'load':
 								return null;
-
 						}
-
 					} else {
 						apiStack.push({type: 'call', methodName: methodName});
 					}
 				};
-
 			}
 		;
 
@@ -368,16 +344,7 @@ const FacebookRenderer = {
 				});
 			};
 
-			(((d, s, id) => {
-				const fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) {
-					return;
-				}
-				const js = d.createElement(s);
-				js.id = id;
-				js.src = '//connect.facebook.net/en_US/sdk.js';
-				fjs.parentNode.insertBefore(js, fjs);
-			})(document, 'script', 'facebook-jssdk'));
+			mejs.Utils.loadScript('https://connect.facebook.net/en_US/sdk.js');
 		}
 
 		if (mediaFiles.length > 0) {
@@ -427,9 +394,6 @@ const FacebookRenderer = {
  * Register Facebook type based on URL structure
  *
  */
-mejs.Utils.typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('//www.facebook') ? 'video/x-facebook' : null;
-});
+mejs.Utils.typeChecks.push((url) => ~(url.toLowerCase()).indexOf('//www.facebook') ? 'video/x-facebook' : null);
 
 mejs.Renderers.add(FacebookRenderer);

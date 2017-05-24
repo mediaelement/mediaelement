@@ -12,7 +12,7 @@
 	if (exports.sv === undefined) {
 		exports.sv = {
 			"mejs.plural-form": 1,			
-			// "mejs.download-file": "Download File",			
+			"mejs.download-file": "Ladda ner fil",			
 			"mejs.install-flash": "Du använder en webbläsare som inte har Flash Player aktiverat eller installerad. Aktivera Flash Player eller hämta den senaste versionen från https://get.adobe.com/flashplayer/",			
 			"mejs.fullscreen": "Fullskärm",			
 			"mejs.play": "Spela",
@@ -24,8 +24,8 @@
 			"mejs.unmute": "Ljud på",
 			"mejs.mute": "Ljud av",
 			"mejs.volume-slider": "Volymkontroll",			
-			"mejs.video-player": "Video Spelare",
-			"mejs.audio-player": "Audio Spelare",			
+			"mejs.video-player": "Videospelare",
+			"mejs.audio-player": "Ljudspelare",			
 			"mejs.captions-subtitles": "Textning/Undertexter",
 			"mejs.captions-chapters": "Kapitel",
 			"mejs.none": "Ingen",

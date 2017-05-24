@@ -30,7 +30,6 @@ Object.assign(config, {
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-
 	/**
 	 * @type {Boolean}
 	 */
@@ -66,22 +65,15 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
-	 * @param {HTMLElement} media
 	 */
-	buildfullscreen (player, controls, layers, media)  {
-
+	buildfullscreen (player)  {
 		if (!player.isVideo) {
 			return;
 		}
 
 		player.isInIframe = (window.location !== window.parent.location);
 
-		// detect on start
-		media.addEventListener('loadstart', () => {
-			player.detectFullscreenMode();
-		});
+		player.detectFullscreenMode();
 
 		const
 			t = this,
@@ -107,7 +99,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.fullscreenBtn = fullscreenBtn;
 
 		t.globalBind('keydown', (e) => {
-			let key = e.which || e.keyCode || 0;
+			const key = e.which || e.keyCode || 0;
 			if (key === 27 && ((Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || t.isFullScreen)) {
 				player.exitFullScreen();
 			}
@@ -118,8 +110,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// setup native fullscreen event
 		if (Features.HAS_TRUE_NATIVE_FULLSCREEN) {
-
-			//
 			/**
 			 * Detect any changes on fullscreen
 			 *
@@ -143,7 +133,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			player.globalBind(Features.FULLSCREEN_EVENT_NAME, fullscreenChanged);
 		}
-
 	},
 
 	/**
@@ -152,10 +141,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @return {String}
 	 */
 	detectFullscreenMode ()  {
-
 		const
 			t = this,
-			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
+			isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
 
 		let mode = '';
@@ -188,15 +176,18 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	enterFullScreen ()  {
-
 		const
 			t = this,
-			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(html5|native)/) !== null,
+			isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName),
 			containerStyles = getComputedStyle(t.container)
 		;
 
-		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN && typeof t.media.webkitEnterFullscreen === 'function') {
-			t.media.webkitEnterFullscreen();
+		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN) {
+			if (typeof t.media.webkitEnterFullscreen === 'function') {
+				t.media.webkitEnterFullscreen();
+			} else {
+				t.media.originalNode.webkitEnterFullscreen();
+			}
 			return;
 		}
 
@@ -210,7 +201,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// attempt to do true fullscreen
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
-
 			Features.requestFullScreen(t.container);
 
 			if (t.isInIframe) {
@@ -234,13 +224,8 @@ Object.assign(MediaElementPlayer.prototype, {
 							setTimeout(checkFullscreen, 500);
 						}
 					}
-
 				}, 1000);
 			}
-
-		} else if (t.fullscreeMode === 'fullwindow') {
-			// move into position
-
 		}
 
 		// make full size
@@ -301,10 +286,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	exitFullScreen ()  {
-
 		const
 			t = this,
-			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
+			isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
 
 		// Prevent container from attempting to stretch a second time
@@ -345,8 +329,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 
-		removeClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
-		addClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+		if (t.fullscreenBtn) {
+			removeClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
+			addClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+		}
 
 		t.setControlsSize();
 		t.isFullScreen = false;

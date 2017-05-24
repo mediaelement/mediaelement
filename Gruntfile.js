@@ -11,6 +11,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-remove-logging");
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	var rendererSources;
 
@@ -29,6 +30,18 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+
+		watch: {
+			scripts: {
+				files: ['src/js/**/*.js', 'test/core/*.js'],
+				tasks: ['eslint', 'browserify', 'concat', 'uglify', 'copy:translation']
+			},
+			stylesheet: {
+				files: ['src/css/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg', 'src/css/**/*.gif'],
+				tasks: ['postcss', 'copy:build']
+			}
+		},
+
 		eslint: {
 			target: [
 				'Gruntfile.js',
@@ -135,19 +148,16 @@ module.exports = function (grunt) {
 			}
 		},
 		uglify: {
-
-			options: {
-				// Preserve comments that start with a bang (like the file header)
-				preserveComments: "some",
-				banner: grunt.file.read('src/js/header.js'),
-				screwIE8: true
-			},
 			build: {
 				files: [{
 					expand: true,
 					src: ['build/**/*.js', '!build/lang/*.js', '!build/jquery.js', '!build/**/*.min.js'],
 					ext: '.min.js'
 				}]
+			},
+			options: {
+				output: {comments: false},
+				banner: grunt.file.read('src/js/header.js')
 			}
 		},
 		postcss: {

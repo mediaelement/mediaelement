@@ -12,7 +12,6 @@ import {addClass, toggleClass} from '../utils/dom';
  * This feature creates/updates the duration and progress times in the control bar, based on native events.
  */
 
-
 // Feature configuration
 Object.assign(config, {
 	/**
@@ -26,9 +25,7 @@ Object.assign(config, {
 	timeAndDurationSeparator: '<span> | </span>'
 });
 
-
 Object.assign(MediaElementPlayer.prototype, {
-
 	/**
 	 * Current time constructor.
 	 *
@@ -55,7 +52,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (t.controlsAreVisible) {
 				player.updateCurrent();
 			}
-
 		});
 	},
 
@@ -69,7 +65,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildduration (player, controls, layers, media)  {
-
 		const
 			t = this,
 			currTime = controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime')
@@ -81,7 +76,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>`;
 
 		} else {
-
 			// add class to current time
 			if (controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
 				addClass(controls.querySelector(`.${t.options.classPrefix}currenttime`).parentNode, `${t.options.classPrefix}currenttime-container`);
@@ -109,7 +103,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	updateCurrent ()  {
 		const t = this;
 
-		let currentTime = t.media.currentTime;
+		let currentTime = t.getCurrentTime();
 
 		if (isNaN(currentTime)) {
 			currentTime = 0;
@@ -127,7 +121,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	updateDuration ()  {
 		const t = this;
 
-		let duration = t.media.duration;
+		let duration = t.getDuration();
 
 		if (isNaN(duration) || duration === Infinity || duration < 0) {
 			t.media.duration = t.options.duration = duration = 0;
@@ -149,5 +143,3 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	}
 });
-
-

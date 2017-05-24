@@ -13,9 +13,7 @@ import {SUPPORTS_NATIVE_HLS, IS_ANDROID} from '../utils/constants';
  * Wraps the native HTML5 <audio> or <video> tag and bubbles its properties, events, and methods up to the mediaElement.
  */
 const HtmlMediaElement = {
-
 	name: 'html5',
-
 	options: {
 		prefix: 'html5'
 	},
@@ -32,12 +30,12 @@ const HtmlMediaElement = {
 
 		// Due to an issue on Webkit, force the MP3 and MP4 on Android and consider native support for HLS;
 		// also consider URLs that might have obfuscated URLs
-		if ((IS_ANDROID && type.match(/\/mp(3|4)$/gi) !== null) ||
-			(['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-			'video/hls'].includes(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
+		if ((IS_ANDROID && /\/mp(3|4)$/i.test(type)) ||
+			(~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+			'video/hls'].indexOf(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
-			return mediaElement.canPlayType(type).replace(/no/, '');
+			return mediaElement.canPlayType(type.toLowerCase()).replace(/no/, '');
 		} else {
 			return '';
 		}
@@ -56,18 +54,15 @@ const HtmlMediaElement = {
 
 		let node = null;
 
-		// CREATE NODE
 		if (mediaElement.originalNode === undefined || mediaElement.originalNode === null) {
 			node = document.createElement('audio');
 			mediaElement.appendChild(node);
-
 		} else {
 			node = mediaElement.originalNode;
 		}
 
 		node.setAttribute('id', id);
 
-		// WRAPPERS for PROPs
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
@@ -76,7 +71,7 @@ const HtmlMediaElement = {
 				node[`get${capName}`] = () => node[propName];
 
 				node[`set${capName}`] = (value) => {
-					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
 						node[propName] = value;
 					}
 				};
@@ -90,12 +85,8 @@ const HtmlMediaElement = {
 		const
 			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			assignEvents = (eventName) => {
-
 				node.addEventListener(eventName, (e) => {
-					// copy event
-
-					const event = document.createEvent('HTMLEvents');
-					event.initEvent(e.type, e.bubbles, e.cancelable);
+					const event = createEvent(e.type, mediaElement);
 					mediaElement.dispatchEvent(event);
 				});
 

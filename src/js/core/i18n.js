@@ -26,7 +26,7 @@ i18n.language = (...args) => {
 			throw new TypeError('Language code must be a string value');
 		}
 
-		if (!args[0].match(/^[a-z]{2}(\-[a-z]{2})?$/i)) {
+		if (!/^[a-z]{2}(\-[a-z]{2})?$/i.test(args[0])) {
 			throw new TypeError('Language code must have format `xx` or `xx-xx`');
 		}
 
@@ -89,7 +89,6 @@ i18n.t = (message, pluralParam = null) => {
 					// Tibetan, Chiga, Dzongkha, Indonesian, Lojban, Georgian, Kazakh, Khmer, Kyrgyz, Malay,
 					// Burmese, Yakut, Sundanese, Tatar, Uyghur, Vietnamese, Wolof
 					(...args) => args[1],
-
 					// 1: Danish, Dutch, English, Faroese, Frisian, German, Norwegian, Swedish, Estonian, Finnish,
 					// Hungarian, Basque, Greek, Hebrew, Italian, Portuguese, Spanish, Catalan, Afrikaans,
 					// Angika, Assamese, Asturian, Azerbaijani, Bulgarian, Bengali, Bodo, Aragonese, Dogri,
@@ -100,11 +99,9 @@ i18n.t = (message, pluralParam = null) => {
 					// Piemontese, Pashto, Romansh, Kinyarwanda, Santali, Scots, Sindhi, Northern Sami, Sinhala,
 					// Somali, Songhay, Albanian, Swahili, Tamil, Telugu, Turkmen, Urdu, Yoruba
 					(...args) => (args[0] === 1) ? args[1] : args[2],
-
 					// 2: French, Brazilian Portuguese, Acholi, Akan, Amharic, Mapudungun, Breton, Filipino,
 					// Gun, Lingala, Mauritian Creole, Malagasy, Maori, Occitan, Tajik, Tigrinya, Uzbek, Walloon
 					(...args) => (args[0] === 0 || args[0] === 1) ? args[1] : args[2],
-
 					// 3: Latvian
 					(...args) => {
 						if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
@@ -115,7 +112,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[3];
 						}
 					},
-
 					// 4: Scottish Gaelic
 					(...args) => {
 						if (args[0] === 1 || args[0] === 11) {
@@ -128,7 +124,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[4];
 						}
 					},
-
 					// 5:  Romanian
 					(...args) => {
 						if (args[0] === 1) {
@@ -139,7 +134,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[3];
 						}
 					},
-
 					// 6: Lithuanian
 					(...args) => {
 						if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
@@ -150,7 +144,6 @@ i18n.t = (message, pluralParam = null) => {
 							return [3];
 						}
 					},
-
 					// 7: Belarusian, Bosnian, Croatian, Serbian, Russian, Ukrainian
 					(...args) => {
 						if (args[0] % 10 === 1 && args[0] % 100 !== 11) {
@@ -161,7 +154,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[3];
 						}
 					},
-
 					// 8:  Slovak, Czech
 					(...args) => {
 						if (args[0] === 1) {
@@ -172,7 +164,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[3];
 						}
 					},
-
 					// 9: Polish
 					(...args) => {
 						if (args[0] === 1) {
@@ -183,7 +174,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[3];
 						}
 					},
-
 					// 10: Slovenian
 					(...args) => {
 						if (args[0] % 100 === 1) {
@@ -196,7 +186,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[1];
 						}
 					},
-
 					// 11: Irish Gaelic
 					(...args) => {
 						if (args[0] === 1) {
@@ -211,7 +200,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[5];
 						}
 					},
-
 					// 12: Arabic
 					(...args) => {
 						if (args[0] === 0) {
@@ -228,7 +216,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[6];
 						}
 					},
-
 					// 13: Maltese
 					(...args) => {
 						if (args[0] === 1) {
@@ -241,7 +228,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[4];
 						}
 					},
-
 					// 14: Macedonian
 					(...args) => {
 						if (args[0] % 10 === 1) {
@@ -252,14 +238,11 @@ i18n.t = (message, pluralParam = null) => {
 							return args[3];
 						}
 					},
-
 					// 15:  Icelandic
 					(...args) => {
 						return (args[0] !== 11 && args[0] % 10 === 1) ? args[1] : args[2];
 					},
-
 					// New additions
-
 					// 16:  Kashubian
 					// In https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Localization_and_Plurals#List_of__pluralRules
 					// Breton is listed as #16 but in the Localization Guide it belongs to the group 2
@@ -273,7 +256,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[3];
 						}
 					},
-
 					// 17:  Welsh
 					(...args) => {
 						if (args[0] === 1) {
@@ -286,12 +268,10 @@ i18n.t = (message, pluralParam = null) => {
 							return args[4];
 						}
 					},
-
 					// 18:  Javanese
 					(...args) => {
 						return (args[0] === 0) ? args[1] : args[2];
 					},
-
 					// 19:  Cornish
 					(...args) => {
 						if (args[0] === 1) {
@@ -304,7 +284,6 @@ i18n.t = (message, pluralParam = null) => {
 							return args[4];
 						}
 					},
-
 					// 20:  Mandinka
 					(...args) => {
 						if (args[0] === 0) {
@@ -338,7 +317,6 @@ i18n.t = (message, pluralParam = null) => {
 			if (pluralParam !== null && typeof pluralParam === 'number') {
 				pluralForm = i18n.en['mejs.plural-form'];
 				str = _plural.apply(null, [str, pluralParam, pluralForm]);
-
 			}
 		}
 
@@ -352,7 +330,6 @@ i18n.t = (message, pluralParam = null) => {
 		}
 
 		return escapeHTML(str);
-
 	}
 
 	return message;

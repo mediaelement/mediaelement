@@ -15,7 +15,6 @@ import {addClass, removeClass, offset} from '../utils/dom';
  * events, such as sliding up/down (or left/right, if vertical), muting/unmuting media, etc.
  */
 
-
 // Feature configuration
 Object.assign(config, {
 	/**
@@ -41,11 +40,15 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	videoVolume: 'vertical'
+	videoVolume: 'vertical',
+	/**
+	 * Initial volume when the player starts (overridden by user cookie)
+	 * @type {Number}
+	 */
+	startVolume: 0.8
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-
 	/**
 	 * Feature constructor.
 	 *
@@ -54,7 +57,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} controls
 	 * @param {$} layers
 	 * @param {HTMLElement} media
-	 * @public
 	 */
 	buildvolume (player, controls, layers, media) {
 
@@ -70,13 +72,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			unmuteText = isString(t.options.unmuteText) ? t.options.unmuteText : i18n.t('mejs.unmute'),
 			volumeControlText = isString(t.options.allyVolumeControlText) ? t.options.allyVolumeControlText : i18n.t('mejs.volume-help-text'),
 			mute = document.createElement('div')
-			;
+		;
 
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
-			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider">` +
+			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider" ` +
+				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
+				`aria-orientation="vertical">` +
 				`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}volume-total">` +
 					`<div class="${t.options.classPrefix}volume-current"></div>` +
@@ -91,6 +95,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			const anchor = document.createElement('a');
 			anchor.className = `${t.options.classPrefix}horizontal-volume-slider`;
 			anchor.href = 'javascript:void(0);';
+			anchor.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
+			anchor.setAttribute('aria-valuemin', 0);
+			anchor.setAttribute('aria-valuemax', 100);
+			anchor.setAttribute('role', 'slider');
 			anchor.innerHTML += `<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}horizontal-volume-total">` +
 				`<div class="${t.options.classPrefix}horizontal-volume-current"></div>` +
@@ -98,6 +106,21 @@ Object.assign(MediaElementPlayer.prototype, {
 				`</div>`;
 			mute.parentNode.insertBefore(anchor, mute.nextSibling);
 		}
+
+		let
+			mouseIsDown = false,
+			mouseIsOver = false,
+			modified = false,
+
+			/**
+			 * @private
+			 */
+			updateVolumeSlider = () => {
+				const volume = Math.floor(media.volume * 100);
+				volumeSlider.setAttribute('aria-valuenow', volume);
+				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
+			}
+		;
 
 		const
 			volumeSlider = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-slider`) :
@@ -108,13 +131,16 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-current`),
 			volumeHandle = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-handle`) :
 				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-handle`),
-			button = mute.firstElementChild,
 
 			/**
 			 * @private
 			 * @param {Number} volume
 			 */
 			positionVolumeHandle = (volume) => {
+
+				if (volume === null || isNaN(volume) || volume === undefined) {
+					return;
+				}
 
 				// correct to 0-1
 				volume = Math.max(0, volume);
@@ -157,17 +183,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			 * @private
 			 */
 			handleVolumeMove = (e) => {
-
 				const
 					totalOffset = offset(volumeTotal),
 					volumeStyles = getComputedStyle(volumeTotal)
 				;
 
+				modified = true;
+
 				let volume = null;
 
 				// calculate the new volume based on the most recent position
 				if (mode === 'vertical') {
-
 					const
 						railHeight = parseFloat(volumeStyles.height),
 						newY = e.pageY - totalOffset.top
@@ -196,12 +222,8 @@ Object.assign(MediaElementPlayer.prototype, {
 				// position the slider and handle
 				positionVolumeHandle(volume);
 
-				// set the media object (this will trigger the `volumechanged` event)
-				if (volume === 0) {
-					media.setMuted(true);
-				} else {
-					media.setMuted(false);
-				}
+				// set the media object (this will trigger the `volumechange` event)
+				media.setMuted((volume === 0));
 				media.setVolume(volume);
 
 				e.preventDefault();
@@ -221,6 +243,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
 		});
+
+		mute.addEventListener('focusout', (e) => {
+			if ((!e.relatedTarget || (e.relatedTarget && !e.relatedTarget.matches(`.${t.options.classPrefix}volume-slider`))) &&
+				mode === 'vertical') {
+				volumeSlider.style.display = 'none';
+			}
+		});
 		mute.addEventListener('mouseleave', () => {
 			mouseIsOver = false;
 			if (!mouseIsDown && mode === 'vertical') {
@@ -229,17 +258,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 		mute.addEventListener('focusout', () => {
 			mouseIsOver = false;
-			if (!mouseIsDown && mode === 'vertical') {
-				volumeSlider.style.display = 'none';
-			}
 		});
 		mute.addEventListener('keydown', (e) => {
-
 			if (t.options.keyActions.length) {
 				let
 					keyCode = e.which || e.keyCode || 0,
 					volume = media.volume
-					;
+				;
+
 				switch (keyCode) {
 					case 38: // Up
 						volume = Math.min(volume + 0.1, 1);
@@ -259,31 +285,27 @@ Object.assign(MediaElementPlayer.prototype, {
 				e.stopPropagation();
 			}
 		});
-
-		let
-			mouseIsDown = false,
-			mouseIsOver = false,
-
-			/**
-			 * @private
-			 */
-			updateVolumeSlider = () => {
-				const volume = Math.floor(media.volume * 100);
-				volumeSlider.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
-				volumeSlider.setAttribute('aria-valuemin', 0);
-				volumeSlider.setAttribute('aria-valuemax', 100);
-				volumeSlider.setAttribute('aria-valuenow', volume);
-				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
-				volumeSlider.setAttribute('role', 'slider');
-				volumeSlider.tabIndex = -1;
-			}
-		;
+		mute.querySelector('button').addEventListener('click', () => {
+			media.setMuted(!media.muted);
+			const event = createEvent('volumechange', media);
+			media.dispatchEvent(event);
+		});
 
 		// Events
 		volumeSlider.addEventListener('dragstart', () => false);
 
 		volumeSlider.addEventListener('mouseover', () => {
 			mouseIsOver = true;
+		});
+		volumeSlider.addEventListener('focusin', () => {
+			volumeSlider.style.display = 'block';
+			mouseIsOver = true;
+		});
+		volumeSlider.addEventListener('focusout', () => {
+			mouseIsOver = false;
+			if (!mouseIsDown && mode === 'vertical') {
+				volumeSlider.style.display = 'none';
+			}
 		});
 		volumeSlider.addEventListener('mousedown', (e) => {
 			handleVolumeMove(e);
@@ -304,26 +326,8 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			});
 			mouseIsDown = true;
-
 			e.preventDefault();
 			e.stopPropagation();
-		});
-
-		// MUTE button
-		button.addEventListener('click', () => {
-			media.setMuted(!media.muted);
-			const event = createEvent('volumechange', media);
-			media.dispatchEvent(event);
-		});
-		button.addEventListener('focus', () => {
-			if (mode === 'vertical') {
-				volumeSlider.style.display = 'block';
-			}
-		});
-		button.addEventListener('blur', () => {
-			if (mode === 'vertical') {
-				volumeSlider.style.display = 'none';
-			}
 		});
 
 		// listen for volume change events from other sources
@@ -342,17 +346,39 @@ Object.assign(MediaElementPlayer.prototype, {
 			updateVolumeSlider(e);
 		});
 
+		let rendered = false;
+		media.addEventListener('rendererready', function () {
+			if (!modified) {
+				setTimeout(() => {
+					rendered = true;
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}, 250);
+			}
+		});
+
+		media.addEventListener('loadedmetadata', function () {
+			setTimeout(() => {
+				if (!modified && !rendered) {
+					if (player.options.startVolume === 0) {
+						media.setMuted(true);
+					}
+					media.setVolume(player.options.startVolume);
+					t.setControlsSize();
+				}
+				rendered = false;
+			}, 250);
+		});
+
 		// mutes the media and sets the volume icon muted if the initial volume is set to 0
 		if (player.options.startVolume === 0) {
 			media.setMuted(true);
 		}
 
-		// shim gets the startvolume as a parameter, but we have to set it on the native <video> and <audio> elements
-		const isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null;
-
-		if (isNative) {
-			media.setVolume(player.options.startVolume);
-		}
+		media.setVolume(player.options.startVolume);
 
 		t.container.addEventListener('controlsresize', () => {
 			if (media.muted) {
@@ -367,5 +393,3 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	}
 });
-
-

@@ -8,7 +8,7 @@ One file. Any browser. Same UI.
 * Meaning: Use everywhere, keep copyright, it'd be swell if you'd link back here.
 * Thanks: my employer, [Dallas Theological Seminary](http://www.dts.edu/)
 * Contributors: [all contributors](https://github.com/mediaelement/mediaelement/graphs/contributors)
-* Currently maintained by Rafael Miranda (@ron666)
+* Currently maintained by Rafael Miranda (@rafa8626)
 
 [![GitHub Version](https://img.shields.io/npm/v/mediaelement.svg)](https://github.com/mediaelement/mediaelement)
 [![Build Status](https://img.shields.io/travis/mediaelement/mediaelement.svg)](https://travis-ci.org/mediaelement/mediaelement)
@@ -53,7 +53,7 @@ In order to successfully install `3.x` in an existing setup, you must consider t
 
 3. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with Javascript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](docs/installation.md#disabled-javascript) section for more details.
  
-4. If you want to use Flash shims from a CDN, do the change related to `pluginPath` setting the CDN's URL, and also setting `shimScriptAccess` configuration as ***`always`***.
+4. If you want to use Flash shims from a CDN, do the change related to `pluginPath` setting the CDN's URL, and also setting `shimScriptAccess` configuration as **`always`**.
 
 5. If you need to force the Flash shim, the way to do it in `3.x` version is to use the `renderers` configuration and list them in an array.
 
@@ -63,9 +63,9 @@ In order to successfully install `3.x` in an existing setup, you must consider t
 $('video, audio').mediaelementplayer({
         // Configuration
         success: function(media) {
-                var isNative = media.rendererName.match(/html5|native/);
+                var isNative = /html5|native/i.test(media.rendererName);
                 
-                var isYoutube = media.rendererName.match(/youtube/);
+                var isYoutube = ~media.rendererName.indexOf('youtube');
                 
                 // etc.
         }
@@ -81,7 +81,7 @@ The full documentation on how to install `MediaElement.js` is available at [Inst
 
 A brief guide on how to create and use instances of `MediaElement` available at [Usage](docs/usage.md).
 
-Additional features can be found at https://github.com/mediaelement/mediaelement-plugins
+Additional features can be found at https://github.com/mediaelement/mediaelement-plugins.
 
 <a id="api"></a>
 ## API and Configuration
@@ -95,6 +95,9 @@ Also, a `Utilities/Features` guide is available for development. Visit [Utilitie
 
 If you want to contribute to improve this package, please read [Guidelines](docs/guidelines.md).
 
+**NOTE**: If you would like to contribute with translations, make sure that you also check https://github.com/mediaelement/mediaelement-plugins, and perform the
+translations for the files suffixed as `-i18n`.
+
 <a id="sources"></a>
 ## Useful resources
 
@@ -103,7 +106,7 @@ A compilation of useful articles can be found [here](docs/resources.md).
 <a id="changelog"></a>
 ## Change Log
 
-Changes available at [Change Log](changelog.md)
+Changes available at [Change Log](changelog.md).
 
 <a id="todo"></a>
 ## TODO list

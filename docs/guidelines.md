@@ -81,7 +81,7 @@ const [camelCaseRendererName] = {
      * @param {String} type
      * @return {Boolean}
      */
-    canPlayType: (type) => ['video/mime_type1', 'video/mime_type2', 'video/mime_type3' ...].includes(type),
+    canPlayType: (type) => ~['video/mime_type1', 'video/mime_type2', 'video/mime_type3' ...].indexOf(type.toLowerCase()),
    
     /**
      * Create the player instance and add all native events/methods/properties as possible
@@ -272,10 +272,7 @@ const [camelCaseRendererName] = {
  * Register Native M(PEG)-Dash type based on URL structure
  *
  */
-typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('.file_extension') ? 'video/mime_type1' : null;
-});
+typeChecks.push((url) => ~(url.toLowerCase()).indexOf('.file_extension') ? 'video/mime_type1' : null);
 
 renderer.add([camelCaseRendererName]);
 ```

@@ -46,7 +46,7 @@ export function getMimeFromType (type) {
 		throw new Error('`type` argument must be a string');
 	}
 
-	return (type && ~type.indexOf(';')) ? type.substr(0, type.indexOf(';')) : type;
+	return (type && type.indexOf(';') > -1) ? type.substr(0, type.indexOf(';')) : type;
 }
 
 /**
@@ -69,7 +69,6 @@ export function getTypeFromFile (url) {
 		}
 	}
 
-	// the do standard extension check
 	const
 		ext = getExtension(url),
 		normalizedExt = normalizeExtension(ext)
@@ -79,15 +78,14 @@ export function getTypeFromFile (url) {
 
 	// Obtain correct MIME types
 	if (normalizedExt) {
-		if (['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].includes(normalizedExt)) {
+		if (~['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].indexOf(normalizedExt)) {
 			mime = `video/${normalizedExt}`;
-		} else if (['mp3', 'oga', 'wav', 'mid', 'midi'].includes(normalizedExt)) {
+		} else if (~['mp3', 'oga', 'wav', 'mid', 'midi'].indexOf(normalizedExt)) {
 			mime = `audio/${normalizedExt}`;
 		}
 	}
 
 	return mime;
-
 }
 
 /**
@@ -103,8 +101,7 @@ export function getExtension (url) {
 	}
 
 	const baseUrl = url.split('?')[0], baseName = baseUrl.split('\\').pop().split('/').pop();
-
-	return baseName.indexOf('.') > -1 ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
+	return ~baseName.indexOf('.') ? baseName.substring(baseName.lastIndexOf('.') + 1) : '';
 }
 
 /**

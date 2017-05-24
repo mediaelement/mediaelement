@@ -1,12 +1,12 @@
 'use strict';
 
 import window from 'global/window';
-import document from 'global/document';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {typeChecks} from '../utils/media';
 import {HAS_MSE} from '../utils/constants';
+import {loadScript} from '../utils/dom';
 
 /**
  * Native M(PEG)-Dash renderer
@@ -18,81 +18,25 @@ import {HAS_MSE} from '../utils/constants';
  *
  */
 const NativeDash = {
-	/**
-	 * @type {Boolean}
-	 */
-	isMediaLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	creationQueue: [],
+
+	promise: null,
 
 	/**
 	 * Create a queue to prepare the loading of an DASH source
 	 *
 	 * @param {Object} settings - an object with settings needed to load an DASH player instance
 	 */
-	prepareSettings: (settings) => {
-		if (NativeDash.isLoaded) {
-			NativeDash.createInstance(settings);
-		} else {
-			NativeDash.loadScript(settings);
-			NativeDash.creationQueue.push(settings);
-		}
-	},
-
-	/**
-	 * Load dash.mediaplayer.js script on the header of the document
-	 *
-	 * @param {Object} settings - an object with settings needed to load an DASH player instance
-	 */
-	loadScript: (settings) => {
-
-		// Skip script loading since it is already loaded
+	load(settings) {
 		if (typeof dashjs !== 'undefined') {
-			NativeDash.createInstance(settings);
-		} else if (!NativeDash.isScriptLoaded) {
-
+			NativeDash._createPlayer(settings);
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : '//cdn.dashjs.org/latest/dash.mediaplayer.min.js';
+				settings.options.path : 'https://cdn.dashjs.org/latest/dash.all.min.js';
 
-			const
-				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0]
-			;
-
-			let done = false;
-
-			script.src = settings.options.path;
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined ||
-					this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					NativeDash.mediaReady();
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-
-			NativeDash.isScriptLoaded = true;
-		}
-	},
-
-	/**
-	 * Process queue of DASH player creation
-	 *
-	 */
-	mediaReady: () => {
-
-		NativeDash.isLoaded = true;
-		NativeDash.isScriptLoaded = true;
-
-		while (NativeDash.creationQueue.length > 0) {
-			const settings = NativeDash.creationQueue.pop();
-			NativeDash.createInstance(settings);
+			NativeDash.promise = NativeDash.promise || loadScript(settings.options.path);
+			NativeDash.promise.then(() => {
+				NativeDash._createPlayer(settings);
+			});
 		}
 	},
 
@@ -101,8 +45,7 @@ const NativeDash = {
 	 *
 	 * @param {Object} settings - an object with settings needed to instantiate DASH object
 	 */
-	createInstance: (settings) => {
-
+	_createPlayer: (settings) => {
 		const player = dashjs.MediaPlayer().create();
 		window['__ready__' + settings.id](player);
 	}
@@ -110,13 +53,13 @@ const NativeDash = {
 
 const DashNativeRenderer = {
 	name: 'native_dash',
-
 	options: {
 		prefix: 'native_dash',
 		dash: {
 			// Special config: used to set the local path/URL of dash.js player library
-			path: '//cdn.dashjs.org/latest/dash.mediaplayer.min.js',
-			debug: false
+			path: 'https://cdn.dashjs.org/latest/dash.all.min.js',
+			debug: false,
+			drm: {}
 		}
 	},
 	/**
@@ -125,7 +68,7 @@ const DashNativeRenderer = {
 	 * @param {String} type
 	 * @return {Boolean}
 	 */
-	canPlayType: (type) => HAS_MSE && ['application/dash+xml'].includes(type),
+	canPlayType: (type) => HAS_MSE && ['application/dash+xml'].indexOf(type.toLowerCase()) > -1,
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
@@ -160,17 +103,16 @@ const DashNativeRenderer = {
 				node[`get${capName}`] = () => (dashPlayer !== null) ? node[propName] : null;
 
 				node[`set${capName}`] = (value) => {
-					if (!mejs.html5media.readOnlyProperties.includes(propName)) {
+					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
+						node[propName] = value;
+
 						if (dashPlayer !== null) {
 							if (propName === 'src') {
-
 								dashPlayer.attachSource(value);
 								if (autoplay) {
 									node.play();
 								}
 							}
-
-							node[propName] = value;
 						}
 					}
 				};
@@ -182,30 +124,31 @@ const DashNativeRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// Initial method to register all M-Dash events
+		// Initial method to register all M(PEG)-DASH events
 		window['__ready__' + id] = (_dashPlayer) => {
-
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-
 			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setAutoPlay(((preload && preload === 'auto') || autoplay));
 			dashPlayer.setScheduleWhilePaused(((preload && preload === 'auto') || autoplay));
 
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
-
 					if (eventName === 'loadedmetadata') {
-						dashPlayer.initialize(node, node.src, false);
+						dashPlayer.initialize(node, null, (preload && preload === 'auto') || autoplay);
+						dashPlayer.setFastSwitchEnabled(true);
+
+						// If DRM is set, load protection data
+						if (!mejs.Utils.isObjectEmpty(options.dash.drm)) {
+							dashPlayer.setProtectionData(options.dash.drm);
+						}
+						dashPlayer.attachSource(node.src);
 					}
 
 					node.addEventListener(eventName, (e) => {
-						const event = document.createEvent('HTMLEvents');
-						event.initEvent(e.type, e.bubbles, e.cancelable);
+						const event = createEvent(e.type, mediaElement);
 						mediaElement.dispatchEvent(event);
 					});
-
 				}
 			;
 
@@ -252,12 +195,11 @@ const DashNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		NativeDash.prepareSettings({
+		NativeDash.load({
 			options: options.dash,
 			id: id
 		});
 
-		// HELPER METHODS
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
 			node.style.height = `${height}px`;
@@ -286,9 +228,6 @@ const DashNativeRenderer = {
  * Register Native M(PEG)-Dash type based on URL structure
  *
  */
-typeChecks.push((url) => {
-	url = url.toLowerCase();
-	return url.includes('.mpd') ? 'application/dash+xml' : null;
-});
+typeChecks.push((url) => ~(url.toLowerCase()).indexOf('.mpd') ? 'application/dash+xml' : null);
 
 renderer.add(DashNativeRenderer);

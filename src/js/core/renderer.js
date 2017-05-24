@@ -21,7 +21,6 @@ class Renderer {
 	 * @method add
 	 */
 	add (renderer) {
-
 		if (renderer.name === undefined) {
 			throw new TypeError('renderer must contain at least `name` property');
 		}
@@ -39,7 +38,6 @@ class Renderer {
 	 * @method select
 	 */
 	select (mediaFiles, renderers = []) {
-
 		const renderersLength = renderers.length;
 
 		renderers = renderers.length ? renderers: this.order;
@@ -51,13 +49,13 @@ class Renderer {
 		if (!renderersLength) {
 			const
 				rendererIndicator = [
-					/^(html5|native)/,
-					/^flash/,
-					/iframe$/,
+					/^(html5|native)/i,
+					/^flash/i,
+					/iframe$/i,
 				],
 				rendererRanking = (renderer) => {
 					for (let i = 0, total = rendererIndicator.length; i < total; i++) {
-						if (renderer.match(rendererIndicator[i]) !== null) {
+						if (rendererIndicator[i].test(renderer)) {
 							return i;
 						}
 					}
@@ -95,7 +93,6 @@ class Renderer {
 	// Setters/getters
 
 	set order(order) {
-
 		if (!Array.isArray(order)) {
 			throw new TypeError('order must be an array of strings.');
 		}
@@ -104,7 +101,6 @@ class Renderer {
 	}
 
 	set renderers(renderers) {
-
 		if (renderers !== null && typeof renderers !== 'object') {
 			throw new TypeError('renderers must be an array of objects.');
 		}

@@ -71,7 +71,7 @@ convertSMPTEtoSeconds(SMPTE) | Convert a Society of Motion Picture and Televisio
 <a id="features"></a>
 ## Features
 
-`MediaElement.js` has some flags to determine which browser the user is in, some elements to determine the type of fullscreen the browser supports, etc.
+`MediaElement.js` has some flags/methods to determine which browser the user is in, some elements to determine the type of fullscreen the browser supports, etc.
   
 All of these elements can be accessed by using `mejs.Features.{name}`. The following list shows all the possible features.
 
@@ -96,6 +96,6 @@ All of these elements can be accessed by using `mejs.Features.{name}`. The follo
 * mejs.Features.hasTrueNativeFullScreen
 * mejs.Features.nativeFullScreenEnabled
 * mejs.Features.fullScreenEventName
-* mejs.Features.isFullScreen
-* mejs.Features.requestFullScreen
-* mejs.Features.cancelFullScreen
+* mejs.Features.isFullScreen()
+* mejs.Features.requestFullScreen()
+* mejs.Features.cancelFullScreen()

@@ -90,7 +90,6 @@ export function splitEvents (events, id) {
 		}
 	});
 
-
 	ret.d = ret.d.join(' ');
 	ret.w = ret.w.join(' ');
 	return ret;
@@ -109,15 +108,15 @@ export function createEvent (eventName, target) {
 	}
 
 	const
-		eventFrags = eventName.match(/[a-z]+\.([a-z]+)/),
+		eventFrags = eventName.match(/([a-z]+\.([a-z]+))/i),
 		detail = {
 			target: target
 		}
 	;
 
 	if (eventFrags !== null) {
-		eventName = eventFrags[0];
-		detail.namespace = eventFrags[1];
+		eventName = eventFrags[1];
+		detail.namespace = eventFrags[2];
 	}
 
 	return new window.CustomEvent(eventName, {

@@ -81,7 +81,7 @@ export const PluginDetector = {
 					version[i] = parseInt(version[i].match(/\d+/), 10);
 				}
 			}
-			// Internet Explorer / ActiveX
+		// Internet Explorer / ActiveX
 		} else if (window.ActiveXObject !== undefined) {
 			try {
 				ax = new ActiveXObject(activeX);
@@ -129,17 +129,13 @@ const FlashMediaElementRenderer = {
 
 		const flash = {};
 
-		// store main variable
 		flash.options = options;
 		flash.id = mediaElement.id + '_' + flash.options.prefix;
 		flash.mediaElement = mediaElement;
-
-		// insert data
 		flash.flashState = {};
 		flash.flashApi = null;
 		flash.flashApiStack = [];
 
-		// mediaElements for get/set
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
@@ -150,13 +146,10 @@ const FlashMediaElementRenderer = {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 				flash[`get${capName}`] = () => {
-
 					if (flash.flashApi !== null) {
-
-						if (flash.flashApi['get_' + propName] !== undefined) {
+						if (typeof flash.flashApi['get_' + propName] === 'function') {
 							const value = flash.flashApi['get_' + propName]();
 
-							// special case for buffered to conform to HTML5's newest
 							if (propName === 'buffered') {
 								return {
 									start: () => {
@@ -168,12 +161,10 @@ const FlashMediaElementRenderer = {
 									length: 1
 								};
 							}
-
 							return value;
 						} else {
 							return null;
 						}
-
 					} else {
 						return null;
 					}
@@ -186,7 +177,11 @@ const FlashMediaElementRenderer = {
 
 					// send value to Flash
 					if (flash.flashApi !== null && flash.flashApi['set_' + propName] !== undefined) {
-						flash.flashApi['set_' + propName](value);
+						try {
+							flash.flashApi['set_' + propName](value);
+						} catch (e) {
+							console.log(e);
+						}
 					} else {
 						// store for after "READY" event fires
 						flash.flashApiStack.push({
@@ -196,7 +191,6 @@ const FlashMediaElementRenderer = {
 						});
 					}
 				};
-
 			}
 		;
 
@@ -204,14 +198,10 @@ const FlashMediaElementRenderer = {
 			assignGettersSetters(props[i]);
 		}
 
-		// add mediaElements for native methods
 		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
-
-				// run the method on the native HTMLMediaElement
 				flash[methodName] = () => {
-
 					if (flash.flashApi !== null) {
 
 						// send call up to Flash ExternalInterface API
@@ -242,7 +232,7 @@ const FlashMediaElementRenderer = {
 		}
 
 		// give initial events like in others renderers
-		const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay', 'error'];
+		const initEvents = ['rendererready'];
 
 		for (let i = 0, total = initEvents.length; i < total; i++) {
 			const event = createEvent(initEvents[i], flash);
@@ -258,7 +248,6 @@ const FlashMediaElementRenderer = {
 			// do call stack
 			if (flash.flashApiStack.length) {
 				for (let i = 0, total = flash.flashApiStack.length; i < total; i++) {
-
 					const stackItem = flash.flashApiStack[i];
 
 					if (stackItem.type === 'set') {
@@ -276,7 +265,6 @@ const FlashMediaElementRenderer = {
 		};
 
 		window[`__event__${flash.id}`] = (eventName, message) => {
-
 			const event = createEvent(eventName, flash);
 			event.message = message || '';
 
@@ -288,7 +276,7 @@ const FlashMediaElementRenderer = {
 		flash.flashWrapper = document.createElement('div');
 
 		// If the access script flag does not have any of the valid values, set to `sameDomain` by default
-		if (!['always', 'sameDomain'].includes(flash.options.shimScriptAccess)) {
+		if (['always', 'sameDomain'].indexOf(flash.options.shimScriptAccess) === -1) {
 			flash.options.shimScriptAccess = 'sameDomain';
 		}
 
@@ -374,26 +362,12 @@ const FlashMediaElementRenderer = {
 
 		flash.hide = () => {
 			if (isVideo) {
-				flash.flashNode.style.position = 'absolute';
-				flash.flashNode.style.width = '1px';
-				flash.flashNode.style.height = '1px';
-				try {
-					flash.flashNode.style.clip = 'rect(0 0 0 0);';
-				} catch (e) {
-					console.log(e);
-				}
+				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = () => {
 			if (isVideo) {
-				flash.flashNode.style.position = '';
-				flash.flashNode.style.width = '';
-				flash.flashNode.style.height = '';
-				try {
-					flash.flashNode.style.clip = '';
-				} catch (e) {
-					console.log(e);
-				}
+				flash.flashNode.style.display = '';
 			}
 		};
 		flash.setSize = (width, height) => {
@@ -408,7 +382,6 @@ const FlashMediaElementRenderer = {
 		flash.destroy = () => {
 			flash.flashNode.remove();
 		};
-
 
 		if (mediaFiles && mediaFiles.length > 0) {
 			for (let i = 0, total = mediaFiles.length; i < total; i++) {
@@ -432,33 +405,30 @@ if (hasFlash) {
 	 *
 	 */
 	typeChecks.push((url) => {
-
 		url = url.toLowerCase();
 
 		if (url.startsWith('rtmp')) {
-			if (url.includes('.mp3')) {
+			if (~url.indexOf('.mp3')) {
 				return 'audio/rtmp';
 			} else {
 				return 'video/rtmp';
 			}
-		} else if (url.includes('.oga') || url.includes('.ogg')) {
+		} else if (/\.og(a|g)/i.test(url)) {
 			return 'audio/ogg';
-		} else if (url.includes('.m3u8')) {
+		} else if (~url.indexOf('.m3u8')) {
 			return 'application/x-mpegURL';
-		} else if (url.includes('.mpd')) {
+		} else if (~url.indexOf('.mpd')) {
 			return 'application/dash+xml';
-		} else if (url.includes('.flv')) {
+		} else if (~url.indexOf('.flv')) {
 			return 'video/flv';
-		}else {
+		} else {
 			return null;
 		}
-
 	});
 
 	// VIDEO
 	const FlashMediaElementVideoRenderer = {
 		name: 'flash_video',
-
 		options: {
 			prefix: 'flash_video',
 			filename: 'mediaelement-flash-video.swf',
@@ -474,8 +444,8 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv',
-			'video/x-flv'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['video/mp4', 'video/rtmp', 'audio/rtmp', 'rtmp/mp4', 'audio/mp4', 'video/flv',
+			'video/x-flv'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 
@@ -485,7 +455,6 @@ if (hasFlash) {
 	// HLS
 	const FlashMediaElementHlsVideoRenderer = {
 		name: 'flash_hls',
-
 		options: {
 			prefix: 'flash_hls',
 			filename: 'mediaelement-flash-video-hls.swf'
@@ -496,8 +465,8 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-			'video/hls'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+			'video/hls'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -506,7 +475,6 @@ if (hasFlash) {
 	// M(PEG)-DASH
 	const FlashMediaElementMdashVideoRenderer = {
 		name: 'flash_dash',
-
 		options: {
 			prefix: 'flash_dash',
 			filename: 'mediaelement-flash-video-mdash.swf'
@@ -517,7 +485,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['application/dash+xml'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['application/dash+xml'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -526,7 +494,6 @@ if (hasFlash) {
 	// AUDIO
 	const FlashMediaElementAudioRenderer = {
 		name: 'flash_audio',
-
 		options: {
 			prefix: 'flash_audio',
 			filename: 'mediaelement-flash-audio.swf'
@@ -537,7 +504,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['audio/mp3'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['audio/mp3'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};
@@ -546,7 +513,6 @@ if (hasFlash) {
 	// AUDIO - ogg
 	const FlashMediaElementAudioOggRenderer = {
 		name: 'flash_audio_ogg',
-
 		options: {
 			prefix: 'flash_audio_ogg',
 			filename: 'mediaelement-flash-audio-ogg.swf'
@@ -557,7 +523,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ['audio/ogg', 'audio/oga', 'audio/ogv'].includes(type.toLowerCase()),
+		canPlayType: (type) => ~['audio/ogg', 'audio/oga', 'audio/ogv'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create
 	};

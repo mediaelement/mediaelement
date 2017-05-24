@@ -6,6 +6,7 @@ import mejs from './mejs';
 import {createEvent} from '../utils/general';
 import {getTypeFromFile, formatType, absolutizeUrl} from '../utils/media';
 import {renderer} from './renderer';
+import {IS_IOS} from '../utils/constants';
 
 /**
  * Media Core
@@ -15,9 +16,18 @@ import {renderer} from './renderer';
  */
 class MediaElement {
 
-	constructor (idOrNode, options) {
+	/**
+	 *
+	 * @param {String|Node} idOrNode
+	 * @param {Object} options
+	 * @param {Object[]} sources
+	 * @returns {Element|*}
+	 */
+	constructor (idOrNode, options, sources) {
 
 		const t = this;
+
+		sources = Array.isArray(sources) ? sources : null;
 
 		t.defaults = {
 			/**
@@ -67,15 +77,14 @@ class MediaElement {
 
 		id = id || `mejs_${(Math.random().toString().slice(2))}`;
 
-		if (t.mediaElement.originalNode !== undefined && t.mediaElement.originalNode !== null &&
-			t.mediaElement.appendChild) {
+		if (t.mediaElement.originalNode !== undefined && t.mediaElement.originalNode !== null && t.mediaElement.appendChild) {
 			// change id
 			t.mediaElement.originalNode.setAttribute('id', `${id}_from_mejs`);
 
 			// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
 			// only if video/audio tags are detected
 			const tagName = t.mediaElement.originalNode.tagName.toLowerCase();
-			if (['video', 'audio'].includes(tagName) && !t.mediaElement.originalNode.getAttribute('preload')) {
+			if (['video', 'audio'].indexOf(tagName) > -1 && !t.mediaElement.originalNode.getAttribute('preload')) {
 				t.mediaElement.originalNode.setAttribute('preload', 'none');
 			}
 
@@ -148,8 +157,6 @@ class MediaElement {
 				const index = rendererArray[i];
 
 				if (index === rendererName) {
-
-					// create the renderer
 					const rendererList = renderer.renderers;
 					newRendererType = rendererList[index];
 
@@ -243,9 +250,11 @@ class MediaElement {
 
 					const
 						capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`,
-						getFn = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer[`get${capName}`]() : null,
+						getFn = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
+							typeof t.mediaElement.renderer[`get${capName}`] === 'function') ? t.mediaElement.renderer[`get${capName}`]() : null,
 						setFn = (value) => {
-							if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
+							if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
+								typeof t.mediaElement.renderer[`set${capName}`] === 'function') {
 								t.mediaElement.renderer[`set${capName}`](value);
 							}
 						};
@@ -259,7 +268,6 @@ class MediaElement {
 			// based on the media files detected
 			getSrc = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer.getSrc() : null,
 			setSrc = (value) => {
-
 				const mediaFiles = [];
 
 				// clean up URLs
@@ -281,7 +289,6 @@ class MediaElement {
 							type: (type === '' || type === null || type === undefined) && src ?
 								getTypeFromFile(src) : type
 						});
-
 					}
 				}
 
@@ -322,7 +329,6 @@ class MediaElement {
 					event.message = 'Error creating renderer';
 					t.mediaElement.dispatchEvent(event);
 					t.mediaElement.createErrorMessage(mediaFiles);
-					return;
 				}
 			},
 			assignMethods = (methodName) => {
@@ -410,11 +416,44 @@ class MediaElement {
 			}
 		};
 
-		if (t.mediaElement.originalNode !== null) {
-			const mediaFiles = [];
+		/**
+		 * Convert a URL to BLOB to avoid issues with regular media types playing under a HTTPS website
+		 * @see https://poodll.com/ios-10-and-html5-video-and-html5-audio-on-https-sites/
+		 * @private
+		 */
+		const processURL = (url, type) => {
+
+			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' &&
+				IS_IOS && !window.MSStream){
+				const xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if (this.readyState === 4 && this.status === 200) {
+						const
+							url = window.URL || window.webkitURL,
+							blobUrl = url.createObjectURL(this.response)
+						;
+						t.mediaElement.originalNode.setAttribute('src', blobUrl);
+						return blobUrl;
+					}
+					return url;
+				};
+				xhr.open('GET', url);
+				xhr.responseType = 'blob';
+				xhr.send();
+			}
+
+			return url;
+		};
+
+		let mediaFiles;
+
+		if (sources !== null) {
+			mediaFiles = sources;
+		} else if (t.mediaElement.originalNode !== null) {
+
+			mediaFiles = [];
 
 			switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
-
 				case 'iframe':
 					mediaFiles.push({
 						type: '',
@@ -422,41 +461,43 @@ class MediaElement {
 					});
 
 					break;
-
 				case 'audio':
 				case 'video':
-					let
-						n,
-						src,
-						type,
+					const
 						sources = t.mediaElement.originalNode.childNodes.length,
 						nodeSource = t.mediaElement.originalNode.getAttribute('src')
-						;
+					;
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
-						const node = t.mediaElement.originalNode;
+						const
+							node = t.mediaElement.originalNode,
+							type = formatType(nodeSource, node.getAttribute('type'))
+						;
 						mediaFiles.push({
-							type: formatType(nodeSource, node.getAttribute('type')),
-							src: nodeSource
+							type: type,
+							src: processURL(nodeSource, type)
 						});
 					}
 
 					// test <source> types to see if they are usable
 					for (let i = 0; i < sources; i++) {
-						n = t.mediaElement.originalNode.childNodes[i];
+						const n = t.mediaElement.originalNode.childNodes[i];
 						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
-							src = n.getAttribute('src');
-							type = formatType(src, n.getAttribute('type'));
-							mediaFiles.push({type: type, src: src});
+							const
+								src = n.getAttribute('src'),
+								type = formatType(src, n.getAttribute('type'))
+							;
+							mediaFiles.push({type: type, src: processURL(src, type)});
 						}
 					}
 					break;
 			}
+		}
 
-			if (mediaFiles.length > 0) {
-				t.mediaElement.src = mediaFiles;
-			}
+		// Set the best match based on renderers
+		if (mediaFiles.length) {
+			t.mediaElement.src = mediaFiles;
 		}
 
 		if (t.mediaElement.options.success) {

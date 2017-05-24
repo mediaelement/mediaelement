@@ -28,7 +28,7 @@
 			"mejs.video-player": "Video-Player",
 			"mejs.audio-player": "Audio-Player",			
 			"mejs.captions-subtitles": "Überschriften/Untertitel",
-			// "mejs.captions-chapters": "Chapters",
+			"mejs.captions-chapters": "Kapitel",
 			"mejs.none": "Keine",
 			"mejs.afrikaans": "Afrikanisch",
 			"mejs.albanian": "Albanisch",

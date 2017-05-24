@@ -86,10 +86,12 @@ However, if you want to bring the latest version and support the `Embeds` functi
 
 1. Just remove the entire content of the folder and Paste the content of the `build` folder from the latest version of `MediaElementJS` inside of it. 
 
-2. Download the [wp-mediaelement.zip](https://github.com/mediaelement/mediaelement/files/842296/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
+2. Download the [wp-mediaelement.zip](https://github.com/mediaelement/mediaelement/files/1009558/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
 
 <a id="wp-functions"></a>
 #### `wp-includes/functions.php`
+
+**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
 
 1. In the `wp_check_filetype()` method, add the following condition inside this loop:    
 ```
@@ -113,6 +115,8 @@ foreach ( $mimes as $ext_preg => $mime_match ) {
 
 <a id="wp-media"></a>
 #### `wp-includes/media.php`
+
+**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
 
 1. In the `wp_get_audio_extensions()` method, add the following extension:
 ```
@@ -144,7 +148,7 @@ $scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-pl
 ```
 and replace all of that until you reach the end of the translations, with this:
 ```
-$scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-player.min.js", array('jquery'), '3.2.4', 1 );
+$scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-player.min.js", array('jquery'), 'X.X.X', 1 );
 did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
     'language' => get_bloginfo( 'language' ),
     'strings'  => array(
@@ -234,7 +238,14 @@ did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
            'mejs.yiddish'             => __( 'Yiddish' ),
     ),
 ) );
+$scripts->add( 'wp-mediaelement', "/wp-includes/js/mediaelement/wp-mediaelement$suffix.js", array('mediaelement'), false, 1 );
+$mejs_settings = array(
+	'pluginPath' => includes_url( 'js/mediaelement/', 'relative' ),
+        'classPrefix' => 'mejs-',
+        'stretching' => 'responsive',
+);
 ```
+being `X.X.X` the latest version you want to install.
 
 2. Remove `$scripts->add( 'froogaloop',  "/wp-includes/js/mediaelement/froogaloop.min.js", array(), '2.0' );` 
    
@@ -244,8 +255,9 @@ $styles->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelementplayer.m
 ```
 with: 
 ```
-$styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css", array(), '3.2.4' );
+$styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css", array(), 'X.X.X' );
 ```   
+being `X.X.X` the latest version you want to install.
 
 <a id="plugins"></a>
 ### Additional plugins
@@ -296,6 +308,12 @@ $('video, audio').mediaelementplayer({
 	// more configuration
 });
 ```
+
+Check the content of `mediaelementplayer.min.css` (or if you decided to use the old styles, `mediaelementplayer-legacy.min.css`) to customize any CSS related to the player. 
+
+Also, as an example, visit [this section](resources.md#styles) to have an idea on how can you customize the look-and-feel of the player. 
+
+
 <a id="tags"></a>
 ## 3. Add `<video>` or `<audio>` tags
 
@@ -313,9 +331,11 @@ or
     <source type="video/mp4" src="myvideo.mp4" />
 </video>
 ```
-All the formats listed in [Browser and Device support](../README.md#browser-support) can be instantiated using this setup. 
 
-**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display errors in regards of unknown/custom MIME types. But they don't prevent the plugin to work properly. 
+All the formats supported are listed in [this table](usage.md#renderers-list). Besides that, there are some additional attributes that can be added in the `video`/`audio` tag. 
+Visit the [Attributes](api.md#attributes) section for more information.
+
+**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display warnings in regards of unknown/custom MIME types. But they do not prevent the plugin to work properly. 
 
 <a id="multi-codecs"></a>
 ### Multiple codecs (Optional)

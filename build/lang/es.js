@@ -6,7 +6,7 @@
  * @author
  *   Jalios (Twitter: @Jalios)
  *   Sascha Greuel (Twitter: @SoftCreatR)
- *   Rafael Miranda (GitHub: @ron666)
+ *   Rafael Miranda (GitHub: @rafa8626)
  *
  * @see core/i18n.js
  */(function (exports) {

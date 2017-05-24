@@ -16,7 +16,7 @@
 			"mejs.plural-form": 1,
 
 			// core/mediaelement.js
-			// "mejs.download-file": "Download File",
+			"mejs.download-file": "Ladda ner fil",
 
 			// renderers/flash.js
 			"mejs.install-flash": "Du använder en webbläsare som inte har Flash Player aktiverat eller installerad. Aktivera Flash Player eller hämta den senaste versionen från https://get.adobe.com/flashplayer/",
@@ -40,8 +40,8 @@
 			"mejs.volume-slider": "Volymkontroll",
 
 			// core/player.js
-			"mejs.video-player": "Video Spelare",
-			"mejs.audio-player": "Audio Spelare",
+			"mejs.video-player": "Videospelare",
+			"mejs.audio-player": "Ljudspelare",
 
 			// features/tracks.js
 			"mejs.captions-subtitles": "Textning/Undertexter",
