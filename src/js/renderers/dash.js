@@ -103,9 +103,9 @@ const DashNativeRenderer = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
-						if (dashPlayer !== null) {
-							node[propName] = value;
+						node[propName] = value;
 
+						if (dashPlayer !== null) {
 							if (propName === 'src') {
 								dashPlayer.attachSource(value);
 								if (autoplay) {
@@ -137,7 +137,6 @@ const DashNativeRenderer = {
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
 						dashPlayer.initialize(node, node.src, false);
-						node.setVolume(mediaElement.originalNode.volume);
 					}
 
 					node.addEventListener(eventName, (e) => {

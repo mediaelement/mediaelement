@@ -111,9 +111,9 @@ const HlsNativeRenderer = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
-						if (hlsPlayer !== null) {
-							node[propName] = value;
+						node[propName] = value;
 
+						if (hlsPlayer !== null) {
 							if (propName === 'src') {
 
 								hlsPlayer.destroy();
@@ -147,7 +147,6 @@ const HlsNativeRenderer = {
 						hlsPlayer.detachMedia();
 						hlsPlayer.loadSource(url);
 						hlsPlayer.attachMedia(node);
-						node.setVolume(mediaElement.originalNode.volume);
 					}
 
 					node.addEventListener(eventName, (e) => {

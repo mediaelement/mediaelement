@@ -257,9 +257,6 @@ const FlashMediaElementRenderer = {
 						;
 
 						flash[`set${capName}`](stackItem.value);
-						if (propName === 'src') {
-							flash['setVolume'](mediaElement.originalNode.volume);
-						}
 					} else if (stackItem.type === 'call') {
 						flash[stackItem.methodName]();
 					}

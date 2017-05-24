@@ -50,6 +50,7 @@ const NativeFlv = {
 		flvjs.LoggingControl.enableVerbose = settings.options.debug;
 		const player = flvjs.createPlayer(settings.options);
 		window[`__ready__${settings.id}`](player);
+		return player;
 	}
 };
 
@@ -106,12 +107,24 @@ const FlvNativeRenderer = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
+						node[propName] = value;
+
 						if (flvPlayer !== null) {
-							node[propName] = value;
 
 							if (propName === 'src') {
-								flvPlayer.unload();
-								flvPlayer.detachMediaElement();
+
+								// If `segments` is detected, remove it to avoid issues
+								if (typeof options.flv.segments !== 'undefined') {
+									delete options.flv.segments;
+								}
+								options.flv.type = 'flv';
+								options.flv.url = value;
+
+								flvPlayer.destroy();
+								flvPlayer = NativeFlv._createPlayer({
+									options: options.flv,
+									id: id
+								});
 								flvPlayer.attachMediaElement(node);
 								flvPlayer.load();
 							}
@@ -136,7 +149,6 @@ const FlvNativeRenderer = {
 						flvPlayer.detachMediaElement();
 						flvPlayer.attachMediaElement(node);
 						flvPlayer.load();
-						node.setVolume(mediaElement.originalNode.volume);
 					}
 
 					node.addEventListener(eventName, (e) => {
