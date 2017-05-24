@@ -1647,7 +1647,7 @@ Object.assign(_player2.default.prototype, {
 	},
 	setProgressRail: function setProgressRail(e) {
 		var t = this,
-		    target = e !== undefined ? e.target : t.media;
+		    target = e !== undefined ? e.detail.target || e.target : t.media;
 
 		var percent = null;
 
@@ -1662,7 +1662,7 @@ Object.assign(_player2.default.prototype, {
 		if (percent !== null) {
 			percent = Math.min(1, Math.max(0, percent));
 
-			if (t.loaded && t.total) {
+			if (t.loaded) {
 				t.setTransformStyle(t.loaded, 'scaleX(' + percent + ')');
 			}
 		}
@@ -3726,10 +3726,11 @@ var MediaElementPlayer = function () {
 
 					if (t.options.enableAutosize) {
 						t.media.addEventListener('loadedmetadata', function (e) {
-							if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') && e.target !== null && !isNaN(e.target.videoHeight)) {
-								t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
+							var target = e !== undefined ? e.detail.target || e.target : t.media;
+							if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') && target !== null && !isNaN(target.videoHeight)) {
+								t.setPlayerSize(target.videoWidth, target.videoHeight);
 								t.setControlsSize();
-								t.media.setSize(e.target.videoWidth, e.target.videoHeight);
+								t.media.setSize(target.videoWidth, target.videoHeight);
 							}
 						});
 					}

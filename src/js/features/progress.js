@@ -453,7 +453,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	setProgressRail (e)  {
 		const
 			t = this,
-			target = (e !== undefined) ? e.target : t.media
+			target = (e !== undefined) ? (e.detail.target || e.target) : t.media
 		;
 
 		let percent = null;
@@ -479,7 +479,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (percent !== null) {
 			percent = Math.min(1, Math.max(0, percent));
 			// update loaded bar
-			if (t.loaded && t.total) {
+			if (t.loaded) {
 				t.setTransformStyle(t.loaded,`scaleX(${percent})`);
 			}
 		}

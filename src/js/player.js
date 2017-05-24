@@ -854,11 +854,12 @@ class MediaElementPlayer {
 					t.media.addEventListener('loadedmetadata', (e) => {
 						// if the <video height> was not set and the options.videoHeight was not set
 						// then resize to the real dimensions
+						const target = (e !== undefined) ? (e.detail.target || e.target) : t.media;
 						if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') &&
-							e.target !== null && !isNaN(e.target.videoHeight)) {
-							t.setPlayerSize(e.target.videoWidth, e.target.videoHeight);
+							target !== null && !isNaN(target.videoHeight)) {
+							t.setPlayerSize(target.videoWidth, target.videoHeight);
 							t.setControlsSize();
-							t.media.setSize(e.target.videoWidth, e.target.videoHeight);
+							t.media.setSize(target.videoWidth, target.videoHeight);
 						}
 					});
 				}
