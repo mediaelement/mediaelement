@@ -63,7 +63,7 @@ To get the default installation there are several different ways.
  
 1. Download the package from https://github.com/mediaelement/mediaelement 
 
-2. Use a CDN reference; the most popular ones are [jsDelivr](http://www.jsdelivr.com/projects/mediaelement) and [cdnjs](https://cdnjs.com/libraries/mediaelement). 
+2. Use a CDN reference; the most popular ones are [jsDelivr](http://cdn.jsdelivr.net/npm/mediaelement/) and [cdnjs](https://cdnjs.com/libraries/mediaelement). 
 
 3. Through GIT: `git clone https://github.com/mediaelement/mediaelement.git`
 

@@ -16,8 +16,9 @@
 * Added player min-width based on elements visible on control bar @rafa8626
 * Added missing events to set `startVolume` properly when loading new data @rafa8626
 * Fixed issue related to controlbar not reflecting loading progress @rafa8626
-* Fixed issue when loading new FLV source with native FLV renderer @rafa8626
+* Fixed issues with native FLV renderer related to load new sources and having multiple players rendering FLV media @rafa8626
 * Enabled DRM support for M(PEG)-DASH via `setSrc()` and `dash.drm` configuration @rafa8626
+* Added support to pass a single object in `setSrc()` @rafa8626
 
 *4.1.1 (2017/05/16)*
 
