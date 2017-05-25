@@ -142,19 +142,17 @@ const HlsNativeRenderer = {
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				hlsEvents = Hls.Events,
 				assignEvents = (eventName) => {
-					if (eventName !== 'progress') {
-						if (eventName === 'loadedmetadata') {
-							const url = mediaElement.originalNode.src;
-							hlsPlayer.detachMedia();
-							hlsPlayer.loadSource(url);
-							hlsPlayer.attachMedia(node);
-						}
-
-						node.addEventListener(eventName, (e) => {
-							const event = createEvent(e.type, mediaElement);
-							mediaElement.dispatchEvent(event);
-						});
+					if (eventName === 'loadedmetadata') {
+						const url = mediaElement.originalNode.src;
+						hlsPlayer.detachMedia();
+						hlsPlayer.loadSource(url);
+						hlsPlayer.attachMedia(node);
 					}
+
+					node.addEventListener(eventName, (e) => {
+						const event = createEvent(e.type, mediaElement);
+						mediaElement.dispatchEvent(event);
+					});
 
 				}
 			;

@@ -18,7 +18,6 @@
 * Fixed issue related to controlbar not reflecting loading progress @rafa8626
 * Fixed issue when loading new FLV source with native FLV renderer @rafa8626
 * Enabled DRM support for M(PEG)-DASH via `setSrc()` and `dash.drm` configuration @rafa8626
-* Fixed issue with native FLV, HLS and M(PEG)-DASH renderers by removing `progress` event @rafa8626
 
 *4.1.1 (2017/05/16)*
 
