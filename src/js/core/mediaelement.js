@@ -111,7 +111,12 @@ class MediaElement {
 		 */
 		t.mediaElement.changeRenderer = (rendererName, mediaFiles) => {
 
-			const t = this;
+			const
+				t = this,
+				// If the first element of `mediaFiles` contain more than `src` and `type`
+				// pass the entire object; otherwise, just `src`
+				media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].src
+			;
 
 			// check for a match on the current renderer
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
@@ -121,7 +126,7 @@ class MediaElement {
 					t.mediaElement.renderer.stop();
 				}
 				t.mediaElement.renderer.show();
-				t.mediaElement.renderer.setSrc(mediaFiles[0].src);
+				t.mediaElement.renderer.setSrc(media);
 				return true;
 			}
 
@@ -142,7 +147,7 @@ class MediaElement {
 
 			if (newRenderer !== undefined && newRenderer !== null) {
 				newRenderer.show();
-				newRenderer.setSrc(mediaFiles[0].src);
+				newRenderer.setSrc(media);
 				t.mediaElement.renderer = newRenderer;
 				t.mediaElement.rendererName = rendererName;
 				return true;
@@ -276,19 +281,20 @@ class MediaElement {
 						src: value,
 						type: value ? getTypeFromFile(value) : ''
 					});
-				} else {
+				} else if (Array.isArray(value)) {
 					for (let i = 0, total = value.length; i < total; i++) {
 
 						const
 							src = absolutizeUrl(value[i].src),
-							type = value[i].type
+							type = value[i].type,
+							media = Object.assign(value[i], {
+								src: src,
+								type: (type === '' || type === null || type === undefined) && src ?
+									getTypeFromFile(src) : type
+							})
 						;
 
-						mediaFiles.push({
-							src: src,
-							type: (type === '' || type === null || type === undefined) && src ?
-								getTypeFromFile(src) : type
-						});
+						mediaFiles.push(media);
 					}
 				}
 
