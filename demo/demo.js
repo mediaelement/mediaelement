@@ -105,18 +105,18 @@ document.addEventListener('DOMContentLoaded', function () {
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 
-				// media.addEventListener('loadedmetadata', function () {
-				// 	var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
-				// 	if (src !== null && src !== undefined) {
-				// 		renderer.querySelector('.src').innerHTML = '<a href="' + src + '" target="_blank">' + src + '</a>';
-				// 		renderer.querySelector('.renderer').innerHTML = media.rendererName;
-				// 		renderer.querySelector('.error').innerHTML = '';
-				// 	}
-				// });
-				//
-				// media.addEventListener('error', function (e) {
-				// 	renderer.querySelector('.error').innerHTML = '<strong>Error</strong>: ' + e.message;
-				// });
+				media.addEventListener('loadedmetadata', function () {
+					var src = media.originalNode.getAttribute('src').replace('&amp;', '&');
+					if (src !== null && src !== undefined) {
+						renderer.querySelector('.src').innerHTML = '<a href="' + src + '" target="_blank">' + src + '</a>';
+						renderer.querySelector('.renderer').innerHTML = media.rendererName;
+						renderer.querySelector('.error').innerHTML = '';
+					}
+				});
+
+				media.addEventListener('error', function (e) {
+					renderer.querySelector('.error').innerHTML = '<strong>Error</strong>: ' + e.message;
+				});
 			}
 		});
 	}
