@@ -6,6 +6,7 @@
  * @author
  *   Jalios (Twitter: @Jalios)
  *   Sascha Greuel (Twitter: @SoftCreatR)
+ *   Peter Dave Hello (Twitter: @PeterDaveHello)
  *
  * @see core/i18n.js
  */
@@ -13,32 +14,32 @@
 	if (exports.zh === undefined) {
 		exports.zh = {
 			"mejs.plural-form": 0,			
-			"mejs.download-file": "下載文件",			
+			"mejs.download-file": "下載檔案",			
 			// "mejs.install-flash": "You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/",			
-			"mejs.fullscreen": "全屏",			
+			"mejs.fullscreen": "全螢幕",			
 			"mejs.play": "播放",
 			"mejs.pause": "暫停",			
-			"mejs.time-slider": "時間滑動棒",
-			"mejs.time-help-text": "使用左/右箭頭快進1秒，上/下箭頭快進10秒。",
+			"mejs.time-slider": "時間軸",
+			"mejs.time-help-text": "使用左/右箭頭快轉1秒，上/下箭頭快轉10秒。",
 			//"mejs.live-broadcast" : "Live Broadcast",			
 			"mejs.volume-help-text": "使用上/下箭頭提高或降低音量。",
 			"mejs.unmute": "取消靜音",
 			"mejs.mute": "靜音",
 			"mejs.volume-slider": "音量控制鍵",			
-			"mejs.video-player": "視頻播放器",
-			"mejs.audio-player": "音頻播放器",			
+			"mejs.video-player": "影片播放器",
+			"mejs.audio-player": "音樂播放器",			
 			"mejs.captions-subtitles": "字幕/標題",
-			// "mejs.captions-chapters": "Chapters",
-			"mejs.none": "沒有"
+			"mejs.captions-chapters": "章節",
+			"mejs.none": "無",
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",
 			// "mejs.belarusian": "Belarusian",
 			// "mejs.bulgarian": "Bulgarian",
 			// "mejs.catalan": "Catalan",
-			// "mejs.chinese": "Chinese",
-			// "mejs.chinese-simplified": "Chinese (Simplified)",
-			// "mejs.chinese-traditional": "Chinese (Traditional)",
+			"mejs.chinese": "中文",
+			"mejs.chinese-simplified": "简体中文",
+			"mejs.chinese-traditional": "正體中文",
 			// "mejs.croatian": "Croatian",
 			// "mejs.czech": "Czech",
 			// "mejs.danish": "Danish",
