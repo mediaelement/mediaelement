@@ -48,7 +48,7 @@
 			// features/tracks.js
 			"mejs.captions-subtitles": "字幕/標題",
 			"mejs.captions-chapters": "章節",
-			"mejs.none": "無"
+			"mejs.none": "無",
 			// "mejs.afrikaans": "Afrikaans",
 			// "mejs.albanian": "Albanian",
 			// "mejs.arabic": "Arabic",

@@ -1,5 +1,9 @@
 ### Version History
 
+*4.x.x (2017/??/??)*
+
+* Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello
+
 *4.1.2 (2017/05/25)*
 
 * Fixed issues with Accessibility in Chapters/Captions and Volume slider @rafa8626 
