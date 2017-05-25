@@ -149,21 +149,23 @@ const DashNativeRenderer = {
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
-					if (eventName === 'loadedmetadata') {
-						dashPlayer.initialize(node, null, (preload && preload === 'auto') || autoplay);
-						dashPlayer.setFastSwitchEnabled(true);
+					if (eventName !== 'progress') {
+						if (eventName === 'loadedmetadata') {
+							dashPlayer.initialize(node, null, (preload && preload === 'auto') || autoplay);
+							dashPlayer.setFastSwitchEnabled(true);
 
-						// If DRM is set, load protection data
-						if (!mejs.Utils.isObjectEmpty(options.dash.drm)) {
-							dashPlayer.setProtectionData(options.dash.drm);
+							// If DRM is set, load protection data
+							if (!mejs.Utils.isObjectEmpty(options.dash.drm)) {
+								dashPlayer.setProtectionData(options.dash.drm);
+							}
+							dashPlayer.attachSource(node.src);
 						}
-						dashPlayer.attachSource(node.src);
-					}
 
-					node.addEventListener(eventName, (e) => {
-						const event = createEvent(e.type, mediaElement);
-						mediaElement.dispatchEvent(event);
-					});
+						node.addEventListener(eventName, (e) => {
+							const event = createEvent(e.type, mediaElement);
+							mediaElement.dispatchEvent(event);
+						});
+					}
 				}
 			;
 

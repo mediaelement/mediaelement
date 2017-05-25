@@ -144,17 +144,19 @@ const FlvNativeRenderer = {
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				assignEvents = (eventName) => {
-					if (eventName === 'loadedmetadata') {
-						flvPlayer.unload();
-						flvPlayer.detachMediaElement();
-						flvPlayer.attachMediaElement(node);
-						flvPlayer.load();
-					}
+					if (eventName !== 'progress') {
+						if (eventName === 'loadedmetadata') {
+							flvPlayer.unload();
+							flvPlayer.detachMediaElement();
+							flvPlayer.attachMediaElement(node);
+							flvPlayer.load();
+						}
 
-					node.addEventListener(eventName, (e) => {
-						const event = createEvent(e.type, mediaElement);
-						mediaElement.dispatchEvent(event);
-					});
+						node.addEventListener(eventName, (e) => {
+							const event = createEvent(e.type, mediaElement);
+							mediaElement.dispatchEvent(event);
+						});
+					}
 				}
 			;
 

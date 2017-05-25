@@ -4931,20 +4931,22 @@ var DashNativeRenderer = {
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			    dashEvents = dashjs.MediaPlayer.events,
 			    assignEvents = function assignEvents(eventName) {
-				if (eventName === 'loadedmetadata') {
-					dashPlayer.initialize(node, null, preload && preload === 'auto' || autoplay);
-					dashPlayer.setFastSwitchEnabled(true);
+				if (eventName !== 'progress') {
+					if (eventName === 'loadedmetadata') {
+						dashPlayer.initialize(node, null, preload && preload === 'auto' || autoplay);
+						dashPlayer.setFastSwitchEnabled(true);
 
-					if (!_mejs2.default.Utils.isObjectEmpty(options.dash.drm)) {
-						dashPlayer.setProtectionData(options.dash.drm);
+						if (!_mejs2.default.Utils.isObjectEmpty(options.dash.drm)) {
+							dashPlayer.setProtectionData(options.dash.drm);
+						}
+						dashPlayer.attachSource(node.src);
 					}
-					dashPlayer.attachSource(node.src);
-				}
 
-				node.addEventListener(eventName, function (e) {
-					var event = (0, _general.createEvent)(e.type, mediaElement);
-					mediaElement.dispatchEvent(event);
-				});
+					node.addEventListener(eventName, function (e) {
+						var event = (0, _general.createEvent)(e.type, mediaElement);
+						mediaElement.dispatchEvent(event);
+					});
+				}
 			};
 
 			for (var _i = 0, _total = events.length; _i < _total; _i++) {
@@ -5554,17 +5556,19 @@ var FlvNativeRenderer = {
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			    assignEvents = function assignEvents(eventName) {
-				if (eventName === 'loadedmetadata') {
-					flvPlayer.unload();
-					flvPlayer.detachMediaElement();
-					flvPlayer.attachMediaElement(node);
-					flvPlayer.load();
-				}
+				if (eventName !== 'progress') {
+					if (eventName === 'loadedmetadata') {
+						flvPlayer.unload();
+						flvPlayer.detachMediaElement();
+						flvPlayer.attachMediaElement(node);
+						flvPlayer.load();
+					}
 
-				node.addEventListener(eventName, function (e) {
-					var event = (0, _general.createEvent)(e.type, mediaElement);
-					mediaElement.dispatchEvent(event);
-				});
+					node.addEventListener(eventName, function (e) {
+						var event = (0, _general.createEvent)(e.type, mediaElement);
+						mediaElement.dispatchEvent(event);
+					});
+				}
 			};
 
 			for (var _i = 0, _total = events.length; _i < _total; _i++) {
@@ -5749,17 +5753,19 @@ var HlsNativeRenderer = {
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			    hlsEvents = Hls.Events,
 			    assignEvents = function assignEvents(eventName) {
-				if (eventName === 'loadedmetadata') {
-					var url = mediaElement.originalNode.src;
-					hlsPlayer.detachMedia();
-					hlsPlayer.loadSource(url);
-					hlsPlayer.attachMedia(node);
-				}
+				if (eventName !== 'progress') {
+					if (eventName === 'loadedmetadata') {
+						var url = mediaElement.originalNode.src;
+						hlsPlayer.detachMedia();
+						hlsPlayer.loadSource(url);
+						hlsPlayer.attachMedia(node);
+					}
 
-				node.addEventListener(eventName, function (e) {
-					var event = (0, _general.createEvent)(e.type, mediaElement);
-					mediaElement.dispatchEvent(event);
-				});
+					node.addEventListener(eventName, function (e) {
+						var event = (0, _general.createEvent)(e.type, mediaElement);
+						mediaElement.dispatchEvent(event);
+					});
+				}
 			};
 
 			for (var _i = 0, _total = events.length; _i < _total; _i++) {
