@@ -316,6 +316,8 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
@@ -330,7 +332,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _general = _dereq_(25);
 
-var _media = _dereq_(26);
+var _media2 = _dereq_(26);
 
 var _renderer = _dereq_(7);
 
@@ -538,19 +540,27 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		if (typeof value === 'string') {
 			mediaFiles.push({
 				src: value,
-				type: value ? (0, _media.getTypeFromFile)(value) : ''
+				type: value ? (0, _media2.getTypeFromFile)(value) : ''
 			});
+		} else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.src !== undefined) {
+			var src = (0, _media2.absolutizeUrl)(value.src),
+			    type = value.type,
+			    media = Object.assign(value, {
+				src: src,
+				type: (type === '' || type === null || type === undefined) && src ? (0, _media2.getTypeFromFile)(src) : type
+			});
+			mediaFiles.push(media);
 		} else if (Array.isArray(value)) {
 			for (var i = 0, total = value.length; i < total; i++) {
 
-				var src = (0, _media.absolutizeUrl)(value[i].src),
-				    type = value[i].type,
-				    media = Object.assign(value[i], {
-					src: src,
-					type: (type === '' || type === null || type === undefined) && src ? (0, _media.getTypeFromFile)(src) : type
+				var _src = (0, _media2.absolutizeUrl)(value[i].src),
+				    _type = value[i].type,
+				    _media = Object.assign(value[i], {
+					src: _src,
+					type: (_type === '' || _type === null || _type === undefined) && _src ? (0, _media2.getTypeFromFile)(_src) : _type
 				});
 
-				mediaFiles.push(media);
+				mediaFiles.push(_media);
 			}
 		}
 
@@ -703,7 +713,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 				if (nodeSource) {
 					var node = t.mediaElement.originalNode,
-					    type = (0, _media.formatType)(nodeSource, node.getAttribute('type'));
+					    type = (0, _media2.formatType)(nodeSource, node.getAttribute('type'));
 					mediaFiles.push({
 						type: type,
 						src: processURL(nodeSource, type)
@@ -714,8 +724,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 					var n = t.mediaElement.originalNode.childNodes[_i4];
 					if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
 						var src = n.getAttribute('src'),
-						    _type = (0, _media.formatType)(src, n.getAttribute('type'));
-						mediaFiles.push({ type: _type, src: processURL(src, _type) });
+						    _type2 = (0, _media2.formatType)(src, n.getAttribute('type'));
+						mediaFiles.push({ type: _type2, src: processURL(src, _type2) });
 					}
 				}
 				break;
@@ -5524,17 +5534,17 @@ var FlvNativeRenderer = {
 					node[propName] = value;
 
 					if (flvPlayer !== null) {
-
 						if (propName === 'src') {
-							if (typeof options.flv.segments !== 'undefined') {
-								delete options.flv.segments;
-							}
-							options.flv.type = 'flv';
-							options.flv.url = value;
+							var _flvOptions = {};
+							_flvOptions.type = 'flv';
+							_flvOptions.url = value;
+							_flvOptions.cors = options.flv.cors;
+							_flvOptions.debug = options.flv.debug;
+							_flvOptions.path = options.flv.path;
 
 							flvPlayer.destroy();
 							flvPlayer = NativeFlv._createPlayer({
-								options: options.flv,
+								options: _flvOptions,
 								id: id
 							});
 							flvPlayer.attachMediaElement(node);
@@ -5587,11 +5597,15 @@ var FlvNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		options.flv.type = 'flv';
-		options.flv.url = node.getAttribute('src');
+		var flvOptions = {};
+		flvOptions.type = 'flv';
+		flvOptions.url = node.src;
+		flvOptions.cors = options.flv.cors;
+		flvOptions.debug = options.flv.debug;
+		flvOptions.path = options.flv.path;
 
 		NativeFlv.load({
-			options: options.flv,
+			options: flvOptions,
 			id: id
 		});
 

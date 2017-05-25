@@ -110,19 +110,17 @@ const FlvNativeRenderer = {
 						node[propName] = value;
 
 						if (flvPlayer !== null) {
-
 							if (propName === 'src') {
-
-								// If `segments` is detected, remove it to avoid issues
-								if (typeof options.flv.segments !== 'undefined') {
-									delete options.flv.segments;
-								}
-								options.flv.type = 'flv';
-								options.flv.url = value;
+								const flvOptions = {};
+								flvOptions.type = 'flv';
+								flvOptions.url = value;
+								flvOptions.cors = options.flv.cors;
+								flvOptions.debug = options.flv.debug;
+								flvOptions.path = options.flv.path;
 
 								flvPlayer.destroy();
 								flvPlayer = NativeFlv._createPlayer({
-									options: options.flv,
+									options: flvOptions,
 									id: id
 								});
 								flvPlayer.attachMediaElement(node);
@@ -178,12 +176,17 @@ const FlvNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		// Options that cannot be overridden
-		options.flv.type = 'flv';
-		options.flv.url = node.getAttribute('src');
+		// This approach prevents carrying over unnecessary elements from flv.js
+		// in case there are multiple instances of the player
+		const flvOptions = {};
+		flvOptions.type = 'flv';
+		flvOptions.url = node.src;
+		flvOptions.cors = options.flv.cors;
+		flvOptions.debug = options.flv.debug;
+		flvOptions.path = options.flv.path;
 
 		NativeFlv.load({
-			options: options.flv,
+			options: flvOptions,
 			id: id
 		});
 

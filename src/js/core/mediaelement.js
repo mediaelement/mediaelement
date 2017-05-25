@@ -270,17 +270,29 @@ class MediaElement {
 				}
 			},
 			// `src` is a property separated from the others since it carries the logic to set the proper renderer
-			// based on the media files detected
+			// based on the media files detected;
+			// `setSrc` can accept a URL string, an object with at least `src` or an Array of objects
 			getSrc = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer.getSrc() : null,
 			setSrc = (value) => {
 				const mediaFiles = [];
 
-				// clean up URLs
 				if (typeof value === 'string') {
 					mediaFiles.push({
 						src: value,
 						type: value ? getTypeFromFile(value) : ''
 					});
+				} else if (typeof value === 'object' && value.src !== undefined) {
+					const
+						src = absolutizeUrl(value.src),
+						type = value.type,
+						media = Object.assign(value, {
+							src: src,
+							type: (type === '' || type === null || type === undefined) && src ?
+								getTypeFromFile(src) : type
+						})
+					;
+					mediaFiles.push(media);
+
 				} else if (Array.isArray(value)) {
 					for (let i = 0, total = value.length; i < total; i++) {
 
