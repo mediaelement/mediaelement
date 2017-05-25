@@ -19,6 +19,7 @@
 * Fixed issues with native FLV renderer related to load new sources and having multiple players rendering FLV media @rafa8626
 * Enabled DRM support for M(PEG)-DASH via `setSrc()` and `dash.drm` configuration @rafa8626
 * Added support to pass a single object in `setSrc()` @rafa8626
+* Added Persian translation (https://github.com/mediaelement/mediaelement/pull/2238) @wmateam
 
 *4.1.1 (2017/05/16)*
 
