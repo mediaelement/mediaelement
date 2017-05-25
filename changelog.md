@@ -17,6 +17,7 @@
 * Added missing events to set `startVolume` properly when loading new data @rafa8626
 * Fixed issue related to controlbar not reflecting loading progress @rafa8626
 * Fixed issue when loading new FLV source with native FLV renderer @rafa8626
+* Enabled DRM support for M(PEG)-DASH via `setSrc()` and `dash.drm` configuration @rafa8626
 
 *4.1.1 (2017/05/16)*
 

@@ -57,7 +57,7 @@ pluginPath | string | `build/` | Path where Flash shims are located
 shimScriptAccess | string | `sameDomain` | Flag in `<object>` and `<embed>` to determine whether to use local or CDN files. Possible values: `always` (CDN version) or `sameDomain` (local files)
 customError | string | __(empty)__ | If error happens, set up customized HTML message
 dailymotion | object | | See [Documentation](https://developer.dailymotion.com/player)
-dash | object | | Just `debug` and `path` parameters to indicate where to load library
+dash | object | | Accepts `debug`, `drm` (object to load protected/licensed streaming) and `path` parameters to indicate `dash.js` URL/local path
 facebook | object | | See [Documentation](https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup)
 flv | object | | See [Documentation](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) (and a custom `path` parameter to indicate where to load library)
 hls | object | | See [Documentation](https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning) (and a custom `path` parameter to indicate where to load library)

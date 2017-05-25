@@ -104,15 +104,30 @@ const DashNativeRenderer = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
-						node[propName] = value;
-
-						if (dashPlayer !== null) {
-							if (propName === 'src') {
-								dashPlayer.attachSource(value);
-								if (autoplay) {
-									node.play();
+						if (propName === 'src') {
+							if (typeof value === 'string') {
+								node[propName] = value;
+								if (dashPlayer !== null) {
+									dashPlayer.attachSource(value);
+									if (autoplay) {
+										node.play();
+									}
+								}
+							} else if (value && typeof value === 'object' && value.src) {
+								node[propName] = value.src;
+								if (dashPlayer !== null) {
+									// If DRM is set, load protection data
+									if (value && typeof value === 'object' && value.drm) {
+										dashPlayer.setProtectionData(value.drm);
+									}
+									dashPlayer.attachSource(value.src);
+									if (autoplay) {
+										node.play();
+									}
 								}
 							}
+						} else {
+							node[propName] = value;
 						}
 					}
 				};
@@ -184,6 +199,9 @@ const DashNativeRenderer = {
 			for (let i = 0, total = mediaFiles.length; i < total; i++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
 					node.setAttribute('src', mediaFiles[i].src);
+					if (typeof mediaFiles[i].drm !== 'undefined') {
+						options.dash.drm = mediaFiles[i].drm;
+					}
 					break;
 				}
 			}

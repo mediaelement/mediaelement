@@ -398,7 +398,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 	t.mediaElement.changeRenderer = function (rendererName, mediaFiles) {
 
-		var t = _this;
+		var t = _this,
+		    media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].src;
 
 		if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && t.mediaElement.renderer.name === rendererName) {
 			t.mediaElement.renderer.pause();
@@ -406,7 +407,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				t.mediaElement.renderer.stop();
 			}
 			t.mediaElement.renderer.show();
-			t.mediaElement.renderer.setSrc(mediaFiles[0].src);
+			t.mediaElement.renderer.setSrc(media);
 			return true;
 		}
 
@@ -423,7 +424,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 		if (newRenderer !== undefined && newRenderer !== null) {
 			newRenderer.show();
-			newRenderer.setSrc(mediaFiles[0].src);
+			newRenderer.setSrc(media);
 			t.mediaElement.renderer = newRenderer;
 			t.mediaElement.rendererName = rendererName;
 			return true;
@@ -539,16 +540,17 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				src: value,
 				type: value ? (0, _media.getTypeFromFile)(value) : ''
 			});
-		} else {
+		} else if (Array.isArray(value)) {
 			for (var i = 0, total = value.length; i < total; i++) {
 
 				var src = (0, _media.absolutizeUrl)(value[i].src),
-				    type = value[i].type;
-
-				mediaFiles.push({
+				    type = value[i].type,
+				    media = Object.assign(value[i], {
 					src: src,
 					type: (type === '' || type === null || type === undefined) && src ? (0, _media.getTypeFromFile)(src) : type
 				});
+
+				mediaFiles.push(media);
 			}
 		}
 
@@ -978,6 +980,8 @@ var EN = exports.EN = {
 },{}],9:[function(_dereq_,module,exports){
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
@@ -1059,15 +1063,29 @@ var DashNativeRenderer = {
 
 			node['set' + capName] = function (value) {
 				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
-					node[propName] = value;
-
-					if (dashPlayer !== null) {
-						if (propName === 'src') {
-							dashPlayer.attachSource(value);
-							if (autoplay) {
-								node.play();
+					if (propName === 'src') {
+						if (typeof value === 'string') {
+							node[propName] = value;
+							if (dashPlayer !== null) {
+								dashPlayer.attachSource(value);
+								if (autoplay) {
+									node.play();
+								}
+							}
+						} else if (value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.src) {
+							node[propName] = value.src;
+							if (dashPlayer !== null) {
+								if (value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.drm) {
+									dashPlayer.setProtectionData(value.drm);
+								}
+								dashPlayer.attachSource(value.src);
+								if (autoplay) {
+									node.play();
+								}
 							}
 						}
+					} else {
+						node[propName] = value;
 					}
 				}
 			};
@@ -1126,6 +1144,9 @@ var DashNativeRenderer = {
 			for (var _i2 = 0, _total2 = mediaFiles.length; _i2 < _total2; _i2++) {
 				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i2].type)) {
 					node.setAttribute('src', mediaFiles[_i2].src);
+					if (typeof mediaFiles[_i2].drm !== 'undefined') {
+						options.dash.drm = mediaFiles[_i2].drm;
+					}
 					break;
 				}
 			}
