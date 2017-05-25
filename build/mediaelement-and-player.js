@@ -16,36 +16,30 @@ var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
 var minDoc = _dereq_(1);
 
-var doccy;
-
 if (typeof document !== 'undefined') {
-    doccy = document;
+    module.exports = document;
 } else {
-    doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'];
+    var doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'];
 
     if (!doccy) {
         doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'] = minDoc;
     }
-}
 
-module.exports = doccy;
+    module.exports = doccy;
+}
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"1":1}],3:[function(_dereq_,module,exports){
 (function (global){
-var win;
-
 if (typeof window !== "undefined") {
-    win = window;
+    module.exports = window;
 } else if (typeof global !== "undefined") {
-    win = global;
+    module.exports = global;
 } else if (typeof self !== "undefined"){
-    win = self;
+    module.exports = self;
 } else {
-    win = {};
+    module.exports = {};
 }
-
-module.exports = win;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(_dereq_,module,exports){

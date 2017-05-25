@@ -10,6 +10,8 @@
  */
 
 (function (exports) {
+    "use strict";
+    
     if (exports.fa === undefined) {
         exports.fa = {
             "mejs.plural-form": 0,
