@@ -437,10 +437,14 @@ const YouTubeIframeRenderer = {
 
 						youTubeIframe = youTubeApi.getIframe();
 
+						// Check for `muted` attribute to start video without sound
+						if (mediaElement.originalNode.getAttribute('muted')) {
+							youTubeApi.mute();
+						}
+
 						const
 							events = ['mouseover', 'mouseout'],
 							assignEvents = (e) => {
-
 								const newEvent = createEvent(e.type, youtube);
 								mediaElement.dispatchEvent(newEvent);
 							}
@@ -470,8 +474,10 @@ const YouTubeIframeRenderer = {
 							case 0: // YT.PlayerState.ENDED
 								events = ['ended'];
 								paused = false;
-								ended = true;
-								youtube.stopInterval();
+								ended = !youtube.options.youtube.loop;
+								if (!youtube.options.youtube.loop) {
+									youtube.stopInterval();
+								}
 								break;
 							case 1:	// YT.PlayerState.PLAYING
 								events = ['play', 'playing'];
@@ -515,6 +521,15 @@ const YouTubeIframeRenderer = {
 			youtubeSettings.playerVars.playsinline = 1;
 		}
 
+		// Check for `autoplay` and `loop` attributes to override settings
+		if (mediaElement.originalNode.autoplay) {
+			youtubeSettings.playerVars.autoplay = 1;
+		}
+
+		if (mediaElement.originalNode.loop) {
+			youtubeSettings.playerVars.loop = 1;
+		}
+
 		// send it off for async loading and creation
 		YouTubeApi.enqueueIframe(youtubeSettings);
 
@@ -549,10 +564,8 @@ const YouTubeIframeRenderer = {
 		youtube.startInterval = () => {
 			// create timer
 			youtube.interval = setInterval(() => {
-
 				const event = createEvent('timeupdate', youtube);
 				mediaElement.dispatchEvent(event);
-
 			}, 250);
 		};
 		youtube.stopInterval = () => {

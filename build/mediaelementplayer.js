@@ -2718,6 +2718,17 @@ Object.assign(_player2.default.prototype, {
 
 			e.preventDefault();
 			e.stopPropagation();
+		},
+		    toggleMute = function toggleMute() {
+			if (media.muted) {
+				positionVolumeHandle(0);
+				(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
+				(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
+			} else {
+				positionVolumeHandle(media.volume);
+				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
+				(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
+			}
 		};
 
 		mute.addEventListener('mouseenter', function (e) {
@@ -2817,15 +2828,7 @@ Object.assign(_player2.default.prototype, {
 
 		media.addEventListener('volumechange', function (e) {
 			if (!mouseIsDown) {
-				if (media.muted) {
-					positionVolumeHandle(0);
-					(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
-					(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
-				} else {
-					positionVolumeHandle(media.volume);
-					(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
-					(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
-				}
+				toggleMute();
 			}
 			updateVolumeSlider(e);
 		});
@@ -2835,8 +2838,9 @@ Object.assign(_player2.default.prototype, {
 			if (!modified) {
 				setTimeout(function () {
 					rendered = true;
-					if (player.options.startVolume === 0) {
+					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
+						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -2847,8 +2851,9 @@ Object.assign(_player2.default.prototype, {
 		media.addEventListener('loadedmetadata', function () {
 			setTimeout(function () {
 				if (!modified && !rendered) {
-					if (player.options.startVolume === 0) {
+					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
+						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -2857,22 +2862,16 @@ Object.assign(_player2.default.prototype, {
 			}, 250);
 		});
 
-		if (player.options.startVolume === 0) {
+		if (player.options.startVolume === 0 || media.originalNode.muted) {
 			media.setMuted(true);
+			player.options.startVolume = 0;
+			toggleMute();
 		}
 
 		media.setVolume(player.options.startVolume);
 
 		t.container.addEventListener('controlsresize', function () {
-			if (media.muted) {
-				positionVolumeHandle(0);
-				(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
-				(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
-			} else {
-				positionVolumeHandle(media.volume);
-				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
-				(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
-			}
+			toggleMute();
 		});
 	}
 });
@@ -3268,6 +3267,13 @@ var MediaElementPlayer = function () {
 		}
 
 		t.options = Object.assign({}, config, o);
+
+		if (t.options.loop && !t.media.getAttribute('loop')) {
+			t.media.loop = true;
+			t.node.loop = true;
+		} else if (t.media.loop) {
+			t.options.loop = true;
+		}
 
 		if (!t.options.timeFormat) {
 			t.options.timeFormat = 'mm:ss';

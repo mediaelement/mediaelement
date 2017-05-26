@@ -303,6 +303,14 @@ class MediaElementPlayer {
 		// extend default options
 		t.options = Object.assign({}, config, o);
 
+		// Check `loop` attribute to modify options
+		if (t.options.loop && !t.media.getAttribute('loop')) {
+			t.media.loop = true;
+			t.node.loop = true;
+		} else if (t.media.loop) {
+			t.options.loop = true;
+		}
+
 		if (!t.options.timeFormat) {
 			// Generate the time format according to options
 			t.options.timeFormat = 'mm:ss';

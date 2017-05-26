@@ -273,13 +273,15 @@ var vimeoIframeRenderer = {
 			vimeoPlayer.on('loaded', function () {
 				vimeoPlayer.getDuration().then(function (loadProgress) {
 					duration = loadProgress;
-
 					if (duration > 0) {
 						bufferedTime = duration * loadProgress;
+						if (mediaElement.originalNode.autoplay) {
+							paused = false;
+							ended = false;
+							var event = mejs.Utils.createEvent('play', vimeo);
+							mediaElement.dispatchEvent(event);
+						}
 					}
-
-					var event = mejs.Utils.createEvent('loadedmetadata', vimeo);
-					mediaElement.dispatchEvent(event);
 				}).catch(function (error) {
 					errorHandler(error, vimeo);
 				});
@@ -290,6 +292,10 @@ var vimeoIframeRenderer = {
 
 					if (duration > 0) {
 						bufferedTime = duration * loadProgress;
+						if (mediaElement.originalNode.autoplay) {
+							var initEvent = mejs.Utils.createEvent('play', vimeo);
+							mediaElement.dispatchEvent(initEvent);
+						}
 					}
 
 					var event = mejs.Utils.createEvent('progress', vimeo);
@@ -329,7 +335,7 @@ var vimeoIframeRenderer = {
 				mediaElement.dispatchEvent(event);
 			});
 
-			events = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
+			events = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 			for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
 				var event = mejs.Utils.createEvent(events[_i4], vimeo);
@@ -340,8 +346,15 @@ var vimeoIframeRenderer = {
 		var height = mediaElement.originalNode.height,
 		    width = mediaElement.originalNode.width,
 		    vimeoContainer = document.createElement('iframe'),
-		    standardUrl = '//player.vimeo.com/video/' + VimeoApi.getVimeoId(mediaFiles[0].src),
-		    queryArgs = ~mediaFiles[0].src.indexOf('?') ? '?' + mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1) : '';
+		    standardUrl = '//player.vimeo.com/video/' + VimeoApi.getVimeoId(mediaFiles[0].src);
+
+		var queryArgs = ~mediaFiles[0].src.indexOf('?') ? '?' + mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1) : '';
+		if (queryArgs && mediaElement.originalNode.autoplay && queryArgs.indexOf('autoplay') === -1) {
+			queryArgs += '&autoplay=1';
+		}
+		if (queryArgs && mediaElement.originalNode.loop && queryArgs.indexOf('loop') === -1) {
+			queryArgs += '&loop=1';
+		}
 
 		vimeoContainer.setAttribute('id', vimeo.id);
 		vimeoContainer.setAttribute('width', width);
