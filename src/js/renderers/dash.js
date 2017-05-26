@@ -150,7 +150,7 @@ const DashNativeRenderer = {
 				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
-						dashPlayer.initialize(node, null, (preload && preload === 'auto') || autoplay);
+						dashPlayer.initialize(node, null, autoplay);
 						dashPlayer.setFastSwitchEnabled(true);
 
 						// If DRM is set, load protection data

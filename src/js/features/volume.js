@@ -228,6 +228,17 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				e.preventDefault();
 				e.stopPropagation();
+			},
+			toggleMute = () => {
+				if (media.muted) {
+					positionVolumeHandle(0);
+					removeClass(mute, `${t.options.classPrefix}mute`);
+					addClass(mute, `${t.options.classPrefix}unmute`);
+				} else {
+					positionVolumeHandle(media.volume);
+					removeClass(mute, `${t.options.classPrefix}unmute`);
+					addClass(mute, `${t.options.classPrefix}mute`);
+				}
 			}
 		;
 
@@ -333,15 +344,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// listen for volume change events from other sources
 		media.addEventListener('volumechange', (e) => {
 			if (!mouseIsDown) {
-				if (media.muted) {
-					positionVolumeHandle(0);
-					removeClass(mute, `${t.options.classPrefix}mute`);
-					addClass(mute, `${t.options.classPrefix}unmute`);
-				} else {
-					positionVolumeHandle(media.volume);
-					removeClass(mute, `${t.options.classPrefix}unmute`);
-					addClass(mute, `${t.options.classPrefix}mute`);
-				}
+				toggleMute();
 			}
 			updateVolumeSlider(e);
 		});
@@ -351,8 +354,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (!modified) {
 				setTimeout(() => {
 					rendered = true;
-					if (player.options.startVolume === 0) {
+					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
+						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -363,8 +367,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		media.addEventListener('loadedmetadata', function () {
 			setTimeout(() => {
 				if (!modified && !rendered) {
-					if (player.options.startVolume === 0) {
+					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
+						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -373,23 +378,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			}, 250);
 		});
 
-		// mutes the media and sets the volume icon muted if the initial volume is set to 0
-		if (player.options.startVolume === 0) {
+		// mute the media and sets the volume icon muted if the initial volume is set to 0
+		if (player.options.startVolume === 0 || media.originalNode.muted) {
 			media.setMuted(true);
+			player.options.startVolume = 0;
+			toggleMute();
 		}
 
 		media.setVolume(player.options.startVolume);
 
 		t.container.addEventListener('controlsresize', () => {
-			if (media.muted) {
-				positionVolumeHandle(0);
-				removeClass(mute, `${t.options.classPrefix}mute`);
-				addClass(mute, `${t.options.classPrefix}unmute`);
-			} else {
-				positionVolumeHandle(media.volume);
-				removeClass(mute, `${t.options.classPrefix}unmute`);
-				addClass(mute, `${t.options.classPrefix}mute`);
-			}
+			toggleMute();
 		});
 	}
 });

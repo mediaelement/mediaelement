@@ -1114,7 +1114,7 @@ var DashNativeRenderer = {
 			    dashEvents = dashjs.MediaPlayer.events,
 			    assignEvents = function assignEvents(eventName) {
 				if (eventName === 'loadedmetadata') {
-					dashPlayer.initialize(node, null, preload && preload === 'auto' || autoplay);
+					dashPlayer.initialize(node, null, autoplay);
 					dashPlayer.setFastSwitchEnabled(true);
 
 					if (!_mejs2.default.Utils.isObjectEmpty(options.dash.drm)) {
@@ -2552,9 +2552,12 @@ var YouTubeIframeRenderer = {
 
 					youTubeIframe = youTubeApi.getIframe();
 
+					if (mediaElement.originalNode.getAttribute('muted')) {
+						youTubeApi.mute();
+					}
+
 					var events = ['mouseover', 'mouseout'],
 					    assignEvents = function assignEvents(e) {
-
 						var newEvent = (0, _general.createEvent)(e.type, youtube);
 						mediaElement.dispatchEvent(newEvent);
 					};
@@ -2582,8 +2585,10 @@ var YouTubeIframeRenderer = {
 						case 0:
 							events = ['ended'];
 							paused = false;
-							ended = true;
-							youtube.stopInterval();
+							ended = !youtube.options.youtube.loop;
+							if (!youtube.options.youtube.loop) {
+								youtube.stopInterval();
+							}
 							break;
 						case 1:
 							events = ['play', 'playing'];
@@ -2625,6 +2630,14 @@ var YouTubeIframeRenderer = {
 			youtubeSettings.playerVars.playsinline = 1;
 		}
 
+		if (mediaElement.originalNode.autoplay) {
+			youtubeSettings.playerVars.autoplay = 1;
+		}
+
+		if (mediaElement.originalNode.loop) {
+			youtubeSettings.playerVars.loop = 1;
+		}
+
 		YouTubeApi.enqueueIframe(youtubeSettings);
 
 		youtube.onEvent = function (eventName, player, _youTubeState) {
@@ -2657,7 +2670,6 @@ var YouTubeIframeRenderer = {
 
 		youtube.startInterval = function () {
 			youtube.interval = setInterval(function () {
-
 				var event = (0, _general.createEvent)('timeupdate', youtube);
 				mediaElement.dispatchEvent(event);
 			}, 250);

@@ -4,6 +4,7 @@
 
 * Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello
 * Changed `destroy()` to `remove()` in React documentation (https://github.com/mediaelement/mediaelement/pull/2243) @evykassirer
+* Added full support for `autoplay`, `loop` and `muted` attributes to interact in all renderers @rafa8626
 
 *4.1.2 (2017/05/25)*
 

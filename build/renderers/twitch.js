@@ -351,7 +351,8 @@ var TwitchIframeRenderer = {
 			width: width,
 			height: height,
 			playsinline: false,
-			autoplay: mediaElement.originalNode.autoplay
+			autoplay: mediaElement.originalNode.autoplay,
+			muted: mediaElement.originalNode.muted
 		};
 
 		twitchSettings[type] = twitchId;
