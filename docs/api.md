@@ -63,7 +63,9 @@ flv | object | | See [Documentation](https://github.com/Bilibili/flv.js/blob/mas
 hls | object | | See [Documentation](https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning) (and a custom `path` parameter to indicate where to load library)
 youtube | object | | See [Documentation](https://developers.google.com/youtube/player_parameters#Parameters) (and a custom `nocookie` parameter to switch to YouTube's no-cookie URL)
 
-**Note**: Vimeo and Soundcloud don't need any configuration for now since they are pretty straight forward.
+**Notes** 
+1. Vimeo and Soundcloud don't need any configuration for now since they are pretty straight forward.
+2. To use DRM with M(PEG)-DASH, make sure CORS are configured correctly, and also your site **MUST** be using SSL. 
 
 <a id="player"></a>
 ### MediaElementPlayer

@@ -1,11 +1,16 @@
 ### Version History
 
-*4.1.2 (2017/??/??)*
+*4.x.x (2017/??/??)*
+
+* Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello
+* Changed `destroy()` to `remove()` in React documentation (https://github.com/mediaelement/mediaelement/pull/2243) @evykassirer
+
+*4.1.2 (2017/05/25)*
 
 * Fixed issues with Accessibility in Chapters/Captions and Volume slider @rafa8626 
-* Added new resource to documentation @rafa8626
+* Added new resources to documentation @rafa8626
 * Fixed MD broken link (https://github.com/mediaelement/mediaelement/pull/2223) @Mackiovello
-* Changed calculation to avoid higher dimensions than expected using `parseFloat` on responsive mode @rafa8626 
+* Changed calculation to avoid higher dimensions than expected using `parseFloat` on `responsive` mode @rafa8626 
 * Updated `installation.md` file for WordPress upgrades, and fixed README file @rafa8626 
 * Fixed `hasFluidMode()` method to return proper result (https://github.com/mediaelement/mediaelement/pull/2224) @lucash
 * Fixed issue with logical operators and `~` symbol @rafa8626
