@@ -3,6 +3,7 @@
 *4.x.x (2017/??/??)*
 
 * Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello
+* Changed `destroy()` to `remove()` in React documentation (https://github.com/mediaelement/mediaelement/pull/2243) @evykassirer
 
 *4.1.2 (2017/05/25)*
 
