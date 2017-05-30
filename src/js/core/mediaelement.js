@@ -428,15 +428,10 @@ class MediaElement {
 							if (methodName === 'play') {
 								if (t.mediaElement.promises.length) {
 									let sequence = Promise.resolve();
-
 									t.mediaElement.promises.forEach((promise) => {
 										sequence = sequence
 										.then(() => promise)
-										.then(() => {
-											t.mediaElement.renderer[methodName](args);
-											t.mediaElement.promises.splice(1);
-
-										})
+										.then(() => t.mediaElement.renderer[methodName](args))
 										.catch((e) => {
 											console.error(e);
 											// if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {

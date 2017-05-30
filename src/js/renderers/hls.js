@@ -227,11 +227,15 @@ const HlsNativeRenderer = {
 
 		if (preload !== 'auto' && !autoplay) {
 			node.addEventListener('play', () => {
-				hlsPlayer.startLoad();
+				if (hlsPlayer !== null) {
+					hlsPlayer.startLoad();
+				}
 			});
 
 			node.addEventListener('pause', () => {
-				hlsPlayer.stopLoad();
+				if (hlsPlayer !== null) {
+					hlsPlayer.stopLoad();
+				}
 			});
 		}
 

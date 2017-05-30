@@ -16,15 +16,16 @@ const TwitchApi = {
 	 * @param {Object} settings - an object with settings needed to create <iframe>
 	 */
 	load: (settings) => {
-
 		if (typeof Twitch !== 'undefined') {
 			TwitchApi._createPlayer(settings);
-		} else {
+		} else if (!TwitchApi.promise) {
 			TwitchApi.promise = TwitchApi.promise || mejs.Utils.loadScript('https://player.twitch.tv/js/embed/v1.js');
 			TwitchApi.promise.then(() => {
 				TwitchApi._createPlayer(settings);
 			});
 		}
+
+		return TwitchApi.promise;
 	},
 
 	/**
@@ -49,7 +50,6 @@ const TwitchApi = {
 	 * @return {int}
 	 */
 	getTwitchId: (url) => {
-
 		let twitchId = '';
 
 		if (url.indexOf('?') > 0) {
@@ -73,7 +73,6 @@ const TwitchApi = {
 	 * @returns {string}
 	 */
 	getTwitchIdFromParam: (url) => {
-
 		if (url === undefined || url === null || !url.trim().length) {
 			return null;
 		}
@@ -108,7 +107,6 @@ const TwitchApi = {
 	 * @return {?String}
 	 */
 	getTwitchIdFromUrl: (url) => {
-
 		if (url === undefined || url === null || !url.trim().length) {
 			return null;
 		}
@@ -126,14 +124,11 @@ const TwitchApi = {
 	 * @param {String} id
 	 * @returns {String}
 	 */
-	getTwitchType: (id) => {
-		return /^v\d+/i.test(id) !== null ? 'video' : 'channel';
-	}
+	getTwitchType: (id) => /^v\d+/i.test(id) !== null ? 'video' : 'channel'
 };
 
 const TwitchIframeRenderer = {
 	name: 'twitch_iframe',
-
 	options: {
 		prefix: 'twitch_iframe',
 	},
@@ -242,12 +237,8 @@ const TwitchIframeRenderer = {
 				};
 
 				twitch[`set${capName}`] = (value) => {
-
 					if (twitchPlayer !== null) {
-
-						// do something
 						switch (propName) {
-
 							case 'src':
 								const
 									url = typeof value === 'string' ? value : value[0].src,
@@ -260,7 +251,6 @@ const TwitchIframeRenderer = {
 									twitchPlayer.setVideo(videoId);
 								}
 								break;
-
 							case 'currentTime':
 								twitchPlayer.seek(value);
 								setTimeout(() => {
@@ -268,7 +258,6 @@ const TwitchIframeRenderer = {
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'muted':
 								twitchPlayer.setMuted(value);
 								setTimeout(() => {
@@ -276,7 +265,6 @@ const TwitchIframeRenderer = {
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'volume':
 								volume = value;
 								twitchPlayer.setVolume(value);
@@ -289,12 +277,10 @@ const TwitchIframeRenderer = {
 								const event = mejs.Utils.createEvent('canplay', twitch);
 								mediaElement.dispatchEvent(event);
 								break;
-
 							default:
 								console.log('Twitch ' + twitch.id, propName, 'UNSUPPORTED property');
 								break;
 						}
-
 					} else {
 						// store for after "READY" event fires
 						apiStack.push({type: 'set', propName: propName, value: value});
@@ -312,13 +298,8 @@ const TwitchIframeRenderer = {
 		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
-
-				// run the method on the native HTMLMediaElement
 				twitch[methodName] = () => {
-
 					if (twitchPlayer !== null) {
-
-						// DO method
 						switch (methodName) {
 							case 'play':
 								paused = false;
@@ -328,14 +309,11 @@ const TwitchIframeRenderer = {
 								return twitchPlayer.pause();
 							case 'load':
 								return null;
-
 						}
-
 					} else {
 						apiStack.push({type: 'call', methodName: methodName});
 					}
 				};
-
 			}
 		;
 
@@ -358,13 +336,10 @@ const TwitchIframeRenderer = {
 
 		// Initial method to register all Twitch events when initializing <iframe>
 		window['__ready__' + twitch.id] = (_twitchPlayer) => {
-
 			mediaElement.twitchPlayer = twitchPlayer = _twitchPlayer;
 
-			// do call stack
 			if (apiStack.length) {
 				for (let i = 0, total = apiStack.length; i < total; i++) {
-
 					const stackItem = apiStack[i];
 
 					if (stackItem.type === 'set') {
@@ -382,13 +357,13 @@ const TwitchIframeRenderer = {
 			twitchIframe.style.width = '100%';
 			twitchIframe.style.height = '100%';
 
-			// a few more events
-			let events = ['mouseover', 'mouseout'];
-
-			const assignEvents = (e) => {
-				const event = createEvent(e.type, twitch);
-				mediaElement.dispatchEvent(event);
-			};
+			const
+				events = ['mouseover', 'mouseout'],
+				assignEvents = (e) => {
+					const event = createEvent(e.type, twitch);
+					mediaElement.dispatchEvent(event);
+				}
+			;
 
 			for (let i = 0, total = events.length; i < total; i++) {
 				twitchIframe.addEventListener(events[i], assignEvents, false);
@@ -401,7 +376,6 @@ const TwitchIframeRenderer = {
 				paused = false;
 				ended = false;
 				sendEvents(['rendererready', 'loadedmetadata', 'loadeddata', 'canplay']);
-
 			});
 			twitchPlayer.addEventListener('play', () => {
 				if (!hasStartedPlaying) {
@@ -416,7 +390,6 @@ const TwitchIframeRenderer = {
 					twitchPlayer.getCurrentTime();
 					sendEvents(['timeupdate']);
 				}, 250);
-
 			});
 			twitchPlayer.addEventListener('pause', () => {
 				paused = true;
@@ -424,7 +397,6 @@ const TwitchIframeRenderer = {
 				if (!twitchPlayer.getEnded()) {
 					sendEvents(['pause']);
 				}
-
 			});
 			twitchPlayer.addEventListener('ended', () => {
 				paused = true;
@@ -436,7 +408,6 @@ const TwitchIframeRenderer = {
 			});
 		};
 
-		// CREATE Twitch
 		const
 			height = mediaElement.originalNode.height,
 			width = mediaElement.originalNode.width,
@@ -461,9 +432,6 @@ const TwitchIframeRenderer = {
 		mediaElement.originalNode.style.display = 'none';
 		mediaElement.originalNode.autoplay = false;
 
-		// send it off for async loading and creation
-		TwitchApi.load(twitchSettings);
-
 		twitch.setSize = (width, height) => {
 			if (TwitchApi !== null && !isNaN(width) && !isNaN(height)) {
 				twitchContainer.setAttribute('width', width);
@@ -477,8 +445,10 @@ const TwitchIframeRenderer = {
 		twitch.show = () => {
 			twitchContainer.style.display = '';
 		};
-		twitch.destroy = () => {
-		};
+		twitch.destroy = () => {};
+
+		// send it off for async loading and creation
+		mediaElement.promises.push(TwitchApi.load(twitchSettings));
 
 		return twitch;
 	}
