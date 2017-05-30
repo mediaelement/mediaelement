@@ -66,6 +66,7 @@ for (var i = 0; i < sourcesTotal; i++) {
 
 		player.setSrc(this.value.replace('&amp;', '&'));
 		player.load();
+		player.play();
 
 		var renderer = document.getElementById(player.media.id + '-rendername');
 		renderer.querySelector('.src').innerHTML = '<a href="' + this.value + '" target="_blank">' + this.value + '</a>';

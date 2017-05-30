@@ -897,13 +897,11 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 					if (methodName === 'play') {
 						if (t.mediaElement.promises.length) {
 							var sequence = Promise.resolve();
-
 							t.mediaElement.promises.forEach(function (promise) {
 								sequence = sequence.then(function () {
 									return promise;
 								}).then(function () {
-									t.mediaElement.renderer[methodName](args);
-									t.mediaElement.promises.splice(1);
+									return t.mediaElement.renderer[methodName](args);
 								}).catch(function (e) {
 									console.error(e);
 								});
