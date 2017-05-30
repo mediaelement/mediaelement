@@ -28,8 +28,10 @@ const NativeFlv = {
 	 */
 	load: (settings) => {
 		if (typeof flvjs !== 'undefined') {
-			NativeFlv._createPlayer(settings);
-		} else {
+			NativeFlv.promise = new Promise(() => {
+				NativeFlv._createPlayer(settings);
+			});
+		} else if (!NativeFlv.promise) {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
 
@@ -38,6 +40,8 @@ const NativeFlv = {
 				NativeFlv._createPlayer(settings);
 			});
 		}
+
+		return NativeFlv.promise;
 	},
 
 	/**
@@ -185,11 +189,6 @@ const FlvNativeRenderer = {
 		flvOptions.debug = options.flv.debug;
 		flvOptions.path = options.flv.path;
 
-		NativeFlv.load({
-			options: flvOptions,
-			id: id
-		});
-
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
 			node.style.height = `${height}px`;
@@ -217,6 +216,11 @@ const FlvNativeRenderer = {
 
 		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
+
+		mediaElement.promises.push(NativeFlv.load({
+			options: flvOptions,
+			id: id
+		}));
 
 		return node;
 	}

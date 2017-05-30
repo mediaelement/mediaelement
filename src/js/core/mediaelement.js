@@ -61,7 +61,6 @@ class MediaElement {
 
 		// create our node (note: older versions of iOS don't support Object.defineProperty on DOM nodes)
 		t.mediaElement = document.createElement(options.fakeNodeName);
-		t.mediaElement.options = options;
 
 		let
 			id = idOrNode,
@@ -75,32 +74,113 @@ class MediaElement {
 			id = idOrNode.id;
 		}
 
+		if (t.mediaElement.originalNode === undefined || t.mediaElement.originalNode === null) {
+			return null;
+		}
+
+		t.mediaElement.options = options;
 		id = id || `mejs_${(Math.random().toString().slice(2))}`;
 
-		if (t.mediaElement.originalNode !== undefined && t.mediaElement.originalNode !== null && t.mediaElement.appendChild) {
-			// change id
-			t.mediaElement.originalNode.setAttribute('id', `${id}_from_mejs`);
+		// change id
+		t.mediaElement.originalNode.setAttribute('id', `${id}_from_mejs`);
 
-			// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
-			// only if video/audio tags are detected
-			const tagName = t.mediaElement.originalNode.tagName.toLowerCase();
-			if (['video', 'audio'].indexOf(tagName) > -1 && !t.mediaElement.originalNode.getAttribute('preload')) {
-				t.mediaElement.originalNode.setAttribute('preload', 'none');
+		// to avoid some issues with Javascript interactions in the plugin, set `preload=none` if not set
+		// only if video/audio tags are detected
+		const tagName = t.mediaElement.originalNode.tagName.toLowerCase();
+		if (['video', 'audio'].indexOf(tagName) > -1 && !t.mediaElement.originalNode.getAttribute('preload')) {
+			t.mediaElement.originalNode.setAttribute('preload', 'none');
+		}
+
+		// add next to this one
+		t.mediaElement.originalNode.parentNode.insertBefore(t.mediaElement, t.mediaElement.originalNode);
+
+		// insert this one inside
+		t.mediaElement.appendChild(t.mediaElement.originalNode);
+
+		/**
+		 * Convert a URL to BLOB to avoid issues with regular media types playing under a HTTPS website
+		 * @see https://poodll.com/ios-10-and-html5-video-and-html5-audio-on-https-sites/
+		 * @private
+		 */
+		const processURL = (url, type) => {
+			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' &&
+				IS_IOS && !window.MSStream){
+				const xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if (this.readyState === 4 && this.status === 200) {
+						const
+							url = window.URL || window.webkitURL,
+							blobUrl = url.createObjectURL(this.response)
+						;
+						t.mediaElement.originalNode.setAttribute('src', blobUrl);
+						return blobUrl;
+					}
+					return url;
+				};
+				xhr.open('GET', url);
+				xhr.responseType = 'blob';
+				xhr.send();
 			}
 
-			// add next to this one
-			t.mediaElement.originalNode.parentNode.insertBefore(t.mediaElement, t.mediaElement.originalNode);
+			return url;
+		};
 
-			// insert this one inside
-			t.mediaElement.appendChild(t.mediaElement.originalNode);
-		} else {
-			// TODO: where to put the node?
+		let mediaFiles;
+
+		if (sources !== null) {
+			mediaFiles = sources;
+		} else if (t.mediaElement.originalNode !== null) {
+
+			mediaFiles = [];
+
+			switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
+				case 'iframe':
+					mediaFiles.push({
+						type: '',
+						src: t.mediaElement.originalNode.getAttribute('src')
+					});
+					break;
+				case 'audio':
+				case 'video':
+					const
+						sources = t.mediaElement.originalNode.childNodes.length,
+						nodeSource = t.mediaElement.originalNode.getAttribute('src')
+					;
+
+					// Consider if node contains the `src` and `type` attributes
+					if (nodeSource) {
+						const
+							node = t.mediaElement.originalNode,
+							type = formatType(nodeSource, node.getAttribute('type'))
+						;
+						mediaFiles.push({
+							type: type,
+							src: processURL(nodeSource, type)
+						});
+					}
+
+					// test <source> types to see if they are usable
+					for (let i = 0; i < sources; i++) {
+						const n = t.mediaElement.originalNode.childNodes[i];
+						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
+							const
+								src = n.getAttribute('src'),
+								type = formatType(src, n.getAttribute('type'))
+							;
+							mediaFiles.push({type: type, src: processURL(src, type)});
+						}
+					}
+					break;
+			}
 		}
 
 		t.mediaElement.id = id;
 		t.mediaElement.renderers = {};
+		t.mediaElement.events = {};
+		t.mediaElement.promises = [];
 		t.mediaElement.renderer = null;
 		t.mediaElement.rendererName = null;
+
 		/**
 		 * Determine whether the renderer was found or not
 		 *
@@ -158,7 +238,6 @@ class MediaElement {
 
 			// find the desired renderer in the array of possible ones
 			for (let i = 0, total = rendererArray.length; i < total; i++) {
-
 				const index = rendererArray[i];
 
 				if (index === rendererName) {
@@ -173,9 +252,7 @@ class MediaElement {
 					t.mediaElement.renderers[newRendererType.name] = newRenderer;
 					t.mediaElement.renderer = newRenderer;
 					t.mediaElement.rendererName = rendererName;
-
 					newRenderer.show();
-
 					return true;
 				}
 			}
@@ -340,14 +417,7 @@ class MediaElement {
 				}
 
 				// turn on the renderer (this checks for the existing renderer already)
-				t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
-
-				if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-					event = createEvent('error', t.mediaElement);
-					event.message = 'Error creating renderer';
-					t.mediaElement.dispatchEvent(event);
-					t.mediaElement.createErrorMessage(mediaFiles);
-				}
+				return t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 			},
 			assignMethods = (methodName) => {
 				// run the method on the current renderer
@@ -355,7 +425,34 @@ class MediaElement {
 					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
 					typeof t.mediaElement.renderer[methodName] === 'function') {
 						try {
-							t.mediaElement.renderer[methodName](args)
+							if (methodName === 'play') {
+								if (t.mediaElement.promises.length) {
+									let sequence = Promise.resolve();
+
+									t.mediaElement.promises.forEach((promise) => {
+										sequence = sequence
+										.then(() => promise)
+										.then(() => {
+											t.mediaElement.renderer[methodName](args);
+											t.mediaElement.promises.splice(1);
+
+										})
+										.catch((e) => {
+											console.error(e);
+											// if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
+											// 	const event = createEvent('error', t.mediaElement);
+											// 	event.message = 'Error creating renderer';
+											// 	t.mediaElement.dispatchEvent(event);
+											// 	t.mediaElement.createErrorMessage(mediaFiles);
+											// }
+										});
+									});
+								} else {
+									t.mediaElement.renderer[methodName](args);
+								}
+							} else {
+								t.mediaElement.renderer[methodName](args);
+							}
 						} catch (e) {
 							t.mediaElement.createErrorMessage();
 						}
@@ -377,9 +474,6 @@ class MediaElement {
 		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
 		}
-
-		// IE && iOS
-		t.mediaElement.events = {};
 
 		// start: fake events
 		t.mediaElement.addEventListener = (eventName, callback) => {
@@ -424,9 +518,7 @@ class MediaElement {
 		 * @param {Event} event
 		 */
 		t.mediaElement.dispatchEvent = (event) => {
-
 			const callbacks = t.mediaElement.events[event.type];
-
 			if (callbacks) {
 				for (let i = 0; i < callbacks.length; i++) {
 					callbacks[i].apply(null, [event]);
@@ -434,96 +526,35 @@ class MediaElement {
 			}
 		};
 
-		/**
-		 * Convert a URL to BLOB to avoid issues with regular media types playing under a HTTPS website
-		 * @see https://poodll.com/ios-10-and-html5-video-and-html5-audio-on-https-sites/
-		 * @private
-		 */
-		const processURL = (url, type) => {
-
-			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' &&
-				IS_IOS && !window.MSStream){
-				const xhr = new XMLHttpRequest();
-				xhr.onreadystatechange = function() {
-					if (this.readyState === 4 && this.status === 200) {
-						const
-							url = window.URL || window.webkitURL,
-							blobUrl = url.createObjectURL(this.response)
-						;
-						t.mediaElement.originalNode.setAttribute('src', blobUrl);
-						return blobUrl;
-					}
-					return url;
-				};
-				xhr.open('GET', url);
-				xhr.responseType = 'blob';
-				xhr.send();
-			}
-
-			return url;
-		};
-
-		let mediaFiles;
-
-		if (sources !== null) {
-			mediaFiles = sources;
-		} else if (t.mediaElement.originalNode !== null) {
-
-			mediaFiles = [];
-
-			switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
-				case 'iframe':
-					mediaFiles.push({
-						type: '',
-						src: t.mediaElement.originalNode.getAttribute('src')
-					});
-
-					break;
-				case 'audio':
-				case 'video':
-					const
-						sources = t.mediaElement.originalNode.childNodes.length,
-						nodeSource = t.mediaElement.originalNode.getAttribute('src')
-					;
-
-					// Consider if node contains the `src` and `type` attributes
-					if (nodeSource) {
-						const
-							node = t.mediaElement.originalNode,
-							type = formatType(nodeSource, node.getAttribute('type'))
-						;
-						mediaFiles.push({
-							type: type,
-							src: processURL(nodeSource, type)
-						});
-					}
-
-					// test <source> types to see if they are usable
-					for (let i = 0; i < sources; i++) {
-						const n = t.mediaElement.originalNode.childNodes[i];
-						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
-							const
-								src = n.getAttribute('src'),
-								type = formatType(src, n.getAttribute('type'))
-							;
-							mediaFiles.push({type: type, src: processURL(src, type)});
-						}
-					}
-					break;
-			}
-		}
-
 		// Set the best match based on renderers
 		if (mediaFiles.length) {
 			t.mediaElement.src = mediaFiles;
 		}
 
-		if (t.mediaElement.options.success) {
-			t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
-		}
+		if (t.mediaElement.promises.length) {
+			let sequence = Promise.resolve();
 
-		if (error && t.mediaElement.options.error) {
-			t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+			t.mediaElement.promises.forEach(function (promise) {
+				sequence = sequence
+					.then(() => promise)
+					.then(() => {
+					if (t.mediaElement.options.success) {
+						t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
+					}
+				}).catch(() => {
+					if (error && t.mediaElement.options.error) {
+						t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+					}
+				});
+			});
+		} else {
+			if (t.mediaElement.options.success) {
+				t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
+			}
+
+			if (error && t.mediaElement.options.error) {
+				t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+			}
 		}
 
 		return t.mediaElement;

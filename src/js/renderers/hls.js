@@ -28,8 +28,10 @@ const NativeHls = {
 	 */
 	load(settings) {
 		if (typeof Hls !== 'undefined') {
-			NativeHls._createPlayer(settings);
-		} else {
+			NativeHls.promise = new Promise(() => {
+				NativeHls._createPlayer(settings);
+			});
+		} else if (!NativeHls.promise) {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'http://cdn.jsdelivr.net/npm/hls.js@latest';
 
@@ -38,6 +40,8 @@ const NativeHls = {
 				NativeHls._createPlayer(settings);
 			});
 		}
+
+		return NativeHls.promise;
 	},
 
 	/**
@@ -115,7 +119,6 @@ const HlsNativeRenderer = {
 
 						if (hlsPlayer !== null) {
 							if (propName === 'src') {
-
 								hlsPlayer.destroy();
 								hlsPlayer = NativeHls._createPlayer({
 									options: options.hls,
@@ -137,7 +140,6 @@ const HlsNativeRenderer = {
 
 		window['__ready__' + id] = (_hlsPlayer) => {
 			mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
-
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				hlsEvents = Hls.Events,
@@ -153,7 +155,6 @@ const HlsNativeRenderer = {
 						const event = createEvent(e.type, mediaElement);
 						mediaElement.dispatchEvent(event);
 					});
-
 				}
 			;
 
@@ -226,15 +227,11 @@ const HlsNativeRenderer = {
 
 		if (preload !== 'auto' && !autoplay) {
 			node.addEventListener('play', () => {
-				if (hlsPlayer !== null) {
-					hlsPlayer.startLoad();
-				}
+				hlsPlayer.startLoad();
 			});
 
 			node.addEventListener('pause', () => {
-				if (hlsPlayer !== null) {
-					hlsPlayer.stopLoad();
-				}
+				hlsPlayer.stopLoad();
 			});
 		}
 
@@ -243,12 +240,6 @@ const HlsNativeRenderer = {
 		originalNode.parentNode.insertBefore(node, originalNode);
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
-
-		NativeHls.load({
-			options: options.hls,
-			id: id
-		});
-
 
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
@@ -281,6 +272,11 @@ const HlsNativeRenderer = {
 
 		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
+
+		mediaElement.promises.push(NativeHls.load({
+			options: options.hls,
+			id: id
+		}));
 
 		return node;
 	}

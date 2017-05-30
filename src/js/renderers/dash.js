@@ -28,8 +28,10 @@ const NativeDash = {
 	 */
 	load(settings) {
 		if (typeof dashjs !== 'undefined') {
-			NativeDash._createPlayer(settings);
-		} else {
+			NativeDash.promise = new Promise(() => {
+				NativeDash._createPlayer(settings);
+			});
+		} else if (!NativeDash.promise) {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdn.dashjs.org/latest/dash.all.min.js';
 
@@ -38,6 +40,8 @@ const NativeDash = {
 				NativeDash._createPlayer(settings);
 			});
 		}
+
+		return NativeDash.promise;
 	},
 
 	/**
@@ -213,11 +217,6 @@ const DashNativeRenderer = {
 		originalNode.autoplay = false;
 		originalNode.style.display = 'none';
 
-		NativeDash.load({
-			options: options.dash,
-			id: id
-		});
-
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
 			node.style.height = `${height}px`;
@@ -237,6 +236,11 @@ const DashNativeRenderer = {
 
 		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
+
+		mediaElement.promises.push(NativeDash.load({
+			options: options.dash,
+			id: id
+		}));
 
 		return node;
 	}
