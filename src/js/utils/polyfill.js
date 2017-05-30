@@ -1,6 +1,7 @@
 'use strict';
 
 import document from 'global/document';
+import Promise from 'promise-polyfill';
 
 /**
  * Polyfill
@@ -155,4 +156,10 @@ if (/firefox/i.test(navigator.userAgent)) {
 		const t = window.mediaElementJsOldGetComputedStyle(el, pseudoEl);
 		return (t === null) ? {getPropertyValue: function () {}} : t;
 	}
+}
+
+// Integrate Promise polyfill if not detected
+// Used https://github.com/taylorhakes/promise-polyfill
+if (!window.Promise) {
+	window.Promise = Promise;
 }

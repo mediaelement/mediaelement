@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Most of the mtehods have been borrowed/adapted from https://plainjs.com/javascript,
+ * Most of the methods have been borrowed/adapted from https://plainjs.com/javascript,
  * except fadeIn/fadeOut (from https://github.com/DimitriMikadze/vanilla-helpers/blob/master/js/vanillaHelpers.js)
  */
 
@@ -9,33 +9,8 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from '../core/mejs';
 
-
-function TinyPromise (handler) {
-	const thens = [];
-	let state = -1;
-	let result;
-	let then;
-
-	function done (value) {
-		for (result = value; (then = thens.shift());) {
-			then[state] && then[state](result);
-		}
-	}
-
-	handler(
-		value => done(value, state = 0),
-		value => done(value, state = 1)
-	);
-
-	return {
-		then(...args) {
-			~state ? args[state] && args[state](result) : thens.push(args)
-		}
-	}
-}
-
 export function loadScript (url) {
-	return TinyPromise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		const script = document.createElement('script');
 		script.src = url;
 		script.async = true;
