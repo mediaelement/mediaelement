@@ -365,36 +365,35 @@ const TwitchIframeRenderer = {
 				paused = false;
 				ended = false;
 				sendEvents(['rendererready', 'loadedmetadata', 'loadeddata', 'canplay']);
+			});
+			twitchPlayer.addEventListener('play', () => {
+				if (!hasStartedPlaying) {
+					hasStartedPlaying = true;
+				}
+				paused = false;
+				ended = false;
+				sendEvents(['play', 'playing', 'progress']);
 
-				twitchPlayer.addEventListener('play', () => {
-					if (!hasStartedPlaying) {
-						hasStartedPlaying = true;
-					}
-					paused = false;
-					ended = false;
-					sendEvents(['play', 'playing', 'progress']);
-
-					// Workaround to update progress bar
-					timer = setInterval(() => {
-						twitchPlayer.getCurrentTime();
-						sendEvents(['timeupdate']);
-					}, 250);
-				});
-				twitchPlayer.addEventListener('pause', () => {
-					paused = true;
-					ended = false;
-					if (!twitchPlayer.getEnded()) {
-						sendEvents(['pause']);
-					}
-				});
-				twitchPlayer.addEventListener('ended', () => {
-					paused = true;
-					ended = true;
-					sendEvents(['ended']);
-					clearInterval(timer);
-					hasStartedPlaying = false;
-					timer = null;
-				});
+				// Workaround to update progress bar
+				timer = setInterval(() => {
+					twitchPlayer.getCurrentTime();
+					sendEvents(['timeupdate']);
+				}, 250);
+			});
+			twitchPlayer.addEventListener('pause', () => {
+				paused = true;
+				ended = false;
+				if (!twitchPlayer.getEnded()) {
+					sendEvents(['pause']);
+				}
+			});
+			twitchPlayer.addEventListener('ended', () => {
+				paused = true;
+				ended = true;
+				sendEvents(['ended']);
+				clearInterval(timer);
+				hasStartedPlaying = false;
+				timer = null;
 			});
 		};
 
