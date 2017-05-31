@@ -104,34 +104,21 @@ class MediaElement {
 		 */
 		const processURL = (url, type) => {
 			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' && IS_IOS) {
-				if ('body' in window.Response.prototype) {
-					fetch(url).then(res => {
-						const reader = res.body.getReader();
-						const pump = () => reader.read()
-							.then(({ value, done }) => {
-								if (!done && value !== undefined) {
-									return pump();
-								}
-							});
-						pump();
-					});
-				} else {
-					const xhr = new XMLHttpRequest();
-					xhr.onreadystatechange = function() {
-						if (this.readyState === 4 && this.status === 200) {
-							const
-								url = window.URL || window.webkitURL,
-								blobUrl = url.createObjectURL(this.response)
-							;
-							t.mediaElement.originalNode.setAttribute('src', blobUrl);
-							return blobUrl;
-						}
-						return url;
-					};
-					xhr.open('GET', url);
-					xhr.responseType = 'blob';
-					xhr.send();
-				}
+				const xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function () {
+					if (this.readyState === 4 && this.status === 200) {
+						const
+							url = window.URL || window.webkitURL,
+							blobUrl = url.createObjectURL(this.response)
+						;
+						t.mediaElement.originalNode.setAttribute('src', blobUrl);
+						return blobUrl;
+					}
+					return url;
+				};
+				xhr.open('GET', url);
+				xhr.responseType = 'blob';
+				xhr.send();
 			}
 
 			return url;

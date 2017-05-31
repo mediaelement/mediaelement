@@ -632,36 +632,19 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 	var processURL = function processURL(url, type) {
 		if (_mejs2.default.html5media.mediaTypes.indexOf(type) > -1 && _window2.default.location.protocol === 'https:' && _constants.IS_IOS) {
-			if ('body' in _window2.default.Response.prototype) {
-				fetch(url).then(function (res) {
-					var reader = res.body.getReader();
-					var pump = function pump() {
-						return reader.read().then(function (_ref) {
-							var value = _ref.value,
-							    done = _ref.done;
-
-							if (!done && value !== undefined) {
-								return pump();
-							}
-						});
-					};
-					pump();
-				});
-			} else {
-				var xhr = new XMLHttpRequest();
-				xhr.onreadystatechange = function () {
-					if (this.readyState === 4 && this.status === 200) {
-						var _url = _window2.default.URL || _window2.default.webkitURL,
-						    blobUrl = _url.createObjectURL(this.response);
-						t.mediaElement.originalNode.setAttribute('src', blobUrl);
-						return blobUrl;
-					}
-					return url;
-				};
-				xhr.open('GET', url);
-				xhr.responseType = 'blob';
-				xhr.send();
-			}
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function () {
+				if (this.readyState === 4 && this.status === 200) {
+					var _url = _window2.default.URL || _window2.default.webkitURL,
+					    blobUrl = _url.createObjectURL(this.response);
+					t.mediaElement.originalNode.setAttribute('src', blobUrl);
+					return blobUrl;
+				}
+				return url;
+			};
+			xhr.open('GET', url);
+			xhr.responseType = 'blob';
+			xhr.send();
 		}
 
 		return url;
@@ -1363,7 +1346,7 @@ var DashNativeRenderer = {
 							if (dashPlayer !== null) {
 								if (value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && _typeof(value.drm) === 'object') {
 									dashPlayer.setProtectionData(value.drm);
-									if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
+									if ((0, _general.isString)(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
 										dashPlayer.getProtectionController().setRobustnessLevel(options.dash.robustnessLevel);
 									}
 								}
@@ -1400,7 +1383,7 @@ var DashNativeRenderer = {
 
 					if (_typeof(options.dash.drm) === 'object' && !_mejs2.default.Utils.isObjectEmpty(options.dash.drm)) {
 						dashPlayer.setProtectionData(options.dash.drm);
-						if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
+						if ((0, _general.isString)(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
 							dashPlayer.getProtectionController().setRobustnessLevel(options.dash.robustnessLevel);
 						}
 					}

@@ -3,7 +3,7 @@
 import window from 'global/window';
 import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
-import {createEvent} from '../utils/general';
+import {createEvent, isString} from '../utils/general';
 import {typeChecks} from '../utils/media';
 import {HAS_MSE} from '../utils/constants';
 import {loadScript} from '../utils/dom';
