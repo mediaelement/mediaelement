@@ -359,39 +359,23 @@ $('video').mediaelementplayer({
     
     // More configuration parameters...
     
-    success: function(media, node) {
-    	
-    	// Since it could be that the HLS element is not yet loaded, use a `setInterval()` method to check when 
-    	// it's ready and then destroy it; this applies to the native renderers (HLS, DASH and FLV)
-    	var interval = setInterval(function () {
+    success: function(media, node) {        
+        media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
+            // All the code when this event is reached...
+            console.log('Media attached!');
+        });
         
-    		// media.hlsPlayer is the instance of HLS.js in MediaElement
-    		// each one of the renderers has a player instance
-    		// See `Use of Renderers` above for more information
-            if (media.rendererName === 'native_hls' && media.hlsPlayer !== undefined) {
-            	
-            	// clear interval to stop checking if HLS object is available
-                clearInterval(interval);
-            	
-            	media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
-            		// All the code when this event is reached...
-                    console.log('Media attached!');
-                });
-                
-                // Manifest file was parsed, invoke loading method
-                media.hlsPlayer.on('hlsManifestParsed', function() {
-            		// All the code when this event is reached...
-            		console.log('Manifest parsed!');
-            
-                });
-                
-            	media.hlsPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
-            		// All the code when this event is reached...
-            		console.log(data);
-                });
-            }
-            
-        }, 500); 
+        // Manifest file was parsed, invoke loading method
+        media.hlsPlayer.on('hlsManifestParsed', function() {
+            // All the code when this event is reached...
+            console.log('Manifest parsed!');
+    
+        });
+        
+        media.hlsPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
+            // All the code when this event is reached...
+            console.log(data);
+        });
     }
 });
 ```
