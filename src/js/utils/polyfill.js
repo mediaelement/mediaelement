@@ -1,6 +1,7 @@
 'use strict';
 
 import document from 'global/document';
+import Promise from 'promise-polyfill';
 
 /**
  * Polyfill
@@ -156,3 +157,29 @@ if (/firefox/i.test(navigator.userAgent)) {
 		return (t === null) ? {getPropertyValue: function () {}} : t;
 	}
 }
+
+// Integrate Promise polyfill if not detected
+// Used https://github.com/taylorhakes/promise-polyfill
+if (!window.Promise) {
+	window.Promise = Promise;
+}
+
+// Overwrites native 'children' prototype.
+// Adds Document & DocumentFragment support for IE9 & Safari.
+// Returns array instead of HTMLCollection.
+// Reference: https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/children#Polyfill
+(function(constructor) {
+	if (constructor && constructor.prototype && constructor.prototype.children === null) {
+		Object.defineProperty(constructor.prototype, 'children', {
+			get: function() {
+				let i = 0, node, nodes = this.childNodes, children = [];
+				while ((node = nodes[i++])) {
+					if (node.nodeType === 1) {
+						children.push(node);
+					}
+				}
+				return children;
+			}
+		});
+	}
+})(window.Node || window.Element);

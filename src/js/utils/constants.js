@@ -6,9 +6,10 @@ import mejs from '../core/mejs';
 
 export const NAV = window.navigator;
 export const UA = NAV.userAgent.toLowerCase();
-export const IS_IPAD = /ipad/i.test(UA);
-export const IS_IPHONE = /iphone/i.test(UA);
-export const IS_IOS = IS_IPHONE || IS_IPAD;
+export const IS_IPAD = /ipad/i.test(UA) && !window.MSStream;
+export const IS_IPHONE = /iphone/i.test(UA) && !window.MSStream;
+export const IS_IPOD = /ipod/i.test(UA) && !window.MSStream;
+export const IS_IOS = /ipad|iphone|ipod/i.test(UA) && !window.MSStream;
 export const IS_ANDROID = /android/i.test(UA);
 export const IS_IE = /(trident|microsoft)/i.test(NAV.appName);
 export const IS_EDGE = ('msLaunchUri' in NAV && !('documentMode' in document));
@@ -138,6 +139,7 @@ export {isFullScreen, requestFullScreen, cancelFullScreen};
 
 mejs.Features = mejs.Features || {};
 mejs.Features.isiPad = IS_IPAD;
+mejs.Features.isiPod = IS_IPOD;
 mejs.Features.isiPhone = IS_IPHONE;
 mejs.Features.isiOS = mejs.Features.isiPhone || mejs.Features.isiPad;
 mejs.Features.isAndroid = IS_ANDROID;

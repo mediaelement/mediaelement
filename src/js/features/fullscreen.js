@@ -255,7 +255,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.setSize(screen.width, screen.height);
 		}
 
-		const layers = t.layers.childNodes, total = layers.length;
+		const layers = t.layers.children, total = layers.length;
 		for (let i = 0; i < total; i++) {
 			layers[i].style.width = '100%';
 			layers[i].style.height = '100%';
@@ -322,7 +322,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.media.setSize(t.normalWidth, t.normalHeight);
 			}
 
-			const layers = t.layers.childNodes, total = layers.length;
+			const layers = t.layers.children, total = layers.length;
 			for (let i = 0; i < total; i++) {
 				layers[i].style.width = `${t.normalWidth}px`;
 				layers[i].style.height = `${t.normalHeight}px`;

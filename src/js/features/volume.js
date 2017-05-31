@@ -385,8 +385,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			toggleMute();
 		}
 
-		media.setVolume(player.options.startVolume);
-
 		t.container.addEventListener('controlsresize', () => {
 			toggleMute();
 		});
