@@ -1,10 +1,14 @@
 ### Version History
 
-*4.x.x (2017/??/??)*
+*4.1.3 (2017/??/??)*
 
 * Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello
 * Changed `destroy()` to `remove()` in React documentation (https://github.com/mediaelement/mediaelement/pull/2243) @evykassirer
 * Added full support for `autoplay`, `loop` and `muted` attributes to interact in all renderers @rafa8626
+* Improved core functionality by adding Promises to ensure proper behavior of plugin's operation, such as `play()`, `setSrc()`, etc. @rafa8626
+* Fixed typo for DailyMotion renderer @rafa8626
+* Integrated new `robustnessLevel` parameter for DRM on M(PEG)-DASH renderer @rafa8626
+* Replaced `childNodes` with `children` to avoid issues with non Node elements inside video/audio tag @rafa8626
 
 *4.1.2 (2017/05/25)*
 
