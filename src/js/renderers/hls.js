@@ -26,7 +26,7 @@ const NativeHls = {
 	 *
 	 * @param {Object} settings - an object with settings needed to load an HLS player instance
 	 */
-	load(settings) {
+	load: (settings) => {
 		if (typeof Hls !== 'undefined') {
 			NativeHls.promise = new Promise(() => {
 				NativeHls._createPlayer(settings);

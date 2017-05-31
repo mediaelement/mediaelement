@@ -177,9 +177,6 @@ const TwitchIframeRenderer = {
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
-
-				// add to flash state that we will store
-
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 				twitch[`get${capName}`] = () => {
@@ -191,26 +188,20 @@ const TwitchIframeRenderer = {
 							case 'currentTime':
 								time = twitchPlayer.getCurrentTime();
 								return time;
-
 							case 'duration':
 								duration = twitchPlayer.getDuration();
 								return duration;
-
 							case 'volume':
 								volume = twitchPlayer.getVolume();
 								return volume;
-
 							case 'paused':
 								paused = twitchPlayer.isPaused();
 								return paused;
-
 							case 'ended':
 								ended = twitchPlayer.getEnded();
 								return ended;
-
 							case 'muted':
 								return twitchPlayer.getMuted();
-
 							case 'buffered':
 								return {
 									start: () => {
@@ -222,10 +213,8 @@ const TwitchIframeRenderer = {
 									length: 1
 								};
 							case 'src':
-
 								return (TwitchApi.getTwitchType(twitchId) === 'channel') ?
 									twitchPlayer.getChannel() : twitchPlayer.getVideo();
-
 							case 'readyState':
 								return readyState;
 						}
@@ -376,35 +365,36 @@ const TwitchIframeRenderer = {
 				paused = false;
 				ended = false;
 				sendEvents(['rendererready', 'loadedmetadata', 'loadeddata', 'canplay']);
-			});
-			twitchPlayer.addEventListener('play', () => {
-				if (!hasStartedPlaying) {
-					hasStartedPlaying = true;
-				}
-				paused = false;
-				ended = false;
-				sendEvents(['play', 'playing', 'progress']);
 
-				// Workaround to update progress bar
-				timer = setInterval(() => {
-					twitchPlayer.getCurrentTime();
-					sendEvents(['timeupdate']);
-				}, 250);
-			});
-			twitchPlayer.addEventListener('pause', () => {
-				paused = true;
-				ended = false;
-				if (!twitchPlayer.getEnded()) {
-					sendEvents(['pause']);
-				}
-			});
-			twitchPlayer.addEventListener('ended', () => {
-				paused = true;
-				ended = true;
-				sendEvents(['ended']);
-				clearInterval(timer);
-				hasStartedPlaying = false;
-				timer = null;
+				twitchPlayer.addEventListener('play', () => {
+					if (!hasStartedPlaying) {
+						hasStartedPlaying = true;
+					}
+					paused = false;
+					ended = false;
+					sendEvents(['play', 'playing', 'progress']);
+
+					// Workaround to update progress bar
+					timer = setInterval(() => {
+						twitchPlayer.getCurrentTime();
+						sendEvents(['timeupdate']);
+					}, 250);
+				});
+				twitchPlayer.addEventListener('pause', () => {
+					paused = true;
+					ended = false;
+					if (!twitchPlayer.getEnded()) {
+						sendEvents(['pause']);
+					}
+				});
+				twitchPlayer.addEventListener('ended', () => {
+					paused = true;
+					ended = true;
+					sendEvents(['ended']);
+					clearInterval(timer);
+					hasStartedPlaying = false;
+					timer = null;
+				});
 			});
 		};
 

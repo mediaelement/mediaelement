@@ -444,7 +444,7 @@ class MediaElementPlayer {
 
 				const
 					cloneNode = t.node.cloneNode(),
-					children = t.node.childNodes,
+					children = t.node.children,
 					mediaFiles = [],
 					tracks = []
 				;
@@ -452,24 +452,22 @@ class MediaElementPlayer {
 				for (let i = 0, total = children.length; i < total; i++) {
 					const childNode = children[i];
 
-					if (childNode && childNode.nodeType !== Node.TEXT_NODE) {
-						switch (childNode.tagName.toLowerCase()) {
-							case 'source':
-								const elements = {};
-								Array.prototype.slice.call(childNode.attributes).forEach((item) => {
-									elements[item.name] = item.value;
-								});
-								elements.type = formatType(elements.src, elements.type);
-								mediaFiles.push(elements);
-								break;
-							case 'track':
-								childNode.mode = 'hidden';
-								tracks.push(childNode);
-								break;
-							default:
-								cloneNode.appendChild(childNode);
-								break;
-						}
+					switch (childNode.tagName.toLowerCase()) {
+						case 'source':
+							const elements = {};
+							Array.prototype.slice.call(childNode.attributes).forEach((item) => {
+								elements[item.name] = item.value;
+							});
+							elements.type = formatType(elements.src, elements.type);
+							mediaFiles.push(elements);
+							break;
+						case 'track':
+							childNode.mode = 'hidden';
+							tracks.push(childNode);
+							break;
+						default:
+							cloneNode.appendChild(childNode);
+							break;
 					}
 				}
 
@@ -1223,7 +1221,7 @@ class MediaElementPlayer {
 			}
 
 			// set the layers
-			const layerChildren = t.layers.childNodes;
+			const layerChildren = t.layers.children;
 			for (let i = 0, total = layerChildren.length; i < total; i++) {
 				layerChildren[i].style.width = '100%';
 				layerChildren[i].style.height = '100%';
@@ -1339,7 +1337,7 @@ class MediaElementPlayer {
 		t.container.style.width = width;
 		t.container.style.height = height;
 
-		const layers = t.layers.childNodes;
+		const layers = t.layers.children;
 		for (let i = 0, total = layers.length; i < total; i++) {
 			layers[i].style.width = width;
 			layers[i].style.height = height;
@@ -1381,7 +1379,7 @@ class MediaElementPlayer {
 			const event = createEvent('controlsresize', t.container);
 			t.container.dispatchEvent(event);
 		} else {
-			const children = t.controls.childNodes;
+			const children = t.controls.children;
 			let minWidth = 0;
 
 			for (let i = 0, total = children.length; i < total; i++) {
@@ -1403,11 +1401,11 @@ class MediaElementPlayer {
 		const t = this;
 
 		if (t.featurePosition[key] !== undefined) {
-			const child = t.controls.childNodes[t.featurePosition[key] - 1];
+			const child = t.controls.children[t.featurePosition[key] - 1];
 			child.parentNode.insertBefore(element, child.nextSibling);
 		} else {
 			t.controls.appendChild(element);
-			const children = t.controls.childNodes;
+			const children = t.controls.children;
 			for (let i = 0, total = children.length; i < total; i++) {
 				if (element == children[i]) {
 					t.featurePosition[key] = i;

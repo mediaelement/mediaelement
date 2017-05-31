@@ -26,7 +26,7 @@ const NativeDash = {
 	 *
 	 * @param {Object} settings - an object with settings needed to load an DASH player instance
 	 */
-	load(settings) {
+	load: (settings) => {
 		if (typeof dashjs !== 'undefined') {
 			NativeDash.promise = new Promise(() => {
 				NativeDash._createPlayer(settings);
@@ -63,7 +63,10 @@ const DashNativeRenderer = {
 			// Special config: used to set the local path/URL of dash.js player library
 			path: 'https://cdn.dashjs.org/latest/dash.all.min.js',
 			debug: false,
-			drm: {}
+			drm: {},
+			// Robustness level for video and audio capabilities.
+			// Possible values: SW_SECURE_CRYPTO, SW_SECURE_DECODE, HW_SECURE_CRYPTO, HW_SECURE_CRYPTO, HW_SECURE_DECODE, HW_SECURE_ALL
+			robustnessLevel: ''
 		}
 	},
 	/**
@@ -87,7 +90,6 @@ const DashNativeRenderer = {
 		const
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
-			preload = originalNode.getAttribute('preload'),
 			autoplay = originalNode.autoplay
 		;
 
@@ -114,19 +116,22 @@ const DashNativeRenderer = {
 								if (dashPlayer !== null) {
 									dashPlayer.attachSource(value);
 									if (autoplay) {
-										node.play();
+										dashPlayer.play();
 									}
 								}
 							} else if (value && typeof value === 'object' && value.src) {
 								node[propName] = value.src;
 								if (dashPlayer !== null) {
 									// If DRM is set, load protection data
-									if (value && typeof value === 'object' && value.drm) {
+									if (value && typeof value === 'object' && typeof value.drm === 'object') {
 										dashPlayer.setProtectionData(value.drm);
+										if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
+											dashPlayer.getProtectionController().setRobustnessLevel(options.dash.robustnessLevel);
+										}
 									}
 									dashPlayer.attachSource(value.src);
 									if (autoplay) {
-										node.play();
+										dashPlayer.play();
 									}
 								}
 							}
@@ -135,7 +140,6 @@ const DashNativeRenderer = {
 						}
 					}
 				};
-
 			}
 		;
 
@@ -146,22 +150,29 @@ const DashNativeRenderer = {
 		// Initial method to register all M(PEG)-DASH events
 		window['__ready__' + id] = (_dashPlayer) => {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setScheduleWhilePaused(((preload && preload === 'auto') || autoplay));
 
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
-						dashPlayer.initialize(node, null, autoplay);
+						// Basic configuration
+						dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
+						dashPlayer.initialize();
+						dashPlayer.setScheduleWhilePaused(false);
 						dashPlayer.setFastSwitchEnabled(true);
+						dashPlayer.attachView(node);
+						dashPlayer.setAutoPlay(false);
 
 						// If DRM is set, load protection data
-						if (!mejs.Utils.isObjectEmpty(options.dash.drm)) {
+						if (typeof options.dash.drm === 'object' && !mejs.Utils.isObjectEmpty(options.dash.drm)) {
 							dashPlayer.setProtectionData(options.dash.drm);
+							if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
+								dashPlayer.getProtectionController()
+								.setRobustnessLevel(options.dash.robustnessLevel);
+							}
 						}
-						dashPlayer.attachSource(node.src);
+						dashPlayer.attachSource(node.getSrc());
 					}
 
 					node.addEventListener(eventName, (e) => {

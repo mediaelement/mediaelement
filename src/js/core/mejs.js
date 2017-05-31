@@ -37,9 +37,9 @@ mejs.html5media = {
 	 * @type {String[]}
 	 */
 	events: [
-		'loadstart', 'progress', 'suspend', 'abort', 'error', 'emptied', 'stalled', 'play', 'pause', 'loadedmetadata',
-		'loadeddata', 'waiting', 'playing', 'canplay', 'canplaythrough', 'seeking', 'seeked', 'timeupdate', 'ended',
-		'ratechange', 'durationchange', 'volumechange'
+		'loadstart', 'durationchange', 'loadedmetadata', 'loadeddata', 'progress', 'canplay', 'canplaythrough',
+		'suspend', 'abort', 'error', 'emptied', 'stalled', 'play', 'playing',  'pause', 'waiting', 'seeking',
+		'seeked', 'timeupdate', 'ended', 'ratechange', 'volumechange'
 	],
 	/**
 	 * @type {String[]}

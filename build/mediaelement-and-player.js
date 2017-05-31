@@ -631,20 +631,37 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.appendChild(t.mediaElement.originalNode);
 
 	var processURL = function processURL(url, type) {
-		if (_mejs2.default.html5media.mediaTypes.indexOf(type) > -1 && _window2.default.location.protocol === 'https:' && _constants.IS_IOS && !_window2.default.MSStream) {
-			var xhr = new XMLHttpRequest();
-			xhr.onreadystatechange = function () {
-				if (this.readyState === 4 && this.status === 200) {
-					var _url = _window2.default.URL || _window2.default.webkitURL,
-					    blobUrl = _url.createObjectURL(this.response);
-					t.mediaElement.originalNode.setAttribute('src', blobUrl);
-					return blobUrl;
-				}
-				return url;
-			};
-			xhr.open('GET', url);
-			xhr.responseType = 'blob';
-			xhr.send();
+		if (_mejs2.default.html5media.mediaTypes.indexOf(type) > -1 && _window2.default.location.protocol === 'https:' && _constants.IS_IOS) {
+			if ('body' in _window2.default.Response.prototype) {
+				fetch(url).then(function (res) {
+					var reader = res.body.getReader();
+					var pump = function pump() {
+						return reader.read().then(function (_ref) {
+							var value = _ref.value,
+							    done = _ref.done;
+
+							if (!done && value !== undefined) {
+								return pump();
+							}
+						});
+					};
+					pump();
+				});
+			} else {
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function () {
+					if (this.readyState === 4 && this.status === 200) {
+						var _url = _window2.default.URL || _window2.default.webkitURL,
+						    blobUrl = _url.createObjectURL(this.response);
+						t.mediaElement.originalNode.setAttribute('src', blobUrl);
+						return blobUrl;
+					}
+					return url;
+				};
+				xhr.open('GET', url);
+				xhr.responseType = 'blob';
+				xhr.send();
+			}
 		}
 
 		return url;
@@ -667,7 +684,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				break;
 			case 'audio':
 			case 'video':
-				var _sources = t.mediaElement.originalNode.childNodes.length,
+				var _sources = t.mediaElement.originalNode.children.length,
 				    nodeSource = t.mediaElement.originalNode.getAttribute('src');
 
 				if (nodeSource) {
@@ -680,8 +697,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				}
 
 				for (var i = 0; i < _sources; i++) {
-					var n = t.mediaElement.originalNode.childNodes[i];
-					if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
+					var n = t.mediaElement.originalNode.children[i];
+					if (n.tagName.toLowerCase() === 'source') {
 						var src = n.getAttribute('src'),
 						    _type = (0, _media2.formatType)(src, n.getAttribute('type'));
 						mediaFiles.push({ type: _type, src: processURL(src, _type) });
@@ -896,15 +913,17 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				try {
 					if (methodName === 'play') {
 						if (t.mediaElement.promises.length) {
-							var sequence = Promise.resolve();
-							t.mediaElement.promises.forEach(function (promise) {
-								sequence = sequence.then(function () {
-									return promise;
-								}).then(function () {
-									return t.mediaElement.renderer[methodName](args);
-								}).catch(function (e) {
-									console.error(e);
-								});
+							Promise.all(t.mediaElement.promises).then(function () {
+								setTimeout(function () {
+									t.mediaElement.renderer[methodName](args);
+								}, 250);
+							}).catch(function (e) {
+								if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
+									var event = (0, _general.createEvent)('error', t.mediaElement);
+									event.message = e;
+									t.mediaElement.dispatchEvent(event);
+									t.mediaElement.createErrorMessage(mediaFiles);
+								}
 							});
 						} else {
 							t.mediaElement.renderer[methodName](args);
@@ -977,20 +996,14 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	}
 
 	if (t.mediaElement.promises.length) {
-		var sequence = Promise.resolve();
-
-		t.mediaElement.promises.forEach(function (promise) {
-			sequence = sequence.then(function () {
-				return promise;
-			}).then(function () {
-				if (t.mediaElement.options.success) {
-					t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
-				}
-			}).catch(function () {
-				if (error && t.mediaElement.options.error) {
-					t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
-				}
-			});
+		Promise.all(t.mediaElement.promises).then(function () {
+			if (t.mediaElement.options.success) {
+				t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
+			}
+		}).catch(function () {
+			if (error && t.mediaElement.options.error) {
+				t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+			}
 		});
 	} else {
 		if (t.mediaElement.options.success) {
@@ -1032,7 +1045,7 @@ mejs.html5media = {
 
 	methods: ['load', 'play', 'pause', 'canPlayType'],
 
-	events: ['loadstart', 'progress', 'suspend', 'abort', 'error', 'emptied', 'stalled', 'play', 'pause', 'loadedmetadata', 'loadeddata', 'waiting', 'playing', 'canplay', 'canplaythrough', 'seeking', 'seeked', 'timeupdate', 'ended', 'ratechange', 'durationchange', 'volumechange'],
+	events: ['loadstart', 'durationchange', 'loadedmetadata', 'loadeddata', 'progress', 'canplay', 'canplaythrough', 'suspend', 'abort', 'error', 'emptied', 'stalled', 'play', 'playing', 'pause', 'waiting', 'seeking', 'seeked', 'timeupdate', 'ended', 'ratechange', 'volumechange'],
 
 	mediaTypes: ['audio/mp3', 'audio/ogg', 'audio/oga', 'audio/wav', 'audio/x-wav', 'audio/wave', 'audio/x-pn-wav', 'audio/mpeg', 'audio/mp4', 'video/mp4', 'video/webm', 'video/ogg', 'video/ogv']
 };
@@ -1352,7 +1365,7 @@ Object.assign(_player2.default.prototype, {
 			t.media.setSize(screen.width, screen.height);
 		}
 
-		var layers = t.layers.childNodes,
+		var layers = t.layers.children,
 		    total = layers.length;
 		for (var _i = 0; _i < total; _i++) {
 			layers[_i].style.width = '100%';
@@ -1410,7 +1423,7 @@ Object.assign(_player2.default.prototype, {
 				t.media.setSize(t.normalWidth, t.normalHeight);
 			}
 
-			var layers = t.layers.childNodes,
+			var layers = t.layers.children,
 			    total = layers.length;
 			for (var _i2 = 0; _i2 < total; _i2++) {
 				layers[_i2].style.width = t.normalWidth + 'px';
@@ -2242,7 +2255,7 @@ Object.assign(_player2.default.prototype, {
 
 		for (var _i7 = 0, _total5 = inEvents.length; _i7 < _total5; _i7++) {
 			player.chaptersButton.addEventListener(inEvents[_i7], function () {
-				if (this.querySelector('.' + t.options.classPrefix + 'chapters-selector-list').childNodes.length) {
+				if (this.querySelector('.' + t.options.classPrefix + 'chapters-selector-list').children.length) {
 					(0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
 				}
 			});
@@ -3629,34 +3642,32 @@ var MediaElementPlayer = function () {
 				dom.addClass(t.container, t.options.classPrefix + 'hide-cues');
 
 				var cloneNode = t.node.cloneNode(),
-				    children = t.node.childNodes,
+				    children = t.node.children,
 				    mediaFiles = [],
 				    tracks = [];
 
 				for (var i = 0, total = children.length; i < total; i++) {
 					var childNode = children[i];
 
-					if (childNode && childNode.nodeType !== Node.TEXT_NODE) {
-						(function () {
-							switch (childNode.tagName.toLowerCase()) {
-								case 'source':
-									var elements = {};
-									Array.prototype.slice.call(childNode.attributes).forEach(function (item) {
-										elements[item.name] = item.value;
-									});
-									elements.type = (0, _media.formatType)(elements.src, elements.type);
-									mediaFiles.push(elements);
-									break;
-								case 'track':
-									childNode.mode = 'hidden';
-									tracks.push(childNode);
-									break;
-								default:
-									cloneNode.appendChild(childNode);
-									break;
-							}
-						})();
-					}
+					(function () {
+						switch (childNode.tagName.toLowerCase()) {
+							case 'source':
+								var elements = {};
+								Array.prototype.slice.call(childNode.attributes).forEach(function (item) {
+									elements[item.name] = item.value;
+								});
+								elements.type = (0, _media.formatType)(elements.src, elements.type);
+								mediaFiles.push(elements);
+								break;
+							case 'track':
+								childNode.mode = 'hidden';
+								tracks.push(childNode);
+								break;
+							default:
+								cloneNode.appendChild(childNode);
+								break;
+						}
+					})();
 				}
 
 				t.node.remove();
@@ -4321,7 +4332,7 @@ var MediaElementPlayer = function () {
 					t.media.setSize(parentWidth, newHeight);
 				}
 
-				var layerChildren = t.layers.childNodes;
+				var layerChildren = t.layers.children;
 				for (var i = 0, total = layerChildren.length; i < total; i++) {
 					layerChildren[i].style.width = '100%';
 					layerChildren[i].style.height = '100%';
@@ -4427,7 +4438,7 @@ var MediaElementPlayer = function () {
 			t.container.style.width = width;
 			t.container.style.height = height;
 
-			var layers = t.layers.childNodes;
+			var layers = t.layers.children;
 			for (var i = 0, total = layers.length; i < total; i++) {
 				layers[i].style.width = width;
 				layers[i].style.height = height;
@@ -4468,7 +4479,7 @@ var MediaElementPlayer = function () {
 				var event = (0, _general.createEvent)('controlsresize', t.container);
 				t.container.dispatchEvent(event);
 			} else {
-				var children = t.controls.childNodes;
+				var children = t.controls.children;
 				var minWidth = 0;
 
 				for (var _i = 0, _total = children.length; _i < _total; _i++) {
@@ -4485,11 +4496,11 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			if (t.featurePosition[key] !== undefined) {
-				var child = t.controls.childNodes[t.featurePosition[key] - 1];
+				var child = t.controls.children[t.featurePosition[key] - 1];
 				child.parentNode.insertBefore(element, child.nextSibling);
 			} else {
 				t.controls.appendChild(element);
-				var children = t.controls.childNodes;
+				var children = t.controls.children;
 				for (var i = 0, total = children.length; i < total; i++) {
 					if (element == children[i]) {
 						t.featurePosition[key] = i;
@@ -5136,7 +5147,9 @@ var DashNativeRenderer = {
 		dash: {
 			path: 'https://cdn.dashjs.org/latest/dash.all.min.js',
 			debug: false,
-			drm: {}
+			drm: {},
+
+			robustnessLevel: ''
 		}
 	},
 
@@ -5148,7 +5161,6 @@ var DashNativeRenderer = {
 
 		var originalNode = mediaElement.originalNode,
 		    id = mediaElement.id + '_' + options.prefix,
-		    preload = originalNode.getAttribute('preload'),
 		    autoplay = originalNode.autoplay;
 
 		var node = null,
@@ -5173,18 +5185,21 @@ var DashNativeRenderer = {
 							if (dashPlayer !== null) {
 								dashPlayer.attachSource(value);
 								if (autoplay) {
-									node.play();
+									dashPlayer.play();
 								}
 							}
 						} else if (value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.src) {
 							node[propName] = value.src;
 							if (dashPlayer !== null) {
-								if (value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.drm) {
+								if (value && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && _typeof(value.drm) === 'object') {
 									dashPlayer.setProtectionData(value.drm);
+									if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
+										dashPlayer.getProtectionController().setRobustnessLevel(options.dash.robustnessLevel);
+									}
 								}
 								dashPlayer.attachSource(value.src);
 								if (autoplay) {
-									node.play();
+									dashPlayer.play();
 								}
 							}
 						}
@@ -5201,20 +5216,25 @@ var DashNativeRenderer = {
 
 		_window2.default['__ready__' + id] = function (_dashPlayer) {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
-			dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
-			dashPlayer.setScheduleWhilePaused(preload && preload === 'auto' || autoplay);
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			    dashEvents = dashjs.MediaPlayer.events,
 			    assignEvents = function assignEvents(eventName) {
 				if (eventName === 'loadedmetadata') {
-					dashPlayer.initialize(node, null, autoplay);
+					dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
+					dashPlayer.initialize();
+					dashPlayer.setScheduleWhilePaused(false);
 					dashPlayer.setFastSwitchEnabled(true);
+					dashPlayer.attachView(node);
+					dashPlayer.setAutoPlay(false);
 
-					if (!_mejs2.default.Utils.isObjectEmpty(options.dash.drm)) {
+					if (_typeof(options.dash.drm) === 'object' && !_mejs2.default.Utils.isObjectEmpty(options.dash.drm)) {
 						dashPlayer.setProtectionData(options.dash.drm);
+						if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
+							dashPlayer.getProtectionController().setRobustnessLevel(options.dash.robustnessLevel);
+						}
 					}
-					dashPlayer.attachSource(node.src);
+					dashPlayer.attachSource(node.getSrc());
 				}
 
 				node.addEventListener(eventName, function (e) {
@@ -6804,7 +6824,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_EDGE = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
+exports.cancelFullScreen = exports.requestFullScreen = exports.isFullScreen = exports.FULLSCREEN_EVENT_NAME = exports.HAS_NATIVE_FULLSCREEN_ENABLED = exports.HAS_TRUE_NATIVE_FULLSCREEN = exports.HAS_IOS_FULLSCREEN = exports.HAS_MS_NATIVE_FULLSCREEN = exports.HAS_MOZ_NATIVE_FULLSCREEN = exports.HAS_WEBKIT_NATIVE_FULLSCREEN = exports.HAS_NATIVE_FULLSCREEN = exports.SUPPORTS_NATIVE_HLS = exports.SUPPORT_POINTER_EVENTS = exports.HAS_MSE = exports.IS_STOCK_ANDROID = exports.IS_SAFARI = exports.IS_FIREFOX = exports.IS_CHROME = exports.IS_EDGE = exports.IS_IE = exports.IS_ANDROID = exports.IS_IOS = exports.IS_IPOD = exports.IS_IPHONE = exports.IS_IPAD = exports.UA = exports.NAV = undefined;
 
 var _window = _dereq_(3);
 
@@ -6822,9 +6842,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var NAV = exports.NAV = _window2.default.navigator;
 var UA = exports.UA = NAV.userAgent.toLowerCase();
-var IS_IPAD = exports.IS_IPAD = /ipad/i.test(UA);
-var IS_IPHONE = exports.IS_IPHONE = /iphone/i.test(UA);
-var IS_IOS = exports.IS_IOS = IS_IPHONE || IS_IPAD;
+var IS_IPAD = exports.IS_IPAD = /ipad/i.test(UA) && !_window2.default.MSStream;
+var IS_IPHONE = exports.IS_IPHONE = /iphone/i.test(UA) && !_window2.default.MSStream;
+var IS_IPOD = exports.IS_IPOD = /ipod/i.test(UA) && !_window2.default.MSStream;
+var IS_IOS = exports.IS_IOS = /ipad|iphone|ipod/i.test(UA) && !_window2.default.MSStream;
 var IS_ANDROID = exports.IS_ANDROID = /android/i.test(UA);
 var IS_IE = exports.IS_IE = /(trident|microsoft)/i.test(NAV.appName);
 var IS_EDGE = exports.IS_EDGE = 'msLaunchUri' in NAV && !('documentMode' in _document2.default);
@@ -6943,6 +6964,7 @@ exports.cancelFullScreen = cancelFullScreen;
 
 _mejs2.default.Features = _mejs2.default.Features || {};
 _mejs2.default.Features.isiPad = IS_IPAD;
+_mejs2.default.Features.isiPod = IS_IPOD;
 _mejs2.default.Features.isiPhone = IS_IPHONE;
 _mejs2.default.Features.isiOS = _mejs2.default.Features.isiPhone || _mejs2.default.Features.isiPad;
 _mejs2.default.Features.isAndroid = IS_ANDROID;
@@ -7585,6 +7607,25 @@ if (/firefox/i.test(navigator.userAgent)) {
 if (!window.Promise) {
 	window.Promise = _promisePolyfill2.default;
 }
+
+(function (constructor) {
+	if (constructor && constructor.prototype && constructor.prototype.children === null) {
+		Object.defineProperty(constructor.prototype, 'children', {
+			get: function get() {
+				var i = 0,
+				    node = void 0,
+				    nodes = this.childNodes,
+				    children = [];
+				while (node = nodes[i++]) {
+					if (node.nodeType === 1) {
+						children.push(node);
+					}
+				}
+				return children;
+			}
+		});
+	}
+})(window.Node || window.Element);
 
 },{"2":2,"4":4}],29:[function(_dereq_,module,exports){
 'use strict';

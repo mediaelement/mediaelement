@@ -103,23 +103,35 @@ class MediaElement {
 		 * @private
 		 */
 		const processURL = (url, type) => {
-			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' &&
-				IS_IOS && !window.MSStream){
-				const xhr = new XMLHttpRequest();
-				xhr.onreadystatechange = function() {
-					if (this.readyState === 4 && this.status === 200) {
-						const
-							url = window.URL || window.webkitURL,
-							blobUrl = url.createObjectURL(this.response)
-						;
-						t.mediaElement.originalNode.setAttribute('src', blobUrl);
-						return blobUrl;
-					}
-					return url;
-				};
-				xhr.open('GET', url);
-				xhr.responseType = 'blob';
-				xhr.send();
+			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' && IS_IOS) {
+				if ('body' in window.Response.prototype) {
+					fetch(url).then(res => {
+						const reader = res.body.getReader();
+						const pump = () => reader.read()
+							.then(({ value, done }) => {
+								if (!done && value !== undefined) {
+									return pump();
+								}
+							});
+						pump();
+					});
+				} else {
+					const xhr = new XMLHttpRequest();
+					xhr.onreadystatechange = function() {
+						if (this.readyState === 4 && this.status === 200) {
+							const
+								url = window.URL || window.webkitURL,
+								blobUrl = url.createObjectURL(this.response)
+							;
+							t.mediaElement.originalNode.setAttribute('src', blobUrl);
+							return blobUrl;
+						}
+						return url;
+					};
+					xhr.open('GET', url);
+					xhr.responseType = 'blob';
+					xhr.send();
+				}
 			}
 
 			return url;
@@ -143,7 +155,7 @@ class MediaElement {
 				case 'audio':
 				case 'video':
 					const
-						sources = t.mediaElement.originalNode.childNodes.length,
+						sources = t.mediaElement.originalNode.children.length,
 						nodeSource = t.mediaElement.originalNode.getAttribute('src')
 					;
 
@@ -161,8 +173,8 @@ class MediaElement {
 
 					// test <source> types to see if they are usable
 					for (let i = 0; i < sources; i++) {
-						const n = t.mediaElement.originalNode.childNodes[i];
-						if (n.nodeType === Node.ELEMENT_NODE && n.tagName.toLowerCase() === 'source') {
+						const n = t.mediaElement.originalNode.children[i];
+						if (n.tagName.toLowerCase() === 'source') {
 							const
 								src = n.getAttribute('src'),
 								type = formatType(src, n.getAttribute('type'))
@@ -427,20 +439,20 @@ class MediaElement {
 						try {
 							if (methodName === 'play') {
 								if (t.mediaElement.promises.length) {
-									let sequence = Promise.resolve();
-									t.mediaElement.promises.forEach((promise) => {
-										sequence = sequence
-										.then(() => promise)
-										.then(() => t.mediaElement.renderer[methodName](args))
-										.catch((e) => {
-											console.error(e);
-											// if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-											// 	const event = createEvent('error', t.mediaElement);
-											// 	event.message = 'Error creating renderer';
-											// 	t.mediaElement.dispatchEvent(event);
-											// 	t.mediaElement.createErrorMessage(mediaFiles);
-											// }
-										});
+									Promise.all(t.mediaElement.promises)
+									.then(() => {
+										// Give a delay to ensure all be played properly
+										setTimeout(() => {
+											t.mediaElement.renderer[methodName](args)
+										}, 250);
+									})
+									.catch((e) => {
+										if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
+											const event = createEvent('error', t.mediaElement);
+											event.message = e;
+											t.mediaElement.dispatchEvent(event);
+											t.mediaElement.createErrorMessage(mediaFiles);
+										}
 									});
 								} else {
 									t.mediaElement.renderer[methodName](args);
@@ -527,12 +539,8 @@ class MediaElement {
 		}
 
 		if (t.mediaElement.promises.length) {
-			let sequence = Promise.resolve();
-
-			t.mediaElement.promises.forEach(function (promise) {
-				sequence = sequence
-					.then(() => promise)
-					.then(() => {
+			Promise.all(t.mediaElement.promises)
+				.then(() => {
 					if (t.mediaElement.options.success) {
 						t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
 					}
@@ -541,7 +549,6 @@ class MediaElement {
 						t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
 					}
 				});
-			});
 		} else {
 			if (t.mediaElement.options.success) {
 				t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);

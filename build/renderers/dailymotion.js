@@ -355,7 +355,6 @@ var DailyMotionIframeRenderer = {
 		DailyMotionApi.enqueueIframe(dmSettings);
 
 		dm.hide = function () {
-			dm.stopInterval();
 			dm.pause();
 			if (dmIframe) {
 				dmIframe.style.display = 'none';

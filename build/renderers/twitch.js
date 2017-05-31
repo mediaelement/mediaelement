@@ -120,7 +120,6 @@ var TwitchIframeRenderer = {
 
 		var props = mejs.html5media.properties,
 		    assignGettersSetters = function assignGettersSetters(propName) {
-
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
 
 			twitch['get' + capName] = function () {
@@ -131,26 +130,20 @@ var TwitchIframeRenderer = {
 						case 'currentTime':
 							time = twitchPlayer.getCurrentTime();
 							return time;
-
 						case 'duration':
 							duration = twitchPlayer.getDuration();
 							return duration;
-
 						case 'volume':
 							volume = twitchPlayer.getVolume();
 							return volume;
-
 						case 'paused':
 							paused = twitchPlayer.isPaused();
 							return paused;
-
 						case 'ended':
 							ended = twitchPlayer.getEnded();
 							return ended;
-
 						case 'muted':
 							return twitchPlayer.getMuted();
-
 						case 'buffered':
 							return {
 								start: function start() {
@@ -162,9 +155,7 @@ var TwitchIframeRenderer = {
 								length: 1
 							};
 						case 'src':
-
 							return TwitchApi.getTwitchType(twitchId) === 'channel' ? twitchPlayer.getChannel() : twitchPlayer.getVideo();
-
 						case 'readyState':
 							return readyState;
 					}
@@ -297,34 +288,35 @@ var TwitchIframeRenderer = {
 				paused = false;
 				ended = false;
 				sendEvents(['rendererready', 'loadedmetadata', 'loadeddata', 'canplay']);
-			});
-			twitchPlayer.addEventListener('play', function () {
-				if (!hasStartedPlaying) {
-					hasStartedPlaying = true;
-				}
-				paused = false;
-				ended = false;
-				sendEvents(['play', 'playing', 'progress']);
 
-				timer = setInterval(function () {
-					twitchPlayer.getCurrentTime();
-					sendEvents(['timeupdate']);
-				}, 250);
-			});
-			twitchPlayer.addEventListener('pause', function () {
-				paused = true;
-				ended = false;
-				if (!twitchPlayer.getEnded()) {
-					sendEvents(['pause']);
-				}
-			});
-			twitchPlayer.addEventListener('ended', function () {
-				paused = true;
-				ended = true;
-				sendEvents(['ended']);
-				clearInterval(timer);
-				hasStartedPlaying = false;
-				timer = null;
+				twitchPlayer.addEventListener('play', function () {
+					if (!hasStartedPlaying) {
+						hasStartedPlaying = true;
+					}
+					paused = false;
+					ended = false;
+					sendEvents(['play', 'playing', 'progress']);
+
+					timer = setInterval(function () {
+						twitchPlayer.getCurrentTime();
+						sendEvents(['timeupdate']);
+					}, 250);
+				});
+				twitchPlayer.addEventListener('pause', function () {
+					paused = true;
+					ended = false;
+					if (!twitchPlayer.getEnded()) {
+						sendEvents(['pause']);
+					}
+				});
+				twitchPlayer.addEventListener('ended', function () {
+					paused = true;
+					ended = true;
+					sendEvents(['ended']);
+					clearInterval(timer);
+					hasStartedPlaying = false;
+					timer = null;
+				});
 			});
 		};
 

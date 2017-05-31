@@ -217,7 +217,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		for (let i = 0, total = inEvents.length; i < total; i++) {
 			player.chaptersButton.addEventListener(inEvents[i], function () {
-				if (this.querySelector(`.${t.options.classPrefix}chapters-selector-list`).childNodes.length) {
+				if (this.querySelector(`.${t.options.classPrefix}chapters-selector-list`).children.length) {
 					removeClass(this.querySelector(`.${t.options.classPrefix}chapters-selector`), `${t.options.classPrefix}offscreen`);
 				}
 			});
