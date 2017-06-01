@@ -51,33 +51,5 @@
   "scripts": {
     "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register --require babel-polyfill --recursive test/unit",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
-  },
-  "browserify": {
-    "extensions": [
-      ".js"
-    ],
-    "transform": [
-      [
-        "babelify",
-        {
-          "comments": false,
-          "presets": [
-            [
-              "env",
-              {
-                "targets": {
-                  "browsers": [
-                    "last 5 versions",
-                    "ie >= 9",
-                    "ios >= 8",
-                    "android >= 4"
-                  ]
-                }
-              }
-            ]
-          ]
-        }
-      ]
-    ]
   }
 }
