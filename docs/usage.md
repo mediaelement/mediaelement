@@ -353,29 +353,32 @@ $('video').mediaelementplayer({
     pluginPath: '../build/',
     // All the config related to HLS
     hls: {
-        debug: true,
-        autoStartLoad: false
+        debug: true
     },
-    
     // More configuration parameters...
     
-    success: function(media, node) {        
-        media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function() {
-            // All the code when this event is reached...
-            console.log('Media attached!');
-        });
+    success: function(media, node) {  
+    	
+    	// In case that there are more videos with different media associated, check if the 
+    	// HLS player exists
+    	if (media.hlsPlayer !== undefined) {
+    		media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
+                // All the code when this event is reached...
+                console.log('Media attached!');
+            });
+            
+            // Manifest file was parsed, invoke loading method
+            media.hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function () {
+                // All the code when this event is reached...
+                console.log('Manifest parsed!');
         
-        // Manifest file was parsed, invoke loading method
-        media.hlsPlayer.on('hlsManifestParsed', function() {
-            // All the code when this event is reached...
-            console.log('Manifest parsed!');
-    
-        });
-        
-        media.hlsPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
-            // All the code when this event is reached...
-            console.log(data);
-        });
+            });
+            
+            media.hlsPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
+                // All the code when this event is reached...
+                console.log(data);
+            });
+    	} 
     }
 });
 ```
