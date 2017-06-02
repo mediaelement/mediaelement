@@ -413,6 +413,7 @@ To know how well-supported are each one of the formats, visit http://caniuse.com
 * `ogg` formats will not play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
 * `wav` and `webm` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
 * `flv` and `mpd` will not work on iOS since it doesn't support MSE; for `mpd` use a `m3u8` fallback.
+* Soundcloud can play with `html5` renderer using the following URL format: `https://api.soundcloud.com/tracks/XXX/stream?client_id=XXX`
 
 
 <a id="streching-modes"></a>

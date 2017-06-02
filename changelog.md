@@ -11,6 +11,7 @@
 * Replaced `childNodes` with `children` to avoid issues with non Node elements inside video/audio tag @rafa8626
 * Cleaned `Gruntfile` to remove unnecessary task and align CSS to current browser compatibility @rafa8626
 * Fixed `disableControls()` method (https://github.com/mediaelement/mediaelement/pull/2254) @jhutchins
+* Updated documentation to state support for SoundCloud with native HTML5 renderer @rafa8626
 
 *4.1.2 (2017/05/25)*
 
