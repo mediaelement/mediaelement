@@ -3844,7 +3844,7 @@ var MediaElementPlayer = function () {
 			var t = this;
 
 			t.killControlsTimer();
-			t.controlsEnabled = true;
+			t.controlsEnabled = false;
 			t.hideControls(false, true);
 		}
 	}, {
