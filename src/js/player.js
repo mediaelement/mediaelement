@@ -673,7 +673,7 @@ class MediaElementPlayer {
 		const t = this;
 
 		t.killControlsTimer();
-		t.controlsEnabled = true;
+		t.controlsEnabled = false;
 		t.hideControls(false, true);
 	}
 
