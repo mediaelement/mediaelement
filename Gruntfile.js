@@ -123,7 +123,7 @@ module.exports = function (grunt) {
 				},
 				options: {
 					plugin: [
-						"browserify-derequire", "bundle-collapser/plugin"
+						'browserify-derequire', 'bundle-collapser/plugin'
 					]
 				}
 			}
@@ -164,7 +164,7 @@ module.exports = function (grunt) {
 			options: {
 				processors: [
 					// Add vendor prefixes.
-					require('autoprefixer')({browsers: 'last 2 versions, ie > 8'}),
+					require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
 					// Minify the result.
 					require('cssnano')()
 				]
@@ -201,15 +201,11 @@ module.exports = function (grunt) {
 					}
 				}
 			}
-		},
-		clean: {
-			build: ['build'],
-			temp: ['tmp']
 		}
 	});
 
-	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
-	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
 	grunt.registerTask('flash', '', function () {
 		var exec = require('child_process').execSync;
 		var result = exec("sh compile_swf.sh", {encoding: 'utf8'});
