@@ -3,10 +3,11 @@
 * [0. Setup MIME-types](#mime-types)
 * [1. Install `MediaElementJS`](#install)
     * [Installation in WordPress](#wordpress)
-        * [`wp-includes/js/mediaelement`](#wp-includes)
-        * [`wp-includes/functions.php`](#wp-functions)
-        * [`wp-includes/media.php`](#wp-media)
-        * [`wp-includes/script-loader.php`](#wp-script)
+        * [In `wp-admin/about.php`](#wp-about)
+        * [In `wp-admin/includes/ajax-actions.php`](#wp-ajax)
+        * [In `wp-includes/media.php`](#wp-media)
+		* [In `wp-includes/js/mediaelement` folder](#wp-js-mediaelement)
+        * [In `wp-includes/script-loader.php`](#wp-script)
     * [Additional plugins](#plugins)
 * [2. Add Script and Stylesheet](#script-and-stylesheet)
 * [3. Add `<video>` or `<audio>` tags](#tags)
@@ -75,72 +76,90 @@ To get the default installation there are several different ways.
 <a id="wordpress"></a>
 ### Installation in WordPress
 
-WordPress currently incorporates `MediaElementJS` as a part of the [Embeds](https://codex.wordpress.org/Embeds) core package. 
+WordPress currently incorporates `MediaElementJS` as a part of the [Embeds](https://codex.wordpress.org/Embeds) core package. If you are using a version prior 4.8.1, and you want to upgrade `MediaElementJS` to the latest version, follow these steps:
 
-If you do not need this, just make sure you upgrade `MediaElementJS` in the theme(s) you are using, locate the player configuration, add the `classPrefix: 'mejs-'` element, and use the `mediaelementplayer-legacy.min.css` to avoid breaking styles for the theme. 
-
-However, if you want to bring the latest version and support the `Embeds` functionality, follow the next steps:
-
-<a id="wp-includes"></a>
-#### `wp-includes/js/mediaelement`
-
-1. Just remove the entire content of the folder and Paste the content of the `build` folder from the latest version of `MediaElementJS` inside of it. 
-
-2. Download the [wp-mediaelement.zip](https://github.com/mediaelement/mediaelement/files/1009558/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
-
-<a id="wp-functions"></a>
-#### `wp-includes/functions.php`
-
-**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
-
-1. In the `wp_check_filetype()` method, add the following condition inside this loop:    
+<a id="wp-about"></a>
+#### In `wp-admin/about.php`
+1. Find the block
 ```
-foreach ( $mimes as $ext_preg => $mime_match ) {
-   // Add this conditional
-   if ($ext_preg === 'm3u8') {
-       $ext_preg .= '.*';
-   }
+if ( ! wp_is_mobile() ) {
+ 	wp_enqueue_style( 'wp-mediaelement' );
+```
+and add below the following:
+```
+wp_enqueue_script( 'mediaelement-vimeo' );
+```
+2. Find the block
+```
+wp_localize_script( 'mediaelement', '_wpmejsSettings', 
+```
+and add in the `_wpmejsSettings` the following:
+```
+'pluginPath'        => includes_url( 'js/mediaelement/', 'relative' ),
+'pauseOtherPlayers' => '',
+'classPrefix'       => 'mejs-',
+'stretching'        => 'responsive',
 ```
 
-2. In the `wp_get_mime_types()` method, add the following MIME types:
-```
-'m3u8' => 'application/x-mpegurl',
-'mpd' => 'application/dash+xml'
-```
+<a id="wp-ajax"></a>
+#### In `wp-admin/includes/ajax-actions.php`
 
-3. In the `wp_get_ext_types()` method, add the following extensions at the end of the `video` array:
+1. Find the blocks that contain:
 ```
-'video' => array(..., 'm3u8', 'mpd')
+wp_print_scripts( 'wp-mediaelement' );
+```
+and replace them with:
+```
+wp_print_scripts( array( 'mediaelement-vimeo', 'wp-mediaelement' ) );
 ```
 
 <a id="wp-media"></a>
-#### `wp-includes/media.php`
+#### In `wp-includes/media.php`
 
-**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
+1. Find the block that contains:
+```
+$library = apply_filters( 'wp_video_shortcode_library', 'mediaelement' );
+if ( 'mediaelement' === $library && did_action( 'init' ) ) {
+	wp_enqueue_style( 'wp-mediaelement' );
+	wp_enqueue_script( 'wp-mediaelement' );
+}
+```
+and replace it with:
+```
+$library = apply_filters( 'wp_video_shortcode_library', 'mediaelement' );
+if ( 'mediaelement' === $library && did_action( 'init' ) ) {
+	wp_enqueue_style( 'wp-mediaelement' );
+	wp_enqueue_script( 'mediaelement-vimeo' );
+	wp_enqueue_script( 'wp-mediaelement' );
+}
+```
 
-1. In the `wp_get_audio_extensions()` method, add the following extension:
+2. Find the block that contains:
 ```
-// This will allow us to play M3U8 files as audio only
-return apply_filters(..., '.*?type=audio') 
+if ( $is_vimeo ) {
+	wp_enqueue_script( 'froogaloop' );
+}
+```
+and replace it with:
+```
+if ( $is_vimeo ) {
+	wp_enqueue_script( 'mediaelement-vimeo' );
+}
 ```
 
-2. In the `wp_get_video_extensions()` method, add the following extensions:
+3. Inside the function `wpview_media_sandbox_styles()`, add:
 ```
-return apply_filters(..., 'm3u8', 'mpd');
+$mediaelement = includes_url( "js/mediaelement/mediaelementplayer-legacy.min.css?$version" );
 ```
 
-3. In the `wp_audio_shortcode()` method replace
-```
-if ( ! in_array( strtolower( $type['ext'] ), $default_types ) )
-```
-with:
-```
-if ( ! in_array( strtolower( $type['ext'] ), $default_types ) &&
-     !preg_match('/' . implode($default_types, '|'). '/i', $type['ext']))
-```    
+<a id="wp-js-mediaelement"></a>
+#### In `wp-includes/js/mediaelement` folder
+
+1. Remove all the files from the folder and install all the files inside the `build` folder from the `MediaElement` project.
+2. Download and copy/paste the WordPress files contained in this [link](https://github.com/mediaelement/mediaelement/files/1048572/wp-mejs.zip).
 
 <a id="wp-script"></a>
-#### `wp-includes/script-loader.php`
+#### In `wp-includes/script-loader.php`
 
 1. Find the block:
 ```
@@ -157,14 +176,14 @@ did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
            'mejs.fullscreen-on'       => __( 'Go Fullscreen' ),
            'mejs.download-video'      => __( 'Download Video' ),
            'mejs.fullscreen'          => __( 'Fullscreen' ),
-           'mejs.time-jump-forward'   => [ __('Jump forward 1 second'), __('Jump forward %1 seconds') ],
+           'mejs.time-jump-forward'   => array( __('Jump forward 1 second'), __('Jump forward %1 seconds') ),
            'mejs.loop'                => __( 'Toggle Loop' ),
            'mejs.play'                => __( 'Play' ),
            'mejs.pause'               => __( 'Pause' ),
            'mejs.close'               => __( 'Close' ),
            'mejs.time-slider'         => __( 'Time Slider' ),
            'mejs.time-help-text'      => __( 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.' ),
-           'mejs.time-skip-back'      => [ __('Skip back 1 second'), __('Skip back %1 seconds') ],
+           'mejs.time-skip-back'      => array( __('Skip back 1 second'), __('Skip back %1 seconds') ),
            'mejs.captions-subtitles'  => __( 'Captions/Subtitles' ),
            'mejs.captions-chapters'   => __( 'Chapters' ),
            'mejs.none'                => __( 'None' ),
@@ -176,7 +195,7 @@ did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
            'mejs.video-player'        => __( 'Video Player' ),
            'mejs.audio-player'        => __( 'Audio Player' ),
            'mejs.ad-skip'             => __( 'Skip ad' ),
-           'mejs.ad-skip-info'        => [ __('Skip in 1 second'), __('Skip in %1 seconds') ],
+           'mejs.ad-skip-info'        => array( __('Skip in 1 second'), __('Skip in %1 seconds') ),
            'mejs.source-chooser'      => __( 'Source Chooser' ),
            'mejs.stop'                => __( 'Stop' ),
            'mejs.speed-rate'          => __( 'Speed Rate' ),
@@ -238,6 +257,7 @@ did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
            'mejs.yiddish'             => __( 'Yiddish' ),
     ),
 ) );
+$scripts->add( 'mediaelement-vimeo', "/wp-includes/js/mediaelement/renderers/vimeo.min.js", array('mediaelement'), 'X.X.X', 1 );
 $scripts->add( 'wp-mediaelement', "/wp-includes/js/mediaelement/wp-mediaelement$suffix.js", array('mediaelement'), false, 1 );
 $mejs_settings = array(
 	'pluginPath' => includes_url( 'js/mediaelement/', 'relative' ),
