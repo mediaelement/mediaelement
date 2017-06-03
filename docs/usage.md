@@ -335,7 +335,7 @@ $('video, audio').mediaelementplayer({
 });
 ```
 
-`MediaElement` can call methods from the current renderer's API (if any) by invoking its own API instance, a special object attached to the `MediaElement` instance. Keep in mind that some methods won't work if they are not bound to an event. An example using native HLS:
+`MediaElement` can invoke methods from the current renderer's API. An example using native HLS:
 ```javascript
 $('video').mediaelementplayer({
     pluginPath: '../build/',
@@ -346,25 +346,22 @@ $('video').mediaelementplayer({
     // More configuration parameters...
     
     success: function(media, node, player) {  
-    	
-    	// In case that there are more videos with different media associated, check if the 
-    	// HLS player exists
-	// NOTE: This approach will be deprecated soon, and you will just need to use 
-	// `media.addEventListener(Hls.Events.MEDIA_ATTACHED)` in this example
-    	if (media.hlsPlayer !== undefined) {
-    		media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
+    	// Use the conditional to detect if you are using `native_hls` renderer for that given media;
+    	// otherwise, you don't need it
+    	if (Hls !== undefined) {
+    		media.addEventListener(Hls.Events.MEDIA_ATTACHED, function () {
                 // All the code when this event is reached...
                 console.log('Media attached!');
             });
             
             // Manifest file was parsed, invoke loading method
-            media.hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function () {
+            media.addEventListener(Hls.Events.MANIFEST_PARSED, function () {
                 // All the code when this event is reached...
                 console.log('Manifest parsed!');
         
             });
             
-            media.hlsPlayer.on(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
+            media.addEventListener(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
                 // All the code when this event is reached...
                 console.log(data);
             });
@@ -375,23 +372,23 @@ $('video').mediaelementplayer({
 <a id="renderers-list"></a>
 Below are listed the renderers with their IDs and player instance to execute other methods from APIs.
 
-Renderer | ID | API instance | Reference | MIME Type(s) 
+Renderer | ID | Reference | MIME Type(s) 
 -------- | --- | ------------ | -------- | --------- 
-Native video/audio | `html5` | --- | --- | video/mp4, audio/mp4, video/webm, audio/mpeg, audio/mp3, audio/ogg, audio/oga, video/ogg
-HLS native | `native_hls` | `hlsPlayer` | [`hls.js` API](https://github.com/dailymotion/hls.js/blob/master/doc/API.md) | application/x-mpegURL, vnd.apple.mpegURL
-M(PEG)-DASH native | `native_dash` | `dashPlayer` | [`dash.js` Documentation](http://cdn.dashjs.org/latest/jsdoc/index.html) | application/dash+xml
-FLV native | `native_flv` | `flvPlayer` | [`flv.js` API](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) | video/flv
-SoundCloud | `soundcloud_iframe` | `scPlayer` | [SoundCloud Widget API](https://developers.soundcloud.com/docs/api/html5-widget) | video/soundcloud, video/x-soundcloud
-Facebook | `facebook` | --- | --- | video/facebook, video/x-facebook
-Vimeo | `vimeo_iframe` | `vimeoPlayer` | [Vimeo Player API](https://github.com/vimeo/player.js) | video/vimeo, video/x-vimeo
-YouTube | `youtube_iframe` | `youTubeApi` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
-DailyMotion | `dailymotion_iframe` | `dmPlayer` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
-Twitch | `twitch_iframe` | `twitchPlayer` | [Twitch Emded API](https://github.com/justintv/Twitch-API/blob/master/embed-video.md) | video/twitch, video/x-twitch
-Video shim  | `flash_video` | --- | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 
-Audio shim | `flash_audio` | --- | --- | audio/mp3
-OGG Audio shim  | `flash_audio_ogg` | --- | --- | audio/ogg, audio/oga
-HLS shim | `flash_hls` | --- | --- | application/x-mpegURL, vnd.apple.mpegURL
-M(PEG)-DASH shim | `flash_dash` | --- | --- |application/dash+xml
+Native video/audio | `html5` | --- | video/mp4, audio/mp4, video/webm, audio/mpeg, audio/mp3, audio/ogg, audio/oga, video/ogg
+HLS native | `native_hls` | [`hls.js` API](https://github.com/dailymotion/hls.js/blob/master/doc/API.md) | application/x-mpegURL, vnd.apple.mpegURL
+M(PEG)-DASH native | `native_dash` | [`dash.js` Documentation](http://cdn.dashjs.org/latest/jsdoc/index.html) | application/dash+xml
+FLV native | `native_flv` | [`flv.js` API](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) | video/flv
+SoundCloud | `soundcloud_iframe` | [SoundCloud Widget API](https://developers.soundcloud.com/docs/api/html5-widget) | video/soundcloud, video/x-soundcloud
+Facebook | `facebook` | --- | video/facebook, video/x-facebook
+Vimeo | `vimeo_iframe` | [Vimeo Player API](https://github.com/vimeo/player.js) | video/vimeo, video/x-vimeo
+YouTube | `youtube_iframe` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
+DailyMotion | `dailymotion_iframe` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
+Twitch | `twitch_iframe` | [Twitch Emded API](https://github.com/justintv/Twitch-API/blob/master/embed-video.md) | video/twitch, video/x-twitch
+Video shim  | `flash_video` | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 
+Audio shim | `flash_audio` | --- | audio/mp3
+OGG Audio shim  | `flash_audio_ogg` | --- | audio/ogg, audio/oga
+HLS shim | `flash_hls` | --- | application/x-mpegURL, vnd.apple.mpegURL
+M(PEG)-DASH shim | `flash_dash` | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
 
