@@ -47,14 +47,14 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ### Vanilla JavaScript
 ```html
 <script>
-
     var player = new MediaElementPlayer('player', {
-    	pluginPath: "/path/to/shims/", 
-    	success: function(mediaElement, originalNode) {
+    	pluginPath: "/path/to/shims/",
+	// When using `MediaElementPlayer`, a `player` argument 
+	// is available in the `success` callback
+    	success: function(mediaElement, originalNode, player) {
 	        // do things
         }
     });
-    
 </script>	
 ```
 
@@ -62,25 +62,14 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ### jQuery
 ```html
 <script>
-
     $('#mediaplayer').mediaelementplayer({
     	pluginPath: "/path/to/shims/", 
-    	success: function(mediaElement, originalNode) {
+	// When using jQuery's `mediaelementplayer`, a `player` argument 
+	// is available in the `success` callback
+    	success: function(mediaElement, originalNode, player) {
 	        // do things
         }
-    });
-
-    // To access player after its creation through jQuery use:
-    var playerId = $('#mediaplayer').closest('.mejs__container').attr('id');
-    // or $('#mediaplayer').closest('.mejs-container').attr('id') in "legacy" stylesheet
-    
-    var player = mejs.players[playerId];
-    
-    // With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
-    // i.e., if you wanna exit fullscreen on iPhone using the player, use this:
-    var player = $('#mediaplayer')[0];
-    player.webkitExitFullScreen();
-    
+    });    
 </script>
 ```
 
@@ -179,7 +168,7 @@ export default class MediaElement extends Component {
     
     state = {}
     
-    success(media, node) {
+    success(media, node, player) {
         // Your action when media was successfully loaded
     }
     
@@ -235,8 +224,8 @@ export default class MediaElement extends Component {
         const options = Object.assign({}, JSON.parse(this.props.options), {
         	// Read the Notes below for more explanation about how to set up the path for shims
             pluginPath: './static/media/',
-            success: (media) => this.success(media),
-            error: (media) => this.error(media)
+            success: (media, node, player) => this.success(media, node, player),
+            error: (media, node) => this.error(media, node)
         });
         
         this.setState({player: new MediaElementPlayer(this.props.id, options)});
@@ -357,7 +346,7 @@ $('video').mediaelementplayer({
     },
     // More configuration parameters...
     
-    success: function(media, node) {  
+    success: function(media, node, player) {  
     	
     	// In case that there are more videos with different media associated, check if the 
     	// HLS player exists
