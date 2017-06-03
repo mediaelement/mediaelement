@@ -280,7 +280,6 @@ export default class App extends Component {
 ```
 
 **IMPORTANT NOTES**
-* If you plan to use M(PEG)-DASH renderer,  you will need to use `dash.js/dist/dash.mediaplayer.min` rather than just `dash.js`. Currently, it has a bug when using it through NPM.
 * If you want to support Flash renderers, you **MUST** activate a file loader in WebPack's configuration file in order to send the shims to the correct location (`./static/media/` in the example above). Something like this:
 ```javascript
 module: {
@@ -350,6 +349,8 @@ $('video').mediaelementplayer({
     	
     	// In case that there are more videos with different media associated, check if the 
     	// HLS player exists
+	// NOTE: This approach will be deprecated soon, and you will just need to use 
+	// `media.addEventListener(Hls.Events.MEDIA_ATTACHED)` in this example
     	if (media.hlsPlayer !== undefined) {
     		media.hlsPlayer.on(Hls.Events.MEDIA_ATTACHED, function () {
                 // All the code when this event is reached...
