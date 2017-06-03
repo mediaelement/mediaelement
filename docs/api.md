@@ -55,6 +55,8 @@ renderers | array | `[]` | List of the renderers to use
 fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
 pluginPath | string | `build/` | Path where Flash shims are located
 shimScriptAccess | string | `sameDomain` | Flag in `<object>` and `<embed>` to determine whether to use local or CDN files. Possible values: `always` (CDN version) or `sameDomain` (local files)
+success | callback | | Action(s) that will be executed as soon as the source is loaded; passes 2 arguments: `media` (the wrapper that mimics all the native events/properties/methods for all renderers) and `node` (the original HTML `video`, `audio` or `iframe` tag where the media was loaded originally; if `html5` is being used, `media` and `node` are the same)
+error | callback | | Action(s) that will be executed if source doesn't load for any reason. Passes same arguments as `success`
 customError | string | __(empty)__ | If error happens, set up customized HTML message
 dailymotion | object | | See [Documentation](https://developer.dailymotion.com/player)
 dash | object | | Accepts `debug`, `drm` (object to load protected/licensed streaming; read [here](https://github.com/Axinom/drm-quick-start) for more information) and `path` parameters to indicate `dash.js` URL/local path
@@ -65,7 +67,8 @@ youtube | object | | See [Documentation](https://developers.google.com/youtube/p
 
 **Notes** 
 1. Vimeo and Soundcloud don't need any configuration for now since they are pretty straight forward.
-2. To use DRM with M(PEG)-DASH, make sure CORS are configured correctly, and also your site **MUST** be using SSL. 
+2. To use DRM with M(PEG)-DASH, make sure CORS are configured correctly, and also your site **MUST** be using SSL.
+3. `success` and `error` will be available for both MediaElement and MediaElementPlayer; however, when using the player, a third argument is passed: `player`, which gives access to the methods associated to the `MediaElementPlayer` class.
 
 <a id="player"></a>
 ### MediaElementPlayer
