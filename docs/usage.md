@@ -24,10 +24,10 @@ You can use this as a standalone library if you wish, or just stick with the ful
 <script>
 
     var player = new MediaElement('player', {
-    	pluginPath: "/path/to/shims/", 
+    	pluginPath: "/path/to/shims/",
     	success: function(mediaElement, originalNode) {
             // do things
-            
+
         }
     });
 
@@ -37,9 +37,9 @@ You can use this as a standalone library if you wish, or just stick with the ful
 <a id="automatic"></a>
 ### Automatic start
 You can avoid running any startup scripts by adding `class="mejs__player"` to the `<video>` or `<audio>` tag. All the player configuration can be added through `data-mejsoptions` attribute.
-```html	
-<video src="myvideo.mp4" width="320" height="240" 
-		class="mejs__player" 
+```html
+<video src="myvideo.mp4" width="320" height="240"
+		class="mejs__player"
 		data-mejsoptions='{"pluginPath": "/path/to/shims/", "alwaysShowControls": "true"}'></video>
 ```
 
@@ -49,13 +49,13 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 <script>
     var player = new MediaElementPlayer('player', {
     	pluginPath: "/path/to/shims/",
-	// When using `MediaElementPlayer`, an `instance` argument 
+	// When using `MediaElementPlayer`, an `instance` argument
 	// is available in the `success` callback
     	success: function(mediaElement, originalNode, instance) {
 	        // do things
         }
     });
-</script>	
+</script>
 ```
 
 <a id="jquery"></a>
@@ -63,13 +63,13 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ```html
 <script>
     $('#mediaplayer').mediaelementplayer({
-    	pluginPath: "/path/to/shims/", 
-	// When using jQuery's `mediaelementplayer`, an `instance` argument 
+    	pluginPath: "/path/to/shims/",
+	// When using jQuery's `mediaelementplayer`, an `instance` argument
 	// is available in the `success` callback
     	success: function(mediaElement, originalNode, instance) {
 	        // do things
         }
-    });    
+    });
 </script>
 ```
 
@@ -79,7 +79,7 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 // To import only MediaElement class
 import 'mediaelement/standalone';
 
-// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin 
+// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin
 // (includes the HTML5 and Flahs renderers ONLY)
 import 'mediaelement/player';
 
@@ -92,7 +92,7 @@ import 'mediaelement/build/renderers/vimeo';
 
 // To import languages (i.e., Spanish)
 import 'mediaelement/build/lang/es';
-// Later on the code you need to use mejs.i18n.language('es') to set the language 
+// Later on the code you need to use mejs.i18n.language('es') to set the language
 ```
 
 **IMPORTANT**: To ensure you can use the `$.fn.mediaelementplayer` plugin, you will need to import jQuery as well in your bundle like follows:
@@ -165,19 +165,19 @@ import 'mediaelement/build/mediaelementplayer.min.css';
 import 'mediaelement/build/mediaelement-flash-video.swf';
 
 export default class MediaElement extends Component {
-    
+
     state = {}
-    
+
     success(media, node, instance) {
         // Your action when media was successfully loaded
     }
-    
+
     error(media) {
         // Your action when media had an error loading
     }
-    
+
     render() {
-        
+
         const
             props = this.props,
             sources = JSON.parse(props.sources),
@@ -185,17 +185,17 @@ export default class MediaElement extends Component {
             sourceTags = [],
             tracksTags = []
         ;
-        
+
         for (let i = 0, total = sources.length; i < total; i++) {
             const source = sources[i];
             sourceTags.push(`<source src="${source.src}" type="${source.type}">`);
         }
-        
+
         for (let i = 0, total = tracks.length; i < total; i++) {
             const track = tracks[i];
             tracksTags.push(`<track src="${track.src}" kind="${track.kind}" srclang="${track.lang}"${(track.label ? ` label=${track.label}` : '')}>`);
         }
-        
+
         const
             mediaBody = `${sourceTags.join("\n")}
                 ${tracksTags.join("\n")}`,
@@ -208,29 +208,29 @@ export default class MediaElement extends Component {
                     ${mediaBody}
                 </audio>`
         ;
-        
+
         return (<div dangerouslySetInnerHTML={{__html: mediaHtml}}></div>);
-        
+
     }
-    
+
     componentDidMount() {
-        
+
         const {MediaElementPlayer} = global;
 
         if (!MediaElementPlayer) {
             return;
         }
-        
+
         const options = Object.assign({}, JSON.parse(this.props.options), {
         	// Read the Notes below for more explanation about how to set up the path for shims
             pluginPath: './static/media/',
             success: (media, node, instance) => this.success(media, node, instance),
             error: (media, node) => this.error(media, node)
         });
-        
+
         this.setState({player: new MediaElementPlayer(this.props.id, options)});
     }
-    
+
     componentWillUnmount() {
         if (this.state.player) {
             this.state.player.remove();
@@ -248,11 +248,11 @@ import './App.css';
 import MediaElement from './MediaElement';
 
 export default class App extends Component {
-	
+
 	// Other code
-	
+
 	render() {
-        const 
+        const
                 sources = [
                     {src: 'http://www.streambox.fr/playlists/test_001/stream.m3u8', type: 'application/x-mpegURL'},
                     {src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', type: 'video/mp4'},
@@ -261,7 +261,7 @@ export default class App extends Component {
                 config = {},
                 tracks = {}
        ;
-       
+
        return (
             <MediaElement
                id="player1"
@@ -320,13 +320,13 @@ After the `MediaElement` package has been loaded, include any renderer(s) you ar
 <script src="/path/to/renderers/vimeo.min.js"></script>
 <script src="/path/to/renderers/twitch.min.js"></script>
 ```
-By default, all the renderers will be called by their IDs and the plugin will try to detect the best one. 
+By default, all the renderers will be called by their IDs and the plugin will try to detect the best one.
 
 However, if you need to use just a subset of renderers in a specific order, you must list their IDs using `renderers` option when configuring your player.
 
 ```javascript
 
-// Use globally native M(PEG)-DASH renderer first, then Flash shim 
+// Use globally native M(PEG)-DASH renderer first, then Flash shim
 mejs.Renderers.order = ['native_dash', 'flash_dash'];
 
 $('video, audio').mediaelementplayer({
@@ -344,8 +344,8 @@ $('video').mediaelementplayer({
         debug: true
     },
     // More configuration parameters...
-    
-    success: function(media, node, instance) {  
+
+    success: function(media, node, instance) {
     	// Use the conditional to detect if you are using `native_hls` renderer for that given media;
     	// otherwise, you don't need it
     	if (Hls !== undefined) {
@@ -353,27 +353,27 @@ $('video').mediaelementplayer({
                 // All the code when this event is reached...
                 console.log('Media attached!');
             });
-            
+
             // Manifest file was parsed, invoke loading method
             media.addEventListener(Hls.Events.MANIFEST_PARSED, function () {
                 // All the code when this event is reached...
                 console.log('Manifest parsed!');
-        
+
             });
-            
+
             media.addEventListener(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
                 // All the code when this event is reached...
                 console.log(data);
             });
-    	} 
+    	}
     }
 });
 ```
 <a id="renderers-list"></a>
 Below are listed the renderers with their IDs and player instance to execute other methods from APIs.
 
-Renderer | ID | Reference | MIME Type(s) 
--------- | --- | ------------ | -------- | --------- 
+Renderer | ID | Reference | MIME Type(s)
+-------- | --- | ------------ | -------- | ---------
 Native video/audio | `html5` | --- | video/mp4, audio/mp4, video/webm, audio/mpeg, audio/mp3, audio/ogg, audio/oga, video/ogg
 HLS native | `native_hls` | [`hls.js` API](https://github.com/dailymotion/hls.js/blob/master/doc/API.md) | application/x-mpegURL, vnd.apple.mpegURL
 M(PEG)-DASH native | `native_dash` | [`dash.js` Documentation](http://cdn.dashjs.org/latest/jsdoc/index.html) | application/dash+xml
@@ -384,7 +384,7 @@ Vimeo | `vimeo_iframe` | [Vimeo Player API](https://github.com/vimeo/player.js) 
 YouTube | `youtube_iframe` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
 DailyMotion | `dailymotion_iframe` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
 Twitch | `twitch_iframe` | [Twitch Emded API](https://github.com/justintv/Twitch-API/blob/master/embed-video.md) | video/twitch, video/x-twitch
-Video shim  | `flash_video` | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4 
+Video shim  | `flash_video` | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4
 Audio shim | `flash_audio` | --- | audio/mp3
 OGG Audio shim  | `flash_audio_ogg` | --- | audio/ogg, audio/oga
 HLS shim | `flash_hls` | --- | application/x-mpegURL, vnd.apple.mpegURL
@@ -395,7 +395,7 @@ To know how well-supported are each one of the formats, visit http://caniuse.com
 **IMPORTANT**: Only renderers prefixed as __native__, YouTube, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
 
 
-**Notes** 
+**Notes**
 * Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
 * `ogg` formats will not play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
 * `wav` and `webm` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
@@ -419,7 +419,7 @@ none | Use `width` and `height` attributes specified in the `video`/`audio` tags
 <a id="grid"></a>
 ## Responsive grid
 
-Since `MediaElement` can adapt its size to be responsive, some might be tempted to use CSS or Javascript to create a responsive grid of videos. 
+Since `MediaElement` can adapt its size to be responsive, some might be tempted to use CSS or Javascript to create a responsive grid of videos.
 
 So far, right now the best plugin to be used with `MediaElement` for this task has been [Flexr](http://flexrgrid.com/).
 
@@ -427,10 +427,10 @@ So far, right now the best plugin to be used with `MediaElement` for this task h
 <a id="captions"></a>
 ## Setting new captions
 
-With `MediaElementPlayer`, the way to do it is just setting the new values for required attributes (`srclang`, `kind` and `src`) and optionally, `label`, 
+With `MediaElementPlayer`, the way to do it is just setting the new values for required attributes (`srclang`, `kind` and `src`) and optionally, `label`,
 in the `track` tags for all browsers **EXCEPT Safari Desktop**.
 
-With Safari Desktop in its latest version, due to a keyboard trap issue generated when appending the original `video` tag containing `track` element during the construction 
+With Safari Desktop in its latest version, due to a keyboard trap issue generated when appending the original `video` tag containing `track` element during the construction
 of the player, it is necessary to create `track` tags with the attributes specified above, and override the `trackFiles` array.
 ```javascript
 var player = new MediaElementPlayer('#player');
@@ -451,9 +451,9 @@ if (player.trackFiles !== null) {
 Once you set up the new values for the track attributes, or defined the workflow for Safari, it is required to register the new track(s) as follows:
 ```javascript
 player.findTracks();
-// This way we are ensuring ALL tracks are being loaded, starting from the first one 
+// This way we are ensuring ALL tracks are being loaded, starting from the first one
 player.loadTrack(0);
-// Set the default language using the ID of the language. 
+// Set the default language using the ID of the language.
 // Check the radio buttons generated by the player to see the ID you want to set, or use `none`
 player.setTrack('mep_0_track_0_subtitles_en');
 ```
@@ -472,14 +472,14 @@ var player = new MediaElementPlayer('#player');
 
 
 if (!player.paused) {
-        player.pause();	
+        player.pause();
 }
 
 player.remove();
 
 // If you wanna destroy COMPLETELY the player (including also the `video` tag) use the above and also the following:
 var videos = document.getElementsByTagName('video');
-for( var i = 0, total = videos.length; i < total; i++ ){ 
+for( var i = 0, total = videos.length; i < total; i++ ){
         videos[i].parentNode.removeChild(videos[i]);
 }
 

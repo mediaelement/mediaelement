@@ -33,7 +33,7 @@ _MediaElementPlayer: HTML5 `<video>` and `<audio>` player_
 
 A complete HTML/CSS audio/video player built on top `MediaElement.js`. Many great HTML5 players have a completely separate Flash UI in fallback mode, but MediaElementPlayer.js uses the same HTML/CSS for all players.
 
-`MediaElement.js` is a set of custom Flash plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using. 
+`MediaElement.js` is a set of custom Flash plugins that mimic the HTML5 MediaElement API for browsers that don't support HTML5 or don't support the media codecs you're using.
 Instead of using Flash as a _fallback_, Flash is used to make the browser seem HTML5 compliant and enable codecs like H.264 (via Flash) on all browsers.
 
 In general, `MediaElement.js` supports **IE9+, MS Edge, Chrome, Firefox, Safari, iOS 8+** and **Android 4.0+**.
@@ -52,7 +52,7 @@ In order to successfully install `3.x` in an existing setup, you must consider t
 2. By default, `MediaElement` has bundled native renderers, such as HLS, M(PEG)-DASH and FLV, as well as YouTube and Flash shims. **If you want to use any other renderer, you MUST refer to the `build/renderers` folder and add as many as you want**. Check `demo/index.html` for a better reference.
 
 3. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with Javascript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](docs/installation.md#disabled-javascript) section for more details.
- 
+
 4. If you want to use Flash shims from a CDN, do the change related to `pluginPath` setting the CDN's URL, and also setting `shimScriptAccess` configuration as **`always`**.
 
 5. If you need to force the Flash shim, the way to do it in `3.x` version is to use the `renderers` configuration and list them in an array.
@@ -64,9 +64,9 @@ $('video, audio').mediaelementplayer({
         // Configuration
         success: function(media) {
                 var isNative = /html5|native/i.test(media.rendererName);
-                
+
                 var isYoutube = ~media.rendererName.indexOf('youtube');
-                
+
                 // etc.
         }
 });
@@ -85,7 +85,7 @@ Additional features can be found at https://github.com/mediaelement/mediaelement
 
 <a id="api"></a>
 ## API and Configuration
-   
+
 `MediaElement.js` has many options that you can take advantage from. Visit [API and Configuration](docs/api.md) for more details.
 
 Also, a `Utilities/Features` guide is available for development. Visit [Utilities/Features](docs/utils.md) for more details.
@@ -111,6 +111,6 @@ Changes available at [Change Log](changelog.md).
 <a id="todo"></a>
 ## TODO list
 
-**IMPORTANT:** Before posting an issue, it is strongly encouraged to read the whole documentation since it covers the majority of scenarios exposed in prior issues. 
+**IMPORTANT:** Before posting an issue, it is strongly encouraged to read the whole documentation since it covers the majority of scenarios exposed in prior issues.
 
 New features and pending bugs can be found at [TODO list](TODO.md).

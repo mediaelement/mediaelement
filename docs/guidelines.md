@@ -17,7 +17,7 @@
 * Tab size is **8** for indentation.
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
 * Make sure you download the necessary media files from https://github.com/mediaelement/mediaelement-files and place them inside the `/media/` directory.
-* Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product. 
+* Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product.
 
 <a id="features"></a>
 ### Features
@@ -32,7 +32,7 @@
 
 <script>
 $(document).ready(function() {
- 
+
     // create player
     $('#player1').mediaelementplayer({
         // add desired features in order
@@ -42,7 +42,7 @@ $(document).ready(function() {
 </script>
 ```
 
-As a final note, try to be aware of building it thinking on Accessibility. Take a look into [`mediaelementplayer-feature-tracks.js`](src/js/mediaelementplayer-feature-tracks.js) for more reference about best practices. 
+As a final note, try to be aware of building it thinking on Accessibility. Take a look into [`mediaelementplayer-feature-tracks.js`](src/js/mediaelementplayer-feature-tracks.js) for more reference about best practices.
 
 <a id="renderers"></a>
 ### Renderers
@@ -69,12 +69,12 @@ import {renderer} from '../core/renderer';
 const [camelCaseRendererName] = {
     // A unique name for the renderer
     name: '[unique_renderer_name]',
-    
+
     options: {
         // MUST match with renderer name
         prefix: '[unique_renderer_name]'
     },
-    
+
     /**
      * Determine if a specific element type can be played with this render
      *
@@ -82,7 +82,7 @@ const [camelCaseRendererName] = {
      * @return {Boolean}
      */
     canPlayType: (type) => ~['video/mime_type1', 'video/mime_type2', 'video/mime_type3' ...].indexOf(type.toLowerCase()),
-   
+
     /**
      * Create the player instance and add all native events/methods/properties as possible
      *
@@ -94,13 +94,13 @@ const [camelCaseRendererName] = {
     create: (mediaElement, options, mediaFiles) => {
         // General container
         let container = {};
-        
+
         options = Object.assign(options, mediaElement.options);
-    
+
         container.options = options;
         container.id = mediaElement.id + '_' + options.prefix;
         container.mediaElement = mediaElement;
-    
+
         let
             apiStack = [],
             i,
@@ -111,17 +111,17 @@ const [camelCaseRendererName] = {
             i,
             il
         ;
-        
+
         // More code prior binding native properties/methods/events ...
-        
-        const 
+
+        const
             props = mejs.html5media.properties,
             assignGettersSetters = (propName) => {
-                                                  
+
                 // add to flash state that we will store
-                
+
                 const capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
-                
+
                 container['get' + capName] = () => {
                     if (customPlayer !== null) {
                         let value = null;
@@ -135,7 +135,7 @@ const [camelCaseRendererName] = {
                 };
                 container['set' + capName] = (value) => {
                     if (customPlayer !== null) {
-                    
+
                         switch (propName) {
                         // Add your code for each property (i.e., setSrc, setCurrentTime, etc.)
                         }
@@ -143,23 +143,23 @@ const [camelCaseRendererName] = {
                         // store for after "READY" event fires
                         apiStack.push({type: 'set', propName: propName, value: value});
                     }
-                };    
+                };
             }
         ;
-        
+
         for (i = 0, il = props.length; i < il; i++) {
             assignGettersSetters(props[i]);
         }
-        
-        const 
+
+        const
             methods = mejs.html5media.methods,
             assignMethods = function(methodName) {
-                                            
+
                 // run the method on the native HTMLMediaElement
                 container[methodName] = () => {
-                
+
                     if (customPlayer !== null) {
-                    
+
                         switch (methodName) {
                         // Add your code for each native method (i.e., play, pause, load, etc.)
                         }
@@ -167,76 +167,76 @@ const [camelCaseRendererName] = {
                         apiStack.push({type: 'call', methodName: methodName});
                     }
                 };
-            
+
             }
         ;
-        
+
         for (i = 0, il = methods.length; i < il; i++) {
             assignMethods(methods[i]);
         }
-        
-        // Tends to be the norm to use a global event to register all the native events, plus the custom 
+
+        // Tends to be the norm to use a global event to register all the native events, plus the custom
         // events for the renderer, depending on the specifications of the renderer's API
         // The following code MUST be executed during the creation of the renderer, either outside of this scope
         // or below when creating the DOM for the renderer
         window['__ready__' + container.id] = (_customPlayer) => {
             //
             mediaElement.customPlayer = customPlayer = _customPlayer;
-            
+
             // do call stack
             if (apiStack.length) {
                 for (i = 0, il = apiStack.length; i<il; i++) {
-                
+
                     let stackItem = apiStack[i];
-    
+
                     if (stackItem.type === 'set') {
                         let propName = stackItem.propName,
                             capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
-                
+
                             container['set' + capName](stackItem.value);
                     } else if (stackItem.type === 'call') {
                         container[stackItem.methodName]();
                     }
                 }
             }
-            
+
             containerDOM = document.getElementById(container.id);
-            
+
             // Make sure to include Mouse events
             events = ['mouseover','mouseout'];
-            
+
             const assignEvent = (e) => {
                 const event = mejs.Utils.createEvent(e.type, container);
                 mediaElement.dispatchEvent(event);
             };
-            
+
             for (let j in events) {
                 const eventName = events[j];
                 mejs.addEvent(containerDOM, eventName, assignEvent);
             }
-            
+
             // BUBBLE EVENTS up
             let events = mejs.html5media.events;
             events = events.concat(['click','mouseover','mouseout']);
-            
+
             const assignNativeEvents = (eventName) => {
-                                                   
+
                 // Any code related to trigger events
                 // generally it follows the convention above:
-                
+
                 customPlayer.addEventListener(eventName, (e) => {
                     // copy event
                     const event = mejs.Utils.createEvent(e.type, customPlayer);
                     mediaElement.dispatchEvent(event);
                 });
             };
-            
+
             for (i = 0, il = events.length; i < il; i++) {
                 assignNativeEvents(events[i]);
             }
 
             // All custom events (if any)....
-            
+
             // give initial events
             const initEvents = ['rendererready','loadeddata','loadedmetadata','canplay'];
 
@@ -245,9 +245,9 @@ const [camelCaseRendererName] = {
                 mediaElement.dispatchEvent(event);
             }
         };
-        
+
         // Create new markup for renderer and hide original one ....
-        
+
         // The following methods MUST be created
 
         container.hide = () => {
@@ -262,12 +262,12 @@ const [camelCaseRendererName] = {
         container.destroy = () => {
             // Add your code to destroy media (if any; otherwise, leave empty)
         };
-                    
+
         return container;
-        
+
     }
 };
-    
+
 /**
  * Register Native M(PEG)-Dash type based on URL structure
  *
@@ -296,7 +296,7 @@ If it is a translation that wants to be added, a couple of considerations need t
 
 * The current format is `'mejs.[ID of element]' : 'translation'` (i.e., `'mejs.play': 'Play'`).
 * The first element in the object **MUST** be `mejs.plural-form: [Number]`, where `[Number]` is the Family Group Number the language belongs (see `/src/js/core/i18n.js` to determine which number is the appropriate one).
-* If you require to use plurals, you must write the possible translations in the order specified in http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html as an array, and the placeholder to replace the number would be `%1`. 
+* If you require to use plurals, you must write the possible translations in the order specified in http://localization-guide.readthedocs.io/en/latest/l10n/pluralforms.html as an array, and the placeholder to replace the number would be `%1`.
 * A code template to build a translation is presented below.
 
 ```javascript
@@ -404,14 +404,14 @@ if (mejs.i18n.[lang] === undefined) {
 }
 ```
 
-**IMPORTANT**: You will also need to add the language in the `MediaElement Plugins` repository. 
+**IMPORTANT**: You will also need to add the language in the `MediaElement Plugins` repository.
 
 For more information about this, read the [Template for Translations](https://github.com/mediaelement/mediaelement-plugins#translations) documentation.
 
 <a id="es6"></a>
 ### A word on `ES6` for Renderers
 
-All the renderers are written using `Ecmascript 2015` specifications. 
+All the renderers are written using `Ecmascript 2015` specifications.
 
 See`src/js/renderers` directory, and check how the files were written to ensure compatibility.
 
@@ -442,15 +442,15 @@ Or, simply, type in Terminal `grunt shell` to create all the SWF files in the ri
 <a id="building"></a>
 ## Building with Grunt
 
-To compile ALL the files, in your Terminal window just type `grunt` in the root of the project. 
+To compile ALL the files, in your Terminal window just type `grunt` in the root of the project.
 
 You can also type `grunt debug` to avoid removing the console messages.
 
 Additionally, `grunt` can accept an extra option to create custom bundle.
 
-The way to use them is to append the keyword `--renderers`, followed by the comma-separated list of elements. 
+The way to use them is to append the keyword `--renderers`, followed by the comma-separated list of elements.
 
-The list must match the name of the files, meaning that if you wanna include the `x` renderer, it must exist a `src/js/renderers/x.js` file. 
+The list must match the name of the files, meaning that if you wanna include the `x` renderer, it must exist a `src/js/renderers/x.js` file.
 
 For example:
 

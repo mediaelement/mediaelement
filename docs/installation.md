@@ -16,7 +16,7 @@
     * [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
     * [Use of Closed Captioning (Optional)](#closed-captioning)
 * [4. Setup Player](#player)
-* [5. Set default language (Optional)](#language)    
+* [5. Set default language (Optional)](#language)
 
 <a id="mime-types"></a>
 ## 0. Setup MIME-types (optional)
@@ -56,15 +56,15 @@ If you want to make your media to play in `Chromium` browser, please read [this 
 For more information about how to set up a server to serve media properly and other general and useful topics about dealing with HTML5 video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
 
 **Do not** compress media (`mod_deflate` or `gzip`), since it can lead to unexpected results, like headers not being passed correctly.
- 
+
 <a id="install"></a>
 ## 1. Install `MediaElementJS`
- 
-To get the default installation there are several different ways.
- 
-1. Download the package from https://github.com/mediaelement/mediaelement 
 
-2. Use a CDN reference; the most popular ones are [jsDelivr](http://cdn.jsdelivr.net/npm/mediaelement/) and [cdnjs](https://cdnjs.com/libraries/mediaelement). 
+To get the default installation there are several different ways.
+
+1. Download the package from https://github.com/mediaelement/mediaelement
+
+2. Use a CDN reference; the most popular ones are [jsDelivr](http://cdn.jsdelivr.net/npm/mediaelement/) and [cdnjs](https://cdnjs.com/libraries/mediaelement).
 
 3. Through GIT: `git clone https://github.com/mediaelement/mediaelement.git`
 
@@ -91,7 +91,7 @@ wp_enqueue_script( 'mediaelement-vimeo' );
 ```
 2. Find the block
 ```
-wp_localize_script( 'mediaelement', '_wpmejsSettings', 
+wp_localize_script( 'mediaelement', '_wpmejsSettings',
 ```
 and add in the `_wpmejsSettings` the following:
 ```
@@ -267,16 +267,16 @@ $mejs_settings = array(
 ```
 being `X.X.X` the latest version you want to install.
 
-2. Remove `$scripts->add( 'froogaloop',  "/wp-includes/js/mediaelement/froogaloop.min.js", array(), '2.0' );` 
-   
-3. Replace: 
+2. Remove `$scripts->add( 'froogaloop',  "/wp-includes/js/mediaelement/froogaloop.min.js", array(), '2.0' );`
+
+3. Replace:
 ```
-$styles->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelementplayer.min.css", array(), '2.22.0' ); 
+$styles->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelementplayer.min.css", array(), '2.22.0' );
 ```
-with: 
+with:
 ```
 $styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css", array(), 'X.X.X' );
-```   
+```
 being `X.X.X` the latest version you want to install.
 
 <a id="plugins"></a>
@@ -312,9 +312,9 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 
 Also, update `pluginPath` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
 
-You can also use a CDN to load your script and stylesheet. 
+You can also use a CDN to load your script and stylesheet.
 
-As stated above, the important factor is to set the `pluginPath` correctly, but also, for this scenario, you will need to set the `shimScriptAccess` configuration element as ***`always`*** to make the shims to work. 
+As stated above, the important factor is to set the `pluginPath` correctly, but also, for this scenario, you will need to set the `shimScriptAccess` configuration element as ***`always`*** to make the shims to work.
 
 As an example:
 
@@ -322,16 +322,16 @@ As an example:
 $('video, audio').mediaelementplayer({
 	// Do not forget to put a final slash (/)
 	pluginPath: 'https://cdnjs.com/libraries/mediaelement/',
-	// this will allow the CDN to use Flash without restrictions 
+	// this will allow the CDN to use Flash without restrictions
     // (by default, this is set as `sameDomain`)
-	shimScriptAccess: 'always' 
+	shimScriptAccess: 'always'
 	// more configuration
 });
 ```
 
-Check the content of `mediaelementplayer.min.css` (or if you decided to use the old styles, `mediaelementplayer-legacy.min.css`) to customize any CSS related to the player. 
+Check the content of `mediaelementplayer.min.css` (or if you decided to use the old styles, `mediaelementplayer-legacy.min.css`) to customize any CSS related to the player.
 
-Also, as an example, visit [this section](resources.md#styles) to have an idea on how can you customize the look-and-feel of the player. 
+Also, as an example, visit [this section](resources.md#styles) to have an idea on how can you customize the look-and-feel of the player.
 
 
 <a id="tags"></a>
@@ -341,21 +341,21 @@ Also, as an example, visit [this section](resources.md#styles) to have an idea o
 ### Default setup
 If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single file.
 
-```html	
+```html
 <video src="myvideo.mp4" width="320" height="240" type="video/mp4"></video>
 
 ```
 or
-```html	
+```html
 <video width="320" height="240">
     <source type="video/mp4" src="myvideo.mp4" />
 </video>
 ```
 
-All the formats supported are listed in [this table](usage.md#renderers-list). Besides that, there are some additional attributes that can be added in the `video`/`audio` tag. 
+All the formats supported are listed in [this table](usage.md#renderers-list). Besides that, there are some additional attributes that can be added in the `video`/`audio` tag.
 Visit the [Attributes](api.md#attributes) section for more information.
 
-**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display warnings in regards of unknown/custom MIME types. But they do not prevent the plugin to work properly. 
+**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display warnings in regards of unknown/custom MIME types. But they do not prevent the plugin to work properly.
 
 <a id="multi-codecs"></a>
 ### Multiple codecs (Optional)
@@ -378,8 +378,8 @@ In very rare cases, you might have a non-HTML5 browser with Flash turned on and 
 	<source type="video/webm" src="myvideo.webm" />
 	<source type="video/ogg" src="myvideo.ogv" />
 	<object width="320" height="240" type="application/x-shockwave-flash" data="/path/to/mediaelement-flash-video.swf">
-		<param name="movie" value="/path/to/mediaelement-flash-video.swf" /> 
-		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
+		<param name="movie" value="/path/to/mediaelement-flash-video.swf" />
+		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" />
 		<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
 	</object>
 </video>
@@ -393,7 +393,7 @@ The way to setup closed captioning is by using the `track` tag as follows:
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
     <source type="video/mp4" src="myvideo.mp4" />
-    ... 
+    ...
     <track src="subtitles_en.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="en" label="English">
     <track src="subtitles_es.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="es" label="Spanish">
     ...
@@ -424,15 +424,15 @@ Optionally, just can set the attribute `lang` in the `<html>` tag with the one y
 <script>
 
     mejs.i18n.language('de'); // Setting German language
-    
+
     $('audio,video').mediaelementplayer({
         success: function(player, node) {
-        
+
         	// Optional
             $(player).closest('.mejs__container').attr('lang', mejs.i18n.language());
-            
+
             $('html').attr('lang', mejs.i18n.language());
-            
+
             // More code
         }
     });

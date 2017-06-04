@@ -25,7 +25,7 @@ height | Sets the height of the video player in pixels; you can also indicate pe
 loop |	Specifies that the video will start over again, every time it is finished
 muted |	Specifies that the audio output of the video should be muted
 poster | Specifies an image to be shown while the video is downloading, or until the user hits the play button. Generally, a PNG or JPEG image. If not specified, the player will use the background color specified in the style sheet
-preload	| Specifies if and how the author thinks the video should be loaded when the page loads; possible values: `auto`, `metadata` or `none` (recommended)	
+preload	| Specifies if and how the author thinks the video should be loaded when the page loads; possible values: `auto`, `metadata` or `none` (recommended)
 src	| Specifies the URL of the video file; this value can also be indicated with `source` tags (refer to the [Multiple Codecs](installation.md#multi-codecs) section for more information)
 style | Specifies an inline CSS style for an element
 tabindex | Specifies the tabbing order of an element. To avoid the keyboard to focus on this element, use `-1`; otherwise, `0`
@@ -34,9 +34,9 @@ width | Sets the width of the video player in pixels; you can also indicate perc
 
 The following markup displays all the attributes listed above for more clarity:
 ```html
-<video autoplay controls class="player" id="player1" height="360" 
-    width="100%" loop muted poster="/path/to/poster.jpg" 
-    preload="none" src="/path/to/media.mp4" 
+<video autoplay controls class="player" id="player1" height="360"
+    width="100%" loop muted poster="/path/to/poster.jpg"
+    preload="none" src="/path/to/media.mp4"
     style="max-width: 100%" tabindex="0" title="MediaElement">
 </video>
 ```
@@ -65,7 +65,7 @@ flv | object | | See [Documentation](https://github.com/Bilibili/flv.js/blob/mas
 hls | object | | See [Documentation](https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning) (and a custom `path` parameter to indicate where to load library)
 youtube | object | | See [Documentation](https://developers.google.com/youtube/player_parameters#Parameters) (and a custom `nocookie` parameter to switch to YouTube's no-cookie URL)
 
-**Notes** 
+**Notes**
 1. Vimeo and Soundcloud don't need any configuration for now since they are pretty straight forward.
 2. To use DRM with M(PEG)-DASH, make sure CORS are configured correctly, and also your site **MUST** be using SSL.
 3. `success` and `error` will be available for both `MediaElement` and `MediaElementPlayer`; however, when using `MediaElementPlayer`, a third argument is passed: `instance`, which gives access to the methods associated to the `MediaElementPlayer` class.
@@ -125,7 +125,7 @@ enableProgressTooltip | boolean | `true` | Enable/disable tooltip that shows tim
 useSmoothHover | boolean | `true` | Enable smooth behavior when hovering progress bar (like YouTube's)
 audioVolume | string | `horizontal` | Position of volume slider on audio element
 videoVolume | string | `vertical` | Position of volume slider on video element
-usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer events when on fullscreen mode 
+usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer events when on fullscreen mode
 tracksAriaLive | boolean | `false` | By default, no WAI-ARIA live region - don't make a screen reader speak captions over an audio track.
 hideCaptionsButtonWhenEmpty | boolean | `true` | Option to remove the `[cc]` button when no `<track kind="subtitles">` are present
 toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to popup
@@ -148,20 +148,20 @@ MediaElementPlayer is a complete audio and video player, but you can also use ju
 
 <a id="properties"></a>
 ### Properties
-Property | Description | GET | SET 
+Property | Description | GET | SET
 -------- | ----------- | --- | ---
 autoplay | Set or return whether the audio/video should start playing as soon as it is loaded | X | X
-buffered | Return a TimeRanges object representing the buffered parts of the audio/video | X | 
+buffered | Return a TimeRanges object representing the buffered parts of the audio/video | X |
 controls | Set or return whether the audio/video should display controls (like play/pause etc.) | X | X
-currentSrc | Return the URL of the current audio/video | X | 
+currentSrc | Return the URL of the current audio/video | X |
 currentTime | Set or return the current playback position in the audio/video (in seconds) | X | X
-duration | Return the length of the current audio/video (in seconds); to determine it without playing media, `preload="auto"` must be set | X |  
-ended | Return whether the playback of the audio/video has ended or not | X | 
-error | Return a MediaError object representing the error state of the audio/video | X | 
+duration | Return the length of the current audio/video (in seconds); to determine it without playing media, `preload="auto"` must be set | X |
+ended | Return whether the playback of the audio/video has ended or not | X |
+error | Return a MediaError object representing the error state of the audio/video | X |
 loop | Set or return whether the audio/video should start over again when finished | X | X
 muted | Set or returns whether the audio/video is muted or not | X | X
-paused | Return whether the audio/video is paused or not | X | 
-readyState | Return the current ready state of the audio/video | X | 
+paused | Return whether the audio/video is paused or not | X |
+readyState | Return the current ready state of the audio/video | X |
 seeking | Return whether the user is currently seeking in the audio/video | X |
 src | Set or return the current source of the audio/video element | X | X
 volume | Set or return the volume of the audio/video | X | X
@@ -176,11 +176,11 @@ play() | Start playing the audio/video
 pause() | Halt (pauses) the currently playing audio or video
 stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is `pause`
 remove() | Destroy the video/audio player instance
-canPlayType(type) | Determine whether current player can/cannot play a specific media type; `type` is MIME type and each renderer has a whitelist of them 
+canPlayType(type) | Determine whether current player can/cannot play a specific media type; `type` is MIME type and each renderer has a whitelist of them
 setPlayerSize (width, height) | Set player's `width` and `height` also considering the `stretching` configuration
-setPoster (url) | Add a `image` tag with the poster's `url` inside the player's layer 
+setPoster (url) | Add a `image` tag with the poster's `url` inside the player's layer
 setMuted (muted) | Mute/unmute the player; `muted` is a boolean value
-setCurrentTime (time) | Set a new current time for the player; `time` is either an integer or float number, and if negative, it will start from zero. 
+setCurrentTime (time) | Set a new current time for the player; `time` is either an integer or float number, and if negative, it will start from zero.
 getCurrentTime () | Retrieve the current time of the media being played
 setVolume (volume) | Set a volume level for the player; `volume` is a number between `0` and `1`
 getVolume () | Retrieve the current volume level of the media being played
@@ -191,7 +191,7 @@ getSrc () | Retrieve the media URL/path currently being played; each renderer ha
 ### Events
 
 Event | Action(s) executed when...
------ | ----------- 
+----- | -----------
 loadedmetadata | Meta data (like dimensions and duration) are loaded
 progress | Browser is in the process of getting the media data
 timeupdate | The playing position has changed (like when the user fast forwards to a different point in the media)
