@@ -22,7 +22,7 @@ You can use this as a standalone library if you wish, or just stick with the ful
 ## Standalone
 ```html
 <script>
-	// You can use either an ID string (i.e., `player`), or `document.querySelector('#PLAYER_ID')`
+	// You can use either a string for the player ID (i.e., `player`), or `document.querySelector`
 	var player = new MediaElement('player', {
 		pluginPath: "/path/to/shims/",
 		success: function(mediaElement, originalNode) {
@@ -47,7 +47,7 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ### Vanilla JavaScript
 ```html
 <script>
-	// You can use either an ID string (i.e., `player`), or `document.querySelector('#PLAYER_ID')`
+	// You can use either a string for the player ID (i.e., `player`), or `document.querySelector`
 	var player = new MediaElementPlayer('player', {
 		pluginPath: "/path/to/shims/",
 	// When using `MediaElementPlayer`, an `instance` argument
