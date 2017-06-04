@@ -17,6 +17,9 @@
 * Fixed to documentation (https://github.com/mediaelement/mediaelement/pull/2259) @marcobiedermann
 * Optimized SVG sprite (https://github.com/mediaelement/mediaelement/pull/2260) @marcobiedermann
 * Upgraded regex to match YouTube videos properly @rafa8626
+* Fixed regex to check if source is valid YouTube source @rafa8626
+* Upgraded `flv.js` to 1.3.0 (https://github.com/mediaelement/mediaelement/pull/2262) @isantolin
+* Updated `hls.js` to a CDN with SSL support (https://github.com/mediaelement/mediaelement/pull/2263) @isantolin
 
 *4.1.2 (2017/05/25)*
 
