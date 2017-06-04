@@ -6813,7 +6813,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	};
 
 	_media.typeChecks.push(function (url) {
-		return (/\/\/(www\.youtube|youtu\.be)/i.test(url) ? 'video/x-youtube' : null
+		return (/\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null
 		);
 	});
 

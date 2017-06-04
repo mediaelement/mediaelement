@@ -14,6 +14,7 @@
 * Updated documentation to state support for SoundCloud with native HTML5 renderer @rafa8626
 * Updated documentation to expose `instance` argument when using `MediaElementPlayer` or jQuery's `mediaelementplayer` success callback @rafa8626
 * Added missing events for `FLV` native renderer @rafa8626
+* Upgraded regex to match YouTube videos properly @rafa8626
 
 *4.1.2 (2017/05/25)*
 
