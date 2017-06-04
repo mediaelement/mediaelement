@@ -49,9 +49,9 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 <script>
     var player = new MediaElementPlayer('player', {
     	pluginPath: "/path/to/shims/",
-	// When using `MediaElementPlayer`, a `player` argument 
+	// When using `MediaElementPlayer`, an `instance` argument 
 	// is available in the `success` callback
-    	success: function(mediaElement, originalNode, player) {
+    	success: function(mediaElement, originalNode, instance) {
 	        // do things
         }
     });
@@ -64,9 +64,9 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 <script>
     $('#mediaplayer').mediaelementplayer({
     	pluginPath: "/path/to/shims/", 
-	// When using jQuery's `mediaelementplayer`, a `player` argument 
+	// When using jQuery's `mediaelementplayer`, an `instance` argument 
 	// is available in the `success` callback
-    	success: function(mediaElement, originalNode, player) {
+    	success: function(mediaElement, originalNode, instance) {
 	        // do things
         }
     });    
@@ -168,7 +168,7 @@ export default class MediaElement extends Component {
     
     state = {}
     
-    success(media, node, player) {
+    success(media, node, instance) {
         // Your action when media was successfully loaded
     }
     
@@ -224,7 +224,7 @@ export default class MediaElement extends Component {
         const options = Object.assign({}, JSON.parse(this.props.options), {
         	// Read the Notes below for more explanation about how to set up the path for shims
             pluginPath: './static/media/',
-            success: (media, node, player) => this.success(media, node, player),
+            success: (media, node, instance) => this.success(media, node, instance),
             error: (media, node) => this.error(media, node)
         });
         
@@ -345,7 +345,7 @@ $('video').mediaelementplayer({
     },
     // More configuration parameters...
     
-    success: function(media, node, player) {  
+    success: function(media, node, instance) {  
     	// Use the conditional to detect if you are using `native_hls` renderer for that given media;
     	// otherwise, you don't need it
     	if (Hls !== undefined) {

@@ -145,6 +145,7 @@ const FlvNativeRenderer = {
 
 			const
 				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+				flvEvents = flvjs.Events,
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
 						flvPlayer.unload();
@@ -162,6 +163,27 @@ const FlvNativeRenderer = {
 
 			for (let i = 0, total = events.length; i < total; i++) {
 				assignEvents(events[i]);
+			}
+
+			/**
+			 * Custom FLV events
+			 *
+			 * These events can be attached to the original node using addEventListener and the name of the event,
+			 * not using flvjs.Events object
+			 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
+			 */
+			const assignFlvEvents = (name, e) => {
+				const event = createEvent(name, node);
+				event.data = e;
+				mediaElement.dispatchEvent(event);
+			};
+
+			for (const eventType in flvEvents) {
+				if (flvEvents.hasOwnProperty(eventType)) {
+					flvPlayer.on(flvEvents[eventType], (e) => {
+						assignFlvEvents(flvEvents[eventType], e);
+					});
+				}
 			}
 		};
 

@@ -2006,6 +2006,7 @@ var FlvNativeRenderer = {
 			mediaElement.flvPlayer = flvPlayer = _flvPlayer;
 
 			var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+			    flvEvents = flvjs.Events,
 			    assignEvents = function assignEvents(eventName) {
 				if (eventName === 'loadedmetadata') {
 					flvPlayer.unload();
@@ -2022,6 +2023,24 @@ var FlvNativeRenderer = {
 
 			for (var _i = 0, _total = events.length; _i < _total; _i++) {
 				assignEvents(events[_i]);
+			}
+
+			var assignFlvEvents = function assignFlvEvents(name, e) {
+				var event = (0, _general.createEvent)(name, node);
+				event.data = e;
+				mediaElement.dispatchEvent(event);
+			};
+
+			var _loop = function _loop(eventType) {
+				if (flvEvents.hasOwnProperty(eventType)) {
+					flvPlayer.on(flvEvents[eventType], function (e) {
+						assignFlvEvents(flvEvents[eventType], e);
+					});
+				}
+			};
+
+			for (var eventType in flvEvents) {
+				_loop(eventType);
 			}
 		};
 
