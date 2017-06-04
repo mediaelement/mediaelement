@@ -16,6 +16,7 @@
 * Added missing events for `FLV` native renderer @rafa8626
 * Fixed to documentation (https://github.com/mediaelement/mediaelement/pull/2259) @marcobiedermann
 * Optimized SVG sprite (https://github.com/mediaelement/mediaelement/pull/2260) @marcobiedermann
+* Upgraded regex to match YouTube videos properly @rafa8626
 
 *4.1.2 (2017/05/25)*
 

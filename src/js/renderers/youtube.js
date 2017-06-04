@@ -90,6 +90,7 @@ const YouTubeApi = {
 	 * - http://www.youtube.com/v/VIDEO_ID?version=3
 	 * - http://youtu.be/Djd6tPrxc08
 	 * - http://www.youtube-nocookie.com/watch?feature=player_embedded&v=yyWWXSwtPP0
+	 * - https://youtube.com/watch?v=1XwU8H6e8Ts
 	 *
 	 * @param {String} url
 	 * @return {string}
@@ -584,7 +585,7 @@ if (window.postMessage && typeof window.addEventListener) {
 		YouTubeApi.iFrameReady();
 	};
 
-	typeChecks.push((url) => /\/\/(www\.youtube|youtu\.be)/i.test(url) ? 'video/x-youtube' : null);
+	typeChecks.push((url) => /\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null);
 
 	renderer.add(YouTubeIframeRenderer);
 }
