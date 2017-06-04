@@ -47,7 +47,7 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ### Vanilla JavaScript
 ```html
 <script>
-	var player = new MediaElementPlayer('player', {
+	var player = new MediaElementPlayer(document.querySelector('#mediaplayer'), {
 		pluginPath: "/path/to/shims/",
 	// When using `MediaElementPlayer`, an `instance` argument
 	// is available in the `success` callback
