@@ -33,7 +33,7 @@ const NativeHls = {
 			});
 		} else if (!NativeHls.promise) {
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : 'http://cdn.jsdelivr.net/npm/hls.js@latest';
+				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.9/hls.min.js';
 
 			NativeHls.promise = NativeHls.promise || loadScript(settings.options.path);
 			NativeHls.promise.then(() => {
@@ -63,7 +63,7 @@ const HlsNativeRenderer = {
 		prefix: 'native_hls',
 		hls: {
 			// Special config: used to set the local path/URL of hls.js library
-			path: 'http://cdn.jsdelivr.net/npm/hls.js@latest',
+			path: 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.9/hls.min.js',
 			// To modify more elements from hls.js,
 			// see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
 			autoStartLoad: false,
