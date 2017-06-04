@@ -61,14 +61,14 @@ In order to successfully install `3.x` in an existing setup, you must consider t
 
 ```javascript
 $('video, audio').mediaelementplayer({
-        // Configuration
-        success: function(media) {
-                var isNative = /html5|native/i.test(media.rendererName);
+	// Configuration
+	success: function(media) {
+		var isNative = /html5|native/i.test(media.rendererName);
 
-                var isYoutube = ~media.rendererName.indexOf('youtube');
+		var isYoutube = ~media.rendererName.indexOf('youtube');
 
-                // etc.
-        }
+		// etc.
+	}
 });
 ```
 

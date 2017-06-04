@@ -1,10 +1,10 @@
 # Utilities/Features
 
 * [Utilities](#utils)
-    * [DOM](#dom)
-    * [General](#general)
-    * [Media](#media)
-    * [Time](#time)
+	* [DOM](#dom)
+	* [General](#general)
+	* [Media](#media)
+	* [Time](#time)
 * [Features](#features)
 
 <a id="utils"></a>

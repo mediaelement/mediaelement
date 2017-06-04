@@ -1,12 +1,12 @@
 # Usage
 
 * [Initialize player](#initialize)
-    * [Automatic start](#automatic)
-    * [Vanilla JavaScript](#vanilla)
-    * [jQuery](#jquery)
-    * [NPM/Meteor](#npm-meteor)
-    * [Require](#require)
-    * [React](#react)
+	* [Automatic start](#automatic)
+	* [Vanilla JavaScript](#vanilla)
+	* [jQuery](#jquery)
+	* [NPM/Meteor](#npm-meteor)
+	* [Require](#require)
+	* [React](#react)
 * [Use Renderers](#renderers-usage)
 * [Use `stretching` modes](#stretching-modes)
 * [Responsive grid](#grid)
@@ -23,13 +23,13 @@ You can use this as a standalone library if you wish, or just stick with the ful
 ```html
 <script>
 
-    var player = new MediaElement('player', {
-    	pluginPath: "/path/to/shims/",
-    	success: function(mediaElement, originalNode) {
-            // do things
+	var player = new MediaElement('player', {
+		pluginPath: "/path/to/shims/",
+		success: function(mediaElement, originalNode) {
+			// do things
 
-        }
-    });
+		}
+	});
 
 </script>
 ```
@@ -47,14 +47,14 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ### Vanilla JavaScript
 ```html
 <script>
-    var player = new MediaElementPlayer('player', {
-    	pluginPath: "/path/to/shims/",
+	var player = new MediaElementPlayer('player', {
+		pluginPath: "/path/to/shims/",
 	// When using `MediaElementPlayer`, an `instance` argument
 	// is available in the `success` callback
-    	success: function(mediaElement, originalNode, instance) {
-	        // do things
-        }
-    });
+		success: function(mediaElement, originalNode, instance) {
+			// do things
+		}
+	});
 </script>
 ```
 
@@ -62,14 +62,14 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ### jQuery
 ```html
 <script>
-    $('#mediaplayer').mediaelementplayer({
-    	pluginPath: "/path/to/shims/",
+	$('#mediaplayer').mediaelementplayer({
+		pluginPath: "/path/to/shims/",
 	// When using jQuery's `mediaelementplayer`, an `instance` argument
 	// is available in the `success` callback
-    	success: function(mediaElement, originalNode, instance) {
-	        // do things
-        }
-    });
+		success: function(mediaElement, originalNode, instance) {
+			// do things
+		}
+	});
 </script>
 ```
 
@@ -124,24 +124,24 @@ npm install hls.js
 In your code, include a `shim` for the external library and then assign the exported variable to the global scope.
 ```javascript
 requirejs.config({
-    // Other configuration
-    shim: {
-    	// Other shims
-        'path/to/hls': {deps: ['require'], exports: "Hls"},
-    }
+	// Other configuration
+	shim: {
+		// Other shims
+		'path/to/hls': {deps: ['require'], exports: "Hls"},
+	}
 });
 
 // Later on the code...
 require(['path/to/hls'], function (Hls) {
-        window.Hls = Hls;
+		window.Hls = Hls;
 
-        require(['path/to/mediaelement-and-player'], function (MediaElementPlayer) {
+		require(['path/to/mediaelement-and-player'], function (MediaElementPlayer) {
 
-            var player = new MediaElementPlayer('media-id', {
-            	// Player configuration
-            });
-        });
-    });
+			var player = new MediaElementPlayer('media-id', {
+				// Player configuration
+			});
+		});
+	});
 
 ```
 
@@ -166,76 +166,76 @@ import 'mediaelement/build/mediaelement-flash-video.swf';
 
 export default class MediaElement extends Component {
 
-    state = {}
+	state = {}
 
-    success(media, node, instance) {
-        // Your action when media was successfully loaded
-    }
+	success(media, node, instance) {
+		// Your action when media was successfully loaded
+	}
 
-    error(media) {
-        // Your action when media had an error loading
-    }
+	error(media) {
+		// Your action when media had an error loading
+	}
 
-    render() {
+	render() {
 
-        const
-            props = this.props,
-            sources = JSON.parse(props.sources),
-            tracks = JSON.parse(props.tracks),
-            sourceTags = [],
-            tracksTags = []
-        ;
+		const
+			props = this.props,
+			sources = JSON.parse(props.sources),
+			tracks = JSON.parse(props.tracks),
+			sourceTags = [],
+			tracksTags = []
+		;
 
-        for (let i = 0, total = sources.length; i < total; i++) {
-            const source = sources[i];
-            sourceTags.push(`<source src="${source.src}" type="${source.type}">`);
-        }
+		for (let i = 0, total = sources.length; i < total; i++) {
+			const source = sources[i];
+			sourceTags.push(`<source src="${source.src}" type="${source.type}">`);
+		}
 
-        for (let i = 0, total = tracks.length; i < total; i++) {
-            const track = tracks[i];
-            tracksTags.push(`<track src="${track.src}" kind="${track.kind}" srclang="${track.lang}"${(track.label ? ` label=${track.label}` : '')}>`);
-        }
+		for (let i = 0, total = tracks.length; i < total; i++) {
+			const track = tracks[i];
+			tracksTags.push(`<track src="${track.src}" kind="${track.kind}" srclang="${track.lang}"${(track.label ? ` label=${track.label}` : '')}>`);
+		}
 
-        const
-            mediaBody = `${sourceTags.join("\n")}
-                ${tracksTags.join("\n")}`,
-            mediaHtml = props.mediaType === 'video' ?
-                `<video id="${props.id}" width="${props.width}" height="${props.height}"${(props.poster ? ` poster=${props.poster}` : '')}
-                    ${(props.controls ? ' controls' : '')}${(props.preload ? ` preload="${props.preload}"` : '')}>
-                    ${mediaBody}
-                </video>` :
-                `<audio id="${props.id}" width="${props.width}" controls>
-                    ${mediaBody}
-                </audio>`
-        ;
+		const
+			mediaBody = `${sourceTags.join("\n")}
+				${tracksTags.join("\n")}`,
+			mediaHtml = props.mediaType === 'video' ?
+				`<video id="${props.id}" width="${props.width}" height="${props.height}"${(props.poster ? ` poster=${props.poster}` : '')}
+					${(props.controls ? ' controls' : '')}${(props.preload ? ` preload="${props.preload}"` : '')}>
+					${mediaBody}
+				</video>` :
+				`<audio id="${props.id}" width="${props.width}" controls>
+					${mediaBody}
+				</audio>`
+		;
 
-        return (<div dangerouslySetInnerHTML={{__html: mediaHtml}}></div>);
+		return (<div dangerouslySetInnerHTML={{__html: mediaHtml}}></div>);
 
-    }
+	}
 
-    componentDidMount() {
+	componentDidMount() {
 
-        const {MediaElementPlayer} = global;
+		const {MediaElementPlayer} = global;
 
-        if (!MediaElementPlayer) {
-            return;
-        }
+		if (!MediaElementPlayer) {
+			return;
+		}
 
-        const options = Object.assign({}, JSON.parse(this.props.options), {
-        	// Read the Notes below for more explanation about how to set up the path for shims
-            pluginPath: './static/media/',
-            success: (media, node, instance) => this.success(media, node, instance),
-            error: (media, node) => this.error(media, node)
-        });
+		const options = Object.assign({}, JSON.parse(this.props.options), {
+			// Read the Notes below for more explanation about how to set up the path for shims
+			pluginPath: './static/media/',
+			success: (media, node, instance) => this.success(media, node, instance),
+			error: (media, node) => this.error(media, node)
+		});
 
-        this.setState({player: new MediaElementPlayer(this.props.id, options)});
-    }
+		this.setState({player: new MediaElementPlayer(this.props.id, options)});
+	}
 
-    componentWillUnmount() {
-        if (this.state.player) {
-            this.state.player.remove();
-        }
-    }
+	componentWillUnmount() {
+		if (this.state.player) {
+			this.state.player.remove();
+		}
+	}
 }
 ```
 
@@ -252,30 +252,30 @@ export default class App extends Component {
 	// Other code
 
 	render() {
-        const
-                sources = [
-                    {src: 'http://www.streambox.fr/playlists/test_001/stream.m3u8', type: 'application/x-mpegURL'},
-                    {src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', type: 'video/mp4'},
-                    {src: 'rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4', type: 'video/rtmp'}
-                ],
-                config = {},
-                tracks = {}
-       ;
+		const
+			sources = [
+				{src: 'http://www.streambox.fr/playlists/test_001/stream.m3u8', type: 'application/x-mpegURL'},
+				{src: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4', type: 'video/mp4'},
+				{src: 'rtmp://firehose.cul.columbia.edu:1935/vod/mp4:sample.mp4', type: 'video/rtmp'}
+			],
+			config = {},
+			tracks = {}
+		;
 
-       return (
-            <MediaElement
-               id="player1"
-               mediaType="video"
-               preload="none"
-               controls
-               width="640"
-               height="360"
-               poster=""
-               sources={JSON.stringify(sources)}
-               options={JSON.stringify(config)}
-               tracks={JSON.stringify(tracks)}
-            />);
-    }
+		return (
+		<MediaElement
+		   id="player1"
+		   mediaType="video"
+		   preload="none"
+		   controls
+		   width="640"
+		   height="360"
+		   poster=""
+		   sources={JSON.stringify(sources)}
+		   options={JSON.stringify(config)}
+		   tracks={JSON.stringify(tracks)}
+		/>);
+	}
 }
 ```
 
@@ -287,13 +287,13 @@ module: {
 	loaders: [
 		// All previous loaders
 		{
-                test: /\.swf$/,
-                loader: 'file',
-                query: {
-                        name: 'static/media/[name].[ext]'
-                }
-        }
-    ]
+			test: /\.swf$/,
+			loader: 'file',
+			query: {
+					name: 'static/media/[name].[ext]'
+			}
+		}
+	]
 }
 ```
 * For other renderers that cannot be installed through NPM, such as YouTube, you might need to load their script through `componentDidMount` method:
@@ -330,43 +330,43 @@ However, if you need to use just a subset of renderers in a specific order, you 
 mejs.Renderers.order = ['native_dash', 'flash_dash'];
 
 $('video, audio').mediaelementplayer({
-    renderers: ['native_dash', 'flash_dash'], // Use only M(PEG)DASH renderers
-    // More configuration
+	renderers: ['native_dash', 'flash_dash'], // Use only M(PEG)DASH renderers
+	// More configuration
 });
 ```
 
 `MediaElement` can invoke methods from the current renderer's API. An example using native HLS:
 ```javascript
 $('video').mediaelementplayer({
-    pluginPath: '../build/',
-    // All the config related to HLS
-    hls: {
-        debug: true
-    },
-    // More configuration parameters...
+	pluginPath: '../build/',
+	// All the config related to HLS
+	hls: {
+		debug: true
+	},
+	// More configuration parameters...
 
-    success: function(media, node, instance) {
-    	// Use the conditional to detect if you are using `native_hls` renderer for that given media;
-    	// otherwise, you don't need it
-    	if (Hls !== undefined) {
-    		media.addEventListener(Hls.Events.MEDIA_ATTACHED, function () {
-                // All the code when this event is reached...
-                console.log('Media attached!');
-            });
+	success: function(media, node, instance) {
+		// Use the conditional to detect if you are using `native_hls` renderer for that given media;
+		// otherwise, you don't need it
+		if (Hls !== undefined) {
+			media.addEventListener(Hls.Events.MEDIA_ATTACHED, function () {
+				// All the code when this event is reached...
+				console.log('Media attached!');
+			});
 
-            // Manifest file was parsed, invoke loading method
-            media.addEventListener(Hls.Events.MANIFEST_PARSED, function () {
-                // All the code when this event is reached...
-                console.log('Manifest parsed!');
+			// Manifest file was parsed, invoke loading method
+			media.addEventListener(Hls.Events.MANIFEST_PARSED, function () {
+				// All the code when this event is reached...
+				console.log('Manifest parsed!');
 
-            });
+			});
 
-            media.addEventListener(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
-                // All the code when this event is reached...
-                console.log(data);
-            });
-    	}
-    }
+			media.addEventListener(Hls.Events.FRAG_PARSING_METADATA, function (event, data) {
+				// All the code when this event is reached...
+				console.log(data);
+			});
+		}
+	}
 });
 ```
 <a id="renderers-list"></a>
@@ -444,7 +444,7 @@ track.srclang = 'en';
 // In this example, we are assuming there is only on `track` tag;
 // if there are more, implement your logic to override the necessary one(s)
 if (player.trackFiles !== null) {
-        player.trackFiles = [track];
+	player.trackFiles = [track];
 }
 ```
 
@@ -472,7 +472,7 @@ var player = new MediaElementPlayer('#player');
 
 
 if (!player.paused) {
-        player.pause();
+	player.pause();
 }
 
 player.remove();
@@ -480,12 +480,12 @@ player.remove();
 // If you wanna destroy COMPLETELY the player (including also the `video` tag) use the above and also the following:
 var videos = document.getElementsByTagName('video');
 for( var i = 0, total = videos.length; i < total; i++ ){
-        videos[i].parentNode.removeChild(videos[i]);
+	videos[i].parentNode.removeChild(videos[i]);
 }
 
 // Using jQuery:
 // $('video').each(function() {
-//         $(this).remove();
+// 	$(this).remove();
 // });
 ```
 

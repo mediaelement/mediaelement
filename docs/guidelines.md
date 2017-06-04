@@ -1,10 +1,10 @@
 # Guidelines for Contributors
 
 * [Development](#development)
-    * [General Conventions](#development)
-    * [Renderers](#renderers)
-    * [Translations](#translations)
-    * [A word on `ES6` for Renderers](#es6)
+	* [General Conventions](#development)
+	* [Renderers](#renderers)
+	* [Translations](#translations)
+	* [A word on `ES6` for Renderers](#es6)
 * [Node.js](#nodejs)
 * [Flex SDK](#flex)
 * [Building with Grunt](#building)
@@ -33,11 +33,11 @@
 <script>
 $(document).ready(function() {
 
-    // create player
-    $('#player1').mediaelementplayer({
-        // add desired features in order
-        features: ['playpause','[feature_name]','current','progress','duration','volume']
-    });
+	// create player
+	$('#player1').mediaelementplayer({
+		// add desired features in order
+		features: ['playpause','[feature_name]','current','progress','duration','volume']
+	});
 });
 </script>
 ```
@@ -67,205 +67,205 @@ import {renderer} from '../core/renderer';
  */
 
 const [camelCaseRendererName] = {
-    // A unique name for the renderer
-    name: '[unique_renderer_name]',
+	// A unique name for the renderer
+	name: '[unique_renderer_name]',
 
-    options: {
-        // MUST match with renderer name
-        prefix: '[unique_renderer_name]'
-    },
+	options: {
+		// MUST match with renderer name
+		prefix: '[unique_renderer_name]'
+	},
 
-    /**
-     * Determine if a specific element type can be played with this render
-     *
-     * @param {String} type
-     * @return {Boolean}
-     */
-    canPlayType: (type) => ~['video/mime_type1', 'video/mime_type2', 'video/mime_type3' ...].indexOf(type.toLowerCase()),
+	/**
+	 * Determine if a specific element type can be played with this render
+	 *
+	 * @param {String} type
+	 * @return {Boolean}
+	 */
+	canPlayType: (type) => ~['video/mime_type1', 'video/mime_type2', 'video/mime_type3' ...].indexOf(type.toLowerCase()),
 
-    /**
-     * Create the player instance and add all native events/methods/properties as possible
-     *
-     * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
-     * @param {Object} options All the player configuration options passed through constructor
-     * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
-     * @return {Object}
-    */
-    create: (mediaElement, options, mediaFiles) => {
-        // General container
-        let container = {};
+	/**
+	 * Create the player instance and add all native events/methods/properties as possible
+	 *
+	 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+	 * @param {Object} options All the player configuration options passed through constructor
+	 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+	 * @return {Object}
+	*/
+	create: (mediaElement, options, mediaFiles) => {
+		// General container
+		let container = {};
 
-        options = Object.assign(options, mediaElement.options);
+		options = Object.assign(options, mediaElement.options);
 
-        container.options = options;
-        container.id = mediaElement.id + '_' + options.prefix;
-        container.mediaElement = mediaElement;
+		container.options = options;
+		container.id = mediaElement.id + '_' + options.prefix;
+		container.mediaElement = mediaElement;
 
-        let
-            apiStack = [],
-            i,
-            il,
-            customPlayer = null,
-            events,
-            containerDOM = null,
-            i,
-            il
-        ;
+		let
+			apiStack = [],
+			i,
+			il,
+			customPlayer = null,
+			events,
+			containerDOM = null,
+			i,
+			il
+		;
 
-        // More code prior binding native properties/methods/events ...
+		// More code prior binding native properties/methods/events ...
 
-        const
-            props = mejs.html5media.properties,
-            assignGettersSetters = (propName) => {
+		const
+			props = mejs.html5media.properties,
+			assignGettersSetters = (propName) => {
 
-                // add to flash state that we will store
+				// add to flash state that we will store
 
-                const capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+				const capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
-                container['get' + capName] = () => {
-                    if (customPlayer !== null) {
-                        let value = null;
+				container['get' + capName] = () => {
+					if (customPlayer !== null) {
+						let value = null;
 
-                        switch (propName) {
-                        // Add your code for each property (i.e., getSrc, getCurrentTime, etc.)
-                        }
-                    } else {
-                        return null;
-                    }
-                };
-                container['set' + capName] = (value) => {
-                    if (customPlayer !== null) {
+						switch (propName) {
+						// Add your code for each property (i.e., getSrc, getCurrentTime, etc.)
+						}
+					} else {
+						return null;
+					}
+				};
+				container['set' + capName] = (value) => {
+					if (customPlayer !== null) {
 
-                        switch (propName) {
-                        // Add your code for each property (i.e., setSrc, setCurrentTime, etc.)
-                        }
-                    }  else {
-                        // store for after "READY" event fires
-                        apiStack.push({type: 'set', propName: propName, value: value});
-                    }
-                };
-            }
-        ;
+						switch (propName) {
+						// Add your code for each property (i.e., setSrc, setCurrentTime, etc.)
+						}
+					}  else {
+						// store for after "READY" event fires
+						apiStack.push({type: 'set', propName: propName, value: value});
+					}
+				};
+			}
+		;
 
-        for (i = 0, il = props.length; i < il; i++) {
-            assignGettersSetters(props[i]);
-        }
+		for (i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
+		}
 
-        const
-            methods = mejs.html5media.methods,
-            assignMethods = function(methodName) {
+		const
+			methods = mejs.html5media.methods,
+			assignMethods = function(methodName) {
 
-                // run the method on the native HTMLMediaElement
-                container[methodName] = () => {
+				// run the method on the native HTMLMediaElement
+				container[methodName] = () => {
 
-                    if (customPlayer !== null) {
+					if (customPlayer !== null) {
 
-                        switch (methodName) {
-                        // Add your code for each native method (i.e., play, pause, load, etc.)
-                        }
-                    } else {
-                        apiStack.push({type: 'call', methodName: methodName});
-                    }
-                };
+						switch (methodName) {
+						// Add your code for each native method (i.e., play, pause, load, etc.)
+						}
+					} else {
+						apiStack.push({type: 'call', methodName: methodName});
+					}
+				};
 
-            }
-        ;
+			}
+		;
 
-        for (i = 0, il = methods.length; i < il; i++) {
-            assignMethods(methods[i]);
-        }
+		for (i = 0, il = methods.length; i < il; i++) {
+			assignMethods(methods[i]);
+		}
 
-        // Tends to be the norm to use a global event to register all the native events, plus the custom
-        // events for the renderer, depending on the specifications of the renderer's API
-        // The following code MUST be executed during the creation of the renderer, either outside of this scope
-        // or below when creating the DOM for the renderer
-        window['__ready__' + container.id] = (_customPlayer) => {
-            //
-            mediaElement.customPlayer = customPlayer = _customPlayer;
+		// Tends to be the norm to use a global event to register all the native events, plus the custom
+		// events for the renderer, depending on the specifications of the renderer's API
+		// The following code MUST be executed during the creation of the renderer, either outside of this scope
+		// or below when creating the DOM for the renderer
+		window['__ready__' + container.id] = (_customPlayer) => {
+			//
+			mediaElement.customPlayer = customPlayer = _customPlayer;
 
-            // do call stack
-            if (apiStack.length) {
-                for (i = 0, il = apiStack.length; i<il; i++) {
+			// do call stack
+			if (apiStack.length) {
+				for (i = 0, il = apiStack.length; i<il; i++) {
 
-                    let stackItem = apiStack[i];
+					let stackItem = apiStack[i];
 
-                    if (stackItem.type === 'set') {
-                        let propName = stackItem.propName,
-                            capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
+					if (stackItem.type === 'set') {
+						let propName = stackItem.propName,
+							capName = propName.substring(0,1).toUpperCase() + propName.substring(1);
 
-                            container['set' + capName](stackItem.value);
-                    } else if (stackItem.type === 'call') {
-                        container[stackItem.methodName]();
-                    }
-                }
-            }
+							container['set' + capName](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						container[stackItem.methodName]();
+					}
+				}
+			}
 
-            containerDOM = document.getElementById(container.id);
+			containerDOM = document.getElementById(container.id);
 
-            // Make sure to include Mouse events
-            events = ['mouseover','mouseout'];
+			// Make sure to include Mouse events
+			events = ['mouseover','mouseout'];
 
-            const assignEvent = (e) => {
-                const event = mejs.Utils.createEvent(e.type, container);
-                mediaElement.dispatchEvent(event);
-            };
+			const assignEvent = (e) => {
+				const event = mejs.Utils.createEvent(e.type, container);
+				mediaElement.dispatchEvent(event);
+			};
 
-            for (let j in events) {
-                const eventName = events[j];
-                mejs.addEvent(containerDOM, eventName, assignEvent);
-            }
+			for (let j in events) {
+				const eventName = events[j];
+				mejs.addEvent(containerDOM, eventName, assignEvent);
+			}
 
-            // BUBBLE EVENTS up
-            let events = mejs.html5media.events;
-            events = events.concat(['click','mouseover','mouseout']);
+			// BUBBLE EVENTS up
+			let events = mejs.html5media.events;
+			events = events.concat(['click','mouseover','mouseout']);
 
-            const assignNativeEvents = (eventName) => {
+			const assignNativeEvents = (eventName) => {
 
-                // Any code related to trigger events
-                // generally it follows the convention above:
+				// Any code related to trigger events
+				// generally it follows the convention above:
 
-                customPlayer.addEventListener(eventName, (e) => {
-                    // copy event
-                    const event = mejs.Utils.createEvent(e.type, customPlayer);
-                    mediaElement.dispatchEvent(event);
-                });
-            };
+				customPlayer.addEventListener(eventName, (e) => {
+					// copy event
+					const event = mejs.Utils.createEvent(e.type, customPlayer);
+					mediaElement.dispatchEvent(event);
+				});
+			};
 
-            for (i = 0, il = events.length; i < il; i++) {
-                assignNativeEvents(events[i]);
-            }
+			for (i = 0, il = events.length; i < il; i++) {
+				assignNativeEvents(events[i]);
+			}
 
-            // All custom events (if any)....
+			// All custom events (if any)....
 
-            // give initial events
-            const initEvents = ['rendererready','loadeddata','loadedmetadata','canplay'];
+			// give initial events
+			const initEvents = ['rendererready','loadeddata','loadedmetadata','canplay'];
 
-            for (i = 0, il = initEvents.length; i < il; i++) {
-                let event = mejs.Utils.createEvent(initEvents[i], container);
-                mediaElement.dispatchEvent(event);
-            }
-        };
+			for (i = 0, il = initEvents.length; i < il; i++) {
+				let event = mejs.Utils.createEvent(initEvents[i], container);
+				mediaElement.dispatchEvent(event);
+			}
+		};
 
-        // Create new markup for renderer and hide original one ....
+		// Create new markup for renderer and hide original one ....
 
-        // The following methods MUST be created
+		// The following methods MUST be created
 
-        container.hide = () => {
-            // Add your code to hide media
-        };
-        container.show = () => {
-            // Add your code to show media
-        };
-        container.setSize = () => {
-            // Add your code to resize media
-        };
-        container.destroy = () => {
-            // Add your code to destroy media (if any; otherwise, leave empty)
-        };
+		container.hide = () => {
+			// Add your code to hide media
+		};
+		container.show = () => {
+			// Add your code to show media
+		};
+		container.setSize = () => {
+			// Add your code to resize media
+		};
+		container.destroy = () => {
+			// Add your code to destroy media (if any; otherwise, leave empty)
+		};
 
-        return container;
+		return container;
 
-    }
+	}
 };
 
 /**
@@ -284,7 +284,7 @@ Another things to consider when developing a new renderer:
 
 ```html
 <label>Sources <select name="sources">
-     <option value="/path/to/new_media.extension">[EXTENSION]</option>
+	 <option value="/path/to/new_media.extension">[EXTENSION]</option>
 </select>
 </label>
  ```

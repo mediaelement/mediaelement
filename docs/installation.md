@@ -2,19 +2,19 @@
 
 * [0. Setup MIME-types](#mime-types)
 * [1. Install `MediaElementJS`](#install)
-    * [Installation in WordPress](#wordpress)
-        * [In `wp-admin/about.php`](#wp-about)
-        * [In `wp-admin/includes/ajax-actions.php`](#wp-ajax)
-        * [In `wp-includes/media.php`](#wp-media)
+	* [Installation in WordPress](#wordpress)
+		* [In `wp-admin/about.php`](#wp-about)
+		* [In `wp-admin/includes/ajax-actions.php`](#wp-ajax)
+		* [In `wp-includes/media.php`](#wp-media)
 		* [In `wp-includes/js/mediaelement` folder](#wp-js-mediaelement)
-        * [In `wp-includes/script-loader.php`](#wp-script)
-    * [Additional plugins](#plugins)
+		* [In `wp-includes/script-loader.php`](#wp-script)
+	* [Additional plugins](#plugins)
 * [2. Add Script and Stylesheet](#script-and-stylesheet)
 * [3. Add `<video>` or `<audio>` tags](#tags)
-    * [Default setup](#default-setup)
-    * [Multiple codecs (Optional)](#multi-codecs)
-    * [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
-    * [Use of Closed Captioning (Optional)](#closed-captioning)
+	* [Default setup](#default-setup)
+	* [Multiple codecs (Optional)](#multi-codecs)
+	* [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
+	* [Use of Closed Captioning (Optional)](#closed-captioning)
 * [4. Setup Player](#player)
 * [5. Set default language (Optional)](#language)
 
@@ -83,7 +83,7 @@ WordPress currently incorporates `MediaElementJS` as a part of the [Embeds](http
 1. Find the block
 ```
 if ( ! wp_is_mobile() ) {
- 	wp_enqueue_style( 'wp-mediaelement' );
+	wp_enqueue_style( 'wp-mediaelement' );
 ```
 and add below the following:
 ```
@@ -169,100 +169,100 @@ and replace all of that until you reach the end of the translations, with this:
 ```
 $scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-player.min.js", array('jquery'), 'X.X.X', 1 );
 did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
-    'language' => get_bloginfo( 'language' ),
-    'strings'  => array(
-           'mejs.install-flash'       => __( 'You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/' ),
-           'mejs.fullscreen-off'      => __( 'Turn off Fullscreen' ),
-           'mejs.fullscreen-on'       => __( 'Go Fullscreen' ),
-           'mejs.download-video'      => __( 'Download Video' ),
-           'mejs.fullscreen'          => __( 'Fullscreen' ),
-           'mejs.time-jump-forward'   => array( __('Jump forward 1 second'), __('Jump forward %1 seconds') ),
-           'mejs.loop'                => __( 'Toggle Loop' ),
-           'mejs.play'                => __( 'Play' ),
-           'mejs.pause'               => __( 'Pause' ),
-           'mejs.close'               => __( 'Close' ),
-           'mejs.time-slider'         => __( 'Time Slider' ),
-           'mejs.time-help-text'      => __( 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.' ),
-           'mejs.time-skip-back'      => array( __('Skip back 1 second'), __('Skip back %1 seconds') ),
-           'mejs.captions-subtitles'  => __( 'Captions/Subtitles' ),
-           'mejs.captions-chapters'   => __( 'Chapters' ),
-           'mejs.none'                => __( 'None' ),
-           'mejs.mute-toggle'         => __( 'Mute Toggle' ),
-           'mejs.volume-help-text'    => __( 'Use Up/Down Arrow keys to increase or decrease volume.' ),
-           'mejs.unmute'              => __( 'Unmute' ),
-           'mejs.mute'                => __( 'Mute' ),
-           'mejs.volume-slider'       => __( 'Volume Slider' ),
-           'mejs.video-player'        => __( 'Video Player' ),
-           'mejs.audio-player'        => __( 'Audio Player' ),
-           'mejs.ad-skip'             => __( 'Skip ad' ),
-           'mejs.ad-skip-info'        => array( __('Skip in 1 second'), __('Skip in %1 seconds') ),
-           'mejs.source-chooser'      => __( 'Source Chooser' ),
-           'mejs.stop'                => __( 'Stop' ),
-           'mejs.speed-rate'          => __( 'Speed Rate' ),
-           'mejs.live-broadcast'      => __( 'Live Broadcast' ),
-           'mejs.afrikaans'           => __( 'Afrikaans' ),
-           'mejs.albanian'            => __( 'Albanian' ),
-           'mejs.arabic'              => __( 'Arabic' ),
-           'mejs.belarusian'          => __( 'Belarusian' ),
-           'mejs.bulgarian'           => __( 'Bulgarian' ),
-           'mejs.catalan'             => __( 'Catalan' ),
-           'mejs.chinese'             => __( 'Chinese' ),
-           'mejs.chinese-simplified'  => __( 'Chinese (Simplified)' ),
-           'mejs.chinese-traditional' => __( 'Chinese (Traditional)' ),
-           'mejs.croatian'            => __( 'Croatian' ),
-           'mejs.czech'               => __( 'Czech' ),
-           'mejs.danish'              => __( 'Danish' ),
-           'mejs.dutch'               => __( 'Dutch' ),
-           'mejs.english'             => __( 'English' ),
-           'mejs.estonian'            => __( 'Estonian' ),
-           'mejs.filipino'            => __( 'Filipino' ),
-           'mejs.finnish'             => __( 'Finnish' ),
-           'mejs.french'              => __( 'French' ),
-           'mejs.galician'            => __( 'Galician' ),
-           'mejs.german'              => __( 'German' ),
-           'mejs.greek'               => __( 'Greek' ),
-           'mejs.haitian-creole'      => __( 'Haitian Creole' ),
-           'mejs.hebrew'              => __( 'Hebrew' ),
-           'mejs.hindi'               => __( 'Hindi' ),
-           'mejs.hungarian'           => __( 'Hungarian' ),
-           'mejs.icelandic'           => __( 'Icelandic' ),
-           'mejs.indonesian'          => __( 'Indonesian' ),
-           'mejs.irish'               => __( 'Irish' ),
-           'mejs.italian'             => __( 'Italian' ),
-           'mejs.japanese'            => __( 'Japanese' ),
-           'mejs.korean'              => __( 'Korean' ),
-           'mejs.latvian'             => __( 'Latvian' ),
-           'mejs.lithuanian'          => __( 'Lithuanian' ),
-           'mejs.macedonian'          => __( 'Macedonian' ),
-           'mejs.malay'               => __( 'Malay' ),
-           'mejs.maltese'             => __( 'Maltese' ),
-           'mejs.norwegian'           => __( 'Norwegian' ),
-           'mejs.persian'             => __( 'Persian' ),
-           'mejs.polish'              => __( 'Polish' ),
-           'mejs.portuguese'          => __( 'Portuguese' ),
-           'mejs.romanian'            => __( 'Romanian' ),
-           'mejs.russian'             => __( 'Russian' ),
-           'mejs.serbian'             => __( 'Serbian' ),
-           'mejs.slovak'              => __( 'Slovak' ),
-           'mejs.slovenian'           => __( 'Slovenian' ),
-           'mejs.spanish'             => __( 'Spanish' ),
-           'mejs.swahili'             => __( 'Swahili' ),
-           'mejs.swedish'             => __( 'Swedish' ),
-           'mejs.tagalog'             => __( 'Tagalog' ),
-           'mejs.thai'                => __( 'Thai' ),
-           'mejs.turkish'             => __( 'Turkish' ),
-           'mejs.ukrainian'           => __( 'Ukrainian' ),
-           'mejs.vietnamese'          => __( 'Vietnamese' ),
-           'mejs.welsh'               => __( 'Welsh' ),
-           'mejs.yiddish'             => __( 'Yiddish' ),
-    ),
+	'language' => get_bloginfo( 'language' ),
+	'strings'  => array(
+		'mejs.install-flash'       => __( 'You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/' ),
+		'mejs.fullscreen-off'      => __( 'Turn off Fullscreen' ),
+		'mejs.fullscreen-on'       => __( 'Go Fullscreen' ),
+		'mejs.download-video'      => __( 'Download Video' ),
+		'mejs.fullscreen'          => __( 'Fullscreen' ),
+		'mejs.time-jump-forward'   => array( __('Jump forward 1 second'), __('Jump forward %1 seconds') ),
+		'mejs.loop'                => __( 'Toggle Loop' ),
+		'mejs.play'                => __( 'Play' ),
+		'mejs.pause'               => __( 'Pause' ),
+		'mejs.close'               => __( 'Close' ),
+		'mejs.time-slider'         => __( 'Time Slider' ),
+		'mejs.time-help-text'      => __( 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.' ),
+		'mejs.time-skip-back'      => array( __('Skip back 1 second'), __('Skip back %1 seconds') ),
+		'mejs.captions-subtitles'  => __( 'Captions/Subtitles' ),
+		'mejs.captions-chapters'   => __( 'Chapters' ),
+		'mejs.none'                => __( 'None' ),
+		'mejs.mute-toggle'         => __( 'Mute Toggle' ),
+		'mejs.volume-help-text'    => __( 'Use Up/Down Arrow keys to increase or decrease volume.' ),
+		'mejs.unmute'              => __( 'Unmute' ),
+		'mejs.mute'                => __( 'Mute' ),
+		'mejs.volume-slider'       => __( 'Volume Slider' ),
+		'mejs.video-player'        => __( 'Video Player' ),
+		'mejs.audio-player'        => __( 'Audio Player' ),
+		'mejs.ad-skip'             => __( 'Skip ad' ),
+		'mejs.ad-skip-info'        => array( __('Skip in 1 second'), __('Skip in %1 seconds') ),
+		'mejs.source-chooser'      => __( 'Source Chooser' ),
+		'mejs.stop'                => __( 'Stop' ),
+		'mejs.speed-rate'          => __( 'Speed Rate' ),
+		'mejs.live-broadcast'      => __( 'Live Broadcast' ),
+		'mejs.afrikaans'           => __( 'Afrikaans' ),
+		'mejs.albanian'            => __( 'Albanian' ),
+		'mejs.arabic'              => __( 'Arabic' ),
+		'mejs.belarusian'          => __( 'Belarusian' ),
+		'mejs.bulgarian'           => __( 'Bulgarian' ),
+		'mejs.catalan'             => __( 'Catalan' ),
+		'mejs.chinese'             => __( 'Chinese' ),
+		'mejs.chinese-simplified'  => __( 'Chinese (Simplified)' ),
+		'mejs.chinese-traditional' => __( 'Chinese (Traditional)' ),
+		'mejs.croatian'            => __( 'Croatian' ),
+		'mejs.czech'               => __( 'Czech' ),
+		'mejs.danish'              => __( 'Danish' ),
+		'mejs.dutch'               => __( 'Dutch' ),
+		'mejs.english'             => __( 'English' ),
+		'mejs.estonian'            => __( 'Estonian' ),
+		'mejs.filipino'            => __( 'Filipino' ),
+		'mejs.finnish'             => __( 'Finnish' ),
+		'mejs.french'              => __( 'French' ),
+		'mejs.galician'            => __( 'Galician' ),
+		'mejs.german'              => __( 'German' ),
+		'mejs.greek'               => __( 'Greek' ),
+		'mejs.haitian-creole'      => __( 'Haitian Creole' ),
+		'mejs.hebrew'              => __( 'Hebrew' ),
+		'mejs.hindi'               => __( 'Hindi' ),
+		'mejs.hungarian'           => __( 'Hungarian' ),
+		'mejs.icelandic'           => __( 'Icelandic' ),
+		'mejs.indonesian'          => __( 'Indonesian' ),
+		'mejs.irish'               => __( 'Irish' ),
+		'mejs.italian'             => __( 'Italian' ),
+		'mejs.japanese'            => __( 'Japanese' ),
+		'mejs.korean'              => __( 'Korean' ),
+		'mejs.latvian'             => __( 'Latvian' ),
+		'mejs.lithuanian'          => __( 'Lithuanian' ),
+		'mejs.macedonian'          => __( 'Macedonian' ),
+		'mejs.malay'               => __( 'Malay' ),
+		'mejs.maltese'             => __( 'Maltese' ),
+		'mejs.norwegian'           => __( 'Norwegian' ),
+		'mejs.persian'             => __( 'Persian' ),
+		'mejs.polish'              => __( 'Polish' ),
+		'mejs.portuguese'          => __( 'Portuguese' ),
+		'mejs.romanian'            => __( 'Romanian' ),
+		'mejs.russian'             => __( 'Russian' ),
+		'mejs.serbian'             => __( 'Serbian' ),
+		'mejs.slovak'              => __( 'Slovak' ),
+		'mejs.slovenian'           => __( 'Slovenian' ),
+		'mejs.spanish'             => __( 'Spanish' ),
+		'mejs.swahili'             => __( 'Swahili' ),
+		'mejs.swedish'             => __( 'Swedish' ),
+		'mejs.tagalog'             => __( 'Tagalog' ),
+		'mejs.thai'                => __( 'Thai' ),
+		'mejs.turkish'             => __( 'Turkish' ),
+		'mejs.ukrainian'           => __( 'Ukrainian' ),
+		'mejs.vietnamese'          => __( 'Vietnamese' ),
+		'mejs.welsh'               => __( 'Welsh' ),
+		'mejs.yiddish'             => __( 'Yiddish' ),
+	),
 ) );
 $scripts->add( 'mediaelement-vimeo', "/wp-includes/js/mediaelement/renderers/vimeo.min.js", array('mediaelement'), 'X.X.X', 1 );
 $scripts->add( 'wp-mediaelement', "/wp-includes/js/mediaelement/wp-mediaelement$suffix.js", array('mediaelement'), false, 1 );
 $mejs_settings = array(
 	'pluginPath' => includes_url( 'js/mediaelement/', 'relative' ),
-        'classPrefix' => 'mejs-',
-        'stretching' => 'responsive',
+		'classPrefix' => 'mejs-',
+		'stretching' => 'responsive',
 );
 ```
 being `X.X.X` the latest version you want to install.
@@ -299,13 +299,13 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 
 <style>
 .mejs__overlay-button {
-    background-image: url("/path/to/mejs-controls.svg");
+	background-image: url("/path/to/mejs-controls.svg");
 }
 .mejs__overlay-loading-bg-img {
-    background-image: url("/path/to/mejs-controls.svg");
+	background-image: url("/path/to/mejs-controls.svg");
 }
 .mejs__button > button {
-    background-image: url("/path/to/mejs-controls.svg");
+	background-image: url("/path/to/mejs-controls.svg");
 }
 </style>
 ```
@@ -323,7 +323,7 @@ $('video, audio').mediaelementplayer({
 	// Do not forget to put a final slash (/)
 	pluginPath: 'https://cdnjs.com/libraries/mediaelement/',
 	// this will allow the CDN to use Flash without restrictions
-    // (by default, this is set as `sameDomain`)
+	// (by default, this is set as `sameDomain`)
 	shimScriptAccess: 'always'
 	// more configuration
 });
@@ -348,7 +348,7 @@ If your users have JavaScript and/or Flash, the easiest route for all browsers a
 or
 ```html
 <video width="320" height="240">
-    <source type="video/mp4" src="myvideo.mp4" />
+	<source type="video/mp4" src="myvideo.mp4" />
 </video>
 ```
 
@@ -392,11 +392,11 @@ If you plan to use this approach, just remember that it will only work for nativ
 The way to setup closed captioning is by using the `track` tag as follows:
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
-    <source type="video/mp4" src="myvideo.mp4" />
-    ...
-    <track src="subtitles_en.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="en" label="English">
-    <track src="subtitles_es.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="es" label="Spanish">
-    ...
+	<source type="video/mp4" src="myvideo.mp4" />
+	...
+	<track src="subtitles_en.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="en" label="English">
+	<track src="subtitles_es.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="es" label="Spanish">
+	...
 </video>
 ```
 
@@ -423,19 +423,19 @@ Optionally, just can set the attribute `lang` in the `<html>` tag with the one y
 ```html
 <script>
 
-    mejs.i18n.language('de'); // Setting German language
+	mejs.i18n.language('de'); // Setting German language
 
-    $('audio,video').mediaelementplayer({
-        success: function(player, node) {
+	$('audio,video').mediaelementplayer({
+		success: function(player, node) {
 
-        	// Optional
-            $(player).closest('.mejs__container').attr('lang', mejs.i18n.language());
+			// Optional
+			$(player).closest('.mejs__container').attr('lang', mejs.i18n.language());
 
-            $('html').attr('lang', mejs.i18n.language());
+			$('html').attr('lang', mejs.i18n.language());
 
-            // More code
-        }
-    });
+			// More code
+		}
+	});
 </script>
 ```
 

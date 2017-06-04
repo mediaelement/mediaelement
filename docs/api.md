@@ -2,12 +2,12 @@
 
 * [Attributes](#attributes)
 * [Configuration](#development)
-    * [Standalone](#standalone)
-    * [MediaElementPlayer](#player)
+	* [Standalone](#standalone)
+	* [MediaElementPlayer](#player)
 * [API](#api)
-    * [Properties](#properties)
-    * [Methods](#methods)
-    * [Events](#events)
+	* [Properties](#properties)
+	* [Methods](#methods)
+	* [Events](#events)
 
 
 <a id="attributes"></a>
@@ -35,9 +35,9 @@ width | Sets the width of the video player in pixels; you can also indicate perc
 The following markup displays all the attributes listed above for more clarity:
 ```html
 <video autoplay controls class="player" id="player1" height="360"
-    width="100%" loop muted poster="/path/to/poster.jpg"
-    preload="none" src="/path/to/media.mp4"
-    style="max-width: 100%" tabindex="0" title="MediaElement">
+	width="100%" loop muted poster="/path/to/poster.jpg"
+	preload="none" src="/path/to/media.mp4"
+	style="max-width: 100%" tabindex="0" title="MediaElement">
 </video>
 ```
 
