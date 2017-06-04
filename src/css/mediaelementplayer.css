@@ -171,27 +171,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     width: 80px;
     height: 80px;
     background: transparent url("mejs-controls.svg") -160px -40px no-repeat;
-    -webkit-animation: mejs-loading-spinner 1s linear infinite;
-    -moz-animation: mejs-loading-spinner 1s linear infinite;
     animation: mejs-loading-spinner 1s linear infinite;
     z-index: 1;
 }
 
-@-moz-keyframes mejs-loading-spinner {
-    100% {
-        -moz-transform: rotate(360deg);
-    }
-}
-
-@-webkit-keyframes mejs-loading-spinner {
-    100% {
-        -webkit-transform: rotate(360deg);
-    }
-}
-
 @keyframes mejs-loading-spinner {
     100% {
-        -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
 }
@@ -358,9 +343,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__time-current, .mejs__time-buffering, .mejs__time-loaded, .mejs__time-hovered {
     width: 100%;
     left: 0;
-    -ms-transform-origin: 0 0;
     transform-origin: 0 0;
-    -ms-transform: scaleX(0);
     transform: scaleX(0);
     transition: .15s ease-in all;
 }
@@ -370,7 +353,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__time-hovered.no-hover {
-    -ms-transform: scaleX(0) !important;
     transform: scaleX(0) !important;
 }
 
@@ -380,14 +362,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     border: 4px solid transparent;
     z-index: 11;
     left: 0;
-    -ms-transform: translateX(0px);
     transform: translateX(0px);
 }
 
 .mejs__time-handle-content {
     left: -7px;
     border: 4px solid rgba(255, 255, 255, 0.9);
-    -ms-transform: scale(0);
     transform: scale(0);
     top: -4px;
     border-radius: 50%;
@@ -396,7 +376,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__time-rail:hover .mejs__time-handle-content, .mejs__time-rail .mejs__time-handle-content:focus, .mejs__time-rail .mejs__time-handle-content:active {
-    -ms-transform: scale(1);
     transform: scale(1);
 }
 
