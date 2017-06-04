@@ -15,7 +15,7 @@
 * Updated documentation to expose `instance` argument when using `MediaElementPlayer` or jQuery's `mediaelementplayer` success callback @rafa8626
 * Added missing events for `FLV` native renderer @rafa8626
 * Fixed to documentation (https://github.com/mediaelement/mediaelement/pull/2259) @marcobiedermann
-* 
+* Optimized SVG sprite (https://github.com/mediaelement/mediaelement/pull/2260) @marcobiedermann
 
 *4.1.2 (2017/05/25)*
 
