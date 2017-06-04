@@ -1371,11 +1371,6 @@ class MediaElementPlayer {
 
 			t.container.style.minWidth = `${siblingsWidth}px`;
 
-
-			// Substract the width of the feature siblings from time rail
-			const controlsWidth = parseFloat(t.controls.offsetWidth);
-			t.rail.style.width = `${(siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth)}px`;
-
 			const event = createEvent('controlsresize', t.container);
 			t.container.dispatchEvent(event);
 		} else {

@@ -200,6 +200,9 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 /* Start: CONTROL BAR */
 .mejs__controls {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
     position: absolute;
     list-style-type: none;
     margin: 0;
@@ -219,7 +222,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__button,
 .mejs__time,
 .mejs__time-rail {
-    float: left;
     margin: 0;
     width: 32px;
     height: 40px;
@@ -293,6 +295,9 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* Start: Progress Bar */
 .mejs__time-rail {
     direction: ltr;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
     width: 200px;
     padding-top: 10px;
     height: 40px;
