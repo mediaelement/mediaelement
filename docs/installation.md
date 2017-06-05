@@ -2,20 +2,21 @@
 
 * [0. Setup MIME-types](#mime-types)
 * [1. Install `MediaElementJS`](#install)
-    * [Installation in WordPress](#wordpress)
-        * [`wp-includes/js/mediaelement`](#wp-includes)
-        * [`wp-includes/functions.php`](#wp-functions)
-        * [`wp-includes/media.php`](#wp-media)
-        * [`wp-includes/script-loader.php`](#wp-script)
-    * [Additional plugins](#plugins)
+	* [Installation in WordPress](#wordpress)
+		* [In `wp-admin/about.php`](#wp-about)
+		* [In `wp-admin/includes/ajax-actions.php`](#wp-ajax)
+		* [In `wp-includes/media.php`](#wp-media)
+		* [In `wp-includes/js/mediaelement` folder](#wp-js-mediaelement)
+		* [In `wp-includes/script-loader.php`](#wp-script)
+	* [Additional plugins](#plugins)
 * [2. Add Script and Stylesheet](#script-and-stylesheet)
 * [3. Add `<video>` or `<audio>` tags](#tags)
-    * [Default setup](#default-setup)
-    * [Multiple codecs (Optional)](#multi-codecs)
-    * [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
-    * [Use of Closed Captioning (Optional)](#closed-captioning)
+	* [Default setup](#default-setup)
+	* [Multiple codecs (Optional)](#multi-codecs)
+	* [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
+	* [Use of Closed Captioning (Optional)](#closed-captioning)
 * [4. Setup Player](#player)
-* [5. Set default language (Optional)](#language)    
+* [5. Set default language (Optional)](#language)
 
 <a id="mime-types"></a>
 ## 0. Setup MIME-types (optional)
@@ -55,15 +56,15 @@ If you want to make your media to play in `Chromium` browser, please read [this 
 For more information about how to set up a server to serve media properly and other general and useful topics about dealing with HTML5 video, [this article](http://ronallo.com/blog/html5-video-everything-i-needed-to-know) is a good start point.
 
 **Do not** compress media (`mod_deflate` or `gzip`), since it can lead to unexpected results, like headers not being passed correctly.
- 
+
 <a id="install"></a>
 ## 1. Install `MediaElementJS`
- 
-To get the default installation there are several different ways.
- 
-1. Download the package from https://github.com/mediaelement/mediaelement 
 
-2. Use a CDN reference; the most popular ones are [jsDelivr](http://cdn.jsdelivr.net/npm/mediaelement/) and [cdnjs](https://cdnjs.com/libraries/mediaelement). 
+To get the default installation there are several different ways.
+
+1. Download the package from https://github.com/mediaelement/mediaelement
+
+2. Use a CDN reference; the most popular ones are [jsDelivr](http://cdn.jsdelivr.net/npm/mediaelement/) and [cdnjs](https://cdnjs.com/libraries/mediaelement).
 
 3. Through GIT: `git clone https://github.com/mediaelement/mediaelement.git`
 
@@ -75,72 +76,90 @@ To get the default installation there are several different ways.
 <a id="wordpress"></a>
 ### Installation in WordPress
 
-WordPress currently incorporates `MediaElementJS` as a part of the [Embeds](https://codex.wordpress.org/Embeds) core package. 
+WordPress currently incorporates `MediaElementJS` as a part of the [Embeds](https://codex.wordpress.org/Embeds) core package. If you are using a version prior 4.8.1, and you want to upgrade `MediaElementJS` to the latest version, follow these steps:
 
-If you do not need this, just make sure you upgrade `MediaElementJS` in the theme(s) you are using, locate the player configuration, add the `classPrefix: 'mejs-'` element, and use the `mediaelementplayer-legacy.min.css` to avoid breaking styles for the theme. 
-
-However, if you want to bring the latest version and support the `Embeds` functionality, follow the next steps:
-
-<a id="wp-includes"></a>
-#### `wp-includes/js/mediaelement`
-
-1. Just remove the entire content of the folder and Paste the content of the `build` folder from the latest version of `MediaElementJS` inside of it. 
-
-2. Download the [wp-mediaelement.zip](https://github.com/mediaelement/mediaelement/files/1009558/wp-mediaelement.zip) file, unzip it and move all its content inside the in the `wp-includes/js/mediaelement` folder.
-
-<a id="wp-functions"></a>
-#### `wp-includes/functions.php`
-
-**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
-
-1. In the `wp_check_filetype()` method, add the following condition inside this loop:    
+<a id="wp-about"></a>
+#### In `wp-admin/about.php`
+1. Find the block
 ```
-foreach ( $mimes as $ext_preg => $mime_match ) {
-   // Add this conditional
-   if ($ext_preg === 'm3u8') {
-       $ext_preg .= '.*';
-   }
+if ( ! wp_is_mobile() ) {
+	wp_enqueue_style( 'wp-mediaelement' );
+```
+and add below the following:
+```
+wp_enqueue_script( 'mediaelement-vimeo' );
+```
+2. Find the block
+```
+wp_localize_script( 'mediaelement', '_wpmejsSettings',
+```
+and add in the `_wpmejsSettings` the following:
+```
+'pluginPath'        => includes_url( 'js/mediaelement/', 'relative' ),
+'pauseOtherPlayers' => '',
+'classPrefix'       => 'mejs-',
+'stretching'        => 'responsive',
 ```
 
-2. In the `wp_get_mime_types()` method, add the following MIME types:
-```
-'m3u8' => 'application/x-mpegurl',
-'mpd' => 'application/dash+xml'
-```
+<a id="wp-ajax"></a>
+#### In `wp-admin/includes/ajax-actions.php`
 
-3. In the `wp_get_ext_types()` method, add the following extensions at the end of the `video` array:
+1. Find the blocks that contain:
 ```
-'video' => array(..., 'm3u8', 'mpd')
+wp_print_scripts( 'wp-mediaelement' );
+```
+and replace them with:
+```
+wp_print_scripts( array( 'mediaelement-vimeo', 'wp-mediaelement' ) );
 ```
 
 <a id="wp-media"></a>
-#### `wp-includes/media.php`
+#### In `wp-includes/media.php`
 
-**NOTE**: WordPress has not approved this change officially, so do it under your own risk.
+1. Find the block that contains:
+```
+$library = apply_filters( 'wp_video_shortcode_library', 'mediaelement' );
+if ( 'mediaelement' === $library && did_action( 'init' ) ) {
+	wp_enqueue_style( 'wp-mediaelement' );
+	wp_enqueue_script( 'wp-mediaelement' );
+}
+```
+and replace it with:
+```
+$library = apply_filters( 'wp_video_shortcode_library', 'mediaelement' );
+if ( 'mediaelement' === $library && did_action( 'init' ) ) {
+	wp_enqueue_style( 'wp-mediaelement' );
+	wp_enqueue_script( 'mediaelement-vimeo' );
+	wp_enqueue_script( 'wp-mediaelement' );
+}
+```
 
-1. In the `wp_get_audio_extensions()` method, add the following extension:
+2. Find the block that contains:
 ```
-// This will allow us to play M3U8 files as audio only
-return apply_filters(..., '.*?type=audio') 
+if ( $is_vimeo ) {
+	wp_enqueue_script( 'froogaloop' );
+}
+```
+and replace it with:
+```
+if ( $is_vimeo ) {
+	wp_enqueue_script( 'mediaelement-vimeo' );
+}
 ```
 
-2. In the `wp_get_video_extensions()` method, add the following extensions:
+3. Inside the function `wpview_media_sandbox_styles()`, add:
 ```
-return apply_filters(..., 'm3u8', 'mpd');
+$mediaelement = includes_url( "js/mediaelement/mediaelementplayer-legacy.min.css?$version" );
 ```
 
-3. In the `wp_audio_shortcode()` method replace
-```
-if ( ! in_array( strtolower( $type['ext'] ), $default_types ) )
-```
-with:
-```
-if ( ! in_array( strtolower( $type['ext'] ), $default_types ) &&
-     !preg_match('/' . implode($default_types, '|'). '/i', $type['ext']))
-```    
+<a id="wp-js-mediaelement"></a>
+#### In `wp-includes/js/mediaelement` folder
+
+1. Remove all the files from the folder and install all the files inside the `build` folder from the `MediaElement` project.
+2. Download and copy/paste the WordPress files contained in this [link](https://github.com/mediaelement/mediaelement/files/1048572/wp-mejs.zip).
 
 <a id="wp-script"></a>
-#### `wp-includes/script-loader.php`
+#### In `wp-includes/script-loader.php`
 
 1. Find the block:
 ```
@@ -150,113 +169,114 @@ and replace all of that until you reach the end of the translations, with this:
 ```
 $scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-player.min.js", array('jquery'), 'X.X.X', 1 );
 did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
-    'language' => get_bloginfo( 'language' ),
-    'strings'  => array(
-           'mejs.install-flash'       => __( 'You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/' ),
-           'mejs.fullscreen-off'      => __( 'Turn off Fullscreen' ),
-           'mejs.fullscreen-on'       => __( 'Go Fullscreen' ),
-           'mejs.download-video'      => __( 'Download Video' ),
-           'mejs.fullscreen'          => __( 'Fullscreen' ),
-           'mejs.time-jump-forward'   => [ __('Jump forward 1 second'), __('Jump forward %1 seconds') ],
-           'mejs.loop'                => __( 'Toggle Loop' ),
-           'mejs.play'                => __( 'Play' ),
-           'mejs.pause'               => __( 'Pause' ),
-           'mejs.close'               => __( 'Close' ),
-           'mejs.time-slider'         => __( 'Time Slider' ),
-           'mejs.time-help-text'      => __( 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.' ),
-           'mejs.time-skip-back'      => [ __('Skip back 1 second'), __('Skip back %1 seconds') ],
-           'mejs.captions-subtitles'  => __( 'Captions/Subtitles' ),
-           'mejs.captions-chapters'   => __( 'Chapters' ),
-           'mejs.none'                => __( 'None' ),
-           'mejs.mute-toggle'         => __( 'Mute Toggle' ),
-           'mejs.volume-help-text'    => __( 'Use Up/Down Arrow keys to increase or decrease volume.' ),
-           'mejs.unmute'              => __( 'Unmute' ),
-           'mejs.mute'                => __( 'Mute' ),
-           'mejs.volume-slider'       => __( 'Volume Slider' ),
-           'mejs.video-player'        => __( 'Video Player' ),
-           'mejs.audio-player'        => __( 'Audio Player' ),
-           'mejs.ad-skip'             => __( 'Skip ad' ),
-           'mejs.ad-skip-info'        => [ __('Skip in 1 second'), __('Skip in %1 seconds') ],
-           'mejs.source-chooser'      => __( 'Source Chooser' ),
-           'mejs.stop'                => __( 'Stop' ),
-           'mejs.speed-rate'          => __( 'Speed Rate' ),
-           'mejs.live-broadcast'      => __( 'Live Broadcast' ),
-           'mejs.afrikaans'           => __( 'Afrikaans' ),
-           'mejs.albanian'            => __( 'Albanian' ),
-           'mejs.arabic'              => __( 'Arabic' ),
-           'mejs.belarusian'          => __( 'Belarusian' ),
-           'mejs.bulgarian'           => __( 'Bulgarian' ),
-           'mejs.catalan'             => __( 'Catalan' ),
-           'mejs.chinese'             => __( 'Chinese' ),
-           'mejs.chinese-simplified'  => __( 'Chinese (Simplified)' ),
-           'mejs.chinese-traditional' => __( 'Chinese (Traditional)' ),
-           'mejs.croatian'            => __( 'Croatian' ),
-           'mejs.czech'               => __( 'Czech' ),
-           'mejs.danish'              => __( 'Danish' ),
-           'mejs.dutch'               => __( 'Dutch' ),
-           'mejs.english'             => __( 'English' ),
-           'mejs.estonian'            => __( 'Estonian' ),
-           'mejs.filipino'            => __( 'Filipino' ),
-           'mejs.finnish'             => __( 'Finnish' ),
-           'mejs.french'              => __( 'French' ),
-           'mejs.galician'            => __( 'Galician' ),
-           'mejs.german'              => __( 'German' ),
-           'mejs.greek'               => __( 'Greek' ),
-           'mejs.haitian-creole'      => __( 'Haitian Creole' ),
-           'mejs.hebrew'              => __( 'Hebrew' ),
-           'mejs.hindi'               => __( 'Hindi' ),
-           'mejs.hungarian'           => __( 'Hungarian' ),
-           'mejs.icelandic'           => __( 'Icelandic' ),
-           'mejs.indonesian'          => __( 'Indonesian' ),
-           'mejs.irish'               => __( 'Irish' ),
-           'mejs.italian'             => __( 'Italian' ),
-           'mejs.japanese'            => __( 'Japanese' ),
-           'mejs.korean'              => __( 'Korean' ),
-           'mejs.latvian'             => __( 'Latvian' ),
-           'mejs.lithuanian'          => __( 'Lithuanian' ),
-           'mejs.macedonian'          => __( 'Macedonian' ),
-           'mejs.malay'               => __( 'Malay' ),
-           'mejs.maltese'             => __( 'Maltese' ),
-           'mejs.norwegian'           => __( 'Norwegian' ),
-           'mejs.persian'             => __( 'Persian' ),
-           'mejs.polish'              => __( 'Polish' ),
-           'mejs.portuguese'          => __( 'Portuguese' ),
-           'mejs.romanian'            => __( 'Romanian' ),
-           'mejs.russian'             => __( 'Russian' ),
-           'mejs.serbian'             => __( 'Serbian' ),
-           'mejs.slovak'              => __( 'Slovak' ),
-           'mejs.slovenian'           => __( 'Slovenian' ),
-           'mejs.spanish'             => __( 'Spanish' ),
-           'mejs.swahili'             => __( 'Swahili' ),
-           'mejs.swedish'             => __( 'Swedish' ),
-           'mejs.tagalog'             => __( 'Tagalog' ),
-           'mejs.thai'                => __( 'Thai' ),
-           'mejs.turkish'             => __( 'Turkish' ),
-           'mejs.ukrainian'           => __( 'Ukrainian' ),
-           'mejs.vietnamese'          => __( 'Vietnamese' ),
-           'mejs.welsh'               => __( 'Welsh' ),
-           'mejs.yiddish'             => __( 'Yiddish' ),
-    ),
+	'language' => get_bloginfo( 'language' ),
+	'strings'  => array(
+		'mejs.install-flash'       => __( 'You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/' ),
+		'mejs.fullscreen-off'      => __( 'Turn off Fullscreen' ),
+		'mejs.fullscreen-on'       => __( 'Go Fullscreen' ),
+		'mejs.download-video'      => __( 'Download Video' ),
+		'mejs.fullscreen'          => __( 'Fullscreen' ),
+		'mejs.time-jump-forward'   => array( __('Jump forward 1 second'), __('Jump forward %1 seconds') ),
+		'mejs.loop'                => __( 'Toggle Loop' ),
+		'mejs.play'                => __( 'Play' ),
+		'mejs.pause'               => __( 'Pause' ),
+		'mejs.close'               => __( 'Close' ),
+		'mejs.time-slider'         => __( 'Time Slider' ),
+		'mejs.time-help-text'      => __( 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.' ),
+		'mejs.time-skip-back'      => array( __('Skip back 1 second'), __('Skip back %1 seconds') ),
+		'mejs.captions-subtitles'  => __( 'Captions/Subtitles' ),
+		'mejs.captions-chapters'   => __( 'Chapters' ),
+		'mejs.none'                => __( 'None' ),
+		'mejs.mute-toggle'         => __( 'Mute Toggle' ),
+		'mejs.volume-help-text'    => __( 'Use Up/Down Arrow keys to increase or decrease volume.' ),
+		'mejs.unmute'              => __( 'Unmute' ),
+		'mejs.mute'                => __( 'Mute' ),
+		'mejs.volume-slider'       => __( 'Volume Slider' ),
+		'mejs.video-player'        => __( 'Video Player' ),
+		'mejs.audio-player'        => __( 'Audio Player' ),
+		'mejs.ad-skip'             => __( 'Skip ad' ),
+		'mejs.ad-skip-info'        => array( __('Skip in 1 second'), __('Skip in %1 seconds') ),
+		'mejs.source-chooser'      => __( 'Source Chooser' ),
+		'mejs.stop'                => __( 'Stop' ),
+		'mejs.speed-rate'          => __( 'Speed Rate' ),
+		'mejs.live-broadcast'      => __( 'Live Broadcast' ),
+		'mejs.afrikaans'           => __( 'Afrikaans' ),
+		'mejs.albanian'            => __( 'Albanian' ),
+		'mejs.arabic'              => __( 'Arabic' ),
+		'mejs.belarusian'          => __( 'Belarusian' ),
+		'mejs.bulgarian'           => __( 'Bulgarian' ),
+		'mejs.catalan'             => __( 'Catalan' ),
+		'mejs.chinese'             => __( 'Chinese' ),
+		'mejs.chinese-simplified'  => __( 'Chinese (Simplified)' ),
+		'mejs.chinese-traditional' => __( 'Chinese (Traditional)' ),
+		'mejs.croatian'            => __( 'Croatian' ),
+		'mejs.czech'               => __( 'Czech' ),
+		'mejs.danish'              => __( 'Danish' ),
+		'mejs.dutch'               => __( 'Dutch' ),
+		'mejs.english'             => __( 'English' ),
+		'mejs.estonian'            => __( 'Estonian' ),
+		'mejs.filipino'            => __( 'Filipino' ),
+		'mejs.finnish'             => __( 'Finnish' ),
+		'mejs.french'              => __( 'French' ),
+		'mejs.galician'            => __( 'Galician' ),
+		'mejs.german'              => __( 'German' ),
+		'mejs.greek'               => __( 'Greek' ),
+		'mejs.haitian-creole'      => __( 'Haitian Creole' ),
+		'mejs.hebrew'              => __( 'Hebrew' ),
+		'mejs.hindi'               => __( 'Hindi' ),
+		'mejs.hungarian'           => __( 'Hungarian' ),
+		'mejs.icelandic'           => __( 'Icelandic' ),
+		'mejs.indonesian'          => __( 'Indonesian' ),
+		'mejs.irish'               => __( 'Irish' ),
+		'mejs.italian'             => __( 'Italian' ),
+		'mejs.japanese'            => __( 'Japanese' ),
+		'mejs.korean'              => __( 'Korean' ),
+		'mejs.latvian'             => __( 'Latvian' ),
+		'mejs.lithuanian'          => __( 'Lithuanian' ),
+		'mejs.macedonian'          => __( 'Macedonian' ),
+		'mejs.malay'               => __( 'Malay' ),
+		'mejs.maltese'             => __( 'Maltese' ),
+		'mejs.norwegian'           => __( 'Norwegian' ),
+		'mejs.persian'             => __( 'Persian' ),
+		'mejs.polish'              => __( 'Polish' ),
+		'mejs.portuguese'          => __( 'Portuguese' ),
+		'mejs.romanian'            => __( 'Romanian' ),
+		'mejs.russian'             => __( 'Russian' ),
+		'mejs.serbian'             => __( 'Serbian' ),
+		'mejs.slovak'              => __( 'Slovak' ),
+		'mejs.slovenian'           => __( 'Slovenian' ),
+		'mejs.spanish'             => __( 'Spanish' ),
+		'mejs.swahili'             => __( 'Swahili' ),
+		'mejs.swedish'             => __( 'Swedish' ),
+		'mejs.tagalog'             => __( 'Tagalog' ),
+		'mejs.thai'                => __( 'Thai' ),
+		'mejs.turkish'             => __( 'Turkish' ),
+		'mejs.ukrainian'           => __( 'Ukrainian' ),
+		'mejs.vietnamese'          => __( 'Vietnamese' ),
+		'mejs.welsh'               => __( 'Welsh' ),
+		'mejs.yiddish'             => __( 'Yiddish' ),
+	),
 ) );
+$scripts->add( 'mediaelement-vimeo', "/wp-includes/js/mediaelement/renderers/vimeo.min.js", array('mediaelement'), 'X.X.X', 1 );
 $scripts->add( 'wp-mediaelement', "/wp-includes/js/mediaelement/wp-mediaelement$suffix.js", array('mediaelement'), false, 1 );
 $mejs_settings = array(
 	'pluginPath' => includes_url( 'js/mediaelement/', 'relative' ),
-        'classPrefix' => 'mejs-',
-        'stretching' => 'responsive',
+		'classPrefix' => 'mejs-',
+		'stretching' => 'responsive',
 );
 ```
 being `X.X.X` the latest version you want to install.
 
-2. Remove `$scripts->add( 'froogaloop',  "/wp-includes/js/mediaelement/froogaloop.min.js", array(), '2.0' );` 
-   
-3. Replace: 
+2. Remove `$scripts->add( 'froogaloop',  "/wp-includes/js/mediaelement/froogaloop.min.js", array(), '2.0' );`
+
+3. Replace:
 ```
-$styles->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelementplayer.min.css", array(), '2.22.0' ); 
+$styles->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelementplayer.min.css", array(), '2.22.0' );
 ```
-with: 
+with:
 ```
 $styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css", array(), 'X.X.X' );
-```   
+```
 being `X.X.X` the latest version you want to install.
 
 <a id="plugins"></a>
@@ -279,22 +299,22 @@ If you wish to install the sources in different directories (i.e., all Javascrip
 
 <style>
 .mejs__overlay-button {
-    background-image: url("/path/to/mejs-controls.svg");
+	background-image: url("/path/to/mejs-controls.svg");
 }
 .mejs__overlay-loading-bg-img {
-    background-image: url("/path/to/mejs-controls.svg");
+	background-image: url("/path/to/mejs-controls.svg");
 }
 .mejs__button > button {
-    background-image: url("/path/to/mejs-controls.svg");
+	background-image: url("/path/to/mejs-controls.svg");
 }
 </style>
 ```
 
 Also, update `pluginPath` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
 
-You can also use a CDN to load your script and stylesheet. 
+You can also use a CDN to load your script and stylesheet.
 
-As stated above, the important factor is to set the `pluginPath` correctly, but also, for this scenario, you will need to set the `shimScriptAccess` configuration element as ***`always`*** to make the shims to work. 
+As stated above, the important factor is to set the `pluginPath` correctly, but also, for this scenario, you will need to set the `shimScriptAccess` configuration element as ***`always`*** to make the shims to work.
 
 As an example:
 
@@ -302,16 +322,16 @@ As an example:
 $('video, audio').mediaelementplayer({
 	// Do not forget to put a final slash (/)
 	pluginPath: 'https://cdnjs.com/libraries/mediaelement/',
-	// this will allow the CDN to use Flash without restrictions 
-    // (by default, this is set as `sameDomain`)
-	shimScriptAccess: 'always' 
+	// this will allow the CDN to use Flash without restrictions
+	// (by default, this is set as `sameDomain`)
+	shimScriptAccess: 'always'
 	// more configuration
 });
 ```
 
-Check the content of `mediaelementplayer.min.css` (or if you decided to use the old styles, `mediaelementplayer-legacy.min.css`) to customize any CSS related to the player. 
+Check the content of `mediaelementplayer.min.css` (or if you decided to use the old styles, `mediaelementplayer-legacy.min.css`) to customize any CSS related to the player.
 
-Also, as an example, visit [this section](resources.md#styles) to have an idea on how can you customize the look-and-feel of the player. 
+Also, as an example, visit [this section](resources.md#styles) to have an idea on how can you customize the look-and-feel of the player.
 
 
 <a id="tags"></a>
@@ -321,21 +341,21 @@ Also, as an example, visit [this section](resources.md#styles) to have an idea o
 ### Default setup
 If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single file.
 
-```html	
+```html
 <video src="myvideo.mp4" width="320" height="240" type="video/mp4"></video>
 
 ```
 or
-```html	
+```html
 <video width="320" height="240">
-    <source type="video/mp4" src="myvideo.mp4" />
+	<source type="video/mp4" src="myvideo.mp4" />
 </video>
 ```
 
-All the formats supported are listed in [this table](usage.md#renderers-list). Besides that, there are some additional attributes that can be added in the `video`/`audio` tag. 
+All the formats supported are listed in [this table](usage.md#renderers-list). Besides that, there are some additional attributes that can be added in the `video`/`audio` tag.
 Visit the [Attributes](api.md#attributes) section for more information.
 
-**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display warnings in regards of unknown/custom MIME types. But they do not prevent the plugin to work properly. 
+**Note**: Although it is important to include their MIME type so the plugin renders the media accurately, some browsers like Firefox can display warnings in regards of unknown/custom MIME types. But they do not prevent the plugin to work properly.
 
 <a id="multi-codecs"></a>
 ### Multiple codecs (Optional)
@@ -358,8 +378,8 @@ In very rare cases, you might have a non-HTML5 browser with Flash turned on and 
 	<source type="video/webm" src="myvideo.webm" />
 	<source type="video/ogg" src="myvideo.ogv" />
 	<object width="320" height="240" type="application/x-shockwave-flash" data="/path/to/mediaelement-flash-video.swf">
-		<param name="movie" value="/path/to/mediaelement-flash-video.swf" /> 
-		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" /> 		
+		<param name="movie" value="/path/to/mediaelement-flash-video.swf" />
+		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" />
 		<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
 	</object>
 </video>
@@ -372,11 +392,11 @@ If you plan to use this approach, just remember that it will only work for nativ
 The way to setup closed captioning is by using the `track` tag as follows:
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
-    <source type="video/mp4" src="myvideo.mp4" />
-    ... 
-    <track src="subtitles_en.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="en" label="English">
-    <track src="subtitles_es.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="es" label="Spanish">
-    ...
+	<source type="video/mp4" src="myvideo.mp4" />
+	...
+	<track src="subtitles_en.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="en" label="English">
+	<track src="subtitles_es.[srt|vtt]" kind="[subtitles|captions|chapters]" srclang="es" label="Spanish">
+	...
 </video>
 ```
 
@@ -403,19 +423,19 @@ Optionally, just can set the attribute `lang` in the `<html>` tag with the one y
 ```html
 <script>
 
-    mejs.i18n.language('de'); // Setting German language
-    
-    $('audio,video').mediaelementplayer({
-        success: function(player, node) {
-        
-        	// Optional
-            $(player).closest('.mejs__container').attr('lang', mejs.i18n.language());
-            
-            $('html').attr('lang', mejs.i18n.language());
-            
-            // More code
-        }
-    });
+	mejs.i18n.language('de'); // Setting German language
+
+	$('audio,video').mediaelementplayer({
+		success: function(player, node) {
+
+			// Optional
+			$(player).closest('.mejs__container').attr('lang', mejs.i18n.language());
+
+			$('html').attr('lang', mejs.i18n.language());
+
+			// More code
+		}
+	});
 </script>
 ```
 

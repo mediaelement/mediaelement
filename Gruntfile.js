@@ -1,6 +1,5 @@
 module.exports = function (grunt) {
 
-	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-copy');
@@ -12,6 +11,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-stylelint');
 
 	var rendererSources;
 
@@ -40,6 +40,10 @@ module.exports = function (grunt) {
 				files: ['src/css/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg', 'src/css/**/*.gif'],
 				tasks: ['postcss', 'copy:build']
 			}
+		},
+
+		stylelint: {
+			all: ['src/css/*.css']
 		},
 
 		eslint: {
@@ -123,7 +127,7 @@ module.exports = function (grunt) {
 				},
 				options: {
 					plugin: [
-						"browserify-derequire", "bundle-collapser/plugin"
+						'browserify-derequire', 'bundle-collapser/plugin'
 					]
 				}
 			}
@@ -161,20 +165,52 @@ module.exports = function (grunt) {
 			}
 		},
 		postcss: {
-			options: {
-				processors: [
-					// Add vendor prefixes.
-					require('autoprefixer')({browsers: 'last 2 versions, ie > 8'}),
-					// Minify the result.
-					require('cssnano')()
-				]
-			},
 			main: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({
+							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+						})
+					]
+				},
 				src: 'src/css/mediaelementplayer.css',
-				dest: 'build/mediaelementplayer.min.css'
+				dest: 'build/mediaelementplayer.css'
 			},
 			legacy: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({
+							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+						})
+					]
+				},
 				src: 'src/css/mediaelementplayer-legacy.css',
+				dest: 'build/mediaelementplayer-legacy.css'
+			},
+			mainMin: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
+						// Minify the result.
+						require('cssnano')()
+					]
+				},
+				src: 'build/mediaelementplayer.css',
+				dest: 'build/mediaelementplayer.min.css'
+			},
+			legacyMin: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
+						// Minify the result.
+						require('cssnano')()
+					]
+				},
+				src: 'build/mediaelementplayer-legacy.css',
 				dest: 'build/mediaelementplayer-legacy.min.css'
 			}
 		},
@@ -182,7 +218,7 @@ module.exports = function (grunt) {
 			build: {
 				expand: true,
 				cwd: 'src/css/',
-				src: ['*.png', '*.svg', '*.gif', '*.css'],
+				src: ['*.png', '*.svg', '*.gif'],
 				dest: 'build/',
 				flatten: true,
 				filter: 'isFile'
@@ -201,15 +237,11 @@ module.exports = function (grunt) {
 					}
 				}
 			}
-		},
-		clean: {
-			build: ['build'],
-			temp: ['tmp']
 		}
 	});
 
-	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'clean:temp']);
-	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'clean:temp']);
+	grunt.registerTask('default', ['eslint', 'stylelint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('debug', ['eslint', 'stylelint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
 	grunt.registerTask('flash', '', function () {
 		var exec = require('child_process').execSync;
 		var result = exec("sh compile_swf.sh", {encoding: 'utf8'});
