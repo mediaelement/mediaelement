@@ -438,6 +438,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-time-float-corner {
     border: solid 5px #eee;
+    border-color: #eee transparent transparent;
     border-radius: 0;
     display: block;
     height: 0;

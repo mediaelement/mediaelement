@@ -192,6 +192,8 @@ module.exports = function (grunt) {
 			mainMin: {
 				options: {
 					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
 						// Minify the result.
 						require('cssnano')()
 					]
@@ -202,6 +204,8 @@ module.exports = function (grunt) {
 			legacyMin: {
 				options: {
 					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
 						// Minify the result.
 						require('cssnano')()
 					]
