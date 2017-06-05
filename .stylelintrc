@@ -12,6 +12,7 @@
         ]
       }
     ],
+    "length-zero-no-unit": true,
     "number-leading-zero": "always",
     "order/order": [
       "custom-properties",

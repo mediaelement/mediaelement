@@ -2,7 +2,7 @@
 Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
 .mejs__offscreen {
     clip: rect(1px, 1px, 1px, 1px); /* IE8-IE11 - no support for clip-path */
-    clip-path: polygon(0px 0px, 0px 0px, 0px 0px, 0px 0px);
+    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
     height: 1px;
     overflow: hidden;
     position: absolute !important;
@@ -361,7 +361,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     cursor: pointer;
     left: 0;
     position: absolute;
-    transform: translateX(0px);
+    transform: translateX(0);
     z-index: 11;
 }
 
