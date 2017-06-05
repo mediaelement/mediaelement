@@ -24,6 +24,7 @@
 * Integrated [Stylelint](https://stylelint.io/) for CSS quality @rafa8626 
 * Improvements to CSS stylesheets via `Stylelint` (https://github.com/mediaelement/mediaelement/pull/2266) @marcobiedermann
 * Fixed workflow to generate proper vendor prefixes (https://github.com/mediaelement/mediaelement/pull/2265) @marcobiedermann
+* CSS cleanup (https://github.com/mediaelement/mediaelement/pull/2267) @marcobiedermann
 
 *4.1.2 (2017/05/25)*
 
