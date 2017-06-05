@@ -12,7 +12,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__container {
     background: #000;
     box-sizing: border-box;
-    font-family: "Helvetica", Arial, serif;
+    font-family: 'Helvetica', Arial, serif;
     position: relative;
     text-align: left;
     text-indent: 0;
@@ -141,7 +141,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__overlay-button {
-    background: url("mejs-controls.svg") no-repeat;
+    background: url('mejs-controls.svg') no-repeat;
     background-position: 0 -39px;
     height: 80px;
     left: 50%;
@@ -168,7 +168,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__overlay-loading-bg-img {
     animation: mejs__loading-spinner 1s linear infinite;
-    background: transparent url("mejs-controls.svg") -160px -40px no-repeat;
+    background: transparent url('mejs-controls.svg') -160px -40px no-repeat;
     display: block;
     height: 80px;
     width: 80px;
@@ -196,7 +196,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     z-index: 1;
 }
 
-.mejs__controls:not([style*="display: none"]) {
+.mejs__controls:not([style*='display: none']) {
     background: rgba(255, 0, 0, 0.7);
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.35));
 }
@@ -213,7 +213,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__button > button {
-    background: transparent url("mejs-controls.svg");
+    background: transparent url('mejs-controls.svg');
     border: 0;
     cursor: pointer;
     display: block;
