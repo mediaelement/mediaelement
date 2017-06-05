@@ -619,7 +619,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     font-size: 10px;
     line-height: 15px;
     padding: 4px 0 0;
-    width: 55px;
 }
 
 .mejs__captions-selected, .mejs__chapters-selected {
