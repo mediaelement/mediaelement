@@ -141,8 +141,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-overlay-button {
-    background-position: 0 -39px;
     background: url("mejs-controls.svg") no-repeat;
+    background-position: 0 -39px;
     height: 80px;
     left: 50%;
     margin: -40px 0 0 -40px;
@@ -167,31 +167,16 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-overlay-loading-bg-img {
-    -webkit-animation: mejs-loading-spinner 1s linear infinite;
-    -moz-animation: mejs-loading-spinner 1s linear infinite;
-    animation: mejs-loading-spinner 1s linear infinite;
-    background: transparent url("mejs-controls.svg") -160px -40px no-repeat;
     display: block;
-    height: 80px;
     width: 80px;
+    height: 80px;
+    background: transparent url("mejs-controls.svg") -160px -40px no-repeat;
+    animation: mejs-loading-spinner 1s linear infinite;
     z-index: 1;
-}
-
-@-moz-keyframes mejs-loading-spinner {
-    100% {
-        -moz-transform: rotate(360deg);
-    }
-}
-
-@-webkit-keyframes mejs-loading-spinner {
-    100% {
-        -webkit-transform: rotate(360deg);
-    }
 }
 
 @keyframes mejs-loading-spinner {
     100% {
-        -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
 }
@@ -357,9 +342,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-time-current, .mejs-time-buffering, .mejs-time-loaded, .mejs-time-hovered {
     left: 0;
-    -ms-transform-origin: 0 0;
     transform-origin: 0 0;
-    -ms-transform: scaleX(0);
     transform: scaleX(0);
     transition: .15s ease-in all;
     width: 100%;
@@ -370,7 +353,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-time-hovered.no-hover {
-    -ms-transform: scaleX(0) !important;
     transform: scaleX(0) !important;
 }
 
@@ -379,7 +361,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     cursor: pointer;
     left: 0;
     position: absolute;
-    -ms-transform: translateX(0px);
     transform: translateX(0px);
     z-index: 11;
 }
@@ -390,13 +371,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     height: 10px;
     left: -7px;
     top: -4px;
-    -ms-transform: scale(0);
     transform: scale(0);
     width: 10px;
 }
 
 .mejs-time-rail:hover .mejs-time-handle-content, .mejs-time-rail .mejs-time-handle-content:focus, .mejs-time-rail .mejs-time-handle-content:active {
-    -ms-transform: scale(1);
     transform: scale(1);
 }
 
