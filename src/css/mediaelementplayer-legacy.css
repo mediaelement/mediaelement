@@ -324,7 +324,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-time-loaded {
-    background: rgba(255, 255, 255, .3);
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .mejs-time-current, .mejs-time-handle-content {
@@ -332,7 +332,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-time-hovered {
-    background: rgba(255, 255, 255, .5);
+    background: rgba(255, 255, 255, 0.5);
     z-index: 10;
 }
 
@@ -344,12 +344,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     left: 0;
     transform: scaleX(0);
     transform-origin: 0 0;
-    transition: .15s ease-in all;
+    transition: 0.15s ease-in all;
     width: 100%;
 }
 
 .mejs-time-hovered {
-    transition: height .1s cubic-bezier(0.44, 0.0, 1, 1);
+    transition: height 0.1s cubic-bezier(0.44, 0.0, 1, 1);
 }
 
 .mejs-time-hovered.no-hover {

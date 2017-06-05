@@ -12,6 +12,7 @@
         ]
       }
     ],
+    "number-leading-zero": "always",
     "order/order": [
       "custom-properties",
       "declarations"
