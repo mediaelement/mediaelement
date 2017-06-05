@@ -11,6 +11,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-stylelint');
 
 	var rendererSources;
 
@@ -39,6 +40,10 @@ module.exports = function (grunt) {
 				files: ['src/css/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg', 'src/css/**/*.gif'],
 				tasks: ['postcss', 'copy:build']
 			}
+		},
+
+		stylelint: {
+			all: ['src/css/*.css']
 		},
 
 		eslint: {

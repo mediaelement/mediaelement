@@ -1,6 +1,6 @@
 ### Version History
 
-*4.1.3 (2017/??/??)*
+*4.1.3 (2017/06/??)*
 
 * Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello
 * Changed `destroy()` to `remove()` in React documentation (https://github.com/mediaelement/mediaelement/pull/2243) @evykassirer
@@ -20,6 +20,8 @@
 * Fixed regex to check if source is valid YouTube source @rafa8626
 * Upgraded `flv.js` to 1.3.0 (https://github.com/mediaelement/mediaelement/pull/2262) @isantolin
 * Updated `hls.js` to a CDN with SSL support (https://github.com/mediaelement/mediaelement/pull/2263) @isantolin
+* Sorted CSS properties to reduce filesize when using gzip (https://github.com/mediaelement/mediaelement/pull/2264) @marcobiedermann
+* Integrated [Stylelint](https://stylelint.io/) for CSS quality @rafa8626 
 
 *4.1.2 (2017/05/25)*
 

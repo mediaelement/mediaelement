@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "color-hex-case": [2, "lower"],
+    "order/order": [
+      "custom-properties",
+      "declarations"
+    ],
+    "order/properties-alphabetical-order": true
+  }
+}
