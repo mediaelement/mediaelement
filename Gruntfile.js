@@ -165,20 +165,48 @@ module.exports = function (grunt) {
 			}
 		},
 		postcss: {
-			options: {
-				processors: [
-					// Add vendor prefixes.
-					require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
-					// Minify the result.
-					require('cssnano')()
-				]
-			},
 			main: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({
+							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+						})
+					]
+				},
 				src: 'src/css/mediaelementplayer.css',
-				dest: 'build/mediaelementplayer.min.css'
+				dest: 'build/mediaelementplayer.css'
 			},
 			legacy: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({
+							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+						})
+					]
+				},
 				src: 'src/css/mediaelementplayer-legacy.css',
+				dest: 'build/mediaelementplayer-legacy.css'
+			},
+			mainMin: {
+				options: {
+					processors: [
+						// Minify the result.
+						require('cssnano')()
+					]
+				},
+				src: 'build/mediaelementplayer.css',
+				dest: 'build/mediaelementplayer.min.css'
+			},
+			legacyMin: {
+				options: {
+					processors: [
+						// Minify the result.
+						require('cssnano')()
+					]
+				},
+				src: 'build/mediaelementplayer-legacy.css',
 				dest: 'build/mediaelementplayer-legacy.min.css'
 			}
 		},
@@ -186,7 +214,7 @@ module.exports = function (grunt) {
 			build: {
 				expand: true,
 				cwd: 'src/css/',
-				src: ['*.png', '*.svg', '*.gif', '*.css'],
+				src: ['*.png', '*.svg', '*.gif'],
 				dest: 'build/',
 				flatten: true,
 				filter: 'isFile'
