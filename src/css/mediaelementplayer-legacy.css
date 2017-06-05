@@ -145,10 +145,10 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     background-position: 0 -39px;
     height: 80px;
     left: 50%;
-    margin: -40px 0 0 -40px;
     overflow: hidden;
     position: absolute;
     top: 50%;
+    transform: translate(-50%, -50%);
     width: 80px;
     z-index: 1;
 }
@@ -160,9 +160,9 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-overlay-loading {
     height: 80px;
     left: 50%;
-    margin: -40px 0 0 -40px;
     position: absolute;
     top: 50%;
+    transform: translate(-50%, -50%);
     width: 80px;
 }
 
@@ -381,13 +381,14 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-time-float {
     background: #eee;
     border: solid 1px #333;
+    bottom: 100%;
     color: #111;
     display: none;
     height: 17px;
-    margin-left: -18px;
+    margin-bottom: 9px;
     position: absolute;
     text-align: center;
-    top: -26px;
+    transform: translateX(-50%);
     width: 36px;
 }
 
@@ -405,10 +406,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     border-radius: 0;
     display: block;
     height: 0;
-    left: 13px;
+    left: 50%;
     line-height: 0;
     position: absolute;
-    top: 15px;
+    top: 100%;
+    transform: translateX(-50%);
     width: 0;
 }
 
@@ -462,12 +464,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-volume-button > .mejs-volume-slider {
     background: rgba(50, 50, 50, 0.7);
     border-radius: 0;
+    bottom: 100%;
     display: none;
     height: 115px;
-    left: 5px;
+    left: 50%;
     margin: 0;
     position: absolute;
-    top: -115px;
+    transform: translateX(-50%);
     width: 25px;
     z-index: 1;
 }
@@ -479,17 +482,16 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-volume-total {
     background: rgba(255, 255, 255, 0.5);
     height: 100px;
-    left: 11px;
+    left: 50%;
     margin: 0;
     position: absolute;
     top: 8px;
+    transform: translateX(-50%);
     width: 2px;
 }
 
 .mejs-volume-current {
     background: rgba(255, 255, 255, 0.9);
-    bottom: 0;
-    height: 100%;
     left: 0;
     margin: 0;
     position: absolute;
@@ -499,12 +501,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-volume-handle {
     background: rgba(255, 255, 255, 0.9);
     border-radius: 1px;
-    bottom: 100%;
     cursor: ns-resize;
     height: 6px;
-    left: 0;
-    margin: 0 0 -3px -7px;
+    left: 50%;
     position: absolute;
+    transform: translateX(-50%);
     width: 16px;
 }
 
@@ -566,7 +567,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     background: rgba(50, 50, 50, 0.7);
     border: solid 1px transparent;
     border-radius: 0;
-    bottom: 40px;
+    bottom: 100%;
     overflow: hidden;
     padding: 0;
     position: absolute;
