@@ -14,6 +14,7 @@
     ],
     "length-zero-no-unit": true,
     "number-leading-zero": "always",
+    "number-no-trailing-zeros": true,
     "order/order": [
       "custom-properties",
       "declarations"
