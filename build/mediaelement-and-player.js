@@ -2055,8 +2055,16 @@ Object.assign(_player2.default.prototype, {
 			currentTime = 0;
 		}
 
+		var timecode = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+
+		if (timecode.length > 5) {
+			(0, _dom.addClass)(t.container, t.options.classPrefix + 'long-video');
+		} else {
+			(0, _dom.removeClass)(t.container, t.options.classPrefix + 'long-video');
+		}
+
 		if (t.controls.querySelector('.' + t.options.classPrefix + 'currenttime')) {
-			t.controls.querySelector('.' + t.options.classPrefix + 'currenttime').innerText = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+			t.controls.querySelector('.' + t.options.classPrefix + 'currenttime').innerText = timecode;
 		}
 	},
 	updateDuration: function updateDuration() {
@@ -2075,7 +2083,9 @@ Object.assign(_player2.default.prototype, {
 		var timecode = (0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 
 		if (timecode.length > 5) {
-			(0, _dom.toggleClass)(t.container, t.options.classPrefix + 'long-video');
+			(0, _dom.addClass)(t.container, t.options.classPrefix + 'long-video');
+		} else {
+			(0, _dom.removeClass)(t.container, t.options.classPrefix + 'long-video');
 		}
 
 		if (t.controls.querySelector('.' + t.options.classPrefix + 'duration') && duration > 0) {

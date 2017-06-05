@@ -25,6 +25,7 @@
 * Improvements to CSS stylesheets via `Stylelint` (https://github.com/mediaelement/mediaelement/pull/2266) and (https://github.com/mediaelement/mediaelement/pull/2269) @marcobiedermann
 * Fixed workflow to generate proper vendor prefixes (https://github.com/mediaelement/mediaelement/pull/2265) @marcobiedermann
 * CSS cleanup (https://github.com/mediaelement/mediaelement/pull/2267) @marcobiedermann
+* Fixed issue related to tooltip changing size when hovering on progress bar and `alwaysShowHours` set to `true` @rafa8626
 
 *4.1.2 (2017/05/25)*
 
