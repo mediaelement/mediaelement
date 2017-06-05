@@ -4,6 +4,7 @@
   ],
   "rules": {
     "color-hex-case": ["lower"],
+    "color-hex-length": "short",
     "declaration-block-no-duplicate-properties": [
       true,
       {
@@ -12,6 +13,9 @@
         ]
       }
     ],
+    "function-comma-space-after": "always-single-line",
+    "function-comma-space-before": "never",
+    "indentation": 4,
     "length-zero-no-unit": true,
     "number-leading-zero": "always",
     "number-no-trailing-zeros": true,
@@ -22,7 +26,10 @@
     "order/properties-alphabetical-order": true,
     "property-case": "lower",
     "property-no-unknown": true,
+    "selector-combinator-space-after": "always",
+    "selector-combinator-space-before": "always",
     "selector-list-comma-newline-after": "always",
-    "shorthand-property-no-redundant-values": true
+    "shorthand-property-no-redundant-values": true,
+    "string-quotes": "single"
   }
 }
