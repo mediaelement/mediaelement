@@ -45,6 +45,7 @@
     "mocha-jsdom": "^1.1.0",
     "promise-polyfill": "6.0.2",
     "stylelint": "^7.10.1",
+    "stylelint-order": "^0.4.4",
     "uglify-js": "^3.0.10"
   },
   "dependencies": {
