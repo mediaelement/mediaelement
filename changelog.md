@@ -22,7 +22,7 @@
 * Updated `hls.js` to a CDN with SSL support (https://github.com/mediaelement/mediaelement/pull/2263) @isantolin
 * Sorted CSS properties to reduce filesize when using gzip (https://github.com/mediaelement/mediaelement/pull/2264) @marcobiedermann
 * Integrated [Stylelint](https://stylelint.io/) for CSS quality @rafa8626 
-* Improvements to CSS stylesheets via `Stylelint` (https://github.com/mediaelement/mediaelement/pull/2266) @marcobiedermann
+* Improvements to CSS stylesheets via `Stylelint` (https://github.com/mediaelement/mediaelement/pull/2266) and (https://github.com/mediaelement/mediaelement/pull/2269) @marcobiedermann
 * Fixed workflow to generate proper vendor prefixes (https://github.com/mediaelement/mediaelement/pull/2265) @marcobiedermann
 * CSS cleanup (https://github.com/mediaelement/mediaelement/pull/2267) @marcobiedermann
 
