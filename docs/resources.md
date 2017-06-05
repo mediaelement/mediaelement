@@ -5,7 +5,7 @@
 * [Code snippets](#gists)
 
 The following resources talk about a variety of topics that users of `MediaElementJS` deal with.
- 
+
 <a id="styles"></a>
 ## Styling player
 

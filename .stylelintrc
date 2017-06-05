@@ -1,0 +1,24 @@
+{
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "color-hex-case": ["lower"],
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignore": [
+          "consecutive-duplicates-with-different-values"
+        ]
+      }
+    ],
+    "order/order": [
+      "custom-properties",
+      "declarations"
+    ],
+    "order/properties-alphabetical-order": true,
+    "property-case": "lower",
+    "property-no-unknown": true,
+    "shorthand-property-no-redundant-values": true
+  }
+}

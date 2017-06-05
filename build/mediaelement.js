@@ -16,30 +16,36 @@ var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
 var minDoc = _dereq_(1);
 
+var doccy;
+
 if (typeof document !== 'undefined') {
-    module.exports = document;
+    doccy = document;
 } else {
-    var doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'];
+    doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'];
 
     if (!doccy) {
         doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'] = minDoc;
     }
-
-    module.exports = doccy;
 }
+
+module.exports = doccy;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"1":1}],3:[function(_dereq_,module,exports){
 (function (global){
+var win;
+
 if (typeof window !== "undefined") {
-    module.exports = window;
+    win = window;
 } else if (typeof global !== "undefined") {
-    module.exports = global;
+    win = global;
 } else if (typeof self !== "undefined"){
-    module.exports = self;
+    win = self;
 } else {
-    module.exports = {};
+    win = {};
 }
+
+module.exports = win;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(_dereq_,module,exports){
@@ -1917,7 +1923,7 @@ var NativeFlv = {
 				NativeFlv._createPlayer(settings);
 			});
 		} else if (!NativeFlv.promise) {
-			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js';
+			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.0/flv.min.js';
 
 			NativeFlv.promise = NativeFlv.promise || (0, _dom.loadScript)(settings.options.path);
 			NativeFlv.promise.then(function () {
@@ -1942,7 +1948,7 @@ var FlvNativeRenderer = {
 	options: {
 		prefix: 'native_flv',
 		flv: {
-			path: 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.2.0/flv.min.js',
+			path: 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.0/flv.min.js',
 
 			cors: true,
 			debug: false
@@ -2142,7 +2148,7 @@ var NativeHls = {
 				NativeHls._createPlayer(settings);
 			});
 		} else if (!NativeHls.promise) {
-			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'http://cdn.jsdelivr.net/npm/hls.js@latest';
+			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.9/hls.min.js';
 
 			NativeHls.promise = NativeHls.promise || (0, _dom.loadScript)(settings.options.path);
 			NativeHls.promise.then(function () {
@@ -2165,7 +2171,7 @@ var HlsNativeRenderer = {
 	options: {
 		prefix: 'native_hls',
 		hls: {
-			path: 'http://cdn.jsdelivr.net/npm/hls.js@latest',
+			path: 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.9/hls.min.js',
 
 			autoStartLoad: false,
 			debug: false
@@ -2983,7 +2989,7 @@ if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) 
 	};
 
 	_media.typeChecks.push(function (url) {
-		return (/\/\/(www\.youtube|youtu\.be)/i.test(url) ? 'video/x-youtube' : null
+		return (/\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null
 		);
 	});
 

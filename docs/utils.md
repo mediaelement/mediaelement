@@ -1,10 +1,10 @@
 # Utilities/Features
 
 * [Utilities](#utils)
-    * [DOM](#dom)
-    * [General](#general)
-    * [Media](#media)
-    * [Time](#time)
+	* [DOM](#dom)
+	* [General](#general)
+	* [Media](#media)
+	* [Time](#time)
 * [Features](#features)
 
 <a id="utils"></a>
@@ -37,11 +37,11 @@ Sometimes, common tasks like escaping HTML or checking if a value is a certain t
 
 Method | Description
 ------ | --------
-escapeHTML(input) | Escape `&, <, >, "` characters from `input` to avoid XSS attacks 
-debounce(callback, wait, immediate) | Execute `callback` in a specific period of `wait` time, or bypasses the time if `immediate` is `true` (default: `false`) 
+escapeHTML(input) | Escape `&, <, >, "` characters from `input` to avoid XSS attacks
+debounce(callback, wait, immediate) | Execute `callback` in a specific period of `wait` time, or bypasses the time if `immediate` is `true` (default: `false`)
 isObjectEmpty(object) | Check if `object` is empty
 splitEvents(events, id) | Split a string of `events` separated by spaces into `document` (d) and `window` (w) events. An `id` can be passed to append a namespace
-createEvent(eventName, target) | Wrapper of `CustomEvent` class to create a event, passing a `eventName` and a possible `target` 
+createEvent(eventName, target) | Wrapper of `CustomEvent` class to create a event, passing a `eventName` and a possible `target`
 isNodeAfter(sourceNode, targetNode) | Check if `targetNode` appears after `sourceNode` in the DOM
 isString(input) | Determine if an `input` value is a string
 
@@ -72,7 +72,7 @@ convertSMPTEtoSeconds(SMPTE) | Convert a Society of Motion Picture and Televisio
 ## Features
 
 `MediaElement.js` has some flags/methods to determine which browser the user is in, some elements to determine the type of fullscreen the browser supports, etc.
-  
+
 All of these elements can be accessed by using `mejs.Features.{name}`. The following list shows all the possible features.
 
 * mejs.Features.isiPad
