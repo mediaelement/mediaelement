@@ -236,8 +236,8 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
-	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('default', ['eslint', 'stylelint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('debug', ['eslint', 'stylelint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
 	grunt.registerTask('flash', '', function () {
 		var exec = require('child_process').execSync;
 		var result = exec("sh compile_swf.sh", {encoding: 'utf8'});

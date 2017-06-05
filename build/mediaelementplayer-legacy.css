@@ -168,12 +168,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-overlay-loading-bg-img {
-    display: block;
-    width: 80px;
-    height: 80px;
-    background: transparent url("mejs-controls.svg") -160px -40px no-repeat;
     -webkit-animation: mejs-loading-spinner 1s linear infinite;
             animation: mejs-loading-spinner 1s linear infinite;
+    background: transparent url("mejs-controls.svg") -160px -40px no-repeat;
+    display: block;
+    height: 80px;
+    width: 80px;
     z-index: 1;
 }
 
@@ -264,7 +264,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     font-weight: bold;
     height: 24px;
     overflow: hidden;
-    padding: 16px 6px 0 6px;
+    padding: 16px 6px 0;
     text-align: center;
     width: auto;
 }
@@ -314,7 +314,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-time-total {
     background: rgba(255, 255, 255, 0.3);
-    margin: 5px 0 0 0;
+    margin: 5px 0 0;
     width: 100%;
 }
 
@@ -364,12 +364,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-time-current, .mejs-time-buffering, .mejs-time-loaded, .mejs-time-hovered {
     left: 0;
-    -webkit-transform-origin: 0 0;
-        -ms-transform-origin: 0 0;
-            transform-origin: 0 0;
     -webkit-transform: scaleX(0);
         -ms-transform: scaleX(0);
             transform: scaleX(0);
+    -webkit-transform-origin: 0 0;
+        -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
     -webkit-transition: .15s ease-in all;
     transition: .15s ease-in all;
     width: 100%;
@@ -398,8 +398,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-time-handle-content {
-    border-radius: 50%;
     border: 4px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
     height: 10px;
     left: -7px;
     top: -4px;
@@ -437,9 +437,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs-time-float-corner {
-    border-color: #eee transparent transparent transparent;
-    border-radius: 0;
     border: solid 5px #eee;
+    border-radius: 0;
     display: block;
     height: 0;
     left: 13px;
@@ -601,8 +600,8 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-captions-button > .mejs-captions-selector, .mejs-chapters-button > .mejs-chapters-selector {
     background: rgba(50, 50, 50, 0.7);
-    border-radius: 0;
     border: solid 1px transparent;
+    border-radius: 0;
     bottom: 40px;
     overflow: hidden;
     padding: 0;
@@ -633,7 +632,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     cursor: pointer;
     display: block;
     list-style-type: none !important;
-    margin: 0 0 6px 0;
+    margin: 0 0 6px;
     overflow: hidden;
     padding: 0 10px;
 }
@@ -656,7 +655,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     float: left;
     font-size: 10px;
     line-height: 15px;
-    padding: 4px 0 0 0;
+    padding: 4px 0 0;
     width: 55px;
 }
 
@@ -666,7 +665,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs-captions-translations {
     font-size: 10px;
-    margin: 0 0 5px 0;
+    margin: 0 0 5px;
 }
 
 .mejs-captions-layer {
