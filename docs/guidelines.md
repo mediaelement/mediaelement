@@ -5,6 +5,7 @@
 	* [Renderers](#renderers)
 	* [Translations](#translations)
 	* [A word on `ES6` for Renderers](#es6)
+	* [CSS](#css)
 * [Node.js](#nodejs)
 * [Flex SDK](#flex)
 * [Building with Grunt](#building)
@@ -416,6 +417,11 @@ All the renderers are written using `Ecmascript 2015` specifications.
 See`src/js/renderers` directory, and check how the files were written to ensure compatibility.
 
 **Note**: the `for...of` loop could have been used, but in order to bundle them and reduce the size of the bundled files, it is **strongly recommended to avoid*** its use.
+
+<a id="css"></a>
+### CSS
+
+Sort CSS properties by alphabet to improve filesize when using gzip compression.
 
 <a id="nodejs"></a>
 ## Node.js
