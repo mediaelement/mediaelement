@@ -248,7 +248,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__time {
     box-sizing: content-box;
     color: #fff;
-    display: block;
     font-size: 11px;
     font-weight: bold;
     height: 24px;
@@ -585,7 +584,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__captions-selector-list, .mejs__chapters-selector-list {
-    display: block;
     list-style-type: none !important;
     margin: 0;
     overflow: hidden;
