@@ -369,8 +369,8 @@ const FacebookRenderer = {
 				fbDiv.style.height = height;
 			}
 		};
-		fbWrapper.destroy = () => {
-		};
+		fbWrapper.destroy = () => {};
+
 		fbWrapper.interval = null;
 
 		fbWrapper.startInterval = () => {

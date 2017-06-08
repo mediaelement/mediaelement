@@ -271,12 +271,6 @@ const HlsNativeRenderer = {
 			}
 		};
 
-		node.stop = () => {
-			if (hlsPlayer !== null) {
-				hlsPlayer.stopLoad();
-			}
-		};
-
 		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
 

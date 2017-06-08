@@ -247,6 +247,12 @@ const DashNativeRenderer = {
 			return node;
 		};
 
+		node.destroy = () => {
+			if (dashPlayer !== null) {
+				dashPlayer.reset();
+			}
+		};
+
 		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);
 

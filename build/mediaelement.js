@@ -1470,6 +1470,12 @@ var DashNativeRenderer = {
 			return node;
 		};
 
+		node.destroy = function () {
+			if (dashPlayer !== null) {
+				dashPlayer.reset();
+			}
+		};
+
 		var event = (0, _general.createEvent)('rendererready', node);
 		mediaElement.dispatchEvent(event);
 
@@ -2360,12 +2366,6 @@ var HlsNativeRenderer = {
 			if (hlsPlayer !== null) {
 				hlsPlayer.stopLoad();
 				hlsPlayer.destroy();
-			}
-		};
-
-		node.stop = function () {
-			if (hlsPlayer !== null) {
-				hlsPlayer.stopLoad();
 			}
 		};
 

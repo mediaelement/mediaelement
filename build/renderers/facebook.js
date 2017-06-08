@@ -310,6 +310,7 @@ var FacebookRenderer = {
 			}
 		};
 		fbWrapper.destroy = function () {};
+
 		fbWrapper.interval = null;
 
 		fbWrapper.startInterval = function () {
