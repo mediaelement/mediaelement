@@ -424,15 +424,7 @@ class MediaElement {
 				}
 
 				// turn on the renderer (this checks for the existing renderer already)
-				t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
-
-				if (mediaFiles[0].src &&
-					(t.mediaElement.renderer === undefined || t.mediaElement.renderer === null)) {
-					event = createEvent('error', t.mediaElement);
-					event.message = 'Error creating renderer';
-					t.mediaElement.dispatchEvent(event);
-					t.mediaElement.createErrorMessage(event.message, mediaFiles);
-				}
+				return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
 			},
 			assignMethods = (methodName) => {
 				// run the method on the current renderer

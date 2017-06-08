@@ -896,14 +896,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			return;
 		}
 
-		t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
-
-		if (mediaFiles[0].src && (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null)) {
-			event = (0, _general.createEvent)('error', t.mediaElement);
-			event.message = 'Error creating renderer';
-			t.mediaElement.dispatchEvent(event);
-			t.mediaElement.createErrorMessage(event.message, mediaFiles);
-		}
+		return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
 	},
 	    assignMethods = function assignMethods(methodName) {
 		t.mediaElement[methodName] = function () {
