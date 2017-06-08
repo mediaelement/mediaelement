@@ -1,5 +1,12 @@
 ### Version History
 
+*4.1.4 (2017/??/??)*
+
+* Updated documentation on ReactJS about how to destroy a player and fixed typo on WordPress section @rafa8626
+* Fixed issues related to Promises with native renderers @rafa8626
+* Fixed typos in player to execute properly `destroy()` and `stop()` methods @rafa8626
+* Fixed issues with error message not being displayed properly in different scenarios @rafa8626
+
 *4.1.3 (2017/06/06)*
 
 * Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello

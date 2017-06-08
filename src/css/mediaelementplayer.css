@@ -689,17 +689,16 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Track (Captions and Chapters) */
 
 /* Start: Error */
+.me_cannotplay,
 .me_cannotplay a {
-    font-weight: bold;
-}
-
-.mejs__container .me_cannotplay a {
     color: #fff;
+    font-size: 0.8em;
 }
 
-.me_cannotplay span {
-    display: block;
-    padding: 15px;
+.me_cannotplay p,
+.me_cannotplay a {
+    display: inline-block;
+    padding: 0 15px;
+    width: 100%;
 }
-
 /* End: Error */

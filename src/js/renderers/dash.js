@@ -28,7 +28,9 @@ const NativeDash = {
 	 */
 	load: (settings) => {
 		if (typeof dashjs !== 'undefined') {
-			NativeDash.promise = new Promise(() => {
+			NativeDash.promise = new Promise((resolve) => {
+				resolve();
+			}).then(() => {
 				NativeDash._createPlayer(settings);
 			});
 		} else if (!NativeDash.promise) {

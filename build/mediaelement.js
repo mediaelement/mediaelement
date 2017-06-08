@@ -768,8 +768,9 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		}
 	};
 
-	t.mediaElement.createErrorMessage = function (urlList) {
+	t.mediaElement.createErrorMessage = function (message, urlList) {
 
+		message = message || '';
 		urlList = Array.isArray(urlList) ? urlList : [];
 
 		var errorContainer = _document2.default.createElement('div');
@@ -786,6 +787,10 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="' + _mejs2.default.i18n.t('mejs.download-file') + '">';
 			}
 
+			if (message) {
+				errorContent += '<p>' + message + '</p>';
+			}
+
 			for (var _i2 = 0, total = urlList.length; _i2 < total; _i2++) {
 				var url = urlList[_i2];
 				errorContent += '<a href="' + url.src + '" data-type="' + url.type + '"><span>' + _mejs2.default.i18n.t('mejs.download-file') + ': ' + url.src + '</span></a>';
@@ -793,6 +798,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		}
 
 		errorContainer.innerHTML = errorContent;
+		console.error(message);
 
 		t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
 		t.mediaElement.originalNode.style.display = 'none';
@@ -882,15 +888,22 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			t.mediaElement.querySelector('.me_cannotplay').remove();
 		}
 
-		if (renderInfo === null) {
-			t.mediaElement.createErrorMessage(mediaFiles);
+		if (renderInfo === null && mediaFiles[0].src) {
 			event = (0, _general.createEvent)('error', t.mediaElement);
 			event.message = 'No renderer found';
+			t.mediaElement.createErrorMessage(event.message, mediaFiles);
 			t.mediaElement.dispatchEvent(event);
 			return;
 		}
 
-		return t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
+		t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
+
+		if (mediaFiles[0].src && (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null)) {
+			event = (0, _general.createEvent)('error', t.mediaElement);
+			event.message = 'Error creating renderer';
+			t.mediaElement.dispatchEvent(event);
+			t.mediaElement.createErrorMessage(event.message, mediaFiles);
+		}
 	},
 	    assignMethods = function assignMethods(methodName) {
 		t.mediaElement[methodName] = function () {
@@ -899,29 +912,33 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			}
 
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function') {
-				try {
-					if (methodName === 'play') {
-						if (t.mediaElement.promises.length) {
-							Promise.all(t.mediaElement.promises).then(function () {
-								setTimeout(function () {
-									t.mediaElement.renderer[methodName](args);
-								}, 250);
-							}).catch(function (e) {
-								if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-									var event = (0, _general.createEvent)('error', t.mediaElement);
-									event.message = e;
-									t.mediaElement.dispatchEvent(event);
-									t.mediaElement.createErrorMessage(mediaFiles);
-								}
-							});
-						} else {
-							t.mediaElement.renderer[methodName](args);
-						}
+				if (methodName === 'play') {
+					if (t.mediaElement.promises.length) {
+						Promise.all(t.mediaElement.promises).then(function () {
+							setTimeout(function () {
+								t.mediaElement.renderer[methodName](args);
+							}, 250);
+						}).catch(function (e) {
+							if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
+								var event = (0, _general.createEvent)('error', t.mediaElement);
+								event.message = e;
+								t.mediaElement.dispatchEvent(event);
+								t.mediaElement.createErrorMessage(e, mediaFiles);
+							}
+						});
 					} else {
-						t.mediaElement.renderer[methodName](args);
+						try {
+							t.mediaElement.renderer[methodName](args);
+						} catch (e) {
+							t.mediaElement.createErrorMessage();
+						}
 					}
-				} catch (e) {
-					t.mediaElement.createErrorMessage();
+				} else {
+					try {
+						t.mediaElement.renderer[methodName](args);
+					} catch (e) {
+						t.mediaElement.createErrorMessage();
+					}
 				}
 			}
 			return null;
@@ -1278,7 +1295,9 @@ var NativeDash = {
 
 	load: function load(settings) {
 		if (typeof dashjs !== 'undefined') {
-			NativeDash.promise = new Promise(function () {
+			NativeDash.promise = new Promise(function (resolve) {
+				resolve();
+			}).then(function () {
 				NativeDash._createPlayer(settings);
 			});
 		} else if (!NativeDash.promise) {
@@ -1919,7 +1938,9 @@ var NativeFlv = {
 
 	load: function load(settings) {
 		if (typeof flvjs !== 'undefined') {
-			NativeFlv.promise = new Promise(function () {
+			NativeFlv.promise = new Promise(function (resolve) {
+				resolve();
+			}).then(function () {
 				NativeFlv._createPlayer(settings);
 			});
 		} else if (!NativeFlv.promise) {
@@ -2144,7 +2165,9 @@ var NativeHls = {
 
 	load: function load(settings) {
 		if (typeof Hls !== 'undefined') {
-			NativeHls.promise = new Promise(function () {
+			NativeHls.promise = new Promise(function (resolve) {
+				resolve();
+			}).then(function () {
 				NativeHls._createPlayer(settings);
 			});
 		} else if (!NativeHls.promise) {
@@ -2342,6 +2365,7 @@ var HlsNativeRenderer = {
 
 		node.destroy = function () {
 			if (hlsPlayer !== null) {
+				hlsPlayer.stopLoad();
 				hlsPlayer.destroy();
 			}
 		};

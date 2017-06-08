@@ -28,7 +28,9 @@ const NativeHls = {
 	 */
 	load: (settings) => {
 		if (typeof Hls !== 'undefined') {
-			NativeHls.promise = new Promise(() => {
+			NativeHls.promise = new Promise((resolve) => {
+				resolve();
+			}).then(() => {
 				NativeHls._createPlayer(settings);
 			});
 		} else if (!NativeHls.promise) {
@@ -264,6 +266,7 @@ const HlsNativeRenderer = {
 
 		node.destroy = () => {
 			if (hlsPlayer !== null) {
+				hlsPlayer.stopLoad();
 				hlsPlayer.destroy();
 			}
 		};

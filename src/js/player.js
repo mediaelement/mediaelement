@@ -908,8 +908,8 @@ class MediaElementPlayer {
 					}
 				}
 
-				if (typeof t.media.stop === 'function') {
-					t.media.stop();
+				if (typeof t.media.renderer.stop === 'function') {
+					t.media.renderer.stop();
 				} else {
 					t.media.pause();
 				}
@@ -1018,7 +1018,6 @@ class MediaElementPlayer {
 		}
 
 		if (t.options.success) {
-
 			if (typeof t.options.success === 'string') {
 				window[t.options.success](t.media, t.domNode, t);
 			} else {
@@ -1975,8 +1974,8 @@ class MediaElementPlayer {
 			t.container.parentNode.insertBefore(t.node, t.container);
 		}
 
-		if (typeof t.media.destroy === 'function') {
-			t.media.destroy();
+		if (typeof t.media.renderer.destroy === 'function') {
+			t.media.renderer.destroy();
 		}
 
 		// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to

@@ -28,7 +28,9 @@ const NativeFlv = {
 	 */
 	load: (settings) => {
 		if (typeof flvjs !== 'undefined') {
-			NativeFlv.promise = new Promise(() => {
+			NativeFlv.promise = new Promise((resolve) => {
+				resolve();
+			}).then(() => {
 				NativeFlv._createPlayer(settings);
 			});
 		} else if (!NativeFlv.promise) {

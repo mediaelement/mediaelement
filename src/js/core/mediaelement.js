@@ -276,8 +276,9 @@ class MediaElement {
 		 *
 		 * @param {Object[]} urlList
 		 */
-		t.mediaElement.createErrorMessage = (urlList) => {
+		t.mediaElement.createErrorMessage = (message, urlList) => {
 
+			message = message || '';
 			urlList = Array.isArray(urlList) ? urlList : [];
 
 			const errorContainer = document.createElement('div');
@@ -294,6 +295,10 @@ class MediaElement {
 					errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;
 				}
 
+				if (message) {
+					errorContent += `<p>${message}</p>`;
+				}
+
 				for (let i = 0, total = urlList.length; i < total; i++) {
 					const url = urlList[i];
 					errorContent += `<a href="${url.src}" data-type="${url.type}"><span>${mejs.i18n.t('mejs.download-file')}: ${url.src}</span></a>`;
@@ -301,6 +306,7 @@ class MediaElement {
 			}
 
 			errorContainer.innerHTML = errorContent;
+			console.error(message);
 
 			t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
 			t.mediaElement.originalNode.style.display = 'none';
@@ -407,53 +413,66 @@ class MediaElement {
 				}
 
 				// did we find a renderer?
-				if (renderInfo === null) {
-					t.mediaElement.createErrorMessage(mediaFiles);
+				// At least there must be a media in the `mediaFiles` since the media tag can come up an
+				// empty source for starters
+				if (renderInfo === null && mediaFiles[0].src) {
 					event = createEvent('error', t.mediaElement);
 					event.message = 'No renderer found';
+					t.mediaElement.createErrorMessage(event.message, mediaFiles);
 					t.mediaElement.dispatchEvent(event);
 					return;
 				}
 
 				// turn on the renderer (this checks for the existing renderer already)
-				return t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
+				t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
+
+				if (mediaFiles[0].src &&
+					(t.mediaElement.renderer === undefined || t.mediaElement.renderer === null)) {
+					event = createEvent('error', t.mediaElement);
+					event.message = 'Error creating renderer';
+					t.mediaElement.dispatchEvent(event);
+					t.mediaElement.createErrorMessage(event.message, mediaFiles);
+				}
 			},
 			assignMethods = (methodName) => {
 				// run the method on the current renderer
 				t.mediaElement[methodName] = (...args) => {
 					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
-					typeof t.mediaElement.renderer[methodName] === 'function') {
-						try {
-							if (methodName === 'play') {
-								if (t.mediaElement.promises.length) {
-									Promise.all(t.mediaElement.promises)
-									.then(() => {
-										// Give a delay to ensure all be played properly
-										setTimeout(() => {
-											t.mediaElement.renderer[methodName](args)
-										}, 250);
-									})
-									.catch((e) => {
-										if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-											const event = createEvent('error', t.mediaElement);
-											event.message = e;
-											t.mediaElement.dispatchEvent(event);
-											t.mediaElement.createErrorMessage(mediaFiles);
-										}
-									});
-								} else {
-									t.mediaElement.renderer[methodName](args);
-								}
+						typeof t.mediaElement.renderer[methodName] === 'function') {
+						if (methodName === 'play') {
+							if (t.mediaElement.promises.length) {
+								Promise.all(t.mediaElement.promises)
+								.then(() => {
+									// Give a delay to ensure all be played properly
+									setTimeout(() => {
+										t.mediaElement.renderer[methodName](args)
+									}, 250);
+								})
+								.catch((e) => {
+									if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
+										const event = createEvent('error', t.mediaElement);
+										event.message = e;
+										t.mediaElement.dispatchEvent(event);
+										t.mediaElement.createErrorMessage(e, mediaFiles);
+									}
+								});
 							} else {
-								t.mediaElement.renderer[methodName](args);
+								try {
+									t.mediaElement.renderer[methodName](args);
+								} catch (e) {
+									t.mediaElement.createErrorMessage();
+								}
 							}
-						} catch (e) {
-							t.mediaElement.createErrorMessage();
+						} else {
+							try {
+								t.mediaElement.renderer[methodName](args);
+							} catch (e) {
+								t.mediaElement.createErrorMessage();
+							}
 						}
 					}
 					return null;
 				};
-
 			};
 
 		// Assign all methods/properties/events to fake node if renderer was found
