@@ -3796,7 +3796,7 @@ var MediaElementPlayer = function () {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused && t.media.readyState === 4 && (!t.options.hideVideoControlsOnLoad && t.media.currentTime <= 0 || !t.options.hideVideoControlsOnPause && t.media.currentTime > 0) || t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState || t.media.ended)) {
+			if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.media.paused && t.media.readyState === 4 && (!t.options.hideVideoControlsOnLoad && t.media.currentTime <= 0 || !t.options.hideVideoControlsOnPause && t.media.currentTime > 0) || t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState || t.media.ended)) {
 				return;
 			}
 
@@ -4122,7 +4122,9 @@ var MediaElementPlayer = function () {
 				t.container.addEventListener('focusin', function (e) {
 					dom.removeClass(e.currentTarget, t.options.classPrefix + 'container-keyboard-inactive');
 					if (t.controlsEnabled && !t.options.alwaysShowControls) {
-						t.showControls(false);
+						t.killControlsTimer('enter');
+						t.showControls();
+						t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 					}
 				});
 
@@ -4131,8 +4133,8 @@ var MediaElementPlayer = function () {
 						if (e.relatedTarget) {
 							if (t.keyboardAction && !e.relatedTarget.closest('.' + t.options.classPrefix + 'container')) {
 								t.keyboardAction = false;
-								if (t.isVideo && !t.options.alwaysShowControls) {
-									t.hideControls(true);
+								if (t.isVideo && !t.options.alwaysShowControls && !t.media.paused) {
+									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 								}
 							}
 						}

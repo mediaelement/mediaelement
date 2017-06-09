@@ -579,13 +579,10 @@ const YouTubeIframeRenderer = {
 	}
 };
 
-if (window.postMessage && typeof window.addEventListener) {
+window.onYouTubePlayerAPIReady = () => {
+	YouTubeApi.iFrameReady();
+};
 
-	window.onYouTubePlayerAPIReady = () => {
-		YouTubeApi.iFrameReady();
-	};
+typeChecks.push((url) => /\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null);
 
-	typeChecks.push((url) => /\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null);
-
-	renderer.add(YouTubeIframeRenderer);
-}
+renderer.add(YouTubeIframeRenderer);

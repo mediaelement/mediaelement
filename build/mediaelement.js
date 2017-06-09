@@ -2516,8 +2516,6 @@ _renderer.renderer.add(HtmlMediaElement);
 },{"16":16,"18":18,"2":2,"3":3,"7":7,"8":8}],15:[function(_dereq_,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
@@ -2999,19 +2997,16 @@ var YouTubeIframeRenderer = {
 	}
 };
 
-if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) {
+_window2.default.onYouTubePlayerAPIReady = function () {
+	YouTubeApi.iFrameReady();
+};
 
-	_window2.default.onYouTubePlayerAPIReady = function () {
-		YouTubeApi.iFrameReady();
-	};
+_media.typeChecks.push(function (url) {
+	return (/\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null
+	);
+});
 
-	_media.typeChecks.push(function (url) {
-		return (/\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null
-		);
-	});
-
-	_renderer.renderer.add(YouTubeIframeRenderer);
-}
+_renderer.renderer.add(YouTubeIframeRenderer);
 
 },{"17":17,"18":18,"19":19,"2":2,"3":3,"7":7,"8":8}],16:[function(_dereq_,module,exports){
 'use strict';

@@ -6,6 +6,7 @@
 * Fixed issues related to Promises with native renderers @rafa8626
 * Fixed typos in player to execute properly `destroy()` and `stop()` methods @rafa8626
 * Fixed issues with error message not being displayed properly in different scenarios @rafa8626
+* Fixed issue with controls not being hidden using keyboard @rafa8626
 
 *4.1.3 (2017/06/06)*
 

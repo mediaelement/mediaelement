@@ -3796,7 +3796,7 @@ var MediaElementPlayer = function () {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction || t.media.paused && t.media.readyState === 4 && (!t.options.hideVideoControlsOnLoad && t.media.currentTime <= 0 || !t.options.hideVideoControlsOnPause && t.media.currentTime > 0) || t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState || t.media.ended)) {
+			if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.media.paused && t.media.readyState === 4 && (!t.options.hideVideoControlsOnLoad && t.media.currentTime <= 0 || !t.options.hideVideoControlsOnPause && t.media.currentTime > 0) || t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState || t.media.ended)) {
 				return;
 			}
 
@@ -4122,7 +4122,9 @@ var MediaElementPlayer = function () {
 				t.container.addEventListener('focusin', function (e) {
 					dom.removeClass(e.currentTarget, t.options.classPrefix + 'container-keyboard-inactive');
 					if (t.controlsEnabled && !t.options.alwaysShowControls) {
-						t.showControls(false);
+						t.killControlsTimer('enter');
+						t.showControls();
+						t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 					}
 				});
 
@@ -4131,8 +4133,8 @@ var MediaElementPlayer = function () {
 						if (e.relatedTarget) {
 							if (t.keyboardAction && !e.relatedTarget.closest('.' + t.options.classPrefix + 'container')) {
 								t.keyboardAction = false;
-								if (t.isVideo && !t.options.alwaysShowControls) {
-									t.hideControls(true);
+								if (t.isVideo && !t.options.alwaysShowControls && !t.media.paused) {
+									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 								}
 							}
 						}
@@ -6355,8 +6357,6 @@ _renderer.renderer.add(HtmlMediaElement);
 },{"2":2,"24":24,"26":26,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
@@ -6838,19 +6838,16 @@ var YouTubeIframeRenderer = {
 	}
 };
 
-if (_window2.default.postMessage && _typeof(_window2.default.addEventListener)) {
+_window2.default.onYouTubePlayerAPIReady = function () {
+	YouTubeApi.iFrameReady();
+};
 
-	_window2.default.onYouTubePlayerAPIReady = function () {
-		YouTubeApi.iFrameReady();
-	};
+_media.typeChecks.push(function (url) {
+	return (/\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null
+	);
+});
 
-	_media.typeChecks.push(function (url) {
-		return (/\/\/(www\.youtube|youtu\.?be)/i.test(url) ? 'video/x-youtube' : null
-		);
-	});
-
-	_renderer.renderer.add(YouTubeIframeRenderer);
-}
+_renderer.renderer.add(YouTubeIframeRenderer);
 
 },{"2":2,"25":25,"26":26,"27":27,"3":3,"7":7,"8":8}],24:[function(_dereq_,module,exports){
 'use strict';
