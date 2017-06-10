@@ -973,7 +973,7 @@ class MediaElementPlayer {
 			// Enable focus outline for Accessibility purposes
 			t.container.addEventListener('focusin', function (e) {
 				dom.removeClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
-				if (t.controlsEnabled && !t.options.alwaysShowControls) {
+				if (t.isVideo && t.controlsEnabled && !t.options.alwaysShowControls) {
 					t.killControlsTimer('enter');
 					t.showControls();
 					t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
