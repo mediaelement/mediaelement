@@ -17,7 +17,11 @@ var TwitchApi = {
 
 	load: function load(settings) {
 		if (typeof Twitch !== 'undefined') {
-			TwitchApi._createPlayer(settings);
+			TwitchApi.promise = new Promise(function (resolve) {
+				resolve();
+			}).then(function () {
+				TwitchApi._createPlayer(settings);
+			});
 		} else if (!TwitchApi.promise) {
 			TwitchApi.promise = TwitchApi.promise || mejs.Utils.loadScript('https://player.twitch.tv/js/embed/v1.js');
 			TwitchApi.promise.then(function () {

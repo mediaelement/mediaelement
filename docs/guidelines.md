@@ -421,7 +421,7 @@ See`src/js/renderers` directory, and check how the files were written to ensure 
 <a id="css"></a>
 ### CSS
 
-Sort CSS properties by alphabet to improve filesize when using gzip compression.
+Sort CSS properties **alphabetically** to improve file size when using `gzip` compression.
 
 <a id="nodejs"></a>
 ## Node.js

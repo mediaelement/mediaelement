@@ -389,6 +389,8 @@ var vimeoIframeRenderer = {
 			}
 		};
 
+		vimeo.destroy = function () {};
+
 		return vimeo;
 	}
 };

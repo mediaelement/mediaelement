@@ -4,7 +4,7 @@ import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import {secondsToTimeCode} from '../utils/time';
-import {addClass, toggleClass} from '../utils/dom';
+import {addClass, removeClass} from '../utils/dom';
 
 /**
  * Current/duration times
@@ -109,8 +109,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			currentTime = 0;
 		}
 
+		const timecode = secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+
+		// Toggle long-video class if time code is >5 digits (MM:SS)
+		if (timecode.length > 5) {
+			addClass(t.container, `${t.options.classPrefix}long-video`);
+		} else {
+			removeClass(t.container, `${t.options.classPrefix}long-video`);
+		}
+
 		if (t.controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
-			t.controls.querySelector(`.${t.options.classPrefix}currenttime`).innerText = secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+			t.controls.querySelector(`.${t.options.classPrefix}currenttime`).innerText = timecode;
 		}
 	},
 
@@ -135,7 +144,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Toggle long-video class if time code is >5 digits (MM:SS)
 		if (timecode.length > 5) {
-			toggleClass(t.container, `${t.options.classPrefix}long-video`);
+			addClass(t.container, `${t.options.classPrefix}long-video`);
+		} else {
+			removeClass(t.container, `${t.options.classPrefix}long-video`);
 		}
 
 		if (t.controls.querySelector(`.${t.options.classPrefix}duration`) && duration > 0) {

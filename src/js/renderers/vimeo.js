@@ -445,6 +445,8 @@ const vimeoIframeRenderer = {
 			}
 		};
 
+		vimeo.destroy = () => {};
+
 		return vimeo;
 	}
 };

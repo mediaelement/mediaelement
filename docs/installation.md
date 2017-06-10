@@ -147,7 +147,12 @@ if ( $is_vimeo ) {
 }
 ```
 
-3. Inside the function `wpview_media_sandbox_styles()`, add:
+3. Inside the function `wpview_media_sandbox_styles()`, replace:
+```
+$mediaelement = includes_url( "js/mediaelement/mediaelementplayer.min.css?$version" );
+
+```
+with:
 ```
 $mediaelement = includes_url( "js/mediaelement/mediaelementplayer-legacy.min.css?$version" );
 ```
