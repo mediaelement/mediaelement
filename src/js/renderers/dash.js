@@ -28,7 +28,9 @@ const NativeDash = {
 	 */
 	load: (settings) => {
 		if (typeof dashjs !== 'undefined') {
-			NativeDash.promise = new Promise(() => {
+			NativeDash.promise = new Promise((resolve) => {
+				resolve();
+			}).then(() => {
 				NativeDash._createPlayer(settings);
 			});
 		} else if (!NativeDash.promise) {
@@ -243,6 +245,12 @@ const DashNativeRenderer = {
 		node.show = () => {
 			node.style.display = '';
 			return node;
+		};
+
+		node.destroy = () => {
+			if (dashPlayer !== null) {
+				dashPlayer.reset();
+			}
 		};
 
 		const event = createEvent('rendererready', node);

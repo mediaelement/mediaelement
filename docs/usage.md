@@ -237,6 +237,7 @@ export default class MediaElement extends Component {
 	componentWillUnmount() {
 		if (this.state.player) {
 			this.state.player.remove();
+			this.setState({player: null});
 		}
 	}
 }

@@ -1,6 +1,14 @@
 ### Version History
 
-*4.1.3 (2017/06/??)*
+*4.1.4 (2017/??/??)*
+
+* Updated documentation on ReactJS about how to destroy a player and fixed typo on WordPress section @rafa8626
+* Fixed issues related to Promises with native renderers @rafa8626
+* Fixed typos in player to execute properly `destroy()` and `stop()` methods @rafa8626
+* Fixed issues with error message not being displayed properly in different scenarios @rafa8626
+* Fixed issue with controls not being hidden using keyboard @rafa8626
+
+*4.1.3 (2017/06/06)*
 
 * Updated Chinese translations (https://github.com/mediaelement/mediaelement/pull/2239) @PeterDaveHello
 * Changed `destroy()` to `remove()` in React documentation (https://github.com/mediaelement/mediaelement/pull/2243) @evykassirer
@@ -22,7 +30,10 @@
 * Updated `hls.js` to a CDN with SSL support (https://github.com/mediaelement/mediaelement/pull/2263) @isantolin
 * Sorted CSS properties to reduce filesize when using gzip (https://github.com/mediaelement/mediaelement/pull/2264) @marcobiedermann
 * Integrated [Stylelint](https://stylelint.io/) for CSS quality @rafa8626 
+* Improvements to CSS stylesheets via `Stylelint` (https://github.com/mediaelement/mediaelement/pull/2266) and (https://github.com/mediaelement/mediaelement/pull/2269) @marcobiedermann
 * Fixed workflow to generate proper vendor prefixes (https://github.com/mediaelement/mediaelement/pull/2265) @marcobiedermann
+* CSS cleanup (https://github.com/mediaelement/mediaelement/pull/2267) @marcobiedermann
+* Fixed issue related to tooltip changing size when hovering on progress bar and `alwaysShowHours` set to `true` @rafa8626
 
 *4.1.2 (2017/05/25)*
 

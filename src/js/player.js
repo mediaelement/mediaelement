@@ -600,7 +600,7 @@ class MediaElementPlayer {
 
 		doAnimation = doAnimation === undefined || doAnimation;
 
-		if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.keyboardAction ||
+		if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls ||
 			(t.media.paused && t.media.readyState === 4 && ((!t.options.hideVideoControlsOnLoad &&
 			t.media.currentTime <= 0) || (!t.options.hideVideoControlsOnPause && t.media.currentTime > 0))) ||
 			(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState) ||
@@ -908,8 +908,8 @@ class MediaElementPlayer {
 					}
 				}
 
-				if (typeof t.media.stop === 'function') {
-					t.media.stop();
+				if (typeof t.media.renderer.stop === 'function') {
+					t.media.renderer.stop();
 				} else {
 					t.media.pause();
 				}
@@ -973,8 +973,10 @@ class MediaElementPlayer {
 			// Enable focus outline for Accessibility purposes
 			t.container.addEventListener('focusin', function (e) {
 				dom.removeClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
-				if (t.controlsEnabled && !t.options.alwaysShowControls) {
-					t.showControls(false);
+				if (t.isVideo && t.controlsEnabled && !t.options.alwaysShowControls) {
+					t.killControlsTimer('enter');
+					t.showControls();
+					t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
 				}
 			});
 
@@ -984,8 +986,8 @@ class MediaElementPlayer {
 					if (e.relatedTarget) {
 						if (t.keyboardAction && !e.relatedTarget.closest(`.${t.options.classPrefix}container`)) {
 							t.keyboardAction = false;
-							if (t.isVideo && !t.options.alwaysShowControls) {
-								t.hideControls(true);
+							if (t.isVideo && !t.options.alwaysShowControls && !t.media.paused) {
+								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 							}
 						}
 					}
@@ -1018,7 +1020,6 @@ class MediaElementPlayer {
 		}
 
 		if (t.options.success) {
-
 			if (typeof t.options.success === 'string') {
 				window[t.options.success](t.media, t.domNode, t);
 			} else {
@@ -1975,8 +1976,8 @@ class MediaElementPlayer {
 			t.container.parentNode.insertBefore(t.node, t.container);
 		}
 
-		if (typeof t.media.destroy === 'function') {
-			t.media.destroy();
+		if (typeof t.media.renderer.destroy === 'function') {
+			t.media.renderer.destroy();
 		}
 
 		// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to
