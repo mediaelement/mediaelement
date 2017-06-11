@@ -344,7 +344,7 @@ class MediaElementPlayer {
 		;
 
 		// get video from src or href?
-		t.isDynamic = (tagName !== 'audio' && tagName !== 'video');
+		t.isDynamic = (tagName !== 'audio' && tagName !== 'video' && tagName !== 'iframe');
 		t.isVideo = (t.isDynamic) ? t.options.isVideo : (tagName !== 'audio' && t.options.isVideo);
 		t.mediaFiles = null;
 		t.trackFiles = null;
@@ -973,7 +973,7 @@ class MediaElementPlayer {
 			// Enable focus outline for Accessibility purposes
 			t.container.addEventListener('focusin', function (e) {
 				dom.removeClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
-				if (t.isVideo && t.controlsEnabled && !t.options.alwaysShowControls) {
+				if (t.isVideo && !IS_ANDROID && !IS_IOS && t.controlsEnabled && !t.options.alwaysShowControls) {
 					t.killControlsTimer('enter');
 					t.showControls();
 					t.startControlsTimer(t.options.controlsTimeoutMouseEnter);

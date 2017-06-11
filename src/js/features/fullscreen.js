@@ -8,6 +8,7 @@ import MediaElementPlayer from '../player';
 import * as Features from '../utils/constants';
 import {isString, createEvent} from '../utils/general';
 import {addClass, removeClass} from '../utils/dom';
+import {getTypeFromFile} from '../utils/media';
 
 
 /**
@@ -96,6 +97,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
+
+
 		player.fullscreenBtn = fullscreenBtn;
 
 		t.globalBind('keydown', (e) => {
@@ -154,8 +157,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			mode = 'plugin-native';
 		} else if (t.usePluginFullScreen && Features.SUPPORT_POINTER_EVENTS) {
 			mode = 'plugin-click';
-		} else {
-			mode = 'fullwindow';
 		}
 
 		t.fullscreenMode = mode;
@@ -182,12 +183,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			containerStyles = getComputedStyle(t.container)
 		;
 
-		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN) {
-			if (typeof t.media.webkitEnterFullscreen === 'function') {
-				t.media.webkitEnterFullscreen();
-			} else {
-				t.media.originalNode.webkitEnterFullscreen();
-			}
+		// iOS allows playing fullscreen ONLY on `video` tag, so check if the source can go fullscreen on iOS
+		// and if the player can play the current source
+		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN &&
+			typeof t.media.originalNode.webkitEnterFullscreen === 'function' &&
+			t.media.originalNode.canPlayType(getTypeFromFile(t.media.getSrc()))) {
+			t.media.originalNode.webkitEnterFullscreen();
 			return;
 		}
 

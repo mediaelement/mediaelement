@@ -1194,6 +1194,8 @@ var _general = _dereq_(22);
 
 var _dom = _dereq_(21);
 
+var _media = _dereq_(23);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -1286,8 +1288,6 @@ Object.assign(_player2.default.prototype, {
 			mode = 'plugin-native';
 		} else if (t.usePluginFullScreen && Features.SUPPORT_POINTER_EVENTS) {
 			mode = 'plugin-click';
-		} else {
-			mode = 'fullwindow';
 		}
 
 		t.fullscreenMode = mode;
@@ -1301,12 +1301,8 @@ Object.assign(_player2.default.prototype, {
 		    isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName),
 		    containerStyles = getComputedStyle(t.container);
 
-		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN) {
-			if (typeof t.media.webkitEnterFullscreen === 'function') {
-				t.media.webkitEnterFullscreen();
-			} else {
-				t.media.originalNode.webkitEnterFullscreen();
-			}
+		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN && typeof t.media.originalNode.webkitEnterFullscreen === 'function' && t.media.originalNode.canPlayType((0, _media.getTypeFromFile)(t.media.getSrc()))) {
+			t.media.originalNode.webkitEnterFullscreen();
 			return;
 		}
 
@@ -1449,7 +1445,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"20":20,"21":21,"22":22,"3":3,"5":5}],10:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"20":20,"21":21,"22":22,"23":23,"3":3,"5":5}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -3579,7 +3575,7 @@ var MediaElementPlayer = function () {
 		}),
 		    tagName = t.node.tagName.toLowerCase();
 
-		t.isDynamic = tagName !== 'audio' && tagName !== 'video';
+		t.isDynamic = tagName !== 'audio' && tagName !== 'video' && tagName !== 'iframe';
 		t.isVideo = t.isDynamic ? t.options.isVideo : tagName !== 'audio' && t.options.isVideo;
 		t.mediaFiles = null;
 		t.trackFiles = null;
@@ -4121,7 +4117,7 @@ var MediaElementPlayer = function () {
 
 				t.container.addEventListener('focusin', function (e) {
 					dom.removeClass(e.currentTarget, t.options.classPrefix + 'container-keyboard-inactive');
-					if (t.isVideo && t.controlsEnabled && !t.options.alwaysShowControls) {
+					if (t.isVideo && !_constants.IS_ANDROID && !_constants.IS_IOS && t.controlsEnabled && !t.options.alwaysShowControls) {
 						t.killControlsTimer('enter');
 						t.showControls();
 						t.startControlsTimer(t.options.controlsTimeoutMouseEnter);
