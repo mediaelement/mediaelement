@@ -2,12 +2,13 @@
 
 *4.1.4 (2017/??/??)*
 
-* Updated documentation on ReactJS about how to destroy a player and fixed typo on WordPress section @rafa8626
 * Fixed issues related to Promises with native renderers @rafa8626
 * Fixed typos in player to execute properly `destroy()` and `stop()` methods @rafa8626
 * Fixed issues with error message not being displayed properly in different scenarios @rafa8626
 * Fixed issue with controls not being hidden using keyboard @rafa8626
 * Fixed issue using fullscreen button and iframes @rafa8626
+* Updated documentation on ReactJS about how to destroy a player and fixed typo on WordPress section @rafa8626
+* Added missing documentation about how to install `MediaElement` in Drupal @rafa8626
 
 *4.1.3 (2017/06/06)*
 

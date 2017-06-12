@@ -8,6 +8,7 @@
 		* [In `wp-includes/media.php`](#wp-media)
 		* [In `wp-includes/js/mediaelement` folder](#wp-js-mediaelement)
 		* [In `wp-includes/script-loader.php`](#wp-script)
+	* [Installation in Drupal](#drupal)
 	* [Additional plugins](#plugins)
 * [2. Add Script and Stylesheet](#script-and-stylesheet)
 * [3. Add `<video>` or `<audio>` tags](#tags)
@@ -283,6 +284,34 @@ with:
 $styles->add( 'mediaelement',  "/wp-includes/js/mediaelement/mediaelementplayer-legacy.min.css", array(), 'X.X.X' );
 ```
 being `X.X.X` the latest version you want to install.
+
+<a id="drupal"></a>
+### Installation in Drupal
+
+With Drupal, you can create your own module and add `MediaElement` to it (see this document for more information).
+
+However, if you are using, or **if you have a Drupal 7 installation** and want to use, [`MediaElement Module`](https://www.drupal.org/project/mediaelement), you have to update it performing the following steps: 
+
+1. Install the [Libraries](https://www.drupal.org/project/libraries) module, if you haven't.
+
+2. Install the module into the `modules` folder, if you haven't.
+
+3. Replace the line in the `modules/mediaelement/mediaelement.admin.inc` file
+```
+'#markup' => '<video width="360" height="203" id="player1" src="' . $path . '/media/echo-hereweare.mp4"><p>Your browser leaves much to be desired.</p></video>',
+```
+with
+```
+'#markup' => '<video width="360" height="203" id="player1" src="https://media.w3.org/2010/05/sintel/trailer.mp4"></video>',
+```
+
+4. Install `MediaElement` latest `build` folder into Drupal's `sites/all/libraries/mediaelement` directory.
+
+5. Activate the module and configure it from Drupal's `Module` section.
+
+6. Check the box on `Enable MediaElement.js site wide`.
+
+7. Now every time you create a page/post and include the `video` or `audio` tag, the player will render them.
 
 <a id="plugins"></a>
 ### Additional plugins
