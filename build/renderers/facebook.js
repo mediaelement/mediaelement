@@ -18,7 +18,7 @@ var FacebookRenderer = {
 		facebook: {
 			appId: '{your-app-id}',
 			xfbml: true,
-			version: 'v2.6'
+			version: 'v2.9'
 		}
 	},
 
