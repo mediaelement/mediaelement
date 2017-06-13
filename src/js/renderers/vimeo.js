@@ -400,7 +400,7 @@ const vimeoIframeRenderer = {
 			height = mediaElement.originalNode.height,
 			width = mediaElement.originalNode.width,
 			vimeoContainer = document.createElement('iframe'),
-			standardUrl = `//player.vimeo.com/video/${VimeoApi.getVimeoId(mediaFiles[0].src)}`
+			standardUrl = `https://player.vimeo.com/video/${VimeoApi.getVimeoId(mediaFiles[0].src)}`
 		;
 
 		let queryArgs = ~mediaFiles[0].src.indexOf('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : '';

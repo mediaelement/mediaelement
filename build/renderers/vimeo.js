@@ -346,7 +346,7 @@ var vimeoIframeRenderer = {
 		var height = mediaElement.originalNode.height,
 		    width = mediaElement.originalNode.width,
 		    vimeoContainer = document.createElement('iframe'),
-		    standardUrl = '//player.vimeo.com/video/' + VimeoApi.getVimeoId(mediaFiles[0].src);
+		    standardUrl = 'https://player.vimeo.com/video/' + VimeoApi.getVimeoId(mediaFiles[0].src);
 
 		var queryArgs = ~mediaFiles[0].src.indexOf('?') ? '?' + mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1) : '';
 		if (queryArgs && mediaElement.originalNode.autoplay && queryArgs.indexOf('autoplay') === -1) {

@@ -9,6 +9,7 @@
 * Fixed issue using fullscreen button and iframes @rafa8626
 * Updated documentation on ReactJS about how to destroy a player and fixed typo on WordPress section @rafa8626
 * Added missing documentation about how to install `MediaElement` in Drupal @rafa8626
+* Fixed typo in `Vimeo` renderer @rafa8626
 
 *4.1.3 (2017/06/06)*
 
