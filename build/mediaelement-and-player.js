@@ -4692,7 +4692,9 @@ var MediaElementPlayer = function () {
 			    loading = _document2.default.createElement('div'),
 			    error = _document2.default.createElement('div'),
 			    bigPlay = _document2.default.createElement('div'),
-			    buffer = controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
+			    buffer = function buffer() {
+				return controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
+			};
 
 			loading.style.display = 'none';
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
@@ -4741,31 +4743,31 @@ var MediaElementPlayer = function () {
 			media.addEventListener('play', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer) {
-					buffer.style.display = 'none';
+				if (buffer() !== null) {
+					buffer().style.display = 'none';
 				}
 				error.style.display = 'none';
 			});
 			media.addEventListener('playing', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer) {
-					buffer.style.display = 'none';
+				if (buffer() !== null) {
+					buffer().style.display = 'none';
 				}
 				error.style.display = 'none';
 			});
 			media.addEventListener('seeking', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = '';
-				if (buffer) {
-					buffer.style.display = '';
+				if (buffer() !== null) {
+					buffer().style.display = '';
 				}
 			});
 			media.addEventListener('seeked', function () {
 				bigPlay.style.display = media.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
 				loading.style.display = 'none';
-				if (buffer) {
-					buffer.style.display = '';
+				if (buffer() !== null) {
+					buffer().style.display = '';
 				}
 			});
 			media.addEventListener('pause', function () {
@@ -4773,21 +4775,21 @@ var MediaElementPlayer = function () {
 				if (!_constants.IS_STOCK_ANDROID) {
 					bigPlay.style.display = '';
 				}
-				if (buffer) {
-					buffer.style.display = 'none';
+				if (buffer() !== null) {
+					buffer().style.display = 'none';
 				}
 			});
 			media.addEventListener('waiting', function () {
 				loading.style.display = '';
-				if (buffer) {
-					buffer.style.display = '';
+				if (buffer() !== null) {
+					buffer().style.display = '';
 				}
 			});
 
 			media.addEventListener('loadeddata', function () {
 				loading.style.display = '';
-				if (buffer) {
-					buffer.style.display = '';
+				if (buffer() !== null) {
+					buffer().style.display = '';
 				}
 
 				if (_constants.IS_ANDROID) {
@@ -4802,8 +4804,8 @@ var MediaElementPlayer = function () {
 			});
 			media.addEventListener('canplay', function () {
 				loading.style.display = 'none';
-				if (buffer) {
-					buffer.style.display = 'none';
+				if (buffer() !== null) {
+					buffer().style.display = 'none';
 				}
 
 				clearTimeout(media.canplayTimeout);
@@ -4813,8 +4815,8 @@ var MediaElementPlayer = function () {
 				t._handleError(e);
 				loading.style.display = 'none';
 				bigPlay.style.display = 'none';
-				if (buffer) {
-					buffer.style.display = 'none';
+				if (buffer() !== null) {
+					buffer().style.display = 'none';
 				}
 				if (e.message) {
 					error.style.display = 'block';

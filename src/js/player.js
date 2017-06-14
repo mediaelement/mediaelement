@@ -1605,7 +1605,7 @@ class MediaElementPlayer {
 			error = document.createElement('div'),
 			// this needs to come last so it's on top
 			bigPlay = document.createElement('div'),
-			buffer = controls.querySelector(`.${t.options.classPrefix}time-buffering`)
+			buffer = () => controls.querySelector(`.${t.options.classPrefix}time-buffering`)
 		;
 
 		loading.style.display = 'none'; // start out hidden
@@ -1663,31 +1663,31 @@ class MediaElementPlayer {
 		media.addEventListener('play', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (buffer) {
-				buffer.style.display = 'none';
+			if (buffer() !== null) {
+				buffer().style.display = 'none';
 			}
 			error.style.display = 'none';
 		});
 		media.addEventListener('playing', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (buffer) {
-				buffer.style.display = 'none';
+			if (buffer() !== null) {
+				buffer().style.display = 'none';
 			}
 			error.style.display = 'none';
 		});
 		media.addEventListener('seeking', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = '';
-			if (buffer) {
-				buffer.style.display = '';
+			if (buffer() !== null) {
+				buffer().style.display = '';
 			}
 		});
 		media.addEventListener('seeked', () => {
 			bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
-			if (buffer) {
-				buffer.style.display = '';
+			if (buffer() !== null) {
+				buffer().style.display = '';
 			}
 		});
 		media.addEventListener('pause', () => {
@@ -1695,22 +1695,22 @@ class MediaElementPlayer {
 			if (!IS_STOCK_ANDROID) {
 				bigPlay.style.display = '';
 			}
-			if (buffer) {
-				buffer.style.display = 'none';
+			if (buffer() !== null) {
+				buffer().style.display = 'none';
 			}
 		});
 		media.addEventListener('waiting', () => {
 			loading.style.display = '';
-			if (buffer) {
-				buffer.style.display = '';
+			if (buffer() !== null) {
+				buffer().style.display = '';
 			}
 		});
 
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
 			loading.style.display = '';
-			if (buffer) {
-				buffer.style.display = '';
+			if (buffer() !== null) {
+				buffer().style.display = '';
 			}
 
 			// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
@@ -1727,8 +1727,8 @@ class MediaElementPlayer {
 		});
 		media.addEventListener('canplay', () => {
 			loading.style.display = 'none';
-			if (buffer) {
-				buffer.style.display = 'none';
+			if (buffer() !== null) {
+				buffer().style.display = 'none';
 			}
 			// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
 			clearTimeout(media.canplayTimeout);
@@ -1739,8 +1739,8 @@ class MediaElementPlayer {
 			t._handleError(e);
 			loading.style.display = 'none';
 			bigPlay.style.display = 'none';
-			if (buffer) {
-				buffer.style.display = 'none';
+			if (buffer() !== null) {
+				buffer().style.display = 'none';
 			}
 			if (e.message) {
 				error.style.display = 'block';
