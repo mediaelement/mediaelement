@@ -11,6 +11,7 @@
 * Added missing documentation about how to install `MediaElement` in Drupal @rafa8626
 * Fixed typo in `Vimeo` renderer @rafa8626
 * Updated version of `Facebook` API @rafa8626
+* Replacing `buffer` querySelector with getter function in player (https://github.com/mediaelement/mediaelement/pull/2284) @ychen022
 
 *4.1.3 (2017/06/06)*
 
