@@ -4721,6 +4721,7 @@ var MediaElementPlayer = function () {
 					}
 
 					button.setAttribute('aria-pressed', !!pressed);
+					t.container.focus();
 				}
 			});
 
