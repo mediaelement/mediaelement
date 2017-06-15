@@ -384,7 +384,6 @@ class MediaElementPlayer {
 				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
-				`<div class="${t.options.classPrefix}clear"></div>` +
 			`</div>`;
 			t.container.addEventListener('focus', (e) => {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
