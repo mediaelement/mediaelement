@@ -1,11 +1,16 @@
 /* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).
 Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
 .mejs__offscreen {
-    clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    border: 0;
+    clip: rect( 1px, 1px, 1px, 1px );
+    clip-path: inset( 50% );
     height: 1px;
+    margin: -1px;
     overflow: hidden;
-    position: absolute !important;
+    padding: 0;
+    position: absolute;
     width: 1px;
+    word-wrap: normal;
 }
 
 .mejs__container {
@@ -269,7 +274,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     margin: 0 10px;
     padding-top: 10px;
     position: relative;
-    width: 200px;
 }
 
 .mejs__time-total,
@@ -564,17 +568,12 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     padding: 0;
     position: absolute;
     right: -51px;
-    visibility: hidden;
+    visibility: visible;
     width: 85px;
 }
 
 .mejs__chapters-button > .mejs__chapters-selector {
     width: 110px;
-}
-
-.mejs__captions-button > .mejs__captions-selector,
-.mejs__chapters-button > .mejs__chapters-selector {
-    visibility: visible;
 }
 
 .mejs__captions-selector-list,
@@ -604,12 +603,17 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__captions-selector-input,
 .mejs__chapters-selector-input {
-    display: none;
+    clear: both;
+    float: left;
+    left: -1000px;
+    margin: 3px 3px 0 5px;
+    position: absolute;
 }
 
 .mejs__captions-selector-label,
 .mejs__chapters-selector-label {
     cursor: pointer;
+    float: left;
     font-size: 10px;
     line-height: 15px;
     padding: 4px 0 0;
