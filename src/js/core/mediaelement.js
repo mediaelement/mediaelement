@@ -404,7 +404,7 @@ class MediaElement {
 										if (response && typeof response.then === 'function') {
 											response.catch((e) => t.mediaElement.generateError(e, mediaFiles));
 										}
-									}, 300);
+									}, 200);
 								}).catch((e) => {
 									t.mediaElement.generateError(e, mediaFiles);
 								});

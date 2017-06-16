@@ -880,7 +880,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 										return t.mediaElement.generateError(e, mediaFiles);
 									});
 								}
-							}, 300);
+							}, 200);
 						}).catch(function (e) {
 							t.mediaElement.generateError(e, mediaFiles);
 						});
