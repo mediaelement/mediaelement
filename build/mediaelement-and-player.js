@@ -5064,12 +5064,10 @@ var MediaElementPlayer = function () {
 				t.container.remove();
 			}
 			t.globalUnbind('resize', t.globalResizeCallback);
-			t.globalUnbind('keydown', function (e) {
-				t.globalKeydownCallback(e);
-				if (typeof t.exitFullscreenCallback === 'function') {
-					t.exitFullscreenCallback(e);
-				}
-			});
+			t.globalUnbind('keydown', t.globalKeydownCallback);
+			if (typeof t.exitFullscreenCallback === 'function') {
+				t.globalUnbind('keydown', t.exitFullscreenCallback);
+			}
 			t.globalUnbind('click', t.globalClickCallback);
 
 			delete t.media.player;
