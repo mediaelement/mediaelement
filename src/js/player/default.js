@@ -3,14 +3,13 @@
 export default class DefaultPlayer {
 	/**
 	 *
-	 * @param {MediaElement} media
-	 * @param {Boolean} isVideo
-	 * @param {String} classPrefix
+	 * @param {MediaElementPlayer} player
 	 */
-	constructor (media, isVideo, classPrefix) {
-		this.media = media;
-		this.isVideo = isVideo;
-		this.classPrefix = classPrefix;
+	constructor (player) {
+		this.media = player.media;
+		this.isVideo = player.isVideo;
+		this.classPrefix = player.options.classPrefix;
+		this.createIframeLayer = () => player.createIframeLayer();
 	}
 
 	get paused () {

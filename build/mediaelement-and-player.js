@@ -3839,7 +3839,7 @@ var MediaElementPlayer = function () {
 		key: '_setDefaultPlayer',
 		value: function _setDefaultPlayer() {
 			var t = this;
-			t.proxy = new _default2.default(t.media, t.isVideo, t.options.classPrefix);
+			t.proxy = new _default2.default(t);
 			t.setCurrentTime(t.currentMediaTime);
 			if (t.getCurrentTime() > 0 && !_constants.IS_IOS && !_constants.IS_ANDROID) {
 				t.play();
@@ -5137,12 +5137,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DefaultPlayer = function () {
-	function DefaultPlayer(media, isVideo, classPrefix) {
+	function DefaultPlayer(player) {
 		_classCallCheck(this, DefaultPlayer);
 
-		this.media = media;
-		this.isVideo = isVideo;
-		this.classPrefix = classPrefix;
+		this.media = player.media;
+		this.isVideo = player.isVideo;
+		this.classPrefix = player.options.classPrefix;
+		this.createIframeLayer = function () {
+			return player.createIframeLayer();
+		};
 	}
 
 	_createClass(DefaultPlayer, [{

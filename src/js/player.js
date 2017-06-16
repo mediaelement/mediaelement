@@ -695,7 +695,7 @@ class MediaElementPlayer {
 
 	_setDefaultPlayer () {
 		const t = this;
-		t.proxy = new DefaultPlayer(t.media, t.isVideo, t.options.classPrefix);
+		t.proxy = new DefaultPlayer(t);
 		t.setCurrentTime(t.currentMediaTime);
 		if (t.getCurrentTime() > 0 && !IS_IOS && !IS_ANDROID) {
 			t.play();
