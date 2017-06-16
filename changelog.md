@@ -13,6 +13,7 @@
 * Updated version of `Facebook` API @rafa8626
 * Replacing `buffer` querySelector with getter function in player (https://github.com/mediaelement/mediaelement/pull/2284) @ychen022
 * Fixed issue with keyboard not picking events on Chrome @rafa8626
+* Use flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
 
 *4.1.3 (2017/06/06)*
 
