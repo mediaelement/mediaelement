@@ -1526,7 +1526,7 @@ class MediaElementPlayer {
 			}
 		}
 		if (events.w) {
-			const eventList = events.d.split(' ');
+			const eventList = events.w.split(' ');
 			for (let i = 0, total = eventList.length; i < total; i++) {
 				eventList[i].split('.').reduce(function (part, e) {
 					window.removeEventListener(e, callback, false);

@@ -4625,7 +4625,7 @@ var MediaElementPlayer = function () {
 				}
 			}
 			if (events.w) {
-				var _eventList2 = events.d.split(' ');
+				var _eventList2 = events.w.split(' ');
 				for (var _i3 = 0, _total3 = _eventList2.length; _i3 < _total3; _i3++) {
 					_eventList2[_i3].split('.').reduce(function (part, e) {
 						_window2.default.removeEventListener(e, callback, false);
