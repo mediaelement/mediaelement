@@ -42,7 +42,9 @@ In general, `MediaElement.js` supports **IE11+, MS Edge, Chrome, Firefox, Safari
 
 ## * IMPORTANT CHANGES on `4.2.0` version
 
-As part of an effort to continuing improving the player, we are dropping support for IE9 and IE10, since market share of those browsers together is 0.4%, according to http://caniuse.com/usage-table. 
+As part of the continuous improvements the player, we have decided to drop completely support for IE9 and IE10, since market share of those browsers together is 0.4%, according to http://caniuse.com/usage-table.
+ 
+This change is for `MediaElement` and `MediaElement Plugins` repositories. 
 
 <a id="migration"></a>
 ## * IMPORTANT: Migrating from `2.x` to `4.x` version

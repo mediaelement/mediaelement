@@ -68,7 +68,8 @@ youtube | object | | See [Documentation](https://developers.google.com/youtube/p
 **Notes**
 1. Vimeo and Soundcloud don't need any configuration for now since they are pretty straight forward.
 2. To use DRM with M(PEG)-DASH, make sure CORS are configured correctly, and also your site **MUST** be using SSL.
-3. `success` and `error` will be available for both `MediaElement` and `MediaElementPlayer`; however, when using `MediaElementPlayer`, a third argument is passed: `instance`, which gives access to the methods associated to the `MediaElementPlayer` class.
+3. Both `success` and `error` will be available for both `MediaElement` and `MediaElementPlayer`; however, when using `MediaElementPlayer`, a third argument is passed: `instance`, which gives access to the methods associated to the `MediaElementPlayer` class.
+4. When using `MediaElementPlayer`, `error` arguments will be: `error` (the details on the error event), `media` and `node`.
 
 <a id="player"></a>
 ### MediaElementPlayer
@@ -117,6 +118,7 @@ stretching | string | `auto` | Stretching modes for video player. If `auto` is s
 enableKeyboard | boolean | `true` | Turns keyboard support on and off for this instance
 pauseOtherPlayers | boolean | `true` | When focused player starts, it will pause other players
 secondsDecimalLength | number | `0` | Number of decimal places to show if frames are shown
+customError | string | _(empty)_ | If error happens, set up customized HTML message
 keyActions | array | `[...]` | Keyboard actions to trigger different actions. Accepts array of objects in format: `{keys: [1,2,3...], action: function(player, media) { ... }}`. To see the entire list, please check `/src/js/mediaelementplayer-player.js`
 duration | number | `-1` | Start point to detect changes on media time duration
 timeAndDurationSeparator | string | `<span> | </span>` | Separator between the current time and the total duration of media being played
