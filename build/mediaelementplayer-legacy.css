@@ -739,14 +739,14 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* End: Track (Captions and Chapters) */
 
 /* Start: Error */
-.me_cannotplay,
-.me_cannotplay a {
+.mejs-cannotplay,
+.mejs-cannotplay a {
     color: #fff;
     font-size: 0.8em;
 }
 
-.me_cannotplay p,
-.me_cannotplay a {
+.mejs-cannotplay p,
+.mejs-cannotplay a {
     display: inline-block;
     padding: 0 15px;
     width: 100%;

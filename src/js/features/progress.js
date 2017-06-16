@@ -4,7 +4,7 @@ import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
-import {IS_FIREFOX, IS_IOS, IS_ANDROID} from '../utils/constants';
+import {IS_IOS, IS_ANDROID} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
 import {offset, addClass, removeClass, hasClass} from '../utils/dom';
 
@@ -224,17 +224,18 @@ Object.assign(MediaElementPlayer.prototype, {
 			 */
 			restartPlayer = () => {
 				if (new Date() - lastKeyPressTime >= 1000) {
-					media.play();
+					t.play();
 				}
 			},
 			handleMouseup = () => {
 				if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
 					t.setCurrentTime(t.newTime);
-					player.setCurrentRail();
+					t.setCurrentRail();
 					t.updateCurrent(t.newTime);
 				}
 				if (t.forcedHandlePause) {
-					t.media.play();
+					t.slider.focus();
+					t.play();
 				}
 				t.forcedHandlePause = false;
 			}
@@ -249,7 +250,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 		t.slider.addEventListener('keydown', (e) => {
 			if ((new Date() - lastKeyPressTime) >= 1000) {
-				startedPaused = media.paused;
+				startedPaused = t.paused;
 			}
 
 			if (t.options.keyActions.length) {
@@ -282,20 +283,11 @@ Object.assign(MediaElementPlayer.prototype, {
 					case 35: // end
 						seekTime = duration;
 						break;
-					case 32: // space
-						if (!IS_FIREFOX) {
-							if (media.paused) {
-								media.play();
-							} else {
-								media.pause();
-							}
-						}
-						return;
 					case 13: // enter
-						if (media.paused) {
-							media.play();
+						if (t.paused) {
+							t.play();
 						} else {
-							media.pause();
+							t.pause();
 						}
 						return;
 					default:
@@ -305,7 +297,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
 				lastKeyPressTime = new Date();
 				if (!startedPaused) {
-					media.pause();
+					player.pause();
 				}
 
 				if (seekTime < t.getDuration() && !startedPaused) {
@@ -330,8 +322,8 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (t.getDuration() !== Infinity) {
 					// only handle left clicks or touch
 					if (e.which === 1 || e.which === 0) {
-						if (!media.paused) {
-							t.media.pause();
+						if (!t.paused) {
+							t.pause();
 							t.forcedHandlePause = true;
 						}
 
@@ -415,7 +407,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// current time
 		media.addEventListener('timeupdate', (e) => {
 			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
-			if (t.getDuration() !== Infinity ) {
+			if (t.getDuration() !== Infinity) {
 				if (broadcast) {
 					t.slider.style.display = '';
 					broadcast.remove();

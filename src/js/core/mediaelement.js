@@ -49,12 +49,7 @@ class MediaElement {
 			 * Flag in `<object>` and `<embed>` to determine whether to use local or CDN
 			 * Possible values: 'always' (CDN version) or 'sameDomain' (local files)
 			 */
-			shimScriptAccess: 'sameDomain',
-			/**
-			 * If error happens, set up HTML message
-			 * @type {String}
-			 */
-			customError: ''
+			shimScriptAccess: 'sameDomain'
 		};
 
 		options = Object.assign(t.defaults, options);
@@ -263,8 +258,8 @@ class MediaElement {
 		 * Set the element dimensions based on selected renderer's setSize method
 		 *
 		 * @public
-		 * @param {number} width
-		 * @param {number} height
+		 * @param {Number} width
+		 * @param {Number} height
 		 */
 		t.mediaElement.setSize = (width, height) => {
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
@@ -274,41 +269,17 @@ class MediaElement {
 
 		/**
 		 *
+		 * @public
+		 * @param {String} message
 		 * @param {Object[]} urlList
 		 */
-		t.mediaElement.createErrorMessage = (message, urlList) => {
-
+		t.mediaElement.generateError = (message, urlList) => {
 			message = message || '';
 			urlList = Array.isArray(urlList) ? urlList : [];
-
-			const errorContainer = document.createElement('div');
-			errorContainer.className = 'me_cannotplay';
-			errorContainer.style.width = '100%';
-			errorContainer.style.height = '100%';
-
-			let errorContent = t.mediaElement.options.customError;
-
-			if (!errorContent) {
-
-				const poster = t.mediaElement.originalNode.getAttribute('poster');
-				if (poster) {
-					errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;
-				}
-
-				if (message) {
-					errorContent += `<p>${message}</p>`;
-				}
-
-				for (let i = 0, total = urlList.length; i < total; i++) {
-					const url = urlList[i];
-					errorContent += `<a href="${url.src}" data-type="${url.type}"><span>${mejs.i18n.t('mejs.download-file')}: ${url.src}</span></a>`;
-				}
-			}
-
-			errorContainer.innerHTML = errorContent;
-			console.error(message);
-
-			t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
+			const event = createEvent('error', t.mediaElement);
+			event.message = message;
+			event.urls = urlList;
+			t.mediaElement.dispatchEvent(event);
 			t.mediaElement.originalNode.style.display = 'none';
 			error = true;
 		};
@@ -338,7 +309,7 @@ class MediaElement {
 					const
 						capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`,
 						getFn = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
-							typeof t.mediaElement.renderer[`get${capName}`] === 'function') ? t.mediaElement.renderer[`get${capName}`]() : null,
+						typeof t.mediaElement.renderer[`get${capName}`] === 'function') ? t.mediaElement.renderer[`get${capName}`]() : null,
 						setFn = (value) => {
 							if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
 								typeof t.mediaElement.renderer[`set${capName}`] === 'function') {
@@ -408,18 +379,11 @@ class MediaElement {
 
 				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
 
-				if (t.mediaElement.querySelector('.me_cannotplay')) {
-					t.mediaElement.querySelector('.me_cannotplay').remove();
-				}
-
 				// did we find a renderer?
 				// At least there must be a media in the `mediaFiles` since the media tag can come up an
 				// empty source for starters
 				if (renderInfo === null && mediaFiles[0].src) {
-					event = createEvent('error', t.mediaElement);
-					event.message = 'No renderer found';
-					t.mediaElement.createErrorMessage(event.message, mediaFiles);
-					t.mediaElement.dispatchEvent(event);
+					t.mediaElement.generateError('No renderer found', mediaFiles);
 					return;
 				}
 
@@ -433,33 +397,35 @@ class MediaElement {
 						typeof t.mediaElement.renderer[methodName] === 'function') {
 						if (methodName === 'play') {
 							if (t.mediaElement.promises.length) {
-								Promise.all(t.mediaElement.promises)
-								.then(() => {
+								Promise.all(t.mediaElement.promises).then(() => {
 									// Give a delay to ensure all be played properly
 									setTimeout(() => {
-										t.mediaElement.renderer[methodName](args)
-									}, 250);
-								})
-								.catch((e) => {
-									if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-										const event = createEvent('error', t.mediaElement);
-										event.message = e;
-										t.mediaElement.dispatchEvent(event);
-										t.mediaElement.createErrorMessage(e, mediaFiles);
-									}
+										const response = t.mediaElement.renderer[methodName](args);
+										if (response && typeof response.then === 'function') {
+											response.catch((e) => t.mediaElement.generateError(e, mediaFiles));
+										}
+									}, 300);
+								}).catch((e) => {
+									t.mediaElement.generateError(e, mediaFiles);
 								});
 							} else {
 								try {
-									t.mediaElement.renderer[methodName](args);
+									const response = t.mediaElement.renderer[methodName](args);
+									if (response && typeof response.then === 'function') {
+										response.catch((e) => t.mediaElement.generateError(e, mediaFiles));
+									}
 								} catch (e) {
-									t.mediaElement.createErrorMessage();
+									t.mediaElement.generateError(e, mediaFiles);
 								}
 							}
 						} else {
 							try {
-								t.mediaElement.renderer[methodName](args);
+								const response = t.mediaElement.renderer[methodName](args);
+								if (response && typeof response.then === 'function') {
+									response.catch((e) => t.mediaElement.generateError(e, mediaFiles));
+								}
 							} catch (e) {
-								t.mediaElement.createErrorMessage();
+								t.mediaElement.generateError(e, mediaFiles);
 							}
 						}
 					}
@@ -538,15 +504,15 @@ class MediaElement {
 
 		if (t.mediaElement.promises.length) {
 			Promise.all(t.mediaElement.promises)
-				.then(() => {
-					if (t.mediaElement.options.success) {
-						t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
-					}
-				}).catch(() => {
-					if (error && t.mediaElement.options.error) {
-						t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
-					}
-				});
+			.then(() => {
+				if (t.mediaElement.options.success) {
+					t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);
+				}
+			}).catch(() => {
+				if (error && t.mediaElement.options.error) {
+					t.mediaElement.options.error(t.mediaElement, t.mediaElement.originalNode);
+				}
+			});
 		} else {
 			if (t.mediaElement.options.success) {
 				t.mediaElement.options.success(t.mediaElement, t.mediaElement.originalNode);

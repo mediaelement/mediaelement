@@ -223,14 +223,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				positionVolumeHandle(volume);
 
 				// set the media object (this will trigger the `volumechange` event)
-				media.setMuted((volume === 0));
-				media.setVolume(volume);
+				t.setMuted((volume === 0));
+				t.setVolume(volume);
 
 				e.preventDefault();
 				e.stopPropagation();
 			},
 			toggleMute = () => {
-				if (media.muted) {
+				if (t.muted) {
 					positionVolumeHandle(0);
 					removeClass(mute, `${t.options.classPrefix}mute`);
 					addClass(mute, `${t.options.classPrefix}unmute`);

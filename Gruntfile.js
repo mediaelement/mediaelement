@@ -77,23 +77,6 @@ module.exports = function (grunt) {
 						'src/js/renderers/hls.js',
 						'src/js/renderers/youtube.js',
 					]),
-					// just player
-					'build/mediaelementplayer.js': [
-						'src/js/utils/polyfill.js',
-						'src/js/core/mediaelement.js',
-						'src/js/core/i18n.js',
-						'src/js/languages/en.js',
-						'src/js/renderers/html5.js',
-						'src/js/renderers/flash.js',
-						'src/js/library.js',
-						'src/js/player.js',
-						'src/js/features/fullscreen.js',
-						'src/js/features/playpause.js',
-						'src/js/features/progress.js',
-						'src/js/features/time.js',
-						'src/js/features/tracks.js',
-						'src/js/features/volume.js'
-					],
 					// all bundle
 					'build/mediaelement-and-player.js': [
 						'src/js/utils/polyfill.js',
@@ -108,7 +91,8 @@ module.exports = function (grunt) {
 						'src/js/renderers/hls.js',
 						'src/js/renderers/youtube.js',
 					]).concat([
-						'src/js/library.js',
+						'src/js/player/library.js',
+						'src/js/player/default.js',
 						'src/js/player.js',
 						'src/js/features/fullscreen.js',
 						'src/js/features/playpause.js',
@@ -182,7 +166,7 @@ module.exports = function (grunt) {
 					processors: [
 						// Add vendor prefixes.
 						require('autoprefixer')({
-							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+							browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'
 						})
 					]
 				},
@@ -193,7 +177,7 @@ module.exports = function (grunt) {
 				options: {
 					processors: [
 						// Add vendor prefixes.
-						require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'}),
 						// Minify the result.
 						require('cssnano')()
 					]
@@ -205,7 +189,7 @@ module.exports = function (grunt) {
 				options: {
 					processors: [
 						// Add vendor prefixes.
-						require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'}),
 						// Minify the result.
 						require('cssnano')()
 					]

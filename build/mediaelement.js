@@ -599,9 +599,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 		pluginPath: 'build/',
 
-		shimScriptAccess: 'sameDomain',
-
-		customError: ''
+		shimScriptAccess: 'sameDomain'
 	};
 
 	options = Object.assign(t.defaults, options);
@@ -768,39 +766,13 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		}
 	};
 
-	t.mediaElement.createErrorMessage = function (message, urlList) {
-
+	t.mediaElement.generateError = function (message, urlList) {
 		message = message || '';
 		urlList = Array.isArray(urlList) ? urlList : [];
-
-		var errorContainer = _document2.default.createElement('div');
-		errorContainer.className = 'me_cannotplay';
-		errorContainer.style.width = '100%';
-		errorContainer.style.height = '100%';
-
-		var errorContent = t.mediaElement.options.customError;
-
-		if (!errorContent) {
-
-			var poster = t.mediaElement.originalNode.getAttribute('poster');
-			if (poster) {
-				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="' + _mejs2.default.i18n.t('mejs.download-file') + '">';
-			}
-
-			if (message) {
-				errorContent += '<p>' + message + '</p>';
-			}
-
-			for (var _i2 = 0, total = urlList.length; _i2 < total; _i2++) {
-				var url = urlList[_i2];
-				errorContent += '<a href="' + url.src + '" data-type="' + url.type + '"><span>' + _mejs2.default.i18n.t('mejs.download-file') + ': ' + url.src + '</span></a>';
-			}
-		}
-
-		errorContainer.innerHTML = errorContent;
-		console.error(message);
-
-		t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
+		var event = (0, _general.createEvent)('error', t.mediaElement);
+		event.message = message;
+		event.urls = urlList;
+		t.mediaElement.dispatchEvent(event);
 		t.mediaElement.originalNode.style.display = 'none';
 		error = true;
 	};
@@ -860,11 +832,11 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			});
 			mediaFiles.push(media);
 		} else if (Array.isArray(value)) {
-			for (var _i3 = 0, total = value.length; _i3 < total; _i3++) {
+			for (var _i2 = 0, total = value.length; _i2 < total; _i2++) {
 
-				var _src2 = (0, _media2.absolutizeUrl)(value[_i3].src),
-				    _type3 = value[_i3].type,
-				    _media = Object.assign(value[_i3], {
+				var _src2 = (0, _media2.absolutizeUrl)(value[_i2].src),
+				    _type3 = value[_i2].type,
+				    _media = Object.assign(value[_i2], {
 					src: _src2,
 					type: (_type3 === '' || _type3 === null || _type3 === undefined) && _src2 ? (0, _media2.getTypeFromFile)(_src2) : _type3
 				});
@@ -884,15 +856,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 		t.mediaElement.originalNode.setAttribute('src', mediaFiles[0].src || '');
 
-		if (t.mediaElement.querySelector('.me_cannotplay')) {
-			t.mediaElement.querySelector('.me_cannotplay').remove();
-		}
-
 		if (renderInfo === null && mediaFiles[0].src) {
-			event = (0, _general.createEvent)('error', t.mediaElement);
-			event.message = 'No renderer found';
-			t.mediaElement.createErrorMessage(event.message, mediaFiles);
-			t.mediaElement.dispatchEvent(event);
+			t.mediaElement.generateError('No renderer found', mediaFiles);
 			return;
 		}
 
@@ -909,28 +874,38 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 					if (t.mediaElement.promises.length) {
 						Promise.all(t.mediaElement.promises).then(function () {
 							setTimeout(function () {
-								t.mediaElement.renderer[methodName](args);
-							}, 250);
+								var response = t.mediaElement.renderer[methodName](args);
+								if (response && typeof response.then === 'function') {
+									response.catch(function (e) {
+										return t.mediaElement.generateError(e, mediaFiles);
+									});
+								}
+							}, 300);
 						}).catch(function (e) {
-							if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-								var event = (0, _general.createEvent)('error', t.mediaElement);
-								event.message = e;
-								t.mediaElement.dispatchEvent(event);
-								t.mediaElement.createErrorMessage(e, mediaFiles);
-							}
+							t.mediaElement.generateError(e, mediaFiles);
 						});
 					} else {
 						try {
-							t.mediaElement.renderer[methodName](args);
+							var response = t.mediaElement.renderer[methodName](args);
+							if (response && typeof response.then === 'function') {
+								response.catch(function (e) {
+									return t.mediaElement.generateError(e, mediaFiles);
+								});
+							}
 						} catch (e) {
-							t.mediaElement.createErrorMessage();
+							t.mediaElement.generateError(e, mediaFiles);
 						}
 					}
 				} else {
 					try {
-						t.mediaElement.renderer[methodName](args);
+						var _response = t.mediaElement.renderer[methodName](args);
+						if (_response && typeof _response.then === 'function') {
+							_response.catch(function (e) {
+								return t.mediaElement.generateError(e, mediaFiles);
+							});
+						}
 					} catch (e) {
-						t.mediaElement.createErrorMessage();
+						t.mediaElement.generateError(e, mediaFiles);
 					}
 				}
 			}
@@ -942,12 +917,12 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.getSrc = getSrc;
 	t.mediaElement.setSrc = setSrc;
 
-	for (var _i4 = 0, total = props.length; _i4 < total; _i4++) {
-		assignGettersSetters(props[_i4]);
+	for (var _i3 = 0, total = props.length; _i3 < total; _i3++) {
+		assignGettersSetters(props[_i3]);
 	}
 
-	for (var _i5 = 0, _total = methods.length; _i5 < _total; _i5++) {
-		assignMethods(methods[_i5]);
+	for (var _i4 = 0, _total = methods.length; _i4 < _total; _i4++) {
+		assignMethods(methods[_i4]);
 	}
 
 	t.mediaElement.addEventListener = function (eventName, callback) {
@@ -972,9 +947,9 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			return true;
 		}
 
-		for (var _i6 = 0; _i6 < callbacks.length; _i6++) {
-			if (callbacks[_i6] === callback) {
-				t.mediaElement.events[eventName].splice(_i6, 1);
+		for (var _i5 = 0; _i5 < callbacks.length; _i5++) {
+			if (callbacks[_i5] === callback) {
+				t.mediaElement.events[eventName].splice(_i5, 1);
 				return true;
 			}
 		}
@@ -984,8 +959,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.dispatchEvent = function (event) {
 		var callbacks = t.mediaElement.events[event.type];
 		if (callbacks) {
-			for (var _i7 = 0; _i7 < callbacks.length; _i7++) {
-				callbacks[_i7].apply(null, [event]);
+			for (var _i6 = 0; _i6 < callbacks.length; _i6++) {
+				callbacks[_i6].apply(null, [event]);
 			}
 		}
 	};

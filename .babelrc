@@ -3,7 +3,7 @@
   "presets": [
     ["env", {
       "targets": {
-        "browsers": ["last 5 versions", "ie >= 9", "ios >= 8", "android >= 4"]
+        "browsers": ["last 5 versions", "ie > 10", "ios > 7", "android > 3"]
       }
     }]
   ]

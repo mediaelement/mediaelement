@@ -1,6 +1,6 @@
 ### Version History
 
-*4.1.4 (2017/??/??)*
+*4.2.0 (2017/??/??)*
 
 * Fixed issues related to Promises with native renderers @rafa8626
 * Fixed typos in player to execute properly `destroy()` and `stop()` methods @rafa8626
@@ -12,7 +12,10 @@
 * Fixed typo in `Vimeo` renderer @rafa8626
 * Updated version of `Facebook` API @rafa8626
 * Replacing `buffer` querySelector with getter function in player (https://github.com/mediaelement/mediaelement/pull/2284) @ychen022
-* Fixed issue with keyboard not picking events on Chrome @rafa8626
+* Fixed issues with keyboard not picking events correctly on Chrome @rafa8626
+* Improved error system to catch more errors and present them to user @rafa8626
+* Removed `mediaelementplayer` bundles, considered unnecessary @rafa8626
+* Added new middleware layer to allow interaction with other players @rafa8626
 
 *4.1.3 (2017/06/06)*
 

@@ -4,6 +4,7 @@ import window from 'global/window';
 import document from 'global/document';
 import mejs from './core/mejs';
 import MediaElement from './core/mediaelement';
+import DefaultPlayer from './player/default';
 import i18n from './core/i18n';
 import {
 	IS_FIREFOX,
@@ -116,27 +117,29 @@ export const config = {
 	pauseOtherPlayers: true,
 	// Number of decimal places to show if frames are shown
 	secondsDecimalLength: 0,
+	// If error happens, set up HTML message
+	customError: '',
 	// Array of keyboard actions such as play/pause
 	keyActions: [
 		{
 			keys: [
-				32, // SPACE
+				32, // SPACEBAR
 				179 // GOOGLE play/pause button
 			],
-			action: (player, media) => {
+			action: (player) => {
 
 				if (!IS_FIREFOX) {
-					if (media.paused || media.ended) {
-						media.play();
+					if (player.paused || player.ended) {
+						player.play();
 					} else {
-						media.pause();
+						player.pause();
 					}
 				}
 			}
 		},
 		{
 			keys: [38], // UP
-			action: (player, media) => {
+			action: (player) => {
 
 				if (player.container.querySelector(`.${config.classPrefix}volume-button>button`).matches(':focus') ||
 					player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
@@ -147,17 +150,17 @@ export const config = {
 					player.startControlsTimer();
 				}
 
-				const newVolume = Math.min(media.volume + 0.1, 1);
-				media.setVolume(newVolume);
+				const newVolume = Math.min(player.volume + 0.1, 1);
+				player.setVolume(newVolume);
 				if (newVolume > 0) {
-					media.setMuted(false);
+					player.setMuted(false);
 				}
 
 			}
 		},
 		{
 			keys: [40], // DOWN
-			action: (player, media) => {
+			action: (player) => {
 
 				if (player.container.querySelector(`.${config.classPrefix}volume-button>button`).matches(':focus') ||
 					player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
@@ -169,11 +172,11 @@ export const config = {
 					player.startControlsTimer();
 				}
 
-				const newVolume = Math.max(media.volume - 0.1, 0);
-				media.setVolume(newVolume);
+				const newVolume = Math.max(player.volume - 0.1, 0);
+				player.setVolume(newVolume);
 
 				if (newVolume <= 0.1) {
-					media.setMuted(true);
+					player.setMuted(true);
 				}
 
 			}
@@ -183,16 +186,16 @@ export const config = {
 				37, // LEFT
 				227 // Google TV rewind
 			],
-			action: (player, media) => {
-				if (!isNaN(media.duration) && media.duration > 0) {
+			action: (player) => {
+				if (!isNaN(player.duration) && player.duration > 0) {
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
 					}
 
 					// 5%
-					const newTime = Math.max(media.currentTime - player.options.defaultSeekBackwardInterval(media), 0);
-					media.setCurrentTime(newTime);
+					const newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
+					player.setCurrentTime(newTime);
 				}
 			}
 		},
@@ -201,17 +204,17 @@ export const config = {
 				39, // RIGHT
 				228 // Google TV forward
 			],
-			action: (player, media) => {
+			action: (player) => {
 
-				if (!isNaN(media.duration) && media.duration > 0) {
+				if (!isNaN(player.duration) && player.duration > 0) {
 					if (player.isVideo) {
 						player.showControls();
 						player.startControlsTimer();
 					}
 
 					// 5%
-					const newTime = Math.min(media.currentTime + player.options.defaultSeekForwardInterval(media), media.duration);
-					media.setCurrentTime(newTime);
+					const newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);
+					player.setCurrentTime(newTime);
 				}
 			}
 		},
@@ -267,14 +270,6 @@ class MediaElementPlayer {
 			element = typeof node === 'string' ? document.getElementById(node) : node
 		;
 
-		t.hasFocus = false;
-
-		t.controlsAreVisible = true;
-
-		t.controlsEnabled = true;
-
-		t.controlsTimer = null;
-
 		// enforce object, even without "new" (via John Resig)
 		if (!(t instanceof MediaElementPlayer)) {
 			return new MediaElementPlayer(element, o);
@@ -293,6 +288,18 @@ class MediaElementPlayer {
 		if (t.media.player !== undefined) {
 			return t.media.player;
 		}
+
+		t.hasFocus = false;
+
+		t.controlsAreVisible = true;
+
+		t.controlsEnabled = true;
+
+		t.controlsTimer = null;
+
+		t.currentMediaTime = 0;
+
+		t.proxy = null;
 
 		// try to get options from data-mejsoptions
 		if (o === undefined) {
@@ -332,7 +339,7 @@ class MediaElementPlayer {
 
 		// start up
 		const
-			meOptions = Object.assign({}, t.options, {
+			playerOptions = Object.assign({}, t.options, {
 				success: (media, domNode) => {
 					t._meReady(media, domNode);
 				},
@@ -385,7 +392,7 @@ class MediaElementPlayer {
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
 				`<div class="${t.options.classPrefix}clear"></div>` +
-			`</div>`;
+				`</div>`;
 			t.container.addEventListener('focus', (e) => {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
@@ -532,16 +539,18 @@ class MediaElementPlayer {
 			t.setPlayerSize(t.width, t.height);
 
 			// create MediaElementShim
-			meOptions.pluginWidth = t.width;
-			meOptions.pluginHeight = t.height;
+			playerOptions.pluginWidth = t.width;
+			playerOptions.pluginHeight = t.height;
 		}
 		// Hide media completely for audio that doesn't have any features
 		else if (!t.isVideo && !t.options.features.length) {
 			t.node.style.display = 'none';
 		}
 
+		mejs.MepDefaults = playerOptions;
+
 		// create MediaElement shim
-		new MediaElement(t.media, meOptions, t.mediaFiles);
+		new MediaElement(t.media, playerOptions, t.mediaFiles);
 
 		if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
 			// controls are shown when loaded
@@ -601,10 +610,10 @@ class MediaElementPlayer {
 		doAnimation = doAnimation === undefined || doAnimation;
 
 		if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls ||
-			(t.media.paused && t.media.readyState === 4 && ((!t.options.hideVideoControlsOnLoad &&
-			t.media.currentTime <= 0) || (!t.options.hideVideoControlsOnPause && t.media.currentTime > 0))) ||
-			(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState) ||
-			t.media.ended)) {
+			(t.paused && t.readyState === 4 && ((!t.options.hideVideoControlsOnLoad &&
+			t.currentTime <= 0) || (!t.options.hideVideoControlsOnPause && t.currentTime > 0))) ||
+			(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.readyState) ||
+			t.ended)) {
 			return;
 		}
 
@@ -684,6 +693,15 @@ class MediaElementPlayer {
 		t.showControls(false);
 	}
 
+	_setDefaultPlayer () {
+		const t = this;
+		t.proxy = new DefaultPlayer(t.media, t.isVideo, t.options.classPrefix);
+		t.setCurrentTime(t.currentMediaTime);
+		if (t.getCurrentTime() > 0 && !IS_IOS && !IS_ANDROID) {
+			t.play();
+		}
+	}
+
 	/**
 	 * Set up all controls and events
 	 *
@@ -739,11 +757,6 @@ class MediaElementPlayer {
 				return;
 			}
 
-			// two built in features
-			t.buildposter(t, t.controls, t.layers, t.media);
-			t.buildkeyboard(t, t.controls, t.layers, t.media);
-			t.buildoverlays(t, t.controls, t.layers, t.media);
-
 			// grab for use by features
 			t.findTracks();
 
@@ -762,6 +775,13 @@ class MediaElementPlayer {
 					}
 				}
 			}
+			
+			t.buildposter(t, t.controls, t.layers, t.media);
+			t.buildkeyboard(t, t.controls, t.layers, t.media);
+			t.buildoverlays(t, t.controls, t.layers, t.media);
+
+			// Enable default actions
+			t._setDefaultPlayer();
 
 			const event = createEvent('controlsready', t.container);
 			t.container.dispatchEvent(event);
@@ -784,15 +804,16 @@ class MediaElementPlayer {
 							pressed = button.getAttribute('aria-pressed')
 						;
 
-						if (t.media.paused && pressed) {
+						if (t.paused && pressed) {
 							t.pause();
-						} else if (t.media.paused) {
+						} else if (t.paused) {
 							t.play();
 						} else {
 							t.pause();
 						}
 
 						button.setAttribute('aria-pressed', !(pressed));
+						t.container.focus();
 					}
 				};
 
@@ -839,7 +860,7 @@ class MediaElementPlayer {
 					});
 					t.container.addEventListener('mouseleave', () => {
 						if (t.controlsEnabled) {
-							if (!t.media.paused && !t.options.alwaysShowControls) {
+							if (!t.paused && !t.options.alwaysShowControls) {
 								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 							}
 						}
@@ -894,7 +915,7 @@ class MediaElementPlayer {
 			t.media.addEventListener('ended', () => {
 				if (t.options.autoRewind) {
 					try {
-						t.media.setCurrentTime(0);
+						t.setCurrentTime(0);
 						// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after
 						// ending the video and jumping to the beginning
 						setTimeout(() => {
@@ -911,7 +932,7 @@ class MediaElementPlayer {
 				if (typeof t.media.renderer.stop === 'function') {
 					t.media.renderer.stop();
 				} else {
-					t.media.pause();
+					t.pause();
 				}
 
 				if (t.setProgressRail) {
@@ -931,7 +952,7 @@ class MediaElementPlayer {
 			// resize on the first play
 			t.media.addEventListener('loadedmetadata', () => {
 
-				calculateTimeFormat(t.duration, t.options, t.options.framesPerSecond || 25);
+				calculateTimeFormat(t.getDuration(), t.options, t.options.framesPerSecond || 25);
 
 				if (t.updateDuration) {
 					t.updateDuration();
@@ -949,8 +970,8 @@ class MediaElementPlayer {
 			// Only change the time format when necessary
 			let duration = null;
 			t.media.addEventListener('timeupdate', () => {
-				if (!isNaN(t.media.getDuration()) && duration !== t.media.getDuration()) {
-					duration = t.media.getDuration();
+				if (!isNaN(t.getDuration()) && duration !== t.getDuration()) {
+					duration = t.getDuration();
 					calculateTimeFormat(duration, t.options, t.options.framesPerSecond || 25);
 
 					// make sure to fill in and resize the controls (e.g., 00:00 => 01:13:15
@@ -986,7 +1007,7 @@ class MediaElementPlayer {
 					if (e.relatedTarget) {
 						if (t.keyboardAction && !e.relatedTarget.closest(`.${t.options.classPrefix}container`)) {
 							t.keyboardAction = false;
-							if (t.isVideo && !t.options.alwaysShowControls && !t.media.paused) {
+							if (t.isVideo && !t.options.alwaysShowControls && !t.paused) {
 								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 							}
 						}
@@ -1030,10 +1051,12 @@ class MediaElementPlayer {
 
 	/**
 	 *
-	 * @param {Event} e
+	 * @param {CustomEvent} e
+	 * @param {MediaElement} media
+	 * @param {HTMLElement} node
 	 * @private
 	 */
-	_handleError (e) {
+	_handleError (e, media, node) {
 		const t = this;
 
 		if (t.controls) {
@@ -1048,7 +1071,43 @@ class MediaElementPlayer {
 
 		// Tell user that the file cannot be played
 		if (t.options.error) {
-			t.options.error(e);
+			t.options.error(e, media, node);
+		}
+
+		// Remove prior error message
+		if (t.container.querySelector(`.${t.options.classPrefix}cannotplay`)) {
+			t.container.querySelector(`.${t.options.classPrefix}cannotplay`).remove();
+		}
+
+		const errorContainer = document.createElement('div');
+		errorContainer.className = `${t.options.classPrefix}cannotplay`;
+		errorContainer.style.width = '100%';
+		errorContainer.style.height = '100%';
+
+		let errorContent = t.options.customError;
+
+		if (!errorContent) {
+			const poster = t.media.originalNode.getAttribute('poster');
+			if (poster) {
+				errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;
+			}
+
+			if (e.message) {
+				errorContent += `<p>${e.message}</p>`;
+			}
+
+			if (e.urls) {
+				for (let i = 0, total = e.urls.length; i < total; i++) {
+					const url = e.urls[i];
+					errorContent += `<a href="${url.src}" data-type="${url.type}"><span>${mejs.i18n.t('mejs.download-file')}: ${url.src}</span></a>`;
+				}
+			}
+		}
+
+		if (errorContent && t.layers.querySelector(`.${t.options.classPrefix}overlay-error`)) {
+			errorContainer.innerHTML = errorContent;
+			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = errorContainer.outerHTML;
+			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'block';
 		}
 	}
 
@@ -1099,7 +1158,7 @@ class MediaElementPlayer {
 
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
 		return (t.height.toString().indexOf('%') !== -1 || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
-			t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
+		t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
 	}
 
 	setResponsiveMode () {
@@ -1368,7 +1427,7 @@ class MediaElementPlayer {
 				siblingsWidth += siblings[i].offsetWidth;
 			}
 
-			siblingsWidth += totalMargin + ((totalMargin === 0) ?  (railMargin * 2) : railMargin) + 1;
+			siblingsWidth += totalMargin + ((totalMargin === 0) ? (railMargin * 2) : railMargin) + 1;
 
 			t.container.style.minWidth = `${siblingsWidth}px`;
 
@@ -1408,7 +1467,7 @@ class MediaElementPlayer {
 			t.controls.appendChild(element);
 			const children = t.controls.children;
 			for (let i = 0, total = children.length; i < total; i++) {
-				if (element == children[i]) {
+				if (element === children[i]) {
 					t.featurePosition[key] = i;
 					break;
 				}
@@ -1435,10 +1494,10 @@ class MediaElementPlayer {
 			layer.className = `${t.options.classPrefix}iframe-overlay`;
 			layer.addEventListener('click', (e) => {
 				if (t.options.clickToPlayPause) {
-					if (t.media.paused) {
-						t.media.play();
+					if (t.paused) {
+						t.play();
 					} else {
-						t.media.pause();
+						t.pause();
 					}
 
 					e.preventDefault();
@@ -1491,7 +1550,7 @@ class MediaElementPlayer {
 		const
 			t = this,
 			doc = t.node ? t.node.ownerDocument : document
-			;
+		;
 
 		events = splitEvents(events, t.id);
 		if (events.d) {
@@ -1518,7 +1577,7 @@ class MediaElementPlayer {
 		const
 			t = this,
 			doc = t.node ? t.node.ownerDocument : document
-			;
+		;
 
 		events = splitEvents(events, t.id);
 		if (events.d) {
@@ -1586,7 +1645,7 @@ class MediaElementPlayer {
 			media.addEventListener('pause', () => {
 				// To avoid displaying the poster when video ended, since it
 				// triggers a pause event as well
-				if (!media.ended) {
+				if (!player.ended) {
 					poster.style.display = '';
 				}
 			});
@@ -1605,7 +1664,7 @@ class MediaElementPlayer {
 			error = document.createElement('div'),
 			// this needs to come last so it's on top
 			bigPlay = document.createElement('div'),
-			buffer = () => controls.querySelector(`.${t.options.classPrefix}time-buffering`)
+			buffer = controls.querySelector(`.${t.options.classPrefix}time-buffering`)
 		;
 
 		loading.style.display = 'none'; // start out hidden
@@ -1621,7 +1680,7 @@ class MediaElementPlayer {
 		layers.appendChild(error);
 
 		bigPlay.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play`;
-		bigPlay.innerHTML = `<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0"` +
+		bigPlay.innerHTML = `<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0" ` +
 			`aria-label="${i18n.t('mejs.play')}" aria-pressed="false"></div>`;
 		bigPlay.addEventListener('click', () => {
 			// Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay
@@ -1633,10 +1692,10 @@ class MediaElementPlayer {
 					pressed = button.getAttribute('aria-pressed')
 				;
 
-				if (media.paused) {
-					media.play();
+				if (t.paused) {
+					t.play();
 				} else {
-					media.pause();
+					t.pause();
 				}
 
 				button.setAttribute('aria-pressed', !!pressed);
@@ -1660,58 +1719,67 @@ class MediaElementPlayer {
 			!(player.media.originalNode.getAttribute('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
 			bigPlay.style.display = 'none';
 		}
+
+		let hasError = false;
+
 		// show/hide big play button
 		media.addEventListener('play', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (buffer() !== null) {
-				buffer().style.display = 'none';
+			if (buffer !== null) {
+				buffer.style.display = 'none';
 			}
 			error.style.display = 'none';
+			hasError = false;
 		});
 		media.addEventListener('playing', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (buffer() !== null) {
-				buffer().style.display = 'none';
+			if (buffer !== null) {
+				buffer.style.display = 'none';
 			}
 			error.style.display = 'none';
+			hasError = false;
 		});
 		media.addEventListener('seeking', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = '';
-			if (buffer() !== null) {
-				buffer().style.display = '';
+			if (buffer !== null) {
+				buffer.style.display = '';
 			}
+			hasError = false;
 		});
 		media.addEventListener('seeked', () => {
-			bigPlay.style.display = media.paused && !IS_STOCK_ANDROID ? '' : 'none';
+			bigPlay.style.display = t.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
-			if (buffer() !== null) {
-				buffer().style.display = '';
+			if (buffer !== null) {
+				buffer.style.display = '';
 			}
+			hasError = false;
 		});
 		media.addEventListener('pause', () => {
 			loading.style.display = 'none';
-			if (!IS_STOCK_ANDROID) {
+			if (!IS_STOCK_ANDROID && !hasError) {
 				bigPlay.style.display = '';
 			}
-			if (buffer() !== null) {
-				buffer().style.display = 'none';
+			if (buffer !== null) {
+				buffer.style.display = 'none';
 			}
+			hasError = false;
 		});
 		media.addEventListener('waiting', () => {
 			loading.style.display = '';
-			if (buffer() !== null) {
-				buffer().style.display = '';
+			if (buffer !== null) {
+				buffer.style.display = '';
 			}
+			hasError = false;
 		});
 
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
 			loading.style.display = '';
-			if (buffer() !== null) {
-				buffer().style.display = '';
+			if (buffer !== null) {
+				buffer.style.display = '';
 			}
 
 			// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
@@ -1725,32 +1793,32 @@ class MediaElementPlayer {
 					}
 				}, 300);
 			}
+			hasError = false;
 		});
 		media.addEventListener('canplay', () => {
 			loading.style.display = 'none';
-			if (buffer() !== null) {
-				buffer().style.display = 'none';
+			if (buffer !== null) {
+				buffer.style.display = 'none';
 			}
 			// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
 			clearTimeout(media.canplayTimeout);
+			hasError = false;
 		});
 
 		// error handling
 		media.addEventListener('error', (e) => {
-			t._handleError(e);
+			t._handleError(e, t.media, t.node);
 			loading.style.display = 'none';
 			bigPlay.style.display = 'none';
-			if (buffer() !== null) {
-				buffer().style.display = 'none';
+			if (buffer !== null) {
+				buffer.style.display = 'none';
 			}
-			if (e.message) {
-				error.style.display = 'block';
-				error.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = e.message;
-			}
+			hasError = true;
 		});
 
 		media.addEventListener('keydown', (e) => {
 			t.onkeydown(player, media, e);
+			hasError = false;
 		});
 	}
 
@@ -1800,70 +1868,103 @@ class MediaElementPlayer {
 		return true;
 	}
 
-	play () {
-		const t = this;
+	get paused () {
+		return this.proxy.paused;
+	}
 
-		// only load if the current time is 0 to ensure proper playing
-		if (t.media.getCurrentTime() <= 0) {
-			t.load();
-		}
-		t.media.play();
+	get muted () {
+		return this.proxy.muted;
+	}
+
+	set muted (muted) {
+		this.setMuted(muted);
+	}
+
+	get ended () {
+		return this.proxy.ended;
+	}
+
+	get readyState () {
+		return this.proxy.readyState;
+	}
+
+	set currentTime (time) {
+		this.setCurrentTime(time);
+	}
+
+	get currentTime () {
+		return this.getCurrentTime();
+	}
+
+	get duration () {
+		return this.getDuration();
+	}
+
+	set volume (volume) {
+		this.setVolume(volume);
+	}
+
+	get volume () {
+		return this.getVolume();
+	}
+
+	set src (src) {
+		this.setSrc(src);
+	}
+
+	get src () {
+		return this.getSrc();
+	}
+
+	play () {
+		this.proxy.play();
 	}
 
 	pause () {
-		try {
-			this.media.pause();
-		} catch (e) {
-			console.log(e);
-		}
+		this.proxy.pause();
 	}
 
 	load () {
-		const t = this;
-
-		if (!t.isLoaded) {
-			t.media.load();
-		}
-
-		t.isLoaded = true;
-	}
-
-	setMuted (muted) {
-		this.media.setMuted(muted);
+		this.proxy.load();
 	}
 
 	setCurrentTime (time) {
-		this.media.setCurrentTime(time);
+		this.proxy.setCurrentTime(time);
 	}
 
 	getCurrentTime () {
-		return this.media.currentTime;
+		return this.proxy.currentTime;
 	}
 
 	getDuration () {
-		return this.media.duration;
+		return this.proxy.duration;
 	}
 
 	setVolume (volume) {
-		this.media.setVolume(volume);
+		this.proxy.volume = volume;
 	}
 
 	getVolume () {
-		return this.media.volume;
+		return this.proxy.getVolume();
+	}
+
+	setMuted (value) {
+		this.proxy.setMuted(value);
 	}
 
 	setSrc (src) {
-		const
-			t = this,
-			layer = document.getElementById(`${t.media.id}-iframe-overlay`)
-		;
-
-		if (layer) {
-			layer.remove();
+		if (!this.controlsEnabled) {
+			this.enableControls();
 		}
+		this.proxy.setSrc(src);
+	}
 
-		t.media.setSrc(src);
-		t.createIframeLayer();
+	getSrc () {
+		return this.proxy.getSrc();
+	}
+
+	canPlayType (type) {
+		return this.proxy.canPlayType(type);
 	}
 
 	remove () {
@@ -1873,12 +1974,12 @@ class MediaElementPlayer {
 		;
 
 		// Stop completely media playing
-		if (!t.media.paused) {
-			t.media.pause();
+		if (!t.paused) {
+			t.pause();
 		}
 
-		const src = t.media.getSrc();
-		t.media.setSrc('');
+		const src = t.getSrc();
+		t.setSrc('');
 
 		// invoke features cleanup
 		for (const featureIndex in t.options.features) {
@@ -1999,33 +2100,3 @@ class MediaElementPlayer {
 window.MediaElementPlayer = MediaElementPlayer;
 
 export default MediaElementPlayer;
-
-// turn into plugin
-(($) => {
-
-	if (typeof $ !== 'undefined') {
-		$.fn.mediaelementplayer = function (options) {
-			if (options === false) {
-				this.each(function () {
-					const player = $(this).data('mediaelementplayer');
-					if (player) {
-						player.remove();
-					}
-					$(this).removeData('mediaelementplayer');
-				});
-			}
-			else {
-				this.each(function () {
-					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
-				});
-			}
-			return this;
-		};
-
-		$(document).ready(() => {
-			// auto enable using JSON attribute
-			$(`.${config.classPrefix}player`).mediaelementplayer();
-		});
-	}
-
-})(mejs.$);
