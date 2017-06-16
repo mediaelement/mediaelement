@@ -1248,12 +1248,14 @@ Object.assign(_player2.default.prototype, {
 
 		player.fullscreenBtn = fullscreenBtn;
 
-		t.globalBind('keydown', function (e) {
+		t.exitFullscreenCallback = function (e) {
 			var key = e.which || e.keyCode || 0;
 			if (key === 27 && (Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN || t.isFullScreen)) {
 				player.exitFullScreen();
 			}
-		});
+		};
+
+		t.globalBind('keydown', t.exitFullscreenCallback);
 
 		t.normalHeight = 0;
 		t.normalWidth = 0;
@@ -4142,13 +4144,15 @@ var MediaElementPlayer = function () {
 					t.setControlsSize();
 				}, 0);
 
-				t.globalBind('resize', function () {
+				t.globalResizeCallback = function () {
 					if (!(t.isFullScreen || _constants.HAS_TRUE_NATIVE_FULLSCREEN && _document2.default.webkitIsFullScreen)) {
 						t.setPlayerSize(t.width, t.height);
 					}
 
 					t.setControlsSize();
-				});
+				};
+
+				t.globalBind('resize', t.globalResizeCallback);
 			}
 
 			if (autoplay && isNative) {
@@ -4836,16 +4840,20 @@ var MediaElementPlayer = function () {
 				t.keyboardAction = true;
 			});
 
-			t.globalBind('keydown', function (event) {
+			t.globalKeydownCallback = function (event) {
 				var container = _document2.default.activeElement.closest('.' + t.options.classPrefix + 'container'),
 				    target = t.media.closest('.' + t.options.classPrefix + 'container');
 				t.hasFocus = !!(container && target && container.id === target.id);
 				return t.onkeydown(player, media, event);
-			});
+			};
 
-			t.globalBind('click', function (event) {
+			t.globalClickCallback = function (event) {
 				t.hasFocus = !!event.target.closest('.' + t.options.classPrefix + 'container');
-			});
+			};
+
+			t.globalBind('keydown', t.globalKeydownCallback);
+
+			t.globalBind('click', t.globalClickCallback);
 		}
 	}, {
 		key: 'onkeydown',
@@ -5055,7 +5063,14 @@ var MediaElementPlayer = function () {
 				offscreen.remove();
 				t.container.remove();
 			}
-			t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur mousemove.vol mouseup.vol resize click keydown');
+			t.globalUnbind('resize', t.globalResizeCallback);
+			t.globalUnbind('keydown', function (e) {
+				t.globalKeydownCallback(e);
+				if (typeof t.exitFullscreenCallback === 'function') {
+					t.exitFullscreenCallback(e);
+				}
+			});
+			t.globalUnbind('click', t.globalClickCallback);
 
 			delete t.media.player;
 		}

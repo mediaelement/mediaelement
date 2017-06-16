@@ -101,12 +101,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.fullscreenBtn = fullscreenBtn;
 
-		t.globalBind('keydown', (e) => {
+		t.exitFullscreenCallback = (e) => {
 			const key = e.which || e.keyCode || 0;
 			if (key === 27 && ((Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || t.isFullScreen)) {
 				player.exitFullScreen();
 			}
-		});
+		};
+
+		t.globalBind('keydown', t.exitFullscreenCallback);
 
 		t.normalHeight = 0;
 		t.normalWidth = 0;

@@ -999,10 +999,7 @@ class MediaElementPlayer {
 				t.setControlsSize();
 			}, 0);
 
-
-			// adjust controls whenever window sizes (used to be in fullscreen only)
-			t.globalBind('resize', () => {
-
+			t.globalResizeCallback = () => {
 				// don't resize for fullscreen mode
 				if (!(t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen))) {
 					t.setPlayerSize(t.width, t.height);
@@ -1010,7 +1007,11 @@ class MediaElementPlayer {
 
 				// always adjust controls
 				t.setControlsSize();
-			});
+			};
+
+
+			// adjust controls whenever window sizes (used to be in fullscreen only)
+			t.globalBind('resize', t.globalResizeCallback);
 		}
 
 		// force autoplay for HTML5
@@ -1756,21 +1757,24 @@ class MediaElementPlayer {
 			t.keyboardAction = true;
 		});
 
-		// listen for key presses
-		t.globalBind('keydown', (event) => {
+		t.globalKeydownCallback = (event) => {
 			const
 				container = document.activeElement.closest(`.${t.options.classPrefix}container`),
 				target = t.media.closest(`.${t.options.classPrefix}container`)
 			;
 			t.hasFocus = !!(container && target && container.id === target.id);
 			return t.onkeydown(player, media, event);
-		});
+		};
 
+		t.globalClickCallback = (event) => {
+			t.hasFocus = !!(event.target.closest(`.${t.options.classPrefix}container`));
+		};
+
+		// listen for key presses
+		t.globalBind('keydown', t.globalKeydownCallback);
 
 		// check if someone clicked outside a player region, then kill its focus
-		t.globalBind('click', (event) => {
-			t.hasFocus = !!(event.target.closest(`.${t.options.classPrefix}container`));
-		});
+		t.globalBind('click', t.globalClickCallback);
 
 	}
 
@@ -1984,7 +1988,14 @@ class MediaElementPlayer {
 			offscreen.remove();
 			t.container.remove();
 		}
-		t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur mousemove.vol mouseup.vol resize click keydown');
+		t.globalUnbind('resize', t.globalResizeCallback);
+		t.globalUnbind('keydown', (e) => {
+			t.globalKeydownCallback(e);
+			if (typeof t.exitFullscreenCallback === 'function') {
+				t.exitFullscreenCallback(e);
+			}
+		});
+		t.globalUnbind('click', t.globalClickCallback);
 
 		delete t.media.player;
 	}
