@@ -1984,7 +1984,7 @@ class MediaElementPlayer {
 			offscreen.remove();
 			t.container.remove();
 		}
-		t.globalUnbind();
+		t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur mousemove.vol mouseup.vol resize click keydown');
 
 		delete t.media.player;
 	}
