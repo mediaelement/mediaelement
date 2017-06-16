@@ -1020,10 +1020,7 @@ class MediaElementPlayer {
 				t.setControlsSize();
 			}, 0);
 
-
-			// adjust controls whenever window sizes (used to be in fullscreen only)
-			t.globalBind('resize', () => {
-
+			t.globalResizeCallback = () => {
 				// don't resize for fullscreen mode
 				if (!(t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen))) {
 					t.setPlayerSize(t.width, t.height);
@@ -1031,7 +1028,11 @@ class MediaElementPlayer {
 
 				// always adjust controls
 				t.setControlsSize();
-			});
+			};
+
+
+			// adjust controls whenever window sizes (used to be in fullscreen only)
+			t.globalBind('resize', t.globalResizeCallback);
 		}
 
 		// force autoplay for HTML5
@@ -1584,7 +1585,7 @@ class MediaElementPlayer {
 			}
 		}
 		if (events.w) {
-			const eventList = events.d.split(' ');
+			const eventList = events.w.split(' ');
 			for (let i = 0, total = eventList.length; i < total; i++) {
 				eventList[i].split('.').reduce(function (part, e) {
 					window.removeEventListener(e, callback, false);
@@ -1824,21 +1825,24 @@ class MediaElementPlayer {
 			t.keyboardAction = true;
 		});
 
-		// listen for key presses
-		t.globalBind('keydown', (event) => {
+		t.globalKeydownCallback = (event) => {
 			const
 				container = document.activeElement.closest(`.${t.options.classPrefix}container`),
 				target = t.media.closest(`.${t.options.classPrefix}container`)
 			;
 			t.hasFocus = !!(container && target && container.id === target.id);
 			return t.onkeydown(player, media, event);
-		});
+		};
 
+		t.globalClickCallback = (event) => {
+			t.hasFocus = !!(event.target.closest(`.${t.options.classPrefix}container`));
+		};
+
+		// listen for key presses
+		t.globalBind('keydown', t.globalKeydownCallback);
 
 		// check if someone clicked outside a player region, then kill its focus
-		t.globalBind('click', (event) => {
-			t.hasFocus = !!(event.target.closest(`.${t.options.classPrefix}container`));
-		});
+		t.globalBind('click', t.globalClickCallback);
 
 	}
 
@@ -2085,7 +2089,12 @@ class MediaElementPlayer {
 			offscreen.remove();
 			t.container.remove();
 		}
-		t.globalUnbind();
+		t.globalUnbind('resize', t.globalResizeCallback);
+		t.globalUnbind('keydown', t.globalKeydownCallback);
+		if (typeof t.exitFullscreenCallback === 'function') {
+			t.globalUnbind('keydown', t.exitFullscreenCallback);
+		}
+		t.globalUnbind('click', t.globalClickCallback);
 
 		delete t.media.player;
 	}

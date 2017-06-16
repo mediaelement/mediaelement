@@ -17,6 +17,7 @@
 * Removed `mediaelementplayer` bundles, considered unnecessary @rafa8626
 * Added new middleware layer to allow interaction with other players @rafa8626
 * Use flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
+* Fixed issue with events not being unbound when player is destroyed @rafa8626
 
 *4.1.3 (2017/06/06)*
 
