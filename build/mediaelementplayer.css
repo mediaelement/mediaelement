@@ -1,13 +1,17 @@
 /* Accessibility: hide screen reader texts (and prefer "top" for RTL languages).
 Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-how/ */
 .mejs__offscreen {
-    clip: rect(1px, 1px, 1px, 1px); /* IE8-IE11 - no support for clip-path */
-    -webkit-clip-path: polygon(0 0, 0 0, 0 0, 0 0);
-            clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+    border: 0;
+    clip: rect( 1px, 1px, 1px, 1px );
+    -webkit-clip-path: inset( 50% );
+            clip-path: inset( 50% );
     height: 1px;
+    margin: -1px;
     overflow: hidden;
-    position: absolute !important;
+    padding: 0;
+    position: absolute;
     width: 1px;
+    word-wrap: normal;
 }
 
 .mejs__container {
@@ -87,10 +91,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     width: 100% !important;
 }
 
-.mejs__clear {
-    clear: both;
-}
-
 /* Start: LAYERS */
 .mejs__background {
     left: 0;
@@ -127,10 +127,21 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__overlay {
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+        -ms-flex-align: center;
+            align-items: center;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     left: 0;
     position: absolute;
     top: 0;
-    z-index: 1;
 }
 
 .mejs__layer {
@@ -145,15 +156,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     background: url('mejs-controls.svg') no-repeat;
     background-position: 0 -39px;
     height: 80px;
-    left: 50%;
-    overflow: hidden;
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
     width: 80px;
-    z-index: 1;
 }
 
 .mejs__overlay:hover > .mejs__overlay-button {
@@ -162,12 +165,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__overlay-loading {
     height: 80px;
-    left: 50%;
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
     width: 80px;
 }
 
@@ -200,6 +197,10 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* Start: CONTROL BAR */
 .mejs__controls {
     bottom: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
     height: 40px;
     left: 0;
     list-style-type: none;
@@ -219,7 +220,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__button,
 .mejs__time,
 .mejs__time-rail {
-    float: left;
     font-size: 10px;
     height: 40px;
     line-height: 10px;
@@ -292,11 +292,14 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* Start: Progress Bar */
 .mejs__time-rail {
     direction: ltr;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+        -ms-flex-positive: 1;
+            flex-grow: 1;
     height: 40px;
     margin: 0 10px;
     padding-top: 10px;
     position: relative;
-    width: 200px;
 }
 
 .mejs__time-total,
@@ -564,7 +567,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__horizontal-volume-slider {
     display: block;
-    float: left;
     height: 36px;
     position: relative;
     vertical-align: middle;
@@ -628,18 +630,13 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     padding: 0;
     position: absolute;
     right: 50%;
-    visibility: hidden;
+    visibility: visible;
     width: 86px;
 }
 
 .mejs__chapters-button > .mejs__chapters-selector {
     margin-right: -55px;
     width: 110px;
-}
-
-.mejs__captions-button > .mejs__captions-selector,
-.mejs__chapters-button > .mejs__chapters-selector {
-    visibility: visible;
 }
 
 .mejs__captions-selector-list,

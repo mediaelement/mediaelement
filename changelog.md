@@ -16,6 +16,7 @@
 * Improved error system to catch more errors and present them to user @rafa8626
 * Removed `mediaelementplayer` bundles, considered unnecessary @rafa8626
 * Added new middleware layer to allow interaction with other players @rafa8626
+* Use flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
 
 *4.1.3 (2017/06/06)*
 

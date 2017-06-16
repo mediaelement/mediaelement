@@ -153,9 +153,7 @@ module.exports = function (grunt) {
 				options: {
 					processors: [
 						// Add vendor prefixes.
-						require('autoprefixer')({
-							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
-						})
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'})
 					]
 				},
 				src: 'src/css/mediaelementplayer.css',
@@ -165,9 +163,7 @@ module.exports = function (grunt) {
 				options: {
 					processors: [
 						// Add vendor prefixes.
-						require('autoprefixer')({
-							browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'
-						})
+						require('autoprefixer')({browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'})
 					]
 				},
 				src: 'src/css/mediaelementplayer-legacy.css',

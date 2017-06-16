@@ -391,8 +391,7 @@ class MediaElementPlayer {
 				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
-				`<div class="${t.options.classPrefix}clear"></div>` +
-				`</div>`;
+			`</div>`;
 			t.container.addEventListener('focus', (e) => {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
@@ -1430,11 +1429,6 @@ class MediaElementPlayer {
 			siblingsWidth += totalMargin + ((totalMargin === 0) ? (railMargin * 2) : railMargin) + 1;
 
 			t.container.style.minWidth = `${siblingsWidth}px`;
-
-
-			// Substract the width of the feature siblings from time rail
-			const controlsWidth = parseFloat(t.controls.offsetWidth);
-			t.rail.style.width = `${(siblingsWidth > controlsWidth ? 0 : controlsWidth - siblingsWidth)}px`;
 
 			const event = createEvent('controlsresize', t.container);
 			t.container.dispatchEvent(event);
