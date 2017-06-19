@@ -1743,6 +1743,15 @@ Object.assign(_player2.default.prototype, {
 					case 35:
 						seekTime = duration;
 						break;
+					case 32:
+						if (!_constants.IS_FIREFOX) {
+							if (t.paused) {
+								t.play();
+							} else {
+								t.pause();
+							}
+						}
+						return;
 					case 13:
 						if (t.paused) {
 							t.play();
