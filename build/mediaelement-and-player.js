@@ -4952,16 +4952,17 @@ var MediaElementPlayer = function () {
 		}
 	}, {
 		key: 'remove',
-		value: function remove() {
+		value: function remove(stopCompletely) {
 			var t = this,
-			    rendererName = t.media.rendererName;
+			    rendererName = t.media.rendererName,
+			    src = t.media.originalNode.src;
 
-			if (!t.paused) {
-				t.pause();
+			if (stopCompletely === true) {
+				if (!t.paused) {
+					t.pause();
+				}
+				t.setSrc('');
 			}
-
-			var src = t.getSrc();
-			t.setSrc('');
 
 			for (var featureIndex in t.options.features) {
 				var feature = t.options.features[featureIndex];
@@ -5144,6 +5145,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DefaultPlayer = function () {
@@ -5296,7 +5303,10 @@ var DefaultPlayer = function () {
 
 exports.default = DefaultPlayer;
 
-},{}],18:[function(_dereq_,module,exports){
+
+_window2.default.DefaultPlayer = DefaultPlayer;
+
+},{"3":3}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);

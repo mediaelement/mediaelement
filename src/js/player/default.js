@@ -1,5 +1,7 @@
 'use strict';
 
+import window from 'global/window';
+
 export default class DefaultPlayer {
 	/**
 	 *
@@ -130,3 +132,5 @@ export default class DefaultPlayer {
 		return this.media.canPlayType(type);
 	}
 }
+
+window.DefaultPlayer = DefaultPlayer;
