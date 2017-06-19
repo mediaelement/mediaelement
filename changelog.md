@@ -1,6 +1,6 @@
 ### Version History
 
-*4.1.4 (2017/??/??)*
+*4.2.0 (2017/??/??)*
 
 * Fixed issues related to Promises with native renderers @rafa8626
 * Fixed typos in player to execute properly `destroy()` and `stop()` methods @rafa8626
@@ -16,6 +16,7 @@
 * Use flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
 * Fixed issue with events not being unbound when player is destroyed @rafa8626
 * Added missing style for buffering element @rafa8626
+* Updated references to (Adobe / Apache) Flex SDK in documentation (https://github.com/mediaelement/mediaelement/pull/2287) @isantolin
 
 *4.1.3 (2017/06/06)*
 
