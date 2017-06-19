@@ -1965,24 +1965,12 @@ class MediaElementPlayer {
 		return this.proxy.canPlayType(type);
 	}
 
-	/**
-	 *
-	 * @param stopCompletely Destroy the source (not recommended for Chromecast)
-	 */
-	remove (stopCompletely) {
+	remove () {
 		const
 			t = this,
 			rendererName = t.media.rendererName,
 			src = t.media.originalNode.src
 		;
-
-		// Stop completely media playing
-		if (stopCompletely === true) {
-			if (!t.paused) {
-				t.pause();
-			}
-			t.setSrc('');
-		}
 
 		// invoke features cleanup
 		for (const featureIndex in t.options.features) {

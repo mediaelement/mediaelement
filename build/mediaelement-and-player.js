@@ -4952,17 +4952,10 @@ var MediaElementPlayer = function () {
 		}
 	}, {
 		key: 'remove',
-		value: function remove(stopCompletely) {
+		value: function remove() {
 			var t = this,
 			    rendererName = t.media.rendererName,
 			    src = t.media.originalNode.src;
-
-			if (stopCompletely === true) {
-				if (!t.paused) {
-					t.pause();
-				}
-				t.setSrc('');
-			}
 
 			for (var featureIndex in t.options.features) {
 				var feature = t.options.features[featureIndex];
