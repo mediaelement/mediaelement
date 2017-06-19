@@ -7,7 +7,7 @@
 	* [A word on `ES6` for Renderers](#es6)
 	* [CSS](#css)
 * [Node.js](#nodejs)
-* [Flex SDK](#flex)
+* [(Adobe / Apache) Flex SDK](#flex)
 * [Building with Grunt](#building)
 
 <a id="development"></a>
@@ -431,12 +431,12 @@ Since `MediaElement.js` uses [Grunt](http://gruntjs.com/) to compile it, Node.js
 Once installed, at the command prompt, type `npm install`, which will download all the necessary tools.
 
 <a id="flex"></a>
-## Flex SDK
+## (Adobe / Apache) Flex SDK
 
 One of the subtasks involved during the compiling of `MediaElement.js` is the compiling of the Flash files. In order to do it, Flex SDK needs to be installed.
 
 1. Make sure your version of Java is **1.5 or later** since Flex compilers are 32-bit executables and cannot launch 64-bit processes; otherwise, you will receive the error ```This Java instance does not support a 32-bit JVM.Please install the desired version```. For more information about this topic, read [Adobe's JVM Configuration](http://help.adobe.com/en_US/flex/using/WS2db454920e96a9e51e63e3d11c0bf69084-7fd9.html#WS2db454920e96a9e51e63e3d11c0bf5fb32-7ff3).
-2. Download the free Flex SDK from http://sourceforge.net/adobe/flexsdk/wiki/Download%20Flex%204.6/
+2. Download the free (Flex SDK from http://www.adobe.com/devnet/flex/flex-sdk-download.html or http://flex.apache.org/download-binaries.html
 2. Unzip it to a directory on your local machine (eg: ```/usr/local/flex_sdk_4.6```)
 3. Create a symlink from the install location to this directory (eg: ```ln -s /usr/local/flex_sdk_4.6 /path/to/mediaelement/src/flash```)
 4. If you do not have the required player global swc file (version **10.1**), download it from https://helpx.adobe.com/flash-player/kb/archived-flash-player-versions.html and place it inside ```/path/to/flex_sdk_4.6/frameworks/libs/player/10.1/playerglobal.swc```

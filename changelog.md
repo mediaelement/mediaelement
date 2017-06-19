@@ -19,6 +19,7 @@
 * Use flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
 * Fixed issue with events not being unbound when player is destroyed and removed unnecessary callbacks from it @rafa8626
 * Added missing style for buffering element @rafa8626
+* Updated references to (Adobe / Apache) Flex SDK in documentation (https://github.com/mediaelement/mediaelement/pull/2287) @isantolin
 
 *4.1.3 (2017/06/06)*
 
