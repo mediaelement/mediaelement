@@ -71,7 +71,7 @@
                 "targets": {
                   "browsers": [
                     "last 5 versions",
-                    "ie > 8",
+                    "ie > 10",
                     "ios > 7",
                     "android > 3"
                   ]

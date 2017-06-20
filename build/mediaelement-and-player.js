@@ -298,7 +298,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _en = _dereq_(15);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -550,7 +550,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"15":15,"26":26,"7":7}],6:[function(_dereq_,module,exports){
+},{"15":15,"27":27,"7":7}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -571,13 +571,13 @@ var _mejs = _dereq_(7);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _media2 = _dereq_(27);
+var _media2 = _dereq_(28);
 
 var _renderer = _dereq_(8);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -599,9 +599,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 		pluginPath: 'build/',
 
-		shimScriptAccess: 'sameDomain',
-
-		customError: ''
+		shimScriptAccess: 'sameDomain'
 	};
 
 	options = Object.assign(t.defaults, options);
@@ -768,39 +766,13 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		}
 	};
 
-	t.mediaElement.createErrorMessage = function (message, urlList) {
-
+	t.mediaElement.generateError = function (message, urlList) {
 		message = message || '';
 		urlList = Array.isArray(urlList) ? urlList : [];
-
-		var errorContainer = _document2.default.createElement('div');
-		errorContainer.className = 'me_cannotplay';
-		errorContainer.style.width = '100%';
-		errorContainer.style.height = '100%';
-
-		var errorContent = t.mediaElement.options.customError;
-
-		if (!errorContent) {
-
-			var poster = t.mediaElement.originalNode.getAttribute('poster');
-			if (poster) {
-				errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="' + _mejs2.default.i18n.t('mejs.download-file') + '">';
-			}
-
-			if (message) {
-				errorContent += '<p>' + message + '</p>';
-			}
-
-			for (var _i2 = 0, total = urlList.length; _i2 < total; _i2++) {
-				var url = urlList[_i2];
-				errorContent += '<a href="' + url.src + '" data-type="' + url.type + '"><span>' + _mejs2.default.i18n.t('mejs.download-file') + ': ' + url.src + '</span></a>';
-			}
-		}
-
-		errorContainer.innerHTML = errorContent;
-		console.error(message);
-
-		t.mediaElement.originalNode.parentNode.insertBefore(errorContainer, t.mediaElement.originalNode);
+		var event = (0, _general.createEvent)('error', t.mediaElement);
+		event.message = message;
+		event.urls = urlList;
+		t.mediaElement.dispatchEvent(event);
 		t.mediaElement.originalNode.style.display = 'none';
 		error = true;
 	};
@@ -860,11 +832,11 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			});
 			mediaFiles.push(media);
 		} else if (Array.isArray(value)) {
-			for (var _i3 = 0, total = value.length; _i3 < total; _i3++) {
+			for (var _i2 = 0, total = value.length; _i2 < total; _i2++) {
 
-				var _src2 = (0, _media2.absolutizeUrl)(value[_i3].src),
-				    _type3 = value[_i3].type,
-				    _media = Object.assign(value[_i3], {
+				var _src2 = (0, _media2.absolutizeUrl)(value[_i2].src),
+				    _type3 = value[_i2].type,
+				    _media = Object.assign(value[_i2], {
 					src: _src2,
 					type: (_type3 === '' || _type3 === null || _type3 === undefined) && _src2 ? (0, _media2.getTypeFromFile)(_src2) : _type3
 				});
@@ -884,15 +856,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 		t.mediaElement.originalNode.setAttribute('src', mediaFiles[0].src || '');
 
-		if (t.mediaElement.querySelector('.me_cannotplay')) {
-			t.mediaElement.querySelector('.me_cannotplay').remove();
-		}
-
 		if (renderInfo === null && mediaFiles[0].src) {
-			event = (0, _general.createEvent)('error', t.mediaElement);
-			event.message = 'No renderer found';
-			t.mediaElement.createErrorMessage(event.message, mediaFiles);
-			t.mediaElement.dispatchEvent(event);
+			t.mediaElement.generateError('No renderer found', mediaFiles);
 			return;
 		}
 
@@ -909,28 +874,38 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 					if (t.mediaElement.promises.length) {
 						Promise.all(t.mediaElement.promises).then(function () {
 							setTimeout(function () {
-								t.mediaElement.renderer[methodName](args);
-							}, 250);
+								var response = t.mediaElement.renderer[methodName](args);
+								if (response && typeof response.then === 'function') {
+									response.catch(function (e) {
+										return t.mediaElement.generateError(e, mediaFiles);
+									});
+								}
+							}, 200);
 						}).catch(function (e) {
-							if (t.mediaElement.renderer === undefined || t.mediaElement.renderer === null) {
-								var event = (0, _general.createEvent)('error', t.mediaElement);
-								event.message = e;
-								t.mediaElement.dispatchEvent(event);
-								t.mediaElement.createErrorMessage(e, mediaFiles);
-							}
+							t.mediaElement.generateError(e, mediaFiles);
 						});
 					} else {
 						try {
-							t.mediaElement.renderer[methodName](args);
+							var response = t.mediaElement.renderer[methodName](args);
+							if (response && typeof response.then === 'function') {
+								response.catch(function (e) {
+									return t.mediaElement.generateError(e, mediaFiles);
+								});
+							}
 						} catch (e) {
-							t.mediaElement.createErrorMessage();
+							t.mediaElement.generateError(e, mediaFiles);
 						}
 					}
 				} else {
 					try {
-						t.mediaElement.renderer[methodName](args);
+						var _response = t.mediaElement.renderer[methodName](args);
+						if (_response && typeof _response.then === 'function') {
+							_response.catch(function (e) {
+								return t.mediaElement.generateError(e, mediaFiles);
+							});
+						}
 					} catch (e) {
-						t.mediaElement.createErrorMessage();
+						t.mediaElement.generateError(e, mediaFiles);
 					}
 				}
 			}
@@ -942,12 +917,12 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.getSrc = getSrc;
 	t.mediaElement.setSrc = setSrc;
 
-	for (var _i4 = 0, total = props.length; _i4 < total; _i4++) {
-		assignGettersSetters(props[_i4]);
+	for (var _i3 = 0, total = props.length; _i3 < total; _i3++) {
+		assignGettersSetters(props[_i3]);
 	}
 
-	for (var _i5 = 0, _total = methods.length; _i5 < _total; _i5++) {
-		assignMethods(methods[_i5]);
+	for (var _i4 = 0, _total = methods.length; _i4 < _total; _i4++) {
+		assignMethods(methods[_i4]);
 	}
 
 	t.mediaElement.addEventListener = function (eventName, callback) {
@@ -972,9 +947,9 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			return true;
 		}
 
-		for (var _i6 = 0; _i6 < callbacks.length; _i6++) {
-			if (callbacks[_i6] === callback) {
-				t.mediaElement.events[eventName].splice(_i6, 1);
+		for (var _i5 = 0; _i5 < callbacks.length; _i5++) {
+			if (callbacks[_i5] === callback) {
+				t.mediaElement.events[eventName].splice(_i5, 1);
 				return true;
 			}
 		}
@@ -984,8 +959,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.dispatchEvent = function (event) {
 		var callbacks = t.mediaElement.events[event.type];
 		if (callbacks) {
-			for (var _i7 = 0; _i7 < callbacks.length; _i7++) {
-				callbacks[_i7].apply(null, [event]);
+			for (var _i6 = 0; _i6 < callbacks.length; _i6++) {
+				callbacks[_i6].apply(null, [event]);
 			}
 		}
 	};
@@ -1021,7 +996,7 @@ _window2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"24":24,"26":26,"27":27,"3":3,"7":7,"8":8}],7:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"28":28,"3":3,"7":7,"8":8}],7:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1182,19 +1157,19 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _player = _dereq_(17);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
 var Features = _interopRequireWildcard(_constants);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1447,14 +1422,14 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"24":24,"25":25,"26":26,"27":27,"3":3,"5":5}],10:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"25":25,"26":26,"27":27,"28":28,"3":3,"5":5}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(17);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1462,9 +1437,9 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1485,10 +1460,10 @@ Object.assign(_player2.default.prototype, {
 		play.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + t.options.classPrefix + 'play';
 		play.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>';
 		play.addEventListener('click', function () {
-			if (media.paused) {
-				media.play();
+			if (t.paused) {
+				t.play();
 			} else {
-				media.pause();
+				t.pause();
 			}
 		});
 
@@ -1540,14 +1515,14 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"25":25,"26":26,"5":5}],11:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"26":26,"27":27,"5":5}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(17);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1555,11 +1530,11 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1713,17 +1688,18 @@ Object.assign(_player2.default.prototype, {
 		},
 		    restartPlayer = function restartPlayer() {
 			if (new Date() - lastKeyPressTime >= 1000) {
-				media.play();
+				t.play();
 			}
 		},
 		    handleMouseup = function handleMouseup() {
 			if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
 				t.setCurrentTime(t.newTime);
-				player.setCurrentRail();
+				t.setCurrentRail();
 				t.updateCurrent(t.newTime);
 			}
 			if (t.forcedHandlePause) {
-				t.media.play();
+				t.slider.focus();
+				t.play();
 			}
 			t.forcedHandlePause = false;
 		};
@@ -1736,7 +1712,7 @@ Object.assign(_player2.default.prototype, {
 		});
 		t.slider.addEventListener('keydown', function (e) {
 			if (new Date() - lastKeyPressTime >= 1000) {
-				startedPaused = media.paused;
+				startedPaused = t.paused;
 			}
 
 			if (t.options.keyActions.length) {
@@ -1769,18 +1745,18 @@ Object.assign(_player2.default.prototype, {
 						break;
 					case 32:
 						if (!_constants.IS_FIREFOX) {
-							if (media.paused) {
-								media.play();
+							if (t.paused) {
+								t.play();
 							} else {
-								media.pause();
+								t.pause();
 							}
 						}
 						return;
 					case 13:
-						if (media.paused) {
-							media.play();
+						if (t.paused) {
+							t.play();
 						} else {
-							media.pause();
+							t.pause();
 						}
 						return;
 					default:
@@ -1790,7 +1766,7 @@ Object.assign(_player2.default.prototype, {
 				seekTime = seekTime < 0 ? 0 : seekTime >= duration ? duration : Math.floor(seekTime);
 				lastKeyPressTime = new Date();
 				if (!startedPaused) {
-					media.pause();
+					player.pause();
 				}
 
 				if (seekTime < t.getDuration() && !startedPaused) {
@@ -1815,8 +1791,8 @@ Object.assign(_player2.default.prototype, {
 				t.forcedHandlePause = false;
 				if (t.getDuration() !== Infinity) {
 					if (e.which === 1 || e.which === 0) {
-						if (!media.paused) {
-							t.media.pause();
+						if (!t.paused) {
+							t.pause();
 							t.forcedHandlePause = true;
 						}
 
@@ -1989,20 +1965,20 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"24":24,"25":25,"29":29,"5":5}],12:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"25":25,"26":26,"30":30,"5":5}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(17);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2102,7 +2078,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"25":25,"29":29}],13:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"26":26,"30":30}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -2117,15 +2093,15 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _player = _dereq_(17);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2842,14 +2818,14 @@ _mejs2.default.TrackFormatParser = {
 	}
 };
 
-},{"17":17,"2":2,"25":25,"26":26,"29":29,"5":5,"7":7}],14:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"26":26,"27":27,"30":30,"5":5,"7":7}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(17);
+var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -2857,11 +2833,11 @@ var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2991,14 +2967,14 @@ Object.assign(_player2.default.prototype, {
 
 			positionVolumeHandle(volume);
 
-			media.setMuted(volume === 0);
-			media.setVolume(volume);
+			t.setMuted(volume === 0);
+			t.setVolume(volume);
 
 			e.preventDefault();
 			e.stopPropagation();
 		},
 		    toggleMute = function toggleMute() {
-			if (media.muted) {
+			if (t.muted) {
 				positionVolumeHandle(0);
 				(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
 				(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
@@ -3152,7 +3128,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"24":24,"25":25,"26":26,"5":5}],15:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"25":25,"26":26,"27":27,"5":5}],15:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3245,27 +3221,6 @@ var EN = exports.EN = {
 },{}],16:[function(_dereq_,module,exports){
 'use strict';
 
-var _window = _dereq_(3);
-
-var _window2 = _interopRequireDefault(_window);
-
-var _mejs = _dereq_(7);
-
-var _mejs2 = _interopRequireDefault(_mejs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-if (typeof jQuery !== 'undefined') {
-	_mejs2.default.$ = _window2.default.jQuery = _window2.default.$ = jQuery;
-} else if (typeof Zepto !== 'undefined') {
-	_mejs2.default.$ = _window2.default.Zepto = _window2.default.$ = Zepto;
-} else if (typeof ender !== 'undefined') {
-	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
-}
-
-},{"3":3,"7":7}],17:[function(_dereq_,module,exports){
-'use strict';
-
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -3291,19 +3246,23 @@ var _mediaelement = _dereq_(6);
 
 var _mediaelement2 = _interopRequireDefault(_mediaelement);
 
+var _default = _dereq_(17);
+
+var _default2 = _interopRequireDefault(_default);
+
 var _i18n = _dereq_(5);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _time = _dereq_(29);
+var _time = _dereq_(30);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 var dom = _interopRequireWildcard(_dom);
 
@@ -3398,21 +3357,23 @@ var config = exports.config = {
 
 	secondsDecimalLength: 0,
 
+	customError: '',
+
 	keyActions: [{
 		keys: [32, 179],
-		action: function action(player, media) {
+		action: function action(player) {
 
 			if (!_constants.IS_FIREFOX) {
-				if (media.paused || media.ended) {
-					media.play();
+				if (player.paused || player.ended) {
+					player.play();
 				} else {
-					media.pause();
+					player.pause();
 				}
 			}
 		}
 	}, {
 		keys: [38],
-		action: function action(player, media) {
+		action: function action(player) {
 
 			if (player.container.querySelector('.' + config.classPrefix + 'volume-button>button').matches(':focus') || player.container.querySelector('.' + config.classPrefix + 'volume-slider').matches(':focus')) {
 				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = '';
@@ -3422,15 +3383,15 @@ var config = exports.config = {
 				player.startControlsTimer();
 			}
 
-			var newVolume = Math.min(media.volume + 0.1, 1);
-			media.setVolume(newVolume);
+			var newVolume = Math.min(player.volume + 0.1, 1);
+			player.setVolume(newVolume);
 			if (newVolume > 0) {
-				media.setMuted(false);
+				player.setMuted(false);
 			}
 		}
 	}, {
 		keys: [40],
-		action: function action(player, media) {
+		action: function action(player) {
 
 			if (player.container.querySelector('.' + config.classPrefix + 'volume-button>button').matches(':focus') || player.container.querySelector('.' + config.classPrefix + 'volume-slider').matches(':focus')) {
 				player.container.querySelector('.' + config.classPrefix + 'volume-slider').style.display = '';
@@ -3441,38 +3402,38 @@ var config = exports.config = {
 				player.startControlsTimer();
 			}
 
-			var newVolume = Math.max(media.volume - 0.1, 0);
-			media.setVolume(newVolume);
+			var newVolume = Math.max(player.volume - 0.1, 0);
+			player.setVolume(newVolume);
 
 			if (newVolume <= 0.1) {
-				media.setMuted(true);
+				player.setMuted(true);
 			}
 		}
 	}, {
 		keys: [37, 227],
-		action: function action(player, media) {
-			if (!isNaN(media.duration) && media.duration > 0) {
+		action: function action(player) {
+			if (!isNaN(player.duration) && player.duration > 0) {
 				if (player.isVideo) {
 					player.showControls();
 					player.startControlsTimer();
 				}
 
-				var newTime = Math.max(media.currentTime - player.options.defaultSeekBackwardInterval(media), 0);
-				media.setCurrentTime(newTime);
+				var newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
+				player.setCurrentTime(newTime);
 			}
 		}
 	}, {
 		keys: [39, 228],
-		action: function action(player, media) {
+		action: function action(player) {
 
-			if (!isNaN(media.duration) && media.duration > 0) {
+			if (!isNaN(player.duration) && player.duration > 0) {
 				if (player.isVideo) {
 					player.showControls();
 					player.startControlsTimer();
 				}
 
-				var newTime = Math.min(media.currentTime + player.options.defaultSeekForwardInterval(media), media.duration);
-				media.setCurrentTime(newTime);
+				var newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);
+				player.setCurrentTime(newTime);
 			}
 		}
 	}, {
@@ -3515,14 +3476,6 @@ var MediaElementPlayer = function () {
 		var t = this,
 		    element = typeof node === 'string' ? _document2.default.getElementById(node) : node;
 
-		t.hasFocus = false;
-
-		t.controlsAreVisible = true;
-
-		t.controlsEnabled = true;
-
-		t.controlsTimer = null;
-
 		if (!(t instanceof MediaElementPlayer)) {
 			return new MediaElementPlayer(element, o);
 		}
@@ -3536,6 +3489,18 @@ var MediaElementPlayer = function () {
 		if (t.media.player !== undefined) {
 			return t.media.player;
 		}
+
+		t.hasFocus = false;
+
+		t.controlsAreVisible = true;
+
+		t.controlsEnabled = true;
+
+		t.controlsTimer = null;
+
+		t.currentMediaTime = 0;
+
+		t.proxy = null;
 
 		if (o === undefined) {
 			var options = t.node.getAttribute('data-mejsoptions');
@@ -3567,7 +3532,7 @@ var MediaElementPlayer = function () {
 
 		_mejs2.default.players[t.id] = t;
 
-		var meOptions = Object.assign({}, t.options, {
+		var playerOptions = Object.assign({}, t.options, {
 			success: function success(media, domNode) {
 				t._meReady(media, domNode);
 			},
@@ -3722,13 +3687,15 @@ var MediaElementPlayer = function () {
 
 			t.setPlayerSize(t.width, t.height);
 
-			meOptions.pluginWidth = t.width;
-			meOptions.pluginHeight = t.height;
+			playerOptions.pluginWidth = t.width;
+			playerOptions.pluginHeight = t.height;
 		} else if (!t.isVideo && !t.options.features.length) {
 				t.node.style.display = 'none';
 			}
 
-		new _mediaelement2.default(t.media, meOptions, t.mediaFiles);
+		_mejs2.default.MepDefaults = playerOptions;
+
+		new _mediaelement2.default(t.media, playerOptions, t.mediaFiles);
 
 		if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
 			var event = (0, _general.createEvent)('controlsshown', t.container);
@@ -3794,7 +3761,7 @@ var MediaElementPlayer = function () {
 
 			doAnimation = doAnimation === undefined || doAnimation;
 
-			if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.media.paused && t.media.readyState === 4 && (!t.options.hideVideoControlsOnLoad && t.media.currentTime <= 0 || !t.options.hideVideoControlsOnPause && t.media.currentTime > 0) || t.isVideo && !t.options.hideVideoControlsOnLoad && !t.media.readyState || t.media.ended)) {
+			if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls || t.paused && t.readyState === 4 && (!t.options.hideVideoControlsOnLoad && t.currentTime <= 0 || !t.options.hideVideoControlsOnPause && t.currentTime > 0) || t.isVideo && !t.options.hideVideoControlsOnLoad && !t.readyState || t.ended)) {
 				return;
 			}
 
@@ -3880,6 +3847,16 @@ var MediaElementPlayer = function () {
 			t.showControls(false);
 		}
 	}, {
+		key: '_setDefaultPlayer',
+		value: function _setDefaultPlayer() {
+			var t = this;
+			t.proxy = new _default2.default(t);
+			t.setCurrentTime(t.currentMediaTime);
+			if (t.getCurrentTime() > 0 && !_constants.IS_IOS && !_constants.IS_ANDROID) {
+				t.play();
+			}
+		}
+	}, {
 		key: '_meReady',
 		value: function _meReady(media, domNode) {
 			var t = this,
@@ -3921,10 +3898,6 @@ var MediaElementPlayer = function () {
 					return;
 				}
 
-				t.buildposter(t, t.controls, t.layers, t.media);
-				t.buildkeyboard(t, t.controls, t.layers, t.media);
-				t.buildoverlays(t, t.controls, t.layers, t.media);
-
 				t.findTracks();
 
 				t.featurePosition = {};
@@ -3940,6 +3913,12 @@ var MediaElementPlayer = function () {
 					}
 				}
 
+				t.buildposter(t, t.controls, t.layers, t.media);
+				t.buildkeyboard(t, t.controls, t.layers, t.media);
+				t.buildoverlays(t, t.controls, t.layers, t.media);
+
+				t._setDefaultPlayer();
+
 				var event = (0, _general.createEvent)('controlsready', t.container);
 				t.container.dispatchEvent(event);
 
@@ -3953,15 +3932,16 @@ var MediaElementPlayer = function () {
 							var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
 							    pressed = button.getAttribute('aria-pressed');
 
-							if (t.media.paused && pressed) {
+							if (t.paused && pressed) {
 								t.pause();
-							} else if (t.media.paused) {
+							} else if (t.paused) {
 								t.play();
 							} else {
 								t.pause();
 							}
 
 							button.setAttribute('aria-pressed', !pressed);
+							t.container.focus();
 						}
 					};
 
@@ -4001,7 +3981,7 @@ var MediaElementPlayer = function () {
 						});
 						t.container.addEventListener('mouseleave', function () {
 							if (t.controlsEnabled) {
-								if (!t.media.paused && !t.options.alwaysShowControls) {
+								if (!t.paused && !t.options.alwaysShowControls) {
 									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 								}
 							}
@@ -4046,7 +4026,7 @@ var MediaElementPlayer = function () {
 				t.media.addEventListener('ended', function () {
 					if (t.options.autoRewind) {
 						try {
-							t.media.setCurrentTime(0);
+							t.setCurrentTime(0);
 
 							setTimeout(function () {
 								var loadingElement = t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading');
@@ -4062,7 +4042,7 @@ var MediaElementPlayer = function () {
 					if (typeof t.media.renderer.stop === 'function') {
 						t.media.renderer.stop();
 					} else {
-						t.media.pause();
+						t.pause();
 					}
 
 					if (t.setProgressRail) {
@@ -4081,7 +4061,7 @@ var MediaElementPlayer = function () {
 
 				t.media.addEventListener('loadedmetadata', function () {
 
-					(0, _time.calculateTimeFormat)(t.duration, t.options, t.options.framesPerSecond || 25);
+					(0, _time.calculateTimeFormat)(t.getDuration(), t.options, t.options.framesPerSecond || 25);
 
 					if (t.updateDuration) {
 						t.updateDuration();
@@ -4098,8 +4078,8 @@ var MediaElementPlayer = function () {
 
 				var duration = null;
 				t.media.addEventListener('timeupdate', function () {
-					if (!isNaN(t.media.getDuration()) && duration !== t.media.getDuration()) {
-						duration = t.media.getDuration();
+					if (!isNaN(t.getDuration()) && duration !== t.getDuration()) {
+						duration = t.getDuration();
 						(0, _time.calculateTimeFormat)(duration, t.options, t.options.framesPerSecond || 25);
 
 						if (t.updateDuration) {
@@ -4131,7 +4111,7 @@ var MediaElementPlayer = function () {
 						if (e.relatedTarget) {
 							if (t.keyboardAction && !e.relatedTarget.closest('.' + t.options.classPrefix + 'container')) {
 								t.keyboardAction = false;
-								if (t.isVideo && !t.options.alwaysShowControls && !t.media.paused) {
+								if (t.isVideo && !t.options.alwaysShowControls && !t.paused) {
 									t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
 								}
 							}
@@ -4169,7 +4149,7 @@ var MediaElementPlayer = function () {
 		}
 	}, {
 		key: '_handleError',
-		value: function _handleError(e) {
+		value: function _handleError(e, media, node) {
 			var t = this;
 
 			if (t.controls) {
@@ -4183,7 +4163,42 @@ var MediaElementPlayer = function () {
 			}
 
 			if (t.options.error) {
-				t.options.error(e);
+				t.options.error(e, media, node);
+			}
+
+			if (t.container.querySelector('.' + t.options.classPrefix + 'cannotplay')) {
+				t.container.querySelector('.' + t.options.classPrefix + 'cannotplay').remove();
+			}
+
+			var errorContainer = _document2.default.createElement('div');
+			errorContainer.className = t.options.classPrefix + 'cannotplay';
+			errorContainer.style.width = '100%';
+			errorContainer.style.height = '100%';
+
+			var errorContent = t.options.customError;
+
+			if (!errorContent) {
+				var poster = t.media.originalNode.getAttribute('poster');
+				if (poster) {
+					errorContent += '<img src="' + poster + '" width="100%" height="100%" alt="' + _mejs2.default.i18n.t('mejs.download-file') + '">';
+				}
+
+				if (e.message) {
+					errorContent += '<p>' + e.message + '</p>';
+				}
+
+				if (e.urls) {
+					for (var i = 0, total = e.urls.length; i < total; i++) {
+						var url = e.urls[i];
+						errorContent += '<a href="' + url.src + '" data-type="' + url.type + '"><span>' + _mejs2.default.i18n.t('mejs.download-file') + ': ' + url.src + '</span></a>';
+					}
+				}
+			}
+
+			if (errorContent && t.layers.querySelector('.' + t.options.classPrefix + 'overlay-error')) {
+				errorContainer.innerHTML = errorContent;
+				t.layers.querySelector('.' + t.options.classPrefix + 'overlay-error').innerHTML = errorContainer.outerHTML;
+				t.layers.querySelector('.' + t.options.classPrefix + 'overlay-error').parentNode.style.display = 'block';
 			}
 		}
 	}, {
@@ -4509,7 +4524,7 @@ var MediaElementPlayer = function () {
 				t.controls.appendChild(element);
 				var children = t.controls.children;
 				for (var i = 0, total = children.length; i < total; i++) {
-					if (element == children[i]) {
+					if (element === children[i]) {
 						t.featurePosition[key] = i;
 						break;
 					}
@@ -4530,10 +4545,10 @@ var MediaElementPlayer = function () {
 				layer.className = t.options.classPrefix + 'iframe-overlay';
 				layer.addEventListener('click', function (e) {
 					if (t.options.clickToPlayPause) {
-						if (t.media.paused) {
-							t.media.play();
+						if (t.paused) {
+							t.play();
 						} else {
-							t.media.pause();
+							t.pause();
 						}
 
 						e.preventDefault();
@@ -4675,7 +4690,7 @@ var MediaElementPlayer = function () {
 
 			if (player.options.showPosterWhenPaused) {
 				media.addEventListener('pause', function () {
-					if (!media.ended) {
+					if (!player.ended) {
 						poster.style.display = '';
 					}
 				});
@@ -4693,9 +4708,7 @@ var MediaElementPlayer = function () {
 			    loading = _document2.default.createElement('div'),
 			    error = _document2.default.createElement('div'),
 			    bigPlay = _document2.default.createElement('div'),
-			    buffer = function buffer() {
-				return controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
-			};
+			    buffer = controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
 
 			loading.style.display = 'none';
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
@@ -4708,17 +4721,17 @@ var MediaElementPlayer = function () {
 			layers.appendChild(error);
 
 			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play';
-			bigPlay.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0"' + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false"></div>');
+			bigPlay.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0" ' + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false"></div>');
 			bigPlay.addEventListener('click', function () {
 				if (t.options.clickToPlayPause) {
 
 					var button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
 					    pressed = button.getAttribute('aria-pressed');
 
-					if (media.paused) {
-						media.play();
+					if (t.paused) {
+						t.play();
 					} else {
-						media.pause();
+						t.pause();
 					}
 
 					button.setAttribute('aria-pressed', !!pressed);
@@ -4742,56 +4755,64 @@ var MediaElementPlayer = function () {
 				bigPlay.style.display = 'none';
 			}
 
+			var hasError = false;
+
 			media.addEventListener('play', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer() !== null) {
-					buffer().style.display = 'none';
+				if (buffer !== null) {
+					buffer.style.display = 'none';
 				}
 				error.style.display = 'none';
+				hasError = false;
 			});
 			media.addEventListener('playing', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer() !== null) {
-					buffer().style.display = 'none';
+				if (buffer !== null) {
+					buffer.style.display = 'none';
 				}
 				error.style.display = 'none';
+				hasError = false;
 			});
 			media.addEventListener('seeking', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = '';
-				if (buffer() !== null) {
-					buffer().style.display = '';
+				if (buffer !== null) {
+					buffer.style.display = '';
 				}
+				hasError = false;
 			});
 			media.addEventListener('seeked', function () {
-				bigPlay.style.display = media.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
+				bigPlay.style.display = t.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
 				loading.style.display = 'none';
-				if (buffer() !== null) {
-					buffer().style.display = '';
+				if (buffer !== null) {
+					buffer.style.display = '';
 				}
+				hasError = false;
 			});
 			media.addEventListener('pause', function () {
 				loading.style.display = 'none';
-				if (!_constants.IS_STOCK_ANDROID) {
+				if (!_constants.IS_STOCK_ANDROID && !hasError) {
 					bigPlay.style.display = '';
 				}
-				if (buffer() !== null) {
-					buffer().style.display = 'none';
+				if (buffer !== null) {
+					buffer.style.display = 'none';
 				}
+				hasError = false;
 			});
 			media.addEventListener('waiting', function () {
 				loading.style.display = '';
-				if (buffer() !== null) {
-					buffer().style.display = '';
+				if (buffer !== null) {
+					buffer.style.display = '';
 				}
+				hasError = false;
 			});
 
 			media.addEventListener('loadeddata', function () {
 				loading.style.display = '';
-				if (buffer() !== null) {
-					buffer().style.display = '';
+				if (buffer !== null) {
+					buffer.style.display = '';
 				}
 
 				if (_constants.IS_ANDROID) {
@@ -4803,31 +4824,31 @@ var MediaElementPlayer = function () {
 						}
 					}, 300);
 				}
+				hasError = false;
 			});
 			media.addEventListener('canplay', function () {
 				loading.style.display = 'none';
-				if (buffer() !== null) {
-					buffer().style.display = 'none';
+				if (buffer !== null) {
+					buffer.style.display = 'none';
 				}
 
 				clearTimeout(media.canplayTimeout);
+				hasError = false;
 			});
 
 			media.addEventListener('error', function (e) {
-				t._handleError(e);
+				t._handleError(e, t.media, t.node);
 				loading.style.display = 'none';
 				bigPlay.style.display = 'none';
-				if (buffer() !== null) {
-					buffer().style.display = 'none';
+				if (buffer !== null) {
+					buffer.style.display = 'none';
 				}
-				if (e.message) {
-					error.style.display = 'block';
-					error.querySelector('.' + t.options.classPrefix + 'overlay-error').innerHTML = e.message;
-				}
+				hasError = true;
 			});
 
 			media.addEventListener('keydown', function (e) {
 				t.onkeydown(player, media, e);
+				hasError = false;
 			});
 		}
 	}, {
@@ -4878,88 +4899,72 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'play',
 		value: function play() {
-			var t = this;
-
-			if (t.media.getCurrentTime() <= 0) {
-				t.load();
-			}
-			t.media.play();
+			this.proxy.play();
 		}
 	}, {
 		key: 'pause',
 		value: function pause() {
-			try {
-				this.media.pause();
-			} catch (e) {
-				
-			}
+			this.proxy.pause();
 		}
 	}, {
 		key: 'load',
 		value: function load() {
-			var t = this;
-
-			if (!t.isLoaded) {
-				t.media.load();
-			}
-
-			t.isLoaded = true;
-		}
-	}, {
-		key: 'setMuted',
-		value: function setMuted(muted) {
-			this.media.setMuted(muted);
+			this.proxy.load();
 		}
 	}, {
 		key: 'setCurrentTime',
 		value: function setCurrentTime(time) {
-			this.media.setCurrentTime(time);
+			this.proxy.setCurrentTime(time);
 		}
 	}, {
 		key: 'getCurrentTime',
 		value: function getCurrentTime() {
-			return this.media.currentTime;
+			return this.proxy.currentTime;
 		}
 	}, {
 		key: 'getDuration',
 		value: function getDuration() {
-			return this.media.duration;
+			return this.proxy.duration;
 		}
 	}, {
 		key: 'setVolume',
 		value: function setVolume(volume) {
-			this.media.setVolume(volume);
+			this.proxy.volume = volume;
 		}
 	}, {
 		key: 'getVolume',
 		value: function getVolume() {
-			return this.media.volume;
+			return this.proxy.getVolume();
+		}
+	}, {
+		key: 'setMuted',
+		value: function setMuted(value) {
+			this.proxy.setMuted(value);
 		}
 	}, {
 		key: 'setSrc',
 		value: function setSrc(src) {
-			var t = this,
-			    layer = _document2.default.getElementById(t.media.id + '-iframe-overlay');
-
-			if (layer) {
-				layer.remove();
+			if (!this.controlsEnabled) {
+				this.enableControls();
 			}
-
-			t.media.setSrc(src);
-			t.createIframeLayer();
+			this.proxy.setSrc(src);
+		}
+	}, {
+		key: 'getSrc',
+		value: function getSrc() {
+			return this.proxy.getSrc();
+		}
+	}, {
+		key: 'canPlayType',
+		value: function canPlayType(type) {
+			return this.proxy.canPlayType(type);
 		}
 	}, {
 		key: 'remove',
 		value: function remove() {
 			var t = this,
-			    rendererName = t.media.rendererName;
-
-			if (!t.media.paused) {
-				t.media.pause();
-			}
-
-			var src = t.media.getSrc();
-			t.media.setSrc('');
+			    rendererName = t.media.rendererName,
+			    src = t.media.originalNode.src;
 
 			for (var featureIndex in t.options.features) {
 				var feature = t.options.features[featureIndex];
@@ -5072,6 +5077,58 @@ var MediaElementPlayer = function () {
 
 			delete t.media.player;
 		}
+	}, {
+		key: 'paused',
+		get: function get() {
+			return this.proxy.paused;
+		}
+	}, {
+		key: 'muted',
+		get: function get() {
+			return this.proxy.muted;
+		},
+		set: function set(muted) {
+			this.setMuted(muted);
+		}
+	}, {
+		key: 'ended',
+		get: function get() {
+			return this.proxy.ended;
+		}
+	}, {
+		key: 'readyState',
+		get: function get() {
+			return this.proxy.readyState;
+		}
+	}, {
+		key: 'currentTime',
+		set: function set(time) {
+			this.setCurrentTime(time);
+		},
+		get: function get() {
+			return this.getCurrentTime();
+		}
+	}, {
+		key: 'duration',
+		get: function get() {
+			return this.getDuration();
+		}
+	}, {
+		key: 'volume',
+		set: function set(volume) {
+			this.setVolume(volume);
+		},
+		get: function get() {
+			return this.getVolume();
+		}
+	}, {
+		key: 'src',
+		set: function set(src) {
+			this.setSrc(src);
+		},
+		get: function get() {
+			return this.getSrc();
+		}
 	}]);
 
 	return MediaElementPlayer;
@@ -5081,8 +5138,198 @@ _window2.default.MediaElementPlayer = MediaElementPlayer;
 
 exports.default = MediaElementPlayer;
 
-(function ($) {
+},{"17":17,"2":2,"25":25,"26":26,"27":27,"28":28,"3":3,"30":30,"5":5,"6":6,"7":7}],17:[function(_dereq_,module,exports){
+'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DefaultPlayer = function () {
+	function DefaultPlayer(player) {
+		_classCallCheck(this, DefaultPlayer);
+
+		this.media = player.media;
+		this.isVideo = player.isVideo;
+		this.classPrefix = player.options.classPrefix;
+		this.createIframeLayer = function () {
+			return player.createIframeLayer();
+		};
+	}
+
+	_createClass(DefaultPlayer, [{
+		key: 'play',
+		value: function play() {
+			var t = this;
+
+			if (t.media.getCurrentTime() <= 0) {
+				t.load();
+			}
+			t.media.play();
+		}
+	}, {
+		key: 'pause',
+		value: function pause() {
+			this.media.pause();
+		}
+	}, {
+		key: 'load',
+		value: function load() {
+			var t = this;
+
+			if (!t.isLoaded) {
+				t.media.load();
+			}
+
+			t.isLoaded = true;
+		}
+	}, {
+		key: 'setCurrentTime',
+		value: function setCurrentTime(time) {
+			this.media.setCurrentTime(time);
+		}
+	}, {
+		key: 'getCurrentTime',
+		value: function getCurrentTime() {
+			return this.media.currentTime;
+		}
+	}, {
+		key: 'getDuration',
+		value: function getDuration() {
+			return this.media.getDuration();
+		}
+	}, {
+		key: 'setVolume',
+		value: function setVolume(volume) {
+			this.media.setVolume(volume);
+		}
+	}, {
+		key: 'getVolume',
+		value: function getVolume() {
+			return this.media.getVolume();
+		}
+	}, {
+		key: 'setMuted',
+		value: function setMuted(value) {
+			this.media.setMuted(value);
+		}
+	}, {
+		key: 'setSrc',
+		value: function setSrc(src) {
+			var t = this,
+			    layer = document.getElementById(t.media.id + '-iframe-overlay');
+
+			if (layer) {
+				layer.remove();
+			}
+
+			t.media.setSrc(src);
+			t.createIframeLayer();
+		}
+	}, {
+		key: 'getSrc',
+		value: function getSrc() {
+			return this.media.getSrc();
+		}
+	}, {
+		key: 'canPlayType',
+		value: function canPlayType(type) {
+			return this.media.canPlayType(type);
+		}
+	}, {
+		key: 'paused',
+		get: function get() {
+			return this.media.paused;
+		}
+	}, {
+		key: 'muted',
+		set: function set(muted) {
+			this.setMuted(muted);
+		},
+		get: function get() {
+			return this.media.muted;
+		}
+	}, {
+		key: 'ended',
+		get: function get() {
+			return this.media.ended;
+		}
+	}, {
+		key: 'readyState',
+		get: function get() {
+			return this.media.readyState;
+		}
+	}, {
+		key: 'currentTime',
+		set: function set(time) {
+			this.setCurrentTime(time);
+		},
+		get: function get() {
+			return this.getCurrentTime();
+		}
+	}, {
+		key: 'duration',
+		get: function get() {
+			return this.getDuration();
+		}
+	}, {
+		key: 'volume',
+		set: function set(volume) {
+			this.setVolume(volume);
+		},
+		get: function get() {
+			return this.getVolume();
+		}
+	}, {
+		key: 'src',
+		set: function set(src) {
+			this.setSrc(src);
+		},
+		get: function get() {
+			return this.getSrc();
+		}
+	}]);
+
+	return DefaultPlayer;
+}();
+
+exports.default = DefaultPlayer;
+
+
+_window2.default.DefaultPlayer = DefaultPlayer;
+
+},{"3":3}],18:[function(_dereq_,module,exports){
+'use strict';
+
+var _window = _dereq_(3);
+
+var _window2 = _interopRequireDefault(_window);
+
+var _mejs = _dereq_(7);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+if (typeof jQuery !== 'undefined') {
+	_mejs2.default.$ = _window2.default.jQuery = _window2.default.$ = jQuery;
+} else if (typeof Zepto !== 'undefined') {
+	_mejs2.default.$ = _window2.default.Zepto = _window2.default.$ = Zepto;
+} else if (typeof ender !== 'undefined') {
+	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
+}
+
+(function ($) {
 	if (typeof $ !== 'undefined') {
 		$.fn.mediaelementplayer = function (options) {
 			if (options === false) {
@@ -5101,13 +5348,13 @@ exports.default = MediaElementPlayer;
 			return this;
 		};
 
-		$(_document2.default).ready(function () {
-			$('.' + config.classPrefix + 'player').mediaelementplayer();
+		$(document).ready(function () {
+			$('.' + _mejs2.default.MepDefaults.classPrefix + 'player').mediaelementplayer();
 		});
 	}
 })(_mejs2.default.$);
 
-},{"2":2,"24":24,"25":25,"26":26,"27":27,"29":29,"3":3,"5":5,"6":6,"7":7}],18:[function(_dereq_,module,exports){
+},{"3":3,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -5122,13 +5369,13 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5344,7 +5591,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"24":24,"25":25,"26":26,"27":27,"3":3,"7":7,"8":8}],19:[function(_dereq_,module,exports){
+},{"25":25,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],20:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5372,11 +5619,11 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5758,7 +6005,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"2":2,"24":24,"26":26,"27":27,"3":3,"5":5,"7":7,"8":8}],20:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"28":28,"3":3,"5":5,"7":7,"8":8}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -5771,13 +6018,13 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5985,7 +6232,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"24":24,"25":25,"26":26,"27":27,"3":3,"7":7,"8":8}],21:[function(_dereq_,module,exports){
+},{"25":25,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -5998,13 +6245,13 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6237,7 +6484,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"24":24,"25":25,"26":26,"27":27,"3":3,"7":7,"8":8}],22:[function(_dereq_,module,exports){
+},{"25":25,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6254,9 +6501,9 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _constants = _dereq_(24);
+var _constants = _dereq_(25);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6363,7 +6610,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"2":2,"24":24,"26":26,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"3":3,"7":7,"8":8}],24:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6380,11 +6627,11 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _renderer = _dereq_(8);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
-var _media = _dereq_(27);
+var _media = _dereq_(28);
 
-var _dom = _dereq_(25);
+var _dom = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6858,7 +7105,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(YouTubeIframeRenderer);
 
-},{"2":2,"25":25,"26":26,"27":27,"3":3,"7":7,"8":8}],24:[function(_dereq_,module,exports){
+},{"2":2,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],25:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7029,7 +7276,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"2":2,"3":3,"7":7}],25:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"7":7}],26:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7255,7 +7502,7 @@ _mejs2.default.Utils.visible = visible;
 _mejs2.default.Utils.ajax = ajax;
 _mejs2.default.Utils.loadScript = loadScript;
 
-},{"2":2,"3":3,"7":7}],26:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"7":7}],27:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7391,7 +7638,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 _mejs2.default.Utils.isString = isString;
 
-},{"7":7}],27:[function(_dereq_,module,exports){
+},{"7":7}],28:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7409,7 +7656,7 @@ var _mejs = _dereq_(7);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(26);
+var _general = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7514,7 +7761,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"26":26,"7":7}],28:[function(_dereq_,module,exports){
+},{"27":27,"7":7}],29:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -7667,7 +7914,7 @@ if (!window.Promise) {
 	}
 })(window.Node || window.Element);
 
-},{"2":2,"4":4}],29:[function(_dereq_,module,exports){
+},{"2":2,"4":4}],30:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7902,4 +8149,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"7":7}]},{},[28,6,5,15,22,19,18,20,21,23,16,17,9,10,11,12,13,14]);
+},{"7":7}]},{},[29,6,5,15,23,20,19,21,22,24,18,17,16,9,10,11,12,13,14]);
