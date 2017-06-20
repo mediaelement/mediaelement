@@ -21,6 +21,7 @@
 * Added missing style for buffering element @rafa8626
 * Removed conditional to disable control bar when an error happens @rafa8626
 * Updated references to (Adobe / Apache) Flex SDK in documentation (https://github.com/mediaelement/mediaelement/pull/2287) @isantolin
+* Added CDN references to latest resources for both native FLV and HLS @rafa8626
 
 *4.1.3 (2017/06/06)*
 
