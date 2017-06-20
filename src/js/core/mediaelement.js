@@ -280,7 +280,6 @@ class MediaElement {
 			event.message = message;
 			event.urls = urlList;
 			t.mediaElement.dispatchEvent(event);
-			t.mediaElement.originalNode.style.display = 'none';
 			error = true;
 		};
 

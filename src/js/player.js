@@ -1057,13 +1057,10 @@ class MediaElementPlayer {
 	 * @private
 	 */
 	_handleError (e, media, node) {
-		const t = this;
-
-		if (t.controls) {
-			t.disableControls();
-		}
-
-		const play = t.layers.querySelector(`.${t.options.classPrefix}overlay-play`);
+		const
+			t = this,
+			play = t.layers.querySelector(`.${t.options.classPrefix}overlay-play`)
+		;
 
 		if (play) {
 			play.style.display = 'none';

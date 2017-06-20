@@ -773,7 +773,6 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		event.message = message;
 		event.urls = urlList;
 		t.mediaElement.dispatchEvent(event);
-		t.mediaElement.originalNode.style.display = 'none';
 		error = true;
 	};
 
@@ -4150,13 +4149,8 @@ var MediaElementPlayer = function () {
 	}, {
 		key: '_handleError',
 		value: function _handleError(e, media, node) {
-			var t = this;
-
-			if (t.controls) {
-				t.disableControls();
-			}
-
-			var play = t.layers.querySelector('.' + t.options.classPrefix + 'overlay-play');
+			var t = this,
+			    play = t.layers.querySelector('.' + t.options.classPrefix + 'overlay-play');
 
 			if (play) {
 				play.style.display = 'none';
