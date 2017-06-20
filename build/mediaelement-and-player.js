@@ -6416,7 +6416,7 @@ var HlsNativeRenderer = {
 			}
 		}
 
-		if (!(preload && preload !== 'none') && !autoplay) {
+		if (preload !== 'auto' && !autoplay) {
 			node.addEventListener('play', function () {
 				if (hlsPlayer !== null) {
 					hlsPlayer.startLoad();
