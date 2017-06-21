@@ -308,7 +308,7 @@ h2.main {
 }
 
 .site-logos img {
-	width: 100%;
+	max-width: 100%;
 }
 
 /* what's new  */
@@ -406,7 +406,7 @@ footer a {
 	}
 
 	.site-logos .site-logo {
-		width: 18%;
+		width: 20%;
 	}
 	.line {
 		display: inline;
