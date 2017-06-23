@@ -23,6 +23,7 @@
 * Updated references to (Adobe / Apache) Flex SDK in documentation (https://github.com/mediaelement/mediaelement/pull/2287) @isantolin
 * Added CDN references to latest resources for both native FLV and HLS @rafa8626
 * Fixed issue with tooltip position when rail is 100% and gets cut off @rafa8626
+* Fixed `The play() request was interrupted` errors by changing way to check for Promises and methods @rafa8626
 
 *4.1.3 (2017/06/06)*
 

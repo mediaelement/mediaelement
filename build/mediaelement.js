@@ -869,38 +869,39 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			}
 
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function') {
-				if (methodName === 'play') {
-					if (t.mediaElement.promises.length) {
-						Promise.all(t.mediaElement.promises).then(function () {
-							setTimeout(function () {
-								var response = t.mediaElement.renderer[methodName](args);
-								if (response && typeof response.then === 'function') {
-									response.catch(function (e) {
-										return t.mediaElement.generateError(e, mediaFiles);
-									});
-								}
-							}, 200);
-						}).catch(function (e) {
-							t.mediaElement.generateError(e, mediaFiles);
-						});
-					} else {
+				if (t.mediaElement.promises.length) {
+					Promise.all(t.mediaElement.promises).then(function () {
 						try {
 							var response = t.mediaElement.renderer[methodName](args);
 							if (response && typeof response.then === 'function') {
 								response.catch(function (e) {
-									return t.mediaElement.generateError(e, mediaFiles);
+									if (methodName === 'play') {
+										setTimeout(function () {
+											t.mediaElement.renderer[methodName](args);
+										}, 150);
+									} else {
+										return t.mediaElement.generateError(e, mediaFiles);
+									}
 								});
 							}
 						} catch (e) {
 							t.mediaElement.generateError(e, mediaFiles);
 						}
-					}
+					}).catch(function (e) {
+						t.mediaElement.generateError(e, mediaFiles);
+					});
 				} else {
 					try {
-						var _response = t.mediaElement.renderer[methodName](args);
-						if (_response && typeof _response.then === 'function') {
-							_response.catch(function (e) {
-								return t.mediaElement.generateError(e, mediaFiles);
+						var response = t.mediaElement.renderer[methodName](args);
+						if (response && typeof response.then === 'function') {
+							response.catch(function (e) {
+								if (methodName === 'play') {
+									setTimeout(function () {
+										t.mediaElement.renderer[methodName](args);
+									}, 150);
+								} else {
+									return t.mediaElement.generateError(e, mediaFiles);
+								}
 							});
 						}
 					} catch (e) {

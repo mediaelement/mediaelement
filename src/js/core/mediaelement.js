@@ -394,34 +394,42 @@ class MediaElement {
 				t.mediaElement[methodName] = (...args) => {
 					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
 						typeof t.mediaElement.renderer[methodName] === 'function') {
-						if (methodName === 'play') {
-							if (t.mediaElement.promises.length) {
-								Promise.all(t.mediaElement.promises).then(() => {
-									// Give a delay to ensure all be played properly
-									setTimeout(() => {
-										const response = t.mediaElement.renderer[methodName](args);
-										if (response && typeof response.then === 'function') {
-											response.catch((e) => t.mediaElement.generateError(e, mediaFiles));
-										}
-									}, 200);
-								}).catch((e) => {
-									t.mediaElement.generateError(e, mediaFiles);
-								});
-							} else {
+						if (t.mediaElement.promises.length) {
+							Promise.all(t.mediaElement.promises).then(() => {
 								try {
 									const response = t.mediaElement.renderer[methodName](args);
 									if (response && typeof response.then === 'function') {
-										response.catch((e) => t.mediaElement.generateError(e, mediaFiles));
+										response.catch((e) => {
+											// Sometimes, playing media might throw `DOMException: The play() request was interrupted` errors;
+											// if it's play, re-execute the action. If not, generate the error
+											if (methodName === 'play') {
+												setTimeout(function() {
+													t.mediaElement.renderer[methodName](args);
+												}, 150);
+											} else {
+												return t.mediaElement.generateError(e, mediaFiles);
+											}
+										});
 									}
 								} catch (e) {
 									t.mediaElement.generateError(e, mediaFiles);
 								}
-							}
+							}).catch((e) => {
+								t.mediaElement.generateError(e, mediaFiles);
+							});
 						} else {
 							try {
 								const response = t.mediaElement.renderer[methodName](args);
 								if (response && typeof response.then === 'function') {
-									response.catch((e) => t.mediaElement.generateError(e, mediaFiles));
+									response.catch((e) => {
+										if (methodName === 'play') {
+											setTimeout(function() {
+												t.mediaElement.renderer[methodName](args);
+											}, 150);
+										} else {
+											return t.mediaElement.generateError(e, mediaFiles);
+										}
+									});
 								}
 							} catch (e) {
 								t.mediaElement.generateError(e, mediaFiles);
