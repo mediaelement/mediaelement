@@ -1584,7 +1584,7 @@ Object.assign(_player2.default.prototype, {
 		var handleMouseMove = function handleMouseMove(e) {
 			var totalStyles = getComputedStyle(t.total),
 			    offsetStyles = (0, _dom.offset)(t.total),
-			    width = parseFloat(totalStyles.width),
+			    width = t.total.offsetWidth,
 			    transform = function () {
 				if (totalStyles.webkitTransform !== undefined) {
 					return 'webkitTransform';
@@ -1609,6 +1609,7 @@ Object.assign(_player2.default.prototype, {
 			}();
 
 			var percentage = 0,
+			    leftPos = 0,
 			    pos = 0,
 			    x = void 0;
 
@@ -1656,10 +1657,24 @@ Object.assign(_player2.default.prototype, {
 						}
 					}
 
-					t.timefloat.style.left = pos + 'px';
+					var half = t.timefloat.offsetWidth / 2;
+					if (x <= t.timefloat.offsetWidth + half) {
+						leftPos = half;
+					} else if (x >= t.container.offsetWidth - half) {
+						leftPos = t.total.offsetWidth - half;
+					} else {
+						leftPos = pos;
+					}
+
+					t.timefloat.style.left = leftPos + 'px';
 					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 					t.timefloat.style.display = 'block';
 				}
+			} else if (!_constants.IS_IOS && !_constants.IS_ANDROID && t.timefloat) {
+				leftPos = t.timefloat.offsetWidth + width >= t.container.offsetWidth ? t.timefloat.offsetWidth / 2 : 0;
+				t.timefloat.style.left = leftPos + 'px';
+				t.timefloat.style.left = leftPos + 'px';
+				t.timefloat.style.display = 'block';
 			}
 		},
 		    updateSlider = function updateSlider() {

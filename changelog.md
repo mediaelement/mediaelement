@@ -22,6 +22,7 @@
 * Removed conditional to disable control bar when an error happens @rafa8626
 * Updated references to (Adobe / Apache) Flex SDK in documentation (https://github.com/mediaelement/mediaelement/pull/2287) @isantolin
 * Added CDN references to latest resources for both native FLV and HLS @rafa8626
+* Fixed issue with tooltip position when rail is 100% and gets cut off @rafa8626
 
 *4.1.3 (2017/06/06)*
 

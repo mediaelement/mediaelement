@@ -101,7 +101,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					totalStyles = getComputedStyle(t.total),
 					offsetStyles = offset(t.total),
-					width = parseFloat(totalStyles.width),
+					width = t.total.offsetWidth,
 					transform = (() => {
 						if (totalStyles.webkitTransform !== undefined) {
 							return 'webkitTransform';
@@ -128,6 +128,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				let
 					percentage = 0,
+					leftPos = 0,
 					pos = 0,
 					x
 				;
@@ -181,10 +182,25 @@ Object.assign(MediaElementPlayer.prototype, {
 							}
 						}
 
-						t.timefloat.style.left = `${pos}px`;
+						// Add correct position of tooltip if rail is 100%
+						const half = t.timefloat.offsetWidth / 2;
+						if (x <= t.timefloat.offsetWidth + half) {
+							leftPos = half;
+						} else if (x >= t.container.offsetWidth- half) {
+							leftPos = t.total.offsetWidth - half;
+						} else {
+							leftPos = pos;
+						}
+
+						t.timefloat.style.left = `${leftPos}px`;
 						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
 						t.timefloat.style.display = 'block';
 					}
+				} else if (!IS_IOS && !IS_ANDROID && t.timefloat) {
+					leftPos = t.timefloat.offsetWidth + width >= t.container.offsetWidth ? t.timefloat.offsetWidth / 2 : 0;
+					t.timefloat.style.left = leftPos + 'px';
+					t.timefloat.style.left = `${leftPos}px`;
+					t.timefloat.style.display = 'block';
 				}
 			},
 			/**
