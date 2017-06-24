@@ -868,14 +868,16 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				response.catch(function (e) {
 					if (methodName === 'play') {
 						if (t.mediaElement.paused) {
-							var tmpResponse = t.mediaElement.renderer.play();
-							if (tmpResponse !== undefined) {
-								tmpResponse.catch(function () {
-									if (!t.mediaElement.renderer.paused) {
-										t.mediaElement.renderer.pause();
-									}
-								});
-							}
+							setTimeout(function () {
+								var tmpResponse = t.mediaElement.renderer.play();
+								if (tmpResponse !== undefined) {
+									tmpResponse.catch(function () {
+										if (!t.mediaElement.renderer.paused) {
+											t.mediaElement.renderer.pause();
+										}
+									});
+								}
+							}, 150);
 						}
 					} else {
 						return t.mediaElement.generateError(e, mediaFiles);

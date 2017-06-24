@@ -396,15 +396,17 @@ class MediaElement {
 							// If so, pause and re-execute the action.
 							if (methodName === 'play') {
 								if (t.mediaElement.paused) {
-									const tmpResponse = t.mediaElement.renderer.play();
-									if (tmpResponse !== undefined) {
-										// Final attempt: just pause the media if it's not paused
-										tmpResponse.catch(() => {
-											if (!t.mediaElement.renderer.paused) {
-												t.mediaElement.renderer.pause();
-											}
-										});
-									}
+									setTimeout(() => {
+										const tmpResponse = t.mediaElement.renderer.play();
+										if (tmpResponse !== undefined) {
+											// Final attempt: just pause the media if it's not paused
+											tmpResponse.catch(() => {
+												if (!t.mediaElement.renderer.paused) {
+													t.mediaElement.renderer.pause();
+												}
+											});
+										}
+									}, 150);
 								}
 							} else {
 								return t.mediaElement.generateError(e, mediaFiles);
