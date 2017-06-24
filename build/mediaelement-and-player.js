@@ -852,7 +852,6 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			event = (0, _general.createEvent)('pause', t.mediaElement);
 			t.mediaElement.dispatchEvent(event);
 		}
-
 		t.mediaElement.originalNode.setAttribute('src', mediaFiles[0].src || '');
 
 		if (renderInfo === null && mediaFiles[0].src) {
@@ -861,6 +860,30 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		}
 
 		return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
+	},
+	    isPlaying = function isPlaying() {
+		return t.mediaElement.currentTime > 0 && !t.mediaElement.paused && !t.mediaElement.ended && t.mediaElement.readyState > 2;
+	},
+	    triggerAction = function triggerAction(methodName, args) {
+		try {
+			var response = t.mediaElement.renderer[methodName](args);
+			if (response && typeof response.then === 'function') {
+				response.catch(function (e) {
+					if (methodName === 'play') {
+						if (isPlaying()) {
+							t.mediaElement.renderer.pause();
+							setTimeout(function () {
+								t.mediaElement.renderer.play();
+							}, 50);
+						}
+					} else {
+						return t.mediaElement.generateError(e, mediaFiles);
+					}
+				});
+			}
+		} catch (e) {
+			t.mediaElement.generateError(e, mediaFiles);
+		}
 	},
 	    assignMethods = function assignMethods(methodName) {
 		t.mediaElement[methodName] = function () {
@@ -871,42 +894,12 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function') {
 				if (t.mediaElement.promises.length) {
 					Promise.all(t.mediaElement.promises).then(function () {
-						try {
-							var response = t.mediaElement.renderer[methodName](args);
-							if (response && typeof response.then === 'function') {
-								response.catch(function (e) {
-									if (methodName === 'play') {
-										setTimeout(function () {
-											t.mediaElement.renderer[methodName](args);
-										}, 150);
-									} else {
-										return t.mediaElement.generateError(e, mediaFiles);
-									}
-								});
-							}
-						} catch (e) {
-							t.mediaElement.generateError(e, mediaFiles);
-						}
+						triggerAction(methodName, args);
 					}).catch(function (e) {
 						t.mediaElement.generateError(e, mediaFiles);
 					});
 				} else {
-					try {
-						var response = t.mediaElement.renderer[methodName](args);
-						if (response && typeof response.then === 'function') {
-							response.catch(function (e) {
-								if (methodName === 'play') {
-									setTimeout(function () {
-										t.mediaElement.renderer[methodName](args);
-									}, 150);
-								} else {
-									return t.mediaElement.generateError(e, mediaFiles);
-								}
-							});
-						}
-					} catch (e) {
-						t.mediaElement.generateError(e, mediaFiles);
-					}
+					triggerAction(methodName, args);
 				}
 			}
 			return null;
@@ -4007,10 +4000,6 @@ var MediaElementPlayer = function () {
 						t.hideControls(false);
 					}
 
-					if (autoplay && !t.options.alwaysShowControls) {
-						t.hideControls();
-					}
-
 					if (t.options.enableAutosize) {
 						t.media.addEventListener('loadedmetadata', function (e) {
 							var target = e !== undefined ? e.detail.target || e.target : t.media;
@@ -4035,6 +4024,10 @@ var MediaElementPlayer = function () {
 								p.hasFocus = false;
 							}
 						}
+					}
+
+					if (!(_constants.IS_ANDROID || _constants.IS_IOS) && !t.options.alwaysShowControls) {
+						t.hideControls();
 					}
 				});
 

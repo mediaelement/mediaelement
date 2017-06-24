@@ -375,10 +375,8 @@ class MediaElement {
 					event = createEvent('pause', t.mediaElement);
 					t.mediaElement.dispatchEvent(event);
 				}
-
 				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
 
-				// did we find a renderer?
 				// At least there must be a media in the `mediaFiles` since the media tag can come up an
 				// empty source for starters
 				if (renderInfo === null && mediaFiles[0].src) {
@@ -389,51 +387,43 @@ class MediaElement {
 				// turn on the renderer (this checks for the existing renderer already)
 				return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
 			},
+			// Borrowed from https://stackoverflow.com/questions/36803176/how-to-prevent-the-play-request-was-interrupted-by-a-call-to-pause-error
+			isPlaying = () => t.mediaElement.currentTime > 0 && !t.mediaElement.paused && !t.mediaElement.ended && t.mediaElement.readyState > 2,
+			triggerAction = (methodName, args) => {
+				try {
+					const response = t.mediaElement.renderer[methodName](args);
+					if (response && typeof response.then === 'function') {
+						response.catch((e) => {
+							// Sometimes, playing media might throw `DOMException: The play() request was interrupted`.
+							// If so, pause and re-execute the action.
+							if (methodName === 'play') {
+								if (isPlaying()) {
+									t.mediaElement.renderer.pause();
+									setTimeout(function () {
+										t.mediaElement.renderer.play();
+									}, 50);
+								}
+							} else {
+								return t.mediaElement.generateError(e, mediaFiles);
+							}
+						});
+					}
+				} catch (e) {
+					t.mediaElement.generateError(e, mediaFiles);
+				}
+			},
 			assignMethods = (methodName) => {
-				// run the method on the current renderer
 				t.mediaElement[methodName] = (...args) => {
 					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
 						typeof t.mediaElement.renderer[methodName] === 'function') {
 						if (t.mediaElement.promises.length) {
 							Promise.all(t.mediaElement.promises).then(() => {
-								try {
-									const response = t.mediaElement.renderer[methodName](args);
-									if (response && typeof response.then === 'function') {
-										response.catch((e) => {
-											// Sometimes, playing media might throw `DOMException: The play() request was interrupted` errors;
-											// if it's play, re-execute the action. If not, generate the error
-											if (methodName === 'play') {
-												setTimeout(function() {
-													t.mediaElement.renderer[methodName](args);
-												}, 150);
-											} else {
-												return t.mediaElement.generateError(e, mediaFiles);
-											}
-										});
-									}
-								} catch (e) {
-									t.mediaElement.generateError(e, mediaFiles);
-								}
+								triggerAction(methodName, args);
 							}).catch((e) => {
 								t.mediaElement.generateError(e, mediaFiles);
 							});
 						} else {
-							try {
-								const response = t.mediaElement.renderer[methodName](args);
-								if (response && typeof response.then === 'function') {
-									response.catch((e) => {
-										if (methodName === 'play') {
-											setTimeout(function() {
-												t.mediaElement.renderer[methodName](args);
-											}, 150);
-										} else {
-											return t.mediaElement.generateError(e, mediaFiles);
-										}
-									});
-								}
-							} catch (e) {
-								t.mediaElement.generateError(e, mediaFiles);
-							}
+							triggerAction(methodName, args);
 						}
 					}
 					return null;

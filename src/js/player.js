@@ -870,11 +870,6 @@ class MediaElementPlayer {
 					t.hideControls(false);
 				}
 
-				// check for autoplay
-				if (autoplay && !t.options.alwaysShowControls) {
-					t.hideControls();
-				}
-
 				// resizer
 				if (t.options.enableAutosize) {
 					t.media.addEventListener('loadedmetadata', (e) => {
@@ -907,6 +902,11 @@ class MediaElementPlayer {
 							p.hasFocus = false;
 						}
 					}
+				}
+
+				// check for autoplay
+				if (!(IS_ANDROID || IS_IOS) && !t.options.alwaysShowControls) {
+					t.hideControls();
 				}
 			});
 
