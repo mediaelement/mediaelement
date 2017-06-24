@@ -25,6 +25,7 @@
 * Fixed issue with tooltip position when rail is 100% and gets cut off @rafa8626
 * Fixed `The play() request was interrupted` errors by changing way to check for Promises and methods @rafa8626
 * Added missing workflow to hide controls when playing media and mouse is out of player container @rafa8626
+* Added conditionals to check if `src` track is not empty to avoid render empty track sources @rafa8626
 
 *4.1.3 (2017/06/06)*
 

@@ -135,11 +135,16 @@ Object.assign(MediaElementPlayer.prototype, {
 		let subtitleCount = 0;
 
 		for (let i = 0; i < total; i++) {
-			const kind = player.tracks[i].kind;
-			if (kind === 'subtitles' || kind === 'captions') {
-				subtitleCount++;
-			} else if (kind === 'chapters' && !controls.querySelector(`.${t.options.classPrefix}chapter-selector`)) {
-				player.captionsButton.parentNode.insertBefore(player.chaptersButton, player.captionsButton);
+			const
+				kind = player.tracks[i].kind,
+				src = player.tracks[i].src
+			;
+			if (src.trim()) {
+				if (kind === 'subtitles' || kind === 'captions') {
+					subtitleCount++;
+				} else if (kind === 'chapters' && !controls.querySelector(`.${t.options.classPrefix}chapter-selector`)) {
+					player.captionsButton.parentNode.insertBefore(player.chaptersButton, player.captionsButton);
+				}
 			}
 		}
 
@@ -150,7 +155,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// add to list
 		for (let i = 0; i < total; i++) {
 			const kind = player.tracks[i].kind;
-			if (kind === 'subtitles' || kind === 'captions') {
+			if (player.tracks[i].src.trim() && (kind === 'subtitles' || kind === 'captions')) {
 				player.addTrackButton(player.tracks[i].trackId, player.tracks[i].srclang, player.tracks[i].label);
 			}
 		}

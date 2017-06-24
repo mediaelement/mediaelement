@@ -2175,11 +2175,14 @@ Object.assign(_player2.default.prototype, {
 		var subtitleCount = 0;
 
 		for (var _i = 0; _i < total; _i++) {
-			var kind = player.tracks[_i].kind;
-			if (kind === 'subtitles' || kind === 'captions') {
-				subtitleCount++;
-			} else if (kind === 'chapters' && !controls.querySelector('.' + t.options.classPrefix + 'chapter-selector')) {
-				player.captionsButton.parentNode.insertBefore(player.chaptersButton, player.captionsButton);
+			var kind = player.tracks[_i].kind,
+			    src = player.tracks[_i].src;
+			if (src.trim()) {
+				if (kind === 'subtitles' || kind === 'captions') {
+					subtitleCount++;
+				} else if (kind === 'chapters' && !controls.querySelector('.' + t.options.classPrefix + 'chapter-selector')) {
+					player.captionsButton.parentNode.insertBefore(player.chaptersButton, player.captionsButton);
+				}
 			}
 		}
 
@@ -2189,7 +2192,7 @@ Object.assign(_player2.default.prototype, {
 
 		for (var _i2 = 0; _i2 < total; _i2++) {
 			var _kind = player.tracks[_i2].kind;
-			if (_kind === 'subtitles' || _kind === 'captions') {
+			if (player.tracks[_i2].src.trim() && (_kind === 'subtitles' || _kind === 'captions')) {
 				player.addTrackButton(player.tracks[_i2].trackId, player.tracks[_i2].srclang, player.tracks[_i2].label);
 			}
 		}
