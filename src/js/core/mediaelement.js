@@ -399,10 +399,10 @@ class MediaElement {
 							if (methodName === 'play') {
 								if (isPlaying()) {
 									t.mediaElement.renderer.pause();
-									setTimeout(function () {
-										t.mediaElement.renderer.play();
-									}, 50);
 								}
+								setTimeout(function () {
+									t.mediaElement.renderer.play();
+								}, 50);
 							} else {
 								return t.mediaElement.generateError(e, mediaFiles);
 							}
