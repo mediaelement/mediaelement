@@ -387,8 +387,6 @@ class MediaElement {
 				// turn on the renderer (this checks for the existing renderer already)
 				return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
 			},
-			// Borrowed from https://stackoverflow.com/questions/36803176/how-to-prevent-the-play-request-was-interrupted-by-a-call-to-pause-error
-			isPlaying = () => t.mediaElement.currentTime > 0 && !t.mediaElement.paused && !t.mediaElement.ended && t.mediaElement.readyState > 2,
 			triggerAction = (methodName, args) => {
 				try {
 					const response = t.mediaElement.renderer[methodName](args);
@@ -397,12 +395,17 @@ class MediaElement {
 							// Sometimes, playing media might throw `DOMException: The play() request was interrupted`.
 							// If so, pause and re-execute the action.
 							if (methodName === 'play') {
-								if (isPlaying()) {
-									t.mediaElement.renderer.pause();
+								if (t.mediaElement.paused) {
+									const tmpResponse = t.mediaElement.renderer.play();
+									if (tmpResponse !== undefined) {
+										// Final attempt: just pause the media if it's not paused
+										tmpResponse.catch(() => {
+											if (!t.mediaElement.renderer.paused) {
+												t.mediaElement.renderer.pause();
+											}
+										});
+									}
 								}
-								setTimeout(function () {
-									t.mediaElement.renderer.play();
-								}, 50);
 							} else {
 								return t.mediaElement.generateError(e, mediaFiles);
 							}

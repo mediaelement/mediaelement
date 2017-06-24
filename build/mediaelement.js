@@ -861,21 +861,22 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 		return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
 	},
-	    isPlaying = function isPlaying() {
-		return t.mediaElement.currentTime > 0 && !t.mediaElement.paused && !t.mediaElement.ended && t.mediaElement.readyState > 2;
-	},
 	    triggerAction = function triggerAction(methodName, args) {
 		try {
 			var response = t.mediaElement.renderer[methodName](args);
 			if (response && typeof response.then === 'function') {
 				response.catch(function (e) {
 					if (methodName === 'play') {
-						if (isPlaying()) {
-							t.mediaElement.renderer.pause();
+						if (t.mediaElement.paused) {
+							var tmpResponse = t.mediaElement.renderer.play();
+							if (tmpResponse !== undefined) {
+								tmpResponse.catch(function () {
+									if (!t.mediaElement.renderer.paused) {
+										t.mediaElement.renderer.pause();
+									}
+								});
+							}
 						}
-						setTimeout(function () {
-							t.mediaElement.renderer.play();
-						}, 50);
 					} else {
 						return t.mediaElement.generateError(e, mediaFiles);
 					}
