@@ -910,7 +910,7 @@ class MediaElementPlayer {
 				}
 
 				// check for autoplay
-				if (!(IS_ANDROID || IS_IOS) && !t.options.alwaysShowControls) {
+				if (!(IS_ANDROID || IS_IOS) && !t.options.alwaysShowControls && t.isVideo) {
 					t.hideControls();
 				}
 			});

@@ -4029,7 +4029,7 @@ var MediaElementPlayer = function () {
 						}
 					}
 
-					if (!(_constants.IS_ANDROID || _constants.IS_IOS) && !t.options.alwaysShowControls) {
+					if (!(_constants.IS_ANDROID || _constants.IS_IOS) && !t.options.alwaysShowControls && t.isVideo) {
 						t.hideControls();
 					}
 				});
