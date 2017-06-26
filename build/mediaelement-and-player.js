@@ -1249,6 +1249,10 @@ Object.assign(_player2.default.prototype, {
 			player.globalBind(Features.FULLSCREEN_EVENT_NAME, fullscreenChanged);
 		}
 	},
+	cleanfullscreen: function cleanfullscreen(player) {
+		player.exitFullScreen();
+		player.globalUnbind('keydown', player.exitFullscreenCallback);
+	},
 	detectFullscreenMode: function detectFullscreenMode() {
 		var t = this,
 		    isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName);
@@ -1265,9 +1269,6 @@ Object.assign(_player2.default.prototype, {
 
 		t.fullscreenMode = mode;
 		return mode;
-	},
-	cleanfullscreen: function cleanfullscreen(player) {
-		player.exitFullScreen();
 	},
 	enterFullScreen: function enterFullScreen() {
 		var t = this,
@@ -1861,7 +1862,7 @@ Object.assign(_player2.default.prototype, {
 			}
 		});
 
-		media.addEventListener('progress', function (e) {
+		t.broadcastCallback = function (e) {
 			var broadcast = controls.querySelector('.' + t.options.classPrefix + 'broadcast');
 			if (t.getDuration() !== Infinity) {
 				if (broadcast) {
@@ -1873,35 +1874,17 @@ Object.assign(_player2.default.prototype, {
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
+				updateSlider();
 			} else if (!broadcast) {
 				var label = _document2.default.createElement('span');
 				label.className = t.options.classPrefix + 'broadcast';
 				label.innerText = _i18n2.default.t('mejs.live-broadcast');
 				t.slider.style.display = 'none';
 			}
-		});
+		};
 
-		media.addEventListener('timeupdate', function (e) {
-			var broadcast = controls.querySelector('.' + t.options.classPrefix + 'broadcast');
-			if (t.getDuration() !== Infinity) {
-				if (broadcast) {
-					t.slider.style.display = '';
-					broadcast.remove();
-				}
-
-				player.setProgressRail(e);
-				if (!t.forcedHandlePause) {
-					player.setCurrentRail(e);
-				}
-				updateSlider(e);
-			} else if (!broadcast) {
-				var label = _document2.default.createElement('span');
-				label.className = t.options.classPrefix + 'broadcast';
-				label.innerText = _i18n2.default.t('mejs.live-broadcast');
-				controls.querySelector('.' + t.options.classPrefix + 'time-rail').appendChild(label);
-				t.slider.style.display = 'none';
-			}
-		});
+		media.addEventListener('progress', t.broadcastCallback);
+		media.addEventListener('timeupdate', t.broadcastCallback);
 
 		t.container.addEventListener('controlsresize', function (e) {
 			if (t.getDuration() !== Infinity) {
@@ -1911,6 +1894,13 @@ Object.assign(_player2.default.prototype, {
 				}
 			}
 		});
+	},
+	cleanprogress: function cleanprogress(player, controls, layers, media) {
+		media.removeEventListener('progress', player.broadcastCallback);
+		media.removeEventListener('timeupdate', player.broadcastCallback);
+		if (player.rail) {
+			player.rail.remove();
+		}
 	},
 	setProgressRail: function setProgressRail(e) {
 		var t = this,
@@ -2010,12 +2000,15 @@ Object.assign(_player2.default.prototype, {
 		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength) + '</span>';
 
 		t.addControlElement(time, 'current');
-
-		media.addEventListener('timeupdate', function () {
+		t.updateTimeCallback = function () {
 			if (t.controlsAreVisible) {
 				player.updateCurrent();
 			}
-		});
+		};
+		media.addEventListener('timeupdate', t.updateTimeCallback);
+	},
+	cleancurrent: function cleancurrent(player, controls, layers, media) {
+		media.removeEventListener('timeupdate', player.updateTimeCallback);
 	},
 	buildduration: function buildduration(player, controls, layers, media) {
 		var t = this,
@@ -2035,11 +2028,10 @@ Object.assign(_player2.default.prototype, {
 			t.addControlElement(duration, 'duration');
 		}
 
-		media.addEventListener('timeupdate', function () {
-			if (t.controlsAreVisible) {
-				player.updateDuration();
-			}
-		});
+		media.addEventListener('timeupdate', t.updateTimeCallback);
+	},
+	cleanduration: function cleanduration(player, controls, layers, media) {
+		media.removeEventListener('timeupdate', player.updateTimeCallback);
 	},
 	updateCurrent: function updateCurrent() {
 		var t = this;
@@ -3864,11 +3856,16 @@ var MediaElementPlayer = function () {
 		key: '_setDefaultPlayer',
 		value: function _setDefaultPlayer() {
 			var t = this;
-			t.proxy = new _default2.default(t);
-			t.setCurrentTime(t.currentMediaTime);
-			if (t.getCurrentTime() > 0 && !_constants.IS_IOS && !_constants.IS_ANDROID) {
-				t.play();
+			if (t.proxy) {
+				t.proxy.pause();
 			}
+			t.proxy = new _default2.default(t);
+			t.media.addEventListener('loadedmetadata', function () {
+				t.setCurrentTime(t.currentMediaTime);
+				if (t.getCurrentTime() > 0 && !_constants.IS_IOS && !_constants.IS_ANDROID) {
+					t.play();
+				}
+			});
 		}
 	}, {
 		key: '_meReady',
@@ -4796,7 +4793,7 @@ var MediaElementPlayer = function () {
 				bigPlay.style.display = t.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
 				loading.style.display = 'none';
 				if (buffer !== null) {
-					buffer.style.display = '';
+					buffer.style.display = 'none';
 				}
 				hasError = false;
 			});
@@ -4979,7 +4976,7 @@ var MediaElementPlayer = function () {
 				var feature = t.options.features[featureIndex];
 				if (t['clean' + feature]) {
 					try {
-						t['clean' + feature](t);
+						t['clean' + feature](t, t.layers, t.controls, t.media);
 					} catch (e) {
 						console.error('error cleaning ' + feature, e);
 					}
@@ -5079,9 +5076,6 @@ var MediaElementPlayer = function () {
 			}
 			t.globalUnbind('resize', t.globalResizeCallback);
 			t.globalUnbind('keydown', t.globalKeydownCallback);
-			if (typeof t.exitFullscreenCallback === 'function') {
-				t.globalUnbind('keydown', t.exitFullscreenCallback);
-			}
 			t.globalUnbind('click', t.globalClickCallback);
 
 			delete t.media.player;
@@ -5174,6 +5168,7 @@ var DefaultPlayer = function () {
 		this.createIframeLayer = function () {
 			return player.createIframeLayer();
 		};
+		return this;
 	}
 
 	_createClass(DefaultPlayer, [{

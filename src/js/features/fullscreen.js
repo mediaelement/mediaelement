@@ -97,8 +97,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
-
-
 		player.fullscreenBtn = fullscreenBtn;
 
 		t.exitFullscreenCallback = (e) => {
@@ -139,6 +137,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.globalBind(Features.FULLSCREEN_EVENT_NAME, fullscreenChanged);
 		}
 	},
+	cleanfullscreen (player)  {
+		player.exitFullScreen();
+		player.globalUnbind('keydown', player.exitFullscreenCallback);
+	},
 
 	/**
 	 * Detect the type of fullscreen based on browser's capabilities
@@ -163,16 +165,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.fullscreenMode = mode;
 		return mode;
-	},
-
-	/**
-	 * Feature destructor.
-	 *
-	 * Always has to be prefixed with `clean` and the name that was used in features list
-	 * @param {MediaElementPlayer} player
-	 */
-	cleanfullscreen (player)  {
-		player.exitFullScreen();
 	},
 
 	/**

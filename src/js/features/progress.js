@@ -406,10 +406,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
-		// loading
 		// If media is does not have a finite duration, remove progress bar interaction
 		// and indicate that is a live broadcast
-		media.addEventListener('progress', (e) => {
+		t.broadcastCallback = (e) => {
 			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
 			if (t.getDuration() !== Infinity) {
 				if (broadcast) {
@@ -421,36 +420,17 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (!t.forcedHandlePause) {
 					player.setCurrentRail(e);
 				}
+				updateSlider();
 			} else if (!broadcast) {
 				const label = document.createElement('span');
 				label.className = `${t.options.classPrefix}broadcast`;
 				label.innerText = i18n.t('mejs.live-broadcast');
 				t.slider.style.display = 'none';
 			}
-		});
+		};
 
-		// current time
-		media.addEventListener('timeupdate', (e) => {
-			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
-			if (t.getDuration() !== Infinity) {
-				if (broadcast) {
-					t.slider.style.display = '';
-					broadcast.remove();
-				}
-
-				player.setProgressRail(e);
-				if (!t.forcedHandlePause) {
-					player.setCurrentRail(e);
-				}
-				updateSlider(e);
-			} else if (!broadcast) {
-				const label = document.createElement('span');
-				label.className = `${t.options.classPrefix}broadcast`;
-				label.innerText = i18n.t('mejs.live-broadcast');
-				controls.querySelector(`.${t.options.classPrefix}time-rail`).appendChild(label);
-				t.slider.style.display = 'none';
-			}
-		});
+		media.addEventListener('progress', t.broadcastCallback);
+		media.addEventListener('timeupdate', t.broadcastCallback);
 
 		t.container.addEventListener('controlsresize', (e) => {
 			if (t.getDuration() !== Infinity) {
@@ -461,7 +441,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 	},
-
+	cleanprogress (player, controls, layers, media) {
+		media.removeEventListener('progress', player.broadcastCallback);
+		media.removeEventListener('timeupdate', player.broadcastCallback);
+		if (player.rail) {
+			player.rail.remove();
+		}
+	},
 	/**
 	 * Calculate the progress on the media and update progress bar's width
 	 *

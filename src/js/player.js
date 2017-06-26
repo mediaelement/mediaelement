@@ -694,11 +694,16 @@ class MediaElementPlayer {
 
 	_setDefaultPlayer () {
 		const t = this;
-		t.proxy = new DefaultPlayer(t);
-		t.setCurrentTime(t.currentMediaTime);
-		if (t.getCurrentTime() > 0 && !IS_IOS && !IS_ANDROID) {
-			t.play();
+		if (t.proxy) {
+			t.proxy.pause();
 		}
+		t.proxy = new DefaultPlayer(t);
+		t.media.addEventListener('loadedmetadata', () => {
+			t.setCurrentTime(t.currentMediaTime);
+			if (t.getCurrentTime() > 0 && !IS_IOS && !IS_ANDROID) {
+				t.play();
+			}
+		});
 	}
 
 	/**
@@ -1745,7 +1750,7 @@ class MediaElementPlayer {
 			bigPlay.style.display = t.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
 			if (buffer !== null) {
-				buffer.style.display = '';
+				buffer.style.display = 'none';
 			}
 			hasError = false;
 		});
@@ -1840,7 +1845,6 @@ class MediaElementPlayer {
 
 		// check if someone clicked outside a player region, then kill its focus
 		t.globalBind('click', t.globalClickCallback);
-
 	}
 
 	onkeydown (player, media, e) {
@@ -1974,7 +1978,7 @@ class MediaElementPlayer {
 			const feature = t.options.features[featureIndex];
 			if (t[`clean${feature}`]) {
 				try {
-					t[`clean${feature}`](t);
+					t[`clean${feature}`](t, t.layers, t.controls, t.media);
 				} catch (e) {
 					// @todo: report control error
 					console.error(`error cleaning ${feature}`, e);
@@ -2081,9 +2085,6 @@ class MediaElementPlayer {
 		}
 		t.globalUnbind('resize', t.globalResizeCallback);
 		t.globalUnbind('keydown', t.globalKeydownCallback);
-		if (typeof t.exitFullscreenCallback === 'function') {
-			t.globalUnbind('keydown', t.exitFullscreenCallback);
-		}
 		t.globalUnbind('click', t.globalClickCallback);
 
 		delete t.media.player;

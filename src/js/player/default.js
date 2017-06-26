@@ -12,6 +12,7 @@ export default class DefaultPlayer {
 		this.isVideo = player.isVideo;
 		this.classPrefix = player.options.classPrefix;
 		this.createIframeLayer = () => player.createIframeLayer();
+		return this;
 	}
 
 	get paused () {
