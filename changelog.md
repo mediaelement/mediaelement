@@ -1,6 +1,6 @@
 ### Version History
 
-*4.2.0 (2017/??/??)*
+*4.2.0 (2017/06/26)*
 
 * Fixed issues related to Promises with native renderers @rafa8626
 * Fixed typos in player to execute properly `destroy()` and `stop()` methods @rafa8626
@@ -16,12 +16,12 @@
 * Improved error system to catch more errors and present them to user @rafa8626
 * Removed `mediaelementplayer` bundles, as well as `jQuery` file, considered unnecessary @rafa8626
 * Added new middleware layer to allow interaction with other players @rafa8626
-* Use flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
+* Used flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
 * Fixed issue with events not being unbound when player is destroyed and removed unnecessary callbacks from it @rafa8626
 * Added missing style for buffering element @rafa8626
 * Removed conditional to disable control bar when an error happens @rafa8626
 * Updated references to (Adobe / Apache) Flex SDK in documentation (https://github.com/mediaelement/mediaelement/pull/2287) @isantolin
-* Added CDN references to latest resources for both native FLV and HLS @rafa8626
+* Updated CDN references for both native FLV and HLS renderers @rafa8626
 * Fixed issue with tooltip position when rail is 100% and gets cut off @rafa8626
 * Fixed `The play() request was interrupted` errors by changing way to check for Promises and methods @rafa8626
 * Added missing workflow to hide controls when playing media and mouse is out of player container @rafa8626
