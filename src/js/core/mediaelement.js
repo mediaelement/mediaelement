@@ -93,12 +93,12 @@ class MediaElement {
 		t.mediaElement.appendChild(t.mediaElement.originalNode);
 
 		/**
-		 * Convert a URL to BLOB to avoid issues with regular media types playing under a HTTPS website
+		 * Convert a non-SSL URL to BLOB to avoid issues with regular media types playing under a SSL website
 		 * @see https://poodll.com/ios-10-and-html5-video-and-html5-audio-on-https-sites/
 		 * @private
 		 */
 		const processURL = (url, type) => {
-			if (window.location.protocol === 'https:' && url.indexOf('https:') === 0 && IS_IOS && mejs.html5media.mediaTypes.indexOf(type) > -1) {
+			if (window.location.protocol === 'https:' && url.indexOf('http:') === 0 && IS_IOS && mejs.html5media.mediaTypes.indexOf(type) > -1) {
 				const xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = function () {
 					if (this.readyState === 4 && this.status === 200) {

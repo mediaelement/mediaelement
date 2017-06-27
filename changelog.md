@@ -1,8 +1,9 @@
 ### Version History
 
-*4.2.1 (2017/06/28)*
+*4.2.1/4.2.2 (2017/06/28)*
 
 * Added conditional to avoid AJAX request on non-SSL media on iOS @rafa8626
+* Fixed error with .versions file @rafa8626
 
 *4.2.0 (2017/06/26)*
 
