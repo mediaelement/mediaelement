@@ -1,5 +1,9 @@
 ### Version History
 
+*4.2.1 (2017/06/28)*
+
+* Added conditional to avoid AJAX request on non-SSL media on iOS @rafa8626
+
 *4.2.0 (2017/06/26)*
 
 * Fixed issues related to Promises with native renderers @rafa8626
