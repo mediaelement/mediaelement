@@ -98,7 +98,7 @@ class MediaElement {
 		 * @private
 		 */
 		const processURL = (url, type) => {
-			if (mejs.html5media.mediaTypes.indexOf(type) > -1 && window.location.protocol === 'https:' && IS_IOS) {
+			if (window.location.protocol === 'https:' && url.indexOf('https:') === 0 && IS_IOS && mejs.html5media.mediaTypes.indexOf(type) > -1) {
 				const xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = function () {
 					if (this.readyState === 4 && this.status === 200) {

@@ -636,7 +636,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.appendChild(t.mediaElement.originalNode);
 
 	var processURL = function processURL(url, type) {
-		if (_mejs2.default.html5media.mediaTypes.indexOf(type) > -1 && _window2.default.location.protocol === 'https:' && _constants.IS_IOS) {
+		if (_window2.default.location.protocol === 'https:' && url.indexOf('https:') === 0 && _constants.IS_IOS && _mejs2.default.html5media.mediaTypes.indexOf(type) > -1) {
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
 				if (this.readyState === 4 && this.status === 200) {
