@@ -51,7 +51,6 @@ Package.onUse(function(api) {
     api.addFiles([
         'build/mediaelement.js',
         'build/mediaelement-and-player.js',
-        'build/mediaelementplayer.js',
         'build/mediaelementplayer.css',
         'build/mediaelementplayer-legacy.css'
     ], 'client');
