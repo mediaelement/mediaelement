@@ -17,6 +17,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     background: #000;
     box-sizing: border-box;
     font-family: 'Helvetica', Arial, serif;
+    overflow: hidden;
     position: relative;
     text-align: left;
     text-indent: 0;
@@ -186,7 +187,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     padding: 0 10px;
     position: absolute;
     width: 100%;
-    z-index: 1;
+    z-index: 3;
 }
 
 .mejs-controls:not([style*='display: none']) {
