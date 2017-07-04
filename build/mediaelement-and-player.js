@@ -1183,6 +1183,8 @@ Object.assign(_player2.default.prototype, {
 
 	isNativeFullScreen: false,
 
+	useFakeFullscreen: false,
+
 	isInIframe: false,
 
 	isPluginClickThroughCreated: false,
@@ -1276,7 +1278,7 @@ Object.assign(_player2.default.prototype, {
 		    isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName),
 		    containerStyles = getComputedStyle(t.container);
 
-		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN && typeof t.media.originalNode.webkitEnterFullscreen === 'function' && t.media.originalNode.canPlayType((0, _media.getTypeFromFile)(t.media.getSrc()))) {
+		if (t.options.useFakeFullscreen === false && Features.IS_IOS && Features.HAS_IOS_FULLSCREEN && typeof t.media.originalNode.webkitEnterFullscreen === 'function' && t.media.originalNode.canPlayType((0, _media.getTypeFromFile)(t.media.getSrc()))) {
 			t.media.originalNode.webkitEnterFullscreen();
 			return;
 		}

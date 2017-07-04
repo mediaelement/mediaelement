@@ -3,6 +3,7 @@
 *4.2.3 (2017/??/??)*
 
 * Fixed issue with setting default player causing some sources to autoplay @rafa8626
+* Added new `useFakeFullscreen` configuration element to bypass conditional when entering fullscreen @rafa8626
 
 *4.2.1/4.2.2 (2017/06/28)*
 

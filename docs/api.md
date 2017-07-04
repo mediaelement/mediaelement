@@ -128,6 +128,7 @@ useSmoothHover | boolean | `true` | Enable smooth behavior when hovering progres
 audioVolume | string | `horizontal` | Position of volume slider on audio element
 videoVolume | string | `vertical` | Position of volume slider on video element
 usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer events when on fullscreen mode
+useFakeFullscreen | boolean | `false` | Flag to bypass native capabilities on mobile devices and use the fake-fullscreen mode
 tracksAriaLive | boolean | `false` | By default, no WAI-ARIA live region - don't make a screen reader speak captions over an audio track.
 hideCaptionsButtonWhenEmpty | boolean | `true` | Option to remove the `[cc]` button when no `<track kind="subtitles">` are present
 toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to popup

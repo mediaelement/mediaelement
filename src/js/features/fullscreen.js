@@ -42,6 +42,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 * @type {Boolean}
 	 */
+	useFakeFullscreen: false,
+	/**
+	 * @type {Boolean}
+	 */
 	isInIframe: false,
 	/**
 	 * @type {Boolean}
@@ -179,7 +183,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// iOS allows playing fullscreen ONLY on `video` tag, so check if the source can go fullscreen on iOS
 		// and if the player can play the current source
-		if (Features.IS_IOS && Features.HAS_IOS_FULLSCREEN &&
+		if (t.options.useFakeFullscreen === false && Features.IS_IOS && Features.HAS_IOS_FULLSCREEN &&
 			typeof t.media.originalNode.webkitEnterFullscreen === 'function' &&
 			t.media.originalNode.canPlayType(getTypeFromFile(t.media.getSrc()))) {
 			t.media.originalNode.webkitEnterFullscreen();
