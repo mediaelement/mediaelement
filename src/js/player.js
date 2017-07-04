@@ -699,9 +699,11 @@ class MediaElementPlayer {
 		}
 		t.proxy = new DefaultPlayer(t);
 		t.media.addEventListener('loadedmetadata', () => {
-			t.setCurrentTime(t.currentMediaTime);
-			if (t.getCurrentTime() > 0 && !IS_IOS && !IS_ANDROID) {
-				t.play();
+			if (t.getCurrentTime() > 0) {
+				t.setCurrentTime(t.currentMediaTime);
+				if (!IS_IOS && !IS_ANDROID) {
+					t.play();
+				}
 			}
 		});
 	}

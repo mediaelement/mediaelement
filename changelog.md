@@ -1,5 +1,9 @@
 ### Version History
 
+*4.2.3 (2017/??/??)*
+
+* Fixed issue with setting default player causing some sources to autoplay @rafa8626
+
 *4.2.1/4.2.2 (2017/06/28)*
 
 * Added conditional to avoid AJAX request on non-SSL media on iOS @rafa8626
