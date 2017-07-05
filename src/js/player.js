@@ -391,7 +391,7 @@ class MediaElementPlayer {
 				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
-			`</div>`;
+				`</div>`;
 			t.container.addEventListener('focus', (e) => {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
@@ -781,7 +781,7 @@ class MediaElementPlayer {
 					}
 				}
 			}
-			
+
 			t.buildposter(t, t.controls, t.layers, t.media);
 			t.buildkeyboard(t, t.controls, t.layers, t.media);
 			t.buildoverlays(t, t.controls, t.layers, t.media);
@@ -2100,6 +2100,23 @@ export default MediaElementPlayer;
 // turn into plugin
 (($) => {
 	if (typeof $ !== 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
+			if (options === false) {
+				this.each(function () {
+					const player = $(this).data('mediaelementplayer');
+					if (player) {
+						player.remove();
+					}
+					$(this).removeData('mediaelementplayer');
+				});
+			} else {
+				this.each(function () {
+					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
+				});
+			}
+			return this;
+		};
+
 		$(document).ready(() => {
 			// auto enable using JSON attribute
 			$(`.${mejs.MepDefaults.classPrefix}player`).mediaelementplayer();

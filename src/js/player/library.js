@@ -10,24 +10,3 @@ if (typeof jQuery !== 'undefined') {
 } else if (typeof ender !== 'undefined') {
 	mejs.$ = window.ender = window.$ = ender;
 }
-// turn into plugin
-(($) => {
-	if (typeof $ !== 'undefined') {
-		$.fn.mediaelementplayer = function (options) {
-			if (options === false) {
-				this.each(function () {
-					const player = $(this).data('mediaelementplayer');
-					if (player) {
-						player.remove();
-					}
-					$(this).removeData('mediaelementplayer');
-				});
-			} else {
-				this.each(function () {
-					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
-				});
-			}
-			return this;
-		};
-	}
-})(mejs.$);

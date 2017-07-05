@@ -5148,6 +5148,23 @@ exports.default = MediaElementPlayer;
 
 (function ($) {
 	if (typeof $ !== 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
+			if (options === false) {
+				this.each(function () {
+					var player = $(this).data('mediaelementplayer');
+					if (player) {
+						player.remove();
+					}
+					$(this).removeData('mediaelementplayer');
+				});
+			} else {
+				this.each(function () {
+					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
+				});
+			}
+			return this;
+		};
+
 		$(_document2.default).ready(function () {
 			$('.' + _mejs2.default.MepDefaults.classPrefix + 'player').mediaelementplayer();
 		});
@@ -5345,27 +5362,6 @@ if (typeof jQuery !== 'undefined') {
 } else if (typeof ender !== 'undefined') {
 	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
 }
-
-(function ($) {
-	if (typeof $ !== 'undefined') {
-		$.fn.mediaelementplayer = function (options) {
-			if (options === false) {
-				this.each(function () {
-					var player = $(this).data('mediaelementplayer');
-					if (player) {
-						player.remove();
-					}
-					$(this).removeData('mediaelementplayer');
-				});
-			} else {
-				this.each(function () {
-					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
-				});
-			}
-			return this;
-		};
-	}
-})(_mejs2.default.$);
 
 },{"3":3,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
