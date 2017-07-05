@@ -91,9 +91,9 @@ module.exports = function (grunt) {
 						'src/js/renderers/hls.js',
 						'src/js/renderers/youtube.js',
 					]).concat([
+						'src/js/player.js',
 						'src/js/player/library.js',
 						'src/js/player/default.js',
-						'src/js/player.js',
 						'src/js/features/fullscreen.js',
 						'src/js/features/playpause.js',
 						'src/js/features/progress.js',
