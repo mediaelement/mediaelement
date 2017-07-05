@@ -11,28 +11,26 @@ if (typeof jQuery !== 'undefined') {
 	mejs.$ = window.ender = window.$ = ender;
 }
 // turn into plugin
-(($) => {
-	if (typeof $ !== 'undefined') {
-		$.fn.mediaelementplayer = function (options) {
-			if (options === false) {
-				this.each(function () {
-					const player = $(this).data('mediaelementplayer');
-					if (player) {
-						player.remove();
-					}
-					$(this).removeData('mediaelementplayer');
-				});
-			} else {
-				this.each(function () {
-					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
-				});
-			}
-			return this;
-		};
+if (typeof window.$ !== 'undefined') {
+	window.$.fn.mediaelementplayer = function (options) {
+		if (options === false) {
+			this.each(function () {
+				const player = window.$(this).data('mediaelementplayer');
+				if (player) {
+					player.remove();
+				}
+				window.$(this).removeData('mediaelementplayer');
+			});
+		} else {
+			this.each(function () {
+				window.$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
+			});
+		}
+		return this;
+	};
 
-		$(document).ready(() => {
-			// auto enable using JSON attribute
-			$(`.${mejs.MepDefaults.classPrefix}player`).mediaelementplayer();
-		});
-	}
-})(mejs.$);
+	window.$(document).ready(() => {
+		// auto enable using JSON attribute
+		window.$(`.${mejs.MepDefaults.classPrefix}player`).mediaelementplayer();
+	});
+}
