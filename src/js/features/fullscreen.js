@@ -27,7 +27,11 @@ Object.assign(config, {
 	/**
 	 * @type {?String}
 	 */
-	fullscreenText: null
+	fullscreenText: null,
+	/**
+	 * @type {Boolean}
+	 */
+	useFakeFullscreen: false
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -39,10 +43,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @type {Boolean}
 	 */
 	isNativeFullScreen: false,
-	/**
-	 * @type {Boolean}
-	 */
-	useFakeFullscreen: false,
 	/**
 	 * @type {Boolean}
 	 */

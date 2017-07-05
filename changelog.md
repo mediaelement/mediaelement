@@ -3,7 +3,7 @@
 *4.2.3 (2017/??/??)*
 
 * Fixed issue with setting default player causing some sources to autoplay @rafa8626
-* Added new `useFakeFullscreen` configuration element to bypass conditional when entering fullscreen @rafa8626
+* Added new `useFakeFullscreen` configuration element to bypass conditional when entering fullscreen and added CSS to hide native controls @rafa8626
 * Fixed issue with jQuery approach in lazy-loading scenarios @rafa8626
 
 *4.2.1/4.2.2 (2017/06/28)*

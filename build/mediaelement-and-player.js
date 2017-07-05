@@ -1175,15 +1175,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.assign(_player.config, {
 	usePluginFullScreen: true,
 
-	fullscreenText: null
+	fullscreenText: null,
+
+	useFakeFullscreen: false
 });
 
 Object.assign(_player2.default.prototype, {
 	isFullScreen: false,
 
 	isNativeFullScreen: false,
-
-	useFakeFullscreen: false,
 
 	isInIframe: false,
 

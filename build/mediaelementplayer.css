@@ -33,7 +33,10 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     box-sizing: border-box;
 }
 
-/* Hide native play button from iOS to favor plugin button */
+/* Hide native play button and control bar from iOS to favor plugin button */
+.mejs__container video::-webkit-media-controls,
+.mejs__container video::-webkit-media-controls-panel,
+.mejs__container video::-webkit-media-controls-panel-container,
 .mejs__container video::-webkit-media-controls-start-playback-button {
     -webkit-appearance: none;
     display: none !important;
