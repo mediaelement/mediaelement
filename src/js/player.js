@@ -2119,7 +2119,7 @@ export default MediaElementPlayer;
 
 		$(document).ready(() => {
 			// auto enable using JSON attribute
-			$(`.${mejs.MepDefaults.classPrefix}player`).mediaelementplayer();
+			$(`.${config.classPrefix}player`).mediaelementplayer();
 		});
 	}
 })(mejs.$);

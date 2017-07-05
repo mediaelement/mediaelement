@@ -5166,7 +5166,7 @@ exports.default = MediaElementPlayer;
 		};
 
 		$(_document2.default).ready(function () {
-			$('.' + _mejs2.default.MepDefaults.classPrefix + 'player').mediaelementplayer();
+			$('.' + config.classPrefix + 'player').mediaelementplayer();
 		});
 	}
 })(_mejs2.default.$);
