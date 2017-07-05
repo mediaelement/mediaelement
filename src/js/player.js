@@ -2096,3 +2096,13 @@ class MediaElementPlayer {
 window.MediaElementPlayer = MediaElementPlayer;
 
 export default MediaElementPlayer;
+
+// turn into plugin
+(($) => {
+	if (typeof $ !== 'undefined') {
+		$(document).ready(() => {
+			// auto enable using JSON attribute
+			$(`.${mejs.MepDefaults.classPrefix}player`).mediaelementplayer();
+		});
+	}
+})(mejs.$);

@@ -5146,6 +5146,14 @@ _window2.default.MediaElementPlayer = MediaElementPlayer;
 
 exports.default = MediaElementPlayer;
 
+(function ($) {
+	if (typeof $ !== 'undefined') {
+		$(_document2.default).ready(function () {
+			$('.' + _mejs2.default.MepDefaults.classPrefix + 'player').mediaelementplayer();
+		});
+	}
+})(_mejs2.default.$);
+
 },{"17":17,"2":2,"25":25,"26":26,"27":27,"28":28,"3":3,"30":30,"5":5,"6":6,"7":7}],17:[function(_dereq_,module,exports){
 'use strict';
 
@@ -5338,28 +5346,26 @@ if (typeof jQuery !== 'undefined') {
 	_mejs2.default.$ = _window2.default.ender = _window2.default.$ = ender;
 }
 
-if (typeof _window2.default.$ !== 'undefined') {
-	_window2.default.$.fn.mediaelementplayer = function (options) {
-		if (options === false) {
-			this.each(function () {
-				var player = _window2.default.$(this).data('mediaelementplayer');
-				if (player) {
-					player.remove();
-				}
-				_window2.default.$(this).removeData('mediaelementplayer');
-			});
-		} else {
-			this.each(function () {
-				_window2.default.$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
-			});
-		}
-		return this;
-	};
-
-	_window2.default.$(document).ready(function () {
-		_window2.default.$('.' + _mejs2.default.MepDefaults.classPrefix + 'player').mediaelementplayer();
-	});
-}
+(function ($) {
+	if (typeof $ !== 'undefined') {
+		$.fn.mediaelementplayer = function (options) {
+			if (options === false) {
+				this.each(function () {
+					var player = $(this).data('mediaelementplayer');
+					if (player) {
+						player.remove();
+					}
+					$(this).removeData('mediaelementplayer');
+				});
+			} else {
+				this.each(function () {
+					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
+				});
+			}
+			return this;
+		};
+	}
+})(_mejs2.default.$);
 
 },{"3":3,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
