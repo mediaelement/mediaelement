@@ -54,6 +54,7 @@ const NativeDash = {
 	_createPlayer: (settings) => {
 		const player = dashjs.MediaPlayer().create();
 		window['__ready__' + settings.id](player);
+		return player;
 	}
 };
 
@@ -105,6 +106,11 @@ const DashNativeRenderer = {
 
 		const
 			props = mejs.html5media.properties,
+			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+			attachNativeEvents = (e) => {
+				const event = createEvent(e.type, mediaElement);
+				mediaElement.dispatchEvent(event);
+			},
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
@@ -113,28 +119,27 @@ const DashNativeRenderer = {
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
 						if (propName === 'src') {
-							if (typeof value === 'string') {
-								node[propName] = value;
-								if (dashPlayer !== null) {
-									dashPlayer.attachSource(value);
-									if (autoplay) {
-										dashPlayer.play();
+							const source = typeof value === 'object' && value.src ? value.src : value;
+							node[propName] = source;
+							if (dashPlayer !== null) {
+								dashPlayer.reset();
+								for (let i = 0, total = events.length; i < total; i++) {
+									node.removeEventListener(events[i], attachNativeEvents);
+								}
+								dashPlayer = NativeDash._createPlayer({
+									options: options.dash,
+									id: id
+								});
+								// If DRM is set, load protection data
+								if (value && typeof value === 'object' && typeof value.drm === 'object') {
+									dashPlayer.setProtectionData(value.drm);
+									if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
+										dashPlayer.getProtectionController().setRobustnessLevel(options.dash.robustnessLevel);
 									}
 								}
-							} else if (value && typeof value === 'object' && value.src) {
-								node[propName] = value.src;
-								if (dashPlayer !== null) {
-									// If DRM is set, load protection data
-									if (value && typeof value === 'object' && typeof value.drm === 'object') {
-										dashPlayer.setProtectionData(value.drm);
-										if (isString(options.dash.robustnessLevel) && options.dash.robustnessLevel) {
-											dashPlayer.getProtectionController().setRobustnessLevel(options.dash.robustnessLevel);
-										}
-									}
-									dashPlayer.attachSource(value.src);
-									if (autoplay) {
-										dashPlayer.play();
-									}
+								dashPlayer.attachSource(source);
+								if (autoplay) {
+									dashPlayer.play();
 								}
 							}
 						} else {
@@ -154,7 +159,6 @@ const DashNativeRenderer = {
 			mediaElement.dashPlayer = dashPlayer = _dashPlayer;
 
 			const
-				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				dashEvents = dashjs.MediaPlayer.events,
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
@@ -177,10 +181,7 @@ const DashNativeRenderer = {
 						dashPlayer.attachSource(node.getSrc());
 					}
 
-					node.addEventListener(eventName, (e) => {
-						const event = createEvent(e.type, mediaElement);
-						mediaElement.dispatchEvent(event);
-					});
+					node.addEventListener(eventName, attachNativeEvents);
 				}
 			;
 

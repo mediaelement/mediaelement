@@ -110,6 +110,12 @@ const HlsNativeRenderer = {
 
 		const
 			props = mejs.html5media.properties,
+			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+
+			attachNativeEvents = (e) => {
+				const event = createEvent(e.type, mediaElement);
+				mediaElement.dispatchEvent(event);
+			},
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
@@ -117,19 +123,22 @@ const HlsNativeRenderer = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
-						node[propName] = value;
-
-						if (hlsPlayer !== null) {
-							if (propName === 'src') {
+						if (propName === 'src') {
+							node[propName] = typeof value === 'object' && value.src ? value.src : value;
+							if (hlsPlayer !== null) {
 								hlsPlayer.destroy();
+								for (let i = 0, total = events.length; i < total; i++) {
+									node.removeEventListener(events[i], attachNativeEvents);
+								}
 								hlsPlayer = NativeHls._createPlayer({
 									options: options.hls,
 									id: id
 								});
-
 								hlsPlayer.loadSource(value);
 								hlsPlayer.attachMedia(node);
 							}
+						} else {
+							node[propName] = value;
 						}
 					}
 				};
@@ -143,7 +152,6 @@ const HlsNativeRenderer = {
 		window['__ready__' + id] = (_hlsPlayer) => {
 			mediaElement.hlsPlayer = hlsPlayer = _hlsPlayer;
 			const
-				events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 				hlsEvents = Hls.Events,
 				assignEvents = (eventName) => {
 					if (eventName === 'loadedmetadata') {
@@ -153,10 +161,7 @@ const HlsNativeRenderer = {
 						hlsPlayer.attachMedia(node);
 					}
 
-					node.addEventListener(eventName, (e) => {
-						const event = createEvent(e.type, mediaElement);
-						mediaElement.dispatchEvent(event);
-					});
+					node.addEventListener(eventName, attachNativeEvents);
 				}
 			;
 
