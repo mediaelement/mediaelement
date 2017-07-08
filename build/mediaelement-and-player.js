@@ -4583,12 +4583,21 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'setPoster',
 		value: function setPoster(url) {
-			var t = this,
-			    posterDiv = t.container.querySelector('.' + t.options.classPrefix + 'poster');
+			var t = this;
+
+			var posterDiv = t.container.querySelector('.' + t.options.classPrefix + 'poster');
+
+			if (posterDiv) {
+				posterDiv.style.display = 'block';
+			} else {
+				posterDiv = _document2.default.createElement('div');
+				posterDiv.className = t.options.classPrefix + 'poster ' + t.options.classPrefix + 'layer';
+				t.layers.appendChild(posterDiv);
+			}
 
 			var posterImg = posterDiv.querySelector('img');
 
-			if (!posterImg) {
+			if (!posterImg && url) {
 				posterImg = _document2.default.createElement('img');
 				posterImg.className = t.options.classPrefix + 'poster-img';
 				posterImg.width = '100%';
@@ -4596,8 +4605,13 @@ var MediaElementPlayer = function () {
 				posterDiv.appendChild(posterImg);
 			}
 
-			posterImg.setAttribute('src', url);
-			posterDiv.style.backgroundImage = 'url("' + url + '")';
+			if (url) {
+				posterImg.setAttribute('src', url);
+				posterDiv.style.backgroundImage = 'url("' + url + '")';
+			} else if (posterImg) {
+				posterDiv.style.backgroundImage = 'none';
+				posterImg.remove();
+			}
 		}
 	}, {
 		key: 'changeSkin',

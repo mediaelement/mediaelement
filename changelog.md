@@ -7,6 +7,7 @@
 * Fixed issue with sequence of files when creating bundle @rafa8626
 * Updated FLV renderer library @rafa8626
 * Cleaned stylesheet and fixed minor issues on demo file @rafa8626
+* Fixed issues when using `setPoster` method after player was initialized @rafa8626
 
 *4.2.1/4.2.2 (2017/06/28)*
 

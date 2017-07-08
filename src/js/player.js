@@ -1518,14 +1518,21 @@ class MediaElementPlayer {
 	}
 
 	setPoster (url) {
-		const
-			t = this,
-			posterDiv = t.container.querySelector(`.${t.options.classPrefix}poster`)
-		;
+		const t = this;
+
+		let posterDiv = t.container.querySelector(`.${t.options.classPrefix}poster`);
+
+		if (posterDiv) {
+			posterDiv.style.display = 'block';
+		} else {
+			posterDiv = document.createElement('div');
+			posterDiv.className = `${t.options.classPrefix}poster ${t.options.classPrefix}layer`;
+			t.layers.appendChild(posterDiv);
+		}
 
 		let posterImg = posterDiv.querySelector('img');
 
-		if (!posterImg) {
+		if (!posterImg && url) {
 			posterImg = document.createElement('img');
 			posterImg.className = `${t.options.classPrefix}poster-img`;
 			posterImg.width = '100%';
@@ -1533,8 +1540,13 @@ class MediaElementPlayer {
 			posterDiv.appendChild(posterImg);
 		}
 
-		posterImg.setAttribute('src', url);
-		posterDiv.style.backgroundImage = `url("${url}")`;
+		if (url) {
+			posterImg.setAttribute('src', url);
+			posterDiv.style.backgroundImage = `url("${url}")`;
+		} else if (posterImg) {
+			posterDiv.style.backgroundImage = 'none';
+			posterImg.remove();
+		}
 	}
 
 	changeSkin (className) {

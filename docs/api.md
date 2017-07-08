@@ -181,7 +181,7 @@ stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer.
 remove() | Destroy the video/audio player instance
 canPlayType(type) | Determine whether current player can/cannot play a specific media type; `type` is MIME type and each renderer has a whitelist of them
 setPlayerSize (width, height) | Set player's `width` and `height` also considering the `stretching` configuration
-setPoster (url) | Add a `image` tag with the poster's `url` inside the player's layer
+setPoster (url) | Add a `image` tag with the poster's `url` inside the player's layer; you can pass an _empty_ string to clear the poster 
 setMuted (muted) | Mute/unmute the player; `muted` is a boolean value
 setCurrentTime (time) | Set a new current time for the player; `time` is either an integer or float number, and if negative, it will start from zero.
 getCurrentTime () | Retrieve the current time of the media being played
