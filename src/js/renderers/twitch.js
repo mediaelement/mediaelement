@@ -22,14 +22,12 @@ const TwitchApi = {
 			}).then(() => {
 				TwitchApi._createPlayer(settings);
 			});
-		} else if (!TwitchApi.promise) {
+		} else {
 			TwitchApi.promise = TwitchApi.promise || mejs.Utils.loadScript('https://player.twitch.tv/js/embed/v1.js');
 			TwitchApi.promise.then(() => {
 				TwitchApi._createPlayer(settings);
 			});
 		}
-
-		return TwitchApi.promise;
 	},
 
 	/**
@@ -441,7 +439,7 @@ const TwitchIframeRenderer = {
 		twitch.destroy = () => {};
 
 		// send it off for async loading and creation
-		mediaElement.promises.push(TwitchApi.load(twitchSettings));
+		TwitchApi.load(twitchSettings);
 
 		return twitch;
 	}

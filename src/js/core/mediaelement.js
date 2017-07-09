@@ -375,7 +375,7 @@ class MediaElement {
 					event = createEvent('pause', t.mediaElement);
 					t.mediaElement.dispatchEvent(event);
 				}
-				t.mediaElement.originalNode.setAttribute('src', (mediaFiles[0].src || ''));
+				t.mediaElement.originalNode.src = (mediaFiles[0].src || '');
 
 				// At least there must be a media in the `mediaFiles` since the media tag can come up an
 				// empty source for starters

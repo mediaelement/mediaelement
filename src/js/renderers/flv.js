@@ -33,7 +33,7 @@ const NativeFlv = {
 			}).then(() => {
 				NativeFlv._createPlayer(settings);
 			});
-		} else if (!NativeFlv.promise) {
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.2/flv.min.js';
 

@@ -33,7 +33,7 @@ const NativeHls = {
 			}).then(() => {
 				NativeHls._createPlayer(settings);
 			});
-		} else if (!NativeHls.promise) {
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.10/hls.min.js';
 

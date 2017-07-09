@@ -33,7 +33,7 @@ const NativeDash = {
 			}).then(() => {
 				NativeDash._createPlayer(settings);
 			});
-		} else if (!NativeDash.promise) {
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
 				settings.options.path : 'https://cdn.dashjs.org/latest/dash.all.min.js';
 
