@@ -8,7 +8,8 @@
 * Updated FLV renderer library @rafa8626
 * Cleaned stylesheet and fixed minor issues on demo file @rafa8626
 * Fixed issues when using `setPoster` method after player was initialized @rafa8626
-* Fixed issues with `setSrc` duplicating events on the native renderers @rafa8626
+* Fixed issues with `setSrc` method duplicating events on the native renderers @rafa8626
+* Removed code to load media when playing considered unnecessary @rafa8626
 
 *4.2.1/4.2.2 (2017/06/28)*
 

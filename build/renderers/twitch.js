@@ -23,14 +23,12 @@ var TwitchApi = {
 			}).then(function () {
 				TwitchApi._createPlayer(settings);
 			});
-		} else if (!TwitchApi.promise) {
+		} else {
 			TwitchApi.promise = TwitchApi.promise || mejs.Utils.loadScript('https://player.twitch.tv/js/embed/v1.js');
 			TwitchApi.promise.then(function () {
 				TwitchApi._createPlayer(settings);
 			});
 		}
-
-		return TwitchApi.promise;
 	},
 
 	_createPlayer: function _createPlayer(settings) {
@@ -361,7 +359,7 @@ var TwitchIframeRenderer = {
 		};
 		twitch.destroy = function () {};
 
-		mediaElement.promises.push(TwitchApi.load(twitchSettings));
+		TwitchApi.load(twitchSettings);
 
 		return twitch;
 	}

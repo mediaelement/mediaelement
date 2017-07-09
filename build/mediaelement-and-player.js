@@ -853,7 +853,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 			event = (0, _general.createEvent)('pause', t.mediaElement);
 			t.mediaElement.dispatchEvent(event);
 		}
-		t.mediaElement.originalNode.setAttribute('src', mediaFiles[0].src || '');
+		t.mediaElement.originalNode.src = mediaFiles[0].src || '';
 
 		if (renderInfo === null && mediaFiles[0].src) {
 			t.mediaElement.generateError('No renderer found', mediaFiles);
@@ -5193,12 +5193,7 @@ var DefaultPlayer = function () {
 	_createClass(DefaultPlayer, [{
 		key: 'play',
 		value: function play() {
-			var t = this;
-
-			if (t.media.getCurrentTime() <= 0) {
-				t.load();
-			}
-			t.media.play();
+			this.media.play();
 		}
 	}, {
 		key: 'pause',
@@ -5413,7 +5408,7 @@ var NativeDash = {
 			}).then(function () {
 				NativeDash._createPlayer(settings);
 			});
-		} else if (!NativeDash.promise) {
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdn.dashjs.org/latest/dash.all.min.js';
 
 			NativeDash.promise = NativeDash.promise || (0, _dom.loadScript)(settings.options.path);
@@ -6066,7 +6061,7 @@ var NativeFlv = {
 			}).then(function () {
 				NativeFlv._createPlayer(settings);
 			});
-		} else if (!NativeFlv.promise) {
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.2/flv.min.js';
 
 			NativeFlv.promise = NativeFlv.promise || (0, _dom.loadScript)(settings.options.path);
@@ -6300,7 +6295,7 @@ var NativeHls = {
 			}).then(function () {
 				NativeHls._createPlayer(settings);
 			});
-		} else if (!NativeHls.promise) {
+		} else {
 			settings.options.path = typeof settings.options.path === 'string' ? settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.10/hls.min.js';
 
 			NativeHls.promise = NativeHls.promise || (0, _dom.loadScript)(settings.options.path);
