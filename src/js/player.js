@@ -1522,9 +1522,7 @@ class MediaElementPlayer {
 
 		let posterDiv = t.container.querySelector(`.${t.options.classPrefix}poster`);
 
-		if (posterDiv) {
-			posterDiv.style.display = 'block';
-		} else {
+		if (!posterDiv) {
 			posterDiv = document.createElement('div');
 			posterDiv.className = `${t.options.classPrefix}poster ${t.options.classPrefix}layer`;
 			t.layers.appendChild(posterDiv);
@@ -1537,15 +1535,20 @@ class MediaElementPlayer {
 			posterImg.className = `${t.options.classPrefix}poster-img`;
 			posterImg.width = '100%';
 			posterImg.height = '100%';
+			posterDiv.style.display = '';
 			posterDiv.appendChild(posterImg);
 		}
 
 		if (url) {
 			posterImg.setAttribute('src', url);
 			posterDiv.style.backgroundImage = `url("${url}")`;
+			posterDiv.style.display = '';
 		} else if (posterImg) {
 			posterDiv.style.backgroundImage = 'none';
+			posterDiv.style.display = 'none';
 			posterImg.remove();
+		} else {
+			posterDiv.style.display = 'none';
 		}
 	}
 
@@ -1733,7 +1736,9 @@ class MediaElementPlayer {
 		layers.appendChild(bigPlay);
 
 		if (t.media.rendererName !== null && ((/(youtube|facebook)/i.test(t.media.rendererName) &&
-			!(player.media.originalNode.getAttribute('poster') || player.options.poster)) || IS_STOCK_ANDROID)) {
+			!(t.media.originalNode.getAttribute('poster') || player.options.poster ||
+			(typeof t.media.renderer.getPosterUrl === 'function' && t.media.renderer.getPosterUrl()))) ||
+			IS_STOCK_ANDROID)) {
 			bigPlay.style.display = 'none';
 		}
 

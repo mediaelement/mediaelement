@@ -4587,9 +4587,7 @@ var MediaElementPlayer = function () {
 
 			var posterDiv = t.container.querySelector('.' + t.options.classPrefix + 'poster');
 
-			if (posterDiv) {
-				posterDiv.style.display = 'block';
-			} else {
+			if (!posterDiv) {
 				posterDiv = _document2.default.createElement('div');
 				posterDiv.className = t.options.classPrefix + 'poster ' + t.options.classPrefix + 'layer';
 				t.layers.appendChild(posterDiv);
@@ -4602,15 +4600,20 @@ var MediaElementPlayer = function () {
 				posterImg.className = t.options.classPrefix + 'poster-img';
 				posterImg.width = '100%';
 				posterImg.height = '100%';
+				posterDiv.style.display = '';
 				posterDiv.appendChild(posterImg);
 			}
 
 			if (url) {
 				posterImg.setAttribute('src', url);
 				posterDiv.style.backgroundImage = 'url("' + url + '")';
+				posterDiv.style.display = '';
 			} else if (posterImg) {
 				posterDiv.style.backgroundImage = 'none';
+				posterDiv.style.display = 'none';
 				posterImg.remove();
+			} else {
+				posterDiv.style.display = 'none';
 			}
 		}
 	}, {
@@ -4782,7 +4785,7 @@ var MediaElementPlayer = function () {
 
 			layers.appendChild(bigPlay);
 
-			if (t.media.rendererName !== null && (/(youtube|facebook)/i.test(t.media.rendererName) && !(player.media.originalNode.getAttribute('poster') || player.options.poster) || _constants.IS_STOCK_ANDROID)) {
+			if (t.media.rendererName !== null && (/(youtube|facebook)/i.test(t.media.rendererName) && !(t.media.originalNode.getAttribute('poster') || player.options.poster || typeof t.media.renderer.getPosterUrl === 'function' && t.media.renderer.getPosterUrl()) || _constants.IS_STOCK_ANDROID)) {
 				bigPlay.style.display = 'none';
 			}
 
