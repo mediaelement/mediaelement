@@ -202,7 +202,9 @@ const YouTubeIframeRenderer = {
 			start: 0,
 			iv_load_policy: 3,
 			// custom to inject `-nocookie` element in URL
-			nocookie: false
+			nocookie: false,
+			// accepts: `default`, `hqdefault`, `mqdefault`, `sddefault` and `maxresdefault`
+			imageQuality: null
 		}
 	},
 
@@ -380,7 +382,7 @@ const YouTubeIframeRenderer = {
 
 		// If `nocookie` feature was enabled, modify original URL
 		if (youtube.options.youtube.nocookie) {
-			mediaElement.originalNode.setAttribute('src', YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src));
+			mediaElement.originalNode.src = YouTubeApi.getYouTubeNoCookieUrl(mediaFiles[0].src);
 		}
 
 		mediaElement.originalNode.parentNode.insertBefore(youtubeContainer, mediaElement.originalNode);
@@ -573,6 +575,14 @@ const YouTubeIframeRenderer = {
 			if (youtube.interval) {
 				clearInterval(youtube.interval);
 			}
+		};
+		youtube.getPosterUrl = () => {
+			const
+				quality = options.youtube.imageQuality,
+				resolutions = ['default', 'hqdefault', 'mqdefault', 'sddefault', 'maxresdefault'],
+				id = YouTubeApi.getYouTubeId(mediaElement.originalNode.src)
+			;
+			return quality && resolutions.indexOf(quality) > -1 && id ? `https://img.youtube.com/vi/${id}/${quality}.jpg` : '';
 		};
 
 		return youtube;

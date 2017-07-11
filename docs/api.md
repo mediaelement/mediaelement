@@ -63,7 +63,7 @@ dash | object | | Accepts `debug`, `drm` (object to load protected/licensed stre
 facebook | object | | See [Documentation](https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup)
 flv | object | | See [Documentation](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) (and a custom `path` parameter to indicate where to load library)
 hls | object | | See [Documentation](https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning) (and a custom `path` parameter to indicate where to load library)
-youtube | object | | See [Documentation](https://developers.google.com/youtube/player_parameters#Parameters) (and a custom `nocookie` parameter to switch to YouTube's no-cookie URL)
+youtube | object | | See [Documentation](https://developers.google.com/youtube/player_parameters#Parameters); also, a custom `nocookie` parameter to switch to YouTube's no-cookie URL and `imageQuality` parameter if user decides to use Image API to load a YouTube poster based on YouTube video ID (possible values: `default`, `hqdefault`, `mqdefault`, `sddefault` and `maxresdefault`)
 
 **Notes**
 1. Vimeo and Soundcloud don't need any configuration for now since they are pretty straight forward.

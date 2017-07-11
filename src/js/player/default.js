@@ -12,6 +12,7 @@ export default class DefaultPlayer {
 		this.isVideo = player.isVideo;
 		this.classPrefix = player.options.classPrefix;
 		this.createIframeLayer = () => player.createIframeLayer();
+		this.setPoster = (url) => player.setPoster(url);
 		return this;
 	}
 
@@ -117,6 +118,9 @@ export default class DefaultPlayer {
 
 		t.media.setSrc(src);
 		t.createIframeLayer();
+		if (typeof t.media.renderer.getPosterUrl === 'function') {
+			t.setPoster(t.media.renderer.getPosterUrl());
+		}
 	}
 
 	getSrc () {
