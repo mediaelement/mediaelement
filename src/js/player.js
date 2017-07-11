@@ -1637,7 +1637,7 @@ class MediaElementPlayer {
 		// second, try the real poster
 		if (posterUrl) {
 			t.setPoster(posterUrl);
-		} else if (typeof t.media.renderer.getPosterUrl === 'function') {
+		} else if (t.media.renderer !== null && typeof t.media.renderer.getPosterUrl === 'function') {
 			t.setPoster(t.media.renderer.getPosterUrl());
 		} else {
 			poster.style.display = 'none';
