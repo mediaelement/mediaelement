@@ -41,6 +41,7 @@ describe('MediaElement Player - Test Results', function () {
 	});
 
 	it('Create a `fake` node that mimics all media events/properties/methods', function () {
+		console.log(player)
 		expect(player.media.tagName.toLowerCase()).to.equal('mediaelementwrapper');
 		expect(player.paused).to.not.equal(null);
 	});
