@@ -1357,7 +1357,7 @@ class MediaElementPlayer {
 		t.setDimensions('100%', '100%');
 
 		// This prevents an issue when displaying poster
-		const poster = t.container.querySelector(`${t.options.classPrefix}poster img`);
+		const poster = t.container.querySelector(`.${t.options.classPrefix}poster>img`);
 		if (poster) {
 			poster.style.display = '';
 		}
@@ -1620,7 +1620,11 @@ class MediaElementPlayer {
 		poster.className = `${t.options.classPrefix}poster ${t.options.classPrefix}layer`;
 		layers.appendChild(poster);
 
-		let posterUrl = player.media.getAttribute('poster');
+		let posterUrl = media.originalNode.getAttribute('poster');
+
+		if (posterUrl && IS_IOS) {
+			media.originalNode.removeAttribute('poster');
+		}
 
 		// priority goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
 		if (player.options.poster !== '') {
@@ -2031,6 +2035,10 @@ class MediaElementPlayer {
 		if (!t.isDynamic) {
 			t.node.setAttribute('controls', true);
 			t.node.setAttribute('id', t.node.getAttribute('id').replace(`_${rendererName}`, '').replace('_from_mejs', ''));
+			const poster = t.container.querySelector(`.${t.options.classPrefix}poster>img`);
+			if (poster) {
+				t.node.setAttribute('id', poster.src);
+			}
 
 			// Remove `autoplay` (not worth bringing it back once player is destroyed)
 			delete t.node.autoplay;

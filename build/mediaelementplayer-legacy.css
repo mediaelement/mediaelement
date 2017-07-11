@@ -109,7 +109,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-poster {
     background-position: 50% 50%;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     left: 0;
     position: absolute;
     top: 0;

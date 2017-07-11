@@ -4434,7 +4434,7 @@ var MediaElementPlayer = function () {
 
 			t.setDimensions('100%', '100%');
 
-			var poster = t.container.querySelector(t.options.classPrefix + 'poster img');
+			var poster = t.container.querySelector('.' + t.options.classPrefix + 'poster>img');
 			if (poster) {
 				poster.style.display = '';
 			}
@@ -4683,7 +4683,11 @@ var MediaElementPlayer = function () {
 			poster.className = t.options.classPrefix + 'poster ' + t.options.classPrefix + 'layer';
 			layers.appendChild(poster);
 
-			var posterUrl = player.media.getAttribute('poster');
+			var posterUrl = media.originalNode.getAttribute('poster');
+
+			if (posterUrl && _constants.IS_IOS) {
+				media.originalNode.removeAttribute('poster');
+			}
 
 			if (player.options.poster !== '') {
 				posterUrl = player.options.poster;
@@ -5030,6 +5034,10 @@ var MediaElementPlayer = function () {
 				(function () {
 					t.node.setAttribute('controls', true);
 					t.node.setAttribute('id', t.node.getAttribute('id').replace('_' + rendererName, '').replace('_from_mejs', ''));
+					var poster = t.container.querySelector('.' + t.options.classPrefix + 'poster>img');
+					if (poster) {
+						t.node.setAttribute('id', poster.src);
+					}
 
 					delete t.node.autoplay;
 
