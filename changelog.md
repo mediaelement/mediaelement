@@ -13,7 +13,8 @@
 * Added mechanism in `YouTube` renderer to add YouTube's thumbnail as a poster using `youtube`'s `imageQuality` parameter @rafa8626
 * Fixed typo on `setFill` mode and fixed issue with poster when using iOS @rafa8626
 * Fixed issue with `M(PEG)-DASH` renderer related to `dash.js` not picking settings from the renderer @rafa8626 
-* Added a missing dependency to `player/library.js` file (https://github.com/mediaelement/mediaelement/pull/2318) @JulianKniephoff
+* Added missing dependency to `player/library.js` file (https://github.com/mediaelement/mediaelement/pull/2318) @JulianKniephoff
+* Added missing code to explain how to use `MediaElement` with `RequireJS` @rafa8626
 
 *4.2.1/4.2.2 (2017/06/28)*
 

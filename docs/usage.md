@@ -131,6 +131,9 @@ requirejs.config({
 	shim: {
 		// Other shims
 		'path/to/hls': {deps: ['require'], exports: "Hls"},
+        // If you only need the shim and not the player, use
+        //'path/to/mediaelement': {deps: ['require'], exports: "MediaElement"}
+        'path/to/mediaelement-and-player': {deps: ['require'], exports: "MediaElementPlayer"}
 	}
 });
 
