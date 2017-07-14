@@ -2,6 +2,7 @@
 
 import window from 'global/window';
 import mejs from '../core/mejs';
+import MediaElementPlayer from '../player';
 
 if (typeof jQuery !== 'undefined') {
 	mejs.$ = window.jQuery = window.$ = jQuery;
