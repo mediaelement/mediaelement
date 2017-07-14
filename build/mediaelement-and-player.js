@@ -5356,6 +5356,10 @@ var _mejs = _dereq_(7);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
+var _player = _dereq_(16);
+
+var _player2 = _interopRequireDefault(_player);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 if (typeof jQuery !== 'undefined') {
@@ -5379,7 +5383,7 @@ if (typeof jQuery !== 'undefined') {
 				});
 			} else {
 				this.each(function () {
-					$(this).data('mediaelementplayer', new MediaElementPlayer(this, options));
+					$(this).data('mediaelementplayer', new _player2.default(this, options));
 				});
 			}
 			return this;
@@ -5391,7 +5395,7 @@ if (typeof jQuery !== 'undefined') {
 	}
 })(_mejs2.default.$);
 
-},{"3":3,"7":7}],19:[function(_dereq_,module,exports){
+},{"16":16,"3":3,"7":7}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
