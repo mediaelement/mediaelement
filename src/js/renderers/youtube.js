@@ -111,7 +111,9 @@ const YouTubeApi = {
 			youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
 		}
 
-		return youTubeId;
+		const id = youTubeId.substring(youTubeId.lastIndexOf('/') + 1);
+		youTubeId = id.split('?');
+		return youTubeId[0];
 	},
 
 	/**

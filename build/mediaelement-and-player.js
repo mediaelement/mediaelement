@@ -6751,7 +6751,9 @@ var YouTubeApi = {
 			youTubeId = YouTubeApi.getYouTubeIdFromUrl(url);
 		}
 
-		return youTubeId;
+		var id = youTubeId.substring(youTubeId.lastIndexOf('/') + 1);
+		youTubeId = id.split('?');
+		return youTubeId[0];
 	},
 
 	getYouTubeIdFromParam: function getYouTubeIdFromParam(url) {
