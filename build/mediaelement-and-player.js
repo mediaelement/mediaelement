@@ -5467,10 +5467,16 @@ var DashNativeRenderer = {
 
 		var originalNode = mediaElement.originalNode,
 		    id = mediaElement.id + '_' + options.prefix,
-		    autoplay = originalNode.autoplay;
+		    autoplay = originalNode.autoplay,
+		    children = originalNode.children;
 
 		var node = null,
 		    dashPlayer = null;
+
+		originalNode.removeAttribute('type');
+		for (var i = 0, total = children.length; i < total; i++) {
+			children[i].removeAttribute('type');
+		}
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
@@ -5495,8 +5501,8 @@ var DashNativeRenderer = {
 						node[propName] = source;
 						if (dashPlayer !== null) {
 							dashPlayer.reset();
-							for (var i = 0, total = events.length; i < total; i++) {
-								node.removeEventListener(events[i], attachNativeEvents);
+							for (var _i = 0, _total = events.length; _i < _total; _i++) {
+								node.removeEventListener(events[_i], attachNativeEvents);
 							}
 							dashPlayer = NativeDash._createPlayer({
 								options: options.dash,
@@ -5521,8 +5527,8 @@ var DashNativeRenderer = {
 			};
 		};
 
-		for (var i = 0, total = props.length; i < total; i++) {
-			assignGettersSetters(props[i]);
+		for (var _i2 = 0, _total2 = props.length; _i2 < _total2; _i2++) {
+			assignGettersSetters(props[_i2]);
 		}
 
 		_window2.default['__ready__' + id] = function (_dashPlayer) {
@@ -5550,8 +5556,8 @@ var DashNativeRenderer = {
 				node.addEventListener(eventName, attachNativeEvents);
 			};
 
-			for (var _i = 0, _total = events.length; _i < _total; _i++) {
-				assignEvents(events[_i]);
+			for (var _i3 = 0, _total3 = events.length; _i3 < _total3; _i3++) {
+				assignEvents(events[_i3]);
 			}
 
 			var assignMdashEvents = function assignMdashEvents(e) {
@@ -5572,11 +5578,11 @@ var DashNativeRenderer = {
 		};
 
 		if (mediaFiles && mediaFiles.length > 0) {
-			for (var _i2 = 0, _total2 = mediaFiles.length; _i2 < _total2; _i2++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i2].type)) {
-					node.setAttribute('src', mediaFiles[_i2].src);
-					if (typeof mediaFiles[_i2].drm !== 'undefined') {
-						options.dash.drm = mediaFiles[_i2].drm;
+			for (var _i4 = 0, _total4 = mediaFiles.length; _i4 < _total4; _i4++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i4].type)) {
+					node.setAttribute('src', mediaFiles[_i4].src);
+					if (typeof mediaFiles[_i4].drm !== 'undefined') {
+						options.dash.drm = mediaFiles[_i4].drm;
 					}
 					break;
 				}

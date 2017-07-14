@@ -93,13 +93,21 @@ const DashNativeRenderer = {
 		const
 			originalNode = mediaElement.originalNode,
 			id = mediaElement.id + '_' + options.prefix,
-			autoplay = originalNode.autoplay
+			autoplay = originalNode.autoplay,
+			children = originalNode.children
 		;
 
 		let
 			node = null,
 			dashPlayer = null
 		;
+
+		// Remove the `type` attribute since dash.js reads that, bypassing all configuration
+		// that it's used on this renderer
+		originalNode.removeAttribute('type');
+		for (let i = 0, total = children.length; i < total; i++) {
+			children[i].removeAttribute('type');
+		}
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
