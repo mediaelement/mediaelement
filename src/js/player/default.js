@@ -118,7 +118,7 @@ export default class DefaultPlayer {
 
 		t.media.setSrc(src);
 		t.createIframeLayer();
-		if (typeof t.media.renderer.getPosterUrl === 'function') {
+		if (t.media.renderer !== null && typeof t.media.renderer.getPosterUrl === 'function') {
 			t.setPoster(t.media.renderer.getPosterUrl());
 		}
 	}
