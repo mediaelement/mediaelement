@@ -399,7 +399,10 @@ M(PEG)-DASH shim | `flash_dash` | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
 
-**IMPORTANT**: Only renderers prefixed as __native__, YouTube, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
+**IMPORTANT NOTES** 
+1. Only renderers prefixed as __native__, YouTube, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
+2. For `flash_hls`, you can use the events listed on https://github.com/mangui/flashls/blob/dev/API.md by prepending __on__ followed by the event name in camelcase notation; 
+i.e., to call `FRAGMENT_PLAYING`, you need to write `onFragmentPlaying` on JS. The events that return objects will have the info in the `data` attribute of the object; the rest, on the `message` attribute. 
 
 
 **Notes**
