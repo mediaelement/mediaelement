@@ -266,7 +266,14 @@ const FlashMediaElementRenderer = {
 
 		window[`__event__${flash.id}`] = (eventName, message) => {
 			const event = createEvent(eventName, flash);
-			event.message = message || '';
+			if (message) {
+				try {
+					event.data = JSON.parse(message);
+					event.details.data = JSON.parse(message);
+				} catch (e) {
+					event.message = message;
+				}
+			}
 
 			// send event from Flash up to the mediaElement
 			flash.mediaElement.dispatchEvent(event);

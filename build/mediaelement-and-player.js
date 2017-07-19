@@ -5853,7 +5853,14 @@ var FlashMediaElementRenderer = {
 
 		_window2.default['__event__' + flash.id] = function (eventName, message) {
 			var event = (0, _general.createEvent)(eventName, flash);
-			event.message = message || '';
+			if (message) {
+				try {
+					event.data = JSON.parse(message);
+					event.details.data = JSON.parse(message);
+				} catch (e) {
+					event.message = message;
+				}
+			}
 
 			flash.mediaElement.dispatchEvent(event);
 		};

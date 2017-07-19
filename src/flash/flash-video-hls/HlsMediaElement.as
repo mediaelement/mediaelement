@@ -86,11 +86,28 @@
 			HLSSettings.logInfo = false;
 
 			_hls = new HLS();
-			_hls.addEventListener(HLSEvent.PLAYBACK_COMPLETE, _completeHandler);
-			_hls.addEventListener(HLSEvent.ERROR, _errorHandler);
 			_hls.addEventListener(HLSEvent.MANIFEST_LOADED, _manifestHandler);
+			_hls.addEventListener(HLSEvent.LEVEL_LOADING, _levelLoadingHandler);
+			_hls.addEventListener(HLSEvent.LEVEL_LOADED, _levelLoadedHandler);
+			_hls.addEventListener(HLSEvent.LEVEL_SWITCH, _levelSwitchHandler);
+			_hls.addEventListener(HLSEvent.LEVEL_ENDLIST, _levelEndlistHandler);
+			_hls.addEventListener(HLSEvent.FRAGMENT_LOADING, _fragmentLoadingHandler);
+			_hls.addEventListener(HLSEvent.FRAGMENT_LOADED, _fragmentLoadedHandler);
+			_hls.addEventListener(HLSEvent.FRAGMENT_PLAYING, _fragmentPlayingHandler);
+			_hls.addEventListener(HLSEvent.FRAGMENT_SKIPPED, _fragmentSkippedHandler);
+			_hls.addEventListener(HLSEvent.AUDIO_TRACKS_LIST_CHANGE, _audioTracksListChangeHandler);
+			_hls.addEventListener(HLSEvent.AUDIO_TRACK_SWITCH, _audioTracksSwitchHandler);
+			_hls.addEventListener(HLSEvent.AUDIO_LEVEL_LOADING, _audioLevelLoadingHandler);
+			_hls.addEventListener(HLSEvent.AUDIO_LEVEL_LOADED, _audioLevelLoadedHandler);
+			_hls.addEventListener(HLSEvent.TAGS_LOADED, _tagsLoadedHandler);
 			_hls.addEventListener(HLSEvent.MEDIA_TIME, _mediaTimeHandler);
 			_hls.addEventListener(HLSEvent.PLAYBACK_STATE, _stateHandler);
+			_hls.addEventListener(HLSEvent.PLAYBACK_COMPLETE, _completeHandler);
+			_hls.addEventListener(HLSEvent.SEEK_STATE, _seekHandler);
+			_hls.addEventListener(HLSEvent.PLAYLIST_DURATION_UPDATED, _playlistDurationUpdatedHandler);
+			_hls.addEventListener(HLSEvent.ID3_UPDATED, _id3UpdatedHandler);
+			_hls.addEventListener(HLSEvent.LIVE_LOADING_STALLED, _liveLoadingStalledHandler);
+			_hls.addEventListener(HLSEvent.ERROR, _errorHandler);
 
 			_hls.stream.soundTransform = new SoundTransform(_volume);
 			_video.attachNetStream(_hls.stream);
@@ -291,13 +308,64 @@
 		//
 		// Events
 		//
-		private function _completeHandler(event: HLSEvent): void {
+		private function _completeHandler(): void {
 			_isEnded = true;
 			_isPaused = true;
 			sendEvent('ended');
 		}
 		private function _errorHandler(event: HLSEvent): void {
 			sendEvent('error', event.toString());
+		}
+		private function _levelLoadingHandler(event: HLSEvent): void {
+			sendEvent('onLevelLoading', JSON.stringify(event));
+		}
+		private function _levelLoadedHandler(event: HLSEvent): void {
+			sendEvent('onLevelLoaded', JSON.stringify(event.loadMetrics));
+		}
+		private function _levelSwitchHandler(event: HLSEvent): void {
+			sendEvent('onLevelSwitch', JSON.stringify(event));
+		}
+		private function _levelEndlistHandler(): void {
+			sendEvent('onLevelEndlist');
+		}
+		private function _fragmentLoadingHandler(event: HLSEvent): void {
+			sendEvent('onFragmentLoading', JSON.stringify(event));
+		}
+		private function _fragmentLoadedHandler(event: HLSEvent): void {
+			sendEvent('onFragmentLoaded', JSON.stringify(event.loadMetrics));
+		}
+		private function _fragmentPlayingHandler(event: HLSEvent): void {
+			sendEvent('onFragmentPlaying', JSON.stringify(event.playMetrics));
+		}
+		private function _fragmentSkippedHandler(event: HLSEvent): void {
+			sendEvent('onFragmentPlaying', JSON.stringify(event));
+		}
+		private function _audioTracksListChangeHandler(): void {
+			sendEvent('onAudioTracksListChange');
+		}
+		private function _audioTracksSwitchHandler(): void {
+			sendEvent('onAudioTracksSwitch');
+		}
+		private function _audioLevelLoadingHandler(event: HLSEvent): void {
+			sendEvent('onAudioLevelLoading', JSON.stringify(event));
+		}
+		private function _audioLevelLoadedHandler(event: HLSEvent): void {
+			sendEvent('onAudioLevelLoaded', JSON.stringify(event.loadMetrics));
+		}
+		private function _tagsLoadedHandler(event: HLSEvent): void {
+			sendEvent('onTagsLoaded', JSON.stringify(event.loadMetrics));
+		}
+		private function _seekHandler(event: HLSEvent): void {
+			sendEvent('onSeek', JSON.stringify(event));
+		}
+		private function _playlistDurationUpdatedHandler(event: HLSEvent): void {
+			sendEvent('onPlaylistDurationUpdated', JSON.stringify(event));
+		}
+		private function _id3UpdatedHandler(event: HLSEvent): void {
+			sendEvent('onID3Updated', JSON.stringify(event.ID3Data));
+		}
+		private function _liveLoadingStalledHandler(): void {
+			sendEvent('onLiveLoadingStalled');
 		}
 		private function _manifestHandler(event: HLSEvent): void {
 			_duration = event.levels[0].duration;
@@ -319,6 +387,7 @@
 			if (_autoplay) {
 				_hls.stream.play();
 			}
+			sendEvent('onManifestLoaded', JSON.stringify(event.levels));
 		}
 		private function _mediaTimeHandler(event: HLSEvent): void {
 			_position = event.mediatime.position;
@@ -374,8 +443,8 @@
 		//
 		// Utilities
 		//
-		private function sendEvent(eventName: String, eventMessage: String = ''): void {
-			ExternalInterface.call('(function(){window["__event__' +  _id + '"]("' + eventName + '", "' + eventMessage + '")})()', null);
+		private function sendEvent(eventName: String, data: String = ''): void {
+			ExternalInterface.call('(function(){window["__event__' +  _id + '"]("' + eventName + '", \'' + data + '\')})()', null);
 		}
 		private function log(): void {
 			if (ExternalInterface.available) {

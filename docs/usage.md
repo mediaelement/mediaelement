@@ -394,7 +394,7 @@ Twitch | `twitch_iframe` | [Twitch Emded API](https://github.com/justintv/Twitch
 Video shim  | `flash_video` | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4
 Audio shim | `flash_audio` | --- | audio/mp3
 OGG Audio shim  | `flash_audio_ogg` | --- | audio/ogg, audio/oga
-HLS shim | `flash_hls` | --- | application/x-mpegURL, vnd.apple.mpegURL
+HLS shim | `flash_hls` | [FlasHLS Events](https://github.com/mangui/flashls/blob/dev/API.md) | application/x-mpegURL, vnd.apple.mpegURL
 M(PEG)-DASH shim | `flash_dash` | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
