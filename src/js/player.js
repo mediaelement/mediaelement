@@ -285,7 +285,7 @@ class MediaElementPlayer {
 		}
 
 		// check for existing player
-		if (t.media.player !== undefined) {
+		if (t.media.player) {
 			return t.media.player;
 		}
 

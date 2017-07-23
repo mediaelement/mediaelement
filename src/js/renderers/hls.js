@@ -35,7 +35,7 @@ const NativeHls = {
 			});
 		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.10/hls.min.js';
+				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/hls.js/0.7.11/hls.min.js';
 
 			NativeHls.promise = NativeHls.promise || loadScript(settings.options.path);
 			NativeHls.promise.then(() => {

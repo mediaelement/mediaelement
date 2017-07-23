@@ -57,15 +57,21 @@ describe('MediaElement Player - Test Results', function () {
 	// });
 
 	it('Should set custom play text', function () {
-		expect(container.querySelector('.mejs__play>button').getAttribute('title')).to.equal('Play track');
+		expect(container.querySelector('.mejs__play>button').title).to.equal('Play track');
 	});
 
 	it('Should set custom pause text', function (done) {
 		player.play();
-		player.media.addEventListener('play', function () {
-			expect(container.querySelector('.mejs__pause>button').getAttribute('title')).to.equal('Pause track');
-			done();
-		}, false);
+		var listener = function () {
+			expect(container.querySelector('.mejs__pause>button').title).to.equal('Pause track');
+			player.media.removeEventListener('play', listener);
+			setTimeout(function() {
+				player.pause();
+				done();
+			}, 250);
+		};
+		player.media.addEventListener('play', listener);
+
 	});
 
 	// it('Should set custom fullscreen text', function () {
@@ -73,17 +79,17 @@ describe('MediaElement Player - Test Results', function () {
 	// });
 	//
 	it('Should set custom mute text', function () {
-		expect(container.querySelector('.mejs__mute>button').getAttribute('title')).to.equal('Mute volume');
+		expect(container.querySelector('.mejs__mute>button').title).to.equal('Mute volume');
 	});
 
 	it('Should set custom unmute text', function (done) {
 		container.querySelector('.mejs__mute>button').click();
 		var listener = function () {
-			expect(container.querySelector('.mejs__unmute>button').getAttribute('title')).to.equal('Unmute volume');
-			player.media.removeEventListener('volumechange', listener, false);
+			expect(container.querySelector('.mejs__unmute>button').title).to.equal('Unmute volume');
+			player.media.removeEventListener('volumechange', listener);
 			done();
 		};
-		player.media.addEventListener('volumechange', listener, false);
+		player.media.addEventListener('volumechange', listener);
 	});
 
 	it('Can handle different media types properly (i.e., HLS)', function () {
