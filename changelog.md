@@ -1,5 +1,9 @@
 ### Version History
 
+*4.2.4 (2017/??/??)*
+
+* Added missing conditional to set current time properly for live streams (especially YouTube ones) @rafa8626
+
 *4.2.3 (2017/07/22)*
 
 * Fixed issue with setting default player causing some sources to autoplay @rafa8626

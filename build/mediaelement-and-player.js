@@ -3864,7 +3864,7 @@ var MediaElementPlayer = function () {
 			}
 			t.proxy = new _default2.default(t);
 			t.media.addEventListener('loadedmetadata', function () {
-				if (t.getCurrentTime() > 0) {
+				if (t.getCurrentTime() > 0 && t.currentMediaTime > 0) {
 					t.setCurrentTime(t.currentMediaTime);
 					if (!_constants.IS_IOS && !_constants.IS_ANDROID) {
 						t.play();
