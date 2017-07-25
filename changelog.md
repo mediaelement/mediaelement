@@ -3,6 +3,7 @@
 *4.2.4 (2017/??/??)*
 
 * Added missing conditional to set current time properly for live streams (especially YouTube ones) @rafa8626
+* Fixed issues with Flash fallback for FLV and RTMP in regards of setting current time and other events @rafa8626
 
 *4.2.3 (2017/07/22)*
 

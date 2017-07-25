@@ -1706,7 +1706,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		var autoplay = mediaElement.originalNode.autoplay,
-		    flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay, 'allowScriptAccess=' + flash.options.shimScriptAccess],
+		    flashVars = ['uid=' + flash.id, 'autoplay=' + autoplay, 'allowScriptAccess=' + flash.options.shimScriptAccess, 'preload=' + (mediaElement.originalNode.getAttribute('preload') || '')],
 		    isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video',
 		    flashHeight = isVideo ? mediaElement.originalNode.height : 1,
 		    flashWidth = isVideo ? mediaElement.originalNode.width : 1;
@@ -1721,10 +1721,7 @@ var FlashMediaElementRenderer = {
 		}
 
 		mediaElement.appendChild(flash.flashWrapper);
-
-		if (mediaElement.originalNode !== null) {
-			mediaElement.originalNode.style.display = 'none';
-		}
+		mediaElement.originalNode.style.display = 'none';
 
 		var settings = [];
 

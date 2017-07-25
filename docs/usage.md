@@ -18,6 +18,7 @@
 ## Initialize player
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
+**IMPORTANT:** If you use `flash_video` renderer, it's always recommended to use `media.load()` inside the `success` callback to ensure that RTMP and FLV will play properly. 
 
 ## Standalone
 ```html
