@@ -5,7 +5,7 @@
 	* [Vanilla JavaScript](#vanilla)
 	* [jQuery](#jquery)
 	* [NPM/Meteor](#npm-meteor)
-	* [Require](#require)
+	* [RequireJS](#requirejs)
 	* [React](#react)
 * [Use Renderers](#renderers-usage)
 * [Use `stretching` modes](#stretching-modes)
@@ -116,8 +116,8 @@ import '/path/to/jquery-global';
 import 'mediaelement/full'; // or import `mediaelement/player`;
 ```
 
-<a id="require"></a>
-### Require
+<a id="requirejs"></a>
+### RequireJS
 With `Require.js`, you will need the following setup if you are planning to use HLS, M(PEG)-DASH or FLV, given the way the packages are bundled.
 
 To make it work, install via NPM any of the external libraries you will need (i.e., HLS.js).
