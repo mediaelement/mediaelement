@@ -4688,11 +4688,8 @@ var MediaElementPlayer = function () {
 
 			var posterUrl = media.originalNode.getAttribute('poster');
 
-			if (posterUrl && _constants.IS_IOS) {
+			if (player.options.poster !== '' && posterUrl && _constants.IS_IOS) {
 				media.originalNode.removeAttribute('poster');
-			}
-
-			if (player.options.poster !== '') {
 				posterUrl = player.options.poster;
 			}
 
@@ -5039,7 +5036,7 @@ var MediaElementPlayer = function () {
 					t.node.setAttribute('id', t.node.getAttribute('id').replace('_' + rendererName, '').replace('_from_mejs', ''));
 					var poster = t.container.querySelector('.' + t.options.classPrefix + 'poster>img');
 					if (poster) {
-						t.node.setAttribute('id', poster.src);
+						t.node.setAttribute('poster', poster.src);
 					}
 
 					delete t.node.autoplay;

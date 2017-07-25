@@ -1625,12 +1625,9 @@ class MediaElementPlayer {
 
 		let posterUrl = media.originalNode.getAttribute('poster');
 
-		if (posterUrl && IS_IOS) {
-			media.originalNode.removeAttribute('poster');
-		}
-
 		// priority goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
-		if (player.options.poster !== '') {
+		if (player.options.poster !== '' && posterUrl && IS_IOS) {
+			media.originalNode.removeAttribute('poster');
 			posterUrl = player.options.poster;
 		}
 
@@ -2042,7 +2039,7 @@ class MediaElementPlayer {
 			t.node.setAttribute('id', t.node.getAttribute('id').replace(`_${rendererName}`, '').replace('_from_mejs', ''));
 			const poster = t.container.querySelector(`.${t.options.classPrefix}poster>img`);
 			if (poster) {
-				t.node.setAttribute('id', poster.src);
+				t.node.setAttribute('poster', poster.src);
 			}
 
 			// Remove `autoplay` (not worth bringing it back once player is destroyed)
