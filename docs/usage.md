@@ -131,26 +131,22 @@ requirejs.config({
 	shim: {
 		// Other shims
 		'path/to/hls': {deps: ['require'], exports: "Hls"},
-        // If you only need the shim and not the player, use
-        //'path/to/mediaelement': {deps: ['require'], exports: "MediaElement"}
-        'path/to/mediaelement-and-player': {deps: ['require'], exports: "MediaElementPlayer"}
+        	// If you only need the shim and not the player, use
+        	//'path/to/mediaelement': {deps: ['require'], exports: "MediaElement"}
+        	'path/to/mediaelement-and-player': {deps: ['require'], exports: "MediaElementPlayer"}
 	}
 });
 
 // Later on the code...
 require(['path/to/hls'], function (Hls) {
-		window.Hls = Hls;
-
-		require(['path/to/mediaelement-and-player'], function (MediaElementPlayer) {
-
-			var player = new MediaElementPlayer('media-id', {
-				// Player configuration
-			});
+	window.Hls = Hls;
+	require(['path/to/mediaelement-and-player'], function (MediaElementPlayer) {
+		var player = new MediaElementPlayer('media-id', {
+			// Player configuration
 		});
 	});
-
+});
 ```
-
 **IMPORTANT NOTE:** To keep Flash shims working you **MUST** setup the path where the shims are via `pluginPath`, and do not forget to add a slash at the end of the string. Please refer to the examples above. In Meteor, the right path to be used is `/packages/johndyer_mediaelement/build/`;
 
 
