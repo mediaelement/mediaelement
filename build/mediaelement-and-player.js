@@ -1325,7 +1325,7 @@ Object.assign(_player2.default.prototype, {
 			t.node.style.width = '100%';
 			t.node.style.height = '100%';
 		} else {
-			var elements = t.container.querySelectorAll('iframe, embed, object, video'),
+			var elements = t.container.querySelectorAll('embed, object, video'),
 			    _total = elements.length;
 			for (var i = 0; i < _total; i++) {
 				elements[i].style.width = '100%';
@@ -1383,7 +1383,7 @@ Object.assign(_player2.default.prototype, {
 				t.node.style.width = t.normalWidth + 'px';
 				t.node.style.height = t.normalHeight + 'px';
 			} else {
-				var elements = t.container.querySelectorAll('iframe, embed, object, video'),
+				var elements = t.container.querySelectorAll('embed, object, video'),
 				    _total2 = elements.length;
 				for (var i = 0; i < _total2; i++) {
 					elements[i].style.width = t.normalWidth + 'px';

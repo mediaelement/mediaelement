@@ -243,7 +243,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.node.style.width = '100%';
 			t.node.style.height = '100%';
 		} else {
-			const elements = t.container.querySelectorAll('iframe, embed, object, video'), total = elements.length;
+			const elements = t.container.querySelectorAll('embed, object, video'), total = elements.length;
 			for (let i = 0; i < total; i++) {
 				elements[i].style.width = '100%';
 				elements[i].style.height = '100%';
@@ -310,7 +310,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.node.style.width = `${t.normalWidth}px`;
 				t.node.style.height = `${t.normalHeight}px`;
 			} else {
-				const elements = t.container.querySelectorAll('iframe, embed, object, video'), total = elements.length;
+				const elements = t.container.querySelectorAll('embed, object, video'), total = elements.length;
 				for (let i = 0; i < total; i++) {
 					elements[i].style.width = `${t.normalWidth}px`;
 					elements[i].style.height = `${t.normalHeight}px`;

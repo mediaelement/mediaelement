@@ -6,6 +6,8 @@
 * Fixed issues with Flash fallback for FLV and RTMP in regards of setting current time and other events @rafa8626
 * Fixed typos when setting poster for iOS and when destroying player @rafa8626
 * Fixed typo when setting default player caused issues on Firefox when extending `MediaElementPlayer` object @rafa8626
+* Fixed issue related to iframe renderers not resizing properly after using fullscreen @rafa8626
+* Updated RTMP and Dailymotion sources @rafa8626
 
 *4.2.3 (2017/07/22)*
 
