@@ -5,6 +5,7 @@
 * Added missing conditional to set current time properly for live streams (especially YouTube ones) @rafa8626
 * Fixed issues with Flash fallback for FLV and RTMP in regards of setting current time and other events @rafa8626
 * Fixed typos when setting poster for iOS and when destroying player @rafa8626
+* Fixed typo when setting default player caused issues on Firefox when extending `MediaElementPlayer` object @rafa8626
 
 *4.2.3 (2017/07/22)*
 

@@ -769,6 +769,9 @@ class MediaElementPlayer {
 			// cache container to store control elements' original position
 			t.featurePosition = {};
 
+			// Enable default actions
+			t._setDefaultPlayer();
+
 			// add user-defined features/controls
 			for (let i = 0, total = t.options.features.length; i < total; i++) {
 				const feature = t.options.features[i];
@@ -785,9 +788,6 @@ class MediaElementPlayer {
 			t.buildposter(t, t.controls, t.layers, t.media);
 			t.buildkeyboard(t, t.controls, t.layers, t.media);
 			t.buildoverlays(t, t.controls, t.layers, t.media);
-
-			// Enable default actions
-			t._setDefaultPlayer();
 
 			const event = createEvent('controlsready', t.container);
 			t.container.dispatchEvent(event);
@@ -1735,7 +1735,7 @@ class MediaElementPlayer {
 		if (t.media.rendererName !== null && ((/(youtube|facebook)/i.test(t.media.rendererName) &&
 			!(t.media.originalNode.getAttribute('poster') || player.options.poster ||
 			(typeof t.media.renderer.getPosterUrl === 'function' && t.media.renderer.getPosterUrl()))) ||
-			IS_STOCK_ANDROID)) {
+			IS_STOCK_ANDROID || t.media.originalNode.getAttribute('autoplay'))) {
 			bigPlay.style.display = 'none';
 		}
 

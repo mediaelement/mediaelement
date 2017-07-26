@@ -3918,6 +3918,8 @@ var MediaElementPlayer = function () {
 
 				t.featurePosition = {};
 
+				t._setDefaultPlayer();
+
 				for (var i = 0, total = t.options.features.length; i < total; i++) {
 					var feature = t.options.features[i];
 					if (t['build' + feature]) {
@@ -3932,8 +3934,6 @@ var MediaElementPlayer = function () {
 				t.buildposter(t, t.controls, t.layers, t.media);
 				t.buildkeyboard(t, t.controls, t.layers, t.media);
 				t.buildoverlays(t, t.controls, t.layers, t.media);
-
-				t._setDefaultPlayer();
 
 				var event = (0, _general.createEvent)('controlsready', t.container);
 				t.container.dispatchEvent(event);
@@ -4782,7 +4782,7 @@ var MediaElementPlayer = function () {
 
 			layers.appendChild(bigPlay);
 
-			if (t.media.rendererName !== null && (/(youtube|facebook)/i.test(t.media.rendererName) && !(t.media.originalNode.getAttribute('poster') || player.options.poster || typeof t.media.renderer.getPosterUrl === 'function' && t.media.renderer.getPosterUrl()) || _constants.IS_STOCK_ANDROID)) {
+			if (t.media.rendererName !== null && (/(youtube|facebook)/i.test(t.media.rendererName) && !(t.media.originalNode.getAttribute('poster') || player.options.poster || typeof t.media.renderer.getPosterUrl === 'function' && t.media.renderer.getPosterUrl()) || _constants.IS_STOCK_ANDROID || t.media.originalNode.getAttribute('autoplay'))) {
 				bigPlay.style.display = 'none';
 			}
 
