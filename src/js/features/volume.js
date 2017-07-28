@@ -330,8 +330,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 			t.globalBind('mouseup.vol', () => {
 				mouseIsDown = false;
-				t.globalUnbind('mousemove.vol mouseup.vol');
-
 				if (!mouseIsOver && mode === 'vertical') {
 					volumeSlider.style.display = 'none';
 				}

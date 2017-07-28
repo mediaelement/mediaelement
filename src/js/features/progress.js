@@ -370,7 +370,6 @@ Object.assign(MediaElementPlayer.prototype, {
 							if (t.timefloat) {
 								t.timefloat.style.display = 'none';
 							}
-							t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
 						});
 					}
 				}
@@ -395,7 +394,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.slider.addEventListener('mouseleave', () => {
 			if (t.getDuration() !== Infinity) {
 				if (!mouseIsDown) {
-					t.globalUnbind('mousemove.dur');
 					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
 					}

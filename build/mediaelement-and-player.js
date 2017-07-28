@@ -1829,7 +1829,6 @@ Object.assign(_player2.default.prototype, {
 							if (t.timefloat) {
 								t.timefloat.style.display = 'none';
 							}
-							t.globalUnbind('mousemove.dur touchmove.dur mouseup.dur touchend.dur');
 						});
 					}
 				}
@@ -1854,7 +1853,6 @@ Object.assign(_player2.default.prototype, {
 		t.slider.addEventListener('mouseleave', function () {
 			if (t.getDuration() !== Infinity) {
 				if (!mouseIsDown) {
-					t.globalUnbind('mousemove.dur');
 					if (t.timefloat) {
 						t.timefloat.style.display = 'none';
 					}
@@ -3078,8 +3076,6 @@ Object.assign(_player2.default.prototype, {
 			});
 			t.globalBind('mouseup.vol', function () {
 				mouseIsDown = false;
-				t.globalUnbind('mousemove.vol mouseup.vol');
-
 				if (!mouseIsOver && mode === 'vertical') {
 					volumeSlider.style.display = 'none';
 				}
