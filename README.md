@@ -19,7 +19,7 @@ One file. Any browser. Same UI.
 # Table of Contents
 
 * [Introduction](#intro)
-* [Migrating from `2.x` to `3.x` version](#migration)
+* [Migrating from `2.x` to `4.x` version](#migration)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
 * [Guidelines for Contributors](#guidelines)
