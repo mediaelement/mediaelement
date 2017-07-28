@@ -14,7 +14,9 @@ Package.onUse(function(api) {
         'build/lang/cs.js',
         'build/lang/de.js',
         'build/lang/es.js',
+        'build/lang/fa.js',
         'build/lang/fr.js',
+        'build/lang/hr.js',
         'build/lang/hu.js',
         'build/lang/it.js',
         'build/lang/ja.js',
@@ -26,6 +28,8 @@ Package.onUse(function(api) {
         'build/lang/ro.js',
         'build/lang/ru.js',
         'build/lang/sk.js',
+        'build/lang/sv.js',
+        'build/lang/uk.js',
         'build/lang/zh.js',
         'build/lang/zh-cn.js',
         'build/renderers/dailymotion.js',
@@ -49,7 +53,6 @@ Package.onUse(function(api) {
     }
 
     api.addFiles([
-        'build/mediaelement.js',
         'build/mediaelement-and-player.js',
         'build/mediaelementplayer.css',
         'build/mediaelementplayer-legacy.css'

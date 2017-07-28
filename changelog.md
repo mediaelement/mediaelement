@@ -9,6 +9,7 @@
 * Fixed issue related to iframe renderers not resizing properly after using fullscreen @rafa8626
 * Updated RTMP and Dailymotion sources @rafa8626
 * Added `useDefaultControls` configuration to simplify list of `features` (https://github.com/mediaelement/mediaelement-plugins/issues/74) @rafa8626
+* Removed `build/mediaelement.js` in `package.js` to avoid duplication issues in Meteor and added missing languages @rafa8626
 
 *4.2.3 (2017/07/22)*
 
