@@ -686,10 +686,20 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     font-size: 0.8em;
 }
 
+.mejs-cannotplay {
+    position: relative;
+}
+
 .mejs-cannotplay p,
 .mejs-cannotplay a {
     display: inline-block;
     padding: 0 15px;
     width: 100%;
+}
+
+.mejs-cannotplay p {
+    left: 0;
+    position: absolute;
+    top: 0;
 }
 /* End: Error */
