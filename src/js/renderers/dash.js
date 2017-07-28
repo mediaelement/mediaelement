@@ -116,8 +116,10 @@ const DashNativeRenderer = {
 			props = mejs.html5media.properties,
 			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			attachNativeEvents = (e) => {
-				const event = createEvent(e.type, mediaElement);
-				mediaElement.dispatchEvent(event);
+				if (e.type !== 'error') {
+					const event = createEvent(e.type, mediaElement);
+					mediaElement.dispatchEvent(event);
+				}
 			},
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
@@ -204,19 +206,20 @@ const DashNativeRenderer = {
 			 * not using dashjs.MediaPlayer.events object
 			 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 			 */
-			const assignMdashEvents = (e) => {
-				const event = createEvent(e.type, node);
-				event.data = e;
-				mediaElement.dispatchEvent(event);
-
-				if (e.type.toLowerCase() === 'error') {
-					console.error(e);
+			const assignMdashEvents = (name, data) => {
+				if (name.toLowerCase() === 'error') {
+					mediaElement.generateError(data.message, node.src);
+					console.error(data);
+				} else {
+					const event = createEvent(name, mediaElement);
+					event.data = data;
+					mediaElement.dispatchEvent(event);
 				}
 			};
 
 			for (const eventType in dashEvents) {
 				if (dashEvents.hasOwnProperty(eventType)) {
-					dashPlayer.on(dashEvents[eventType], assignMdashEvents);
+					dashPlayer.on(dashEvents[eventType], (e, ...args) => assignMdashEvents(e.type, args));
 				}
 			}
 		};

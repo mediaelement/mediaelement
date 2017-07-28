@@ -108,8 +108,10 @@ const FlvNativeRenderer = {
 			props = mejs.html5media.properties,
 			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			attachNativeEvents = (e) => {
-				const event = createEvent(e.type, mediaElement);
-				mediaElement.dispatchEvent(event);
+				if (e.type !== 'error') {
+					const event = createEvent(e.type, mediaElement);
+					mediaElement.dispatchEvent(event);
+				}
 			},
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
@@ -179,17 +181,20 @@ const FlvNativeRenderer = {
 			 * not using flvjs.Events object
 			 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 			 */
-			const assignFlvEvents = (name, e) => {
-				const event = createEvent(name, node);
-				event.data = e;
-				mediaElement.dispatchEvent(event);
+			const assignFlvEvents = (name, data) => {
+				if (name === 'error') {
+					const message = `${data[0]}: ${data[1]} ${data[2].msg}`;
+					mediaElement.generateError(message, node.src);
+				} else {
+					const event = createEvent(name, mediaElement);
+					event.data = data;
+					mediaElement.dispatchEvent(event);
+				}
 			};
 
 			for (const eventType in flvEvents) {
 				if (flvEvents.hasOwnProperty(eventType)) {
-					flvPlayer.on(flvEvents[eventType], (e) => {
-						assignFlvEvents(flvEvents[eventType], e);
-					});
+					flvPlayer.on(flvEvents[eventType], (...args) => assignFlvEvents(flvEvents[eventType], args));
 				}
 			}
 		};

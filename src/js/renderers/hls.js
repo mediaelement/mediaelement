@@ -113,8 +113,10 @@ const HlsNativeRenderer = {
 			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 
 			attachNativeEvents = (e) => {
-				const event = createEvent(e.type, mediaElement);
-				mediaElement.dispatchEvent(event);
+				if (e.type !== 'error') {
+					const event = createEvent(e.type, mediaElement);
+					mediaElement.dispatchEvent(event);
+				}
 			},
 			assignGettersSetters = (propName) => {
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
@@ -180,13 +182,9 @@ const HlsNativeRenderer = {
 			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
 			 */
 			let recoverDecodingErrorDate, recoverSwapAudioCodecDate;
-			const assignHlsEvents = function (e, data) {
-				const event = createEvent(e, node);
-				event.data = data;
-				mediaElement.dispatchEvent(event);
-
-				if (e === 'hlsError') {
-					console.warn(e, data);
+			const assignHlsEvents = function (name, data) {
+				if (name === 'hlsError') {
+					console.warn(name, data);
 
 					// borrowed from http://dailymotion.github.io/hls.js/demo/
 					if (data.fatal) {
@@ -202,23 +200,31 @@ const HlsNativeRenderer = {
 									hlsPlayer.swapAudioCodec();
 									hlsPlayer.recoverMediaError();
 								} else {
-									console.error('Cannot recover, last media error recovery failed');
+									const message = 'Cannot recover, last media error recovery failed';
+									mediaElement.generateError(message, node.src);
+									console.error(message);
 								}
 								break;
 							case 'networkError':
-								console.error('Network error');
+								const message = 'Network error';
+								mediaElement.generateError(message, node.src);
+								console.error(message);
 								break;
 							default:
 								hlsPlayer.destroy();
 								break;
 						}
 					}
+				} else {
+					const event = createEvent(name, mediaElement);
+					event.data = data;
+					mediaElement.dispatchEvent(event);
 				}
 			};
 
 			for (const eventType in hlsEvents) {
 				if (hlsEvents.hasOwnProperty(eventType)) {
-					hlsPlayer.on(hlsEvents[eventType], assignHlsEvents);
+					hlsPlayer.on(hlsEvents[eventType], (...args) => assignHlsEvents(hlsEvents[eventType], args));
 				}
 			}
 		};
