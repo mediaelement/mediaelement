@@ -105,6 +105,9 @@ export const config = {
 	AndroidUseNativeControls: false,
 	// Features to show
 	features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'],
+	// If set to `true`, all the default control elements listed in features above will be used, and the features will
+	// add other features
+	useDefaultControls: false,
 	// Only for dynamic
 	isVideo: true,
 	// Stretching modes (auto, fill, responsive, none)
@@ -367,7 +370,7 @@ class MediaElementPlayer {
 				t.play();
 			}
 
-		} else if ((t.isVideo || (!t.isVideo && t.options.features.length)) && !(IS_ANDROID && t.options.AndroidUseNativeControls)) {
+		} else if ((t.isVideo || (!t.isVideo && (t.options.features.length || t.options.useDefaultControls))) && !(IS_ANDROID && t.options.AndroidUseNativeControls)) {
 
 			// DESKTOP: use MediaElementPlayer controls
 
@@ -411,7 +414,7 @@ class MediaElementPlayer {
 			t.node.parentNode.insertBefore(t.container, t.node);
 
 			// When no elements in controls, hide bar completely
-			if (!t.options.features.length) {
+			if (!t.options.features.length && !t.options.useDefaultControls) {
 				t.container.style.background = 'transparent';
 				t.container.querySelector(`.${t.options.classPrefix}controls`).style.display = 'none';
 			}
@@ -542,7 +545,7 @@ class MediaElementPlayer {
 			playerOptions.pluginHeight = t.height;
 		}
 		// Hide media completely for audio that doesn't have any features
-		else if (!t.isVideo && !t.options.features.length) {
+		else if (!t.isVideo && !t.options.features.length && !t.options.useDefaultControls) {
 			t.node.style.display = 'none';
 		}
 
@@ -745,7 +748,7 @@ class MediaElementPlayer {
 			// In the event that no features are specified for audio,
 			// create only MediaElement instance rather than
 			// doing all the work to create a full player
-			if (!t.isVideo && !t.options.features.length) {
+			if (!t.isVideo && !t.options.features.length && !t.options.useDefaultControls) {
 				// force autoplay for HTML5
 				if (autoplay && isNative) {
 					t.play();
@@ -771,6 +774,11 @@ class MediaElementPlayer {
 
 			// Enable default actions
 			t._setDefaultPlayer();
+
+			if (t.options.useDefaultControls) {
+				const defaultControls = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
+				t.options.features = defaultControls.concat(t.options.features.filter((item) => defaultControls.indexOf(item) === -1));
+			}
 
 			// add user-defined features/controls
 			for (let i = 0, total = t.options.features.length; i < total; i++) {

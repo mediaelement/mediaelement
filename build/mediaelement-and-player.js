@@ -3354,6 +3354,8 @@ var config = exports.config = {
 
 	features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'],
 
+	useDefaultControls: false,
+
 	isVideo: true,
 
 	stretching: 'auto',
@@ -3562,7 +3564,7 @@ var MediaElementPlayer = function () {
 			if (_constants.IS_IPAD && t.node.getAttribute('autoplay')) {
 				t.play();
 			}
-		} else if ((t.isVideo || !t.isVideo && t.options.features.length) && !(_constants.IS_ANDROID && t.options.AndroidUseNativeControls)) {
+		} else if ((t.isVideo || !t.isVideo && (t.options.features.length || t.options.useDefaultControls)) && !(_constants.IS_ANDROID && t.options.AndroidUseNativeControls)) {
 			t.node.removeAttribute('controls');
 			var videoPlayerTitle = t.isVideo ? _i18n2.default.t('mejs.video-player') : _i18n2.default.t('mejs.audio-player');
 
@@ -3590,7 +3592,7 @@ var MediaElementPlayer = function () {
 			});
 			t.node.parentNode.insertBefore(t.container, t.node);
 
-			if (!t.options.features.length) {
+			if (!t.options.features.length && !t.options.useDefaultControls) {
 				t.container.style.background = 'transparent';
 				t.container.querySelector('.' + t.options.classPrefix + 'controls').style.display = 'none';
 			}
@@ -3698,7 +3700,7 @@ var MediaElementPlayer = function () {
 
 			playerOptions.pluginWidth = t.width;
 			playerOptions.pluginHeight = t.height;
-		} else if (!t.isVideo && !t.options.features.length) {
+		} else if (!t.isVideo && !t.options.features.length && !t.options.useDefaultControls) {
 				t.node.style.display = 'none';
 			}
 
@@ -3897,7 +3899,7 @@ var MediaElementPlayer = function () {
 			t.domNode = domNode;
 
 			if (!(_constants.IS_ANDROID && t.options.AndroidUseNativeControls) && !(_constants.IS_IPAD && t.options.iPadUseNativeControls) && !(_constants.IS_IPHONE && t.options.iPhoneUseNativeControls)) {
-				if (!t.isVideo && !t.options.features.length) {
+				if (!t.isVideo && !t.options.features.length && !t.options.useDefaultControls) {
 					if (autoplay && isNative) {
 						t.play();
 					}
@@ -3919,6 +3921,13 @@ var MediaElementPlayer = function () {
 				t.featurePosition = {};
 
 				t._setDefaultPlayer();
+
+				if (t.options.useDefaultControls) {
+					var defaultControls = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
+					t.options.features = defaultControls.concat(t.options.features.filter(function (item) {
+						return defaultControls.indexOf(item) === -1;
+					}));
+				}
 
 				for (var i = 0, total = t.options.features.length; i < total; i++) {
 					var feature = t.options.features[i];

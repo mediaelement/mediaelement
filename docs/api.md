@@ -112,7 +112,8 @@ controlsTimeoutMouseLeave | number | `1000` | Time in ms to trigger the timer wh
 iPadUseNativeControls | boolean | `false` | Force iPad's native controls
 iPhoneUseNativeControls | boolean | `false` | Force iPhone's native controls
 AndroidUseNativeControls | boolean | `false` | Force Android's native controls
-features | array | `[...]` | List of features to show in control bars. Supported features: `playpause`, `current`, `progress`, `fullscreen`, `tracks`, `jumpforward`, `skipback`, `loop`, `markers`, `postroll`, `sourcechooser`, `speed`, `stop`, `duration`, `volume`
+features | array | `[...]` | List of features/plugin to use in the player; some will be included in the control bar (by default IN STRICT ORDER: `playpause`, `current`, `progress`, `duration`, `tracks`, `volume`, `fullscreen`)
+useDefaultControls | boolean | `false` | If set to `true`, all the default control elements listed in `features` above will be used, and the features will append any other plugins indicated in `features`. This approach is used mostly when adding more plugins WITHOUT modifying the elements in the control bar in any capacity
 isVideo | boolean | `true` | Only for dynamic purposes
 stretching | string | `auto` | Stretching modes for video player. If `auto` is set, player will try to find the `max-width` and `max-height` CSS styles to turn it into `responsive` mode; otherwise, will set the dimensions specified in the tag (same as setting this option as `none`). The `fill` mode will try to use the available space to make the video fit and, when window is resized, it will crop the dimensions to center it according to the available space.
 enableKeyboard | boolean | `true` | Turns keyboard support on and off for this instance
