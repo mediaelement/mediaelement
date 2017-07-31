@@ -125,6 +125,7 @@ timeAndDurationSeparator | string | `<span> &#124; </span>` | Separator between 
 hideVolumeOnTouchDevices | boolean | `true` | Touch devices (specially mobile devices) have different way to handle volume, so no need to display it
 enableProgressTooltip | boolean | `true` | Enable/disable tooltip that shows time popup in progress bar
 useSmoothHover | boolean | `true` | Enable smooth behavior when hovering progress bar (like YouTube's)
+forceLive | boolean | `false` | If set to `true`, the `Live Broadcast` message will be displayed and progress bar will be hidden, no matter if `duration` is a valid number
 audioVolume | string | `horizontal` | Position of volume slider on audio element
 videoVolume | string | `vertical` | Position of volume slider on video element
 usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer events when on fullscreen mode

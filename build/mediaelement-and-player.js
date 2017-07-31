@@ -1541,7 +1541,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.assign(_player.config, {
 	enableProgressTooltip: true,
 
-	useSmoothHover: true
+	useSmoothHover: true,
+
+	forceLive: false
 });
 
 Object.assign(_player2.default.prototype, {
@@ -1865,7 +1867,7 @@ Object.assign(_player2.default.prototype, {
 
 		t.broadcastCallback = function (e) {
 			var broadcast = controls.querySelector('.' + t.options.classPrefix + 'broadcast');
-			if (t.getDuration() !== Infinity) {
+			if (!t.options.forceLive && t.getDuration() !== Infinity) {
 				if (broadcast) {
 					t.slider.style.display = '';
 					broadcast.remove();
@@ -1876,11 +1878,12 @@ Object.assign(_player2.default.prototype, {
 					player.setCurrentRail(e);
 				}
 				updateSlider();
-			} else if (!broadcast) {
+			} else if (!broadcast || t.options.forceLive) {
 				var label = _document2.default.createElement('span');
 				label.className = t.options.classPrefix + 'broadcast';
 				label.innerText = _i18n2.default.t('mejs.live-broadcast');
 				t.slider.style.display = 'none';
+				t.rail.appendChild(label);
 			}
 		};
 

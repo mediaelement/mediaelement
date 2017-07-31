@@ -26,7 +26,11 @@ Object.assign(config, {
 	 * Enable smooth behavior when hovering progress bar
 	 * @type {Boolean}
 	 */
-	useSmoothHover: true
+	useSmoothHover: true,
+	/**
+	 * If set to `true`, the `Live Broadcast` message will be displayed no matter if `duration` is a valid number
+	 */
+	forceLive: false
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -408,7 +412,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// and indicate that is a live broadcast
 		t.broadcastCallback = (e) => {
 			const broadcast = controls.querySelector(`.${t.options.classPrefix}broadcast`);
-			if (t.getDuration() !== Infinity) {
+			if (!t.options.forceLive && t.getDuration() !== Infinity) {
 				if (broadcast) {
 					t.slider.style.display = '';
 					broadcast.remove();
@@ -419,11 +423,12 @@ Object.assign(MediaElementPlayer.prototype, {
 					player.setCurrentRail(e);
 				}
 				updateSlider();
-			} else if (!broadcast) {
+			} else if (!broadcast || t.options.forceLive) {
 				const label = document.createElement('span');
 				label.className = `${t.options.classPrefix}broadcast`;
 				label.innerText = i18n.t('mejs.live-broadcast');
 				t.slider.style.display = 'none';
+				t.rail.appendChild(label);
 			}
 		};
 
