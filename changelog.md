@@ -12,6 +12,7 @@
 * Removed `build/mediaelement.js` in `package.js` to avoid duplication issues in Meteor and added missing languages @rafa8626
 * Removed unnecessary event un-bindings that caused errors on Edge @rafa8626
 * Added missing layer to display errors correctly on native renderers and added missing styles for errors @rafa8626
+* Added missing translations; removed Brazilian Portuguese and added Catalan in demo file @rafa8626
 
 *4.2.3 (2017/07/22)*
 
