@@ -57,7 +57,6 @@ pluginPath | string | `build/` | Path where Flash shims are located
 shimScriptAccess | string | `sameDomain` | Flag in `<object>` and `<embed>` to determine whether to use local or CDN files. Possible values: `always` (CDN version) or `sameDomain` (local files)
 success | callback | | Action(s) that will be executed as soon as the source is loaded; passes 2 arguments: `media` (the wrapper that mimics all the native events/properties/methods for all renderers) and `node` (the original HTML `video`, `audio` or `iframe` tag where the media was loaded originally; if `html5` is being used, `media` and `node` are the basically the same)
 error | callback | | Action(s) that will be executed if source doesn't load for any reason. Passes same arguments as `success`
-customError | string | __(empty)__ | If error happens, set up customized HTML message
 dailymotion | object | | See [Documentation](https://developer.dailymotion.com/player)
 dash | object | | Accepts `debug`, `drm` (object to load protected/licensed streaming; read [here](https://github.com/Axinom/drm-quick-start) for more information) and `path` parameters to indicate `dash.js` URL/local path
 facebook | object | | See [Documentation](https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup)
