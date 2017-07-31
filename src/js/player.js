@@ -1096,12 +1096,15 @@ class MediaElementPlayer {
 		errorContainer.style.width = '100%';
 		errorContainer.style.height = '100%';
 
-		let errorContent = typeof t.options.customError === 'function' ? t.options.customError(media, node) : t.options.customError;
+		let
+			errorContent = typeof t.options.customError === 'function' ? t.options.customError(media, node) : t.options.customError,
+			imgError = ''
+		;
 
 		if (errorContent) {
 			const poster = t.media.originalNode.getAttribute('poster');
 			if (poster) {
-				errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;
+				imgError = `<img src="${poster}" alt="${mejs.i18n.t('mejs.download-file')}">`;
 			}
 
 			if (e.message) {
@@ -1118,7 +1121,7 @@ class MediaElementPlayer {
 
 		if (errorContent && t.layers.querySelector(`.${t.options.classPrefix}overlay-error`)) {
 			errorContainer.innerHTML = errorContent;
-			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = errorContainer.outerHTML;
+			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = `${imgError}${errorContainer.outerHTML}`;
 			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'block';
 		}
 	}
