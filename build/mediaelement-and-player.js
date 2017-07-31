@@ -4194,7 +4194,7 @@ var MediaElementPlayer = function () {
 			errorContainer.style.width = '100%';
 			errorContainer.style.height = '100%';
 
-			var errorContent = typeof t.options.customError === 'function' ? t.options.customError(media, node) : t.options.customError,
+			var errorContent = typeof t.options.customError === 'function' ? t.options.customError(t.media, t.media.originalNode) : t.options.customError,
 			    imgError = '';
 
 			if (errorContent) {

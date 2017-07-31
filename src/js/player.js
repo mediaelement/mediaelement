@@ -1097,7 +1097,7 @@ class MediaElementPlayer {
 		errorContainer.style.height = '100%';
 
 		let
-			errorContent = typeof t.options.customError === 'function' ? t.options.customError(media, node) : t.options.customError,
+			errorContent = typeof t.options.customError === 'function' ? t.options.customError(t.media, t.media.originalNode) : t.options.customError,
 			imgError = ''
 		;
 
