@@ -120,8 +120,8 @@ export const config = {
 	pauseOtherPlayers: true,
 	// Number of decimal places to show if frames are shown
 	secondsDecimalLength: 0,
-	// If error happens, set up HTML message
-	customError: '',
+	// If error happens, set up HTML message via string or function
+	customError: null,
 	// Array of keyboard actions such as play/pause
 	keyActions: [
 		{
@@ -1096,9 +1096,9 @@ class MediaElementPlayer {
 		errorContainer.style.width = '100%';
 		errorContainer.style.height = '100%';
 
-		let errorContent = t.options.customError;
+		let errorContent = typeof t.options.customError === 'function' ? t.options.customError(media, node) : t.options.customError;
 
-		if (!errorContent) {
+		if (errorContent) {
 			const poster = t.media.originalNode.getAttribute('poster');
 			if (poster) {
 				errorContent += `<img src="${poster}" width="100%" height="100%" alt="${mejs.i18n.t('mejs.download-file')}">`;

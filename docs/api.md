@@ -118,10 +118,10 @@ stretching | string | `auto` | Stretching modes for video player. If `auto` is s
 enableKeyboard | boolean | `true` | Turns keyboard support on and off for this instance
 pauseOtherPlayers | boolean | `true` | When focused player starts, it will pause other players
 secondsDecimalLength | number | `0` | Number of decimal places to show if frames are shown
-customError | string | _(empty)_ | If error happens, set up customized HTML message
+customError | string/callback | `null` | If error happens, set up customized HTML message through a string or a function. The function has 2 parameters: `media` (the wrapper that mimics all the native events/properties/methods for all renderers) and `node` (the original HTML `video`, `audio` or `iframe` tag where the media was loaded originally)
 keyActions | array | `[...]` | Keyboard actions to trigger different actions. Accepts array of objects in format: `{keys: [1,2,3...], action: function(player, media) { ... }}`. To see the entire list, please check `/src/js/mediaelementplayer-player.js`
 duration | number | `-1` | Start point to detect changes on media time duration
-timeAndDurationSeparator | string | `<span> | </span>` | Separator between the current time and the total duration of media being played
+timeAndDurationSeparator | string | `<span> &#124; </span>` | Separator between the current time and the total duration of media being played
 hideVolumeOnTouchDevices | boolean | `true` | Touch devices (specially mobile devices) have different way to handle volume, so no need to display it
 enableProgressTooltip | boolean | `true` | Enable/disable tooltip that shows time popup in progress bar
 useSmoothHover | boolean | `true` | Enable smooth behavior when hovering progress bar (like YouTube's)
