@@ -77,7 +77,7 @@ To get the default installation there are several different ways.
 <a id="wordpress"></a>
 ### Installation in WordPress
 
-WordPress currently incorporates `MediaElementJS` as a part of the [Embeds](https://codex.wordpress.org/Embeds) core package. If you are using a version prior 4.8.1, and you want to upgrade `MediaElementJS` to the latest version, follow these steps:
+WordPress currently incorporates `MediaElementJS` as a part of the [Embeds](https://codex.wordpress.org/Embeds) core package. If you are using a version prior 4.9, and you want to upgrade `MediaElementJS` to the latest version, follow these steps:
 
 <a id="wp-about"></a>
 #### In `wp-admin/about.php`
