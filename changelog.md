@@ -14,6 +14,8 @@
 * Added missing layer to display errors correctly on native renderers and added missing styles for errors; `customError` accepts a callback as well @rafa8626
 * Added missing translations; removed Brazilian Portuguese and added Catalan in demo file @rafa8626
 * Added `forceLive` configuration to hide progress bar and display `Live Broadcast` even when `duration` is a valid number @rafa8626
+* Fixed issues with Flash HLS renderer related to restarting video once ended @rafa8626
+* Added missing translations @rafa8626
 
 *4.2.3 (2017/07/22)*
 

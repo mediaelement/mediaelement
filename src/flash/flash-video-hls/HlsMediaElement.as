@@ -82,7 +82,7 @@
 			_display.height = _video.height = _stageHeight;
 
 
-			// Settings to be overriden for HLS
+			// Settings to be overridden for HLS
 			HLSSettings.logInfo = false;
 
 			_hls = new HLS();
@@ -127,13 +127,11 @@
 				ExternalInterface.addCallback('set_volume', set_volume);
 				ExternalInterface.addCallback('set_currentTime', set_currentTime);
 				ExternalInterface.addCallback('set_muted', set_muted);
-				ExternalInterface.addCallback('set_paused', set_paused);
 
 				ExternalInterface.addCallback('fire_load', fire_load);
 				ExternalInterface.addCallback('fire_play', fire_play);
 				ExternalInterface.addCallback('fire_pause', fire_pause);
 				ExternalInterface.addCallback('fire_setSize', fire_setSize);
-				ExternalInterface.addCallback('fire_stop', fire_stop);
 
 				ExternalInterface.call('(function(){window["__ready__' + _id + '"]()})()', null);
 			}
@@ -143,8 +141,8 @@
 		// Javascript bridged methods
 		//
 		private function fire_load(): void {
-
 			if (_url) {
+				fire_stop();
 				sendEvent("loadstart");
 				_hls.load(_url);
 			}
@@ -152,7 +150,7 @@
 		private function fire_play(): void {
 			if (!_isManifestLoaded) {
 				_playqueued = true;
-				return;
+				fire_load();
 			}
 
 			if (_hlsState == HLSPlayStates.PAUSED || _hlsState == HLSPlayStates.PAUSED_BUFFERING) {
@@ -227,7 +225,6 @@
 		// Setters
 		//
 		private function set_src(url: String): void {
-			fire_stop();
 			_url = url;
 			_hls.load(_url);
 		}
@@ -246,19 +243,19 @@
 			sendEvent("volumechange");
 		}
 		private function set_muted(muted: Boolean): void {
-
 			// ignore if no change
-			if (muted === _isMuted)
+			if (muted === _isMuted) {
 				return;
+			}
 
 			_isMuted = muted;
 
 			if (muted) {
 				_hls.stream.soundTransform = new SoundTransform(0);
-				sendEvent("volumechange");
 			} else {
 				set_volume(_volume);
 			}
+			sendEvent("volumechange");
 		}
 
 		//
@@ -271,22 +268,13 @@
 			return _position;
 		}
 		private function get_volume(): Number {
-			if (_isMuted) {
-				return 0;
-			} else {
-				return _volume;
-			}
+			return _isMuted ? 0 :_volume;
 		}
 		private function get_muted(): Boolean {
 			return _isMuted;
 		}
 		private function get_paused(): Boolean {
 			return _isPaused;
-		}
-		private function set_paused(paused: Boolean): void {
-			if (paused) {
-				fire_pause();
-			}
 		}
 		private function get_ended(): Boolean {
 			return _isEnded;
@@ -402,13 +390,11 @@
 				_videoWidth = videoWidth;
 				fire_setSize(_videoWidth, _videoHeight);
 			}
-
 			sendEvent("progress");
 			sendEvent("timeupdate");
 		}
 		private function _stateHandler(event: HLSEvent): void {
 			_hlsState = event.state;
-
 			switch (event.state) {
 				case HLSPlayStates.PLAYING:
 					_isPaused = false;
@@ -417,11 +403,18 @@
 					sendEvent("play");
 					sendEvent("playing");
 					break;
-
 				case HLSPlayStates.PAUSED:
 					_isPaused = true;
 					_isEnded = false;
 					sendEvent("pause");
+					break;
+				case HLSPlayStates.IDLE:
+					if (parseInt(_position) >= parseInt(_duration) && !_isEnded) {
+						_isPaused = true;
+						_isEnded = true;
+						sendEvent("pause");
+						sendEvent("ended");
+					}
 					break;
 			}
 		}
