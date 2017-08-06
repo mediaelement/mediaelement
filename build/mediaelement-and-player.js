@@ -864,27 +864,9 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	},
 	    triggerAction = function triggerAction(methodName, args) {
 		try {
-			var response = t.mediaElement.renderer[methodName](args);
-			if (response && typeof response.then === 'function') {
-				response.catch(function (e) {
-					if (methodName === 'play') {
-						if (t.mediaElement.paused) {
-							setTimeout(function () {
-								var tmpResponse = t.mediaElement.renderer.play();
-								if (tmpResponse !== undefined) {
-									tmpResponse.catch(function () {
-										if (!t.mediaElement.renderer.paused) {
-											t.mediaElement.renderer.pause();
-										}
-									});
-								}
-							}, 150);
-						}
-					} else {
-						return t.mediaElement.generateError(e, mediaFiles);
-					}
-				});
-			}
+			setTimeout(function () {
+				t.mediaElement.renderer[methodName](args);
+			}, methodName === 'play' ? 150 : 0);
 		} catch (e) {
 			t.mediaElement.generateError(e, mediaFiles);
 		}

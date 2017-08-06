@@ -7,7 +7,6 @@
  *
  * @author
  * 	Tongro
- *      rafa8626
  *
  * @see core/i18n.js
  */
