@@ -35,12 +35,18 @@ var FacebookRenderer = {
 		    readyState = 4,
 		    autoplay = mediaElement.originalNode.autoplay;
 
-		var src = '',
+		var poster = '',
+		    src = '',
 		    paused = true,
 		    ended = false,
 		    hasStartedPlaying = false,
 		    fbApi = null,
 		    fbDiv = null;
+
+		if (mediaElement.originalNode.getAttribute('poster')) {
+			poster = mediaElement.originalNode.getAttribute('poster');
+			mediaElement.originalNode.removeAttribute('poster');
+		}
 
 		options = Object.assign(options, mediaElement.options);
 		fbWrapper.options = options;
@@ -310,7 +316,9 @@ var FacebookRenderer = {
 				fbDiv.style.height = height;
 			}
 		};
-		fbWrapper.destroy = function () {};
+		fbWrapper.destroy = function () {
+			mediaElement.originalNode.setAttribute('poster', poster);
+		};
 
 		fbWrapper.interval = null;
 

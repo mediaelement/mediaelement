@@ -44,6 +44,7 @@ const FacebookRenderer = {
 		;
 
 		let
+			poster = '',
 			src = '',
 			paused = true,
 			ended = false,
@@ -51,6 +52,11 @@ const FacebookRenderer = {
 			fbApi = null,
 			fbDiv = null
 		;
+
+		if (mejs.Features.IS_IPHONE && mediaElement.originalNode.getAttribute('poster')) {
+			poster = mediaElement.originalNode.getAttribute('poster');
+			mediaElement.originalNode.removeAttribute('poster');
+		}
 
 		options = Object.assign(options, mediaElement.options);
 		fbWrapper.options = options;
@@ -369,7 +375,11 @@ const FacebookRenderer = {
 				fbDiv.style.height = height;
 			}
 		};
-		fbWrapper.destroy = () => {};
+		fbWrapper.destroy = () => {
+			if (poster) {
+				mediaElement.originalNode.setAttribute('poster', poster);
+			}
+		};
 
 		fbWrapper.interval = null;
 

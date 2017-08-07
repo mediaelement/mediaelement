@@ -17,6 +17,7 @@
 * Fixed issues with Flash HLS renderer related to restarting video once ended @rafa8626
 * Added missing translations @rafa8626
 * Fixed issue with native methods assigned to MediaElement shim related to `The play() request was interrupted` error @rafa8626
+* Created workflow to remove/restore `poster` when using FB and iPhone @rafa8626
 
 *4.2.3 (2017/07/22)*
 
