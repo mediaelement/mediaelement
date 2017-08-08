@@ -66,7 +66,9 @@ for (var i = 0; i < sourcesTotal; i++) {
 
 		player.setSrc(this.value.replace('&amp;', '&'));
 		player.load();
-		player.play();
+		if (!mejs.Features.isiOS && !mejs.Features.isAndroid) {
+			player.play();
+		}
 
 		var renderer = document.getElementById(player.media.id + '-rendername');
 		renderer.querySelector('.src').innerHTML = '<a href="' + this.value + '" target="_blank">' + this.value + '</a>';

@@ -864,9 +864,13 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	},
 	    triggerAction = function triggerAction(methodName, args) {
 		try {
-			setTimeout(function () {
+			if (methodName === 'play' && t.mediaElement.rendererName === 'native_dash') {
+				setTimeout(function () {
+					t.mediaElement.renderer[methodName](args);
+				}, 100);
+			} else {
 				t.mediaElement.renderer[methodName](args);
-			}, methodName === 'play' ? 150 : 0);
+			}
 		} catch (e) {
 			t.mediaElement.generateError(e, mediaFiles);
 		}
