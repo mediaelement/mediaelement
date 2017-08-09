@@ -474,7 +474,7 @@ if (hasFlash) {
 		 * @param {String} type
 		 * @return {Boolean}
 		 */
-		canPlayType: (type) => ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
+		canPlayType: (type) => ~['application/x-mpegurl', 'application/vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
 			'video/hls'].indexOf(type.toLowerCase()),
 
 		create: FlashMediaElementRenderer.create

@@ -29,7 +29,7 @@ export function absolutizeUrl (url) {
  * @return {String}
  */
 export function formatType (url, type = '') {
-	return (url && !type) ? getTypeFromFile(url) : getMimeFromType(type);
+	return (url && !type) ? getTypeFromFile(url) : type;
 }
 
 /**

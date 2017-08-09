@@ -1,5 +1,9 @@
 ### Version History
 
+*4.2.5 (2017/??/??)*
+
+* Removed workflow that ignored MIME type to get a better media match @rafa8626
+
 *4.2.4 (2017/08/08)*
 
 * Added missing conditional to set current time properly for live streams (especially YouTube ones) @rafa8626
