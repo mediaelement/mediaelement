@@ -1,6 +1,6 @@
 ### Version History
 
-*4.2.4 (2017/??/??)*
+*4.2.4 (2017/08/08)*
 
 * Added missing conditional to set current time properly for live streams (especially YouTube ones) @rafa8626
 * Fixed issues with Flash fallback for FLV and RTMP in regards of setting current time and other events @rafa8626
@@ -16,7 +16,7 @@
 * Added `forceLive` configuration to hide progress bar and display `Live Broadcast` even when `duration` is a valid number @rafa8626
 * Fixed issues with Flash HLS renderer related to restarting video once ended @rafa8626
 * Added missing translations @rafa8626
-* Fixed issue with native methods assigned to MediaElement shim related to `The play() request was interrupted` error @rafa8626
+* Fixed issue with native M(PEG)-DASH assigned to MediaElement shim related to `The play() request was interrupted` error @rafa8626
 * Created workflow to remove/restore `poster` when using FB and iPhone and updated SDK version @rafa8626
 
 *4.2.3 (2017/07/22)*
