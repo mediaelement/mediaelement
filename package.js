@@ -24,7 +24,6 @@ Package.onUse(function(api) {
         'build/lang/nl.js',
         'build/lang/pl.js',
         'build/lang/pt.js',
-        'build/lang/pt-br.js',
         'build/lang/ro.js',
         'build/lang/ru.js',
         'build/lang/sk.js',
