@@ -187,10 +187,14 @@ Object.assign(MediaElementPlayer.prototype, {
 						}
 
 						// Add correct position of tooltip if rail is 100%
-						const half = t.timefloat.offsetWidth / 2;
-						if (x <= t.timefloat.offsetWidth + half) {
+						const
+							half = t.timefloat.offsetWidth / 2,
+							offsetContainer = mejs.Utils.offset(t.container)
+						;
+
+						if ((x - offsetContainer.left) < t.timefloat.offsetWidth) {
 							leftPos = half;
-						} else if (x >= t.container.offsetWidth- half) {
+						} else if ((x - offsetContainer.left) >= t.container.offsetWidth - half) {
 							leftPos = t.total.offsetWidth - half;
 						} else {
 							leftPos = pos;
