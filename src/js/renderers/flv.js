@@ -54,7 +54,7 @@ const NativeFlv = {
 	_createPlayer: (settings) => {
 		flvjs.LoggingControl.enableDebug = settings.options.debug;
 		flvjs.LoggingControl.enableVerbose = settings.options.debug;
-		const player = flvjs.createPlayer(settings.options);
+		const player = flvjs.createPlayer(settings.options, settings.configs);
 		window[`__ready__${settings.id}`](player);
 		return player;
 	}
@@ -129,6 +129,7 @@ const FlvNativeRenderer = {
 								flvOptions.cors = options.flv.cors;
 								flvOptions.debug = options.flv.debug;
 								flvOptions.path = options.flv.path;
+								const flvConfigs = options.flv.configs;
 
 								flvPlayer.destroy();
 								for (let i = 0, total = events.length; i < total; i++) {
@@ -136,6 +137,7 @@ const FlvNativeRenderer = {
 								}
 								flvPlayer = NativeFlv._createPlayer({
 									options: flvOptions,
+									configs: flvConfigs,
 									id: id
 								});
 								flvPlayer.attachMediaElement(node);
@@ -222,6 +224,7 @@ const FlvNativeRenderer = {
 		flvOptions.cors = options.flv.cors;
 		flvOptions.debug = options.flv.debug;
 		flvOptions.path = options.flv.path;
+		const flvConfigs = options.flv.configs;
 
 		node.setSize = (width, height) => {
 			node.style.width = `${width}px`;
@@ -253,6 +256,7 @@ const FlvNativeRenderer = {
 
 		mediaElement.promises.push(NativeFlv.load({
 			options: flvOptions,
+			configs: flvConfigs,
 			id: id
 		}));
 
