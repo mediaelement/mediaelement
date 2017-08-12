@@ -1937,7 +1937,7 @@ var NativeFlv = {
 	_createPlayer: function _createPlayer(settings) {
 		flvjs.LoggingControl.enableDebug = settings.options.debug;
 		flvjs.LoggingControl.enableVerbose = settings.options.debug;
-		var player = flvjs.createPlayer(settings.options);
+		var player = flvjs.createPlayer(settings.options, settings.configs);
 		_window2.default['__ready__' + settings.id](player);
 		return player;
 	}
@@ -1996,6 +1996,7 @@ var FlvNativeRenderer = {
 							_flvOptions.cors = options.flv.cors;
 							_flvOptions.debug = options.flv.debug;
 							_flvOptions.path = options.flv.path;
+							var _flvConfigs = options.flv.configs;
 
 							flvPlayer.destroy();
 							for (var i = 0, total = events.length; i < total; i++) {
@@ -2003,6 +2004,7 @@ var FlvNativeRenderer = {
 							}
 							flvPlayer = NativeFlv._createPlayer({
 								options: _flvOptions,
+								configs: _flvConfigs,
 								id: id
 							});
 							flvPlayer.attachMediaElement(node);
@@ -2087,6 +2089,7 @@ var FlvNativeRenderer = {
 		flvOptions.cors = options.flv.cors;
 		flvOptions.debug = options.flv.debug;
 		flvOptions.path = options.flv.path;
+		var flvConfigs = options.flv.configs;
 
 		node.setSize = function (width, height) {
 			node.style.width = width + 'px';
@@ -2118,6 +2121,7 @@ var FlvNativeRenderer = {
 
 		mediaElement.promises.push(NativeFlv.load({
 			options: flvOptions,
+			configs: flvConfigs,
 			id: id
 		}));
 
