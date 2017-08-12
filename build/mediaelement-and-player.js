@@ -5026,6 +5026,8 @@ var MediaElementPlayer = function () {
 			t.node.style.width = nativeWidth;
 			t.node.style.height = nativeHeight;
 
+			t.setPlayerSize(0, 0);
+
 			if (!t.isDynamic) {
 				(function () {
 					t.node.setAttribute('controls', true);

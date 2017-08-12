@@ -2043,6 +2043,8 @@ class MediaElementPlayer {
 
 		t.node.style.width = nativeWidth;
 		t.node.style.height = nativeHeight;
+		// Call this to avoid further calls to attempt set the player's dimensions
+		t.setPlayerSize(0,0);
 
 		// grab video and put it back in place
 		if (!t.isDynamic) {

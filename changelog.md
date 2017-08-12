@@ -6,6 +6,7 @@
 * Added style to avoid flickering when using volume on Chrome @rafa8626
 * Fixed broken UUT @rafa8626
 * Added `configs` parameter for native FLV according to documenation for flv.js (https://github.com/mediaelement/mediaelement/pull/2344) @xiaosongxiaosong
+* Added missing call to avoid further calls to attempt set the player's dimensions once removed @rafa8626
 
 *4.2.5 (2017/08/09)*
 
