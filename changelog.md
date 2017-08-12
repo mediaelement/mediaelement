@@ -1,5 +1,11 @@
 ### Version History
 
+*X.X.X (??/??/??)*
+
+* Fixed positioning of progress bar tooltip @rafa8626
+* Added style to avoid flickering when using volume on Chrome @rafa8626
+* Fixed broken UUT @rafa8626
+
 *4.2.5 (2017/08/09)*
 
 * Removed workflow that ignored MIME type to get a better media match @rafa8626
