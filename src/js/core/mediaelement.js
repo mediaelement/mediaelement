@@ -393,7 +393,7 @@ class MediaElement {
 					if (methodName === 'play' && t.mediaElement.rendererName === 'native_dash') {
 						setTimeout(() => {
 							t.mediaElement.renderer[methodName](args);
-						}, 100);
+						}, 150);
 					} else {
 						t.mediaElement.renderer[methodName](args);
 					}

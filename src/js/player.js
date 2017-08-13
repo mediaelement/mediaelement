@@ -1101,14 +1101,14 @@ class MediaElementPlayer {
 			imgError = ''
 		;
 
-		if (errorContent) {
+		if (!errorContent) {
 			const poster = t.media.originalNode.getAttribute('poster');
 			if (poster) {
 				imgError = `<img src="${poster}" alt="${mejs.i18n.t('mejs.download-file')}">`;
 			}
 
 			if (e.message) {
-				errorContent += `<p>${e.message}</p>`;
+				errorContent = `<p>${e.message}</p>`;
 			}
 
 			if (e.urls) {
