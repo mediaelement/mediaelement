@@ -4006,7 +4006,7 @@ var MediaElementPlayer = function () {
 					if (t.options.enableAutosize) {
 						t.media.addEventListener('loadedmetadata', function (e) {
 							var target = e !== undefined ? e.detail.target || e.target : t.media;
-							if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') && target !== null && !isNaN(target.videoHeight)) {
+							if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') && !t.domNode.style.height && target !== null && !isNaN(target.videoHeight)) {
 								t.setPlayerSize(target.videoWidth, target.videoHeight);
 								t.setControlsSize();
 								t.media.setSize(target.videoWidth, target.videoHeight);
@@ -6708,8 +6708,6 @@ var HtmlMediaElement = {
 				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
 					node.setAttribute('src', mediaFiles[index].src);
 					break;
-				} else {
-					++index;
 				}
 			}
 		}

@@ -2522,8 +2522,6 @@ var HtmlMediaElement = {
 				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
 					node.setAttribute('src', mediaFiles[index].src);
 					break;
-				} else {
-					++index;
 				}
 			}
 		}

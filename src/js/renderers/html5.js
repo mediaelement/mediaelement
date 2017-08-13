@@ -125,8 +125,6 @@ const HtmlMediaElement = {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
 					node.setAttribute('src', mediaFiles[index].src);
 					break;
-				} else {
-					++index;
 				}
 			}
 		}
