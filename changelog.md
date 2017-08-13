@@ -8,6 +8,7 @@
 * Added `configs` parameter for native FLV according to documentation for flv.js (https://github.com/mediaelement/mediaelement/pull/2344) @xiaosongxiaosong
 * Added missing call to avoid further calls to attempt set the player's dimensions once removed @rafa8626
 * Fixed typo when checking error event and fixed workflow to loop multiple sources until valid one is found @rafa8626
+* Fixed workflow to enable/disable controls once error occurs and once user recovers from error @rafa8626
 
 *4.2.5 (2017/08/09)*
 

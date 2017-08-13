@@ -1124,6 +1124,10 @@ class MediaElementPlayer {
 			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = `${imgError}${errorContainer.outerHTML}`;
 			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'block';
 		}
+
+		if (t.controlsEnabled) {
+			t.disableControls();
+		}
 	}
 
 	setPlayerSize (width, height) {
@@ -1844,6 +1848,12 @@ class MediaElementPlayer {
 				buffer.style.display = 'none';
 			}
 			hasError = true;
+		});
+
+		media.addEventListener('loadedmetadata', () => {
+			if (!t.controlsEnabled) {
+				t.enableControls();
+			}
 		});
 
 		media.addEventListener('keydown', (e) => {

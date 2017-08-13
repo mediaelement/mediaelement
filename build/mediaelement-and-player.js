@@ -4207,6 +4207,10 @@ var MediaElementPlayer = function () {
 				t.layers.querySelector('.' + t.options.classPrefix + 'overlay-error').innerHTML = '' + imgError + errorContainer.outerHTML;
 				t.layers.querySelector('.' + t.options.classPrefix + 'overlay-error').parentNode.style.display = 'block';
 			}
+
+			if (t.controlsEnabled) {
+				t.disableControls();
+			}
 		}
 	}, {
 		key: 'setPlayerSize',
@@ -4871,6 +4875,12 @@ var MediaElementPlayer = function () {
 					buffer.style.display = 'none';
 				}
 				hasError = true;
+			});
+
+			media.addEventListener('loadedmetadata', function () {
+				if (!t.controlsEnabled) {
+					t.enableControls();
+				}
 			});
 
 			media.addEventListener('keydown', function (e) {
