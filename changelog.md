@@ -10,6 +10,7 @@
 * Fixed typo when checking error event and fixed workflow to loop multiple sources until valid one is found @rafa8626
 * Fixed workflow to enable/disable controls once error occurs and once user recovers from error @rafa8626
 * Fixed issue when no `height` attribute but style is set to create proper player dimensions @rafa8626
+* Use local variable for `getComputedStyle` polyfill to avoid recursion on Firefox (https://github.com/mediaelement/mediaelement/pull/2351) @synthecypher
 
 *4.2.5 (2017/08/09)*
 
