@@ -151,9 +151,9 @@ if (window.Element && !Element.prototype.closest) {
 // Javascript workaround for FF iframe `getComputedStyle` bug
 // Reference: https://stackoverflow.com/questions/32659801/javascript-workaround-for-firefox-iframe-getcomputedstyle-bug/32660009#32660009
 if (/firefox/i.test(navigator.userAgent)) {
-	window.mediaElementJsOldGetComputedStyle = window.getComputedStyle;
+	var getComputedStyle = window.getComputedStyle;
 	window.getComputedStyle = (el, pseudoEl) => {
-		const t = window.mediaElementJsOldGetComputedStyle(el, pseudoEl);
+		const t = getComputedStyle(el, pseudoEl);
 		return (t === null) ? {getPropertyValue: function () {}} : t;
 	}
 }
