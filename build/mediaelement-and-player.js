@@ -1727,16 +1727,51 @@ Object.assign(_player2.default.prototype, {
 				    seekBackward = player.options.defaultSeekBackwardInterval(media);
 
 				var seekTime = t.getCurrentTime();
+				var volume = t.container.querySelector('.' + t.options.classPrefix + 'volume-slider');
+
+				if (keyCode === 38 || keyCode === 40) {
+					if (volume) {
+						volume.style.display = 'block';
+					}
+					if (t.isVideo) {
+						t.showControls();
+						t.startControlsTimer();
+					}
+
+					var newVolume = keyCode === 38 ? Math.min(t.volume + 0.1, 1) : Math.max(t.volume - 0.1, 0),
+					    mutePlayer = newVolume <= 0;
+					t.setVolume(newVolume);
+					t.setMuted(mutePlayer);
+					return;
+				} else {
+					if (volume) {
+						volume.style.display = 'none';
+					}
+				}
 
 				switch (keyCode) {
-					case 37:
+					case 38:
 					case 40:
+						var _volume = t.container.querySelector('.' + t.options.classPrefix + 'volume-slider');
+						if (_volume) {
+							_volume.style.display = '';
+						}
+						if (t.isVideo) {
+							t.showControls();
+							t.startControlsTimer();
+						}
+
+						var _newVolume = keyCode === 38 ? Math.min(player.volume + 0.1, 1) : Math.max(t.volume - 0.1, 0),
+						    _mutePlayer = _newVolume <= 0;
+						t.setVolume(_newVolume);
+						t.setMuted(_mutePlayer);
+						return;
+					case 37:
 						if (t.getDuration() !== Infinity) {
 							seekTime -= seekBackward;
 						}
 						break;
 					case 39:
-					case 38:
 						if (t.getDuration() !== Infinity) {
 							seekTime += seekForward;
 						}
@@ -1747,20 +1782,14 @@ Object.assign(_player2.default.prototype, {
 					case 35:
 						seekTime = duration;
 						break;
+					case 13:
 					case 32:
-						if (!_constants.IS_FIREFOX) {
+						if (_constants.IS_FIREFOX) {
 							if (t.paused) {
 								t.play();
 							} else {
 								t.pause();
 							}
-						}
-						return;
-					case 13:
-						if (t.paused) {
-							t.play();
-						} else {
-							t.pause();
 						}
 						return;
 					default:
@@ -4926,6 +4955,7 @@ var MediaElementPlayer = function () {
 							keyAction.action(player, media, e.keyCode, e);
 							e.preventDefault();
 							e.stopPropagation();
+							return;
 						}
 					}
 				}

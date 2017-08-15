@@ -1902,6 +1902,7 @@ class MediaElementPlayer {
 						keyAction.action(player, media, e.keyCode, e);
 						e.preventDefault();
 						e.stopPropagation();
+						return;
 					}
 				}
 			}
