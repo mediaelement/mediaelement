@@ -122,6 +122,9 @@ export const config = {
 	secondsDecimalLength: 0,
 	// If error happens, set up HTML message via string or function
 	customError: null,
+	// Make player stretch to full browser width, when used with Stretching mode responsive  
+	fullWindowWidth: false,
+	
 	// Array of keyboard actions such as play/pause
 	keyActions: [
 		{
@@ -1149,7 +1152,7 @@ class MediaElementPlayer {
 
 		let
 			newHeight,
-			parentWidth = parseFloat(parentStyles.width)
+			parentWidth = (t.options.fullWindowWidth) ? $(window).width() : parseFloat(parentStyles.width);
 		;
 
 		if (t.isVideo) {
