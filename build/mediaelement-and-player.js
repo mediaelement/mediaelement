@@ -1750,22 +1750,6 @@ Object.assign(_player2.default.prototype, {
 				}
 
 				switch (keyCode) {
-					case 38:
-					case 40:
-						var _volume = t.container.querySelector('.' + t.options.classPrefix + 'volume-slider');
-						if (_volume) {
-							_volume.style.display = '';
-						}
-						if (t.isVideo) {
-							t.showControls();
-							t.startControlsTimer();
-						}
-
-						var _newVolume = keyCode === 38 ? Math.min(player.volume + 0.1, 1) : Math.max(t.volume - 0.1, 0),
-						    _mutePlayer = _newVolume <= 0;
-						t.setVolume(_newVolume);
-						t.setMuted(_mutePlayer);
-						return;
 					case 37:
 						if (t.getDuration() !== Infinity) {
 							seekTime -= seekBackward;

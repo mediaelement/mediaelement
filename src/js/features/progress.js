@@ -312,24 +312,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 
 				switch (keyCode) {
-					case 38:
-					case 40:
-						const volume = t.container.querySelector(`.${t.options.classPrefix}volume-slider`);
-						if (volume) {
-							volume.style.display = '';
-						}
-						if (t.isVideo) {
-							t.showControls();
-							t.startControlsTimer();
-						}
-
-						const
-							newVolume = keyCode === 38 ? Math.min(player.volume + 0.1, 1) : Math.max(t.volume - 0.1, 0),
-							mutePlayer = newVolume <= 0
-						;
-						t.setVolume(newVolume);
-						t.setMuted(mutePlayer);
-						return;
 					case 37: // left
 						if (t.getDuration() !== Infinity) {
 							seekTime -= seekBackward;
