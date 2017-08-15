@@ -1152,7 +1152,7 @@ class MediaElementPlayer {
 
 		let
 			newHeight,
-			parentWidth = (t.options.fullWindowWidth) ? window.offsetWidth : parseFloat(parentStyles.width);
+			parentWidth = (t.options.fullWindowWidth) ? $(window).width() : parseFloat(parentStyles.width);
 		;
 
 		if (t.isVideo) {
