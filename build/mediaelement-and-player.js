@@ -3369,6 +3369,8 @@ var config = exports.config = {
 
 	customError: null,
 
+	fullWindowWidth: false,
+	
 	keyActions: [{
 		keys: [32, 179],
 		action: function action(player) {
@@ -4349,7 +4351,7 @@ var MediaElementPlayer = function () {
 			    parentHeight = parseFloat(parentStyles.height);
 
 			var newHeight = void 0,
-			    parentWidth = parseFloat(parentStyles.width);
+			    parentWidth = (t.options.fullWindowWidth) ? $(window).width() : parseFloat(parentStyles.width);
 
 			if (t.isVideo) {
 				if (t.height === '100%') {
