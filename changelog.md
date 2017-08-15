@@ -11,7 +11,8 @@
 * Fixed workflow to enable/disable controls once error occurs and once user recovers from error @rafa8626
 * Fixed issue when no `height` attribute but style is set to create proper player dimensions @rafa8626
 * Use local variable for `getComputedStyle` polyfill to avoid recursion on Firefox (https://github.com/mediaelement/mediaelement/pull/2351) @synthecypher
-* Fixed accessibility issues when using keyboard on focused progress bar @rafa8626
+* Fixed accessibility issues when using keyboard on focused progress bar and moved `keyActions` to their individual components @rafa8626
+* Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*
 

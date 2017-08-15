@@ -90,6 +90,64 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(mute, 'volume');
 
+		t.options.keyActions.push({
+			keys: [38], // UP
+			action: (player) => {
+				const volumeSlider = player.container.querySelector(`.${config.classPrefix}volume-slider`);
+				if (volumeSlider || player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
+					volumeSlider.style.display = 'block';
+				}
+				if (player.isVideo) {
+					player.showControls();
+					player.startControlsTimer();
+				}
+
+				const newVolume = Math.min(player.volume + 0.1, 1);
+				player.setVolume(newVolume);
+				if (newVolume > 0) {
+					player.setMuted(false);
+				}
+
+			}
+		},
+		{
+			keys: [40], // DOWN
+			action: (player) => {
+				const volumeSlider = player.container.querySelector(`.${config.classPrefix}volume-slider`);
+				if (volumeSlider) {
+					volumeSlider.style.display = 'block';
+				}
+
+				if (player.isVideo) {
+					player.showControls();
+					player.startControlsTimer();
+				}
+
+				const newVolume = Math.max(player.volume - 0.1, 0);
+				player.setVolume(newVolume);
+
+				if (newVolume <= 0.1) {
+					player.setMuted(true);
+				}
+
+			}
+		},
+		{
+			keys: [77], // M
+			action: (player) => {
+				player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = 'block';
+				if (player.isVideo) {
+					player.showControls();
+					player.startControlsTimer();
+				}
+				if (player.media.muted) {
+					player.setMuted(false);
+				} else {
+					player.setMuted(true);
+				}
+			}
+		});
+
 		// horizontal version
 		if (mode === 'horizontal') {
 			const anchor = document.createElement('a');
@@ -241,6 +299,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			}
 		;
+
+		player.container.addEventListener('keydown', (e) => {
+			const hasFocus = !!(e.target.closest(`.${t.options.classPrefix}container`));
+			if (!hasFocus && mode === 'vertical') {
+				volumeSlider.style.display = 'none';
+			}
+		});
 
 		mute.addEventListener('mouseenter', (e) => {
 			if (e.target === mute) {

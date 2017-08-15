@@ -74,6 +74,48 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(rail, 'progress');
 
+		t.options.keyActions.push({
+			keys: [
+				37, // LEFT
+				227 // Google TV rewind
+			],
+			action: (player) => {
+				if (!isNaN(player.duration) && player.duration > 0) {
+					if (player.isVideo) {
+						player.showControls();
+						player.startControlsTimer();
+					}
+
+					player.container.querySelector(`.${config.classPrefix}time-total`).focus();
+
+					// 5%
+					const newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
+					player.setCurrentTime(newTime);
+				}
+			}
+		},
+		{
+			keys: [
+				39, // RIGHT
+				228 // Google TV forward
+			],
+			action: (player) => {
+
+				if (!isNaN(player.duration) && player.duration > 0) {
+					if (player.isVideo) {
+						player.showControls();
+						player.startControlsTimer();
+					}
+
+					player.container.querySelector(`.${config.classPrefix}time-total`).focus();
+
+					// 5%
+					const newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);
+					player.setCurrentTime(newTime);
+				}
+			}
+		});
+
 		controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'none';
 
 		t.rail = controls.querySelector(`.${t.options.classPrefix}time-rail`);
@@ -348,11 +390,13 @@ Object.assign(MediaElementPlayer.prototype, {
 					player.pause();
 				}
 
+
 				if (seekTime < t.getDuration() && !startedPaused) {
 					setTimeout(restartPlayer, 1100);
 				}
 
 				t.setCurrentTime(seekTime);
+				player.showControls();
 
 				e.preventDefault();
 				e.stopPropagation();
