@@ -2031,5 +2031,6 @@ class MediaElementPlayer {
 }
 
 window.MediaElementPlayer = MediaElementPlayer;
+mejs.MediaElementPlayer = MediaElementPlayer;
 
 export default MediaElementPlayer;

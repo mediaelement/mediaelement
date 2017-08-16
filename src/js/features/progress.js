@@ -231,7 +231,8 @@ Object.assign(MediaElementPlayer.prototype, {
 						// Add correct position of tooltip if rail is 100%
 						const
 							half = t.timefloat.offsetWidth / 2,
-							offsetContainer = mejs.Utils.offset(t.container)
+							offsetContainer = mejs.Utils.offset(t.container),
+							tooltipStyles = getComputedStyle(t.timefloat)
 						;
 
 						if ((x - offsetContainer.left) < t.timefloat.offsetWidth) {
@@ -240,6 +241,10 @@ Object.assign(MediaElementPlayer.prototype, {
 							leftPos = t.total.offsetWidth - half;
 						} else {
 							leftPos = pos;
+						}
+
+						if (hasClass(t.container, `${t.options.classPrefix}long-video`)) {
+							leftPos += parseFloat(tooltipStyles.marginLeft)/2 + t.timefloat.offsetWidth/2;
 						}
 
 						t.timefloat.style.left = `${leftPos}px`;

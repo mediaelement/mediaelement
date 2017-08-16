@@ -47,6 +47,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		time.innerHTML = `<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength)}</span>`;
 
 		t.addControlElement(time, 'current');
+		player.updateCurrent();
 		t.updateTimeCallback = () => {
 			if (t.controlsAreVisible) {
 				player.updateCurrent();
@@ -92,10 +93,16 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.addControlElement(duration, 'duration');
 		}
 
-		media.addEventListener('timeupdate', t.updateTimeCallback);
+		t.updateDurationCallback = () => {
+			if (t.controlsAreVisible) {
+				player.updateDuration();
+			}
+		};
+
+		media.addEventListener('timeupdate', t.updateDurationCallback);
 	},
 	cleanduration (player, controls, layers, media) {
-		media.removeEventListener('timeupdate', player.updateTimeCallback);
+		media.removeEventListener('timeupdate', player.updateDurationCallback);
 	},
 
 	/**
@@ -122,6 +129,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (t.controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
 			t.controls.querySelector(`.${t.options.classPrefix}currenttime`).innerText = timecode;
+
 		}
 	},
 

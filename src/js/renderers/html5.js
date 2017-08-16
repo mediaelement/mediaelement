@@ -120,7 +120,7 @@ const HtmlMediaElement = {
 			index = 0,
 			total = mediaFiles.length
 		;
-		if (mediaFiles && mediaFiles.length > 0) {
+		if (total > 0) {
 			for (; index < total; index++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
 					node.setAttribute('src', mediaFiles[index].src);

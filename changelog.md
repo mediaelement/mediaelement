@@ -7,11 +7,13 @@
 * Fixed broken UUT @rafa8626
 * Added `configs` parameter for native FLV according to documentation for flv.js (https://github.com/mediaelement/mediaelement/pull/2344) @xiaosongxiaosong
 * Added missing call to avoid further calls to attempt set the player's dimensions once removed @rafa8626
-* Fixed typo when checking error event and fixed workflow to loop multiple sources until valid one is found @rafa8626
+* Fixed typo when checking error event and fixed workflow to loop multiple sources until valid one is found for `html5` and `native_hls` renderers @rafa8626
 * Fixed workflow to enable/disable controls once error occurs and once user recovers from error @rafa8626
 * Fixed issue when no `height` attribute but style is set to create proper player dimensions @rafa8626
 * Use local variable for `getComputedStyle` polyfill to avoid recursion on Firefox (https://github.com/mediaelement/mediaelement/pull/2351) @synthecypher
 * Fixed accessibility issues when using keyboard on focused progress bar and moved `keyActions` to their individual components @rafa8626
+* Fixed issues with progress bar tooltip when media duration is too long @rafa8626
+* Added new `mejs` variables needed for Wordpress @rafa8626
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

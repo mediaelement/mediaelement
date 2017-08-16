@@ -514,5 +514,6 @@ class MediaElement {
 }
 
 window.MediaElement = MediaElement;
+mejs.MediaElement = MediaElement;
 
 export default MediaElement;

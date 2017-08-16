@@ -101,7 +101,9 @@ const HlsNativeRenderer = {
 
 		let
 			hlsPlayer = null,
-			node = null
+			node = null,
+			index = 0,
+			total = mediaFiles.length
 		;
 
 		node = originalNode.cloneNode(true);
@@ -184,7 +186,8 @@ const HlsNativeRenderer = {
 			let recoverDecodingErrorDate, recoverSwapAudioCodecDate;
 			const assignHlsEvents = function (name, data) {
 				if (name === 'hlsError') {
-					console.warn(name, data);
+					console.warn(data);
+					data = data[1];
 
 					// borrowed from http://dailymotion.github.io/hls.js/demo/
 					if (data.fatal) {
@@ -206,9 +209,15 @@ const HlsNativeRenderer = {
 								}
 								break;
 							case 'networkError':
-								const message = 'Network error';
-								mediaElement.generateError(message, node.src);
-								console.error(message);
+								if (data.details === 'manifestLoadError' && index < total) {
+									node.setSrc(mediaFiles[index++].src);
+									node.load();
+									node.play();
+								} else {
+									const message = 'Network error';
+									mediaElement.generateError(message, mediaFiles);
+									console.error(message);
+								}
 								break;
 							default:
 								hlsPlayer.destroy();
@@ -229,10 +238,10 @@ const HlsNativeRenderer = {
 			}
 		};
 
-		if (mediaFiles && mediaFiles.length > 0) {
-			for (let i = 0, total = mediaFiles.length; i < total; i++) {
-				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					node.setAttribute('src', mediaFiles[i].src);
+		if (total > 0) {
+			for (; index < total; index++) {
+				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
+					node.setAttribute('src', mediaFiles[index].src);
 					break;
 				}
 			}

@@ -975,6 +975,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 };
 
 _window2.default.MediaElement = MediaElement;
+_mejs2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
@@ -1694,7 +1695,8 @@ Object.assign(_player2.default.prototype, {
 					}
 
 					var half = t.timefloat.offsetWidth / 2,
-					    offsetContainer = mejs.Utils.offset(t.container);
+					    offsetContainer = mejs.Utils.offset(t.container),
+					    tooltipStyles = getComputedStyle(t.timefloat);
 
 					if (x - offsetContainer.left < t.timefloat.offsetWidth) {
 						leftPos = half;
@@ -1702,6 +1704,10 @@ Object.assign(_player2.default.prototype, {
 						leftPos = t.total.offsetWidth - half;
 					} else {
 						leftPos = pos;
+					}
+
+					if ((0, _dom.hasClass)(t.container, t.options.classPrefix + 'long-video')) {
+						leftPos += parseFloat(tooltipStyles.marginLeft) / 2 + t.timefloat.offsetWidth / 2;
 					}
 
 					t.timefloat.style.left = leftPos + 'px';
@@ -2053,6 +2059,7 @@ Object.assign(_player2.default.prototype, {
 		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength) + '</span>';
 
 		t.addControlElement(time, 'current');
+		player.updateCurrent();
 		t.updateTimeCallback = function () {
 			if (t.controlsAreVisible) {
 				player.updateCurrent();
@@ -2081,10 +2088,16 @@ Object.assign(_player2.default.prototype, {
 			t.addControlElement(duration, 'duration');
 		}
 
-		media.addEventListener('timeupdate', t.updateTimeCallback);
+		t.updateDurationCallback = function () {
+			if (t.controlsAreVisible) {
+				player.updateDuration();
+			}
+		};
+
+		media.addEventListener('timeupdate', t.updateDurationCallback);
 	},
 	cleanduration: function cleanduration(player, controls, layers, media) {
-		media.removeEventListener('timeupdate', player.updateTimeCallback);
+		media.removeEventListener('timeupdate', player.updateDurationCallback);
 	},
 	updateCurrent: function updateCurrent() {
 		var t = this;
@@ -5206,6 +5219,7 @@ var MediaElementPlayer = function () {
 }();
 
 _window2.default.MediaElementPlayer = MediaElementPlayer;
+_mejs2.default.MediaElementPlayer = MediaElementPlayer;
 
 exports.default = MediaElementPlayer;
 
@@ -6431,7 +6445,9 @@ var HlsNativeRenderer = {
 		    autoplay = originalNode.autoplay;
 
 		var hlsPlayer = null,
-		    node = null;
+		    node = null,
+		    index = 0,
+		    total = mediaFiles.length;
 
 		node = originalNode.cloneNode(true);
 		options = Object.assign(options, mediaElement.options);
@@ -6458,7 +6474,7 @@ var HlsNativeRenderer = {
 						node[propName] = (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.src ? value.src : value;
 						if (hlsPlayer !== null) {
 							hlsPlayer.destroy();
-							for (var i = 0, total = events.length; i < total; i++) {
+							for (var i = 0, _total = events.length; i < _total; i++) {
 								node.removeEventListener(events[i], attachNativeEvents);
 							}
 							hlsPlayer = NativeHls._createPlayer({
@@ -6475,7 +6491,7 @@ var HlsNativeRenderer = {
 			};
 		};
 
-		for (var i = 0, total = props.length; i < total; i++) {
+		for (var i = 0, _total2 = props.length; i < _total2; i++) {
 			assignGettersSetters(props[i]);
 		}
 
@@ -6493,7 +6509,7 @@ var HlsNativeRenderer = {
 				node.addEventListener(eventName, attachNativeEvents);
 			};
 
-			for (var _i = 0, _total = events.length; _i < _total; _i++) {
+			for (var _i = 0, _total3 = events.length; _i < _total3; _i++) {
 				assignEvents(events[_i]);
 			}
 
@@ -6501,7 +6517,8 @@ var HlsNativeRenderer = {
 			    recoverSwapAudioCodecDate = void 0;
 			var assignHlsEvents = function assignHlsEvents(name, data) {
 				if (name === 'hlsError') {
-					console.warn(name, data);
+					console.warn(data);
+					data = data[1];
 
 					if (data.fatal) {
 						switch (data.type) {
@@ -6516,15 +6533,21 @@ var HlsNativeRenderer = {
 									hlsPlayer.swapAudioCodec();
 									hlsPlayer.recoverMediaError();
 								} else {
-									var _message = 'Cannot recover, last media error recovery failed';
-									mediaElement.generateError(_message, node.src);
-									console.error(_message);
+									var message = 'Cannot recover, last media error recovery failed';
+									mediaElement.generateError(message, node.src);
+									console.error(message);
 								}
 								break;
 							case 'networkError':
-								var message = 'Network error';
-								mediaElement.generateError(message, node.src);
-								console.error(message);
+								if (data.details === 'manifestLoadError' && index < total) {
+									node.setSrc(mediaFiles[index++].src);
+									node.load();
+									node.play();
+								} else {
+									var _message = 'Network error';
+									mediaElement.generateError(_message, mediaFiles);
+									console.error(_message);
+								}
 								break;
 							default:
 								hlsPlayer.destroy();
@@ -6555,10 +6578,10 @@ var HlsNativeRenderer = {
 			}
 		};
 
-		if (mediaFiles && mediaFiles.length > 0) {
-			for (var _i2 = 0, _total2 = mediaFiles.length; _i2 < _total2; _i2++) {
-				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[_i2].type)) {
-					node.setAttribute('src', mediaFiles[_i2].src);
+		if (total > 0) {
+			for (; index < total; index++) {
+				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
+					node.setAttribute('src', mediaFiles[index].src);
 					break;
 				}
 			}
@@ -6734,7 +6757,7 @@ var HtmlMediaElement = {
 
 		var index = 0,
 		    total = mediaFiles.length;
-		if (mediaFiles && mediaFiles.length > 0) {
+		if (total > 0) {
 			for (; index < total; index++) {
 				if (_renderer.renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
 					node.setAttribute('src', mediaFiles[index].src);
