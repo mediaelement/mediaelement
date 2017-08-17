@@ -1674,7 +1674,7 @@ Object.assign(_player2.default.prototype, {
 					t.updateCurrent(t.newTime);
 				}
 
-				if (!_constants.IS_IOS && !_constants.IS_ANDROID && t.timefloat) {
+				if (!_constants.IS_IOS && !_constants.IS_ANDROID) {
 					if (pos < 0) {
 						pos = 0;
 					}
@@ -1694,25 +1694,27 @@ Object.assign(_player2.default.prototype, {
 						}
 					}
 
-					var half = t.timefloat.offsetWidth / 2,
-					    offsetContainer = mejs.Utils.offset(t.container),
-					    tooltipStyles = getComputedStyle(t.timefloat);
+					if (t.timefloat) {
+						var half = t.timefloat.offsetWidth / 2,
+						    offsetContainer = mejs.Utils.offset(t.container),
+						    tooltipStyles = getComputedStyle(t.timefloat);
 
-					if (x - offsetContainer.left < t.timefloat.offsetWidth) {
-						leftPos = half;
-					} else if (x - offsetContainer.left >= t.container.offsetWidth - half) {
-						leftPos = t.total.offsetWidth - half;
-					} else {
-						leftPos = pos;
+						if (x - offsetContainer.left < t.timefloat.offsetWidth) {
+							leftPos = half;
+						} else if (x - offsetContainer.left >= t.container.offsetWidth - half) {
+							leftPos = t.total.offsetWidth - half;
+						} else {
+							leftPos = pos;
+						}
+
+						if ((0, _dom.hasClass)(t.container, t.options.classPrefix + 'long-video')) {
+							leftPos += parseFloat(tooltipStyles.marginLeft) / 2 + t.timefloat.offsetWidth / 2;
+						}
+
+						t.timefloat.style.left = leftPos + 'px';
+						t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
+						t.timefloat.style.display = 'block';
 					}
-
-					if ((0, _dom.hasClass)(t.container, t.options.classPrefix + 'long-video')) {
-						leftPos += parseFloat(tooltipStyles.marginLeft) / 2 + t.timefloat.offsetWidth / 2;
-					}
-
-					t.timefloat.style.left = leftPos + 'px';
-					t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
-					t.timefloat.style.display = 'block';
 				}
 			} else if (!_constants.IS_IOS && !_constants.IS_ANDROID && t.timefloat) {
 				leftPos = t.timefloat.offsetWidth + width >= t.container.offsetWidth ? t.timefloat.offsetWidth / 2 : 0;
