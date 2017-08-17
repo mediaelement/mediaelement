@@ -209,10 +209,12 @@ const HlsNativeRenderer = {
 								}
 								break;
 							case 'networkError':
-								if (data.details === 'manifestLoadError' && index < total) {
-									node.setSrc(mediaFiles[index++].src);
-									node.load();
-									node.play();
+								if (data.details === 'manifestLoadError') {
+									if (index < total) {
+										node.setSrc(mediaFiles[index++].src);
+										node.load();
+										node.play();
+									}
 								} else {
 									const message = 'Network error';
 									mediaElement.generateError(message, mediaFiles);
