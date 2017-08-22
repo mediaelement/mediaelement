@@ -15,6 +15,7 @@
 * Fixed issues with progress bar tooltip when media duration is too long @rafa8626
 * Added new `mejs` variables needed for Wordpress @rafa8626
 * Fixed issues with events fired in incorrect time for `flash_video` renderer @milax
+* Set specific settings for embedding flash object in Edge browser (https://github.com/mediaelement/mediaelement/pull/2364) @milax 
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*
