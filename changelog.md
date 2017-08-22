@@ -16,6 +16,7 @@
 * Added new `mejs` variables needed for Wordpress @rafa8626
 * Fixed issues with events fired in incorrect time for `flash_video` renderer @milax
 * Set specific settings for embedding flash object in Edge browser (https://github.com/mediaelement/mediaelement/pull/2364) @milax 
+* Added new constant to detect `passive events` and added conditional for `touchstart` events @rafa8626
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

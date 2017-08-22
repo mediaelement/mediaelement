@@ -37,6 +37,21 @@ export const SUPPORT_POINTER_EVENTS = (() => {
 	return !!supports;
 })();
 
+// Test via a getter in the options object to see if the passive property is accessed
+export const SUPPORT_PASSIVE_EVENT = (() => {
+	let supportsPassive = false;
+	try {
+		const opts = Object.defineProperty({}, 'passive', {
+			get: function() {
+				supportsPassive = true;
+			}
+		});
+		window.addEventListener('test', null, opts);
+	} catch (e) {}
+
+	return supportsPassive;
+})();
+
 // for IE
 const html5Elements = ['source', 'track', 'audio', 'video'];
 let video;
@@ -152,6 +167,7 @@ mejs.Features.isStockAndroid = IS_STOCK_ANDROID;
 mejs.Features.hasMSE = HAS_MSE;
 mejs.Features.supportsNativeHLS = SUPPORTS_NATIVE_HLS;
 mejs.Features.supportsPointerEvents = SUPPORT_POINTER_EVENTS;
+mejs.Features.supportsPassiveEvent = SUPPORT_PASSIVE_EVENT;
 mejs.Features.hasiOSFullScreen = HAS_IOS_FULLSCREEN;
 mejs.Features.hasNativeFullscreen = HAS_NATIVE_FULLSCREEN;
 mejs.Features.hasWebkitNativeFullScreen = HAS_WEBKIT_NATIVE_FULLSCREEN;

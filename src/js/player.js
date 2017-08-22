@@ -14,7 +14,8 @@ import {
 	IS_ANDROID,
 	IS_IOS,
 	IS_STOCK_ANDROID,
-	HAS_TRUE_NATIVE_FULLSCREEN
+	HAS_TRUE_NATIVE_FULLSCREEN,
+	SUPPORT_PASSIVE_EVENT
 } from './utils/constants';
 import {splitEvents, isNodeAfter, createEvent, isString} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
@@ -739,7 +740,7 @@ class MediaElementPlayer {
 								t.showControls(false);
 							}
 						}
-					});
+					}, SUPPORT_PASSIVE_EVENT ? { passive: true } : false);
 				} else {
 					// show/hide controls
 					t.container.addEventListener('mouseenter', () => {
