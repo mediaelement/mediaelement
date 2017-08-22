@@ -5952,11 +5952,11 @@ var FlashMediaElementRenderer = {
 
 		var settings = [];
 
-		if (_constants.IS_IE || IS_EDGE) {
+		if (_constants.IS_IE || _constants.IS_EDGE) {
 			var specialIEContainer = _document2.default.createElement('div');
 			flash.flashWrapper.appendChild(specialIEContainer);
 
-			if (IS_EDGE) {
+			if (_constants.IS_EDGE) {
 				settings = ['type="application/x-shockwave-flash"', 'data="' + flash.options.pluginPath + flash.options.filename + '"', 'id="__' + flash.id + '"', 'width="' + flashWidth + '"', 'height="' + flashHeight + '"'];
 			} else {
 				settings = ['classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"', 'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"', 'id="__' + flash.id + '"', 'width="' + flashWidth + '"', 'height="' + flashHeight + '"'];

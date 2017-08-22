@@ -6,7 +6,7 @@ import mejs from '../core/mejs';
 import i18n from '../core/i18n';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
-import {NAV, IS_IE} from '../utils/constants';
+import {NAV, IS_IE, IS_EDGE} from '../utils/constants';
 import {typeChecks, absolutizeUrl} from '../utils/media';
 
 /**
