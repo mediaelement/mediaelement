@@ -139,117 +139,6 @@ export const config = {
 					}
 				}
 			}
-		},
-		{
-			keys: [38], // UP
-			action: (player) => {
-
-				if (player.container.querySelector(`.${config.classPrefix}volume-button>button`).matches(':focus') ||
-					player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
-					player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = '';
-				}
-				if (player.isVideo) {
-					player.showControls();
-					player.startControlsTimer();
-				}
-
-				const newVolume = Math.min(player.volume + 0.1, 1);
-				player.setVolume(newVolume);
-				if (newVolume > 0) {
-					player.setMuted(false);
-				}
-
-			}
-		},
-		{
-			keys: [40], // DOWN
-			action: (player) => {
-
-				if (player.container.querySelector(`.${config.classPrefix}volume-button>button`).matches(':focus') ||
-					player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
-					player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = '';
-				}
-
-				if (player.isVideo) {
-					player.showControls();
-					player.startControlsTimer();
-				}
-
-				const newVolume = Math.max(player.volume - 0.1, 0);
-				player.setVolume(newVolume);
-
-				if (newVolume <= 0.1) {
-					player.setMuted(true);
-				}
-
-			}
-		},
-		{
-			keys: [
-				37, // LEFT
-				227 // Google TV rewind
-			],
-			action: (player) => {
-				if (!isNaN(player.duration) && player.duration > 0) {
-					if (player.isVideo) {
-						player.showControls();
-						player.startControlsTimer();
-					}
-
-					// 5%
-					const newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
-					player.setCurrentTime(newTime);
-				}
-			}
-		},
-		{
-			keys: [
-				39, // RIGHT
-				228 // Google TV forward
-			],
-			action: (player) => {
-
-				if (!isNaN(player.duration) && player.duration > 0) {
-					if (player.isVideo) {
-						player.showControls();
-						player.startControlsTimer();
-					}
-
-					// 5%
-					const newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);
-					player.setCurrentTime(newTime);
-				}
-			}
-		},
-		{
-			keys: [70], // F
-			action: (player, media, key, event) => {
-				if (!event.ctrlKey) {
-					if (typeof player.enterFullScreen !== 'undefined') {
-						if (player.isFullScreen) {
-							player.exitFullScreen();
-						} else {
-							player.enterFullScreen();
-						}
-					}
-				}
-			}
-		},
-		{
-			keys: [77], // M
-			action: (player) => {
-
-				player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = '';
-				if (player.isVideo) {
-					player.showControls();
-					player.startControlsTimer();
-				}
-				if (player.media.muted) {
-					player.setMuted(false);
-				} else {
-					player.setMuted(true);
-				}
-			}
 		}
 	]
 };
@@ -885,13 +774,13 @@ class MediaElementPlayer {
 					t.hideControls(false);
 				}
 
-				// resizer
 				if (t.options.enableAutosize) {
 					t.media.addEventListener('loadedmetadata', (e) => {
-						// if the <video height> was not set and the options.videoHeight was not set
-						// then resize to the real dimensions
+						// if the `height` attribute and `height` style and `options.videoHeight`
+						// were not set, resize to the media's real dimensions
 						const target = (e !== undefined) ? (e.detail.target || e.target) : t.media;
 						if (t.options.videoHeight <= 0 && !t.domNode.getAttribute('height') &&
+							!t.domNode.style.height &&
 							target !== null && !isNaN(target.videoHeight)) {
 							t.setPlayerSize(target.videoWidth, target.videoHeight);
 							t.setControlsSize();
@@ -1101,14 +990,14 @@ class MediaElementPlayer {
 			imgError = ''
 		;
 
-		if (errorContent) {
+		if (!errorContent) {
 			const poster = t.media.originalNode.getAttribute('poster');
 			if (poster) {
 				imgError = `<img src="${poster}" alt="${mejs.i18n.t('mejs.download-file')}">`;
 			}
 
 			if (e.message) {
-				errorContent += `<p>${e.message}</p>`;
+				errorContent = `<p>${e.message}</p>`;
 			}
 
 			if (e.urls) {
@@ -1123,6 +1012,10 @@ class MediaElementPlayer {
 			errorContainer.innerHTML = errorContent;
 			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = `${imgError}${errorContainer.outerHTML}`;
 			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'block';
+		}
+
+		if (t.controlsEnabled) {
+			t.disableControls();
 		}
 	}
 
@@ -1846,6 +1739,12 @@ class MediaElementPlayer {
 			hasError = true;
 		});
 
+		media.addEventListener('loadedmetadata', () => {
+			if (!t.controlsEnabled) {
+				t.enableControls();
+			}
+		});
+
 		media.addEventListener('keydown', (e) => {
 			t.onkeydown(player, media, e);
 			hasError = false;
@@ -1892,6 +1791,7 @@ class MediaElementPlayer {
 						keyAction.action(player, media, e.keyCode, e);
 						e.preventDefault();
 						e.stopPropagation();
+						return;
 					}
 				}
 			}
@@ -2043,6 +1943,8 @@ class MediaElementPlayer {
 
 		t.node.style.width = nativeWidth;
 		t.node.style.height = nativeHeight;
+		// Call this to avoid further calls to attempt set the player's dimensions
+		t.setPlayerSize(0,0);
 
 		// grab video and put it back in place
 		if (!t.isDynamic) {
@@ -2129,5 +2031,6 @@ class MediaElementPlayer {
 }
 
 window.MediaElementPlayer = MediaElementPlayer;
+mejs.MediaElementPlayer = MediaElementPlayer;
 
 export default MediaElementPlayer;

@@ -103,6 +103,21 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.fullscreenBtn = fullscreenBtn;
 
+		t.options.keyActions.push({
+			keys: [70], // F
+			action: (player, media, key, event) => {
+				if (!event.ctrlKey) {
+					if (typeof player.enterFullScreen !== 'undefined') {
+						if (player.isFullScreen) {
+							player.exitFullScreen();
+						} else {
+							player.enterFullScreen();
+						}
+					}
+				}
+			}
+		});
+
 		t.exitFullscreenCallback = (e) => {
 			const key = e.which || e.keyCode || 0;
 			if (key === 27 && ((Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || t.isFullScreen)) {

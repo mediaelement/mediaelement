@@ -86,7 +86,7 @@ const HtmlMediaElement = {
 			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			assignEvents = (eventName) => {
 				node.addEventListener(eventName, (e) => {
-					const event = createEvent(e.type, mediaElement);
+					const event = createEvent(e.type, e.target);
 					mediaElement.dispatchEvent(event);
 				});
 
@@ -116,14 +116,31 @@ const HtmlMediaElement = {
 			return node;
 		};
 
-		if (mediaFiles && mediaFiles.length > 0) {
-			for (let i = 0, total = mediaFiles.length; i < total; i++) {
-				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					node.setAttribute('src', mediaFiles[i].src);
+		let
+			index = 0,
+			total = mediaFiles.length
+		;
+		if (total > 0) {
+			for (; index < total; index++) {
+				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
+					node.setAttribute('src', mediaFiles[index].src);
 					break;
 				}
 			}
 		}
+
+		// Check if it current source can be played; otherwise, load next until no more options are left
+		node.addEventListener('error', function (e) {
+			if (e.target.error.code === 4) {
+				if (index < total) {
+					node.src = mediaFiles[index++].src;
+					node.load();
+					node.play();
+				} else {
+					mediaElement.generateError('Media error: Format(s) not supported or source(s) not found', mediaFiles);
+				}
+			}
+		});
 
 		const event = createEvent('rendererready', node);
 		mediaElement.dispatchEvent(event);

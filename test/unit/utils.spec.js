@@ -359,7 +359,7 @@ describe('Utilities', () => {
 				type = 'audio/mp3; codecs="avc1.42E01E, mp3a.40.2'
 			;
 
-			expect(media.formatType(url, type)).to.equal('audio/mp3');
+			expect(media.formatType(url, type)).to.equal('audio/mp3; codecs="avc1.42E01E, mp3a.40.2');
 		});
 	});
 

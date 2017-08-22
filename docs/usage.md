@@ -83,10 +83,6 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 // To import only MediaElement class
 import 'mediaelement/standalone';
 
-// To import only MediaElementPlayer class and $.fn.mediaelementplayer plugin
-// (includes the HTML5 and Flahs renderers ONLY)
-import 'mediaelement/player';
-
 // To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes,
 // $.fn.mediaelementplayer plugin, all the native renderers, YouTube and Flash shims)
 import 'mediaelement/full';
@@ -114,7 +110,7 @@ window.$ = jquery;
 'use strict';
 
 import '/path/to/jquery-global';
-import 'mediaelement/full'; // or import `mediaelement/player`;
+import 'mediaelement'; // or import `mediaelement/standalone` if you only want the shim but not the full player;
 ```
 
 <a id="requirejs"></a>

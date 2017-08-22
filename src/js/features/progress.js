@@ -74,6 +74,48 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(rail, 'progress');
 
+		t.options.keyActions.push({
+			keys: [
+				37, // LEFT
+				227 // Google TV rewind
+			],
+			action: (player) => {
+				if (!isNaN(player.duration) && player.duration > 0) {
+					if (player.isVideo) {
+						player.showControls();
+						player.startControlsTimer();
+					}
+
+					player.container.querySelector(`.${config.classPrefix}time-total`).focus();
+
+					// 5%
+					const newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
+					player.setCurrentTime(newTime);
+				}
+			}
+		},
+		{
+			keys: [
+				39, // RIGHT
+				228 // Google TV forward
+			],
+			action: (player) => {
+
+				if (!isNaN(player.duration) && player.duration > 0) {
+					if (player.isVideo) {
+						player.showControls();
+						player.startControlsTimer();
+					}
+
+					player.container.querySelector(`.${config.classPrefix}time-total`).focus();
+
+					// 5%
+					const newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);
+					player.setCurrentTime(newTime);
+				}
+			}
+		});
+
 		controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'none';
 
 		t.rail = controls.querySelector(`.${t.options.classPrefix}time-rail`);
@@ -164,7 +206,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 
 					// position floating time box
-					if (!IS_IOS && !IS_ANDROID && t.timefloat) {
+					if (!IS_IOS && !IS_ANDROID) {
 						if (pos < 0){
 							pos = 0;
 						}
@@ -187,18 +229,29 @@ Object.assign(MediaElementPlayer.prototype, {
 						}
 
 						// Add correct position of tooltip if rail is 100%
-						const half = t.timefloat.offsetWidth / 2;
-						if (x <= t.timefloat.offsetWidth + half) {
-							leftPos = half;
-						} else if (x >= t.container.offsetWidth- half) {
-							leftPos = t.total.offsetWidth - half;
-						} else {
-							leftPos = pos;
-						}
+						if (t.timefloat) {
+							const
+								half = t.timefloat.offsetWidth / 2,
+								offsetContainer = mejs.Utils.offset(t.container),
+								tooltipStyles = getComputedStyle(t.timefloat)
+							;
 
-						t.timefloat.style.left = `${leftPos}px`;
-						t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
-						t.timefloat.style.display = 'block';
+							if ((x - offsetContainer.left) < t.timefloat.offsetWidth) {
+								leftPos = half;
+							} else if ((x - offsetContainer.left) >= t.container.offsetWidth - half) {
+								leftPos = t.total.offsetWidth - half;
+							} else {
+								leftPos = pos;
+							}
+
+							if (hasClass(t.container, `${t.options.classPrefix}long-video`)) {
+								leftPos += parseFloat(tooltipStyles.marginLeft)/2 + t.timefloat.offsetWidth/2;
+							}
+
+							t.timefloat.style.left = `${leftPos}px`;
+							t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
+							t.timefloat.style.display = 'block';
+						}
 					}
 				} else if (!IS_IOS && !IS_ANDROID && t.timefloat) {
 					leftPos = t.timefloat.offsetWidth + width >= t.container.offsetWidth ? t.timefloat.offsetWidth / 2 : 0;
@@ -283,16 +336,37 @@ Object.assign(MediaElementPlayer.prototype, {
 				;
 
 				let seekTime = t.getCurrentTime();
+				const volume = t.container.querySelector(`.${t.options.classPrefix }volume-slider`);
+
+				if (keyCode === 38 || keyCode === 40) {
+					if (volume) {
+						volume.style.display = 'block';
+					}
+					if (t.isVideo) {
+						t.showControls();
+						t.startControlsTimer();
+					}
+
+					const
+						newVolume = keyCode === 38 ? Math.min(t.volume + 0.1, 1) : Math.max(t.volume - 0.1, 0),
+						mutePlayer = newVolume <= 0
+					;
+					t.setVolume(newVolume);
+					t.setMuted(mutePlayer);
+					return;
+				} else {
+					if (volume) {
+						volume.style.display = 'none';
+					}
+				}
 
 				switch (keyCode) {
 					case 37: // left
-					case 40: // Down
 						if (t.getDuration() !== Infinity) {
 							seekTime -= seekBackward;
 						}
 						break;
 					case 39: // Right
-					case 38: // Up
 						if (t.getDuration() !== Infinity) {
 							seekTime += seekForward;
 						}
@@ -303,20 +377,14 @@ Object.assign(MediaElementPlayer.prototype, {
 					case 35: // end
 						seekTime = duration;
 						break;
+					case 13: // enter
 					case 32: // space
-						if (!IS_FIREFOX) {
+						if (IS_FIREFOX) {
 							if (t.paused) {
 								t.play();
 							} else {
 								t.pause();
 							}
-						}
-						return;
-					case 13: // enter
-						if (t.paused) {
-							t.play();
-						} else {
-							t.pause();
 						}
 						return;
 					default:
@@ -329,11 +397,13 @@ Object.assign(MediaElementPlayer.prototype, {
 					player.pause();
 				}
 
+
 				if (seekTime < t.getDuration() && !startedPaused) {
 					setTimeout(restartPlayer, 1100);
 				}
 
 				t.setCurrentTime(seekTime);
+				player.showControls();
 
 				e.preventDefault();
 				e.stopPropagation();
