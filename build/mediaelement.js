@@ -1562,6 +1562,7 @@ var FlashMediaElementRenderer = {
 	create: function create(mediaElement, options, mediaFiles) {
 
 		var flash = {};
+		var isActive = false;
 
 		flash.options = options;
 		flash.id = mediaElement.id + '_' + flash.options.prefix;
@@ -1629,21 +1630,23 @@ var FlashMediaElementRenderer = {
 		var methods = _mejs2.default.html5media.methods,
 		    assignMethods = function assignMethods(methodName) {
 			flash[methodName] = function () {
-				if (flash.flashApi !== null) {
-					if (flash.flashApi['fire_' + methodName]) {
-						try {
-							flash.flashApi['fire_' + methodName]();
-						} catch (e) {
+				if (isActive) {
+					if (flash.flashApi !== null) {
+						if (flash.flashApi['fire_' + methodName]) {
+							try {
+								flash.flashApi['fire_' + methodName]();
+							} catch (e) {
+								
+							}
+						} else {
 							
 						}
 					} else {
-						
+						flash.flashApiStack.push({
+							type: 'call',
+							methodName: methodName
+						});
 					}
-				} else {
-					flash.flashApiStack.push({
-						type: 'call',
-						methodName: methodName
-					});
 				}
 			};
 		};
@@ -1749,11 +1752,13 @@ var FlashMediaElementRenderer = {
 		flash.flashNode = flash.flashWrapper.lastChild;
 
 		flash.hide = function () {
+			isActive = false;
 			if (isVideo) {
 				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = function () {
+			isActive = true;
 			if (isVideo) {
 				flash.flashNode.style.display = '';
 			}
@@ -2470,6 +2475,7 @@ var HtmlMediaElement = {
 	create: function create(mediaElement, options, mediaFiles) {
 
 		var id = mediaElement.id + '_' + options.prefix;
+		var isActive = false;
 
 		var node = null;
 
@@ -2504,8 +2510,10 @@ var HtmlMediaElement = {
 		var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 		    assignEvents = function assignEvents(eventName) {
 			node.addEventListener(eventName, function (e) {
-				var event = (0, _general.createEvent)(e.type, e.target);
-				mediaElement.dispatchEvent(event);
+				if (isActive) {
+					var _event = (0, _general.createEvent)(e.type, e.target);
+					mediaElement.dispatchEvent(_event);
+				}
 			});
 		};
 
@@ -2520,12 +2528,14 @@ var HtmlMediaElement = {
 		};
 
 		node.hide = function () {
+			isActive = false;
 			node.style.display = 'none';
 
 			return node;
 		};
 
 		node.show = function () {
+			isActive = true;
 			node.style.display = '';
 
 			return node;
@@ -2543,7 +2553,7 @@ var HtmlMediaElement = {
 		}
 
 		node.addEventListener('error', function (e) {
-			if (e.target.error.code === 4) {
+			if (e.target.error.code === 4 && isActive) {
 				if (index < total) {
 					node.src = mediaFiles[index++].src;
 					node.load();

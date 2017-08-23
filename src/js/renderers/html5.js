@@ -51,6 +51,7 @@ const HtmlMediaElement = {
 	create: (mediaElement, options, mediaFiles) => {
 
 		const id = mediaElement.id + '_' + options.prefix;
+		let isActive = false;
 
 		let node = null;
 
@@ -86,8 +87,11 @@ const HtmlMediaElement = {
 			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
 			assignEvents = (eventName) => {
 				node.addEventListener(eventName, (e) => {
-					const event = createEvent(e.type, e.target);
-					mediaElement.dispatchEvent(event);
+					// Emmit an event only in case of the renderer is active at the moment
+					if(isActive) {
+						const event = createEvent(e.type, e.target);
+						mediaElement.dispatchEvent(event);
+					}
 				});
 
 			}
@@ -105,12 +109,14 @@ const HtmlMediaElement = {
 		};
 
 		node.hide = () => {
+			isActive = false;
 			node.style.display = 'none';
 
 			return node;
 		};
 
 		node.show = () => {
+			isActive = true;
 			node.style.display = '';
 
 			return node;
@@ -131,7 +137,8 @@ const HtmlMediaElement = {
 
 		// Check if it current source can be played; otherwise, load next until no more options are left
 		node.addEventListener('error', function (e) {
-			if (e.target.error.code === 4) {
+			// Reload the source only in case of the renderer is active at the moment
+			if (e.target.error.code === 4 && isActive) {
 				if (index < total) {
 					node.src = mediaFiles[index++].src;
 					node.load();
