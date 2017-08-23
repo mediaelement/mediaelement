@@ -17,6 +17,7 @@
 * Fixed issues with events fired in incorrect time for `flash_video` renderer @milax
 * Set specific settings for embedding flash object in Edge browser (https://github.com/mediaelement/mediaelement/pull/2364) @milax 
 * Added new constant to detect `passive events` and added conditional for `touchstart` events @rafa8626
+* Removed width and height from `embed` object to ensure Flash audio will play on Chrome (https://github.com/mediaelement/mediaelement/pull/2367) @milax
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*
