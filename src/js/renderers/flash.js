@@ -364,12 +364,15 @@ const FlashMediaElementRenderer = {
 				'type="application/x-shockwave-flash"',
 				'pluginspage="//www.macromedia.com/go/getflashplayer"',
 				`src="${flash.options.pluginPath}${flash.options.filename}"`,
-				`flashvars="${flashVars.join('&')}"`,
-				`width="${flashWidth}"`,
-				`height="${flashHeight}"`
+				`flashvars="${flashVars.join('&')}"`
 			];
 
-			if (!isVideo) {
+			// set width&height attributes for video only
+			if (isVideo) {
+				settings.push('width="${flashWidth}"');
+				settings.push('height="${flashHeight}"');
+			}
+			else {
 				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
 			}
 
