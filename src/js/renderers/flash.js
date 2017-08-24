@@ -128,6 +128,7 @@ const FlashMediaElementRenderer = {
 	create: (mediaElement, options, mediaFiles) => {
 
 		const flash = {};
+		let isActive = false;
 
 		flash.options = options;
 		flash.id = mediaElement.id + '_' + flash.options.prefix;
@@ -202,25 +203,27 @@ const FlashMediaElementRenderer = {
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 				flash[methodName] = () => {
-					if (flash.flashApi !== null) {
+					if(isActive) {
+						if (flash.flashApi !== null) {
 
-						// send call up to Flash ExternalInterface API
-						if (flash.flashApi[`fire_${methodName}`]) {
-							try {
-								flash.flashApi[`fire_${methodName}`]();
-							} catch (e) {
-								console.log(e);
+							// send call up to Flash ExternalInterface API
+							if (flash.flashApi[`fire_${methodName}`]) {
+								try {
+									flash.flashApi[`fire_${methodName}`]();
+								} catch (e) {
+									console.log(e);
+								}
+
+							} else {
+								console.log('flash', 'missing method', methodName);
 							}
-
 						} else {
-							console.log('flash', 'missing method', methodName);
+							// store for after "READY" event fires
+							flash.flashApiStack.push({
+								type: 'call',
+								methodName: methodName
+							});
 						}
-					} else {
-						// store for after "READY" event fires
-						flash.flashApiStack.push({
-							type: 'call',
-							methodName: methodName
-						});
 					}
 				};
 
@@ -382,11 +385,13 @@ const FlashMediaElementRenderer = {
 		flash.flashNode = flash.flashWrapper.lastChild;
 
 		flash.hide = () => {
+			isActive = false;
 			if (isVideo) {
 				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = () => {
+			isActive = true;
 			if (isVideo) {
 				flash.flashNode.style.display = '';
 			}
