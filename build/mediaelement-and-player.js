@@ -2266,12 +2266,13 @@ Object.assign(_player2.default.prototype, {
 		    outEvents = ['mouseleave', 'focusout'];
 
 		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
-			player.captionsButton.addEventListener('click', function () {
+			player.captionsButton.addEventListener('click', function (e) {
 				var trackId = 'none';
 				if (player.selectedTrack === null) {
 					trackId = player.tracks[0].trackId;
 				}
-				player.setTrack(trackId);
+				var keyboard = e.keyCode || e.which;
+				player.setTrack(trackId, typeof keyboard !== 'undefined');
 			});
 		} else {
 			var labels = player.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selector-label'),
@@ -2290,18 +2291,20 @@ Object.assign(_player2.default.prototype, {
 			}
 
 			for (var _i5 = 0, _total3 = captions.length; _i5 < _total3; _i5++) {
-				captions[_i5].addEventListener('click', function () {
-					player.setTrack(this.value);
+				captions[_i5].addEventListener('click', function (e) {
+					var keyboard = e.keyCode || e.which;
+					player.setTrack(this.value, typeof keyboard !== 'undefined');
 				});
 			}
 
 			for (var _i6 = 0, _total4 = labels.length; _i6 < _total4; _i6++) {
-				labels[_i6].addEventListener('click', function () {
+				labels[_i6].addEventListener('click', function (e) {
 					var radio = (0, _dom.siblings)(this, function (el) {
 						return el.tagName === 'INPUT';
 					})[0],
 					    event = (0, _general.createEvent)('click', radio);
 					radio.dispatchEvent(event);
+					e.preventDefault();
 				});
 			}
 
@@ -2399,7 +2402,7 @@ Object.assign(_player2.default.prototype, {
 			});
 		}
 	},
-	setTrack: function setTrack(trackId) {
+	setTrack: function setTrack(trackId, setByKeyboard) {
 
 		var t = this,
 		    radios = t.captionsButton.querySelectorAll('input[type="radio"]'),
@@ -2443,6 +2446,12 @@ Object.assign(_player2.default.prototype, {
 		var event = (0, _general.createEvent)('captionschange', t.media);
 		event.detail.caption = t.selectedTrack;
 		t.media.dispatchEvent(event);
+
+		if (!setByKeyboard) {
+			setTimeout(function () {
+				t.container.focus();
+			}, 500);
+		}
 	},
 	loadNextTrack: function loadNextTrack() {
 		var t = this;

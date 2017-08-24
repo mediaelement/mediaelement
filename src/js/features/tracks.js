@@ -170,12 +170,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// if only one language then just make the button a toggle
 		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
-			player.captionsButton.addEventListener('click', () => {
+			player.captionsButton.addEventListener('click', (e) => {
 				let trackId = 'none';
 				if (player.selectedTrack === null) {
 					trackId = player.tracks[0].trackId;
 				}
-				player.setTrack(trackId);
+				const keyboard = e.keyCode || e.which;
+				player.setTrack(trackId, (typeof keyboard !== 'undefined'));
 			});
 		} else {
 			const
@@ -196,21 +197,23 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 
 			for (let i = 0, total = captions.length; i < total; i++) {
-				captions[i].addEventListener('click',  function () {
+				captions[i].addEventListener('click',  function (e) {
 					// value is trackId, same as the actual id, and we're using it here
 					// because the "none" checkbox doesn't have a trackId
 					// to use, but we want to know when "none" is clicked
-					player.setTrack(this.value);
+					const keyboard = e.keyCode || e.which;
+					player.setTrack(this.value, (typeof keyboard !== 'undefined'));
 				});
 			}
 
 			for (let i = 0, total = labels.length; i < total; i++) {
-				labels[i].addEventListener('click',  function () {
+				labels[i].addEventListener('click',  function (e) {
 					const
 						radio = siblings(this, (el) => el.tagName === 'INPUT')[0],
 						event = createEvent('click', radio)
 					;
 					radio.dispatchEvent(event);
+					e.preventDefault();
 				});
 			}
 
@@ -332,7 +335,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} trackId, or "none" to disable captions
 	 */
-	setTrack (trackId) {
+	setTrack (trackId, setByKeyboard) {
 
 		const
 			t = this,
@@ -376,6 +379,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		const event = createEvent('captionschange', t.media);
 		event.detail.caption = t.selectedTrack;
 		t.media.dispatchEvent(event);
+
+		if (!setByKeyboard) {
+			setTimeout(function() {
+				t.container.focus();
+			}, 500);
+		}
 	},
 
 	/**
