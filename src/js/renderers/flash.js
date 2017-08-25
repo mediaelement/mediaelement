@@ -373,7 +373,7 @@ const FlashMediaElementRenderer = {
 				settings.push('height="${flashHeight}"');
 			}
 			else {
-				settings.push('style="position: absolute; left: -9999em; top: -99999em;"');
+				settings.push('style="position: fixed; left: -9999em; top: -9999em;"');
 			}
 
 			flash.flashWrapper.innerHTML = `<embed ${settings.join(' ')}>`;
