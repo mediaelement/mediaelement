@@ -1743,7 +1743,7 @@ var FlashMediaElementRenderer = {
 				settings.push('width="${flashWidth}"');
 				settings.push('height="${flashHeight}"');
 			} else {
-				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+				settings.push('style="position: fixed; left: -9999em; top: -9999em;"');
 			}
 
 			flash.flashWrapper.innerHTML = '<embed ' + settings.join(' ') + '>';

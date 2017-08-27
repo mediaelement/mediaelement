@@ -19,6 +19,7 @@
 * Added new constant to detect `passive events` and added conditional for `touchstart` events @rafa8626
 * Removed width and height from `embed` object to ensure Flash audio will play on Chrome (https://github.com/mediaelement/mediaelement/pull/2367) @milax
 * Fixed issue with Caption menu disappearing after selecting another one @rafa8626 and @Instagit
+* Removed black area when Flash player is used in audio player (https://github.com/mediaelement/mediaelement/pull/2370) @milax
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*
