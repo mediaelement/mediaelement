@@ -2678,7 +2678,7 @@ Object.assign(_player2.default.prototype, {
 		for (var _i13 = 0, _total10 = radios.length; _i13 < _total10; _i13++) {
 			radios[_i13].disabled = false;
 			radios[_i13].checked = false;
-			radios[_i13].addEventListener('click', function () {
+			radios[_i13].addEventListener('click', function (e) {
 				var self = this,
 				    listItems = t.chaptersButton.querySelectorAll('li'),
 				    label = (0, _dom.siblings)(self, function (el) {
@@ -2694,6 +2694,13 @@ Object.assign(_player2.default.prototype, {
 					listItems[_i14].setAttribute('aria-checked', false);
 				}
 
+				var keyboard = e.keyCode || e.which;
+				if (typeof keyboard === 'undefined') {
+					setTimeout(function () {
+						t.container.focus();
+					}, 500);
+				}
+
 				t.media.setCurrentTime(parseFloat(self.value));
 				if (t.media.paused) {
 					t.media.play();
@@ -2702,12 +2709,13 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		for (var _i15 = 0, _total12 = labels.length; _i15 < _total12; _i15++) {
-			labels[_i15].addEventListener('click', function () {
+			labels[_i15].addEventListener('click', function (e) {
 				var radio = (0, _dom.siblings)(this, function (el) {
 					return el.tagName === 'INPUT';
 				})[0],
 				    event = (0, _general.createEvent)('click', radio);
 				radio.dispatchEvent(event);
+				e.preventDefault();
 			});
 		}
 	},
