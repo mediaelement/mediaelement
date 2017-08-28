@@ -4742,8 +4742,10 @@ var MediaElementPlayer = function () {
 
 			var posterUrl = media.originalNode.getAttribute('poster');
 
-			if (player.options.poster !== '' && posterUrl && _constants.IS_IOS) {
-				media.originalNode.removeAttribute('poster');
+			if (player.options.poster !== '') {
+				if (posterUrl && _constants.IS_IOS) {
+					media.originalNode.removeAttribute('poster');
+				}
 				posterUrl = player.options.poster;
 			}
 

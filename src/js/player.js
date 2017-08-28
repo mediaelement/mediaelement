@@ -1531,8 +1531,10 @@ class MediaElementPlayer {
 		let posterUrl = media.originalNode.getAttribute('poster');
 
 		// priority goes to option (this is useful if you need to support iOS 3.x (iOS completely fails with poster)
-		if (player.options.poster !== '' && posterUrl && IS_IOS) {
-			media.originalNode.removeAttribute('poster');
+		if (player.options.poster !== '') {
+			if (posterUrl && IS_IOS) {
+				media.originalNode.removeAttribute('poster');
+			}
 			posterUrl = player.options.poster;
 		}
 
