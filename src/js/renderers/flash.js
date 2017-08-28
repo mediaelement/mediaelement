@@ -81,7 +81,7 @@ export const PluginDetector = {
 					version[i] = parseInt(version[i].match(/\d+/), 10);
 				}
 			}
-		// Internet Explorer / ActiveX
+			// Internet Explorer / ActiveX
 		} else if (window.ActiveXObject !== undefined) {
 			try {
 				ax = new ActiveXObject(activeX);
@@ -128,6 +128,7 @@ const FlashMediaElementRenderer = {
 	create: (mediaElement, options, mediaFiles) => {
 
 		const flash = {};
+		let isActive = false;
 
 		flash.options = options;
 		flash.id = mediaElement.id + '_' + flash.options.prefix;
@@ -202,30 +203,32 @@ const FlashMediaElementRenderer = {
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 				flash[methodName] = () => {
-					if (flash.flashApi !== null) {
+					if (isActive) {
+						if (flash.flashApi !== null) {
 
-						// send call up to Flash ExternalInterface API
-						if (flash.flashApi[`fire_${methodName}`]) {
-							try {
-								flash.flashApi[`fire_${methodName}`]();
-							} catch (e) {
-								console.log(e);
+							// send call up to Flash ExternalInterface API
+							if (flash.flashApi[`fire_${methodName}`]) {
+								try {
+									flash.flashApi[`fire_${methodName}`]();
+								} catch (e) {
+									console.log(e);
+								}
+
+							} else {
+								console.log('flash', 'missing method', methodName);
 							}
-
 						} else {
-							console.log('flash', 'missing method', methodName);
+							// store for after "READY" event fires
+							flash.flashApiStack.push({
+								type: 'call',
+								methodName: methodName
+							});
 						}
-					} else {
-						// store for after "READY" event fires
-						flash.flashApiStack.push({
-							type: 'call',
-							methodName: methodName
-						});
 					}
 				};
 
 			}
-			;
+		;
 		methods.push('stop');
 		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
@@ -317,7 +320,7 @@ const FlashMediaElementRenderer = {
 			const specialIEContainer = document.createElement('div');
 			flash.flashWrapper.appendChild(specialIEContainer);
 
-			if(IS_EDGE) {
+			if (IS_EDGE) {
 				settings = [
 					'type="application/x-shockwave-flash"',
 					'data="' + flash.options.pluginPath + flash.options.filename + '"', 'id="__' + flash.id + '"',
@@ -347,7 +350,7 @@ const FlashMediaElementRenderer = {
 				`<param name="allowScriptAccess" value="${flash.options.shimScriptAccess}" />` +
 				`<param name="allowFullScreen" value="true" />` +
 				`<div>${i18n.t('mejs.install-flash')}</div>` +
-			`</object>`;
+				`</object>`;
 
 		} else {
 
@@ -382,11 +385,13 @@ const FlashMediaElementRenderer = {
 		flash.flashNode = flash.flashWrapper.lastChild;
 
 		flash.hide = () => {
+			isActive = false;
 			if (isVideo) {
 				flash.flashNode.style.display = 'none';
 			}
 		};
 		flash.show = () => {
+			isActive = true;
 			if (isVideo) {
 				flash.flashNode.style.display = '';
 			}
