@@ -216,6 +216,7 @@ var FacebookRenderer = {
 						};
 
 						fbWrapper.setSize(width, height);
+						fbApi.unmute();
 
 						if (autoplay) {
 							fbApi.play();

@@ -116,8 +116,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
-		controls.querySelector(`.${t.options.classPrefix}time-buffering`).style.display = 'none';
-
 		t.rail = controls.querySelector(`.${t.options.classPrefix}time-rail`);
 		t.total = controls.querySelector(`.${t.options.classPrefix}time-total`);
 		t.loaded = controls.querySelector(`.${t.options.classPrefix}time-loaded`);
@@ -127,6 +125,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.timefloatcurrent = controls.querySelector(`.${t.options.classPrefix}time-float-current`);
 		t.slider = controls.querySelector(`.${t.options.classPrefix}time-slider`);
 		t.hovered = controls.querySelector(`.${t.options.classPrefix}time-hovered`);
+		t.buffer = controls.querySelector(`.${t.options.classPrefix}time-buffering`);
 		t.newTime = 0;
 		t.forcedHandlePause = false;
 		t.setTransformStyle = (element, value) => {
@@ -136,6 +135,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			element.style.msTransform = value;
 			element.style.OTransform = value;
 		};
+
+		t.buffer.style.display = 'none';
 
 		/**
 		 *
@@ -504,6 +505,33 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		media.addEventListener('progress', t.broadcastCallback);
 		media.addEventListener('timeupdate', t.broadcastCallback);
+		media.addEventListener('play', () => {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('playing', () => {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('seeking', () => {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('seeked', () => {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('pause', () => {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('waiting', () => {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('loadeddata', () => {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('canplay', () => {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('error', () => {
+			t.buffer.style.display = 'none';
+		});
 
 		t.container.addEventListener('controlsresize', (e) => {
 			if (t.getDuration() !== Infinity) {

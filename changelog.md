@@ -21,6 +21,8 @@
 * Fixed issue with Caption/Chapters menus not selecting options properly when using mouse @rafa8626 and @Instagit
 * Removed black area when Flash player is used in audio player (https://github.com/mediaelement/mediaelement/pull/2370) @milax
 * Fixed issue with `poster` option not being set if `poster` attribute is absent @rafa8626
+* Moved code inside `player.js` to corresponding features to restore original order or operations when creating layers @rafa8626
+* Added `unmute` command for Facebook renderer @rafa8626
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

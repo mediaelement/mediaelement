@@ -656,14 +656,15 @@ class MediaElementPlayer {
 				return;
 			}
 
-			// grab for use by features
-			t.findTracks();
-
 			// cache container to store control elements' original position
 			t.featurePosition = {};
 
 			// Enable default actions
 			t._setDefaultPlayer();
+
+			t.buildposter(t, t.controls, t.layers, t.media);
+			t.buildkeyboard(t, t.controls, t.layers, t.media);
+			t.buildoverlays(t, t.controls, t.layers, t.media);
 
 			if (t.options.useDefaultControls) {
 				const defaultControls = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
@@ -682,10 +683,6 @@ class MediaElementPlayer {
 					}
 				}
 			}
-
-			t.buildposter(t, t.controls, t.layers, t.media);
-			t.buildkeyboard(t, t.controls, t.layers, t.media);
-			t.buildoverlays(t, t.controls, t.layers, t.media);
 
 			const event = createEvent('controlsready', t.container);
 			t.container.dispatchEvent(event);
@@ -1587,8 +1584,7 @@ class MediaElementPlayer {
 			loading = document.createElement('div'),
 			error = document.createElement('div'),
 			// this needs to come last so it's on top
-			bigPlay = document.createElement('div'),
-			buffer = controls.querySelector(`.${t.options.classPrefix}time-buffering`)
+			bigPlay = document.createElement('div')
 		;
 
 		loading.style.display = 'none'; // start out hidden
@@ -1652,35 +1648,23 @@ class MediaElementPlayer {
 		media.addEventListener('play', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (buffer !== null) {
-				buffer.style.display = 'none';
-			}
 			error.style.display = 'none';
 			hasError = false;
 		});
 		media.addEventListener('playing', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = 'none';
-			if (buffer !== null) {
-				buffer.style.display = 'none';
-			}
 			error.style.display = 'none';
 			hasError = false;
 		});
 		media.addEventListener('seeking', () => {
 			bigPlay.style.display = 'none';
 			loading.style.display = '';
-			if (buffer !== null) {
-				buffer.style.display = '';
-			}
 			hasError = false;
 		});
 		media.addEventListener('seeked', () => {
 			bigPlay.style.display = t.paused && !IS_STOCK_ANDROID ? '' : 'none';
 			loading.style.display = 'none';
-			if (buffer !== null) {
-				buffer.style.display = 'none';
-			}
 			hasError = false;
 		});
 		media.addEventListener('pause', () => {
@@ -1688,26 +1672,16 @@ class MediaElementPlayer {
 			if (!IS_STOCK_ANDROID && !hasError) {
 				bigPlay.style.display = '';
 			}
-			if (buffer !== null) {
-				buffer.style.display = 'none';
-			}
 			hasError = false;
 		});
 		media.addEventListener('waiting', () => {
 			loading.style.display = '';
-			if (buffer !== null) {
-				buffer.style.display = '';
-			}
 			hasError = false;
 		});
 
 		// show/hide loading
 		media.addEventListener('loadeddata', () => {
 			loading.style.display = '';
-			if (buffer !== null) {
-				buffer.style.display = '';
-			}
-
 			// Firing the 'canplay' event after a timeout which isn't getting fired on some Android 4.1 devices
 			// (https://github.com/johndyer/mediaelement/issues/1305)
 			if (IS_ANDROID) {
@@ -1723,9 +1697,6 @@ class MediaElementPlayer {
 		});
 		media.addEventListener('canplay', () => {
 			loading.style.display = 'none';
-			if (buffer !== null) {
-				buffer.style.display = 'none';
-			}
 			// Clear timeout inside 'loadeddata' to prevent 'canplay' from firing twice
 			clearTimeout(media.canplayTimeout);
 			hasError = false;
@@ -1736,9 +1707,6 @@ class MediaElementPlayer {
 			t._handleError(e, t.media, t.node);
 			loading.style.display = 'none';
 			bigPlay.style.display = 'none';
-			if (buffer !== null) {
-				buffer.style.display = 'none';
-			}
 			hasError = true;
 		});
 

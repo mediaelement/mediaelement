@@ -1597,8 +1597,6 @@ Object.assign(_player2.default.prototype, {
 			}
 		});
 
-		controls.querySelector('.' + t.options.classPrefix + 'time-buffering').style.display = 'none';
-
 		t.rail = controls.querySelector('.' + t.options.classPrefix + 'time-rail');
 		t.total = controls.querySelector('.' + t.options.classPrefix + 'time-total');
 		t.loaded = controls.querySelector('.' + t.options.classPrefix + 'time-loaded');
@@ -1608,6 +1606,7 @@ Object.assign(_player2.default.prototype, {
 		t.timefloatcurrent = controls.querySelector('.' + t.options.classPrefix + 'time-float-current');
 		t.slider = controls.querySelector('.' + t.options.classPrefix + 'time-slider');
 		t.hovered = controls.querySelector('.' + t.options.classPrefix + 'time-hovered');
+		t.buffer = controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
 		t.newTime = 0;
 		t.forcedHandlePause = false;
 		t.setTransformStyle = function (element, value) {
@@ -1617,6 +1616,8 @@ Object.assign(_player2.default.prototype, {
 			element.style.msTransform = value;
 			element.style.OTransform = value;
 		};
+
+		t.buffer.style.display = 'none';
 
 		var handleMouseMove = function handleMouseMove(e) {
 			var totalStyles = getComputedStyle(t.total),
@@ -1946,6 +1947,33 @@ Object.assign(_player2.default.prototype, {
 
 		media.addEventListener('progress', t.broadcastCallback);
 		media.addEventListener('timeupdate', t.broadcastCallback);
+		media.addEventListener('play', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('playing', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('seeking', function () {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('seeked', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('pause', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('waiting', function () {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('loadeddata', function () {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('canplay', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('error', function () {
+			t.buffer.style.display = 'none';
+		});
 
 		t.container.addEventListener('controlsresize', function (e) {
 			if (t.getDuration() !== Infinity) {
@@ -2196,6 +2224,8 @@ Object.assign(_player2.default.prototype, {
 	hasChapters: false,
 
 	buildtracks: function buildtracks(player, controls, layers, media) {
+
+		this.findTracks();
 
 		if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
 			return;
@@ -3964,11 +3994,13 @@ var MediaElementPlayer = function () {
 					return;
 				}
 
-				t.findTracks();
-
 				t.featurePosition = {};
 
 				t._setDefaultPlayer();
+
+				t.buildposter(t, t.controls, t.layers, t.media);
+				t.buildkeyboard(t, t.controls, t.layers, t.media);
+				t.buildoverlays(t, t.controls, t.layers, t.media);
 
 				if (t.options.useDefaultControls) {
 					var defaultControls = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
@@ -3987,10 +4019,6 @@ var MediaElementPlayer = function () {
 						}
 					}
 				}
-
-				t.buildposter(t, t.controls, t.layers, t.media);
-				t.buildkeyboard(t, t.controls, t.layers, t.media);
-				t.buildoverlays(t, t.controls, t.layers, t.media);
 
 				var event = (0, _general.createEvent)('controlsready', t.container);
 				t.container.dispatchEvent(event);
@@ -4802,8 +4830,7 @@ var MediaElementPlayer = function () {
 			var t = this,
 			    loading = _document2.default.createElement('div'),
 			    error = _document2.default.createElement('div'),
-			    bigPlay = _document2.default.createElement('div'),
-			    buffer = controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
+			    bigPlay = _document2.default.createElement('div');
 
 			loading.style.display = 'none';
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
@@ -4855,35 +4882,23 @@ var MediaElementPlayer = function () {
 			media.addEventListener('play', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				error.style.display = 'none';
 				hasError = false;
 			});
 			media.addEventListener('playing', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				error.style.display = 'none';
 				hasError = false;
 			});
 			media.addEventListener('seeking', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = '';
-				if (buffer !== null) {
-					buffer.style.display = '';
-				}
 				hasError = false;
 			});
 			media.addEventListener('seeked', function () {
 				bigPlay.style.display = t.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				hasError = false;
 			});
 			media.addEventListener('pause', function () {
@@ -4891,24 +4906,15 @@ var MediaElementPlayer = function () {
 				if (!_constants.IS_STOCK_ANDROID && !hasError) {
 					bigPlay.style.display = '';
 				}
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				hasError = false;
 			});
 			media.addEventListener('waiting', function () {
 				loading.style.display = '';
-				if (buffer !== null) {
-					buffer.style.display = '';
-				}
 				hasError = false;
 			});
 
 			media.addEventListener('loadeddata', function () {
 				loading.style.display = '';
-				if (buffer !== null) {
-					buffer.style.display = '';
-				}
 
 				if (_constants.IS_ANDROID) {
 					media.canplayTimeout = setTimeout(function () {
@@ -4923,9 +4929,6 @@ var MediaElementPlayer = function () {
 			});
 			media.addEventListener('canplay', function () {
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 
 				clearTimeout(media.canplayTimeout);
 				hasError = false;
@@ -4935,9 +4938,6 @@ var MediaElementPlayer = function () {
 				t._handleError(e, t.media, t.node);
 				loading.style.display = 'none';
 				bigPlay.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				hasError = true;
 			});
 

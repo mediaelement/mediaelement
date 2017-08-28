@@ -72,6 +72,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	buildtracks (player, controls, layers, media) {
 
+		this.findTracks();
+
 		if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
 			return;
 		}
