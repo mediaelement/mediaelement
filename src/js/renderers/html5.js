@@ -32,7 +32,7 @@ const HtmlMediaElement = {
 		// also consider URLs that might have obfuscated URLs
 		if ((IS_ANDROID && /\/mp(3|4)$/i.test(type)) ||
 			(~['application/x-mpegurl', 'vnd.apple.mpegurl', 'audio/mpegurl', 'audio/hls',
-			'video/hls'].indexOf(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
+				'video/hls'].indexOf(type.toLowerCase()) && SUPPORTS_NATIVE_HLS)) {
 			return 'yes';
 		} else if (mediaElement.canPlayType) {
 			return mediaElement.canPlayType(type.toLowerCase()).replace(/no/, '');
@@ -88,7 +88,7 @@ const HtmlMediaElement = {
 			assignEvents = (eventName) => {
 				node.addEventListener(eventName, (e) => {
 					// Emmit an event only in case of the renderer is active at the moment
-					if(isActive) {
+					if (isActive) {
 						const event = createEvent(e.type, e.target);
 						mediaElement.dispatchEvent(event);
 					}

@@ -18,6 +18,12 @@
 * Set specific settings for embedding flash object in Edge browser (https://github.com/mediaelement/mediaelement/pull/2364) @milax 
 * Added new constant to detect `passive events` and added conditional for `touchstart` events @rafa8626
 * Removed width and height from `embed` object to ensure Flash audio will play on Chrome (https://github.com/mediaelement/mediaelement/pull/2367) @milax
+* Fixed issue with Caption/Chapters menus not selecting options properly when using mouse @rafa8626 and @Instagit
+* Removed black area when Flash player is used in audio player (https://github.com/mediaelement/mediaelement/pull/2370) @milax
+* Fixed issue with `poster` option not being set if `poster` attribute is absent @rafa8626
+* Moved code inside `player.js` to corresponding features to restore original order or operations when creating layers @rafa8626
+* Added `unmute` command for Facebook renderer @rafa8626
+* Fixed events emitting and run handlers of active renderer only for Flash and HTML5 renderer (https://github.com/mediaelement/mediaelement/pull/2368) @milax
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

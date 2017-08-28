@@ -1597,8 +1597,6 @@ Object.assign(_player2.default.prototype, {
 			}
 		});
 
-		controls.querySelector('.' + t.options.classPrefix + 'time-buffering').style.display = 'none';
-
 		t.rail = controls.querySelector('.' + t.options.classPrefix + 'time-rail');
 		t.total = controls.querySelector('.' + t.options.classPrefix + 'time-total');
 		t.loaded = controls.querySelector('.' + t.options.classPrefix + 'time-loaded');
@@ -1608,6 +1606,7 @@ Object.assign(_player2.default.prototype, {
 		t.timefloatcurrent = controls.querySelector('.' + t.options.classPrefix + 'time-float-current');
 		t.slider = controls.querySelector('.' + t.options.classPrefix + 'time-slider');
 		t.hovered = controls.querySelector('.' + t.options.classPrefix + 'time-hovered');
+		t.buffer = controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
 		t.newTime = 0;
 		t.forcedHandlePause = false;
 		t.setTransformStyle = function (element, value) {
@@ -1617,6 +1616,8 @@ Object.assign(_player2.default.prototype, {
 			element.style.msTransform = value;
 			element.style.OTransform = value;
 		};
+
+		t.buffer.style.display = 'none';
 
 		var handleMouseMove = function handleMouseMove(e) {
 			var totalStyles = getComputedStyle(t.total),
@@ -1946,6 +1947,33 @@ Object.assign(_player2.default.prototype, {
 
 		media.addEventListener('progress', t.broadcastCallback);
 		media.addEventListener('timeupdate', t.broadcastCallback);
+		media.addEventListener('play', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('playing', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('seeking', function () {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('seeked', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('pause', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('waiting', function () {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('loadeddata', function () {
+			t.buffer.style.display = '';
+		});
+		media.addEventListener('canplay', function () {
+			t.buffer.style.display = 'none';
+		});
+		media.addEventListener('error', function () {
+			t.buffer.style.display = 'none';
+		});
 
 		t.container.addEventListener('controlsresize', function (e) {
 			if (t.getDuration() !== Infinity) {
@@ -2197,6 +2225,8 @@ Object.assign(_player2.default.prototype, {
 
 	buildtracks: function buildtracks(player, controls, layers, media) {
 
+		this.findTracks();
+
 		if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
 			return;
 		}
@@ -2266,12 +2296,13 @@ Object.assign(_player2.default.prototype, {
 		    outEvents = ['mouseleave', 'focusout'];
 
 		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
-			player.captionsButton.addEventListener('click', function () {
+			player.captionsButton.addEventListener('click', function (e) {
 				var trackId = 'none';
 				if (player.selectedTrack === null) {
 					trackId = player.tracks[0].trackId;
 				}
-				player.setTrack(trackId);
+				var keyboard = e.keyCode || e.which;
+				player.setTrack(trackId, typeof keyboard !== 'undefined');
 			});
 		} else {
 			var labels = player.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selector-label'),
@@ -2290,18 +2321,20 @@ Object.assign(_player2.default.prototype, {
 			}
 
 			for (var _i5 = 0, _total3 = captions.length; _i5 < _total3; _i5++) {
-				captions[_i5].addEventListener('click', function () {
-					player.setTrack(this.value);
+				captions[_i5].addEventListener('click', function (e) {
+					var keyboard = e.keyCode || e.which;
+					player.setTrack(this.value, typeof keyboard !== 'undefined');
 				});
 			}
 
 			for (var _i6 = 0, _total4 = labels.length; _i6 < _total4; _i6++) {
-				labels[_i6].addEventListener('click', function () {
+				labels[_i6].addEventListener('click', function (e) {
 					var radio = (0, _dom.siblings)(this, function (el) {
 						return el.tagName === 'INPUT';
 					})[0],
 					    event = (0, _general.createEvent)('click', radio);
 					radio.dispatchEvent(event);
+					e.preventDefault();
 				});
 			}
 
@@ -2399,7 +2432,7 @@ Object.assign(_player2.default.prototype, {
 			});
 		}
 	},
-	setTrack: function setTrack(trackId) {
+	setTrack: function setTrack(trackId, setByKeyboard) {
 
 		var t = this,
 		    radios = t.captionsButton.querySelectorAll('input[type="radio"]'),
@@ -2443,6 +2476,12 @@ Object.assign(_player2.default.prototype, {
 		var event = (0, _general.createEvent)('captionschange', t.media);
 		event.detail.caption = t.selectedTrack;
 		t.media.dispatchEvent(event);
+
+		if (!setByKeyboard) {
+			setTimeout(function () {
+				t.container.focus();
+			}, 500);
+		}
 	},
 	loadNextTrack: function loadNextTrack() {
 		var t = this;
@@ -2669,7 +2708,7 @@ Object.assign(_player2.default.prototype, {
 		for (var _i13 = 0, _total10 = radios.length; _i13 < _total10; _i13++) {
 			radios[_i13].disabled = false;
 			radios[_i13].checked = false;
-			radios[_i13].addEventListener('click', function () {
+			radios[_i13].addEventListener('click', function (e) {
 				var self = this,
 				    listItems = t.chaptersButton.querySelectorAll('li'),
 				    label = (0, _dom.siblings)(self, function (el) {
@@ -2685,6 +2724,13 @@ Object.assign(_player2.default.prototype, {
 					listItems[_i14].setAttribute('aria-checked', false);
 				}
 
+				var keyboard = e.keyCode || e.which;
+				if (typeof keyboard === 'undefined') {
+					setTimeout(function () {
+						t.container.focus();
+					}, 500);
+				}
+
 				t.media.setCurrentTime(parseFloat(self.value));
 				if (t.media.paused) {
 					t.media.play();
@@ -2693,12 +2739,13 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		for (var _i15 = 0, _total12 = labels.length; _i15 < _total12; _i15++) {
-			labels[_i15].addEventListener('click', function () {
+			labels[_i15].addEventListener('click', function (e) {
 				var radio = (0, _dom.siblings)(this, function (el) {
 					return el.tagName === 'INPUT';
 				})[0],
 				    event = (0, _general.createEvent)('click', radio);
 				radio.dispatchEvent(event);
+				e.preventDefault();
 			});
 		}
 	},
@@ -3947,11 +3994,13 @@ var MediaElementPlayer = function () {
 					return;
 				}
 
-				t.findTracks();
-
 				t.featurePosition = {};
 
 				t._setDefaultPlayer();
+
+				t.buildposter(t, t.controls, t.layers, t.media);
+				t.buildkeyboard(t, t.controls, t.layers, t.media);
+				t.buildoverlays(t, t.controls, t.layers, t.media);
 
 				if (t.options.useDefaultControls) {
 					var defaultControls = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
@@ -3970,10 +4019,6 @@ var MediaElementPlayer = function () {
 						}
 					}
 				}
-
-				t.buildposter(t, t.controls, t.layers, t.media);
-				t.buildkeyboard(t, t.controls, t.layers, t.media);
-				t.buildoverlays(t, t.controls, t.layers, t.media);
 
 				var event = (0, _general.createEvent)('controlsready', t.container);
 				t.container.dispatchEvent(event);
@@ -4733,8 +4778,10 @@ var MediaElementPlayer = function () {
 
 			var posterUrl = media.originalNode.getAttribute('poster');
 
-			if (player.options.poster !== '' && posterUrl && _constants.IS_IOS) {
-				media.originalNode.removeAttribute('poster');
+			if (player.options.poster !== '') {
+				if (posterUrl && _constants.IS_IOS) {
+					media.originalNode.removeAttribute('poster');
+				}
 				posterUrl = player.options.poster;
 			}
 
@@ -4783,8 +4830,7 @@ var MediaElementPlayer = function () {
 			var t = this,
 			    loading = _document2.default.createElement('div'),
 			    error = _document2.default.createElement('div'),
-			    bigPlay = _document2.default.createElement('div'),
-			    buffer = controls.querySelector('.' + t.options.classPrefix + 'time-buffering');
+			    bigPlay = _document2.default.createElement('div');
 
 			loading.style.display = 'none';
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
@@ -4836,35 +4882,23 @@ var MediaElementPlayer = function () {
 			media.addEventListener('play', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				error.style.display = 'none';
 				hasError = false;
 			});
 			media.addEventListener('playing', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				error.style.display = 'none';
 				hasError = false;
 			});
 			media.addEventListener('seeking', function () {
 				bigPlay.style.display = 'none';
 				loading.style.display = '';
-				if (buffer !== null) {
-					buffer.style.display = '';
-				}
 				hasError = false;
 			});
 			media.addEventListener('seeked', function () {
 				bigPlay.style.display = t.paused && !_constants.IS_STOCK_ANDROID ? '' : 'none';
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				hasError = false;
 			});
 			media.addEventListener('pause', function () {
@@ -4872,24 +4906,15 @@ var MediaElementPlayer = function () {
 				if (!_constants.IS_STOCK_ANDROID && !hasError) {
 					bigPlay.style.display = '';
 				}
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				hasError = false;
 			});
 			media.addEventListener('waiting', function () {
 				loading.style.display = '';
-				if (buffer !== null) {
-					buffer.style.display = '';
-				}
 				hasError = false;
 			});
 
 			media.addEventListener('loadeddata', function () {
 				loading.style.display = '';
-				if (buffer !== null) {
-					buffer.style.display = '';
-				}
 
 				if (_constants.IS_ANDROID) {
 					media.canplayTimeout = setTimeout(function () {
@@ -4904,9 +4929,6 @@ var MediaElementPlayer = function () {
 			});
 			media.addEventListener('canplay', function () {
 				loading.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 
 				clearTimeout(media.canplayTimeout);
 				hasError = false;
@@ -4916,9 +4938,6 @@ var MediaElementPlayer = function () {
 				t._handleError(e, t.media, t.node);
 				loading.style.display = 'none';
 				bigPlay.style.display = 'none';
-				if (buffer !== null) {
-					buffer.style.display = 'none';
-				}
 				hasError = true;
 			});
 
@@ -5978,7 +5997,7 @@ var FlashMediaElementRenderer = {
 				settings.push('width="${flashWidth}"');
 				settings.push('height="${flashHeight}"');
 			} else {
-				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+				settings.push('style="position: fixed; left: -9999em; top: -9999em;"');
 			}
 
 			flash.flashWrapper.innerHTML = '<embed ' + settings.join(' ') + '>';

@@ -81,7 +81,7 @@ export const PluginDetector = {
 					version[i] = parseInt(version[i].match(/\d+/), 10);
 				}
 			}
-		// Internet Explorer / ActiveX
+			// Internet Explorer / ActiveX
 		} else if (window.ActiveXObject !== undefined) {
 			try {
 				ax = new ActiveXObject(activeX);
@@ -203,7 +203,7 @@ const FlashMediaElementRenderer = {
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
 				flash[methodName] = () => {
-					if(isActive) {
+					if (isActive) {
 						if (flash.flashApi !== null) {
 
 							// send call up to Flash ExternalInterface API
@@ -228,7 +228,7 @@ const FlashMediaElementRenderer = {
 				};
 
 			}
-			;
+		;
 		methods.push('stop');
 		for (let i = 0, total = methods.length; i < total; i++) {
 			assignMethods(methods[i]);
@@ -320,7 +320,7 @@ const FlashMediaElementRenderer = {
 			const specialIEContainer = document.createElement('div');
 			flash.flashWrapper.appendChild(specialIEContainer);
 
-			if(IS_EDGE) {
+			if (IS_EDGE) {
 				settings = [
 					'type="application/x-shockwave-flash"',
 					'data="' + flash.options.pluginPath + flash.options.filename + '"', 'id="__' + flash.id + '"',
@@ -350,7 +350,7 @@ const FlashMediaElementRenderer = {
 				`<param name="allowScriptAccess" value="${flash.options.shimScriptAccess}" />` +
 				`<param name="allowFullScreen" value="true" />` +
 				`<div>${i18n.t('mejs.install-flash')}</div>` +
-			`</object>`;
+				`</object>`;
 
 		} else {
 
@@ -376,7 +376,7 @@ const FlashMediaElementRenderer = {
 				settings.push('height="${flashHeight}"');
 			}
 			else {
-				settings.push('style="clip: rect(0 0 0 0); position: absolute;"');
+				settings.push('style="position: fixed; left: -9999em; top: -9999em;"');
 			}
 
 			flash.flashWrapper.innerHTML = `<embed ${settings.join(' ')}>`;
