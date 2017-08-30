@@ -397,7 +397,6 @@
 		}
 		private function _stateHandler(event: HLSEvent): void {
 			_hlsState = event.state;
-			log(_hlsState);
 			switch (event.state) {
 				case HLSPlayStates.PLAYING:
 					_isPaused = false;
