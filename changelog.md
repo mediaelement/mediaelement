@@ -24,6 +24,7 @@
 * Moved code inside `player.js` to corresponding features to restore original order or operations when creating layers @rafa8626
 * Added `unmute` command for Facebook renderer @rafa8626
 * Fixed events emitting and run handlers of active renderer only for Flash and HTML5 renderer (https://github.com/mediaelement/mediaelement/pull/2368) @milax
+* Fixed issues when setting sources for Flash HLS renderer @rafa8626
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

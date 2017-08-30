@@ -4,6 +4,7 @@
 	import flash.events.*;
 	import flash.media.*;
 	import flash.net.*;
+	import flash.utils.setTimeout;
 	import flash.system.*;
 	import flash.external.*;
 
@@ -132,6 +133,7 @@
 				ExternalInterface.addCallback('fire_play', fire_play);
 				ExternalInterface.addCallback('fire_pause', fire_pause);
 				ExternalInterface.addCallback('fire_setSize', fire_setSize);
+				ExternalInterface.addCallback('fire_stop', fire_stop);
 
 				ExternalInterface.call('(function(){window["__ready__' + _id + '"]()})()', null);
 			}
@@ -142,15 +144,13 @@
 		//
 		private function fire_load(): void {
 			if (_url) {
-				fire_stop();
 				sendEvent("loadstart");
 				_hls.load(_url);
 			}
 		}
 		private function fire_play(): void {
 			if (!_isManifestLoaded) {
-				_playqueued = true;
-				fire_load();
+				return;
 			}
 
 			if (_hlsState == HLSPlayStates.PAUSED || _hlsState == HLSPlayStates.PAUSED_BUFFERING) {
@@ -158,6 +158,7 @@
 			} else {
 				_hls.stream.play();
 			}
+
 		}
 		private function fire_pause(): void {
 			if (!_isManifestLoaded) {
@@ -225,6 +226,7 @@
 		// Setters
 		//
 		private function set_src(url: String): void {
+			fire_stop();
 			_url = url;
 			_hls.load(_url);
 		}
@@ -395,6 +397,7 @@
 		}
 		private function _stateHandler(event: HLSEvent): void {
 			_hlsState = event.state;
+			log(_hlsState);
 			switch (event.state) {
 				case HLSPlayStates.PLAYING:
 					_isPaused = false;
@@ -412,7 +415,7 @@
 					if (parseInt(_position) >= parseInt(_duration) && !_isEnded) {
 						_isPaused = true;
 						_isEnded = true;
-						sendEvent("pause");
+						// sendEvent("pause");
 						sendEvent("ended");
 					}
 					break;
