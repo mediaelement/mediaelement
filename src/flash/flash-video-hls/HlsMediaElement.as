@@ -392,6 +392,14 @@
 				_videoWidth = videoWidth;
 				fire_setSize(_videoWidth, _videoHeight);
 			}
+
+			if (parseInt(_position) >= parseInt(_duration) && !_isEnded) {
+				_isPaused = true;
+				_isEnded = true;
+				// sendEvent("pause");
+				sendEvent("ended");
+			}
+
 			sendEvent("progress");
 			sendEvent("timeupdate");
 		}
