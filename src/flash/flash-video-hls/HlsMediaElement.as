@@ -150,6 +150,7 @@
 		}
 		private function fire_play(): void {
 			if (!_isManifestLoaded) {
+				fire_load();
 				return;
 			}
 
@@ -396,7 +397,7 @@
 			if (parseInt(_position) >= parseInt(_duration) && !_isEnded) {
 				_isPaused = true;
 				_isEnded = true;
-				// sendEvent("pause");
+				sendEvent("pause");
 				sendEvent("ended");
 			}
 
@@ -422,7 +423,7 @@
 					if (parseInt(_position) >= parseInt(_duration) && !_isEnded) {
 						_isPaused = true;
 						_isEnded = true;
-						// sendEvent("pause");
+						sendEvent("pause");
 						sendEvent("ended");
 					}
 					break;
