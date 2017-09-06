@@ -25,7 +25,7 @@
 * Added `unmute` command for Facebook renderer @rafa8626
 * Fixed events emitting and run handlers of active renderer only for Flash and HTML5 renderer (https://github.com/mediaelement/mediaelement/pull/2368) @milax
 * Fixed issues when setting sources for Flash HLS renderer and added missing events @rafa8626
-* Upgraded `hls.js` to 0.8.1 version @rafa8626
+* Upgraded `hls.js` to 0.8.1 version and `flv.js` to 1.3.3 version @rafa8626
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

@@ -35,7 +35,7 @@ const NativeFlv = {
 			});
 		} else {
 			settings.options.path = typeof settings.options.path === 'string' ?
-				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.2/flv.min.js';
+				settings.options.path : 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.3/flv.min.js';
 
 			NativeFlv.promise = NativeFlv.promise || loadScript(settings.options.path);
 			NativeFlv.promise.then(() => {
@@ -66,7 +66,7 @@ const FlvNativeRenderer = {
 		prefix: 'native_flv',
 		flv: {
 			// Special config: used to set the local path/URL of flv.js library
-			path: 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.2/flv.min.js',
+			path: 'https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.3.3/flv.min.js',
 			// To modify more elements from FLV player,
 			// see https://github.com/Bilibili/flv.js/blob/master/docs/api.md#config
 			cors: true,
