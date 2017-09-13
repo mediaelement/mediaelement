@@ -59,7 +59,7 @@ success | callback | | Action(s) that will be executed as soon as the source is 
 error | callback | | Action(s) that will be executed if source doesn't load for any reason. Passes same arguments as `success`
 dailymotion | object | | See [Documentation](https://developer.dailymotion.com/player)
 dash | object | | Accepts `debug`, `drm` (object to load protected/licensed streaming; read [here](https://github.com/Axinom/drm-quick-start) for more information) and `path` parameters to indicate `dash.js` URL/local path
-facebook | object | | See [Documentation](https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup)
+facebook | object | | See [Documentation](https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup) (and a custom `lang` parameter to indicate the FB SDK language)
 flv | object | | See [Documentation](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) (and a custom `path` parameter to indicate where to load library)
 hls | object | | See [Documentation](https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning) (and a custom `path` parameter to indicate where to load library)
 youtube | object | | See [Documentation](https://developers.google.com/youtube/player_parameters#Parameters); also, a custom `nocookie` parameter to switch to YouTube's no-cookie URL and `imageQuality` parameter if user decides to use Image API to load a YouTube poster based on YouTube video ID (possible values: `default`, `hqdefault`, `mqdefault`, `sddefault` and `maxresdefault`)

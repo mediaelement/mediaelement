@@ -53,7 +53,7 @@ const NativeDash = {
 	 */
 	_createPlayer: (settings) => {
 		const player = dashjs.MediaPlayer().create();
-		window['__ready__' + settings.id](player);
+		window[`__ready__${settings.id}`](player);
 		return player;
 	}
 };

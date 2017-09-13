@@ -86,7 +86,7 @@ const DailyMotionApi = {
 		});
 
 		player.addEventListener('apiready', () => {
-			window['__ready__' + settings.id](player, {paused: true, ended: false});
+			window[`__ready__${settings.id}`](player, {paused: true, ended: false});
 		});
 	},
 

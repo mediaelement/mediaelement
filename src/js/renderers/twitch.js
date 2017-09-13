@@ -37,7 +37,7 @@ const TwitchApi = {
 	 */
 	_createPlayer: (settings) => {
 		const player = new Twitch.Player(settings.id, settings);
-		window['__ready__' + settings.id](player);
+		window[`__ready__${settings.id}`](player);
 	},
 
 	/**

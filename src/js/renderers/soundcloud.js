@@ -34,7 +34,7 @@ const SoundCloudApi = {
 	 */
 	_createPlayer: (settings) => {
 		const player = SC.Widget(settings.iframe);
-		window['__ready__' + settings.id](player);
+		window[`__ready__${settings.id}`](player);
 	}
 };
 

@@ -1,6 +1,6 @@
 ### Version History
 
-*X.X.X (??/??/??)*
+*4.2.6 (2017/09/??)*
 
 * Fixed positioning of progress bar tooltip @rafa8626
 * Added style to avoid flickering when using volume on Chrome @rafa8626
@@ -26,6 +26,7 @@
 * Fixed events emitting and run handlers of active renderer only for Flash and HTML5 renderer (https://github.com/mediaelement/mediaelement/pull/2368) @milax
 * Fixed issues when setting sources for Flash HLS renderer and added missing events @rafa8626
 * Upgraded `hls.js` to 0.8.1 version and `flv.js` to 1.3.3 version @rafa8626
+* Refactor `Facebook` renderer to solve issues when instantiating multiple videos and added new `lang` parameter to load language on SDK @rafa8626
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

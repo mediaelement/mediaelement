@@ -54,7 +54,7 @@ const NativeHls = {
 	 */
 	_createPlayer: (settings) => {
 		const player = new Hls(settings.options);
-		window['__ready__' + settings.id](player);
+		window[`__ready__${settings.id}`](player);
 		return player;
 	}
 };

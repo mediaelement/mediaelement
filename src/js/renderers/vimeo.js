@@ -39,7 +39,7 @@ const VimeoApi = {
 	 */
 	_createPlayer: (settings) => {
 		const player = new Vimeo.Player(settings.iframe);
-		window['__ready__' + settings.id](player);
+		window[`__ready__${settings.id}`](player);
 	},
 
 	/**
