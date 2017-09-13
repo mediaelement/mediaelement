@@ -88,10 +88,10 @@ const TwitchApi = {
 
 		for (let i = 0, total = parameters.length; i < total; i++) {
 			const paramParts = parameters[i].split('=');
-			if (~paramParts[0].indexOf('channel=')) {
+			if (~paramParts[0].indexOf('channel')) {
 				twitchId = paramParts[1];
 				break;
-			} else if (~paramParts[0].indexOf('video=')) {
+			} else if (~paramParts[0].indexOf('video')) {
 				twitchId = `v${paramParts[1]}`;
 				break;
 			}
