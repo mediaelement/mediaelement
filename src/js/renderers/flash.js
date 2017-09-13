@@ -323,15 +323,17 @@ const FlashMediaElementRenderer = {
 			if (IS_EDGE) {
 				settings = [
 					'type="application/x-shockwave-flash"',
-					'data="' + flash.options.pluginPath + flash.options.filename + '"', 'id="__' + flash.id + '"',
-					'width="' + flashWidth + '"', 'height="' + flashHeight + '"'
+					`data="${flash.options.pluginPath}${flash.options.filename}"`,
+					`id="__${flash.id}"`,
+					`width="${flashWidth}"`,
+					`height="${flashHeight}'"`
 				];
 			}
 			else {
 				settings = [
 					'classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"',
 					'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"',
-					`id="__${flash.id }"`,
+					`id="__${flash.id}"`,
 					`width="${flashWidth}"`,
 					`height="${flashHeight}"`
 				];
@@ -372,8 +374,8 @@ const FlashMediaElementRenderer = {
 
 			// set width&height attributes for video only
 			if (isVideo) {
-				settings.push('width="${flashWidth}"');
-				settings.push('height="${flashHeight}"');
+				settings.push(`width="${flashWidth}"`);
+				settings.push(`height="${flashHeight}"`);
 			}
 			else {
 				settings.push('style="position: fixed; left: -9999em; top: -9999em;"');

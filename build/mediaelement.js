@@ -1728,7 +1728,7 @@ var FlashMediaElementRenderer = {
 			flash.flashWrapper.appendChild(specialIEContainer);
 
 			if (_constants.IS_EDGE) {
-				settings = ['type="application/x-shockwave-flash"', 'data="' + flash.options.pluginPath + flash.options.filename + '"', 'id="__' + flash.id + '"', 'width="' + flashWidth + '"', 'height="' + flashHeight + '"'];
+				settings = ['type="application/x-shockwave-flash"', 'data="' + flash.options.pluginPath + flash.options.filename + '"', 'id="__' + flash.id + '"', 'width="' + flashWidth + '"', 'height="' + flashHeight + '\'"'];
 			} else {
 				settings = ['classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"', 'codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"', 'id="__' + flash.id + '"', 'width="' + flashWidth + '"', 'height="' + flashHeight + '"'];
 			}
@@ -1743,8 +1743,8 @@ var FlashMediaElementRenderer = {
 			settings = ['id="__' + flash.id + '"', 'name="__' + flash.id + '"', 'play="true"', 'loop="false"', 'quality="high"', 'bgcolor="#000000"', 'wmode="transparent"', 'allowScriptAccess="' + flash.options.shimScriptAccess + '"', 'allowFullScreen="true"', 'type="application/x-shockwave-flash"', 'pluginspage="//www.macromedia.com/go/getflashplayer"', 'src="' + flash.options.pluginPath + flash.options.filename + '"', 'flashvars="' + flashVars.join('&') + '"'];
 
 			if (isVideo) {
-				settings.push('width="${flashWidth}"');
-				settings.push('height="${flashHeight}"');
+				settings.push('width="' + flashWidth + '"');
+				settings.push('height="' + flashHeight + '"');
 			} else {
 				settings.push('style="position: fixed; left: -9999em; top: -9999em;"');
 			}
