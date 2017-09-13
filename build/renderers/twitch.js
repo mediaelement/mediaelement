@@ -82,12 +82,12 @@ var TwitchApi = {
 		var parts = url.split('?');
 		url = parts[0];
 		var id = url.substring(url.lastIndexOf('/') + 1);
-		return (/^\d+$/i.test(id) !== null ? 'v' + id : id
+		return (/^\d+$/i.test(id) ? 'v' + id : id
 		);
 	},
 
 	getTwitchType: function getTwitchType(id) {
-		return (/^v\d+/i.test(id) !== null ? 'video' : 'channel'
+		return (/^v\d+/i.test(id) ? 'video' : 'channel'
 		);
 	}
 };
@@ -286,12 +286,12 @@ var TwitchIframeRenderer = {
 
 			var timer = void 0;
 
-			twitchPlayer.addEventListener('ready', function () {
+			twitchPlayer.addEventListener(Twitch.Player.READY, function () {
 				paused = false;
 				ended = false;
 				sendEvents(['rendererready', 'loadedmetadata', 'loadeddata', 'canplay']);
 			});
-			twitchPlayer.addEventListener('play', function () {
+			twitchPlayer.addEventListener(Twitch.Player.PLAY, function () {
 				if (!hasStartedPlaying) {
 					hasStartedPlaying = true;
 				}
@@ -304,14 +304,14 @@ var TwitchIframeRenderer = {
 					sendEvents(['timeupdate']);
 				}, 250);
 			});
-			twitchPlayer.addEventListener('pause', function () {
+			twitchPlayer.addEventListener(Twitch.Player.PAUSE, function () {
 				paused = true;
 				ended = false;
 				if (!twitchPlayer.getEnded()) {
 					sendEvents(['pause']);
 				}
 			});
-			twitchPlayer.addEventListener('ended', function () {
+			twitchPlayer.addEventListener(Twitch.Player.ENDED, function () {
 				paused = true;
 				ended = true;
 				sendEvents(['ended']);
