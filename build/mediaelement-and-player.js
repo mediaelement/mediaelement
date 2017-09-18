@@ -864,9 +864,23 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	    triggerAction = function triggerAction(methodName, args) {
 		try {
 			if (methodName === 'play' && t.mediaElement.rendererName === 'native_dash') {
-				setTimeout(function () {
-					t.mediaElement.renderer[methodName](args);
-				}, 150);
+				var response = t.mediaElement.renderer[methodName](args);
+				if (response && typeof response.then === 'function') {
+					response.catch(function () {
+						if (t.mediaElement.paused) {
+							setTimeout(function () {
+								var tmpResponse = t.mediaElement.renderer.play();
+								if (tmpResponse !== undefined) {
+									tmpResponse.catch(function () {
+										if (!t.mediaElement.renderer.paused) {
+											t.mediaElement.renderer.pause();
+										}
+									});
+								}
+							}, 150);
+						}
+					});
+				}
 			} else {
 				t.mediaElement.renderer[methodName](args);
 			}

@@ -29,6 +29,7 @@
 * Refactor `Facebook` renderer to solve issues when instantiating multiple videos and added new `lang` parameter to load language on SDK @rafa8626
 * Fixed typos in `Twitch` renderer that caused channels not to play properly @rafa8626
 * Fixed typos in `Flash` renderer to avoid issues with `embed` dimensions @rafa8626
+* Reintegrated old workflow to deal only with `dash.js` play errors @rafa8626 
 * Updated documentation @rafa8626
 
 *4.2.5 (2017/08/09)*

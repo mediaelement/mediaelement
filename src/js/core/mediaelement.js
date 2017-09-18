@@ -391,9 +391,24 @@ class MediaElement {
 				try {
 					// Sometimes, playing native DASH media might throw `DOMException: The play() request was interrupted`.
 					if (methodName === 'play' && t.mediaElement.rendererName === 'native_dash') {
-						setTimeout(() => {
-							t.mediaElement.renderer[methodName](args);
-						}, 150);
+						const response = t.mediaElement.renderer[methodName](args);
+						if (response && typeof response.then === 'function') {
+							response.catch(() => {
+								if (t.mediaElement.paused) {
+									setTimeout(() => {
+										const tmpResponse = t.mediaElement.renderer.play();
+										if (tmpResponse !== undefined) {
+											// Final attempt: pause the media if not paused
+											tmpResponse.catch(() => {
+												if (!t.mediaElement.renderer.paused) {
+													t.mediaElement.renderer.pause();
+												}
+											});
+										}
+									}, 150);
+								}
+							});
+						}
 					} else {
 						t.mediaElement.renderer[methodName](args);
 					}
