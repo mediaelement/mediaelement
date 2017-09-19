@@ -1,6 +1,6 @@
 ### Version History
 
-*4.2.6 (2017/09/??)*
+*4.2.6 (2017/09/19)*
 
 * Fixed positioning of progress bar tooltip @rafa8626
 * Added style to avoid flickering when using volume on Chrome @rafa8626
