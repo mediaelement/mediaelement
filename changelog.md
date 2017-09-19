@@ -31,6 +31,7 @@
 * Fixed typos in `Flash` renderer to avoid issues with `embed` dimensions @rafa8626
 * Reintegrated old workflow to deal only with `dash.js` play errors @rafa8626 
 * Updated documentation @rafa8626
+* Added documentation about MEJS installation through Bower (https://github.com/mediaelement/mediaelement/pull/2399) @thompsonemerson
 
 *4.2.5 (2017/08/09)*
 
