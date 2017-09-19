@@ -71,7 +71,9 @@ To get the default installation there are several different ways.
 
 4. Through NPM: `npm install mediaelement`
 
-5. If you are using Meteor: `meteor add johndyer:mediaelement` or `meteor npm install mediaelement`
+5. Through BOWER: `bower install mediaelement`
+
+6. If you are using Meteor: `meteor add johndyer:mediaelement` or `meteor npm install mediaelement`
 
 
 <a id="wordpress"></a>
