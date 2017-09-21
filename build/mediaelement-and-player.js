@@ -5992,6 +5992,14 @@ var FlashMediaElementRenderer = {
 			flashVars.push('pseudostreamtype=' + flash.options.pseudoStreamingType);
 		}
 
+		if (flash.options.streamDelimiter) {
+			flashVars.push('streamdelimiter=' + encodeURIComponent(flash.options.streamDelimiter));
+		}
+
+		if (flash.options.proxyType) {
+			flashVars.push('proxytype=' + flash.options.proxyType);
+		}
+
 		mediaElement.appendChild(flash.flashWrapper);
 		mediaElement.originalNode.style.display = 'none';
 
@@ -6100,7 +6108,11 @@ if (hasFlash) {
 
 			pseudoStreamingStartQueryParam: 'start',
 
-			pseudoStreamingType: 'byte'
+			pseudoStreamingType: 'byte',
+
+			proxyType: '',
+
+			streamDelimiter: ''
 		},
 
 		canPlayType: function canPlayType(type) {

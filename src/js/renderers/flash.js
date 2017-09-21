@@ -311,6 +311,14 @@ const FlashMediaElementRenderer = {
 			flashVars.push(`pseudostreamtype=${flash.options.pseudoStreamingType}`);
 		}
 
+		if (flash.options.streamDelimiter) {
+			flashVars.push(`streamdelimiter=${encodeURIComponent(flash.options.streamDelimiter)}`);
+		}
+
+		if (flash.options.proxyType) {
+			flashVars.push(`proxytype=${flash.options.proxyType}`);
+		}
+
 		mediaElement.appendChild(flash.flashWrapper);
 		mediaElement.originalNode.style.display = 'none';
 
@@ -464,7 +472,11 @@ if (hasFlash) {
 			// start query parameter sent to server for pseudo-streaming
 			pseudoStreamingStartQueryParam: 'start',
 			// pseudo streaming type: use `time` for time based seeking (MP4) or `byte` for file byte position (FLV)
-			pseudoStreamingType: 'byte'
+			pseudoStreamingType: 'byte',
+			// Possible values: `none`, `HTTP`, `CONNECTOnly`, `CONNECT`, and `best`
+			proxyType: '',
+			// Indicate how to delimit folder structure in RTMP (`/`, `:`, `>`, etc.)
+			streamDelimiter: '',
 		},
 		/**
 		 * Determine if a specific element type can be played with this render

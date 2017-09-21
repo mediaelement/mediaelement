@@ -3,6 +3,7 @@
 *X.X.X (??/??/??)*
 
 * Fixed issue with `setFillMode` when using cross-domain URLs in iframe @rafa8626
+* Added new `proxyType` and `streamDelimiter` variables to Flash video to support RTMPS compatibility @rafa8626
 
 *4.2.6 (2017/09/19)*
 
