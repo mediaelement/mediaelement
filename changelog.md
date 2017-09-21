@@ -1,5 +1,9 @@
 ### Version History
 
+*X.X.X (??/??/??)*
+
+* Fixed issue with `setFillMode` when using cross-domain URLs in iframe @rafa8626
+
 *4.2.6 (2017/09/19)*
 
 * Fixed positioning of progress bar tooltip @rafa8626

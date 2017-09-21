@@ -4483,22 +4483,31 @@ var MediaElementPlayer = function () {
 		key: 'setFillMode',
 		value: function setFillMode() {
 			var t = this;
+			var isIframe = _window2.default.self !== _window2.default.top && _window2.default.frameElement !== null;
+			var parent = function () {
+				var parentEl = void 0,
+				    el = t.container;
 
-			var parent = void 0,
-			    isIframe = false;
+				while (el) {
+					try {
+						if (_constants.IS_FIREFOX && el.tagName.toLowerCase() === 'html' && _window2.default.self !== _window2.default.top && _window2.default.frameElement !== null) {
+							return _window2.default.frameElement;
+						} else {
+							parentEl = el.parentElement;
+						}
+					} catch (e) {
+						parentEl = el.parentElement;
+					}
 
-			try {
-				if (_window2.default.self !== _window2.default.top) {
-					isIframe = true;
-					parent = _window2.default.frameElement;
-				} else {
-					parent = t.outerContainer;
+					if (parentEl && dom.visible(parentEl)) {
+						return parentEl;
+					}
+					el = parentEl;
 				}
-			} catch (e) {
-				parent = t.outerContainer;
-			}
 
-			var parentStyles = getComputedStyle(parent);
+				return null;
+			}();
+			var parentStyles = parent ? getComputedStyle(parent, null) : getComputedStyle(_document2.default.body, null);
 
 			if (t.node.style.height !== 'none' && t.node.style.height !== t.height) {
 				t.node.style.height = 'auto';

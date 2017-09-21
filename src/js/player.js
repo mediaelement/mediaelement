@@ -1197,24 +1197,32 @@ class MediaElementPlayer {
 
 	setFillMode () {
 		const t = this;
+		const isIframe = window.self !== window.top && window.frameElement !== null;
+		const parent = (() => {
+			let parentEl, el = t.container;
 
-		let
-			parent,
-			isIframe = false
-		;
+			// traverse parents to find the closest visible one
+			while (el) {
+				try {
+					// Firefox has an issue calculating dimensions on hidden iframes
+					if (IS_FIREFOX && el.tagName.toLowerCase() === 'html' && window.self !== window.top && window.frameElement !== null) {
+						return window.frameElement;
+					} else {
+						parentEl = el.parentElement;
+					}
+				} catch (e) {
+					parentEl = el.parentElement;
+				}
 
-		try {
-			if (window.self !== window.top) {
-				isIframe = true;
-				parent = window.frameElement;
-			} else {
-				parent = t.outerContainer;
+				if (parentEl && dom.visible(parentEl)) {
+					return parentEl;
+				}
+				el = parentEl;
 			}
-		} catch (e) {
-			parent = t.outerContainer;
-		}
 
-		let parentStyles = getComputedStyle(parent);
+			return null;
+		})();
+		let parentStyles = parent ? getComputedStyle(parent, null) : getComputedStyle(document.body, null);
 
 		// Remove the responsive attributes in the event they are there
 		if (t.node.style.height !== 'none' && t.node.style.height !== t.height) {
