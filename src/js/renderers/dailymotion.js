@@ -157,7 +157,8 @@ const DailyMotionIframeRenderer = {
 		let
 			events,
 			dmPlayer = null,
-			dmIframe = null
+			dmIframe = null,
+			muted = mediaElement.originalNode.muted
 		;
 
 		dm.options = options;
@@ -190,7 +191,8 @@ const DailyMotionIframeRenderer = {
 							case 'ended':
 								return dmPlayer.ended;
 							case 'muted':
-								return dmPlayer.muted;
+								muted = dmPlayer.muted;
+								return muted;
 							case 'buffered':
 								const percentLoaded = dmPlayer.bufferedTime,
 									duration = dmPlayer.duration;
@@ -226,7 +228,11 @@ const DailyMotionIframeRenderer = {
 								dmPlayer.seek(value);
 								break;
 							case 'muted':
+								if (value === true) {
+									dmPlayer.setVolume(0);
+								}
 								dmPlayer.setMuted(value);
+								muted = value;
 								setTimeout(() => {
 									const event = mejs.Utils.createEvent('volumechange', dm);
 									mediaElement.dispatchEvent(event);
@@ -234,6 +240,14 @@ const DailyMotionIframeRenderer = {
 								break;
 							case 'volume':
 								dmPlayer.setVolume(value);
+								if (value === 0 && !dmPlayer.muted) {
+									dmPlayer.setMuted(true);
+									muted = true;
+								} else if (value > 0 && dmPlayer.muted) {
+									dmPlayer.setMuted(false);
+									muted = false;
+								}
+
 								setTimeout(() => {
 									const event = mejs.Utils.createEvent('volumechange', dm);
 									mediaElement.dispatchEvent(event);
@@ -322,8 +336,8 @@ const DailyMotionIframeRenderer = {
 			}
 
 			if (mediaElement.originalNode.muted) {
-				dmPlayer.setMuted(true);
 				dmPlayer.setVolume(0);
+				dmPlayer.setMuted(true);
 			}
 
 			events = mejs.html5media.events;
@@ -333,7 +347,7 @@ const DailyMotionIframeRenderer = {
 				// Deprecated event; not consider it
 				if (eventName !== 'ended') {
 					dmPlayer.addEventListener(eventName, (e) => {
-						const event = mejs.Utils.createEvent(e.type, dmPlayer);
+						const event = mejs.Utils.createEvent(e.type, dm);
 						mediaElement.dispatchEvent(event);
 					});
 				}
@@ -345,42 +359,39 @@ const DailyMotionIframeRenderer = {
 
 			// Custom DailyMotion events
 			dmPlayer.addEventListener('ad_start', () => {
-				let event = mejs.Utils.createEvent('play', dmPlayer);
+				let event = mejs.Utils.createEvent('play', dm);
 				mediaElement.dispatchEvent(event);
 
-				event = mejs.Utils.createEvent('progress', dmPlayer);
+				event = mejs.Utils.createEvent('progress', dm);
 				mediaElement.dispatchEvent(event);
 
-				event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+				event = mejs.Utils.createEvent('timeupdate', dm);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_timeupdate', () => {
-				const event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+				const event = mejs.Utils.createEvent('timeupdate', dm);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_pause', () => {
-				const event = mejs.Utils.createEvent('pause', dmPlayer);
-				mediaElement.dispatchEvent(event);
-			});
-			dmPlayer.addEventListener('ad_end', () => {
-				const event = mejs.Utils.createEvent('ended', dmPlayer);
+				const event = mejs.Utils.createEvent('pause', dm);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('start', function () {
-				if (mediaElement.originalNode.muted) {
-					dmPlayer.setMuted(true);
+				if (dmPlayer.muted) {
+					const event = mejs.Utils.createEvent('volumechange', dm);
+					mediaElement.dispatchEvent(event);
 				}
 			});
 			dmPlayer.addEventListener('video_start', () => {
-				const event = mejs.Utils.createEvent('play', dmPlayer);
+				const event = mejs.Utils.createEvent('play', dm);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('ad_timeupdate', () => {
-				const event = mejs.Utils.createEvent('timeupdate', dmPlayer);
+				const event = mejs.Utils.createEvent('timeupdate', dm);
 				mediaElement.dispatchEvent(event);
 			});
 			dmPlayer.addEventListener('video_end', () => {
-				const event = mejs.Utils.createEvent('ended', dmPlayer);
+				const event = mejs.Utils.createEvent('ended', dm);
 				mediaElement.dispatchEvent(event);
 
 				// Check `loop` attribute
