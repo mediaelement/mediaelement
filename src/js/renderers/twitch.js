@@ -351,7 +351,7 @@ const TwitchIframeRenderer = {
 			const
 				events = ['mouseover', 'mouseout'],
 				assignEvents = (e) => {
-					const event = createEvent(e.type, twitch);
+					const event = mejs.Utils.createEvent(e.type, twitch);
 					mediaElement.dispatchEvent(event);
 				}
 			;

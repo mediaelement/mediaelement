@@ -7188,9 +7188,6 @@ var YouTubeIframeRenderer = {
 				showinfo: 0,
 				modestbranding: 0,
 				html5: 1,
-				playsinline: 0,
-				start: 0,
-				end: 0,
 				iv_load_policy: 3
 			}, youtube.options.youtube),
 			origin: _window2.default.location.host,
@@ -7220,7 +7217,7 @@ var YouTubeIframeRenderer = {
 
 					youTubeIframe = youTubeApi.getIframe();
 
-					if (mediaElement.originalNode.getAttribute('muted')) {
+					if (mediaElement.originalNode.muted) {
 						youTubeApi.mute();
 					}
 
@@ -7294,7 +7291,7 @@ var YouTubeIframeRenderer = {
 			}
 		};
 
-		if (isAudio) {
+		if (isAudio || !isAudio && mediaElement.originalNode.hasAttribute('playsinline')) {
 			youtubeSettings.playerVars.playsinline = 1;
 		}
 

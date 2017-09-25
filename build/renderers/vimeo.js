@@ -256,6 +256,10 @@ var vimeoIframeRenderer = {
 				}
 			}
 
+			if (mediaElement.originalNode.muted) {
+				vimeoPlayer.setVolume(0);
+			}
+
 			var vimeoIframe = document.getElementById(vimeo.id);
 			var events = void 0;
 

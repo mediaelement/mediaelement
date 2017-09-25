@@ -273,7 +273,9 @@ const FacebookRenderer = {
 					;
 
 					fb.setSize(width, height);
-					fbPlayer.unmute();
+					if (!mediaElement.originalNode.muted) {
+						fbPlayer.unmute();
+					}
 
 					if (autoplay) {
 						fbPlayer.play();
