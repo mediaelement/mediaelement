@@ -338,6 +338,9 @@ const DailyMotionIframeRenderer = {
 			if (mediaElement.originalNode.muted) {
 				dmPlayer.setVolume(0);
 				dmPlayer.setMuted(true);
+			} else {
+				dmPlayer.setVolume(dmPlayer.volume);
+				dmPlayer.setMuted(false);
 			}
 
 			events = mejs.html5media.events;
