@@ -432,9 +432,8 @@ const DailyMotionIframeRenderer = {
 		dmSettings.params = Object.assign({}, dm.options.dailymotion);
 
 		// Check for `autoplay` and `muted` attributes to override settings
-		if (mediaElement.originalNode.controls) {
-			dmSettings.params.controls = true;
-		}
+		dmSettings.params.controls = !!mediaElement.originalNode.controls;
+
 		if (mediaElement.originalNode.autoplay) {
 			dmSettings.params.autoplay = true;
 		}

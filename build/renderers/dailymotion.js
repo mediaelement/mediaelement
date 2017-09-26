@@ -361,9 +361,8 @@ var DailyMotionIframeRenderer = {
 
 		dmSettings.params = Object.assign({}, dm.options.dailymotion);
 
-		if (mediaElement.originalNode.controls) {
-			dmSettings.params.controls = true;
-		}
+		dmSettings.params.controls = !!mediaElement.originalNode.controls;
+
 		if (mediaElement.originalNode.autoplay) {
 			dmSettings.params.autoplay = true;
 		}
