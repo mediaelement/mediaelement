@@ -525,10 +525,12 @@ const YouTubeIframeRenderer = {
 		}
 
 		// Check for `autoplay` and `loop` attributes to override settings
+		if (mediaElement.originalNode.controls) {
+			youtubeSettings.playerVars.controls = 1;
+		}
 		if (mediaElement.originalNode.autoplay) {
 			youtubeSettings.playerVars.autoplay = 1;
 		}
-
 		if (mediaElement.originalNode.loop) {
 			youtubeSettings.playerVars.loop = 1;
 		}

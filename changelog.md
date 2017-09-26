@@ -7,6 +7,7 @@
 * Fixed issues with renderers when trying to use `muted` property while using `MediaElement` shim @rafa8626
 * Fixed typo with `Twitch` renderer related to trigger mouse events @rafa8626
 * Fixed typo when assigning options to `Dailymotion` renderer @rafa8626
+* Added missing workflow to set controls on YouTube, Facebook and Dailymotion renderers via `controls` property @rafa8626 
 
 *4.2.6 (2017/09/19)*
 
