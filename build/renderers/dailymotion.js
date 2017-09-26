@@ -353,11 +353,13 @@ var DailyMotionIframeRenderer = {
 		mediaElement.originalNode.style.display = 'none';
 
 		var videoId = DailyMotionApi.getDailyMotionId(mediaFiles[0].src),
-		    dmSettings = Object.assign({
+		    dmSettings = {
 			id: dm.id,
 			container: dmContainer,
 			videoId: videoId
-		}, dm.options.dailymotion);
+		};
+
+		dmSettings.params = Object.assign({}, dm.options.dailymotion);
 
 		if (mediaElement.originalNode.autoplay) {
 			dmSettings.params.autoplay = true;
@@ -365,6 +367,7 @@ var DailyMotionIframeRenderer = {
 		if (mediaElement.originalNode.muted) {
 			dmSettings.params.mute = true;
 		}
+		dmSettings.params.api = '1';
 
 		DailyMotionApi.enqueueIframe(dmSettings);
 

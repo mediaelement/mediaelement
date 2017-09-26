@@ -520,7 +520,7 @@ const YouTubeIframeRenderer = {
 
 		// The following will prevent that, in mobile devices, YouTube is displayed in fullscreen when using audio
 		// of if the `playsinline` attribute is not set
-		if (isAudio || (!isAudio && mediaElement.originalNode.hasAttribute('playsinline'))) {
+		if (isAudio || mediaElement.originalNode.hasAttribute('playsinline')) {
 			youtubeSettings.playerVars.playsinline = 1;
 		}
 

@@ -3031,7 +3031,7 @@ var YouTubeIframeRenderer = {
 			}
 		};
 
-		if (isAudio || !isAudio && mediaElement.originalNode.hasAttribute('playsinline')) {
+		if (isAudio || mediaElement.originalNode.hasAttribute('playsinline')) {
 			youtubeSettings.playerVars.playsinline = 1;
 		}
 

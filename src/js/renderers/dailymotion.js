@@ -423,11 +423,13 @@ const DailyMotionIframeRenderer = {
 
 		const
 			videoId = DailyMotionApi.getDailyMotionId(mediaFiles[0].src),
-			dmSettings = Object.assign({
+			dmSettings = {
 				id: dm.id,
 				container: dmContainer,
 				videoId: videoId
-			}, dm.options.dailymotion);
+			};
+
+		dmSettings.params = Object.assign({}, dm.options.dailymotion);
 
 		// Check for `autoplay` and `muted` attributes to override settings
 		if (mediaElement.originalNode.autoplay) {
@@ -436,6 +438,7 @@ const DailyMotionIframeRenderer = {
 		if (mediaElement.originalNode.muted) {
 			dmSettings.params.mute = true;
 		}
+		dmSettings.params.api = '1';
 
 		DailyMotionApi.enqueueIframe(dmSettings);
 
