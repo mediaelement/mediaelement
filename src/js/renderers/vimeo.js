@@ -307,6 +307,7 @@ const vimeoIframeRenderer = {
 
 			if (mediaElement.originalNode.muted) {
 				vimeoPlayer.setVolume(0);
+				volume = 0;
 			}
 
 			const vimeoIframe = document.getElementById(vimeo.id);

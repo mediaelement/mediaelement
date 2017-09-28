@@ -258,6 +258,7 @@ var vimeoIframeRenderer = {
 
 			if (mediaElement.originalNode.muted) {
 				vimeoPlayer.setVolume(0);
+				volume = 0;
 			}
 
 			var vimeoIframe = document.getElementById(vimeo.id);
