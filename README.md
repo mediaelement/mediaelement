@@ -41,7 +41,7 @@ In general, `MediaElement.js` supports **IE11+, MS Edge, Chrome, Firefox, Safari
 
 ## * IMPORTANT NOTE for Safari users (Jun 8, 2017)
 
-Since Sierra version, `autoplay` policies have changed. You may experience an error if you try to execute `play` programatically or via `autoplay` attribute with MediaElement. 
+Since Sierra version, `autoplay` policies have changed. You may experience an error if you try to execute `play` programatically or via `autoplay` attribute with MediaElement, unless `muted` attribute is specified. 
 
 For more information, read https://webkit.org/blog/7734/auto-play-policy-changes-for-macos/
 
