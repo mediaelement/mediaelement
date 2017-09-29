@@ -39,6 +39,13 @@ In general, `MediaElement.js` supports **IE11+, MS Edge, Chrome, Firefox, Safari
 
 **It is strongly recommended to read the entire documentation and check the `demo` folder to get the most out of this package**. Visit [here](docs) to start.
 
+## * IMPORTANT NOTE for Safari users (Jun 8, 2017)
+
+Since Sierra version, `autoplay` policies have changed. You may experience an error if you try to execute `play` programatically or via `autoplay` attribute with MediaElement. 
+
+For more information, read https://webkit.org/blog/7734/auto-play-policy-changes-for-macos/
+
+
 ## * IMPORTANT CHANGES on `4.2.0` version
 
 As part of the continuous improvements the player, we have decided to drop completely support for IE9 and IE10, since market share of those browsers together is 0.4%, according to http://caniuse.com/usage-table.
