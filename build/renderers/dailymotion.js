@@ -321,6 +321,9 @@ var DailyMotionIframeRenderer = {
 			dmPlayer.addEventListener('video_start', function () {
 				var event = mejs.Utils.createEvent('play', dm);
 				mediaElement.dispatchEvent(event);
+
+				var playingEvent = mejs.Utils.createEvent('playing', dm);
+				mediaElement.dispatchEvent(playingEvent);
 			});
 			dmPlayer.addEventListener('ad_timeupdate', function () {
 				var event = mejs.Utils.createEvent('timeupdate', dm);
