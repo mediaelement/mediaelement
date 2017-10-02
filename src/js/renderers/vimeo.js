@@ -352,6 +352,9 @@ const vimeoIframeRenderer = {
 						if (mediaElement.originalNode.autoplay) {
 							const initEvent = mejs.Utils.createEvent('play', vimeo);
 							mediaElement.dispatchEvent(initEvent);
+
+							const playingEvent = mejs.Utils.createEvent('playing', vimeo);
+							mediaElement.dispatchEvent(playingEvent);
 						}
 					}
 
@@ -377,6 +380,9 @@ const vimeoIframeRenderer = {
 				ended = false;
 				const event = mejs.Utils.createEvent('play', vimeo);
 				mediaElement.dispatchEvent(event);
+
+				const playingEvent = mejs.Utils.createEvent('playing', vimeo);
+				mediaElement.dispatchEvent(playingEvent);
 			});
 			vimeoPlayer.on('pause', () => {
 				paused = true;

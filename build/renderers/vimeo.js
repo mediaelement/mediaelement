@@ -300,6 +300,9 @@ var vimeoIframeRenderer = {
 						if (mediaElement.originalNode.autoplay) {
 							var initEvent = mejs.Utils.createEvent('play', vimeo);
 							mediaElement.dispatchEvent(initEvent);
+
+							var playingEvent = mejs.Utils.createEvent('playing', vimeo);
+							mediaElement.dispatchEvent(playingEvent);
 						}
 					}
 
@@ -324,6 +327,9 @@ var vimeoIframeRenderer = {
 				ended = false;
 				var event = mejs.Utils.createEvent('play', vimeo);
 				mediaElement.dispatchEvent(event);
+
+				var playingEvent = mejs.Utils.createEvent('playing', vimeo);
+				mediaElement.dispatchEvent(playingEvent);
 			});
 			vimeoPlayer.on('pause', function () {
 				paused = true;
