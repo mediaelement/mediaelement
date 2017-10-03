@@ -41,10 +41,21 @@ describe('i18n', () => {
 				i18n.language(12345);
 			}).to.throw(TypeError);
 
+			expect(() => {
+				i18n.language('xxxx');
+			}).to.throw(TypeError);
 
 			expect(() => {
 				i18n.language('x', {});
 			}).to.throw(TypeError);
+
+			expect(() => {
+				i18n.language('xxx', {});
+			}).not.to.throw(TypeError);
+
+			expect(() => {
+				i18n.language('xx-xx', {});
+			}).not.to.throw(TypeError);
 		});
 	});
 
