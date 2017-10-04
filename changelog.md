@@ -11,6 +11,7 @@
 * Updated `hls.js` to version 0.8.4 @rafa8626
 * Added missing `playing` event on `Vimeo` and `Dailymotion` renderer @rafa8626
 * Expanded regexp to accept 3-letter country codes and also underscore for 4-letter country codes @rafa8626
+* Added `init` method for WP compatibility @rafa8626
 
 *4.2.6 (2017/09/19)*
 

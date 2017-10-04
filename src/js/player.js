@@ -230,8 +230,15 @@ class MediaElementPlayer {
 		// add to player array (for focus events)
 		mejs.players[t.id] = t;
 
-		// start up
+		t.init();
+
+		return t;
+	}
+
+	// Added method for WP compatibility
+	init () {
 		const
+			t = this,
 			playerOptions = Object.assign({}, t.options, {
 				success: (media, domNode) => {
 					t._meReady(media, domNode);
@@ -449,8 +456,6 @@ class MediaElementPlayer {
 			const event = createEvent('controlsshown', t.container);
 			t.container.dispatchEvent(event);
 		}
-
-		return t;
 	}
 
 	showControls (doAnimation) {

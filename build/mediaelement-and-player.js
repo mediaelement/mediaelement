@@ -3635,180 +3635,186 @@ var MediaElementPlayer = function () {
 
 		_mejs2.default.players[t.id] = t;
 
-		var playerOptions = Object.assign({}, t.options, {
-			success: function success(media, domNode) {
-				t._meReady(media, domNode);
-			},
-			error: function error(e) {
-				t._handleError(e);
-			}
-		}),
-		    tagName = t.node.tagName.toLowerCase();
-
-		t.isDynamic = tagName !== 'audio' && tagName !== 'video' && tagName !== 'iframe';
-		t.isVideo = t.isDynamic ? t.options.isVideo : tagName !== 'audio' && t.options.isVideo;
-		t.mediaFiles = null;
-		t.trackFiles = null;
-
-		if (_constants.IS_IPAD && t.options.iPadUseNativeControls || _constants.IS_IPHONE && t.options.iPhoneUseNativeControls) {
-			t.node.setAttribute('controls', true);
-
-			if (_constants.IS_IPAD && t.node.getAttribute('autoplay')) {
-				t.play();
-			}
-		} else if ((t.isVideo || !t.isVideo && (t.options.features.length || t.options.useDefaultControls)) && !(_constants.IS_ANDROID && t.options.AndroidUseNativeControls)) {
-			t.node.removeAttribute('controls');
-			var videoPlayerTitle = t.isVideo ? _i18n2.default.t('mejs.video-player') : _i18n2.default.t('mejs.audio-player');
-
-			var offscreen = _document2.default.createElement('span');
-			offscreen.className = t.options.classPrefix + 'offscreen';
-			offscreen.innerText = videoPlayerTitle;
-			t.media.parentNode.insertBefore(offscreen, t.media);
-
-			t.container = _document2.default.createElement('div');
-			t.container.id = t.id;
-			t.container.className = t.options.classPrefix + 'container ' + t.options.classPrefix + 'container-keyboard-inactive ' + t.media.className;
-			t.container.tabIndex = 0;
-			t.container.setAttribute('role', 'application');
-			t.container.setAttribute('aria-label', videoPlayerTitle);
-			t.container.innerHTML = '<div class="' + t.options.classPrefix + 'inner">' + ('<div class="' + t.options.classPrefix + 'mediaelement"></div>') + ('<div class="' + t.options.classPrefix + 'layers"></div>') + ('<div class="' + t.options.classPrefix + 'controls"></div>') + '</div>';
-			t.container.addEventListener('focus', function (e) {
-				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
-					t.showControls(true);
-
-					var btnSelector = (0, _general.isNodeAfter)(e.relatedTarget, t.container) ? '.' + t.options.classPrefix + 'controls .' + t.options.classPrefix + 'button:last-child > button' : '.' + t.options.classPrefix + 'playpause-button > button',
-					    button = t.container.querySelector(btnSelector);
-
-					button.focus();
-				}
-			});
-			t.node.parentNode.insertBefore(t.container, t.node);
-
-			if (!t.options.features.length && !t.options.useDefaultControls) {
-				t.container.style.background = 'transparent';
-				t.container.querySelector('.' + t.options.classPrefix + 'controls').style.display = 'none';
-			}
-
-			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, t.options.classPrefix + 'fill-container')) {
-				t.outerContainer = t.media.parentNode;
-
-				var wrapper = _document2.default.createElement('div');
-				wrapper.className = t.options.classPrefix + 'fill-container';
-				t.container.parentNode.insertBefore(wrapper, t.container);
-				wrapper.appendChild(t.container);
-			}
-
-			if (_constants.IS_ANDROID) {
-				dom.addClass(t.container, t.options.classPrefix + 'android');
-			}
-			if (_constants.IS_IOS) {
-				dom.addClass(t.container, t.options.classPrefix + 'ios');
-			}
-			if (_constants.IS_IPAD) {
-				dom.addClass(t.container, t.options.classPrefix + 'ipad');
-			}
-			if (_constants.IS_IPHONE) {
-				dom.addClass(t.container, t.options.classPrefix + 'iphone');
-			}
-			dom.addClass(t.container, t.isVideo ? t.options.classPrefix + 'video' : t.options.classPrefix + 'audio');
-
-			if (_constants.IS_SAFARI && !_constants.IS_IOS) {
-
-				dom.addClass(t.container, t.options.classPrefix + 'hide-cues');
-
-				var cloneNode = t.node.cloneNode(),
-				    children = t.node.children,
-				    mediaFiles = [],
-				    tracks = [];
-
-				for (var i = 0, total = children.length; i < total; i++) {
-					var childNode = children[i];
-
-					(function () {
-						switch (childNode.tagName.toLowerCase()) {
-							case 'source':
-								var elements = {};
-								Array.prototype.slice.call(childNode.attributes).forEach(function (item) {
-									elements[item.name] = item.value;
-								});
-								elements.type = (0, _media.formatType)(elements.src, elements.type);
-								mediaFiles.push(elements);
-								break;
-							case 'track':
-								childNode.mode = 'hidden';
-								tracks.push(childNode);
-								break;
-							default:
-								cloneNode.appendChild(childNode);
-								break;
-						}
-					})();
-				}
-
-				t.node.remove();
-				t.node = t.media = cloneNode;
-
-				if (mediaFiles.length) {
-					t.mediaFiles = mediaFiles;
-				}
-				if (tracks.length) {
-					t.trackFiles = tracks;
-				}
-			}
-
-			t.container.querySelector('.' + t.options.classPrefix + 'mediaelement').appendChild(t.node);
-
-			t.media.player = t;
-
-			t.controls = t.container.querySelector('.' + t.options.classPrefix + 'controls');
-			t.layers = t.container.querySelector('.' + t.options.classPrefix + 'layers');
-
-			var tagType = t.isVideo ? 'video' : 'audio',
-			    capsTagName = tagType.substring(0, 1).toUpperCase() + tagType.substring(1);
-
-			if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
-				t.width = t.options[tagType + 'Width'];
-			} else if (t.node.style.width !== '' && t.node.style.width !== null) {
-				t.width = t.node.style.width;
-			} else if (t.node.getAttribute('width')) {
-				t.width = t.node.getAttribute('width');
-			} else {
-				t.width = t.options['default' + capsTagName + 'Width'];
-			}
-
-			if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
-				t.height = t.options[tagType + 'Height'];
-			} else if (t.node.style.height !== '' && t.node.style.height !== null) {
-				t.height = t.node.style.height;
-			} else if (t.node.getAttribute('height')) {
-				t.height = t.node.getAttribute('height');
-			} else {
-				t.height = t.options['default' + capsTagName + 'Height'];
-			}
-
-			t.initialAspectRatio = t.height >= t.width ? t.width / t.height : t.height / t.width;
-
-			t.setPlayerSize(t.width, t.height);
-
-			playerOptions.pluginWidth = t.width;
-			playerOptions.pluginHeight = t.height;
-		} else if (!t.isVideo && !t.options.features.length && !t.options.useDefaultControls) {
-				t.node.style.display = 'none';
-			}
-
-		_mejs2.default.MepDefaults = playerOptions;
-
-		new _mediaelement2.default(t.media, playerOptions, t.mediaFiles);
-
-		if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
-			var event = (0, _general.createEvent)('controlsshown', t.container);
-			t.container.dispatchEvent(event);
-		}
+		t.init();
 
 		return t;
 	}
 
 	_createClass(MediaElementPlayer, [{
+		key: 'init',
+		value: function init() {
+			var t = this,
+			    playerOptions = Object.assign({}, t.options, {
+				success: function success(media, domNode) {
+					t._meReady(media, domNode);
+				},
+				error: function error(e) {
+					t._handleError(e);
+				}
+			}),
+			    tagName = t.node.tagName.toLowerCase();
+
+			t.isDynamic = tagName !== 'audio' && tagName !== 'video' && tagName !== 'iframe';
+			t.isVideo = t.isDynamic ? t.options.isVideo : tagName !== 'audio' && t.options.isVideo;
+			t.mediaFiles = null;
+			t.trackFiles = null;
+
+			if (_constants.IS_IPAD && t.options.iPadUseNativeControls || _constants.IS_IPHONE && t.options.iPhoneUseNativeControls) {
+				t.node.setAttribute('controls', true);
+
+				if (_constants.IS_IPAD && t.node.getAttribute('autoplay')) {
+					t.play();
+				}
+			} else if ((t.isVideo || !t.isVideo && (t.options.features.length || t.options.useDefaultControls)) && !(_constants.IS_ANDROID && t.options.AndroidUseNativeControls)) {
+				t.node.removeAttribute('controls');
+				var videoPlayerTitle = t.isVideo ? _i18n2.default.t('mejs.video-player') : _i18n2.default.t('mejs.audio-player');
+
+				var offscreen = _document2.default.createElement('span');
+				offscreen.className = t.options.classPrefix + 'offscreen';
+				offscreen.innerText = videoPlayerTitle;
+				t.media.parentNode.insertBefore(offscreen, t.media);
+
+				t.container = _document2.default.createElement('div');
+				t.container.id = t.id;
+				t.container.className = t.options.classPrefix + 'container ' + t.options.classPrefix + 'container-keyboard-inactive ' + t.media.className;
+				t.container.tabIndex = 0;
+				t.container.setAttribute('role', 'application');
+				t.container.setAttribute('aria-label', videoPlayerTitle);
+				t.container.innerHTML = '<div class="' + t.options.classPrefix + 'inner">' + ('<div class="' + t.options.classPrefix + 'mediaelement"></div>') + ('<div class="' + t.options.classPrefix + 'layers"></div>') + ('<div class="' + t.options.classPrefix + 'controls"></div>') + '</div>';
+				t.container.addEventListener('focus', function (e) {
+					if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
+						t.showControls(true);
+
+						var btnSelector = (0, _general.isNodeAfter)(e.relatedTarget, t.container) ? '.' + t.options.classPrefix + 'controls .' + t.options.classPrefix + 'button:last-child > button' : '.' + t.options.classPrefix + 'playpause-button > button',
+						    button = t.container.querySelector(btnSelector);
+
+						button.focus();
+					}
+				});
+				t.node.parentNode.insertBefore(t.container, t.node);
+
+				if (!t.options.features.length && !t.options.useDefaultControls) {
+					t.container.style.background = 'transparent';
+					t.container.querySelector('.' + t.options.classPrefix + 'controls').style.display = 'none';
+				}
+
+				if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, t.options.classPrefix + 'fill-container')) {
+					t.outerContainer = t.media.parentNode;
+
+					var wrapper = _document2.default.createElement('div');
+					wrapper.className = t.options.classPrefix + 'fill-container';
+					t.container.parentNode.insertBefore(wrapper, t.container);
+					wrapper.appendChild(t.container);
+				}
+
+				if (_constants.IS_ANDROID) {
+					dom.addClass(t.container, t.options.classPrefix + 'android');
+				}
+				if (_constants.IS_IOS) {
+					dom.addClass(t.container, t.options.classPrefix + 'ios');
+				}
+				if (_constants.IS_IPAD) {
+					dom.addClass(t.container, t.options.classPrefix + 'ipad');
+				}
+				if (_constants.IS_IPHONE) {
+					dom.addClass(t.container, t.options.classPrefix + 'iphone');
+				}
+				dom.addClass(t.container, t.isVideo ? t.options.classPrefix + 'video' : t.options.classPrefix + 'audio');
+
+				if (_constants.IS_SAFARI && !_constants.IS_IOS) {
+
+					dom.addClass(t.container, t.options.classPrefix + 'hide-cues');
+
+					var cloneNode = t.node.cloneNode(),
+					    children = t.node.children,
+					    mediaFiles = [],
+					    tracks = [];
+
+					for (var i = 0, total = children.length; i < total; i++) {
+						var childNode = children[i];
+
+						(function () {
+							switch (childNode.tagName.toLowerCase()) {
+								case 'source':
+									var elements = {};
+									Array.prototype.slice.call(childNode.attributes).forEach(function (item) {
+										elements[item.name] = item.value;
+									});
+									elements.type = (0, _media.formatType)(elements.src, elements.type);
+									mediaFiles.push(elements);
+									break;
+								case 'track':
+									childNode.mode = 'hidden';
+									tracks.push(childNode);
+									break;
+								default:
+									cloneNode.appendChild(childNode);
+									break;
+							}
+						})();
+					}
+
+					t.node.remove();
+					t.node = t.media = cloneNode;
+
+					if (mediaFiles.length) {
+						t.mediaFiles = mediaFiles;
+					}
+					if (tracks.length) {
+						t.trackFiles = tracks;
+					}
+				}
+
+				t.container.querySelector('.' + t.options.classPrefix + 'mediaelement').appendChild(t.node);
+
+				t.media.player = t;
+
+				t.controls = t.container.querySelector('.' + t.options.classPrefix + 'controls');
+				t.layers = t.container.querySelector('.' + t.options.classPrefix + 'layers');
+
+				var tagType = t.isVideo ? 'video' : 'audio',
+				    capsTagName = tagType.substring(0, 1).toUpperCase() + tagType.substring(1);
+
+				if (t.options[tagType + 'Width'] > 0 || t.options[tagType + 'Width'].toString().indexOf('%') > -1) {
+					t.width = t.options[tagType + 'Width'];
+				} else if (t.node.style.width !== '' && t.node.style.width !== null) {
+					t.width = t.node.style.width;
+				} else if (t.node.getAttribute('width')) {
+					t.width = t.node.getAttribute('width');
+				} else {
+					t.width = t.options['default' + capsTagName + 'Width'];
+				}
+
+				if (t.options[tagType + 'Height'] > 0 || t.options[tagType + 'Height'].toString().indexOf('%') > -1) {
+					t.height = t.options[tagType + 'Height'];
+				} else if (t.node.style.height !== '' && t.node.style.height !== null) {
+					t.height = t.node.style.height;
+				} else if (t.node.getAttribute('height')) {
+					t.height = t.node.getAttribute('height');
+				} else {
+					t.height = t.options['default' + capsTagName + 'Height'];
+				}
+
+				t.initialAspectRatio = t.height >= t.width ? t.width / t.height : t.height / t.width;
+
+				t.setPlayerSize(t.width, t.height);
+
+				playerOptions.pluginWidth = t.width;
+				playerOptions.pluginHeight = t.height;
+			} else if (!t.isVideo && !t.options.features.length && !t.options.useDefaultControls) {
+					t.node.style.display = 'none';
+				}
+
+			_mejs2.default.MepDefaults = playerOptions;
+
+			new _mediaelement2.default(t.media, playerOptions, t.mediaFiles);
+
+			if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
+				var event = (0, _general.createEvent)('controlsshown', t.container);
+				t.container.dispatchEvent(event);
+			}
+		}
+	}, {
 		key: 'showControls',
 		value: function showControls(doAnimation) {
 			var t = this;
