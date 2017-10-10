@@ -4704,35 +4704,39 @@ var MediaElementPlayer = function () {
 		value: function setPoster(url) {
 			var t = this;
 
-			var posterDiv = t.container.querySelector('.' + t.options.classPrefix + 'poster');
+			if (t.container) {
+				var posterDiv = t.container.querySelector('.' + t.options.classPrefix + 'poster');
 
-			if (!posterDiv) {
-				posterDiv = _document2.default.createElement('div');
-				posterDiv.className = t.options.classPrefix + 'poster ' + t.options.classPrefix + 'layer';
-				t.layers.appendChild(posterDiv);
-			}
+				if (!posterDiv) {
+					posterDiv = _document2.default.createElement('div');
+					posterDiv.className = t.options.classPrefix + 'poster ' + t.options.classPrefix + 'layer';
+					t.layers.appendChild(posterDiv);
+				}
 
-			var posterImg = posterDiv.querySelector('img');
+				var posterImg = posterDiv.querySelector('img');
 
-			if (!posterImg && url) {
-				posterImg = _document2.default.createElement('img');
-				posterImg.className = t.options.classPrefix + 'poster-img';
-				posterImg.width = '100%';
-				posterImg.height = '100%';
-				posterDiv.style.display = '';
-				posterDiv.appendChild(posterImg);
-			}
+				if (!posterImg && url) {
+					posterImg = _document2.default.createElement('img');
+					posterImg.className = t.options.classPrefix + 'poster-img';
+					posterImg.width = '100%';
+					posterImg.height = '100%';
+					posterDiv.style.display = '';
+					posterDiv.appendChild(posterImg);
+				}
 
-			if (url) {
-				posterImg.setAttribute('src', url);
-				posterDiv.style.backgroundImage = 'url("' + url + '")';
-				posterDiv.style.display = '';
-			} else if (posterImg) {
-				posterDiv.style.backgroundImage = 'none';
-				posterDiv.style.display = 'none';
-				posterImg.remove();
-			} else {
-				posterDiv.style.display = 'none';
+				if (url) {
+					posterImg.setAttribute('src', url);
+					posterDiv.style.backgroundImage = 'url("' + url + '")';
+					posterDiv.style.display = '';
+				} else if (posterImg) {
+					posterDiv.style.backgroundImage = 'none';
+					posterDiv.style.display = 'none';
+					posterImg.remove();
+				} else {
+					posterDiv.style.display = 'none';
+				}
+			} else if (_constants.IS_IPAD && t.options.iPadUseNativeControls || _constants.IS_IPHONE && t.options.iPhoneUseNativeControls || _constants.IS_ANDROID && t.options.AndroidUseNativeControls) {
+				t.media.originalNode.poster = url;
 			}
 		}
 	}, {
