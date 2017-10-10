@@ -12,6 +12,7 @@
 * Added missing `playing` event on `Vimeo` and `Dailymotion` renderer @rafa8626
 * Expanded regexp to accept 3-letter country codes and also underscore for 4-letter country codes @rafa8626
 * Added `init` method for WP compatibility @rafa8626
+* Make `setPoster` method to work on mobile devices with native controls (https://github.com/mediaelement/mediaelement/pull/2419) @lucash
 
 *4.2.6 (2017/09/19)*
 
