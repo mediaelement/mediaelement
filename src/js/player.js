@@ -1435,35 +1435,39 @@ class MediaElementPlayer {
 	setPoster (url) {
 		const t = this;
 
-		let posterDiv = t.container.querySelector(`.${t.options.classPrefix}poster`);
+		if (t.container) {
+			let posterDiv = t.container.querySelector(`.${t.options.classPrefix}poster`);
 
-		if (!posterDiv) {
-			posterDiv = document.createElement('div');
-			posterDiv.className = `${t.options.classPrefix}poster ${t.options.classPrefix}layer`;
-			t.layers.appendChild(posterDiv);
-		}
+			if (!posterDiv) {
+				posterDiv = document.createElement('div');
+				posterDiv.className = `${t.options.classPrefix}poster ${t.options.classPrefix}layer`;
+				t.layers.appendChild(posterDiv);
+			}
 
-		let posterImg = posterDiv.querySelector('img');
+			let posterImg = posterDiv.querySelector('img');
 
-		if (!posterImg && url) {
-			posterImg = document.createElement('img');
-			posterImg.className = `${t.options.classPrefix}poster-img`;
-			posterImg.width = '100%';
-			posterImg.height = '100%';
-			posterDiv.style.display = '';
-			posterDiv.appendChild(posterImg);
-		}
+			if (!posterImg && url) {
+				posterImg = document.createElement('img');
+				posterImg.className = `${t.options.classPrefix}poster-img`;
+				posterImg.width = '100%';
+				posterImg.height = '100%';
+				posterDiv.style.display = '';
+				posterDiv.appendChild(posterImg);
+			}
 
-		if (url) {
-			posterImg.setAttribute('src', url);
-			posterDiv.style.backgroundImage = `url("${url}")`;
-			posterDiv.style.display = '';
-		} else if (posterImg) {
-			posterDiv.style.backgroundImage = 'none';
-			posterDiv.style.display = 'none';
-			posterImg.remove();
-		} else {
-			posterDiv.style.display = 'none';
+			if (url) {
+				posterImg.setAttribute('src', url);
+				posterDiv.style.backgroundImage = `url("${url}")`;
+				posterDiv.style.display = '';
+			} else if (posterImg) {
+				posterDiv.style.backgroundImage = 'none';
+				posterDiv.style.display = 'none';
+				posterImg.remove();
+			} else {
+				posterDiv.style.display = 'none';
+			}
+		} else if ((IS_IPAD && t.options.iPadUseNativeControls) || (IS_IPHONE && t.options.iPhoneUseNativeControls) || (IS_ANDROID && t.options.AndroidUseNativeControls)) {
+			t.media.originalNode.poster = url;
 		}
 	}
 
