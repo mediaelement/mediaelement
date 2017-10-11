@@ -139,7 +139,7 @@ const HtmlMediaElement = {
 		node.addEventListener('error', function (e) {
 			// Reload the source only in case of the renderer is active at the moment
 			if (e.target.error.code === 4 && isActive) {
-				if (index < total) {
+				if (index < total && mediaFiles[(index + 1)] !== undefined) {
 					node.src = mediaFiles[index++].src;
 					node.load();
 					node.play();

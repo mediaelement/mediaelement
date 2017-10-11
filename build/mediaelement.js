@@ -2348,15 +2348,19 @@ var HlsNativeRenderer = {
 								break;
 							case 'networkError':
 								if (data.details === 'manifestLoadError') {
-									if (index < total) {
+									if (index < total && mediaFiles[index + 1] !== undefined) {
 										node.setSrc(mediaFiles[index++].src);
 										node.load();
 										node.play();
+									} else {
+										var _message = 'Network error';
+										mediaElement.generateError(_message, mediaFiles);
+										console.error(_message);
 									}
 								} else {
-									var _message = 'Network error';
-									mediaElement.generateError(_message, mediaFiles);
-									console.error(_message);
+									var _message2 = 'Network error';
+									mediaElement.generateError(_message2, mediaFiles);
+									console.error(_message2);
 								}
 								break;
 							default:
@@ -2583,7 +2587,7 @@ var HtmlMediaElement = {
 
 		node.addEventListener('error', function (e) {
 			if (e.target.error.code === 4 && isActive) {
-				if (index < total) {
+				if (index < total && mediaFiles[index + 1] !== undefined) {
 					node.src = mediaFiles[index++].src;
 					node.load();
 					node.play();
