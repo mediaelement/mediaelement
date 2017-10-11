@@ -14,6 +14,7 @@
 * Added `init` method for WP compatibility @rafa8626
 * Make `setPoster` method to work on mobile devices with native controls (https://github.com/mediaelement/mediaelement/pull/2419) @lucash
 * Added missing conditional in native HLS and HTML5 renderer to test media files correctly to trigger error after testing all of them @rafa8626
+* Added jsDelivr badge (https://github.com/mediaelement/mediaelement/pull/2421) @LukasDrgon
 
 *4.2.6 (2017/09/19)*
 
