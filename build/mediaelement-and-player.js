@@ -4029,16 +4029,7 @@ var MediaElementPlayer = function () {
 					}));
 				}
 
-				for (var i = 0, total = t.options.features.length; i < total; i++) {
-					var feature = t.options.features[i];
-					if (t['build' + feature]) {
-						try {
-							t['build' + feature](t, t.controls, t.layers, t.media);
-						} catch (e) {
-							console.error('error building ' + feature, e);
-						}
-					}
-				}
+				t.buildfeatures(t, t.controls, t.layers, t.media);
 
 				var event = (0, _general.createEvent)('controlsready', t.container);
 				t.container.dispatchEvent(event);
@@ -4797,6 +4788,22 @@ var MediaElementPlayer = function () {
 						_window2.default.removeEventListener(e, callback, false);
 						return e;
 					}, '');
+				}
+			}
+		}
+	}, {
+		key: 'buildfeatures',
+		value: function buildfeatures(player, controls, layers, media) {
+			var t = this;
+
+			for (var i = 0, total = t.options.features.length; i < total; i++) {
+				var feature = t.options.features[i];
+				if (t['build' + feature]) {
+					try {
+						t['build' + feature](player, controls, layers, media);
+					} catch (e) {
+						console.error('error building ' + feature, e);
+					}
 				}
 			}
 		}

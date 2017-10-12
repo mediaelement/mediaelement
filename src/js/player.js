@@ -676,18 +676,7 @@ class MediaElementPlayer {
 				t.options.features = defaultControls.concat(t.options.features.filter((item) => defaultControls.indexOf(item) === -1));
 			}
 
-			// add user-defined features/controls
-			for (let i = 0, total = t.options.features.length; i < total; i++) {
-				const feature = t.options.features[i];
-				if (t[`build${feature}`]) {
-					try {
-						t[`build${feature}`](t, t.controls, t.layers, t.media);
-					} catch (e) {
-						// TODO: report control error
-						console.error(`error building ${feature}`, e);
-					}
-				}
-			}
+			t.buildfeatures(t, t.controls, t.layers, t.media);
 
 			const event = createEvent('controlsready', t.container);
 			t.container.dispatchEvent(event);
@@ -1529,6 +1518,23 @@ class MediaElementPlayer {
 					window.removeEventListener(e, callback, false);
 					return e;
 				}, '');
+			}
+		}
+	}
+
+	buildfeatures (player, controls, layers, media) {
+		const t = this;
+
+		// add user-defined features/controls
+		for (let i = 0, total = t.options.features.length; i < total; i++) {
+			const feature = t.options.features[i];
+			if (t[`build${feature}`]) {
+				try {
+					t[`build${feature}`](player, controls, layers, media);
+				} catch (e) {
+					// TODO: report control error
+					console.error(`error building ${feature}`, e);
+				}
 			}
 		}
 	}
