@@ -246,19 +246,19 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (!player.options.alwaysShowControls) {
 			// move with controls
-			player.container.addEventListener('controlsshown', () => {
+			player.getElement(player.container).addEventListener('controlsshown', () => {
 				// push captions above controls
-				addClass(player.container.querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
+				addClass(player.getElement(player.container).querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
 			});
 
-			player.container.addEventListener('controlshidden', () => {
+			player.getElement(player.container).addEventListener('controlshidden', () => {
 				if (!media.paused) {
 					// move back to normal place
-					removeClass(player.container.querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
+					removeClass(player.getElement(player.container).querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
 				}
 			});
 		} else {
-			addClass(player.container.querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
+			addClass(player.getElement(player.container).querySelector(`.${t.options.classPrefix}captions-position`), `${t.options.classPrefix}captions-position-hover`);
 		}
 
 		media.addEventListener('timeupdate', () => {

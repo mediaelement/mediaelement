@@ -93,8 +93,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.options.keyActions.push({
 			keys: [38], // UP
 			action: (player) => {
-				const volumeSlider = player.container.querySelector(`.${config.classPrefix}volume-slider`);
-				if (volumeSlider || player.container.querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
+				const volumeSlider = player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`);
+				if (volumeSlider || player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
 					volumeSlider.style.display = 'block';
 				}
 				if (player.isVideo) {
@@ -113,7 +113,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		{
 			keys: [40], // DOWN
 			action: (player) => {
-				const volumeSlider = player.container.querySelector(`.${config.classPrefix}volume-slider`);
+				const volumeSlider = player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`);
 				if (volumeSlider) {
 					volumeSlider.style.display = 'block';
 				}
@@ -135,7 +135,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		{
 			keys: [77], // M
 			action: (player) => {
-				player.container.querySelector(`.${config.classPrefix}volume-slider`).style.display = 'block';
+				player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`).style.display = 'block';
 				if (player.isVideo) {
 					player.showControls();
 					player.startControlsTimer();
@@ -300,7 +300,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		;
 
-		player.container.addEventListener('keydown', (e) => {
+		player.getElement(player.container).addEventListener('keydown', (e) => {
 			const hasFocus = !!(e.target.closest(`.${t.options.classPrefix}container`));
 			if (!hasFocus && mode === 'vertical') {
 				volumeSlider.style.display = 'none';

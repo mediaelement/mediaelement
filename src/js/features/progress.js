@@ -86,7 +86,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						player.startControlsTimer();
 					}
 
-					player.container.querySelector(`.${config.classPrefix}time-total`).focus();
+					player.getElement(player.container).querySelector(`.${config.classPrefix}time-total`).focus();
 
 					// 5%
 					const newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
@@ -107,7 +107,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						player.startControlsTimer();
 					}
 
-					player.container.querySelector(`.${config.classPrefix}time-total`).focus();
+					player.getElement(player.container).querySelector(`.${config.classPrefix}time-total`).focus();
 
 					// 5%
 					const newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);

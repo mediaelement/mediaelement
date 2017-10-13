@@ -1587,7 +1587,7 @@ Object.assign(_player2.default.prototype, {
 						player.startControlsTimer();
 					}
 
-					player.container.querySelector('.' + _player.config.classPrefix + 'time-total').focus();
+					player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'time-total').focus();
 
 					var newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
 					player.setCurrentTime(newTime);
@@ -1603,7 +1603,7 @@ Object.assign(_player2.default.prototype, {
 						player.startControlsTimer();
 					}
 
-					player.container.querySelector('.' + _player.config.classPrefix + 'time-total').focus();
+					player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'time-total').focus();
 
 					var newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);
 					player.setCurrentTime(newTime);
@@ -2376,17 +2376,17 @@ Object.assign(_player2.default.prototype, {
 		});
 
 		if (!player.options.alwaysShowControls) {
-			player.container.addEventListener('controlsshown', function () {
-				(0, _dom.addClass)(player.container.querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
+			player.getElement(player.container).addEventListener('controlsshown', function () {
+				(0, _dom.addClass)(player.getElement(player.container).querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
 			});
 
-			player.container.addEventListener('controlshidden', function () {
+			player.getElement(player.container).addEventListener('controlshidden', function () {
 				if (!media.paused) {
-					(0, _dom.removeClass)(player.container.querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
+					(0, _dom.removeClass)(player.getElement(player.container).querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
 				}
 			});
 		} else {
-			(0, _dom.addClass)(player.container.querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
+			(0, _dom.addClass)(player.getElement(player.container).querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
 		}
 
 		media.addEventListener('timeupdate', function () {
@@ -3013,8 +3013,8 @@ Object.assign(_player2.default.prototype, {
 		t.options.keyActions.push({
 			keys: [38],
 			action: function action(player) {
-				var volumeSlider = player.container.querySelector('.' + _player.config.classPrefix + 'volume-slider');
-				if (volumeSlider || player.container.querySelector('.' + _player.config.classPrefix + 'volume-slider').matches(':focus')) {
+				var volumeSlider = player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'volume-slider');
+				if (volumeSlider || player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'volume-slider').matches(':focus')) {
 					volumeSlider.style.display = 'block';
 				}
 				if (player.isVideo) {
@@ -3031,7 +3031,7 @@ Object.assign(_player2.default.prototype, {
 		}, {
 			keys: [40],
 			action: function action(player) {
-				var volumeSlider = player.container.querySelector('.' + _player.config.classPrefix + 'volume-slider');
+				var volumeSlider = player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'volume-slider');
 				if (volumeSlider) {
 					volumeSlider.style.display = 'block';
 				}
@@ -3051,7 +3051,7 @@ Object.assign(_player2.default.prototype, {
 		}, {
 			keys: [77],
 			action: function action(player) {
-				player.container.querySelector('.' + _player.config.classPrefix + 'volume-slider').style.display = 'block';
+				player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'volume-slider').style.display = 'block';
 				if (player.isVideo) {
 					player.showControls();
 					player.startControlsTimer();
@@ -3174,7 +3174,7 @@ Object.assign(_player2.default.prototype, {
 			}
 		};
 
-		player.container.addEventListener('keydown', function (e) {
+		player.getElement(player.container).addEventListener('keydown', function (e) {
 			var hasFocus = !!e.target.closest('.' + t.options.classPrefix + 'container');
 			if (!hasFocus && mode === 'vertical') {
 				volumeSlider.style.display = 'none';
