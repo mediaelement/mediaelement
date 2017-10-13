@@ -122,13 +122,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Toggle long-video class if time code is >5 digits (MM:SS)
 		if (timecode.length > 5) {
-			addClass(t.container, `${t.options.classPrefix}long-video`);
+			addClass(t.getElement(t.container), `${t.options.classPrefix}long-video`);
 		} else {
-			removeClass(t.container, `${t.options.classPrefix}long-video`);
+			removeClass(t.getElement(t.container), `${t.options.classPrefix}long-video`);
 		}
 
-		if (t.controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
-			t.controls.querySelector(`.${t.options.classPrefix}currenttime`).innerText = timecode;
+		if (t.getElement(t.controls).querySelector(`.${t.options.classPrefix}currenttime`)) {
+			t.getElement(t.controls).querySelector(`.${t.options.classPrefix}currenttime`).innerText = timecode;
 
 		}
 	},
@@ -154,13 +154,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Toggle long-video class if time code is >5 digits (MM:SS)
 		if (timecode.length > 5) {
-			addClass(t.container, `${t.options.classPrefix}long-video`);
+			addClass(t.getElement(t.container), `${t.options.classPrefix}long-video`);
 		} else {
-			removeClass(t.container, `${t.options.classPrefix}long-video`);
+			removeClass(t.getElement(t.container), `${t.options.classPrefix}long-video`);
 		}
 
-		if (t.controls.querySelector(`.${t.options.classPrefix}duration`) && duration > 0) {
-			t.controls.querySelector(`.${t.options.classPrefix}duration`).innerHTML = timecode;
+		if (t.getElement(t.controls).querySelector(`.${t.options.classPrefix}duration`) && duration > 0) {
+			t.getElement(t.controls).querySelector(`.${t.options.classPrefix}duration`).innerHTML = timecode;
 		}
 	}
 });

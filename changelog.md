@@ -11,7 +11,7 @@
 * Updated `hls.js` to version 0.8.4 @rafa8626
 * Added missing `playing` event on `Vimeo` and `Dailymotion` renderer @rafa8626
 * Expanded regexp to accept 3-letter country codes and also underscore for 4-letter country codes @rafa8626
-* Added `init` and `buildfeatures` methods for WP compatibility @rafa8626
+* Added `init`, `getElement` and `buildfeatures` methods for WP compatibility @rafa8626
 * Make `setPoster` method to work on mobile devices with native controls (https://github.com/mediaelement/mediaelement/pull/2419) @lucash
 * Added missing conditional in native HLS and HTML5 renderer to test media files correctly to trigger error after testing all of them @rafa8626
 * Added jsDelivr badge (https://github.com/mediaelement/mediaelement/pull/2421) @LukasDrgon

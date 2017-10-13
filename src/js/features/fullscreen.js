@@ -193,7 +193,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName),
-			containerStyles = getComputedStyle(t.container)
+			containerStyles = getComputedStyle(t.getElement(t.container))
 		;
 
 		// iOS allows playing fullscreen ONLY on `video` tag, so check if the source can go fullscreen on iOS
@@ -207,7 +207,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// set it to not show scroll bars so 100% will work
 		addClass(document.documentElement, `${t.options.classPrefix}fullscreen`);
-		addClass(t.container, `${t.options.classPrefix}container-fullscreen`);
+		addClass(t.getElement(t.container), `${t.options.classPrefix}container-fullscreen`);
 
 		// store sizing
 		t.normalHeight = parseFloat(containerStyles.height);
@@ -215,7 +215,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// attempt to do true fullscreen
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
-			Features.requestFullScreen(t.container);
+			Features.requestFullScreen(t.getElement(t.container));
 
 			if (t.isInIframe) {
 				// sometimes exiting from fullscreen doesn't work
@@ -243,14 +243,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// make full size
-		t.container.style.width = '100%';
-		t.container.style.height = '100%';
+		t.getElement(t.container).style.width = '100%';
+		t.getElement(t.container).style.height = '100%';
 
 		// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
 		// Actually, it seems to be needed for IE8, too
 		t.containerSizeTimeout = setTimeout(() => {
-			t.container.style.width = '100%';
-			t.container.style.height = '100%';
+			t.getElement(t.container).style.width = '100%';
+			t.getElement(t.container).style.height = '100%';
 			t.setControlsSize();
 		}, 500);
 
@@ -258,7 +258,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.node.style.width = '100%';
 			t.node.style.height = '100%';
 		} else {
-			const elements = t.container.querySelectorAll('embed, object, video'), total = elements.length;
+			const elements = t.getElement(t.container).querySelectorAll('embed, object, video'), total = elements.length;
 			for (let i = 0; i < total; i++) {
 				elements[i].style.width = '100%';
 				elements[i].style.height = '100%';
@@ -269,7 +269,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.setSize(screen.width, screen.height);
 		}
 
-		const layers = t.layers.children, total = layers.length;
+		const layers = t.getElement(t.layers).children, total = layers.length;
 		for (let i = 0; i < total; i++) {
 			layers[i].style.width = '100%';
 			layers[i].style.height = '100%';
@@ -285,15 +285,15 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			zoomFactor = Math.min(screen.width / t.width, screen.height / t.height),
-			captionText = t.container.querySelector(`.${t.options.classPrefix}captions-text`)
+			captionText = t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-text`)
 		;
 		if (captionText) {
 			captionText.style.fontSize = `${(zoomFactor * 100)}%`;
 			captionText.style.lineHeight = 'normal';
-			t.container.querySelector(`.${t.options.classPrefix}captions-position`).style.bottom = '45px';
+			t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-position`).style.bottom = '45px';
 		}
-		const event = createEvent('enteredfullscreen', t.container);
-		t.container.dispatchEvent(event);
+		const event = createEvent('enteredfullscreen', t.getElement(t.container));
+		t.getElement(t.container).dispatchEvent(event);
 	},
 
 	/**
@@ -315,17 +315,17 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// restore scroll bars to document
 		removeClass(document.documentElement, `${t.options.classPrefix}fullscreen`);
-		removeClass(t.container, `${t.options.classPrefix}container-fullscreen`);
+		removeClass(t.getElement(t.container), `${t.options.classPrefix}container-fullscreen`);
 
 		if (t.options.setDimensions) {
-			t.container.style.width = `${t.normalWidth}px`;
-			t.container.style.height = `${t.normalHeight}px`;
+			t.getElement(t.container).style.width = `${t.normalWidth}px`;
+			t.getElement(t.container).style.height = `${t.normalHeight}px`;
 
 			if (isNative) {
 				t.node.style.width = `${t.normalWidth}px`;
 				t.node.style.height = `${t.normalHeight}px`;
 			} else {
-				const elements = t.container.querySelectorAll('embed, object, video'), total = elements.length;
+				const elements = t.getElement(t.container).querySelectorAll('embed, object, video'), total = elements.length;
 				for (let i = 0; i < total; i++) {
 					elements[i].style.width = `${t.normalWidth}px`;
 					elements[i].style.height = `${t.normalHeight}px`;
@@ -336,7 +336,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.media.setSize(t.normalWidth, t.normalHeight);
 			}
 
-			const layers = t.layers.children, total = layers.length;
+			const layers = t.getElement(t.layers).children, total = layers.length;
 			for (let i = 0; i < total; i++) {
 				layers[i].style.width = `${t.normalWidth}px`;
 				layers[i].style.height = `${t.normalHeight}px`;
@@ -351,13 +351,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.setControlsSize();
 		t.isFullScreen = false;
 
-		const captionText = t.container.querySelector(`.${t.options.classPrefix}captions-text`);
+		const captionText = t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-text`);
 		if (captionText) {
 			captionText.style.fontSize = '';
 			captionText.style.lineHeight = '';
-			t.container.querySelector(`.${t.options.classPrefix}captions-position`).style.bottom = '';
+			t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-position`).style.bottom = '';
 		}
-		const event = createEvent('exitedfullscreen', t.container);
-		t.container.dispatchEvent(event);
+		const event = createEvent('exitedfullscreen', t.getElement(t.container));
+		t.getElement(t.container).dispatchEvent(event);
 	}
 });

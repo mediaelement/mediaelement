@@ -303,7 +303,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	rebuildtracks () {
 		const t = this;
 		t.findTracks();
-		t.buildtracks(t, t.controls, t.layers, t.media);
+		t.buildtracks(t, t.getElement(t.controls), t.getElement(t.layers), t.media);
 	},
 
 	findTracks () {
@@ -385,7 +385,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (!setByKeyboard) {
 			setTimeout(function() {
-				t.container.focus();
+				t.getElement(t.container).focus();
 			}, 500);
 		}
 	},
@@ -722,7 +722,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const keyboard = e.keyCode || e.which;
 				if (typeof keyboard === 'undefined') {
 					setTimeout(function() {
-						t.container.focus();
+						t.getElement(t.container).focus();
 					}, 500);
 				}
 

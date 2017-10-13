@@ -181,14 +181,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		const
-			volumeSlider = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-slider`) :
-				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-slider`),
-			volumeTotal = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-total`) :
-				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-total`),
-			volumeCurrent = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-current`) :
-				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-current`),
-			volumeHandle = mode === 'vertical' ? t.container.querySelector(`.${t.options.classPrefix}volume-handle`) :
-				t.container.querySelector(`.${t.options.classPrefix}horizontal-volume-handle`),
+			volumeSlider = mode === 'vertical' ? t.getElement(t.container).querySelector(`.${t.options.classPrefix}volume-slider`) :
+				t.getElement(t.container).querySelector(`.${t.options.classPrefix}horizontal-volume-slider`),
+			volumeTotal = mode === 'vertical' ? t.getElement(t.container).querySelector(`.${t.options.classPrefix}volume-total`) :
+				t.getElement(t.container).querySelector(`.${t.options.classPrefix}horizontal-volume-total`),
+			volumeCurrent = mode === 'vertical' ? t.getElement(t.container).querySelector(`.${t.options.classPrefix}volume-current`) :
+				t.getElement(t.container).querySelector(`.${t.options.classPrefix}horizontal-volume-current`),
+			volumeHandle = mode === 'vertical' ? t.getElement(t.container).querySelector(`.${t.options.classPrefix}volume-handle`) :
+				t.getElement(t.container).querySelector(`.${t.options.classPrefix}horizontal-volume-handle`),
 
 			/**
 			 * @private
@@ -448,7 +448,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			toggleMute();
 		}
 
-		t.container.addEventListener('controlsresize', () => {
+		t.getElement(t.container).addEventListener('controlsresize', () => {
 			toggleMute();
 		});
 	}

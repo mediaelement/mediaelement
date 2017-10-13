@@ -233,19 +233,19 @@ Object.assign(MediaElementPlayer.prototype, {
 						if (t.timefloat) {
 							const
 								half = t.timefloat.offsetWidth / 2,
-								offsetContainer = mejs.Utils.offset(t.container),
+								offsetContainer = mejs.Utils.offset(t.getElement(t.container)),
 								tooltipStyles = getComputedStyle(t.timefloat)
 							;
 
 							if ((x - offsetContainer.left) < t.timefloat.offsetWidth) {
 								leftPos = half;
-							} else if ((x - offsetContainer.left) >= t.container.offsetWidth - half) {
+							} else if ((x - offsetContainer.left) >= t.getElement(t.container).offsetWidth - half) {
 								leftPos = t.total.offsetWidth - half;
 							} else {
 								leftPos = pos;
 							}
 
-							if (hasClass(t.container, `${t.options.classPrefix}long-video`)) {
+							if (hasClass(t.getElement(t.container), `${t.options.classPrefix}long-video`)) {
 								leftPos += parseFloat(tooltipStyles.marginLeft)/2 + t.timefloat.offsetWidth/2;
 							}
 
@@ -255,7 +255,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						}
 					}
 				} else if (!IS_IOS && !IS_ANDROID && t.timefloat) {
-					leftPos = t.timefloat.offsetWidth + width >= t.container.offsetWidth ? t.timefloat.offsetWidth / 2 : 0;
+					leftPos = t.timefloat.offsetWidth + width >= t.getElement(t.container).offsetWidth ? t.timefloat.offsetWidth / 2 : 0;
 					t.timefloat.style.left = leftPos + 'px';
 					t.timefloat.style.left = `${leftPos}px`;
 					t.timefloat.style.display = 'block';
@@ -337,7 +337,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				;
 
 				let seekTime = t.getCurrentTime();
-				const volume = t.container.querySelector(`.${t.options.classPrefix }volume-slider`);
+				const volume = t.getElement(t.container).querySelector(`.${t.options.classPrefix }volume-slider`);
 
 				if (keyCode === 38 || keyCode === 40) {
 					if (volume) {
@@ -432,7 +432,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						const endEvents = ['mouseup', 'touchend'];
 
 						for (let j = 0, totalEvents = endEvents.length; j < totalEvents; j++) {
-							t.container.addEventListener(endEvents[j], (event) => {
+							t.getElement(t.container).addEventListener(endEvents[j], (event) => {
 								const target = event.target;
 								if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
 									handleMouseMove(event);
@@ -452,7 +452,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 		t.slider.addEventListener('mouseenter', (e) => {
 			if (e.target === t.slider && t.getDuration() !== Infinity) {
-				t.container.addEventListener('mousemove', (event) => {
+				t.getElement(t.container).addEventListener('mousemove', (event) => {
 					const target = event.target;
 					if (target === t.slider || target.closest(`.${t.options.classPrefix}time-slider`)) {
 						handleMouseMove(event);
@@ -533,7 +533,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.buffer.style.display = 'none';
 		});
 
-		t.container.addEventListener('controlsresize', (e) => {
+		t.getElement(t.container).addEventListener('controlsresize', (e) => {
 			if (t.getDuration() !== Infinity) {
 				player.setProgressRail(e);
 				if (!t.forcedHandlePause) {

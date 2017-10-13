@@ -235,6 +235,10 @@ class MediaElementPlayer {
 		return t;
 	}
 
+	getElement (element) {
+		return element;
+	}
+
 	// Added method for WP compatibility
 	init () {
 		const
@@ -282,71 +286,71 @@ class MediaElementPlayer {
 
 			// build container
 			t.container = document.createElement('div');
-			t.container.id = t.id;
-			t.container.className = `${t.options.classPrefix}container ${t.options.classPrefix}container-keyboard-inactive ${t.media.className}`;
-			t.container.tabIndex = 0;
-			t.container.setAttribute('role', 'application');
-			t.container.setAttribute('aria-label', videoPlayerTitle);
-			t.container.innerHTML = `<div class="${t.options.classPrefix}inner">` +
+			t.getElement(t.container).id = t.id;
+			t.getElement(t.container).className = `${t.options.classPrefix}container ${t.options.classPrefix}container-keyboard-inactive ${t.media.className}`;
+			t.getElement(t.container).tabIndex = 0;
+			t.getElement(t.container).setAttribute('role', 'application');
+			t.getElement(t.container).setAttribute('aria-label', videoPlayerTitle);
+			t.getElement(t.container).innerHTML = `<div class="${t.options.classPrefix}inner">` +
 				`<div class="${t.options.classPrefix}mediaelement"></div>` +
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
 				`</div>`;
-			t.container.addEventListener('focus', (e) => {
+			t.getElement(t.container).addEventListener('focus', (e) => {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
 
 					// If e.relatedTarget appears before container, send focus to play button,
 					// else send focus to last control button.
 					const
-						btnSelector = isNodeAfter(e.relatedTarget, t.container) ?
+						btnSelector = isNodeAfter(e.relatedTarget, t.getElement(t.container)) ?
 							`.${t.options.classPrefix}controls .${t.options.classPrefix}button:last-child > button` :
 							`.${t.options.classPrefix}playpause-button > button`,
-						button = t.container.querySelector(btnSelector)
+						button = t.getElement(t.container).querySelector(btnSelector)
 					;
 
 					button.focus();
 				}
 			});
-			t.node.parentNode.insertBefore(t.container, t.node);
+			t.node.parentNode.insertBefore(t.getElement(t.container), t.node);
 
 			// When no elements in controls, hide bar completely
 			if (!t.options.features.length && !t.options.useDefaultControls) {
-				t.container.style.background = 'transparent';
-				t.container.querySelector(`.${t.options.classPrefix}controls`).style.display = 'none';
+				t.getElement(t.container).style.background = 'transparent';
+				t.getElement(t.container).querySelector(`.${t.options.classPrefix}controls`).style.display = 'none';
 			}
 
-			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.container.parentNode, `${t.options.classPrefix}fill-container`)) {
+			if (t.isVideo && t.options.stretching === 'fill' && !dom.hasClass(t.getElement(t.container).parentNode, `${t.options.classPrefix}fill-container`)) {
 				// outer container
 				t.outerContainer = t.media.parentNode;
 
 				const wrapper = document.createElement('div');
 				wrapper.className = `${t.options.classPrefix}fill-container`;
-				t.container.parentNode.insertBefore(wrapper, t.container);
-				wrapper.appendChild(t.container);
+				t.getElement(t.container).parentNode.insertBefore(wrapper, t.getElement(t.container));
+				wrapper.appendChild(t.getElement(t.container));
 			}
 
 			// add classes for user and content
 			if (IS_ANDROID) {
-				dom.addClass(t.container, `${t.options.classPrefix}android`);
+				dom.addClass(t.getElement(t.container), `${t.options.classPrefix}android`);
 			}
 			if (IS_IOS) {
-				dom.addClass(t.container, `${t.options.classPrefix}ios`);
+				dom.addClass(t.getElement(t.container), `${t.options.classPrefix}ios`);
 			}
 			if (IS_IPAD) {
-				dom.addClass(t.container, `${t.options.classPrefix}ipad`);
+				dom.addClass(t.getElement(t.container), `${t.options.classPrefix}ipad`);
 			}
 			if (IS_IPHONE) {
-				dom.addClass(t.container, `${t.options.classPrefix}iphone`);
+				dom.addClass(t.getElement(t.container), `${t.options.classPrefix}iphone`);
 			}
-			dom.addClass(t.container, (t.isVideo ? `${t.options.classPrefix}video` : `${t.options.classPrefix}audio`));
+			dom.addClass(t.getElement(t.container), (t.isVideo ? `${t.options.classPrefix}video` : `${t.options.classPrefix}audio`));
 
 			// Workflow for Safari desktop: "clone" element and remove children, but save them to check sources, captions, etc.
 			// This ensure full compatibility when using keyboard, since Safari creates a keyboard trap when appending
 			// video/audio elements with children
 			if (IS_SAFARI && !IS_IOS) {
 
-				dom.addClass(t.container, `${t.options.classPrefix}hide-cues`);
+				dom.addClass(t.getElement(t.container), `${t.options.classPrefix}hide-cues`);
 
 				const
 					cloneNode = t.node.cloneNode(),
@@ -389,14 +393,14 @@ class MediaElementPlayer {
 			}
 
 			// move the `video`/`audio` tag into the right spot
-			t.container.querySelector(`.${t.options.classPrefix}mediaelement`).appendChild(t.node);
+			t.getElement(t.container).querySelector(`.${t.options.classPrefix}mediaelement`).appendChild(t.node);
 
 			// needs to be assigned here, after iOS remap
 			t.media.player = t;
 
 			// find parts
-			t.controls = t.container.querySelector(`.${t.options.classPrefix}controls`);
-			t.layers = t.container.querySelector(`.${t.options.classPrefix}layers`);
+			t.controls = t.getElement(t.container).querySelector(`.${t.options.classPrefix}controls`);
+			t.layers = t.getElement(t.container).querySelector(`.${t.options.classPrefix}layers`);
 
 			// determine the size
 
@@ -451,10 +455,10 @@ class MediaElementPlayer {
 		// create MediaElement shim
 		new MediaElement(t.media, playerOptions, t.mediaFiles);
 
-		if (t.container !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
+		if (t.getElement(t.container) !== undefined && t.options.features.length && t.controlsAreVisible && !t.options.hideVideoControlsOnLoad) {
 			// controls are shown when loaded
-			const event = createEvent('controlsshown', t.container);
-			t.container.dispatchEvent(event);
+			const event = createEvent('controlsshown', t.getElement(t.container));
+			t.getElement(t.container).dispatchEvent(event);
 		}
 	}
 
@@ -468,33 +472,33 @@ class MediaElementPlayer {
 		}
 
 		if (doAnimation) {
-			dom.fadeIn(t.controls, 200, () => {
-				dom.removeClass(t.controls, `${t.options.classPrefix}offscreen`);
-				const event = createEvent('controlsshown', t.container);
-				t.container.dispatchEvent(event);
+			dom.fadeIn(t.getElement(t.controls), 200, () => {
+				dom.removeClass(t.getElement(t.controls), `${t.options.classPrefix}offscreen`);
+				const event = createEvent('controlsshown', t.getElement(t.container));
+				t.getElement(t.container).dispatchEvent(event);
 			});
 
 			// any additional controls people might add and want to hide
-			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
+			const controls = t.getElement(t.container).querySelectorAll(`.${t.options.classPrefix}control`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.fadeIn(controls[i], 200, () => {
 					dom.removeClass(controls[i], `${t.options.classPrefix}offscreen`);
 				});
 			}
 		} else {
-			dom.removeClass(t.controls, `${t.options.classPrefix}offscreen`);
-			t.controls.style.display = '';
-			t.controls.style.opacity = 1;
+			dom.removeClass(t.getElement(t.controls), `${t.options.classPrefix}offscreen`);
+			t.getElement(t.controls).style.display = '';
+			t.getElement(t.controls).style.opacity = 1;
 
 			// any additional controls people might add and want to hide
-			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
+			const controls = t.getElement(t.container).querySelectorAll(`.${t.options.classPrefix}control`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.removeClass(controls[i], `${t.options.classPrefix}offscreen`);
 				controls[i].style.display = '';
 			}
 
-			const event = createEvent('controlsshown', t.container);
-			t.container.dispatchEvent(event);
+			const event = createEvent('controlsshown', t.getElement(t.container));
+			t.getElement(t.container).dispatchEvent(event);
 		}
 
 		t.controlsAreVisible = true;
@@ -516,15 +520,15 @@ class MediaElementPlayer {
 
 		if (doAnimation) {
 			// fade out main controls
-			dom.fadeOut(t.controls, 200, () => {
-				dom.addClass(t.controls, `${t.options.classPrefix}offscreen`);
-				t.controls.style.display = '';
-				const event = createEvent('controlshidden', t.container);
-				t.container.dispatchEvent(event);
+			dom.fadeOut(t.getElement(t.controls), 200, () => {
+				dom.addClass(t.getElement(t.controls), `${t.options.classPrefix}offscreen`);
+				t.getElement(t.controls).style.display = '';
+				const event = createEvent('controlshidden', t.getElement(t.container));
+				t.getElement(t.container).dispatchEvent(event);
 			});
 
 			// any additional controls people might add and want to hide
-			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
+			const controls = t.getElement(t.container).querySelectorAll(`.${t.options.classPrefix}control`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.fadeOut(controls[i], 200, () => {
 					dom.addClass(controls[i], `${t.options.classPrefix}offscreen`);
@@ -534,19 +538,19 @@ class MediaElementPlayer {
 		} else {
 
 			// hide main controls
-			dom.addClass(t.controls, `${t.options.classPrefix}offscreen`);
-			t.controls.style.display = '';
-			t.controls.style.opacity = 0;
+			dom.addClass(t.getElement(t.controls), `${t.options.classPrefix}offscreen`);
+			t.getElement(t.controls).style.display = '';
+			t.getElement(t.controls).style.opacity = 0;
 
 			// hide others
-			const controls = t.container.querySelectorAll(`.${t.options.classPrefix}control`);
+			const controls = t.getElement(t.container).querySelectorAll(`.${t.options.classPrefix}control`);
 			for (let i = 0, total = controls.length; i < total; i++) {
 				dom.addClass(controls[i], `${t.options.classPrefix}offscreen`);
 				controls[i].style.display = '';
 			}
 
-			const event = createEvent('controlshidden', t.container);
-			t.container.dispatchEvent(event);
+			const event = createEvent('controlshidden', t.getElement(t.container));
+			t.getElement(t.container).dispatchEvent(event);
 		}
 
 		t.controlsAreVisible = false;
@@ -621,12 +625,12 @@ class MediaElementPlayer {
 			isNative = media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
 
-		if (t.controls) {
+		if (t.getElement(t.controls)) {
 			t.enableControls();
 		}
 
-		if (t.container && t.container.querySelector(`.${t.options.classPrefix}overlay-play`)) {
-			t.container.querySelector(`.${t.options.classPrefix}overlay-play`).style.display = '';
+		if (t.getElement(t.container) && t.getElement(t.container).querySelector(`.${t.options.classPrefix}overlay-play`)) {
+			t.getElement(t.container).querySelector(`.${t.options.classPrefix}overlay-play`).style.display = '';
 		}
 
 		// make sure it can't create itself again if a plugin reloads
@@ -667,19 +671,19 @@ class MediaElementPlayer {
 			// Enable default actions
 			t._setDefaultPlayer();
 
-			t.buildposter(t, t.controls, t.layers, t.media);
-			t.buildkeyboard(t, t.controls, t.layers, t.media);
-			t.buildoverlays(t, t.controls, t.layers, t.media);
+			t.buildposter(t, t.getElement(t.controls), t.getElement(t.layers), t.media);
+			t.buildkeyboard(t, t.getElement(t.controls), t.getElement(t.layers), t.media);
+			t.buildoverlays(t, t.getElement(t.controls), t.getElement(t.layers), t.media);
 
 			if (t.options.useDefaultControls) {
 				const defaultControls = ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume', 'fullscreen'];
 				t.options.features = defaultControls.concat(t.options.features.filter((item) => defaultControls.indexOf(item) === -1));
 			}
 
-			t.buildfeatures(t, t.controls, t.layers, t.media);
+			t.buildfeatures(t, t.getElement(t.controls), t.getElement(t.layers), t.media);
 
-			const event = createEvent('controlsready', t.container);
-			t.container.dispatchEvent(event);
+			const event = createEvent('controlsready', t.getElement(t.container));
+			t.getElement(t.container).dispatchEvent(event);
 
 			// reset all layers and controls
 			t.setPlayerSize(t.width, t.height);
@@ -694,7 +698,7 @@ class MediaElementPlayer {
 
 					if (t.options.clickToPlayPause) {
 						const
-							button = t.container
+							button = t.getElement(t.container)
 							.querySelector(`.${t.options.classPrefix}overlay-button`),
 							pressed = button.getAttribute('aria-pressed')
 						;
@@ -708,7 +712,7 @@ class MediaElementPlayer {
 						}
 
 						button.setAttribute('aria-pressed', !(pressed));
-						t.container.focus();
+						t.getElement(t.container).focus();
 					}
 				};
 
@@ -734,7 +738,7 @@ class MediaElementPlayer {
 					}, SUPPORT_PASSIVE_EVENT ? { passive: true } : false);
 				} else {
 					// show/hide controls
-					t.container.addEventListener('mouseenter', () => {
+					t.getElement(t.container).addEventListener('mouseenter', () => {
 						if (t.controlsEnabled) {
 							if (!t.options.alwaysShowControls) {
 								t.killControlsTimer('enter');
@@ -743,7 +747,7 @@ class MediaElementPlayer {
 							}
 						}
 					});
-					t.container.addEventListener('mousemove', () => {
+					t.getElement(t.container).addEventListener('mousemove', () => {
 						if (t.controlsEnabled) {
 							if (!t.controlsAreVisible) {
 								t.showControls();
@@ -753,7 +757,7 @@ class MediaElementPlayer {
 							}
 						}
 					});
-					t.container.addEventListener('mouseleave', () => {
+					t.getElement(t.container).addEventListener('mouseleave', () => {
 						if (t.controlsEnabled) {
 							if (!t.paused && !t.options.alwaysShowControls) {
 								t.startControlsTimer(t.options.controlsTimeoutMouseLeave);
@@ -814,7 +818,7 @@ class MediaElementPlayer {
 						// Fixing an Android stock browser bug, where "seeked" isn't fired correctly after
 						// ending the video and jumping to the beginning
 						setTimeout(() => {
-							const loadingElement = t.container.querySelector(`.${t.options.classPrefix}overlay-loading`);
+							const loadingElement = t.getElement(t.container).querySelector(`.${t.options.classPrefix}overlay-loading`);
 							if (loadingElement && loadingElement.parentNode) {
 								loadingElement.parentNode.style.display = 'none';
 							}
@@ -882,12 +886,12 @@ class MediaElementPlayer {
 			});
 
 			// Disable focus outline to improve look-and-feel for regular users
-			t.container.addEventListener('click', function (e) {
+			t.getElement(t.container).addEventListener('click', function (e) {
 				dom.addClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
 			});
 
 			// Enable focus outline for Accessibility purposes
-			t.container.addEventListener('focusin', function (e) {
+			t.getElement(t.container).addEventListener('focusin', function (e) {
 				dom.removeClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
 				if (t.isVideo && !IS_ANDROID && !IS_IOS && t.controlsEnabled && !t.options.alwaysShowControls) {
 					t.killControlsTimer('enter');
@@ -896,7 +900,7 @@ class MediaElementPlayer {
 				}
 			});
 
-			t.container.addEventListener('focusout', (e) => {
+			t.getElement(t.container).addEventListener('focusout', (e) => {
 				setTimeout(() => {
 					//FF is working on supporting focusout https://bugzilla.mozilla.org/show_bug.cgi?id=687787
 					if (e.relatedTarget) {
@@ -955,7 +959,7 @@ class MediaElementPlayer {
 	_handleError (e, media, node) {
 		const
 			t = this,
-			play = t.layers.querySelector(`.${t.options.classPrefix}overlay-play`)
+			play = t.getElement(t.layers).querySelector(`.${t.options.classPrefix}overlay-play`)
 		;
 
 		if (play) {
@@ -968,8 +972,8 @@ class MediaElementPlayer {
 		}
 
 		// Remove prior error message
-		if (t.container.querySelector(`.${t.options.classPrefix}cannotplay`)) {
-			t.container.querySelector(`.${t.options.classPrefix}cannotplay`).remove();
+		if (t.getElement(t.container).querySelector(`.${t.options.classPrefix}cannotplay`)) {
+			t.getElement(t.container).querySelector(`.${t.options.classPrefix}cannotplay`).remove();
 		}
 
 		const errorContainer = document.createElement('div');
@@ -1000,10 +1004,10 @@ class MediaElementPlayer {
 			}
 		}
 
-		if (errorContent && t.layers.querySelector(`.${t.options.classPrefix}overlay-error`)) {
+		if (errorContent && t.getElement(t.layers).querySelector(`.${t.options.classPrefix}overlay-error`)) {
 			errorContainer.innerHTML = errorContent;
-			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = `${imgError}${errorContainer.outerHTML}`;
-			t.layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'block';
+			t.getElement(t.layers).querySelector(`.${t.options.classPrefix}overlay-error`).innerHTML = `${imgError}${errorContainer.outerHTML}`;
+			t.getElement(t.layers).querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'block';
 		}
 
 		if (t.controlsEnabled) {
@@ -1066,7 +1070,7 @@ class MediaElementPlayer {
 			t = this,
 			parent = (() => {
 
-				let parentEl, el = t.container;
+				let parentEl, el = t.getElement(t.container);
 
 				// traverse parents to find the closest visible one
 				while (el) {
@@ -1160,7 +1164,7 @@ class MediaElementPlayer {
 			newHeight = parentHeight;
 		}
 
-		if (t.container.parentNode.length > 0 && t.container.parentNode.tagName.toLowerCase() === 'body') {
+		if (t.getElement(t.container).parentNode.length > 0 && t.getElement(t.container).parentNode.tagName.toLowerCase() === 'body') {
 			parentWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 			newHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 		}
@@ -1168,8 +1172,8 @@ class MediaElementPlayer {
 		if (newHeight && parentWidth) {
 
 			// set outer container size
-			t.container.style.width = `${parentWidth}px`;
-			t.container.style.height = `${newHeight}px`;
+			t.getElement(t.container).style.width = `${parentWidth}px`;
+			t.getElement(t.container).style.height = `${newHeight}px`;
 
 			// set native <video> or <audio> and shims
 			t.node.style.width = '100%';
@@ -1181,7 +1185,7 @@ class MediaElementPlayer {
 			}
 
 			// set the layers
-			const layerChildren = t.layers.children;
+			const layerChildren = t.getElement(t.layers).children;
 			for (let i = 0, total = layerChildren.length; i < total; i++) {
 				layerChildren[i].style.width = '100%';
 				layerChildren[i].style.height = '100%';
@@ -1193,7 +1197,7 @@ class MediaElementPlayer {
 		const t = this;
 		const isIframe = window.self !== window.top && window.frameElement !== null;
 		const parent = (() => {
-			let parentEl, el = t.container;
+			let parentEl, el = t.getElement(t.container);
 
 			// traverse parents to find the closest visible one
 			while (el) {
@@ -1261,13 +1265,13 @@ class MediaElementPlayer {
 		t.setDimensions('100%', '100%');
 
 		// This prevents an issue when displaying poster
-		const poster = t.container.querySelector(`.${t.options.classPrefix}poster>img`);
+		const poster = t.getElement(t.container).querySelector(`.${t.options.classPrefix}poster>img`);
 		if (poster) {
 			poster.style.display = '';
 		}
 
 		const
-			targetElement = t.container.querySelectorAll('object, embed, iframe, video'),
+			targetElement = t.getElement(t.container).querySelectorAll('object, embed, iframe, video'),
 			initHeight = t.height,
 			initWidth = t.width,
 			// scale to the target width
@@ -1302,10 +1306,10 @@ class MediaElementPlayer {
 		width = isString(width) && width.indexOf('%') > -1 ? width : `${parseFloat(width)}px`;
 		height = isString(height) && height.indexOf('%') > -1 ? height : `${parseFloat(height)}px`;
 
-		t.container.style.width = width;
-		t.container.style.height = height;
+		t.getElement(t.container).style.width = width;
+		t.getElement(t.container).style.height = height;
 
-		const layers = t.layers.children;
+		const layers = t.getElement(t.layers).children;
 		for (let i = 0, total = layers.length; i < total; i++) {
 			layers[i].style.width = width;
 			layers[i].style.height = height;
@@ -1316,7 +1320,7 @@ class MediaElementPlayer {
 		const t = this;
 
 		// skip calculation if hidden
-		if (!dom.visible(t.container)) {
+		if (!dom.visible(t.getElement(t.container))) {
 			return;
 		}
 
@@ -1337,19 +1341,19 @@ class MediaElementPlayer {
 
 			siblingsWidth += totalMargin + ((totalMargin === 0) ? (railMargin * 2) : railMargin) + 1;
 
-			t.container.style.minWidth = `${siblingsWidth}px`;
+			t.getElement(t.container).style.minWidth = `${siblingsWidth}px`;
 
-			const event = createEvent('controlsresize', t.container);
-			t.container.dispatchEvent(event);
+			const event = createEvent('controlsresize', t.getElement(t.container));
+			t.getElement(t.container).dispatchEvent(event);
 		} else {
-			const children = t.controls.children;
+			const children = t.getElement(t.controls).children;
 			let minWidth = 0;
 
 			for (let i = 0, total = children.length; i < total; i++) {
 				minWidth += children[i].offsetWidth;
 			}
 
-			t.container.style.minWidth = `${minWidth}px`;
+			t.getElement(t.container).style.minWidth = `${minWidth}px`;
 		}
 	}
 
@@ -1364,11 +1368,11 @@ class MediaElementPlayer {
 		const t = this;
 
 		if (t.featurePosition[key] !== undefined) {
-			const child = t.controls.children[t.featurePosition[key] - 1];
+			const child = t.getElement(t.controls).children[t.featurePosition[key] - 1];
 			child.parentNode.insertBefore(element, child.nextSibling);
 		} else {
-			t.controls.appendChild(element);
-			const children = t.controls.children;
+			t.getElement(t.controls).appendChild(element);
+			const children = t.getElement(t.controls).children;
 			for (let i = 0, total = children.length; i < total; i++) {
 				if (element === children[i]) {
 					t.featurePosition[key] = i;
@@ -1424,13 +1428,13 @@ class MediaElementPlayer {
 	setPoster (url) {
 		const t = this;
 
-		if (t.container) {
-			let posterDiv = t.container.querySelector(`.${t.options.classPrefix}poster`);
+		if (t.getElement(t.container)) {
+			let posterDiv = t.getElement(t.container).querySelector(`.${t.options.classPrefix}poster`);
 
 			if (!posterDiv) {
 				posterDiv = document.createElement('div');
 				posterDiv.className = `${t.options.classPrefix}poster ${t.options.classPrefix}layer`;
-				t.layers.appendChild(posterDiv);
+				t.getElement(t.layers).appendChild(posterDiv);
 			}
 
 			let posterImg = posterDiv.querySelector('img');
@@ -1463,7 +1467,7 @@ class MediaElementPlayer {
 	changeSkin (className) {
 		const t = this;
 
-		t.container.className = `${t.options.classPrefix}container ${className}`;
+		t.getElement(t.container).className = `${t.options.classPrefix}container ${className}`;
 		t.setPlayerSize(t.width, t.height);
 		t.setControlsSize();
 	}
@@ -1631,7 +1635,7 @@ class MediaElementPlayer {
 			if (t.options.clickToPlayPause) {
 
 				const
-					button = t.container.querySelector(`.${t.options.classPrefix}overlay-button`),
+					button = t.getElement(t.container).querySelector(`.${t.options.classPrefix}overlay-button`),
 					pressed = button.getAttribute('aria-pressed')
 				;
 
@@ -1642,7 +1646,7 @@ class MediaElementPlayer {
 				}
 
 				button.setAttribute('aria-pressed', !!pressed);
-				t.container.focus();
+				t.getElement(t.container).focus();
 			}
 		});
 		// Allow keyboard to execute action on play button
@@ -1749,7 +1753,7 @@ class MediaElementPlayer {
 
 		const t = this;
 
-		t.container.addEventListener('keydown', () => {
+		t.getElement(t.container).addEventListener('keydown', () => {
 			t.keyboardAction = true;
 		});
 
@@ -1905,7 +1909,7 @@ class MediaElementPlayer {
 			const feature = t.options.features[featureIndex];
 			if (t[`clean${feature}`]) {
 				try {
-					t[`clean${feature}`](t, t.layers, t.controls, t.media);
+					t[`clean${feature}`](t, t.getElement(t.layers), t.getElement(t.controls), t.media);
 				} catch (e) {
 					// @todo: report control error
 					console.error(`error cleaning ${feature}`, e);
@@ -1944,7 +1948,7 @@ class MediaElementPlayer {
 		if (!t.isDynamic) {
 			t.node.setAttribute('controls', true);
 			t.node.setAttribute('id', t.node.getAttribute('id').replace(`_${rendererName}`, '').replace('_from_mejs', ''));
-			const poster = t.container.querySelector(`.${t.options.classPrefix}poster>img`);
+			const poster = t.getElement(t.container).querySelector(`.${t.options.classPrefix}poster>img`);
 			if (poster) {
 				t.node.setAttribute('poster', poster.src);
 			}
@@ -1965,7 +1969,7 @@ class MediaElementPlayer {
 
 			const node = t.node.cloneNode();
 			node.style.display = '';
-			t.container.parentNode.insertBefore(node, t.container);
+			t.getElement(t.container).parentNode.insertBefore(node, t.getElement(t.container));
 			t.node.remove();
 
 			// Add children
@@ -2000,7 +2004,7 @@ class MediaElementPlayer {
 			delete t.trackFiles;
 
 		} else {
-			t.container.parentNode.insertBefore(t.node, t.container);
+			t.getElement(t.container).parentNode.insertBefore(t.node, t.getElement(t.container));
 		}
 
 		if (typeof t.media.renderer.destroy === 'function') {
@@ -2011,10 +2015,10 @@ class MediaElementPlayer {
 		// pause a non existent Flash API.
 		delete mejs.players[t.id];
 
-		if (typeof t.container === 'object') {
-			const offscreen = t.container.parentNode.querySelector(`.${t.options.classPrefix}offscreen`);
+		if (typeof t.getElement(t.container) === 'object') {
+			const offscreen = t.getElement(t.container).parentNode.querySelector(`.${t.options.classPrefix}offscreen`);
 			offscreen.remove();
-			t.container.remove();
+			t.getElement(t.container).remove();
 		}
 		t.globalUnbind('resize', t.globalResizeCallback);
 		t.globalUnbind('keydown', t.globalKeydownCallback);

@@ -116,7 +116,10 @@ export function siblings (el, filter) {
 }
 
 export function visible (elem) {
-	return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
+	if (elem.getClientRects !== undefined && elem.getClientRects === 'function') {
+		return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+	}
+	return !!( elem.offsetWidth || elem.offsetHeight);
 }
 
 export function ajax (url, dataType, success, error) {

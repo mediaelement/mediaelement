@@ -3448,7 +3448,10 @@ function siblings(el, filter) {
 }
 
 function visible(elem) {
-	return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+	if (elem.getClientRects !== undefined && elem.getClientRects === 'function') {
+		return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+	}
+	return !!(elem.offsetWidth || elem.offsetHeight);
 }
 
 function ajax(url, dataType, success, error) {
