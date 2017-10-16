@@ -1727,7 +1727,7 @@ Object.assign(_player2.default.prototype, {
 						}
 
 						t.timefloat.style.left = leftPos + 'px';
-						t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
+						t.timefloatcurrent.innerHTML = (0, _time.secondsToTimeCode)(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat);
 						t.timefloat.style.display = 'block';
 					}
 				}
@@ -1741,7 +1741,7 @@ Object.assign(_player2.default.prototype, {
 		    updateSlider = function updateSlider() {
 			var seconds = t.getCurrentTime(),
 			    timeSliderText = _i18n2.default.t('mejs.time-slider'),
-			    time = (0, _time.secondsToTimeCode)(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength),
+			    time = (0, _time.secondsToTimeCode)(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat),
 			    duration = t.getDuration();
 
 			t.slider.setAttribute('role', 'slider');
@@ -2050,7 +2050,7 @@ Object.assign(_player2.default.prototype, {
 				t.setTransformStyle(t.handle, 'translateX(' + handlePos + 'px)');
 
 				if (t.options.useSmoothHover && !(0, _dom.hasClass)(t.hovered, 'no-hover')) {
-					var pos = parseInt(t.hovered.getAttribute('pos'));
+					var pos = parseInt(t.hovered.getAttribute('pos'), 10);
 					pos = isNaN(pos) ? 0 : pos;
 
 					var hoverScaleX = pos / tW - handlePos / tW;
@@ -2100,7 +2100,7 @@ Object.assign(_player2.default.prototype, {
 		time.className = t.options.classPrefix + 'time';
 		time.setAttribute('role', 'timer');
 		time.setAttribute('aria-live', 'off');
-		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength) + '</span>';
+		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat) + '</span>';
 
 		t.addControlElement(time, 'current');
 		player.updateCurrent();
@@ -2119,7 +2119,7 @@ Object.assign(_player2.default.prototype, {
 		    currTime = controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime');
 
 		if (currTime) {
-			controls.querySelector('.' + t.options.classPrefix + 'time').innerHTML += t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength) + '</span>');
+			controls.querySelector('.' + t.options.classPrefix + 'time').innerHTML += t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat) + '</span>');
 		} else {
 			if (controls.querySelector('.' + t.options.classPrefix + 'currenttime')) {
 				(0, _dom.addClass)(controls.querySelector('.' + t.options.classPrefix + 'currenttime').parentNode, t.options.classPrefix + 'currenttime-container');
@@ -2127,7 +2127,7 @@ Object.assign(_player2.default.prototype, {
 
 			var duration = _document2.default.createElement('div');
 			duration.className = t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container';
-			duration.innerHTML = '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength) + '</span>');
+			duration.innerHTML = '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat) + '</span>');
 
 			t.addControlElement(duration, 'duration');
 		}
@@ -2152,7 +2152,7 @@ Object.assign(_player2.default.prototype, {
 			currentTime = 0;
 		}
 
-		var timecode = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+		var timecode = (0, _time.secondsToTimeCode)(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat);
 
 		if (timecode.length > 5) {
 			(0, _dom.addClass)(t.getElement(t.container), t.options.classPrefix + 'long-video');
@@ -2177,7 +2177,7 @@ Object.assign(_player2.default.prototype, {
 			duration = t.options.duration;
 		}
 
-		var timecode = (0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+		var timecode = (0, _time.secondsToTimeCode)(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat);
 
 		if (timecode.length > 5) {
 			(0, _dom.addClass)(t.getElement(t.container), t.options.classPrefix + 'long-video');
@@ -8249,6 +8249,7 @@ function secondsToTimeCode(time) {
 	var showFrameCount = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 	var fps = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 25;
 	var secondsDecimalLength = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+	var timeFormat = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'mm:ss';
 
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
@@ -8302,14 +8303,28 @@ function secondsToTimeCode(time) {
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
 
-	var result = forceHours || hours > 0 ? (hours < 10 ? '0' + hours : hours) + ':' : '';
-	result += (minutes < 10 ? '0' + minutes : minutes) + ':';
-	result += '' + (seconds < 10 ? '0' + seconds : seconds);
+	var timeFormatFrags = timeFormat.split(':');
+	var timeFormatSettings = {};
+	for (var i = 0, total = timeFormatFrags.length; i < total; ++i) {
+		var unique = '';
+		for (var j = 0, t = timeFormatFrags[i].length; j < t; j++) {
+			if (unique.indexOf(timeFormatFrags[i][j]) < 0) {
+				unique += timeFormatFrags[i][j];
+			}
+		}
+		if (~['f', 's', 'm', 'h'].indexOf(unique)) {
+			timeFormatSettings[unique] = timeFormatFrags[i].length;
+		}
+	}
+
+	var result = forceHours || hours > 0 ? (hours < 10 && timeFormatSettings.h > 1 ? '0' + hours : hours) + ':' : '';
+	result += (minutes < 10 && timeFormatSettings.m > 1 ? '0' + minutes : minutes) + ':';
+	result += '' + (seconds < 10 && timeFormatSettings.s > 1 ? '0' + seconds : seconds);
 
 	if (showFrameCount) {
 		frames = (f % timeBase).toFixed(0);
 		frames = frames <= 0 ? 0 : frames;
-		result += frames < 10 ? frameSep + '0' + frames : '' + frameSep + frames;
+		result += frames < 10 && timeFormatSettings.f ? frameSep + '0' + frames : '' + frameSep + frames;
 	}
 
 	return result;
@@ -8422,7 +8437,7 @@ function calculateTimeFormat(time, options) {
 		}
 	}
 
-	options.currentTimeFormat = format;
+	options.timeFormat = format;
 }
 
 function convertSMPTEtoSeconds(SMPTE) {

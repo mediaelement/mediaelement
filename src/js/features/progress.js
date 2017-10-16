@@ -250,7 +250,7 @@ Object.assign(MediaElementPlayer.prototype, {
 							}
 
 							t.timefloat.style.left = `${leftPos}px`;
-							t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength);
+							t.timefloatcurrent.innerHTML = secondsToTimeCode(t.newTime, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat);
 							t.timefloat.style.display = 'block';
 						}
 					}
@@ -271,7 +271,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					seconds = t.getCurrentTime(),
 					timeSliderText = i18n.t('mejs.time-slider'),
-					time = secondsToTimeCode(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength),
+					time = secondsToTimeCode(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat),
 					duration = t.getDuration()
 				;
 
@@ -629,7 +629,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.setTransformStyle(t.handle,`translateX(${handlePos}px)`);
 
 				if (t.options.useSmoothHover && !hasClass(t.hovered, 'no-hover')) {
-					let pos = parseInt(t.hovered.getAttribute('pos'));
+					let pos = parseInt(t.hovered.getAttribute('pos'), 10);
 					pos = (isNaN(pos)) ? 0 : pos;
 
 					const hoverScaleX = pos/tW - handlePos/tW;

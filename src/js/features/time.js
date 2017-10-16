@@ -44,7 +44,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		time.className = `${t.options.classPrefix}time`;
 		time.setAttribute('role', 'timer');
 		time.setAttribute('aria-live', 'off');
-		time.innerHTML = `<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength)}</span>`;
+		time.innerHTML = `<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat)}</span>`;
 
 		t.addControlElement(time, 'current');
 		player.updateCurrent();
@@ -77,7 +77,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (currTime) {
 			controls.querySelector(`.${t.options.classPrefix}time`).innerHTML +=
 				`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>`;
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat)}</span>`;
 
 		} else {
 			// add class to current time
@@ -88,7 +88,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			const duration = document.createElement('div');
 			duration.className = `${t.options.classPrefix}time ${t.options.classPrefix}duration-container`;
 			duration.innerHTML = `<span class="${t.options.classPrefix}duration">` +
-				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength)}</span>`;
+				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat)}</span>`;
 
 			t.addControlElement(duration, 'duration');
 		}
@@ -118,7 +118,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			currentTime = 0;
 		}
 
-		const timecode = secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+		const timecode = secondsToTimeCode(currentTime, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat);
 
 		// Toggle long-video class if time code is >5 digits (MM:SS)
 		if (timecode.length > 5) {
@@ -150,7 +150,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			duration = t.options.duration;
 		}
 
-		const timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+		const timecode = secondsToTimeCode(duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat);
 
 		// Toggle long-video class if time code is >5 digits (MM:SS)
 		if (timecode.length > 5) {

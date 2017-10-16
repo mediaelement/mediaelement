@@ -39,7 +39,7 @@ var VimeoApi = {
 
 		var parts = url.split('?');
 		url = parts[0];
-		return parseInt(url.substring(url.lastIndexOf('/') + 1));
+		return parseInt(url.substring(url.lastIndexOf('/') + 1), 10);
 	}
 };
 

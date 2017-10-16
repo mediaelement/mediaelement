@@ -19,9 +19,10 @@ export function isDropFrame(fps = 25) {
  * @param {Boolean} showFrameCount
  * @param {Number} fps - Frames per second
  * @param {Number} secondsDecimalLength - Number of decimals to display if any
+ * @param {String} timeFormat
  * @return {String}
  */
-export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0) {
+export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0, timeFormat = 'mm:ss') {
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
@@ -77,14 +78,28 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
 
-	let result = (forceHours || hours > 0) ? `${(hours < 10 ? `0${hours}` : hours)}:` : '';
-	result += `${(minutes < 10 ? `0${minutes}` : minutes)}:`;
-	result += `${(seconds < 10 ? `0${seconds}` : seconds)}`;
+	const timeFormatFrags = timeFormat.split(':');
+	const timeFormatSettings = {};
+	for (let i = 0, total = timeFormatFrags.length; i < total; ++i) {
+		let unique = '';
+		for (let j = 0, t = timeFormatFrags[i].length; j < t; j++) {
+			if (unique.indexOf(timeFormatFrags[i][j]) < 0) {
+				unique += timeFormatFrags[i][j];
+			}
+		}
+		if (~['f', 's', 'm', 'h'].indexOf(unique)) {
+			timeFormatSettings[unique] = timeFormatFrags[i].length;
+		}
+	}
+
+	let result = (forceHours || hours > 0) ? `${(hours < 10 && timeFormatSettings.h > 1 ? `0${hours}` : hours)}:` : '';
+	result += `${(minutes < 10 && timeFormatSettings.m > 1 ? `0${minutes}` : minutes)}:`;
+	result += `${(seconds < 10 && timeFormatSettings.s > 1 ? `0${seconds}` : seconds)}`;
 
 	if (showFrameCount) {
 		frames = (f % timeBase).toFixed(0);
 		frames = frames <= 0 ? 0 : frames;
-		result += (frames < 10) ? `${frameSep}0${frames}` : `${frameSep}${frames}`;
+		result += (frames < 10 && timeFormatSettings.f) ? `${frameSep}0${frames}` : `${frameSep}${frames}`;
 	}
 
 	return result;
@@ -221,7 +236,7 @@ export function calculateTimeFormat (time, options, fps = 25) {
 		}
 	}
 
-	options.currentTimeFormat = format;
+	options.timeFormat = format;
 }
 
 /**
