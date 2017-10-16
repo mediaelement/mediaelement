@@ -750,6 +750,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 .mejs__overlay-error > img {
     left: 0;
+    max-width: 100%;
     position: absolute;
     top: 0;
     z-index: -1;

@@ -378,6 +378,35 @@ const YouTubeIframeRenderer = {
 			assignMethods(methods[i]);
 		}
 
+		/**
+		 * Generate custom errors for YouTube based on the API specifications
+		 *
+		 * @see https://developers.google.com/youtube/iframe_api_reference#onError
+		 * @param {Object} error
+		 */
+		const errorHandler = (error) => {
+			let message = '';
+			switch (error.data) {
+				case 2:
+					message = 'The request contains an invalid parameter value. Verify that video ID has 11 characters and that contains no invalid characters, such as exclamation points or asterisks.';
+					break;
+				case 5:
+					message = 'The requested content cannot be played in an HTML5 player or another error related to the HTML5 player has occurred.';
+					break;
+				case 100:
+					message = 'The video requested was not found. Either video has been removed or has been marked as private.';
+					break;
+				case 101:
+				case 105:
+					message = 'The owner of the requested video does not allow it to be played in embedded players.';
+					break;
+				default:
+					message = 'Unknown error.';
+					break;
+			}
+			mediaElement.generateError(`Code ${error.data}: ${message}`, mediaFiles);
+		};
+
 		// CREATE YouTube
 		const youtubeContainer = document.createElement('div');
 		youtubeContainer.id = youtube.id;
@@ -509,11 +538,7 @@ const YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 						}
 					},
-					onError: (e) => {
-						const event = createEvent('error', youtube);
-						event.data = e.data;
-						mediaElement.dispatchEvent(event);
-					}
+					onError: (e) => errorHandler(e)
 				}
 			}
 		;

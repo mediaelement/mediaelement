@@ -112,12 +112,9 @@ const vimeoIframeRenderer = {
 		 *
 		 * @see https://github.com/vimeo/player.js#error
 		 * @param {Object} error
-		 * @param {Object} target
 		 */
-		const errorHandler = (error, target) => {
-			const event = mejs.Utils.createEvent('error', target);
-			event.message = error.name + ': ' + error.message;
-			mediaElement.dispatchEvent(event);
+		const errorHandler = (error) => {
+			mediaElement.generateError(`Code ${error.name}: ${error.message}`, mediaFiles);
 		};
 
 		// wrappers for get/set
@@ -134,10 +131,8 @@ const vimeoIframeRenderer = {
 						switch (propName) {
 							case 'currentTime':
 								return currentTime;
-
 							case 'duration':
 								return duration;
-
 							case 'volume':
 								return volume;
 							case 'muted':
@@ -146,12 +141,10 @@ const vimeoIframeRenderer = {
 								return paused;
 							case 'ended':
 								return ended;
-
 							case 'src':
 								vimeoPlayer.getVideoUrl().then((_url) => {
 									url = _url;
-								});
-
+								}).catch((error) => errorHandler(error));
 								return url;
 							case 'buffered':
 								return {
@@ -183,10 +176,7 @@ const vimeoIframeRenderer = {
 									if (mediaElement.originalNode.autoplay) {
 										vimeoPlayer.play();
 									}
-
-								}).catch((error) => {
-									errorHandler(error, vimeo);
-								});
+								}).catch((error) => errorHandler(error));
 								break;
 							case 'currentTime':
 								vimeoPlayer.setCurrentTime(value).then(() => {
@@ -195,9 +185,7 @@ const vimeoIframeRenderer = {
 										const event = mejs.Utils.createEvent('timeupdate', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
-								}).catch((error) => {
-									errorHandler(error, vimeo);
-								});
+								}).catch((error) => errorHandler(error));
 								break;
 							case 'volume':
 								vimeoPlayer.setVolume(value).then(() => {
@@ -207,14 +195,10 @@ const vimeoIframeRenderer = {
 										const event = mejs.Utils.createEvent('volumechange', vimeo);
 										mediaElement.dispatchEvent(event);
 									}, 50);
-								}).catch((error) => {
-									errorHandler(error, vimeo);
-								});
-								break
+								}).catch((error) => errorHandler(error));
+								break;
 							case 'loop':
-								vimeoPlayer.setLoop(value).catch((error) => {
-									errorHandler(error, vimeo);
-								});
+								vimeoPlayer.setLoop(value).catch((error) => errorHandler(error));
 								break;
 							case 'muted':
 								if (value) {
@@ -224,9 +208,7 @@ const vimeoIframeRenderer = {
 											const event = mejs.Utils.createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
-									}).catch((error) => {
-										errorHandler(error, vimeo);
-									});
+									}).catch((error) => errorHandler(error));
 								} else {
 									vimeoPlayer.setVolume(oldVolume).then(() => {
 										volume = oldVolume;
@@ -234,9 +216,7 @@ const vimeoIframeRenderer = {
 											const event = mejs.Utils.createEvent('volumechange', vimeo);
 											mediaElement.dispatchEvent(event);
 										}, 50);
-									}).catch((error) => {
-										errorHandler(error, vimeo);
-									});
+									}).catch((error) => errorHandler(error));
 								}
 								break;
 							case 'readyState':
@@ -361,19 +341,14 @@ const vimeoIframeRenderer = {
 					const event = mejs.Utils.createEvent('progress', vimeo);
 					mediaElement.dispatchEvent(event);
 
-				}).catch((error) => {
-					errorHandler(error, vimeo);
-				});
+				}).catch((error) => errorHandler(error));
 			});
 			vimeoPlayer.on('timeupdate', () => {
 				vimeoPlayer.getCurrentTime().then((seconds) => {
 					currentTime = seconds;
-
 					const event = mejs.Utils.createEvent('timeupdate', vimeo);
 					mediaElement.dispatchEvent(event);
-				}).catch((error) => {
-					errorHandler(error, vimeo);
-				});
+				}).catch((error) => errorHandler(error));
 			});
 			vimeoPlayer.on('play', () => {
 				paused = false;

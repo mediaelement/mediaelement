@@ -84,7 +84,7 @@ const HtmlMediaElement = {
 		}
 
 		const
-			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']).filter(e => e !== 'error'),
 			assignEvents = (eventName) => {
 				node.addEventListener(eventName, (e) => {
 					// Emmit an event only in case of the renderer is active at the moment

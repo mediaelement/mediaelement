@@ -1320,12 +1320,12 @@ var DashNativeRenderer = {
 		options = Object.assign(options, mediaElement.options);
 
 		var props = _mejs2.default.html5media.properties,
-		    events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+		    events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']).filter(function (e) {
+			return e !== 'error';
+		}),
 		    attachNativeEvents = function attachNativeEvents(e) {
-			if (e.type !== 'error') {
-				var _event = (0, _general.createEvent)(e.type, mediaElement);
-				mediaElement.dispatchEvent(_event);
-			}
+			var event = (0, _general.createEvent)(e.type, mediaElement);
+			mediaElement.dispatchEvent(event);
 		},
 		    assignGettersSetters = function assignGettersSetters(propName) {
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
@@ -1405,9 +1405,9 @@ var DashNativeRenderer = {
 					mediaElement.generateError(data.message, node.src);
 					console.error(data);
 				} else {
-					var _event2 = (0, _general.createEvent)(name, mediaElement);
-					_event2.data = data;
-					mediaElement.dispatchEvent(_event2);
+					var _event = (0, _general.createEvent)(name, mediaElement);
+					_event.data = data;
+					mediaElement.dispatchEvent(_event);
 				}
 			};
 
@@ -2010,12 +2010,12 @@ var FlvNativeRenderer = {
 		options = Object.assign(options, mediaElement.options);
 
 		var props = _mejs2.default.html5media.properties,
-		    events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+		    events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']).filter(function (e) {
+			return e !== 'error';
+		}),
 		    attachNativeEvents = function attachNativeEvents(e) {
-			if (e.type !== 'error') {
-				var _event = (0, _general.createEvent)(e.type, mediaElement);
-				mediaElement.dispatchEvent(_event);
-			}
+			var event = (0, _general.createEvent)(e.type, mediaElement);
+			mediaElement.dispatchEvent(event);
 		},
 		    assignGettersSetters = function assignGettersSetters(propName) {
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
@@ -2084,9 +2084,9 @@ var FlvNativeRenderer = {
 					var message = data[0] + ': ' + data[1] + ' ' + data[2].msg;
 					mediaElement.generateError(message, node.src);
 				} else {
-					var _event2 = (0, _general.createEvent)(name, mediaElement);
-					_event2.data = data;
-					mediaElement.dispatchEvent(_event2);
+					var _event = (0, _general.createEvent)(name, mediaElement);
+					_event.data = data;
+					mediaElement.dispatchEvent(_event);
 				}
 			};
 
@@ -2262,12 +2262,12 @@ var HlsNativeRenderer = {
 		options.hls.autoStartLoad = preload && preload !== 'none' || autoplay;
 
 		var props = _mejs2.default.html5media.properties,
-		    events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+		    events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']).filter(function (e) {
+			return e !== 'error';
+		}),
 		    attachNativeEvents = function attachNativeEvents(e) {
-			if (e.type !== 'error') {
-				var _event = (0, _general.createEvent)(e.type, mediaElement);
-				mediaElement.dispatchEvent(_event);
-			}
+			var event = (0, _general.createEvent)(e.type, mediaElement);
+			mediaElement.dispatchEvent(event);
 		},
 		    assignGettersSetters = function assignGettersSetters(propName) {
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
@@ -2369,9 +2369,9 @@ var HlsNativeRenderer = {
 						}
 					}
 				} else {
-					var _event2 = (0, _general.createEvent)(name, mediaElement);
-					_event2.data = data;
-					mediaElement.dispatchEvent(_event2);
+					var _event = (0, _general.createEvent)(name, mediaElement);
+					_event.data = data;
+					mediaElement.dispatchEvent(_event);
 				}
 			};
 
@@ -2540,7 +2540,9 @@ var HtmlMediaElement = {
 			assignGettersSetters(props[i]);
 		}
 
-		var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']),
+		var events = _mejs2.default.html5media.events.concat(['click', 'mouseover', 'mouseout']).filter(function (e) {
+			return e !== 'error';
+		}),
 		    assignEvents = function assignEvents(eventName) {
 			node.addEventListener(eventName, function (e) {
 				if (isActive) {
@@ -2905,6 +2907,29 @@ var YouTubeIframeRenderer = {
 			assignMethods(methods[_i]);
 		}
 
+		var errorHandler = function errorHandler(error) {
+			var message = '';
+			switch (error.data) {
+				case 2:
+					message = 'The request contains an invalid parameter value. Verify that video ID has 11 characters and that contains no invalid characters, such as exclamation points or asterisks.';
+					break;
+				case 5:
+					message = 'The requested content cannot be played in an HTML5 player or another error related to the HTML5 player has occurred.';
+					break;
+				case 100:
+					message = 'The video requested was not found. Either video has been removed or has been marked as private.';
+					break;
+				case 101:
+				case 105:
+					message = 'The owner of the requested video does not allow it to be played in embedded players.';
+					break;
+				default:
+					message = 'Unknown error.';
+					break;
+			}
+			mediaElement.generateError('Code ' + error.data + ': ' + message, mediaFiles);
+		};
+
 		var youtubeContainer = _document2.default.createElement('div');
 		youtubeContainer.id = youtube.id;
 
@@ -3028,9 +3053,7 @@ var YouTubeIframeRenderer = {
 					}
 				},
 				onError: function onError(e) {
-					var event = (0, _general.createEvent)('error', youtube);
-					event.data = e.data;
-					mediaElement.dispatchEvent(event);
+					return errorHandler(e);
 				}
 			}
 		};
