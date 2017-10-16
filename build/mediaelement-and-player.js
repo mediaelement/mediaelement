@@ -315,8 +315,8 @@ i18n.language = function () {
 			throw new TypeError('Language code must be a string value');
 		}
 
-		if (!/^(([a-z]{2}((\-|_)[a-z]{2})?)|([a-z]{3}))$/i.test(args[0])) {
-			throw new TypeError('Language code must have format `xx`, `xxx`, `xx_XX` or `xx-xx`');
+		if (!/^[a-z]{2,3}((\-|_)[a-z]{2})?$/i.test(args[0])) {
+			throw new TypeError('Language code must have format 2-3 letters and. optionally, hyphen, underscore followed by 2 more letters');
 		}
 
 		i18n.lang = args[0];

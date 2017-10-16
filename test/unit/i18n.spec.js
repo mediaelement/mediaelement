@@ -56,6 +56,10 @@ describe('i18n', () => {
 			expect(() => {
 				i18n.language('xx-xx', {});
 			}).not.to.throw(TypeError);
+
+			expect(() => {
+				i18n.language('xxx_XX', {});
+			}).not.to.throw(TypeError);
 		});
 	});
 
