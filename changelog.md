@@ -17,7 +17,7 @@
 * Added jsDelivr badge (https://github.com/mediaelement/mediaelement/pull/2421) @LukasDrgon
 * Fixed issue with `visible` method when `getClientRects` is not a function @rafa8626
 * Fixed issues with `parseInt` method not setting radix in some calls @rafa8626
-* Added missing argument in `secondsToTimeCode` method to check the time format given and display accordingly @rafa8626
+* Added missing argument in `secondsToTimeCode` method to check the time format given and display accordingly @rafa8626 
 
 *4.2.6 (2017/09/19)*
 
