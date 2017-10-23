@@ -498,6 +498,18 @@ class MediaElement {
 			}
 		};
 
+		/**
+		 * Remove `mediaelement` completely and restore original media tag
+		 */
+		t.mediaElement.destroy = () => {
+			const mediaElement = t.mediaElement.originalNode.cloneNode(true);
+			const wrapper = t.mediaElement.parentElement;
+			mediaElement.removeAttribute('id');
+			mediaElement.remove();
+			t.mediaElement.remove();
+			wrapper.append(mediaElement);
+		};
+
 		// Set the best match based on renderers
 		if (mediaFiles.length) {
 			t.mediaElement.src = mediaFiles;
