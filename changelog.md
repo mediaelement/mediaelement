@@ -19,6 +19,7 @@
 * Fixed issues with `parseInt` method not setting radix in some calls @rafa8626
 * Added missing argument in `secondsToTimeCode` method to check the time format given and display accordingly @rafa8626 
 * Fixed issues related to duplicated calls when triggering error and fixed style for poster when error is displayed @rafa8626
+* Fixed issue with captions not being rendered inside video frame when on fullscreen @rafa8626
 
 *4.2.6 (2017/09/19)*
 
