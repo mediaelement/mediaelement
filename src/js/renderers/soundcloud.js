@@ -67,7 +67,8 @@ const SoundCloudIframeRenderer = {
 			sc = {},
 			apiStack = [],
 			readyState = 4,
-			autoplay = mediaElement.originalNode.autoplay
+			autoplay = mediaElement.originalNode.autoplay,
+			isVideo = mediaElement.originalNode !== null && mediaElement.originalNode.tagName.toLowerCase() === 'video'
 		;
 
 		let
@@ -291,10 +292,10 @@ const SoundCloudIframeRenderer = {
 		// container for API API
 		scIframe = document.createElement('iframe');
 		scIframe.id = sc.id;
-		scIframe.width = 10;
-		scIframe.height = 10;
+		scIframe.width = isVideo ? '100%' : 1;
+		scIframe.height = isVideo ? '100%' : 1;
 		scIframe.frameBorder = 0;
-		scIframe.style.visibility = 'hidden';
+		scIframe.style.visibility = isVideo ? 'visible' : 'hidden';
 		scIframe.src = mediaFiles[0].src;
 		scIframe.scrolling = 'no';
 

@@ -21,6 +21,7 @@
 * Fixed issues related to duplicated calls when triggering error and fixed style for poster when error is displayed @rafa8626
 * Fixed issue with captions not being rendered inside video frame on any state @rafa8626
 * Integrated `destroy` method in `MediaElement` class @rafa8626
+* Added validation to modify `SoundCloud` iframe atributes when using `video` tag @rafa8626
 
 *4.2.6 (2017/09/19)*
 
