@@ -1097,8 +1097,8 @@ class MediaElementPlayer {
 			parentStyles = parent ? getComputedStyle(parent, null) : getComputedStyle(document.body, null),
 			nativeWidth = (() => {
 				if (t.isVideo) {
-					if (t.media.videoWidth && t.media.videoWidth > 0) {
-						return t.media.videoWidth;
+					if (t.node.videoWidth && t.node.videoWidth > 0) {
+						return t.node.videoWidth;
 					} else if (t.node.getAttribute('width')) {
 						return t.node.getAttribute('width');
 					} else {
@@ -1110,8 +1110,8 @@ class MediaElementPlayer {
 			})(),
 			nativeHeight = (() => {
 				if (t.isVideo) {
-					if (t.media.videoHeight && t.media.videoHeight > 0) {
-						return t.media.videoHeight;
+					if (t.node.videoHeight && t.node.videoHeight > 0) {
+						return t.node.videoHeight;
 					} else if (t.node.getAttribute('height')) {
 						return t.node.getAttribute('height');
 					} else {
@@ -1127,9 +1127,9 @@ class MediaElementPlayer {
 					return ratio;
 				}
 
-				if (t.media.videoWidth && t.media.videoWidth > 0 && t.media.videoHeight && t.media.videoHeight > 0) {
-					ratio = (t.height >= t.width) ? t.media.videoWidth / t.media.videoHeight :
-						t.media.videoHeight / t.media.videoWidth;
+				if (t.node.videoWidth && t.node.videoWidth > 0 && t.node.videoHeight && t.node.videoHeight > 0) {
+					ratio = (t.height >= t.width) ? t.node.videoWidth / t.node.videoHeight :
+						t.node.videoHeight / t.node.videoWidth;
 				} else {
 					ratio = t.initialAspectRatio;
 				}

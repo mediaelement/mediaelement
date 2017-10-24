@@ -1381,7 +1381,7 @@ Object.assign(_player2.default.prototype, {
 		if (captionText) {
 			captionText.style.fontSize = zoomFactor * 100 + '%';
 			captionText.style.lineHeight = 'normal';
-			t.getElement(t.container).querySelector('.' + t.options.classPrefix + 'captions-position').style.bottom = (screen.height - t.normalHeight) / 2 - zoomFactor + 'px';
+			t.getElement(t.container).querySelector('.' + t.options.classPrefix + 'captions-position').style.bottom = (screen.height - t.normalHeight) / 2 - t.getElement(t.controls).offsetHeight / 2 + zoomFactor + 15 + 'px';
 		}
 		var event = (0, _general.createEvent)('enteredfullscreen', t.getElement(t.container));
 		t.getElement(t.container).dispatchEvent(event);
@@ -4406,8 +4406,8 @@ var MediaElementPlayer = function () {
 			    parentStyles = parent ? getComputedStyle(parent, null) : getComputedStyle(_document2.default.body, null),
 			    nativeWidth = function () {
 				if (t.isVideo) {
-					if (t.media.videoWidth && t.media.videoWidth > 0) {
-						return t.media.videoWidth;
+					if (t.node.videoWidth && t.node.videoWidth > 0) {
+						return t.node.videoWidth;
 					} else if (t.node.getAttribute('width')) {
 						return t.node.getAttribute('width');
 					} else {
@@ -4419,8 +4419,8 @@ var MediaElementPlayer = function () {
 			}(),
 			    nativeHeight = function () {
 				if (t.isVideo) {
-					if (t.media.videoHeight && t.media.videoHeight > 0) {
-						return t.media.videoHeight;
+					if (t.node.videoHeight && t.node.videoHeight > 0) {
+						return t.node.videoHeight;
 					} else if (t.node.getAttribute('height')) {
 						return t.node.getAttribute('height');
 					} else {
@@ -4436,8 +4436,8 @@ var MediaElementPlayer = function () {
 					return ratio;
 				}
 
-				if (t.media.videoWidth && t.media.videoWidth > 0 && t.media.videoHeight && t.media.videoHeight > 0) {
-					ratio = t.height >= t.width ? t.media.videoWidth / t.media.videoHeight : t.media.videoHeight / t.media.videoWidth;
+				if (t.node.videoWidth && t.node.videoWidth > 0 && t.node.videoHeight && t.node.videoHeight > 0) {
+					ratio = t.height >= t.width ? t.node.videoWidth / t.node.videoHeight : t.node.videoHeight / t.node.videoWidth;
 				} else {
 					ratio = t.initialAspectRatio;
 				}
