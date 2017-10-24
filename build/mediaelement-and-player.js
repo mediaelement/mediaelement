@@ -2645,7 +2645,6 @@ Object.assign(_player2.default.prototype, {
 				t.captionsText.className = t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || '');
 				t.captions.style.display = '';
 				t.captions.style.height = '0px';
-				t.captions.style.bottom = (0, _dom.hasClass)(t.captions.parentNode, t.options.classPrefix + 'captions-position-hover') ? '10%' : '11.5%';
 				return;
 			}
 			t.captions.style.display = 'none';

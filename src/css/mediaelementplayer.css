@@ -663,6 +663,10 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     width: 100%;
 }
 
+.mejs__captions-position-hover {
+    bottom: 35px;
+}
+
 .mejs__captions-text,
 .mejs__captions-text * {
     background: rgba(20, 20, 20, 0.5);

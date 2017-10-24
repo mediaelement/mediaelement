@@ -587,7 +587,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.captionsText.className = `${t.options.classPrefix}captions-text ${(track.entries[i].identifier || '')}`;
 				t.captions.style.display = '';
 				t.captions.style.height = '0px';
-				t.captions.style.bottom = hasClass(t.captions.parentNode, `${t.options.classPrefix}captions-position-hover`) ? '10%' : '11.5%';
 				return; // exit out if one is visible;
 			}
 			t.captions.style.display = 'none';
