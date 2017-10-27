@@ -5691,13 +5691,13 @@ var DashNativeRenderer = {
 				assignEvents(events[_i3]);
 			}
 
-			var assignMdashEvents = function assignMdashEvents(name, data) {
-				if (name.toLowerCase() === 'error') {
-					mediaElement.generateError(data.message, node.src);
-					console.error(data);
+			var assignMdashEvents = function assignMdashEvents(e) {
+				if (e.type.toLowerCase() === 'error') {
+					mediaElement.generateError(e.message, node.src);
+					console.error(e);
 				} else {
-					var _event = (0, _general.createEvent)(name, mediaElement);
-					_event.data = data;
+					var _event = (0, _general.createEvent)(e.type, mediaElement);
+					_event.data = e;
 					mediaElement.dispatchEvent(_event);
 				}
 			};
@@ -5705,11 +5705,7 @@ var DashNativeRenderer = {
 			for (var eventType in dashEvents) {
 				if (dashEvents.hasOwnProperty(eventType)) {
 					dashPlayer.on(dashEvents[eventType], function (e) {
-						for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-							args[_key - 1] = arguments[_key];
-						}
-
-						return assignMdashEvents(e.type, args);
+						return assignMdashEvents(e);
 					});
 				}
 			}

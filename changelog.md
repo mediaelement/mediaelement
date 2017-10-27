@@ -99,6 +99,7 @@
 * Added missing code to explain how to use `MediaElement` with `RequireJS` @rafa8626
 * Integrated Flashls events to be processed by the player @rafa8626
 * Fixed test file when using JSDom and Mocha Chai @rafa8626
+* Changed arguments in `M(PEG)-DASH` native renderer to trigger correctly events @rafa8626
 
 *4.2.1/4.2.2 (2017/06/28)*
 

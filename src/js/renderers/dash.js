@@ -204,20 +204,20 @@ const DashNativeRenderer = {
 			 * not using dashjs.MediaPlayer.events object
 			 * @see http://cdn.dashjs.org/latest/jsdoc/MediaPlayerEvents.html
 			 */
-			const assignMdashEvents = (name, data) => {
-				if (name.toLowerCase() === 'error') {
-					mediaElement.generateError(data.message, node.src);
-					console.error(data);
+			const assignMdashEvents = (e) => {
+				if (e.type.toLowerCase() === 'error') {
+					mediaElement.generateError(e.message, node.src);
+					console.error(e);
 				} else {
-					const event = createEvent(name, mediaElement);
-					event.data = data;
+					const event = createEvent(e.type, mediaElement);
+					event.data = e;
 					mediaElement.dispatchEvent(event);
 				}
 			};
 
 			for (const eventType in dashEvents) {
 				if (dashEvents.hasOwnProperty(eventType)) {
-					dashPlayer.on(dashEvents[eventType], (e, ...args) => assignMdashEvents(e.type, args));
+					dashPlayer.on(dashEvents[eventType], (e) => assignMdashEvents(e));
 				}
 			}
 		};
