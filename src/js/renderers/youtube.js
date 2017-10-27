@@ -560,6 +560,14 @@ const YouTubeIframeRenderer = {
 			youtubeSettings.playerVars.loop = 1;
 		}
 
+		// This is to ensure loop will work with YouTube's AS3 player
+		// @see https://developers.google.com/youtube/player_parameters#loop
+		if (((youtubeSettings.playerVars.loop && parseInt(youtubeSettings.playerVars.loop, 10) === 1) ||
+			mediaElement.originalNode.src.indexOf('loop=') > -1) && !youtubeSettings.playerVars.playlist &&
+			mediaElement.originalNode.src.indexOf('playlist=') === -1) {
+			youtubeSettings.playerVars.playlist = YouTubeApi.getYouTubeId(mediaElement.originalNode.src);
+		}
+
 		// send it off for async loading and creation
 		YouTubeApi.enqueueIframe(youtubeSettings);
 
