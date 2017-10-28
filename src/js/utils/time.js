@@ -22,7 +22,7 @@ export function isDropFrame(fps = 25) {
  * @param {String} timeFormat
  * @return {String}
  */
-export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0, timeFormat = 'mm:ss') {
+export function secondsToTimeCode(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0, timeFormat = 'hh:mm:ss') {
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 

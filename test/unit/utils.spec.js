@@ -210,12 +210,12 @@ describe('Utilities', () => {
 
 			expect(time.secondsToTimeCode(36.45, false, true, 32)).to.equal('00:36:14');
 			expect(time.secondsToTimeCode(70.89, true, true, 40)).to.equal('00:01:10:36');
-			expect(time.secondsToTimeCode(3600.234, true, true)).to.equal('01:00:00:06');
+			expect(time.secondsToTimeCode(3600.234, true, true, 25, 0, 'hh:mm:ss:ff')).to.equal('01:00:00:06');
 		});
 
 		it('checks if frames per second has decimals and adjust the time code', () => {
 			expect(time.secondsToTimeCode(36.45, false, true, 32.46)).to.equal('00:36;31');
-			expect(time.secondsToTimeCode(70.87465, false, true, 32.6891, 3)).to.equal('01:10;09');
+			expect(time.secondsToTimeCode(70.87465, false, true, 32.6891, 3, 'mm:ss:ff')).to.equal('01:10;09');
 			expect(time.secondsToTimeCode(0.378, false, true, 300.2, 3)).to.equal('00:00;113');
 		});
 
@@ -271,18 +271,21 @@ describe('Utilities', () => {
 
 		const options = {
 			timeFormat: 'mm:ss',
-			currentTimeFormat: '',
 		};
 
 		it('attempts to fix time format (i.e., `hh:mm:ss:ff`)', () => {
 			time.calculateTimeFormat(36, options);
-			expect(options.currentTimeFormat).to.equal('mm:ss');
+			expect(options.timeFormat).to.equal('mm:ss');
+
+			options.timeFormat = 'mm:ss';
 
 			time.calculateTimeFormat(3600, options);
-			expect(options.currentTimeFormat).to.equal('hh:mm:ss');
+			expect(options.timeFormat).to.equal('hh:mm:ss');
+
+			options.timeFormat = 'mm:ss';
 
 			time.calculateTimeFormat(36.432, options, 32);
-			expect(options.currentTimeFormat).to.equal('mm:ss');
+			expect(options.timeFormat).to.equal('mm:ss');
 		});
 
 		it('can only accept numeric values for the time', () => {
