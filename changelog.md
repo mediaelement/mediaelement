@@ -1,6 +1,6 @@
 ### Version History
 
-*4.3.0 (2017/11/??)*
+*4.3.0 (2017/11/17)*
 
 * Fixed issue with `setFillMode` when using cross-domain URLs in iframe @rafa8626
 * Added new `proxyType` and `streamDelimiter` variables to Flash video to support RTMPS compatibility @rafa8626
