@@ -62,7 +62,7 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 		if (showFrameCount) {
 			seconds = timeBaseDivision % 60;
 		} else {
-			seconds = ((f / timeBase) % 60).toFixed(secondsDecimalLength);
+			seconds = Math.floor((f / timeBase) % 60).toFixed(secondsDecimalLength);
 		}
 	}
 	else {
@@ -71,12 +71,15 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 		if (showFrameCount) {
 			seconds = Math.floor(time % 60);
 		} else {
-			seconds = (time % 60).toFixed(secondsDecimalLength);
+			seconds = Math.floor(time % 60).toFixed(secondsDecimalLength);
 		}
 	}
 	hours = hours <= 0 ? 0 : hours;
 	minutes = minutes <= 0 ? 0 : minutes;
 	seconds = seconds <= 0 ? 0 : seconds;
+
+	seconds = seconds === 60 ? 0 : seconds;
+	minutes = minutes === 60 ? 0 : minutes;
 
 	const timeFormatFrags = timeFormat.split(':');
 	const timeFormatSettings = {};

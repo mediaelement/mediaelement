@@ -66,8 +66,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
 	buildtracks (player, controls, layers, media) {

@@ -24,6 +24,8 @@
 * Added validation to modify `SoundCloud` iframe atributes when using `video` tag @rafa8626
 * Fixed issue when checking for native dimensions of `video` element to set responsive dimensions correctly @rafa8626
 * Added missing workflow to make `loop` work correctly in YouTube according to documentation @rafa8626
+* Fixed issue with timecode displaying 60 seconds @rafa8626
+* Fixed JSDocs for some features @rafa8626
 
 *4.2.6 (2017/09/19)*
 
