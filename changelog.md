@@ -1,6 +1,6 @@
 ### Version History
 
-*X.X.X (??/??/??)*
+*4.3.0 (2017/11/??)*
 
 * Fixed issue with `setFillMode` when using cross-domain URLs in iframe @rafa8626
 * Added new `proxyType` and `streamDelimiter` variables to Flash video to support RTMPS compatibility @rafa8626
@@ -8,7 +8,6 @@
 * Fixed typo with `Twitch` renderer related to trigger mouse events @rafa8626
 * Fixed typo when assigning options to `Dailymotion` renderer @rafa8626
 * Added missing workflow to set controls on YouTube, Facebook and Dailymotion renderers via `controls` property @rafa8626 
-* Updated `hls.js` to version 0.8.4 @rafa8626
 * Added missing `playing` event on `Vimeo` and `Dailymotion` renderer @rafa8626
 * Expanded regexp to accept 3-letter country codes and underscore for 4-letter country codes @rafa8626
 * Added `init`, `getElement` and `buildfeatures` methods for WP compatibility @rafa8626
@@ -24,6 +23,7 @@
 * Added validation to modify `SoundCloud` iframe atributes when using `video` tag @rafa8626
 * Fixed issue when checking for native dimensions of `video` element to set responsive dimensions correctly @rafa8626
 * Added missing workflow to make `loop` work correctly in YouTube according to documentation @rafa8626
+* Changed paths for `hls.js` and `flv.js` renderers to always be up-to-date @rafa8626
 * Fixed issue with timecode displaying 60 seconds @rafa8626
 * Fixed JSDocs for some features @rafa8626
 
