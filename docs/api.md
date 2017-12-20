@@ -132,7 +132,7 @@ usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer e
 useFakeFullscreen | boolean | `false` | Flag to bypass native capabilities on mobile devices and use the fake-fullscreen mode
 tracksAriaLive | boolean | `false` | By default, no WAI-ARIA live region - don't make a screen reader speak captions over an audio track.
 hideCaptionsButtonWhenEmpty | boolean | `true` | Option to remove the `[cc]` button when no `<track kind="subtitles">` are present
-toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to popup
+toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to toggle button
 startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element
 slidesSelector | string | _(empty)_ | Selector for slides; could be any valid Javascript selector (`#id`, `.class`, `img`, etc.)
 tracksText | string | `null` | Title for Closed Captioning button for WARIA purposes
