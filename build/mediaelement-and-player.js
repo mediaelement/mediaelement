@@ -3310,7 +3310,6 @@ Object.assign(_player2.default.prototype, {
 				if (!modified && !rendered) {
 					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
-						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
