@@ -1,5 +1,10 @@
 ### Version History
 
+*4.2.8 (??/??/??)*
+
+* Clarify effect of setting `toggleCaptionsButtonWhenOnlyOne` (https://github.com/mediaelement/mediaelement/pull/2471) @cjcolvar
+* Remember `startVolume` value even if video is muted (https://github.com/mediaelement/mediaelement/pull/2470) @D3nnisH
+
 *4.2.7 (2017/11/17)*
 
 * Fixed issue with `setFillMode` when using cross-domain URLs in iframe @rafa8626
