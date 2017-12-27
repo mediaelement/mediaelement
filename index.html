@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="css/mejs-site.css">
 
         <!-- library -->
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelementplayer.min.css">
     </head>
     <body>
 
@@ -242,12 +242,12 @@
         </footer>
 
         <!-- JS -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/renderers/dailymotion.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/renderers/facebook.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/renderers/soundcloud.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/renderers/twitch.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/renderers/vimeo.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/mediaelement-and-player.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/renderers/dailymotion.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/renderers/facebook.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/renderers/soundcloud.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/renderers/twitch.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/renderers/vimeo.min.js"></script>
         <script src="https://buttons.github.io/buttons.js"></script>
         <script src="https://platform.twitter.com/widgets.js"></script>
         <script>
@@ -272,7 +272,9 @@
 
                 // These media types cannot play at all on iOS, so disabling them
                 if (mejs.Features.isiOS) {
-                    sourcesSelector[i].querySelector('option[value^="rtmp"]').disabled = true;
+			        if (sourcesSelector[i].querySelector('option[value^="rtmp"]')) {
+                        sourcesSelector[i].querySelector('option[value^="rtmp"]').disabled = true;
+                    }
                     if (sourcesSelector[i].querySelector('option[value$="webm"]')) {
                         sourcesSelector[i].querySelector('option[value$="webm"]').disabled = true;
                     }
@@ -293,7 +295,7 @@
 
                 for (var i = 0; i < total; i++) {
                     new MediaElementPlayer(mediaElements[i], {
-                        pluginPath: 'https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.5/',
+                        pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/',
                         shimScriptAccess: 'always',
                         success: function () {
                             var target = document.body.querySelectorAll('.player'), targetTotal = target.length;
