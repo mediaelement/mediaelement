@@ -921,13 +921,16 @@ class MediaElementPlayer {
 			}, 0);
 
 			t.globalResizeCallback = () => {
-				// don't resize for fullscreen mode
-				if (!(t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen))) {
-					t.setPlayerSize(t.width, t.height);
-				}
+				// don't resize inside an iframe
+				if (!t.isInIframe) {
+					// don't resize for fullscreen mode
+					if (!(t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen))) {
+						t.setPlayerSize(t.width, t.height);
+					}
 
-				// always adjust controls
-				t.setControlsSize();
+					// always adjust controls
+					t.setControlsSize();
+				}
 			};
 
 
