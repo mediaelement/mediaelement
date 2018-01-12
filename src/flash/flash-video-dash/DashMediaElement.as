@@ -60,7 +60,6 @@ package {
 		private var _mediaFactory: DefaultMediaFactory;
 		private var _resource: URLResource;
 
-
 		/**
 		 * @constructor
 		 */
@@ -154,7 +153,6 @@ package {
 
 			return false;
 		}
-
 
 		//
 		// Javascript bridged methods

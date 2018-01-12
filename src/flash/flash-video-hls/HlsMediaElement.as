@@ -156,7 +156,6 @@
 
 			return false;
 		}
-		
 
 		//
 		// Javascript bridged methods
@@ -239,7 +238,7 @@
 					_video.width = contWidth;
 					_video.height = contHeight;
 				}
-			}			
+			}
 		}
 
 		//
