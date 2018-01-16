@@ -60,11 +60,14 @@ package {
 		private var _mediaFactory: DefaultMediaFactory;
 		private var _resource: URLResource;
 
-
 		/**
 		 * @constructor
 		 */
 		public function DashMediaElement() {
+
+			if (isIllegalQuerystring()) {
+				return;
+			}
 
 			var flashVars: Object = LoaderInfo(this.root.loaderInfo).parameters;
 
@@ -135,6 +138,20 @@ package {
 
 				ExternalInterface.call('(function(){window["__ready__' + _id + '"]()})()', null);
 			}
+		}
+
+		private function isIllegalQuerystring():Boolean {
+			var query:String = '';
+			var pos:Number = root.loaderInfo.url.indexOf('?') ;
+
+			if ( pos > -1 ) {
+			    query = root.loaderInfo.url.substring( pos );
+			    if ( ! /^\?\d+$/.test( query ) ) {
+			        return true;
+			    }
+			}
+
+			return false;
 		}
 
 		//
