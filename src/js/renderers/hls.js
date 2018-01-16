@@ -14,7 +14,7 @@ import {loadScript} from '../utils/dom';
  * Uses DailyMotion's hls.js, which is a JavaScript library which implements an HTTP Live Streaming client.
  * It relies on HTML5 video and MediaSource Extensions for playback.
  * This renderer integrates new events associated with m3u8 files the same way Flash version of Hls does.
- * @see https://github.com/dailymotion/hls.js
+ * @see https://github.com/video-dev/hls.js
  *
  */
 const NativeHls = {
@@ -67,7 +67,7 @@ const HlsNativeRenderer = {
 			// Special config: used to set the local path/URL of hls.js library
 			path: 'https://cdn.jsdelivr.net/npm/hls.js@latest',
 			// To modify more elements from hls.js,
-			// see https://github.com/dailymotion/hls.js/blob/master/API.md#user-content-fine-tuning
+			// see https://github.com/video-dev/hls.js/blob/master/doc/API.md#fine-tuning
 			autoStartLoad: false,
 			debug: false
 		}
@@ -175,10 +175,10 @@ const HlsNativeRenderer = {
 			 *
 			 * These events can be attached to the original node using addEventListener and the name of the event,
 			 * not using Hls.Events object
-			 * @see https://github.com/dailymotion/hls.js/blob/master/src/events.js
-			 * @see https://github.com/dailymotion/hls.js/blob/master/src/errors.js
-			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#runtime-events
-			 * @see https://github.com/dailymotion/hls.js/blob/master/API.md#errors
+			 * @see https://github.com/video-dev/hls.js/blob/master/src/events.js
+			 * @see https://github.com/video-dev/hls.js/blob/master/src/errors.js
+			 * @see https://github.com/video-dev/hls.js/blob/master/doc/API.md#runtime-events
+			 * @see https://github.com/video-dev/hls.js/blob/master/doc/API.md#errors
 			 */
 			let recoverDecodingErrorDate, recoverSwapAudioCodecDate;
 			const assignHlsEvents = function (name, data) {
@@ -186,7 +186,7 @@ const HlsNativeRenderer = {
 					console.warn(data);
 					data = data[1];
 
-					// borrowed from http://dailymotion.github.io/hls.js/demo/
+					// borrowed from https://video-dev.github.io/hls.js/demo
 					if (data.fatal) {
 						switch (data.type) {
 							case 'mediaError':
