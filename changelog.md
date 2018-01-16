@@ -1,9 +1,11 @@
 ### Version History
 
-*4.2.8 (??/??/??)*
+*4.2.8 (2018/01/16)*
 
 * Clarify effect of setting `toggleCaptionsButtonWhenOnlyOne` (https://github.com/mediaelement/mediaelement/pull/2471) @cjcolvar
 * Remember `startVolume` value even if video is muted (https://github.com/mediaelement/mediaelement/pull/2470) @D3nnisH
+* Fix @see links for hls.js renderer (https://github.com/mediaelement/mediaelement/pull/2478) @cjcolvar
+* UID filter for Flash files @johndyer
 
 *4.2.7 (2017/11/17)*
 
