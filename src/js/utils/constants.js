@@ -32,7 +32,7 @@ export const SUPPORT_POINTER_EVENTS = (() => {
 	element.style.pointerEvents = 'auto';
 	element.style.pointerEvents = 'x';
 	documentElement.appendChild(element);
-	let supports = getComputedStyle && getComputedStyle(element, '').pointerEvents === 'auto';
+	let supports = getComputedStyle && (getComputedStyle(element, '') || {}).pointerEvents === 'auto';
 	element.remove();
 	return !!supports;
 })();
