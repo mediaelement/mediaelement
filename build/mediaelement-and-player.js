@@ -1778,7 +1778,7 @@ Object.assign(_player2.default.prototype, {
 		    handleMouseup = function handleMouseup() {
 			if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
 				t.setCurrentTime(t.newTime);
-				t.setCurrentRail();
+				t.setCurrentRailHandle(t.newTime);
 				t.updateCurrent(t.newTime);
 			}
 			if (t.forcedHandlePause) {
@@ -3890,7 +3890,7 @@ var MediaElementPlayer = function () {
 			if (doAnimation) {
 				(function () {
 					dom.fadeOut(t.getElement(t.controls), 200, function () {
-						dom.addClass(t.getElement(t.controls), t.options.classPrefix + 'offscreen');
+						// dom.addClass(t.getElement(t.controls), t.options.classPrefix + 'offscreen');
 						t.getElement(t.controls).style.display = '';
 						var event = (0, _general.createEvent)('controlshidden', t.getElement(t.container));
 						t.getElement(t.container).dispatchEvent(event);
