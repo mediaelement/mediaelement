@@ -1,5 +1,13 @@
 ### Version History
 
+*4.2.9 (2018/03/??)*
+
+* Fixed typo in documentation (https://github.com/mediaelement/mediaelement/pull/2512) @moagggi
+* Added remainingTime getter (https://github.com/mediaelement/mediaelement/pull/2505) @Lewiscowles1986
+* Fixed iframe parameters formatting for Vimeo/Facebook (https://github.com/mediaelement/mediaelement/pull/2498) @skreutzer
+* Added Malay translation (https://github.com/mediaelement/mediaelement/pull/2490) @MuhdNurHidayat
+* Fixed `getComputedStyle` in Firefox (https://github.com/mediaelement/mediaelement/pull/2487) @pgrzeszczak-neducatio
+
 *4.2.8 (2018/01/16)*
 
 * Clarify effect of setting `toggleCaptionsButtonWhenOnlyOne` (https://github.com/mediaelement/mediaelement/pull/2471) @cjcolvar
