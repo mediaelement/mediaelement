@@ -336,7 +336,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			mouseIsOver = false;
 		});
 		mute.addEventListener('keydown', (e) => {
-			if (t.options.keyActions.length) {
+			if (t.options.enableKeyboard && t.options.keyActions.length) {
 				let
 					keyCode = e.which || e.keyCode || 0,
 					volume = media.volume

@@ -142,7 +142,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		let duration = t.getDuration();
 
-		if (isNaN(duration) || duration === Infinity || duration < 0) {
+		if (t.media !== undefined && (isNaN(duration) || duration === Infinity || duration < 0)) {
 			t.media.duration = t.options.duration = duration = 0;
 		}
 

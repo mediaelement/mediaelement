@@ -156,7 +156,8 @@ Once installed through NPM, you will be able to create your component using `Med
 **MediaElement.js**
 ```javascript
 import React, { Component } from 'react';
-import 'hls.js';
+import flvjs from 'flv.js';
+import hlsjs from 'hls.js';
 import 'mediaelement';
 
 // Import stylesheet and shims
@@ -215,7 +216,7 @@ export default class MediaElement extends Component {
 	componentDidMount() {
 
 		const {MediaElementPlayer} = global;
-
+		
 		if (!MediaElementPlayer) {
 			return;
 		}
@@ -226,7 +227,9 @@ export default class MediaElement extends Component {
 			success: (media, node, instance) => this.success(media, node, instance),
 			error: (media, node) => this.error(media, node)
 		});
-
+		
+		window.flvjs = flvjs;
+		window.Hls = hlsjs;
 		this.setState({player: new MediaElementPlayer(this.props.id, options)});
 	}
 

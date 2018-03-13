@@ -327,7 +327,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				startedPaused = t.paused;
 			}
 
-			if (t.options.keyActions.length) {
+			if (t.options.enableKeyboard && t.options.keyActions.length) {
 
 				const
 					keyCode = e.which || e.keyCode || 0,

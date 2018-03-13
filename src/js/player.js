@@ -1957,12 +1957,13 @@ class MediaElementPlayer {
 			delete t.node.autoplay;
 
 			// Reintegrate file if it can be played
+			t.node.setAttribute('src', '');
 			if (t.media.canPlayType(getTypeFromFile(src)) !== '') {
 				t.node.setAttribute('src', src);
 			}
 
 			// If <iframe>, remove overlay
-			if (~rendererName.indexOf('iframe')) {
+			if (rendererName && rendererName.indexOf('iframe') > -1) {
 				const layer = document.getElementById(`${t.media.id}-iframe-overlay`);
 				layer.remove();
 			}
@@ -2007,7 +2008,7 @@ class MediaElementPlayer {
 			t.getElement(t.container).parentNode.insertBefore(t.node, t.getElement(t.container));
 		}
 
-		if (typeof t.media.renderer.destroy === 'function') {
+		if (t.media.renderer && typeof t.media.renderer.destroy === 'function') {
 			t.media.renderer.destroy();
 		}
 

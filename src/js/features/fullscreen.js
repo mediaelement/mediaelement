@@ -120,7 +120,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.exitFullscreenCallback = (e) => {
 			const key = e.which || e.keyCode || 0;
-			if (key === 27 && ((Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || t.isFullScreen)) {
+			if (t.options.enableKeyboard && key === 27 && ((Features.HAS_TRUE_NATIVE_FULLSCREEN && Features.IS_FULLSCREEN) || t.isFullScreen)) {
 				player.exitFullScreen();
 			}
 		};
@@ -195,6 +195,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName),
 			containerStyles = getComputedStyle(t.getElement(t.container))
 		;
+
+		if (!t.isVideo) {
+			return;
+		}
 
 		// iOS allows playing fullscreen ONLY on `video` tag, so check if the source can go fullscreen on iOS
 		// and if the player can play the current source
@@ -305,6 +309,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			t = this,
 			isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
+
+		if (!t.isVideo) {
+			return;
+		}
 
 		// Prevent container from attempting to stretch a second time
 		clearTimeout(t.containerSizeTimeout);
