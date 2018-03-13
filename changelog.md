@@ -14,7 +14,8 @@
 * Added missing conditionals when destroying media @rafa8626
 * Modified Malay language in the demo @rafa8626
 * Set empty source when destroying player to prevent #2499 @rafa8626
-* Added conditional to avoid setting duration when `media` has been destroyed @rafa8626 
+* Added conditional to avoid setting duration when `media` has been destroyed @rafa8626
+* Replaced callback when seeking in paused media to achieve correct behavior @rafa8626  
 
 *4.2.8 (2018/01/16)*
 

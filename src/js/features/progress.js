@@ -304,7 +304,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			handleMouseup = () => {
 				if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
 					t.setCurrentTime(t.newTime);
-					t.setCurrentRail();
+					t.setCurrentRailHandle(t.newTime);
 					t.updateCurrent(t.newTime);
 				}
 				if (t.forcedHandlePause) {
