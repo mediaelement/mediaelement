@@ -47,6 +47,10 @@ export default class DefaultPlayer {
 	get duration () {
 		return this.getDuration();
 	}
+	
+	get remainingTime() {
+		return (this.getDuration() - this.currentTime());
+	}
 
 	set volume (volume) {
 		this.setVolume(volume);
