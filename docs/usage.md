@@ -444,7 +444,7 @@ track.label = 'English';
 track.src = '/path/to/captions.vtt';
 track.srclang = 'en';
 
-// In this example, we are assuming there is only on `track` tag;
+// In this example, we are assuming there is only one `track` tag;
 // if there are more, implement your logic to override the necessary one(s)
 if (player.trackFiles !== null) {
 	player.trackFiles = [track];
