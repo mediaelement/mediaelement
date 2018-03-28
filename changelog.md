@@ -1,6 +1,6 @@
 ### Version History
 
-*4.2.9 (2018/03/??)*
+*4.2.9 (2018/03/27)*
 
 * Fixed typo in documentation (https://github.com/mediaelement/mediaelement/pull/2512) @moagggi
 * Added remainingTime getter (https://github.com/mediaelement/mediaelement/pull/2505) @Lewiscowles1986
@@ -16,6 +16,7 @@
 * Set empty source when destroying player to prevent #2499 @rafa8626
 * Added conditional to avoid setting duration when `media` has been destroyed @rafa8626
 * Replaced callback when seeking in paused media to achieve correct behavior @rafa8626  
+* Updated documentation about using `startLanguage` and `toggleCaptionsButtonWhenOnlyOne` (https://github.com/mediaelement/mediaelement/pull/2520) @dmdewey
 
 *4.2.8 (2018/01/16)*
 
