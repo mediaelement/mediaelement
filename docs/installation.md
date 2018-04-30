@@ -407,7 +407,7 @@ This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and 
 
 <a id="disabled-javascript"></a>
 ### Browsers with JavaScript disabled (Optional)
-In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code. For more information abput this approach, please read [Video for Everybody!](http://camendesign.com/code/video_for_everybody) documentation.
+In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code. For more information about this approach, please read [Video for Everybody!](http://camendesign.com/code/video_for_everybody) documentation.
 ```html
 <video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
 	<source type="video/mp4" src="myvideo.mp4" />
