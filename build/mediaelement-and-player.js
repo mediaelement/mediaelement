@@ -864,7 +864,6 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	    triggerAction = function triggerAction(methodName, args) {
 		try {
 		    if (methodName === 'play' && (t.mediaElement.rendererName === 'native_dash' || t.mediaElement.rendererName === 'native_hls')) {
-			        console.log('play promise called');
 				var response = t.mediaElement.renderer[methodName](args);
 				if (response && typeof response.then === 'function') {
 					response.catch(function () {
