@@ -95,7 +95,11 @@ export default class DefaultPlayer {
 	}
 
 	getDuration () {
-		return this.media.getDuration();
+		let duration = this.media.getDuration();
+		if (duration === Infinity && this.media.seekable && this.media.seekable.length) {
+			duration = this.media.seekable.end(0);
+		}
+		return duration;
 	}
 
 	setVolume (volume) {
