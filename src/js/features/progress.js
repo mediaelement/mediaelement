@@ -198,7 +198,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					pos = x - offsetStyles.left;
 					percentage = (pos / width);
-					t.newTime = (percentage <= 0.02) ? 0 : percentage * t.getDuration();
+					t.newTime = percentage * t.getDuration();
 
 					// fake seek to where the mouse is
 					if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
