@@ -495,11 +495,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 				updateSlider();
 			} else if (!broadcast || t.options.forceLive) {
-				const label = document.createElement('span');
-				label.className = `${t.options.classPrefix}broadcast`;
-				label.innerText = i18n.t('mejs.live-broadcast');
-				t.slider.style.display = 'none';
-				t.rail.appendChild(label);
+				if (t.rail.querySelector('.' + t.options.classPrefix + 'broadcast') == null) {
+					const label = document.createElement('span');
+					label.className = `${t.options.classPrefix}broadcast`;
+					label.innerText = i18n.t('mejs.live-broadcast');
+					t.slider.style.display = 'none';
+					t.rail.appendChild(label);
+				}
 			}
 		};
 
