@@ -14,10 +14,7 @@
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
-    "babel-preset-env": "^1.5.0",
     "babel-register": "^6.24.1",
-    "babelify": "^7.3.0",
     "browserify": "^13.1.1",
     "browserify-derequire": "^0.9.4",
     "bundle-collapser": "^1.2.1",
@@ -49,6 +46,9 @@
     "uglify-js": "^3.0.10"
   },
   "dependencies": {
+    "babel-core": "^6.24.1",
+    "babel-preset-env": "^1.5.0",
+    "babelify": "^7.3.0",
     "global": "^4.3.1"
   },
   "scripts": {
