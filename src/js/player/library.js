@@ -5,11 +5,11 @@ import mejs from '../core/mejs';
 import MediaElementPlayer from '../player';
 
 if (typeof jQuery !== 'undefined') {
-	mejs.$ = window.jQuery = window.$ = jQuery;
+	mejs.$ = jQuery;
 } else if (typeof Zepto !== 'undefined') {
-	mejs.$ = window.Zepto = window.$ = Zepto;
+	mejs.$ = Zepto;
 } else if (typeof ender !== 'undefined') {
-	mejs.$ = window.ender = window.$ = ender;
+	mejs.$ = ender;
 }
 
 // turn into plugin
