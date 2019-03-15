@@ -406,7 +406,8 @@ const vimeoIframeRenderer = {
 		vimeoContainer.setAttribute('webkitallowfullscreen', 'true');
 		vimeoContainer.setAttribute('mozallowfullscreen', 'true');
 		vimeoContainer.setAttribute('allowfullscreen', 'true');
-
+                vimeoContainer.setAttribute('allow', 'autoplay');
+		
 		mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 
