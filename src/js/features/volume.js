@@ -156,6 +156,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			anchor.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
 			anchor.setAttribute('aria-valuemin', 0);
 			anchor.setAttribute('aria-valuemax', 100);
+			anchor.setAttribute('aria-valuenow', 100);
 			anchor.setAttribute('role', 'slider');
 			anchor.innerHTML += `<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}horizontal-volume-total">` +
