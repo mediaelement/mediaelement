@@ -27,3 +27,4 @@ The following resources talk about a variety of topics that users of `MediaEleme
 * [MediaElementPlayer.js: use `AudioContext.decodeAudioData()`](https://gist.github.com/rafa8626/e6afe41dd00742a75c4d25cc387a7d61)
 * [Use of DRM with MediaElement](https://jsfiddle.net/f431r2zq/12/)
 * [MediaElementPlayer.js using Chromecast and dynamic sources](https://jsfiddle.net/Luuwnjfm/18/)
+* [MediaElementPlayer.js Video Snapshot Plugin](https://github.com/Codecsocean/mediaelement-snapshot)
