@@ -8,7 +8,7 @@
 	* [RequireJS](#requirejs)
 	* [React](#react)
 * [Use Renderers](#renderers-usage)
-* [Use `stretching` modes](#stretching-modes)
+* [Use `stretching` modes](#use-stretching-modes)
 * [Responsive grid](#grid)
 * [Setting new captions](#captions)
 * [Destroy player](#destroy)
