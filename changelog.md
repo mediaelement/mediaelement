@@ -1,5 +1,15 @@
 ### Version History
 
+
+*4.2.10 (2019/04/17)*
+
+* Fixed don't swallow first 2% of the video in time slider (https://github.com/mediaelement/mediaelement/pull/2582) @jomo @coveralls
+* Fixed Chrome to play vimeo videos (https://github.com/mediaelement/mediaelement/pull/2622) @mmusket @coveralls @homerjam
+* Fixed Update volume.js (https://github.com/mediaelement/mediaelement/pull/2530) - Implementing a slight change to improve accessibility and compliance with WCAG 2.0 success criteria 4.1.1 and 4.1.2 @vavroom @coveralls
+* Fixed the forceLive always adding "Live Broadcast" memory leak (https://github.com/mediaelement/mediaelement/pull/2589) @joshdvir @coveralls @Qoraiche
+* Update resources.md (https://github.com/mediaelement/mediaelement/pull/2565) - Add video snapshot plugin resource @Qoraiche @coveralls
+* Fixed typo (https://github.com/mediaelement/mediaelement/pull/2540) @Qoraiche @coveralls
+
 *4.2.9 (2018/03/27)*
 
 * Fixed typo in documentation (https://github.com/mediaelement/mediaelement/pull/2512) @moagggi
