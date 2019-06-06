@@ -390,12 +390,16 @@ const vimeoIframeRenderer = {
 		;
 
 		let queryArgs = ~mediaFiles[0].src.indexOf('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : '';
-		if (queryArgs && mediaElement.originalNode.autoplay && queryArgs.indexOf('autoplay') === -1) {
-			queryArgs += '&autoplay=1';
+		const args = [];
+
+		if (mediaElement.originalNode.autoplay && queryArgs.indexOf('autoplay') === -1) {
+			args.push('autoplay=1');
 		}
-		if (queryArgs && mediaElement.originalNode.loop && queryArgs.indexOf('loop') === -1) {
-			queryArgs += '&loop=1';
+		if (mediaElement.originalNode.loop && queryArgs.indexOf('loop') === -1) {
+			args.push('loop=1');
 		}
+
+		queryArgs = `${queryArgs}${queryArgs ? '&' : '?'}${args.join('&')}`
 
 		// Create Vimeo <iframe> markup
 		vimeoContainer.setAttribute('id', vimeo.id);
