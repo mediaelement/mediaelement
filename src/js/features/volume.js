@@ -94,7 +94,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			keys: [38], // UP
 			action: (player) => {
 				const volumeSlider = player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`);
-				if (volumeSlider || player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`).matches(':focus')) {
+				if (volumeSlider && volumeSlider.matches(':focus')) {
 					volumeSlider.style.display = 'block';
 				}
 				if (player.isVideo) {
