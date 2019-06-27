@@ -392,8 +392,8 @@ Object.assign(MediaElementPlayer.prototype, {
 						return;
 				}
 
-				seekTime = seekTime < 0 || isNaN(seekTime) ? 0 : seekTime >= duration ? duration : Math.floor(seekTime);
-				lastKeyPressTime = new Date();
+				seekTime = seekTime < 0 || isNaN(seekTime) ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime);
+				lastKeyPressTime = new Date());
 				if (!startedPaused) {
 					player.pause();
 				}
