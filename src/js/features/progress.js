@@ -281,7 +281,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (media.paused) {
 					t.slider.setAttribute('aria-label', timeSliderText);
 					t.slider.setAttribute('aria-valuemin', 0);
-					t.slider.setAttribute('aria-valuemax', duration);
+					t.slider.setAttribute('aria-valuemax', isNaN(duration) ? 0 : duration);
 					t.slider.setAttribute('aria-valuenow', seconds);
 					t.slider.setAttribute('aria-valuetext', time);
 				} else {

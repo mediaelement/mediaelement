@@ -142,7 +142,7 @@ const FlvNativeRenderer = {
 								flvPlayer.load();
 							}
 						} else {
-							node[propName] = value;
+							if (value > 0) node[propName] = value;
 						}
 					}
 				};

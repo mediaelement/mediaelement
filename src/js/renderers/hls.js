@@ -139,7 +139,7 @@ const HlsNativeRenderer = {
 								hlsPlayer.attachMedia(node);
 							}
 						} else {
-							node[propName] = value;
+							if (value > 0) node[propName] = value;
 						}
 					}
 				};
