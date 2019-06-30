@@ -73,7 +73,7 @@ const HtmlMediaElement = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
-						node[propName] = value;
+						if (value > 0) node[propName] = value;
 					}
 				};
 			}
@@ -87,7 +87,7 @@ const HtmlMediaElement = {
 			events = mejs.html5media.events.concat(['click', 'mouseover', 'mouseout']).filter(e => e !== 'error'),
 			assignEvents = (eventName) => {
 				node.addEventListener(eventName, (e) => {
-					// Emmit an event only in case of the renderer is active at the moment
+					// Emit an event only in case the renderer is active at the moment
 					if (isActive) {
 						const event = createEvent(e.type, e.target);
 						mediaElement.dispatchEvent(event);

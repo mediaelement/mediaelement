@@ -281,7 +281,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (media.paused) {
 					t.slider.setAttribute('aria-label', timeSliderText);
 					t.slider.setAttribute('aria-valuemin', 0);
-					t.slider.setAttribute('aria-valuemax', duration);
+					t.slider.setAttribute('aria-valuemax', isNaN(duration) ? 0 : duration);
 					t.slider.setAttribute('aria-valuenow', seconds);
 					t.slider.setAttribute('aria-valuetext', time);
 				} else {
@@ -392,7 +392,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						return;
 				}
 
-				seekTime = seekTime < 0 ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
+				seekTime = seekTime < 0 || isNaN(seekTime) ? 0 : (seekTime >= duration ? duration : Math.floor(seekTime));
 				lastKeyPressTime = new Date();
 				if (!startedPaused) {
 					player.pause();
