@@ -226,12 +226,12 @@ const HlsNativeRenderer = {
 								hlsPlayer.destroy();
 								break;
 						}
+						return;
 					}
-				} else {
-					const event = createEvent(name, mediaElement);
-					event.data = data;
-					mediaElement.dispatchEvent(event);
 				}
+				const event = createEvent(name, mediaElement);
+				event.data = data;
+				mediaElement.dispatchEvent(event);
 			};
 
 			for (const eventType in hlsEvents) {
