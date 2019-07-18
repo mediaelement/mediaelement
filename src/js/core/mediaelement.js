@@ -392,7 +392,7 @@ class MediaElement {
 				        // Sometimes, playing native DASH media might throw `DOMException: The play() request was interrupted`.
 				        // Add this for native HLS playback as well
 				        if (methodName === 'play' &&
-					    (t.mediaElement.rendererName === 'native_dash' || t.mediaElement.rendererName === 'native_hls') {
+					    (t.mediaElement.rendererName === 'native_dash' || t.mediaElement.rendererName === 'native_hls')) {
 						const response = t.mediaElement.renderer[methodName](args);
 						if (response && typeof response.then === 'function') {
 							response.catch(() => {
