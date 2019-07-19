@@ -376,7 +376,7 @@ class MediaElementPlayer {
 							tracks.push(childNode);
 							break;
 						default:
-							cloneNode.appendChild(childNode);
+							cloneNode.appendChild(childNode.cloneNode(true));
 							break;
 					}
 				}
