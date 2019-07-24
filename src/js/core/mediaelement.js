@@ -509,7 +509,7 @@ class MediaElement {
 			mediaElement.removeAttribute('id');
 			mediaElement.remove();
 			t.mediaElement.remove();
-			wrapper.append(mediaElement);
+			wrapper.appendChild(mediaElement);
 		};
 
 		// Set the best match based on renderers
