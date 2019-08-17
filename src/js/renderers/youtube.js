@@ -267,6 +267,8 @@ const YouTubeIframeRenderer = {
 							case 'volume':
 								volume = youTubeApi.getVolume() / 100;
 								return volume;
+							case 'playbackRate':
+								return youTubeApi.getPlaybackRate();
 							case 'paused':
 								return paused;
 							case 'ended':
@@ -329,6 +331,13 @@ const YouTubeIframeRenderer = {
 								youTubeApi.setVolume(value * 100);
 								setTimeout(() => {
 									const event = createEvent('volumechange', youtube);
+									mediaElement.dispatchEvent(event);
+								}, 50);
+								break;
+							case 'playbackRate':
+								youTubeApi.setPlaybackRate(value);
+								setTimeout(() => {
+									const event = createEvent('ratechange', youtube);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
