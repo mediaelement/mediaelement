@@ -1,7 +1,19 @@
 ### Version History
 
+*4.2.12 (2019/08/22)
 
-*4.2.10 (2019/04/17)*
+Fix dash.js (@daveyx,#2659, call to obsolete functions removed) (#2672)
+Fixes Safari critical error on video element children (#2668)
+Generate hlsError events for non fatal errors (#2666)
+Fix append method is not support on old browser (#2580)
+Fix time slider crash on left/right arrow keypress #2622
+Fix bug before media loads and currentTime is not a number #2658
+No longer modify any objects under the global window objects to prevent side effect. (PR #2123 Fixed #2598)
+Added handling of the .play() promise errors to native_hls player (PR#2550)
+Add support for getPlaybackRate and setPlaybackRate for YouTube renderer (#2676)
+Add Turkish translations #2678
+
+*4.2.10 (2019/04/17)
 
 * Fixed don't swallow first 2% of the video in time slider (https://github.com/mediaelement/mediaelement/pull/2582) @jomo @coveralls
 * Fixed Chrome to play vimeo videos (https://github.com/mediaelement/mediaelement/pull/2622) @mmusket @coveralls @homerjam
