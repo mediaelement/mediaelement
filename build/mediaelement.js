@@ -863,7 +863,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	},
 	    triggerAction = function triggerAction(methodName, args) {
 		try {
-			if (methodName === 'play' && t.mediaElement.rendererName === 'native_dash') {
+			if (methodName === 'play' && (t.mediaElement.rendererName === 'native_dash' || t.mediaElement.rendererName === 'native_hls')) {
 				var response = t.mediaElement.renderer[methodName](args);
 				if (response && typeof response.then === 'function') {
 					response.catch(function () {
@@ -967,7 +967,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		mediaElement.removeAttribute('id');
 		mediaElement.remove();
 		t.mediaElement.remove();
-		wrapper.append(mediaElement);
+		wrapper.appendChild(mediaElement);
 	};
 
 	if (mediaFiles.length) {
@@ -1017,7 +1017,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '4.2.10';
+mejs.version = '4.2.12';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1370,7 +1370,7 @@ var DashNativeRenderer = {
 							}
 						}
 					} else {
-						node[propName] = value;
+						if (value > 0) node[propName] = value;
 					}
 				}
 			};
@@ -1386,10 +1386,7 @@ var DashNativeRenderer = {
 			var dashEvents = dashjs.MediaPlayer.events,
 			    assignEvents = function assignEvents(eventName) {
 				if (eventName === 'loadedmetadata') {
-					dashPlayer.getDebug().setLogToBrowserConsole(options.dash.debug);
 					dashPlayer.initialize();
-					dashPlayer.setScheduleWhilePaused(false);
-					dashPlayer.setFastSwitchEnabled(true);
 					dashPlayer.attachView(node);
 					dashPlayer.setAutoPlay(false);
 
@@ -2055,7 +2052,7 @@ var FlvNativeRenderer = {
 							flvPlayer.load();
 						}
 					} else {
-						node[propName] = value;
+						if (value > 0) node[propName] = value;
 					}
 				}
 			};
@@ -2298,7 +2295,7 @@ var HlsNativeRenderer = {
 							hlsPlayer.attachMedia(node);
 						}
 					} else {
-						node[propName] = value;
+						if (value > 0) node[propName] = value;
 					}
 				}
 			};
@@ -2372,12 +2369,12 @@ var HlsNativeRenderer = {
 								hlsPlayer.destroy();
 								break;
 						}
+						return;
 					}
-				} else {
-					var _event = (0, _general.createEvent)(name, mediaElement);
-					_event.data = data;
-					mediaElement.dispatchEvent(_event);
 				}
+				var event = (0, _general.createEvent)(name, mediaElement);
+				event.data = data;
+				mediaElement.dispatchEvent(event);
 			};
 
 			var _loop = function _loop(eventType) {
@@ -2536,7 +2533,7 @@ var HtmlMediaElement = {
 
 			node['set' + capName] = function (value) {
 				if (_mejs2.default.html5media.readOnlyProperties.indexOf(propName) === -1) {
-					node[propName] = value;
+					if (value > 0) node[propName] = value;
 				}
 			};
 		};
@@ -2805,6 +2802,8 @@ var YouTubeIframeRenderer = {
 						case 'volume':
 							volume = youTubeApi.getVolume() / 100;
 							return volume;
+						case 'playbackRate':
+							return youTubeApi.getPlaybackRate();
 						case 'paused':
 							return paused;
 						case 'ended':
@@ -2867,6 +2866,13 @@ var YouTubeIframeRenderer = {
 							youTubeApi.setVolume(value * 100);
 							setTimeout(function () {
 								var event = (0, _general.createEvent)('volumechange', youtube);
+								mediaElement.dispatchEvent(event);
+							}, 50);
+							break;
+						case 'playbackRate':
+							youTubeApi.setPlaybackRate(value);
+							setTimeout(function () {
+								var event = (0, _general.createEvent)('ratechange', youtube);
 								mediaElement.dispatchEvent(event);
 							}, 50);
 							break;
