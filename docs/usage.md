@@ -378,7 +378,7 @@ Below are listed the renderers with their IDs and player instance to execute oth
 Renderer | ID | Reference | MIME Type(s)
 --- | -- | --- | ---
 Native video/audio | `html5` | --- | video/mp4, audio/mp4, video/webm, audio/mpeg, audio/mp3, audio/ogg, audio/oga, video/ogg
-HLS native | `native_hls` | [`hls.js` API](https://github.com/dailymotion/hls.js/blob/master/doc/API.md) | application/x-mpegURL, vnd.apple.mpegURL
+HLS native | `native_hls` | [`hls.js` API](https://github.com/dailymotion/hls.js/blob/master/docs/API.md) | application/x-mpegURL, vnd.apple.mpegURL
 M(PEG)-DASH native | `native_dash` | [`dash.js` Documentation](http://cdn.dashjs.org/latest/jsdoc/index.html) | application/dash+xml
 FLV native | `native_flv` | [`flv.js` API](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) | video/flv
 SoundCloud | `soundcloud_iframe` | [SoundCloud Widget API](https://developers.soundcloud.com/docs/api/html5-widget) | video/soundcloud, video/x-soundcloud
