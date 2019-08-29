@@ -386,7 +386,7 @@ Facebook | `facebook` | --- | video/facebook, video/x-facebook
 Vimeo | `vimeo_iframe` | [Vimeo Player API](https://github.com/vimeo/player.js) | video/vimeo, video/x-vimeo
 YouTube | `youtube_iframe` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
 DailyMotion | `dailymotion_iframe` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
-Twitch | `twitch_iframe` | [Twitch Emded API](https://github.com/justintv/Twitch-API/blob/master/embed-video.md) | video/twitch, video/x-twitch
+Twitch | `twitch_iframe` | [Twitch Emded API](https://dev.twitch.tv/docs/embed/video-and-clips/) | video/twitch, video/x-twitch
 Video shim  | `flash_video` | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4
 Audio shim | `flash_audio` | --- | audio/mp3
 OGG Audio shim  | `flash_audio_ogg` | --- | audio/ogg, audio/oga
