@@ -73,7 +73,7 @@ const HtmlMediaElement = {
 
 				node[`set${capName}`] = (value) => {
 					if (mejs.html5media.readOnlyProperties.indexOf(propName) === -1) {
-						if (value > 0) node[propName] = value;
+						node[propName] = value;
 					}
 				};
 			}
