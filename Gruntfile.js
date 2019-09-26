@@ -107,6 +107,7 @@ module.exports = function (grunt) {
 					'build/renderers/facebook.js': 'src/js/renderers/facebook.js',
 					'build/renderers/soundcloud.js': 'src/js/renderers/soundcloud.js',
 					'build/renderers/twitch.js': 'src/js/renderers/twitch.js',
+					'build/renderers/youtube.js': 'src/js/renderers/youtube.js',
 					'build/renderers/vimeo.js': 'src/js/renderers/vimeo.js'
 				},
 				options: {
