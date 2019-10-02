@@ -4,7 +4,7 @@
 	* [Automatic start](#automatic)
 	* [Vanilla JavaScript](#vanilla)
 	* [jQuery](#jquery)
-	* [NPM/Meteor](#npm-meteor)
+	* [npm/Meteor](#npm-meteor)
 	* [RequireJS](#requirejs)
 	* [React](#react)
 * [Use Renderers](#renderers-usage)
@@ -78,7 +78,7 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ```
 
 <a id="npm-meteor"></a>
-### NPM/Meteor
+### npm/Meteor
 ```javascript
 // To import only MediaElement class
 import 'mediaelement/standalone';
@@ -117,7 +117,7 @@ import 'mediaelement'; // or import `mediaelement/standalone` if you only want t
 ### RequireJS
 With `Require.js`, you will need the following setup if you are planning to use HLS, M(PEG)-DASH or FLV, given the way the packages are bundled.
 
-To make it work, install via NPM any of the external libraries you will need (i.e., HLS.js).
+To make it work, install via npm any of the external libraries you will need (i.e., HLS.js).
 ```
 npm install hls.js
 ```
@@ -151,7 +151,7 @@ require(['path/to/hls'], function (Hls) {
 ### React
 With `React.js`, you will need to install the external libraries the same way as `Require`.
 
-Once installed through NPM, you will be able to create your component using `MediaElement`. As an example:
+Once installed through npm, you will be able to create your component using `MediaElement`. As an example:
 
 **MediaElement.js**
 ```javascript
@@ -299,7 +299,7 @@ module: {
 	]
 }
 ```
-* For other renderers that cannot be installed through NPM, such as YouTube, you might need to load their script through `componentDidMount` method:
+* For other renderers that cannot be installed through npm, such as YouTube, you might need to load their script through `componentDidMount` method:
 ```javascript
 componentDidMount() {
 	let loaded = false;
@@ -406,7 +406,7 @@ i.e., to call `FRAGMENT_PLAYING`, you need to write `onFragmentPlaying` on JS. T
 * `ogg` formats will not play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
 * `wav` and `webm` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
 * `flv` and `mpd` will not work on iOS since it doesn't support MSE; for `mpd` use a `m3u8` fallback.
-* Soundcloud can play with `html5` renderer using the following URL format: `https://api.soundcloud.com/tracks/XXX/stream?client_id=XXX`
+* SoundCloud can play with `html5` renderer using the following URL format: `https://api.soundcloud.com/tracks/XXX/stream?client_id=XXX`
 
 
 <a id="streching-modes"></a>
@@ -417,7 +417,7 @@ i.e., to call `FRAGMENT_PLAYING`, you need to write `onFragmentPlaying` on JS. T
 Mode |  Setup
 ---- | -------
 auto | Mode by default, this mode checks if there are any elements in the `video`/`audio` tag to turn the _responsive_ mode; if not, will set it up in _none_ mode.
-responsive | Can be turned on by setting `max-width: 100%` style (inline, or in the stylesheet), or `width="100%" height="100%"` attributes in the `video`/`audio` tag. In Javascript, set in the player's configuration `stretching: 'responsive'` (preferred) or `videoWidth: '100%' videoHeight: '100%'`.
+responsive | Can be turned on by setting `max-width: 100%` style (inline, or in the stylesheet), or `width="100%" height="100%"` attributes in the `video`/`audio` tag. In JavaScript, set in the player's configuration `stretching: 'responsive'` (preferred) or `videoWidth: '100%' videoHeight: '100%'`.
 fill | This mode will crop the video to adapt it to the dimensions of the parent container by only setting up `stretching: 'fill'`. It is encouraged to set up the parent's `height` to `100%` to make it work as expected.
 none | Use `width` and `height` attributes specified in the `video`/`audio` tags and no `max-width: 100%` or `width="100%" height="100%"` attributes; otherwise, use the `stretching: 'none'` configuration element to achieve this.
 
@@ -425,7 +425,7 @@ none | Use `width` and `height` attributes specified in the `video`/`audio` tags
 <a id="grid"></a>
 ## Responsive grid
 
-Since `MediaElement` can adapt its size to be responsive, some might be tempted to use CSS or Javascript to create a responsive grid of videos.
+Since `MediaElement` can adapt its size to be responsive, some might be tempted to use CSS or JavaScript to create a responsive grid of videos.
 
 So far, right now the best plugin to be used with `MediaElement` for this task has been [Flexr](http://flexrgrid.com/).
 

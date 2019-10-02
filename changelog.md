@@ -171,7 +171,7 @@
 * Improved error system to catch more errors and present them to user @rafa8626
 * Removed `mediaelementplayer` bundles, as well as `jQuery` file, considered unnecessary @rafa8626
 * Added new middleware layer to allow interaction with other players @rafa8626
-* Used flex-box to reduce calculation via Javascript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
+* Used flex-box to reduce calculation via JavaScript on control bar (https://github.com/mediaelement/mediaelement/pull/2261) @marcobiedermann and @rafa8626
 * Fixed issue with events not being unbound when player is destroyed and removed unnecessary callbacks from it @rafa8626
 * Added missing style for buffering element @rafa8626
 * Removed conditional to disable control bar when an error happens @rafa8626
@@ -515,7 +515,7 @@
 
 *2.23.5 (2017/01/06)*
 
-* Fixed typo that caused Wordpress support for translations to be broken (#1984) @rafa8626
+* Fixed typo that caused WordPress support for translations to be broken (#1984) @rafa8626
 
 *2.23.4 (2016/10/21)*
 
@@ -774,11 +774,11 @@
 * Add bower.json (https://github.com/mediaelement/mediaelement/pull/1188) @herby
 * i18n : add French translation (https://github.com/mediaelement/mediaelement/pull/1177) @kloh-fr
 * IE8 layout (Adding width and height to .me-plugin) @peterh-capella
-* Fixes #1113 - Youtube Playbutton on load hidden (https://github.com/mediaelement/mediaelement/pull/1140) @LOK-Soft
+* Fixes #1113 - YouTube Playbutton on load hidden (https://github.com/mediaelement/mediaelement/pull/1140) @LOK-Soft
 * setVideoSize : verify this.pluginElement before this.pluginElement.style (https://github.com/mediaelement/mediaelement/pull/1175) @bdecarne
 * VideoElement.as: fix duration on setSrc (https://github.com/mediaelement/mediaelement/pull/1127) @rounce
 * don't hide controls when they're being hovered over (https://github.com/mediaelement/mediaelement/pull/1121) @rounce
-* flash: send keydown events up to javascript (https://github.com/mediaelement/mediaelement/pull/1120) @rounce
+* flash: send keydown events up to JavaScript (https://github.com/mediaelement/mediaelement/pull/1120) @rounce
 * Restore IE6 compatibility for 100% (https://github.com/mediaelement/mediaelement/pull/1021) @ryokenau
 * Added playback speed (HTML5 only), fixed caption's auto-size when fullscreen (https://github.com/mediaelement/mediaelement/pull/1027) @cheng-shiwen
 * Cleaned up playback speed (https://github.com/mediaelement/mediaelement/pull/1249) @matthillman
@@ -813,7 +813,7 @@
 * Fixed display of volume control on non-mobile touch devices (https://github.com/mediaelement/mediaelement/pull/1093) @OwenEdwards
 * Calculate correctly the video player height for 100% (https://github.com/mediaelement/mediaelement/pull/1083) @LeResKP
 * restore focus after click on the controls (https://github.com/mediaelement/mediaelement/pull/1094) @rounce
-* Support youtu.be URL for youtube source (https://github.com/mediaelement/mediaelement/pull/1135) @clkao
+* Support youtu.be URL for YouTube source (https://github.com/mediaelement/mediaelement/pull/1135) @clkao
 * Make slider work on touch devices (https://github.com/mediaelement/mediaelement/pull/1033) @Singularetantum
 * add Simplified Chinese translation (https://github.com/mediaelement/mediaelement/pull/1065) @michaeljayt
 * Fixed the reference to `media` in the bigPlay control creation. (https://github.com/mediaelement/mediaelement/pull/1111) @nuzzio
@@ -824,7 +824,7 @@
 
 * Removed breaking `hasTouch` detection
 * Fixed IE detection https://github.com/mediaelement/mediaelement/pull/1018
-* fix play() on ipad does not start playing and double click issue (https://github.com/mediaelement/mediaelement/pull/918) @fbuecklers
+* fix play() on iPad does not start playing and double click issue (https://github.com/mediaelement/mediaelement/pull/918) @fbuecklers
 * added scale=default to Flash for better 100% https://github.com/mediaelement/mediaelement/pull/963
 * Add code fences for GHFM https://github.com/mediaelement/mediaelement/pull/975
 * i18n improvements https://github.com/mediaelement/mediaelement/pull/1025
@@ -842,7 +842,7 @@
 *2.12.1 (2013/08/26)*
 
 * Remove all `console.log` statements in `Builder.py` @mediaelement
-* More i18n fixes for Wordpress https://github.com/mediaelement/mediaelement/pull/940 @SergeyBiryukov
+* More i18n fixes for WordPress https://github.com/mediaelement/mediaelement/pull/940 @SergeyBiryukov
 * Fix touch detection in QtWebKit https://github.com/mediaelement/mediaelement/pull/939 @peterbrook
 * Added configuration option httpsBasicAuthSite fix sites using HTTPS basic authentication (benroy73) https://github.com/mediaelement/mediaelement/pull/937
 * Fixed backlight plugin error  https://github.com/mediaelement/mediaelement/pull/932 @eviweb
@@ -850,7 +850,7 @@
 * Add a mejs-fullscreen css class on the root element https://github.com/mediaelement/mediaelement/pull/925 @fbuecklers
 * fix for ff switch between fullscreen and normal mode https://github.com/mediaelement/mediaelement/pull/924 @fbuecklers
 * Multiple fixes: old issue #548, current issues #754 and #902 https://github.com/mediaelement/mediaelement/pull/923 @peterh-capella
-* fix firefox detect 100% mode issue https://github.com/mediaelement/mediaelement/pull/919 @KaptinLin
+* fix Firefox detect 100% mode issue https://github.com/mediaelement/mediaelement/pull/919 @KaptinLin
 * Option to show the poster when the video is ended https://github.com/mediaelement/mediaelement/pull/891 @LeResKP
 * Fix for Chrome autoplaying when forcing Flash https://github.com/mediaelement/mediaelement/pull/889 @tjsnyder
 * Allow SWF to work over insecure domain https://github.com/mediaelement/mediaelement/pull/897 @sebablanco
@@ -879,7 +879,7 @@
 
 *2.11.3	(2013/04/13)*
 
-* Change to `getScriptPath` to allow querystring variables to be added (for Wordpress Core)
+* Change to `getScriptPath` to allow querystring variables to be added (for WordPress Core)
 
 *2.11.2	(2013/04/12)*
 
@@ -900,7 +900,7 @@ Fixes and updates
 * Protocol relative YouTube URLs for `iframe` API (https://github.com/mediaelement/mediaelement/pull/825) @dtsosie
 * Added aria-label to all button elements (https://github.com/mediaelement/mediaelement/pull/824) @Luzifer
 * Fixed preroll adclick URL (mediaelement)
-* Traditional chinese locale strings for i18n module (latzt) (https://github.com/mediaelement/mediaelement/pull/820)
+* Traditional Chinese locale strings for i18n module (latzt) (https://github.com/mediaelement/mediaelement/pull/820)
 * Allow captions on audio player (https://github.com/mediaelement/mediaelement/pull/819) @LeResKP
 * Fix incorrect path returned by `getScriptPath()` @Ciki
 * Overhauling hover div creation and placement (https://github.com/mediaelement/mediaelement/pull/813) @JeffreyATW
@@ -924,7 +924,7 @@ Fixes and updates
 * Properly clean up player when calling MediaElementPlayer.remove() (https://github.com/mediaelement/mediaelement/pull/779) @odnamrataizem
 * Add "mejs-shim" class to all shims to prevent improper resizing (https://github.com/mediaelement/mediaelement/pull/789) @JeffreyATW
 * Bug fix for the error "this.pluginApi.pauseMedia is not a function" when using the flash player and removing the dom element. https://github.com/mediaelement/mediaelement/pull/788 @Jmaharman
-* Make possible to open youtube links as audio only https://github.com/mediaelement/mediaelement/pull/784 @Seb33300
+* Make possible to open YouTube links as audio only https://github.com/mediaelement/mediaelement/pull/784 @Seb33300
 * Add a few basic Jasmine tests https://github.com/mediaelement/mediaelement/pull/781 @msgilligan
 * Add option to hide the video controls on load  https://github.com/mediaelement/mediaelement/pull/780#issuecomment-14781622 @eResKP
 * @cc button can now be a toggle when there's just one track  https://github.com/mediaelement/mediaelement/pull/793 @LeResKP
@@ -1023,7 +1023,7 @@ Fixes and updates
 *2.8.1 (2012/04/19)*
 
 * Flash fullscreen: video not fullsized
-* Flash fullscreen: youtube controls not working
+* Flash fullscreen: YouTube controls not working
 
 *2.8.0 (2012/04/17)*
 
@@ -1202,12 +1202,12 @@ Fixes and updates
 * added alwaysShowControls option (kaichen)
 * forceful padding override on buttons
 * started "ender" branch to experiment with removing jQuery dependency and baking in ender.js
-* updated the use of `type` javascript option with src is present
+* updated the use of `type` JavaScript option with src is present
 * remove preload="none" hack for Chrome now that it supports it (note: Chrome still strangely fires a 'loadstart' event)
 * added hooks for other jQuery compatible libraries like @ender.js(http://enderjs.com)
-* Wordpress: if you don't specify a file extension, mejs will look for attached files and use them @video src="/wp-content/uploads/myfile"
-* Wordpress: option to select a 'skin'
-* Wordpress: option to select audio width/height
+* WordPress: if you don't specify a file extension, mejs will look for attached files and use them @video src="/wp-content/uploads/myfile"
+* WordPress: option to select a 'skin'
+* WordPress: option to select audio width/height
 
 *2.1.6 (2011/06/14) - 35.5kb*
 
@@ -1282,7 +1282,7 @@ Fixes and updates
 
 * Whitespace cleanup on files
 * Preventing flash/sl plugins from reinitializing when they are removed by another script
-* Fixed IE JavaScript errors in Flash fallback (seen in Wordpress)
+* Fixed IE JavaScript errors in Flash fallback (seen in WordPress)
 * Added 'play' event to Silverlight to prevent errors
 
 *2.0.5 (2011/01/25) - 31.7kb*
@@ -1315,7 +1315,7 @@ Fixes and updates
 
 * Changed HTML escape method to encodeURICompnent
 * Flash-based RMTP support (contributor: sylvinus)
-* Fixed Wordpress loop bug
+* Fixed WordPress loop bug
 * Changed time popup to move with mouse instead of currentTime
 * added enablePluginSmoothing (Flash)
 * Added some "play" "playing" event duplication to Flash
