@@ -69,7 +69,7 @@ To get the default installation there are several different ways.
 
 3. Through GIT: `git clone https://github.com/mediaelement/mediaelement.git`
 
-4. Through NPM: `npm install mediaelement`
+4. Through npm: `npm install mediaelement`
 
 5. Through BOWER: `bower install mediaelement`
 
@@ -329,7 +329,7 @@ If you want to install any of them, refer to the new plugins repository clicking
 <link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
 ```
 
-If you wish to install the sources in different directories (i.e., all Javascript files in a _js_, all CSS in a _styles_, Flash shims in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
+If you wish to install the sources in different directories (i.e., all JavaScript files in a _js_, all CSS in a _styles_, Flash shims in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
 ```html
 <link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
 

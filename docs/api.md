@@ -134,7 +134,7 @@ tracksAriaLive | boolean | `false` | By default, no WAI-ARIA live region - don't
 hideCaptionsButtonWhenEmpty | boolean | `true` | Option to remove the `[cc]` button when no `<track kind="subtitles">` are present
 toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to toggle button
 startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element. Note: Will not work when toggleCaptionsButtonWhenOnlyOne is set to `true`
-slidesSelector | string | _(empty)_ | Selector for slides; could be any valid Javascript selector (`#id`, `.class`, `img`, etc.)
+slidesSelector | string | _(empty)_ | Selector for slides; could be any valid JavaScript selector (`#id`, `.class`, `img`, etc.)
 tracksText | string | `null` | Title for Closed Captioning button for WARIA purposes
 chaptersText  | string | `null` | Title for Chapters button for WARIA purposes
 muteText | string | `null` | Title for Mute button for WARIA purposes
