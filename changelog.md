@@ -1,5 +1,10 @@
 ### Version History
 
+*4.2.13 (2019/09/27)*
+
+* Undo changes introduced 4.2.11 to fix unmute bug
+* added missing target build/renderers/youtube.js in Gruntfile.js
+
 *4.2.12 (2019/08/22)*
 
 * Fix dash.js (@daveyx,#2659, call to obsolete functions removed) (#2672)
