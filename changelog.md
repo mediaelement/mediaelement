@@ -1,5 +1,11 @@
 ### Version History
 
+*4.2.14 (2019/10/19)*
+
+* Update versions in src/js/core/mejs.js and package.js (had not been done for 4.2.13)
+* Include RELEASE.md so that "the maintainer" knows how to build a release.
+* Handle captions files missing text at end of file. (PR#2702)
+
 *4.2.13 (2019/09/27)*
 
 * Undo changes introduced 4.2.11 to fix unmute bug
