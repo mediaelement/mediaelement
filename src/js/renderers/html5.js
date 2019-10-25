@@ -138,7 +138,7 @@ const HtmlMediaElement = {
 		// Check if it current source can be played; otherwise, load next until no more options are left
 		node.addEventListener('error', function (e) {
 			// Reload the source only in case of the renderer is active at the moment
-			if (e.target.error.code === 4 && isActive) {
+			if (e && e.target && e.target.error && e.target.error.code === 4 && isActive) {
 				if (index < total && mediaFiles[(index + 1)] !== undefined) {
 					node.src = mediaFiles[index++].src;
 					node.load();
