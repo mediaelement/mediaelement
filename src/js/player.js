@@ -797,7 +797,7 @@ class MediaElementPlayer {
 					if (mejs.players.hasOwnProperty(playerIndex)) {
 						const p = mejs.players[playerIndex];
 
-						if (p.id !== t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended) {
+						if (p.id !== t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended && p.options.ignorePauseOtherPlayersOption !== true) {
 							p.pause();
 							p.hasFocus = false;
 						}
