@@ -61,7 +61,7 @@ for (let i = 0, total = html5Elements.length; i < total; i++) {
 }
 
 // Test if browsers support HLS natively (right now Safari, Android's Chrome and Stock browsers, and MS Edge)
-export const SUPPORTS_NATIVE_HLS = (IS_SAFARI || (IS_ANDROID && (IS_CHROME || IS_STOCK_ANDROID)) || (IS_IE && /edge/i.test(UA)));
+export const SUPPORTS_NATIVE_HLS = (IS_SAFARI || (IS_IE && /edge/i.test(UA)));
 
 // Detect native JavaScript fullscreen (Safari/Firefox only, Chrome still fails)
 
