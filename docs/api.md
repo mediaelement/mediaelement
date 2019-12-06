@@ -117,6 +117,7 @@ isVideo | boolean | `true` | Only for dynamic purposes
 stretching | string | `auto` | Stretching modes for video player. If `auto` is set, player will try to find the `max-width` and `max-height` CSS styles to turn it into `responsive` mode; otherwise, will set the dimensions specified in the tag (same as setting this option as `none`). The `fill` mode will try to use the available space to make the video fit and, when window is resized, it will crop the dimensions to center it according to the available space.
 enableKeyboard | boolean | `true` | Turns keyboard support on and off for this instance
 pauseOtherPlayers | boolean | `true` | When focused player starts, it will pause other players
+ignorePauseOtherPlayersOption | boolean | `true` |it will ignore pauseOtherPlayers option on currentplayer
 secondsDecimalLength | number | `0` | Number of decimal places to show if frames are shown
 customError | string/callback | `null` | If error happens, set up customized HTML message through a string or a function. The function has 2 parameters: `media` (the wrapper that mimics all the native events/properties/methods for all renderers) and `node` (the original HTML `video`, `audio` or `iframe` tag where the media was loaded originally)
 keyActions | array | `[...]` | Keyboard actions to trigger different actions. Accepts array of objects in format: `{keys: [1,2,3...], action: function(player, media) { ... }}`. To see the entire list, please check `/src/js/mediaelementplayer-player.js`
