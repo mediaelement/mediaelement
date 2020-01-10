@@ -101,7 +101,7 @@ if (hasTrueNativeFullScreen) {
 	if (hasWebkitNativeFullScreen) {
 		fullScreenEventName = 'webkitfullscreenchange';
 	} else if (hasMozNativeFullScreen) {
-		fullScreenEventName = 'mozfullscreenchange';
+		fullScreenEventName = 'fullscreenchange';
 	} else if (hasMsNativeFullScreen) {
 		fullScreenEventName = 'MSFullscreenChange';
 	}
