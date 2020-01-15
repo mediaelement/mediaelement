@@ -135,7 +135,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		{
 			keys: [77], // M
 			action: (player) => {
-				player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`).style.display = 'block';
+				const volumeSlider = player.getElement(player.container).querySelector(`.${config.classPrefix}volume-slider`);
+				if (volumeSlider) {
+					volumeSlider.style.display = 'block';
+				}
+
 				if (player.isVideo) {
 					player.showControls();
 					player.startControlsTimer();
