@@ -86,7 +86,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						player.startControlsTimer();
 					}
 
-					var timeSlider = player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'time-total');
+					var timeSlider = player.getElement(player.container).querySelector(`.${t.options.classPrefix}time-total`);
 					if (timeSlider) {
 						timeSlider.focus();
 					}
@@ -110,7 +110,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						player.startControlsTimer();
 					}
 
-					var timeSlider = player.getElement(player.container).querySelector('.' + _player.config.classPrefix + 'time-total');
+					var timeSlider = player.getElement(player.container).querySelector(`.${t.options.classPrefix}time-total`);
 					if (timeSlider) {
 						timeSlider.focus();
 					}
