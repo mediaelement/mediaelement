@@ -47,18 +47,35 @@ const VimeoApi = {
 	 * Valid URL format(s):
 	 *  - https://player.vimeo.com/video/59777392
 	 *  - https://vimeo.com/59777392
+	 *  - https://vimeo.com/59777392/61ee64f645
 	 *
 	 * @param {String} url - Vimeo full URL to grab the number Id of the source
 	 * @return {int}
 	 */
 	getVimeoId: (url) => {
-		if (url === undefined || url === null) {
+		if (url == null) {
 			return null;
 		}
 
 		const parts = url.split('?');
 		url = parts[0];
-		return parseInt(url.substring(url.lastIndexOf('/') + 1), 10);
+
+		const playerLinkMatch = url.match(/https:\/\/player.vimeo.com\/video\/(\d+)$/);
+		if (playerLinkMatch) {
+			return parseInt(playerLinkMatch[1], 10);
+		}
+
+		const vimeoLinkMatch = url.match(/https:\/\/vimeo.com\/(\d+)$/);
+		if (vimeoLinkMatch) {
+			return parseInt(vimeoLinkMatch[1], 10);
+		}
+
+		const privateVimeoLinkMatch = url.match(/https:\/\/vimeo.com\/(\d+)\/\w+$/);
+		if (privateVimeoLinkMatch) {
+			return parseInt(privateVimeoLinkMatch[1], 10);
+		}
+
+		return NaN;
 	}
 };
 
