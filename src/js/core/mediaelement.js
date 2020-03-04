@@ -385,7 +385,8 @@ class MediaElement {
 				}
 
 				// turn on the renderer (this checks for the existing renderer already)
-				return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
+				var shouldChangeRenderer = !(mediaFiles[0].src === undefined || mediaFiles[0].src === null || mediaFiles[0].src === '')
+				return shouldChangeRenderer ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
 			},
 			triggerAction = (methodName, args) => {
 				try {
