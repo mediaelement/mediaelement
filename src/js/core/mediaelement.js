@@ -370,7 +370,7 @@ class MediaElement {
 				;
 
 				// Ensure that the original gets the first source found
-				if (!t.mediaElement.paused) {
+				if (!t.mediaElement.paused && !(t.mediaElement.src == null || t.mediaElement.src === '')) {
 					t.mediaElement.pause();
 					event = createEvent('pause', t.mediaElement);
 					t.mediaElement.dispatchEvent(event);
