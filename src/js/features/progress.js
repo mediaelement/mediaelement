@@ -107,7 +107,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					// start again to track new time
 					setTimeout(function() {
 						player.play();
-					}, 1100);
+					}, 0);
 				}
 			}
 		},
@@ -145,7 +145,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					// start again to track new time
 					setTimeout(function() {
 						player.play();
-					}, 1100);
+					}, 0);
 				}
 			}
 		});
