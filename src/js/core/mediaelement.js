@@ -370,7 +370,7 @@ class MediaElement {
 				;
 
 				// Ensure that the original gets the first source found
-				if (!t.mediaElement.paused) {
+				if (!t.mediaElement.paused && !(t.mediaElement.src == null || t.mediaElement.src === '')) {
 					t.mediaElement.pause();
 					event = createEvent('pause', t.mediaElement);
 					t.mediaElement.dispatchEvent(event);
@@ -385,7 +385,8 @@ class MediaElement {
 				}
 
 				// turn on the renderer (this checks for the existing renderer already)
-				return mediaFiles[0].src ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
+				var shouldChangeRenderer = !(mediaFiles[0].src == null || mediaFiles[0].src === '');
+				return shouldChangeRenderer ? t.mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles) : null;
 			},
 			triggerAction = (methodName, args) => {
 				try {
