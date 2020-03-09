@@ -18,10 +18,14 @@ Instructions for the Maintainer
 
   src/js/core/mejs.js:mejs.version = '4.x.x';
   package.js: version: '4.x.x',
+  package-lock.json: "version": "4.x.x",
+  package.json: "version": "4.x.x",
 
 - check with shell command;
 
   egrep "version:|mejs.version =" package.js src/js/core/mejs.js
+  head -4 package*.json | grep version
+
 
 - Update changelog.md
 
