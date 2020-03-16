@@ -33,6 +33,10 @@ Instructions for the Maintainer
 
   grunt
 
+- check that mejs.version has been updated sucessfully below build/
+
+  grep mejs.version build/* -r
+
 - add/commit/push all including build/
 
   git add --all
