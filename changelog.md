@@ -4,6 +4,12 @@
 
 * fix 4.2.15 release : update version to 4.2.16, rebuild
 
+* Changed multiple urls in demo file (#2749)
+* Removed FLV and MP4 No Ext de to 404 replaced HLS due to 404 with Akamai Test stream
+* Replaced Facebook url due to not working Layout is ** up now. Change multple audio files due to not working. api.soundcloud.com has reached it limit for api request therefore not working any more
+* replaced one supplied by facebook
+* Facebook video post did not work
+
 *4.2.15 (2020/03/10)*
 
 * Do not delay starting media on key action (#2745)
