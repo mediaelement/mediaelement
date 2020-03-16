@@ -1,5 +1,9 @@
 ### Version History
 
+*4.2.16 (2020/03/16)*
+
+* fix 4.2.15 release : update version to 4.2.16, rebuild
+
 *4.2.15 (2020/03/10)*
 
 * Do not delay starting media on key action (#2745)
