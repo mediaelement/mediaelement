@@ -1074,6 +1074,10 @@ class MediaElementPlayer {
 				}
 			})(),
 			aspectRatio = (() => {
+				//enableAutosize == false maintain original ratio
+				if(!t.options.enableAutosize){
+					return  t.initialAspectRatio;
+				}
 				let ratio = 1;
 				if (!t.isVideo) {
 					return ratio;
