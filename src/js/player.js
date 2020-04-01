@@ -574,7 +574,7 @@ class MediaElementPlayer {
 			t = this,
 			autoplayAttr = domNode.getAttribute('autoplay'),
 			autoplay = !(autoplayAttr === undefined || autoplayAttr === null || autoplayAttr === 'false'),
-			isNative = media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
+			isNative = media.rendererName !== null && /(native|html5)/i.test(media.rendererName)
 		;
 
 		if (t.getElement(t.controls)) {
