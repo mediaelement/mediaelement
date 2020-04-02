@@ -924,17 +924,16 @@ mejs.TrackFormatParser = {
 		 * @returns {{text: Array, times: Array}}
 		 */
 		parse (trackText) {
-			trackText = $(trackText).filter('tt');
-			const
-				container = trackText.firstChild,
+			const trackElem = document.adoptNode(new DOMParser().parseFromString(trackText, 'application/xml').documentElement),
+				container = trackElem.querySelector('div'),
 				lines = container.querySelectorAll('p'),
-				styleNode = trackText.getElementById(`${container.attr('style')}`),
+				styleNode = document.getElementById(container.getAttribute('style')),
 				entries = []
-			;
+      ;
 
 			let styles;
 
-			if (styleNode.length) {
+			if (styleNode) {
 				styleNode.removeAttribute('id');
 				const attributes = styleNode.attributes;
 				if (attributes.length) {
@@ -956,23 +955,23 @@ mejs.TrackFormatParser = {
 					}
 				;
 
-				if (lines.eq(i).attr('begin')) {
-					_temp.start = convertSMPTEtoSeconds(lines.eq(i).attr('begin'));
+				if (lines[i].getAttribute('begin')) {
+					_temp.start = convertSMPTEtoSeconds(lines[i].getAttribute('begin'));
 				}
-				if (!_temp.start && lines.eq(i - 1).attr('end')) {
-					_temp.start = convertSMPTEtoSeconds(lines.eq(i - 1).attr('end'));
+				if (!_temp.start && lines[i - 1].getAttribute('end')) {
+					_temp.start = convertSMPTEtoSeconds(lines[i - 1].getAttribute('end'));
 				}
-				if (lines.eq(i).attr('end')) {
-					_temp.stop = convertSMPTEtoSeconds(lines.eq(i).attr('end'));
+				if (lines[i].getAttribute('end')) {
+					_temp.stop = convertSMPTEtoSeconds(lines[i].getAttribute('end'));
 				}
-				if (!_temp.stop && lines.eq(i + 1).attr('begin')) {
-					_temp.stop = convertSMPTEtoSeconds(lines.eq(i + 1).attr('begin'));
+				if (!_temp.stop && lines[i + 1].getAttribute('begin')) {
+					_temp.stop = convertSMPTEtoSeconds(lines[i + 1].getAttribute('begin'));
 				}
 
 				if (styles) {
 					style = '';
 					for (let _style in styles) {
-						style += `${_style}:${styles[_style]};`;
+						style += `${_style}: ${styles[_style] };`;
 					}
 				}
 				if (style) {
@@ -981,7 +980,7 @@ mejs.TrackFormatParser = {
 				if (_temp.start === 0) {
 					_temp.start = 0.200;
 				}
-				_temp.text = lines.eq(i).innerHTML.trim().replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
+				_temp.text = lines[i].innerHTML.trim().replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_| !:, .; ]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
 				entries.push(_temp);
 			}
 			return entries;
