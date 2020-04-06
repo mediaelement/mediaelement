@@ -1074,6 +1074,10 @@ class MediaElementPlayer {
 				}
 			})(),
 			aspectRatio = (() => {
+				//enableAutosize == false maintain original ratio
+				if(!t.options.enableAutosize){
+					return  t.initialAspectRatio;
+				}
 				let ratio = 1;
 				if (!t.isVideo) {
 					return ratio;
@@ -1970,7 +1974,9 @@ class MediaElementPlayer {
 
 		if (typeof t.getElement(t.container) === 'object') {
 			const offscreen = t.getElement(t.container).parentNode.querySelector(`.${t.options.classPrefix}offscreen`);
+			if(offscreen){
 			offscreen.remove();
+			}
 			t.getElement(t.container).remove();
 		}
 		t.globalUnbind('resize', t.globalResizeCallback);
