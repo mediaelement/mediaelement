@@ -78,8 +78,10 @@ export function getTypeFromFile (url) {
 
 	// Obtain correct MIME types
 	if (normalizedExt) {
-		if (~['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg', 'mov'].indexOf(normalizedExt)) {
+		if (~['mp4', 'm4v', 'ogg', 'ogv', 'webm', 'flv', 'mpeg'].indexOf(normalizedExt)) {
 			mime = `video/${normalizedExt}`;
+		} else if ('mov' === normalizedExt) {
+			mime = 'video/quicktime';
 		} else if (~['mp3', 'oga', 'wav', 'mid', 'midi'].indexOf(normalizedExt)) {
 			mime = `audio/${normalizedExt}`;
 		}
