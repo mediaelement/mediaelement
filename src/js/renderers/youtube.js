@@ -439,6 +439,7 @@ const YouTubeIframeRenderer = {
 				videoId: videoId,
 				height: height,
 				width: width,
+				host: youtube.options.youtube && youtube.options.youtube.nocookie ? 'https://www.youtube-nocookie.com' : undefined,
 				playerVars: Object.assign({
 					controls: 0,
 					rel: 0,
