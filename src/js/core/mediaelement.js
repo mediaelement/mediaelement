@@ -426,13 +426,13 @@ class MediaElement {
 					if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
 						typeof t.mediaElement.renderer[methodName] === 'function') {
 						if (t.mediaElement.promises.length) {
-							Promise.all(t.mediaElement.promises).then(() => {
-								triggerAction(methodName, args);
+							return Promise.all(t.mediaElement.promises).then(() => {
+								return triggerAction(methodName, args);
 							}).catch((e) => {
 								t.mediaElement.generateError(e, mediaFiles);
 							});
 						} else {
-							triggerAction(methodName, args);
+							return triggerAction(methodName, args);
 						}
 					}
 					return null;
