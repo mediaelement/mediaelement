@@ -298,6 +298,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					removeClass(mute, `${t.options.classPrefix}mute`);
 					addClass(mute, `${t.options.classPrefix}unmute`);
 				} else {
+					
 					positionVolumeHandle(media.volume);
 					removeClass(mute, `${t.options.classPrefix}unmute`);
 					addClass(mute, `${t.options.classPrefix}mute`);
@@ -424,7 +425,6 @@ Object.assign(MediaElementPlayer.prototype, {
 					rendered = true;
 					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
-						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -438,6 +438,9 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
 					}
+					if(player.options.startVolume === 0){
+						player.options.startVolume = 0;	
+					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
 				}
@@ -448,7 +451,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		// mute the media and sets the volume icon muted if the initial volume is set to 0
 		if (player.options.startVolume === 0 || media.originalNode.muted) {
 			media.setMuted(true);
-			player.options.startVolume = 0;
+			if(player.options.startVolume === 0){
+				player.options.startVolume = 0;	
+			}			
 			toggleMute();
 		}
 
