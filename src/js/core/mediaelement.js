@@ -430,6 +430,7 @@ class MediaElement {
 								return triggerAction(methodName, args);
 							}).catch((e) => {
 								t.mediaElement.generateError(e, mediaFiles);
+								return Promise.reject(e);
 							});
 						} else {
 							return triggerAction(methodName, args);
