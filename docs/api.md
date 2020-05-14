@@ -181,8 +181,8 @@ pauseUserInteraction | Returns whether the last `pause` call was initiated from 
 Method | Description
 -------- | ------------
 load() | Reload the audio/video element; also, it is used to update the audio/video element after changing the source or other settings
-play() | Start playing the audio/video
-pause() | Halt (pauses) the currently playing audio or video
+play(userInteraction = false) | Start playing the audio/video
+pause(userInteraction = false) | Halt (pauses) the currently playing audio or video
 stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is `pause`
 remove() | Destroy the video/audio player instance
 canPlayType(type) | Determine whether current player can/cannot play a specific media type; `type` is MIME type and each renderer has a whitelist of them
