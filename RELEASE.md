@@ -5,10 +5,9 @@ Instructions for the Maintainer
  PREPARING A RELEASE - first steps, command line
 **********************
 
-- Create a dedicated branch for the release;
+- Switch to / create the <rel-4.x.x[-rc-x]> branch
 
-  git checkout master
-  git checkout -b release_4.X.X
+  git checkout -b rel-4.x.x-rc-x
 
 - Run basic npm security checks;
 
@@ -37,11 +36,27 @@ Instructions for the Maintainer
 
   grep mejs.version build/* -r
 
-- add/commit/push all including build/
+- add/commit all including build/
 
   git add --all
-  git commit -am "release 4.X.X"
-  git push
+  git commit -am "release 4.x.x-rc-x
+
+
+- *** check everything once
+
+- *** check everything once more
+
+
+- *** carefully, interractivelly rebase,
+ allowing  "reword"ing commits for cleaner git log
+
+#ifdef FINAL_RELEASE
+  git rebase -i master
+#endif FINAL_RELEASE
+
+- *** did you really check *** everything *** ?
+
+-  git push
 
 
 **********************
