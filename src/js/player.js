@@ -1801,11 +1801,17 @@ class MediaElementPlayer {
 		return this.getSrc();
 	}
 
+	/**
+	 * @param {boolean} userInteraction Use `true` when the call comes from user interaction.
+	 */
 	play (userInteraction = false) {
 		this.playUserInteraction = userInteraction;
 		this.proxy.play();
 	}
 
+	/**
+	 * @param {boolean} userInteraction Use `true` when the call comes from user interaction.
+	 */
 	pause (userInteraction = false) {
 		this.pauseUserInteraction = userInteraction;
 		this.proxy.pause();
