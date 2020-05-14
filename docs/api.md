@@ -8,6 +8,7 @@
 	* [Properties](#properties)
 	* [Methods](#methods)
 	* [Events](#events)
+	* [Examples](#examples)
 
 
 <a id="attributes"></a>
@@ -212,5 +213,28 @@ pause | The media is paused either by the user or programmatically
 ended | The media has reach the end (a useful event for messages like "thanks for listening")
 volumechange | Volume is changed (including setting the volume to "mute")
 captionschange | The media has detected that captions have changed
+
+<a id="examples"></a>
+### Examples
+
+#### Detect if play/pause event comes from user interaction
+
+```js
+mediaElement.addEventListener('play', () => {
+  if (player.playUserInteraction) {
+    // Example: Send event to Websocket
+  }
+})
+
+mediaElement.addEventListener('pause', () => {
+  const userInteraction = this.player.playUserInteraction &&
+      // Handle when video is ended (dispatches a `pause` event)
+      this.player.currentTime < this.player.duration
+  if (userInteraction) {
+    // Example: Send event to Websocket
+  }
+})
+```
+
 ________
 [Back to Main](../README.md)
