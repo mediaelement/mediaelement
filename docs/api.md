@@ -171,6 +171,8 @@ readyState | Return the current ready state of the audio/video | X |
 seeking | Return whether the user is currently seeking in the audio/video | X |
 src | Set or return the current source of the audio/video element | X | X
 volume | Set or return the volume of the audio/video | X | X
+playUserInteraction | Returns whether the last `play` call was initiated from user interaction | X |
+pauseUserInteraction | Returns whether the last `pause` call was initiated from user interaction | X |
 
 <a id="methods"></a>
 ### Methods
