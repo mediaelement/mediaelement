@@ -227,9 +227,9 @@ mediaElement.addEventListener('play', () => {
 })
 
 mediaElement.addEventListener('pause', () => {
-  const userInteraction = this.player.playUserInteraction &&
+  const userInteraction = player.playUserInteraction &&
       // Handle when video is ended (dispatches a `pause` event)
-      this.player.currentTime < this.player.duration
+      player.currentTime < player.duration
   if (userInteraction) {
     // Example: Send event to Websocket
   }
