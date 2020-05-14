@@ -227,7 +227,7 @@ mediaElement.addEventListener('play', () => {
 });
 
 mediaElement.addEventListener('pause', () => {
-	const userInteraction = player.playUserInteraction &&
+	const userInteraction = player.pauseUserInteraction &&
 		// Handle when video is ended (dispatches a `pause` event)
 		player.currentTime < player.duration;
 	if (userInteraction) {
