@@ -221,19 +221,19 @@ captionschange | The media has detected that captions have changed
 
 ```js
 mediaElement.addEventListener('play', () => {
-  if (player.playUserInteraction) {
-    // Example: Send event to Websocket
-  }
-})
+	if (player.playUserInteraction) {
+		// Example: Send event to Websocket
+	}
+});
 
 mediaElement.addEventListener('pause', () => {
-  const userInteraction = player.playUserInteraction &&
-      // Handle when video is ended (dispatches a `pause` event)
-      player.currentTime < player.duration
-  if (userInteraction) {
-    // Example: Send event to Websocket
-  }
-})
+	const userInteraction = player.playUserInteraction &&
+			// Handle when video is ended (dispatches a `pause` event)
+			player.currentTime < player.duration;
+	if (userInteraction) {
+		// Example: Send event to Websocket
+	}
+});
 ```
 
 ________
