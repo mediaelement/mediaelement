@@ -35,7 +35,7 @@
 /* line 16, ../sass/mediaelement/inc/_wrappers.scss */
 .mejs-container div,
 .mejs-container span {
-  position: static;
+  position: absolute;
   display: block;
   margin: 0;
   padding: 0;
@@ -59,11 +59,6 @@
 }
 
 /* line 45, ../sass/mediaelement/inc/_wrappers.scss */
-div.mejs-mediaelement {
-  position: relative;
-}
-
-/* line 48, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-background,
 div.mejs-layers,
 div.mejs-poster {
@@ -73,25 +68,25 @@ div.mejs-poster {
   width: 100%;
 }
 
-/* line 57, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 54, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-poster {
   background-size: contain;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
-/* line 61, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 58, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-poster img {
   margin: 0;
   padding: 0;
   border: 0;
 }
 
-/* line 68, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 65, ../sass/mediaelement/inc/_wrappers.scss */
 :root div.mejs-poster img {
   display: none;
 }
 
-/* line 72, ../sass/mediaelement/inc/_wrappers.scss */
+/* line 69, ../sass/mediaelement/inc/_wrappers.scss */
 div.mejs-clear {
   clear: both;
 }
@@ -141,7 +136,6 @@ div.mejs-controls {
   border-top: #cacaca 1px solid;
   background: #f0f0f0;
   background: rgba(240, 240, 240, 0.8);
-  background: -webkit-linear-gradient(rgba(240, 240, 240, 0.8), rgba(202, 202, 202, 0.8));
   background: linear-gradient(rgba(240, 240, 240, 0.8), rgba(202, 202, 202, 0.8));
   /*
     // Not sure about these... are they used?
@@ -195,7 +189,6 @@ div.mejs-controls button {
   background-image: url("ME_controls_min_light.svg");
   background-size: auto 16px;
   background-repeat: no-repeat;
-  -webkit-transition: border-color 500ms, background-color 700ms;
   transition: border-color 500ms, background-color 700ms;
 }
 /* line 45, ../sass/mediaelement/inc/_controls.scss */
@@ -305,36 +298,30 @@ div.mejs-controls .mejs-time-rail span {
 div.mejs-controls .mejs-time-total,
 div.mejs-controls .mejs-time-current,
 div.mejs-controls .mejs-time-loaded {
-  -webkit-transition: width 100ms ease;
   transition: width 100ms ease;
 }
 /* line 39, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-total {
   background: #f0f0f0;
   background: rgba(240, 240, 240, 0.8);
-  background: -webkit-linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
   background: linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
 }
 /* line 43, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-current {
   background: #3caac8;
   background: rgba(60, 170, 200, 0.8);
-  background: -webkit-linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
   background: linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
 }
 /* line 47, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-loaded {
   background: #cacaca;
   background: rgba(202, 202, 202, 0.8);
-  background: -webkit-linear-gradient(rgba(60, 60, 60, 0.8), rgba(202, 202, 202, 0.8));
   background: linear-gradient(rgba(60, 60, 60, 0.8), rgba(202, 202, 202, 0.8));
 }
 /* line 51, ../sass/mediaelement/inc/_time.scss */
 div.mejs-controls span.mejs-time-buffering {
-  background-image: -webkit-linear-gradient(135deg, rgba(60, 60, 60, 0.15) 25%, transparent 25%, transparent 50%, rgba(60, 60, 60, 0.15) 50%, rgba(60, 60, 60, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(-45deg, rgba(60, 60, 60, 0.15) 25%, transparent 25%, transparent 50%, rgba(60, 60, 60, 0.15) 50%, rgba(60, 60, 60, 0.15) 75%, transparent 75%, transparent);
   background-size: 10.66667px 10.66667px;
-  -webkit-animation: buffering-stripes 2s linear infinite;
   animation: buffering-stripes 2s linear infinite;
 }
 /* line 57, ../sass/mediaelement/inc/_time.scss */
@@ -408,7 +395,6 @@ div.mejs-controls .mejs-volume-button .mejs-volume-slider {
   background-color: #f0f0f0;
   background: #f0f0f0;
   background: rgba(240, 240, 240, 0.8);
-  background: -webkit-linear-gradient(rgba(60, 60, 60, 0.8), rgba(240, 240, 240, 0.8));
   background: linear-gradient(rgba(60, 60, 60, 0.8), rgba(240, 240, 240, 0.8));
 }
 /* line 22, ../sass/mediaelement/inc/_volume.scss */
@@ -465,14 +451,12 @@ div.mejs-controls .mejs-horizontal-volume-slider div {
 div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
   background: #f0f0f0;
   background: rgba(240, 240, 240, 0.8);
-  background: -webkit-linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
   background: linear-gradient(rgba(202, 202, 202, 0.8), rgba(240, 240, 240, 0.8));
 }
 /* line 76, ../sass/mediaelement/inc/_volume.scss */
 div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current {
   background: #3caac8;
   background: rgba(60, 170, 200, 0.8);
-  background: -webkit-linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
   background: linear-gradient(rgba(24, 71, 83, 0.8), rgba(60, 170, 200, 0.8));
 }
 /* line 80, ../sass/mediaelement/inc/_volume.scss */
@@ -538,15 +522,6 @@ div.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-handle 
 /* line 6, ../sass/mediaelement/inc/_no-svg.scss */
 .no-svg .mejs-button button {
   background-image: "ME_controls_light.png";
-}
-
-@-webkit-keyframes buffering-stripes {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 32px 0;
-  }
 }
 
 @keyframes buffering-stripes {

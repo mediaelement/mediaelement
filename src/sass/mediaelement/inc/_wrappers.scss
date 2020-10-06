@@ -15,7 +15,7 @@
 
   div,
   span{
-    position: static;
+    position: absolute;
     display: block;
     margin: 0;
     padding: 0;
@@ -42,9 +42,6 @@
 
 // Wrapper / container elements.
 
-div.mejs-mediaelement {
-  position: relative;
-}
 div.mejs-background,
 div.mejs-layers,
 div.mejs-poster {
