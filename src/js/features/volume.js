@@ -78,7 +78,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		mute.innerHTML = mode === 'horizontal' ?
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
-			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider" ` +
+			`<a href="about:blank" class="${t.options.classPrefix}volume-slider" ` +
 				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
 				`aria-orientation="vertical">` +
 				`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
@@ -89,6 +89,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</a>`;
 
 		t.addControlElement(mute, 'volume');
+
+		const volumeSliderElement = mute.querySelector(`.${t.options.classPrefix}volume-slider`);
+		if (volumeSliderElement !== null) {
+			volumeSliderElement.addEventListener('click', function (event) {
+				event.preventDefault()
+			});
+		}
 
 		t.options.keyActions.push({
 			keys: [38], // UP
@@ -156,12 +163,15 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (mode === 'horizontal') {
 			const anchor = document.createElement('a');
 			anchor.className = `${t.options.classPrefix}horizontal-volume-slider`;
-			anchor.href = 'javascript:void(0);';
+			anchor.href = 'about:blank';
 			anchor.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
 			anchor.setAttribute('aria-valuemin', 0);
 			anchor.setAttribute('aria-valuemax', 100);
 			anchor.setAttribute('aria-valuenow', 100);
 			anchor.setAttribute('role', 'slider');
+			anchor.addEventListener('click', function (event) {
+				event.preventDefault();
+			});
 			anchor.innerHTML += `<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}horizontal-volume-total">` +
 				`<div class="${t.options.classPrefix}horizontal-volume-current"></div>` +
