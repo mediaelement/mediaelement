@@ -1714,6 +1714,10 @@ class MediaElementPlayer {
 		});
 
 		t.globalKeydownCallback = (event) => {
+			if (!document.activeElement) { 
+				return true;
+			}
+			
 			const
 				container = document.activeElement.closest(`.${t.options.classPrefix}container`),
 				target = t.media.closest(`.${t.options.classPrefix}container`)
