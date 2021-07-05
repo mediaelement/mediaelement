@@ -1,6 +1,6 @@
 ### Version History
 
-*4.2.17-rc1 (2020/05/14)*
+*4.2.17 (2021/07/05)*
 
 * Fix player.options.startVolume overwritten by 0 (#2783)
 * Fix some html comments typos, Strip out old 404 sources (#2772)

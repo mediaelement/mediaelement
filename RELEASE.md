@@ -5,9 +5,9 @@ Instructions for the Maintainer
  PREPARING A RELEASE - first steps, command line
 **********************
 
-- Switch to / create the <rel-4.x.x[-rc-x]> branch
+- Switch to / create the <rel-4.x.x> branch
 
-  git checkout -b rel-4.x.x-rc-x
+  git checkout -b rel-4.x.x
 
 - Run basic npm security checks;
 
@@ -39,7 +39,7 @@ Instructions for the Maintainer
 - add/commit all including build/
 
   git add --all
-  git commit -am "release 4.x.x-rc-x
+  git commit -am "release 4.x.x
 
 
 - *** check everything once
