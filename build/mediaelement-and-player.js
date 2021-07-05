@@ -3224,6 +3224,7 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.removeClass)(mute, t.options.classPrefix + 'mute');
 				(0, _dom.addClass)(mute, t.options.classPrefix + 'unmute');
 			} else {
+
 				positionVolumeHandle(media.volume);
 				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
 				(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
@@ -3344,7 +3345,6 @@ Object.assign(_player2.default.prototype, {
 					rendered = true;
 					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
-						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -3358,6 +3358,9 @@ Object.assign(_player2.default.prototype, {
 					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
 					}
+					if (player.options.startVolume === 0) {
+						player.options.startVolume = 0;
+					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
 				}
@@ -3367,7 +3370,9 @@ Object.assign(_player2.default.prototype, {
 
 		if (player.options.startVolume === 0 || media.originalNode.muted) {
 			media.setMuted(true);
-			player.options.startVolume = 0;
+			if (player.options.startVolume === 0) {
+				player.options.startVolume = 0;
+			}
 			toggleMute();
 		}
 
@@ -7260,6 +7265,7 @@ var YouTubeIframeRenderer = {
 			videoId: videoId,
 			height: height,
 			width: width,
+			host: youtube.options.youtube && youtube.options.youtube.nocookie ? 'https://www.youtube-nocookie.com' : undefined,
 			playerVars: Object.assign({
 				controls: 0,
 				rel: 0,
