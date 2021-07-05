@@ -10,6 +10,7 @@
 * Fix rare issue with offscreen.remove() #2752
 * Fix DFXP parsing: remove remnants of jQuery use (#2760)
 * Use the same rendererName variable when calculating isNative (#2759)
+* Improve formatting of the release.md docs
 
 *4.2.16 (2020/03/16)*
 
