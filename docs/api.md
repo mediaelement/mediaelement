@@ -54,6 +54,7 @@ Parameter | Type | Default | Description
 renderers | array | `[]` | List of the renderers to use
 fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
 pluginPath | string | `build/` | Path where Flash shims are located
+iconSprite | string | `mejs-controls.svg` | Path and file for svg icon sprite
 shimScriptAccess | string | `sameDomain` | Flag in `<object>` and `<embed>` to determine whether to use local or CDN files. Possible values: `always` (CDN version) or `sameDomain` (local files)
 success | callback | | Action(s) that will be executed as soon as the source is loaded; passes 2 arguments: `media` (the wrapper that mimics all the native events/properties/methods for all renderers) and `node` (the original HTML `video`, `audio` or `iframe` tag where the media was loaded originally; if `html5` is being used, `media` and `node` are the basically the same)
 error | callback | | Action(s) that will be executed if source doesn't load for any reason. Passes same arguments as `success`
