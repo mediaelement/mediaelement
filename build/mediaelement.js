@@ -599,6 +599,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 		pluginPath: 'build/',
 
+		iconSprite: 'mejs-controls.svg',
+
 		shimScriptAccess: 'sameDomain'
 	};
 

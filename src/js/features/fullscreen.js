@@ -85,9 +85,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			fullscreenTitle = isString(t.options.fullscreenText) ? t.options.fullscreenText : i18n.t('mejs.fullscreen'),
 			fullscreenBtn = document.createElement('div')
 		;
-
 		fullscreenBtn.className = `${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button`;
-		fullscreenBtn.innerHTML = `<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0"></button>`;
+		fullscreenBtn.innerHTML = `
+			<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0">
+				<svg xmlns="http://www.w3.org/2000/svg">
+					<use xlink:href="${t.media.options.iconSprite}#i-fullscreen"></use>
+				</svg>
+			</button>`;
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.addEventListener('click', () => {
@@ -280,8 +284,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			removeClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
-			addClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
+			t.fullscreenBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-unfullscreen"></use>`;
 		}
 
 		t.setControlsSize();
@@ -353,8 +356,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			removeClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
-			addClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+			t.fullscreenBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-fullscreen"></use>`;
 		}
 
 		t.setControlsSize();

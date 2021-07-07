@@ -59,7 +59,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildvolume (player, controls, layers, media) {
-
 		// Android and iOS don't support volume controls
 		if ((IS_ANDROID || IS_IOS) && this.options.hideVolumeOnTouchDevices) {
 			return;
@@ -77,7 +76,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
-			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0">
+				<svg xmlns="http://www.w3.org/2000/svg">
+					<use xlink:href="${t.media.options.iconSprite}#i-mute"></use>
+				</svg>
+			</button>` +
 			`<a class="${t.options.classPrefix}volume-slider" ` +
 				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
 				`aria-orientation="vertical">` +
@@ -203,7 +206,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (volume === null || isNaN(volume) || volume === undefined) {
 					return;
 				}
-
 				// correct to 0-1
 				volume = Math.max(0, volume);
 				volume = Math.min(volume, 1);
@@ -215,12 +217,19 @@ Object.assign(MediaElementPlayer.prototype, {
 					const button = mute.firstElementChild;
 					button.setAttribute('title', unmuteText);
 					button.setAttribute('aria-label', unmuteText);
+					if (button.querySelector('svg')) {
+						button.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-unmute"></use>`;
+					}
+
 				} else {
 					removeClass(mute, `${t.options.classPrefix}unmute`);
 					addClass(mute, `${t.options.classPrefix}mute`);
 					const button = mute.firstElementChild;
 					button.setAttribute('title', muteText);
 					button.setAttribute('aria-label', muteText);
+					if (button.querySelector('svg')) {
+						button.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-mute"></use>`;
+					}
 				}
 
 				const
@@ -297,7 +306,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					removeClass(mute, `${t.options.classPrefix}mute`);
 					addClass(mute, `${t.options.classPrefix}unmute`);
 				} else {
-					
+
 					positionVolumeHandle(media.volume);
 					removeClass(mute, `${t.options.classPrefix}unmute`);
 					addClass(mute, `${t.options.classPrefix}mute`);
@@ -438,7 +447,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						media.setMuted(true);
 					}
 					if(player.options.startVolume === 0){
-						player.options.startVolume = 0;	
+						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -451,8 +460,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (player.options.startVolume === 0 || media.originalNode.muted) {
 			media.setMuted(true);
 			if(player.options.startVolume === 0){
-				player.options.startVolume = 0;	
-			}			
+				player.options.startVolume = 0;
+			}
 			toggleMute();
 		}
 

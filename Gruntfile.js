@@ -204,6 +204,14 @@ module.exports = function (grunt) {
 				flatten: true,
 				filter: 'isFile'
 			},
+			demo: {
+				expand: true,
+				cwd: 'demo/',
+				src: ['*.*'],
+				dest: 'build/',
+				flatten: true,
+				filter: 'isFile'
+			},
 			translation: {
 				expand: true,
 				cwd: 'src/js/languages/',

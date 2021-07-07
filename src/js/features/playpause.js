@@ -47,7 +47,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		play.className = `${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ${t.options.classPrefix}play`;
-		play.innerHTML = `<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0"></button>`;
+		play.innerHTML = `<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0">
+				<svg xmlns="http://www.w3.org/2000/svg">
+					<use xlink:href="${t.media.options.iconSprite}#i-play"></use>
+				</svg>
+			</button>`;
 		play.addEventListener('click', () => {
 			if (t.paused) {
 				t.play();
@@ -70,6 +74,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}pause`);
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
+				playBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-pause"></use>`;
 			} else {
 
 				removeClass(play, `${t.options.classPrefix}pause`);
@@ -77,6 +82,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}play`);
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+				playBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-play"></use>`;
 			}
 		}
 
@@ -104,6 +110,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}replay`);
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+				playBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-replay"></use>`;
 			}
 		});
 	}

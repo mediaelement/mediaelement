@@ -595,9 +595,11 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.defaults = {
 		renderers: [],
 
-		fakeNodeName: 'mediaelementwrapper',
+		fakeNodeName: 'div',
 
 		pluginPath: 'build/',
+
+		iconSprite: 'mejs-controls.svg',
 
 		shimScriptAccess: 'sameDomain'
 	};
@@ -1215,9 +1217,8 @@ Object.assign(_player2.default.prototype, {
 		var t = this,
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
 		    fullscreenBtn = _document2.default.createElement('div');
-
 		fullscreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button';
-		fullscreenBtn.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0"></button>';
+		fullscreenBtn.innerHTML = '\n\t\t\t<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-fullscreen"></use>\n\t\t\t\t</svg>\n\t\t\t</button>';
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.addEventListener('click', function () {
@@ -1374,8 +1375,7 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
-			(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
+			t.fullscreenBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-unfullscreen"></use>';
 		}
 
 		t.setControlsSize();
@@ -1437,8 +1437,7 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
-			(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
+			t.fullscreenBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-fullscreen"></use>';
 		}
 
 		t.setControlsSize();
@@ -1491,7 +1490,7 @@ Object.assign(_player2.default.prototype, {
 		    play = _document2.default.createElement('div');
 
 		play.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + t.options.classPrefix + 'play';
-		play.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0"></button>';
+		play.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-play"></use>\n\t\t\t\t</svg>\n\t\t\t</button>';
 		play.addEventListener('click', function () {
 			if (t.paused) {
 				t.play();
@@ -1510,6 +1509,7 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'pause');
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
+				playBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-pause"></use>';
 			} else {
 
 				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
@@ -1517,6 +1517,7 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'play');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+				playBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-play"></use>';
 			}
 		}
 
@@ -1543,6 +1544,7 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
+				playBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-replay"></use>';
 			}
 		});
 	}
@@ -2318,7 +2320,7 @@ Object.assign(_player2.default.prototype, {
 
 		player.captionsButton = _document2.default.createElement('div');
 		player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
-		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
+		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-captions"></use>\n\t\t\t\t</svg>\n\t\t\t</button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
 
 		t.addControlElement(player.captionsButton, 'tracks');
 
@@ -2326,7 +2328,7 @@ Object.assign(_player2.default.prototype, {
 
 		player.chaptersButton = _document2.default.createElement('div');
 		player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
-		player.chaptersButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
+		player.chaptersButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-chapters"></use>\n\t\t\t\t</svg>\n\t\t\t</button>' + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
 
 		var subtitleCount = 0;
 
@@ -3057,7 +3059,7 @@ Object.assign(_player2.default.prototype, {
 		    mute = _document2.default.createElement('div');
 
 		mute.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute';
-		mute.innerHTML = mode === 'horizontal' ? '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' : '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
+		mute.innerHTML = mode === 'horizontal' ? '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' : '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-mute"></use>\n\t\t\t\t</svg>\n\t\t\t</button>' + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
 
 		t.addControlElement(mute, 'volume');
 
@@ -3160,12 +3162,18 @@ Object.assign(_player2.default.prototype, {
 				var button = mute.firstElementChild;
 				button.setAttribute('title', unmuteText);
 				button.setAttribute('aria-label', unmuteText);
+				if (button.querySelector('svg')) {
+					button.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-unmute"></use>';
+				}
 			} else {
 				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
 				(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
 				var _button = mute.firstElementChild;
 				_button.setAttribute('title', muteText);
 				_button.setAttribute('aria-label', muteText);
+				if (_button.querySelector('svg')) {
+					_button.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-mute"></use>';
+				}
 			}
 
 			var volumePercentage = volume * 100 + '%',
@@ -4898,7 +4906,7 @@ var MediaElementPlayer = function () {
 
 			loading.style.display = 'none';
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
-			loading.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-loading">' + ('<span class="' + t.options.classPrefix + 'overlay-loading-bg-img"></span>') + '</div>';
+			loading.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-loading">' + ('<div class="' + t.options.classPrefix + 'overlay-loading-bg-img">\n\t\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-loading-spinner"></use>\n\t\t\t\t\t</svg>\n\t\t\t\t</div>') + '</div>';
 			layers.appendChild(loading);
 
 			error.style.display = 'none';
@@ -4907,7 +4915,7 @@ var MediaElementPlayer = function () {
 			layers.appendChild(error);
 
 			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play';
-			bigPlay.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0" ' + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false"></div>');
+			bigPlay.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0" ' + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-overlay-play"></use>\n\t\t\t\t</svg>\n\t\t\t</div>');
 			bigPlay.addEventListener('click', function () {
 				if (t.options.clickToPlayPause) {
 
@@ -4933,6 +4941,14 @@ var MediaElementPlayer = function () {
 					bigPlay.dispatchEvent(event);
 					return false;
 				}
+			});
+
+			bigPlay.addEventListener('mouseover', function () {
+				bigPlay.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-overlay-play-hover"></use>';
+			});
+
+			bigPlay.addEventListener('mouseout', function () {
+				bigPlay.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-overlay-play"></use>';
 			});
 
 			layers.appendChild(bigPlay);

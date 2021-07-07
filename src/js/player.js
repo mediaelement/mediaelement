@@ -1572,8 +1572,13 @@ class MediaElementPlayer {
 
 		loading.style.display = 'none'; // start out hidden
 		loading.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer`;
-		loading.innerHTML = `<div class="${t.options.classPrefix}overlay-loading">` +
-			`<span class="${t.options.classPrefix}overlay-loading-bg-img"></span>` +
+		loading.innerHTML =
+			`<div class="${t.options.classPrefix}overlay-loading">` +
+				`<div class="${t.options.classPrefix}overlay-loading-bg-img">
+					<svg xmlns="http://www.w3.org/2000/svg">
+						<use xlink:href="${t.media.options.iconSprite}#i-loading-spinner"></use>
+					</svg>
+				</div>` +
 			`</div>`;
 		layers.appendChild(loading);
 
@@ -1584,7 +1589,11 @@ class MediaElementPlayer {
 
 		bigPlay.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play`;
 		bigPlay.innerHTML = `<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0" ` +
-			`aria-label="${i18n.t('mejs.play')}" aria-pressed="false"></div>`;
+			`aria-label="${i18n.t('mejs.play')}" aria-pressed="false">
+				<svg xmlns="http://www.w3.org/2000/svg">
+					<use xlink:href="${t.media.options.iconSprite}#i-overlay-play"></use>
+				</svg>
+			</div>`;
 		bigPlay.addEventListener('click', () => {
 			// Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay
 			// started and immediately stopped the video
@@ -1614,6 +1623,14 @@ class MediaElementPlayer {
 				bigPlay.dispatchEvent(event);
 				return false;
 			}
+		});
+
+		bigPlay.addEventListener('mouseover', function () {
+			bigPlay.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-overlay-play-hover"></use>`;
+		});
+
+		bigPlay.addEventListener('mouseout', function () {
+			bigPlay.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-overlay-play"></use>`;
 		});
 
 		layers.appendChild(bigPlay);
