@@ -595,7 +595,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.defaults = {
 		renderers: [],
 
-		fakeNodeName: 'mediaelementwrapper',
+		fakeNodeName: 'div',
 
 		pluginPath: 'build/',
 

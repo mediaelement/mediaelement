@@ -39,7 +39,7 @@ class MediaElement {
 			 * Name of MediaElement container
 			 * @type {String}
 			 */
-			fakeNodeName: 'mediaelementwrapper',
+			fakeNodeName: 'div',
 			/**
 			 * The path where shims are located
 			 * @type {String}
