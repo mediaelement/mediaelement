@@ -8,6 +8,7 @@ import MediaElementPlayer from '../player';
 import {convertSMPTEtoSeconds} from '../utils/time';
 import {isString, createEvent} from '../utils/general';
 import {addClass, removeClass, hasClass, siblings, ajax, fadeIn, fadeOut, visible} from '../utils/dom';
+import {generateControlButton} from '../utils/generate';
 
 /**
  * Closed Captions (CC) button
@@ -108,11 +109,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.captionsButton = document.createElement('div');
 		player.captionsButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}captions-button`;
 		player.captionsButton.innerHTML =
-			`<button type="button" aria-controls="${t.id}" title="${tracksTitle}" aria-label="${tracksTitle}" tabindex="0">
-				<svg xmlns="http://www.w3.org/2000/svg">
-					<use xlink:href="${t.media.options.iconSprite}#i-captions"></use>
-				</svg>
-			</button>` +
+			generateControlButton(t.id, tracksTitle, tracksTitle, `${t.media.options.iconSprite}#i-captions`) +
 			`<div class="${t.options.classPrefix}captions-selector ${t.options.classPrefix}offscreen">` +
 				`<ul class="${t.options.classPrefix}captions-selector-list">` +
 					`<li class="${t.options.classPrefix}captions-selector-list-item">` +
@@ -133,11 +130,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.chaptersButton = document.createElement('div');
 		player.chaptersButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}chapters-button`;
 		player.chaptersButton.innerHTML =
-			`<button type="button" aria-controls="${t.id}" title="${chaptersTitle}" aria-label="${chaptersTitle}" tabindex="0">
-				<svg xmlns="http://www.w3.org/2000/svg">
-					<use xlink:href="${t.media.options.iconSprite}#i-chapters"></use>
-				</svg>
-			</button>` +
+			generateControlButton(t.id, chaptersTitle, chaptersTitle, `${t.media.options.iconSprite}#i-chapters`) +
 			`<div class="${t.options.classPrefix}chapters-selector ${t.options.classPrefix}offscreen">` +
 				`<ul class="${t.options.classPrefix}chapters-selector-list"></ul>` +
 			`</div>`;

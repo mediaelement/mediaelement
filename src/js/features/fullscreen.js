@@ -9,6 +9,7 @@ import * as Features from '../utils/constants';
 import {isString, createEvent} from '../utils/general';
 import {addClass, removeClass} from '../utils/dom';
 import {getTypeFromFile} from '../utils/media';
+import {generateControlButton} from '../utils/generate';
 
 
 /**
@@ -86,12 +87,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			fullscreenBtn = document.createElement('div')
 		;
 		fullscreenBtn.className = `${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button`;
-		fullscreenBtn.innerHTML = `
-			<button type="button" aria-controls="${t.id}" title="${fullscreenTitle}" aria-label="${fullscreenTitle}" tabindex="0">
-				<svg xmlns="http://www.w3.org/2000/svg">
-					<use xlink:href="${t.media.options.iconSprite}#i-fullscreen"></use>
-				</svg>
-			</button>`;
+		fullscreenBtn.innerHTML = generateControlButton(t.id, fullscreenTitle, fullscreenTitle, `${t.media.options.iconSprite}#i-fullscreen`);
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.addEventListener('click', () => {
@@ -284,7 +280,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-unfullscreen"></use>`;
+			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-unfullscreen`);
 		}
 
 		t.setControlsSize();
@@ -356,7 +352,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-fullscreen"></use>`;
+			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-fullscreen`);
 		}
 
 		t.setControlsSize();

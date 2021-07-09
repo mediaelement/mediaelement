@@ -7,6 +7,7 @@ import i18n from '../core/i18n';
 import {IS_ANDROID, IS_IOS} from '../utils/constants';
 import {isString, createEvent} from '../utils/general';
 import {addClass, removeClass, offset} from '../utils/dom';
+import {generateControlButton} from '../utils/generate';
 
 /**
  * Volume button
@@ -40,7 +41,7 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	videoVolume: 'vertical',
+	videoVolume: 'horizontal',
 	/**
 	 * Initial volume when the player starts (overridden by user cookie)
 	 * @type {Number}
@@ -75,12 +76,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
-			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
-			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0">
-				<svg xmlns="http://www.w3.org/2000/svg">
-					<use xlink:href="${t.media.options.iconSprite}#i-mute"></use>
-				</svg>
-			</button>` +
+			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}#i-mute`) :
+			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}#i-mute`) +
 			`<a class="${t.options.classPrefix}volume-slider" ` +
 				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
 				`aria-orientation="vertical">` +
@@ -218,7 +215,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					button.setAttribute('title', unmuteText);
 					button.setAttribute('aria-label', unmuteText);
 					if (button.querySelector('svg')) {
-						button.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-unmute"></use>`;
+						button.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-unmute`);
 					}
 
 				} else {
@@ -228,7 +225,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					button.setAttribute('title', muteText);
 					button.setAttribute('aria-label', muteText);
 					if (button.querySelector('svg')) {
-						button.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-mute"></use>`;
+						button.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-mute`);
 					}
 				}
 

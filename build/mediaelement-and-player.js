@@ -573,7 +573,7 @@ var _mejs2 = _interopRequireDefault(_mejs);
 
 var _general = _dereq_(27);
 
-var _media2 = _dereq_(28);
+var _media2 = _dereq_(29);
 
 var _renderer = _dereq_(8);
 
@@ -1005,7 +1005,7 @@ _mejs2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"25":25,"27":27,"28":28,"3":3,"7":7,"8":8}],7:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"29":29,"3":3,"7":7,"8":8}],7:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1178,7 +1178,9 @@ var _general = _dereq_(27);
 
 var _dom = _dereq_(26);
 
-var _media = _dereq_(28);
+var _media = _dereq_(29);
+
+var _generate = _dereq_(28);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1218,7 +1220,7 @@ Object.assign(_player2.default.prototype, {
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
 		    fullscreenBtn = _document2.default.createElement('div');
 		fullscreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button';
-		fullscreenBtn.innerHTML = '\n\t\t\t<button type="button" aria-controls="' + t.id + '" title="' + fullscreenTitle + '" aria-label="' + fullscreenTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-fullscreen"></use>\n\t\t\t\t</svg>\n\t\t\t</button>';
+		fullscreenBtn.innerHTML = (0, _generate.generateControlButton)(t.id, fullscreenTitle, fullscreenTitle, t.media.options.iconSprite + '#i-fullscreen');
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.addEventListener('click', function () {
@@ -1375,7 +1377,7 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-unfullscreen"></use>';
+			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-unfullscreen');
 		}
 
 		t.setControlsSize();
@@ -1437,7 +1439,7 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-fullscreen"></use>';
+			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-fullscreen');
 		}
 
 		t.setControlsSize();
@@ -1454,7 +1456,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"25":25,"26":26,"27":27,"28":28,"3":3,"5":5}],10:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"25":25,"26":26,"27":27,"28":28,"29":29,"3":3,"5":5}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -1473,6 +1475,8 @@ var _general = _dereq_(27);
 
 var _dom = _dereq_(26);
 
+var _generate = _dereq_(28);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Object.assign(_player.config, {
@@ -1490,7 +1494,7 @@ Object.assign(_player2.default.prototype, {
 		    play = _document2.default.createElement('div');
 
 		play.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + t.options.classPrefix + 'play';
-		play.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + playTitle + '" aria-label="' + pauseTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-play"></use>\n\t\t\t\t</svg>\n\t\t\t</button>';
+		play.innerHTML = (0, _generate.generateControlButton)(t.id, pauseTitle, playTitle, t.media.options.iconSprite + '#i-play');
 		play.addEventListener('click', function () {
 			if (t.paused) {
 				t.play();
@@ -1509,7 +1513,7 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'pause');
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
-				playBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-pause"></use>';
+				playBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-pause');
 			} else {
 
 				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
@@ -1517,7 +1521,7 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'play');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
-				playBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-play"></use>';
+				playBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-play');
 			}
 		}
 
@@ -1544,13 +1548,13 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
-				playBtn.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-replay"></use>';
+				playBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-replay');
 			}
 		});
 	}
 });
 
-},{"16":16,"2":2,"26":26,"27":27,"5":5}],11:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"26":26,"27":27,"28":28,"5":5}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -1567,7 +1571,7 @@ var _i18n2 = _interopRequireDefault(_i18n);
 
 var _constants = _dereq_(25);
 
-var _time = _dereq_(30);
+var _time = _dereq_(31);
 
 var _dom = _dereq_(26);
 
@@ -2120,7 +2124,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"25":25,"26":26,"30":30,"5":5}],12:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"25":25,"26":26,"31":31,"5":5}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -2131,7 +2135,7 @@ var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(30);
+var _time = _dereq_(31);
 
 var _dom = _dereq_(26);
 
@@ -2242,7 +2246,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"26":26,"30":30}],13:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"26":26,"31":31}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -2261,11 +2265,13 @@ var _player = _dereq_(16);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(30);
+var _time = _dereq_(31);
 
 var _general = _dereq_(27);
 
 var _dom = _dereq_(26);
+
+var _generate = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2320,7 +2326,7 @@ Object.assign(_player2.default.prototype, {
 
 		player.captionsButton = _document2.default.createElement('div');
 		player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
-		player.captionsButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + tracksTitle + '" aria-label="' + tracksTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-captions"></use>\n\t\t\t\t</svg>\n\t\t\t</button>' + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
+		player.captionsButton.innerHTML = (0, _generate.generateControlButton)(t.id, tracksTitle, tracksTitle, t.media.options.iconSprite + '#i-captions') + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
 
 		t.addControlElement(player.captionsButton, 'tracks');
 
@@ -2328,7 +2334,7 @@ Object.assign(_player2.default.prototype, {
 
 		player.chaptersButton = _document2.default.createElement('div');
 		player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
-		player.chaptersButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + chaptersTitle + '" aria-label="' + chaptersTitle + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-chapters"></use>\n\t\t\t\t</svg>\n\t\t\t</button>' + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
+		player.chaptersButton.innerHTML = (0, _generate.generateControlButton)(t.id, chaptersTitle, chaptersTitle, t.media.options.iconSprite + '#i-chapters') + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
 
 		var subtitleCount = 0;
 
@@ -3006,7 +3012,7 @@ _mejs2.default.TrackFormatParser = {
 	}
 };
 
-},{"16":16,"2":2,"26":26,"27":27,"30":30,"5":5,"7":7}],14:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"26":26,"27":27,"28":28,"31":31,"5":5,"7":7}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -3027,6 +3033,8 @@ var _general = _dereq_(27);
 
 var _dom = _dereq_(26);
 
+var _generate = _dereq_(28);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Object.assign(_player.config, {
@@ -3040,7 +3048,7 @@ Object.assign(_player.config, {
 
 	audioVolume: 'horizontal',
 
-	videoVolume: 'vertical',
+	videoVolume: 'horizontal',
 
 	startVolume: 0.8
 });
@@ -3059,7 +3067,7 @@ Object.assign(_player2.default.prototype, {
 		    mute = _document2.default.createElement('div');
 
 		mute.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute';
-		mute.innerHTML = mode === 'horizontal' ? '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' : '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-mute"></use>\n\t\t\t\t</svg>\n\t\t\t</button>' + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
+		mute.innerHTML = mode === 'horizontal' ? (0, _generate.generateControlButton)(t.id, muteText, muteText, t.media.options.iconSprite + '#i-mute') : (0, _generate.generateControlButton)(t.id, muteText, muteText, t.media.options.iconSprite + '#i-mute') + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
 
 		t.addControlElement(mute, 'volume');
 
@@ -3163,7 +3171,7 @@ Object.assign(_player2.default.prototype, {
 				button.setAttribute('title', unmuteText);
 				button.setAttribute('aria-label', unmuteText);
 				if (button.querySelector('svg')) {
-					button.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-unmute"></use>';
+					button.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-unmute');
 				}
 			} else {
 				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
@@ -3172,7 +3180,7 @@ Object.assign(_player2.default.prototype, {
 				_button.setAttribute('title', muteText);
 				_button.setAttribute('aria-label', muteText);
 				if (_button.querySelector('svg')) {
-					_button.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-mute"></use>';
+					_button.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-mute');
 				}
 			}
 
@@ -3390,7 +3398,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"25":25,"26":26,"27":27,"5":5}],15:[function(_dereq_,module,exports){
+},{"16":16,"2":2,"25":25,"26":26,"27":27,"28":28,"5":5}],15:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3520,13 +3528,15 @@ var _constants = _dereq_(25);
 
 var _general = _dereq_(27);
 
-var _time = _dereq_(30);
+var _time = _dereq_(31);
 
-var _media = _dereq_(28);
+var _media = _dereq_(29);
 
 var _dom = _dereq_(26);
 
 var dom = _interopRequireWildcard(_dom);
+
+var _generate = _dereq_(28);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -4915,7 +4925,8 @@ var MediaElementPlayer = function () {
 			layers.appendChild(error);
 
 			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play';
-			bigPlay.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-button" role="button" tabindex="0" ' + ('aria-label="' + _i18n2.default.t('mejs.play') + '" aria-pressed="false">\n\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-overlay-play"></use>\n\t\t\t\t</svg>\n\t\t\t</div>');
+			bigPlay.innerHTML = (0, _generate.generateControlButton)(t.id, _i18n2.default.t('mejs.play'), _i18n2.default.t('mejs.play'), t.media.options.iconSprite + '#i-overlay-play', t.options.classPrefix + 'overlay-button');
+
 			bigPlay.addEventListener('click', function () {
 				if (t.options.clickToPlayPause) {
 
@@ -4944,11 +4955,11 @@ var MediaElementPlayer = function () {
 			});
 
 			bigPlay.addEventListener('mouseover', function () {
-				bigPlay.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-overlay-play-hover"></use>';
+				bigPlay.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-overlay-play-hover');
 			});
 
 			bigPlay.addEventListener('mouseout', function () {
-				bigPlay.querySelector('svg').innerHTML = '<use xlink:href="' + t.media.options.iconSprite + '#i-overlay-play"></use>';
+				bigPlay.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-overlay-play');
 			});
 
 			layers.appendChild(bigPlay);
@@ -5327,7 +5338,7 @@ _mejs2.default.MediaElementPlayer = MediaElementPlayer;
 
 exports.default = MediaElementPlayer;
 
-},{"17":17,"2":2,"25":25,"26":26,"27":27,"28":28,"3":3,"30":30,"5":5,"6":6,"7":7}],17:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"25":25,"26":26,"27":27,"28":28,"29":29,"3":3,"31":31,"5":5,"6":6,"7":7}],17:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5575,7 +5586,7 @@ var _renderer = _dereq_(8);
 
 var _general = _dereq_(27);
 
-var _media = _dereq_(28);
+var _media = _dereq_(29);
 
 var _constants = _dereq_(25);
 
@@ -5805,7 +5816,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"25":25,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],20:[function(_dereq_,module,exports){
+},{"25":25,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],20:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5837,7 +5848,7 @@ var _general = _dereq_(27);
 
 var _constants = _dereq_(25);
 
-var _media = _dereq_(28);
+var _media = _dereq_(29);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6247,7 +6258,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"2":2,"25":25,"27":27,"28":28,"3":3,"5":5,"7":7,"8":8}],21:[function(_dereq_,module,exports){
+},{"2":2,"25":25,"27":27,"29":29,"3":3,"5":5,"7":7,"8":8}],21:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -6266,7 +6277,7 @@ var _general = _dereq_(27);
 
 var _constants = _dereq_(25);
 
-var _media = _dereq_(28);
+var _media = _dereq_(29);
 
 var _dom = _dereq_(26);
 
@@ -6496,7 +6507,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"25":25,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],22:[function(_dereq_,module,exports){
+},{"25":25,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -6515,7 +6526,7 @@ var _general = _dereq_(27);
 
 var _constants = _dereq_(25);
 
-var _media = _dereq_(28);
+var _media = _dereq_(29);
 
 var _dom = _dereq_(26);
 
@@ -6785,7 +6796,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"25":25,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
+},{"25":25,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6951,7 +6962,7 @@ var _renderer = _dereq_(8);
 
 var _general = _dereq_(27);
 
-var _media = _dereq_(28);
+var _media = _dereq_(29);
 
 var _dom = _dereq_(26);
 
@@ -7471,7 +7482,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(YouTubeIframeRenderer);
 
-},{"2":2,"26":26,"27":27,"28":28,"3":3,"7":7,"8":8}],25:[function(_dereq_,module,exports){
+},{"2":2,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],25:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8028,6 +8039,47 @@ _mejs2.default.Utils.isString = isString;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.generateControlButton = generateControlButton;
+
+var _mejs = _dereq_(7);
+
+var _mejs2 = _interopRequireDefault(_mejs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function generateControlButton(ariaControls, ariaLabel, title, icon) {
+	var buttonClass = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+
+
+	if (typeof ariaControls !== 'string') {
+		throw new Error('`ariaControls` argument must be a string');
+	}
+	if (typeof ariaLabel !== 'string') {
+		throw new Error('`ariaLabel` argument must be a string');
+	}
+	if (typeof title !== 'string') {
+		throw new Error('`title` argument must be a string');
+	}
+	if (typeof icon !== 'string') {
+		throw new Error('`icon` argument must be a string');
+	}
+
+	var className = buttonClass ? 'class=' + buttonClass + ' ' : '';
+
+	var button = '<button ' + className + ' type="button" aria-controls="' + ariaControls + '" title="' + title + '" aria-label="' + ariaLabel + '" tabindex="0">\n\t\t\t<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">\n\t\t\t\t<use xlink:href="' + icon + '"></use>\n\t\t\t</svg>\n\t\t</button>';
+
+	return button;
+}
+
+_mejs2.default.Utils = _mejs2.default.Utils || {};
+_mejs2.default.Utils.generateControlButton = generateControlButton;
+
+},{"7":7}],29:[function(_dereq_,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 exports.typeChecks = undefined;
 exports.absolutizeUrl = absolutizeUrl;
 exports.formatType = formatType;
@@ -8147,7 +8199,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"27":27,"7":7}],29:[function(_dereq_,module,exports){
+},{"27":27,"7":7}],30:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -8300,7 +8352,7 @@ if (!window.Promise) {
 	}
 })(window.Node || window.Element);
 
-},{"2":2,"4":4}],30:[function(_dereq_,module,exports){
+},{"2":2,"4":4}],31:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8553,4 +8605,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"7":7}]},{},[29,6,5,15,23,20,19,21,22,24,16,18,17,9,10,11,12,13,14]);
+},{"7":7}]},{},[30,6,5,15,23,20,19,21,22,24,16,18,17,9,10,11,12,13,14]);

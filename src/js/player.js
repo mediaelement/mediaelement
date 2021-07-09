@@ -20,6 +20,7 @@ import {splitEvents, isNodeAfter, createEvent, isString} from './utils/general';
 import {calculateTimeFormat} from './utils/time';
 import {getTypeFromFile} from './utils/media';
 import * as dom from './utils/dom';
+import {generateControlButton} from "./utils/generate";
 
 mejs.mepIndex = 0;
 
@@ -1588,12 +1589,8 @@ class MediaElementPlayer {
 		layers.appendChild(error);
 
 		bigPlay.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play`;
-		bigPlay.innerHTML = `<div class="${t.options.classPrefix}overlay-button" role="button" tabindex="0" ` +
-			`aria-label="${i18n.t('mejs.play')}" aria-pressed="false">
-				<svg xmlns="http://www.w3.org/2000/svg">
-					<use xlink:href="${t.media.options.iconSprite}#i-overlay-play"></use>
-				</svg>
-			</div>`;
+		bigPlay.innerHTML = generateControlButton(t.id, i18n.t('mejs.play'), i18n.t('mejs.play'), `${t.media.options.iconSprite}#i-overlay-play`,`${t.options.classPrefix}overlay-button`);
+
 		bigPlay.addEventListener('click', () => {
 			// Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay
 			// started and immediately stopped the video
@@ -1625,12 +1622,12 @@ class MediaElementPlayer {
 			}
 		});
 
-		bigPlay.addEventListener('mouseover', function () {
-			bigPlay.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-overlay-play-hover"></use>`;
+		bigPlay.addEventListener('mouseover', () => {
+			bigPlay.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-overlay-play-hover`);
 		});
 
-		bigPlay.addEventListener('mouseout', function () {
-			bigPlay.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-overlay-play"></use>`;
+		bigPlay.addEventListener('mouseout', () => {
+			bigPlay.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-overlay-play`);
 		});
 
 		layers.appendChild(bigPlay);

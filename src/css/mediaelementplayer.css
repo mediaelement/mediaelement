@@ -141,6 +141,11 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     cursor: pointer;
 }
 
+.mejs__overlay-button {
+    background: transparent;
+    border: 0;
+}
+
 .mejs__overlay-button,
 .mejs__overlay-button svg {
     height: 5rem;
@@ -223,7 +228,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 /* :focus for accessibility */
 .mejs__button > button:focus {
-    outline: dotted 1px #999;
+    outline: dotted 0.125rem #fff;
 }
 
 .mejs__container-keyboard-inactive a,

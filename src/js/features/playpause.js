@@ -6,6 +6,7 @@ import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
 import {isString} from '../utils/general';
 import {addClass, removeClass} from '../utils/dom';
+import {generateControlButton} from '../utils/generate';
 
 /**
  * Play/Pause button
@@ -47,11 +48,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		play.className = `${t.options.classPrefix}button ${t.options.classPrefix}playpause-button ${t.options.classPrefix}play`;
-		play.innerHTML = `<button type="button" aria-controls="${t.id}" title="${playTitle}" aria-label="${pauseTitle}" tabindex="0">
-				<svg xmlns="http://www.w3.org/2000/svg">
-					<use xlink:href="${t.media.options.iconSprite}#i-play"></use>
-				</svg>
-			</button>`;
+		play.innerHTML = generateControlButton(t.id, pauseTitle, playTitle, `${t.media.options.iconSprite}#i-play`);
 		play.addEventListener('click', () => {
 			if (t.paused) {
 				t.play();
@@ -74,7 +71,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}pause`);
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
-				playBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-pause"></use>`;
+				playBtn.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-pause`);
 			} else {
 
 				removeClass(play, `${t.options.classPrefix}pause`);
@@ -82,7 +79,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}play`);
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
-				playBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-play"></use>`;
+				playBtn.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-play`);
 			}
 		}
 
@@ -110,7 +107,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				addClass(play, `${t.options.classPrefix}replay`);
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
-				playBtn.querySelector('svg').innerHTML = `<use xlink:href="${t.media.options.iconSprite}#i-replay"></use>`;
+				playBtn.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-replay`);
 			}
 		});
 	}
