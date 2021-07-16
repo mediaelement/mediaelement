@@ -2,6 +2,7 @@
 
 import document from 'global/document';
 import Promise from 'promise-polyfill';
+import svg4everybody from 'svg4everybody';
 
 /**
  * Polyfill
@@ -163,6 +164,10 @@ if (/firefox/i.test(navigator.userAgent)) {
 if (!window.Promise) {
 	window.Promise = Promise;
 }
+
+// Integrate svg4everybody polyfill
+// Used https://github.com/jonathantneal/svg4everybody
+svg4everybody();
 
 // Overwrites native 'children' prototype.
 // Adds Document & DocumentFragment support for IE9 & Safari.

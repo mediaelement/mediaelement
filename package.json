@@ -49,7 +49,8 @@
     "uglify-js": "^3.0.10"
   },
   "dependencies": {
-    "global": "^4.3.1"
+    "global": "^4.3.1",
+    "svg4everybody": "^2.1.9"
   },
   "scripts": {
     "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register --require babel-polyfill --recursive test/unit",
