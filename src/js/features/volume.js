@@ -41,7 +41,7 @@ Object.assign(config, {
 	/**
 	 * @type {String}
 	 */
-	videoVolume: 'horizontal',
+	videoVolume: 'vertical',
 	/**
 	 * Initial volume when the player starts (overridden by user cookie)
 	 * @type {Number}
