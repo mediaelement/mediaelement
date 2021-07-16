@@ -3,11 +3,13 @@
 import mejs from '../core/mejs';
 
 /**
+ * Generate HTML for control button with inline SVG inside
  *
- * @param {String} ariaControls
- * @param {String} ariaLabel
- * @param {String} title
- * @param {String} icon
+ * @param {String} ariaControls id for aria-controls attribute
+ * @param {String} ariaLabel text for aria-label attribute
+ * @param {String} title text for title attribute
+ * @param {String} icon absolute path for the svg icon
+ * @param {String} [buttonClass=null] name for css class
  * @return {String}
  */
 export function generateControlButton (ariaControls, ariaLabel, title, icon, buttonClass = null) {
@@ -27,14 +29,12 @@ export function generateControlButton (ariaControls, ariaLabel, title, icon, but
 
 	const className = buttonClass ? `class=${buttonClass} ` : '';
 
-	const button =
-		`<button ${className} type="button" aria-controls="${ariaControls}" title="${title}" aria-label="${ariaLabel}" tabindex="0">
+	return `<button ${className} aria-controls="${ariaControls}" title="${title}" aria-label="${ariaLabel}">
 			<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
 				<use xlink:href="${icon}"></use>
 			</svg>
 		</button>`;
 
-	return button;
 }
 
 mejs.Utils = mejs.Utils || {};
