@@ -146,6 +146,18 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     border: 0;
 }
 
+.mejs__overlay:hover .mejs__overlay-button svg {
+    opacity: 1;
+}
+
+.mejs__overlay-button svg {
+    opacity: 0.75;
+}
+
+.mejs__overlay-button:focus svg {
+    opacity: 1;
+}
+
 .mejs__overlay-button,
 .mejs__overlay-button svg {
     height: 5rem;

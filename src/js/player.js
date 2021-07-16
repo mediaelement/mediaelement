@@ -1622,14 +1622,6 @@ class MediaElementPlayer {
 			}
 		});
 
-		bigPlay.addEventListener('mouseover', () => {
-			bigPlay.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-overlay-play-hover`);
-		});
-
-		bigPlay.addEventListener('mouseout', () => {
-			bigPlay.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-overlay-play`);
-		});
-
 		layers.appendChild(bigPlay);
 
 		if (t.media.rendererName !== null && ((/(youtube|facebook)/i.test(t.media.rendererName) &&
@@ -1728,10 +1720,10 @@ class MediaElementPlayer {
 		});
 
 		t.globalKeydownCallback = (event) => {
-			if (!document.activeElement) { 
+			if (!document.activeElement) {
 				return true;
 			}
-			
+
 			const
 				container = document.activeElement.closest(`.${t.options.classPrefix}container`),
 				target = t.media.closest(`.${t.options.classPrefix}container`)
