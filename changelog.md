@@ -1,5 +1,13 @@
 ### Version History
 
+*5.0.0 (2021/07/16)*
+
+* Change default value for fakeNodeName to `div` (#2800)
+* Copy all files from `/demo` folder to `/build` folder with grunt task
+* Replace background sprite for controls with svg icon sprite
+* New option `iconSprite`: path where the svg icon sprite is located, see [standalone documentation](https://github.com/mediaelement/mediaelement/blob/master/docs/api.md#standalone)
+* Change `px` to `rem` values in styles
+
 *4.2.17 (2021/07/05)*
 
 * Fix player.options.startVolume overwritten by 0 (#2783)
