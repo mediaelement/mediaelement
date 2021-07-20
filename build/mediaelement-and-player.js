@@ -284,6 +284,113 @@ module.exports = win;
 })(this);
 
 },{}],5:[function(_dereq_,module,exports){
+!function(root, factory) {
+    "function" == typeof define && define.amd ? // AMD. Register as an anonymous module unless amdModuleId is set
+    define([], function() {
+        return root.svg4everybody = factory();
+    }) : "object" == typeof module && module.exports ? // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory() : root.svg4everybody = factory();
+}(this, function() {
+    /*! svg4everybody v2.1.9 | github.com/jonathantneal/svg4everybody */
+    function embed(parent, svg, target) {
+        // if the target exists
+        if (target) {
+            // create a document fragment to hold the contents of the target
+            var fragment = document.createDocumentFragment(), viewBox = !svg.hasAttribute("viewBox") && target.getAttribute("viewBox");
+            // conditionally set the viewBox on the svg
+            viewBox && svg.setAttribute("viewBox", viewBox);
+            // copy the contents of the clone into the fragment
+            for (// clone the target
+            var clone = target.cloneNode(!0); clone.childNodes.length; ) {
+                fragment.appendChild(clone.firstChild);
+            }
+            // append the fragment into the svg
+            parent.appendChild(fragment);
+        }
+    }
+    function loadreadystatechange(xhr) {
+        // listen to changes in the request
+        xhr.onreadystatechange = function() {
+            // if the request is ready
+            if (4 === xhr.readyState) {
+                // get the cached html document
+                var cachedDocument = xhr._cachedDocument;
+                // ensure the cached html document based on the xhr response
+                cachedDocument || (cachedDocument = xhr._cachedDocument = document.implementation.createHTMLDocument(""), 
+                cachedDocument.body.innerHTML = xhr.responseText, xhr._cachedTarget = {}), // clear the xhr embeds list and embed each item
+                xhr._embeds.splice(0).map(function(item) {
+                    // get the cached target
+                    var target = xhr._cachedTarget[item.id];
+                    // ensure the cached target
+                    target || (target = xhr._cachedTarget[item.id] = cachedDocument.getElementById(item.id)), 
+                    // embed the target into the svg
+                    embed(item.parent, item.svg, target);
+                });
+            }
+        }, // test the ready state change immediately
+        xhr.onreadystatechange();
+    }
+    function svg4everybody(rawopts) {
+        function oninterval() {
+            // while the index exists in the live <use> collection
+            for (// get the cached <use> index
+            var index = 0; index < uses.length; ) {
+                // get the current <use>
+                var use = uses[index], parent = use.parentNode, svg = getSVGAncestor(parent), src = use.getAttribute("xlink:href") || use.getAttribute("href");
+                if (!src && opts.attributeName && (src = use.getAttribute(opts.attributeName)), 
+                svg && src) {
+                    if (polyfill) {
+                        if (!opts.validate || opts.validate(src, svg, use)) {
+                            // remove the <use> element
+                            parent.removeChild(use);
+                            // parse the src and get the url and id
+                            var srcSplit = src.split("#"), url = srcSplit.shift(), id = srcSplit.join("#");
+                            // if the link is external
+                            if (url.length) {
+                                // get the cached xhr request
+                                var xhr = requests[url];
+                                // ensure the xhr request exists
+                                xhr || (xhr = requests[url] = new XMLHttpRequest(), xhr.open("GET", url), xhr.send(), 
+                                xhr._embeds = []), // add the svg and id as an item to the xhr embeds list
+                                xhr._embeds.push({
+                                    parent: parent,
+                                    svg: svg,
+                                    id: id
+                                }), // prepare the xhr ready state change event
+                                loadreadystatechange(xhr);
+                            } else {
+                                // embed the local id into the svg
+                                embed(parent, svg, document.getElementById(id));
+                            }
+                        } else {
+                            // increase the index when the previous value was not "valid"
+                            ++index, ++numberOfSvgUseElementsToBypass;
+                        }
+                    }
+                } else {
+                    // increase the index when the previous value was not "valid"
+                    ++index;
+                }
+            }
+            // continue the interval
+            (!uses.length || uses.length - numberOfSvgUseElementsToBypass > 0) && requestAnimationFrame(oninterval, 67);
+        }
+        var polyfill, opts = Object(rawopts), newerIEUA = /\bTrident\/[567]\b|\bMSIE (?:9|10)\.0\b/, webkitUA = /\bAppleWebKit\/(\d+)\b/, olderEdgeUA = /\bEdge\/12\.(\d+)\b/, edgeUA = /\bEdge\/.(\d+)\b/, inIframe = window.top !== window.self;
+        polyfill = "polyfill" in opts ? opts.polyfill : newerIEUA.test(navigator.userAgent) || (navigator.userAgent.match(olderEdgeUA) || [])[1] < 10547 || (navigator.userAgent.match(webkitUA) || [])[1] < 537 || edgeUA.test(navigator.userAgent) && inIframe;
+        // create xhr requests object
+        var requests = {}, requestAnimationFrame = window.requestAnimationFrame || setTimeout, uses = document.getElementsByTagName("use"), numberOfSvgUseElementsToBypass = 0;
+        // conditionally start the interval if the polyfill is active
+        polyfill && oninterval();
+    }
+    function getSVGAncestor(node) {
+        for (var svg = node; "svg" !== svg.nodeName.toLowerCase() && (svg = svg.parentNode); ) {}
+        return svg;
+    }
+    return svg4everybody;
+});
+},{}],6:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -292,13 +399,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _en = _dereq_(15);
+var _en = _dereq_(16);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -550,7 +657,7 @@ if (typeof mejsL10n !== 'undefined') {
 
 exports.default = i18n;
 
-},{"15":15,"27":27,"7":7}],6:[function(_dereq_,module,exports){
+},{"16":16,"28":28,"8":8}],7:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -567,17 +674,17 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _media2 = _dereq_(29);
+var _media2 = _dereq_(30);
 
-var _renderer = _dereq_(8);
+var _renderer = _dereq_(9);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -884,11 +991,13 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 						}
 					});
 				}
+				return response;
 			} else {
-				t.mediaElement.renderer[methodName](args);
+				return t.mediaElement.renderer[methodName](args);
 			}
 		} catch (e) {
 			t.mediaElement.generateError(e, mediaFiles);
+			throw e;
 		}
 	},
 	    assignMethods = function assignMethods(methodName) {
@@ -899,13 +1008,14 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function') {
 				if (t.mediaElement.promises.length) {
-					Promise.all(t.mediaElement.promises).then(function () {
-						triggerAction(methodName, args);
+					return Promise.all(t.mediaElement.promises).then(function () {
+						return triggerAction(methodName, args);
 					}).catch(function (e) {
 						t.mediaElement.generateError(e, mediaFiles);
+						return Promise.reject(e);
 					});
 				} else {
-					triggerAction(methodName, args);
+					return triggerAction(methodName, args);
 				}
 			}
 			return null;
@@ -1005,7 +1115,7 @@ _mejs2.default.MediaElement = MediaElement;
 
 exports.default = MediaElement;
 
-},{"2":2,"25":25,"27":27,"29":29,"3":3,"7":7,"8":8}],7:[function(_dereq_,module,exports){
+},{"2":2,"26":26,"28":28,"3":3,"30":30,"8":8,"9":9}],8:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1037,7 +1147,7 @@ _window2.default.mejs = mejs;
 
 exports.default = mejs;
 
-},{"3":3}],8:[function(_dereq_,module,exports){
+},{"3":3}],9:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1049,7 +1159,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
@@ -1151,7 +1261,7 @@ var renderer = exports.renderer = new Renderer();
 
 _mejs2.default.Renderers = renderer;
 
-},{"7":7}],9:[function(_dereq_,module,exports){
+},{"8":8}],10:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -1162,25 +1272,25 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _i18n = _dereq_(5);
+var _i18n = _dereq_(6);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _player = _dereq_(16);
+var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
 var Features = _interopRequireWildcard(_constants);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
-var _media = _dereq_(29);
+var _media = _dereq_(30);
 
-var _generate = _dereq_(28);
+var _generate = _dereq_(29);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1220,7 +1330,7 @@ Object.assign(_player2.default.prototype, {
 		    fullscreenTitle = (0, _general.isString)(t.options.fullscreenText) ? t.options.fullscreenText : _i18n2.default.t('mejs.fullscreen'),
 		    fullscreenBtn = _document2.default.createElement('div');
 		fullscreenBtn.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'fullscreen-button';
-		fullscreenBtn.innerHTML = (0, _generate.generateControlButton)(t.id, fullscreenTitle, fullscreenTitle, t.media.options.iconSprite + '#i-fullscreen');
+		fullscreenBtn.innerHTML = (0, _generate.generateControlButton)(t.id, fullscreenTitle, fullscreenTitle, '' + t.media.options.iconSprite, ['icon-fullscreen', 'icon-unfullscreen'], '' + t.options.classPrefix);
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.addEventListener('click', function () {
@@ -1377,7 +1487,8 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-unfullscreen');
+			(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
+			(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
 		}
 
 		t.setControlsSize();
@@ -1439,7 +1550,8 @@ Object.assign(_player2.default.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-fullscreen');
+			(0, _dom.removeClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
+			(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'fullscreen');
 		}
 
 		t.setControlsSize();
@@ -1456,26 +1568,26 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"25":25,"26":26,"27":27,"28":28,"29":29,"3":3,"5":5}],10:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"26":26,"27":27,"28":28,"29":29,"3":3,"30":30,"6":6}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(16);
+var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _i18n = _dereq_(5);
+var _i18n = _dereq_(6);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
-var _generate = _dereq_(28);
+var _generate = _dereq_(29);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1494,7 +1606,7 @@ Object.assign(_player2.default.prototype, {
 		    play = _document2.default.createElement('div');
 
 		play.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'playpause-button ' + t.options.classPrefix + 'play';
-		play.innerHTML = (0, _generate.generateControlButton)(t.id, pauseTitle, playTitle, t.media.options.iconSprite + '#i-play');
+		play.innerHTML = (0, _generate.generateControlButton)(t.id, pauseTitle, playTitle, '' + t.media.options.iconSprite, ['icon-play', 'icon-pause', 'icon-replay'], '' + t.options.classPrefix);
 		play.addEventListener('click', function () {
 			if (t.paused) {
 				t.play();
@@ -1513,15 +1625,12 @@ Object.assign(_player2.default.prototype, {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'pause');
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
-				playBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-pause');
 			} else {
-
 				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
 				(0, _dom.removeClass)(play, t.options.classPrefix + 'replay');
 				(0, _dom.addClass)(play, t.options.classPrefix + 'play');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
-				playBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-play');
 			}
 		}
 
@@ -1543,37 +1652,38 @@ Object.assign(_player2.default.prototype, {
 		});
 		media.addEventListener('ended', function () {
 			if (!player.options.loop) {
-				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
-				(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
-				(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
-				playBtn.setAttribute('title', playTitle);
-				playBtn.setAttribute('aria-label', playTitle);
-				playBtn.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-replay');
+				setTimeout(function () {
+					(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
+					(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
+					(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
+					playBtn.setAttribute('title', playTitle);
+					playBtn.setAttribute('aria-label', playTitle);
+				}, 0);
 			}
 		});
 	}
 });
 
-},{"16":16,"2":2,"26":26,"27":27,"28":28,"5":5}],11:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"27":27,"28":28,"29":29,"6":6}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(16);
+var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _i18n = _dereq_(5);
+var _i18n = _dereq_(6);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
-var _time = _dereq_(31);
+var _time = _dereq_(32);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2124,20 +2234,20 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"25":25,"26":26,"31":31,"5":5}],12:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"26":26,"27":27,"32":32,"6":6}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(16);
+var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(31);
+var _time = _dereq_(32);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2246,32 +2356,32 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"26":26,"31":31}],13:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"27":27,"32":32}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _i18n = _dereq_(5);
+var _i18n = _dereq_(6);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _player = _dereq_(16);
+var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(31);
+var _time = _dereq_(32);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
-var _generate = _dereq_(28);
+var _generate = _dereq_(29);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2326,7 +2436,7 @@ Object.assign(_player2.default.prototype, {
 
 		player.captionsButton = _document2.default.createElement('div');
 		player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
-		player.captionsButton.innerHTML = (0, _generate.generateControlButton)(t.id, tracksTitle, tracksTitle, t.media.options.iconSprite + '#i-captions') + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
+		player.captionsButton.innerHTML = (0, _generate.generateControlButton)(t.id, tracksTitle, tracksTitle, '' + t.media.options.iconSprite, ['icon-captions'], '' + t.options.classPrefix) + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
 
 		t.addControlElement(player.captionsButton, 'tracks');
 
@@ -2334,7 +2444,7 @@ Object.assign(_player2.default.prototype, {
 
 		player.chaptersButton = _document2.default.createElement('div');
 		player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
-		player.chaptersButton.innerHTML = (0, _generate.generateControlButton)(t.id, chaptersTitle, chaptersTitle, t.media.options.iconSprite + '#i-chapters') + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
+		player.chaptersButton.innerHTML = (0, _generate.generateControlButton)(t.id, chaptersTitle, chaptersTitle, '' + t.media.options.iconSprite, ['icon-chapters'], '' + t.options.classPrefix) + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
 
 		var subtitleCount = 0;
 
@@ -3012,28 +3122,28 @@ _mejs2.default.TrackFormatParser = {
 	}
 };
 
-},{"16":16,"2":2,"26":26,"27":27,"28":28,"31":31,"5":5,"7":7}],14:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"27":27,"28":28,"29":29,"32":32,"6":6,"8":8}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _player = _dereq_(16);
+var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _i18n = _dereq_(5);
+var _i18n = _dereq_(6);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
-var _generate = _dereq_(28);
+var _generate = _dereq_(29);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3048,7 +3158,7 @@ Object.assign(_player.config, {
 
 	audioVolume: 'horizontal',
 
-	videoVolume: 'horizontal',
+	videoVolume: 'vertical',
 
 	startVolume: 0.8
 });
@@ -3067,7 +3177,7 @@ Object.assign(_player2.default.prototype, {
 		    mute = _document2.default.createElement('div');
 
 		mute.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute';
-		mute.innerHTML = mode === 'horizontal' ? (0, _generate.generateControlButton)(t.id, muteText, muteText, t.media.options.iconSprite + '#i-mute') : (0, _generate.generateControlButton)(t.id, muteText, muteText, t.media.options.iconSprite + '#i-mute') + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
+		mute.innerHTML = mode === 'horizontal' ? (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix) : (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix) + ('<a class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
 
 		t.addControlElement(mute, 'volume');
 
@@ -3132,7 +3242,6 @@ Object.assign(_player2.default.prototype, {
 		if (mode === 'horizontal') {
 			var anchor = _document2.default.createElement('a');
 			anchor.className = t.options.classPrefix + 'horizontal-volume-slider';
-			anchor.href = 'javascript:void(0);';
 			anchor.setAttribute('aria-label', _i18n2.default.t('mejs.volume-slider'));
 			anchor.setAttribute('aria-valuemin', 0);
 			anchor.setAttribute('aria-valuemax', 100);
@@ -3170,18 +3279,12 @@ Object.assign(_player2.default.prototype, {
 				var button = mute.firstElementChild;
 				button.setAttribute('title', unmuteText);
 				button.setAttribute('aria-label', unmuteText);
-				if (button.querySelector('svg')) {
-					button.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-unmute');
-				}
 			} else {
 				(0, _dom.removeClass)(mute, t.options.classPrefix + 'unmute');
 				(0, _dom.addClass)(mute, t.options.classPrefix + 'mute');
 				var _button = mute.firstElementChild;
 				_button.setAttribute('title', muteText);
 				_button.setAttribute('aria-label', muteText);
-				if (_button.querySelector('svg')) {
-					_button.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-mute');
-				}
 			}
 
 			var volumePercentage = volume * 100 + '%',
@@ -3398,7 +3501,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"16":16,"2":2,"25":25,"26":26,"27":27,"28":28,"5":5}],15:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"26":26,"27":27,"28":28,"29":29,"6":6}],16:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3488,7 +3591,7 @@ var EN = exports.EN = {
 	'mejs.yiddish': 'Yiddish'
 };
 
-},{}],16:[function(_dereq_,module,exports){
+},{}],17:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3508,35 +3611,35 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _mediaelement = _dereq_(6);
+var _mediaelement = _dereq_(7);
 
 var _mediaelement2 = _interopRequireDefault(_mediaelement);
 
-var _default = _dereq_(17);
+var _default = _dereq_(18);
 
 var _default2 = _interopRequireDefault(_default);
 
-var _i18n = _dereq_(5);
+var _i18n = _dereq_(6);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _time = _dereq_(31);
+var _time = _dereq_(32);
 
-var _media = _dereq_(29);
+var _media = _dereq_(30);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
 var dom = _interopRequireWildcard(_dom);
 
-var _generate = _dereq_(28);
+var _generate = _dereq_(29);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -4916,7 +5019,7 @@ var MediaElementPlayer = function () {
 
 			loading.style.display = 'none';
 			loading.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer';
-			loading.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-loading">' + ('<div class="' + t.options.classPrefix + 'overlay-loading-bg-img">\n\t\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#i-loading-spinner"></use>\n\t\t\t\t\t</svg>\n\t\t\t\t</div>') + '</div>';
+			loading.innerHTML = '<div class="' + t.options.classPrefix + 'overlay-loading">' + ('<div class="' + t.options.classPrefix + 'overlay-loading-bg-img">\n\t\t\t\t\t<svg xmlns="http://www.w3.org/2000/svg">\n\t\t\t\t\t\t<use xlink:href="' + t.media.options.iconSprite + '#icon-loading-spinner"></use>\n\t\t\t\t\t</svg>\n\t\t\t\t</div>') + '</div>';
 			layers.appendChild(loading);
 
 			error.style.display = 'none';
@@ -4925,7 +5028,7 @@ var MediaElementPlayer = function () {
 			layers.appendChild(error);
 
 			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play';
-			bigPlay.innerHTML = (0, _generate.generateControlButton)(t.id, _i18n2.default.t('mejs.play'), _i18n2.default.t('mejs.play'), t.media.options.iconSprite + '#i-overlay-play', t.options.classPrefix + 'overlay-button');
+			bigPlay.innerHTML = (0, _generate.generateControlButton)(t.id, _i18n2.default.t('mejs.play'), _i18n2.default.t('mejs.play'), '' + t.media.options.iconSprite, ['icon-overlay-play'], '' + t.options.classPrefix, t.options.classPrefix + 'overlay-button');
 
 			bigPlay.addEventListener('click', function () {
 				if (t.options.clickToPlayPause) {
@@ -4952,14 +5055,6 @@ var MediaElementPlayer = function () {
 					bigPlay.dispatchEvent(event);
 					return false;
 				}
-			});
-
-			bigPlay.addEventListener('mouseover', function () {
-				bigPlay.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-overlay-play-hover');
-			});
-
-			bigPlay.addEventListener('mouseout', function () {
-				bigPlay.querySelector('svg use').setAttribute('xlink:href', t.media.options.iconSprite + '#i-overlay-play');
 			});
 
 			layers.appendChild(bigPlay);
@@ -5054,6 +5149,10 @@ var MediaElementPlayer = function () {
 			});
 
 			t.globalKeydownCallback = function (event) {
+				if (!_document2.default.activeElement) {
+					return true;
+				}
+
 				var container = _document2.default.activeElement.closest('.' + t.options.classPrefix + 'container'),
 				    target = t.media.closest('.' + t.options.classPrefix + 'container');
 				t.hasFocus = !!(container && target && container.id === target.id);
@@ -5092,17 +5191,17 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'play',
 		value: function play() {
-			this.proxy.play();
+			return this.proxy.play();
 		}
 	}, {
 		key: 'pause',
 		value: function pause() {
-			this.proxy.pause();
+			return this.proxy.pause();
 		}
 	}, {
 		key: 'load',
 		value: function load() {
-			this.proxy.load();
+			return this.proxy.load();
 		}
 	}, {
 		key: 'setCurrentTime',
@@ -5338,7 +5437,7 @@ _mejs2.default.MediaElementPlayer = MediaElementPlayer;
 
 exports.default = MediaElementPlayer;
 
-},{"17":17,"2":2,"25":25,"26":26,"27":27,"28":28,"29":29,"3":3,"31":31,"5":5,"6":6,"7":7}],17:[function(_dereq_,module,exports){
+},{"18":18,"2":2,"26":26,"27":27,"28":28,"29":29,"3":3,"30":30,"32":32,"6":6,"7":7,"8":8}],18:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5374,12 +5473,12 @@ var DefaultPlayer = function () {
 	_createClass(DefaultPlayer, [{
 		key: 'play',
 		value: function play() {
-			this.media.play();
+			return this.media.play();
 		}
 	}, {
 		key: 'pause',
 		value: function pause() {
-			this.media.pause();
+			return this.media.pause();
 		}
 	}, {
 		key: 'load',
@@ -5519,18 +5618,18 @@ exports.default = DefaultPlayer;
 
 _window2.default.DefaultPlayer = DefaultPlayer;
 
-},{"3":3}],18:[function(_dereq_,module,exports){
+},{"3":3}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _player = _dereq_(16);
+var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -5569,7 +5668,7 @@ if (typeof jQuery !== 'undefined') {
 	}
 })(_mejs2.default.$);
 
-},{"16":16,"3":3,"7":7}],19:[function(_dereq_,module,exports){
+},{"17":17,"3":3,"8":8}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -5578,19 +5677,19 @@ var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _renderer = _dereq_(8);
+var _renderer = _dereq_(9);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _media = _dereq_(29);
+var _media = _dereq_(30);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5816,7 +5915,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(DashNativeRenderer);
 
-},{"25":25,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],20:[function(_dereq_,module,exports){
+},{"26":26,"27":27,"28":28,"3":3,"30":30,"8":8,"9":9}],21:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -5834,21 +5933,21 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _i18n = _dereq_(5);
+var _i18n = _dereq_(6);
 
 var _i18n2 = _interopRequireDefault(_i18n);
 
-var _renderer = _dereq_(8);
+var _renderer = _dereq_(9);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
-var _media = _dereq_(29);
+var _media = _dereq_(30);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6258,7 +6357,7 @@ if (hasFlash) {
 	_renderer.renderer.add(FlashMediaElementAudioOggRenderer);
 }
 
-},{"2":2,"25":25,"27":27,"29":29,"3":3,"5":5,"7":7,"8":8}],21:[function(_dereq_,module,exports){
+},{"2":2,"26":26,"28":28,"3":3,"30":30,"6":6,"8":8,"9":9}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -6267,19 +6366,19 @@ var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _renderer = _dereq_(8);
+var _renderer = _dereq_(9);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
-var _media = _dereq_(29);
+var _media = _dereq_(30);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6507,7 +6606,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(FlvNativeRenderer);
 
-},{"25":25,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],22:[function(_dereq_,module,exports){
+},{"26":26,"27":27,"28":28,"3":3,"30":30,"8":8,"9":9}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -6516,19 +6615,19 @@ var _window = _dereq_(3);
 
 var _window2 = _interopRequireDefault(_window);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _renderer = _dereq_(8);
+var _renderer = _dereq_(9);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
-var _media = _dereq_(29);
+var _media = _dereq_(30);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6796,7 +6895,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(HlsNativeRenderer);
 
-},{"25":25,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],23:[function(_dereq_,module,exports){
+},{"26":26,"27":27,"28":28,"3":3,"30":30,"8":8,"9":9}],24:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6807,15 +6906,15 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _renderer = _dereq_(8);
+var _renderer = _dereq_(9);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _constants = _dereq_(25);
+var _constants = _dereq_(26);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6943,7 +7042,7 @@ _window2.default.HtmlMediaElement = _mejs2.default.HtmlMediaElement = HtmlMediaE
 
 _renderer.renderer.add(HtmlMediaElement);
 
-},{"2":2,"25":25,"27":27,"3":3,"7":7,"8":8}],24:[function(_dereq_,module,exports){
+},{"2":2,"26":26,"28":28,"3":3,"8":8,"9":9}],25:[function(_dereq_,module,exports){
 'use strict';
 
 var _window = _dereq_(3);
@@ -6954,17 +7053,17 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _renderer = _dereq_(8);
+var _renderer = _dereq_(9);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
-var _media = _dereq_(29);
+var _media = _dereq_(30);
 
-var _dom = _dereq_(26);
+var _dom = _dereq_(27);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7482,7 +7581,7 @@ _media.typeChecks.push(function (url) {
 
 _renderer.renderer.add(YouTubeIframeRenderer);
 
-},{"2":2,"26":26,"27":27,"29":29,"3":3,"7":7,"8":8}],25:[function(_dereq_,module,exports){
+},{"2":2,"27":27,"28":28,"3":3,"30":30,"8":8,"9":9}],26:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7498,7 +7597,7 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
@@ -7668,7 +7767,7 @@ _mejs2.default.Features.isFullScreen = isFullScreen;
 _mejs2.default.Features.requestFullScreen = requestFullScreen;
 _mejs2.default.Features.cancelFullScreen = cancelFullScreen;
 
-},{"2":2,"3":3,"7":7}],26:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"8":8}],27:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7692,7 +7791,7 @@ var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
@@ -7897,7 +7996,7 @@ _mejs2.default.Utils.visible = visible;
 _mejs2.default.Utils.ajax = ajax;
 _mejs2.default.Utils.loadScript = loadScript;
 
-},{"2":2,"3":3,"7":7}],27:[function(_dereq_,module,exports){
+},{"2":2,"3":3,"8":8}],28:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -7911,7 +8010,7 @@ exports.createEvent = createEvent;
 exports.isNodeAfter = isNodeAfter;
 exports.isString = isString;
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
@@ -8033,7 +8132,7 @@ _mejs2.default.Utils.createEvent = createEvent;
 _mejs2.default.Utils.isNodeAfter = isNodeAfter;
 _mejs2.default.Utils.isString = isString;
 
-},{"7":7}],28:[function(_dereq_,module,exports){
+},{"8":8}],29:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8041,17 +8140,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.generateControlButton = generateControlButton;
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function generateControlButton(ariaControls, ariaLabel, title, icon) {
-	var buttonClass = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+function generateControlButton(playerId, ariaLabel, title, iconSprite, icons, classPrefix) {
+	var buttonClass = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
 
 
-	if (typeof ariaControls !== 'string') {
+	if (typeof playerId !== 'string') {
 		throw new Error('`ariaControls` argument must be a string');
 	}
 	if (typeof ariaLabel !== 'string') {
@@ -8060,21 +8159,29 @@ function generateControlButton(ariaControls, ariaLabel, title, icon) {
 	if (typeof title !== 'string') {
 		throw new Error('`title` argument must be a string');
 	}
-	if (typeof icon !== 'string') {
-		throw new Error('`icon` argument must be a string');
+	if (typeof iconSprite !== 'string') {
+		throw new Error('`iconSprite` argument must be a string');
+	}
+	if (!Array.isArray(icons)) {
+		throw new Error('`icons` argument must be an array');
+	}
+	if (typeof classPrefix !== 'string') {
+		throw new Error('`classPrefix` argument must be a string');
 	}
 
-	var className = buttonClass ? 'class=' + buttonClass + ' ' : '';
+	var className = buttonClass ? 'class="' + buttonClass + '" ' : '';
 
-	var button = '<button ' + className + ' type="button" aria-controls="' + ariaControls + '" title="' + title + '" aria-label="' + ariaLabel + '" tabindex="0">\n\t\t\t<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">\n\t\t\t\t<use xlink:href="' + icon + '"></use>\n\t\t\t</svg>\n\t\t</button>';
+	var iconHtml = icons.map(function (icon) {
+		return '<svg xmlns="http://www.w3.org/2000/svg" id="' + playerId + '-' + icon + '" class="' + classPrefix + icon + '" aria-hidden="true" focusable="false">\n\t\t\t\t<use xlink:href="' + iconSprite + '#' + icon + '"></use>\n\t\t\t</svg>\n';
+	});
 
-	return button;
+	return '<button ' + className + ' aria-controls="' + playerId + '" title="' + title + '" aria-label="' + ariaLabel + '">\n\t\t\t' + iconHtml.join('') + '\n\t\t</button>';
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};
 _mejs2.default.Utils.generateControlButton = generateControlButton;
 
-},{"7":7}],29:[function(_dereq_,module,exports){
+},{"8":8}],30:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8088,11 +8195,11 @@ exports.getTypeFromFile = getTypeFromFile;
 exports.getExtension = getExtension;
 exports.normalizeExtension = normalizeExtension;
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
-var _general = _dereq_(27);
+var _general = _dereq_(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8199,7 +8306,7 @@ _mejs2.default.Utils.getTypeFromFile = getTypeFromFile;
 _mejs2.default.Utils.getExtension = getExtension;
 _mejs2.default.Utils.normalizeExtension = normalizeExtension;
 
-},{"27":27,"7":7}],30:[function(_dereq_,module,exports){
+},{"28":28,"8":8}],31:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -8209,6 +8316,10 @@ var _document2 = _interopRequireDefault(_document);
 var _promisePolyfill = _dereq_(4);
 
 var _promisePolyfill2 = _interopRequireDefault(_promisePolyfill);
+
+var _svg4everybody = _dereq_(5);
+
+var _svg4everybody2 = _interopRequireDefault(_svg4everybody);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8333,6 +8444,8 @@ if (!window.Promise) {
 	window.Promise = _promisePolyfill2.default;
 }
 
+(0, _svg4everybody2.default)();
+
 (function (constructor) {
 	if (constructor && constructor.prototype && constructor.prototype.children === null) {
 		Object.defineProperty(constructor.prototype, 'children', {
@@ -8352,7 +8465,7 @@ if (!window.Promise) {
 	}
 })(window.Node || window.Element);
 
-},{"2":2,"4":4}],31:[function(_dereq_,module,exports){
+},{"2":2,"4":4,"5":5}],32:[function(_dereq_,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -8364,7 +8477,7 @@ exports.timeCodeToSeconds = timeCodeToSeconds;
 exports.calculateTimeFormat = calculateTimeFormat;
 exports.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-var _mejs = _dereq_(7);
+var _mejs = _dereq_(8);
 
 var _mejs2 = _interopRequireDefault(_mejs);
 
@@ -8605,4 +8718,4 @@ _mejs2.default.Utils.timeCodeToSeconds = timeCodeToSeconds;
 _mejs2.default.Utils.calculateTimeFormat = calculateTimeFormat;
 _mejs2.default.Utils.convertSMPTEtoSeconds = convertSMPTEtoSeconds;
 
-},{"7":7}]},{},[30,6,5,15,23,20,19,21,22,24,16,18,17,9,10,11,12,13,14]);
+},{"8":8}]},{},[31,7,6,16,24,21,20,22,23,25,17,19,18,10,11,12,13,14,15]);
