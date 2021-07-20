@@ -87,7 +87,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			fullscreenBtn = document.createElement('div')
 		;
 		fullscreenBtn.className = `${t.options.classPrefix}button ${t.options.classPrefix}fullscreen-button`;
-		fullscreenBtn.innerHTML = generateControlButton(t.id, fullscreenTitle, fullscreenTitle, `${t.media.options.iconSprite}#i-fullscreen`);
+		fullscreenBtn.innerHTML = generateControlButton(t.id, fullscreenTitle, fullscreenTitle, `${t.media.options.iconSprite}`, ['icon-fullscreen', 'icon-unfullscreen'], `${t.options.classPrefix}`);
 		t.addControlElement(fullscreenBtn, 'fullscreen');
 
 		fullscreenBtn.addEventListener('click', () => {
@@ -280,7 +280,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-unfullscreen`);
+			removeClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+			addClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
 		}
 
 		t.setControlsSize();
@@ -352,7 +353,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		if (t.fullscreenBtn) {
-			t.fullscreenBtn.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-fullscreen`);
+			removeClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
+			addClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
 		}
 
 		t.setControlsSize();

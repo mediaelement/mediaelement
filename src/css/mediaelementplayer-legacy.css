@@ -146,7 +146,14 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     border: 0;
 }
 
-.mejs-overlay-button:hover svg,
+.mejs-overlay:hover .mejs-overlay-button svg {
+    opacity: 1;
+}
+
+.mejs-overlay-button svg {
+    opacity: 0.75;
+}
+
 .mejs-overlay-button:focus svg {
     opacity: 1;
 }
@@ -246,6 +253,45 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 /* End: CONTROL BAR */
+
+/* Start: Play (Play / Pause / Replay) */
+.mejs-playpause-button svg {
+    display: none;
+}
+
+.mejs-play svg.mejs-icon-play {
+    display: block;
+}
+
+.mejs-pause svg.mejs-icon-pause {
+    display: block;
+}
+
+.mejs-replay svg.mejs-icon-replay {
+    display: block;
+}
+/* End: Play (Play / Pause / Replay) */
+
+/* Start: Fullscreen (Fullscreen / Unfullscreen) */
+.mejs-fullscreen-button svg.mejs-icon-unfullscreen {
+    display: none;
+}
+.mejs-fullscreen svg.mejs-icon-fullscreen {
+    display: block;
+}
+
+.mejs-fullscreen svg.mejs-icon-unfullscreen {
+    display: none;
+}
+
+.mejs-unfullscreen svg.mejs-icon-unfullscreen {
+    display: block;
+}
+
+.mejs-unfullscreen svg.mejs-icon-fullscreen {
+    display: none;
+}
+/* End: Fullscreen (Fullscreen / Unfullscreen) */
 
 /* Start: Time (Current / Duration) */
 .mejs-time {
@@ -527,6 +573,18 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs-mute svg,
 .mejs-unmute svg {
     stroke: currentColor;
+}
+
+.mejs-volume-button svg {
+    display: none;
+}
+
+.mejs-mute .mejs-icon-mute {
+    display: block;
+}
+
+.mejs-unmute .mejs-icon-unmute {
+    display: block;
 }
 /* End: Mute/Volume */
 

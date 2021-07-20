@@ -9,6 +9,7 @@ import {isString, createEvent} from '../utils/general';
 import {addClass, removeClass, offset} from '../utils/dom';
 import {generateControlButton} from '../utils/generate';
 
+
 /**
  * Volume button
  *
@@ -76,8 +77,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
-			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}#i-mute`) :
-			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}#i-mute`) +
+			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`) :
+			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`) +
 			`<a class="${t.options.classPrefix}volume-slider" ` +
 				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
 				`aria-orientation="vertical">` +
@@ -214,19 +215,12 @@ Object.assign(MediaElementPlayer.prototype, {
 					const button = mute.firstElementChild;
 					button.setAttribute('title', unmuteText);
 					button.setAttribute('aria-label', unmuteText);
-					if (button.querySelector('svg')) {
-						button.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-unmute`);
-					}
-
 				} else {
 					removeClass(mute, `${t.options.classPrefix}unmute`);
 					addClass(mute, `${t.options.classPrefix}mute`);
 					const button = mute.firstElementChild;
 					button.setAttribute('title', muteText);
 					button.setAttribute('aria-label', muteText);
-					if (button.querySelector('svg')) {
-						button.querySelector('svg use').setAttribute('xlink:href', `${t.media.options.iconSprite}#i-mute`);
-					}
 				}
 
 				const

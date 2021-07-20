@@ -254,6 +254,45 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 /* End: CONTROL BAR */
 
+/* Start: Play (Play / Pause / Replay) */
+.mejs__playpause-button svg {
+    display: none;
+}
+
+.mejs__play svg.mejs__icon-play {
+    display: block;
+}
+
+.mejs__pause svg.mejs__icon-pause {
+    display: block;
+}
+
+.mejs__replay svg.mejs__icon-replay {
+    display: block;
+}
+/* End: Play (Play / Pause / Replay) */
+
+/* Start: Fullscreen (Fullscreen / Unfullscreen) */
+.mejs__fullscreen-button svg.mejs__icon-unfullscreen {
+    display: none;
+}
+.mejs__fullscreen svg.mejs__icon-fullscreen {
+    display: block;
+}
+
+.mejs__fullscreen svg.mejs__icon-unfullscreen {
+    display: none;
+}
+
+.mejs__unfullscreen svg.mejs__icon-unfullscreen {
+    display: block;
+}
+
+.mejs__unfullscreen svg.mejs__icon-fullscreen {
+    display: none;
+}
+/* End: Fullscreen (Fullscreen / Unfullscreen) */
+
 /* Start: Time (Current / Duration) */
 .mejs__time {
     box-sizing: content-box;
@@ -534,6 +573,18 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__mute svg,
 .mejs__unmute svg {
     stroke: currentColor;
+}
+
+.mejs__volume-button svg {
+    display: none;
+}
+
+.mejs__mute .mejs__icon-mute {
+    display: block;
+}
+
+.mejs__unmute .mejs__icon-unmute {
+    display: block;
 }
 /* End: Mute/Volume */
 
