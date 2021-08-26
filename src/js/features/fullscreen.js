@@ -31,7 +31,11 @@ Object.assign(config, {
 	/**
 	 * @type {Boolean}
 	 */
-	useFakeFullscreen: false
+	useFakeFullscreen: false,
+	/**
+	 * @type {Boolean}
+	 */
+	androidUseFakeFullscreen: false,
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -218,7 +222,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.normalWidth = parseFloat(containerStyles.width);
 
 		// attempt to do true fullscreen
-		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
+		if (t.options.androidUseFakeFullscreen === false && (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native')) {
 			Features.requestFullScreen(t.getElement(t.container));
 
 			if (t.isInIframe) {
