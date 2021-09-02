@@ -882,11 +882,13 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 						}
 					});
 				}
+				return response;
 			} else {
-				t.mediaElement.renderer[methodName](args);
+				return t.mediaElement.renderer[methodName](args);
 			}
 		} catch (e) {
 			t.mediaElement.generateError(e, mediaFiles);
+			throw e;
 		}
 	},
 	    assignMethods = function assignMethods(methodName) {
@@ -897,13 +899,14 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer[methodName] === 'function') {
 				if (t.mediaElement.promises.length) {
-					Promise.all(t.mediaElement.promises).then(function () {
-						triggerAction(methodName, args);
+					return Promise.all(t.mediaElement.promises).then(function () {
+						return triggerAction(methodName, args);
 					}).catch(function (e) {
 						t.mediaElement.generateError(e, mediaFiles);
+						return Promise.reject(e);
 					});
 				} else {
-					triggerAction(methodName, args);
+					return triggerAction(methodName, args);
 				}
 			}
 			return null;
@@ -1187,7 +1190,12 @@ Object.assign(_player.config, {
 
 	fullscreenText: null,
 
-	useFakeFullscreen: false
+	useFakeFullscreen: false,
+
+	androidUseFakeFullscreen: false,
+
+	fakeFullscreenMode: 'vertical'
+
 });
 
 Object.assign(_player2.default.prototype, {
@@ -1315,10 +1323,22 @@ Object.assign(_player2.default.prototype, {
 		(0, _dom.addClass)(_document2.default.documentElement, t.options.classPrefix + 'fullscreen');
 		(0, _dom.addClass)(t.getElement(t.container), t.options.classPrefix + 'container-fullscreen');
 
+		if (t.options.fakeFullscreenMode === 'horizontal') {
+			(0, _dom.addClass)(_document2.default.documentElement, t.options.classPrefix + 'fullscreen__horizontal');
+			(0, _dom.addClass)(t.getElement(t.container), t.options.classPrefix + 'container-fullscreen__horizontal');
+			var innerContainer = t.getElement(t.container).firstElementChild;
+			var width = _window2.default.innerWidth || _document2.default.body.clientWidth;
+			var height = _window2.default.innerHeight || _document2.default.body.clientHeight;
+			var top = void 0,
+			    left = void 0;
+			top = left = (height - width) / 2;
+			innerContainer.style.transform = 'rotate(90deg) translate(' + top + 'px, ' + left + 'px)';
+		}
+
 		t.normalHeight = parseFloat(containerStyles.height);
 		t.normalWidth = parseFloat(containerStyles.width);
 
-		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
+		if (t.options.androidUseFakeFullscreen === false && (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native')) {
 			Features.requestFullScreen(t.getElement(t.container));
 
 			if (t.isInIframe) {
@@ -1407,7 +1427,12 @@ Object.assign(_player2.default.prototype, {
 
 		(0, _dom.removeClass)(_document2.default.documentElement, t.options.classPrefix + 'fullscreen');
 		(0, _dom.removeClass)(t.getElement(t.container), t.options.classPrefix + 'container-fullscreen');
-
+		if (t.options.fakeFullscreenMode === 'horizontal') {
+			(0, _dom.removeClass)(_document2.default.documentElement, t.options.classPrefix + 'fullscreen__horizontal');
+			(0, _dom.removeClass)(t.getElement(t.container), t.options.classPrefix + 'container-fullscreen__horizontal');
+			var innerContainer = t.getElement(t.container).firstElementChild;
+			innerContainer.style.transform = 'none';
+		}
 		if (t.options.setDimensions) {
 			t.getElement(t.container).style.width = t.normalWidth + 'px';
 			t.getElement(t.container).style.height = t.normalHeight + 'px';
@@ -3057,7 +3082,7 @@ Object.assign(_player2.default.prototype, {
 		    mute = _document2.default.createElement('div');
 
 		mute.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute';
-		mute.innerHTML = mode === 'horizontal' ? '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' : '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' + ('<a href="javascript:void(0);" class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
+		mute.innerHTML = mode === 'horizontal' ? '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' : '<button type="button" aria-controls="' + t.id + '" title="' + muteText + '" aria-label="' + muteText + '" tabindex="0"></button>' + ('<a class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
 
 		t.addControlElement(mute, 'volume');
 
@@ -3122,7 +3147,6 @@ Object.assign(_player2.default.prototype, {
 		if (mode === 'horizontal') {
 			var anchor = _document2.default.createElement('a');
 			anchor.className = t.options.classPrefix + 'horizontal-volume-slider';
-			anchor.href = 'javascript:void(0);';
 			anchor.setAttribute('aria-label', _i18n2.default.t('mejs.volume-slider'));
 			anchor.setAttribute('aria-valuemin', 0);
 			anchor.setAttribute('aria-valuemax', 100);
@@ -5027,6 +5051,10 @@ var MediaElementPlayer = function () {
 			});
 
 			t.globalKeydownCallback = function (event) {
+				if (!_document2.default.activeElement) {
+					return true;
+				}
+
 				var container = _document2.default.activeElement.closest('.' + t.options.classPrefix + 'container'),
 				    target = t.media.closest('.' + t.options.classPrefix + 'container');
 				t.hasFocus = !!(container && target && container.id === target.id);
@@ -5065,17 +5093,17 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'play',
 		value: function play() {
-			this.proxy.play();
+			return this.proxy.play();
 		}
 	}, {
 		key: 'pause',
 		value: function pause() {
-			this.proxy.pause();
+			return this.proxy.pause();
 		}
 	}, {
 		key: 'load',
 		value: function load() {
-			this.proxy.load();
+			return this.proxy.load();
 		}
 	}, {
 		key: 'setCurrentTime',
@@ -5347,12 +5375,12 @@ var DefaultPlayer = function () {
 	_createClass(DefaultPlayer, [{
 		key: 'play',
 		value: function play() {
-			this.media.play();
+			return this.media.play();
 		}
 	}, {
 		key: 'pause',
 		value: function pause() {
-			this.media.pause();
+			return this.media.pause();
 		}
 	}, {
 		key: 'load',
