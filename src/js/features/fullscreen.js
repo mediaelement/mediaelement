@@ -36,6 +36,11 @@ Object.assign(config, {
 	 * @type {Boolean}
 	 */
 	androidUseFakeFullscreen: false,
+	/**
+	 * @type {String}
+	 */
+	fakeFullscreenMode: 'vertical',
+	
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -189,7 +194,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.fullscreenMode = mode;
 		return mode;
 	},
-
 	/**
 	 *
 	 */
@@ -212,11 +216,22 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.originalNode.webkitEnterFullscreen();
 			return;
 		}
-
+		
 		// set it to not show scroll bars so 100% will work
 		addClass(document.documentElement, `${t.options.classPrefix}fullscreen`);
 		addClass(t.getElement(t.container), `${t.options.classPrefix}container-fullscreen`);
-
+		// horizontal
+		if (t.options.fakeFullscreenMode === 'horizontal') { 
+		addClass(document.documentElement, `${t.options.classPrefix}fullscreen__horizontal`);
+		addClass(t.getElement(t.container), `${t.options.classPrefix}container-fullscreen__horizontal`);
+		const innerContainer = t.getElement(t.container).firstElementChild			
+		const  width =  window.innerWidth || document.body.clientWidth
+		const  height = window.innerHeight || document.body.clientHeight  
+		let top, left;
+		top = left = (height - width) / 2
+		console.log('top', top);
+		innerContainer.style.transform = `rotate(90deg) translate(${top}px, ${left}px)`
+		}
 		// store sizing
 		t.normalHeight = parseFloat(containerStyles.height);
 		t.normalWidth = parseFloat(containerStyles.width);
@@ -249,60 +264,78 @@ Object.assign(MediaElementPlayer.prototype, {
 				}, 1000);
 			}
 		}
-
-		// make full size
-		t.getElement(t.container).style.width = '100%';
-		t.getElement(t.container).style.height = '100%';
-
-		// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
-		// Actually, it seems to be needed for IE8, too
-		t.containerSizeTimeout = setTimeout(() => {
+			// make full size
 			t.getElement(t.container).style.width = '100%';
 			t.getElement(t.container).style.height = '100%';
-			t.setControlsSize();
-		}, 500);
 
-		if (isNative) {
-			t.node.style.width = '100%';
-			t.node.style.height = '100%';
-		} else {
-			const elements = t.getElement(t.container).querySelectorAll('embed, object, video'), total = elements.length;
-			for (let i = 0; i < total; i++) {
-				elements[i].style.width = '100%';
-				elements[i].style.height = '100%';
+			// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
+			// Actually, it seems to be needed for IE8, too
+			t.containerSizeTimeout = setTimeout(() => {
+				t.getElement(t.container).style.width = '100%';
+				t.getElement(t.container).style.height = '100%';
+				t.setControlsSize();
+			}, 500);
+
+			if (isNative) {
+				t.node.style.width = '100%';
+				t.node.style.height = '100%';
+			} else {
+				const elements = t.getElement(t.container).querySelectorAll('embed, object, video'), total = elements.length;
+				for (let i = 0; i < total; i++) {
+					elements[i].style.width = '100%';
+					elements[i].style.height = '100%';
+				}
 			}
-		}
 
-		if (t.options.setDimensions && typeof t.media.setSize === 'function') {
-			t.media.setSize(screen.width, screen.height);
-		}
+			if (t.options.setDimensions && typeof t.media.setSize === 'function') {
+				t.media.setSize(screen.width, screen.height);
+			}
 
-		const layers = t.getElement(t.layers).children, total = layers.length;
-		for (let i = 0; i < total; i++) {
-			layers[i].style.width = '100%';
-			layers[i].style.height = '100%';
-		}
+			const layers = t.getElement(t.layers).children, total = layers.length;
+			for (let i = 0; i < total; i++) {
+				layers[i].style.width = '100%';
+				layers[i].style.height = '100%';
+			}
 
-		if (t.fullscreenBtn) {
-			removeClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
-			addClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
-		}
+			if (t.fullscreenBtn) {
+				removeClass(t.fullscreenBtn, `${t.options.classPrefix}fullscreen`);
+				addClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
+			}
 
-		t.setControlsSize();
-		t.isFullScreen = true;
+			t.setControlsSize();
+			t.isFullScreen = true;
 
-		const
-			zoomFactor = Math.min(screen.width / t.width, screen.height / t.height),
-			captionText = t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-text`)
-		;
-		if (captionText) {
-			captionText.style.fontSize = `${(zoomFactor * 100)}%`;
-			captionText.style.lineHeight = 'normal';
-			t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-position`).style.bottom =
-				`${(((screen.height - t.normalHeight) / 2) - (t.getElement(t.controls).offsetHeight / 2) + zoomFactor + 15)}px`;
+			const
+				zoomFactor = Math.min(screen.width / t.width, screen.height / t.height),
+				captionText = t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-text`)
+			;
+			if (captionText) {
+				captionText.style.fontSize = `${(zoomFactor * 100)}%`;
+				captionText.style.lineHeight = 'normal';
+				t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-position`).style.bottom =
+					`${(((screen.height - t.normalHeight) / 2) - (t.getElement(t.controls).offsetHeight / 2) + zoomFactor + 15)}px`;
+			}
+			const event = createEvent('enteredfullscreen', t.getElement(t.container));
+			t.getElement(t.container).dispatchEvent(event);
+		
+	},
+	/**
+	 *
+	 */
+	recalculateHorizontalScreen()  {
+		const t = this;
+		if (!t.isVideo) {
+			return;
 		}
-		const event = createEvent('enteredfullscreen', t.getElement(t.container));
-		t.getElement(t.container).dispatchEvent(event);
+		// horizontal
+		if (t.options.fakeFullscreenMode === 'horizontal') { 
+		const innerContainer = t.getElement(t.container).firstElementChild			
+		const  width =  window.innerWidth || document.body.clientWidth
+		const  height = window.innerHeight || document.body.clientHeight  
+		let top, left;
+		top = left = (height - width) / 2
+		innerContainer.style.transform = `rotate(90deg) translate(${top}px, ${left}px)`	
+		}	
 	},
 
 	/**
@@ -329,7 +362,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		// restore scroll bars to document
 		removeClass(document.documentElement, `${t.options.classPrefix}fullscreen`);
 		removeClass(t.getElement(t.container), `${t.options.classPrefix}container-fullscreen`);
-
+		if (t.options.fakeFullscreenMode === 'horizontal') {
+		removeClass(document.documentElement, `${t.options.classPrefix}fullscreen__horizontal`);
+		removeClass(t.getElement(t.container), `${t.options.classPrefix}container-fullscreen__horizontal`);
+		const innerContainer = t.getElement(t.container).firstElementChild			
+		innerContainer.style.transform = `none`
+		}
 		if (t.options.setDimensions) {
 			t.getElement(t.container).style.width = `${t.normalWidth}px`;
 			t.getElement(t.container).style.height = `${t.normalHeight}px`;
