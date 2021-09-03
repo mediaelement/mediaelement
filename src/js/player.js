@@ -1713,6 +1713,10 @@ class MediaElementPlayer {
 		});
 
 		t.globalKeydownCallback = (event) => {
+			if (!document.activeElement) { 
+				return true;
+			}
+			
 			const
 				container = document.activeElement.closest(`.${t.options.classPrefix}container`),
 				target = t.media.closest(`.${t.options.classPrefix}container`)
@@ -1806,7 +1810,7 @@ class MediaElementPlayer {
 	 */
 	play (userInteraction = false) {
 		this.playUserInteraction = userInteraction;
-		this.proxy.play();
+		return this.proxy.play();
 	}
 
 	/**
@@ -1814,11 +1818,11 @@ class MediaElementPlayer {
 	 */
 	pause (userInteraction = false) {
 		this.pauseUserInteraction = userInteraction;
-		this.proxy.pause();
+		return this.proxy.pause();
 	}
 
 	load () {
-		this.proxy.load();
+		return this.proxy.load();
 	}
 
 	setCurrentTime (time) {

@@ -1,8 +1,20 @@
 ### Version History
 
+*4.2.17 (2021/07/05)*
+
+* Fix player.options.startVolume overwritten by 0 (#2783)
+* Fix some html comments typos, Strip out old 404 sources (#2772)
+* Fix issues with fullscreen under Safari (#2762)
+* Get correct mime type for mov files (#2766)
+* Fix enableAutosize:false bug see #2753
+* Fix rare issue with offscreen.remove() #2752
+* Fix DFXP parsing: remove remnants of jQuery use (#2760)
+* Use the same rendererName variable when calculating isNative (#2759)
+* Improve formatting of the release.md docs
+
 *4.2.16 (2020/03/16)*
 
-* fix 4.2.15 release : update version to 4.2.16, rebuild
+* Fix 4.2.15 release : update version to 4.2.16, rebuild
 
 * Changed multiple urls in demo file (#2749)
 * Removed FLV and MP4 No Ext de to 404 replaced HLS due to 404 with Akamai Test stream

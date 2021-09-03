@@ -78,7 +78,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		mute.innerHTML = mode === 'horizontal' ?
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` :
 			`<button type="button" aria-controls="${t.id}" title="${muteText}" aria-label="${muteText}" tabindex="0"></button>` +
-			`<a href="javascript:void(0);" class="${t.options.classPrefix}volume-slider" ` +
+			`<a class="${t.options.classPrefix}volume-slider" ` +
 				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
 				`aria-orientation="vertical">` +
 				`<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
@@ -156,7 +156,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (mode === 'horizontal') {
 			const anchor = document.createElement('a');
 			anchor.className = `${t.options.classPrefix}horizontal-volume-slider`;
-			anchor.href = 'javascript:void(0);';
 			anchor.setAttribute('aria-label', i18n.t('mejs.volume-slider'));
 			anchor.setAttribute('aria-valuemin', 0);
 			anchor.setAttribute('aria-valuemax', 100);
@@ -298,6 +297,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					removeClass(mute, `${t.options.classPrefix}mute`);
 					addClass(mute, `${t.options.classPrefix}unmute`);
 				} else {
+					
 					positionVolumeHandle(media.volume);
 					removeClass(mute, `${t.options.classPrefix}unmute`);
 					addClass(mute, `${t.options.classPrefix}mute`);
@@ -424,7 +424,6 @@ Object.assign(MediaElementPlayer.prototype, {
 					rendered = true;
 					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
-						player.options.startVolume = 0;
 					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
@@ -438,6 +437,9 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (player.options.startVolume === 0 || media.originalNode.muted) {
 						media.setMuted(true);
 					}
+					if(player.options.startVolume === 0){
+						player.options.startVolume = 0;	
+					}
 					media.setVolume(player.options.startVolume);
 					t.setControlsSize();
 				}
@@ -448,7 +450,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		// mute the media and sets the volume icon muted if the initial volume is set to 0
 		if (player.options.startVolume === 0 || media.originalNode.muted) {
 			media.setMuted(true);
-			player.options.startVolume = 0;
+			if(player.options.startVolume === 0){
+				player.options.startVolume = 0;	
+			}			
 			toggleMute();
 		}
 

@@ -69,11 +69,11 @@ export default class DefaultPlayer {
 	}
 
 	play () {
-		this.media.play();
+		return this.media.play();
 	}
 
 	pause () {
-		this.media.pause();
+		return this.media.pause();
 	}
 
 	load () {

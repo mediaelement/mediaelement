@@ -416,7 +416,7 @@ int main() {
 	AS3_Val getPositionVal = AS3_Function(NULL, getPosition);
 	AS3_Val seekVal = AS3_Function(NULL, seek);
 
-	// construct an object that holds refereces to the 2 functions
+	// construct an object that holds references to the 2 functions
 	AS3_Val result = AS3_Object("version:StrType", versionVal);
 	AS3_SetS(result, "setupDecoder", setupDecoderVal);
 	AS3_SetS(result, "getHeader", getHeaderVal);

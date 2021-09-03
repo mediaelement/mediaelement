@@ -323,7 +323,7 @@
 			sendEvent('ended');
 		}
 		private function _errorHandler(event: HLSEvent): void {
-			sendEvent('error', event.toString());
+			sendEvent('error', event.error.toString());
 		}
 		private function _levelLoadingHandler(event: HLSEvent): void {
 			sendEvent('onLevelLoading', JSON.stringify(event));
