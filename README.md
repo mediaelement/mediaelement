@@ -19,11 +19,11 @@ One file. Any browser. Same UI.
 # Table of Contents
 
 * [Introduction](#intro)
-* [Migrating from `2.x` to `4.x` version](#migration)
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
 * [Guidelines for Contributors](#guidelines)
 * [Change Log](#changelog)
+* [Migration](#migration)
 * [TODO list](#todo)
 
 <a id="intro"></a>
@@ -45,45 +45,6 @@ In general, `MediaElement.js` supports **IE11+, MS Edge, Chrome, Firefox, Safari
 Since Sierra version, `autoplay` policies have changed. You may experience an error if you try to execute `play` programmatically or via `autoplay` attribute with MediaElement, unless `muted` attribute is specified. 
 
 For more information, read https://webkit.org/blog/7734/auto-play-policy-changes-for-macos/
-
-
-## * IMPORTANT CHANGES on `4.2.0` version
-
-As part of the continuous improvements the player, we have decided to drop completely support for IE9 and IE10, since market share of those browsers together is 0.4%, according to http://caniuse.com/usage-table.
- 
-This change is for `MediaElement` and `MediaElement Plugins` repositories. 
-
-<a id="migration"></a>
-## * IMPORTANT: Migrating from `2.x` to `4.x` version
-
-**NOTE:** `3.x` version has jQuery in the code base, and `4.x` is framework-agnostic. So for either `3.x` or `4.x` versions, the following steps are valid, but it is highly recommended to upgrade to `4.x`.
-
-In order to successfully install `4.x` in an existing setup, you must consider the following guidelines:
-
-1. If your installation relies on the legacy player classes (i.e., `mejs-player`, `mejs-container`, etc.), you **must** set up the proper namespace. In `2.x`, the default namespace is `mejs-` but now is `mejs__`. In order to set up a new namespace (or the legacy one), use the `classPrefix` configuration, and make sure you use the `mediaelementplayer-legacy` stylesheet provided in the `/build/` folder.
-
-2. By default, `MediaElement` has bundled native renderers, such as HLS, M(PEG)-DASH and FLV, as well as YouTube and Flash shims. **If you want to use any other renderer, you MUST refer to the `build/renderers` folder and add as many as you want**. Check `demo/index.html` for a better reference.
-
-3. You **must** set up now the path for the Flash shims if they are not in the same folder as the JS files. To do this, set the path via the `pluginPath` configuration. In the same topic, if you need to support browsers with JavaScript disabled, you **must** reference the correct Flash shim, since in `2.x` there was only a single Flash shim and in `3.x` it was split to target specific media types. Check the [Browsers with JavaScript disabled](docs/installation.md#disabled-javascript) section for more details.
-
-4. If you want to use Flash shims from a CDN, do the change related to `pluginPath` setting the CDN's URL, and also setting `shimScriptAccess` configuration as **`always`**.
-
-5. If you need to force the Flash shim, the way to do it in `3.x` version is to use the `renderers` configuration and list them in an array.
-
-6. `pluginType` was removed to favor `rendererName`. If you rely on that element, just create conditionals based on the renderer ID (all listed [here](docs/usage.md#renderers-list)). For example:
-
-```javascript
-$('video, audio').mediaelementplayer({
-	// Configuration
-	success: function(media) {
-		var isNative = /html5|native/i.test(media.rendererName);
-
-		var isYoutube = ~media.rendererName.indexOf('youtube');
-
-		// etc.
-	}
-});
-```
 
 <a id="installation"></a>
 ## Installation and Usage
@@ -118,6 +79,11 @@ A compilation of useful articles can be found [here](docs/resources.md).
 ## Change Log
 
 Changes available at [Change Log](changelog.md).
+
+<a id="migration"></a>
+## Migration
+
+For migrating mediaelement see [Migration guide](MIGRATION.md).
 
 <a id="todo"></a>
 ## TODO list
