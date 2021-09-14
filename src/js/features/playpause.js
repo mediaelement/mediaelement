@@ -101,11 +101,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (!player.options.loop) {
 				// timeout for IE11
 				setTimeout(() => {
-					removeClass(play, `${t.options.classPrefix}pause`);
-					removeClass(play, `${t.options.classPrefix}play`);
-					addClass(play, `${t.options.classPrefix}replay`);
-					playBtn.setAttribute('title', playTitle);
-					playBtn.setAttribute('aria-label', playTitle);
+					togglePlayPause('pse')
 				}, 0);
 			}
 		});
