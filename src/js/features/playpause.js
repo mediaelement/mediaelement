@@ -65,16 +65,20 @@ Object.assign(MediaElementPlayer.prototype, {
 		 * @param {String} which - token to determine new state of button
 		 */
 		function togglePlayPause (which) {
+			removeClass(play, `${t.options.classPrefix}play`);
+			removeClass(play, `${t.options.classPrefix}replay`);
+			removeClass(play, `${t.options.classPrefix}pause`);
+
 			if ('play' === which) {
-				removeClass(play, `${t.options.classPrefix}play`);
-				removeClass(play, `${t.options.classPrefix}replay`);
 				addClass(play, `${t.options.classPrefix}pause`);
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
-			} else {
-				removeClass(play, `${t.options.classPrefix}pause`);
-				removeClass(play, `${t.options.classPrefix}replay`);
+			} else if('pse' === which) {
 				addClass(play, `${t.options.classPrefix}play`);
+				playBtn.setAttribute('title', playTitle);
+				playBtn.setAttribute('aria-label', playTitle);
+			} else {
+				addClass(play, `${t.options.classPrefix}replay`);
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
 			}
@@ -101,7 +105,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (!player.options.loop) {
 				// timeout for IE11
 				setTimeout(() => {
-					togglePlayPause('pse')
+					togglePlayPause('replay');
 				}, 0);
 			}
 		});
