@@ -1130,7 +1130,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '4.2.17';
+mejs.version = '5.0.0';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1619,16 +1619,20 @@ Object.assign(_player2.default.prototype, {
 		t.addControlElement(play, 'playpause');
 
 		function togglePlayPause(which) {
+			(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
+			(0, _dom.removeClass)(play, t.options.classPrefix + 'replay');
+			(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
+
 			if ('play' === which) {
-				(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
-				(0, _dom.removeClass)(play, t.options.classPrefix + 'replay');
 				(0, _dom.addClass)(play, t.options.classPrefix + 'pause');
 				playBtn.setAttribute('title', pauseTitle);
 				playBtn.setAttribute('aria-label', pauseTitle);
-			} else {
-				(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
-				(0, _dom.removeClass)(play, t.options.classPrefix + 'replay');
+			} else if ('pse' === which) {
 				(0, _dom.addClass)(play, t.options.classPrefix + 'play');
+				playBtn.setAttribute('title', playTitle);
+				playBtn.setAttribute('aria-label', playTitle);
+			} else {
+				(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
 				playBtn.setAttribute('title', playTitle);
 				playBtn.setAttribute('aria-label', playTitle);
 			}
@@ -1653,11 +1657,7 @@ Object.assign(_player2.default.prototype, {
 		media.addEventListener('ended', function () {
 			if (!player.options.loop) {
 				setTimeout(function () {
-					(0, _dom.removeClass)(play, t.options.classPrefix + 'pause');
-					(0, _dom.removeClass)(play, t.options.classPrefix + 'play');
-					(0, _dom.addClass)(play, t.options.classPrefix + 'replay');
-					playBtn.setAttribute('title', playTitle);
-					playBtn.setAttribute('aria-label', playTitle);
+					togglePlayPause('replay');
 				}, 0);
 			}
 		});
@@ -3177,7 +3177,7 @@ Object.assign(_player2.default.prototype, {
 		    mute = _document2.default.createElement('div');
 
 		mute.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute';
-		mute.innerHTML = mode === 'horizontal' ? (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix) : (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix) + ('<a class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
+		mute.innerHTML = mode === 'horizontal' ? (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix, '', t.options.classPrefix + 'volume-slider') : (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix, '', t.options.classPrefix + 'volume-slider') + ('<a class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen" id="' + t.options.classPrefix + 'volume-slider">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
 
 		t.addControlElement(mute, 'volume');
 
@@ -8148,6 +8148,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function generateControlButton(playerId, ariaLabel, title, iconSprite, icons, classPrefix) {
 	var buttonClass = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
+	var ariaDescribedby = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : '';
 
 
 	if (typeof playerId !== 'string') {
@@ -8162,6 +8163,9 @@ function generateControlButton(playerId, ariaLabel, title, iconSprite, icons, cl
 	if (typeof iconSprite !== 'string') {
 		throw new Error('`iconSprite` argument must be a string');
 	}
+	if (typeof ariaDescribedby !== 'string') {
+		throw new Error('`ariaDescribedby` argument must be a string');
+	}
 	if (!Array.isArray(icons)) {
 		throw new Error('`icons` argument must be an array');
 	}
@@ -8171,11 +8175,13 @@ function generateControlButton(playerId, ariaLabel, title, iconSprite, icons, cl
 
 	var className = buttonClass ? 'class="' + buttonClass + '" ' : '';
 
+	var ariaDescribedbyAttr = ariaDescribedby !== '' ? 'aria-describedby="' + ariaDescribedby + '" ' : '';
+
 	var iconHtml = icons.map(function (icon) {
 		return '<svg xmlns="http://www.w3.org/2000/svg" id="' + playerId + '-' + icon + '" class="' + classPrefix + icon + '" aria-hidden="true" focusable="false">\n\t\t\t\t<use xlink:href="' + iconSprite + '#' + icon + '"></use>\n\t\t\t</svg>\n';
 	});
 
-	return '<button ' + className + ' aria-controls="' + playerId + '" title="' + title + '" aria-label="' + ariaLabel + '">\n\t\t\t' + iconHtml.join('') + '\n\t\t</button>';
+	return '<button ' + className + ' aria-controls="' + playerId + '" title="' + title + '" aria-label="' + ariaLabel + '" ' + ariaDescribedbyAttr + '>\n\t\t\t' + iconHtml.join('') + '\n\t\t</button>';
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};
