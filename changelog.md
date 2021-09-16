@@ -11,6 +11,7 @@ We also improved the semantics and aria attributes for the control bar. By using
 * Replace background sprite for controls with svg icon sprite
 * New option `iconSprite`: path where the svg icon sprite is located, see [standalone documentation](docs/api.md#standalone)
 * Change `px` to `rem` values in styles
+* Add attribute `aria-describedby` to volume button
 
 *4.2.17 (2021/07/05)*
 

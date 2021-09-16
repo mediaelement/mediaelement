@@ -12,9 +12,10 @@ import mejs from '../core/mejs';
  * @param {Array} icons array of svg icons
  * @param {String} classPrefix prefix for css class
  * @param {String} [buttonClass=null] name for css class for button
+ * @param {String} ariaDescribedby id for aria-describedby attribute
  * @return {String}
  */
-export function generateControlButton (playerId, ariaLabel, title, iconSprite, icons, classPrefix, buttonClass = null) {
+export function generateControlButton (playerId, ariaLabel, title, iconSprite, icons, classPrefix, buttonClass = null, ariaDescribedby= '') {
 
 	if (typeof playerId !== 'string') {
 		throw new Error('`ariaControls` argument must be a string');
@@ -28,6 +29,9 @@ export function generateControlButton (playerId, ariaLabel, title, iconSprite, i
 	if (typeof iconSprite !== 'string') {
 		throw new Error('`iconSprite` argument must be a string');
 	}
+	if (typeof ariaDescribedby !== 'string') {
+		throw new Error('`ariaDescribedby` argument must be a string');
+	}
 	if (!Array.isArray(icons)) {
 		throw new Error('`icons` argument must be an array');
 	}
@@ -37,13 +41,15 @@ export function generateControlButton (playerId, ariaLabel, title, iconSprite, i
 
 	const className = buttonClass ? `class="${buttonClass}" ` : '';
 
+	const ariaDescribedbyAttr = ariaDescribedby !== '' ? `aria-describedby="${ariaDescribedby}" ` : '';
+
 	const iconHtml = icons.map(icon => {
 		return `<svg xmlns="http://www.w3.org/2000/svg" id="${playerId}-${icon}" class="${classPrefix}${icon}" aria-hidden="true" focusable="false">
 				<use xlink:href="${iconSprite}#${icon}"></use>
 			</svg>
 `	})
 
-	return `<button ${className} aria-controls="${playerId}" title="${title}" aria-label="${ariaLabel}">
+	return `<button ${className} aria-controls="${playerId}" title="${title}" aria-label="${ariaLabel}" ${ariaDescribedbyAttr}>
 			${iconHtml.join('')}
 		</button>`;
 }
