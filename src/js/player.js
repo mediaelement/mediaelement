@@ -1811,7 +1811,8 @@ class MediaElementPlayer {
 		return this.proxy.load();
 	}
 
-	setCurrentTime (time) {
+	setCurrentTime (time, userInteraction = false) {
+		this.seekUserInteraction = userInteraction;
 		this.proxy.setCurrentTime(time);
 	}
 

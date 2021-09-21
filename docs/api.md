@@ -173,6 +173,7 @@ readyState | Return the current ready state of the audio/video | X |
 seeking | Return whether the user is currently seeking in the audio/video | X |
 src | Set or return the current source of the audio/video element | X | X
 volume | Set or return the volume of the audio/video | X | X
+seekUserInteraction | Returns whether the last seek call was initiated from user interaction | X | X
 
 <a id="methods"></a>
 ### Methods
@@ -188,7 +189,7 @@ canPlayType(type) | Determine whether current player can/cannot play a specific 
 setPlayerSize (width, height) | Set player's `width` and `height` also considering the `stretching` configuration
 setPoster (url) | Add a `image` tag with the poster's `url` inside the player's layer; you can pass an _empty_ string to clear the poster 
 setMuted (muted) | Mute/unmute the player; `muted` is a boolean value
-setCurrentTime (time) | Set a new current time for the player; `time` is either an integer or float number, and if negative, it will start from zero.
+setCurrentTime (time, userInteraction) | Set a new current time for the player; `time` is either an integer or float number, and if negative, it will start from zero.
 getCurrentTime () | Retrieve the current time of the media being played
 setVolume (volume) | Set a volume level for the player; `volume` is a number between `0` and `1`
 getVolume () | Retrieve the current volume level of the media being played
