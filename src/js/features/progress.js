@@ -101,7 +101,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// make sure time is updated after 'pause' event is processed
 					setTimeout(function() {
-						player.setCurrentTime(newTime);
+						player.setCurrentTime(newTime, true);
 					}, 0);
 
 					// start again to track new time
@@ -139,7 +139,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// make sure time is updated after 'pause' event is processed
 					setTimeout(function() {
-						player.setCurrentTime(newTime);
+						player.setCurrentTime(newTime, true);
 					}, 0);
 
 					// start again to track new time
@@ -337,7 +337,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			},
 			handleMouseup = () => {
 				if (mouseIsDown && t.getCurrentTime() !== null && t.newTime.toFixed(4) !== t.getCurrentTime().toFixed(4)) {
-					t.setCurrentTime(t.newTime);
+					t.setCurrentTime(t.newTime, true);
 					t.setCurrentRailHandle(t.newTime);
 					t.updateCurrent(t.newTime);
 				}
@@ -434,7 +434,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				// make sure time is updated after 'pause' event is processed
 				setTimeout(function() {
-					t.setCurrentTime(seekTime);
+					t.setCurrentTime(seekTime, true);
 				}, 0);
 
 				if (seekTime < t.getDuration() && !startedPaused) {
