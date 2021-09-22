@@ -1,5 +1,3 @@
-'use strict';
-
 /*!
  * This is a `i18n` language object.
  *
@@ -13,6 +11,8 @@
  * @see core/i18n.js
  */
 (function (exports) {
+    'use strict';
+
 	if (exports.fr === undefined) {
 		exports.fr = {
 			'mejs.plural-form': 2,
