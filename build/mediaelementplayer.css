@@ -562,6 +562,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__volume-total {
     background: rgba(255, 255, 255, 0.5);
+    border: 0.06rem solid #fff;
     height: 6.25rem;
     left: 50%;
     margin: 0;
@@ -605,6 +606,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__horizontal-volume-total {
     background: rgba(50, 50, 50, 0.8);
+    border: 0.06rem solid #fff;
     border-radius: 0.125rem;
     font-size: 1px;
     height: 0.5rem;
@@ -619,6 +621,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 .mejs__horizontal-volume-current {
     background: rgba(255, 255, 255, 0.8);
     border-radius: 0.125rem;
+    border-right: 0.06rem solid #fff;
     font-size: 1px;
     height: 100%;
     left: 0;
