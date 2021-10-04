@@ -1607,7 +1607,7 @@ class MediaElementPlayer {
 					t.pause();
 				}
 
-				button.setAttribute('aria-pressed', !!pressed);
+				button.setAttribute('aria-pressed', !pressed);
 				t.getElement(t.container).focus();
 			}
 		});
