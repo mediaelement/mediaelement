@@ -84,12 +84,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     z-index: 1000;
 }
 
-.mejs__container-fullscreen .mejs__mediaelement,
-.mejs__container-fullscreen video {
-    height: 100% !important;
-    width: 100% !important;
-}
-
 /* Start: LAYERS */
 .mejs__background {
     left: 0;

@@ -1,4 +1,7 @@
 # Version History
+*5.0.1 (2021/10/05)*
+* Fix for fullscreen video not centering in mobile view (#2881)
+* Fix for volume-current and volume-total becoming non-distinguishable with custom high-contrast settings enabled (#2878)
 
 *5.0.0 (2021/09/13)*
 ## The WCAG update
