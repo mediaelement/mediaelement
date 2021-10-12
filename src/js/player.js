@@ -648,7 +648,6 @@ class MediaElementPlayer {
 				// create callback here since it needs access to current
 				// MediaElement object
 				t.clickToPlayPauseCallback = () => {
-
 					if (t.options.clickToPlayPause) {
 						const
 							button = t.getElement(t.container)
@@ -664,7 +663,7 @@ class MediaElementPlayer {
 							t.pause();
 						}
 
-						button.setAttribute('aria-pressed', !(pressed));
+						button.setAttribute('aria-pressed', !pressed);
 						t.getElement(t.container).focus();
 					}
 				};
@@ -1589,7 +1588,7 @@ class MediaElementPlayer {
 		layers.appendChild(error);
 
 		bigPlay.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer ${t.options.classPrefix}overlay-play`;
-		bigPlay.innerHTML = generateControlButton(t.id, i18n.t('mejs.play'), i18n.t('mejs.play'), `${t.media.options.iconSprite}`,['icon-overlay-play'], `${t.options.classPrefix}`, `${t.options.classPrefix}overlay-button`);
+		bigPlay.innerHTML = generateControlButton(t.id, i18n.t('mejs.play'), i18n.t('mejs.play'), `${t.media.options.iconSprite}`,['icon-overlay-play'], `${t.options.classPrefix}`, `${t.options.classPrefix}overlay-button`, '', false);
 
 		bigPlay.addEventListener('click', () => {
 			// Removed 'touchstart' due issues on Samsung Android devices where a tap on bigPlay

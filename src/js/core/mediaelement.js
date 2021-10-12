@@ -91,6 +91,9 @@ class MediaElement {
 			t.mediaElement.originalNode.setAttribute('preload', 'none');
 		}
 
+		// prevent audio/video containers from getting focused
+		t.mediaElement.originalNode.setAttribute('tabindex', -1);
+
 		// add next to this one
 		t.mediaElement.originalNode.parentNode.insertBefore(t.mediaElement, t.mediaElement.originalNode);
 
