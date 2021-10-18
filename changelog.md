@@ -1,4 +1,9 @@
 # Version History
+*5.0.2 (2021/10/18)*
+* Reflect correct aria-pressed status of overlay play button when clicked for the first time
+* Reflect toggling aria-pressed status of the overlay play button correctly
+*Minimizing necessary tabs for Firefox by setting audio/video-element to tabindex="-1"
+
 *5.0.1 (2021/10/05)*
 * Fix for fullscreen video not centering in mobile view (#2881)
 * Fix for volume-current and volume-total becoming non-distinguishable with custom high-contrast settings enabled (#2878)

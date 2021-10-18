@@ -739,6 +739,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		t.mediaElement.originalNode.setAttribute('preload', 'none');
 	}
 
+	t.mediaElement.originalNode.setAttribute('tabindex', -1);
+
 	t.mediaElement.originalNode.parentNode.insertBefore(t.mediaElement, t.mediaElement.originalNode);
 
 	t.mediaElement.appendChild(t.mediaElement.originalNode);
@@ -1130,7 +1132,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '5.0.1';
+mejs.version = '5.0.2';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -4181,7 +4183,6 @@ var MediaElementPlayer = function () {
 
 				if (t.isVideo) {
 					t.clickToPlayPauseCallback = function () {
-
 						if (t.options.clickToPlayPause) {
 							var button = t.getElement(t.container).querySelector('.' + t.options.classPrefix + 'overlay-button'),
 							    pressed = button.getAttribute('aria-pressed');
@@ -5028,7 +5029,7 @@ var MediaElementPlayer = function () {
 			layers.appendChild(error);
 
 			bigPlay.className = t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay-play';
-			bigPlay.innerHTML = (0, _generate.generateControlButton)(t.id, _i18n2.default.t('mejs.play'), _i18n2.default.t('mejs.play'), '' + t.media.options.iconSprite, ['icon-overlay-play'], '' + t.options.classPrefix, t.options.classPrefix + 'overlay-button');
+			bigPlay.innerHTML = (0, _generate.generateControlButton)(t.id, _i18n2.default.t('mejs.play'), _i18n2.default.t('mejs.play'), '' + t.media.options.iconSprite, ['icon-overlay-play'], '' + t.options.classPrefix, t.options.classPrefix + 'overlay-button', '', false);
 
 			bigPlay.addEventListener('click', function () {
 				if (t.options.clickToPlayPause) {
@@ -8149,6 +8150,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function generateControlButton(playerId, ariaLabel, title, iconSprite, icons, classPrefix) {
 	var buttonClass = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
 	var ariaDescribedby = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : '';
+	var ariaPressed = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
 
 
 	if (typeof playerId !== 'string') {
@@ -8177,11 +8179,13 @@ function generateControlButton(playerId, ariaLabel, title, iconSprite, icons, cl
 
 	var ariaDescribedbyAttr = ariaDescribedby !== '' ? 'aria-describedby="' + ariaDescribedby + '" ' : '';
 
+	var ariaPressedAttr = ariaPressed !== null ? 'aria-pressed="' + ariaPressed + '"' : '';
+
 	var iconHtml = icons.map(function (icon) {
 		return '<svg xmlns="http://www.w3.org/2000/svg" id="' + playerId + '-' + icon + '" class="' + classPrefix + icon + '" aria-hidden="true" focusable="false">\n\t\t\t\t<use xlink:href="' + iconSprite + '#' + icon + '"></use>\n\t\t\t</svg>\n';
 	});
 
-	return '<button ' + className + ' aria-controls="' + playerId + '" title="' + title + '" aria-label="' + ariaLabel + '" ' + ariaDescribedbyAttr + '>\n\t\t\t' + iconHtml.join('') + '\n\t\t</button>';
+	return '<button ' + className + ' aria-controls="' + playerId + '" title="' + title + '" aria-label="' + ariaLabel + '" ' + ariaDescribedbyAttr + ' ' + ariaPressedAttr + '>\n\t\t\t' + iconHtml.join('') + '\n\t\t</button>';
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};
