@@ -739,6 +739,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		t.mediaElement.originalNode.setAttribute('preload', 'none');
 	}
 
+	t.mediaElement.originalNode.setAttribute('tabindex', -1);
+
 	t.mediaElement.originalNode.parentNode.insertBefore(t.mediaElement, t.mediaElement.originalNode);
 
 	t.mediaElement.appendChild(t.mediaElement.originalNode);
@@ -1130,7 +1132,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '5.0.1';
+mejs.version = '5.0.2';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
