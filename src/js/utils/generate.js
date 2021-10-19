@@ -51,7 +51,7 @@ export function generateControlButton (playerId, ariaLabel, title, iconSprite, i
 			</svg>
 `	})
 
-	return `<button ${className} aria-controls="${playerId}" title="${title}" aria-label="${ariaLabel}" ${ariaDescribedbyAttr} ${ariaPressedAttr}>
+	return `<button ${className} type="button" aria-controls="${playerId}" title="${title}" aria-label="${ariaLabel}" ${ariaDescribedbyAttr} ${ariaPressedAttr}>
 			${iconHtml.join('')}
 		</button>`;
 }
