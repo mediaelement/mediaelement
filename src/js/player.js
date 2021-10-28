@@ -124,24 +124,7 @@ export const config = {
 	// If error happens, set up HTML message via string or function
 	customError: null,
 	// Array of keyboard actions such as play/pause
-	keyActions: [
-		{
-			keys: [
-				32, // SPACEBAR
-				179 // GOOGLE play/pause button
-			],
-			action: (player) => {
-
-				if (!IS_FIREFOX) {
-					if (player.paused || player.ended) {
-						player.play();
-					} else {
-						player.pause();
-					}
-				}
-			}
-		}
-	]
+	keyActions: []
 };
 
 mejs.MepDefaults = config;
@@ -465,7 +448,7 @@ class MediaElementPlayer {
 
 		if (forceHide !== true && (!t.controlsAreVisible || t.options.alwaysShowControls ||
 			(t.paused && t.readyState === 4 && ((!t.options.hideVideoControlsOnLoad &&
-			t.currentTime <= 0) || (!t.options.hideVideoControlsOnPause && t.currentTime > 0))) ||
+				t.currentTime <= 0) || (!t.options.hideVideoControlsOnPause && t.currentTime > 0))) ||
 			(t.isVideo && !t.options.hideVideoControlsOnLoad && !t.readyState) ||
 			t.ended)) {
 			return;
@@ -651,7 +634,7 @@ class MediaElementPlayer {
 					if (t.options.clickToPlayPause) {
 						const
 							button = t.getElement(t.container)
-							.querySelector(`.${t.options.classPrefix}overlay-button`),
+								.querySelector(`.${t.options.classPrefix}overlay-button`),
 							pressed = button.getAttribute('aria-pressed')
 						;
 
@@ -1014,7 +997,7 @@ class MediaElementPlayer {
 
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
 		return (t.height.toString().indexOf('%') !== -1 || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
-		t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
+			t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
 	}
 
 	setResponsiveMode () {
@@ -1574,7 +1557,7 @@ class MediaElementPlayer {
 		loading.className = `${t.options.classPrefix}overlay ${t.options.classPrefix}layer`;
 		loading.innerHTML =
 			`<div class="${t.options.classPrefix}overlay-loading">` +
-				`<div class="${t.options.classPrefix}overlay-loading-bg-img">
+			`<div class="${t.options.classPrefix}overlay-loading-bg-img">
 					<svg xmlns="http://www.w3.org/2000/svg">
 						<use xlink:href="${t.media.options.iconSprite}#icon-loading-spinner"></use>
 					</svg>
@@ -1625,7 +1608,7 @@ class MediaElementPlayer {
 
 		if (t.media.rendererName !== null && ((/(youtube|facebook)/i.test(t.media.rendererName) &&
 			!(t.media.originalNode.getAttribute('poster') || player.options.poster ||
-			(typeof t.media.renderer.getPosterUrl === 'function' && t.media.renderer.getPosterUrl()))) ||
+				(typeof t.media.renderer.getPosterUrl === 'function' && t.media.renderer.getPosterUrl()))) ||
 			IS_STOCK_ANDROID || t.media.originalNode.getAttribute('autoplay'))) {
 			bigPlay.style.display = 'none';
 		}
@@ -1984,7 +1967,7 @@ class MediaElementPlayer {
 		if (typeof t.getElement(t.container) === 'object') {
 			const offscreen = t.getElement(t.container).parentNode.querySelector(`.${t.options.classPrefix}offscreen`);
 			if(offscreen){
-			offscreen.remove();
+				offscreen.remove();
 			}
 			t.getElement(t.container).remove();
 		}
