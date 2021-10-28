@@ -77,7 +77,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
-			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`, '', `${t.options.classPrefix}volume-slider`) :
+			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`, '', `${t.options.classPrefix}horizontal-volume-slider`) :
 			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`, '', `${t.options.classPrefix}volume-slider`) +
 			`<a class="${t.options.classPrefix}volume-slider" ` +
 				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
@@ -162,7 +162,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			anchor.setAttribute('aria-valuemax', 100);
 			anchor.setAttribute('aria-valuenow', 100);
 			anchor.setAttribute('role', 'slider');
-			anchor.innerHTML += `<span class="${t.options.classPrefix}offscreen">${volumeControlText}</span>` +
+			anchor.innerHTML += `<span class="${t.options.classPrefix}offscreen" id="${t.options.classPrefix}horizontal-volume-slider">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}horizontal-volume-total">` +
 				`<div class="${t.options.classPrefix}horizontal-volume-current"></div>` +
 				`<div class="${t.options.classPrefix}horizontal-volume-handle"></div>` +
