@@ -1,5 +1,5 @@
 # Version History
-*5.0.2 (2021/10/29)*
+*5.0.3 (2021/10/29)*
 * Add attribute `aria-describedby` to horizontal-volume button
 * Reinclude `type="button"` to the button, to prevent submit in forms. 
 * Consistent usage of space and return keys in all browsers (PR #2889 Fixed #2888)
