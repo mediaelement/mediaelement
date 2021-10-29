@@ -107,6 +107,7 @@ class MediaElement {
 		 */
 		const processURL = (url, type) => {
 			if (window.location.protocol === 'https:' && url.indexOf('http:') === 0 && IS_IOS && mejs.html5media.mediaTypes.indexOf(type) > -1) {
+				console.log('If Condition');
 				const xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = function () {
 					if (this.readyState === 4 && this.status === 200) {
@@ -114,7 +115,7 @@ class MediaElement {
 							url = window.URL || window.webkitURL,
 							blobUrl = url.createObjectURL(this.response)
 						;
-						t.mediaElement.originalNode.setAttribute('src', blobUrl);
+						t.mediaElement.originalNode.setAttribute('data-src', blobUrl);
 						return blobUrl;
 					}
 					return url;
@@ -128,26 +129,30 @@ class MediaElement {
 		};
 
 		let mediaFiles;
-
+		console.log(sources, 'sources');
 		if (sources !== null) {
 			mediaFiles = sources;
 		} else if (t.mediaElement.originalNode !== null) {
 
 			mediaFiles = [];
-
+			console.log(mediaFiles, 'mediaFiles');
+			console.log(t.mediaElement.originalNode.nodeName, 't.mediaElement.originalNode.nodeName');
 			switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
 				case 'iframe':
 					mediaFiles.push({
 						type: '',
-						src: t.mediaElement.originalNode.getAttribute('src')
+						src: t.mediaElement.originalNode.getAttribute('data-src')
 					});
 					break;
 				case 'audio':
 				case 'video':
 					const
 						sources = t.mediaElement.originalNode.children.length,
-						nodeSource = t.mediaElement.originalNode.getAttribute('src')
+						nodeSource = t.mediaElement.originalNode.getAttribute('data-src')
 					;
+					console.log(sources, 'sources');
+					console.log(nodeSource, 'nodeSource');
+
 
 					// Consider if node contains the `src` and `type` attributes
 					if (nodeSource) {
@@ -159,6 +164,7 @@ class MediaElement {
 							type: type,
 							src: processURL(nodeSource, type)
 						});
+						console.log(mediaFiles.src, 'mediaFiles src')
 					}
 
 					// test <source> types to see if they are usable
@@ -166,11 +172,12 @@ class MediaElement {
 						const n = t.mediaElement.originalNode.children[i];
 						if (n.tagName.toLowerCase() === 'source') {
 							const
-								src = n.getAttribute('src'),
+								src = n.getAttribute('data-src'),
 								type = formatType(src, n.getAttribute('type'))
 							;
-							mediaFiles.push({type: type, src: processURL(src, type)});
+							mediaFiles.push({type: type, src: src});
 						}
+						console.log(mediaFiles.src, 'mediafile src ');
 					}
 					break;
 			}
@@ -192,13 +199,14 @@ class MediaElement {
 		 * @return {Boolean}
 		 */
 		t.mediaElement.changeRenderer = (rendererName, mediaFiles) => {
-
+			console.log('changeRenderer');
 			const
 				t = this,
 				// If the first element of `mediaFiles` contain more than `src` and `type`
 				// pass the entire object; otherwise, just `src`
-				media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].src
+				media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].dataset.src
 			;
+			console.log( mediaFiles[0].dataset.src, 'dataset src');
 
 			// check for a match on the current renderer
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
@@ -312,7 +320,6 @@ class MediaElement {
 			},
 			assignGettersSetters = (propName) => {
 				if (propName !== 'src') {
-
 					const
 						capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`,
 						getFn = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
@@ -335,15 +342,16 @@ class MediaElement {
 			getSrc = () => (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) ? t.mediaElement.renderer.getSrc() : null,
 			setSrc = (value) => {
 				const mediaFiles = [];
-
+				console.log(mediaFiles, 'mediaFiles in setsrc');
 				if (typeof value === 'string') {
 					mediaFiles.push({
 						src: value,
 						type: value ? getTypeFromFile(value) : ''
 					});
-				} else if (typeof value === 'object' && value.src !== undefined) {
+				} else if (typeof value === 'object' && value.dataset.src !== undefined) {
 					const
-						src = absolutizeUrl(value.src),
+						src = absolutizeUrl(value.dataset.src),
+
 						type = value.type,
 						media = Object.assign(value, {
 							src: src,
@@ -351,13 +359,14 @@ class MediaElement {
 								getTypeFromFile(src) : type
 						})
 					;
+					console.log(src, 'only src');
 					mediaFiles.push(media);
 
 				} else if (Array.isArray(value)) {
 					for (let i = 0, total = value.length; i < total; i++) {
 
 						const
-							src = absolutizeUrl(value[i].src),
+							src = absolutizeUrl(value[i].dataset.src),
 							type = value[i].type,
 							media = Object.assign(value[i], {
 								src: src,
@@ -365,7 +374,7 @@ class MediaElement {
 									getTypeFromFile(src) : type
 							})
 						;
-
+						console.log(src, 'src in Array')
 						mediaFiles.push(media);
 					}
 				}
@@ -376,14 +385,14 @@ class MediaElement {
 						(t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers : [])),
 					event
 				;
-
+				console.log(t.mediaElement.dataset.src, 't.mediaElement.dataset.src')
 				// Ensure that the original gets the first source found
-				if (!t.mediaElement.paused && !(t.mediaElement.src == null || t.mediaElement.src === '')) {
+				if (!t.mediaElement.paused && !(t.mediaElement.dataset.src == null || t.mediaElement.dataset.src === '')) {
 					t.mediaElement.pause();
 					event = createEvent('pause', t.mediaElement);
 					t.mediaElement.dispatchEvent(event);
 				}
-				t.mediaElement.originalNode.src = (mediaFiles[0].src || '');
+				t.mediaElement.originalNode.dataset.src = (mediaFiles[0].src || '');
 
 				// At least there must be a media in the `mediaFiles` since the media tag can come up an
 				// empty source for starters
@@ -449,10 +458,10 @@ class MediaElement {
 			};
 
 		// Assign all methods/properties/events to fake node if renderer was found
-		addProperty(t.mediaElement, 'src', getSrc, setSrc);
+		addProperty(t.mediaElement, 'data-src', getSrc, setSrc);
+
 		t.mediaElement.getSrc = getSrc;
 		t.mediaElement.setSrc = setSrc;
-
 		for (let i = 0, total = props.length; i < total; i++) {
 			assignGettersSetters(props[i]);
 		}
@@ -526,7 +535,7 @@ class MediaElement {
 
 		// Set the best match based on renderers
 		if (mediaFiles.length) {
-			t.mediaElement.src = mediaFiles;
+			t.mediaElement.dataset.src = mediaFiles;
 		}
 
 		if (t.mediaElement.promises.length) {

@@ -75,12 +75,15 @@ class Renderer {
 			;
 
 			if (renderer !== null && renderer !== undefined) {
+				console.log('render');
 				for (let j = 0, jl = mediaFiles.length; j < jl; j++) {
+					console.log(mediaFiles[j].dataset.src)
+
 					if (typeof renderer.canPlayType === 'function' && typeof mediaFiles[j].type === 'string' &&
 						renderer.canPlayType(mediaFiles[j].type)) {
 						return {
 							rendererName: renderer.name,
-							src:  mediaFiles[j].src
+							src:  mediaFiles[j].dataset.src
 						};
 					}
 				}

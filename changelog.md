@@ -1,4 +1,9 @@
 # Version History
+*5.0.2 (2021/10/29)*
+* Add attribute `aria-describedby` to horizontal-volume button
+* Reinclude `type="button"` to the button, to prevent submit in forms. 
+* Consistent usage of space and return keys in all browsers (PR #2889 Fixed #2888)
+
 *5.0.2 (2021/10/18)*
 * Reflect correct aria-pressed status of overlay play button when clicked for the first time
 * Reflect toggling aria-pressed status of the overlay play button correctly

@@ -747,12 +747,13 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 	var processURL = function processURL(url, type) {
 		if (_window2.default.location.protocol === 'https:' && url.indexOf('http:') === 0 && _constants.IS_IOS && _mejs2.default.html5media.mediaTypes.indexOf(type) > -1) {
+			
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
 				if (this.readyState === 4 && this.status === 200) {
 					var _url = _window2.default.URL || _window2.default.webkitURL,
 					    blobUrl = _url.createObjectURL(this.response);
-					t.mediaElement.originalNode.setAttribute('src', blobUrl);
+					t.mediaElement.originalNode.setAttribute('data-src', blobUrl);
 					return blobUrl;
 				}
 				return url;
@@ -766,24 +767,27 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	};
 
 	var mediaFiles = void 0;
-
+	
 	if (sources !== null) {
 		mediaFiles = sources;
 	} else if (t.mediaElement.originalNode !== null) {
 
 		mediaFiles = [];
-
+		
+		
 		switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
 			case 'iframe':
 				mediaFiles.push({
 					type: '',
-					src: t.mediaElement.originalNode.getAttribute('src')
+					src: t.mediaElement.originalNode.getAttribute('data-src')
 				});
 				break;
 			case 'audio':
 			case 'video':
 				var _sources = t.mediaElement.originalNode.children.length,
-				    nodeSource = t.mediaElement.originalNode.getAttribute('src');
+				    nodeSource = t.mediaElement.originalNode.getAttribute('data-src');
+				
+				
 
 				if (nodeSource) {
 					var node = t.mediaElement.originalNode,
@@ -792,15 +796,17 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 						type: type,
 						src: processURL(nodeSource, type)
 					});
+					
 				}
 
 				for (var i = 0; i < _sources; i++) {
 					var n = t.mediaElement.originalNode.children[i];
 					if (n.tagName.toLowerCase() === 'source') {
-						var src = n.getAttribute('src'),
+						var src = n.getAttribute('data-src'),
 						    _type = (0, _media2.formatType)(src, n.getAttribute('type'));
-						mediaFiles.push({ type: _type, src: processURL(src, _type) });
+						mediaFiles.push({ type: _type, src: src });
 					}
+					
 				}
 				break;
 		}
@@ -814,9 +820,10 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.rendererName = null;
 
 	t.mediaElement.changeRenderer = function (rendererName, mediaFiles) {
-
+		
 		var t = _this,
-		    media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].src;
+		    media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].dataset.src;
+		
 
 		if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && t.mediaElement.renderer.name === rendererName) {
 			t.mediaElement.renderer.pause();
@@ -906,7 +913,6 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	},
 	    assignGettersSetters = function assignGettersSetters(propName) {
 		if (propName !== 'src') {
-
 			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1),
 			    getFn = function getFn() {
 				return t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && typeof t.mediaElement.renderer['get' + capName] === 'function' ? t.mediaElement.renderer['get' + capName]() : null;
@@ -927,43 +933,45 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	},
 	    setSrc = function setSrc(value) {
 		var mediaFiles = [];
-
+		
 		if (typeof value === 'string') {
 			mediaFiles.push({
 				src: value,
 				type: value ? (0, _media2.getTypeFromFile)(value) : ''
 			});
-		} else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.src !== undefined) {
-			var _src = (0, _media2.absolutizeUrl)(value.src),
+		} else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.dataset.src !== undefined) {
+			var _src = (0, _media2.absolutizeUrl)(value.dataset.src),
 			    _type2 = value.type,
 			    media = Object.assign(value, {
 				src: _src,
 				type: (_type2 === '' || _type2 === null || _type2 === undefined) && _src ? (0, _media2.getTypeFromFile)(_src) : _type2
 			});
+			
 			mediaFiles.push(media);
 		} else if (Array.isArray(value)) {
 			for (var _i2 = 0, total = value.length; _i2 < total; _i2++) {
 
-				var _src2 = (0, _media2.absolutizeUrl)(value[_i2].src),
+				var _src2 = (0, _media2.absolutizeUrl)(value[_i2].dataset.src),
 				    _type3 = value[_i2].type,
 				    _media = Object.assign(value[_i2], {
 					src: _src2,
 					type: (_type3 === '' || _type3 === null || _type3 === undefined) && _src2 ? (0, _media2.getTypeFromFile)(_src2) : _type3
 				});
-
+				
 				mediaFiles.push(_media);
 			}
 		}
 
 		var renderInfo = _renderer.renderer.select(mediaFiles, t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers : []),
 		    event = void 0;
+		
 
-		if (!t.mediaElement.paused && !(t.mediaElement.src == null || t.mediaElement.src === '')) {
+		if (!t.mediaElement.paused && !(t.mediaElement.dataset.src == null || t.mediaElement.dataset.src === '')) {
 			t.mediaElement.pause();
 			event = (0, _general.createEvent)('pause', t.mediaElement);
 			t.mediaElement.dispatchEvent(event);
 		}
-		t.mediaElement.originalNode.src = mediaFiles[0].src || '';
+		t.mediaElement.originalNode.dataset.src = mediaFiles[0].src || '';
 
 		if (renderInfo === null && mediaFiles[0].src) {
 			t.mediaElement.generateError('No renderer found', mediaFiles);
@@ -1024,10 +1032,10 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		};
 	};
 
-	addProperty(t.mediaElement, 'src', getSrc, setSrc);
+	addProperty(t.mediaElement, 'data-src', getSrc, setSrc);
+
 	t.mediaElement.getSrc = getSrc;
 	t.mediaElement.setSrc = setSrc;
-
 	for (var _i3 = 0, total = props.length; _i3 < total; _i3++) {
 		assignGettersSetters(props[_i3]);
 	}
@@ -1086,7 +1094,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	};
 
 	if (mediaFiles.length) {
-		t.mediaElement.src = mediaFiles;
+		t.mediaElement.dataset.src = mediaFiles;
 	}
 
 	if (t.mediaElement.promises.length) {
@@ -1132,7 +1140,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '5.0.2';
+mejs.version = '5.0.3';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1217,11 +1225,14 @@ var Renderer = function () {
 				    _renderer = this.renderers[key];
 
 				if (_renderer !== null && _renderer !== undefined) {
+					
 					for (var j = 0, jl = mediaFiles.length; j < jl; j++) {
+						
+
 						if (typeof _renderer.canPlayType === 'function' && typeof mediaFiles[j].type === 'string' && _renderer.canPlayType(mediaFiles[j].type)) {
 							return {
 								rendererName: _renderer.name,
-								src: mediaFiles[j].src
+								src: mediaFiles[j].dataset.src
 							};
 						}
 					}
@@ -3179,7 +3190,7 @@ Object.assign(_player2.default.prototype, {
 		    mute = _document2.default.createElement('div');
 
 		mute.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'volume-button ' + t.options.classPrefix + 'mute';
-		mute.innerHTML = mode === 'horizontal' ? (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix, '', t.options.classPrefix + 'volume-slider') : (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix, '', t.options.classPrefix + 'volume-slider') + ('<a class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen" id="' + t.options.classPrefix + 'volume-slider">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
+		mute.innerHTML = mode === 'horizontal' ? (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix, '', t.options.classPrefix + 'horizontal-volume-slider') : (0, _generate.generateControlButton)(t.id, muteText, muteText, '' + t.media.options.iconSprite, ['icon-mute', 'icon-unmute'], '' + t.options.classPrefix, '', t.options.classPrefix + 'volume-slider') + ('<a class="' + t.options.classPrefix + 'volume-slider" ') + ('aria-label="' + _i18n2.default.t('mejs.volume-slider') + '" aria-valuemin="0" aria-valuemax="100" role="slider" ') + 'aria-orientation="vertical">' + ('<span class="' + t.options.classPrefix + 'offscreen" id="' + t.options.classPrefix + 'volume-slider">' + volumeControlText + '</span>') + ('<div class="' + t.options.classPrefix + 'volume-total">') + ('<div class="' + t.options.classPrefix + 'volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'volume-handle"></div>') + '</div>' + '</a>';
 
 		t.addControlElement(mute, 'volume');
 
@@ -3249,7 +3260,7 @@ Object.assign(_player2.default.prototype, {
 			anchor.setAttribute('aria-valuemax', 100);
 			anchor.setAttribute('aria-valuenow', 100);
 			anchor.setAttribute('role', 'slider');
-			anchor.innerHTML += '<span class="' + t.options.classPrefix + 'offscreen">' + volumeControlText + '</span>' + ('<div class="' + t.options.classPrefix + 'horizontal-volume-total">') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-handle"></div>') + '</div>';
+			anchor.innerHTML += '<span class="' + t.options.classPrefix + 'offscreen" id="' + t.options.classPrefix + 'horizontal-volume-slider">' + volumeControlText + '</span>' + ('<div class="' + t.options.classPrefix + 'horizontal-volume-total">') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-current"></div>') + ('<div class="' + t.options.classPrefix + 'horizontal-volume-handle"></div>') + '</div>';
 			mute.parentNode.insertBefore(anchor, mute.nextSibling);
 		}
 
@@ -3738,19 +3749,7 @@ var config = exports.config = {
 
 	customError: null,
 
-	keyActions: [{
-		keys: [32, 179],
-		action: function action(player) {
-
-			if (!_constants.IS_FIREFOX) {
-				if (player.paused || player.ended) {
-					player.play();
-				} else {
-					player.pause();
-				}
-			}
-		}
-	}]
+	keyActions: []
 };
 
 _mejs2.default.MepDefaults = config;
@@ -8185,7 +8184,7 @@ function generateControlButton(playerId, ariaLabel, title, iconSprite, icons, cl
 		return '<svg xmlns="http://www.w3.org/2000/svg" id="' + playerId + '-' + icon + '" class="' + classPrefix + icon + '" aria-hidden="true" focusable="false">\n\t\t\t\t<use xlink:href="' + iconSprite + '#' + icon + '"></use>\n\t\t\t</svg>\n';
 	});
 
-	return '<button ' + className + ' aria-controls="' + playerId + '" title="' + title + '" aria-label="' + ariaLabel + '" ' + ariaDescribedbyAttr + ' ' + ariaPressedAttr + '>\n\t\t\t' + iconHtml.join('') + '\n\t\t</button>';
+	return '<button ' + className + ' type="button" aria-controls="' + playerId + '" title="' + title + '" aria-label="' + ariaLabel + '" ' + ariaDescribedbyAttr + ' ' + ariaPressedAttr + '>\n\t\t\t' + iconHtml.join('') + '\n\t\t</button>';
 }
 
 _mejs2.default.Utils = _mejs2.default.Utils || {};
