@@ -148,14 +148,12 @@ var Renderer = function () {
 				    _renderer = this.renderers[key];
 
 				if (_renderer !== null && _renderer !== undefined) {
-					
 					for (var j = 0, jl = mediaFiles.length; j < jl; j++) {
-						
 
 						if (typeof _renderer.canPlayType === 'function' && typeof mediaFiles[j].type === 'string' && _renderer.canPlayType(mediaFiles[j].type)) {
 							return {
 								rendererName: _renderer.name,
-								src: mediaFiles[j].dataset.src
+								src: mediaFiles[j].src
 							};
 						}
 					}
@@ -466,7 +464,7 @@ var YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							
+							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
