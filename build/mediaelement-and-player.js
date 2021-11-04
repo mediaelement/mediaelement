@@ -747,13 +747,12 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 
 	var processURL = function processURL(url, type) {
 		if (_window2.default.location.protocol === 'https:' && url.indexOf('http:') === 0 && _constants.IS_IOS && _mejs2.default.html5media.mediaTypes.indexOf(type) > -1) {
-			
 			var xhr = new XMLHttpRequest();
 			xhr.onreadystatechange = function () {
 				if (this.readyState === 4 && this.status === 200) {
 					var _url = _window2.default.URL || _window2.default.webkitURL,
 					    blobUrl = _url.createObjectURL(this.response);
-					t.mediaElement.originalNode.setAttribute('data-src', blobUrl);
+					t.mediaElement.originalNode.setAttribute('src', blobUrl);
 					return blobUrl;
 				}
 				return url;
@@ -767,27 +766,22 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	};
 
 	var mediaFiles = void 0;
-	
 	if (sources !== null) {
 		mediaFiles = sources;
 	} else if (t.mediaElement.originalNode !== null) {
 
 		mediaFiles = [];
-		
-		
 		switch (t.mediaElement.originalNode.nodeName.toLowerCase()) {
 			case 'iframe':
 				mediaFiles.push({
 					type: '',
-					src: t.mediaElement.originalNode.getAttribute('data-src')
+					src: t.mediaElement.originalNode.getAttribute('src')
 				});
 				break;
 			case 'audio':
 			case 'video':
 				var _sources = t.mediaElement.originalNode.children.length,
-				    nodeSource = t.mediaElement.originalNode.getAttribute('data-src');
-				
-				
+				    nodeSource = t.mediaElement.originalNode.getAttribute('src');
 
 				if (nodeSource) {
 					var node = t.mediaElement.originalNode,
@@ -796,17 +790,15 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 						type: type,
 						src: processURL(nodeSource, type)
 					});
-					
 				}
 
 				for (var i = 0; i < _sources; i++) {
 					var n = t.mediaElement.originalNode.children[i];
 					if (n.tagName.toLowerCase() === 'source') {
-						var src = n.getAttribute('data-src'),
+						var src = n.getAttribute('src'),
 						    _type = (0, _media2.formatType)(src, n.getAttribute('type'));
-						mediaFiles.push({ type: _type, src: src });
+						mediaFiles.push({ type: _type, src: processURL(src, _type) });
 					}
-					
 				}
 				break;
 		}
@@ -820,10 +812,8 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	t.mediaElement.rendererName = null;
 
 	t.mediaElement.changeRenderer = function (rendererName, mediaFiles) {
-		
 		var t = _this,
-		    media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].dataset.src;
-		
+		    media = Object.keys(mediaFiles[0]).length > 2 ? mediaFiles[0] : mediaFiles[0].src;
 
 		if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null && t.mediaElement.renderer.name === rendererName) {
 			t.mediaElement.renderer.pause();
@@ -933,45 +923,41 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	},
 	    setSrc = function setSrc(value) {
 		var mediaFiles = [];
-		
 		if (typeof value === 'string') {
 			mediaFiles.push({
 				src: value,
 				type: value ? (0, _media2.getTypeFromFile)(value) : ''
 			});
-		} else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.dataset.src !== undefined) {
-			var _src = (0, _media2.absolutizeUrl)(value.dataset.src),
+		} else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.src !== undefined) {
+			var _src = (0, _media2.absolutizeUrl)(value.src),
 			    _type2 = value.type,
 			    media = Object.assign(value, {
 				src: _src,
 				type: (_type2 === '' || _type2 === null || _type2 === undefined) && _src ? (0, _media2.getTypeFromFile)(_src) : _type2
 			});
-			
 			mediaFiles.push(media);
 		} else if (Array.isArray(value)) {
 			for (var _i2 = 0, total = value.length; _i2 < total; _i2++) {
 
-				var _src2 = (0, _media2.absolutizeUrl)(value[_i2].dataset.src),
+				var _src2 = (0, _media2.absolutizeUrl)(value[_i2].src),
 				    _type3 = value[_i2].type,
 				    _media = Object.assign(value[_i2], {
 					src: _src2,
 					type: (_type3 === '' || _type3 === null || _type3 === undefined) && _src2 ? (0, _media2.getTypeFromFile)(_src2) : _type3
 				});
-				
 				mediaFiles.push(_media);
 			}
 		}
 
 		var renderInfo = _renderer.renderer.select(mediaFiles, t.mediaElement.options.renderers.length ? t.mediaElement.options.renderers : []),
 		    event = void 0;
-		
 
-		if (!t.mediaElement.paused && !(t.mediaElement.dataset.src == null || t.mediaElement.dataset.src === '')) {
+		if (!t.mediaElement.paused && !(t.mediaElement.src == null || t.mediaElement.src === '')) {
 			t.mediaElement.pause();
 			event = (0, _general.createEvent)('pause', t.mediaElement);
 			t.mediaElement.dispatchEvent(event);
 		}
-		t.mediaElement.originalNode.dataset.src = mediaFiles[0].src || '';
+		t.mediaElement.originalNode.src = mediaFiles[0].src || '';
 
 		if (renderInfo === null && mediaFiles[0].src) {
 			t.mediaElement.generateError('No renderer found', mediaFiles);
@@ -1032,7 +1018,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 		};
 	};
 
-	addProperty(t.mediaElement, 'data-src', getSrc, setSrc);
+	addProperty(t.mediaElement, 'src', getSrc, setSrc);
 
 	t.mediaElement.getSrc = getSrc;
 	t.mediaElement.setSrc = setSrc;
@@ -1094,7 +1080,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 	};
 
 	if (mediaFiles.length) {
-		t.mediaElement.dataset.src = mediaFiles;
+		t.mediaElement.src = mediaFiles;
 	}
 
 	if (t.mediaElement.promises.length) {
@@ -1140,7 +1126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '5.0.3';
+mejs.version = '5.0.4';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1225,14 +1211,12 @@ var Renderer = function () {
 				    _renderer = this.renderers[key];
 
 				if (_renderer !== null && _renderer !== undefined) {
-					
 					for (var j = 0, jl = mediaFiles.length; j < jl; j++) {
-						
 
 						if (typeof _renderer.canPlayType === 'function' && typeof mediaFiles[j].type === 'string' && _renderer.canPlayType(mediaFiles[j].type)) {
 							return {
 								rendererName: _renderer.name,
-								src: mediaFiles[j].dataset.src
+								src: mediaFiles[j].src
 							};
 						}
 					}

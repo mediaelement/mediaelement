@@ -1,4 +1,7 @@
 # Version History
+*5.0.4 (2021/11/04)*
+* Switch data-src to src (PR #2893 Fixed #2891)
+
 *5.0.3 (2021/10/29)*
 * Add attribute `aria-describedby` to horizontal-volume button
 * Reinclude `type="button"` to the button, to prevent submit in forms. 
