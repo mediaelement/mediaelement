@@ -1380,6 +1380,7 @@ class MediaElementPlayer {
 
 			if (!posterImg && url) {
 				posterImg = document.createElement('img');
+				posterImg.alt = '';
 				posterImg.className = `${t.options.classPrefix}poster-img`;
 				posterImg.width = '100%';
 				posterImg.height = '100%';
