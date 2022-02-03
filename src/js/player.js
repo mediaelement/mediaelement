@@ -124,7 +124,9 @@ export const config = {
 	// If error happens, set up HTML message via string or function
 	customError: null,
 	// Array of keyboard actions such as play/pause
-	keyActions: []
+	keyActions: [],
+	// Hide WAI-ARIA video player title so it can be added externally on the website
+	hideScreenReaderTitle: false
 };
 
 mejs.MepDefaults = config;
@@ -262,10 +264,12 @@ class MediaElementPlayer {
 			t.node.removeAttribute('controls');
 			const videoPlayerTitle = t.isVideo ? i18n.t('mejs.video-player') : i18n.t('mejs.audio-player');
 			// insert description for screen readers
-			const offscreen = document.createElement('span');
-			offscreen.className = `${t.options.classPrefix}offscreen`;
-			offscreen.innerText = videoPlayerTitle;
-			t.media.parentNode.insertBefore(offscreen, t.media);
+			if (!t.options.hideScreenReaderTitle) {
+				const offscreen = document.createElement('span');
+				offscreen.className = `${t.options.classPrefix}offscreen`;
+				offscreen.innerText = videoPlayerTitle;
+				t.media.parentNode.insertBefore(offscreen, t.media);
+			}
 
 			// build container
 			t.container = document.createElement('div');
