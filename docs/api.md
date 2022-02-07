@@ -138,6 +138,7 @@ captionTextPreprocessor | function | _not set_ | Option to preprocess the captio
 toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to toggle button
 startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element. Note: Will not work when toggleCaptionsButtonWhenOnlyOne is set to `true`
 slidesSelector | string | _(empty)_ | Selector for slides; could be any valid JavaScript selector (`#id`, `.class`, `img`, etc.)
+hideScreenReaderTitle | boolean | false | Hide the video player screen reader title so it can be added by the website
 tracksText | string | `null` | Title for Closed Captioning button for WARIA purposes
 chaptersText  | string | `null` | Title for Chapters button for WARIA purposes
 muteText | string | `null` | Title for Mute button for WARIA purposes
