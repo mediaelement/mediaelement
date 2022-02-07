@@ -1126,7 +1126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '5.0.4';
+mejs.version = '5.0.5';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -3733,7 +3733,9 @@ var config = exports.config = {
 
 	customError: null,
 
-	keyActions: []
+	keyActions: [],
+
+	hideScreenReaderTitle: false
 };
 
 _mejs2.default.MepDefaults = config;
@@ -3840,10 +3842,12 @@ var MediaElementPlayer = function () {
 				t.node.removeAttribute('controls');
 				var videoPlayerTitle = t.isVideo ? _i18n2.default.t('mejs.video-player') : _i18n2.default.t('mejs.audio-player');
 
-				var offscreen = _document2.default.createElement('span');
-				offscreen.className = t.options.classPrefix + 'offscreen';
-				offscreen.innerText = videoPlayerTitle;
-				t.media.parentNode.insertBefore(offscreen, t.media);
+				if (!t.options.hideScreenReaderTitle) {
+					var offscreen = _document2.default.createElement('span');
+					offscreen.className = t.options.classPrefix + 'offscreen';
+					offscreen.innerText = videoPlayerTitle;
+					t.media.parentNode.insertBefore(offscreen, t.media);
+				}
 
 				t.container = _document2.default.createElement('div');
 				t.getElement(t.container).id = t.id;
@@ -4837,6 +4841,7 @@ var MediaElementPlayer = function () {
 
 				if (!posterImg && url) {
 					posterImg = _document2.default.createElement('img');
+					posterImg.alt = '';
 					posterImg.className = t.options.classPrefix + 'poster-img';
 					posterImg.width = '100%';
 					posterImg.height = '100%';

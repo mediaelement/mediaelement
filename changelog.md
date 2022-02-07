@@ -1,4 +1,8 @@
 # Version History
+*5.0.5 (2022/02/07)*
+* Added new option to hide screen reader title optionally (#2899)
+* WCAG: Add empty alt to poster image (#2898)
+
 *5.0.4 (2021/11/04)*
 * Switch data-src to src (PR #2893 Fixed #2891)
 
