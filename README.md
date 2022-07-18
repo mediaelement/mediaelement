@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # A better mediaelement for Drupal 7
 
 ### `<video>` and `<audio>` made even easier.
