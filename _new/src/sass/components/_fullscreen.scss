@@ -1,0 +1,26 @@
+/* Start: Fullscreen (Fullscreen / Unfullscreen) */
+
+.mejs__fullscreen-button svg.mejs__icon-unfullscreen {
+  display: none;
+}
+
+.mejs__fullscreen {
+  overflow: hidden !important;
+
+  svg.mejs__icon-fullscreen {
+    display: block;
+  }
+  svg.mejs__icon-unfullscreen {
+    display: none;
+  }
+}
+
+.mejs__unfullscreen {
+  svg.mejs__icon-unfullscreen {
+    display: block;
+  }
+  svg.mejs__icon-fullscreen {
+    display: none;
+  }
+}
+/* End: Fullscreen (Fullscreen / Unfullscreen) */

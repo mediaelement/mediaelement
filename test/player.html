@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>MediaElement.js 3.0 - audio/video unification library</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="../demo/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="../demo/favicon.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel="stylesheet" href="../src/css/mediaelementplayer.css">
+        <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+        <style>
+            h1 {
+                text-align: center;
+            }
+            section {
+                margin: 0 30px
+            }
+            #container {
+                padding: 0 20px 50px;
+            }
+            a {
+                word-wrap: break-word;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="container">
+            <section>
+                <h1>MediaElement.js</h1>
+                <h2>Test Suite</h2>
+
+                <div class="players" id="player1-container">
+
+                    <h3>Video Player</h3>
+
+                    <div class="media-wrapper">
+                        <video id="player1" width="640" height="360" style="max-width:100%;" preload="none">
+                            <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+                            <track kind="subtitles" srclang="en" label="English" src="../demo/mediaelement.vtt" default>
+                        </video>
+                    </div>
+                </div>
+
+                <div id="mocha"></div>
+
+            </section>
+        </div>
+
+        <script>
+		    var mejsL10n = {
+		    	"language":"en-US",
+                "strings":{
+                    "Close":"Close",
+                    "Fullscreen":"Fullscreen",
+                    "Download File":"Download File",
+                    "Download Video":"Download Video",
+                    "Play\/Pause":"Play\/Pause",
+                    "Mute Toggle":"Mute Toggle",
+                    "None":"None",
+                    "Turn off Fullscreen":"Turn off Fullscreen",
+                    "Go Fullscreen":"Go Fullscreen",
+                    "Unmute":"Unmute",
+                    "Mute":"Mute",
+                    "Captions\/Subtitles":"Captions\/Subtitles"
+		    	}
+		    };
+        </script>
+        <script src="../build/mediaelement-and-player.js"></script>
+        <script src="../node_modules/mocha/mocha.js"></script>
+        <script src="../node_modules/chai/chai.js"></script>
+        <script>
+            mocha.setup('bdd');
+            var expect = chai.expect;
+        </script>
+        <script src="player.tests.js"></script>
+        <script>
+                mocha.run();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,29 @@
+
+
+div.mejs-contextmenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: $foreground;
+  border: solid 1px $background;
+  z-index: 1001;
+}
+
+div.mejs-contextmenu-separator {
+  height: 1px;
+  margin: 5px 6px;
+  background: $midground;
+}
+
+div.mejs-contextmenu-item {
+  cursor: pointer;
+  padding: 4px 6px;
+  color: $midground;
+  &:hover {
+    background: #2C7C91;
+    color: $foreground;
+  }
+}

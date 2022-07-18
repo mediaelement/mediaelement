@@ -1,0 +1,130 @@
+{
+  "name": "mediaelement",
+  "license": "MIT",
+  "version": "5.0.5",
+  "main": "full.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mediaelement/mediaelement.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mediaelement/mediaelement/issues?q=is%3Aissue+is%3Aopen+label%3ABug"
+  },
+  "private": false,
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --compilers js:babel-register --require babel-polyfill --recursive test/unit",
+    "clean:assets": "rimraf dist/assets",
+    "clean:css": "rimraf dist/css",
+    "clean:js": "rimraf dist/js",
+    "clean": "rimraf dist/**/*",
+    "postcss": "node 'src/_build/postcss.js' --trace-warnings",
+    "sass": "sass src/sass:dist/css --no-source-map",
+    "js:beautify": "copyfiles -f 'src/js/*.js' 'dist/js' && prettier --config './src/_build/.prettierrc.json' --write './dist/js/**/*'",
+    "js:uglify": "uglifyjs-folder dist/js -eo dist/js",
+    "lint:js": "eslint -c 'src/_build/.eslintrc.json' 'src/js' --fix; exit 0",
+    "lint:css": "stylelint 'dist/css/' --config './src/_build/.stylelintrc.json' --fix; exit 0",
+    "lint:sass": "stylelint 'src/sass/' --config './src/_build/.sasslintrc.json'; exit 0",
+    "build:css": "run-s sass postcss",
+    "build:js": "run-s js:*",
+    "build:assets": "node src/_build/imagemin.mjs",
+    "build": "run-s clean build:*",
+    "watch:sass": "onchange src/sass -- run-s sass ",
+    "watch:js": "onchange src/js -- run-s build:js",
+    "watch:images": "onchange src/assets/images -- run-s build:images || onchange src/assets/icons -- run-s build:icons",
+    "watch": "run-p watch:*",
+    "postinstall": "run-p build watch"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "browserify-derequire": "^1.1.1",
+    "bundle-collapser": "^1.4.0",
+    "chai": "^4.3.6",
+    "coveralls": "^3.1.1",
+    "cssnano": "^5.1.12",
+    "bufferutil": "^4.0.6",
+    "cli-glob": "^0.1.0",
+    "concat": "^1.0.3",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.19.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "graceful-fs": "^4.2.10",
+    "imagemin-cli": "^7.0.0",
+    "istanbul": "^1.1.0-alpha.1",
+    "mocha": "^10.0.0",
+    "mocha-jsdom": "^2.0.0",
+    "promise-polyfill": "8.2.3",
+    "sass": "^1.53.0",
+    "stylelint": "^14.9.1",
+    "stylelint-order": "^5.0.0",
+    "js-beautify": "^1.14.4",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
+    "prettier": "2.7.1",
+    "rimraf": "^3.0.2",
+    "stylelint-config-standard": "^26.0.0",
+    "stylelint-group-selectors": "^1.0.9",
+    "svg-sprite-generator": "0.0.7",
+    "svg2png": "^4.1.1",
+    "uglifyjs-folder": "^3.1.2"
+  },
+  "dependencies": {
+    "global": "^4.4.0",
+    "svg4everybody": "^2.1.9",
+    "autoprefixer": "^10.4.7",
+    "cssnano": "^5.1.12",
+    "glob": "^8.0.3",
+    "imagemin": "^8.0.1",
+    "imagemin-jpegtran": "^7.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "imagemin-svgo": "^10.0.1",
+    "lodash": "^4.17.21",
+    "postcss": "^8.4.14",
+    "postcss-cli": "^10.0.0",
+    "postcss-nested": "^5.0.6",
+    "postcss-reporter": "^7.0.5",
+    "postcss-scss": "^4.0.4",
+    "postcss-sorting": "^7.0.1",
+    "precss": "^4.0.0",
+    "sharp": "^0.30.7",
+    "style-dictionary": "^3.7.1",
+    "stylelint": "^14.9.1",
+    "stylelint-order": "^5.0.0",
+    "utf-8-validate": "^5.0.9",
+    "yaml": "^2.1.1"
+  },
+  "browserify": {
+    "extensions": [
+      ".js"
+    ],
+    "transform": [
+      [
+        "babelify",
+        {
+          "comments": false,
+          "presets": [
+            [
+              "env",
+              {
+                "targets": {
+                  "browsers": [
+                    "last 5 versions",
+                    "ie > 10",
+                    "ios > 7",
+                    "android > 3"
+                  ]
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    ]
+  }
+}

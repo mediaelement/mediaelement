@@ -1,0 +1,10 @@
+{
+  "syntax": "postcss-scss",
+  "extends": "stylelint-config-standard",
+  "plugins": [
+    "stylelint-order"
+  ],
+  "output-file": "src/sass/lint.txt",
+  "ignoreFiles": [],
+  "rules": { }
+}

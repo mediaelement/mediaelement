@@ -1,0 +1,30 @@
+/* Start: Error */
+.mejs__overlay-error {
+  position: relative;
+
+  > img {
+    left: 0;
+    max-width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
+}
+
+.mejs__cannotplay {
+  position: relative;
+
+  &,
+  a {
+    color: $white;
+    font-size: 0.8em;
+  }
+
+  a,
+  p {
+    display: inline-block;
+    padding: 0 0.9375rem;
+    width: 100%;
+  }
+}
+/* End: Error */

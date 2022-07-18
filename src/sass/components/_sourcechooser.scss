@@ -1,0 +1,27 @@
+div.mejs-sourcechooser-selector {
+  visibility: hidden;
+  position: absolute;
+  bottom: 26px;
+  right: -10px;
+  width: 130px;
+  height: 100px;
+  padding: 10px;
+  border: solid 1px transparent;
+  background: url(background.png);
+  background: rgba(50, 50, 50, 0.7);
+  li {
+    margin: 0 0 6px 0;
+  }
+  input {
+    clear: both;
+    float: left;
+    margin: 3px 3px 0 5px;
+  }
+  label {
+    width: 100px;
+    float: left;
+    padding: 4px 0 0 0;
+    line-height: 15px;
+    font-size: 10px;
+  }
+}

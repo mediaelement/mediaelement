@@ -1,0 +1,17 @@
+{
+  "extends": "stylelint-config-standard",
+  "plugins": [
+    "stylelint-order",    
+    "stylelint-group-selectors"
+  ],
+  "syntax": "css",
+  "output-file": "./dist/css/lint.txt",
+  "ignoreFiles": [
+    "**/*/vendor/**/*.css"
+  ],
+  "rules": {
+    "plugin/stylelint-group-selectors": true,
+    "string-quotes": "double",
+    "unit-allowed-list": ["deg", "em", "ex", "ms", "rem", "%", "s", "px", "vw", "vh"]
+  }
+}

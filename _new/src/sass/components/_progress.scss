@@ -1,0 +1,183 @@
+/* Start: Time (Current / Duration) */
+.mejs__time {
+  box-sizing: content-box;
+  color: $white;
+  font-size: 0.6875rem;
+  font-weight: bold;
+  height: 1.5rem;
+  overflow: hidden;
+  padding: 1rem 0.375rem 0;
+  text-align: center;
+  width: auto;
+}
+/* End: Time (Current / Duration) */
+/* Start: Progress Bar */
+.mejs__time-rail {
+  direction: ltr;
+  flex-grow: 1;
+  height: 2.5rem;
+  margin: 0 0.625rem;
+  padding-top: 0.625rem;
+  position: relative;
+}
+
+.mejs__time-total,
+.mejs__time-buffering,
+.mejs__time-loaded,
+.mejs__time-current,
+.mejs__time-float,
+.mejs__time-hovered,
+.mejs__time-float-current,
+.mejs__time-float-corner,
+.mejs__time-marker {
+  border-radius: 0.125rem;
+  cursor: pointer;
+  display: block;
+  height: 0.625rem;
+  position: absolute;
+}
+
+.mejs__time-total {
+  background: opacify($white, 0.3);
+  margin: 0.3125rem 0 0;
+  width: 100%;
+}
+
+.mejs__time-buffering {
+  animation: buffering-stripes 2s linear infinite;
+  background: linear-gradient(
+    -45deg,
+    opacify($white, 0.4) 25%,
+    transparent 25%,
+    transparent 50%,
+    opacify($white, 0.4) 50%,
+    opacify($white, 0.4) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 0.9375rem 0.9375rem;
+  width: 100%;
+}
+
+.mejs__time-loaded {
+  background: opacify($white, 0.3);
+}
+
+.mejs__time-current,
+.mejs__time-handle-content {
+  background: opacify($white, 0.9);
+}
+
+.mejs__time-hovered {
+  background: opacify($white, 0.5);
+  z-index: 10;
+  
+  &.negative {
+  background: opacify($black, 0.2);
+}
+}
+
+
+.mejs__time-current,
+.mejs__time-buffering,
+.mejs__time-loaded,
+.mejs__time-hovered {
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: 0 0;
+  transition: 0.15s ease-in all;
+  width: 100%;
+}
+
+.mejs__time-buffering {
+  transform: scaleX(1);
+}
+
+.mejs__time-hovered {
+  transition: height 0.1s cubic-bezier(0.44, 0, 1, 1);
+
+  &.no-hover {
+    transform: scaleX(0) !important;
+  }
+}
+
+.mejs__time-handle,
+.mejs__time-handle-content {
+  border: 0.25rem solid transparent;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  transform: translateX(0);
+  z-index: 11;
+}
+
+.mejs__time-handle-content {
+  border: 0.25rem solid opacify($white, 0.9);
+  border-radius: 50%;
+  height: 0.625rem;
+  left: -0.4375rem;
+  top: -0.25rem;
+  transform: scale(0);
+  width: 0.625rem;
+}
+
+.mejs__time-rail:hover .mejs__time-handle-content,
+.mejs__time-rail .mejs__time-handle-content:focus,
+.mejs__time-rail .mejs__time-handle-content:active {
+  transform: scale(1);
+}
+
+.mejs__time-float {
+  background: $light-grey;
+  border: solid 1px $dark-grey;
+  bottom: 100%;
+  color: $black;
+  display: none;
+  height: 1.0625rem;
+  margin-bottom: 0.5625rem;
+  position: absolute;
+  text-align: center;
+  transform: translateX(-50%);
+  width: 2.25rem;
+}
+
+.mejs__time-float-current {
+  display: block;
+  left: 0;
+  margin: 0.125rem;
+  text-align: center;
+  width: 1.875rem;
+}
+
+.mejs__time-float-corner {
+  border: solid 0.3125rem $light-grey;
+  border-color: $light-grey transparent transparent;
+  border-radius: 0;
+  display: block;
+  height: 0;
+  left: 50%;
+  line-height: 0;
+  position: absolute;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 0;
+}
+
+.mejs__long-video {
+  .mejs__time-float {
+    margin-left: -1.4375rem;
+    width: 4rem;
+  }
+  .mejs__time-float-current {
+    width: 3.75rem;
+  }
+}
+
+.mejs__broadcast {
+  color: $white;
+  height: 0.625rem;
+  position: absolute;
+  top: 0.9375rem;
+  width: 100%;
+}
+/* End: Progress Bar */

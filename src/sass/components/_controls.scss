@@ -1,0 +1,114 @@
+// Set icon position within button element.
+$border: 1px;
+$ipos: 4px;
+
+// Player controls
+div.mejs-controls {
+  z-index: 999;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: $controlheight;
+  border-top: $midground 1px solid;
+  @include coverlay();
+
+  div {
+    float: left;
+   // width: $bsize + ($border*2);
+   // height: $bsize + ($border*2);
+    margin:  0 .1em;
+    padding: 0;
+  }
+
+  button {
+    cursor: pointer;
+    display: block;
+    width: $bsize;
+    height: $bsize;
+    margin: 2px 0 0;
+    padding: 12px;
+    border: $border solid $midground;
+    border-radius: 2px;
+    font-size: 0;
+    line-height: 0;
+    text-decoration: none;
+    vertical-align: middle;
+    background-color: transparent;
+    background-color: rgba($midground, 0);
+    background-image: url($controls);
+    background-size: auto $isize;
+    background-repeat: no-repeat;
+    transition: border-color 500ms,
+        background-color 700ms;
+
+    &:focus,
+    &:hover {
+      background-color: rgba($background, 0.5);
+      border-color: $background;
+    }
+
+    &:focus {
+      outline: dotted 1px #999;
+    }
+  }
+
+  .mejs-play button {
+    background-position: $ipos $ipos;
+  }
+
+  .mejs-pause button {
+    background-position: -(($ioffset - ($ipos/2)) - $ipos) $ipos;
+  }
+
+  .mejs-stop button {
+    background-position:  -(($ioffset * 2) - $ipos) $ipos;
+  }
+
+  .mejs-skip-back-button button{
+    background-position: -(($ioffset * 3) - $ipos) $ipos;
+  }
+
+  .mejs-mute button {
+    background-position: -(($ioffset * 5) - $ipos) $ipos;
+  }
+
+  .mejs-unmute button {
+    background-position: -(($ioffset * 6) - $ipos) $ipos;
+  }
+
+  .mejs-fullscreen-button button {
+    background-position: -(($ioffset * 7) - $ipos) $ipos;
+  }
+
+  .mejs-unfullscreen button {
+    background-position: -(($ioffset * 8) - $ipos) $ipos;
+  }
+
+  /*
+    // Not sure about these... are they used?
+    .mejs-captions-button button {
+    background-position: -(($ioffset * 11) - $ipos) $ipos;
+    }
+
+    .mejs-loop-on button {
+    background-position: -(($ioffset * 10) - $ipos) $ipos;
+    }
+
+    .mejs-loop-off button {
+    background-color: $midground;
+    }
+
+    .mejs-sourcechooser-button button {
+    background-position: -(($ioffset * ?) - $ipos) $ipos;
+    }
+
+    .mejs-backlight-active span {
+    background-position: -(($ioffset * ?) - $ipos) $ipos;
+    }
+
+    .mejs-backlight-inactive span {
+    background-position: -(($ioffset * ?) - $ipos) $ipos;
+    }
+  */
+}

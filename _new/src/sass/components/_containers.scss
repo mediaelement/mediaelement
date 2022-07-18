@@ -1,0 +1,49 @@
+.mejs__container {
+  background: $color-background;
+  box-sizing: border-box;
+  font-family: "Helvetica", Arial, serif;
+  position: relative;
+  text-align: left;
+  text-indent: 0;
+  vertical-align: top;
+
+  &:focus {
+    outline: none;
+  }
+
+  & * {
+    box-sizing: border-box;
+  }
+
+  /* Hide native play button and control bar from iOS to favor plugin button */
+  & video::-webkit-media-controls,
+  & video::-webkit-media-controls-panel,
+  & video::-webkit-media-controls-panel-container,
+  & video::-webkit-media-controls-start-playback-button {
+    -webkit-appearance: none;
+    display: none !important;
+  }
+}
+
+.mejs__fill-container,
+.mejs__fill-container .mejs__container {
+  height: 100%;
+  width: 100%;
+}
+
+.mejs__fill-container {
+  background: transparent;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.mejs__container-fullscreen {
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}

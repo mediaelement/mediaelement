@@ -1,0 +1,29 @@
+/**
+* Index styles
+*/
+
+@import "mixins";
+
+@import "offscreen";
+@import "wrappers";
+@import "overlay";
+@import "controls";
+@import "contextmenu";
+@import "time";
+@import "video";
+@import "volume";
+@import "embed";
+@import "fullscreen";
+@import "error";
+@import "no-svg";
+@import "animations";
+
+/* Plugin styles */
+@import "plugins";
+//@import "captions";
+//@import "chapters";
+//@import "postroll";
+//@import "sourcechooser";
+//@import "speed";
+
+

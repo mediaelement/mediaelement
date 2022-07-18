@@ -1,0 +1,43 @@
+
+.mejs-chapters {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-right: solid 1px $foreground;
+  width: 10000px;
+  z-index: 1;
+}
+
+.mejs-chapter {
+  position: absolute;
+  float: left;
+  overflow: hidden;
+  @include overlay($midground, $background);
+}
+
+.mejs-chapter-block {
+  cursor: pointer;
+  padding: 5px;
+  color: $foreground;
+  border-right: solid 1px $midground;
+  border-bottom: solid 1px $midground;
+  &:hover {
+    @include overlay($midground, $background);
+  }
+  .ch-title {
+    font-weight: bold;
+    text-overflow: ellipsis;
+    margin: 0 0 3px 0;
+    line-height: 12px;
+  }
+  .ch-timespan {
+    font-size: 12px;
+    line-height: 12px;
+    margin: 3px 0 4px 0;
+    text-overflow: ellipsis;
+  }
+}
+
+.mejs-chapter-block-last {
+  border-right: none;
+}

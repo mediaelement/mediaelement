@@ -1,0 +1,14 @@
+
+@mixin overlay($color1: $background, $color2: $midground, $opacity: 0.8) {
+  background: $color1;
+  background: rgba($color1, $opacity);
+  background: linear-gradient(rgba($color2, $opacity), rgba($color1, $opacity));
+}
+
+@mixin coverlay($color1: $background, $color2: $midground, $opacity: 0.8) {
+  background: $color1;
+  background: rgba($color1, $opacity);
+  background: if(lightness($color1) > 50%,
+  linear-gradient(rgba($color1, $opacity), rgba($color2, $opacity)),
+  linear-gradient(rgba($color2, $opacity), rgba($color1, $opacity)));
+}
