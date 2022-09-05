@@ -175,7 +175,7 @@ var FacebookRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							
+							console.log('facebook ' + fb.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {

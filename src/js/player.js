@@ -283,6 +283,7 @@ class MediaElementPlayer {
 				`<div class="${t.options.classPrefix}layers"></div>` +
 				`<div class="${t.options.classPrefix}controls"></div>` +
 				`</div>`;
+
 			t.getElement(t.container).addEventListener('focus', (e) => {
 				if (!t.controlsAreVisible && !t.hasFocus && t.controlsEnabled) {
 					t.showControls(true);
@@ -375,20 +376,20 @@ class MediaElementPlayer {
 			} else {
 				t.height = t.options['default' + capsTagName + 'Height'];
 			}
-
 			t.initialAspectRatio = (t.height >= t.width) ? t.width / t.height : t.height / t.width;
 
 			// set the size, while we wait for the plugins to load below
 			t.setPlayerSize(t.width, t.height);
-
-			// create MediaElementShim
-			playerOptions.pluginWidth = t.width;
-			playerOptions.pluginHeight = t.height;
 		}
+
 		// Hide media completely for audio that doesn't have any features
 		else if (!t.isVideo && !t.options.features.length && !t.options.useDefaultControls) {
 			t.node.style.display = 'none';
 		}
+
+		// create MediaElementShim
+		playerOptions.pluginWidth = t.width;
+		playerOptions.pluginHeight = t.height;
 
 		mejs.MepDefaults = playerOptions;
 
@@ -403,6 +404,7 @@ class MediaElementPlayer {
 	}
 
 	showControls (doAnimation) {
+
 		const t = this;
 
 		doAnimation = doAnimation === undefined || doAnimation;
@@ -446,6 +448,7 @@ class MediaElementPlayer {
 	}
 
 	hideControls (doAnimation, forceHide) {
+
 		const t = this;
 
 		doAnimation = doAnimation === undefined || doAnimation;
@@ -497,6 +500,7 @@ class MediaElementPlayer {
 	}
 
 	startControlsTimer (timeout) {
+
 		const t = this;
 
 		timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
@@ -510,6 +514,7 @@ class MediaElementPlayer {
 	}
 
 	killControlsTimer () {
+
 		const t = this;
 
 		if (t.controlsTimer !== null) {
@@ -869,7 +874,6 @@ class MediaElementPlayer {
 				t.setControlsSize();
 			};
 
-
 			// adjust controls whenever window sizes (used to be in fullscreen only)
 			t.globalBind('resize', t.globalResizeCallback);
 		}
@@ -998,7 +1002,6 @@ class MediaElementPlayer {
 
 	hasFluidMode () {
 		const t = this;
-
 		// detect 100% mode - use currentStyle for IE since css() doesn't return percentages
 		return (t.height.toString().indexOf('%') !== -1 || (t.node && t.node.style.maxWidth && t.node.style.maxWidth !== 'none' &&
 			t.node.style.maxWidth !== t.width) || (t.node && t.node.currentStyle && t.node.currentStyle.maxWidth === '100%'));
@@ -1008,9 +1011,7 @@ class MediaElementPlayer {
 		const
 			t = this,
 			parent = (() => {
-
 				let parentEl, el = t.getElement(t.container);
-
 				// traverse parents to find the closest visible one
 				while (el) {
 					try {
@@ -1029,9 +1030,7 @@ class MediaElementPlayer {
 					}
 					el = parentEl;
 				}
-
 				return null;
-
 			})(),
 			parentStyles = parent ? getComputedStyle(parent, null) : getComputedStyle(document.body, null),
 			nativeWidth = (() => {
@@ -1080,7 +1079,6 @@ class MediaElementPlayer {
 				if (isNaN(ratio) || ratio < 0.01 || ratio > 100) {
 					ratio = 1;
 				}
-
 				return ratio;
 			})(),
 			parentHeight = parseFloat(parentStyles.height)
@@ -1098,8 +1096,15 @@ class MediaElementPlayer {
 			} else {
 				newHeight = t.height >= t.width ? parseFloat(parentWidth / aspectRatio, 10) : parseFloat(parentWidth * aspectRatio, 10);
 			}
+
 		} else {
 			newHeight = nativeHeight;
+		}
+
+		// Set height of parent container as 'inner'-container, if newHeight is smaller than the height of 'inner'-container
+		// Prevent overlapping content when CSS is deactivated in the browsers
+		if (newHeight <= t.container.querySelector(`.${t.options.classPrefix}inner`).offsetHeight) {
+			newHeight = t.container.querySelector(`.${t.options.classPrefix}inner`).offsetHeight;
 		}
 
 		// If we were unable to compute newHeight, get the container height instead
@@ -1113,7 +1118,6 @@ class MediaElementPlayer {
 		}
 
 		if (newHeight && parentWidth) {
-
 			// set outer container size
 			t.getElement(t.container).style.width = `${parentWidth}px`;
 			t.getElement(t.container).style.height = `${newHeight}px`;
@@ -1125,6 +1129,11 @@ class MediaElementPlayer {
 			// if shim is ready, send the size to the embedded plugin
 			if (t.isVideo && t.media.setSize) {
 				t.media.setSize(parentWidth, newHeight);
+			}
+
+			if (newHeight <= t.container.querySelector(`.${t.options.classPrefix}inner`).offsetHeight) {
+				t.node.style.width = 'auto';
+				t.node.style.height = 'auto';
 			}
 
 			// set the layers
@@ -1204,7 +1213,6 @@ class MediaElementPlayer {
 			parentWidth = parseFloat(parentStyles.width),
 			parentHeight = parseFloat(parentStyles.height)
 		;
-
 		t.setDimensions('100%', '100%');
 
 		// This prevents an issue when displaying poster
@@ -1261,34 +1269,12 @@ class MediaElementPlayer {
 
 	setControlsSize () {
 		const t = this;
-
 		// skip calculation if hidden
 		if (!dom.visible(t.getElement(t.container))) {
 			return;
 		}
 
-		if (t.rail && dom.visible(t.rail)) {
-			const
-				totalStyles = t.total ? getComputedStyle(t.total, null) : null,
-				totalMargin = totalStyles ? parseFloat(totalStyles.marginLeft) + parseFloat(totalStyles.marginRight) : 0,
-				railStyles = getComputedStyle(t.rail),
-				railMargin = parseFloat(railStyles.marginLeft) + parseFloat(railStyles.marginRight)
-			;
-
-			let siblingsWidth = 0;
-
-			const siblings = dom.siblings(t.rail, (el) => el !== t.rail), total = siblings.length;
-			for (let i = 0; i < total; i++) {
-				siblingsWidth += siblings[i].offsetWidth;
-			}
-
-			siblingsWidth += totalMargin + ((totalMargin === 0) ? (railMargin * 2) : railMargin) + 1;
-
-			t.getElement(t.container).style.minWidth = `${siblingsWidth}px`;
-
-			const event = createEvent('controlsresize', t.getElement(t.container));
-			t.getElement(t.container).dispatchEvent(event);
-		} else {
+		if (!(t.rail && dom.visible(t.rail))) {
 			const children = t.getElement(t.controls).children;
 			let minWidth = 0;
 
@@ -1307,7 +1293,6 @@ class MediaElementPlayer {
 	 * @param {String} key
 	 */
 	addControlElement (element, key) {
-
 		const t = this;
 
 		if (t.featurePosition[key] !== undefined) {
@@ -1545,7 +1530,6 @@ class MediaElementPlayer {
 	}
 
 	buildoverlays (player, controls, layers, media) {
-
 		if (!player.isVideo) {
 			return;
 		}
@@ -1699,7 +1683,6 @@ class MediaElementPlayer {
 	}
 
 	buildkeyboard (player, controls, layers, media) {
-
 		const t = this;
 
 		t.getElement(t.container).addEventListener('keydown', () => {
@@ -1731,7 +1714,6 @@ class MediaElementPlayer {
 	}
 
 	onkeydown (player, media, e) {
-
 		if (player.hasFocus && player.options.enableKeyboard) {
 			// find a matching key
 			for (let i = 0, total = player.options.keyActions.length; i < total; i++) {

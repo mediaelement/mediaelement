@@ -143,7 +143,7 @@ var SoundCloudIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
