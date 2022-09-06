@@ -404,7 +404,6 @@ class MediaElementPlayer {
 	}
 
 	showControls (doAnimation) {
-
 		const t = this;
 
 		doAnimation = doAnimation === undefined || doAnimation;
@@ -448,7 +447,6 @@ class MediaElementPlayer {
 	}
 
 	hideControls (doAnimation, forceHide) {
-
 		const t = this;
 
 		doAnimation = doAnimation === undefined || doAnimation;
@@ -500,7 +498,6 @@ class MediaElementPlayer {
 	}
 
 	startControlsTimer (timeout) {
-
 		const t = this;
 
 		timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
@@ -514,7 +511,6 @@ class MediaElementPlayer {
 	}
 
 	killControlsTimer () {
-
 		const t = this;
 
 		if (t.controlsTimer !== null) {
