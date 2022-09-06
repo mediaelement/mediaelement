@@ -1,5 +1,3 @@
-'use strict';
-
 /*!
  * This is a `i18n` language object.
  *
@@ -11,6 +9,8 @@
  * @see core/i18n.js
  */
 (function (exports) {
+    'use strict';
+
 	if (exports.hr === undefined) {
 		exports.hr = {
 			'mejs.plural-form': 7,
