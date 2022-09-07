@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Hungarian
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.hu === undefined) {
+    'use strict';	if (exports.hu === undefined) {
 		exports.hu = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Fájl letöltése',			

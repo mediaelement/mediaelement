@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * French
@@ -11,7 +11,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.fr === undefined) {
+    'use strict';	if (exports.fr === undefined) {
 		exports.fr = {
 			'mejs.plural-form': 2,			
 			'mejs.download-file': 'Télécharger le fichier',			

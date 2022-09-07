@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Croatian
@@ -7,7 +7,7 @@
  *   Hrvoj3e (hrvoj3e@gmail.com) * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.hr === undefined) {
+    'use strict';	if (exports.hr === undefined) {
 		exports.hr = {
 			'mejs.plural-form': 7,			
 			'mejs.download-file': 'Preuzmi datoteku',			

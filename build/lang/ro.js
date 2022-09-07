@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Romanian
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.ro === undefined) {
+    'use strict';	if (exports.ro === undefined) {
 		exports.ro = {
 			'mejs.plural-form': 5,			
 			'mejs.download-file': 'Descarcă fişierul',			

@@ -1126,7 +1126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '5.0.5';
+mejs.version = '5.1.0';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1666,7 +1666,7 @@ var PluginDetector = exports.PluginDetector = {
 					version = axDetect(ax);
 				}
 			} catch (e) {
-				console.log(e);
+				
 			}
 		}
 		return version;
@@ -1737,7 +1737,7 @@ var FlashMediaElementRenderer = {
 					try {
 						flash.flashApi['set_' + propName](value);
 					} catch (e) {
-						console.log(e);
+						
 					}
 				} else {
 					flash.flashApiStack.push({
@@ -1762,10 +1762,10 @@ var FlashMediaElementRenderer = {
 							try {
 								flash.flashApi['fire_' + methodName]();
 							} catch (e) {
-								console.log(e);
+								
 							}
 						} else {
-							console.log('flash', 'missing method', methodName);
+							
 						}
 					} else {
 						flash.flashApiStack.push({
@@ -2991,7 +2991,7 @@ var YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
+							
 							break;
 					}
 				} else {

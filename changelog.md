@@ -1,4 +1,9 @@
 # Version History
+*5.1.0 (2022/09/07)*
+* Detect when seek has been called by user interaction (#2869)
+* Use of strict mode in language files may lead to javascript error when used in a JS packer (#2870) 
+* Fix container height and width calculation when css is deactivated (#2906)
+
 *5.0.5 (2022/02/07)*
 * Added new option to hide screen reader title optionally (#2899)
 * WCAG: Add empty alt to poster image (#2898)

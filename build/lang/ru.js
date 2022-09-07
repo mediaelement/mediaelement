@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Russian
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.ru === undefined) {
+    'use strict';	if (exports.ru === undefined) {
 		exports.ru = {
 			'mejs.plural-form': 7,			
 			'mejs.download-file': 'Скачать файл',			

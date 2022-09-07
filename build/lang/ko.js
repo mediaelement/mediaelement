@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Korean
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.ko === undefined) {
+    'use strict';	if (exports.ko === undefined) {
 		exports.ko = {
 			'mejs.plural-form': 0,			
 			'mejs.download-file': '파일 다운로드',			

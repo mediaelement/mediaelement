@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Dutch
@@ -11,7 +11,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.nl === undefined) {
+    'use strict';	if (exports.nl === undefined) {
 		exports.nl = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Bestand downloaden',			

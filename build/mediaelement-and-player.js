@@ -1126,7 +1126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '5.0.5';
+mejs.version = '5.1.0';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -3948,7 +3948,6 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'showControls',
 		value: function showControls(doAnimation) {
-
 			var t = this;
 
 			doAnimation = doAnimation === undefined || doAnimation;
@@ -3998,7 +3997,6 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'hideControls',
 		value: function hideControls(doAnimation, forceHide) {
-
 			var t = this;
 
 			doAnimation = doAnimation === undefined || doAnimation;
@@ -4049,7 +4047,6 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'startControlsTimer',
 		value: function startControlsTimer(timeout) {
-
 			var t = this;
 
 			timeout = typeof timeout !== 'undefined' ? timeout : t.options.controlsTimeoutDefault;
@@ -4064,7 +4061,6 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'killControlsTimer',
 		value: function killControlsTimer() {
-
 			var t = this;
 
 			if (t.controlsTimer !== null) {
@@ -4281,7 +4277,7 @@ var MediaElementPlayer = function () {
 								}
 							}, 20);
 						} catch (exp) {
-							console.log(exp);
+							
 						}
 					}
 
@@ -5961,7 +5957,7 @@ var PluginDetector = exports.PluginDetector = {
 					version = axDetect(ax);
 				}
 			} catch (e) {
-				console.log(e);
+				
 			}
 		}
 		return version;
@@ -6032,7 +6028,7 @@ var FlashMediaElementRenderer = {
 					try {
 						flash.flashApi['set_' + propName](value);
 					} catch (e) {
-						console.log(e);
+						
 					}
 				} else {
 					flash.flashApiStack.push({
@@ -6057,10 +6053,10 @@ var FlashMediaElementRenderer = {
 							try {
 								flash.flashApi['fire_' + methodName]();
 							} catch (e) {
-								console.log(e);
+								
 							}
 						} else {
-							console.log('flash', 'missing method', methodName);
+							
 						}
 					} else {
 						flash.flashApiStack.push({
@@ -7286,7 +7282,7 @@ var YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
+							
 							break;
 					}
 				} else {

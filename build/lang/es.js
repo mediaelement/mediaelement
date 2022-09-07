@@ -9,8 +9,9 @@
  *   Rafael Miranda (GitHub: @rafa8626)
  *
  * @see core/i18n.js
- */(function (exports) {
-	if (exports.es === undefined) {
+ */
+(function (exports) {
+    'use strict';	if (exports.es === undefined) {
 		exports.es = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Descargar archivo',			

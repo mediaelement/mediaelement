@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Malay (for inter-country use - see the countries mentioned in infobox`s `native to` at https://en.wikipedia.org/wiki/Malay_language)
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.ms === undefined) {
+    'use strict';	if (exports.ms === undefined) {
 		exports.ms = {
 			'mejs.plural-form': 0,			
 			'mejs.download-file': 'Muat Turun Fail',			

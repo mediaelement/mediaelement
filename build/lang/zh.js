@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Chinese (Traditional)
@@ -11,7 +11,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.zh === undefined) {
+    'use strict';	if (exports.zh === undefined) {
 		exports.zh = {
 			'mejs.plural-form': 0,			
 			'mejs.download-file': '下載檔案',			

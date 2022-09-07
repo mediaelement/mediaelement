@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Catalan
@@ -9,7 +9,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.ca === undefined) {
+    'use strict';	if (exports.ca === undefined) {
 		exports.ca = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Descarregar arxiu',			

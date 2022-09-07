@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Turkish
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-    if (exports.tr === undefined) {
+    'use strict';    if (exports.tr === undefined) {
         exports.tr = {
             'mejs.plural-form': 1,            
             'mejs.download-file': 'Dosyayı İndir',            

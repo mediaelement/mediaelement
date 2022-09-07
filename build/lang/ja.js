@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Japanese
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.ja === undefined) {
+    'use strict';	if (exports.ja === undefined) {
 		exports.ja = {
 			'mejs.plural-form': 0,			
 			'mejs.download-file': 'ファイルをダウンロードする',			

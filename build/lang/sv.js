@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Swedish
@@ -9,7 +9,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.sv === undefined) {
+    'use strict';	if (exports.sv === undefined) {
 		exports.sv = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Ladda ner fil',			

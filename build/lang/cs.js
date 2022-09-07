@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Czech
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.cs === undefined) {
+    'use strict';	if (exports.cs === undefined) {
 		exports.cs = {
 			'mejs.plural-form': 8,			
 			'mejs.download-file': 'Stáhnout soubor',			

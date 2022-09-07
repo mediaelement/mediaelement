@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * German
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.de === undefined) {
+    'use strict';	if (exports.de === undefined) {
 		exports.de = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Datei herunterladen',			

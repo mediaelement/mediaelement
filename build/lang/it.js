@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Italian
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.it === undefined) {
+    'use strict';	if (exports.it === undefined) {
 		exports.it = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Scaricare il file',			

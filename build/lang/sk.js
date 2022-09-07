@@ -1,4 +1,4 @@
-'use strict';/*!
+/*!
  * This is a `i18n` language object.
  *
  * Slovak
@@ -10,7 +10,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-	if (exports.sk === undefined) {
+    'use strict';	if (exports.sk === undefined) {
 		exports.sk = {
 			'mejs.plural-form': 8,			
 			'mejs.download-file': 'Prevziať súbor',			

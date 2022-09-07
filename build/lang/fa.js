@@ -7,7 +7,8 @@
  *   wmateam (GitHub: @wmateam)
  *
  * @see core/i18n.js
- */(function (exports) {
+ */
+(function (exports) {
     'use strict';
     
     if (exports.fa === undefined) {
