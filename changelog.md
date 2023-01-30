@@ -1,4 +1,16 @@
 # Version History
+
+*6.0.0* (2023/01/30)
+* Fix missing video tracks after player is removed
+* Added browser-native subtitle support and removed custom VTT/DFXP parsing
+* Removed support for "slides" tracks which were non-functional 
+* Removed options: "tracksAriaLive", "captionTextPreprocessor", "slidesSelector"
+* Renamed "startLanguage" option to "autoplayCaptionLanguage" for clarity
+* New option "chaptersLanguage" to set the language of the displayed chapters track.
+* new option "defaultTrackLine" to control in which line subtitles are displayed by default 
+* Fixed being able to activate disabled caption-buttons 
+* Fixed "default" track not automatically playing (subtitles and captions tracks only)
+
 *5.1.0 (2022/09/07)*
 * Detect when seek has been called by user interaction (#2869)
 * Use of strict mode in language files may lead to javascript error when used in a JS packer (#2870) 

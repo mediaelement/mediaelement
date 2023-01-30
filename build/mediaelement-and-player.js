@@ -2372,8 +2372,6 @@ var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _time = _dereq_(32);
-
 var _general = _dereq_(28);
 
 var _dom = _dereq_(27);
@@ -2383,743 +2381,624 @@ var _generate = _dereq_(29);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 Object.assign(_player.config, {
-	startLanguage: '',
+  autoplayCaptionLanguage: null,
 
-	tracksText: null,
+  defaultTrackLine: -3,
 
-	chaptersText: null,
+  tracksText: null,
 
-	tracksAriaLive: false,
+  chaptersText: null,
 
-	hideCaptionsButtonWhenEmpty: true,
+  chaptersLanguage: null,
 
-	toggleCaptionsButtonWhenOnlyOne: false,
+  hideCaptionsButtonWhenEmpty: true,
 
-	slidesSelector: ''
+  toggleCaptionsButtonWhenOnlyOne: false
 });
 
 Object.assign(_player2.default.prototype, {
-	hasChapters: false,
-
-	buildtracks: function buildtracks(player, controls, layers, media) {
-
-		this.findTracks();
-
-		if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
-			return;
-		}
-
-		var t = this,
-		    attr = t.options.tracksAriaLive ? ' role="log" aria-live="assertive" aria-atomic="false"' : '',
-		    tracksTitle = (0, _general.isString)(t.options.tracksText) ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
-		    chaptersTitle = (0, _general.isString)(t.options.chaptersText) ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters'),
-		    total = player.trackFiles === null ? player.tracks.length : player.trackFiles.length;
-
-		if (t.domNode.textTracks) {
-			for (var i = t.domNode.textTracks.length - 1; i >= 0; i--) {
-				t.domNode.textTracks[i].mode = 'hidden';
-			}
-		}
-
-		t.cleartracks(player);
-
-		player.captions = _document2.default.createElement('div');
-		player.captions.className = t.options.classPrefix + 'captions-layer ' + t.options.classPrefix + 'layer';
-		player.captions.innerHTML = '<div class="' + t.options.classPrefix + 'captions-position ' + t.options.classPrefix + 'captions-position-hover"' + attr + '>' + ('<span class="' + t.options.classPrefix + 'captions-text"></span>') + '</div>';
-		player.captions.style.display = 'none';
-		layers.insertBefore(player.captions, layers.firstChild);
-
-		player.captionsText = player.captions.querySelector('.' + t.options.classPrefix + 'captions-text');
-
-		player.captionsButton = _document2.default.createElement('div');
-		player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
-		player.captionsButton.innerHTML = (0, _generate.generateControlButton)(t.id, tracksTitle, tracksTitle, '' + t.media.options.iconSprite, ['icon-captions'], '' + t.options.classPrefix) + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
-
-		t.addControlElement(player.captionsButton, 'tracks');
-
-		player.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-input').disabled = false;
-
-		player.chaptersButton = _document2.default.createElement('div');
-		player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
-		player.chaptersButton.innerHTML = (0, _generate.generateControlButton)(t.id, chaptersTitle, chaptersTitle, '' + t.media.options.iconSprite, ['icon-chapters'], '' + t.options.classPrefix) + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
-
-		var subtitleCount = 0;
-
-		for (var _i = 0; _i < total; _i++) {
-			var kind = player.tracks[_i].kind,
-			    src = player.tracks[_i].src;
-			if (src.trim()) {
-				if (kind === 'subtitles' || kind === 'captions') {
-					subtitleCount++;
-				} else if (kind === 'chapters' && !controls.querySelector('.' + t.options.classPrefix + 'chapter-selector')) {
-					player.captionsButton.parentNode.insertBefore(player.chaptersButton, player.captionsButton);
-				}
-			}
-		}
-
-		player.trackToLoad = -1;
-		player.selectedTrack = null;
-		player.isLoadingTrack = false;
-
-		for (var _i2 = 0; _i2 < total; _i2++) {
-			var _kind = player.tracks[_i2].kind;
-			if (player.tracks[_i2].src.trim() && (_kind === 'subtitles' || _kind === 'captions')) {
-				player.addTrackButton(player.tracks[_i2].trackId, player.tracks[_i2].srclang, player.tracks[_i2].label);
-			}
-		}
-
-		player.loadNextTrack();
-
-		var inEvents = ['mouseenter', 'focusin'],
-		    outEvents = ['mouseleave', 'focusout'];
-
-		if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitleCount === 1) {
-			player.captionsButton.addEventListener('click', function (e) {
-				var trackId = 'none';
-				if (player.selectedTrack === null) {
-					trackId = player.tracks[0].trackId;
-				}
-				var keyboard = e.keyCode || e.which;
-				player.setTrack(trackId, typeof keyboard !== 'undefined');
-			});
-		} else {
-			var labels = player.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selector-label'),
-			    captions = player.captionsButton.querySelectorAll('input[type=radio]');
-
-			for (var _i3 = 0, _total = inEvents.length; _i3 < _total; _i3++) {
-				player.captionsButton.addEventListener(inEvents[_i3], function () {
-					(0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
-				});
-			}
-
-			for (var _i4 = 0, _total2 = outEvents.length; _i4 < _total2; _i4++) {
-				player.captionsButton.addEventListener(outEvents[_i4], function () {
-					(0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
-				});
-			}
-
-			for (var _i5 = 0, _total3 = captions.length; _i5 < _total3; _i5++) {
-				captions[_i5].addEventListener('click', function (e) {
-					var keyboard = e.keyCode || e.which;
-					player.setTrack(this.value, typeof keyboard !== 'undefined');
-				});
-			}
-
-			for (var _i6 = 0, _total4 = labels.length; _i6 < _total4; _i6++) {
-				labels[_i6].addEventListener('click', function (e) {
-					var radio = (0, _dom.siblings)(this, function (el) {
-						return el.tagName === 'INPUT';
-					})[0],
-					    event = (0, _general.createEvent)('click', radio);
-					radio.dispatchEvent(event);
-					e.preventDefault();
-				});
-			}
-
-			player.captionsButton.addEventListener('keydown', function (e) {
-				e.stopPropagation();
-			});
-		}
-
-		for (var _i7 = 0, _total5 = inEvents.length; _i7 < _total5; _i7++) {
-			player.chaptersButton.addEventListener(inEvents[_i7], function () {
-				if (this.querySelector('.' + t.options.classPrefix + 'chapters-selector-list').children.length) {
-					(0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
-				}
-			});
-		}
-
-		for (var _i8 = 0, _total6 = outEvents.length; _i8 < _total6; _i8++) {
-			player.chaptersButton.addEventListener(outEvents[_i8], function () {
-				(0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
-			});
-		}
-
-		player.chaptersButton.addEventListener('keydown', function (e) {
-			e.stopPropagation();
-		});
-
-		if (!player.options.alwaysShowControls) {
-			player.getElement(player.container).addEventListener('controlsshown', function () {
-				(0, _dom.addClass)(player.getElement(player.container).querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
-			});
-
-			player.getElement(player.container).addEventListener('controlshidden', function () {
-				if (!media.paused) {
-					(0, _dom.removeClass)(player.getElement(player.container).querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
-				}
-			});
-		} else {
-			(0, _dom.addClass)(player.getElement(player.container).querySelector('.' + t.options.classPrefix + 'captions-position'), t.options.classPrefix + 'captions-position-hover');
-		}
-
-		media.addEventListener('timeupdate', function () {
-			player.displayCaptions();
-		});
-
-		if (player.options.slidesSelector !== '') {
-			player.slidesContainer = _document2.default.querySelectorAll(player.options.slidesSelector);
-
-			media.addEventListener('timeupdate', function () {
-				player.displaySlides();
-			});
-		}
-	},
-	cleartracks: function cleartracks(player) {
-		if (player) {
-			if (player.captions) {
-				player.captions.remove();
-			}
-			if (player.chapters) {
-				player.chapters.remove();
-			}
-			if (player.captionsText) {
-				player.captionsText.remove();
-			}
-			if (player.captionsButton) {
-				player.captionsButton.remove();
-			}
-			if (player.chaptersButton) {
-				player.chaptersButton.remove();
-			}
-		}
-	},
-	rebuildtracks: function rebuildtracks() {
-		var t = this;
-		t.findTracks();
-		t.buildtracks(t, t.getElement(t.controls), t.getElement(t.layers), t.media);
-	},
-	findTracks: function findTracks() {
-		var t = this,
-		    tracktags = t.trackFiles === null ? t.node.querySelectorAll('track') : t.trackFiles,
-		    total = tracktags.length;
-
-		t.tracks = [];
-		for (var i = 0; i < total; i++) {
-			var track = tracktags[i],
-			    srclang = track.getAttribute('srclang').toLowerCase() || '',
-			    trackId = t.id + '_track_' + i + '_' + track.getAttribute('kind') + '_' + srclang;
-			t.tracks.push({
-				trackId: trackId,
-				srclang: srclang,
-				src: track.getAttribute('src'),
-				kind: track.getAttribute('kind'),
-				label: track.getAttribute('label') || '',
-				entries: [],
-				isLoaded: false
-			});
-		}
-	},
-	setTrack: function setTrack(trackId, setByKeyboard) {
-
-		var t = this,
-		    radios = t.captionsButton.querySelectorAll('input[type="radio"]'),
-		    captions = t.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selected'),
-		    track = t.captionsButton.querySelector('input[value="' + trackId + '"]');
-
-		for (var i = 0, total = radios.length; i < total; i++) {
-			radios[i].checked = false;
-		}
-
-		for (var _i9 = 0, _total7 = captions.length; _i9 < _total7; _i9++) {
-			(0, _dom.removeClass)(captions[_i9], t.options.classPrefix + 'captions-selected');
-		}
-
-		track.checked = true;
-		var labels = (0, _dom.siblings)(track, function (el) {
-			return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
-		});
-		for (var _i10 = 0, _total8 = labels.length; _i10 < _total8; _i10++) {
-			(0, _dom.addClass)(labels[_i10], t.options.classPrefix + 'captions-selected');
-		}
-
-		if (trackId === 'none') {
-			t.selectedTrack = null;
-			(0, _dom.removeClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
-		} else {
-			for (var _i11 = 0, _total9 = t.tracks.length; _i11 < _total9; _i11++) {
-				var _track = t.tracks[_i11];
-				if (_track.trackId === trackId) {
-					if (t.selectedTrack === null) {
-						(0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
-					}
-					t.selectedTrack = _track;
-					t.captions.setAttribute('lang', t.selectedTrack.srclang);
-					t.displayCaptions();
-					break;
-				}
-			}
-		}
-
-		var event = (0, _general.createEvent)('captionschange', t.media);
-		event.detail.caption = t.selectedTrack;
-		t.media.dispatchEvent(event);
-
-		if (!setByKeyboard) {
-			setTimeout(function () {
-				t.getElement(t.container).focus();
-			}, 500);
-		}
-	},
-	loadNextTrack: function loadNextTrack() {
-		var t = this;
-
-		t.trackToLoad++;
-		if (t.trackToLoad < t.tracks.length) {
-			t.isLoadingTrack = true;
-			t.loadTrack(t.trackToLoad);
-		} else {
-			t.isLoadingTrack = false;
-			t.checkForTracks();
-		}
-	},
-	loadTrack: function loadTrack(index) {
-		var t = this,
-		    track = t.tracks[index];
-
-		if (track !== undefined && (track.src !== undefined || track.src !== "")) {
-			(0, _dom.ajax)(track.src, 'text', function (d) {
-				track.entries = typeof d === 'string' && /<tt\s+xml/ig.exec(d) ? _mejs2.default.TrackFormatParser.dfxp.parse(d) : _mejs2.default.TrackFormatParser.webvtt.parse(d);
-
-				track.isLoaded = true;
-				t.enableTrackButton(track);
-				t.loadNextTrack();
-
-				if (track.kind === 'slides') {
-					t.setupSlides(track);
-				} else if (track.kind === 'chapters' && !t.hasChapters) {
-						t.drawChapters(track);
-						t.hasChapters = true;
-					}
-			}, function () {
-				t.removeTrackButton(track.trackId);
-				t.loadNextTrack();
-			});
-		}
-	},
-	enableTrackButton: function enableTrackButton(track) {
-		var t = this,
-		    lang = track.srclang,
-		    target = _document2.default.getElementById('' + track.trackId);
-
-		if (!target) {
-			return;
-		}
-
-		var label = track.label;
-
-		if (label === '') {
-			label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
-		}
-		target.disabled = false;
-		var targetSiblings = (0, _dom.siblings)(target, function (el) {
-			return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
-		});
-		for (var i = 0, total = targetSiblings.length; i < total; i++) {
-			targetSiblings[i].innerHTML = label;
-		}
-
-		if (t.options.startLanguage === lang) {
-			target.checked = true;
-			var event = (0, _general.createEvent)('click', target);
-			target.dispatchEvent(event);
-		}
-	},
-	removeTrackButton: function removeTrackButton(trackId) {
-		var element = _document2.default.getElementById('' + trackId);
-		if (element) {
-			var button = element.closest('li');
-			if (button) {
-				button.remove();
-			}
-		}
-	},
-	addTrackButton: function addTrackButton(trackId, lang, label) {
-		var t = this;
-		if (label === '') {
-			label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
-		}
-
-		t.captionsButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'captions-selector-list-item">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_captions" id="' + trackId + '" value="' + trackId + '" disabled>') + ('<label class="' + t.options.classPrefix + 'captions-selector-label"') + ('for="' + trackId + '">' + label + ' (loading)</label>') + '</li>';
-	},
-	checkForTracks: function checkForTracks() {
-		var t = this;
-
-		var hasSubtitles = false;
-
-		if (t.options.hideCaptionsButtonWhenEmpty) {
-			for (var i = 0, total = t.tracks.length; i < total; i++) {
-				var kind = t.tracks[i].kind;
-				if ((kind === 'subtitles' || kind === 'captions') && t.tracks[i].isLoaded) {
-					hasSubtitles = true;
-					break;
-				}
-			}
-
-			t.captionsButton.style.display = hasSubtitles ? '' : 'none';
-			t.setControlsSize();
-		}
-	},
-	displayCaptions: function displayCaptions() {
-		if (this.tracks === undefined) {
-			return;
-		}
-
-		var t = this,
-		    track = t.selectedTrack,
-		    sanitize = function sanitize(html) {
-			var div = _document2.default.createElement('div');
-			div.innerHTML = html;
-
-			var scripts = div.getElementsByTagName('script');
-			var i = scripts.length;
-			while (i--) {
-				scripts[i].remove();
-			}
-
-			var allElements = div.getElementsByTagName('*');
-			for (var _i12 = 0, n = allElements.length; _i12 < n; _i12++) {
-				var attributesObj = allElements[_i12].attributes,
-				    attributes = Array.prototype.slice.call(attributesObj);
-
-				for (var j = 0, total = attributes.length; j < total; j++) {
-					if (attributes[j].name.startsWith('on') || attributes[j].value.startsWith('javascript')) {
-						allElements[_i12].remove();
-					} else if (attributes[j].name === 'style') {
-						allElements[_i12].removeAttribute(attributes[j].name);
-					}
-				}
-			}
-			return div.innerHTML;
-		};
-
-		if (track !== null && track.isLoaded) {
-			var i = t.searchTrackPosition(track.entries, t.media.currentTime);
-			if (i > -1) {
-				var text = track.entries[i].text;
-				if (typeof t.options.captionTextPreprocessor === 'function') text = t.options.captionTextPreprocessor(text);
-				t.captionsText.innerHTML = sanitize(text);
-				t.captionsText.className = t.options.classPrefix + 'captions-text ' + (track.entries[i].identifier || '');
-				t.captions.style.display = '';
-				t.captions.style.height = '0px';
-				return;
-			}
-			t.captions.style.display = 'none';
-		} else {
-			t.captions.style.display = 'none';
-		}
-	},
-	setupSlides: function setupSlides(track) {
-		var t = this;
-		t.slides = track;
-		t.slides.entries.imgs = [t.slides.entries.length];
-		t.showSlide(0);
-	},
-	showSlide: function showSlide(index) {
-		var _this = this;
-
-		var t = this;
-
-		if (t.tracks === undefined || t.slidesContainer === undefined) {
-			return;
-		}
-
-		var url = t.slides.entries[index].text;
-
-		var img = t.slides.entries[index].imgs;
-
-		if (img === undefined || img.fadeIn === undefined) {
-			var image = _document2.default.createElement('img');
-			image.src = url;
-			image.addEventListener('load', function () {
-				var self = _this,
-				    visible = (0, _dom.siblings)(self, function (el) {
-					return visible(el);
-				});
-				self.style.display = 'none';
-				t.slidesContainer.innerHTML += self.innerHTML;
-				(0, _dom.fadeIn)(t.slidesContainer.querySelector(image));
-				for (var i = 0, total = visible.length; i < total; i++) {
-					(0, _dom.fadeOut)(visible[i], 400);
-				}
-			});
-			t.slides.entries[index].imgs = img = image;
-		} else if (!(0, _dom.visible)(img)) {
-			var _visible = (0, _dom.siblings)(self, function (el) {
-				return _visible(el);
-			});
-			(0, _dom.fadeIn)(t.slidesContainer.querySelector(img));
-			for (var i = 0, total = _visible.length; i < total; i++) {
-				(0, _dom.fadeOut)(_visible[i]);
-			}
-		}
-	},
-	displaySlides: function displaySlides() {
-		var t = this;
-
-		if (this.slides === undefined) {
-			return;
-		}
-
-		var slides = t.slides,
-		    i = t.searchTrackPosition(slides.entries, t.media.currentTime);
-
-		if (i > -1) {
-			t.showSlide(i);
-		}
-	},
-	drawChapters: function drawChapters(chapters) {
-		var t = this,
-		    total = chapters.entries.length;
-
-		if (!total) {
-			return;
-		}
-
-		t.chaptersButton.querySelector('ul').innerHTML = '';
-
-		for (var i = 0; i < total; i++) {
-			t.chaptersButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'chapters-selector-list-item" ' + 'role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_chapters" id="' + t.id + '_chapters_' + i + '" value="' + chapters.entries[i].start + '" disabled>') + ('<label class="' + t.options.classPrefix + 'chapters-selector-label"') + ('for="' + t.id + '_chapters_' + i + '">' + chapters.entries[i].text + '</label>') + '</li>';
-		}
-
-		var radios = t.chaptersButton.querySelectorAll('input[type="radio"]'),
-		    labels = t.chaptersButton.querySelectorAll('.' + t.options.classPrefix + 'chapters-selector-label');
-
-		for (var _i13 = 0, _total10 = radios.length; _i13 < _total10; _i13++) {
-			radios[_i13].disabled = false;
-			radios[_i13].checked = false;
-			radios[_i13].addEventListener('click', function (e) {
-				var self = this,
-				    listItems = t.chaptersButton.querySelectorAll('li'),
-				    label = (0, _dom.siblings)(self, function (el) {
-					return (0, _dom.hasClass)(el, t.options.classPrefix + 'chapters-selector-label');
-				})[0];
-
-				self.checked = true;
-				self.parentNode.setAttribute('aria-checked', true);
-				(0, _dom.addClass)(label, t.options.classPrefix + 'chapters-selected');
-				(0, _dom.removeClass)(t.chaptersButton.querySelector('.' + t.options.classPrefix + 'chapters-selected'), t.options.classPrefix + 'chapters-selected');
-
-				for (var _i14 = 0, _total11 = listItems.length; _i14 < _total11; _i14++) {
-					listItems[_i14].setAttribute('aria-checked', false);
-				}
-
-				var keyboard = e.keyCode || e.which;
-				if (typeof keyboard === 'undefined') {
-					setTimeout(function () {
-						t.getElement(t.container).focus();
-					}, 500);
-				}
-
-				t.media.setCurrentTime(parseFloat(self.value));
-				if (t.media.paused) {
-					t.media.play();
-				}
-			});
-		}
-
-		for (var _i15 = 0, _total12 = labels.length; _i15 < _total12; _i15++) {
-			labels[_i15].addEventListener('click', function (e) {
-				var radio = (0, _dom.siblings)(this, function (el) {
-					return el.tagName === 'INPUT';
-				})[0],
-				    event = (0, _general.createEvent)('click', radio);
-				radio.dispatchEvent(event);
-				e.preventDefault();
-			});
-		}
-	},
-	searchTrackPosition: function searchTrackPosition(tracks, currentTime) {
-		var lo = 0,
-		    hi = tracks.length - 1,
-		    mid = void 0,
-		    start = void 0,
-		    stop = void 0;
-
-		while (lo <= hi) {
-			mid = lo + hi >> 1;
-			start = tracks[mid].start;
-			stop = tracks[mid].stop;
-
-			if (currentTime >= start && currentTime < stop) {
-				return mid;
-			} else if (start < currentTime) {
-				lo = mid + 1;
-			} else if (start > currentTime) {
-				hi = mid - 1;
-			}
-		}
-
-		return -1;
-	}
+  hasChapters: false,
+
+  buildtracks: function buildtracks(player, controls) {
+    this.initTracks(player);
+
+    if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
+      return;
+    }
+
+    var t = this,
+        tracksTitle = (0, _general.isString)(t.options.tracksText) ? t.options.tracksText : _i18n2.default.t('mejs.captions-subtitles'),
+        chaptersTitle = (0, _general.isString)(t.options.chaptersText) ? t.options.chaptersText : _i18n2.default.t('mejs.captions-chapters');
+
+    t.hideAllTracks();
+
+    t.clearTrackHtml(player);
+
+    player.captionsButton = _document2.default.createElement('div');
+    player.captionsButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'captions-button';
+    player.captionsButton.innerHTML = (0, _generate.generateControlButton)(t.id, tracksTitle, tracksTitle, '' + t.media.options.iconSprite, ['icon-captions'], '' + t.options.classPrefix) + ('<div class="' + t.options.classPrefix + 'captions-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'captions-selector-list">') + ('<li class="' + t.options.classPrefix + 'captions-selector-list-item">') + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + player.id + '_captions" id="' + player.id + '_captions_none" ') + 'value="none" checked disabled>' + ('<label class="' + t.options.classPrefix + 'captions-selector-label ') + (t.options.classPrefix + 'captions-selected" ') + ('for="' + player.id + '_captions_none">' + _i18n2.default.t('mejs.none') + '</label>') + '</li>' + '</ul>' + '</div>';
+
+    t.addControlElement(player.captionsButton, 'tracks');
+
+    player.captionsButton.querySelector('.' + t.options.classPrefix + 'captions-selector-input').disabled = false;
+
+    player.chaptersButton = _document2.default.createElement('div');
+    player.chaptersButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chapters-button';
+    player.chaptersButton.innerHTML = (0, _generate.generateControlButton)(t.id, chaptersTitle, chaptersTitle, '' + t.media.options.iconSprite, ['icon-chapters'], '' + t.options.classPrefix) + ('<div class="' + t.options.classPrefix + 'chapters-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'chapters-selector-list"></ul>') + '</div>';
+
+    var subtitles = t.getSubtitles();
+    var chapters = t.getChapters();
+
+    if (chapters.length > 0 && !controls.querySelector('.' + t.options.classPrefix + 'chapter-selector')) {
+      player.captionsButton.parentNode.insertBefore(player.chaptersButton, player.captionsButton);
+    }
+
+    for (var i = 0; i < subtitles.length; i++) {
+      player.addTrackButton(subtitles[i]);
+      if (subtitles[i].isLoaded) {
+        t.enableTrackButton(subtitles[i]);
+      }
+    }
+
+    player.trackToLoad = -1;
+    player.selectedTrack = null;
+    player.isLoadingTrack = false;
+
+    var inEvents = ['mouseenter', 'focusin'],
+        outEvents = ['mouseleave', 'focusout'];
+
+    if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitles.length === 1) {
+      player.captionsButton.addEventListener('click', function (e) {
+        var trackId = 'none';
+        if (player.selectedTrack === null) {
+          trackId = player.getSubtitles()[0].trackId;
+        }
+        var keyboard = e.keyCode || e.which;
+        player.setTrack(trackId, typeof keyboard !== 'undefined');
+      });
+    } else {
+      var labels = player.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selector-label'),
+          captions = player.captionsButton.querySelectorAll('input[type=radio]');
+
+      for (var _i = 0; _i < inEvents.length; _i++) {
+        player.captionsButton.addEventListener(inEvents[_i], function () {
+          (0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
+        });
+      }
+
+      for (var _i2 = 0; _i2 < outEvents.length; _i2++) {
+        player.captionsButton.addEventListener(outEvents[_i2], function () {
+          (0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
+        });
+      }
+
+      for (var _i3 = 0; _i3 < captions.length; _i3++) {
+        captions[_i3].addEventListener('click', function (e) {
+          var keyboard = e.keyCode || e.which;
+          if (!e.target.disabled) {
+            player.setTrack(this.value, typeof keyboard !== 'undefined');
+          }
+        });
+      }
+
+      for (var _i4 = 0; _i4 < labels.length; _i4++) {
+        labels[_i4].addEventListener('click', function (e) {
+          var radio = (0, _dom.siblings)(this, function (el) {
+            return el.tagName === 'INPUT';
+          })[0],
+              event = (0, _general.createEvent)('click', radio);
+          radio.dispatchEvent(event);
+          e.preventDefault();
+        });
+      }
+
+      player.captionsButton.addEventListener('keydown', function (e) {
+        e.stopPropagation();
+      });
+    }
+
+    for (var _i5 = 0; _i5 < inEvents.length; _i5++) {
+      player.chaptersButton.addEventListener(inEvents[_i5], function () {
+        if (this.querySelector('.' + t.options.classPrefix + 'chapters-selector-list').children.length) {
+          (0, _dom.removeClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
+        }
+      });
+    }
+
+    for (var _i6 = 0; _i6 < outEvents.length; _i6++) {
+      player.chaptersButton.addEventListener(outEvents[_i6], function () {
+        (0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
+      });
+    }
+
+    player.chaptersButton.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+    });
+
+    t.checkAllCaptionsLoadedOrError();
+    t.checkAllChaptersLoadedOrError();
+  },
+  clearTrackHtml: function clearTrackHtml(player) {
+    if (player) {
+      if (player.captionsButton) {
+        player.captionsButton.remove();
+      }
+      if (player.chaptersButton) {
+        player.chaptersButton.remove();
+      }
+    }
+  },
+  rebuildtracks: function rebuildtracks() {
+    var t = this;
+    t.findTracks();
+    t.buildtracks(t, t.getElement(t.controls));
+  },
+  initTracks: function initTracks(player) {
+    var t = this,
+        trackFiles = t.trackFiles === null ? t.node.querySelectorAll('track') : t.trackFiles;
+
+    t.tracks = [];
+
+    if (trackFiles) {
+      player.trackFiles = trackFiles;
+      for (var i = 0; i < trackFiles.length; i++) {
+        var track = trackFiles[i],
+            srclang = track.getAttribute('srclang').toLowerCase() || '',
+            trackId = track.getAttribute('id') || t.id + '_track_' + i + '_' + track.getAttribute('kind') + '_' + srclang;
+        track.setAttribute('id', trackId);
+
+        var trackData = {
+          trackId: trackId,
+          srclang: srclang,
+          src: track.getAttribute('src'),
+          kind: track.getAttribute('kind'),
+          label: track.getAttribute('label') || '',
+          entries: [],
+          isDefault: track.hasAttribute('default'),
+          isError: false,
+          isLoaded: false
+        };
+        t.tracks.push(trackData);
+
+        if (track.getAttribute('kind') === 'captions' || track.getAttribute('kind') === 'subtitles') {
+          switch (track.readyState) {
+            case 2:
+              t.handleCaptionsLoaded(track);
+              break;
+            case 3:
+              t.handleCaptionsError(track);
+              break;
+            default:
+              track.addEventListener('load', function (event) {
+                t.handleCaptionsLoaded(event.target);
+              });
+              track.addEventListener('error', function (event) {
+                t.handleCaptionsError(event.target);
+              });
+              break;
+          }
+        } else if (track.getAttribute('kind') === 'chapters') {
+          switch (track.readyState) {
+            case 2:
+              t.handleChaptersLoaded(track);
+              break;
+            case 3:
+              t.handleChaptersError(track);
+              break;
+            default:
+              track.addEventListener('load', function (event) {
+                t.handleChaptersLoaded(event.target);
+              });
+              track.addEventListener('error', function (event) {
+                t.handleChaptersError(event.target);
+              });
+              break;
+          }
+        }
+      }
+    }
+  },
+  handleCaptionsLoaded: function handleCaptionsLoaded(target) {
+    var textTracks = this.domNode.textTracks,
+        playerTrack = this.getTrackById(target.getAttribute('id'));
+
+    if (Number.isInteger(this.options.defaultTrackLine)) {
+      for (var i = 0; i < textTracks.length; i++) {
+        if (target.getAttribute('srclang') === textTracks[i].language && target.getAttribute('kind') === textTracks[i].kind) {
+          var cues = textTracks[i].cues;
+          for (var c = 0; c < cues.length; c++) {
+            if (cues[c].line === 'auto' || cues[c].line === undefined || cues[c].line === null) {
+              cues[c].line = this.options.defaultTrackLine;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    playerTrack.isLoaded = true;
+    this.enableTrackButton(playerTrack);
+    this.checkAllCaptionsLoadedOrError();
+  },
+  handleCaptionsError: function handleCaptionsError(target) {
+    var playerTrack = this.getTrackById(target.getAttribute('id'));
+
+    playerTrack.isError = true;
+    this.removeTrackButton(playerTrack);
+    this.checkAllCaptionsLoadedOrError();
+  },
+  handleChaptersLoaded: function handleChaptersLoaded(target) {
+    var playerTrack = this.getTrackById(target.getAttribute('id'));
+
+    this.hasChapters = true;
+    playerTrack.isLoaded = true;
+    this.checkAllChaptersLoadedOrError();
+  },
+  handleChaptersError: function handleChaptersError(target) {
+    var playerTrack = this.getTrackById(target.getAttribute('id'));
+    playerTrack.isError = true;
+    this.checkAllChaptersLoadedOrError();
+  },
+  checkAllCaptionsLoadedOrError: function checkAllCaptionsLoadedOrError() {
+    var subtitles = this.getSubtitles();
+    if (subtitles.length === subtitles.filter(function (_ref) {
+      var isLoaded = _ref.isLoaded,
+          isError = _ref.isError;
+      return isLoaded || isError;
+    }).length) {
+      this.removeCaptionsIfEmpty();
+      this.checkForAutoPlay();
+    }
+  },
+  checkAllChaptersLoadedOrError: function checkAllChaptersLoadedOrError() {
+    var _this = this;
+
+    var chapters = this.getChapters(),
+        readyChapters = chapters.filter(function (_ref2) {
+      var isLoaded = _ref2.isLoaded;
+      return isLoaded;
+    });
+    if (chapters.length === chapters.filter(function (_ref3) {
+      var isLoaded = _ref3.isLoaded,
+          isError = _ref3.isError;
+      return isLoaded || isError;
+    }).length) {
+      if (readyChapters.length === 0) {
+        this.chaptersButton.remove();
+      } else {
+        var langChapter = readyChapters.find(function (_ref4) {
+          var srclang = _ref4.srclang;
+          return srclang === _this.options.chaptersLanguage;
+        });
+
+        langChapter = langChapter || readyChapters.find(function (_ref5) {
+          var srclang = _ref5.srclang;
+          return srclang === _i18n2.default.lang;
+        });
+
+        if (readyChapters.length === 1 || !langChapter) {
+          this.drawChapters(readyChapters[0].trackId);
+        } else {
+          this.drawChapters(langChapter.trackId);
+        }
+      }
+    }
+  },
+  setTrack: function setTrack(trackId, setByKeyboard) {
+    var t = this,
+        radios = t.captionsButton.querySelectorAll('input[type="radio"]'),
+        captions = t.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selected'),
+        track = t.captionsButton.querySelector('input[value="' + trackId + '"]');
+
+    for (var i = 0; i < radios.length; i++) {
+      radios[i].checked = false;
+    }
+
+    for (var _i7 = 0; _i7 < captions.length; _i7++) {
+      (0, _dom.removeClass)(captions[_i7], t.options.classPrefix + 'captions-selected');
+    }
+
+    track.checked = true;
+    var labels = (0, _dom.siblings)(track, function (el) {
+      return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
+    });
+    for (var _i8 = 0; _i8 < labels.length; _i8++) {
+      (0, _dom.addClass)(labels[_i8], t.options.classPrefix + 'captions-selected');
+    }
+
+    if (trackId === 'none') {
+      t.selectedTrack = null;
+      (0, _dom.removeClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+      t.deactivateVideoTracks();
+    } else {
+      var _track = t.getTrackById(trackId);
+      if (_track) {
+        if (t.selectedTrack === null) {
+          (0, _dom.addClass)(t.captionsButton, t.options.classPrefix + 'captions-enabled');
+        }
+        t.selectedTrack = _track;
+        t.activateVideoTrack(t.selectedTrack.srclang);
+      }
+    }
+
+    var event = (0, _general.createEvent)('captionschange', t.media);
+    event.detail.caption = t.selectedTrack;
+    t.media.dispatchEvent(event);
+
+    if (!setByKeyboard) {
+      setTimeout(function () {
+        t.getElement(t.container).focus();
+      }, 500);
+    }
+  },
+  hideAllTracks: function hideAllTracks() {
+    if (this.domNode.textTracks) {
+      for (var i = 0; i < this.domNode.textTracks.length; i++) {
+        this.domNode.textTracks[i].mode = 'hidden';
+      }
+    }
+  },
+  deactivateVideoTracks: function deactivateVideoTracks() {
+    if (this.domNode.textTracks) {
+      for (var i = 0; i < this.domNode.textTracks.length; i++) {
+        var track = this.domNode.textTracks[i];
+        if (track.kind === 'subtitles' || track.kind === 'captions') {
+          track.mode = 'hidden';
+        }
+      }
+    }
+  },
+  activateVideoTrack: function activateVideoTrack(srclang) {
+    for (var i = 0; i < this.domNode.textTracks.length; i++) {
+      var track = this.domNode.textTracks[i];
+
+      if (track.kind === 'subtitles' || track.kind === 'captions') {
+        if (track.language === srclang) {
+          track.mode = 'showing';
+        } else {
+          track.mode = 'hidden';
+        }
+      }
+    }
+  },
+  checkForAutoPlay: function checkForAutoPlay() {
+    var _this2 = this;
+
+    var readySubtitles = this.getSubtitles().filter(function (_ref6) {
+      var isError = _ref6.isError;
+      return !isError;
+    }),
+        autoplayTrack = readySubtitles.find(function (_ref7) {
+      var srclang = _ref7.srclang;
+      return _this2.options.autoplayCaptionLanguage === srclang;
+    }) || readySubtitles.find(function (_ref8) {
+      var isDefault = _ref8.isDefault;
+      return isDefault;
+    });
+
+    if (autoplayTrack) {
+      if (this.options.toggleCaptionsButtonWhenOnlyOne && readySubtitles.length === 1 && this.captionsButton) {
+        this.captionsButton.dispatchEvent((0, _general.createEvent)('click', this.captionsButton));
+      } else {
+        var target = _document2.default.getElementById(autoplayTrack.trackId + '-btn');
+        if (target) {
+          target.checked = true;
+          target.dispatchEvent((0, _general.createEvent)('click', target));
+        }
+      }
+    }
+  },
+  enableTrackButton: function enableTrackButton(track) {
+    var t = this,
+        lang = track.srclang,
+        target = _document2.default.getElementById(track.trackId + '-btn');
+    if (!target) {
+      return;
+    }
+
+    var label = track.label;
+
+    if (label === '') {
+      label = _i18n2.default.t(_mejs2.default.language.codes[lang]) || lang;
+    }
+    target.disabled = false;
+    var targetSiblings = (0, _dom.siblings)(target, function (el) {
+      return (0, _dom.hasClass)(el, t.options.classPrefix + 'captions-selector-label');
+    });
+    for (var i = 0; i < targetSiblings.length; i++) {
+      targetSiblings[i].innerHTML = label;
+    }
+  },
+  removeTrackButton: function removeTrackButton(track) {
+    var element = _document2.default.getElementById(track.trackId + '-btn');
+    if (element) {
+      var button = element.closest('li');
+      if (button) {
+        button.remove();
+      }
+    }
+  },
+  addTrackButton: function addTrackButton(track) {
+    var t = this,
+        label = track.label || _i18n2.default.t(_mejs2.default.language.codes[track.srclang]) || track.srclang;
+
+    t.captionsButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'captions-selector-list-item">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_captions" id="' + track.trackId + '-btn" value="' + track.trackId + '" disabled>') + ('<label class="' + t.options.classPrefix + 'captions-selector-label"') + ('for="' + track.trackId + '">' + label + ' (loading)</label>') + '</li>';
+  },
+  removeCaptionsIfEmpty: function removeCaptionsIfEmpty() {
+    if (this.captionsButton && this.options.hideCaptionsButtonWhenEmpty) {
+      var subtitleCount = this.getSubtitles().filter(function (_ref9) {
+        var isError = _ref9.isError;
+        return !isError;
+      }).length;
+      this.captionsButton.style.display = subtitleCount > 0 ? '' : 'none';
+      this.setControlsSize();
+    }
+  },
+  drawChapters: function drawChapters(chapterTrackId) {
+    var t = this,
+        chapter = this.domNode.textTracks.getTrackById(chapterTrackId),
+        numberOfChapters = chapter.cues.length;
+
+    if (!numberOfChapters) {
+      return;
+    }
+
+    t.chaptersButton.querySelector('ul').innerHTML = '';
+
+    for (var i = 0; i < numberOfChapters; i++) {
+      t.chaptersButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'chapters-selector-list-item" ' + 'role="menuitemcheckbox" aria-live="polite" aria-disabled="false" aria-checked="false">' + ('<input type="radio" class="' + t.options.classPrefix + 'captions-selector-input" ') + ('name="' + t.id + '_chapters" id="' + t.id + '_chapters_' + i + '" value="' + chapter.cues[i].startTime + '" disabled>') + ('<label class="' + t.options.classPrefix + 'chapters-selector-label"') + ('for="' + t.id + '_chapters_' + i + '">' + chapter.cues[i].text + '</label>') + '</li>';
+    }
+
+    var radios = t.chaptersButton.querySelectorAll('input[type="radio"]'),
+        labels = t.chaptersButton.querySelectorAll('.' + t.options.classPrefix + 'chapters-selector-label');
+
+    for (var _i9 = 0; _i9 < radios.length; _i9++) {
+      radios[_i9].disabled = false;
+      radios[_i9].checked = false;
+      radios[_i9].addEventListener('click', function (e) {
+        var self = this,
+            listItems = t.chaptersButton.querySelectorAll('li'),
+            label = (0, _dom.siblings)(self, function (el) {
+          return (0, _dom.hasClass)(el, t.options.classPrefix + 'chapters-selector-label');
+        })[0];
+
+        self.checked = true;
+        self.parentNode.setAttribute('aria-checked', true);
+        (0, _dom.addClass)(label, t.options.classPrefix + 'chapters-selected');
+        (0, _dom.removeClass)(t.chaptersButton.querySelector('.' + t.options.classPrefix + 'chapters-selected'), t.options.classPrefix + 'chapters-selected');
+
+        for (var _i10 = 0; _i10 < listItems.length; _i10++) {
+          listItems[_i10].setAttribute('aria-checked', false);
+        }
+
+        var keyboard = e.keyCode || e.which;
+        if (typeof keyboard === 'undefined') {
+          setTimeout(function () {
+            t.getElement(t.container).focus();
+          }, 500);
+        }
+
+        t.media.setCurrentTime(parseFloat(self.value));
+        if (t.media.paused) {
+          t.media.play();
+        }
+      });
+    }
+
+    for (var _i11 = 0; _i11 < labels.length; _i11++) {
+      labels[_i11].addEventListener('click', function (e) {
+        var radio = (0, _dom.siblings)(this, function (el) {
+          return el.tagName === 'INPUT';
+        })[0],
+            event = (0, _general.createEvent)('click', radio);
+        radio.dispatchEvent(event);
+        e.preventDefault();
+      });
+    }
+  },
+  getTrackById: function getTrackById(trackId) {
+    return this.tracks.find(function (track) {
+      return track.trackId === trackId;
+    });
+  },
+  getChapters: function getChapters() {
+    return this.tracks.filter(function (_ref10) {
+      var kind = _ref10.kind;
+      return kind === 'chapters';
+    });
+  },
+  getSubtitles: function getSubtitles() {
+    return this.tracks.filter(function (_ref11) {
+      var kind = _ref11.kind;
+      return kind === 'subtitles' || kind === 'captions';
+    });
+  },
+  searchTrackPosition: function searchTrackPosition(tracks, currentTime) {
+    var lo = 0,
+        hi = tracks.length - 1,
+        mid = void 0,
+        start = void 0,
+        stop = void 0;
+
+    while (lo <= hi) {
+      mid = lo + hi >> 1;
+      start = tracks[mid].start;
+      stop = tracks[mid].stop;
+
+      if (currentTime >= start && currentTime < stop) {
+        return mid;
+      } else if (start < currentTime) {
+        lo = mid + 1;
+      } else if (start > currentTime) {
+        hi = mid - 1;
+      }
+    }
+
+    return -1;
+  }
 });
 
 _mejs2.default.language = {
-	codes: {
-		af: 'mejs.afrikaans',
-		sq: 'mejs.albanian',
-		ar: 'mejs.arabic',
-		be: 'mejs.belarusian',
-		bg: 'mejs.bulgarian',
-		ca: 'mejs.catalan',
-		zh: 'mejs.chinese',
-		'zh-cn': 'mejs.chinese-simplified',
-		'zh-tw': 'mejs.chines-traditional',
-		hr: 'mejs.croatian',
-		cs: 'mejs.czech',
-		da: 'mejs.danish',
-		nl: 'mejs.dutch',
-		en: 'mejs.english',
-		et: 'mejs.estonian',
-		fl: 'mejs.filipino',
-		fi: 'mejs.finnish',
-		fr: 'mejs.french',
-		gl: 'mejs.galician',
-		de: 'mejs.german',
-		el: 'mejs.greek',
-		ht: 'mejs.haitian-creole',
-		iw: 'mejs.hebrew',
-		hi: 'mejs.hindi',
-		hu: 'mejs.hungarian',
-		is: 'mejs.icelandic',
-		id: 'mejs.indonesian',
-		ga: 'mejs.irish',
-		it: 'mejs.italian',
-		ja: 'mejs.japanese',
-		ko: 'mejs.korean',
-		lv: 'mejs.latvian',
-		lt: 'mejs.lithuanian',
-		mk: 'mejs.macedonian',
-		ms: 'mejs.malay',
-		mt: 'mejs.maltese',
-		no: 'mejs.norwegian',
-		fa: 'mejs.persian',
-		pl: 'mejs.polish',
-		pt: 'mejs.portuguese',
-		ro: 'mejs.romanian',
-		ru: 'mejs.russian',
-		sr: 'mejs.serbian',
-		sk: 'mejs.slovak',
-		sl: 'mejs.slovenian',
-		es: 'mejs.spanish',
-		sw: 'mejs.swahili',
-		sv: 'mejs.swedish',
-		tl: 'mejs.tagalog',
-		th: 'mejs.thai',
-		tr: 'mejs.turkish',
-		uk: 'mejs.ukrainian',
-		vi: 'mejs.vietnamese',
-		cy: 'mejs.welsh',
-		yi: 'mejs.yiddish'
-	}
+  codes: {
+    af: 'mejs.afrikaans',
+    sq: 'mejs.albanian',
+    ar: 'mejs.arabic',
+    be: 'mejs.belarusian',
+    bg: 'mejs.bulgarian',
+    ca: 'mejs.catalan',
+    zh: 'mejs.chinese',
+    'zh-cn': 'mejs.chinese-simplified',
+    'zh-tw': 'mejs.chines-traditional',
+    hr: 'mejs.croatian',
+    cs: 'mejs.czech',
+    da: 'mejs.danish',
+    nl: 'mejs.dutch',
+    en: 'mejs.english',
+    et: 'mejs.estonian',
+    fl: 'mejs.filipino',
+    fi: 'mejs.finnish',
+    fr: 'mejs.french',
+    gl: 'mejs.galician',
+    de: 'mejs.german',
+    el: 'mejs.greek',
+    ht: 'mejs.haitian-creole',
+    iw: 'mejs.hebrew',
+    hi: 'mejs.hindi',
+    hu: 'mejs.hungarian',
+    is: 'mejs.icelandic',
+    id: 'mejs.indonesian',
+    ga: 'mejs.irish',
+    it: 'mejs.italian',
+    ja: 'mejs.japanese',
+    ko: 'mejs.korean',
+    lv: 'mejs.latvian',
+    lt: 'mejs.lithuanian',
+    mk: 'mejs.macedonian',
+    ms: 'mejs.malay',
+    mt: 'mejs.maltese',
+    no: 'mejs.norwegian',
+    fa: 'mejs.persian',
+    pl: 'mejs.polish',
+    pt: 'mejs.portuguese',
+    ro: 'mejs.romanian',
+    ru: 'mejs.russian',
+    sr: 'mejs.serbian',
+    sk: 'mejs.slovak',
+    sl: 'mejs.slovenian',
+    es: 'mejs.spanish',
+    sw: 'mejs.swahili',
+    sv: 'mejs.swedish',
+    tl: 'mejs.tagalog',
+    th: 'mejs.thai',
+    tr: 'mejs.turkish',
+    uk: 'mejs.ukrainian',
+    vi: 'mejs.vietnamese',
+    cy: 'mejs.welsh',
+    yi: 'mejs.yiddish'
+  }
 };
 
-_mejs2.default.TrackFormatParser = {
-	webvtt: {
-		pattern: /^((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{1,3})?) --\> ((?:[0-9]{1,2}:)?[0-9]{2}:[0-9]{2}([,.][0-9]{3})?)(.*)$/,
-
-		parse: function parse(trackText) {
-			var lines = trackText.split(/\r?\n/),
-			    entries = [];
-
-			var timecode = void 0,
-			    text = void 0,
-			    identifier = void 0;
-
-			for (var i = 0, total = lines.length; i < total; i++) {
-				timecode = this.pattern.exec(lines[i]);
-
-				if (timecode && i < lines.length) {
-					if (i - 1 >= 0 && lines[i - 1] !== '') {
-						identifier = lines[i - 1];
-					}
-					i++;
-
-					text = lines[i];
-					i++;
-					while (lines[i] !== '' && i < lines.length) {
-						text = text + '\n' + lines[i];
-						i++;
-					}
-					text = text === null ? '' : text.trim().replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-					entries.push({
-						identifier: identifier,
-						start: (0, _time.convertSMPTEtoSeconds)(timecode[1]) === 0 ? 0.200 : (0, _time.convertSMPTEtoSeconds)(timecode[1]),
-						stop: (0, _time.convertSMPTEtoSeconds)(timecode[3]),
-						text: text,
-						settings: timecode[5]
-					});
-				}
-				identifier = '';
-			}
-			return entries;
-		}
-	},
-
-	dfxp: {
-		parse: function parse(trackText) {
-			var trackElem = _document2.default.adoptNode(new DOMParser().parseFromString(trackText, 'application/xml').documentElement),
-			    container = trackElem.querySelector('div'),
-			    lines = container.querySelectorAll('p'),
-			    styleNode = _document2.default.getElementById(container.getAttribute('style')),
-			    entries = [];
-
-			var styles = void 0;
-
-			if (styleNode) {
-				styleNode.removeAttribute('id');
-				var attributes = styleNode.attributes;
-				if (attributes.length) {
-					styles = {};
-					for (var i = 0, total = attributes.length; i < total; i++) {
-						styles[attributes[i].name.split(":")[1]] = attributes[i].value;
-					}
-				}
-			}
-
-			for (var _i16 = 0, _total13 = lines.length; _i16 < _total13; _i16++) {
-				var style = void 0,
-				    _temp = {
-					start: null,
-					stop: null,
-					style: null,
-					text: null
-				};
-
-				if (lines[_i16].getAttribute('begin')) {
-					_temp.start = (0, _time.convertSMPTEtoSeconds)(lines[_i16].getAttribute('begin'));
-				}
-				if (!_temp.start && lines[_i16 - 1].getAttribute('end')) {
-					_temp.start = (0, _time.convertSMPTEtoSeconds)(lines[_i16 - 1].getAttribute('end'));
-				}
-				if (lines[_i16].getAttribute('end')) {
-					_temp.stop = (0, _time.convertSMPTEtoSeconds)(lines[_i16].getAttribute('end'));
-				}
-				if (!_temp.stop && lines[_i16 + 1].getAttribute('begin')) {
-					_temp.stop = (0, _time.convertSMPTEtoSeconds)(lines[_i16 + 1].getAttribute('begin'));
-				}
-
-				if (styles) {
-					style = '';
-					for (var _style in styles) {
-						style += _style + ': ' + styles[_style] + ';';
-					}
-				}
-				if (style) {
-					_temp.style = style;
-				}
-				if (_temp.start === 0) {
-					_temp.start = 0.200;
-				}
-				_temp.text = lines[_i16].innerHTML.trim().replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_| !:, .; ]*[-A-Z0-9+&@#\/%=~_|])/ig, "<a href='$1' target='_blank'>$1</a>");
-				entries.push(_temp);
-			}
-			return entries;
-		}
-	}
-};
-
-},{"17":17,"2":2,"27":27,"28":28,"29":29,"32":32,"6":6,"8":8}],15:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"27":27,"28":28,"29":29,"6":6,"8":8}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);

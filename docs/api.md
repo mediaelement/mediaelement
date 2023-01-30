@@ -132,12 +132,11 @@ audioVolume | string | `horizontal` | Position of volume slider on audio element
 videoVolume | string | `vertical` | Position of volume slider on video element
 usePluginFullScreen | boolean | `true` | Flag to activate detection of Pointer events when on fullscreen mode
 useFakeFullscreen | boolean | `false` | Flag to bypass native capabilities on mobile devices and use the fake-fullscreen mode
-tracksAriaLive | boolean | `false` | By default, no WAI-ARIA live region - don't make a screen reader speak captions over an audio track.
 hideCaptionsButtonWhenEmpty | boolean | `true` | Option to remove the `[cc]` button when no `<track kind="subtitles">` are present
-captionTextPreprocessor | function | _not set_ | Option to preprocess the caption text before it is displayed. If set, it expects a function which takes in caption text and returns a preprocessed version thereof. If it is not set, the caption text is displayed as is.
 toggleCaptionsButtonWhenOnlyOne | boolean | `false` | If true and we only have one track, change captions to toggle button
-startLanguage | string | _(empty)_ | Automatically turn on a `<track>` element. Note: Will not work when toggleCaptionsButtonWhenOnlyOne is set to `true`
-slidesSelector | string | _(empty)_ | Selector for slides; could be any valid JavaScript selector (`#id`, `.class`, `img`, etc.)
+defaultTrackLine | number/boolean | -3 | Default cue line in which to display cues if the cue is set to "auto" (no line entry in VTT). Can be set to `false` to disable.  
+autoplayCaptionLanguage | string | `null` | Automatically turn on a subtitles/captions of the corresponfing language; overrides "default" attribute on track element.
+chaptersLanguage | string | `null` | Set the language of the chapters track. If only one chapter track exists it will always be used. If multiple chapter tracks exist the player will try to find one using `chaptersLanguage` or the current player language. If none is found the first one defined will be used for the chapter display.
 hideScreenReaderTitle | boolean | false | Hide the video player screen reader title so it can be added by the website
 tracksText | string | `null` | Title for Closed Captioning button for WARIA purposes
 chaptersText  | string | `null` | Title for Chapters button for WARIA purposes
