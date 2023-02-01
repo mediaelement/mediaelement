@@ -51,8 +51,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__container:focus {
-    outline-offset: 0.125rem;
-    outline-width: 0.125rem;
+    outline: none;
 }
 
 .mejs__iframe-overlay {
