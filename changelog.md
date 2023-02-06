@@ -1,4 +1,7 @@
 # Version History
+*5.1.1 (2023/02/6)*
+* Add focus outline to mejs__container to pass WCAG SC 2.4.7 (#2912)
+
 *5.1.0 (2022/09/07)*
 * Detect when seek has been called by user interaction (#2869)
 * Use of strict mode in language files may lead to javascript error when used in a JS packer (#2870) 
