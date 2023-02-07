@@ -168,7 +168,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
       for (let i = 0; i < outEvents.length; i++) {
         player.captionsButton.addEventListener(outEvents[i], function () {
-          addClass(this.querySelector(`.${t.options.classPrefix}captions-selector`), `${t.options.classPrefix}offscreen`);
+          // add a small timeout so mobile devices can activate the buttons before focus is lost
+          setTimeout(() => {
+            addClass(this.querySelector(`.${t.options.classPrefix}captions-selector`), `${t.options.classPrefix}offscreen`);
+          }, 20);
         });
       }
 
@@ -211,7 +214,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
     for (let i = 0; i < outEvents.length; i++) {
       player.chaptersButton.addEventListener(outEvents[i], function () {
-        addClass(this.querySelector(`.${t.options.classPrefix}chapters-selector`), `${t.options.classPrefix}offscreen`);
+        // add a small timeout so mobile devices can activate the buttons before focus is lost
+        setTimeout(() => {
+          addClass(this.querySelector(`.${t.options.classPrefix}chapters-selector`), `${t.options.classPrefix}offscreen`);
+        }, 20);
       });
     }
 
