@@ -1,5 +1,8 @@
 # Version History
 
+*6.0.1* (2023/02/07)
+* Fixed an error that prevented some mobile devices from reliably selecting chapters and subtitles 
+
 *6.0.0* (2023/01/30)
 * Fix missing video tracks after player is removed
 * Added browser-native subtitle support and removed custom VTT/DFXP parsing

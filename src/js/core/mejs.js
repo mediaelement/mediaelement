@@ -6,7 +6,7 @@ import window from 'global/window';
 const mejs = {};
 
 // version number
-mejs.version = '6.0.0';
+mejs.version = '6.0.1';
 
 // Basic HTML5 settings
 mejs.html5media = {
