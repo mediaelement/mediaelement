@@ -1126,7 +1126,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '6.0.0';
+mejs.version = '6.0.1';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -2468,7 +2468,11 @@ Object.assign(_player2.default.prototype, {
 
       for (var _i2 = 0; _i2 < outEvents.length; _i2++) {
         player.captionsButton.addEventListener(outEvents[_i2], function () {
-          (0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
+          var _this = this;
+
+          setTimeout(function () {
+            (0, _dom.addClass)(_this.querySelector('.' + t.options.classPrefix + 'captions-selector'), t.options.classPrefix + 'offscreen');
+          }, 0);
         });
       }
 
@@ -2507,7 +2511,11 @@ Object.assign(_player2.default.prototype, {
 
     for (var _i6 = 0; _i6 < outEvents.length; _i6++) {
       player.chaptersButton.addEventListener(outEvents[_i6], function () {
-        (0, _dom.addClass)(this.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
+        var _this2 = this;
+
+        setTimeout(function () {
+          (0, _dom.addClass)(_this2.querySelector('.' + t.options.classPrefix + 'chapters-selector'), t.options.classPrefix + 'offscreen');
+        }, 0);
       });
     }
 
@@ -2651,7 +2659,7 @@ Object.assign(_player2.default.prototype, {
     }
   },
   checkAllChaptersLoadedOrError: function checkAllChaptersLoadedOrError() {
-    var _this = this;
+    var _this3 = this;
 
     var chapters = this.getChapters(),
         readyChapters = chapters.filter(function (_ref2) {
@@ -2668,7 +2676,7 @@ Object.assign(_player2.default.prototype, {
       } else {
         var langChapter = readyChapters.find(function (_ref4) {
           var srclang = _ref4.srclang;
-          return srclang === _this.options.chaptersLanguage;
+          return srclang === _this3.options.chaptersLanguage;
         });
 
         langChapter = langChapter || readyChapters.find(function (_ref5) {
@@ -2762,7 +2770,7 @@ Object.assign(_player2.default.prototype, {
     }
   },
   checkForAutoPlay: function checkForAutoPlay() {
-    var _this2 = this;
+    var _this4 = this;
 
     var readySubtitles = this.getSubtitles().filter(function (_ref6) {
       var isError = _ref6.isError;
@@ -2770,7 +2778,7 @@ Object.assign(_player2.default.prototype, {
     }),
         autoplayTrack = readySubtitles.find(function (_ref7) {
       var srclang = _ref7.srclang;
-      return _this2.options.autoplayCaptionLanguage === srclang;
+      return _this4.options.autoplayCaptionLanguage === srclang;
     }) || readySubtitles.find(function (_ref8) {
       var isDefault = _ref8.isDefault;
       return isDefault;
