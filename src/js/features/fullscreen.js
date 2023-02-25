@@ -229,7 +229,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (t.isNativeFullScreen) {
 						let percentErrorMargin = 0.002, // 0.2%
 							windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-							screenWidth = screen.width,
+							resizeRatio = window.innerWidth / window.screen.availWidth,
+							screenWidth = screen.width * resizeRatio,
 							absDiff = Math.abs(screenWidth - windowWidth),
 							marginError = screenWidth * percentErrorMargin;
 
