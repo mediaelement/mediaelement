@@ -464,7 +464,7 @@ var YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							
+							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
