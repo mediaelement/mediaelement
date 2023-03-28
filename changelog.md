@@ -1,5 +1,8 @@
 # Version History
 
+*6.0.3* (2023/03/28)
+* `outline-style: auto` has been replaced by `outline-style: solid` in the CSS `focus:` pseudo-class in the class `mejs__container`. This change will enable Firefox to show the correct `outline-color` on focus if defined. (#2924)
+
 *6.0.2* (2023/03/06)
 * `outline-style: auto` has been added to the CSS `focus:` pseudo-class to the class `mejs__container` which will enable Firefox to show the correct `outline-color` on focus if defined. Otherwise, it will keep the default color of the browsers. (#2922)
 
