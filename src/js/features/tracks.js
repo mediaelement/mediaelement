@@ -569,7 +569,7 @@ Object.assign(MediaElementPlayer.prototype, {
     const
       t = this,
       lang = track.srclang,
-      target = t.captionsButton.querySelector(`#${track.trackId}-btn`);
+      target = t.captionsButton.querySelector(`#${track.trackId}-btn`)
     ;
     if (!target) {
       return;
