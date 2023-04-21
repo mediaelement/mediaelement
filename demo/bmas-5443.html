@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>BMAS-5443 DEV | MediaElement.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"
+    />
+    <link rel="stylesheet" href="../build/mediaelementplayer.css" />
+    <style>
+      .players {
+        display: flex;
+      }
+
+      .container {
+        overflow: hidden;
+        flex: 1;
+        flex-basis: 0;
+      }
+
+      .player {
+        max-width: 100%;
+        height: auto;
+      }
+
+      section {
+        border-top: 4px solid #2b67ba;
+        margin-top: 2rem;
+      }
+
+      h1,
+      h2,
+      h3 {
+        text-align: center;
+      }
+
+      h2 {
+        color: #618ac3;
+      }
+
+      h3 {
+        height: 3rem;
+      }
+    </style>
+  </head>
+
+  <body style="padding: 1rem">
+    <h1>BMAS-5443</h1>
+    <section>
+      <h2>MediaElement</h2>
+      <div class="players">
+        <div class="container">
+          <h3>Single <code>src</code> attribute</h3>
+          <video
+            id="me1"
+            class="player media-element"
+            src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+            preload="none"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            data-audio-voiceover="true"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+        <div class="container">
+          <h3><code>&lt;source&gt;</code> element(s)</h3>
+          <video
+            id="me2"
+            class="player media-element"
+            preload="none"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            data-audio-voiceover="true"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <source
+              data-quality="AUTO"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,mid,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="1080p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="720p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,mid,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="540p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="Standard"
+              src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+              type="video/mp4"
+            />
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+        <div class="container">
+          <h3>
+            Mixed <code>src</code> attribute and
+            <code>&lt;source&gt;</code> element(s)
+          </h3>
+          <video
+            id="me3"
+            class="player media-element"
+            src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+            preload="none"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            data-audio-voiceover="true"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <source
+              data-quality="AUTO"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,mid,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="1080p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="720p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,mid,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="540p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="Standard"
+              src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+              type="video/mp4"
+            />
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2>MediaElementPlayer</h2>
+      <div class="players">
+        <div class="container">
+          <h3>Single <code>src</code> attribute</h3>
+          <video
+            id="mep1"
+            class="player media-element-player"
+            src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+            preload="none"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            data-audio-voiceover="true"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+        <div class="container">
+          <h3><code>&lt;source&gt;</code> element(s)</h3>
+          <video
+            id="mep2"
+            class="player media-element-player"
+            preload="none"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            data-audio-voiceover="true"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <source
+              data-quality="AUTO"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,mid,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="1080p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="720p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,mid,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="540p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="Standard"
+              src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+              type="video/mp4"
+            />
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+        <div class="container">
+          <h3>
+            Mixed <code>src</code> attribute and
+            <code>&lt;source&gt;</code> element(s)
+          </h3>
+          <video
+            id="mep3"
+            class="player media-element-player"
+            src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+            preload="none"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            data-audio-voiceover="true"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <source
+              data-quality="AUTO"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,mid,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="1080p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="720p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,mid,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="540p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="Standard"
+              src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+              type="video/mp4"
+            />
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2>Native</h2>
+      <div class="players">
+        <div class="container">
+          <h3>Single <code>src</code> attribute</h3>
+          <video
+            class="player native"
+            src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+        <div class="container">
+          <h3><code>&lt;source&gt;</code> element(s)</h3>
+          <video
+            class="player native"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <source
+              data-quality="AUTO"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,mid,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="1080p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="720p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,mid,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="540p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="Standard"
+              src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+              type="video/mp4"
+            />
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+        <div class="container">
+          <h3>
+            Mixed <code>src</code> attribute and
+            <code>&lt;source&gt;</code> element(s)
+          </h3>
+          <video
+            id="player"
+            class="player native"
+            src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+            preload="none"
+            poster="https://www.bmas.de/SharedDocs/Bilder/DE/Videos/Video-Standbilder/Standbilder-dgs/dgs-erklaerung-barrierefreiheit.jpg?__blob=poster&amp;v=2"
+            data-audio-voiceover="true"
+            controls
+            playsinline
+            webkit-playsinline
+          >
+            <source
+              data-quality="AUTO"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,mid,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="1080p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,high,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="720p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,mid,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="540p"
+              src="https://streaming.bmas.de/dash/bmas/dgs-erklaerung-der-barrierefreiheit-,low,.mp4.urlset/manifest.mpd"
+            />
+            <source
+              data-quality="Standard"
+              src="https://streaming.bmas.de/bmas/video/bmas/dgs-erklaerung-der-barrierefreiheit-mid.mp4"
+              type="video/mp4"
+            />
+            <track
+              srclang="de"
+              kind="subtitles"
+              src="german.vtt"
+              label="German with lines"
+            />
+            <track srclang="en" kind="subtitles" src="english.vtt" default />
+            <track srclang="en" kind="chapters" src="english_chapters.vtt" />
+            <track srclang="de" kind="chapters" src="german_chapters.vtt" />
+            <p>Nope</p>
+          </video>
+        </div>
+      </div>
+    </section>
+    <script src="../build/mediaelement-and-player.js"></script>
+    <script>
+      window.onload = () => {
+        const elements = document.querySelectorAll(".player.media-element");
+        const players = document.querySelectorAll(
+          ".player.media-element-player"
+        );
+
+        elements.forEach((element) => {
+          new MediaElement(element, {
+            success: function (mediaElement, originalNode) {
+              console.info(`+++ SUCCESS for ME ${mediaElement.id} +++\n`, {
+                mediaElement,
+                originalNode,
+              });
+            },
+          });
+        });
+
+        players.forEach(
+          (player) =>
+            new MediaElementPlayer(player, {
+              alwaysShowControls: true,
+              showPosterWhenEnded: true,
+              features: [
+                "playpause",
+                "current",
+                "progress",
+                "duration",
+                "tracks",
+                "volume",
+                "fullscreen",
+              ],
+              videoWidth: "100%",
+              stretching: "none",
+              // toggleCaptionsButtonWhenOnlyOne: true,
+              success: function (mediaElement, originalNode) {
+                console.info(`+++ SUCCESS for MEP ${mediaElement.id} +++\n`, {
+                  mediaElement,
+                  originalNode,
+                });
+              },
+            })
+        );
+
+        console.log({ mejs });
+      };
+    </script>
+  </body>
+</html>
