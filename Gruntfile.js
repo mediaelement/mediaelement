@@ -39,6 +39,10 @@ module.exports = function (grunt) {
 			stylesheet: {
 				files: ['src/css/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg', 'src/css/**/*.gif'],
 				tasks: ['postcss', 'copy:build']
+			},
+			demo: {
+				files: ['demo/**/*.js', 'demo/**/*.html'],
+				tasks: ['copy:demo']
 			}
 		},
 
@@ -210,7 +214,16 @@ module.exports = function (grunt) {
 				src: ['*.*'],
 				dest: 'build/',
 				flatten: true,
-				filter: 'isFile'
+				filter: 'isFile',
+				options: {
+					processContent: function (content, srcFile) {
+						if (srcFile.match(/.html$/m)) {
+							return content.replace(/..\/build\//mg, '');
+						}
+
+						return content;
+					}
+				}
 			},
 			translation: {
 				expand: true,
