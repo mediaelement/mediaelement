@@ -186,6 +186,22 @@ export function ajax (url, dataType, success, error) {
 	}
 }
 
+export function hasChildNode(parentNode, expectedChildNode) {
+	const childNodes = Array.from(parentNode.childNodes);
+
+	return childNodes.some((child) => child.nodeName === expectedChildNode);
+}
+
+export function setSrcAttr(node, src) {
+	const hasSource = hasChildNode(node, 'SOURCE');
+
+	if (hasSource) {
+		node.removeAttribute('src');
+	} else { 
+		node.setAttribute('src', src);
+	}
+}
+
 mejs.Utils = mejs.Utils || {};
 mejs.Utils.offset = offset;
 mejs.Utils.hasClass = hasClass;

@@ -6,6 +6,7 @@ import mejs from '../core/mejs';
 import {renderer} from '../core/renderer';
 import {createEvent} from '../utils/general';
 import {SUPPORTS_NATIVE_HLS, IS_ANDROID} from '../utils/constants';
+import { setSrcAttr } from '../utils/dom';
 
 /**
  * Native HTML5 Renderer
@@ -17,7 +18,6 @@ const HtmlMediaElement = {
 	options: {
 		prefix: 'html5'
 	},
-
 	/**
 	 * Determine if a specific element type can be played with this render
 	 *
@@ -129,7 +129,7 @@ const HtmlMediaElement = {
 		if (total > 0) {
 			for (; index < total; index++) {
 				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[index].type)) {
-					node.setAttribute('src', mediaFiles[index].src);
+					setSrcAttr(node, mediaFiles[index].src);
 					break;
 				}
 			}
