@@ -44,13 +44,11 @@ class Renderer {
 
 		// If renderers are not set, set a default order:
 		// 1) Native renderers (HTML5, HLS, M(PEG)-DASH, FLV)
-		// 2) Flash shims (RTMP, FLV, HLS, M(PEG)-DASH, MP3, OGG)
-		// 3) Iframe renderers (YouTube, SoundCloud, Facebook. etc.)
+		// 2) Iframe renderers (YouTube, SoundCloud, Facebook. etc.)
 		if (!renderersLength) {
 			const
 				rendererIndicator = [
 					/^(html5|native)/i,
-					/^flash/i,
 					/iframe$/i,
 				],
 				rendererRanking = (renderer) => {
