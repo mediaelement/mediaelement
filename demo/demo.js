@@ -89,9 +89,6 @@ for (var i = 0; i < sourcesTotal; i++) {
 		if (sourcesSelector[i].querySelector('option[value$=".ogg"]')) {
 			sourcesSelector[i].querySelector('option[value$=".ogg"]').disabled = true;
 		}
-		if (sourcesSelector[i].querySelector('option[value$=".flv"]')) {
-			sourcesSelector[i].querySelector('option[value*=".flv"]').disabled = true;
-		}
 	}
 }
 
