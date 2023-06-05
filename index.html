@@ -296,6 +296,7 @@
                 for (var i = 0; i < total; i++) {
                     new MediaElementPlayer(mediaElements[i], {
                         pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@6.0.3/build/',
+                        iconSprite: '/images/mejs-controls.svg',
                         shimScriptAccess: 'always',
                         success: function () {
                             var target = document.body.querySelectorAll('.player'), targetTotal = target.length;
