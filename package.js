@@ -39,11 +39,6 @@ Package.onUse(function(api) {
         'build/renderers/vimeo.js',
         'build/mejs-controls.svg',
         'build/mejs-controls.png',
-        'build/mediaelement-flash-audio.swf',
-        'build/mediaelement-flash-audio-ogg.swf',
-        'build/mediaelement-flash-video.swf',
-        'build/mediaelement-flash-video-hls.swf',
-        'build/mediaelement-flash-video-mdash.swf',
     ];
 
     if (api.addAssets) {

@@ -20,9 +20,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Descargar archivo',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Esta usando un navegador que no tiene activado o instalado el reproductor de Flash. Por favor active el plugin del reproductor de Flash o descargue la versión más reciente en https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Pantalla completa',
 

@@ -70,10 +70,8 @@ module.exports = function (grunt) {
 						'src/js/core/i18n.js',
 						'src/js/languages/en.js',
 						'src/js/renderers/html5.js',
-						'src/js/renderers/flash.js',
 					].concat(rendererSources || [
 						'src/js/renderers/dash.js',
-						'src/js/renderers/flv.js',
 						'src/js/renderers/hls.js',
 						'src/js/renderers/youtube.js',
 					]),
@@ -84,10 +82,8 @@ module.exports = function (grunt) {
 						'src/js/core/i18n.js',
 						'src/js/languages/en.js',
 						'src/js/renderers/html5.js',
-						'src/js/renderers/flash.js',
 					].concat(rendererSources || [
 						'src/js/renderers/dash.js',
-						'src/js/renderers/flv.js',
 						'src/js/renderers/hls.js',
 						'src/js/renderers/youtube.js',
 					]).concat([
@@ -231,9 +227,4 @@ module.exports = function (grunt) {
 
 	grunt.registerTask('default', ['eslint', 'stylelint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
 	grunt.registerTask('debug', ['eslint', 'stylelint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
-	grunt.registerTask('flash', '', function () {
-		var exec = require('child_process').execSync;
-		var result = exec("sh compile_swf.sh", {encoding: 'utf8'});
-		grunt.log.writeln(result);
-	});
 };

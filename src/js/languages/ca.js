@@ -18,9 +18,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Descarregar arxiu',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Esteu utilitzant un navegador que no tingui Flash Player activat o instal·lat. Activeu el vostre complement Flash Player o descarregueu la versió més recent de https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Pantalla completa',
 

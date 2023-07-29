@@ -15,7 +15,6 @@
         exports.fa = {
             'mejs.plural-form': 0,
             'mejs.download-file': 'دریافت فایل',
-            'mejs.install-flash': 'افزونه فلش پلیر روی مرورگر شما نصب نیست یا غیر فعال است.افزونه را فعال کنید و یا از https://get.adobe.com/flashplayer/ دریافت و نصب کنید.',
             'mejs.fullscreen': 'تمام صفحه',
             'mejs.play': 'پخش',
             'mejs.pause': 'توقف',

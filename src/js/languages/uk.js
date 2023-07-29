@@ -18,9 +18,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Завантажити файл',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Flash Player у вашому браузері не встановлений або відключений. Будь ласка включіть Flash Player або скачайте останню версію із https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Повноекранний режим',
 

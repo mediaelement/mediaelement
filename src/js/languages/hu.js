@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Fájl letöltése',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Olyan böngészőt használ, amelyhez nincs engedélyezve vagy telepítve a Flash player. Kérjük, kapcsolja be a Flash-lejátszó bővítményét, vagy töltse le a legfrissebb verziót a https://get.adobe.com/flashplayer/ címen',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Teljes képernyő',
 

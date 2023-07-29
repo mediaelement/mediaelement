@@ -768,11 +768,7 @@ class MediaElementPlayer {
 					}
 				}
 
-				if (typeof t.media.renderer.stop === 'function') {
-					t.media.renderer.stop();
-				} else {
-					t.pause();
-				}
+				t.pause()
 
 				if (t.setProgressRail) {
 					t.setProgressRail();
@@ -1943,10 +1939,6 @@ class MediaElementPlayer {
 		if (t.media.renderer && typeof t.media.renderer.destroy === 'function') {
 			t.media.renderer.destroy();
 		}
-
-		// Remove the player from the mejs.players object so that pauseOtherPlayers doesn't blow up when trying to
-		// pause a non existent Flash API.
-		delete mejs.players[t.id];
 
 		if (typeof t.getElement(t.container) === 'object') {
 			const offscreen = t.getElement(t.container).parentNode.querySelector(`.${t.options.classPrefix}offscreen`);

@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': '下载文件',
 
-			// renderers/flash.js
-			'mejs.install-flash': '您正在使用未启用或安装Flash播放器的浏览器。请打开您的Flash Player插件，或从https://get.adobe.com/flashplayer/下载最新版本',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': '全屏',
 

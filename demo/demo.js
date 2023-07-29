@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
-			pluginPath: '../build/',
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 

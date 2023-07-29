@@ -16,7 +16,6 @@ describe('MediaElement Player - Test Results', function () {
 	beforeEach(function () {
 		videoTag = document.getElementById('player1');
 		player = new MediaElementPlayer('player1', {
-			pluginPath: '../build/',
 			playText: 'Play track',
 			pauseText: 'Pause track',
 			stopText: 'Stop track',

@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Pobierz plik',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Twoja przeglądarka nie ma włączonej lub zainstalowanej wtyczki Flash Player. Prosimy ją włączyć lub pobrać najnowszą wersję ze strony https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Pełny ekran',
 

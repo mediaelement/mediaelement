@@ -1,5 +1,11 @@
 # Migration Guide
 
+## Migrating from `6.x` to `7.x` version (Draft)
+
+* Flash support removed. If you want to use flash you have to use version 6 or below.
+* `stop()` function was removed, because if was only implemented for flash, use `pause()` instead.
+* Removed `shimScriptAccess` and `pluginPath` settings, because if was only implemented for flash, so you can remove these settings.
+
 ## Migrating from `5.x` to `6.x` version
 
 Version 6.0.0 removed the custom subtitle parsing in favor of browser native support which has greatly improved over the

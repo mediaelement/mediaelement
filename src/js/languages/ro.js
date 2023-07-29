@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Descarcă fişierul',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Utilizați un browser care nu are activat sau instalat playerul Flash. Porniți pluginul Flash player sau descărcați cea mai recentă versiune de la https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Ecran complet',
 

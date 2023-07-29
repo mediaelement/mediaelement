@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Muat Turun Fail',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Anda sedang menggunakan pelayar internet yang tidak mempunyai pemain Flash. Sila aktifkan pemalam pemain Flash anda atau muat turun versi terbaru dari https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Skrin penuh',
 

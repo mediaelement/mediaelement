@@ -16,7 +16,7 @@ import {generateControlButton} from '../utils/generate';
  * Fullscreen button
  *
  * This feature creates a button to toggle fullscreen on video; it considers a letiety of possibilities when dealing with it
- * since it is not consistent across browsers. It also accounts for triggering the event through Flash shim.
+ * since it is not consistent across browsers.
  */
 
 // Feature configuration

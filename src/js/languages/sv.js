@@ -18,9 +18,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Ladda ner fil',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Du använder en webbläsare som inte har Flash Player aktiverat eller installerad. Aktivera Flash Player eller hämta den senaste versionen från https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Fullskärm',
 

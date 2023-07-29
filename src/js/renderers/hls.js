@@ -13,7 +13,6 @@ import {loadScript} from '../utils/dom';
  *
  * Uses DailyMotion's hls.js, which is a JavaScript library which implements an HTTP Live Streaming client.
  * It relies on HTML5 video and MediaSource Extensions for playback.
- * This renderer integrates new events associated with m3u8 files the same way Flash version of Hls does.
  * @see https://github.com/video-dev/hls.js
  *
  */

@@ -53,15 +53,12 @@ Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
 renderers | array | `[]` | List of the renderers to use
 fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
-pluginPath | string | `build/` | Path where Flash shims are located
 iconSprite | string | `mejs-controls.svg` | Path and file for svg icon sprite
-shimScriptAccess | string | `sameDomain` | Flag in `<object>` and `<embed>` to determine whether to use local or CDN files. Possible values: `always` (CDN version) or `sameDomain` (local files)
 success | callback | | Action(s) that will be executed as soon as the source is loaded; passes 2 arguments: `media` (the wrapper that mimics all the native events/properties/methods for all renderers) and `node` (the original HTML `video`, `audio` or `iframe` tag where the media was loaded originally; if `html5` is being used, `media` and `node` are the basically the same)
 error | callback | | Action(s) that will be executed if source doesn't load for any reason. Passes same arguments as `success`
 dailymotion | object | | See [Documentation](https://developer.dailymotion.com/player)
 dash | object | | Accepts `debug`, `drm` (object to load protected/licensed streaming; read [here](https://github.com/Axinom/drm-quick-start) for more information) and `path` parameters to indicate `dash.js` URL/local path
 facebook | object | | See [Documentation](https://developers.facebook.com/docs/plugins/embedded-video-player/api#setup) (and a custom `lang` parameter to indicate the FB SDK language)
-flv | object | | See [Documentation](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) (and a custom `path` parameter to indicate where to load library)
 hls | object | | See [Documentation](https://github.com/dailymotion/hls.js/blob/master/API.md#fine-tuning) (and a custom `path` parameter to indicate where to load library)
 youtube | object | | See [Documentation](https://developers.google.com/youtube/player_parameters#Parameters); also, a custom `nocookie` parameter to switch to YouTube's no-cookie URL and `imageQuality` parameter if user decides to use Image API to load a YouTube poster based on YouTube video ID (possible values: `default`, `hqdefault`, `mqdefault`, `sddefault` and `maxresdefault`)
 
@@ -151,8 +148,6 @@ pauseText | string | `null` | Title for Play/Pause button for WARIA purposes whe
 <a id="api"></a>
 ## API
 
-MediaElementPlayer is a complete audio and video player, but you can also use just the MediaElement object which replaces `<video>` and `<audio>` with a Flash player that mimics the properties, methods, and events of HTML MediaElement API.
-
 <a id="properties"></a>
 ### Properties
 Property | Description | GET | SET
@@ -182,7 +177,6 @@ Method | Description
 load() | Reload the audio/video element; also, it is used to update the audio/video element after changing the source or other settings
 play() | Start playing the audio/video
 pause() | Halt (pauses) the currently playing audio or video
-stop() | **Only** present to support Flash RTMP streaming in MediaElementPlayer. The equivalent for other scenarios is `pause`
 remove() | Destroy the video/audio player instance
 canPlayType(type) | Determine whether current player can/cannot play a specific media type; `type` is MIME type and each renderer has a whitelist of them
 setPlayerSize (width, height) | Set player's `width` and `height` also considering the `stretching` configuration

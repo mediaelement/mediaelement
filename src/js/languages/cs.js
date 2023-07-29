@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Stáhnout soubor',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Používáte prohlížeč, který nemá Flash Player povolen nebo nainstalován. Zapněte plugin Flash Player nebo stáhněte nejnovější verzi z adresy https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Celá obrazovka',
 

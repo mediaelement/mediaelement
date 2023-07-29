@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'ファイルをダウンロードする',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Flash Playerが有効またはインストールされていないブラウザを使用しています。Flash Playerプラグインをオンにするか,https://get.adobe.com/flashplayer/から最新バージョンをダウンロードしてください。',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': '全画面',
 

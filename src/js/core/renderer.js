@@ -43,7 +43,7 @@ class Renderer {
 		renderers = renderers.length ? renderers: this.order;
 
 		// If renderers are not set, set a default order:
-		// 1) Native renderers (HTML5, HLS, M(PEG)-DASH, FLV)
+		// 1) Native renderers (HTML5, HLS, M(PEG)-DASH)
 		// 2) Iframe renderers (YouTube, SoundCloud, Facebook. etc.)
 		if (!renderersLength) {
 			const

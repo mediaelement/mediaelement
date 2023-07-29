@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': '파일 다운로드',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Flash Player가 활성화되거나 설치되지 않은 브라우저를 사용 중입니다. 플래시 플레이어 플러그인을 켜거나 https://get.adobe.com/flashplayer/에서 최신 버전을 다운로드하십시오.',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': '전체화면',
 

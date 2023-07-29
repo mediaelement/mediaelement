@@ -14,7 +14,6 @@
 * [3. Add `<video>` or `<audio>` tags](#tags)
 	* [Default setup](#default-setup)
 	* [Multiple codecs (Optional)](#multi-codecs)
-	* [Browsers with JavaScript disabled (Optional)](#disabled-javascript)
 	* [Use of Closed Captioning (Optional)](#closed-captioning)
 * [4. Setup Player](#player)
 * [5. Set default language (Optional)](#language)
@@ -49,8 +48,6 @@ AddType text/srt .srt
 ```
 
 On Windows/IIS servers, please follow Microsoft's instructions on how to add/edit MIME types on [IIS6](http://www.microsoft.com/technet/prodtechnol/WindowsServer2003/Library/IIS/eb5556e2-f6e1-4871-b9ca-b8cf6f9c8134.mspx?mfr=true) and [IIS7](https://technet.microsoft.com/en-us/library/cc725608(v=ws.10).aspx).
-
-If you are working with local files and plan to test Flash playback, make sure you go to the [Flash Security Settings](http://www.macromedia.com/support/documentation/en/flashplayer/help/settings_manager04.html) page and add your working directory. Also, things tend to work best when you use absolute paths.
 
 If you want to make your media to play in `Chromium` browser, please read [this document](https://www.chromium.org/audio-video)
 
@@ -98,7 +95,6 @@ wp_localize_script( 'mediaelement', '_wpmejsSettings',
 ```
 and add in the `_wpmejsSettings` the following:
 ```
-'pluginPath'        => includes_url( 'js/mediaelement/', 'relative' ),
 'pauseOtherPlayers' => '',
 'classPrefix'       => 'mejs-',
 'stretching'        => 'responsive',
@@ -179,7 +175,6 @@ $scripts->add( 'mediaelement', "/wp-includes/js/mediaelement/mediaelement-and-pl
 did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
 	'language' => get_bloginfo( 'language' ),
 	'strings'  => array(
-		'mejs.install-flash'       => __( 'You are using a browser that does not have Flash player enabled or installed. Please turn on your Flash player plugin or download the latest version from https://get.adobe.com/flashplayer/' ),
 		'mejs.fullscreen-off'      => __( 'Turn off Fullscreen' ),
 		'mejs.fullscreen-on'       => __( 'Go Fullscreen' ),
 		'mejs.download-video'      => __( 'Download Video' ),
@@ -267,11 +262,6 @@ did_action( 'init' ) && $scripts->localize( 'mediaelement', 'mejsL10n', array(
 ) );
 $scripts->add( 'mediaelement-vimeo', "/wp-includes/js/mediaelement/renderers/vimeo.min.js", array('mediaelement'), 'X.X.X', 1 );
 $scripts->add( 'wp-mediaelement', "/wp-includes/js/mediaelement/wp-mediaelement$suffix.js", array('mediaelement'), false, 1 );
-$mejs_settings = array(
-	'pluginPath' => includes_url( 'js/mediaelement/', 'relative' ),
-		'classPrefix' => 'mejs-',
-		'stretching' => 'responsive',
-);
 ```
 being `X.X.X` the latest version you want to install.
 
@@ -329,7 +319,7 @@ If you want to install any of them, refer to the new plugins repository clicking
 <link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
 ```
 
-If you wish to install the sources in different directories (i.e., all JavaScript files in a _js_, all CSS in a _styles_, Flash shims in _plugins_, etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
+If you wish to install the sources in different directories (i.e., all JavaScript files in a _js_, all CSS in a _styles_ etc.), add the following CSS update after the _mediaelementplayer.css_ reference (**only if the images are not in the same folder as the stylesheet**):
 ```html
 <link rel="stylesheet" href="/path/to/mediaelementplayer.min.css" />
 
@@ -346,25 +336,6 @@ If you wish to install the sources in different directories (i.e., all JavaScrip
 </style>
 ```
 
-Also, update `pluginPath` within the configuration options (visit [Usage and Tips](usage.md) and [API and Configuration](api.md) for more details) with the location of the Flash shims.
-
-You can also use a CDN to load your script and stylesheet.
-
-As stated above, the important factor is to set the `pluginPath` correctly, but also, for this scenario, you will need to set the `shimScriptAccess` configuration element as ***`always`*** to make the shims to work.
-
-As an example:
-
-```javascript
-$('video, audio').mediaelementplayer({
-	// Do not forget to put a final slash (/)
-	pluginPath: 'https://cdnjs.com/libraries/mediaelement/',
-	// this will allow the CDN to use Flash without restrictions
-	// (by default, this is set as `sameDomain`)
-	shimScriptAccess: 'always'
-	// more configuration
-});
-```
-
 Check the content of `mediaelementplayer.min.css` (or if you decided to use the old styles, `mediaelementplayer-legacy.min.css`) to customize any CSS related to the player.
 
 Also, as an example, visit [this section](resources.md#styles) to have an idea on how can you customize the look-and-feel of the player.
@@ -375,7 +346,7 @@ Also, as an example, visit [this section](resources.md#styles) to have an idea o
 
 <a id="default-setup"></a>
 ### Default setup
-If your users have JavaScript and/or Flash, the easiest route for all browsers and mobile devices is to use a single file.
+If your users have JavaScript the easiest route for all browsers and mobile devices is to use a single file.
 
 ```html
 <video src="myvideo.mp4" width="320" height="240" type="video/mp4"></video>
@@ -404,23 +375,6 @@ This includes multiple codecs for various browsers (H.264 for IE9+, Safari, and 
 	<source type="video/ogg" src="myvideo.ogv" />
 </video>
 ```
-
-<a id="disabled-javascript"></a>
-### Browsers with JavaScript disabled (Optional)
-In very rare cases, you might have a non-HTML5 browser with Flash turned on and JavaScript turned off. In that specific case, you can also include the Flash `<object>` code. For more information about this approach, please read [Video for Everybody!](http://camendesign.com/code/video_for_everybody) documentation.
-```html
-<video width="320" height="240" poster="poster.jpg" controls="controls" preload="none">
-	<source type="video/mp4" src="myvideo.mp4" />
-	<source type="video/webm" src="myvideo.webm" />
-	<source type="video/ogg" src="myvideo.ogv" />
-	<object width="320" height="240" type="application/x-shockwave-flash" data="/path/to/mediaelement-flash-video.swf">
-		<param name="movie" value="/path/to/mediaelement-flash-video.swf" />
-		<param name="flashvars" value="controls=true&amp;poster=myvideo.jpg&amp;file=myvideo.mp4" />
-		<img src="myvideo.jpg" width="320" height="240" title="No video playback capabilities" />
-	</object>
-</video>
-```
-If you plan to use this approach, just remember that it will only work for native media types, and you can use `mediaelement-flash-audio.swf` (MP3), `mediaelement-flash-audio-ogg.swf` (OGA) or `mediaelement-flash-video.swf` (MP4, FLV, RTMP, M4V, etc.) shims for it.
 
 <a id="closed-captioning"></a>
 ### Use of Closed Captioning (Optional)

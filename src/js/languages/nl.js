@@ -20,9 +20,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Bestand downloaden',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'U gebruikt een browser die geen Flash Player heeft ingeschakeld of geïnstalleerd. Zet de Flash Player plug-in of download de nieuwste versie van https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Volledig scherm',
 

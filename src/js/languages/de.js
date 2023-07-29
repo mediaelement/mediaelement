@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Datei herunterladen',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Ihr Browser unterstützt kein Flash. Bitte aktivieren Sie Flash bzw. laden Sie die aktuellste Flash-Version herunter unter https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Vollbild',
 

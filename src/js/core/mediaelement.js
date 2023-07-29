@@ -41,20 +41,10 @@ class MediaElement {
 			 */
 			fakeNodeName: 'div',
 			/**
-			 * The path where shims are located
-			 * @type {String}
-			 */
-			pluginPath: 'build/',
-			/**
 			 * The path where the icon sprite is located
 			 * @type {String}
 			 */
 			iconSprite: 'mejs-controls.svg',
-			/**
-			 * Flag in `<object>` and `<embed>` to determine whether to use local or CDN
-			 * Possible values: 'always' (CDN version) or 'sameDomain' (local files)
-			 */
-			shimScriptAccess: 'sameDomain'
 		};
 
 		options = Object.assign(t.defaults, options);
@@ -202,9 +192,6 @@ class MediaElement {
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null &&
 				t.mediaElement.renderer.name === rendererName) {
 				t.mediaElement.renderer.pause();
-				if (t.mediaElement.renderer.stop) {
-					t.mediaElement.renderer.stop();
-				}
 				t.mediaElement.renderer.show();
 				t.mediaElement.renderer.setSrc(media);
 				return true;
@@ -213,9 +200,6 @@ class MediaElement {
 			// if existing renderer is not the right one, then hide it
 			if (t.mediaElement.renderer !== undefined && t.mediaElement.renderer !== null) {
 				t.mediaElement.renderer.pause();
-				if (t.mediaElement.renderer.stop) {
-					t.mediaElement.renderer.stop();
-				}
 				t.mediaElement.renderer.hide();
 			}
 

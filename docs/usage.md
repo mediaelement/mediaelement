@@ -18,7 +18,6 @@
 ## Initialize player
 
 You can use this as a standalone library if you wish, or just stick with the full MediaElementPlayer.
-**IMPORTANT:** If you use `flash_video` renderer, it's always recommended to use `media.load()` inside the `success` callback to ensure that RTMP and FLV will play properly. 
 
 ## Standalone
 ```html
@@ -26,10 +25,8 @@ You can use this as a standalone library if you wish, or just stick with the ful
 	// You can use either a string for the player ID (i.e., `player`), 
 	// or `document.querySelector()` for any selector
 	var player = new MediaElement('player', {
-		pluginPath: "/path/to/shims/",
 		success: function(mediaElement, originalNode) {
 			// do things
-
 		}
 	});
 
@@ -42,7 +39,7 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ```html
 <video src="myvideo.mp4" width="320" height="240"
 		class="mejs__player"
-		data-mejsoptions='{"pluginPath": "/path/to/shims/", "alwaysShowControls": "true"}'></video>
+		data-mejsoptions='{"alwaysShowControls": "true"}'></video>
 ```
 
 <a id="vanilla"></a>
@@ -52,7 +49,6 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 	// You can use either a string for the player ID (i.e., `player`), 
 	// or `document.querySelector()` for any selector
 	var player = new MediaElementPlayer('player', {
-		pluginPath: "/path/to/shims/",
 	// When using `MediaElementPlayer`, an `instance` argument
 	// is available in the `success` callback
 		success: function(mediaElement, originalNode, instance) {
@@ -67,7 +63,6 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 ```html
 <script>
 	$('#mediaplayer').mediaelementplayer({
-		pluginPath: "/path/to/shims/",
 	// When using jQuery's `mediaelementplayer`, an `instance` argument
 	// is available in the `success` callback
 		success: function(mediaElement, originalNode, instance) {
@@ -84,7 +79,7 @@ You can avoid running any startup scripts by adding `class="mejs__player"` to th
 import 'mediaelement/standalone';
 
 // To import all the plugin (you will have access to the MediaElement and MediaElementPlayer classes,
-// $.fn.mediaelementplayer plugin, all the native renderers, YouTube and Flash shims)
+// $.fn.mediaelementplayer plugin, all the native renderers, YouTube)
 import 'mediaelement/full';
 
 // To import renderers (i.e., Vimeo)
@@ -115,7 +110,7 @@ import 'mediaelement'; // or import `mediaelement/standalone` if you only want t
 
 <a id="requirejs"></a>
 ### RequireJS
-With `Require.js`, you will need the following setup if you are planning to use HLS, M(PEG)-DASH or FLV, given the way the packages are bundled.
+With `Require.js`, you will need the following setup if you are planning to use HLS, M(PEG)-DASH, given the way the packages are bundled.
 
 To make it work, install via npm any of the external libraries you will need (i.e., HLS.js).
 ```
@@ -144,8 +139,6 @@ require(['path/to/hls'], function (Hls) {
 	});
 });
 ```
-**IMPORTANT NOTE:** To keep Flash shims working you **MUST** setup the path where the shims are via `pluginPath`, and do not forget to add a slash at the end of the string. Please refer to the examples above. In Meteor, the right path to be used is `/packages/johndyer_mediaelement/build/`;
-
 
 <a id="react"></a>
 ### React
@@ -156,13 +149,11 @@ Once installed through npm, you will be able to create your component using `Med
 **MediaElement.js**
 ```javascript
 import React, { Component } from 'react';
-import flvjs from 'flv.js';
 import hlsjs from 'hls.js';
 import 'mediaelement';
 
 // Import stylesheet and shims
 import 'mediaelement/build/mediaelementplayer.min.css';
-import 'mediaelement/build/mediaelement-flash-video.swf';
 
 export default class MediaElement extends Component {
 
@@ -222,13 +213,10 @@ export default class MediaElement extends Component {
 		}
 
 		const options = Object.assign({}, JSON.parse(this.props.options), {
-			// Read the Notes below for more explanation about how to set up the path for shims
-			pluginPath: './static/media/',
 			success: (media, node, instance) => this.success(media, node, instance),
 			error: (media, node) => this.error(media, node)
 		});
 		
-		window.flvjs = flvjs;
 		window.Hls = hlsjs;
 		this.setState({player: new MediaElementPlayer(this.props.id, options)});
 	}
@@ -282,23 +270,6 @@ export default class App extends Component {
 }
 ```
 
-**IMPORTANT NOTES**
-* If you want to support Flash renderers, you **MUST** activate a file loader in WebPack's configuration file in order to send the shims to the correct location (`./static/media/` in the example above). Something like this:
-```javascript
-module: {
-	// All previous code
-	loaders: [
-		// All previous loaders
-		{
-			test: /\.swf$/,
-			loader: 'file',
-			query: {
-					name: 'static/media/[name].[ext]'
-			}
-		}
-	]
-}
-```
 * For other renderers that cannot be installed through npm, such as YouTube, you might need to load their script through `componentDidMount` method:
 ```javascript
 componentDidMount() {
@@ -329,11 +300,11 @@ However, if you need to use just a subset of renderers in a specific order, you 
 
 ```javascript
 
-// Use globally native M(PEG)-DASH renderer first, then Flash shim
-mejs.Renderers.order = ['native_dash', 'flash_dash'];
+// Use globally native M(PEG)-DASH renderer
+mejs.Renderers.order = ['native_dash'];
 
 $('video, audio').mediaelementplayer({
-	renderers: ['native_dash', 'flash_dash'], // Use only M(PEG)DASH renderers
+	renderers: ['native_dash'], // Use only M(PEG)DASH renderers
 	// More configuration
 });
 ```
@@ -341,7 +312,6 @@ $('video, audio').mediaelementplayer({
 `MediaElement` can invoke methods from the current renderer's API. An example using native HLS:
 ```javascript
 $('video').mediaelementplayer({
-	pluginPath: '../build/',
 	// All the config related to HLS
 	hls: {
 		debug: true
@@ -380,32 +350,24 @@ Renderer | ID | Reference | MIME Type(s)
 Native video/audio | `html5` | --- | video/mp4, audio/mp4, video/webm, audio/mpeg, audio/mp3, audio/ogg, audio/oga, video/ogg
 HLS native | `native_hls` | [`hls.js` API](https://github.com/dailymotion/hls.js/blob/master/docs/API.md) | application/x-mpegURL, vnd.apple.mpegURL
 M(PEG)-DASH native | `native_dash` | [`dash.js` Documentation](http://cdn.dashjs.org/latest/jsdoc/index.html) | application/dash+xml
-FLV native | `native_flv` | [`flv.js` API](https://github.com/Bilibili/flv.js/blob/master/docs/api.md) | video/flv
 SoundCloud | `soundcloud_iframe` | [SoundCloud Widget API](https://developers.soundcloud.com/docs/api/html5-widget) | video/soundcloud, video/x-soundcloud
 Facebook | `facebook` | --- | video/facebook, video/x-facebook
 Vimeo | `vimeo_iframe` | [Vimeo Player API](https://github.com/vimeo/player.js) | video/vimeo, video/x-vimeo
 YouTube | `youtube_iframe` | [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) | video/youtube, video/x-youtube
 DailyMotion | `dailymotion_iframe` | [Dailymotion Player API](https://developer.dailymotion.com/player#player-api) | video/dailymotion, video/x-dailymotion
 Twitch | `twitch_iframe` | [Twitch Emded API](https://dev.twitch.tv/docs/embed/video-and-clips/) | video/twitch, video/x-twitch
-Video shim  | `flash_video` | --- | video/mp4, video/rtmp, audio/rtmp, rtmp/mp4, audio/mp4
-Audio shim | `flash_audio` | --- | audio/mp3
-OGG Audio shim  | `flash_audio_ogg` | --- | audio/ogg, audio/oga
-HLS shim | `flash_hls` | [FlasHLS Events](https://github.com/mangui/flashls/blob/dev/API.md) | application/x-mpegURL, vnd.apple.mpegURL
-M(PEG)-DASH shim | `flash_dash` | --- |application/dash+xml
 
 To know how well-supported are each one of the formats, visit http://caniuse.com/
 
 **IMPORTANT NOTES** 
-1. Only renderers prefixed as __native__, YouTube, and Flash shim, are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
-2. For `flash_hls`, you can use the events listed on https://github.com/mangui/flashls/blob/dev/API.md by prepending __on__ followed by the event name in camelcase notation; 
-i.e., to call `FRAGMENT_PLAYING`, you need to write `onFragmentPlaying` on JS. The events that return objects will have the info in the `data` attribute of the object; the rest, on the `message` attribute. 
+* Only renderers prefixed as __native__ and YouTube are integrated by default on the player. The rest of the renderers are stored in the `build/renderers` folder.
 
 
 **Notes**
 * Support for `wmv` and `wma` has been dropped since most of the major players are not supporting it as well.
 * `ogg` formats will not play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
-* `wav` and `webm` formats will only play on Browsers that support it natively since there is currently no Flash fallback to allow them to play in other browsers.
-* `flv` and `mpd` will not work on iOS since it doesn't support MSE; for `mpd` use a `m3u8` fallback.
+* `wav` and `webm` formats will only play on Browsers that support it natively.
+* `mpd` will not work on iOS since it doesn't support MSE; for `mpd` use a `m3u8` fallback.
 * SoundCloud can play with `html5` renderer using the following URL format: `https://api.soundcloud.com/tracks/XXX/stream?client_id=XXX`
 
 

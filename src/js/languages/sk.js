@@ -19,9 +19,6 @@
 			// core/mediaelement.js
 			'mejs.download-file': 'Prevziať súbor',
 
-			// renderers/flash.js
-			'mejs.install-flash': 'Používate prehliadač, ktorý nemá povolený alebo nainštalovaný prehrávač Flash. Zapnite doplnok prehrávača Flash alebo si prevezmite najnovšiu verziu zo stránky https://get.adobe.com/flashplayer/',
-
 			// features/fullscreen.js
 			'mejs.fullscreen': 'Celá obrazovka',
 
