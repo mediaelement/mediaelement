@@ -23,25 +23,28 @@
     <body>
 
 
-        <header>
-            <div class="container">
-                <nav>
-                    <div class="logo">
-                        <a href="/"><img src="images/logo-orange.svg" alt="MediaElement.js Logo"/></a>
-                    </div>
+        <header class="header">
+            <a href="/" class="logo-container">
+                <div class="logo">
+                    <!-- Empty alt-attribute, because it's not a content image -->
+                    <img src="images/logo-orange.svg" alt=""/>
+                </div>
+    
+                <h1 class="brand">
+                    <!-- Empty alt-attribute, because we have an alternative screenreader text not visible -->
+                    <img src="images/mediaelement.svg" alt=""/><span class="sr-only">MediaElement.js</span>
+                </h1>
+            </a>
 
-                    <div class="brand"><img src="images/mediaelement.svg" alt="MediaElement.js"/><span class="sr-only">MediaElement.js</span></div>
-
-                    <div class="menu">
-                        <ul>
-                            <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/installation.md">Installation</a></li>
-                            <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/usage.md">Usage</a></li>
-                            <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/api.md">API</a></li>
-                            <li><a href="https://github.com/mediaelement/mediaelement-plugins">Plugins</a></li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
+            <nav class="menu" aria-label="Main-Navigation">
+                <ul>
+                    <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/installation.md">Installation</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/usage.md">Usage</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/api.md">API</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/utils.md">Utilities</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement-plugins">Plugins</a></li>
+                </ul>
+            </nav>
         </header>
 
         <section class="overview">
@@ -86,10 +89,12 @@
             <div class="container">
 
                 <h2>Look good. Sound good.</h2>
-                <p>One file. Any browser. Same UI.</p>
+                <p class="players_text">MediaElement.js is a blazingly fast and amazingly powerful HTML5 audio and video library that creates a
+                    unified feel for media files (MP4, MP3), streaming content (HLS, M(PEG)-DASH), and embeddable players like
+                    YouTube, Vimeo, Twitch, DailyMotion, Facebook, and SoundCloud.</p>
 
                 <div class="media-container">
-                    <h4><a id="video-player" class="anchor" href="#video-player" aria-hidden="true">
+                    <h3><a id="video-player" class="anchor" href="#video-player" aria-hidden="true">
                         <span aria-hidden="true" class="octicon octicon-link"></span></a>
                         <div class="clearfix">
                             <span class="title">Video Player</span>
@@ -121,7 +126,7 @@
                 </div>
 
                 <div class="media-container">
-                    <h4><a id="audio-player" class="anchor" href="#audio-player" aria-hidden="true">
+                    <h3><a id="audio-player" class="anchor" href="#audio-player" aria-hidden="true">
                         <span aria-hidden="true" class="octicon octicon-link"></span></a>
                         <div class="clearfix">
                             <span class="title">Audio Player</span>
@@ -146,78 +151,15 @@
 
         </section><!-- /.players -->
 
-
-        <section class="sitesusing">
-            <div class="container">
-                <h2>Used by Smart Folks</h2>
-
-                <div class="site-logos">
-
-                    <div class="site-logo">
-                        <a href="http://www.wordpress.org/" target="_blank"><img src="images/wordpress.png" alt="Wordpress"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="http://www.canvaslms.com/" target="_blank"><img src="images/canvas.png" alt="Instructure Canvas"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="http://www.revision3.com/" target="_blank"><img src="images/revision3.png" alt="Revision3"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="http://www.rottentomatoes.com/" target="_blank"><img src="images/rottentomatoes.png" alt="Rotten Tomatoes"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="http://www.teamtreehouse.com/" target="_blank"><img src="images/treehouse.png" alt="Treehouse Coding"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="http://www.mozilla.org/" target="_blank"><img src="images/mozilla.svg" alt="Mozilla Nightly News"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="http://articles.salsalabs.com/" target="_blank"><img src="images/salsa.png" alt="Salsa Labs"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="http://www.streamindex.com/" target="_blank"><img src="images/streams.svg" alt="StreamS"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="https://transloadit.com/" target="_blank"><img src="images/transloadit.png" alt="Transloadit"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="https://contao.org/" target="_blank"><img src="images/contao.svg" alt="Contao"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="https://www.er-secure.de/" target="_blank"><img src="images/er-secure.png" alt="ER Secure"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="https://www.defense.gov/" target="_blank"><img src="images/seal.svg" alt="U.S. Department of Defense" style="height:80px"/></a>
-                    </div>
-
-                    <div class="site-logo">
-                        <a href="https://medsims.com/" target="_blank"><img src="images/medsims.svg" alt="MedSims from WebMD/Medscape"/></a>
-                    </div>
-
-                </div><!-- /.site-logos -->
-
-            </div>
-        </section>
-
         <div class="features">
             <div class="container">
-                <h2><div class="line"><span class="heart">Love</span> HTML5,</div><div class="line"> but having</div><div class="line"> <span class="flash">Fl</span>ashbacks?</div></h2>
+                <h2><div class="line">We <span class="heart">Love</span> accessibility!</div></h2>
 
-                <p>
-                    Easy partner, we can handle it. MediaElement.js is a blazingly fast and amazingly powerful HTML5 audio and video library that creates a
-                    unified feel for media files (MP4, MP3, FLV), streaming content (HLS, M(PEG)-DASH, RTMP), and embeddable players like
-                    YouTube, Vimeo, Twitch, DailyMotion, Facebook, and SoundCloud.
+                <p class="feature__text">
+                    This videoplayer is <a href="https://www.w3.org/TR/WCAG21/">WCAG 2.1</a> compliant and additionally we are 
+                    following the rules for the german accessibility information act <a href="https://www.gesetze-im-internet.de/bitv_2_0/__3.html">BITV 2.0</a> 
+                    and european <a href="https://www.etsi.org/deliver/etsi_en/301500_301599/301549/03.02.01_60/en_301549v030201p.pdf">accessibility requirements 
+                    for ICT products and services (EN 301 549)</a>. If you have any accessibility concerns, please let us know by <a href="https://github.com/mediaelement/mediaelement/issues">creating an issue</a> on github.
                 </p>
 
                 <div class="center">
@@ -225,10 +167,71 @@
                     <a class="button" href="https://github.com/mediaelement/mediaelement" target="_blank">View on GitHub</a>
                     <a class="button" href="https://github.com/mediaelement/mediaelement-plugins" target="_blank">Enhance MediaElement.js</a>
                 </div>
+            </div>
+        </div>
+
+        <section class="sitesusing">
+            <div class="container">
+                <h2>Used by Smart Folks</h2>
+
+                <ul class="site-logos">
+
+                    <li class="site-logo">
+                        <a href="http://www.wordpress.org/" target="_blank"><img src="images/wordpress.png" alt="Wordpress"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="http://www.canvaslms.com/" target="_blank"><img src="images/canvas.png" alt="Instructure Canvas"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="http://www.revision3.com/" target="_blank"><img src="images/revision3.png" alt="Revision3"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="http://www.rottentomatoes.com/" target="_blank"><img src="images/rottentomatoes.png" alt="Rotten Tomatoes"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="http://www.teamtreehouse.com/" target="_blank"><img src="images/treehouse.png" alt="Treehouse Coding"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="http://www.mozilla.org/" target="_blank"><img src="images/mozilla.svg" alt="Mozilla Nightly News"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="http://articles.salsalabs.com/" target="_blank"><img src="images/salsa.png" alt="Salsa Labs"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="http://www.streamindex.com/" target="_blank"><img src="images/streams.svg" alt="StreamS"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="https://transloadit.com/" target="_blank"><img src="images/transloadit.png" alt="Transloadit"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="https://contao.org/" target="_blank"><img src="images/contao.svg" alt="Contao"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="https://www.er-secure.de/" target="_blank"><img src="images/er-secure.png" alt="ER Secure"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="https://www.defense.gov/" target="_blank"><img src="images/seal.svg" alt="U.S. Department of Defense" style="height:80px"/></a>
+                    </li>
+
+                    <li class="site-logo">
+                        <a href="https://medsims.com/" target="_blank"><img src="images/medsims.svg" alt="MedSims from WebMD/Medscape"/></a>
+                    </li>
+
+                </ul><!-- /.site-logos -->
 
             </div>
-
-        </div>
+        </section>
 
         <footer>
             <div class="footer-container">
@@ -295,9 +298,7 @@
 
                 for (var i = 0; i < total; i++) {
                     new MediaElementPlayer(mediaElements[i], {
-                        pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@6.0.3/build/',
                         iconSprite: '/images/mejs-controls.svg',
-                        shimScriptAccess: 'always',
                         success: function () {
                             var target = document.body.querySelectorAll('.player'), targetTotal = target.length;
                             for (var j = 0; j < targetTotal; j++) {
