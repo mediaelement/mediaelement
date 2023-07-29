@@ -20,29 +20,6 @@
 * Make sure you download the necessary media files from https://github.com/mediaelement/mediaelement-files and place them inside the `/media/` directory.
 * Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product.
 
-<a id="features"></a>
-### Features
-
-```html
-<script src="jquery.js"></script>
-<script src="mediaelement-and-player.min.js"></script>
-<link rel="stylesheet" href="mediaelementplayer.css" />
-<script src="mejs-feature-[feature_name].js"></script>
-
-<video id="player1" width="320" height="240"></video>
-
-<script>
-$(document).ready(function() {
-
-	// create player
-	$('#player1').mediaelementplayer({
-		// add desired features in order
-		features: ['playpause','[feature_name]','current','progress','duration','volume']
-	});
-});
-</script>
-```
-
 As a final note, try to be aware of building it thinking on Accessibility. Take a look into [`mediaelementplayer-feature-tracks.js`](src/js/mediaelementplayer-feature-tracks.js) for more reference about best practices.
 
 <a id="renderers"></a>

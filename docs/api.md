@@ -52,7 +52,7 @@ As a standalone library, _MediaElement.js_ can be configured using the following
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
 renderers | array | `[]` | List of the renderers to use
-fakeNodeName | string | `mediaelementwrapper` | Name of MediaElement container
+fakeNodeName | string | `div` | Name of MediaElement container
 iconSprite | string | `mejs-controls.svg` | Path and file for svg icon sprite
 success | callback | | Action(s) that will be executed as soon as the source is loaded; passes 2 arguments: `media` (the wrapper that mimics all the native events/properties/methods for all renderers) and `node` (the original HTML `video`, `audio` or `iframe` tag where the media was loaded originally; if `html5` is being used, `media` and `node` are the basically the same)
 error | callback | | Action(s) that will be executed if source doesn't load for any reason. Passes same arguments as `success`

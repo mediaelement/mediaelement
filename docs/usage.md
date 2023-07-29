@@ -7,6 +7,7 @@
 	* [npm/Meteor](#npm-meteor)
 	* [RequireJS](#requirejs)
 	* [React](#react)
+* [Change features or add plugin](#features)
 * [Use Renderers](#renderers-usage)
 * [Use `stretching` modes](#use-stretching-modes)
 * [Responsive grid](#grid)
@@ -282,6 +283,29 @@ componentDidMount() {
 		loaded = true;
 	}
 }
+```
+
+<a id="features"></a>
+## Add feature or plugin
+If you want to use a specific `feature` or [Plugin](https://github.com/mediaelement/mediaelement-plugins), just add it to the `features` array in the place you want the control for the `feature` or `plugin` to show. The array order is important as it's a reflection of the controlbar visualization. If it's a plugin and not a native feature, make sure to load the plugin javascript file too, after the `mediaelement-and-player.min.js`.
+
+```html
+<script src="jquery.js"></script>
+<script src="mediaelement-and-player.min.js"></script>
+<link rel="stylesheet" href="mediaelementplayer.css" />
+<script src="mejs-feature-[feature_name].js"></script>
+
+<video id="player1" width="320" height="240"></video>
+
+<script>
+$(document).ready(function() {
+	// create player
+	$('#player1').mediaelementplayer({
+		// add desired features in order
+		features: ['playpause','[feature_name]','current','progress','duration','volume']
+	});
+});
+</script>
 ```
 
 <a id="renderers-usage"></a>
