@@ -57,3 +57,13 @@
 **********************
 # PREPARING A RELEASE - third step on npmjs.com
 **********************
+* publish a new version to `npmjs.com` by using: 
+```
+npm login
+npm publish
+```
+
+**********************
+# UPDATE THE WEBSITE
+**********************
+* [Update the version on the website](https://github.com/mediaelement/mediaelement/blob/master/docs/guidelines.md#website) `https://cdn.jsdelivr.net/npm/mediaelement@x.x.x` and update mediaplayer configuration if necessary.
