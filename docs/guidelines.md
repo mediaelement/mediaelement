@@ -2,6 +2,7 @@
 
 * [Development](#development)
 	* [General Conventions](#development)
+	* [Project Struture](#structure)
 	* [Renderers](#renderers)
 	* [Translations](#translations)
 	* [A word on `ES6` for Renderers](#es6)
@@ -23,6 +24,16 @@
  translations for the files suffixed as `-i18n`.
 
 As a final note, try to be aware of building it thinking on Accessibility. Take a look into [`mediaelementplayer-feature-tracks.js`](src/js/mediaelementplayer-feature-tracks.js) for more reference about best practices.
+
+<a id="structure"></a>
+### Project Structure
+
+* `/build` files that are generated when building the project (should only be committed when creating a new release).
+* `/demo` files for testing the library.
+* `/docs` additional documentation for the project.
+* `/media` empty folder to import big files into, see https://github.com/mediaelement/mediaelement-files.
+* `/src` source folder for all css and js files.
+* `/test` mocha unit tests, which can be executed with `npm run test`.
 
 <a id="renderers"></a>
 ### Renderers
