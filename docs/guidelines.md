@@ -33,6 +33,33 @@ As a final note, try to be aware of building it thinking on Accessibility. Take 
 * `/docs` additional documentation for the project.
 * `/media` empty folder to import big files into, see https://github.com/mediaelement/mediaelement-files.
 * `/src` source folder for all css and js files.
+  * `/css` source css files.
+    * `mediaelementplayer.css` default css styles.
+    * `mediaelementplayer-legacy.css` old legacy css styles.
+    * `mejs-controls.svg` svg-spritemap with all icons.
+  * `/js` source js files.
+    * `/core` core functionality of this library.
+      * `i18n.js` support for multiple languages, does only the setup, the actual strings are in the `languages` folder.
+      * `mediaelement.js` creates the `window.mejs.MediaElement` object and default video / audio setup.
+      * `mejs.js` creates the `window.mejs` object and basic `html5` settings.
+      * `renderer.js` creates the `window.Renderers` object and decides which renderer to use.
+    * `/features` all the controlbar features of the player.
+      * `fullscreen.js` creates the fullscreen button.
+      * `playpause.js` creates the playpause button.
+      * `progress.js` creates the progressbar elements.
+      * `time.js` creates the duration time text.
+      * `tracks.js` creates the close-captions button.
+      * `volume.js` creates the volume button and slider.
+    * `/languages` folder with a file for every language supported.
+    * `/player`
+      * `default.js` creates the `window.mejs.DefaultPlayer` object with all the basic functionality like `play/pause`.
+      * `library.js` initiate `mediaelementplayer()` if it's used with another library as plugin
+      or after document-`ready` event.
+    * `/renderers` all the additional renderers for this library.
+    * `/utils` utility functions for many different functionalities.
+    * `header.js` the comment header of the library.
+    * `player.js` creates the `window.mejs.MediaElementPlayer` object and creates and configures the UI and 
+    functionality for the player itself.
 * `/test` mocha unit tests, which can be executed with `npm run test`.
 
 <a id="renderers"></a>
