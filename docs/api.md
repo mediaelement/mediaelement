@@ -17,7 +17,7 @@
 
 Attribute | Description
 -------- | ------------
-autoplay |	Specifies that the video will start playing as soon as it is ready
+autoplay |	Specifies that the video will start playing as soon as it is ready. [Make sure to follow autoplay policies.](#autoplay)
 class | Specifies one or more class names for an element (refers to a class in a style sheet)
 controls | Specifies that video controls should be displayed (such as a play/pause button etc).
 id | Specifies a unique id for an element; if not specified, the plugin will create one automatically
@@ -40,6 +40,10 @@ The following markup displays all the attributes listed above for more clarity:
 	style="max-width: 100%" tabindex="0" title="MediaElement">
 </video>
 ```
+
+<a id="autoplay"></a>
+### Autoplay
+`autoplay` policies have changed. You may experience an error if you try to execute `play` programmatically or via `autoplay` attribute with MediaElement, unless `muted` attribute is specified: https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide
 
 <a id="configuration"></a>
 ## Configuration

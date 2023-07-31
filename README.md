@@ -37,12 +37,6 @@ In general, `MediaElement.js` supports **IE11+, MS Edge, Chrome, Firefox, Safari
 
 **It is strongly recommended to read the entire documentation and check the `demo` folder to get the most out of this package**. Visit [here](docs) to start.
 
-## * IMPORTANT NOTE for Safari users (Jun 8, 2017)
-
-Since Sierra version, `autoplay` policies have changed. You may experience an error if you try to execute `play` programmatically or via `autoplay` attribute with MediaElement, unless `muted` attribute is specified. 
-
-For more information, read https://webkit.org/blog/7734/auto-play-policy-changes-for-macos/
-
 <a id="installation"></a>
 ## Installation and Usage
 
@@ -63,9 +57,6 @@ Also, a `Utilities/Features` guide is available for development. Visit [Utilitie
 ## Guidelines for Contributors
 
 If you want to contribute to improve this package, please read [Guidelines](docs/guidelines.md).
-
-**NOTE**: If you would like to contribute with translations, make sure that you also check https://github.com/mediaelement/mediaelement-plugins, and perform the
-translations for the files suffixed as `-i18n`.
 
 <a id="sources"></a>
 ## Useful resources
