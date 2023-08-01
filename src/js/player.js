@@ -401,6 +401,22 @@ class MediaElementPlayer {
 			const event = createEvent('controlsshown', t.getElement(t.container));
 			t.getElement(t.container).dispatchEvent(event);
 		}
+
+		t.media.addEventListener('rendererready', this.updateNode.bind(this))
+	}
+
+	/**
+	 * Update the node references when a renderer was created, so features like tracks
+	 * are querying the correct node. Otherwise for example the track files can't be found.
+	 *
+	 * TODO: The features should look for the current active renderer instead of the node.
+	 * This current way has still a bug, when we switch between renderers that are already created.
+	 *
+	 * @param event event with renderer node as detail when renderer was created
+	 */
+	updateNode(event) {
+		this.domNode = event.detail.target;
+		this.node = event.detail.target;
 	}
 
 	showControls (doAnimation) {

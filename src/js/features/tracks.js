@@ -73,7 +73,7 @@ Object.assign(MediaElementPlayer.prototype, {
   buildtracks (player, controls) {
     this.initTracks(player);
 
-    if (!player.tracks.length && (!player.trackFiles || !player.trackFiles.length === 0)) {
+    if (!player.tracks.length && (!player.trackFiles || !(player.trackFiles.length === 0))) {
       return;
     }
 
@@ -93,16 +93,16 @@ Object.assign(MediaElementPlayer.prototype, {
     player.captionsButton.innerHTML =
       generateControlButton(t.id, tracksTitle, tracksTitle, `${t.media.options.iconSprite}`, ['icon-captions'], `${t.options.classPrefix}`) +
       `<div class="${t.options.classPrefix}captions-selector ${t.options.classPrefix}offscreen">` +
-      `<ul class="${t.options.classPrefix}captions-selector-list">` +
-      `<li class="${t.options.classPrefix}captions-selector-list-item">` +
-      `<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
-      `name="${player.id}_captions" id="${player.id}_captions_none" ` +
-      `value="none" checked disabled>` +
-      `<label class="${t.options.classPrefix}captions-selector-label ` +
-      `${t.options.classPrefix}captions-selected" ` +
-      `for="${player.id}_captions_none">${i18n.t('mejs.none')}</label>` +
-      `</li>` +
-      `</ul>` +
+        `<ul class="${t.options.classPrefix}captions-selector-list">` +
+          `<li class="${t.options.classPrefix}captions-selector-list-item">` +
+            `<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
+            `name="${player.id}_captions" id="${player.id}_captions_none" ` +
+            `value="none" checked disabled>` +
+            `<label class="${t.options.classPrefix}captions-selector-label ` +
+            `${t.options.classPrefix}captions-selected" ` +
+            `for="${player.id}_captions_none">${i18n.t('mejs.none')}</label>` +
+          `</li>` +
+        `</ul>` +
       `</div>`;
 
     t.addControlElement(player.captionsButton, 'tracks');
@@ -114,7 +114,7 @@ Object.assign(MediaElementPlayer.prototype, {
     player.chaptersButton.innerHTML =
       generateControlButton(t.id, chaptersTitle, chaptersTitle, `${t.media.options.iconSprite}`, ['icon-chapters'], `${t.options.classPrefix}`) +
       `<div class="${t.options.classPrefix}chapters-selector ${t.options.classPrefix}offscreen">` +
-      `<ul class="${t.options.classPrefix}chapters-selector-list"></ul>` +
+        `<ul class="${t.options.classPrefix}chapters-selector-list"></ul>` +
       `</div>`;
 
     const subtitles = t.getSubtitles();
@@ -246,12 +246,6 @@ Object.assign(MediaElementPlayer.prototype, {
         player.chaptersButton.remove();
       }
     }
-  },
-
-  rebuildtracks () {
-    const t = this;
-    t.findTracks();
-    t.buildtracks(t, t.getElement(t.controls));
   },
 
   /**

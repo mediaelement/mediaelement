@@ -442,7 +442,6 @@ if (player.trackFiles !== null) {
 
 Once you set up the new values for the track attributes, or defined the workflow for Safari, it is required to register the new track(s) as follows:
 ```javascript
-player.findTracks();
 // This way we are ensuring ALL tracks are being loaded, starting from the first one
 player.loadTrack(0);
 // Set the default language using the ID of the language.

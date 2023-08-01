@@ -45,7 +45,7 @@ As a final note, try to be aware of building it thinking on Accessibility. Take 
       * `renderer.js` creates the `window.Renderers` object and decides which renderer to use.
     * `/features` all the controlbar features of the player.
       * `fullscreen.js` creates the fullscreen button.
-      * `playpause.js` creates the playpause button.
+      * `playpause.js` creates the play/pause button.
       * `progress.js` creates the progressbar elements.
       * `time.js` creates the duration time text.
       * `tracks.js` creates the close-captions button.
