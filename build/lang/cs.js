@@ -14,7 +14,6 @@
 		exports.cs = {
 			'mejs.plural-form': 8,			
 			'mejs.download-file': 'Stáhnout soubor',			
-			'mejs.install-flash': 'Používáte prohlížeč, který nemá Flash Player povolen nebo nainstalován. Zapněte plugin Flash Player nebo stáhněte nejnovější verzi z adresy https://get.adobe.com/flashplayer/',			
 			'mejs.fullscreen': 'Celá obrazovka',			
 			'mejs.play': 'Přehrát',
 			'mejs.pause': 'Pozastavit',			

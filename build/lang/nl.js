@@ -15,7 +15,6 @@
 		exports.nl = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Bestand downloaden',			
-			'mejs.install-flash': 'U gebruikt een browser die geen Flash Player heeft ingeschakeld of geïnstalleerd. Zet de Flash Player plug-in of download de nieuwste versie van https://get.adobe.com/flashplayer/',			
 			'mejs.fullscreen': 'Volledig scherm',			
 			'mejs.play': 'Afspelen',
 			'mejs.pause': 'Pauzeren',			

@@ -15,7 +15,6 @@
 		exports.zh = {
 			'mejs.plural-form': 0,			
 			'mejs.download-file': '下載檔案',			
-			'mejs.install-flash': '您正在使用未啟用或安裝Flash播放器的瀏覽器。請打開您的Flash Player插件,或從https://get.adobe.com/flashplayer/下載最新版本',			
 			'mejs.fullscreen': '全螢幕',			
 			'mejs.play': '播放',
 			'mejs.pause': '暫停',			

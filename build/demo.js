@@ -89,9 +89,6 @@ for (var i = 0; i < sourcesTotal; i++) {
 		if (sourcesSelector[i].querySelector('option[value$=".ogg"]')) {
 			sourcesSelector[i].querySelector('option[value$=".ogg"]').disabled = true;
 		}
-		if (sourcesSelector[i].querySelector('option[value$=".flv"]')) {
-			sourcesSelector[i].querySelector('option[value*=".flv"]').disabled = true;
-		}
 	}
 }
 
@@ -104,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
-			pluginPath: '../build/',
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 

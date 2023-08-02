@@ -1,6 +1,6 @@
 # Migration Guide
 
-## Migrating from `6.x` to `7.x` version (Draft)
+## Migrating from `6.x` to `7.x` version
 
 * Flash support removed. If you want to use flash you have to use version 6 or below.
 * `stop()` function was removed, because if was only implemented for flash, use `pause()` instead.

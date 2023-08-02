@@ -14,7 +14,6 @@
 		exports.it = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Scaricare il file',			
-			'mejs.install-flash': 'Stai utilizzando un browser che non dispone di Flash Player abilitato o installato. Accenda il tuo plug-in Flash Player o scarica la versione più recente da https://get.adobe.com/flashplayer/',			
 			'mejs.fullscreen': 'Schermo intero',			
 			'mejs.play': 'Eseguire',
 			'mejs.pause': 'Pausa',			

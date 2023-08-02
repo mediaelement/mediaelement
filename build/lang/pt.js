@@ -14,7 +14,6 @@
 		exports.pt = {
 			'mejs.plural-form': 1,			
 			'mejs.download-file': 'Descarregar o ficheiro',			
-			'mejs.install-flash': 'Você está usando um navegador que não possui o player Flash ativado ou instalado. Por favor, ligue o plugin do Flash Player ou baixe a versão mais recente de https://get.adobe.com/flashplayer/',			
 			'mejs.fullscreen': 'Ecrã completo',			
 			'mejs.play': 'Reprodução',
 			'mejs.pause': 'Pausa',			

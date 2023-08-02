@@ -14,7 +14,6 @@
 		exports.sk = {
 			'mejs.plural-form': 8,			
 			'mejs.download-file': 'Prevziať súbor',			
-			'mejs.install-flash': 'Používate prehliadač, ktorý nemá povolený alebo nainštalovaný prehrávač Flash. Zapnite doplnok prehrávača Flash alebo si prevezmite najnovšiu verziu zo stránky https://get.adobe.com/flashplayer/',			
 			'mejs.fullscreen': 'Celá obrazovka',			
 			'mejs.play': 'Prehrať',
 			'mejs.pause': 'Pozastaviť',			

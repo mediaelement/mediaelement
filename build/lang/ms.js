@@ -14,7 +14,6 @@
 		exports.ms = {
 			'mejs.plural-form': 0,			
 			'mejs.download-file': 'Muat Turun Fail',			
-			'mejs.install-flash': 'Anda sedang menggunakan pelayar internet yang tidak mempunyai pemain Flash. Sila aktifkan pemalam pemain Flash anda atau muat turun versi terbaru dari https://get.adobe.com/flashplayer/',			
 			'mejs.fullscreen': 'Skrin penuh',			
 			'mejs.play': 'Main',
 			'mejs.pause': 'Jeda',			
