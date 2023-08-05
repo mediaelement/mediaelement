@@ -392,6 +392,7 @@ To know how well-supported are each one of the formats, visit http://caniuse.com
 * `ogg` formats will not play consistently in all browsers so it is strongly recommended a MP3 fallback for audio, or MP4 for video.
 * `wav` and `webm` formats will only play on Browsers that support it natively.
 * `mpd` will not work on iOS since it doesn't support MSE; for `mpd` use a `m3u8` fallback.
+* `opus` stream format works without any further configuration.
 * SoundCloud can play with `html5` renderer using the following URL format: `https://api.soundcloud.com/tracks/XXX/stream?client_id=XXX`
 
 
