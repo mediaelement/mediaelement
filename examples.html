@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+        <title>Examples - MediaElement.js</title>
+        <meta name="description" content="HTML5 video and audio player with support for YouTube, SoundCloud, Facebook, Vimeo, HLS, Dash, and others."/>
+        <meta name="keywords" content="HTML5, video, H.264, Javascript, media, mp3, mp4"/>
+
+        <!-- fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i">
+
+        <!-- site -->
+        <link rel="stylesheet" href="css/mejs-site.css">
+
+        <!-- library -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelementplayer.min.css">
+        
+        <!-- Plugins -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement-plugins@latest/dist/quality/quality.min.css">
+
+        <script src="js/escape.js"></script>
+
+        <!-- Code highlighting -->
+        <link rel="stylesheet" href="css/highlight-js/a11y-dark.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script defer>
+            document.addEventListener('DOMContentLoaded', init);
+           
+            function init() {
+                document.querySelectorAll('.js-escape-code').forEach((element) => {
+                    element.innerHTML = escapeHTML(element.innerHTML);
+                })
+                
+                hljs.highlightAll();
+            }
+           
+        </script>
+    </head>
+    <body>
+
+
+        <header class="header">
+            <a href="/" class="logo-container">
+                <div class="logo">
+                    <!-- Empty alt-attribute, because it's not a content image -->
+                    <img src="images/logo-orange.svg" alt=""/>
+                </div>
+
+                <h1 class="brand">
+                    <!-- Empty alt-attribute, because we have an alternative screenreader text not visible -->
+                    <img src="images/mediaelement.svg" alt=""/><span class="sr-only">MediaElement.js</span>
+                </h1>
+            </a>
+
+            <nav class="menu" aria-label="Main-Navigation">
+                <ul>
+                    <li><a href="examples.html" class="underline" aria-current="page">Examples</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/installation.md">Installation</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/usage.md">Usage</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement/blob/master/docs/api.md">API</a></li>
+                    <li><a href="https://github.com/mediaelement/mediaelement-plugins">Plugins</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="overview">
+            <div class="container">
+                <h2 class="main headline-2">Examples</h2>
+            </div>
+        </section>
+
+        <section class="players">
+            <div class="container">
+                <h3 class="headline-2">Multiple Captions</h3>
+                <p>Video with multiple captions</p>
+
+                <div class="player">
+                    <video id="player-captions" width="640" height="360" preload="none" style="max-width: 100%" controls poster="images/big_buck_bunny.jpg">
+                        <source src="//github.com/mediaelement/mediaelement-files/blob/master/big_buck_bunny.mp4?raw=true" type="video/mp4">
+                        <track src="dist/mediaelement.vtt" srclang="en" label="English" kind="captions" type="text/vtt">
+                        <track src="dist/mediaelement_german.vtt" srclang="de" label="Deutsch" kind="captions" type="text/vtt">
+                    </video>
+                </div>
+
+                <h4 class="headline-3 left">Code</h4>
+<pre>
+    <code class="language-html js-escape-code">
+    <!-- Import Mediaelement CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelementplayer.min.css" rel="stylesheet">
+    <!-- Import Mediaelement JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelement-and-player.min.js"></script>
+
+    <div class="player">
+        <video id="player-demo" width="640" height="360" preload="none" style="max-width: 100%" controls poster="images/big_buck_bunny.jpg">
+            <source src="//github.com/mediaelement/mediaelement-files/blob/master/big_buck_bunny.mp4?raw=true" type="video/mp4">
+            <!-- Just add multiple <track> files, they get integrated automatically -->
+            <track src="dist/mediaelement.vtt" srclang="en" label="English" kind="captions" type="text/vtt">
+            <track src="dist/mediaelement_german.vtt" srclang="de" label="Deutsch" kind="subtitles" type="text/vtt">
+        </video>
+    </div>
+
+    <script>
+        // You can use either a string for the player ID (i.e., `player`), 
+        // or `document.querySelector()` for any selector
+        const playerCaptions = new MediaElementPlayer('player', {
+            iconSprite: '/images/mejs-controls.svg', // path to svg-spritemap for all icons
+        });
+    </script>
+    </code>
+    <small class="badge"><span class="sr-only">Language:</span>HTML</small>
+</pre>
+
+                <h3 class="headline-2">Quality Chooser Plugin</h3>
+                <p>Selection of multiple sources.</p>
+
+                <div class="player">
+                    <video id="player-quality" width="640" height="360" preload="none" style="max-width: 100%" controls poster="images/big_buck_bunny.jpg">
+                        <source type="video/mp4" src="https://download.samplelib.com/mp4/sample-15s.mp4" data-quality="HD">
+                        <source type="video/mp4" src="https://download.samplelib.com/mp4/sample-10s.mp4" data-quality="SD">
+                        <source type="video/mp4" src="https://download.samplelib.com/mp4/sample-5s.mp4" data-quality="LD">
+                        <track src="dist/mediaelement.vtt" srclang="en" label="English" kind="captions" type="text/vtt">
+                        <track src="dist/mediaelement_german.vtt" srclang="de" label="Deutsch" kind="captions" type="text/vtt">
+                    </video>
+                </div>
+
+                <h4 class="headline-3 left">Code</h4>
+<pre>
+    <code class="language-html js-escape-code">
+    <!-- Import Mediaelement CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelementplayer.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement-plugins@latest/dist/quality/quality.min.css">
+    
+    <!-- Import Mediaelement JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelement-and-player.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mediaelement-plugins@latest/dist/quality/quality.min.js"></script>
+
+    <div class="player">
+        <video id="player-demo" width="640" height="360" preload="none" style="max-width: 100%" controls poster="images/big_buck_bunny.jpg">
+            <!-- Add multiple <source>-tags and set text per `data-quality`-attribute -->
+            <source type="video/mp4" src="https://download.samplelib.com/mp4/sample-15s.mp4" data-quality="HD">
+            <source type="video/mp4" src="https://download.samplelib.com/mp4/sample-10s.mp4" data-quality="SD">
+            <source type="video/mp4" src="https://download.samplelib.com/mp4/sample-5s.mp4" data-quality="LD">
+            <!-- Just add multiple <track> files, they get integrated automatically -->
+            <track src="dist/mediaelement.vtt" srclang="en" label="English" kind="captions" type="text/vtt">
+            <track src="dist/mediaelement_german.vtt" srclang="de" label="Deutsch" kind="subtitles" type="text/vtt">
+        </video>
+    </div>
+
+    <script>
+        // You can use either a string for the player ID (i.e., `player`), 
+        // or `document.querySelector()` for any selector
+        const playerQuality = new MediaElementPlayer('player', {
+            iconSprite: '/images/mejs-controls.svg', // path to svg-spritemap for all icons
+            features: ['playpause', 'current', 'progress', 'duration', 'volume', 'tracks', 'quality', 'fullscreen'], // add 'quality' feature
+        });
+    </script>
+    </code>
+<small class="badge"><span class="sr-only">Language:</span>HTML</small>
+</pre>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-container">
+                <div class="left">
+                    <a href="https://github.com/mediaelement/mediaelement">MediaElement.js</a> was created by
+                    <a href="https://j.hn">John Dyer</a> at <a href="http://www.dts.edu/">Dallas Theological
+                    Seminary</a>.
+                </div>
+                <div class="right">Logo and page design by <a href="https://github.com/cobyalmond">Coby Almond</a>.</div>
+            </div>
+        </footer>
+
+        <!-- JS -->
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelement-and-player.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mediaelement-plugins@latest/dist/quality/quality.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                new MediaElementPlayer('player-captions', {
+                    iconSprite: '/images/mejs-controls.svg',
+		        });
+
+                new MediaElementPlayer('player-quality', {
+                    iconSprite: '/images/mejs-controls.svg',
+                    features: ['playpause', 'current', 'progress', 'duration', 'volume', 'tracks', 'quality', 'fullscreen'],
+		        });
+            });
+        </script>
+    </body>
+</html>
