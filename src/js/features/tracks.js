@@ -146,6 +146,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
     // if only one language then just make the button a toggle
     if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitles.length === 1) {
+      player.captionsButton.classList.add(`${t.options.classPrefix}captions-button-toggle`);
       player.captionsButton.addEventListener('click', (e) => {
         let trackId = 'none';
         if (player.selectedTrack === null) {
@@ -510,6 +511,10 @@ Object.assign(MediaElementPlayer.prototype, {
         }
       }
     }
+    if (this.options.toggleCaptionsButtonWhenOnlyOne && this.getSubtitles().length === 1) {
+      // deactivate captions toggle button
+      this.captionsButton.classList.remove(`${this.options.classPrefix}captions-button-toggle-on`);
+    }
   },
 
   /**
@@ -524,6 +529,10 @@ Object.assign(MediaElementPlayer.prototype, {
       if (track.kind === 'subtitles' || track.kind === 'captions') {
         if (track.language === srclang) {
           track.mode = 'showing';
+          if (this.options.toggleCaptionsButtonWhenOnlyOne && this.getSubtitles().length === 1) {
+            // activate captions toggle button
+            this.captionsButton.classList.add(`${this.options.classPrefix}captions-button-toggle-on`);
+          }
         } else {
           track.mode = 'hidden';
         }
