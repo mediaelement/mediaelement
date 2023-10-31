@@ -676,6 +676,15 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     width: 5.375rem;
 }
 
+/* reduced opacity if captions button is in toggle mode and deactivated */
+.mejs__captions-button-toggle {
+    opacity: 0.7;
+}
+/* normal opacity if captions button is in toggle mode and activated */
+.mejs__captions-button-toggle-on {
+    opacity: 1;
+}
+
 .mejs__chapters-button > .mejs__chapters-selector {
     margin-right: -3.4375rem;
     width: 6.875rem;

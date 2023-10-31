@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.0';
+mejs.version = '7.0.1';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -2436,6 +2436,7 @@ Object.assign(_player2.default.prototype, {
         outEvents = ['mouseleave', 'focusout'];
 
     if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitles.length === 1) {
+      player.captionsButton.classList.add(t.options.classPrefix + 'captions-button-toggle');
       player.captionsButton.addEventListener('click', function (e) {
         var trackId = 'none';
         if (player.selectedTrack === null) {
@@ -2738,6 +2739,9 @@ Object.assign(_player2.default.prototype, {
         }
       }
     }
+    if (this.options.toggleCaptionsButtonWhenOnlyOne && this.getSubtitles().length === 1) {
+      this.captionsButton.classList.remove(this.options.classPrefix + 'captions-button-toggle-on');
+    }
   },
   activateVideoTrack: function activateVideoTrack(srclang) {
     for (var i = 0; i < this.domNode.textTracks.length; i++) {
@@ -2746,6 +2750,9 @@ Object.assign(_player2.default.prototype, {
       if (track.kind === 'subtitles' || track.kind === 'captions') {
         if (track.language === srclang) {
           track.mode = 'showing';
+          if (this.options.toggleCaptionsButtonWhenOnlyOne && this.getSubtitles().length === 1) {
+            this.captionsButton.classList.add(this.options.classPrefix + 'captions-button-toggle-on');
+          }
         } else {
           track.mode = 'hidden';
         }
