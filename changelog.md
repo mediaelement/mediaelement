@@ -1,6 +1,6 @@
 # Version History
 
-*7.0.0* (2023/10/31)
+*7.0.1* (2023/10/31)
 * Fix state of caption toggle not visible
 
 *7.0.0* (2023/03/28)
