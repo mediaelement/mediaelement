@@ -422,6 +422,8 @@ class MediaElementPlayer {
 		if (event.detail.isIframe) {
 			iframeId = mediaElement.renderer.id;
 			node = mediaElement.querySelector(`#${iframeId}`);
+			node.style.position = 'absolute';
+
 			if (originalNode.style.maxWidth) {
 				node.style.maxWidth = originalNode.style.maxWidth;
 			}

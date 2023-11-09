@@ -101,7 +101,7 @@ export function splitEvents (events, id) {
  * @param {*} target
  * @return {Event|Object}
  */
-export function createEvent (eventName, target) {
+export function createEvent (eventName, target, isIframe) {
 
 	if (typeof eventName !== 'string') {
 		throw new Error('Event name must be a string');
@@ -110,7 +110,8 @@ export function createEvent (eventName, target) {
 	const
 		eventFrags = eventName.match(/([a-z]+\.([a-z]+))/i),
 		detail = {
-			target: target
+			target: target,
+			isIframe
 		}
 	;
 
