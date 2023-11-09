@@ -143,7 +143,7 @@ var SoundCloudIframeRenderer = {
 							break;
 
 						default:
-							
+							console.log('sc ' + sc.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
@@ -253,7 +253,7 @@ var SoundCloudIframeRenderer = {
 
 			var initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 			for (var _i3 = 0, _total3 = initEvents.length; _i3 < _total3; _i3++) {
-				var event = mejs.Utils.createEvent(initEvents[_i3], sc);
+				var event = mejs.Utils.createEvent(initEvents[_i3], sc, true);
 				mediaElement.dispatchEvent(event);
 			}
 		};

@@ -394,7 +394,7 @@ const vimeoIframeRenderer = {
 			events = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 			for (let i = 0, total = events.length; i < total; i++) {
-				const event = mejs.Utils.createEvent(events[i], vimeo);
+				const event = mejs.Utils.createEvent(events[i], vimeo, true);
 				mediaElement.dispatchEvent(event);
 			}
 		};
@@ -428,7 +428,7 @@ const vimeoIframeRenderer = {
 		vimeoContainer.setAttribute('mozallowfullscreen', 'true');
 		vimeoContainer.setAttribute('allowfullscreen', 'true');
                 vimeoContainer.setAttribute('allow', 'autoplay');
-		
+
 		mediaElement.originalNode.parentNode.insertBefore(vimeoContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 

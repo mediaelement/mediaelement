@@ -844,6 +844,7 @@ var MediaElement = function MediaElement(idOrNode, options, sources) {
 				newRendererType = rendererList[index];
 
 				var renderOptions = Object.assign(newRendererType.options, t.mediaElement.options);
+
 				newRenderer = newRendererType.create(t.mediaElement, renderOptions, mediaFiles);
 				newRenderer.name = rendererName;
 
@@ -3821,8 +3822,18 @@ var MediaElementPlayer = function () {
 	}, {
 		key: 'updateNode',
 		value: function updateNode(event) {
-			this.domNode = event.detail.target;
-			this.node = event.detail.target;
+			var node = void 0,
+			    iframeId = void 0;
+
+			if (event.detail.isIframe) {
+				iframeId = event.detail.target.mediaElement.renderer.id;
+				node = event.detail.target.mediaElement.querySelector('#' + iframeId);
+			} else {
+				node = event.detail.target;
+			}
+
+			this.domNode = node;
+			this.node = node;
 		}
 	}, {
 		key: 'showControls',
@@ -4156,7 +4167,7 @@ var MediaElementPlayer = function () {
 								}
 							}, 20);
 						} catch (exp) {
-							
+							console.log(exp);
 						}
 					}
 
@@ -5741,7 +5752,7 @@ var DashNativeRenderer = {
 			}
 		};
 
-		var event = (0, _general.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeDash.load({
@@ -6030,7 +6041,7 @@ var HlsNativeRenderer = {
 			}
 		};
 
-		var event = (0, _general.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeHls.load({
@@ -6184,7 +6195,7 @@ var HtmlMediaElement = {
 			}
 		});
 
-		var event = (0, _general.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		return node;
@@ -6464,7 +6475,7 @@ var YouTubeIframeRenderer = {
 							mediaElement.dispatchEvent(event);
 							break;
 						default:
-							
+							console.log('youtube ' + youtube.id, propName, 'UNSUPPORTED property');
 							break;
 					}
 				} else {
@@ -6598,7 +6609,7 @@ var YouTubeIframeRenderer = {
 					var initEvents = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 					for (var _i4 = 0, _total4 = initEvents.length; _i4 < _total4; _i4++) {
-						var event = (0, _general.createEvent)(initEvents[_i4], youtube);
+						var event = (0, _general.createEvent)(initEvents[_i4], youtube, true);
 						mediaElement.dispatchEvent(event);
 					}
 				},
@@ -6680,6 +6691,7 @@ var YouTubeIframeRenderer = {
 		};
 
 		youtube.setSize = function (width, height) {
+			console.log(width, height);
 			if (youTubeApi !== null) {
 				youTubeApi.setSize(width, height);
 			}
@@ -7246,7 +7258,7 @@ function splitEvents(events, id) {
 	return ret;
 }
 
-function createEvent(eventName, target) {
+function createEvent(eventName, target, isIframe) {
 
 	if (typeof eventName !== 'string') {
 		throw new Error('Event name must be a string');
@@ -7254,7 +7266,8 @@ function createEvent(eventName, target) {
 
 	var eventFrags = eventName.match(/([a-z]+\.([a-z]+))/i),
 	    detail = {
-		target: target
+		target: target,
+		isIframe: isIframe
 	};
 
 	if (eventFrags !== null) {

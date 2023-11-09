@@ -415,8 +415,17 @@ class MediaElementPlayer {
 	 * @param event event with renderer node as detail when renderer was created
 	 */
 	updateNode(event) {
-		this.domNode = event.detail.target;
-		this.node = event.detail.target;
+		let node, iframeId;
+
+		if (event.detail.isIframe) {
+			iframeId = event.detail.target.mediaElement.renderer.id;
+			node = event.detail.target.mediaElement.querySelector(`#${iframeId}`);
+		} else {
+			node = event.detail.target;
+		}
+
+		this.domNode = node;  // event.detail.target.mediaElement
+		this.node = node;
 	}
 
 	showControls (doAnimation) {

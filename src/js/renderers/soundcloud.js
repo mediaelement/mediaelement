@@ -284,7 +284,7 @@ const SoundCloudIframeRenderer = {
 			// give initial events
 			const initEvents = ['rendererready', 'loadeddata', 'loadedmetadata', 'canplay'];
 			for (let i = 0, total = initEvents.length; i < total; i++) {
-				const event = mejs.Utils.createEvent(initEvents[i], sc);
+				const event = mejs.Utils.createEvent(initEvents[i], sc, true);
 				mediaElement.dispatchEvent(event);
 			}
 		};

@@ -229,6 +229,7 @@ class MediaElement {
 					newRendererType = rendererList[index];
 
 					const renderOptions = Object.assign(newRendererType.options, t.mediaElement.options);
+
 					newRenderer = newRendererType.create(t.mediaElement, renderOptions, mediaFiles);
 					newRenderer.name = rendererName;
 
