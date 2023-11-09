@@ -320,7 +320,7 @@ const TwitchIframeRenderer = {
 		 */
 		function sendEvents (events) {
 			for (let i = 0, total = events.length; i < total; i++) {
-				const event = mejs.Utils.createEvent(events[i], twitch);
+				const event = mejs.Utils.createEvent(events[i], twitch, true);
 				mediaElement.dispatchEvent(event);
 			}
 		}

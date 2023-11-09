@@ -250,7 +250,7 @@ const FacebookRenderer = {
 		 */
 		function assignEvents (events) {
 			for (let i = 0, total = events.length; i < total; i++) {
-				const event = mejs.Utils.createEvent(events[i], fb);
+				const event = mejs.Utils.createEvent(events[i], fb, true);
 				mediaElement.dispatchEvent(event);
 			}
 		}

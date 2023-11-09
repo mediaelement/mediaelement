@@ -260,7 +260,7 @@ const DashNativeRenderer = {
 			}
 		};
 
-		const event = createEvent('rendererready', node);
+		const event = createEvent('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeDash.load({
