@@ -499,7 +499,7 @@ const YouTubeIframeRenderer = {
 						const initEvents = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 						for (let i = 0, total = initEvents.length; i < total; i++) {
-							const event = createEvent(initEvents[i], youtube);
+							const event = createEvent(initEvents[i], youtube, true);
 							mediaElement.dispatchEvent(event);
 						}
 					},
@@ -588,6 +588,7 @@ const YouTubeIframeRenderer = {
 		};
 
 		youtube.setSize = (width, height) => {
+			console.log(width, height)
 			if (youTubeApi !== null) {
 				youTubeApi.setSize(width, height);
 			}

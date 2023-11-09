@@ -149,7 +149,7 @@ const HtmlMediaElement = {
 			}
 		});
 
-		const event = createEvent('rendererready', node);
+		const event = createEvent('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		return node;

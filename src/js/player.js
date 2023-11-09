@@ -415,8 +415,21 @@ class MediaElementPlayer {
 	 * @param event event with renderer node as detail when renderer was created
 	 */
 	updateNode(event) {
-		this.domNode = event.detail.target;
-		this.node = event.detail.target;
+		let node, iframeId;
+		const mediaElement = event.detail.target.mediaElement;
+		const originalNode = mediaElement.originalNode;
+
+		if (event.detail.isIframe) {
+			iframeId = mediaElement.renderer.id;
+			node = mediaElement.querySelector(`#${iframeId}`);
+			if (originalNode.style.maxWidth) {
+				node.style.maxWidth = originalNode.style.maxWidth;
+			}
+		} else {
+			node = event.detail.target;
+		}
+		this.domNode = node; // event.detail.target.mediaElement
+		this.node = node;
 	}
 
 	showControls (doAnimation) {

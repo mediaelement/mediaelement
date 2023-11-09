@@ -410,7 +410,7 @@ const DailyMotionIframeRenderer = {
 			const initEvents = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 			for (let i = 0, total = initEvents.length; i < total; i++) {
-				const event = mejs.Utils.createEvent(initEvents[i], dm);
+				const event = mejs.Utils.createEvent(initEvents[i], dm, true);
 				mediaElement.dispatchEvent(event);
 			}
 		};
