@@ -588,7 +588,6 @@ const YouTubeIframeRenderer = {
 		};
 
 		youtube.setSize = (width, height) => {
-			console.log(width, height)
 			if (youTubeApi !== null) {
 				youTubeApi.setSize(width, height);
 			}
