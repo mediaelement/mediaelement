@@ -1114,7 +1114,10 @@ class MediaElementPlayer {
 
 		if (t.isVideo) {
 			// Responsive video is based on width: 100% and height: 100%
-			if (t.height === '100%') {
+			if (t.height === '100%' && t.width === '100%') {
+				newHeight = parentHeight;
+			}
+			else if (t.height === '100%') {
 				newHeight = parseFloat(parentWidth * nativeHeight / nativeWidth, 10);
 			} else {
 				newHeight = t.height >= t.width ? parseFloat(parentWidth / aspectRatio, 10) : parseFloat(parentWidth * aspectRatio, 10);
@@ -1246,8 +1249,8 @@ class MediaElementPlayer {
 
 		const
 			targetElement = t.getElement(t.container).querySelectorAll('object, embed, iframe, video'),
-			initHeight = t.height,
-			initWidth = t.width,
+			initHeight = parseFloat(t.height, 10),
+			initWidth = parseFloat(t.width, 10),
 			// scale to the target width
 			scaleX1 = parentWidth,
 			scaleY1 = (initHeight * parentWidth) / initWidth,
