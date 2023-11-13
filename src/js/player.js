@@ -430,7 +430,7 @@ class MediaElementPlayer {
 		} else {
 			node = event.detail.target;
 		}
-		this.domNode = node; // event.detail.target.mediaElement
+		this.domNode = node;
 		this.node = node;
 	}
 
