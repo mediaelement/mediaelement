@@ -1,5 +1,9 @@
 # Version History
 
+*7.0.2* (2023/11/14)
+* Fixed an error that occurred with the iFrame players
+* Fixed a problem with the scaling of iFrames within their containers
+
 *7.0.1* (2023/10/31)
 * Fix state of caption toggle not visible
 

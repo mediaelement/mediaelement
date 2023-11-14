@@ -360,7 +360,7 @@ var vimeoIframeRenderer = {
 			events = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 			for (var _i4 = 0, _total4 = events.length; _i4 < _total4; _i4++) {
-				var event = mejs.Utils.createEvent(events[_i4], vimeo);
+				var event = mejs.Utils.createEvent(events[_i4], vimeo, true);
 				mediaElement.dispatchEvent(event);
 			}
 		};

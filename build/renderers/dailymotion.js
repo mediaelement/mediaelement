@@ -341,7 +341,7 @@ var DailyMotionIframeRenderer = {
 			var initEvents = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 			for (var _i5 = 0, _total5 = initEvents.length; _i5 < _total5; _i5++) {
-				var event = mejs.Utils.createEvent(initEvents[_i5], dm);
+				var event = mejs.Utils.createEvent(initEvents[_i5], dm, true);
 				mediaElement.dispatchEvent(event);
 			}
 		};

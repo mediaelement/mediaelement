@@ -212,7 +212,7 @@ var FacebookRenderer = {
 
 		function assignEvents(events) {
 			for (var _i2 = 0, _total2 = events.length; _i2 < _total2; _i2++) {
-				var event = mejs.Utils.createEvent(events[_i2], fb);
+				var event = mejs.Utils.createEvent(events[_i2], fb, true);
 				mediaElement.dispatchEvent(event);
 			}
 		}

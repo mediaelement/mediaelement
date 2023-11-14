@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.1';
+mejs.version = '7.0.2';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1565,7 +1565,7 @@ var DashNativeRenderer = {
 			}
 		};
 
-		var event = (0, _general.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeDash.load({
@@ -1854,7 +1854,7 @@ var HlsNativeRenderer = {
 			}
 		};
 
-		var event = (0, _general.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeHls.load({
@@ -2008,7 +2008,7 @@ var HtmlMediaElement = {
 			}
 		});
 
-		var event = (0, _general.createEvent)('rendererready', node);
+		var event = (0, _general.createEvent)('rendererready', node, false);
 		mediaElement.dispatchEvent(event);
 
 		return node;
@@ -2422,7 +2422,7 @@ var YouTubeIframeRenderer = {
 					var initEvents = ['rendererready', 'loadedmetadata', 'loadeddata', 'canplay'];
 
 					for (var _i4 = 0, _total4 = initEvents.length; _i4 < _total4; _i4++) {
-						var event = (0, _general.createEvent)(initEvents[_i4], youtube);
+						var event = (0, _general.createEvent)(initEvents[_i4], youtube, true);
 						mediaElement.dispatchEvent(event);
 					}
 				},
@@ -3070,7 +3070,7 @@ function splitEvents(events, id) {
 	return ret;
 }
 
-function createEvent(eventName, target) {
+function createEvent(eventName, target, isIframe) {
 
 	if (typeof eventName !== 'string') {
 		throw new Error('Event name must be a string');
@@ -3078,7 +3078,8 @@ function createEvent(eventName, target) {
 
 	var eventFrags = eventName.match(/([a-z]+\.([a-z]+))/i),
 	    detail = {
-		target: target
+		target: target,
+		isIframe: isIframe
 	};
 
 	if (eventFrags !== null) {
