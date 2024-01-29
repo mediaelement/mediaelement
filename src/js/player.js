@@ -245,6 +245,9 @@ class MediaElementPlayer {
 		t.mediaFiles = null;
 		t.trackFiles = null;
 
+		// We need to set the listener early, or it doesn't get called when a renderer is created on load.
+		t.media.addEventListener('rendererready', this.updateNode.bind(this))
+
 		// use native controls in iPad, iPhone, and Android
 		if ((IS_IPAD && t.options.iPadUseNativeControls) || (IS_IPHONE && t.options.iPhoneUseNativeControls)) {
 
@@ -401,8 +404,6 @@ class MediaElementPlayer {
 			const event = createEvent('controlsshown', t.getElement(t.container));
 			t.getElement(t.container).dispatchEvent(event);
 		}
-
-		t.media.addEventListener('rendererready', this.updateNode.bind(this))
 	}
 
 	/**
@@ -416,7 +417,7 @@ class MediaElementPlayer {
 	 */
 	updateNode(event) {
 		let node, iframeId;
-		const mediaElement = event.detail.target.mediaElement;
+		const mediaElement = event.detail.target.hasOwnProperty('mediaElement') ? event.detail.target.mediaElement : event.detail.target;
 		const originalNode = mediaElement.originalNode;
 
 		if (event.detail.isIframe) {
