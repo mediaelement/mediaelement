@@ -1,5 +1,9 @@
 # Version History
 
+*7.0.3* (2024/01/29)
+* HLS and MPEG-Dash renderer should now have working captions, when loaded initially.
+* Updated `demo/index.html` for easier debugging.
+
 *7.0.2* (2023/11/14)
 * Fixed an error that occurred with the iFrame players
 * Fixed a problem with the scaling of iFrames within their containers
