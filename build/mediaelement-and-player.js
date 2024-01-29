@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.2';
+mejs.version = '7.0.3';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -2591,7 +2591,7 @@ Object.assign(_player2.default.prototype, {
     }
   },
   handleCaptionsLoaded: function handleCaptionsLoaded(target) {
-    var textTracks = this.domNode.textTracks,
+    var textTracks = this.node.textTracks,
         playerTrack = this.getTrackById(target.getAttribute('id'));
 
     if (Number.isInteger(this.options.defaultTrackLine)) {
@@ -2724,16 +2724,16 @@ Object.assign(_player2.default.prototype, {
     }
   },
   hideAllTracks: function hideAllTracks() {
-    if (this.domNode.textTracks) {
-      for (var i = 0; i < this.domNode.textTracks.length; i++) {
-        this.domNode.textTracks[i].mode = 'hidden';
+    if (this.node.textTracks) {
+      for (var i = 0; i < this.node.textTracks.length; i++) {
+        this.node.textTracks[i].mode = 'hidden';
       }
     }
   },
   deactivateVideoTracks: function deactivateVideoTracks() {
-    if (this.domNode.textTracks) {
-      for (var i = 0; i < this.domNode.textTracks.length; i++) {
-        var track = this.domNode.textTracks[i];
+    if (this.node.textTracks) {
+      for (var i = 0; i < this.node.textTracks.length; i++) {
+        var track = this.node.textTracks[i];
         if (track.kind === 'subtitles' || track.kind === 'captions') {
           track.mode = 'hidden';
         }
@@ -2744,8 +2744,8 @@ Object.assign(_player2.default.prototype, {
     }
   },
   activateVideoTrack: function activateVideoTrack(srclang) {
-    for (var i = 0; i < this.domNode.textTracks.length; i++) {
-      var track = this.domNode.textTracks[i];
+    for (var i = 0; i < this.node.textTracks.length; i++) {
+      var track = this.node.textTracks[i];
 
       if (track.kind === 'subtitles' || track.kind === 'captions') {
         if (track.language === srclang) {
@@ -2834,7 +2834,7 @@ Object.assign(_player2.default.prototype, {
   },
   drawChapters: function drawChapters(chapterTrackId) {
     var t = this,
-        chapter = this.domNode.textTracks.getTrackById(chapterTrackId),
+        chapter = this.node.textTracks.getTrackById(chapterTrackId),
         numberOfChapters = chapter.cues.length;
 
     if (!numberOfChapters) {
@@ -3710,6 +3710,8 @@ var MediaElementPlayer = function () {
 			t.mediaFiles = null;
 			t.trackFiles = null;
 
+			t.media.addEventListener('rendererready', this.updateNode.bind(this));
+
 			if (_constants.IS_IPAD && t.options.iPadUseNativeControls || _constants.IS_IPHONE && t.options.iPhoneUseNativeControls) {
 				t.node.setAttribute('controls', true);
 
@@ -3822,15 +3824,13 @@ var MediaElementPlayer = function () {
 				var event = (0, _general.createEvent)('controlsshown', t.getElement(t.container));
 				t.getElement(t.container).dispatchEvent(event);
 			}
-
-			t.media.addEventListener('rendererready', this.updateNode.bind(this));
 		}
 	}, {
 		key: 'updateNode',
 		value: function updateNode(event) {
 			var node = void 0,
 			    iframeId = void 0;
-			var mediaElement = event.detail.target.mediaElement;
+			var mediaElement = event.detail.target.hasOwnProperty('mediaElement') ? event.detail.target.mediaElement : event.detail.target;
 			var originalNode = mediaElement.originalNode;
 
 			if (event.detail.isIframe) {
@@ -5767,7 +5767,7 @@ var DashNativeRenderer = {
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeDash.load({
 			options: options.dash,
@@ -6056,7 +6056,7 @@ var HlsNativeRenderer = {
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeHls.load({
 			options: options.hls,
@@ -6210,7 +6210,7 @@ var HtmlMediaElement = {
 		});
 
 		var event = (0, _general.createEvent)('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		return node;
 	}

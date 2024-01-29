@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.2';
+mejs.version = '7.0.3';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1566,7 +1566,7 @@ var DashNativeRenderer = {
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeDash.load({
 			options: options.dash,
@@ -1855,7 +1855,7 @@ var HlsNativeRenderer = {
 		};
 
 		var event = (0, _general.createEvent)('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeHls.load({
 			options: options.hls,
@@ -2009,7 +2009,7 @@ var HtmlMediaElement = {
 		});
 
 		var event = (0, _general.createEvent)('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		return node;
 	}
