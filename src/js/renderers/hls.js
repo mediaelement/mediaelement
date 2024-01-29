@@ -294,7 +294,7 @@ const HlsNativeRenderer = {
 		};
 
 		const event = createEvent('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		mediaElement.promises.push(NativeHls.load({
 			options: options.hls,

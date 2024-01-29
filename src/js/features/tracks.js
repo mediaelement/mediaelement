@@ -334,7 +334,7 @@ Object.assign(MediaElementPlayer.prototype, {
    */
   handleCaptionsLoaded(target) {
     const
-      textTracks = this.domNode.textTracks,
+      textTracks = this.node.textTracks,
       playerTrack = this.getTrackById(target.getAttribute('id'));
 
     // Set default cue line
@@ -490,10 +490,10 @@ Object.assign(MediaElementPlayer.prototype, {
    * Set mode for all tracks to 'hidden' (causes player to load them).
    */
   hideAllTracks() {
-    if (this.domNode.textTracks) {
+    if (this.node.textTracks) {
       // parse through TextTrackList (not an Array)
-      for (let i = 0; i < this.domNode.textTracks.length; i++) {
-        this.domNode.textTracks[i].mode = 'hidden';
+      for (let i = 0; i < this.node.textTracks.length; i++) {
+        this.node.textTracks[i].mode = 'hidden';
       }
     }
   },
@@ -502,10 +502,10 @@ Object.assign(MediaElementPlayer.prototype, {
    * Hide all subtitles/captions.
    */
   deactivateVideoTracks() {
-    if (this.domNode.textTracks) {
+    if (this.node.textTracks) {
       // parse through TextTrackList (not an Array)
-      for (let i = 0; i < this.domNode.textTracks.length; i++) {
-        const track = this.domNode.textTracks[i];
+      for (let i = 0; i < this.node.textTracks.length; i++) {
+        const track = this.node.textTracks[i];
         if (track.kind === 'subtitles' || track.kind === 'captions') {
           track.mode = 'hidden';
         }
@@ -523,8 +523,8 @@ Object.assign(MediaElementPlayer.prototype, {
    */
   activateVideoTrack(srclang) {
     // parse through TextTrackList (not an Array)
-    for (let i = 0; i < this.domNode.textTracks.length; i++) {
-      const track = this.domNode.textTracks[i];
+    for (let i = 0; i < this.node.textTracks.length; i++) {
+      const track = this.node.textTracks[i];
       // For the 'subtitles-off' button, the first condition will never match so all will subtitles be turned off
       if (track.kind === 'subtitles' || track.kind === 'captions') {
         if (track.language === srclang) {
@@ -641,7 +641,7 @@ Object.assign(MediaElementPlayer.prototype, {
   drawChapters (chapterTrackId) {
     const
       t = this,
-      chapter = this.domNode.textTracks.getTrackById(chapterTrackId),
+      chapter = this.node.textTracks.getTrackById(chapterTrackId),
       numberOfChapters = chapter.cues.length
     ;
 

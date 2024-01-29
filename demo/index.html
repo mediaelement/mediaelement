@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>MediaElement.js 4.2.x - audio/video unification library</title>
+    <title>MediaElement.js - audio/video unification library</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -57,6 +57,14 @@
             left: 0;
             width: 12px;
             height: 12px;
+        }
+
+        .details {
+            margin-bottom: 24px;
+        }
+
+        .players {
+            max-width: 800px;
         }
     </style>
 </head>
@@ -116,13 +124,15 @@
         </section>
 
         <br>
+
+        <!-- VIDEOPLAYER -->
         <div class="players" id="player1-container">
 
             <h3>Video Player</h3>
 
             <div class="media-wrapper">
                 <video id="player1" width="640" height="360" style="max-width:100%;" poster="http://www.mediaelementjs.com/images/big_buck_bunny.jpg" preload="none" controls playsinline webkit-playsinline>
-                    <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" type="video/mp4">
+                    <source src="//github.com/mediaelement/mediaelement-files/blob/master/big_buck_bunny.mp4?raw=true" type="video/mp4">
                     <track srclang="de" kind="subtitles" src="german.vtt" label="German with lines">
                     <track srclang="en" kind="subtitles" src="english.vtt" default>
                     <track srclang="en" kind="chapters" src="english_chapters.vtt">
@@ -136,7 +146,7 @@
                     <option value="//github.com/mediaelement/mediaelement-files/blob/master/big_buck_bunny.mp4?raw=true">MP4</option>
                     <option value="//upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm">WebM</option>
                     <option value="https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8">HLS</option>
-                    <option value="//www.bok.net/dash/tears_of_steel/cleartext/stream.mpd">M(PEG)-DASH</option>
+                    <option value="https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd">M(PEG)-DASH</option>
                     <option value="https://www.dailymotion.com/video/x11prnt">DailyMotion</option>
                     <option value="https://www.youtube.com/watch?v=twYp6W6vt2U">YouTube</option>
                     <option value="https://player.vimeo.com/video/108018156?title=0&amp;byline=0&amp;portrait=0&amp;badge=0">Vimeo</option>
@@ -159,13 +169,45 @@
         <br>
         <hr>
 
+        <!-- VIDEOPLAYER - MPEG-Dash (Source is initially set, to find problems which only happen on load) -->
+        <div class="players" id="player-dash-container">
+            <h3>Video Player - MPEG-Dash</h3>
+
+            <p>Videoplayer which has mpeg-dash as the only source, so it gets loaded initially to find problems
+            that only happens on load.</p>
+
+            <div class="media-wrapper">
+                <video id="player-dash" width="640" height="360" style="max-width:100%;" poster="http://www.mediaelementjs.com/images/big_buck_bunny.jpg" preload="none" controls playsinline webkit-playsinline>
+                    <source src="https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd" type="application/dash+xml">
+                    <track srclang="de" kind="subtitles" src="german.vtt" label="German with lines">
+                    <track srclang="en" kind="subtitles" src="english.vtt" default>
+                    <track srclang="en" kind="chapters" src="english_chapters.vtt">
+                    <track srclang="de" kind="chapters" src="german_chapters.vtt">
+                </video>
+            </div>
+            <div class="player-info">
+                <h4>Player information</h4>
+                <div id="player-dash-rendername">
+                    <p><strong>Source</strong>: <span class="src"><a href="https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd" target="_blank">https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd</a></span></p>
+                    <p><strong>Renderer</strong>: <span class="renderer">html5</span></p>
+                    <p class="error"></p>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <hr>
+
+        <!-- AUDIOPLAYER -->
         <div class="players" id="player2-container">
 
             <h3>Audio Player</h3>
 
             <p>By default, time handle element is hidden, but in this demo the following styles were added to display it just for audio:</p>
 
-            <pre><code>
+            <details class="details">
+                <summary style="cursor:pointer">CSS-Code</summary>
+                <pre><code>
 #player2-container .mejs__time-buffering,
 #player2-container .mejs__time-current,
 #player2-container .mejs__time-handle,
@@ -199,6 +241,7 @@
     height: 0.75rem;
 }
             </code></pre>
+            </details>
 
             <div class="media-wrapper">
                 <audio id="player2" preload="none" controls style="max-width:100%;">
@@ -211,9 +254,7 @@
                     <option value="https://github.com/mediaelement/mediaelement-files/blob/master/AirReview-Landmarks-02-ChasingCorporate.mp3?raw=true">MP3</option>
                     <option value="https://commons.wikimedia.org/wiki/File:Demo_chorus.ogg">OGG</option>
                     <option value="http://db3.indexcom.com/bucket/ram/00/05/64k/05.m3u8">HLS</option>
-                    <!--<option value="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr">RTMP</option>-->
                     <option value="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/282715465&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true">SoundCloud</option>
-                    <!--<option value="https://api.soundcloud.com/tracks/323195515/stream?client_id=95f22ed54a5c297b1c41f72d713623ef">SoundCloud</option>-->
                 </select>
                 </label>
             </div>

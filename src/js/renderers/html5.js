@@ -150,7 +150,7 @@ const HtmlMediaElement = {
 		});
 
 		const event = createEvent('rendererready', node, false);
-		mediaElement.dispatchEvent(event);
+		mediaElement.originalNode.dispatchEvent(event);
 
 		return node;
 	}
