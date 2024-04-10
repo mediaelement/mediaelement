@@ -18,24 +18,7 @@ export const IS_FIREFOX = /firefox/i.test(UA);
 export const IS_SAFARI = /safari/i.test(UA) && !IS_CHROME;
 export const IS_STOCK_ANDROID = /^mozilla\/\d+\.\d+\s\(linux;\su;/i.test(UA);
 export const HAS_MSE = ('MediaSource' in window);
-export const SUPPORT_POINTER_EVENTS = (() => {
-	const
-		element = document.createElement('x'),
-		documentElement = document.documentElement,
-		getComputedStyle = window.getComputedStyle
-	;
-
-	if (!('pointerEvents' in element.style)) {
-		return false;
-	}
-
-	element.style.pointerEvents = 'auto';
-	element.style.pointerEvents = 'x';
-	documentElement.appendChild(element);
-	let supports = getComputedStyle && (getComputedStyle(element, '') || {}).pointerEvents === 'auto';
-	element.remove();
-	return !!supports;
-})();
+export const SUPPORT_POINTER_EVENTS = true; // Now supported by all browsers even IE11 (>98% of all global users), so no need to test anymore: https://caniuse.com/pointer-events
 
 // Test via a getter in the options object to see if the passive property is accessed
 export const SUPPORT_PASSIVE_EVENT = (() => {
