@@ -558,7 +558,9 @@ Object.assign(MediaElementPlayer.prototype, {
         const target = document.getElementById(`${autoplayTrack.trackId}-btn`)
         if (target) {
           target.checked = true;
-          target.dispatchEvent(createEvent('click', target));
+          const clickEvent = createEvent('click', target);
+          clickEvent.stopPropagation();
+          target.dispatchEvent(clickEvent);
         }
       }
     }

@@ -2781,7 +2781,9 @@ Object.assign(_player2.default.prototype, {
         var target = _document2.default.getElementById(autoplayTrack.trackId + '-btn');
         if (target) {
           target.checked = true;
-          target.dispatchEvent((0, _general.createEvent)('click', target));
+          var clickEvent = (0, _general.createEvent)('click', target);
+          clickEvent.stopPropagation();
+          target.dispatchEvent(clickEvent);
         }
       }
     }
