@@ -1,5 +1,9 @@
 # Version History
 
+*7.0.4* (2024/04/25)
+* Fixed wrong focus on load when using default subtitles([#2957](https://github.com/mediaelement/mediaelement/pull/2957)) @Necxes
+* Improved performance by eliminating a test logic event ([#2954](https://github.com/mediaelement/mediaelement/pull/2954)) @westonruter
+
 *7.0.3* (2024/01/29)
 * HLS and MPEG-Dash renderer should now have working captions, when loaded initially.
 * Updated `demo/index.html` for easier debugging.
