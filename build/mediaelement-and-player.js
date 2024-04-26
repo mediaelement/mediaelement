@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.4';
+mejs.version = '7.0.5';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -2437,13 +2437,12 @@ Object.assign(_player2.default.prototype, {
 
     if (t.options.toggleCaptionsButtonWhenOnlyOne && subtitles.length === 1) {
       player.captionsButton.classList.add(t.options.classPrefix + 'captions-button-toggle');
-      player.captionsButton.addEventListener('click', function (e) {
+      player.captionsButton.addEventListener('click', function () {
         var trackId = 'none';
         if (player.selectedTrack === null) {
           trackId = player.getSubtitles()[0].trackId;
         }
-        var keyboard = e.keyCode || e.which;
-        player.setTrack(trackId, typeof keyboard !== 'undefined');
+        player.setTrack(trackId);
       });
     } else {
       var labels = player.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selector-label'),
@@ -2467,9 +2466,8 @@ Object.assign(_player2.default.prototype, {
 
       for (var _i3 = 0; _i3 < captions.length; _i3++) {
         captions[_i3].addEventListener('click', function (e) {
-          var keyboard = e.keyCode || e.which;
           if (!e.target.disabled) {
-            player.setTrack(this.value, typeof keyboard !== 'undefined');
+            player.setTrack(this.value);
           }
         });
       }
@@ -2676,7 +2674,7 @@ Object.assign(_player2.default.prototype, {
       }
     }
   },
-  setTrack: function setTrack(trackId, setByKeyboard) {
+  setTrack: function setTrack(trackId) {
     var t = this,
         radios = t.captionsButton.querySelectorAll('input[type="radio"]'),
         captions = t.captionsButton.querySelectorAll('.' + t.options.classPrefix + 'captions-selected'),
@@ -2716,12 +2714,6 @@ Object.assign(_player2.default.prototype, {
     var event = (0, _general.createEvent)('captionschange', t.media);
     event.detail.caption = t.selectedTrack;
     t.media.dispatchEvent(event);
-
-    if (!setByKeyboard) {
-      setTimeout(function () {
-        t.getElement(t.container).focus();
-      }, 500);
-    }
   },
   hideAllTracks: function hideAllTracks() {
     if (this.node.textTracks) {
@@ -2781,9 +2773,7 @@ Object.assign(_player2.default.prototype, {
         var target = _document2.default.getElementById(autoplayTrack.trackId + '-btn');
         if (target) {
           target.checked = true;
-          var clickEvent = (0, _general.createEvent)('click', target);
-          clickEvent.stopPropagation();
-          target.dispatchEvent(clickEvent);
+          target.dispatchEvent((0, _general.createEvent)('click', target));
         }
       }
     }
