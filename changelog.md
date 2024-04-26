@@ -1,5 +1,8 @@
 # Version History
 
+*7.0.5* (2024/04/26)
+* Fixed wrong focus on load when using default subtitles ([#2958](https://github.com/mediaelement/mediaelement/pull/2958))
+
 *7.0.4* (2024/04/25)
 * Fixed wrong focus on load when using default subtitles([#2957](https://github.com/mediaelement/mediaelement/pull/2957)) @Necxes
 * Improved performance by eliminating a test logic event ([#2954](https://github.com/mediaelement/mediaelement/pull/2954)) @westonruter
