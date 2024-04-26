@@ -180,9 +180,8 @@ Object.assign(MediaElementPlayer.prototype, {
           // value is trackId, same as the actual id, and we're using it here
           // because the "none" checkbox doesn't have a trackId
           // to use, but we want to know when "none" is clicked
-          const keyboard = e.keyCode || e.which;
           if (!e.target.disabled) {
-            player.setTrack(this.value, (typeof keyboard !== 'undefined'));
+            player.setTrack(this.value);
           }
         });
       }
