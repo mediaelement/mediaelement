@@ -107,6 +107,13 @@ module.exports = function (grunt) {
 					'build/renderers/vimeo.js': 'src/js/renderers/vimeo.js'
 				},
 				options: {
+					browserifyOptions: {
+						insertGlobalVars: {
+							"define": function() {
+								return 'null';
+							}
+						}
+					},
 					plugin: [
 						'browserify-derequire', 'bundle-collapser/plugin'
 					]
