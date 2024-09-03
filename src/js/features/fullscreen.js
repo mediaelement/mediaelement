@@ -47,10 +47,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 * @type {Boolean}
 	 */
-	isInIframe: false,
-	/**
-	 * @type {Boolean}
-	 */
 	isPluginClickThroughCreated: false,
 	/**
 	 * Possible modes
@@ -76,8 +72,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (!player.isVideo) {
 			return;
 		}
-
-		player.isInIframe = (window.location !== window.parent.location);
 
 		player.detectFullscreenMode();
 
@@ -220,30 +214,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		// attempt to do true fullscreen
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
 			Features.requestFullScreen(t.getElement(t.container));
-
-			if (t.isInIframe) {
-				// sometimes exiting from fullscreen doesn't work
-				// notably in Chrome <iframe>. Fixed in version 17
-				setTimeout(function checkFullscreen () {
-
-					if (t.isNativeFullScreen) {
-						let percentErrorMargin = 0.002, // 0.2%
-							windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-							screenWidth = screen.width,
-							absDiff = Math.abs(screenWidth - windowWidth),
-							marginError = screenWidth * percentErrorMargin;
-
-						// check if the video is suddenly not really fullscreen
-						if (absDiff > marginError) {
-							// manually exit
-							t.exitFullScreen();
-						} else {
-							// test again
-							setTimeout(checkFullscreen, 500);
-						}
-					}
-				}, 1000);
-			}
 		}
 
 		// make full size
