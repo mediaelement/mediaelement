@@ -3,6 +3,7 @@
 import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
+import i18n from "../core/i18n";
 import {secondsToTimeCode} from '../utils/time';
 import {addClass, removeClass} from '../utils/dom';
 
@@ -44,7 +45,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		time.className = `${t.options.classPrefix}time`;
 		time.setAttribute('role', 'timer');
 		time.setAttribute('aria-live', 'off');
-		time.innerHTML = `<span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat)}</span>`;
+		time.innerHTML = `<span class="mejs__offscreen">${i18n.t('mejs.current')}</span><span class="${t.options.classPrefix}currenttime">${secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat)}</span>`;
 
 		t.addControlElement(time, 'current');
 		player.updateCurrent();
@@ -87,7 +88,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			const duration = document.createElement('div');
 			duration.className = `${t.options.classPrefix}time ${t.options.classPrefix}duration-container`;
-			duration.innerHTML = `<span class="${t.options.classPrefix}duration">` +
+			duration.innerHTML = `<span class="mejs__offscreen">${i18n.t('mejs.duration')}</span><span class="${t.options.classPrefix}duration">` +
 				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat)}</span>`;
 
 			t.addControlElement(duration, 'duration');
