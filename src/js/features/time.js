@@ -77,7 +77,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (currTime) {
 			controls.querySelector(`.${t.options.classPrefix}time`).innerHTML +=
-				`${t.options.timeAndDurationSeparator}<span class="${t.options.classPrefix}duration">` +
+				`${t.options.timeAndDurationSeparator}<span class="mejs__offscreen">${i18n.t('mejs.duration')}</span><span class="${t.options.classPrefix}duration">` +
 				`${secondsToTimeCode(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat)}</span>`;
 
 		} else {
