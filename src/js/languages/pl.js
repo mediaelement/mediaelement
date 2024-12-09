@@ -31,6 +31,10 @@
 			'mejs.time-help-text': 'Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.',
 			'mejs.live-broadcast': 'Transmisja na żywo',
 
+			// features/time.js
+			'mejs.current': 'Aktualny czas',
+			'mejs.duration': 'Całkowity czas trwania',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.',
 			'mejs.unmute': 'Wyłącz wyciszenie',

@@ -32,6 +32,10 @@
 			'mejs.time-help-text': '使用左/右箭頭快轉1秒,上/下箭頭快轉10秒。',
 			'mejs.live-broadcast' : '現場直播',
 
+			// features/time.js
+			'mejs.current': '當前時間',
+			'mejs.duration': '總時長',
+
 			// features/volume.js
 			'mejs.volume-help-text': '使用上/下箭頭提高或降低音量。',
 			'mejs.unmute': '取消靜音',

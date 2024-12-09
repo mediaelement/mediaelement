@@ -30,6 +30,10 @@
 			'mejs.time-help-text': 'Koristi strelice lijevo/desno za pomak naprijed za 1 sekundu te gore/dolje za pomak od 10 sekundi.',
 			'mejs.live-broadcast' : 'Prijenos uživo',
 
+			// features/time.js
+			'mejs.current': 'Trenutno vrijeme',
+			'mejs.duration': 'Ukupno trajanje',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Koristi strelice gore/dolje za pojačavanje ili stišavanje.',
 			'mejs.unmute': 'Uključi zvuk',

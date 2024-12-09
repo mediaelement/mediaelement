@@ -31,6 +31,10 @@
 			'mejs.time-help-text': 'Použijte tlačítka se šipkami doleva / doprava pro posun o jednu vteřinu, tlačítka se šipkami nahoru / dolů pro posun o deset vteřin.',
 			'mejs.live-broadcast' : 'Živé vysílání',
 
+			// features/time.js
+			'mejs.current': 'Aktuální čas',
+			'mejs.duration': 'Celková doba trvání',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Použijte tlačítka se šipkami nahoru / dolů pro zesílení nebo zeslabení hlasitosti.',
 			'mejs.unmute': 'Zapnout zvuk',

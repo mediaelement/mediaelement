@@ -30,6 +30,10 @@
 			'mejs.time-help-text': 'Utilitzeu les tecles de fletxa esquerra / dreta per avançar un segon, fletxes amunt / avall per avançar deu segons.',
 			'mejs.live-broadcast' : 'Transmissió en directe',
 
+			// features/time.js
+			'mejs.current': 'Hora actual',
+			'mejs.duration': 'Durada total',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Utilitzeu les tecles de fletxa amunt / avall per augmentar o disminuir el volum.',
 			'mejs.unmute': 'Reactivar silenci',

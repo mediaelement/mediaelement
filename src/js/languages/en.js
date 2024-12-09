@@ -29,6 +29,10 @@ export const EN = {
 	'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
 	'mejs.live-broadcast' : 'Live Broadcast',
 
+	// features/time.js
+	'mejs.current': 'Current time',
+	'mejs.duration': 'Total duration',
+
 	// features/volume.js
 	'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
 	'mejs.unmute': 'Unmute',

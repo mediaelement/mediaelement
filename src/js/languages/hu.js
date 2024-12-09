@@ -31,6 +31,10 @@
 			'mejs.time-help-text': 'Használja a Bal/Jobb nyíl gombokat az egy másodperces léptetéshez, a Fel/Le nyíl gombokat a tíz másodperces léptetéshez.',
 			'mejs.live-broadcast' : 'Élő közvetítés',
 
+			// features/time.js
+			'mejs.current': 'Jelenlegi idő',
+			'mejs.duration': 'Teljes időtartam',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Használja a Fel/Le nyíl gombokat a hangerő növeléséhez vagy csökkentéséhez.',
 			'mejs.unmute': 'Némítás feloldása',
