@@ -853,6 +853,20 @@ class MediaElementPlayer {
 				}
 			});
 
+			if (t.options.enableKeyboard) {
+				t.getElement(t.container).addEventListener('keydown', function (e) {
+					const keyCode = e.keyCode || e.which || 0;
+					// On Enter, play media
+					if (e.target === t.container && keyCode === 13) {
+						if (t.paused) {
+							t.play();
+						} else {
+							t.pause();
+						}
+					}
+				})
+			}
+
 			// Disable focus outline to improve look-and-feel for regular users
 			t.getElement(t.container).addEventListener('click', function (e) {
 				dom.addClass(e.currentTarget, `${t.options.classPrefix}container-keyboard-inactive`);
@@ -1607,16 +1621,6 @@ class MediaElementPlayer {
 
 				button.setAttribute('aria-pressed', !!pressed);
 				t.getElement(t.container).focus();
-			}
-		});
-		// Allow keyboard to execute action on play button
-		bigPlay.addEventListener('keydown', function (e) {
-			const keyPressed = e.keyCode || e.which || 0;
-			// On Enter, play media
-			if (keyPressed === 13 || (IS_FIREFOX && keyPressed === 32)) {
-				const event = createEvent('click', bigPlay);
-				bigPlay.dispatchEvent(event);
-				return false;
 			}
 		});
 
