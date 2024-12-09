@@ -31,6 +31,10 @@
 			'mejs.time-help-text': 'Klávesmi so šípkou doľava/doprava posuniete o jednu sekundu, šípkami nahor/ nadol posuniete o desať sekúnd.',
 			'mejs.live-broadcast' : 'Živé vysielanie',
 
+			// features/time.js
+			'mejs.current': 'Aktuálny čas',
+			'mejs.duration': 'Celkový čas',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Klávesmi so šípkou nahor/nadol zvýšite alebo znížite hlasitosť.',
 			'mejs.unmute': 'Zrušiť stlmenie',

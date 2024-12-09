@@ -30,7 +30,11 @@
 			'mejs.time-slider': 'Deslizador do tempo',
 			'mejs.time-help-text': 'Use as teclas das setas para a esquerda/direita para avançar um segundo, e as setas para cima/baixo para avançar dez segundos.',
 			'mejs.live-broadcast' : 'Transmissão ao vivo',
-			
+
+			// features/time.js
+			'mejs.current': 'Tempo atual',
+			'mejs.duration': 'Duração total',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Use as teclas das setas para cima/baixo para aumentar ou diminuir o volume.',
 			'mejs.unmute': 'Voltar ao som',

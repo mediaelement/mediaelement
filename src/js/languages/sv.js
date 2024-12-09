@@ -30,6 +30,10 @@
 			'mejs.time-help-text': 'Använd Vänster/Höger piltangent för att spola en sekund, Upp/Ner piltangent spola tio sekunder.',
 			'mejs.live-broadcast': 'Livesändning',
 
+			// features/time.js
+			'mejs.current': 'Aktuell tid',
+			'mejs.duration': 'Total tid',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Använd Upp/Ner piltangent för att öka eller minska volymen.',
 			'mejs.unmute': 'Ljud på',

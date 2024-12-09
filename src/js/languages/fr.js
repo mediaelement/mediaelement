@@ -32,6 +32,10 @@
 			'mejs.time-help-text': 'Utilisez les flèches Gauche/Droite du clavier pour avancer d\'une seconde, les flèches Haut/Bas pour avancer de 10 secondes.',
 			'mejs.live-broadcast' : 'Diffusion en direct',
 
+			// features/time.js
+			'mejs.current': 'Temps actuel',
+			'mejs.duration': 'Durée totale',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Utilisez les flèches Haut/Bas du clavier pour augmenter ou diminuer le volume.',
 			'mejs.unmute': 'Activer le son',

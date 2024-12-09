@@ -32,6 +32,10 @@
 			'mejs.time-help-text': 'Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.',
 			'mejs.live-broadcast': 'Transmisión en Vivo',
 
+			// features/time.js
+			'mejs.current': 'Hora actual',
+			'mejs.duration': 'Duración total',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Use las flechas Arriba/Abajo para subir o bajar el volumen.',
 			'mejs.unmute': 'Reactivar silencio',

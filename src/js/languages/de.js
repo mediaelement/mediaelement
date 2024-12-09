@@ -31,6 +31,10 @@
 			'mejs.time-help-text': 'Verwende die Pfeiltaste nach links/rechts, um eine Sekunde zu spulen, hoch/runter um zehn Sekunden zu spulen.',
 			'mejs.live-broadcast' : 'Live-Übertragung',
 
+			// features/time.js
+			'mejs.current': 'Aktueller Zeitpunkt',
+			'mejs.duration': 'Gesamtlaufzeit',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.',
 			'mejs.unmute': 'Stummschaltung aufheben',

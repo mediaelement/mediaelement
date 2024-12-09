@@ -31,6 +31,10 @@
 			'mejs.time-help-text': 'Gunakan kekunci Anak Panah Kiri/Kanan untuk bergerak satu saat, Anak Panah Atas/Bawah untuk bergerak sepuluh saat.',
 			'mejs.live-broadcast' : 'Siaran Langsung',
 
+			// features/time.js
+			'mejs.current': 'Masa semasa',
+			'mejs.duration': 'Jumlah masa',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Gunakan kekunci Anak Panah Atas/Bawah untuk menguatkan atau memperlahankan bunyi.',
 			'mejs.unmute': 'Nyahsenyap',

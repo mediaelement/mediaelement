@@ -31,6 +31,10 @@
 			'mejs.time-help-text': 'Utilizează tastele săgeată Stânga/Dreapta pentru a avansa o secundă şi săgeţile Sus/Jos pentru a avansa zece secunde.',
 			'mejs.live-broadcast' : 'Difuzare în direct',
 
+			// features/time.js
+			'mejs.current': 'Timp curent',
+			'mejs.duration': 'Durată totală',
+
 			// features/volume.js
 			'mejs.volume-help-text': 'Utilizează tastele de săgeată Sus/Jos pentru a creşte/micşora volumul',
 			'mejs.unmute': 'Cu sunet',
