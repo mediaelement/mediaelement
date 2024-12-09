@@ -4,7 +4,7 @@ import document from 'global/document';
 import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
-import {IS_FIREFOX, IS_IOS, IS_ANDROID, SUPPORT_PASSIVE_EVENT} from '../utils/constants';
+import {IS_IOS, IS_ANDROID, SUPPORT_PASSIVE_EVENT} from '../utils/constants';
 import {secondsToTimeCode} from '../utils/time';
 import {offset, addClass, removeClass, hasClass} from '../utils/dom';
 
@@ -93,7 +93,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// 5%
 					const newTime = Math.max(player.currentTime - player.options.defaultSeekBackwardInterval(player), 0);
-					
+
 					// pause to track current time
 					if (!player.paused) {
 						player.pause();
@@ -131,7 +131,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// 5%
 					const newTime = Math.min(player.currentTime + player.options.defaultSeekForwardInterval(player), player.duration);
-					
+
 					// pause to track current time
 					if (!player.paused) {
 						player.pause();
@@ -413,13 +413,10 @@ Object.assign(MediaElementPlayer.prototype, {
 						seekTime = duration;
 						break;
 					case 13: // enter
-					case 32: // space
-						if (IS_FIREFOX) {
-							if (t.paused) {
-								t.play();
-							} else {
-								t.pause();
-							}
+						if (t.paused) {
+							t.play();
+						} else {
+							t.pause();
 						}
 						return;
 					default:
