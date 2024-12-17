@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'Barra di scorrimento',
 			'mejs.time-help-text': 'Utilizzare i tasti Freccia sinistra/Freccia destra per avanzare di un secondo, Freccia Su/Giù per avanzare dieci secondi.',
 			'mejs.live-broadcast' : 'Trasmissione in diretta',			
+			'mejs.current': 'Ora corrente',
+			'mejs.duration': 'Durata totale',			
 			'mejs.volume-help-text': 'Utilizzare i tasti Freccia Su/Giù per aumentare o diminuire il volume.',
 			'mejs.unmute': 'Disattivare muto',
 			'mejs.mute': 'Muto',

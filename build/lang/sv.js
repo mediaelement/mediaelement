@@ -19,6 +19,8 @@
 			'mejs.time-slider': 'Tidslinje',
 			'mejs.time-help-text': 'Använd Vänster/Höger piltangent för att spola en sekund, Upp/Ner piltangent spola tio sekunder.',
 			'mejs.live-broadcast': 'Livesändning',			
+			'mejs.current': 'Aktuell tid',
+			'mejs.duration': 'Total tid',			
 			'mejs.volume-help-text': 'Använd Upp/Ner piltangent för att öka eller minska volymen.',
 			'mejs.unmute': 'Ljud på',
 			'mejs.mute': 'Ljud av',

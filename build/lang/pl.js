@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'Suwak czasu',
 			'mejs.time-help-text': 'Strzałki w lewo/w prawo powodują przewijanie o sekundę, strzałki w górę/w dół o dziesięć sekund.',
 			'mejs.live-broadcast': 'Transmisja na żywo',			
+			'mejs.current': 'Aktualny czas',
+			'mejs.duration': 'Całkowity czas trwania',			
 			'mejs.volume-help-text': 'Aby zwiększyć lub zmniejszyć głośność, użyj strzałek w górę/w dół.',
 			'mejs.unmute': 'Wyłącz wyciszenie',
 			'mejs.mute': 'Wycisz',

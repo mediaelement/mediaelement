@@ -20,6 +20,8 @@
 			'mejs.time-slider': '时间滑动棒',
 			'mejs.time-help-text': '使用作/右箭头快进1秒,使用上/下箭头快进10秒。',
 			'mejs.live-broadcast' : '现场直播',			
+			'mejs.current': '当前时间',
+			'mejs.duration': '总时长',			
 			'mejs.volume-help-text': '使用上/下箭头提高或降低音量。',
 			'mejs.unmute': '取消静音',
 			'mejs.mute': '静音',

@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'Cursor timp',
 			'mejs.time-help-text': 'Utilizează tastele săgeată Stânga/Dreapta pentru a avansa o secundă şi săgeţile Sus/Jos pentru a avansa zece secunde.',
 			'mejs.live-broadcast' : 'Difuzare în direct',			
+			'mejs.current': 'Timp curent',
+			'mejs.duration': 'Durată totală',			
 			'mejs.volume-help-text': 'Utilizează tastele de săgeată Sus/Jos pentru a creşte/micşora volumul',
 			'mejs.unmute': 'Cu sunet',
 			'mejs.mute': 'Fără sunet',

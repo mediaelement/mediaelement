@@ -20,6 +20,8 @@
             'mejs.time-slider': 'Zaman Ayarı',
             'mejs.time-help-text': 'Bir saniye ileri gitmek için Sol / Sağ Ok tuşlarını, on saniye ileri gitmek için Yukarı / Aşağı oklarını kullanın.',
             'mejs.live-broadcast' : 'Canlı Yayın',            
+            'mejs.current': 'Geçerli zaman',
+            'mejs.duration': 'Toplam süre',            
             'mejs.volume-help-text': 'Sesi artırmak veya azaltmak için Yukarı / Aşağı Ok tuşlarını kullanın.',
             'mejs.unmute': 'Sesi aç',
             'mejs.mute': 'Sessiz',

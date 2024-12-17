@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.5';
+mejs.version = '7.0.6';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1267,6 +1267,9 @@ var EN = exports.EN = {
 	'mejs.time-slider': 'Time Slider',
 	'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
 	'mejs.live-broadcast': 'Live Broadcast',
+
+	'mejs.current': 'Current time',
+	'mejs.duration': 'Total duration',
 
 	'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
 	'mejs.unmute': 'Unmute',
