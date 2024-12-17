@@ -19,6 +19,8 @@
 			'mejs.time-slider': 'Control lliscant de temps',
 			'mejs.time-help-text': 'Utilitzeu les tecles de fletxa esquerra / dreta per avançar un segon, fletxes amunt / avall per avançar deu segons.',
 			'mejs.live-broadcast' : 'Transmissió en directe',			
+			'mejs.current': 'Hora actual',
+			'mejs.duration': 'Durada total',			
 			'mejs.volume-help-text': 'Utilitzeu les tecles de fletxa amunt / avall per augmentar o disminuir el volum.',
 			'mejs.unmute': 'Reactivar silenci',
 			'mejs.mute': 'Silenci',

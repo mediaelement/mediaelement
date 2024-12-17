@@ -21,6 +21,8 @@
 			'mejs.time-slider': 'Control deslizante de tiempo',
 			'mejs.time-help-text': 'Use las flechas Izquierda/Derecha para avanzar un segundo y las flechas Arriba/Abajo para avanzar diez segundos.',
 			'mejs.live-broadcast': 'Transmisión en Vivo',			
+			'mejs.current': 'Hora actual',
+			'mejs.duration': 'Duración total',			
 			'mejs.volume-help-text': 'Use las flechas Arriba/Abajo para subir o bajar el volumen.',
 			'mejs.unmute': 'Reactivar silencio',
 			'mejs.mute': 'Silencio',

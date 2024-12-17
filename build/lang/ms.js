@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'Lungsur Masa',
 			'mejs.time-help-text': 'Gunakan kekunci Anak Panah Kiri/Kanan untuk bergerak satu saat, Anak Panah Atas/Bawah untuk bergerak sepuluh saat.',
 			'mejs.live-broadcast' : 'Siaran Langsung',			
+			'mejs.current': 'Masa semasa',
+			'mejs.duration': 'Jumlah masa',			
 			'mejs.volume-help-text': 'Gunakan kekunci Anak Panah Atas/Bawah untuk menguatkan atau memperlahankan bunyi.',
 			'mejs.unmute': 'Nyahsenyap',
 			'mejs.mute': 'Senyap',

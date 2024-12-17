@@ -20,6 +20,8 @@
 			'mejs.time-slider': '시간 슬라이더',
 			'mejs.time-help-text': '1초 전진하려면 좌/우측 화살표를 사용하시고 10초 전진하려면 위/아래 화살표를 사용하세요.',
 			'mejs.live-broadcast' : '생방송',			
+			'mejs.current': '현재 시간',
+			'mejs.duration': '총 재생 시간',			
 			'mejs.volume-help-text': '볼륨을 높이거나 낮추려면 위/아래 화살표를 이용하세요.',
 			'mejs.unmute': '음소거 해제',
 			'mejs.mute': '말 없는',

@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.5';
+mejs.version = '7.0.6';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1985,13 +1985,10 @@ Object.assign(_player2.default.prototype, {
 						seekTime = duration;
 						break;
 					case 13:
-					case 32:
-						if (_constants.IS_FIREFOX) {
-							if (t.paused) {
-								t.play();
-							} else {
-								t.pause();
-							}
+						if (t.paused) {
+							t.play();
+						} else {
+							t.pause();
 						}
 						return;
 					default:
@@ -2230,6 +2227,10 @@ var _player = _dereq_(17);
 
 var _player2 = _interopRequireDefault(_player);
 
+var _i18n = _dereq_(6);
+
+var _i18n2 = _interopRequireDefault(_i18n);
+
 var _time = _dereq_(30);
 
 var _dom = _dereq_(25);
@@ -2250,7 +2251,7 @@ Object.assign(_player2.default.prototype, {
 		time.className = t.options.classPrefix + 'time';
 		time.setAttribute('role', 'timer');
 		time.setAttribute('aria-live', 'off');
-		time.innerHTML = '<span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat) + '</span>';
+		time.innerHTML = '<span class="mejs__offscreen">' + _i18n2.default.t('mejs.current') + '</span><span class="' + t.options.classPrefix + 'currenttime">' + (0, _time.secondsToTimeCode)(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat) + '</span>';
 
 		t.addControlElement(time, 'current');
 		player.updateCurrent();
@@ -2269,7 +2270,7 @@ Object.assign(_player2.default.prototype, {
 		    currTime = controls.lastChild.querySelector('.' + t.options.classPrefix + 'currenttime');
 
 		if (currTime) {
-			controls.querySelector('.' + t.options.classPrefix + 'time').innerHTML += t.options.timeAndDurationSeparator + '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat) + '</span>');
+			controls.querySelector('.' + t.options.classPrefix + 'time').innerHTML += t.options.timeAndDurationSeparator + '<span class="mejs__offscreen">' + _i18n2.default.t('mejs.duration') + '</span><span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat) + '</span>');
 		} else {
 			if (controls.querySelector('.' + t.options.classPrefix + 'currenttime')) {
 				(0, _dom.addClass)(controls.querySelector('.' + t.options.classPrefix + 'currenttime').parentNode, t.options.classPrefix + 'currenttime-container');
@@ -2277,7 +2278,7 @@ Object.assign(_player2.default.prototype, {
 
 			var duration = _document2.default.createElement('div');
 			duration.className = t.options.classPrefix + 'time ' + t.options.classPrefix + 'duration-container';
-			duration.innerHTML = '<span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat) + '</span>');
+			duration.innerHTML = '<span class="mejs__offscreen">' + _i18n2.default.t('mejs.duration') + '</span><span class="' + t.options.classPrefix + 'duration">' + ((0, _time.secondsToTimeCode)(t.options.duration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength, t.options.timeFormat) + '</span>');
 
 			t.addControlElement(duration, 'duration');
 		}
@@ -2341,7 +2342,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"25":25,"30":30}],14:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"25":25,"30":30,"6":6}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -3390,6 +3391,9 @@ var EN = exports.EN = {
 	'mejs.time-help-text': 'Use Left/Right Arrow keys to advance one second, Up/Down arrows to advance ten seconds.',
 	'mejs.live-broadcast': 'Live Broadcast',
 
+	'mejs.current': 'Current time',
+	'mejs.duration': 'Total duration',
+
 	'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
 	'mejs.unmute': 'Unmute',
 	'mejs.mute': 'Mute',
@@ -4225,6 +4229,20 @@ var MediaElementPlayer = function () {
 					}
 				});
 
+				if (t.options.enableKeyboard) {
+					t.getElement(t.container).addEventListener('keydown', function (e) {
+						var keyCode = e.keyCode || e.which || 0;
+
+						if (e.target === t.container && keyCode === 13) {
+							if (t.paused) {
+								t.play();
+							} else {
+								t.pause();
+							}
+						}
+					});
+				}
+
 				t.getElement(t.container).addEventListener('click', function (e) {
 					dom.addClass(e.currentTarget, t.options.classPrefix + 'container-keyboard-inactive');
 				});
@@ -4906,16 +4924,6 @@ var MediaElementPlayer = function () {
 
 					button.setAttribute('aria-pressed', !!pressed);
 					t.getElement(t.container).focus();
-				}
-			});
-
-			bigPlay.addEventListener('keydown', function (e) {
-				var keyPressed = e.keyCode || e.which || 0;
-
-				if (keyPressed === 13 || _constants.IS_FIREFOX && keyPressed === 32) {
-					var event = (0, _general.createEvent)('click', bigPlay);
-					bigPlay.dispatchEvent(event);
-					return false;
 				}
 			});
 

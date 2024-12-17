@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'Posuvný běžec nastavení času',
 			'mejs.time-help-text': 'Použijte tlačítka se šipkami doleva / doprava pro posun o jednu vteřinu, tlačítka se šipkami nahoru / dolů pro posun o deset vteřin.',
 			'mejs.live-broadcast' : 'Živé vysílání',			
+			'mejs.current': 'Aktuální čas',
+			'mejs.duration': 'Celková doba trvání',			
 			'mejs.volume-help-text': 'Použijte tlačítka se šipkami nahoru / dolů pro zesílení nebo zeslabení hlasitosti.',
 			'mejs.unmute': 'Zapnout zvuk',
 			'mejs.mute': 'Vypnout zvuk',

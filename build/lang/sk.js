@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'Posúvač času',
 			'mejs.time-help-text': 'Klávesmi so šípkou doľava/doprava posuniete o jednu sekundu, šípkami nahor/ nadol posuniete o desať sekúnd.',
 			'mejs.live-broadcast' : 'Živé vysielanie',			
+			'mejs.current': 'Aktuálny čas',
+			'mejs.duration': 'Celkový čas',			
 			'mejs.volume-help-text': 'Klávesmi so šípkou nahor/nadol zvýšite alebo znížite hlasitosť.',
 			'mejs.unmute': 'Zrušiť stlmenie',
 			'mejs.mute': 'Stlmiť',

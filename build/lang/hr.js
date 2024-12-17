@@ -17,6 +17,8 @@
 			'mejs.time-slider': 'Vremenska traka',
 			'mejs.time-help-text': 'Koristi strelice lijevo/desno za pomak naprijed za 1 sekundu te gore/dolje za pomak od 10 sekundi.',
 			'mejs.live-broadcast' : 'Prijenos uživo',			
+			'mejs.current': 'Trenutno vrijeme',
+			'mejs.duration': 'Ukupno trajanje',			
 			'mejs.volume-help-text': 'Koristi strelice gore/dolje za pojačavanje ili stišavanje.',
 			'mejs.unmute': 'Uključi zvuk',
 			'mejs.mute': 'Isključi zvuk',

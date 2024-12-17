@@ -1,5 +1,9 @@
 # Version History
 
+*7.0.6* (2024/12/17)
+* Added keyboard controls for play and pause to container element ([#2978](https://github.com/mediaelement/mediaelement/pull/2978))
+* Added screen reader text for current time and total duration ([#2979](https://github.com/mediaelement/mediaelement/pull/2979))
+
 *7.0.5* (2024/04/26)
 * Fixed wrong focus on load when using default subtitles ([#2958](https://github.com/mediaelement/mediaelement/pull/2958))
 

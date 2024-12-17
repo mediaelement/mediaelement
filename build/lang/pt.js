@@ -19,9 +19,9 @@
 			'mejs.pause': 'Pausa',			
 			'mejs.time-slider': 'Deslizador do tempo',
 			'mejs.time-help-text': 'Use as teclas das setas para a esquerda/direita para avançar um segundo, e as setas para cima/baixo para avançar dez segundos.',
-			'mejs.live-broadcast' : 'Transmissão ao vivo',
-			
-			
+			'mejs.live-broadcast' : 'Transmissão ao vivo',			
+			'mejs.current': 'Tempo atual',
+			'mejs.duration': 'Duração total',			
 			'mejs.volume-help-text': 'Use as teclas das setas para cima/baixo para aumentar ou diminuir o volume.',
 			'mejs.unmute': 'Voltar ao som',
 			'mejs.mute': 'Silêncio',

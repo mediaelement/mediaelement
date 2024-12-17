@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'Idő csúszka',
 			'mejs.time-help-text': 'Használja a Bal/Jobb nyíl gombokat az egy másodperces léptetéshez, a Fel/Le nyíl gombokat a tíz másodperces léptetéshez.',
 			'mejs.live-broadcast' : 'Élő közvetítés',			
+			'mejs.current': 'Jelenlegi idő',
+			'mejs.duration': 'Teljes időtartam',			
 			'mejs.volume-help-text': 'Használja a Fel/Le nyíl gombokat a hangerő növeléséhez vagy csökkentéséhez.',
 			'mejs.unmute': 'Némítás feloldása',
 			'mejs.mute': 'Némítás',

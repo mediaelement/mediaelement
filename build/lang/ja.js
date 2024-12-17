@@ -20,6 +20,8 @@
 			'mejs.time-slider': 'タイムスライダー',
 			'mejs.time-help-text': '1秒進めるには左/右矢印をキーを,10秒進めるには上/下矢印を使います。',
 			'mejs.live-broadcast': 'ライブブロードキャスト',			
+			'mejs.current': '現在時刻',
+			'mejs.duration': '総再生時間',			
 			'mejs.volume-help-text': '音量を上げたり下げたりするには,上/下矢印を使います。',
 			'mejs.unmute': 'ミュートを解除',
 			'mejs.mute': 'ミュート',

@@ -9,9 +9,7 @@
  * @see core/i18n.js
  */
 (function (exports) {
-    'use strict';
-    
-    if (exports.fa === undefined) {
+    'use strict';    if (exports.fa === undefined) {
         exports.fa = {
             'mejs.plural-form': 0,
             'mejs.download-file': 'دریافت فایل',
@@ -21,6 +19,8 @@
             'mejs.time-slider': 'تغییر زمان',
             'mejs.time-help-text': 'از کلید های چپ و راست کیبورد برای جا به جایی به میزان یک ثانیه استفاده کنید.همچنین کلید های بالا و پایین 10 ثانیه زمان را جا به جا می کند.',
             'mejs.live-broadcast': 'پخش زنده',
+            'mejs.current': 'زمان فعلی',
+            'mejs.duration': 'مدت زمان کل',
             'mejs.volume-help-text': 'از دکمه های بالا و پایین برای کم و زیاد کردن حجم صدا استفاده کنید.',
             'mejs.unmute': 'صدا دار',
             'mejs.mute': 'بی صدا',
