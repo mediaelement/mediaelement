@@ -1,4 +1,9 @@
 # Version History
+
+*5.1.2 (2024/12/17)*
+* Added keyboard controls for play and pause to container element (#2978)
+* Added screen reader text for current time and total duration (#2979)
+
 *5.1.1 (2023/02/6)*
 * Add focus outline to mejs__container to pass WCAG SC 2.4.7 (#2912)
 
