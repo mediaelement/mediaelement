@@ -546,7 +546,7 @@ Object.assign(MediaElementPlayer.prototype, {
       if (this.options.toggleCaptionsButtonWhenOnlyOne && readySubtitles.length === 1 && this.captionsButton) {
         this.captionsButton.dispatchEvent(createEvent('click', this.captionsButton));
       } else {
-        const target = document.getElementById(`${autoplayTrack.trackId}-btn`)
+        const target = this.captionsButton.querySelector(`#${autoplayTrack.trackId}-btn`);
         if (target) {
           target.checked = true;
           target.dispatchEvent(createEvent('click', target));
@@ -563,7 +563,7 @@ Object.assign(MediaElementPlayer.prototype, {
     const
       t = this,
       lang = track.srclang,
-      target = document.getElementById(`${track.trackId}-btn`)
+      target = t.captionsButton.querySelector(`#${track.trackId}-btn`)
     ;
     if (!target) {
       return;
@@ -586,7 +586,7 @@ Object.assign(MediaElementPlayer.prototype, {
    * @param {object} track
    */
   removeTrackButton (track) {
-    const element = document.getElementById(`${track.trackId}-btn`);
+    const element = this.captionsButton.querySelector(`#${track.trackId}-btn`);
     if (element) {
       const button = element.closest('li');
       if (button) {
