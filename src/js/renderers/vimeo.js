@@ -409,6 +409,12 @@ const vimeoIframeRenderer = {
 		let queryArgs = ~mediaFiles[0].src.indexOf('?') ? `?${mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1)}` : '';
 		const args = [];
 
+		if (queryArgs.indexOf('controls') === -1) {
+			args.push('controls=false');
+		} else if (queryArgs.indexOf('controls=true') > -1) {
+			queryArgs = queryArgs.replace('controls=true', 'controls=false');
+		}
+
 		if (mediaElement.originalNode.autoplay && queryArgs.indexOf('autoplay') === -1) {
 			args.push('autoplay=1');
 		}
