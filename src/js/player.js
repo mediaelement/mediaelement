@@ -1129,7 +1129,7 @@ class MediaElementPlayer {
 
 		if (t.isVideo) {
 			// Responsive video is based on width: 100% and height: 100%
-			if (t.height === '100%' && t.width === '100%') {
+			if (t.height === '100%' && t.width === '100%' && parentHeight > 0) {
 				newHeight = parentHeight;
 			}
 			else if (t.height === '100%') {
