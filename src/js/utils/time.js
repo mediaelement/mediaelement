@@ -173,26 +173,27 @@ export function framesToLocalizedDuration(time, showFrameCount = false, fps = 25
 	seconds = seconds === 60 ? 0 : seconds;
 	minutes = minutes === 60 ? 0 : minutes;
 
-	let result = '';
+	let resultList = [];
 
 	if (hours > 0) {
-		result += `${i18n.t('mejs.hours', hours)} `;
+		resultList.push(i18n.t('mejs.hours', hours));
 	}
 
 	if (hours > 0 || minutes > 0) {
-		result += `${i18n.t('mejs.minutes', minutes)} `;
+		resultList.push(i18n.t('mejs.minutes', minutes));
 	}
 
-	result += `${i18n.t('mejs.seconds', seconds)}`;
+	resultList.push(i18n.t('mejs.seconds', seconds));
 
 	if (showFrameCount) {
 		frames = Math.round(f % timeBase);
 		frames = frames <= 0 ? 0 : frames;
 
-		result += ` ${i18n.t('mejs.frames', frames)}`
+		resultList.push(i18n.t('mejs.frames', frames));
 	}
 
-	return result;
+	const formatter = new Intl.ListFormat(i18n.lang, { style: 'long', type: 'unit' });
+	return formatter.format(resultList);
 }
 
 /**
