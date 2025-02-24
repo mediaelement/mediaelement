@@ -112,6 +112,7 @@ if (hasTrueNativeFullScreen) {
 	};
 
 	cancelFullScreen = () => {
+		if (!isFullScreen()) return;
 		if (hasWebkitNativeFullScreen) {
 			document.webkitCancelFullScreen();
 
