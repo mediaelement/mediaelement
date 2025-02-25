@@ -5,7 +5,7 @@ import {config} from '../player';
 import MediaElementPlayer from '../player';
 import i18n from '../core/i18n';
 import {IS_IOS, IS_ANDROID, SUPPORT_PASSIVE_EVENT} from '../utils/constants';
-import {secondsToTimeCode} from '../utils/time';
+import {framesToLocalizedDuration, secondsToTimeCode} from '../utils/time';
 import {offset, addClass, removeClass, hasClass} from '../utils/dom';
 
 /**
@@ -305,7 +305,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const
 					seconds = t.getCurrentTime(),
 					timeSliderText = i18n.t('mejs.time-slider'),
-					time = secondsToTimeCode(seconds, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond, player.options.secondsDecimalLength, player.options.timeFormat),
+					textCurrentTime = framesToLocalizedDuration(seconds, player.options.showTimecodeFrameCount, player.options.framesPerSecond),
 					duration = t.getDuration()
 				;
 
@@ -316,7 +316,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.slider.setAttribute('aria-valuemin', 0);
 				t.slider.setAttribute('aria-valuemax', isNaN(duration) ? 0 : duration);
 				t.slider.setAttribute('aria-valuenow', seconds);
-				t.slider.setAttribute('aria-valuetext', time);
+				t.slider.setAttribute('aria-valuetext', textCurrentTime);
 			},
 			/**
 			 *

@@ -1,6 +1,7 @@
 'use strict';
 
 import mejs from '../core/mejs';
+import i18n from "../core/i18n";
 
 /**
  * Indicate if FPS is dropFrame (typically non-integer frame rates: 29.976)
@@ -64,8 +65,7 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 		} else {
 			seconds = Math.floor((f / timeBase) % 60).toFixed(secondsDecimalLength);
 		}
-	}
-	else {
+	} else {
 		hours = Math.floor(time / 3600) % 24;
 		minutes = Math.floor(time / 60) % 60;
 		if (showFrameCount) {
@@ -109,17 +109,14 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 }
 
 /**
- * Format a numeric time in format '00:00:00'
+ * Format a numeric time into localized hours, minutes, seconds
  *
  * @param {Number} time - Ideally a number, but if not or less than zero, is defaulted to zero
- * @param {Boolean} forceHours
  * @param {Boolean} showFrameCount
  * @param {Number} fps - Frames per second
- * @param {Number} secondsDecimalLength - Number of decimals to display if any
- * @param {String} timeFormat
  * @return {String}
  */
-export function framesToLocalizedDuration(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0, timeFormat = 'hh:mm:ss') {
+export function framesToLocalizedDuration(time, showFrameCount = false, fps = 25) {
 
 	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
 
@@ -128,7 +125,6 @@ export function framesToLocalizedDuration(time, forceHours = false, showFrameCou
 		timeBase = Math.round(fps),
 		framesPer24Hours = Math.round(fps * 3600) * 24,
 		framesPer10Minutes = Math.round(fps * 600),
-		frameSep = isDropFrame(fps) ? ';' : ':',
 		hours,
 		minutes,
 		seconds,
@@ -159,16 +155,15 @@ export function framesToLocalizedDuration(time, forceHours = false, showFrameCou
 		if (showFrameCount) {
 			seconds = timeBaseDivision % 60;
 		} else {
-			seconds = Math.floor((f / timeBase) % 60).toFixed(secondsDecimalLength);
+			seconds = Math.floor((f / timeBase) % 60);
 		}
-	}
-	else {
+	} else {
 		hours = Math.floor(time / 3600) % 24;
 		minutes = Math.floor(time / 60) % 60;
 		if (showFrameCount) {
 			seconds = Math.floor(time % 60);
 		} else {
-			seconds = Math.floor(time % 60).toFixed(secondsDecimalLength);
+			seconds = Math.floor(time % 60);
 		}
 	}
 	hours = hours <= 0 ? 0 : hours;
@@ -178,28 +173,23 @@ export function framesToLocalizedDuration(time, forceHours = false, showFrameCou
 	seconds = seconds === 60 ? 0 : seconds;
 	minutes = minutes === 60 ? 0 : minutes;
 
-	const timeFormatFrags = timeFormat.split(':');
-	const timeFormatSettings = {};
-	for (let i = 0, total = timeFormatFrags.length; i < total; ++i) {
-		let unique = '';
-		for (let j = 0, t = timeFormatFrags[i].length; j < t; j++) {
-			if (unique.indexOf(timeFormatFrags[i][j]) < 0) {
-				unique += timeFormatFrags[i][j];
-			}
-		}
-		if (~['f', 's', 'm', 'h'].indexOf(unique)) {
-			timeFormatSettings[unique] = timeFormatFrags[i].length;
-		}
+	let result = '';
+
+	if (hours > 0) {
+		result += `${i18n.t('mejs.hours', hours)} `;
 	}
 
-	let result = (forceHours || hours > 0) ? `${(hours < 10 && timeFormatSettings.h > 1 ? `0${hours}` : hours)}:` : '';
-	result += `${(minutes < 10 && timeFormatSettings.m > 1 ? `0${minutes}` : minutes)}:`;
-	result += `${(seconds < 10 && timeFormatSettings.s > 1 ? `0${seconds}` : seconds)}`;
+	if (hours > 0 || minutes > 0) {
+		result += `${i18n.t('mejs.minutes', minutes)} `;
+	}
+
+	result += `${i18n.t('mejs.seconds', seconds)}`;
 
 	if (showFrameCount) {
-		frames = (f % timeBase).toFixed(0);
+		frames = Math.round(f % timeBase);
 		frames = frames <= 0 ? 0 : frames;
-		result += (frames < 10 && timeFormatSettings.f) ? `${frameSep}0${frames}` : `${frameSep}${frames}`;
+
+		result += ` ${i18n.t('mejs.frames', frames)}`
 	}
 
 	return result;
