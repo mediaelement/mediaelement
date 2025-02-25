@@ -109,6 +109,103 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 }
 
 /**
+ * Format a numeric time in format '00:00:00'
+ *
+ * @param {Number} time - Ideally a number, but if not or less than zero, is defaulted to zero
+ * @param {Boolean} forceHours
+ * @param {Boolean} showFrameCount
+ * @param {Number} fps - Frames per second
+ * @param {Number} secondsDecimalLength - Number of decimals to display if any
+ * @param {String} timeFormat
+ * @return {String}
+ */
+export function framesToLocalizedDuration(time, forceHours = false, showFrameCount = false, fps = 25, secondsDecimalLength = 0, timeFormat = 'hh:mm:ss') {
+
+	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
+
+	let
+		dropFrames = Math.round(fps * 0.066666), // Number of drop frames to drop on the minute marks (6%)
+		timeBase = Math.round(fps),
+		framesPer24Hours = Math.round(fps * 3600) * 24,
+		framesPer10Minutes = Math.round(fps * 600),
+		frameSep = isDropFrame(fps) ? ';' : ':',
+		hours,
+		minutes,
+		seconds,
+		frames,
+		f = Math.round(time * fps)
+	;
+
+	if (isDropFrame(fps)) {
+
+		if (f < 0) {
+			f = framesPer24Hours + f;
+		}
+
+		f = f % framesPer24Hours;
+
+		const d = Math.floor(f / framesPer10Minutes);
+		const m = f % framesPer10Minutes;
+		f = f + dropFrames * 9 * d;
+		if (m > dropFrames) {
+			f = f + dropFrames * (Math.floor((m - dropFrames) / (Math.round(timeBase * 60 - dropFrames))));
+		}
+
+		const timeBaseDivision = Math.floor(f / timeBase);
+
+		hours = Math.floor(Math.floor(timeBaseDivision / 60) / 60);
+		minutes = Math.floor(timeBaseDivision / 60) % 60;
+
+		if (showFrameCount) {
+			seconds = timeBaseDivision % 60;
+		} else {
+			seconds = Math.floor((f / timeBase) % 60).toFixed(secondsDecimalLength);
+		}
+	}
+	else {
+		hours = Math.floor(time / 3600) % 24;
+		minutes = Math.floor(time / 60) % 60;
+		if (showFrameCount) {
+			seconds = Math.floor(time % 60);
+		} else {
+			seconds = Math.floor(time % 60).toFixed(secondsDecimalLength);
+		}
+	}
+	hours = hours <= 0 ? 0 : hours;
+	minutes = minutes <= 0 ? 0 : minutes;
+	seconds = seconds <= 0 ? 0 : seconds;
+
+	seconds = seconds === 60 ? 0 : seconds;
+	minutes = minutes === 60 ? 0 : minutes;
+
+	const timeFormatFrags = timeFormat.split(':');
+	const timeFormatSettings = {};
+	for (let i = 0, total = timeFormatFrags.length; i < total; ++i) {
+		let unique = '';
+		for (let j = 0, t = timeFormatFrags[i].length; j < t; j++) {
+			if (unique.indexOf(timeFormatFrags[i][j]) < 0) {
+				unique += timeFormatFrags[i][j];
+			}
+		}
+		if (~['f', 's', 'm', 'h'].indexOf(unique)) {
+			timeFormatSettings[unique] = timeFormatFrags[i].length;
+		}
+	}
+
+	let result = (forceHours || hours > 0) ? `${(hours < 10 && timeFormatSettings.h > 1 ? `0${hours}` : hours)}:` : '';
+	result += `${(minutes < 10 && timeFormatSettings.m > 1 ? `0${minutes}` : minutes)}:`;
+	result += `${(seconds < 10 && timeFormatSettings.s > 1 ? `0${seconds}` : seconds)}`;
+
+	if (showFrameCount) {
+		frames = (f % timeBase).toFixed(0);
+		frames = frames <= 0 ? 0 : frames;
+		result += (frames < 10 && timeFormatSettings.f) ? `${frameSep}0${frames}` : `${frameSep}${frames}`;
+	}
+
+	return result;
+}
+
+/**
  * Convert a '00:00:00' time string into seconds
  *
  * @param {String} time
