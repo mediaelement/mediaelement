@@ -188,7 +188,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				const statusRegion = mute.querySelector(`.${t.options.classPrefix}volume-status`);
 				if (statusRegion) {
-					statusRegion.innerHTML = `${volume}%`;
+					statusRegion.innerHTML = `${i18n.t('mejs.volume', volume)}`;
 				}
 			}
 		;
