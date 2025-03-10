@@ -32,6 +32,10 @@ export const EN = {
 	// features/time.js
 	'mejs.current': 'Current time',
 	'mejs.duration': 'Total duration',
+	'mejs.hours': ['1 hour', '%1 hours'],
+	'mejs.minutes': ['1 minute', '%1 minutes'],
+	'mejs.seconds': ['1 second', '%1 seconds'],
+	'mejs.frames': ['1 frame', '%1 frames'],
 
 	// features/volume.js
 	'mejs.volume-help-text': 'Use Up/Down Arrow keys to increase or decrease volume.',
