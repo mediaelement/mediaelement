@@ -1407,8 +1407,8 @@ Object.assign(_player2.default.prototype, {
 			return;
 		}
 
-		if (t.options.useFakeFullscreen === false && (Features.IS_IOS || Features.IS_SAFARI) && Features.HAS_IOS_FULLSCREEN && typeof t.media.originalNode.webkitEnterFullscreen === 'function' && t.media.originalNode.canPlayType((0, _media.getTypeFromFile)(t.media.getSrc()))) {
-			t.media.originalNode.webkitEnterFullscreen();
+		if (t.options.useFakeFullscreen === false && (Features.IS_IOS || Features.IS_SAFARI) && Features.HAS_IOS_FULLSCREEN && typeof t.node.webkitEnterFullscreen === 'function' && t.node.canPlayType((0, _media.getTypeFromFile)(t.media.getSrc()))) {
+			t.node.webkitEnterFullscreen();
 			return;
 		}
 

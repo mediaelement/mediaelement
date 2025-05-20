@@ -203,9 +203,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		// iOS allows playing fullscreen ONLY on `video` tag, so check if the source can go fullscreen on iOS
 		// and if the player can play the current source
 		if (t.options.useFakeFullscreen === false && (Features.IS_IOS || Features.IS_SAFARI) && Features.HAS_IOS_FULLSCREEN &&
-			typeof t.media.originalNode.webkitEnterFullscreen === 'function' &&
-			t.media.originalNode.canPlayType(getTypeFromFile(t.media.getSrc()))) {
-			t.media.originalNode.webkitEnterFullscreen();
+			typeof t.node.webkitEnterFullscreen === 'function' &&
+			t.node.canPlayType(getTypeFromFile(t.media.getSrc()))) {
+			t.node.webkitEnterFullscreen();
 			return;
 		}
 
