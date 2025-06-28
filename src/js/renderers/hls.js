@@ -207,7 +207,7 @@ const HlsNativeRenderer = {
 							case 'networkError':
 								if (data.details === 'manifestLoadError') {
 									if (index < total && mediaFiles[(index + 1)] !== undefined) {
-										node.setSrc(mediaFiles[index++].src);
+										node.setSrc(mediaFiles[++index].src);
 										node.load();
 										node.play();
 									} else {
