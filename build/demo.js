@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
+			iconSprite: './mejs-controls.svg',
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 

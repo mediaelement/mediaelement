@@ -136,7 +136,7 @@ module.exports = function (grunt) {
 			build: {
 				files: [{
 					expand: true,
-					src: ['build/**/*.js', '!build/lang/*.js', '!build/jquery.js', '!build/**/*.min.js'],
+					src: ['build/**/*.js', '!build/lang/*.js', '!build/jquery.js', '!build/**/*.min.js', '!build/demo.js'],
 					ext: '.min.js'
 				}]
 			},
@@ -222,9 +222,21 @@ module.exports = function (grunt) {
 					}
 				}
 			}
+		},
+		replace: {
+			html: {
+				src: ['build/index.html', 'build/*.js'],
+				overwrite: true,
+				replacements: [
+					{
+						from: '../build/',
+						to: './'
+					}
+				]
+			}
 		}
 	});
 
-	grunt.registerTask('default', ['eslint', 'stylelint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
-	grunt.registerTask('debug', ['eslint', 'stylelint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('default', ['eslint', 'stylelint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy', 'replace:html']);
+	grunt.registerTask('debug', ['eslint', 'stylelint', 'browserify', 'concat', 'uglify', 'postcss', 'copy', 'replace:html']);
 };
