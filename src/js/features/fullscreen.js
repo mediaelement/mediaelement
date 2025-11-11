@@ -197,8 +197,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		// and if the player can play the current source
 		if (t.options.useFakeFullscreen === false && (Features.IS_IOS || Features.IS_SAFARI) && Features.HAS_IOS_FULLSCREEN &&
 			typeof t.node.webkitEnterFullscreen === 'function' &&
-			t.node.originalNode.canPlayType(getTypeFromFile(t.media.getSrc()))) {
-			t.node.originalNode.webkitEnterFullscreen();
+			t.node.canPlayType(getTypeFromFile(t.media.getSrc()))) {
+			t.node.webkitEnterFullscreen();
 			return;
 		}
 
