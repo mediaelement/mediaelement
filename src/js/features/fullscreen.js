@@ -1,6 +1,5 @@
 'use strict';
 
-import window from 'global/window';
 import document from 'global/document';
 import i18n from '../core/i18n';
 import {config} from '../player';
@@ -47,10 +46,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 * @type {Boolean}
 	 */
-	isInIframe: false,
-	/**
-	 * @type {Boolean}
-	 */
 	isPluginClickThroughCreated: false,
 	/**
 	 * Possible modes
@@ -76,8 +71,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (!player.isVideo) {
 			return;
 		}
-
-		player.isInIframe = (window.location !== window.parent.location);
 
 		player.detectFullscreenMode();
 
@@ -203,9 +196,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		// iOS allows playing fullscreen ONLY on `video` tag, so check if the source can go fullscreen on iOS
 		// and if the player can play the current source
 		if (t.options.useFakeFullscreen === false && (Features.IS_IOS || Features.IS_SAFARI) && Features.HAS_IOS_FULLSCREEN &&
-			typeof t.media.originalNode.webkitEnterFullscreen === 'function' &&
-			t.media.originalNode.canPlayType(getTypeFromFile(t.media.getSrc()))) {
-			t.media.originalNode.webkitEnterFullscreen();
+			typeof t.node.webkitEnterFullscreen === 'function' &&
+			t.node.originalNode.canPlayType(getTypeFromFile(t.media.getSrc()))) {
+			t.node.originalNode.webkitEnterFullscreen();
 			return;
 		}
 
@@ -220,43 +213,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		// attempt to do true fullscreen
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
 			Features.requestFullScreen(t.getElement(t.container));
-
-			if (t.isInIframe) {
-				// sometimes exiting from fullscreen doesn't work
-				// notably in Chrome <iframe>. Fixed in version 17
-				setTimeout(function checkFullscreen () {
-
-					if (t.isNativeFullScreen) {
-						let percentErrorMargin = 0.002, // 0.2%
-							windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-							screenWidth = screen.width,
-							absDiff = Math.abs(screenWidth - windowWidth),
-							marginError = screenWidth * percentErrorMargin;
-
-						// check if the video is suddenly not really fullscreen
-						if (absDiff > marginError) {
-							// manually exit
-							t.exitFullScreen();
-						} else {
-							// test again
-							setTimeout(checkFullscreen, 500);
-						}
-					}
-				}, 1000);
-			}
 		}
 
 		// make full size
 		t.getElement(t.container).style.width = '100%';
 		t.getElement(t.container).style.height = '100%';
-
-		// Only needed for safari 5.1 native full screen, can cause display issues elsewhere
-		// Actually, it seems to be needed for IE8, too
-		t.containerSizeTimeout = setTimeout(() => {
-			t.getElement(t.container).style.width = '100%';
-			t.getElement(t.container).style.height = '100%';
-			t.setControlsSize();
-		}, 500);
 
 		if (isNative) {
 			t.node.style.width = '100%';
@@ -284,8 +245,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			addClass(t.fullscreenBtn, `${t.options.classPrefix}unfullscreen`);
 		}
 
-		t.setControlsSize();
 		t.isFullScreen = true;
+		t.setControlsSize();
+
+		// Recalculate player dimensions for fullscreen after browser updates layout
+		requestAnimationFrame(() => {
+			t.setPlayerSize(screen.width, screen.height);
+		});
 
 		const
 			zoomFactor = Math.min(screen.width / t.width, screen.height / t.height),
@@ -359,6 +325,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.setControlsSize();
 		t.isFullScreen = false;
+
+		// Recalculate player dimensions after exiting fullscreen
+		t.setPlayerSize(t.normalWidth, t.normalHeight);
 
 		const captionText = t.getElement(t.container).querySelector(`.${t.options.classPrefix}captions-text`);
 		if (captionText) {

@@ -902,17 +902,19 @@ class MediaElementPlayer {
 				t.setControlsSize();
 			}, 0);
 
-			t.globalResizeCallback = () => {
-				// don't resize for fullscreen mode
-				if (!(t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen))) {
-					t.setPlayerSize(t.width, t.height);
-				}
+		t.globalResizeCallback = () => {
+			// resize for both normal and fullscreen modes
+			if (t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen)) {
+				// In fullscreen, recalculate dimensions based on screen size
+				t.setPlayerSize(screen.width, screen.height);
+			} else {
+				// In normal mode, use the player's defined dimensions
+				t.setPlayerSize(t.width, t.height);
+			}
 
-				// always adjust controls
-				t.setControlsSize();
-			};
-
-			// adjust controls whenever window sizes (used to be in fullscreen only)
+			// always adjust controls
+			t.setControlsSize();
+		};			// adjust controls whenever window sizes (used to be in fullscreen only)
 			t.globalBind('resize', t.globalResizeCallback);
 		}
 
@@ -1009,6 +1011,13 @@ class MediaElementPlayer {
 
 		if (typeof height !== 'undefined') {
 			t.height = height;
+		}
+
+		// In fullscreen mode, always use setDimensions to avoid responsive mode calculations
+		// Check both t.isFullScreen and native fullscreen API
+		if (t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen)) {
+			t.setDimensions(t.width, t.height);
+			return;
 		}
 
 		// check stretching modes
@@ -1300,6 +1309,12 @@ class MediaElementPlayer {
 
 		t.getElement(t.container).style.width = width;
 		t.getElement(t.container).style.height = height;
+
+		// Also update the video/audio node dimensions when in fullscreen
+		if (t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen)) {
+			t.node.style.width = width;
+			t.node.style.height = height;
+		}
 
 		const layers = t.getElement(t.layers).children;
 		for (let i = 0, total = layers.length; i < total; i++) {
