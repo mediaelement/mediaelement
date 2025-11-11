@@ -1311,7 +1311,9 @@ class MediaElementPlayer {
 		t.getElement(t.container).style.height = height;
 
 		// Also update the video/audio node dimensions when in fullscreen
-		if (t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen)) {
+		// SKIP this for native HTML5 videos to let CSS handle sizing
+		const isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName);
+		if ((t.isFullScreen || (HAS_TRUE_NATIVE_FULLSCREEN && document.webkitIsFullScreen)) && !isNative) {
 			t.node.style.width = width;
 			t.node.style.height = height;
 		}

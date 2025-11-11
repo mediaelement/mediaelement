@@ -220,8 +220,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.getElement(t.container).style.height = '100%';
 
 		if (isNative) {
-			t.node.style.width = '100%';
-			t.node.style.height = '100%';
+			// For native HTML5 video, let CSS handle the sizing with object-fit
+			// Don't set explicit dimensions - CSS will handle it
 		} else {
 			const elements = t.getElement(t.container).querySelectorAll('embed, object, video'), total = elements.length;
 			for (let i = 0; i < total; i++) {
@@ -230,7 +230,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 
-		if (t.options.setDimensions && typeof t.media.setSize === 'function') {
+		if (t.options.setDimensions && typeof t.media.setSize === 'function' && !isNative) {
 			t.media.setSize(screen.width, screen.height);
 		}
 
@@ -248,10 +248,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.isFullScreen = true;
 		t.setControlsSize();
 
-		// Recalculate player dimensions for fullscreen after browser updates layout
-		requestAnimationFrame(() => {
-			t.setPlayerSize(screen.width, screen.height);
-		});
+		// Recalculate player dimensions for fullscreen after browser updates layout (only for non-native)
+		if (!isNative) {
+			requestAnimationFrame(() => {
+				t.setPlayerSize(screen.width, screen.height);
+			});
+		}
 
 		const
 			zoomFactor = Math.min(screen.width / t.width, screen.height / t.height),
