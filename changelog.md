@@ -1,5 +1,10 @@
 # Version History
 
+*7.1.0* (2025/11/12)
+* Fixed a lot of fullscreen scaling and rotating bugs for different browser and devices.
+* Also included the fullscreen fixes of ([#2995](https://github.com/mediaelement/mediaelement/pull/2995)) by @awilfox and ([#2971](https://github.com/mediaelement/mediaelement/pull/2971)) by @swashbuck. This also fixes #2919 and #2644.
+* Also added the functionality for the demo files to test the `fakeFullscreen` option, which was already broken. We need to fix this in another version.
+
 *7.0.7* (2024/12/17)
 * Remove a symlink that got accidentally pushed into git repository
 
