@@ -41,8 +41,10 @@ function updateUrlParameter (uri, key, value) {
 var
 	lang = getQueryStringValue('lang') || 'en',
 	stretching = getQueryStringValue('stretching') || 'auto',
+	fakefullscreen = getQueryStringValue('fakefullscreen') || 'false',
 	languageSelector = document.querySelector('select[name=lang]'),
 	stretchingSelector = document.querySelector('select[name=stretching]'),
+	fakefullscreenSelector = document.querySelector('select[name=fakefullscreen]'),
 	sourcesSelector = document.querySelectorAll('select[name=sources]'),
 	sourcesTotal = sourcesSelector.length
 ;
@@ -54,6 +56,11 @@ languageSelector.addEventListener('change', function () {
 stretchingSelector.value = stretching;
 stretchingSelector.addEventListener('change', function () {
 	window.location.href = updateUrlParameter(window.location.href, 'stretching', stretchingSelector.value);
+});
+
+fakefullscreenSelector.value = fakefullscreen;
+fakefullscreenSelector.addEventListener('change', function () {
+	window.location.href = updateUrlParameter(window.location.href, 'fakefullscreen', fakefullscreenSelector.value);
 });
 
 for (var i = 0; i < sourcesTotal; i++) {
@@ -79,7 +86,6 @@ for (var i = 0; i < sourcesTotal; i++) {
 
 	// These media types cannot play at all on iOS, so disabling them
 	if (mejs.Features.isiOS) {
-		sourcesSelector[i].querySelector('option[value^="rtmp"]').disabled = true;
 		if (sourcesSelector[i].querySelector('option[value$="webm"]')) {
 			sourcesSelector[i].querySelector('option[value$="webm"]').disabled = true;
 		}
@@ -101,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	for (i = 0; i < total; i++) {
 		new MediaElementPlayer(mediaElements[i], {
 			stretching: stretching,
+			fakeFullscreen: fakefullscreen,
 			success: function (media) {
 				var renderer = document.getElementById(media.id + '-rendername');
 
