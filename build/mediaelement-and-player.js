@@ -1116,7 +1116,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var mejs = {};
 
-mejs.version = '7.0.7';
+mejs.version = '7.1.0';
 
 mejs.html5media = {
 	properties: ['volume', 'src', 'currentTime', 'muted', 'duration', 'paused', 'ended', 'buffered', 'error', 'networkState', 'readyState', 'seeking', 'seekable', 'currentSrc', 'preload', 'bufferedBytes', 'bufferedTime', 'initialTime', 'startOffsetTime', 'defaultPlaybackRate', 'playbackRate', 'played', 'autoplay', 'loop', 'controls'],
@@ -1251,10 +1251,6 @@ _mejs2.default.Renderers = renderer;
 },{"8":8}],10:[function(_dereq_,module,exports){
 'use strict';
 
-var _window = _dereq_(3);
-
-var _window2 = _interopRequireDefault(_window);
-
 var _document = _dereq_(2);
 
 var _document2 = _interopRequireDefault(_document);
@@ -1296,8 +1292,6 @@ Object.assign(_player2.default.prototype, {
 
 	isNativeFullScreen: false,
 
-	isInIframe: false,
-
 	isPluginClickThroughCreated: false,
 
 	fullscreenMode: '',
@@ -1308,8 +1302,6 @@ Object.assign(_player2.default.prototype, {
 		if (!player.isVideo) {
 			return;
 		}
-
-		player.isInIframe = _window2.default.location !== _window2.default.parent.location;
 
 		player.detectFullscreenMode();
 
@@ -1407,8 +1399,8 @@ Object.assign(_player2.default.prototype, {
 			return;
 		}
 
-		if (t.options.useFakeFullscreen === false && (Features.IS_IOS || Features.IS_SAFARI) && Features.HAS_IOS_FULLSCREEN && typeof t.media.originalNode.webkitEnterFullscreen === 'function' && t.media.originalNode.canPlayType((0, _media.getTypeFromFile)(t.media.getSrc()))) {
-			t.media.originalNode.webkitEnterFullscreen();
+		if (t.options.useFakeFullscreen === false && (Features.IS_IOS || Features.IS_SAFARI) && Features.HAS_IOS_FULLSCREEN && typeof t.node.webkitEnterFullscreen === 'function' && t.node.canPlayType((0, _media.getTypeFromFile)(t.media.getSrc()))) {
+			t.node.webkitEnterFullscreen();
 			return;
 		}
 
@@ -1420,40 +1412,12 @@ Object.assign(_player2.default.prototype, {
 
 		if (t.fullscreenMode === 'native-native' || t.fullscreenMode === 'plugin-native') {
 			Features.requestFullScreen(t.getElement(t.container));
-
-			if (t.isInIframe) {
-				setTimeout(function checkFullscreen() {
-
-					if (t.isNativeFullScreen) {
-						var percentErrorMargin = 0.002,
-						    windowWidth = _window2.default.innerWidth || _document2.default.documentElement.clientWidth || _document2.default.body.clientWidth,
-						    screenWidth = screen.width,
-						    absDiff = Math.abs(screenWidth - windowWidth),
-						    marginError = screenWidth * percentErrorMargin;
-
-						if (absDiff > marginError) {
-							t.exitFullScreen();
-						} else {
-							setTimeout(checkFullscreen, 500);
-						}
-					}
-				}, 1000);
-			}
 		}
 
 		t.getElement(t.container).style.width = '100%';
 		t.getElement(t.container).style.height = '100%';
 
-		t.containerSizeTimeout = setTimeout(function () {
-			t.getElement(t.container).style.width = '100%';
-			t.getElement(t.container).style.height = '100%';
-			t.setControlsSize();
-		}, 500);
-
-		if (isNative) {
-			t.node.style.width = '100%';
-			t.node.style.height = '100%';
-		} else {
+		if (isNative) {} else {
 			var elements = t.getElement(t.container).querySelectorAll('embed, object, video'),
 			    _total = elements.length;
 			for (var i = 0; i < _total; i++) {
@@ -1462,7 +1426,7 @@ Object.assign(_player2.default.prototype, {
 			}
 		}
 
-		if (t.options.setDimensions && typeof t.media.setSize === 'function') {
+		if (t.options.setDimensions && typeof t.media.setSize === 'function' && !isNative) {
 			t.media.setSize(screen.width, screen.height);
 		}
 
@@ -1478,8 +1442,14 @@ Object.assign(_player2.default.prototype, {
 			(0, _dom.addClass)(t.fullscreenBtn, t.options.classPrefix + 'unfullscreen');
 		}
 
-		t.setControlsSize();
 		t.isFullScreen = true;
+		t.setControlsSize();
+
+		if (!isNative) {
+			requestAnimationFrame(function () {
+				t.setPlayerSize(screen.width, screen.height);
+			});
+		}
 
 		var zoomFactor = Math.min(screen.width / t.width, screen.height / t.height),
 		    captionText = t.getElement(t.container).querySelector('.' + t.options.classPrefix + 'captions-text');
@@ -1544,6 +1514,8 @@ Object.assign(_player2.default.prototype, {
 		t.setControlsSize();
 		t.isFullScreen = false;
 
+		t.setPlayerSize(t.normalWidth, t.normalHeight);
+
 		var captionText = t.getElement(t.container).querySelector('.' + t.options.classPrefix + 'captions-text');
 		if (captionText) {
 			captionText.style.fontSize = '';
@@ -1555,7 +1527,7 @@ Object.assign(_player2.default.prototype, {
 	}
 });
 
-},{"17":17,"2":2,"24":24,"25":25,"26":26,"27":27,"28":28,"3":3,"6":6}],11:[function(_dereq_,module,exports){
+},{"17":17,"2":2,"24":24,"25":25,"26":26,"27":27,"28":28,"6":6}],11:[function(_dereq_,module,exports){
 'use strict';
 
 var _document = _dereq_(2);
@@ -4275,13 +4247,14 @@ var MediaElementPlayer = function () {
 				}, 0);
 
 				t.globalResizeCallback = function () {
-					if (!(t.isFullScreen || _constants.HAS_TRUE_NATIVE_FULLSCREEN && _document2.default.webkitIsFullScreen)) {
+					if (t.isFullScreen || _constants.HAS_TRUE_NATIVE_FULLSCREEN && _document2.default.webkitIsFullScreen) {
+						t.setPlayerSize(screen.width, screen.height);
+					} else {
 						t.setPlayerSize(t.width, t.height);
 					}
 
 					t.setControlsSize();
 				};
-
 				t.globalBind('resize', t.globalResizeCallback);
 			}
 
@@ -4366,6 +4339,11 @@ var MediaElementPlayer = function () {
 
 			if (typeof height !== 'undefined') {
 				t.height = height;
+			}
+
+			if (t.isFullScreen || _constants.HAS_TRUE_NATIVE_FULLSCREEN && _document2.default.webkitIsFullScreen) {
+				t.setDimensions(t.width, t.height);
+				return;
 			}
 
 			switch (t.options.stretching) {
@@ -4631,6 +4609,12 @@ var MediaElementPlayer = function () {
 
 			t.getElement(t.container).style.width = width;
 			t.getElement(t.container).style.height = height;
+
+			var isNative = t.media.rendererName !== null && /(html5|native)/i.test(t.media.rendererName);
+			if ((t.isFullScreen || _constants.HAS_TRUE_NATIVE_FULLSCREEN && _document2.default.webkitIsFullScreen) && !isNative) {
+				t.node.style.width = width;
+				t.node.style.height = height;
+			}
 
 			var layers = t.getElement(t.layers).children;
 			for (var i = 0, total = layers.length; i < total; i++) {

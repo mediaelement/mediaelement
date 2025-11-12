@@ -119,6 +119,10 @@
                     <option value="fill" selected>Fill</option>
                     <option value="none" selected>None (original dimensions)</option>
                 </select>
+                 <label>Fakefullscreen (Video Only)<select name="fakefullscreen">
+                    <option value="false" selected>false (default)</option>
+                    <option value="true">true</option>
+                </select>
                 </label>
             </form>
         </section>
@@ -177,7 +181,7 @@
             that only happens on load.</p>
 
             <div class="media-wrapper">
-                <video id="player-dash" width="640" height="360" style="max-width:100%;" poster="http://www.mediaelementjs.com/images/big_buck_bunny.jpg" preload="none" controls playsinline webkit-playsinline>
+                <video id="player-dash" width="640" height="360" style="max-width:100%;" poster="http://www.mediaelementjs.com/images/big_buck_bunny.jpg" preload="none" controls playsinline>
                     <source src="https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd" type="application/dash+xml">
                     <track srclang="de" kind="subtitles" src="german.vtt" label="German with lines">
                     <track srclang="en" kind="subtitles" src="english.vtt" default>
