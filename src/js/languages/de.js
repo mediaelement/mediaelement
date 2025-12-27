@@ -34,6 +34,10 @@
 			// features/time.js
 			'mejs.current': 'Aktueller Zeitpunkt',
 			'mejs.duration': 'Gesamtlaufzeit',
+			'mejs.hours': ['1 Stunde', '%1 Stunden'],
+			'mejs.minutes': ['1 Minute', '%1 Minuten'],
+			'mejs.seconds': ['1 Sekunde', '%1 Sekunden'],
+			'mejs.frames': ['1 Frame', '%1 Frames'],
 
 			// features/volume.js
 			'mejs.volume-help-text': 'Verwende die Pfeiltaste nach oben/nach unten um die Lautstärke zu erhöhen oder zu verringern.',

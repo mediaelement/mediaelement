@@ -1,6 +1,7 @@
 'use strict';
 
 import mejs from '../core/mejs';
+import i18n from "../core/i18n";
 
 /**
  * Indicate if FPS is dropFrame (typically non-integer frame rates: 29.976)
@@ -64,8 +65,7 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 		} else {
 			seconds = Math.floor((f / timeBase) % 60).toFixed(secondsDecimalLength);
 		}
-	}
-	else {
+	} else {
 		hours = Math.floor(time / 3600) % 24;
 		minutes = Math.floor(time / 60) % 60;
 		if (showFrameCount) {
@@ -106,6 +106,94 @@ export function secondsToTimeCode(time, forceHours = false, showFrameCount = fal
 	}
 
 	return result;
+}
+
+/**
+ * Format a numeric time into localized hours, minutes, seconds
+ *
+ * @param {Number} time - Ideally a number, but if not or less than zero, is defaulted to zero
+ * @param {Boolean} showFrameCount
+ * @param {Number} fps - Frames per second
+ * @return {String}
+ */
+export function framesToLocalizedDuration(time, showFrameCount = false, fps = 25) {
+
+	time = !time || typeof time !== 'number' || time < 0 ? 0 : time;
+
+	let
+		dropFrames = Math.round(fps * 0.066666), // Number of drop frames to drop on the minute marks (6%)
+		timeBase = Math.round(fps),
+		framesPer24Hours = Math.round(fps * 3600) * 24,
+		framesPer10Minutes = Math.round(fps * 600),
+		hours,
+		minutes,
+		seconds,
+		frames,
+		f = Math.round(time * fps)
+	;
+
+	if (isDropFrame(fps)) {
+
+		if (f < 0) {
+			f = framesPer24Hours + f;
+		}
+
+		f = f % framesPer24Hours;
+
+		const d = Math.floor(f / framesPer10Minutes);
+		const m = f % framesPer10Minutes;
+		f = f + dropFrames * 9 * d;
+		if (m > dropFrames) {
+			f = f + dropFrames * (Math.floor((m - dropFrames) / (Math.round(timeBase * 60 - dropFrames))));
+		}
+
+		const timeBaseDivision = Math.floor(f / timeBase);
+
+		hours = Math.floor(Math.floor(timeBaseDivision / 60) / 60);
+		minutes = Math.floor(timeBaseDivision / 60) % 60;
+
+		if (showFrameCount) {
+			seconds = timeBaseDivision % 60;
+		} else {
+			seconds = Math.floor((f / timeBase) % 60);
+		}
+	} else {
+		hours = Math.floor(time / 3600) % 24;
+		minutes = Math.floor(time / 60) % 60;
+		if (showFrameCount) {
+			seconds = Math.floor(time % 60);
+		} else {
+			seconds = Math.floor(time % 60);
+		}
+	}
+	hours = hours <= 0 ? 0 : hours;
+	minutes = minutes <= 0 ? 0 : minutes;
+	seconds = seconds <= 0 ? 0 : seconds;
+
+	seconds = seconds === 60 ? 0 : seconds;
+	minutes = minutes === 60 ? 0 : minutes;
+
+	let resultList = [];
+
+	if (hours > 0) {
+		resultList.push(i18n.t('mejs.hours', hours));
+	}
+
+	if (hours > 0 || minutes > 0) {
+		resultList.push(i18n.t('mejs.minutes', minutes));
+	}
+
+	resultList.push(i18n.t('mejs.seconds', seconds));
+
+	if (showFrameCount) {
+		frames = Math.round(f % timeBase);
+		frames = frames <= 0 ? 0 : frames;
+
+		resultList.push(i18n.t('mejs.frames', frames));
+	}
+
+	const formatter = new Intl.ListFormat(i18n.lang, { style: 'long', type: 'unit' });
+	return formatter.format(resultList);
 }
 
 /**
