@@ -611,7 +611,7 @@ Object.assign(MediaElementPlayer.prototype, {
       `<input type="radio" class="${t.options.classPrefix}captions-selector-input" ` +
       `name="${t.id}_captions" id="${track.trackId}-btn" value="${track.trackId}" disabled>` +
       `<label class="${t.options.classPrefix}captions-selector-label"` +
-      `for="${track.trackId}">${label} (loading)</label>` +
+      `for="${track.trackId}-btn">${label} (loading)</label>` +
       `</li>`;
   },
 
