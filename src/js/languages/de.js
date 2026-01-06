@@ -40,6 +40,7 @@
 			'mejs.unmute': 'Stummschaltung aufheben',
 			'mejs.mute': 'Stummschalten',
 			'mejs.volume-slider': 'Lautstärkeregler',
+			'mejs.volume': ['Lautstärke 1%', 'Lautstärke %1%'],
 
 			// core/player.js
 			'mejs.video-player': 'Video-Player',

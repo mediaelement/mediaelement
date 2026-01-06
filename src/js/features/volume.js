@@ -77,17 +77,20 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		mute.className = `${t.options.classPrefix}button ${t.options.classPrefix}volume-button ${t.options.classPrefix}mute`;
 		mute.innerHTML = mode === 'horizontal' ?
-			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`, '', `${t.options.classPrefix}horizontal-volume-slider`) :
-			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`, '', `${t.options.classPrefix}volume-slider`) +
+			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`, '', `${t.id}_volume-slider`) :
+			generateControlButton(t.id, muteText, muteText, `${t.media.options.iconSprite}`, ['icon-mute', 'icon-unmute'], `${t.options.classPrefix}`, '', `${t.id}_volume-slider`) +
 			`<a class="${t.options.classPrefix}volume-slider" ` +
 				`aria-label="${i18n.t('mejs.volume-slider')}" aria-valuemin="0" aria-valuemax="100" role="slider" ` +
 				`aria-orientation="vertical">` +
-				`<span class="${t.options.classPrefix}offscreen" id="${t.options.classPrefix}volume-slider">${volumeControlText}</span>` +
+				`<span class="${t.options.classPrefix}offscreen" id="${t.id}_volume-slider">${volumeControlText}</span>` +
 				`<div class="${t.options.classPrefix}volume-total">` +
 					`<div class="${t.options.classPrefix}volume-current"></div>` +
 					`<div class="${t.options.classPrefix}volume-handle"></div>` +
 				`</div>` +
-			`</a>`;
+			`</a>` +
+			`<span class="${t.options.classPrefix}offscreen ${t.options.classPrefix}volume-status"
+            role="status">` +
+			`</span>`;
 
 		t.addControlElement(mute, 'volume');
 
@@ -182,6 +185,11 @@ Object.assign(MediaElementPlayer.prototype, {
 				const volume = Math.floor(media.volume * 100);
 				volumeSlider.setAttribute('aria-valuenow', volume);
 				volumeSlider.setAttribute('aria-valuetext', `${volume}%`);
+
+				const statusRegion = mute.querySelector(`.${t.options.classPrefix}volume-status`);
+				if (statusRegion) {
+					statusRegion.innerHTML = `${i18n.t('mejs.volume', volume)}`;
+				}
 			}
 		;
 
@@ -323,6 +331,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		mute.addEventListener('focusin', () => {
 			volumeSlider.style.display = 'block';
 			mouseIsOver = true;
+			setTimeout(updateVolumeSlider, 0);
 		});
 
 		mute.addEventListener('focusout', (e) => {

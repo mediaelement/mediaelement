@@ -38,6 +38,7 @@ export const EN = {
 	'mejs.unmute': 'Unmute',
 	'mejs.mute': 'Mute',
 	'mejs.volume-slider': 'Volume Slider',
+	'mejs.volume': ['Volume 1%', 'Volume %1%'],
 
 	// core/player.js
 	'mejs.video-player': 'Video Player',
