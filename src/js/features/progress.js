@@ -312,19 +312,11 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.slider.setAttribute('role', 'slider');
 				t.slider.tabIndex = 0;
 
-				if (media.paused) {
-					t.slider.setAttribute('aria-label', timeSliderText);
-					t.slider.setAttribute('aria-valuemin', 0);
-					t.slider.setAttribute('aria-valuemax', isNaN(duration) ? 0 : duration);
-					t.slider.setAttribute('aria-valuenow', seconds);
-					t.slider.setAttribute('aria-valuetext', time);
-				} else {
-					t.slider.removeAttribute('aria-label');
-					t.slider.removeAttribute('aria-valuemin');
-					t.slider.removeAttribute('aria-valuemax');
-					t.slider.removeAttribute('aria-valuenow');
-					t.slider.removeAttribute('aria-valuetext');
-				}
+				t.slider.setAttribute('aria-label', timeSliderText);
+				t.slider.setAttribute('aria-valuemin', 0);
+				t.slider.setAttribute('aria-valuemax', isNaN(duration) ? 0 : duration);
+				t.slider.setAttribute('aria-valuenow', seconds);
+				t.slider.setAttribute('aria-valuetext', time);
 			},
 			/**
 			 *
