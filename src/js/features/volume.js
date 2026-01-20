@@ -392,12 +392,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			handleVolumeMove(e);
 			t.globalBind('mousemove.vol', (event) => {
 				const target = event.target;
-				// check for `closest` fixes firefox error: https://github.com/mediaelement/mediaelement/pull/2840/files
 				const targetHasClosest = typeof target.closest == 'function';
-				const targetSliderElement = target.closest(
+				const targetSliderElement = targetHasClosest && target.closest(
 					(mode === 'vertical' ? `.${t.options.classPrefix}volume-slider` : `.${t.options.classPrefix}horizontal-volume-slider`)
 				)
-				if (mouseIsDown && (target === volumeSlider || (targetHasClosest && targetSliderElement))) {
+				if (mouseIsDown && (target === volumeSlider || targetSliderElement)) {
 					handleVolumeMove(event);
 				}
 			});
