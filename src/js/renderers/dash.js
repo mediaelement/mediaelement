@@ -213,7 +213,7 @@ const DashNativeRenderer = {
 			};
 
 			for (const eventType in dashEvents) {
-				if (dashEvents.hasOwnProperty(eventType)) {
+				if (Object.prototype.hasOwnProperty.call(dashEvents, eventType)) {
 					dashPlayer.on(dashEvents[eventType], (e) => assignMdashEvents(e));
 				}
 			}

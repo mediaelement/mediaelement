@@ -12,76 +12,36 @@
   },
   "private": false,
   "devDependencies": {
-    "autoprefixer": "^6.7.7",
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.24.1",
-    "babelify": "^7.3.0",
-    "browserify": "^13.1.1",
-    "browserify-derequire": "^0.9.4",
-    "bundle-collapser": "^1.2.1",
-    "chai": "^3.5.0",
-    "coveralls": "^2.13.1",
-    "cssnano": "^3.8.0",
-    "grunt": "^1.6.1",
-    "grunt-babel": "^6.0.0",
-    "grunt-browserify": "^5.3.0",
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-uglify": "^3.0.1",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^19.0.0",
-    "grunt-postcss": "^0.9.0",
-    "grunt-remove-logging": "^0.2.0",
-    "grunt-shell": "^2.1.0",
-    "grunt-stylelint": "^0.8.0",
-    "grunt-text-replace": "^0.4.0",
-    "istanbul": "^1.1.0-alpha.1",
-    "jsdom": "^9.12.0",
-    "mocha": "^3.4.1",
-    "mocha-jsdom": "^1.1.0",
-    "promise-polyfill": "6.0.2",
-    "stylelint": "^7.10.1",
-    "stylelint-order": "^0.4.4",
-    "uglify-js": "^3.0.10"
+    "@vitejs/plugin-legacy": "^5.4.1",
+    "autoprefixer": "^10.4.19",
+    "cssnano": "^7.0.1",
+    "eslint": "^8.57.0",
+    "postcss": "^8.4.38",
+    "rimraf": "^5.0.7",
+    "stylelint": "^16.6.1",
+    "stylelint-order": "^6.0.4",
+    "terser": "^5.31.0",
+    "vite": "^5.2.12",
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "global": "^4.3.1",
+    "promise-polyfill": "6.0.2",
     "svg4everybody": "^2.1.9"
   },
   "scripts": {
-    "test": "istanbul cover node_modules/mocha/bin/_mocha -- --compilers js:babel-register --require babel-polyfill --recursive test/unit",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
-  },
-  "browserify": {
-    "extensions": [
-      ".js"
-    ],
-    "transform": [
-      [
-        "babelify",
-        {
-          "comments": false,
-          "presets": [
-            [
-              "env",
-              {
-                "targets": {
-                  "browsers": [
-                    "last 5 versions",
-                    "ie > 10",
-                    "ios > 7",
-                    "android > 3"
-                  ]
-                }
-              }
-            ]
-          ]
-        }
-      ]
-    ]
+    "build": "vite build",
+    "build:debug": "vite build --mode development",
+    "dev": "vite",
+    "preview": "vite preview",
+    "lint": "eslint src/js/**/*.js test/**/*.js",
+    "lint:fix": "eslint src/js/**/*.js test/**/*.js --fix",
+    "stylelint": "stylelint src/css/*.css",
+    "stylelint:fix": "stylelint src/css/*.css --fix",
+    "lint:all": "npm run lint && npm run stylelint",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "build:features": "vite build --features",
+    "clean": "rimraf build"
   }
 }

@@ -417,7 +417,7 @@ class MediaElementPlayer {
 	 */
 	updateNode(event) {
 		let node, iframeId;
-		const mediaElement = event.detail.target.hasOwnProperty('mediaElement') ? event.detail.target.mediaElement : event.detail.target;
+		const mediaElement = Object.prototype.hasOwnProperty.call(event.detail.target, 'mediaElement') ? event.detail.target.mediaElement : event.detail.target;
 		const originalNode = mediaElement.originalNode;
 
 		if (event.detail.isIframe) {
@@ -766,7 +766,7 @@ class MediaElementPlayer {
 
 				// go through all other players
 				for (const playerIndex in mejs.players) {
-					if (mejs.players.hasOwnProperty(playerIndex)) {
+					if (Object.prototype.hasOwnProperty.call(mejs.players, playerIndex)) {
 						const p = mejs.players[playerIndex];
 
 						if (p.id !== t.id && t.options.pauseOtherPlayers && !p.paused && !p.ended && p.options.ignorePauseOtherPlayersOption !== true) {

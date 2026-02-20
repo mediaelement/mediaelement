@@ -125,7 +125,7 @@ export function timeCodeToSeconds (time, fps = 25) {
 		time = time.replace(';', ':');
 	}
 
-	if (!/\d{2}(\:\d{2}){0,3}/i.test(time)) {
+	if (!/\d{2}(:\d{2}){0,3}/i.test(time)) {
 		throw new TypeError('Time code must have the format `00:00:00`');
 	}
 

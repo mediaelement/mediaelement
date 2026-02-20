@@ -26,7 +26,7 @@ i18n.language = (...args) => {
 			throw new TypeError('Language code must be a string value');
 		}
 
-		if (!/^[a-z]{2,3}((\-|_)[a-z]{2})?$/i.test(args[0])) {
+		if (!/^[a-z]{2,3}((-|_)[a-z]{2})?$/i.test(args[0])) {
 			throw new TypeError('Language code must have format 2-3 letters and. optionally, hyphen, underscore followed by 2 more letters');
 		}
 

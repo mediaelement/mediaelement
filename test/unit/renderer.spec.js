@@ -6,7 +6,6 @@ import {expect} from 'chai';
 describe('Renderers', () => {
 
 	let
-		renderers,
 		mockRenderer = {
 			name: 'mock',
 			options: {
@@ -16,8 +15,7 @@ describe('Renderers', () => {
 				let validMedia = ['video/mime-3'];
 				return validMedia.indexOf(type) > -1;
 			}
-		},
-		empty = null
+		}
 	;
 
 	describe('#order', () => {

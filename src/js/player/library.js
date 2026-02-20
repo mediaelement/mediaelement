@@ -1,6 +1,5 @@
 'use strict';
 
-import window from 'global/window';
 import mejs from '../core/mejs';
 import MediaElementPlayer from '../player';
 

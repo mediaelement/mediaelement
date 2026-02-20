@@ -234,7 +234,7 @@ const HlsNativeRenderer = {
 			};
 
 			for (const eventType in hlsEvents) {
-				if (hlsEvents.hasOwnProperty(eventType)) {
+				if (Object.prototype.hasOwnProperty.call(hlsEvents, eventType)) {
 					hlsPlayer.on(hlsEvents[eventType], (...args) => assignHlsEvents(hlsEvents[eventType], args));
 				}
 			}

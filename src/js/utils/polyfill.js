@@ -15,7 +15,7 @@ import svg4everybody from 'svg4everybody';
 // from: https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
 (function (arr) {
 	arr.forEach(function (item) {
-		if (item.hasOwnProperty('remove')) {
+		if (Object.prototype.hasOwnProperty.call(item, 'remove')) {
 			return;
 		}
 		Object.defineProperty(item, 'remove', {
@@ -64,7 +64,6 @@ if (typeof Object.assign !== 'function') {
 
 			if (nextSource !== null) { // Skip over if undefined or null
 				for (const nextKey in nextSource) {
-					// Avoid bugs when hasOwnProperty is shadowed
 					if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
 						to[nextKey] = nextSource[nextKey];
 					}

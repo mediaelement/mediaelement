@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable no-import-assign */
+
 import * as general from '../../src/js/utils/general';
 import * as time from '../../src/js/utils/time';
 import * as media from '../../src/js/utils/media';
@@ -338,6 +340,7 @@ describe('Utilities', () => {
 		it('returns the format of a specific media using ONLY a URL', () => {
 
 			const url = 'http://example.com/media.mp4';
+			const originalTypeChecks = media.typeChecks;
 			media.typeChecks = [
 				(url) => {
 					if (url.match(/.mp4/)) {
@@ -352,6 +355,9 @@ describe('Utilities', () => {
 			];
 
 			expect(media.formatType(url)).to.equal('video/mp4');
+			expect(media.formatType('http://example.com/media.mp3')).to.equal('audio/mp3');
+
+			Object.assign(media, {typeChecks: originalTypeChecks});
 
 		});
 
@@ -396,6 +402,7 @@ describe('Utilities', () => {
 
 		it('returns the type of media based on URL structure', () => {
 
+			const originalTypeChecks = media.typeChecks;
 			media.typeChecks =  [
 				(url) => {
 					if (url.match(/.mp4/)) {
@@ -407,7 +414,6 @@ describe('Utilities', () => {
 						return 'audio/mp3';
 					}
 				}
-
 			];
 
 			expect(media.getTypeFromFile('http://example.com/media.mp4')).to.equal('video/mp4');
@@ -415,14 +421,17 @@ describe('Utilities', () => {
 			expect(media.getTypeFromFile('http://example.com/media.mp3')).to.equal('audio/mp3');
 			expect(media.getTypeFromFile('http://example.com/media2.mp3?x=1&y=2')).to.equal('audio/mp3');
 
-			media.typeChecks =  [
+			const testTypeChecks = [
 				12345,
 				'abcde',
 				{}
 			];
+			media.typeChecks = testTypeChecks;
 
 			expect(media.getTypeFromFile('http://example.com/media.m4v')).to.equal('video/mp4');
 			expect(media.getTypeFromFile('http://example.com/media.midi')).to.equal('audio/midi');
+
+			Object.assign(media, {typeChecks: originalTypeChecks});
 
 		});
 

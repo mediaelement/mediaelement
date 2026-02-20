@@ -5,7 +5,6 @@ describe('MediaElement Player - Test Results', function () {
 	var
 		videoTag,
 		container,
-		id,
 		player,
 		setMedia = function (player, src) {
 			player.pause();

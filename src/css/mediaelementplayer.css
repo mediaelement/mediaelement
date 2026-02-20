@@ -207,7 +207,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__controls:not([style*='display: none']) {
-    background: rgba(255, 0, 0, 0.7);
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.35));
 }
 
@@ -658,7 +657,6 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__captions-selector-list-item:hover,
 .mejs__chapters-selector-list-item:hover {
-    background-color: rgb(200, 200, 200) !important;
     background-color: rgba(255, 255, 255, 0.4) !important;
 }
 

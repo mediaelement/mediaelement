@@ -22,8 +22,8 @@ One file. Any browser. Same UI.
 * [Installation and Usage](#installation)
 * [API and Configuration](#api)
 * [Guidelines for Contributors](#guidelines)
-* [Change Log](#changelog)
 * [Migration](#migration)
+* [Change Log](#changelog)
 * [TODO list](#todo)
 
 <a id="intro"></a>
@@ -43,6 +43,33 @@ In general, `MediaElement.js` supports **IE11+, MS Edge, Chrome, Firefox, Safari
 The full documentation on how to install `MediaElement.js` is available at [Installation](docs/installation.md).
 
 A brief guide on how to create and use instances of `MediaElement` available at [Usage](docs/usage.md).
+
+### Quick Start with Vite
+
+```bash
+# Clone the repository
+git clone https://github.com/mediaelement/mediaelement.git
+
+# Install dependencies
+npm install
+
+# Development server
+npm run dev
+
+# Production build
+npm run build
+```
+
+### Build Commands
+
+- `npm run build` - Production build with minification
+- `npm run build:debug` - Development build (unminified)
+- `npm run dev` - Start development server with hot reload
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run stylelint` - Run Stylelint
+- `npm run lint:all` - Run all linters
+- `npm run test` - Run tests with Vitest
 
 Additional features can be found at https://github.com/mediaelement/mediaelement-plugins.
 
