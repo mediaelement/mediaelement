@@ -632,6 +632,19 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     opacity: 1;
 }
 
+/* Hide active captions icon by default */
+.mejs__captions-button svg.mejs__icon-captions-active { display: none; }
+
+/* Hide default captions icon when captions are active */
+.mejs__captions-enabled svg.mejs__icon-captions { display: none; }
+
+/* Show active captions icon when captions are enabled */
+.mejs__captions-enabled svg.mejs__icon-captions-active { display: block; }
+
+/* Fallback: when icon-captions-active is absent from the sprite, keep the default icon visible */
+.mejs__captions-icon-fallback svg.mejs__icon-captions-active { display: none; }
+.mejs__captions-icon-fallback.mejs__captions-enabled svg.mejs__icon-captions { display: block; }
+
 .mejs__chapters-button > .mejs__chapters-selector {
     margin-right: -3.4375rem;
     width: 6.875rem;
